@@ -60,12 +60,12 @@ public class LevelCounter3D extends Group {
 
 	public void update(LevelCounter levelCounter) {
 		getChildren().clear();
-		double x = rightPosition.x;
+		double x = rightPosition.x();
 		for (int i = 0; i < levelCounter.size(); ++i) {
 			int symbol = levelCounter.symbol(i);
 			Box cube = createSpinningCube(fnSymbolImage.apply(symbol), i % 2 == 0);
 			cube.setTranslateX(x);
-			cube.setTranslateY(rightPosition.y);
+			cube.setTranslateY(rightPosition.y());
 			cube.setTranslateZ(-HTS);
 			getChildren().add(cube);
 			x -= t(2);

@@ -152,7 +152,7 @@ public interface Rendering2D {
 	 */
 	default void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
 		if (entity.isVisible()) {
-			drawSpriteCenteredOverBox(g, sprite, entity.getPosition().x, entity.getPosition().y);
+			drawSpriteCenteredOverBox(g, sprite, entity.getPosition().x(), entity.getPosition().y());
 		}
 	}
 
@@ -210,10 +210,10 @@ public interface Rendering2D {
 			String levelText = score.showContent ? "L" + score.levelNumber : "";
 			g.setFont(getArcadeFont());
 			g.setFill(Color.WHITE);
-			g.fillText(score.title, score.getPosition().x, score.getPosition().y);
-			g.fillText("%7s".formatted(pointsText), score.getPosition().x, score.getPosition().y + t(1));
+			g.fillText(score.title, score.getPosition().x(), score.getPosition().y());
+			g.fillText("%7s".formatted(pointsText), score.getPosition().x(), score.getPosition().y() + t(1));
 			g.setFill(Color.LIGHTGRAY);
-			g.fillText(levelText, score.getPosition().x + t(8), score.getPosition().y + t(1));
+			g.fillText(levelText, score.getPosition().x() + t(8), score.getPosition().y() + t(1));
 		}
 	}
 
@@ -233,9 +233,9 @@ public interface Rendering2D {
 
 	default void drawLevelCounter(GraphicsContext g, LevelCounter levelCounter) {
 		if (levelCounter.isVisible()) {
-			double x = levelCounter.getPosition().x;
+			double x = levelCounter.getPosition().x();
 			for (int symbol : levelCounter.symbols) {
-				drawSprite(g, getBonusSymbolSprite(symbol), x, levelCounter.getPosition().y);
+				drawSprite(g, getBonusSymbolSprite(symbol), x, levelCounter.getPosition().y());
 				x -= t(2);
 			}
 		}

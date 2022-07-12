@@ -24,9 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
-import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -115,8 +115,8 @@ public class GuysInfo {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
 		var scaling = playScene.getScaling();
-		textView.setX((entity.getPosition().x + World.HTS) * scaling - textSize.getWidth() / 2);
-		textView.setY(entity.getPosition().y * scaling - textSize.getHeight());
+		textView.setX((entity.getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
+		textView.setY(entity.getPosition().y() * scaling - textSize.getHeight());
 		textView.setVisible(entity.isVisible());
 	}
 
@@ -124,8 +124,8 @@ public class GuysInfo {
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
 		var scaling = playScene.getScaling();
-		textView.setX((bonus.entity().getPosition().x + World.HTS) * scaling - textSize.getWidth() / 2);
-		textView.setY(bonus.entity().getPosition().y * scaling - textSize.getHeight());
+		textView.setX((bonus.entity().getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
+		textView.setY(bonus.entity().getPosition().y() * scaling - textSize.getHeight());
 		textView.setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 

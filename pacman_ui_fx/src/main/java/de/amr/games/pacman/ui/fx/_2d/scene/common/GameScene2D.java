@@ -61,12 +61,12 @@ public abstract class GameScene2D implements GameScene {
 
 	protected GameScene2D(V2d size) {
 		unscaledSize = size;
-		canvas = new Canvas(unscaledSize.x, unscaledSize.y);
+		canvas = new Canvas(unscaledSize.x(), unscaledSize.y());
 		g = canvas.getGraphicsContext2D();
 		root = new StackPane(canvas, overlayCanvas, infoPane);
 		// without this, an ugly vertical white line appears left of the game scene:
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
-		fxSubScene = new SubScene(root, unscaledSize.x, unscaledSize.y);
+		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.widthProperty().bind(fxSubScene.widthProperty());
@@ -115,11 +115,11 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void resize(double height) {
-		double aspectRatio = unscaledSize.x / unscaledSize.y;
+		double aspectRatio = unscaledSize.x() / unscaledSize.y();
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		scalingPy.set(fxSubScene.getHeight() / unscaledSize.y);
+		scalingPy.set(fxSubScene.getHeight() / unscaledSize.y());
 		canvas.getTransforms().setAll(new Scale(getScaling(), getScaling()));
 	}
 

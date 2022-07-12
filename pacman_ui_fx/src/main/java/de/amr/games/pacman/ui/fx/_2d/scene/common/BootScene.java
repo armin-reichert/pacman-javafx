@@ -54,7 +54,7 @@ public class BootScene extends GameScene2D {
 	private final GraphicsContext bg;
 
 	public BootScene() {
-		buffer = new Canvas(unscaledSize.x, unscaledSize.y);
+		buffer = new Canvas(unscaledSize.x(), unscaledSize.y());
 		bg = buffer.getGraphicsContext2D();
 	}
 

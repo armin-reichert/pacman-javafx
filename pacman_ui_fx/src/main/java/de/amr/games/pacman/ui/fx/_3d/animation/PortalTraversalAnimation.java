@@ -98,7 +98,7 @@ public class PortalTraversalAnimation {
 	}
 
 	private boolean outsideWorld() {
-		double centerX = guy.getPosition().x + World.HTS;
+		double centerX = guy.getPosition().x() + World.HTS;
 		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}
 }
