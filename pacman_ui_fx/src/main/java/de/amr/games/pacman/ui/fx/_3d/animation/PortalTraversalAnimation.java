@@ -86,8 +86,8 @@ public class PortalTraversalAnimation {
 		double minDist = Double.MAX_VALUE;
 		for (var portal : world.portals()) {
 			if (portal instanceof HorizontalPortal horizontalPortal) {
-				var left = new V2d(horizontalPortal.getLeftTunnelEnd()).scaled(World.TS);
-				var right = new V2d(horizontalPortal.getRightTunnelEnd()).scaled(World.TS);
+				var left = new V2d(horizontalPortal.leftTunnelEnd()).scaled(World.TS);
+				var right = new V2d(horizontalPortal.rightTunnelEnd()).scaled(World.TS);
 				var dist = Math.min(guy.getPosition().euclideanDistance(left), guy.getPosition().euclideanDistance(right));
 				if (dist < minDist) {
 					minDist = dist;
