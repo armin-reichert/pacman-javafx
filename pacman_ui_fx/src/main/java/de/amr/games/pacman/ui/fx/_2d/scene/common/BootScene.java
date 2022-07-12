@@ -67,12 +67,12 @@ public class BootScene extends GameScene2D {
 	@Override
 	protected void update() {
 		var tick = ctx.state().timer().tick();
-		if (betweenSec(0.5, 2.0, tick) && tick % 5 == 0) {
-			drawRandomHexCodesIntoBuffer(bg);
-		} else if (betweenSec(2.0, 4.0, tick) && tick % 10 == 0) {
-			drawRandomSpritesIntoBuffer(bg);
+		if (betweenSec(0.5, 1.5, tick) && tick % 5 == 0) {
+			drawRandomHexCodesIntoBuffer();
+		} else if (betweenSec(1.5, 4.0, tick) && tick % 10 == 0) {
+			drawRandomSpritesIntoBuffer();
 		} else if (tick == TickTimer.secToTicks(4.0)) {
-			drawGridIntoBuffer(bg);
+			drawGridIntoBuffer();
 		}
 	}
 
@@ -90,20 +90,20 @@ public class BootScene extends GameScene2D {
 		return TickTimer.secToTicks(secLeft) <= tick && tick < TickTimer.secToTicks(secRight);
 	}
 
-	private void drawRandomHexCodesIntoBuffer(GraphicsContext g) {
+	private void drawRandomHexCodesIntoBuffer() {
 		clearBuffer();
-		g.setFill(Color.LIGHTGRAY);
-		g.setFont(SpritesheetPacMan.get().getArcadeFont());
+		bg.setFill(Color.LIGHTGRAY);
+		bg.setFont(SpritesheetPacMan.get().getArcadeFont());
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
 				var hexCode = Integer.toHexString(rnd.nextInt(16));
-				g.fillText(hexCode, col * 8, row * 8 + 8);
+				bg.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
 		LOGGER.trace("Hex codes");
 	}
 
-	private void drawRandomSpritesIntoBuffer(GraphicsContext g) {
+	private void drawRandomSpritesIntoBuffer() {
 		clearBuffer();
 		var sheet = ctx.gameVariant() == GameVariant.MS_PACMAN ? SpritesheetMsPacMan.get() : SpritesheetPacMan.get();
 		var sheetWidth = sheet.getSourceImage().getWidth();
@@ -119,24 +119,24 @@ public class BootScene extends GameScene2D {
 			var r2 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), cellSize, cellSize);
 			var split = numCols / 3 + rnd.nextInt(numCols / 3);
 			for (int col = 0; col < numCols; ++col) {
-				sheet.drawSprite(g, col < split ? r1 : r2, cellSize * col, cellSize * row);
+				sheet.drawSprite(bg, col < split ? r1 : r2, cellSize * col, cellSize * row);
 			}
 		}
 		LOGGER.trace("Random sprites");
 	}
 
-	private void drawGridIntoBuffer(GraphicsContext g) {
+	private void drawGridIntoBuffer() {
 		var cellSize = 16;
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
 		clearBuffer();
-		g.setStroke(Color.LIGHTGRAY);
-		g.setLineWidth(2.0);
+		bg.setStroke(Color.LIGHTGRAY);
+		bg.setLineWidth(2.0);
 		for (int row = 0; row < numRows; ++row) {
-			g.strokeLine(0, row * cellSize, ArcadeWorld.TILES_X * TS, row * cellSize);
+			bg.strokeLine(0, row * cellSize, ArcadeWorld.TILES_X * TS, row * cellSize);
 		}
 		for (int col = 0; col < numCols; ++col) {
-			g.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
+			bg.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
 		}
 		LOGGER.trace("Grid");
 	}
