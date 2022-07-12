@@ -48,7 +48,7 @@ public class GhostBodyAnimation {
 
 	private final CreatureMotionAnimation motion;
 
-	private final ObjectProperty<Color> dressColorPy;
+	public final ObjectProperty<Color> dressColorPy;
 	private final ObjectProperty<Color> eyeBallsColorPy;
 	private final ObjectProperty<Color> eyePupilsColorPy;
 
