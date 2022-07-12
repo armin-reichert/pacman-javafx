@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Creature;
+import de.amr.games.pacman.model.common.world.HorizontalPortal;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
@@ -84,11 +85,13 @@ public class PortalTraversalAnimation {
 	private double distFromNearestPortal() {
 		double minDist = Double.MAX_VALUE;
 		for (var portal : world.portals()) {
-			var left = new V2d(portal.left).scaled(World.TS);
-			var right = new V2d(portal.right).scaled(World.TS);
-			var dist = Math.min(guy.getPosition().euclideanDistance(left), guy.getPosition().euclideanDistance(right));
-			if (dist < minDist) {
-				minDist = dist;
+			if (portal instanceof HorizontalPortal horizontalPortal) {
+				var left = new V2d(horizontalPortal.getLeftTunnelEnd()).scaled(World.TS);
+				var right = new V2d(horizontalPortal.getRightTunnelEnd()).scaled(World.TS);
+				var dist = Math.min(guy.getPosition().euclideanDistance(left), guy.getPosition().euclideanDistance(right));
+				if (dist < minDist) {
+					minDist = dist;
+				}
 			}
 		}
 		return minDist;
