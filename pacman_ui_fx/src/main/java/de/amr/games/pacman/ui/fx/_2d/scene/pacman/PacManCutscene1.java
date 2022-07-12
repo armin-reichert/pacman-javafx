@@ -58,7 +58,7 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.setAnimationSet(new PacAnimations(pac, ctx.r2D));
 		var big = ((SpritesheetPacMan) ctx.r2D).createBigPacManMunchingAnimation();
 		pac.animationSet().ifPresent(animations -> animations.put("big", big));
-		pac.setAnimation(AnimKeys.PAC_MUNCHING);
+		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
 		pac.placeAtTile(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.25);
