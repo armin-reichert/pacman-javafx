@@ -84,8 +84,10 @@ public class Ghost3D extends Group {
 		if (mode != Mode.NUMBER) {
 			body.update();
 		}
-		// until we have an animation for portal traversal of ghosts
-		ghost.setVisible(game.world().insideMap(ghost.tile()));
+		setOpacity(1.0);
+		game.world().portals().stream().filter(portal -> portal.contains(ghost.tile())).findFirst().ifPresent(portal -> {
+			setOpacity(portal.closeness(ghost));
+		});
 	}
 
 	private Mode frightenedMode(GameModel game) {
