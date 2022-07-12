@@ -197,7 +197,7 @@ public class Maze3D extends Group {
 	private boolean isAnyGhostGettingAccess(Stream<Ghost> ghosts, V2d centerPosition) {
 		return ghosts //
 				.filter(Ghost::isVisible) //
-				.filter(ghost -> ghost.is(GhostState.DEAD, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
+				.filter(ghost -> ghost.is(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
 				.anyMatch(ghost -> isGhostGettingAccess(ghost, centerPosition));
 	}
 

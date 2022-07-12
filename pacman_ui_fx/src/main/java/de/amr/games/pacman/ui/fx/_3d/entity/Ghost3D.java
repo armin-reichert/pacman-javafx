@@ -74,7 +74,8 @@ public class Ghost3D extends Group {
 		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() ? frightenedMode(game) : Mode.COLORED_DRESS;
 		case FRIGHTENED -> frightenedMode(game);
 		case ENTERING_HOUSE -> Mode.EYES;
-		case DEAD -> ghost.killIndex >= 0 ? Mode.NUMBER : Mode.EYES;
+		case EATEN -> Mode.NUMBER;
+		case RETURNING_TO_HOUSE -> Mode.EYES;
 		default -> Mode.COLORED_DRESS;
 		};
 		if (mode != newMode) {
@@ -98,7 +99,7 @@ public class Ghost3D extends Group {
 		case FLASHING_DRESS -> body.wearBlueDress(game.level.numFlashes);
 		case EYES -> body.dress().setVisible(false);
 		case NUMBER -> {
-			value.selectNumberAtIndex(ghost.killIndex);
+			value.selectNumberAtIndex(ghost.killedIndex);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
 			setRotate(0);
