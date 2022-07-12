@@ -120,25 +120,25 @@ public class MsPacManIntroScene extends GameScene2D {
 	private void drawTitle(GraphicsContext g) {
 		g.setFont(ctx.r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", icc.titlePosition.x, icc.titlePosition.y);
+		g.fillText("\"MS PAC-MAN\"", icc.titlePosition.x(), icc.titlePosition.y());
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
 		g.setFill(Color.WHITE);
 		g.setFont(ctx.r2D.getArcadeFont());
 		if (ghost.id == Ghost.RED_GHOST) {
-			g.fillText("WITH", icc.titlePosition.x, icc.lightsTopLeft.y + t(3));
+			g.fillText("WITH", icc.titlePosition.x(), icc.lightsTopLeft.y() + t(3));
 		}
 		g.setFill(ctx.r2D.getGhostColor(ghost.id));
-		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), icc.lightsTopLeft.y + t(6));
+		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), icc.lightsTopLeft.y() + t(6));
 	}
 
 	private void drawMsPacManText(GraphicsContext g) {
 		g.setFill(Color.WHITE);
 		g.setFont(ctx.r2D.getArcadeFont());
-		g.fillText("STARRING", icc.titlePosition.x, icc.lightsTopLeft.y + t(3));
+		g.fillText("STARRING", icc.titlePosition.x(), icc.lightsTopLeft.y() + t(3));
 		g.setFill(Color.YELLOW);
-		g.fillText("MS PAC-MAN", icc.titlePosition.x, icc.lightsTopLeft.y + t(6));
+		g.fillText("MS PAC-MAN", icc.titlePosition.x(), icc.lightsTopLeft.y() + t(6));
 	}
 
 	private void drawLights(GraphicsContext g, int numDotsX, int numDotsY) {
@@ -159,7 +159,7 @@ public class MsPacManIntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(icc.lightsTopLeft.x + 4 * x, icc.lightsTopLeft.y + 4 * y, 2, 2);
+			g.fillRect(icc.lightsTopLeft.x() + 4 * x, icc.lightsTopLeft.y() + 4 * y, 2, 2);
 		}
 	}
 }

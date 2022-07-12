@@ -50,8 +50,8 @@ public class Door3D extends Box {
 		depthProperty().bind(doorHeightPy.add(2));
 		setUserData(this); // to access this from scene graph node
 		setMaterial(new PhongMaterial(color));
-		setTranslateX((double) tile.x * TS + HTS);
-		setTranslateY((double) tile.y * TS + HTS);
+		setTranslateX((double) tile.x() * TS + HTS);
+		setTranslateY((double) tile.y() * TS + HTS);
 		translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
 		drawModeProperty().bind(Env.drawModePy);
 	}

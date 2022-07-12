@@ -263,7 +263,7 @@ public interface Rendering2D {
 	default void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersDark) {
 		Consumer<V2i> clearTile = tile -> {
 			g.setFill(Color.BLACK);
-			g.fillRect(t(tile.x), t(tile.y), TS, TS);
+			g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 		};
 		g.drawImage(getMazeFullImage(mazeNumber), x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(clearTile::accept);
@@ -276,10 +276,10 @@ public interface Rendering2D {
 		g.setStroke(Color.GRAY);
 		g.setLineWidth(0.5);
 		for (int row = 0; row <= ArcadeWorld.TILES_Y; ++row) {
-			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.WORLD_SIZE.x, scale * t(row));
+			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.WORLD_SIZE.x(), scale * t(row));
 		}
 		for (int col = 0; col <= ArcadeWorld.TILES_X; ++col) {
-			g.strokeLine(scale * t(col), 0, scale * t(col), scale * ArcadeWorld.WORLD_SIZE.y);
+			g.strokeLine(scale * t(col), 0, scale * t(col), scale * ArcadeWorld.WORLD_SIZE.y());
 		}
 	}
 }
