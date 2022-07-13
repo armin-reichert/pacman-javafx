@@ -90,7 +90,7 @@ public class Ghost3D extends Group {
 		if (mode != Mode.NUMBER) {
 			body.update();
 		}
-		setVisible(true);
+		setVisible(ghost.isVisible());
 		setOpacity(1.0);
 		game.world().portals().stream().filter(portal -> portal.distance(ghost) <= 30.0).findFirst().ifPresent(portal -> {
 			var distance = portal.distance(ghost);
