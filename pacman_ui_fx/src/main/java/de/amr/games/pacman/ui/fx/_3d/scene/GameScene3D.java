@@ -31,13 +31,10 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.CoordSystem;
 import javafx.beans.binding.DoubleExpression;
-import javafx.collections.ObservableList;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
 /**
@@ -45,27 +42,25 @@ import javafx.scene.transform.Translate;
  */
 public abstract class GameScene3D implements GameScene {
 
-	private final SubScene fxSubScene;
-	private final Group contentRoot = new Group();
-	protected double width;
-	protected double height;
+	protected final SubScene fxSubScene;
+	protected final Group contentRoot = new Group();
+	protected AmbientLight light;
+	protected CoordSystem coordSystem;
 	protected SceneContext ctx;
 
 	protected GameScene3D(double width, double height) {
+		coordSystem = new CoordSystem(1000);
+		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
+		light = new AmbientLight(Env.lightColor3D.get());
+		light.colorProperty().bind(Env.lightColor3D);
+		// origin is at center of scene content
 		contentRoot.getTransforms().add(new Translate(-width / 2, -height / 2));
-		var coords = new CoordSystem(1000);
-		coords.visibleProperty().bind(Env.axesVisiblePy);
-		var light = new AmbientLight(Color.GHOSTWHITE);
-		var fxSceneRoot = new Group(contentRoot, coords, light);
-		fxSubScene = new SubScene(fxSceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
+		// initial size does not matter, subscene is resized automatically
+		fxSubScene = new SubScene(new Group(contentRoot, coordSystem, light), 50, 50, true, SceneAntialiasing.BALANCED);
 	}
 
 	protected GameScene3D() {
 		this(ArcadeWorld.TILES_X * World.TS, ArcadeWorld.TILES_Y * World.TS);
-	}
-
-	protected ObservableList<Node> content() {
-		return contentRoot.getChildren();
 	}
 
 	@Override
