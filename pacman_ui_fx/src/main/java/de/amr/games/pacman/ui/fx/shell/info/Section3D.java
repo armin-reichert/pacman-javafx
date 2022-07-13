@@ -44,15 +44,16 @@ import javafx.scene.text.Font;
  */
 public class Section3D extends Section {
 
-	private ComboBox<Perspective> comboPerspective;
-	private CheckBox cbSquirting;
-	private ComboBox<Integer> comboResolution;
-	private Slider sliderWallHeight;
-	private ColorPicker pickerBgColor;
-	private ComboBox<String> comboFloorTexture;
-	private ColorPicker pickerFloorColor;
-	private CheckBox cbAxesVisible;
-	private CheckBox cbWireframeMode;
+	private final ComboBox<Perspective> comboPerspective;
+	private final CheckBox cbSquirting;
+	private final ComboBox<Integer> comboResolution;
+	private final Slider sliderWallHeight;
+	private final ColorPicker pickerLightColor;
+	private final ColorPicker pickerBgColor;
+	private final ComboBox<String> comboFloorTexture;
+	private final ColorPicker pickerFloorColor;
+	private final CheckBox cbAxesVisible;
+	private final CheckBox cbWireframeMode;
 
 	public Section3D(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
@@ -60,10 +61,12 @@ public class Section3D extends Section {
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.perspectivePy.set(comboPerspective.getValue()));
 		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingPy));
-		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		addInfo("Camera",
 				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.getCamera().transformInfo() : "")
 						.available(() -> gameScene().is3D());
+		pickerLightColor = addColorPicker("Light color", Env.lightColorPy.get());
+		pickerLightColor.setOnAction(e -> Env.lightColorPy.set(pickerLightColor.getValue()));
+		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		comboResolution.setOnAction(e -> Env.mazeResolutionPy.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
 		sliderWallHeight.valueProperty()

@@ -51,8 +51,8 @@ public abstract class GameScene3D implements GameScene {
 	protected GameScene3D(double width, double height) {
 		coordSystem = new CoordSystem(1000);
 		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
-		light = new AmbientLight(Env.lightColor3D.get());
-		light.colorProperty().bind(Env.lightColor3D);
+		light = new AmbientLight(Env.lightColorPy.get());
+		light.colorProperty().bind(Env.lightColorPy);
 		// origin is at center of scene content
 		contentRoot.getTransforms().add(new Translate(-width / 2, -height / 2));
 		// initial size does not matter, subscene is resized automatically
