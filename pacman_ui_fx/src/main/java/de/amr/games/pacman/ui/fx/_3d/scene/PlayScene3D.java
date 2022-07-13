@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -141,11 +142,16 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
+		var world = ctx.game().world();
 		var maze3D = world3D.getMaze3D();
+		// when cheat "eat all pellets" is used, no tile is present in the event
 		if (e.tile.isEmpty()) {
-			// when cheat "eat all pellets" is used, no tile is present in the event
-			ctx.game().level.world.tiles().filter(ctx.game().level.world::containsEatenFood)
-					.forEach(tile -> maze3D.pelletAt(tile).ifPresent(maze3D::eatPellet));
+			world.tiles()//
+					.filter(world::containsEatenFood)//
+					.map(maze3D::pelletAt)//
+					.filter(Optional::isPresent)//
+					.map(Optional::get)//
+					.forEach(maze3D::eatPellet);
 		} else {
 			maze3D.pelletAt(e.tile.get()).ifPresent(maze3D::eatPellet);
 		}
