@@ -258,8 +258,7 @@ public class Maze3D extends Group {
 	}
 
 	public void eatPellet(Pellet3D pellet3D) {
-		if (pellet3D instanceof Energizer3D) {
-			var energizer = (Energizer3D) pellet3D;
+		if (pellet3D instanceof Energizer3D energizer) {
 			energizer.stopPumping();
 		}
 		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,

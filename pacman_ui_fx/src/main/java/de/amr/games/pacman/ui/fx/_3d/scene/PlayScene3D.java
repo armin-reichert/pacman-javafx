@@ -84,7 +84,7 @@ public class PlayScene3D extends GameScene3D {
 		content.add(world3D);
 		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D, Rendering3D.getPacSkullColor(),
 				Rendering3D.getPacEyesColor(), Rendering3D.getPacPalateColor());
-		pac3D.reset(ctx.game().world());
+		pac3D.reset();
 		content.add(pac3D);
 		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D, ctx.r2D)).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content::add);
@@ -185,7 +185,7 @@ public class PlayScene3D extends GameScene3D {
 		switch (e.newGameState) {
 		case READY -> {
 			maze3D.reset();
-			pac3D.reset(ctx.game().world());
+			pac3D.reset();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
 		case HUNTING -> maze3D.energizers3D().forEach(Energizer3D::startPumping);
