@@ -32,7 +32,6 @@ import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -55,7 +54,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac = new Pac("Pac-Man");
 		pac.setAnimationSet(ctx.r2D.createPacAnimationSet(pac));
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimationSet(new GhostAnimations(blinky, ctx.r2D));
+		blinky.setAnimationSet(ctx.r2D.createGhostAnimationSet(blinky));
 		blinky.animationSet().ifPresent(animations -> {
 			animations.put("patched", SpritesheetPacMan.get().createBlinkyPatchedAnimation());
 			animations.put("naked", SpritesheetPacMan.get().createBlinkyNakedAnimation());

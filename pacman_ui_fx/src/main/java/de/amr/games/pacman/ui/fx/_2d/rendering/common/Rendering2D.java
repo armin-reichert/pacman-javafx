@@ -98,6 +98,17 @@ public interface Rendering2D {
 
 	SingleEntityAnimation<Rectangle2D> createPacDyingAnimation();
 
+	default EntityAnimationSet createGhostAnimationSet(Ghost ghost) {
+		EntityAnimationSet set = new EntityAnimationSet(5);
+		set.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
+		set.put(AnimKeys.GHOST_EYES, createGhostEyesAnimationMap(ghost));
+		set.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
+		set.put(AnimKeys.GHOST_COLOR, createGhostColorAnimationMap(ghost));
+		set.put(AnimKeys.GHOST_VALUE, createGhostValueList());
+		set.select(AnimKeys.GHOST_COLOR);
+		return set;
+	}
+
 	EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost);
 
 	SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation();

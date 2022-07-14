@@ -33,7 +33,6 @@ import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -78,7 +77,7 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.setAbsSpeed(0);
 		blinky.hide();
 
-		var blinkyAnimations = new GhostAnimations(blinky, ctx.r2D);
+		var blinkyAnimations = ctx.r2D.createGhostAnimationSet(blinky);
 		damagedAnimation = ((SpritesheetPacMan) ctx.r2D).createBlinkyDamagedAnimation();
 		blinkyAnimations.put(DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);

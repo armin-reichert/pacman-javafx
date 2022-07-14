@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -67,9 +66,9 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		icc.inky.setAnimationSet(new GhostAnimations(icc.inky, ctx.r2D));
+		icc.inky.setAnimationSet(ctx.r2D.createGhostAnimationSet(icc.inky));
 		icc.inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		icc.pinky.setAnimationSet(new GhostAnimations(icc.pinky, ctx.r2D));
+		icc.pinky.setAnimationSet(ctx.r2D.createGhostAnimationSet(icc.pinky));
 		icc.pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 	}
 
