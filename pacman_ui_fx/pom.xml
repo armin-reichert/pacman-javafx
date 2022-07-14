@@ -4,10 +4,10 @@
 	<artifactId>pacman_ui_fx</artifactId>
 	<version>1.0</version>
 	<properties>
-		<javafx.version>17.0.2</javafx.version>
+		<javafx.version>18.0.1</javafx.version>
 		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>18</maven.compiler.source>
+		<maven.compiler.target>18</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
 	</properties>
