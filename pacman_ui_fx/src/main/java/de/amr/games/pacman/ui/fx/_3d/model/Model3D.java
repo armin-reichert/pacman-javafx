@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Bounds;
@@ -52,6 +51,9 @@ import javafx.scene.transform.Translate;
 public class Model3D {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
+	private static final double PAC_SIZE = 9.0;
+	private static final double GHOST_SIZE = 8.5;
 
 	private static Model3D theThing;
 
@@ -101,7 +103,8 @@ public class Model3D {
 		});
 
 		var root3D = new Group(face, eyes, palate);
-		root3D.getTransforms().add(scale(root3D, 8.5));
+		root3D.getTransforms().add(new Translate(0, 0, -0.25));
+		root3D.getTransforms().add(scale(root3D, PAC_SIZE));
 		root3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
 		return root3D;
@@ -139,7 +142,7 @@ public class Model3D {
 
 		var ghost = new Group(dress, eyes);
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		ghost.getTransforms().add(scale(ghost, World.TS));
+		ghost.getTransforms().add(scale(ghost, GHOST_SIZE));
 
 		return ghost;
 	}
