@@ -158,7 +158,7 @@ public class Actions {
 
 	public static void togglePaused() {
 		Env.toggle(Env.pausedPy);
-		theGameController.sounds().setSilent(Env.pausedPy.get());
+		theGameController.sounds().setMuted(Env.pausedPy.get());
 	}
 
 	public static void singleStep() {

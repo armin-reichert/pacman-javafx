@@ -132,14 +132,6 @@ public class GameSounds implements GameSoundController {
 	}
 
 	@Override
-	public void setSilent(boolean silent) {
-		this.silent = silent;
-		if (silent) {
-			stopAll();
-		}
-	}
-
-	@Override
 	public boolean isMuted() {
 		return muted;
 	}

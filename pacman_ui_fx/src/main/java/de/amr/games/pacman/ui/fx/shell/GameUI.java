@@ -129,7 +129,7 @@ public class GameUI implements GameEventAdapter {
 		if (steering instanceof KeyboardSteering keySteering) {
 			mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
-		gameController.setPacSteering(currentSteering);
+		gameController.setSteering(currentSteering);
 	}
 
 	public GameLoop getGameLoop() {
