@@ -33,7 +33,6 @@ import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -55,7 +54,7 @@ public class PacManCutscene1 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimationSet(new PacAnimations(pac, ctx.r2D));
+		pac.setAnimationSet(ctx.r2D.createPacAnimationSet(pac));
 		var big = ((SpritesheetPacMan) ctx.r2D).createBigPacManMunchingAnimation();
 		pac.animationSet().ifPresent(animations -> animations.put("big", big));
 		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);

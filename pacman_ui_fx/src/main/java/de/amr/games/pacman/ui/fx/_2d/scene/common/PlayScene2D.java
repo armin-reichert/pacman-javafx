@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -60,7 +59,7 @@ public class PlayScene2D extends GameScene2D {
 		var game = ctx.game();
 		var arcadeWorld = (ArcadeWorld) game.world();
 		arcadeWorld.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(game.level.mazeNumber));
-		game.pac.setAnimationSet(new PacAnimations(game.pac, ctx.r2D));
+		game.pac.setAnimationSet(ctx.r2D.createPacAnimationSet(game.pac));
 		game.ghosts().forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D)));
 		LOGGER.info("Recreated animations for maze, Pac-Man and the ghosts.");
 	}

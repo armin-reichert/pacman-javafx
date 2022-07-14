@@ -32,7 +32,6 @@ import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostAnimations;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.PacAnimations;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -66,7 +65,7 @@ public class PacManIntroScene extends GameScene2D {
 	public void init() {
 		sceneController.restartInInitialState(IntroController.State.START);
 		creditVisible = false;
-		icc.pacMan.setAnimationSet(new PacAnimations(icc.pacMan, ctx.r2D));
+		icc.pacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.pacMan));
 		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimationSet(new GhostAnimations(ghost, ctx.r2D)));
 	}
 

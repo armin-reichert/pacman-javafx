@@ -39,6 +39,7 @@ import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.LevelCounter;
+import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -84,6 +85,14 @@ public interface Rendering2D {
 	Rectangle2D getBonusValueSprite(int symbol);
 
 	// Animations
+
+	default EntityAnimationSet createPacAnimationSet(Pac pac) {
+		EntityAnimationSet set = new EntityAnimationSet(2);
+		set.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
+		set.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimationMap(pac));
+		set.select(AnimKeys.PAC_MUNCHING);
+		return set;
+	}
 
 	EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac);
 
