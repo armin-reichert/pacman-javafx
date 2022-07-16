@@ -43,6 +43,7 @@ import javafx.scene.paint.Color;
 public class World3D extends Group {
 
 	private final Maze3D maze3D;
+	private final Food3D food3D;
 	private final Scores3D scores3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
@@ -66,7 +67,6 @@ public class World3D extends Group {
 		mazeStyle.pelletColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 
 		maze3D = new Maze3D(game.variant, game.level.world, mazeStyle);
-		maze3D.getFood().squirtingPy.bind(Env.squirtingPy);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
 				Env.floorTexturePy));
@@ -74,6 +74,10 @@ public class World3D extends Group {
 		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
 		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
 		getChildren().add(maze3D);
+
+		food3D = new Food3D(game.variant, game.world(), mazeStyle);
+		food3D.squirtingPy.bind(Env.squirtingPy);
+		getChildren().add(food3D);
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpriteImage(r2D.getBonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world.numCols() - 1) * TS, TS);
@@ -94,6 +98,14 @@ public class World3D extends Group {
 
 	public Maze3D getMaze3D() {
 		return maze3D;
+	}
+
+	public Food3D getFood3D() {
+		return food3D;
+	}
+
+	public void reset() {
+		food3D.resetAnimations();
 	}
 
 	public void update(GameModel game) {

@@ -134,10 +134,9 @@ public class PlayScene3D extends GameScene3D {
 
 	public void onSwitchFrom2D() {
 		var world = ctx.game().world();
-		var maze3D = world3D.getMaze3D();
-		maze3D.getFood().pellets3D().forEach(shape3D -> shape3D.setVisible(!world.containsEatenFood(shape3D.tile())));
+		world3D.getFood3D().pellets3D().forEach(shape3D -> shape3D.setVisible(!world.containsEatenFood(shape3D.tile())));
 		if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
-			maze3D.getFood().energizers3D().forEach(Energizer3D::startPumping);
+			world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
 		}
 	}
 
@@ -149,12 +148,12 @@ public class PlayScene3D extends GameScene3D {
 		if (e.tile.isEmpty()) {
 			world.tiles()//
 					.filter(world::containsEatenFood)//
-					.map(maze3D.getFood()::pelletAt)//
+					.map(world3D.getFood3D()::pelletAt)//
 					.filter(Optional::isPresent)//
 					.map(Optional::get)//
 					.forEach(maze3D::eatPellet);
 		} else {
-			maze3D.getFood().pelletAt(e.tile.get()).ifPresent(maze3D::eatPellet);
+			world3D.getFood3D().pelletAt(e.tile.get()).ifPresent(maze3D::eatPellet);
 		}
 	}
 
@@ -184,11 +183,11 @@ public class PlayScene3D extends GameScene3D {
 		var maze3D = world3D.getMaze3D();
 		switch (e.newGameState) {
 		case READY -> {
-			maze3D.reset();
+			world3D.reset();
 			pac3D.reset();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
-		case HUNTING -> maze3D.getFood().energizers3D().forEach(Energizer3D::startPumping);
+		case HUNTING -> world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
 		case PACMAN_DYING -> {
 			var killer = ctx.game().ghosts().filter(ctx.game().pac::sameTile).findAny();
 			if (killer.isPresent()) {
@@ -227,7 +226,7 @@ public class PlayScene3D extends GameScene3D {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			maze3D.getFood().energizers3D().forEach(Energizer3D::stopPumping);
+			world3D.getFood3D().energizers3D().forEach(Energizer3D::stopPumping);
 			bonus3D.setVisible(false);
 		}
 	}

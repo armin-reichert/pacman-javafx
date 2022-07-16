@@ -56,15 +56,34 @@ public class Food3D extends Group {
 		normalPelletMaterial = new PhongMaterial(mazeStyle.pelletColor);
 		squirtingPelletMaterial = new PhongMaterial(gameVariant == GameVariant.PACMAN ? Color.CORNFLOWERBLUE : Color.RED);
 		squirtingPy.addListener((obs, oldVal, newVal) -> updateFood());
-		rebuildFood();
-	}
-
-	private void rebuildFood() {
-		getChildren().clear();
-		particleGroup.getChildren().clear();
 		createPellets(squirtingPy.get());
 		createEnergizers(squirtingPy.get());
 		getChildren().add(particleGroup);
+	}
+
+	private void updateFood() {
+		boolean squirtingEnabled = squirtingPy.get();
+		energizers3D().forEach(energizer3D -> {
+			if (squirtingEnabled) {
+				energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
+			} else {
+				energizer3D.setEatenAnimation(null);
+			}
+		});
+		pellets3D()//
+				.filter(pellet3D -> world.containsFood(pellet3D.tile()))//
+				.filter(Predicate.not(Energizer3D.class::isInstance))//
+				.forEach(pellet3D -> {
+					if (squirtingEnabled && isSquirterTile(pellet3D.tile())) {
+						pellet3D.setRadius(1.5);
+						pellet3D.setMaterial(squirtingPelletMaterial);
+						pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
+					} else {
+						pellet3D.setRadius(1.0);
+						pellet3D.setMaterial(normalPelletMaterial);
+						pellet3D.setEatenAnimation(null);
+					}
+				});
 	}
 
 	private void createPellets(boolean squirtingEnabled) {
@@ -108,31 +127,6 @@ public class Food3D extends Group {
 
 	private boolean isSquirterTile(V2i tile) {
 		return tile.neighbors().filter(world::isWall).count() == 0;
-	}
-
-	private void updateFood() {
-		boolean squirtingEnabled = squirtingPy.get();
-		energizers3D().forEach(energizer3D -> {
-			if (squirtingEnabled) {
-				energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
-			} else {
-				energizer3D.setEatenAnimation(null);
-			}
-		});
-		pellets3D()//
-				.filter(pellet3D -> world.containsFood(pellet3D.tile()))//
-				.filter(Predicate.not(Energizer3D.class::isInstance))//
-				.forEach(pellet3D -> {
-					if (squirtingEnabled && isSquirterTile(pellet3D.tile())) {
-						pellet3D.setRadius(1.5);
-						pellet3D.setMaterial(squirtingPelletMaterial);
-						pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
-					} else {
-						pellet3D.setRadius(1.0);
-						pellet3D.setMaterial(normalPelletMaterial);
-						pellet3D.setEatenAnimation(null);
-					}
-				});
 	}
 
 	/**

@@ -94,27 +94,14 @@ public class Maze3D extends Group {
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 
-	private Food3D food;
-
 	public Maze3D(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
 		this.world = world;
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(mazeStyle);
 		getChildren().add(foundationGroup);
-		addFood(gameVariant, world, mazeStyle);
 		resolutionPy.addListener((obs, oldVal, newVal) -> build(mazeStyle));
 		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
-	}
-
-	public void addFood(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
-		food = new Food3D(gameVariant, world, mazeStyle);
-		getChildren().clear();
-		getChildren().addAll(foundationGroup, food);
-	}
-
-	public Food3D getFood() {
-		return food;
 	}
 
 	private Node createFloor() {
@@ -176,10 +163,6 @@ public class Maze3D extends Group {
 
 	public Animation createMazeFlashingAnimation(int times) {
 		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
-	}
-
-	public void reset() {
-		food.resetAnimations();
 	}
 
 	// should be generalized to work with any ghost house
