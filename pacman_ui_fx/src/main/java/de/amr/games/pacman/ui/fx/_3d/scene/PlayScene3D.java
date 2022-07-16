@@ -34,7 +34,6 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -72,8 +71,8 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D implements GameScene {
 
-	public static final double WIDTH = ArcadeWorld.TILES_X * World.TS;
-	public static final double HEIGHT = ArcadeWorld.TILES_Y * World.TS;
+	public static final double WIDTH = ArcadeWorld.WORLD_SIZE.x();
+	public static final double HEIGHT = ArcadeWorld.WORLD_SIZE.y();
 
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 	private final SubScene fxSubScene;
