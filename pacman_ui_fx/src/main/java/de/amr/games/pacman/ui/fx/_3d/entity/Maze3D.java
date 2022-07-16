@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -42,7 +41,6 @@ import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
@@ -93,24 +91,21 @@ public class Maze3D extends Group {
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(1.0);
 	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>();
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>();
-	public final BooleanProperty squirtingPy = new SimpleBooleanProperty(false);
+	public final BooleanProperty squirtingPelletsPy = new SimpleBooleanProperty(false);
 
-	private final GameVariant gameVariant;
 	private final World world;
 	private final Group foundationGroup = new Group();
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
-	private final Group foodGroup = new Group();
-	private final Group particleGroup = new Group();
+	private final Food3D food3D;
 
 	public Maze3D(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
-		this.gameVariant = gameVariant;
 		this.world = world;
-		getChildren().addAll(foundationGroup, foodGroup, particleGroup);
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(mazeStyle);
-		addFood(mazeStyle);
-		squirtingPy.addListener((obs, oldVal, newVal) -> updateSquirting(mazeStyle));
+		food3D = new Food3D(gameVariant, world, mazeStyle);
+		food3D.squirtingPy.bind(squirtingPelletsPy);
+		getChildren().addAll(foundationGroup, food3D);
 		resolutionPy.addListener((obs, oldVal, newVal) -> build(mazeStyle));
 		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
@@ -205,54 +200,6 @@ public class Maze3D extends Group {
 		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 
-	private void updateSquirting(MazeStyle mazeStyle) {
-		addFood(mazeStyle);
-	}
-
-	private void addFood(MazeStyle mazeStyle) {
-		foodGroup.getChildren().clear();
-		particleGroup.getChildren().clear();
-		if (squirtingPy.get()) {
-			createSquirtingPellets(mazeStyle);
-		} else {
-			createStandardPellets(mazeStyle.pelletColor);
-		}
-	}
-
-	private void createSquirtingPellets(MazeStyle mazeStyle) {
-		var pelletMaterial = new PhongMaterial(mazeStyle.pelletColor);
-		var squirtMaterial = new PhongMaterial(gameVariant == GameVariant.PACMAN ? Color.CORNFLOWERBLUE : Color.RED);
-		world.tiles() //
-				.filter(world::isFoodTile) //
-				.filter(Predicate.not(world::containsEatenFood)) //
-				.map(tile -> {
-					if (world.isEnergizerTile(tile)) {
-						var energizer3D = new Energizer3D(tile, pelletMaterial);
-						energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
-						return energizer3D;
-					} else {
-						if (tile.neighbors().filter(world::isWall).count() == 0) {
-							var pellet3D = new Pellet3D(tile, squirtMaterial, 1.5);
-							pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
-							return pellet3D;
-						} else {
-							return new Pellet3D(tile, pelletMaterial);
-						}
-					}
-				}).forEach(foodGroup.getChildren()::add);
-	}
-
-	private void createStandardPellets(Color pelletColor) {
-		var pelletMaterial = new PhongMaterial(pelletColor);
-		world.tiles()//
-				.filter(world::isFoodTile)//
-				.filter(Predicate.not(world::containsEatenFood))//
-				.map(tile -> world.isEnergizerTile(tile)//
-						? new Energizer3D(tile, pelletMaterial)//
-						: new Pellet3D(tile, pelletMaterial, 1.0))//
-				.forEach(foodGroup.getChildren()::add);
-	}
-
 	public Optional<Pellet3D> pelletAt(V2i tile) {
 		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
 	}
@@ -276,7 +223,7 @@ public class Maze3D extends Group {
 	 * @return all 3D pellets, including energizers
 	 */
 	public Stream<Pellet3D> pellets3D() {
-		return foodGroup.getChildren().stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
+		return food3D.getChildren().stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
 	}
 
 	public Stream<Energizer3D> energizers3D() {

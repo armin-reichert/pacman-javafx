@@ -66,7 +66,7 @@ public class World3D extends Group {
 		mazeStyle.pelletColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
 
 		maze3D = new Maze3D(game.variant, game.level.world, mazeStyle);
-		maze3D.squirtingPy.bind(Env.squirtingPy);
+		maze3D.squirtingPelletsPy.bind(Env.squirtingPy);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
 				Env.floorTexturePy));
