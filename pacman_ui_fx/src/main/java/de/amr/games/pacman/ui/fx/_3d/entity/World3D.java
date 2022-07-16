@@ -139,5 +139,4 @@ public class World3D extends Group {
 	private boolean isGhostGettingAccess(Ghost ghost, V2d doorCenter) {
 		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
-
 }

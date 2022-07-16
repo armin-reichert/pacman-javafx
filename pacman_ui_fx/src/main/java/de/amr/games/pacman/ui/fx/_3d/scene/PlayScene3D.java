@@ -33,6 +33,8 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -47,33 +49,67 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.texts.Texts;
+import de.amr.games.pacman.ui.fx.util.CoordSystem;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
+import javafx.beans.binding.DoubleExpression;
+import javafx.scene.AmbientLight;
+import javafx.scene.Group;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.transform.Translate;
 
 /**
  * 3D play scene with sound and animations.
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends GameScene3D {
+public class PlayScene3D implements GameScene {
+
+	public static final double WIDTH = ArcadeWorld.TILES_X * World.TS;
+	public static final double HEIGHT = ArcadeWorld.TILES_Y * World.TS;
 
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
+	private final SubScene fxSubScene;
+	private final Group contentRoot = new Group();
+	private final AmbientLight light;
+	private final CoordSystem coordSystem;
 
+	private SceneContext ctx;
 	private World3D world3D;
 	private Pac3D pac3D;
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
+
 		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		Env.perspectivePy.addListener((obs, oldVal, newVal) -> setPerspective(newVal));
+		Env.perspectivePy.addListener((obs, oldVal, newVal) -> changeCamera(newVal));
+
+		coordSystem = new CoordSystem(1000);
+		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
+
+		light = new AmbientLight(Env.lightColorPy.get());
+		light.colorProperty().bind(Env.lightColorPy);
+
+		// origin is at center of scene content
+		contentRoot.getTransforms().add(new Translate(-WIDTH / 2, -HEIGHT / 2));
+		// initial size does not matter, subscene is resized automatically
+		fxSubScene = new SubScene(new Group(contentRoot, coordSystem, light), 50, 50, true, SceneAntialiasing.BALANCED);
+	}
+
+	@Override
+	public boolean is3D() {
+		return true;
 	}
 
 	@Override
@@ -91,18 +127,7 @@ public class PlayScene3D extends GameScene3D {
 		Stream.of(ghosts3D).forEach(content::add);
 		bonus3D = new Bonus3D(ctx.game().bonus());
 		content.add(bonus3D);
-		setPerspective(Env.perspectivePy.get());
-	}
-
-	public void setPerspective(Perspective perspective) {
-		var camera = cameraMap.get(perspective);
-		camera.reset();
-		setCamera(camera);
-		if (world3D != null && world3D.getScores3D() != null) {
-			var scores3D = world3D.getScores3D();
-			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-			scores3D.rotateProperty().bind(camera.rotateProperty());
-		}
+		changeCamera(Env.perspectivePy.get());
 	}
 
 	@Override
@@ -131,6 +156,47 @@ public class PlayScene3D extends GameScene3D {
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
 		bonus3D.update();
 		getCamera().update(pac3D);
+	}
+
+	@Override
+	public void setSceneContext(SceneContext ctx) {
+		this.ctx = ctx;
+	}
+
+	@Override
+	public SubScene getFXSubScene() {
+		return fxSubScene;
+	}
+
+	@Override
+	public void setResizeBehavior(DoubleExpression width, DoubleExpression height) {
+		fxSubScene.widthProperty().bind(width);
+		fxSubScene.heightProperty().bind(height);
+	}
+
+	public GameSceneCamera getCamera() {
+		return (GameSceneCamera) fxSubScene.getCamera();
+	}
+
+	private void changeCamera(Perspective perspective) {
+		var camera = cameraMap.get(perspective);
+		fxSubScene.setCamera(camera);
+		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
+		fxSubScene.requestFocus();
+		if (world3D != null && world3D.getScores3D() != null) {
+			var scores3D = world3D.getScores3D();
+			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+			scores3D.rotateProperty().bind(camera.rotateProperty());
+		}
+		camera.reset();
+	}
+
+	private void blockGameController() {
+		ctx.state().timer().resetIndefinitely();
+	}
+
+	private void unblockGameController() {
+		ctx.state().timer().expire();
 	}
 
 	public void onSwitchFrom2D() {
@@ -180,48 +246,54 @@ public class PlayScene3D extends GameScene3D {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		var maze3D = world3D.getMaze3D();
+		var game = ctx.game();
+
 		switch (e.newGameState) {
+
 		case READY -> {
 			world3D.reset();
 			pac3D.reset();
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
+
 		case HUNTING -> world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
-		case PACMAN_DYING -> {
-			var killer = ctx.game().ghosts().filter(ctx.game().pac::sameTile).findAny();
-			if (killer.isPresent()) {
-				var color = ctx.r2D.getGhostColor(killer.get().id);
-				var animation = new SequentialTransition( //
-						Ufx.pauseSec(0.0, this::blockGameController), //
-						pac3D.createDyingAnimation(color), //
-						Ufx.pauseSec(2.0, this::unblockGameController));
-				animation.play();
-			}
-		}
+
+		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
+			var color = ctx.r2D.getGhostColor(killer.id);
+			new SequentialTransition( //
+					Ufx.pauseSec(0.0, this::blockGameController), //
+					pac3D.createDyingAnimation(color), //
+					Ufx.pauseSec(2.0, this::unblockGameController) //
+			).play();
+		});
+
 		case LEVEL_STARTING -> {
 			blockGameController();
-			world3D = new World3D(ctx.game(), ctx.model3D, ctx.r2D);
+			world3D = new World3D(game, ctx.model3D, ctx.r2D);
 			contentRoot.getChildren().set(0, world3D);
-			setPerspective(Env.perspectivePy.get());
-			Actions.showFlashMessage(Texts.message("level_starting", ctx.game().level.number));
+			changeCamera(Env.perspectivePy.get());
+			Actions.showFlashMessage(Texts.message("level_starting", game.level.number));
 			Ufx.pauseSec(3, this::unblockGameController).play();
 		}
+
 		case LEVEL_COMPLETE -> {
-			blockGameController();
-			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n"
-					+ Texts.message("level_complete", ctx.game().level.number);
+			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n" + Texts.message("level_complete", game.level.number);
 			new SequentialTransition( //
+					Ufx.pauseSec(0.0, this::blockGameController), //
 					Ufx.pauseSec(2.0), //
-					maze3D.createMazeFlashingAnimation(ctx.game().level.numFlashes), //
-					Ufx.pauseSec(1.0, ctx.game().pac::hide), //
+					world3D.getMaze3D().createMazeFlashingAnimation(game.level.numFlashes), //
+					Ufx.pauseSec(1.0, game.pac::hide), //
 					Ufx.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
 					Ufx.pauseSec(2.0, this::unblockGameController) //
 			).play();
 		}
+
 		case GAME_OVER -> Actions.showFlashMessage(3, Texts.TALK_GAME_OVER.next());
-		default -> { // ignore
+
+		default -> {
+			// ignore
 		}
+
 		}
 
 		// exit HUNTING
