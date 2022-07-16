@@ -52,6 +52,12 @@ public class Energizer3D extends Pellet3D {
 		pumping.setToZ(0.1);
 	}
 
+	@Override
+	public void eat() {
+		pumping.stop();
+		super.eat();
+	}
+
 	public void startPumping() {
 		pumping.playFromStart();
 	}

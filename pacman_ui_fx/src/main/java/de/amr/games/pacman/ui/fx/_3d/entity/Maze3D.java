@@ -40,10 +40,8 @@ import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -170,21 +168,6 @@ public class Maze3D extends Group {
 
 	private boolean isGhostGettingAccess(Ghost ghost, V2d doorCenter) {
 		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
-	}
-
-	public void eatPellet(Pellet3D pellet3D) {
-		if (pellet3D instanceof Energizer3D energizer) {
-			energizer.stopPumping();
-		}
-		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
-		// the pellet disappears too early (collision by same tile in game model is too simplistic).
-		var delayHiding = Ufx.pauseSec(0.05, () -> pellet3D.setVisible(false));
-		var eatenAnimation = pellet3D.getEatenAnimation();
-		if (eatenAnimation.isPresent()) {
-			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
-		} else {
-			delayHiding.play();
-		}
 	}
 
 	// -------------------------------------------------------------------------------------------

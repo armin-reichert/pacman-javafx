@@ -32,6 +32,8 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
+import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
@@ -126,6 +128,21 @@ public class Food3D extends Group {
 
 	private boolean isSquirterTile(V2i tile) {
 		return tile.neighbors().filter(world::isWall).count() == 0;
+	}
+
+	public void eatPellet(Pellet3D pellet3D) {
+		if (pellet3D instanceof Energizer3D energizer) {
+			energizer.stopPumping();
+		}
+		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
+		// the pellet disappears too early (collision by same tile in game model is too simplistic).
+		var delayHiding = Ufx.pauseSec(0.05, () -> pellet3D.setVisible(false));
+		var eatenAnimation = pellet3D.getEatenAnimation();
+		if (eatenAnimation.isPresent()) {
+			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
+		} else {
+			delayHiding.play();
+		}
 	}
 
 	/**

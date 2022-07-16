@@ -38,6 +38,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
@@ -143,7 +144,6 @@ public class PlayScene3D extends GameScene3D {
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
 		var world = ctx.game().world();
-		var maze3D = world3D.getMaze3D();
 		// when cheat "eat all pellets" is used, no tile is present in the event
 		if (e.tile.isEmpty()) {
 			world.tiles()//
@@ -151,9 +151,9 @@ public class PlayScene3D extends GameScene3D {
 					.map(world3D.getFood3D()::pelletAt)//
 					.filter(Optional::isPresent)//
 					.map(Optional::get)//
-					.forEach(maze3D::eatPellet);
+					.forEach(Pellet3D::eat);
 		} else {
-			world3D.getFood3D().pelletAt(e.tile.get()).ifPresent(maze3D::eatPellet);
+			world3D.getFood3D().pelletAt(e.tile.get()).ifPresent(world3D.getFood3D()::eatPellet);
 		}
 	}
 

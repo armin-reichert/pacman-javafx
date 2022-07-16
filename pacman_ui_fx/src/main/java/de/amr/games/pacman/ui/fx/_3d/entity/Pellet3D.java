@@ -29,7 +29,9 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 
@@ -57,6 +59,15 @@ public class Pellet3D extends Sphere {
 
 	public V2i tile() {
 		return (V2i) getUserData();
+	}
+
+	public void eat() {
+		var hideAfterDelay = Ufx.pauseSec(0.05, () -> setVisible(false));
+		if (animation != null) {
+			new SequentialTransition(hideAfterDelay, animation).play();
+		} else {
+			hideAfterDelay.play();
+		}
 	}
 
 	public Optional<Animation> getEatenAnimation() {
