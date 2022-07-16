@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -46,11 +45,9 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -91,24 +88,33 @@ public class Maze3D extends Group {
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(1.0);
 	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>();
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>();
-	public final BooleanProperty squirtingPelletsPy = new SimpleBooleanProperty(false);
 
 	private final World world;
 	private final Group foundationGroup = new Group();
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
-	private final Food3D food3D;
+
+	private Food3D food;
 
 	public Maze3D(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
 		this.world = world;
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		build(mazeStyle);
-		food3D = new Food3D(gameVariant, world, mazeStyle);
-		food3D.squirtingPy.bind(squirtingPelletsPy);
-		getChildren().addAll(foundationGroup, food3D);
+		getChildren().add(foundationGroup);
+		addFood(gameVariant, world, mazeStyle);
 		resolutionPy.addListener((obs, oldVal, newVal) -> build(mazeStyle));
 		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
+	}
+
+	public void addFood(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
+		food = new Food3D(gameVariant, world, mazeStyle);
+		getChildren().clear();
+		getChildren().addAll(foundationGroup, food);
+	}
+
+	public Food3D getFood() {
+		return food;
 	}
 
 	private Node createFloor() {
@@ -173,12 +179,7 @@ public class Maze3D extends Group {
 	}
 
 	public void reset() {
-		energizers3D().forEach(e3D -> {
-			e3D.setScaleX(1.0);
-			e3D.setScaleY(1.0);
-			e3D.setScaleZ(1.0);
-			e3D.stopPumping();
-		});
+		food.resetAnimations();
 	}
 
 	// should be generalized to work with any ghost house
@@ -200,10 +201,6 @@ public class Maze3D extends Group {
 		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 
-	public Optional<Pellet3D> pelletAt(V2i tile) {
-		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
-	}
-
 	public void eatPellet(Pellet3D pellet3D) {
 		if (pellet3D instanceof Energizer3D energizer) {
 			energizer.stopPumping();
@@ -217,17 +214,6 @@ public class Maze3D extends Group {
 		} else {
 			delayHiding.play();
 		}
-	}
-
-	/**
-	 * @return all 3D pellets, including energizers
-	 */
-	public Stream<Pellet3D> pellets3D() {
-		return food3D.getChildren().stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
-	}
-
-	public Stream<Energizer3D> energizers3D() {
-		return pellets3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
 	// -------------------------------------------------------------------------------------------

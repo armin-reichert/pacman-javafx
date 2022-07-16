@@ -24,8 +24,11 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
@@ -38,65 +41,121 @@ import javafx.scene.paint.PhongMaterial;
 
 /**
  * @author Armin Reichert
- *
  */
 public class Food3D extends Group {
 
 	public final BooleanProperty squirtingPy = new SimpleBooleanProperty(false);
 
-	private final GameVariant gameVariant;
 	private final World world;
 	private final Group particleGroup = new Group();
+	private final PhongMaterial squirtingPelletMaterial;
+	private final PhongMaterial normalPelletMaterial;
 
 	public Food3D(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
-		this.gameVariant = gameVariant;
 		this.world = world;
-		squirtingPy.addListener((obs, oldVal, newVal) -> rebuildFood(mazeStyle));
-		rebuildFood(mazeStyle);
+		normalPelletMaterial = new PhongMaterial(mazeStyle.pelletColor);
+		squirtingPelletMaterial = new PhongMaterial(gameVariant == GameVariant.PACMAN ? Color.CORNFLOWERBLUE : Color.RED);
+		squirtingPy.addListener((obs, oldVal, newVal) -> updateFood());
+		rebuildFood();
 	}
 
-	private void rebuildFood(MazeStyle mazeStyle) {
+	private void rebuildFood() {
 		getChildren().clear();
 		particleGroup.getChildren().clear();
-		if (squirtingPy.get()) {
-			createSquirtingPellets(mazeStyle);
-		} else {
-			createStandardPellets(mazeStyle.pelletColor);
-		}
+		createPellets(squirtingPy.get());
+		createEnergizers(squirtingPy.get());
 		getChildren().add(particleGroup);
 	}
 
-	private void createSquirtingPellets(MazeStyle mazeStyle) {
-		var pelletMaterial = new PhongMaterial(mazeStyle.pelletColor);
-		var squirtMaterial = new PhongMaterial(gameVariant == GameVariant.PACMAN ? Color.CORNFLOWERBLUE : Color.RED);
+	private void createPellets(boolean squirtingEnabled) {
 		world.tiles() //
-				.filter(world::isFoodTile) //
-				.filter(Predicate.not(world::containsEatenFood)) //
-				.map(tile -> {
-					if (world.isEnergizerTile(tile)) {
-						var energizer3D = new Energizer3D(tile, pelletMaterial);
-						energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
-						return energizer3D;
-					} else {
-						if (tile.neighbors().filter(world::isWall).count() == 0) {
-							var pellet3D = new Pellet3D(tile, squirtMaterial, 1.5);
-							pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
-							return pellet3D;
-						} else {
-							return new Pellet3D(tile, pelletMaterial);
-						}
-					}
-				}).forEach(getChildren()::add);
-	}
-
-	private void createStandardPellets(Color pelletColor) {
-		var pelletMaterial = new PhongMaterial(pelletColor);
-		world.tiles()//
 				.filter(world::isFoodTile)//
 				.filter(Predicate.not(world::containsEatenFood))//
-				.map(tile -> world.isEnergizerTile(tile)//
-						? new Energizer3D(tile, pelletMaterial)//
-						: new Pellet3D(tile, pelletMaterial, 1.0))//
+				.filter(Predicate.not(world::isEnergizerTile))//
+				.map(tile -> squirtingEnabled && isSquirterTile(tile) ? createSquirtingPellet(tile) : createNormalPellet(tile))
 				.forEach(getChildren()::add);
+	}
+
+	private void createEnergizers(boolean squirtingEnabled) {
+		world.tiles() //
+				.filter(world::isFoodTile) //
+				.filter(Predicate.not(world::containsEatenFood))//
+				.filter(world::isEnergizerTile)//
+				.map(tile -> squirtingEnabled && isSquirterTile(tile) ? createSquirtingEnergizer(tile)
+						: createNormalEnergizer(tile))
+				.forEach(getChildren()::add);
+	}
+
+	private Pellet3D createNormalPellet(V2i tile) {
+		return new Pellet3D(tile, normalPelletMaterial, 1.0);
+	}
+
+	private Energizer3D createNormalEnergizer(V2i tile) {
+		return new Energizer3D(tile, normalPelletMaterial);
+	}
+
+	private Pellet3D createSquirtingPellet(V2i tile) {
+		var pellet3D = new Pellet3D(tile, squirtingPelletMaterial, 1.5);
+		pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
+		return pellet3D;
+	}
+
+	private Energizer3D createSquirtingEnergizer(V2i tile) {
+		var energizer3D = new Energizer3D(tile, normalPelletMaterial);
+		energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
+		return energizer3D;
+	}
+
+	private boolean isSquirterTile(V2i tile) {
+		return tile.neighbors().filter(world::isWall).count() == 0;
+	}
+
+	private void updateFood() {
+		boolean squirtingEnabled = squirtingPy.get();
+		energizers3D().forEach(energizer3D -> {
+			if (squirtingEnabled) {
+				energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
+			} else {
+				energizer3D.setEatenAnimation(null);
+			}
+		});
+		pellets3D()//
+				.filter(pellet3D -> world.containsFood(pellet3D.tile()))//
+				.filter(Predicate.not(Energizer3D.class::isInstance))//
+				.forEach(pellet3D -> {
+					if (squirtingEnabled && isSquirterTile(pellet3D.tile())) {
+						pellet3D.setRadius(1.5);
+						pellet3D.setMaterial(squirtingPelletMaterial);
+						pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
+					} else {
+						pellet3D.setRadius(1.0);
+						pellet3D.setMaterial(normalPelletMaterial);
+						pellet3D.setEatenAnimation(null);
+					}
+				});
+	}
+
+	/**
+	 * @return all 3D pellets, including energizers
+	 */
+	public Stream<Pellet3D> pellets3D() {
+		return getChildren().stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
+	}
+
+	public Stream<Energizer3D> energizers3D() {
+		return pellets3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+	}
+
+	public Optional<Pellet3D> pelletAt(V2i tile) {
+		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
+	}
+
+	public void resetAnimations() {
+		energizers3D().forEach(e3D -> {
+			e3D.setScaleX(1.0);
+			e3D.setScaleY(1.0);
+			e3D.setScaleZ(1.0);
+			e3D.stopPumping();
+		});
 	}
 }
