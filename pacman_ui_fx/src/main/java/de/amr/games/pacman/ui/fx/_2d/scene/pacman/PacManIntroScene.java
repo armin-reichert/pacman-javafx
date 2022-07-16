@@ -137,6 +137,7 @@ public class PacManIntroScene extends GameScene2D {
 			ctx.r2D.drawCopyright(g, 32);
 		}
 		}
+		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
 	private void drawScoresAndCredit(GraphicsContext g) {

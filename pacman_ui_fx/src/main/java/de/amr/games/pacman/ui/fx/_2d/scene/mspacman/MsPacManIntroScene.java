@@ -113,6 +113,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		if (creditVisible) {
 			ctx.r2D.drawCredit(g, ctx.game().getCredit());
 		}
+		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
 	private void drawTitle(GraphicsContext g) {

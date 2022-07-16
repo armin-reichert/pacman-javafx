@@ -67,7 +67,6 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		infoLayer.init(ctx.game());
 		creditVisible = !ctx.hasCredit(); // show credit only if it is zero
-		ctx.game().levelCounter.setVisible(!creditVisible);
 		ctx.game().bonus().setInactive();
 	}
 
