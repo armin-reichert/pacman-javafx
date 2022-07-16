@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
+import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeColors;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -60,13 +60,12 @@ public class World3D extends Group {
 		}
 		getChildren().add(scores3D);
 
-		var mazeStyle = new MazeStyle();
-		mazeStyle.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
-		mazeStyle.wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
-		mazeStyle.doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
-		mazeStyle.pelletColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
+		var mazeColors = new MazeColors();
+		mazeColors.wallSideColor = Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber);
+		mazeColors.wallTopColor = Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber);
+		mazeColors.doorColor = Rendering3D.getGhostHouseDoorColor(game.variant);
 
-		maze3D = new Maze3D(game.variant, game.level.world, mazeStyle);
+		maze3D = new Maze3D(game.level.world, mazeColors);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
 				Env.floorTexturePy));
@@ -75,7 +74,8 @@ public class World3D extends Group {
 		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
 		getChildren().add(maze3D);
 
-		food3D = new Food3D(game.variant, game.world(), mazeStyle);
+		var foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
+		food3D = new Food3D(game.variant, game.world(), foodColor);
 		food3D.squirtingPy.bind(Env.squirtingPy);
 		getChildren().add(food3D);
 

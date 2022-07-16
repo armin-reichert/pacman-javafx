@@ -32,7 +32,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
-import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeStyle;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
@@ -51,9 +50,9 @@ public class Food3D extends Group {
 	private final PhongMaterial squirtingPelletMaterial;
 	private final PhongMaterial normalPelletMaterial;
 
-	public Food3D(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
+	public Food3D(GameVariant gameVariant, World world, Color foodColor) {
 		this.world = world;
-		normalPelletMaterial = new PhongMaterial(mazeStyle.pelletColor);
+		normalPelletMaterial = new PhongMaterial(foodColor);
 		squirtingPelletMaterial = new PhongMaterial(gameVariant == GameVariant.PACMAN ? Color.CORNFLOWERBLUE : Color.RED);
 		squirtingPy.addListener((obs, oldVal, newVal) -> updateFood());
 		createPellets(squirtingPy.get());

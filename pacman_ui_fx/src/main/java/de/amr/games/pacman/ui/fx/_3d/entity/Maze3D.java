@@ -33,7 +33,6 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
@@ -70,11 +69,10 @@ public class Maze3D extends Group {
 
 	public static final double FLOOR_THICKNESS = 0.1;
 
-	public static class MazeStyle {
+	public static class MazeColors {
 		public Color wallSideColor;
 		public Color wallTopColor;
 		public Color doorColor;
-		public Color pelletColor;
 	}
 
 	private static class WallData {
@@ -94,12 +92,12 @@ public class Maze3D extends Group {
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 
-	public Maze3D(GameVariant gameVariant, World world, MazeStyle mazeStyle) {
+	public Maze3D(World world, MazeColors mazeColors) {
 		this.world = world;
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
-		build(mazeStyle);
+		build(mazeColors);
 		getChildren().add(foundationGroup);
-		resolutionPy.addListener((obs, oldVal, newVal) -> build(mazeStyle));
+		resolutionPy.addListener((obs, oldVal, newVal) -> build(mazeColors));
 		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 	}
@@ -120,13 +118,13 @@ public class Maze3D extends Group {
 		return (Box) foundationGroup.getChildren().get(0);
 	}
 
-	public void build(MazeStyle mazeStyle) {
+	public void build(MazeColors mazeColors) {
 		var floorPlan = new FloorPlan(resolutionPy.get(), world);
 
 		var wallData = new WallData();
-		wallData.baseMaterial = new PhongMaterial(mazeStyle.wallSideColor);
-		wallData.baseMaterial.setSpecularColor(mazeStyle.wallSideColor.brighter());
-		wallData.topMaterial = new PhongMaterial(mazeStyle.wallTopColor);
+		wallData.baseMaterial = new PhongMaterial(mazeColors.wallSideColor);
+		wallData.baseMaterial.setSpecularColor(mazeColors.wallSideColor.brighter());
+		wallData.topMaterial = new PhongMaterial(mazeColors.wallTopColor);
 		wallData.brickSize = (double) TS / floorPlan.getResolution();
 		wallData.height = wallHeightPy.get();
 
@@ -136,7 +134,7 @@ public class Maze3D extends Group {
 		addVerticalWalls(floorPlan, wallData);
 
 		doorsGroup.getChildren()
-				.setAll(world.ghostHouse().doorTiles().map(doorTile -> createDoor(doorTile, mazeStyle.doorColor)).toList());
+				.setAll(world.ghostHouse().doorTiles().map(doorTile -> createDoor(doorTile, mazeColors.doorColor)).toList());
 
 		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
 	}
