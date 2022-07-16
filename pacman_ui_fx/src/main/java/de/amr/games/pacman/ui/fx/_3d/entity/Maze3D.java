@@ -88,9 +88,9 @@ public class Maze3D extends Group {
 	public Maze3D(World world, MazeColors mazeColors) {
 		this.world = world;
 		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
-		build(mazeColors);
+		rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors);
 		getChildren().add(foundationGroup);
-		resolutionPy.addListener((obs, oldVal, newVal) -> build(mazeColors));
+		resolutionPy.addListener((obs, oldVal, newVal) -> rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors));
 		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 	}
@@ -111,9 +111,7 @@ public class Maze3D extends Group {
 		return (Box) foundationGroup.getChildren().get(0);
 	}
 
-	public void build(MazeColors mazeColors) {
-		var floorPlan = new FloorPlan(resolutionPy.get(), world);
-
+	public void rebuild(FloorPlan floorPlan, MazeColors mazeColors) {
 		var wallData = new WallData(//
 				(double) TS / floorPlan.getResolution(), //
 				wallHeightPy.get(), //
@@ -125,7 +123,6 @@ public class Maze3D extends Group {
 		addCorners(floorPlan, wallData);
 		addHorizontalWalls(floorPlan, wallData);
 		addVerticalWalls(floorPlan, wallData);
-
 		doorsGroup.getChildren()
 				.setAll(world.ghostHouse().doorTiles().map(doorTile -> createDoor(doorTile, mazeColors.doorColor)).toList());
 
