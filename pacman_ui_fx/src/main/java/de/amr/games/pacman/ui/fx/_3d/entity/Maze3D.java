@@ -69,17 +69,10 @@ public class Maze3D extends Group {
 
 	public static final double FLOOR_THICKNESS = 0.1;
 
-	public static class MazeColors {
-		public Color wallSideColor;
-		public Color wallTopColor;
-		public Color doorColor;
+	public record MazeColors(Color wallSideColor, Color wallTopColor, Color doorColor) {
 	}
 
-	private static class WallData {
-		double brickSize;
-		double height;
-		PhongMaterial baseMaterial;
-		PhongMaterial topMaterial;
+	public record WallData(double brickSize, double height, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
 	}
 
 	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(4);
@@ -121,12 +114,12 @@ public class Maze3D extends Group {
 	public void build(MazeColors mazeColors) {
 		var floorPlan = new FloorPlan(resolutionPy.get(), world);
 
-		var wallData = new WallData();
-		wallData.baseMaterial = new PhongMaterial(mazeColors.wallSideColor);
+		var wallData = new WallData(//
+				(double) TS / floorPlan.getResolution(), //
+				wallHeightPy.get(), //
+				new PhongMaterial(mazeColors.wallSideColor), //
+				new PhongMaterial(mazeColors.wallTopColor));
 		wallData.baseMaterial.setSpecularColor(mazeColors.wallSideColor.brighter());
-		wallData.topMaterial = new PhongMaterial(mazeColors.wallTopColor);
-		wallData.brickSize = (double) TS / floorPlan.getResolution();
-		wallData.height = wallHeightPy.get();
 
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, wallData);
