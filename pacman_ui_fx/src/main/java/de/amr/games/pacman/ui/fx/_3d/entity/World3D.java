@@ -23,10 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.stream.Stream;
+
+import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeColors;
@@ -110,7 +117,27 @@ public class World3D extends Group {
 
 	public void update(GameModel game) {
 		scores3D.update(game);
-		maze3D.updateDoorState(game.ghosts());
+		updateDoorState(game);
 		livesCounter3D.update(game.livesOneLessShown ? game.lives - 1 : game.lives);
 	}
+
+	// should be generalized to work with any ghost house
+	private void updateDoorState(GameModel game) {
+		if (game.world().ghostHouse() instanceof ArcadeGhostHouse arcadeHouse) {
+			boolean accessGranted = isAnyGhostGettingAccess(game.theGhosts, arcadeHouse.doorsCenterPosition());
+			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
+		}
+	}
+
+	private boolean isAnyGhostGettingAccess(Ghost[] ghosts, V2d centerPosition) {
+		return Stream.of(ghosts) //
+				.filter(Ghost::isVisible) //
+				.filter(ghost -> ghost.is(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
+				.anyMatch(ghost -> isGhostGettingAccess(ghost, centerPosition));
+	}
+
+	private boolean isGhostGettingAccess(Ghost ghost, V2d doorCenter) {
+		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
+	}
+
 }

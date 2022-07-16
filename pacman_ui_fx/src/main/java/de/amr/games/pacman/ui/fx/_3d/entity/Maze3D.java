@@ -23,7 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
@@ -31,11 +30,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
@@ -93,6 +88,10 @@ public class Maze3D extends Group {
 		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
 	}
 
+	public Animation createMazeFlashingAnimation(int times) {
+		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
+	}
+
 	private Node createFloor() {
 		double width = (double) world.numCols() * TS;
 		double height = (double) world.numRows() * TS;
@@ -146,31 +145,6 @@ public class Maze3D extends Group {
 	public Stream<Door3D> doors() {
 		return doorsGroup.getChildren().stream().map(Node::getUserData).map(Door3D.class::cast);
 	}
-
-	public Animation createMazeFlashingAnimation(int times) {
-		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
-	}
-
-	// should be generalized to work with any ghost house
-	public void updateDoorState(Stream<Ghost> ghosts) {
-		if (world.ghostHouse() instanceof ArcadeGhostHouse arcadeHouse) {
-			boolean accessGranted = isAnyGhostGettingAccess(ghosts, arcadeHouse.doorsCenterPosition());
-			doors().forEach(door3D -> door3D.setOpen(accessGranted));
-		}
-	}
-
-	private boolean isAnyGhostGettingAccess(Stream<Ghost> ghosts, V2d centerPosition) {
-		return ghosts //
-				.filter(Ghost::isVisible) //
-				.filter(ghost -> ghost.is(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
-				.anyMatch(ghost -> isGhostGettingAccess(ghost, centerPosition));
-	}
-
-	private boolean isGhostGettingAccess(Ghost ghost, V2d doorCenter) {
-		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
-	}
-
-	// -------------------------------------------------------------------------------------------
 
 	private Door3D createDoor(V2i tile, Color color) {
 		var door = new Door3D(tile, color);
