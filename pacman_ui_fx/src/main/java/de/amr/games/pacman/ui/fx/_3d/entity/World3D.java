@@ -23,7 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
+import static de.amr.games.pacman.model.common.actors.GhostState.RETURNING_TO_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
@@ -32,7 +34,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
@@ -124,19 +125,21 @@ public class World3D extends Group {
 	// should be generalized to work with any ghost house
 	private void updateDoorState(GameModel game) {
 		if (game.world().ghostHouse() instanceof ArcadeGhostHouse arcadeHouse) {
-			boolean accessGranted = isAnyGhostGettingAccess(game.theGhosts, arcadeHouse.doorsCenterPosition());
+			var accessGranted = isAccessGranted(game.theGhosts, arcadeHouse.doorsCenterPosition());
 			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 		}
 	}
 
-	private boolean isAnyGhostGettingAccess(Ghost[] ghosts, V2d centerPosition) {
-		return Stream.of(ghosts) //
-				.filter(Ghost::isVisible) //
-				.filter(ghost -> ghost.is(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)) //
-				.anyMatch(ghost -> isGhostGettingAccess(ghost, centerPosition));
+	private boolean isAccessGranted(Ghost[] ghosts, V2d doorPosition) {
+		return Stream.of(ghosts).anyMatch(ghost -> isAccessGranted(ghost, doorPosition));
 	}
 
-	private boolean isGhostGettingAccess(Ghost ghost, V2d doorCenter) {
-		return ghost.getPosition().euclideanDistance(doorCenter) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
+	private boolean isAccessGranted(Ghost ghost, V2d doorPosition) {
+		return ghost.isVisible() && ghost.is(RETURNING_TO_HOUSE, ENTERING_HOUSE, LEAVING_HOUSE)
+				&& inDoorDistance(ghost, doorPosition);
+	}
+
+	private boolean inDoorDistance(Ghost ghost, V2d doorPosition) {
+		return ghost.getPosition().euclideanDistance(doorPosition) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 }
