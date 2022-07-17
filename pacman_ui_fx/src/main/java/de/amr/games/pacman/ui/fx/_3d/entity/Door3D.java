@@ -45,8 +45,8 @@ public class Door3D extends Box {
 
 	public Door3D(V2i tile, Color color) {
 		setWidth(TS - 1.0);
-		setHeight(1.0);
-		depthProperty().bind(doorHeightPy.add(2.0));
+		setHeight(1.0); // thickness (y-direction)
+		depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)
 		setMaterial(new PhongMaterial(color));
 		setTranslateX((double) tile.x() * TS + HTS);
 		setTranslateY((double) tile.y() * TS + HTS);

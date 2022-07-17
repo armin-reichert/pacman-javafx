@@ -108,20 +108,26 @@ public class Maze3D extends Group {
 		return (Box) foundationGroup.getChildren().get(0);
 	}
 
+	private PhongMaterial coloredMaterial(Color diffuseColor) {
+		var material = new PhongMaterial(diffuseColor);
+		material.setSpecularColor(diffuseColor.brighter());
+		return material;
+	}
+
 	public void rebuild(FloorPlan floorPlan, MazeColors mazeColors) {
 		var wallData = new WallData(//
 				(double) TS / floorPlan.getResolution(), //
 				wallHeightPy.get(), //
-				new PhongMaterial(mazeColors.wallSideColor), //
-				new PhongMaterial(mazeColors.wallTopColor));
-		wallData.baseMaterial.setSpecularColor(mazeColors.wallSideColor.brighter());
+				coloredMaterial(mazeColors.wallSideColor), //
+				coloredMaterial(mazeColors.wallTopColor));
 
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, wallData);
 		addHorizontalWalls(floorPlan, wallData);
 		addVerticalWalls(floorPlan, wallData);
-		doorsGroup.getChildren()
-				.setAll(world.ghostHouse().doorTiles().map(doorTile -> createDoor(doorTile, mazeColors.doorColor)).toList());
+
+		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor)).toList();
+		doorsGroup.getChildren().setAll(doors);
 
 		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
 	}
@@ -136,10 +142,6 @@ public class Maze3D extends Group {
 		}
 		material.setDiffuseMap(texture);
 		getFloor().setMaterial(material);
-	}
-
-	public World getWorld() {
-		return world;
 	}
 
 	public Stream<Door3D> doors() {
