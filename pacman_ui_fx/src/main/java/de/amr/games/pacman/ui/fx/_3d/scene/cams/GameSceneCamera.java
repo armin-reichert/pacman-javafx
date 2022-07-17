@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
+import java.util.Optional;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -39,6 +41,8 @@ public abstract class GameSceneCamera extends PerspectiveCamera {
 		property.set(property.get() + delta);
 	}
 
+	protected CamConfiguration config;
+
 	protected GameSceneCamera() {
 		super(true);
 	}
@@ -48,7 +52,12 @@ public abstract class GameSceneCamera extends PerspectiveCamera {
 				getRotate());
 	}
 
-	public abstract boolean isManuallyConfigurable();
+	/**
+	 * @return the config
+	 */
+	public Optional<CamConfiguration> getConfig() {
+		return Optional.ofNullable(config);
+	}
 
 	public void reset() {
 	}

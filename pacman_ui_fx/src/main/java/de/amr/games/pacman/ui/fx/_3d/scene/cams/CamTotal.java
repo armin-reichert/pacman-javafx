@@ -32,25 +32,28 @@ import javafx.scene.transform.Rotate;
  */
 public class CamTotal extends GameSceneCamera {
 
-	@Override
-	public String toString() {
-		return "Total";
-	}
+	public static final double INITIAL_ROTATE = 60;
+	public static final double INITIAL_TRANSLATE_X = 0;
+	public static final double INITIAL_TRANSLATE_Y = 310;
+	public static final double INITIAL_TRANSLATE_Z = -160;
 
-	@Override
-	public boolean isManuallyConfigurable() {
-		return true;
-	}
-
-	@Override
-	public void reset() {
+	public CamTotal() {
 		setNearClip(0.1);
 		setFarClip(10000.0);
 		setRotationAxis(Rotate.X_AXIS);
-		setRotate(60);
-		setTranslateX(0);
-		setTranslateY(310);
-		setTranslateZ(-160);
+		setRotate(INITIAL_ROTATE);
+		config = new CamConfiguration();
+		config.translateXPy.set(INITIAL_TRANSLATE_X);
+		config.translateYPy.set(INITIAL_TRANSLATE_Y);
+		config.translateZPy.set(INITIAL_TRANSLATE_Z);
+		translateXProperty().bind(config.translateXPy);
+		translateYProperty().bind(config.translateYPy);
+		translateZProperty().bind(config.translateZPy);
+	}
+
+	@Override
+	public String toString() {
+		return "Total";
 	}
 
 	@Override

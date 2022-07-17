@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx._3d.scene.cams.CamConfiguration;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -43,7 +42,6 @@ public class SectionCamera3D extends Section {
 
 	private final ComboBox<Perspective> comboPerspective;
 
-	private final CamConfiguration config = new CamConfiguration();
 	private final Slider sliderTransformX;
 	private final Slider sliderTransformY;
 	private final Slider sliderTransformZ;
@@ -64,10 +62,6 @@ public class SectionCamera3D extends Section {
 		sliderTransformY.setDisable(true);
 		sliderTransformZ.setDisable(true);
 
-		config.translateXPy.bind(sliderTransformX.valueProperty());
-		config.translateYPy.bind(sliderTransformY.valueProperty());
-		config.translateZPy.bind(sliderTransformZ.valueProperty());
-
 		addInfo("Camera",
 				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.getCamera().transformInfo() : "")
 						.available(() -> gameScene().is3D());
@@ -86,23 +80,24 @@ public class SectionCamera3D extends Section {
 	}
 
 	private void onPerspectiveChanged(Perspective perspective) {
-		if (perspective != Perspective.TOTAL) {
-			return;
-		}
 		sliderTransformX.setDisable(true);
 		sliderTransformY.setDisable(true);
 		sliderTransformZ.setDisable(true);
 		if (ui.getSceneManager().getCurrentGameScene().is3D()) {
 			var playScene3D = (PlayScene3D) ui.getSceneManager().getCurrentGameScene();
 			var cam = playScene3D.getCameraForPerspective(perspective);
-			if (cam.isManuallyConfigurable()) {
-				cam.translateXProperty().bind(config.translateXPy);
-				cam.translateYProperty().bind(config.translateYPy);
-				cam.translateZProperty().bind(config.translateZPy);
-				sliderTransformX.setDisable(false);
-				sliderTransformY.setDisable(false);
-				sliderTransformZ.setDisable(false);
+			var config = cam.getConfig();
+			if (config.isPresent()) {
+				sliderTransformX.setValue(config.get().translateXPy.get());
+				sliderTransformY.setValue(config.get().translateYPy.get());
+				sliderTransformZ.setValue(config.get().translateZPy.get());
+				config.get().translateXPy.bind(sliderTransformX.valueProperty());
+				config.get().translateYPy.bind(sliderTransformY.valueProperty());
+				config.get().translateZPy.bind(sliderTransformZ.valueProperty());
 			}
+			sliderTransformX.setDisable(config.isEmpty());
+			sliderTransformY.setDisable(config.isEmpty());
+			sliderTransformZ.setDisable(config.isEmpty());
 		}
 	}
 }
