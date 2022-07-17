@@ -58,15 +58,15 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
-	public static final double FLOOR_THICKNESS = 0.1;
-
 	public record MazeColors(Color wallSideColor, Color wallTopColor, Color doorColor) {
 	}
 
-	public record WallData(double brickSize, double height, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
+	public record WallData(double brickSize, double wallHeight, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
 	}
+
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
+	private static final double FLOOR_THICKNESS = 0.1;
 
 	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(4);
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(1.0);
@@ -74,15 +74,13 @@ public class Maze3D extends Group {
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>();
 
 	private final World world;
-	private final Group foundationGroup = new Group();
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 
 	public Maze3D(World world, MazeColors mazeColors) {
 		this.world = world;
-		foundationGroup.getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
+		getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
 		rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors);
-		getChildren().add(foundationGroup);
 		resolutionPy.addListener((obs, oldVal, newVal) -> rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors));
 		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorMaterial());
 		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorMaterial());
@@ -105,7 +103,7 @@ public class Maze3D extends Group {
 	}
 
 	private Box getFloor() {
-		return (Box) foundationGroup.getChildren().get(0);
+		return (Box) getChildren().get(0);
 	}
 
 	private PhongMaterial coloredMaterial(Color diffuseColor) {
@@ -129,7 +127,7 @@ public class Maze3D extends Group {
 		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor)).toList();
 		doorsGroup.getChildren().setAll(doors);
 
-		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
+		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.wallHeight);
 	}
 
 	private void updateFloorMaterial() {
