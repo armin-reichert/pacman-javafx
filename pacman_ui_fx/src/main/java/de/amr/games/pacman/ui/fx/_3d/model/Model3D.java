@@ -52,8 +52,8 @@ public class Model3D {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	private static final double PAC_SIZE = 10.0;
-	private static final double GHOST_SIZE = 9.5;
+	private static final double PAC_SIZE = 10.5;
+	private static final double GHOST_SIZE = 10.0;
 
 	private static Model3D theThing;
 
@@ -103,7 +103,7 @@ public class Model3D {
 		});
 
 		var root3D = new Group(face, eyes, palate);
-		root3D.getTransforms().add(new Translate(0, 0, -0.25));
+		root3D.getTransforms().add(new Translate(0, 0, -1));
 		root3D.getTransforms().add(scale(root3D, PAC_SIZE));
 		root3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 
@@ -141,6 +141,7 @@ public class Model3D {
 		eyes.getTransforms().add(center);
 
 		var ghost = new Group(dress, eyes);
+		ghost.getTransforms().add(new Translate(0, 0, -1));
 		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		ghost.getTransforms().add(scale(ghost, GHOST_SIZE));
 
