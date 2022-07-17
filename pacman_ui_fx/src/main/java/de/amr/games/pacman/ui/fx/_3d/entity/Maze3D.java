@@ -148,12 +148,10 @@ public class Maze3D extends Group {
 			int wallSize = 0;
 			for (int x = 0; x < floorPlan.sizeX(); ++x) {
 				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
-					if (wallSize > 0) {
-						wallSize++;
-					} else {
+					if (wallSize == 0) {
 						wallStart = x;
-						wallSize = 1;
 					}
+					wallSize++;
 				} else if (wallSize > 0) {
 					addWall(wallStart, y, wallSize, 1, wallData);
 					wallSize = 0;
@@ -171,12 +169,10 @@ public class Maze3D extends Group {
 			int wallSize = 0;
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.VWALL) {
-					if (wallSize > 0) {
-						wallSize++;
-					} else {
+					if (wallSize == 0) {
 						wallStart = y;
-						wallSize = 1;
 					}
+					wallSize++;
 				} else if (wallSize > 0) {
 					addWall(x, wallStart, 1, wallSize, wallData);
 					wallSize = 0;
