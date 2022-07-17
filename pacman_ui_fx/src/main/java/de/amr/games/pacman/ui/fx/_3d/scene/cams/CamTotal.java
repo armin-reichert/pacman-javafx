@@ -42,10 +42,10 @@ public class CamTotal extends GameSceneCamera {
 		setNearClip(0.1);
 		setFarClip(10000.0);
 		setRotationAxis(Rotate.X_AXIS);
-		setRotate(49);
+		setRotate(60);
 		setTranslateX(0);
-		setTranslateY(320);
-		setTranslateZ(-260);
+		setTranslateY(310);
+		setTranslateZ(-160);
 	}
 
 	@Override
