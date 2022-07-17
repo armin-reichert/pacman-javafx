@@ -38,6 +38,11 @@ public class CamTotal extends GameSceneCamera {
 	}
 
 	@Override
+	public boolean isManuallyConfigurable() {
+		return true;
+	}
+
+	@Override
 	public void reset() {
 		setNearClip(0.1);
 		setFarClip(10000.0);

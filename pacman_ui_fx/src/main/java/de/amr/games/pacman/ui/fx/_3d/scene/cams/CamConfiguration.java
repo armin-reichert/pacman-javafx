@@ -33,7 +33,7 @@ import javafx.scene.transform.Rotate;
 /**
  * @author Armin Reichert
  */
-public class CamConfigurator {
+public class CamConfiguration {
 
 	public final DoubleProperty nearClipPy = new SimpleDoubleProperty(0.1);
 	public final DoubleProperty farClipPy = new SimpleDoubleProperty(100.0);

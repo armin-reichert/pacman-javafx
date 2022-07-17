@@ -25,10 +25,12 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.CamConfiguration;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -41,12 +43,30 @@ public class SectionCamera3D extends Section {
 
 	private final ComboBox<Perspective> comboPerspective;
 
+	private final CamConfiguration config = new CamConfiguration();
+	private final Slider sliderTransformX;
+	private final Slider sliderTransformY;
+	private final Slider sliderTransformZ;
+
 	public SectionCamera3D(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.perspectivePy.set(comboPerspective.getValue()));
+		Env.perspectivePy.addListener((obs, oldVal, newVal) -> onPerspectiveChanged(newVal));
+
+		sliderTransformX = addSlider("Translate X", -500, 500, 0);
+		sliderTransformY = addSlider("Translate Y", -500, 500, 0);
+		sliderTransformZ = addSlider("Translate Z", -500, 500, 0);
+
+		sliderTransformX.setDisable(true);
+		sliderTransformY.setDisable(true);
+		sliderTransformZ.setDisable(true);
+
+		config.translateXPy.bind(sliderTransformX.valueProperty());
+		config.translateYPy.bind(sliderTransformY.valueProperty());
+		config.translateZPy.bind(sliderTransformZ.valueProperty());
 
 		addInfo("Camera",
 				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.getCamera().transformInfo() : "")
@@ -63,5 +83,26 @@ public class SectionCamera3D extends Section {
 		super.update();
 		comboPerspective.setValue(Env.perspectivePy.get());
 		comboPerspective.setDisable(!gameScene().is3D());
+	}
+
+	private void onPerspectiveChanged(Perspective perspective) {
+		if (perspective != Perspective.TOTAL) {
+			return;
+		}
+		sliderTransformX.setDisable(true);
+		sliderTransformY.setDisable(true);
+		sliderTransformZ.setDisable(true);
+		if (ui.getSceneManager().getCurrentGameScene().is3D()) {
+			var playScene3D = (PlayScene3D) ui.getSceneManager().getCurrentGameScene();
+			var cam = playScene3D.getCameraForPerspective(perspective);
+			if (cam.isManuallyConfigurable()) {
+				cam.translateXProperty().bind(config.translateXPy);
+				cam.translateYProperty().bind(config.translateYPy);
+				cam.translateZProperty().bind(config.translateZPy);
+				sliderTransformX.setDisable(false);
+				sliderTransformY.setDisable(false);
+				sliderTransformZ.setDisable(false);
+			}
+		}
 	}
 }

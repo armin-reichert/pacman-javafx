@@ -48,6 +48,8 @@ public abstract class GameSceneCamera extends PerspectiveCamera {
 				getRotate());
 	}
 
+	public abstract boolean isManuallyConfigurable();
+
 	public void reset() {
 	}
 

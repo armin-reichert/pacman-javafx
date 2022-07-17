@@ -41,6 +41,11 @@ public class CamNearPlayer extends GameSceneCamera {
 	}
 
 	@Override
+	public boolean isManuallyConfigurable() {
+		return false;
+	}
+
+	@Override
 	public void reset() {
 		setNearClip(0.1);
 		setFarClip(10000.0);

@@ -173,6 +173,10 @@ public class PlayScene3D implements GameScene {
 		fxSubScene.heightProperty().bind(height);
 	}
 
+	public GameSceneCamera getCameraForPerspective(Perspective perspective) {
+		return cameraMap.get(perspective);
+	}
+
 	public GameSceneCamera getCamera() {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
