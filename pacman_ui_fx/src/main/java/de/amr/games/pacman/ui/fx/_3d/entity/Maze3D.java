@@ -44,7 +44,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -79,18 +78,19 @@ public class Maze3D extends Group {
 
 	public Maze3D(World world, MazeColors mazeColors) {
 		this.world = world;
-		getChildren().addAll(createFloor(), wallsGroup, doorsGroup);
+		var floor = createFloor();
+		getChildren().addAll(floor, wallsGroup, doorsGroup);
 		rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors);
 		resolutionPy.addListener((obs, oldVal, newVal) -> rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors));
-		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorMaterial());
-		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorMaterial());
+		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorMaterial(floor));
+		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorMaterial(floor));
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {
 		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
 	}
 
-	private Node createFloor() {
+	private Box createFloor() {
 		double width = (double) world.numCols() * TS;
 		double height = (double) world.numRows() * TS;
 		double depth = FLOOR_THICKNESS;
@@ -100,10 +100,6 @@ public class Maze3D extends Group {
 		floor.setTranslateZ(0.5 * depth);
 		floor.drawModeProperty().bind(Env.drawModePy);
 		return floor;
-	}
-
-	private Box getFloor() {
-		return (Box) getChildren().get(0);
 	}
 
 	private PhongMaterial coloredMaterial(Color diffuseColor) {
@@ -130,10 +126,10 @@ public class Maze3D extends Group {
 		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.wallHeight);
 	}
 
-	private void updateFloorMaterial() {
+	private void updateFloorMaterial(Box floor) {
 		var material = coloredMaterial(floorColorPy.get());
 		material.setDiffuseMap(floorTexturePy.get());
-		getFloor().setMaterial(material);
+		floor.setMaterial(material);
 	}
 
 	public Stream<Door3D> doors() {
