@@ -44,11 +44,9 @@ public class Door3D extends Box {
 	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(HTS);
 
 	public Door3D(V2i tile, Color color) {
-		super();
 		setWidth(TS - 1.0);
 		setHeight(1.0);
-		depthProperty().bind(doorHeightPy.add(2));
-		setUserData(this); // to access this from scene graph node
+		depthProperty().bind(doorHeightPy.add(2.0));
 		setMaterial(new PhongMaterial(color));
 		setTranslateX((double) tile.x() * TS + HTS);
 		setTranslateY((double) tile.y() * TS + HTS);
@@ -57,7 +55,6 @@ public class Door3D extends Box {
 	}
 
 	public void setOpen(boolean open) {
-		// TODO add animation?
 		setVisible(!open);
 	}
 }

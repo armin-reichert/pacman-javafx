@@ -143,7 +143,7 @@ public class Maze3D extends Group {
 	}
 
 	public Stream<Door3D> doors() {
-		return doorsGroup.getChildren().stream().map(Node::getUserData).map(Door3D.class::cast);
+		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
 	}
 
 	private Door3D createDoor(V2i tile, Color color) {
