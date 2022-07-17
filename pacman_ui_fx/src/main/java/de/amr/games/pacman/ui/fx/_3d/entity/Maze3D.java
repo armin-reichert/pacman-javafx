@@ -67,10 +67,11 @@ public class Maze3D extends Group {
 
 	private static final double FLOOR_THICKNESS = 0.1;
 
-	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(4);
-	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(1.0);
+	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(Env.mazeResolutionPy.get());
+	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(Env.mazeWallHeightPy.get());
+	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(Env.mazeWallThicknessPy.get());
 	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>();
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>();
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Env.floorColorPy.get());
 
 	private final World world;
 	private final Group wallsGroup = new Group();
@@ -99,6 +100,7 @@ public class Maze3D extends Group {
 		floor.setTranslateY(0.5 * height);
 		floor.setTranslateZ(0.5 * depth);
 		floor.drawModeProperty().bind(Env.drawModePy);
+		updateFloorMaterial(floor);
 		return floor;
 	}
 
@@ -153,12 +155,12 @@ public class Maze3D extends Group {
 					}
 					wallSize++;
 				} else if (wallSize > 0) {
-					addWall(wallStart, y, wallSize, 1, wallData);
+					addWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
 					wallSize = 0;
 				}
 			}
 			if (wallSize > 0 && y == floorPlan.sizeY() - 1) {
-				addWall(wallStart, y, wallSize, 1, wallData);
+				addWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
 			}
 		}
 	}
@@ -174,12 +176,12 @@ public class Maze3D extends Group {
 					}
 					wallSize++;
 				} else if (wallSize > 0) {
-					addWall(x, wallStart, 1, wallSize, wallData);
+					addWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
 					wallSize = 0;
 				}
 			}
 			if (wallSize > 0 && x == floorPlan.sizeX() - 1) {
-				addWall(x, wallStart, 1, wallSize, wallData);
+				addWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
 			}
 		}
 	}
@@ -188,10 +190,31 @@ public class Maze3D extends Group {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, wallData);
+					addWall(x, y, 1, 1, wallData, FloorPlan.CORNER);
 				}
 			}
 		}
+	}
+
+	private Box createHWall(int numBricksX, double brickSize) {
+		Box wall = new Box();
+		wall.setWidth(numBricksX * brickSize + brickSize);
+		wall.heightProperty().bind(wallThicknessPy);
+		return wall;
+	}
+
+	private Box createVWall(int numBricksY, double brickSize) {
+		Box wall = new Box();
+		wall.widthProperty().bind(wallThicknessPy);
+		wall.setHeight(numBricksY * brickSize + brickSize);
+		return wall;
+	}
+
+	private Box createCorner() {
+		Box corner = new Box();
+		corner.widthProperty().bind(wallThicknessPy);
+		corner.heightProperty().bind(wallThicknessPy);
+		return corner;
 	}
 
 	/**
@@ -204,19 +227,26 @@ public class Maze3D extends Group {
 	 * @param numBricksY number of bricks in y-direction
 	 * @param data       data on how the wall look like
 	 */
-	private void addWall(int x, int y, int numBricksX, int numBricksY, WallData data) {
-		Box base = new Box();
-		base.setWidth(numBricksX * data.brickSize);
-		base.setHeight(numBricksY * data.brickSize);
+	private void addWall(int x, int y, int numBricksX, int numBricksY, WallData data, byte type) {
+
+		Box base = switch (type) {
+		case FloorPlan.HWALL -> createHWall(numBricksX, data.brickSize);
+		case FloorPlan.VWALL -> createVWall(numBricksY, data.brickSize);
+		case FloorPlan.CORNER -> createCorner();
+		default -> throw new IllegalStateException();
+		};
 		base.depthProperty().bind(wallHeightPy);
 		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 		base.setMaterial(data.baseMaterial);
 		base.drawModeProperty().bind(Env.drawModePy);
 
+		Box top = switch (type) {
+		case FloorPlan.HWALL -> createHWall(numBricksX, data.brickSize);
+		case FloorPlan.VWALL -> createVWall(numBricksY, data.brickSize);
+		case FloorPlan.CORNER -> createCorner();
+		default -> throw new IllegalStateException();
+		};
 		double topHeight = 0.1;
-		Box top = new Box();
-		top.setWidth(numBricksX * data.brickSize);
-		top.setHeight(numBricksY * data.brickSize);
 		top.setDepth(topHeight);
 		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
 		top.setMaterial(data.topMaterial);

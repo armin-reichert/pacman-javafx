@@ -48,6 +48,7 @@ public class Section3D extends Section {
 	private final CheckBox cbSquirting;
 	private final ComboBox<Integer> comboResolution;
 	private final Slider sliderWallHeight;
+	private final Slider sliderWallThickness;
 	private final ColorPicker pickerLightColor;
 	private final ColorPicker pickerBgColor;
 	private final ComboBox<String> comboFloorTexture;
@@ -68,9 +69,12 @@ public class Section3D extends Section {
 		pickerLightColor.setOnAction(e -> Env.lightColorPy.set(pickerLightColor.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		comboResolution.setOnAction(e -> Env.mazeResolutionPy.set(comboResolution.getValue()));
-		sliderWallHeight = addSlider("Maze wall height", 0, 10, 8);
+		sliderWallHeight = addSlider("Maze wall height", 0.1, 10.0, Env.mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.mazeWallHeightPy.set(newVal.doubleValue()));
+		sliderWallThickness = addSlider("Maze wall thickness", 0.5, 2.0, Env.mazeWallThicknessPy.get());
+		sliderWallThickness.valueProperty()
+				.addListener((obs, oldVal, newVal) -> Env.mazeWallThicknessPy.set(newVal.doubleValue()));
 		comboFloorTexture = addComboBox("Floor texture", Env.FLOOR_TEXTURES.toArray(String[]::new));
 		comboFloorTexture.setOnAction(e -> Env.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.floorColorPy.get());

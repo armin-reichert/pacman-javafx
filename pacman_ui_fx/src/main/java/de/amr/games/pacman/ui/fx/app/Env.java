@@ -64,6 +64,7 @@ public class Env {
 	public static final ObjectProperty<Color> lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
 	public static final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(4);
 	public static final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(2.0);
+	public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.0);
 	public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);

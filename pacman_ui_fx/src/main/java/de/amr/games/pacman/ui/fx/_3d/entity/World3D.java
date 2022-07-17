@@ -80,6 +80,7 @@ public class World3D extends Group {
 		maze3D.floorColorPy.bind(Env.floorColorPy);
 		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
 		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
+		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
 		getChildren().add(maze3D);
 
 		var foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber);
