@@ -77,7 +77,8 @@ public class Ghost3D extends Group {
 
 	public void update(GameModel game) {
 		var newMode = switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() ? frightenedMode(game) : Mode.COLORED_DRESS;
+		case LOCKED, LEAVING_HOUSE -> ghost.inDanger(game) && ghost.killedIndex == -1 ? frightenedMode(game)
+				: Mode.COLORED_DRESS;
 		case FRIGHTENED -> frightenedMode(game);
 		case ENTERING_HOUSE -> Mode.EYES;
 		case EATEN -> Mode.NUMBER;
