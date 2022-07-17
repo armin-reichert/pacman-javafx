@@ -53,6 +53,7 @@ public class Dashboard extends BorderPane {
 	private Section secGameControl;
 	private Section secGameInfo;
 	private Section sec3D;
+	private Section secCamera3D;
 	private Section secKeys;
 
 	public void build(GameUI ui, GameController gc) {
@@ -60,15 +61,16 @@ public class Dashboard extends BorderPane {
 		secGameControl = new SectionGameControl(ui, gc, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		sec3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secCamera3D = new SectionCamera3D(ui, gc, "3D Camera", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		lhs.getChildren().addAll(secGeneral, secGameControl, secGameInfo, sec3D, secKeys);
+		lhs.getChildren().addAll(secGeneral, secGameControl, secGameInfo, sec3D, secCamera3D, secKeys);
 		setLeft(lhs);
 		setRight(rhs);
 		setVisible(false);
 	}
 
 	public Stream<Section> sections() {
-		return Stream.of(secGeneral, secGameControl, secGameInfo, sec3D, secKeys);
+		return Stream.of(secGeneral, secGameControl, secGameInfo, sec3D, secCamera3D, secKeys);
 	}
 
 	public void update() {

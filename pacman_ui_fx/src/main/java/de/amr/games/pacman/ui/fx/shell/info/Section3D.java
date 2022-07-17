@@ -24,8 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell.info;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -44,7 +42,6 @@ import javafx.scene.text.Font;
  */
 public class Section3D extends Section {
 
-	private final ComboBox<Perspective> comboPerspective;
 	private final CheckBox cbSquirting;
 	private final ComboBox<Integer> comboResolution;
 	private final Slider sliderWallHeight;
@@ -59,14 +56,10 @@ public class Section3D extends Section {
 	public Section3D(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
-		comboPerspective = addComboBox("Perspective", Perspective.values());
-		comboPerspective.setOnAction(e -> Env.perspectivePy.set(comboPerspective.getValue()));
-		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingPy));
-		addInfo("Camera",
-				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.getCamera().transformInfo() : "")
-						.available(() -> gameScene().is3D());
 		pickerLightColor = addColorPicker("Light color", Env.lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.lightColorPy.set(pickerLightColor.getValue()));
+		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
+		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		comboResolution.setOnAction(e -> Env.mazeResolutionPy.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.mazeWallHeightPy.get());
@@ -79,29 +72,21 @@ public class Section3D extends Section {
 		comboFloorTexture.setOnAction(e -> Env.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.floorColorPy.set(pickerFloorColor.getValue()));
-		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
-		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
+		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingPy));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
-		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
-		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
-		addInfo("Shift+UP/DOWN", "Camera -Z / +Z")
-				.available(() -> Env.perspectivePy.get() == Perspective.TOTAL || Env.perspectivePy.get() == Perspective.DRONE);
-		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		comboPerspective.setValue(Env.perspectivePy.get());
-		comboPerspective.setDisable(!gameScene().is3D());
-		cbSquirting.setSelected(Env.squirtingPy.get());
 		comboResolution.setValue(Env.mazeResolutionPy.get());
 		comboResolution.setDisable(!gameScene().is3D());
 		sliderWallHeight.setValue(Env.mazeWallHeightPy.get());
 		sliderWallHeight.setDisable(!gameScene().is3D());
 		comboFloorTexture.setValue(Env.floorTexturePy.get());
 		comboFloorTexture.setDisable(!gameScene().is3D());
+		cbSquirting.setSelected(Env.squirtingPy.get());
 		cbAxesVisible.setSelected(Env.axesVisiblePy.get());
 		cbAxesVisible.setDisable(!gameScene().is3D());
 		cbWireframeMode.setSelected(Env.drawModePy.get() == DrawMode.LINE);
