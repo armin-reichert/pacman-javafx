@@ -182,16 +182,19 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void changeCamera(Perspective perspective) {
+		var oldCamera = fxSubScene.getCamera();
 		var camera = cameraMap.get(perspective);
-		fxSubScene.setCamera(camera);
-		fxSubScene.setOnKeyPressed(camera::onKeyPressed);
-		fxSubScene.requestFocus();
-		if (world3D != null && world3D.getScores3D() != null) {
-			var scores3D = world3D.getScores3D();
-			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-			scores3D.rotateProperty().bind(camera.rotateProperty());
+		if (camera != oldCamera) {
+			fxSubScene.setCamera(camera);
+			fxSubScene.setOnKeyPressed(camera::onKeyPressed);
+			fxSubScene.requestFocus();
+			if (world3D != null && world3D.getScores3D() != null) {
+				var scores3D = world3D.getScores3D();
+				scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+				scores3D.rotateProperty().bind(camera.rotateProperty());
+			}
+			camera.reset();
 		}
-		camera.reset();
 	}
 
 	private void blockGameController() {
