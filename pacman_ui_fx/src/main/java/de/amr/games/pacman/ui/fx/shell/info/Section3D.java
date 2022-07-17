@@ -69,10 +69,10 @@ public class Section3D extends Section {
 		pickerLightColor.setOnAction(e -> Env.lightColorPy.set(pickerLightColor.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		comboResolution.setOnAction(e -> Env.mazeResolutionPy.set(comboResolution.getValue()));
-		sliderWallHeight = addSlider("Maze wall height", 0.1, 10.0, Env.mazeWallHeightPy.get());
+		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.mazeWallHeightPy.set(newVal.doubleValue()));
-		sliderWallThickness = addSlider("Maze wall thickness", 0.5, 2.0, Env.mazeWallThicknessPy.get());
+		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.mazeWallThicknessPy.set(newVal.doubleValue()));
 		comboFloorTexture = addComboBox("Floor texture", Env.FLOOR_TEXTURES.toArray(String[]::new));
