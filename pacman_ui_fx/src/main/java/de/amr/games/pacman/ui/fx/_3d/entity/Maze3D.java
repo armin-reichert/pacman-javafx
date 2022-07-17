@@ -84,8 +84,8 @@ public class Maze3D extends Group {
 		rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors);
 		getChildren().add(foundationGroup);
 		resolutionPy.addListener((obs, oldVal, newVal) -> rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors));
-		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
-		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorTexture());
+		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorMaterial());
+		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorMaterial());
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {
@@ -132,15 +132,9 @@ public class Maze3D extends Group {
 		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.height);
 	}
 
-	private void updateFloorTexture() {
-		var texture = floorTexturePy.get();
-		var color = floorColorPy.get();
-		var material = new PhongMaterial();
-		if (color != null) {
-			material.setDiffuseColor(color);
-			material.setSpecularColor(color.brighter());
-		}
-		material.setDiffuseMap(texture);
+	private void updateFloorMaterial() {
+		var material = coloredMaterial(floorColorPy.get());
+		material.setDiffuseMap(floorTexturePy.get());
 		getFloor().setMaterial(material);
 	}
 
