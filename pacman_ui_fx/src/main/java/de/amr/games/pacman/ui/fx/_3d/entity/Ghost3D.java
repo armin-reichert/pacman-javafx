@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -92,15 +91,6 @@ public class Ghost3D extends Group {
 			body.update();
 		}
 		setVisible(ghost.isVisible());
-		setOpacity(1.0);
-		game.world().portals().stream().filter(portal -> portal.distance(ghost) <= 30.0).findFirst().ifPresent(portal -> {
-			var distance = portal.distance(ghost);
-			var opacity = U.lerp(0.5, 1.0, distance / 30.0);
-//			var dressColor = body.dressColorPy.get();
-//			body.dressColorPy.set(Color.color(dressColor.getRed(), dressColor.getGreen(), dressColor.getBlue(), opacity));
-			LOGGER.info("Ghost %s, opacity %.2f, is at %.2f px from portal %s", ghost.name, opacity, distance, portal);
-			setVisible(distance > 16.0);
-		});
 	}
 
 	private Mode frightenedMode(GameModel game) {

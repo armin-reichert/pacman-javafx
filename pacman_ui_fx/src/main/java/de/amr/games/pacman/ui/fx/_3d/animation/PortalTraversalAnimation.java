@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.world.HorizontalPortal;
@@ -43,6 +42,8 @@ import javafx.scene.paint.Color;
 public class PortalTraversalAnimation {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
+	private static final double FADING_DISTANCE = 32.0;
 
 	private final Creature guy;
 	private final World world;
@@ -63,31 +64,34 @@ public class PortalTraversalAnimation {
 		if (colorPy.isBound()) {
 			return;
 		}
-		colorPy.set(baseColor.get());
 		node.setVisible(guy.isVisible());
-		node.setOpacity(1);
-		if (outsideWorld()) {
-			node.setVisible(true);
-			colorPy.set((Color.color(0.1, 0.1, 0.1, 0.05)));
+		double dist = distFromNearestPortal();
+		if (dist < 4.0 || outsideWorld()) {
+			node.setOpacity(1.0);
+			node.setVisible(false);
+			LOGGER.trace("Distance from portal: %.2f visible: %s", dist, node.isVisible());
+		} else if (dist <= FADING_DISTANCE) {
+			double fading = dist / FADING_DISTANCE;
+			var color = fade(baseColor.get(), fading);
+			colorPy.set(color);
+			LOGGER.trace("Distance from portal: %.2f color: rgb(%.0f,%.0f,%.0f) visible: %s", dist, 256 * color.getRed(),
+					256 * color.getGreen(), 256 * color.getBlue(), node.isVisible());
 		} else {
-			double fadeStart = 32.0;
-			double dist = distFromNearestPortal();
-			if (dist <= fadeStart) { // fade into shadow
-				node.setVisible(true);
-				double opacity = U.lerp(0.2, 1, dist / fadeStart);
-				LOGGER.trace("Distance from portal: %.2f Opacity: %.2f", dist, opacity);
-				colorPy.set(Color.color(baseColor.get().getRed() * opacity, baseColor.get().getGreen() * opacity,
-						baseColor.get().getBlue() * opacity, opacity));
-			}
+			colorPy.set(baseColor.get());
+			node.setOpacity(1.0);
 		}
+	}
+
+	private Color fade(Color color, double fading) {
+		return Color.color(color.getRed() * fading, color.getGreen() * fading, color.getBlue() * fading, fading);
 	}
 
 	private double distFromNearestPortal() {
 		double minDist = Double.MAX_VALUE;
 		for (var portal : world.portals()) {
-			if (portal instanceof HorizontalPortal horizontalPortal) {
-				var left = new V2d(horizontalPortal.leftTunnelEnd()).scaled(World.TS);
-				var right = new V2d(horizontalPortal.rightTunnelEnd()).scaled(World.TS);
+			if (portal instanceof HorizontalPortal horPortal) {
+				var left = new V2d(horPortal.leftTunnelEnd().minus(1, 0)).scaled(World.TS);
+				var right = new V2d(horPortal.rightTunnelEnd().plus(1, 0)).scaled(World.TS);
 				var dist = Math.min(guy.getPosition().euclideanDistance(left), guy.getPosition().euclideanDistance(right));
 				if (dist < minDist) {
 					minDist = dist;
