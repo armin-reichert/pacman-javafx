@@ -24,7 +24,11 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.texts;
 
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.util.EntryPicker;
 
@@ -36,10 +40,17 @@ public class Texts {
 	private Texts() {
 	}
 
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
 	public static String message(String pattern, Object... args) {
-		return BUNDLE.getString(pattern).formatted(args);
+		try {
+			return BUNDLE.getString(pattern).formatted(args);
+		} catch (MissingResourceException x) {
+			LOGGER.error("No text resource found for key '%s'", pattern);
+			return "{%s}".formatted(pattern);
+		}
 	}
 
 	public static final EntryPicker<String> TALK_CHEATING = createEntryPicker("cheating");

@@ -42,6 +42,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFirstPerson;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
@@ -89,6 +90,7 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D() {
 
 		cameraMap.put(Perspective.DRONE, new CamDrone());
+		cameraMap.put(Perspective.FIRST_PERSON, new CamFirstPerson());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
@@ -126,6 +128,9 @@ public class PlayScene3D implements GameScene {
 		Stream.of(ghosts3D).forEach(content::add);
 		bonus3D = new Bonus3D(ctx.game().bonus());
 		content.add(bonus3D);
+
+		var fpc = (CamFirstPerson) getCameraForPerspective(Perspective.FIRST_PERSON);
+		fpc.setPac(ctx.game().pac);
 		changeCamera(Env.perspectivePy.get());
 	}
 
