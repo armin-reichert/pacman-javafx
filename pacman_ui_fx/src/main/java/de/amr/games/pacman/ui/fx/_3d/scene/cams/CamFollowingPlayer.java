@@ -33,7 +33,8 @@ import javafx.scene.transform.Rotate;
  */
 public class CamFollowingPlayer extends GameSceneCamera {
 
-	private double speed = 0.03;
+	private double speedX = 0.005;
+	private double speedY = 0.030;
 
 	@Override
 	public String toString() {
@@ -51,7 +52,7 @@ public class CamFollowingPlayer extends GameSceneCamera {
 
 	@Override
 	public void update(Node target) {
-		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speed));
-		setTranslateY(lerp(getTranslateY(), target.getTranslateY() + 60, speed));
+		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speedX));
+		setTranslateY(lerp(getTranslateY(), target.getTranslateY() + 100, speedY));
 	}
 }
