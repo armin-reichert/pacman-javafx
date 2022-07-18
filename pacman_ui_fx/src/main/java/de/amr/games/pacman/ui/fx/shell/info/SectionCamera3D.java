@@ -40,6 +40,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
+import javafx.util.StringConverter;
 
 /**
  * 3D related settings.
@@ -73,8 +74,36 @@ public class SectionCamera3D extends Section {
 		sliderTransformY.setDisable(true);
 		sliderTransformZ.setDisable(true);
 
-		comboRotationAxis = addComboBox("Rotation Axis", Rotate.X_AXIS, Rotate.Y_AXIS, Rotate.Z_AXIS);
+		comboRotationAxis = addComboBox("Rotation Axis", Rotate.X_AXIS/* , Rotate.Y_AXIS, Rotate.Z_AXIS */);
 		comboRotationAxis.setDisable(true);
+		comboRotationAxis.setConverter(new StringConverter<Point3D>() {
+			@Override
+			public String toString(Point3D p) {
+				if (p == null) {
+					return "";
+				}
+				if (p.equals(Rotate.X_AXIS)) {
+					return "X Axis";
+				}
+				if (p.equals(Rotate.Y_AXIS)) {
+					return "Y Axis";
+				}
+				if (p.equals(Rotate.Z_AXIS)) {
+					return "Z Axis";
+				}
+				return p.toString();
+			}
+
+			@Override
+			public Point3D fromString(String string) {
+				return switch (string) {
+				case "X Axis" -> Rotate.X_AXIS;
+				case "Y Axis" -> Rotate.Y_AXIS;
+				case "Z Axis" -> Rotate.Z_AXIS;
+				default -> Point3D.ZERO;
+				};
+			}
+		});
 
 		sliderRotate = addSlider("Rotate", 0, 360, 0);
 		sliderRotate.setDisable(true);
