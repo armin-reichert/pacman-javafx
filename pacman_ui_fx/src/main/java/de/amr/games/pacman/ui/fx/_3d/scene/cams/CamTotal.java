@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
+import javafx.geometry.Point3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
@@ -32,32 +33,30 @@ import javafx.scene.transform.Rotate;
  */
 public class CamTotal extends GameSceneCamera {
 
+	public static final Point3D INITIAL_ROTATION_AXIS = Rotate.X_AXIS;
 	public static final double INITIAL_ROTATE = 60;
 	public static final double INITIAL_TRANSLATE_X = 0;
 	public static final double INITIAL_TRANSLATE_Y = 310;
 	public static final double INITIAL_TRANSLATE_Z = -160;
 
 	public CamTotal() {
-		config = new CamConfiguration();
-
 		setNearClip(0.1);
 		setFarClip(10000.0);
-
-		translateXProperty().bind(config.translateXPy);
-		translateYProperty().bind(config.translateYPy);
-		translateZProperty().bind(config.translateZPy);
-		setRotationAxis(Rotate.X_AXIS);
-		rotateProperty().bind(config.rotatePy);
-
-		config.translateXPy.set(INITIAL_TRANSLATE_X);
-		config.translateYPy.set(INITIAL_TRANSLATE_Y);
-		config.translateZPy.set(INITIAL_TRANSLATE_Z);
-		config.rotatePy.set(INITIAL_ROTATE);
+		setTranslateX(INITIAL_TRANSLATE_X);
+		setTranslateY(INITIAL_TRANSLATE_Y);
+		setTranslateZ(INITIAL_TRANSLATE_Z);
+		setRotationAxis(INITIAL_ROTATION_AXIS);
+		setRotate(INITIAL_ROTATE);
 	}
 
 	@Override
 	public String toString() {
 		return "Total";
+	}
+
+	@Override
+	public boolean isConfigurable() {
+		return true;
 	}
 
 	@Override

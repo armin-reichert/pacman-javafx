@@ -23,15 +23,23 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import java.util.Optional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import javafx.geometry.Point3D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
 
 /**
  * 3D related settings.
@@ -40,8 +48,10 @@ import javafx.scene.text.Font;
  */
 public class SectionCamera3D extends Section {
 
-	private final ComboBox<Perspective> comboPerspective;
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	private final ComboBox<Perspective> comboPerspective;
+	private final ComboBox<Point3D> comboRotationAxis;
 	private final Slider sliderTransformX;
 	private final Slider sliderTransformY;
 	private final Slider sliderTransformZ;
@@ -62,6 +72,9 @@ public class SectionCamera3D extends Section {
 		sliderTransformX.setDisable(true);
 		sliderTransformY.setDisable(true);
 		sliderTransformZ.setDisable(true);
+
+		comboRotationAxis = addComboBox("Rotation Axis", Rotate.X_AXIS, Rotate.Y_AXIS, Rotate.Z_AXIS);
+		comboRotationAxis.setDisable(true);
 
 		sliderRotate = addSlider("Rotate", 0, 360, 0);
 		sliderRotate.setDisable(true);
@@ -84,28 +97,33 @@ public class SectionCamera3D extends Section {
 	}
 
 	private void onPerspectiveChanged(Perspective perspective) {
-		sliderTransformX.setDisable(true);
-		sliderTransformY.setDisable(true);
-		sliderTransformZ.setDisable(true);
-		sliderRotate.setDisable(true);
-		if (ui.getSceneManager().getCurrentGameScene().is3D()) {
-			var playScene3D = (PlayScene3D) ui.getSceneManager().getCurrentGameScene();
+		LOGGER.info("Perspective changed to %s", perspective);
+		var configurableCam = configurableCam(perspective);
+		configurableCam.ifPresent(cam -> {
+			LOGGER.info("Configurable camera: %s", cam);
+			sliderTransformX.setValue(cam.getTranslateX());
+			sliderTransformY.setValue(cam.getTranslateY());
+			sliderTransformZ.setValue(cam.getTranslateZ());
+			comboRotationAxis.setValue(cam.getRotationAxis());
+			sliderRotate.setValue(cam.getRotate());
+			cam.translateXProperty().bind(sliderTransformX.valueProperty());
+			cam.translateYProperty().bind(sliderTransformY.valueProperty());
+			cam.translateZProperty().bind(sliderTransformZ.valueProperty());
+			cam.rotationAxisProperty().bind(comboRotationAxis.valueProperty());
+			cam.rotateProperty().bind(sliderRotate.valueProperty());
+		});
+		sliderTransformX.setDisable(configurableCam.isEmpty());
+		sliderTransformY.setDisable(configurableCam.isEmpty());
+		sliderTransformZ.setDisable(configurableCam.isEmpty());
+		comboRotationAxis.setDisable(configurableCam.isEmpty());
+		sliderRotate.setDisable(configurableCam.isEmpty());
+	}
+
+	private Optional<GameSceneCamera> configurableCam(Perspective perspective) {
+		if (ui.getSceneManager().getCurrentGameScene() instanceof PlayScene3D playScene3D) {
 			var cam = playScene3D.getCameraForPerspective(perspective);
-			var config = cam.getConfig();
-			if (config.isPresent()) {
-				sliderTransformX.setValue(config.get().translateXPy.get());
-				sliderTransformY.setValue(config.get().translateYPy.get());
-				sliderTransformZ.setValue(config.get().translateZPy.get());
-				sliderRotate.setValue(config.get().rotatePy.get());
-				config.get().translateXPy.bind(sliderTransformX.valueProperty());
-				config.get().translateYPy.bind(sliderTransformY.valueProperty());
-				config.get().translateZPy.bind(sliderTransformZ.valueProperty());
-				config.get().rotatePy.bind(sliderRotate.valueProperty());
-			}
-			sliderTransformX.setDisable(config.isEmpty());
-			sliderTransformY.setDisable(config.isEmpty());
-			sliderTransformZ.setDisable(config.isEmpty());
-			sliderRotate.setDisable(config.isEmpty());
+			return cam.isConfigurable() ? Optional.of(cam) : Optional.empty();
 		}
+		return Optional.empty();
 	}
 }
