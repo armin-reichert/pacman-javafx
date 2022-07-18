@@ -38,17 +38,21 @@ public class CamTotal extends GameSceneCamera {
 	public static final double INITIAL_TRANSLATE_Z = -160;
 
 	public CamTotal() {
+		config = new CamConfiguration();
+
 		setNearClip(0.1);
 		setFarClip(10000.0);
-		setRotationAxis(Rotate.X_AXIS);
-		setRotate(INITIAL_ROTATE);
-		config = new CamConfiguration();
-		config.translateXPy.set(INITIAL_TRANSLATE_X);
-		config.translateYPy.set(INITIAL_TRANSLATE_Y);
-		config.translateZPy.set(INITIAL_TRANSLATE_Z);
+
 		translateXProperty().bind(config.translateXPy);
 		translateYProperty().bind(config.translateYPy);
 		translateZProperty().bind(config.translateZPy);
+		setRotationAxis(Rotate.X_AXIS);
+		rotateProperty().bind(config.rotatePy);
+
+		config.translateXPy.set(INITIAL_TRANSLATE_X);
+		config.translateYPy.set(INITIAL_TRANSLATE_Y);
+		config.translateZPy.set(INITIAL_TRANSLATE_Z);
+		config.rotatePy.set(INITIAL_ROTATE);
 	}
 
 	@Override
