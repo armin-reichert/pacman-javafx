@@ -188,12 +188,12 @@ public class PlayScene3D implements GameScene {
 			fxSubScene.setCamera(camera);
 			fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 			fxSubScene.requestFocus();
-			if (world3D != null && world3D.getScores3D() != null) {
-				var scores3D = world3D.getScores3D();
-				scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-				scores3D.rotateProperty().bind(camera.rotateProperty());
-			}
 			camera.reset();
+		}
+		if (world3D != null && world3D.getScores3D() != null) {
+			var scores3D = world3D.getScores3D();
+			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+			scores3D.rotateProperty().bind(camera.rotateProperty());
 		}
 	}
 
