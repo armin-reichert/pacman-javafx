@@ -36,10 +36,6 @@ import javafx.scene.transform.Rotate;
 public class CamFirstPerson extends GameSceneCamera {
 
 	private Pac pac;
-	private double speed = 0.02;
-
-	public CamFirstPerson() {
-	}
 
 	public void setPac(Pac pac) {
 		this.pac = pac;
