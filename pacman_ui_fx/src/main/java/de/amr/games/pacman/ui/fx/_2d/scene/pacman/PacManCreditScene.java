@@ -76,13 +76,4 @@ public class PacManCreditScene extends GameScene2D {
 
 		ctx.r2D.drawCopyright(g, 29);
 	}
-
-	@Override
-	public void drawHUD(GraphicsContext g) {
-		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().gameScore);
-		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().highScore);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.hudFont, ctx.game().getCredit());
-		}
-	}
 }

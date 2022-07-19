@@ -111,15 +111,6 @@ public class MsPacManIntroScene extends GameScene2D {
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	@Override
-	public void drawHUD(GraphicsContext g) {
-		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().gameScore);
-		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().highScore);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.hudFont, ctx.game().getCredit());
-		}
-	}
-
 	private void drawTitle(GraphicsContext g) {
 		g.setFont(ctx.r2D.getArcadeFont());
 		g.setFill(Color.ORANGE);

@@ -134,15 +134,6 @@ public class PacManIntroScene extends GameScene2D {
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	@Override
-	public void drawHUD(GraphicsContext g) {
-		ctx.r2D.drawScore(g, ctx.hudFont, ctx.game().scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.hudFont, ctx.game().scores.highScore);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.hudFont, ctx.game().getCredit());
-		}
-	}
-
 	// TODO inspect in MAME what's really going on
 	private int flutter(long time) {
 		return time % 5 < 2 ? 0 : -1;

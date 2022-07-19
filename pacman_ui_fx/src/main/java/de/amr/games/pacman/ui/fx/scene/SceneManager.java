@@ -52,7 +52,6 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import javafx.scene.Scene;
-import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -149,8 +148,6 @@ public class SceneManager {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
-		context.hudFont = Font.font(context.r2D.getArcadeFont().getFamily(), 8.0 * scene.getScaling());
-
 		gameController.setSounds(sounds);
 		scene.setSceneContext(context);
 		LOGGER.info("Scene context updated for '%s'.", scene);

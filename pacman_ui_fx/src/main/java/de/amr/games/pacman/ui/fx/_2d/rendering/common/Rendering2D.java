@@ -30,7 +30,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
@@ -44,7 +43,6 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
@@ -53,7 +51,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 /**
@@ -128,12 +125,6 @@ public interface Rendering2D {
 	Image getMazeFullImage(int mazeNumber);
 
 	// Drawing
-
-	default void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
 
 	/**
 	 * Draws sprite (region) using spritesheet.
@@ -223,31 +214,6 @@ public interface Rendering2D {
 	 * @param tileY vertical tile position
 	 */
 	void drawCopyright(GraphicsContext g, int tileY);
-
-	default void drawCredit(GraphicsContext g, Font font, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Color.WHITE, font, t(2), t(36) - 1);
-	}
-
-	default void drawScore(GraphicsContext g, Font font, Score score) {
-		if (score.isVisible()) {
-			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
-			var levelText = score.showContent ? "L" + score.levelNumber : "";
-			drawText(g, score.title, Color.WHITE, font, score.getPosition().x(), score.getPosition().y());
-			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, score.getPosition().x(),
-					score.getPosition().y() + t(1));
-			drawText(g, levelText, Color.LIGHTGRAY, font, score.getPosition().x() + t(8), score.getPosition().y() + t(1));
-		}
-	}
-
-	default void drawGameStateMessage(GraphicsContext g, Font font, GameState state) {
-		if (state == GameState.GAME_OVER) {
-			drawText(g, "GAME  OVER", Color.RED, font, t(9), t(21));
-		} else if (state == GameState.READY) {
-			drawText(g, "READY", Color.YELLOW, font, t(11), t(21));
-			g.setFont(Font.font(font.getFamily(), FontPosture.ITALIC, TS));
-			g.fillText("!", t(16), t(21));
-		}
-	}
 
 	default void drawLevelCounter(GraphicsContext g, LevelCounter levelCounter) {
 		if (levelCounter.isVisible()) {

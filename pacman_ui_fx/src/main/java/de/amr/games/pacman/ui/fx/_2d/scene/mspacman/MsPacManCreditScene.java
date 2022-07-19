@@ -72,14 +72,4 @@ public class MsPacManCreditScene extends GameScene2D {
 		g.fillText("PTS", t(25), t(25));
 		ctx.r2D.drawCopyright(g, 29);
 	}
-
-	@Override
-	public void drawHUD(GraphicsContext g) {
-		var font = Font.font(ctx.r2D.getArcadeFont().getFamily(), 8.0 * getScaling());
-		ctx.r2D.drawScore(g, font, ctx.scores().gameScore);
-		ctx.r2D.drawScore(g, font, ctx.scores().highScore);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, font, ctx.game().getCredit());
-		}
-	}
 }

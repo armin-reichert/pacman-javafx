@@ -81,6 +81,11 @@ public class BootScene extends GameScene2D {
 		g.drawImage(buffer.snapshot(null, null), 0, 0);
 	}
 
+	@Override
+	public void drawHUD(GraphicsContext g) {
+		// hide
+	}
+
 	private void clearBuffer() {
 		bg.setFill(Color.BLACK);
 		bg.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
