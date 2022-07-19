@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import org.apache.logging.log4j.LogManager;
@@ -187,7 +186,7 @@ public abstract class GameScene2D implements GameScene {
 			drawText(g, "GAME  OVER", Color.RED, font, t(9) * getScaling(), t(21) * getScaling());
 		} else if (state == GameState.READY) {
 			drawText(g, "READY", Color.YELLOW, font, t(11) * getScaling(), t(21) * getScaling());
-			g.setFont(Font.font(font.getFamily(), FontPosture.ITALIC, TS));
+			g.setFont(Font.font(hudFont.getFamily(), FontPosture.ITALIC, 8.0 * getScaling()));
 			g.fillText("!", t(16) * getScaling(), t(21) * getScaling());
 		}
 	}
