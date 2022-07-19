@@ -140,7 +140,7 @@ public class BootScene extends GameScene2D {
 		for (int row = 0; row < numRows; ++row) {
 			bg.strokeLine(0, row * cellSize, ArcadeWorld.TILES_X * TS, row * cellSize);
 		}
-		for (int col = 0; col < numCols; ++col) {
+		for (int col = 0; col <= numCols; ++col) {
 			bg.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
 		}
 		LOGGER.trace("Grid");
