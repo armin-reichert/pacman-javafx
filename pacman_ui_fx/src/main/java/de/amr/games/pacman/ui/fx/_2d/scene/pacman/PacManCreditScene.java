@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -57,12 +58,7 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
-		ctx.r2D.drawScore(g, ctx.scores().gameScore);
-		ctx.r2D.drawScore(g, ctx.scores().highScore);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().getCredit());
-		}
+	public void drawSceneContent(GraphicsContext g) {
 		g.setFont(ctx.r2D.getArcadeFont());
 		g.setFill(ctx.r2D.getGhostColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(17));
@@ -79,5 +75,14 @@ public class PacManCreditScene extends GameScene2D {
 		g.fillText("PTS", t(25), t(25));
 
 		ctx.r2D.drawCopyright(g, 29);
+	}
+
+	@Override
+	public void drawHUD(GraphicsContext g) {
+		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().gameScore);
+		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().highScore);
+		if (creditVisible) {
+			ctx.r2D.drawCredit(g, ctx.hudFont, ctx.game().getCredit());
+		}
 	}
 }

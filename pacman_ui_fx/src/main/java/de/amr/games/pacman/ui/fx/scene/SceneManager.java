@@ -47,10 +47,12 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
+import de.amr.games.pacman.ui.fx._3d.scene.CutScene3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -67,7 +69,7 @@ public class SceneManager {
 		{ new BootScene(),                null },
 		{ new PacManIntroScene(),         null },
 		{ new PacManCreditScene(),        null },
-		{ new PacManCutscene1(),          null },
+		{ new PacManCutscene1(),          new CutScene3D() },
 		{ new PacManCutscene2(),          null },
 		{ new PacManCutscene3(),          null },
 		{ new PlayScene2D(),              new PlayScene3D() },
@@ -147,6 +149,8 @@ public class SceneManager {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
+		context.hudFont = Font.font(context.r2D.getArcadeFont().getFamily(), 8.0 * scene.getScaling());
+
 		gameController.setSounds(sounds);
 		scene.setSceneContext(context);
 		LOGGER.info("Scene context updated for '%s'.", scene);

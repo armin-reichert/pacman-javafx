@@ -33,6 +33,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -41,6 +42,7 @@ public class SceneContext {
 
 	public final GameController gameController;
 	public Rendering2D r2D;
+	public Font hudFont;
 	public Model3D model3D;
 
 	public SceneContext(GameController gameController) {

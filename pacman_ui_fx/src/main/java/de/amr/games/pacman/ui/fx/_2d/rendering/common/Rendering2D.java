@@ -129,6 +129,12 @@ public interface Rendering2D {
 
 	// Drawing
 
+	default void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
+	}
+
 	/**
 	 * Draws sprite (region) using spritesheet.
 	 * 
@@ -218,35 +224,27 @@ public interface Rendering2D {
 	 */
 	void drawCopyright(GraphicsContext g, int tileY);
 
-	default void drawCredit(GraphicsContext g, int credit) {
-		g.setFont(getArcadeFont());
-		g.setFill(Color.WHITE);
-		g.fillText("CREDIT  %d".formatted(credit), t(2), t(36) - 1);
+	default void drawCredit(GraphicsContext g, Font font, int credit) {
+		drawText(g, "CREDIT  %d".formatted(credit), Color.WHITE, font, t(2), t(36) - 1);
 	}
 
-	default void drawScore(GraphicsContext g, Score score) {
+	default void drawScore(GraphicsContext g, Font font, Score score) {
 		if (score.isVisible()) {
-			String pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
-			String levelText = score.showContent ? "L" + score.levelNumber : "";
-			g.setFont(getArcadeFont());
-			g.setFill(Color.WHITE);
-			g.fillText(score.title, score.getPosition().x(), score.getPosition().y());
-			g.fillText("%7s".formatted(pointsText), score.getPosition().x(), score.getPosition().y() + t(1));
-			g.setFill(Color.LIGHTGRAY);
-			g.fillText(levelText, score.getPosition().x() + t(8), score.getPosition().y() + t(1));
+			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
+			var levelText = score.showContent ? "L" + score.levelNumber : "";
+			drawText(g, score.title, Color.WHITE, font, score.getPosition().x(), score.getPosition().y());
+			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, score.getPosition().x(),
+					score.getPosition().y() + t(1));
+			drawText(g, levelText, Color.LIGHTGRAY, font, score.getPosition().x() + t(8), score.getPosition().y() + t(1));
 		}
 	}
 
-	default void drawGameStateMessage(GraphicsContext g, GameState state) {
+	default void drawGameStateMessage(GraphicsContext g, Font font, GameState state) {
 		if (state == GameState.GAME_OVER) {
-			g.setFont(getArcadeFont());
-			g.setFill(Color.RED);
-			g.fillText("GAME  OVER", t(9), t(21));
+			drawText(g, "GAME  OVER", Color.RED, font, t(9), t(21));
 		} else if (state == GameState.READY) {
-			g.setFont(getArcadeFont());
-			g.setFill(Color.YELLOW);
-			g.fillText("READY", t(11), t(21));
-			g.setFont(Font.font(getArcadeFont().getFamily(), FontPosture.ITALIC, TS));
+			drawText(g, "READY", Color.YELLOW, font, t(11), t(21));
+			g.setFont(Font.font(font.getFamily(), FontPosture.ITALIC, TS));
 			g.fillText("!", t(16), t(21));
 		}
 	}
@@ -292,14 +290,14 @@ public interface Rendering2D {
 		}
 	}
 
-	default void drawTileBorders(GraphicsContext g, double scale) {
+	default void drawTileBorders(GraphicsContext g) {
 		g.setStroke(Color.GRAY);
 		g.setLineWidth(0.5);
 		for (int row = 0; row <= ArcadeWorld.TILES_Y; ++row) {
-			g.strokeLine(0, scale * t(row), scale * ArcadeWorld.WORLD_SIZE.x(), scale * t(row));
+			g.strokeLine(0, t(row), ArcadeWorld.WORLD_SIZE.x(), t(row));
 		}
 		for (int col = 0; col <= ArcadeWorld.TILES_X; ++col) {
-			g.strokeLine(scale * t(col), 0, scale * t(col), scale * ArcadeWorld.WORLD_SIZE.y());
+			g.strokeLine(t(col), 0, t(col), ArcadeWorld.WORLD_SIZE.y());
 		}
 	}
 }

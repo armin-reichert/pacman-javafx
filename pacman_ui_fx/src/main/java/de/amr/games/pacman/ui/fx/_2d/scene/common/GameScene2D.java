@@ -23,11 +23,15 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
+import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.DoubleProperty;
@@ -38,7 +42,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
+import javafx.scene.text.FontSmoothingType;
 
 /**
  * Base class of all 2D scenes that get rendered inside a canvas.
@@ -47,10 +51,11 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D implements GameScene {
 
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
 	protected final V2d unscaledSize;
-	protected final Canvas canvas;
-	protected final GraphicsContext g;
-	protected final Canvas overlayCanvas = new Canvas();
+	protected final ResizableCanvas canvas;
+	protected final ResizableCanvas overlayCanvas;
 	protected final Pane infoPane = new Pane();
 	protected final StackPane root;
 	protected final SubScene fxSubScene;
@@ -61,12 +66,14 @@ public abstract class GameScene2D implements GameScene {
 
 	protected GameScene2D(V2d size) {
 		unscaledSize = size;
-		canvas = new Canvas(unscaledSize.x(), unscaledSize.y());
-		g = canvas.getGraphicsContext2D();
+		canvas = new ResizableCanvas(unscaledSize.x(), unscaledSize.y());
+		overlayCanvas = new ResizableCanvas(unscaledSize.x(), unscaledSize.y());
+
 		root = new StackPane(canvas, overlayCanvas, infoPane);
 		// without this, an ugly vertical white line appears left of the game scene:
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
+
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.widthProperty().bind(fxSubScene.widthProperty());
@@ -75,10 +82,67 @@ public abstract class GameScene2D implements GameScene {
 		overlayCanvas.setMouseTransparent(true);
 		infoPane.setVisible(Env.showDebugInfoPy.get());
 		infoPane.visibleProperty().bind(Env.showDebugInfoPy);
+
+		resize(unscaledSize.y());
 	}
 
 	protected GameScene2D() {
 		this(new V2d(ArcadeWorld.WORLD_SIZE));
+	}
+
+	@Override
+	public void resize(double height) {
+		double aspectRatio = unscaledSize.x() / unscaledSize.y();
+		double scaling = height / unscaledSize.y();
+		double width = aspectRatio * height;
+		fxSubScene.setWidth(width);
+		fxSubScene.setHeight(height);
+		scalingPy.set(scaling);
+		LOGGER.info("Game scene %s resized. Canvas size: %.0f x %.0f scaling: %.2f", getClass().getSimpleName(),
+				canvas.getWidth(), canvas.getHeight(), scaling);
+	}
+
+	@Override
+	public final void updateAndRender() {
+		update();
+		render(canvas.getGraphicsContext2D());
+	}
+
+	protected void render(GraphicsContext g) {
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g.save();
+		g.scale(getScaling(), getScaling());
+		g.setFontSmoothingType(FontSmoothingType.LCD);
+		drawSceneContent(g);
+		g.restore();
+		if (overlayCanvas.isVisible()) {
+			var og = overlayCanvas.getGraphicsContext2D();
+			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+			og.save();
+			og.scale(getScaling(), getScaling());
+			og.setFontSmoothingType(FontSmoothingType.LCD);
+			ctx.r2D.drawTileBorders(og);
+			og.restore();
+		}
+		g.setFontSmoothingType(FontSmoothingType.LCD);
+		drawHUD(g);
+	}
+
+	/**
+	 * Updates the scene. Subclasses override this method.
+	 */
+	public void update() {
+	}
+
+	/**
+	 * Draws the scene content. Subclasses override this method.
+	 */
+	public void drawSceneContent(GraphicsContext g) {
+	}
+
+	public void drawHUD(GraphicsContext g) {
+
 	}
 
 	@Override
@@ -114,41 +178,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void resize(double height) {
-		double aspectRatio = unscaledSize.x() / unscaledSize.y();
-		double width = aspectRatio * height;
-		fxSubScene.setWidth(width);
-		fxSubScene.setHeight(height);
-		scalingPy.set(fxSubScene.getHeight() / unscaledSize.y());
-		canvas.getTransforms().setAll(new Scale(getScaling(), getScaling()));
-	}
-
 	public double getScaling() {
 		return scalingPy.get();
-	}
-
-	@Override
-	public final void updateAndRender() {
-		update();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		drawSceneContent();
-		if (overlayCanvas.isVisible()) {
-			var og = overlayCanvas.getGraphicsContext2D();
-			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			ctx.r2D.drawTileBorders(og, getScaling());
-		}
-	}
-
-	/**
-	 * Updates the scene. Subclasses override this method.
-	 */
-	protected void update() {
-	}
-
-	/**
-	 * Draws the scene content. Subclasses override this method.
-	 */
-	public void drawSceneContent() {
 	}
 }

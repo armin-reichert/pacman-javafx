@@ -80,6 +80,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 		mazeFull = Ufx.image("graphics/pacman/maze_full.png");
 		mazeEmpty = Ufx.image("graphics/pacman/maze_empty.png");
 		font = Ufx.font("fonts/emulogic.ttf", 8);
+//		font = Font.font("Monospaced", 8);
 	}
 
 	@Override

@@ -69,7 +69,7 @@ public class PiPView extends StackPane {
 			g.setFill(Color.BLACK);
 			g.fillRect(0, 0, width, height);
 			if (drawIt) {
-				gameScene.drawSceneContent();
+				gameScene.drawSceneContent(g);
 			} else {
 				g.drawImage(PLACEHOLDER, 0, 0, 224, 288);
 			}

@@ -94,19 +94,16 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		var tick = sceneController.state().timer().tick();
 		switch (sceneController.state()) {
 		case START -> {
-			drawScoresAndCredit(g);
 			drawGallery(g);
 		}
 		case PRESENTING_GHOSTS -> {
-			drawScoresAndCredit(g);
 			drawGallery(g);
 		}
 		case SHOWING_POINTS -> {
-			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			if (tick > TickTimer.secToTicks(1)) {
@@ -115,7 +112,6 @@ public class PacManIntroScene extends GameScene2D {
 			}
 		}
 		case CHASING_PAC -> {
-			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
@@ -123,14 +119,12 @@ public class PacManIntroScene extends GameScene2D {
 			ctx.r2D.drawCopyright(g, 32);
 		}
 		case CHASING_GHOSTS -> {
-			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			drawGuys(g, 0);
 			ctx.r2D.drawCopyright(g, 32);
 		}
 		case READY_TO_PLAY -> {
-			drawScoresAndCredit(g);
 			drawGallery(g);
 			drawPoints(g);
 			drawGuys(g, 0);
@@ -140,11 +134,12 @@ public class PacManIntroScene extends GameScene2D {
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	private void drawScoresAndCredit(GraphicsContext g) {
-		ctx.r2D.drawScore(g, ctx.game().scores.gameScore);
-		ctx.r2D.drawScore(g, ctx.game().scores.highScore);
+	@Override
+	public void drawHUD(GraphicsContext g) {
+		ctx.r2D.drawScore(g, ctx.hudFont, ctx.game().scores.gameScore);
+		ctx.r2D.drawScore(g, ctx.hudFont, ctx.game().scores.highScore);
 		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().getCredit());
+			ctx.r2D.drawCredit(g, ctx.hudFont, ctx.game().getCredit());
 		}
 	}
 

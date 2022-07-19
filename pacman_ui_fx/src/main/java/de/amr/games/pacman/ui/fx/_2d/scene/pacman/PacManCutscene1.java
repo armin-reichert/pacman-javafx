@@ -27,6 +27,9 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.lib.V2i.v;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
@@ -35,12 +38,15 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
  */
 public class PacManCutscene1 extends GameScene2D {
+
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private int initialDelay;
 	private int frame;
@@ -72,10 +78,12 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setBothDirs(Direction.LEFT);
 		blinky.setAbsSpeed(1.3);
 		blinky.show();
+
+		LOGGER.info("PacManCutscene1 initialized. Canvas size: %.0f x %.0f", canvas.getWidth(), canvas.getHeight());
 	}
 
 	@Override
-	protected void update() {
+	public void update() {
 		if (initialDelay > 0) {
 			--initialDelay;
 			return;
@@ -109,7 +117,7 @@ public class PacManCutscene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
 			g.setFont(ctx.r2D.getArcadeFont());
 			g.setFill(Color.WHITE);

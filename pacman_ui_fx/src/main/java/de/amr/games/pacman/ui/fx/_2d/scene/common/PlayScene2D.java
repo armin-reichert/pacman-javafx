@@ -38,8 +38,10 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Font;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -93,9 +95,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
-		ctx.r2D.drawScore(g, ctx.scores().gameScore);
-		ctx.r2D.drawScore(g, ctx.scores().highScore);
+	public void drawSceneContent(GraphicsContext g) {
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			var flashing = arcadeWorld.flashingAnimation();
 			if (flashing.isPresent() && flashing.get().isRunning()) {
@@ -106,20 +106,29 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			drawMaze();
 		}
-		ctx.r2D.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D.drawBonus(g, ctx.game().bonus());
 		ctx.r2D.drawPac(g, ctx.game().pac);
 		ctx.r2D.drawGhosts(g, ctx.game().theGhosts);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().getCredit());
-		} else {
+		if (!creditVisible) {
 			int livesDisplayed = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
 			ctx.r2D.drawLivesCounter(g, livesDisplayed);
 		}
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
+	@Override
+	public void drawHUD(GraphicsContext g) {
+		var font = Font.font(ctx.r2D.getArcadeFont().getFamily(), 8.0 * getScaling());
+		if (creditVisible) {
+			ctx.r2D.drawCredit(g, font, ctx.game().getCredit());
+		}
+		ctx.r2D.drawScore(g, font, ctx.scores().gameScore);
+		ctx.r2D.drawScore(g, font, ctx.scores().highScore);
+		ctx.r2D.drawGameStateMessage(g, font, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
+	}
+
 	private void drawMaze() {
+		var g = canvas.getGraphicsContext2D();
 		ctx.r2D.drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
 	}
 

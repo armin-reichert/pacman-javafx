@@ -65,7 +65,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	protected void update() {
+	public void update() {
 		var tick = ctx.state().timer().tick();
 		if (betweenSec(0.5, 1.5, tick) && tick % 5 == 0) {
 			drawRandomHexCodesIntoBuffer();
@@ -77,7 +77,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		g.drawImage(buffer.snapshot(null, null), 0, 0);
 	}
 

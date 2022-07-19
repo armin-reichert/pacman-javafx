@@ -92,4 +92,8 @@ public interface GameScene extends GameEventAdapter {
 	 */
 	default void onKeyPressed() {
 	}
+
+	default double getScaling() {
+		return 1.0;
+	}
 }

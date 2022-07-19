@@ -31,6 +31,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 3: "Junior".
@@ -77,7 +78,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		var ssMsPacMan = (SpritesheetMsPacMan) ctx.r2D;
 		ssMsPacMan.drawFlap(g, icc.flap);
 		ctx.r2D.drawPac(g, icc.msPacMan);

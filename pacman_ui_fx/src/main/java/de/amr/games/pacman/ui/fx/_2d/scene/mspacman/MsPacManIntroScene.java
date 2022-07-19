@@ -97,9 +97,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
-		ctx.r2D.drawScore(g, ctx.scores().gameScore);
-		ctx.r2D.drawScore(g, ctx.scores().highScore);
+	public void drawSceneContent(GraphicsContext g) {
 		drawTitle(g);
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {
@@ -110,10 +108,16 @@ public class MsPacManIntroScene extends GameScene2D {
 		ctx.r2D.drawGhosts(g, icc.ghosts);
 		ctx.r2D.drawPac(g, icc.msPacMan);
 		ctx.r2D.drawCopyright(g, 29);
-		if (creditVisible) {
-			ctx.r2D.drawCredit(g, ctx.game().getCredit());
-		}
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
+	}
+
+	@Override
+	public void drawHUD(GraphicsContext g) {
+		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().gameScore);
+		ctx.r2D.drawScore(g, ctx.hudFont, ctx.scores().highScore);
+		if (creditVisible) {
+			ctx.r2D.drawCredit(g, ctx.hudFont, ctx.game().getCredit());
+		}
 	}
 
 	private void drawTitle(GraphicsContext g) {
