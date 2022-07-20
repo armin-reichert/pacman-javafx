@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
@@ -46,6 +47,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.util.Duration;
@@ -66,6 +68,8 @@ public class Maze3D extends Group {
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private static final double FLOOR_THICKNESS = 0.1;
+
+	private static final Image WALL_TEXTURE = Ufx.image("graphics/wall-texture-64.jpg");
 
 	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(Env.mazeResolutionPy.get());
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(Env.mazeWallHeightPy.get());
@@ -107,6 +111,12 @@ public class Maze3D extends Group {
 	private PhongMaterial coloredMaterial(Color diffuseColor) {
 		var material = new PhongMaterial(diffuseColor);
 		material.setSpecularColor(diffuseColor.brighter());
+		return material;
+	}
+
+	private PhongMaterial brickMaterial() {
+		var material = new PhongMaterial();
+		material.setDiffuseMap(WALL_TEXTURE);
 		return material;
 	}
 
@@ -238,7 +248,11 @@ public class Maze3D extends Group {
 		};
 		base.depthProperty().bind(wallHeightPy);
 		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-		base.setMaterial(data.baseMaterial);
+//		base.setMaterial(data.baseMaterial);
+		var pattern = new ImagePattern(WALL_TEXTURE, 0, 0, base.getWidth(), WALL_TEXTURE.getHeight(), false);
+		var pm = new PhongMaterial();
+		pm.setDiffuseMap(pattern.getImage());
+		base.setMaterial(pm);
 		base.drawModeProperty().bind(Env.drawModePy);
 
 		var top = switch (type) {
