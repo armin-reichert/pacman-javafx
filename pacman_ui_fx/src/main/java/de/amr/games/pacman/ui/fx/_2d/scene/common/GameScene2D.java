@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -60,41 +59,41 @@ public abstract class GameScene2D implements GameScene {
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	protected final V2d unscaledSize;
+	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+	protected final StackPane root = new StackPane();
+	protected final SubScene fxSubScene;
+	protected final Pane infoPane = new Pane();
 	protected final ResizableCanvas canvas;
 	protected final ResizableCanvas overlayCanvas;
-	protected final Pane infoPane = new Pane();
-	protected final StackPane root;
-	protected final SubScene fxSubScene;
-	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
 
 	protected SceneContext ctx;
 	protected Font hudFont;
 	protected boolean creditVisible;
 
+	protected GameScene2D() {
+		this(new V2d(ArcadeWorld.WORLD_SIZE));
+	}
+
 	protected GameScene2D(V2d size) {
 		unscaledSize = size;
-		canvas = new ResizableCanvas(unscaledSize.x(), unscaledSize.y());
-		overlayCanvas = new ResizableCanvas(unscaledSize.x(), unscaledSize.y());
 
-		root = new StackPane(canvas, overlayCanvas, infoPane);
-		// without this, an ugly vertical white line appears left of the game scene:
-		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 
+		canvas = new ResizableCanvas();
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+
+		overlayCanvas = new ResizableCanvas();
 		overlayCanvas.widthProperty().bind(fxSubScene.widthProperty());
 		overlayCanvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayCanvas.setMouseTransparent(true);
+
 		infoPane.setVisible(Env.showDebugInfoPy.get());
 		infoPane.visibleProperty().bind(Env.showDebugInfoPy);
 
+		root.getChildren().addAll(canvas, overlayCanvas, infoPane);
 		resize(unscaledSize.y());
-	}
-
-	protected GameScene2D() {
-		this(new V2d(ArcadeWorld.WORLD_SIZE));
 	}
 
 	@Override

@@ -105,7 +105,7 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private Parent createSceneContent() {
-		gameSceneParent = new StackPane();
+		var root = new StackPane();
 		dashboard = new Dashboard();
 		dashboard.build(this, gameController);
 		pipView = new PiPView(new PlayScene2D());
@@ -116,7 +116,9 @@ public class GameUI implements GameEventAdapter {
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
-		return new StackPane(gameSceneParent, overlayPane, flashMessageView);
+		gameSceneParent = new StackPane();
+		root.getChildren().addAll(gameSceneParent, overlayPane, flashMessageView);
+		return root;
 	}
 
 	public void setPacSteering(Steering steering) {
