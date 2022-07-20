@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
@@ -41,7 +42,6 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
 /**
@@ -56,13 +56,19 @@ public class CutScene3D implements GameScene {
 
 	private SceneContext ctx;
 	private World3D world3D;
-
-	private double zoom = 0.25;
-	private double w = zoom * ArcadeWorld.WORLD_SIZE.x();
-	private double h = zoom * ArcadeWorld.WORLD_SIZE.y();
 	private GameScene2D embeddedCutScene;
 
+	private double w;
+	private double h;
+
+	private void setZoom(double zoom) {
+		w = zoom * ArcadeWorld.WORLD_SIZE.x();
+		h = zoom * ArcadeWorld.WORLD_SIZE.y();
+	}
+
 	public CutScene3D() {
+		setZoom(0.5);
+		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
 
 		light = new AmbientLight(Env.lightColorPy.get());
@@ -70,6 +76,7 @@ public class CutScene3D implements GameScene {
 
 		// origin is at center of scene content
 		contentRoot.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
+
 		// initial size does not matter, subscene is resized automatically
 		fxSubScene = new SubScene(new Group(contentRoot, light), 50, 50, true, SceneAntialiasing.BALANCED);
 	}
@@ -81,42 +88,33 @@ public class CutScene3D implements GameScene {
 
 	@Override
 	public void init() {
+
 		var content = contentRoot.getChildren();
 		content.clear();
 
 		world3D = new World3D(ctx.game(), ctx.model3D, ctx.r2D);
 		content.add(world3D);
 
-		changeCamera(Perspective.TOTAL);
+		changeCamera(Perspective.DRONE);
 
 		embeddedCutScene = new PacManCutscene1();
 		embeddedCutScene.resize(h);
 		embeddedCutScene.setSceneContext(ctx);
 		embeddedCutScene.init();
 
-		var subscene = embeddedCutScene.getFXSubScene();
-		subscene.setTranslateX(0.5 * (DEFAULT_WIDTH - w));
-		subscene.setTranslateY(1.0 * (DEFAULT_HEIGHT - h));
-		subscene.setTranslateZ(-h / 2);
-		subscene.rotationAxisProperty().bind(getCamera().rotationAxisProperty());
-		subscene.rotateProperty().bind(getCamera().rotateProperty());
-		content.add(subscene);
+		var root = embeddedCutScene.getRoot();
+		root.setTranslateX(0.5 * (DEFAULT_WIDTH - w));
+		root.setTranslateY(0.5 * (DEFAULT_HEIGHT - h));
+		root.setTranslateZ(-h / 2);
+//		root.rotationAxisProperty().bind(getCamera().rotationAxisProperty());
+//		root.rotateProperty().bind(getCamera().rotateProperty());
+		content.add(root);
 	}
 
 	@Override
 	public void updateAndRender() {
 		world3D.update(ctx.game());
-		if (embeddedCutScene != null) {
-			var eg = embeddedCutScene.getGameSceneCanvas().getGraphicsContext2D();
-			eg.setFill(Color.BLACK);
-			eg.fillRect(0, 0, w, h);
-			embeddedCutScene.update();
-			embeddedCutScene.drawSceneContent(eg);
-			eg.setStroke(Color.WHITE);
-			eg.strokeLine(0, 0, w, h);
-			eg.setStroke(Color.RED);
-			eg.strokeLine(w, 0, 0, h);
-		}
+		embeddedCutScene.updateAndRender();
 	}
 
 	@Override

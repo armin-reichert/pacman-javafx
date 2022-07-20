@@ -211,6 +211,10 @@ public abstract class GameScene2D implements GameScene {
 		return fxSubScene;
 	}
 
+	public StackPane getRoot() {
+		return root;
+	}
+
 	public Canvas getGameSceneCanvas() {
 		return canvas;
 	}

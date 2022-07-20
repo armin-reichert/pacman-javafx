@@ -46,6 +46,10 @@ public class PiPView {
 	private StackPane root = new StackPane();
 	private GameScene2D gameScene;
 
+	public PiPView() {
+		root.setBackground(Ufx.colorBackground(Color.BLACK));
+	}
+
 	public PiPView(GameScene2D embeddedGameScene) {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		setEmbeddedGameScene(embeddedGameScene);
@@ -61,6 +65,10 @@ public class PiPView {
 
 	public StackPane getRoot() {
 		return root;
+	}
+
+	public GameScene2D getGameScene() {
+		return gameScene;
 	}
 
 	public void refresh(SceneManager sceneManager) {
