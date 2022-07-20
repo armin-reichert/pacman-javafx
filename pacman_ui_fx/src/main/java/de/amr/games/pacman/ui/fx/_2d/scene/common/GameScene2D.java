@@ -67,7 +67,6 @@ public abstract class GameScene2D implements GameScene {
 	protected final ResizableCanvas overlayCanvas;
 
 	protected SceneContext ctx;
-	protected Font hudFont;
 	protected boolean creditVisible;
 
 	protected GameScene2D() {
@@ -133,8 +132,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 		g.setFontSmoothingType(FontSmoothingType.LCD);
 		var fontFamily = ctx.r2D.getArcadeFont().getFamily();
-		hudFont = Font.font(fontFamily, Math.floor(8.0 * getScaling()));
-		drawHUD(g);
+		drawHUD(g, Font.font(fontFamily, Math.floor(8.0 * getScaling())));
 	}
 
 	/**
@@ -149,7 +147,7 @@ public abstract class GameScene2D implements GameScene {
 	public void drawSceneContent(GraphicsContext g) {
 	}
 
-	public void drawHUD(GraphicsContext g) {
+	public void drawHUD(GraphicsContext g, Font hudFont) {
 		drawScore(g, hudFont, ctx.game().scores.gameScore);
 		drawScore(g, hudFont, ctx.game().scores.highScore);
 		if (creditVisible) {
@@ -185,7 +183,7 @@ public abstract class GameScene2D implements GameScene {
 			drawText(g, "GAME  OVER", Color.RED, font, t(9) * getScaling(), t(21) * getScaling());
 		} else if (state == GameState.READY) {
 			drawText(g, "READY", Color.YELLOW, font, t(11) * getScaling(), t(21) * getScaling());
-			g.setFont(Font.font(hudFont.getFamily(), FontPosture.ITALIC, 8.0 * getScaling()));
+			g.setFont(Font.font(font.getFamily(), FontPosture.ITALIC, 8.0 * getScaling()));
 			g.fillText("!", t(16) * getScaling(), t(21) * getScaling());
 		}
 	}

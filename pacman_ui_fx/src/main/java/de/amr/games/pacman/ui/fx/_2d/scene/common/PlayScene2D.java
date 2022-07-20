@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Font;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -116,8 +117,8 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void drawHUD(GraphicsContext g) {
-		super.drawHUD(g);
+	public void drawHUD(GraphicsContext g, Font hudFont) {
+		super.drawHUD(g, hudFont);
 		drawGameStateMessage(g, hudFont, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 	}
 

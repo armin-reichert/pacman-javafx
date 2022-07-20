@@ -41,6 +41,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -82,8 +83,8 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawHUD(GraphicsContext g) {
-		// hide
+	public void drawHUD(GraphicsContext g, Font hudFont) {
+		// hide HUD
 	}
 
 	private void clearBuffer() {

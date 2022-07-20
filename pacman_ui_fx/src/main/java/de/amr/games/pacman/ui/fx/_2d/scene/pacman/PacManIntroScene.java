@@ -62,7 +62,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.restartInInitialState(IntroController.State.START);
+		sceneController.restartInState(IntroController.State.START);
 		creditVisible = false;
 		icc.pacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.pacMan));
 		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimationSet(ctx.r2D.createGhostAnimationSet(ghost)));

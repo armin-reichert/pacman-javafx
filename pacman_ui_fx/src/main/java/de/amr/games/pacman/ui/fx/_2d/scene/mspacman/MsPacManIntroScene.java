@@ -61,7 +61,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		sceneController.restartInInitialState(IntroController.State.START);
+		sceneController.restartInState(IntroController.State.START);
 		creditVisible = true;
 		icc.msPacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.msPacMan));
 		icc.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
