@@ -226,10 +226,11 @@ public class Maze3D extends Group {
 	 * @param numBricksX number of bricks in x-direction
 	 * @param numBricksY number of bricks in y-direction
 	 * @param data       data on how the wall look like
+	 * @param type       if it is a horizontal wall, a vertical wall or a corner
 	 */
 	private void addWall(int x, int y, int numBricksX, int numBricksY, WallData data, byte type) {
 
-		Box base = switch (type) {
+		var base = switch (type) {
 		case FloorPlan.HWALL -> createHWall(numBricksX, data.brickSize);
 		case FloorPlan.VWALL -> createVWall(numBricksY, data.brickSize);
 		case FloorPlan.CORNER -> createCorner();
@@ -240,7 +241,7 @@ public class Maze3D extends Group {
 		base.setMaterial(data.baseMaterial);
 		base.drawModeProperty().bind(Env.drawModePy);
 
-		Box top = switch (type) {
+		var top = switch (type) {
 		case FloorPlan.HWALL -> createHWall(numBricksX, data.brickSize);
 		case FloorPlan.VWALL -> createVWall(numBricksY, data.brickSize);
 		case FloorPlan.CORNER -> createCorner();
