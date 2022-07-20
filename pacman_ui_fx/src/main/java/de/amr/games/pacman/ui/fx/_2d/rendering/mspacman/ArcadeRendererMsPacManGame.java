@@ -35,7 +35,7 @@ import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.mspacman.Flap;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
@@ -47,7 +47,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class ArcadeRendererMsPacManGame implements Rendering2D {
+public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 
 	private static ArcadeRendererMsPacManGame cmonManYouKnowTheThing;
 
@@ -94,20 +94,15 @@ public class ArcadeRendererMsPacManGame implements Rendering2D {
 	};
 	//@formatter:on
 
-	private final Spritesheet sheet;
 	private final Image midwayLogo;
 	private final Image[] mazesFull;
 	private final Image[] mazesEmpty;
 	private final Image[] mazesEmptyBW;
-	private final Font font;
 
 	private ArcadeRendererMsPacManGame() {
-		sheet = new Spritesheet("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-				Direction.DOWN);
-
-		font = Ufx.font("fonts/emulogic.ttf", 8);
+		super(new Spritesheet("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+				Direction.DOWN));
 		midwayLogo = Ufx.image("graphics/mspacman/midway.png");
-
 		int numMazes = 6;
 		mazesFull = new Image[numMazes];
 		mazesEmpty = new Image[numMazes];
@@ -120,15 +115,6 @@ public class ArcadeRendererMsPacManGame implements Rendering2D {
 		}
 	}
 
-	public Spritesheet getSheet() {
-		return sheet;
-	}
-
-	@Override
-	public Image source() {
-		return sheet.getSourceImage();
-	}
-
 	/**
 	 * @param col column
 	 * @param row row
@@ -136,16 +122,6 @@ public class ArcadeRendererMsPacManGame implements Rendering2D {
 	 */
 	public Rectangle2D rhs(int col, int row) {
 		return sheet.tilesAtOrigin(456, 0, col, row, 1, 1);
-	}
-
-	@Override
-	public Image getSpriteImage(Rectangle2D sprite) {
-		return sheet.subImage(sprite);
-	}
-
-	@Override
-	public Font getArcadeFont() {
-		return font;
 	}
 
 	@Override

@@ -34,19 +34,18 @@ import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
-public class ArcadeRendererPacManGame implements Rendering2D {
+public class ArcadeRendererPacManGame extends ArcadeRendererBase {
 
 	private static ArcadeRendererPacManGame cmonManYouKnowTheThing;
 
@@ -69,36 +68,14 @@ public class ArcadeRendererPacManGame implements Rendering2D {
 	static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	private final Spritesheet sheet;
 	private final Image mazeFull;
 	private final Image mazeEmpty;
-	private final Font font;
 
 	private ArcadeRendererPacManGame() {
-		sheet = new Spritesheet("graphics/pacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-				Direction.DOWN);
+		super(new Spritesheet("graphics/pacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+				Direction.DOWN));
 		mazeFull = Ufx.image("graphics/pacman/maze_full.png");
 		mazeEmpty = Ufx.image("graphics/pacman/maze_empty.png");
-		font = Ufx.font("fonts/emulogic.ttf", 8);
-	}
-
-	public Spritesheet getSheet() {
-		return sheet;
-	}
-
-	@Override
-	public Image source() {
-		return sheet.getSourceImage();
-	}
-
-	@Override
-	public Image getSpriteImage(Rectangle2D sprite) {
-		return sheet.subImage(sprite);
-	}
-
-	@Override
-	public Font getArcadeFont() {
-		return font;
 	}
 
 	@Override
