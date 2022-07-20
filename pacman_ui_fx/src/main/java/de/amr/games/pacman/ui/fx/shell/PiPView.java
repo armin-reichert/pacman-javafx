@@ -37,21 +37,30 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PiPView extends StackPane {
+public class PiPView {
 
 	private static final Image PLACEHOLDER = Ufx.image("graphics/stoerung.jpg");
 
 	public final DoubleProperty sceneHeightPy = new SimpleDoubleProperty();
 
+	private StackPane root = new StackPane();
 	private GameScene2D gameScene;
+
+	public PiPView(GameScene2D embeddedGameScene) {
+		root.setBackground(Ufx.colorBackground(Color.BLACK));
+		setEmbeddedGameScene(embeddedGameScene);
+	}
 
 	public void setEmbeddedGameScene(GameScene2D gameScene) {
 		this.gameScene = gameScene;
 		gameScene.resize(sceneHeightPy.doubleValue());
 		gameScene.getFXSubScene().setFocusTraversable(false);
-		getChildren().add(gameScene.getFXSubScene());
-		setBackground(Ufx.colorBackground(Color.BLACK));
+		root.getChildren().setAll(gameScene.getFXSubScene());
 		sceneHeightPy.addListener((x, y, h) -> gameScene.resize(h.doubleValue()));
+	}
+
+	public StackPane getRoot() {
+		return root;
 	}
 
 	public void refresh(SceneManager sceneManager) {

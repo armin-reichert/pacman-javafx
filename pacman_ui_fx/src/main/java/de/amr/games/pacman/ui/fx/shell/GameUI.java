@@ -108,14 +108,13 @@ public class GameUI implements GameEventAdapter {
 		gameSceneParent = new StackPane();
 		dashboard = new Dashboard();
 		dashboard.build(this, gameController);
-		pipView = new PiPView();
-		pipView.setEmbeddedGameScene(new PlayScene2D());
+		pipView = new PiPView(new PlayScene2D());
 		pipView.sceneHeightPy.bind(Env.pipSceneHeightPy);
-		pipView.visibleProperty().bind(Env.pipVisiblePy);
-		pipView.opacityProperty().bind(Env.pipOpacityPy);
+		pipView.getRoot().visibleProperty().bind(Env.pipVisiblePy);
+		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView));
+		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
 		return new StackPane(gameSceneParent, overlayPane, flashMessageView);
 	}
