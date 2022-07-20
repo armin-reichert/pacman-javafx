@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import javafx.geometry.Rectangle2D;
@@ -58,7 +58,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ssMsPacMan = (SpritesheetMsPacMan) ctx.r2D;
+		var ssMsPacMan = (ArcadeRendererMsPacManGame) ctx.r2D;
 		sceneController.restartInState(Intermission3Controller.State.FLAP);
 		var flapAnimationSet = new EntityAnimationSet(1);
 		flapAnimationSet.put("flap", ssMsPacMan.createFlapAnimation());
@@ -79,7 +79,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var ssMsPacMan = (SpritesheetMsPacMan) ctx.r2D;
+		var ssMsPacMan = (ArcadeRendererMsPacManGame) ctx.r2D;
 		ssMsPacMan.drawFlap(g, icc.flap);
 		ctx.r2D.drawPac(g, icc.msPacMan);
 		ctx.r2D.drawPac(g, icc.pacMan);

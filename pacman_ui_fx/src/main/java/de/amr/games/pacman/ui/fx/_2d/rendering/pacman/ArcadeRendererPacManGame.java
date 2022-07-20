@@ -44,17 +44,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Pac-Man game spritesheet renderer.
- * 
  * @author Armin Reichert
  */
-public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
+public class ArcadeRendererPacManGame implements Rendering2D {
 
-	private static SpritesheetPacMan cmonManYouKnowTheThing;
+	private static ArcadeRendererPacManGame cmonManYouKnowTheThing;
 
-	public static SpritesheetPacMan get() {
+	public static ArcadeRendererPacManGame get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new SpritesheetPacMan();
+			cmonManYouKnowTheThing = new ArcadeRendererPacManGame();
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -71,26 +69,31 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
+	private final Spritesheet sheet;
 	private final Image mazeFull;
 	private final Image mazeEmpty;
 	private final Font font;
 
-	private SpritesheetPacMan() {
-		super("graphics/pacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+	private ArcadeRendererPacManGame() {
+		sheet = new Spritesheet("graphics/pacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+				Direction.DOWN);
 		mazeFull = Ufx.image("graphics/pacman/maze_full.png");
 		mazeEmpty = Ufx.image("graphics/pacman/maze_empty.png");
 		font = Ufx.font("fonts/emulogic.ttf", 8);
-//		font = Font.font("Monospaced", 8);
+	}
+
+	public Spritesheet getSheet() {
+		return sheet;
 	}
 
 	@Override
 	public Image source() {
-		return source;
+		return sheet.getSourceImage();
 	}
 
 	@Override
 	public Image getSpriteImage(Rectangle2D sprite) {
-		return subImage(sprite);
+		return sheet.subImage(sprite);
 	}
 
 	@Override
@@ -105,24 +108,24 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
-		return tile(2 * dirIndex(dir), 4 + ghostID);
+		return sheet.tile(2 * sheet.dirIndex(dir), 4 + ghostID);
 	}
 
 	@Override
 	public Rectangle2D getBonusSymbolSprite(int symbol) {
-		return tile(2 + symbol, 3);
+		return sheet.tile(2 + symbol, 3);
 	}
 
 	@Override
 	public Rectangle2D getBonusValueSprite(int symbol) {
 		if (symbol <= 3) {
-			return tile(symbol, 9);
+			return sheet.tile(symbol, 9);
 		}
 		if (symbol == 4) {
-			var rect = tiles(4, 9, 3, 1);
+			var rect = sheet.tiles(4, 9, 3, 1);
 			return new Rectangle2D(rect.getMinX(), rect.getMinY(), rect.getWidth() - 13, rect.getHeight()); // WTF
 		}
-		return tiles(3, 5 + symbol, 3, 1);
+		return sheet.tiles(3, 5 + symbol, 3, 1);
 	}
 
 	@Override
@@ -153,17 +156,17 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public Rectangle2D getLifeSprite() {
-		return tile(8, 1);
+		return sheet.tile(8, 1);
 	}
 
 	@Override
 	public EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = dirIndex(dir);
-			var wide = tile(0, d);
-			var middle = tile(1, d);
-			var closed = tile(2, 0);
+			int d = sheet.dirIndex(dir);
+			var wide = sheet.tile(0, d);
+			var middle = sheet.tile(1, d);
+			var closed = sheet.tile(2, 0);
 			var animation = new SingleEntityAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle, closed);
 			animation.setFrameDuration(1);
 			animation.repeatForever();
@@ -174,7 +177,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SingleEntityAnimation<>(tilesToRight(3, 0, 11));
+		var animation = new SingleEntityAnimation<>(sheet.tilesToRight(3, 0, 11));
 		animation.setFrameDuration(8);
 		return animation;
 	}
@@ -183,8 +186,8 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	public EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(tilesToRight(2 * d, 4 + ghost.id, 2));
+			int d = sheet.dirIndex(dir);
+			var animation = new SingleEntityAnimation<>(sheet.tilesToRight(2 * d, 4 + ghost.id, 2));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -194,7 +197,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SingleEntityAnimation<>(tile(8, 4), tile(9, 4));
+		var animation = new SingleEntityAnimation<>(sheet.tile(8, 4), sheet.tile(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
@@ -202,7 +205,7 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SingleEntityAnimation<>(tilesToRight(8, 4, 4));
+		var animation = new SingleEntityAnimation<>(sheet.tilesToRight(8, 4, 4));
 		animation.setFrameDuration(6);
 		return animation;
 	}
@@ -211,43 +214,44 @@ public class SpritesheetPacMan extends Spritesheet implements Rendering2D {
 	public EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = dirIndex(dir);
-			animationByDir.put(dir, new SingleEntityAnimation<>(tile(8 + d, 5)));
+			int d = sheet.dirIndex(dir);
+			animationByDir.put(dir, new SingleEntityAnimation<>(sheet.tile(8 + d, 5)));
 		}
 		return animationByDir;
 	}
 
 	@Override
 	public FixedEntityAnimation<Rectangle2D> createGhostValueList() {
-		return new FixedEntityAnimation<>(tilesToRight(0, 8, 4));
+		return new FixedEntityAnimation<>(sheet.tilesToRight(0, 8, 4));
 	}
 
 	// Pac-Man specific:
 
 	public SingleEntityAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new SingleEntityAnimation<>(tiles(2, 1, 2, 2), tiles(4, 1, 2, 2), tiles(6, 1, 2, 2));
+		var animation = new SingleEntityAnimation<>(sheet.tiles(2, 1, 2, 2), sheet.tiles(4, 1, 2, 2),
+				sheet.tiles(6, 1, 2, 2));
 		animation.setFrameDuration(3);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public FixedEntityAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new FixedEntityAnimation<>(tilesToRight(8, 6, 5));
+		return new FixedEntityAnimation<>(sheet.tilesToRight(8, 6, 5));
 	}
 
 	public FixedEntityAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new FixedEntityAnimation<>(tile(8, 7), tile(9, 7));
+		return new FixedEntityAnimation<>(sheet.tile(8, 7), sheet.tile(9, 7));
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-		var animation = new SingleEntityAnimation<>(tile(10, 7), tile(11, 7));
+		var animation = new SingleEntityAnimation<>(sheet.tile(10, 7), sheet.tile(11, 7));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SingleEntityAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
+		var animation = new SingleEntityAnimation<>(sheet.tiles(8, 8, 2, 1), sheet.tiles(10, 8, 2, 1));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;

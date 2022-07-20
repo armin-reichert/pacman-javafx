@@ -34,12 +34,13 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -53,6 +54,7 @@ public class BootScene extends GameScene2D {
 	private final Random rnd = new Random();
 	private final Canvas buffer;
 	private final GraphicsContext bg;
+	private Image spritesheetImage;
 
 	public BootScene() {
 		buffer = new Canvas(unscaledSize.x(), unscaledSize.y());
@@ -63,16 +65,22 @@ public class BootScene extends GameScene2D {
 	public void init() {
 		clearBuffer();
 		Actions.playHelpMessageAfterSeconds(1);
+		spritesheetImage = ctx.gameVariant() == GameVariant.MS_PACMAN //
+				? ArcadeRendererMsPacManGame.get().getSheet().getSourceImage()
+				: ArcadeRendererPacManGame.get().getSheet().getSourceImage();
 	}
 
 	@Override
 	public void update() {
-		var tick = ctx.state().timer().tick();
-		if (betweenSec(0.5, 1.5, tick) && tick % 5 == 0) {
+		var t = ctx.state().timer().tick();
+		if (betweenSec(0.5, 1.5, t) && t % 5 == 0) {
+			clearBuffer();
 			drawRandomHexCodesIntoBuffer();
-		} else if (betweenSec(1.5, 4.0, tick) && tick % 10 == 0) {
-			drawRandomSpritesIntoBuffer();
-		} else if (tick == TickTimer.secToTicks(4.0)) {
+		} else if (betweenSec(1.5, 4.0, t) && t % 10 == 0) {
+			clearBuffer();
+			drawRandomSpritesIntoBuffer(spritesheetImage);
+		} else if (t == TickTimer.secToTicks(4.0)) {
+			clearBuffer();
 			drawGridIntoBuffer();
 		}
 	}
@@ -84,7 +92,7 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void drawHUD(GraphicsContext g, Font hudFont) {
-		// hide HUD
+		// no HUD
 	}
 
 	private void clearBuffer() {
@@ -97,9 +105,8 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void drawRandomHexCodesIntoBuffer() {
-		clearBuffer();
 		bg.setFill(Color.LIGHTGRAY);
-		bg.setFont(SpritesheetPacMan.get().getArcadeFont());
+		bg.setFont(ctx.r2D.getArcadeFont());
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
 				var hexCode = Integer.toHexString(rnd.nextInt(16));
@@ -109,23 +116,20 @@ public class BootScene extends GameScene2D {
 		LOGGER.trace("Hex codes");
 	}
 
-	private void drawRandomSpritesIntoBuffer() {
-		clearBuffer();
-		var sheet = ctx.gameVariant() == GameVariant.MS_PACMAN ? SpritesheetMsPacMan.get() : SpritesheetPacMan.get();
-		var sheetWidth = sheet.getSourceImage().getWidth();
-		var sheetHeight = sheet.getSourceImage().getHeight();
+	private void drawRandomSpritesIntoBuffer(Image sheetImage) {
+		var w = sheetImage.getWidth();
+		var h = sheetImage.getHeight();
 		var cellSize = 16;
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
 		for (int row = 0; row < numRows; ++row) {
-			if (rnd.nextInt(100) < 10) {
-				continue;
-			}
-			var r1 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), cellSize, cellSize);
-			var r2 = new Rectangle2D(rnd.nextDouble(sheetWidth), rnd.nextDouble(sheetHeight), cellSize, cellSize);
-			var split = numCols / 3 + rnd.nextInt(numCols / 3);
-			for (int col = 0; col < numCols; ++col) {
-				sheet.drawSprite(bg, col < split ? r1 : r2, cellSize * col, cellSize * row);
+			if (rnd.nextInt(100) > 10) {
+				var r1 = new Rectangle2D(rnd.nextDouble(w), rnd.nextDouble(h), cellSize, cellSize);
+				var r2 = new Rectangle2D(rnd.nextDouble(w), rnd.nextDouble(h), cellSize, cellSize);
+				var split = numCols / 4 + rnd.nextInt(numCols / 2);
+				for (int col = 0; col < numCols; ++col) {
+					ctx.r2D.drawSprite(bg, col < split ? r1 : r2, cellSize * col, cellSize * row);
+				}
 			}
 		}
 		LOGGER.trace("Random sprites");
@@ -135,7 +139,6 @@ public class BootScene extends GameScene2D {
 		var cellSize = 16;
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
-		clearBuffer();
 		bg.setStroke(Color.LIGHTGRAY);
 		bg.setLineWidth(2.0);
 		for (int row = 0; row < numRows; ++row) {

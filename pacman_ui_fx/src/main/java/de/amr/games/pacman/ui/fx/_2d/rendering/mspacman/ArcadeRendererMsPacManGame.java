@@ -45,17 +45,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Ms. Pac-Man sprites and animations.
- * 
  * @author Armin Reichert
  */
-public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
+public class ArcadeRendererMsPacManGame implements Rendering2D {
 
-	private static SpritesheetMsPacMan cmonManYouKnowTheThing;
+	private static ArcadeRendererMsPacManGame cmonManYouKnowTheThing;
 
-	public static SpritesheetMsPacMan get() {
+	public static ArcadeRendererMsPacManGame get() {
 		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new SpritesheetMsPacMan();
+			cmonManYouKnowTheThing = new ArcadeRendererMsPacManGame();
 		}
 		return cmonManYouKnowTheThing;
 	}
@@ -96,14 +94,16 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	};
 	//@formatter:on
 
+	private final Spritesheet sheet;
 	private final Image midwayLogo;
 	private final Image[] mazesFull;
 	private final Image[] mazesEmpty;
 	private final Image[] mazesEmptyBW;
 	private final Font font;
 
-	private SpritesheetMsPacMan() {
-		super("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+	private ArcadeRendererMsPacManGame() {
+		sheet = new Spritesheet("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+				Direction.DOWN);
 
 		font = Ufx.font("fonts/emulogic.ttf", 8);
 		midwayLogo = Ufx.image("graphics/mspacman/midway.png");
@@ -113,16 +113,20 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 		mazesEmpty = new Image[numMazes];
 		mazesEmptyBW = new Image[numMazes];
 		for (int i = 0; i < numMazes; ++i) {
-			mazesFull[i] = subImage(0, 248 * i, 226, 248);
-			mazesEmpty[i] = subImage(228, 248 * i, 226, 248);
+			mazesFull[i] = sheet.subImage(0, 248 * i, 226, 248);
+			mazesEmpty[i] = sheet.subImage(228, 248 * i, 226, 248);
 			mazesEmptyBW[i] = Ufx.colorsExchanged(mazesEmpty[i], //
 					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}
 	}
 
+	public Spritesheet getSheet() {
+		return sheet;
+	}
+
 	@Override
 	public Image source() {
-		return source;
+		return sheet.getSourceImage();
 	}
 
 	/**
@@ -131,12 +135,12 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	public Rectangle2D rhs(int col, int row) {
-		return tilesAtOrigin(456, 0, col, row, 1, 1);
+		return sheet.tilesAtOrigin(456, 0, col, row, 1, 1);
 	}
 
 	@Override
 	public Image getSpriteImage(Rectangle2D sprite) {
-		return subImage(sprite);
+		return sheet.subImage(sprite);
 	}
 
 	@Override
@@ -156,7 +160,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 
 	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
-		return rhs(2 * dirIndex(dir) + 1, 4 + ghostID);
+		return rhs(2 * sheet.dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
@@ -221,7 +225,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	@Override
 	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		int mazeIndex = mazeNumber - 1;
-		var mazeEmpty = subImage(228, 248 * mazeIndex, 226, 248);
+		var mazeEmpty = sheet.subImage(228, 248 * mazeIndex, 226, 248);
 		var brightImage = Ufx.colorsExchanged(mazeEmpty, Map.of( //
 				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
@@ -235,7 +239,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	public EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = dirIndex(dir);
+			int d = sheet.dirIndex(dir);
 			var wide = rhs(0, d);
 			var middle = rhs(1, d);
 			var closed = rhs(2, d);
@@ -263,7 +267,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	public EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = dirIndex(dir);
+			int d = sheet.dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(2 * d, 4 + ghost.id), rhs(2 * d + 1, 4 + ghost.id));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
@@ -291,7 +295,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	public EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = dirIndex(dir);
+			int d = sheet.dirIndex(dir);
 			animationByDir.put(dir, new SingleEntityAnimation<>(rhs(8 + d, 5)));
 		}
 		return animationByDir;
@@ -307,7 +311,7 @@ public class SpritesheetMsPacMan extends Spritesheet implements Rendering2D {
 	public EntityAnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = dirIndex(dir);
+			int d = sheet.dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();

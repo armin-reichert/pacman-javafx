@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import javafx.scene.canvas.GraphicsContext;
@@ -56,14 +56,14 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	public void init() {
 		sceneController.restartInState(Intermission1Controller.State.FLAP);
 		var flapAnimationSet = new EntityAnimationSet(1);
-		flapAnimationSet.put("flap", SpritesheetMsPacMan.get().createFlapAnimation());
+		flapAnimationSet.put("flap", ArcadeRendererMsPacManGame.get().createFlapAnimation());
 		flapAnimationSet.select("flap");
 		icc.flap.setAnimationSet(flapAnimationSet);
 		icc.msPac.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.msPac));
 		icc.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		icc.pacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.pacMan));
 		icc.pacMan.animationSet().ifPresent(animations -> {
-			var munching = SpritesheetMsPacMan.get().createPacManMunchingAnimationMap(icc.pacMan);
+			var munching = ArcadeRendererMsPacManGame.get().createPacManMunchingAnimationMap(icc.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
@@ -80,7 +80,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var ss = (SpritesheetMsPacMan) ctx.r2D;
+		var ss = (ArcadeRendererMsPacManGame) ctx.r2D;
 		ss.drawFlap(g, icc.flap);
 		ctx.r2D.drawPac(g, icc.msPac);
 		ctx.r2D.drawPac(g, icc.pacMan);

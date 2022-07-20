@@ -32,8 +32,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.SpritesheetMsPacMan;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.SpritesheetPacMan;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
@@ -140,8 +140,8 @@ public class SceneManager {
 	public void updateSceneContext(GameScene scene) {
 		var context = new SceneContext(gameController);
 		context.r2D = switch (context.gameVariant()) {
-		case MS_PACMAN -> SpritesheetMsPacMan.get();
-		case PACMAN -> SpritesheetPacMan.get();
+		case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
+		case PACMAN -> ArcadeRendererPacManGame.get();
 		};
 		context.model3D = Model3D.get(); // no game variant-specific 3D models yet
 		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (context.gameVariant()) {
