@@ -41,7 +41,6 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
@@ -49,9 +48,6 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 public class CutScene3D implements GameScene {
-
-	public static final double WIDTH = ArcadeWorld.WORLD_SIZE.x();
-	public static final double HEIGHT = ArcadeWorld.WORLD_SIZE.y();
 
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 	private final SubScene fxSubScene;
@@ -61,8 +57,9 @@ public class CutScene3D implements GameScene {
 	private SceneContext ctx;
 	private World3D world3D;
 
-	private Canvas embeddedCanvas;
-
+	private double zoom = 0.25;
+	private double w = zoom * ArcadeWorld.WORLD_SIZE.x();
+	private double h = zoom * ArcadeWorld.WORLD_SIZE.y();
 	private GameScene2D embeddedCutScene;
 
 	public CutScene3D() {
@@ -72,7 +69,7 @@ public class CutScene3D implements GameScene {
 		light.colorProperty().bind(Env.lightColorPy);
 
 		// origin is at center of scene content
-		contentRoot.getTransforms().add(new Translate(-WIDTH / 2, -HEIGHT / 2));
+		contentRoot.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
 		// initial size does not matter, subscene is resized automatically
 		fxSubScene = new SubScene(new Group(contentRoot, light), 50, 50, true, SceneAntialiasing.BALANCED);
 	}
@@ -92,48 +89,33 @@ public class CutScene3D implements GameScene {
 
 		changeCamera(Perspective.TOTAL);
 
-		double zoom = 0.75;
-		double w = zoom * ArcadeWorld.WORLD_SIZE.x();
-		double h = zoom * ArcadeWorld.WORLD_SIZE.y();
-
 		embeddedCutScene = new PacManCutscene1();
+		embeddedCutScene.resize(h);
 		embeddedCutScene.setSceneContext(ctx);
 		embeddedCutScene.init();
 
-		// embeddedCutScene.getGameSceneCanvas().getTransforms().setAll(new Scale(zoom, zoom));
-//
-//		var subscene = embeddedCutScene.getFXSubScene();
-//		subscene.setWidth(w);
-//		subscene.setHeight(h);
-//		subscene.setTranslateX(0);
-//		subscene.setTranslateY(130);
-//		subscene.setTranslateZ(-h / 2);
-//		subscene.rotationAxisProperty().bind(getCamera().rotationAxisProperty());
-//		subscene.rotateProperty().bind(getCamera().rotateProperty());
-//		content.add(subscene);
-
-		embeddedCanvas = new Canvas(w, h);
-		var eg = embeddedCanvas.getGraphicsContext2D();
-		eg.scale(zoom, zoom);
-		embeddedCanvas.setTranslateZ(-10);
-		embeddedCanvas.setTranslateY(160);
-		embeddedCanvas.setTranslateZ(-h / 2);
-		embeddedCanvas.rotationAxisProperty().bind(getCamera().rotationAxisProperty());
-		embeddedCanvas.rotateProperty().bind(getCamera().rotateProperty());
-		content.add(embeddedCanvas);
-
+		var subscene = embeddedCutScene.getFXSubScene();
+		subscene.setTranslateX(0.5 * (DEFAULT_WIDTH - w));
+		subscene.setTranslateY(1.0 * (DEFAULT_HEIGHT - h));
+		subscene.setTranslateZ(-h / 2);
+		subscene.rotationAxisProperty().bind(getCamera().rotationAxisProperty());
+		subscene.rotateProperty().bind(getCamera().rotateProperty());
+		content.add(subscene);
 	}
 
 	@Override
 	public void updateAndRender() {
 		world3D.update(ctx.game());
-//		embeddedCutScene.updateAndRender();
 		if (embeddedCutScene != null) {
-			embeddedCutScene.update();
-			var eg = embeddedCanvas.getGraphicsContext2D();
+			var eg = embeddedCutScene.getGameSceneCanvas().getGraphicsContext2D();
 			eg.setFill(Color.BLACK);
-			eg.fillRect(0, 0, embeddedCanvas.getWidth(), embeddedCanvas.getHeight());
+			eg.fillRect(0, 0, w, h);
+			embeddedCutScene.update();
 			embeddedCutScene.drawSceneContent(eg);
+			eg.setStroke(Color.WHITE);
+			eg.strokeLine(0, 0, w, h);
+			eg.setStroke(Color.RED);
+			eg.strokeLine(w, 0, 0, h);
 		}
 	}
 

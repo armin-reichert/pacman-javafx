@@ -207,7 +207,7 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.use3DScenePy);
-		if (theUI.getSceneManager().hasScenesForBothDimensions()) {
+		if (theUI.getSceneManager().hasDifferentScenesFor2DAnd3D()) {
 			theUI.on2D3DChange();
 		} else {
 			showFlashMessage(Texts.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));

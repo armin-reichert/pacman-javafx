@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventAdapter;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.beans.binding.DoubleExpression;
 import javafx.scene.SubScene;
@@ -34,6 +35,10 @@ import javafx.scene.SubScene;
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventAdapter {
+
+	public static final double DEFAULT_WIDTH = ArcadeWorld.WORLD_SIZE.x();
+
+	public static final double DEFAULT_HEIGHT = ArcadeWorld.WORLD_SIZE.y();
 
 	/**
 	 * Sets the scene context (game controller/model, 2D rendering, 3D model, sound).

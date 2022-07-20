@@ -47,7 +47,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
-import de.amr.games.pacman.ui.fx._3d.scene.CutScene3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
@@ -68,7 +67,7 @@ public class SceneManager {
 		{ new BootScene(),                null },
 		{ new PacManIntroScene(),         null },
 		{ new PacManCreditScene(),        null },
-		{ new PacManCutscene1(),          new CutScene3D() },
+		{ new PacManCutscene1(),          null/*new CutScene3D()*/ },
 		{ new PacManCutscene2(),          null },
 		{ new PacManCutscene3(),          null },
 		{ new PlayScene2D(),              new PlayScene3D() },
@@ -178,7 +177,7 @@ public class SceneManager {
 		return Optional.ofNullable(wantedScene.orElse(scenes[index][SCENE_2D]));
 	}
 
-	public boolean hasScenesForBothDimensions() {
+	public boolean hasDifferentScenesFor2DAnd3D() {
 		var scene2D = findGameScene(SCENE_2D);
 		var scene3D = findGameScene(SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);

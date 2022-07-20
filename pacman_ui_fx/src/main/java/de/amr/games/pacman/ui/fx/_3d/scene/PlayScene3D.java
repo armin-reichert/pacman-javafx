@@ -33,7 +33,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -72,9 +71,6 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D implements GameScene {
 
-	public static final double WIDTH = ArcadeWorld.WORLD_SIZE.x();
-	public static final double HEIGHT = ArcadeWorld.WORLD_SIZE.y();
-
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 	private final SubScene fxSubScene;
 	private final Group contentRoot = new Group();
@@ -103,7 +99,7 @@ public class PlayScene3D implements GameScene {
 		light.colorProperty().bind(Env.lightColorPy);
 
 		// origin is at center of scene content
-		contentRoot.getTransforms().add(new Translate(-WIDTH / 2, -HEIGHT / 2));
+		contentRoot.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
 		// initial size does not matter, subscene is resized automatically
 		fxSubScene = new SubScene(new Group(contentRoot, coordSystem, light), 50, 50, true, SceneAntialiasing.BALANCED);
 	}
