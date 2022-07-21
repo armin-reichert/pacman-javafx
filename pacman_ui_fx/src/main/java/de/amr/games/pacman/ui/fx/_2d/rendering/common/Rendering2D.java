@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
@@ -33,6 +34,7 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -142,6 +144,18 @@ public interface Rendering2D {
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
 	void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersDark);
+
+	// HUD
+
+	void drawHUD(GraphicsContext g, double scaling, boolean creditVisible, int credit, Score score, Score highScore);
+
+	void drawScore(GraphicsContext g, Score score, double scaling);
+
+	void drawCredit(GraphicsContext g, int credit, double scaliing);
+
+	void drawGameStateMessage(GraphicsContext g, GameState state, double scaling);
+
+	// Debug
 
 	void drawTileBorders(GraphicsContext g);
 }

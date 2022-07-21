@@ -23,14 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.common.world.World.t;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -45,8 +41,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontSmoothingType;
 
 /**
@@ -62,9 +56,9 @@ public abstract class GameScene2D implements GameScene {
 	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
 	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene;
-	protected final Pane infoPane = new Pane();
 	protected final ResizableCanvas canvas;
 	protected final ResizableCanvas overlayCanvas;
+	protected final Pane overlayPane = new Pane();
 
 	protected SceneContext ctx;
 	protected boolean creditVisible;
@@ -88,10 +82,10 @@ public abstract class GameScene2D implements GameScene {
 		overlayCanvas.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayCanvas.setMouseTransparent(true);
 
-		infoPane.setVisible(Env.showDebugInfoPy.get());
-		infoPane.visibleProperty().bind(Env.showDebugInfoPy);
+		overlayPane.setVisible(Env.showDebugInfoPy.get());
+		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
 
-		root.getChildren().addAll(canvas, overlayCanvas, infoPane);
+		root.getChildren().addAll(canvas, overlayCanvas, overlayPane);
 		resize(unscaledSize.y());
 	}
 
@@ -131,8 +125,12 @@ public abstract class GameScene2D implements GameScene {
 			og.restore();
 		}
 		g.setFontSmoothingType(FontSmoothingType.LCD);
-		var fontFamily = ctx.r2D.getArcadeFont().getFamily();
-		drawHUD(g, Font.font(fontFamily, Math.floor(8.0 * getScaling())));
+		drawHUD(g);
+	}
+
+	public void drawHUD(GraphicsContext g) {
+		ctx.r2D.drawHUD(g, getScaling(), creditVisible, ctx.game().getCredit(), ctx.game().scores.gameScore,
+				ctx.game().scores.highScore);
 	}
 
 	/**
@@ -145,47 +143,6 @@ public abstract class GameScene2D implements GameScene {
 	 * Draws the scene content. Subclasses override this method.
 	 */
 	public void drawSceneContent(GraphicsContext g) {
-	}
-
-	public void drawHUD(GraphicsContext g, Font hudFont) {
-		drawScore(g, hudFont, ctx.game().scores.gameScore);
-		drawScore(g, hudFont, ctx.game().scores.highScore);
-		if (creditVisible) {
-			drawCredit(g, hudFont, ctx.game().getCredit());
-		}
-	}
-
-	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
-
-	public void drawCredit(GraphicsContext g, Font font, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Color.WHITE, font, t(2) * getScaling(), t(36) * getScaling() - 1);
-	}
-
-	public void drawScore(GraphicsContext g, Font font, Score score) {
-		if (score.isVisible()) {
-			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
-			var levelText = score.showContent ? "L" + score.levelNumber : "";
-			drawText(g, score.title, Color.WHITE, font, score.getPosition().x() * getScaling(),
-					score.getPosition().y() * getScaling());
-			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, score.getPosition().x() * getScaling(),
-					score.getPosition().y() * getScaling() + t(1) * getScaling());
-			drawText(g, levelText, Color.LIGHTGRAY, font, score.getPosition().x() * getScaling() + t(8) * getScaling(),
-					score.getPosition().y() * getScaling() + t(1) * getScaling());
-		}
-	}
-
-	public void drawGameStateMessage(GraphicsContext g, Font font, GameState state) {
-		if (state == GameState.GAME_OVER) {
-			drawText(g, "GAME  OVER", Color.RED, font, t(9) * getScaling(), t(21) * getScaling());
-		} else if (state == GameState.READY) {
-			drawText(g, "READY", Color.YELLOW, font, t(11) * getScaling(), t(21) * getScaling());
-			g.setFont(Font.font(font.getFamily(), FontPosture.ITALIC, 8.0 * getScaling()));
-			g.fillText("!", t(16) * getScaling(), t(21) * getScaling());
-		}
 	}
 
 	@Override

@@ -31,8 +31,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * Picture-In-Picture view. Displays an embedded 2D game scene.
@@ -88,8 +86,7 @@ public class PiPView {
 			g.setFill(Color.BLACK);
 			g.fillRect(0, 0, width, height);
 			if (drawIt) {
-				var hudFont = Font.font("Monospaced", FontWeight.BOLD, Math.floor(10.0 * gameScene.getScaling()));
-				gameScene.drawHUD(g, hudFont);
+				gameScene.drawHUD(g);
 				gameScene.drawSceneContent(g);
 			} else {
 				g.drawImage(PLACEHOLDER, 0, 0, 224, 288);

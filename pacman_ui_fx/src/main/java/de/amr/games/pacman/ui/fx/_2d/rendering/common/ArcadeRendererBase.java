@@ -30,6 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
@@ -39,6 +40,7 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
@@ -48,6 +50,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 /**
@@ -56,11 +59,17 @@ import javafx.scene.text.FontWeight;
 public abstract class ArcadeRendererBase implements Rendering2D {
 
 	protected final Spritesheet sheet;
-	protected final Font font;
+	protected final Font arcadeFont;
 
-	public ArcadeRendererBase(Spritesheet sheet) {
+	protected ArcadeRendererBase(Spritesheet sheet) {
 		this.sheet = sheet;
-		font = Ufx.font("fonts/emulogic.ttf", 8);
+		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
+	}
+
+	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
 	}
 
 	public Spritesheet getSheet() {
@@ -79,7 +88,7 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 
 	@Override
 	public Font getArcadeFont() {
-		return font;
+		return arcadeFont;
 	}
 
 	@Override
@@ -206,6 +215,48 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 			g.setFill(Color.YELLOW);
 			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
 			g.fillText("+" + excessLives, x + t(10), y + t(1));
+		}
+	}
+
+	@Override
+	public void drawHUD(GraphicsContext g, double scaling, boolean creditVisible, int credit, Score score,
+			Score highScore) {
+		drawScore(g, score, scaling);
+		drawScore(g, highScore, scaling);
+		if (creditVisible) {
+			drawCredit(g, credit, scaling);
+		}
+	}
+
+	@Override
+	public void drawCredit(GraphicsContext g, int credit, double scaling) {
+		var font = Font.font(arcadeFont.getFamily(), scaling * TS);
+		drawText(g, "CREDIT  %d".formatted(credit), Color.WHITE, font, t(2) * scaling, t(36) * scaling - 1);
+	}
+
+	@Override
+	public void drawScore(GraphicsContext g, Score score, double scaling) {
+		var font = Font.font(arcadeFont.getFamily(), scaling * TS);
+		if (score.isVisible()) {
+			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
+			var levelText = score.showContent ? "L" + score.levelNumber : "";
+			drawText(g, score.title, Color.WHITE, font, score.getPosition().x() * scaling, score.getPosition().y() * scaling);
+			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, score.getPosition().x() * scaling,
+					score.getPosition().y() * scaling + t(1) * scaling);
+			drawText(g, levelText, Color.LIGHTGRAY, font, score.getPosition().x() * scaling + t(8) * scaling,
+					score.getPosition().y() * scaling + t(1) * scaling);
+		}
+	}
+
+	@Override
+	public void drawGameStateMessage(GraphicsContext g, GameState state, double scaling) {
+		var font = Font.font(arcadeFont.getFamily(), scaling * TS);
+		if (state == GameState.GAME_OVER) {
+			drawText(g, "GAME  OVER", Color.RED, font, t(9) * scaling, t(21) * scaling);
+		} else if (state == GameState.READY) {
+			drawText(g, "READY", Color.YELLOW, font, t(11) * scaling, t(21) * scaling);
+			g.setFont(Font.font(font.getFamily(), FontPosture.ITALIC, font.getSize()));
+			g.fillText("!", t(16) * scaling, t(21) * scaling);
 		}
 	}
 
