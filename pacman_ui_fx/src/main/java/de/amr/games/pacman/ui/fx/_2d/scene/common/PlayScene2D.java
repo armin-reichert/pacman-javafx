@@ -67,7 +67,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void init() {
 		infoLayer.init(ctx.game());
-		creditVisible = !ctx.hasCredit(); // show credit only if it is zero
+		hud.creditVisible = !ctx.hasCredit(); // show credit only if it is zero
 		ctx.game().bonus().setInactive();
 	}
 
@@ -108,7 +108,8 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D.drawBonus(g, ctx.game().bonus());
 		ctx.r2D.drawPac(g, ctx.game().pac);
 		ctx.r2D.drawGhosts(g, ctx.game().theGhosts);
-		if (!creditVisible) {
+		// TODO integrate into HUD
+		if (!hud.creditVisible) {
 			int livesDisplayed = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
 			ctx.r2D.drawLivesCounter(g, livesDisplayed);
 		}

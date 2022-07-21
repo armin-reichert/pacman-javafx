@@ -63,9 +63,14 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInState(IntroController.State.START);
-		creditVisible = false;
 		icc.pacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.pacMan));
 		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimationSet(ctx.r2D.createGhostAnimationSet(ghost)));
+	}
+
+	@Override
+	public void update() {
+		sceneController.update();
+		hud.creditVisible = icc.creditVisible;
 	}
 
 	@Override
@@ -85,12 +90,6 @@ public class PacManIntroScene extends GameScene2D {
 			ctx.game().intermissionTestNumber = 1;
 			ctx.state().startIntermissionTest(ctx.game());
 		}
-	}
-
-	@Override
-	public void update() {
-		sceneController.update();
-		creditVisible = icc.creditVisible;
 	}
 
 	@Override

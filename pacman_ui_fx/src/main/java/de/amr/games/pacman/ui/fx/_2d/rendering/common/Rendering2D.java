@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -147,11 +146,7 @@ public interface Rendering2D {
 
 	// HUD
 
-	void drawHUD(GraphicsContext g, double scaling, boolean creditVisible, int credit, Score score, Score highScore);
-
-	void drawScore(GraphicsContext g, Score score, double scaling);
-
-	void drawCredit(GraphicsContext g, int credit, double scaliing);
+	void drawHUD(GraphicsContext g, HUD hud);
 
 	void drawGameStateMessage(GraphicsContext g, GameState state, double scaling);
 

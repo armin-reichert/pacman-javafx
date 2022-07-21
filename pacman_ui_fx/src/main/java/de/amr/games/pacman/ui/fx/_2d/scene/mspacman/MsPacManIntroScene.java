@@ -62,7 +62,6 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInState(IntroController.State.START);
-		creditVisible = true;
 		icc.msPacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.msPacMan));
 		icc.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		Stream.of(icc.ghosts).forEach(ghost -> {
@@ -70,6 +69,12 @@ public class MsPacManIntroScene extends GameScene2D {
 			animations.ensureRunning();
 			ghost.setAnimationSet(animations);
 		});
+	}
+
+	@Override
+	public void update() {
+		sceneController.update();
+		hud.creditVisible = icc.creditVisible;
 	}
 
 	@Override
@@ -88,12 +93,6 @@ public class MsPacManIntroScene extends GameScene2D {
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
 			ctx.state().startIntermissionTest(ctx.game());
 		}
-	}
-
-	@Override
-	public void update() {
-		sceneController.update();
-		creditVisible = icc.creditVisible;
 	}
 
 	@Override

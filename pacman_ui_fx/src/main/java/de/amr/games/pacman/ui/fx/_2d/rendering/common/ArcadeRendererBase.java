@@ -35,12 +35,12 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.LevelCounter;
+import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.actors.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
@@ -219,32 +219,23 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 	}
 
 	@Override
-	public void drawHUD(GraphicsContext g, double scaling, boolean creditVisible, int credit, Score score,
-			Score highScore) {
-		drawScore(g, score, scaling);
-		drawScore(g, highScore, scaling);
-		if (creditVisible) {
-			drawCredit(g, credit, scaling);
+	public void drawHUD(GraphicsContext g, HUD hud) {
+		drawScore(g, hud.score, hud.scaling * TS, hud.scaling * TS, hud.scaling);
+		drawScore(g, hud.highScore, 16 * hud.scaling * TS, hud.scaling * TS, hud.scaling);
+		if (hud.creditVisible) {
+			var font = Font.font(arcadeFont.getFamily(), hud.scaling * TS);
+			drawText(g, "CREDIT  %d".formatted(hud.credit), Color.WHITE, font, t(2) * hud.scaling, t(36) * hud.scaling - 1);
 		}
 	}
 
-	@Override
-	public void drawCredit(GraphicsContext g, int credit, double scaling) {
+	private void drawScore(GraphicsContext g, Score score, double x, double y, double scaling) {
 		var font = Font.font(arcadeFont.getFamily(), scaling * TS);
-		drawText(g, "CREDIT  %d".formatted(credit), Color.WHITE, font, t(2) * scaling, t(36) * scaling - 1);
-	}
-
-	@Override
-	public void drawScore(GraphicsContext g, Score score, double scaling) {
-		var font = Font.font(arcadeFont.getFamily(), scaling * TS);
-		if (score.isVisible()) {
+		if (score.visible) {
 			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
 			var levelText = score.showContent ? "L" + score.levelNumber : "";
-			drawText(g, score.title, Color.WHITE, font, score.getPosition().x() * scaling, score.getPosition().y() * scaling);
-			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, score.getPosition().x() * scaling,
-					score.getPosition().y() * scaling + t(1) * scaling);
-			drawText(g, levelText, Color.LIGHTGRAY, font, score.getPosition().x() * scaling + t(8) * scaling,
-					score.getPosition().y() * scaling + t(1) * scaling);
+			drawText(g, score.title, Color.WHITE, font, x, y);
+			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + t(1) * scaling + 1);
+			drawText(g, levelText, Color.LIGHTGRAY, font, x + t(8) * scaling, y + t(1) * scaling + 1);
 		}
 	}
 

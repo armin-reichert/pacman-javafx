@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.HUD;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -59,9 +60,9 @@ public abstract class GameScene2D implements GameScene {
 	protected final ResizableCanvas canvas;
 	protected final ResizableCanvas overlayCanvas;
 	protected final Pane overlayPane = new Pane();
+	protected final HUD hud = new HUD();
 
 	protected SceneContext ctx;
-	protected boolean creditVisible;
 
 	protected GameScene2D() {
 		this(new V2d(ArcadeWorld.WORLD_SIZE));
@@ -124,13 +125,17 @@ public abstract class GameScene2D implements GameScene {
 			ctx.r2D.drawTileBorders(og);
 			og.restore();
 		}
-		g.setFontSmoothingType(FontSmoothingType.LCD);
 		drawHUD(g);
 	}
 
 	public void drawHUD(GraphicsContext g) {
-		ctx.r2D.drawHUD(g, getScaling(), creditVisible, ctx.game().getCredit(), ctx.game().scores.gameScore,
-				ctx.game().scores.highScore);
+		hud.width = canvas.getWidth();
+		hud.height = canvas.getHeight();
+		hud.scaling = getScaling();
+		hud.credit = ctx.game().getCredit();
+		hud.score = ctx.game().scores.gameScore;
+		hud.highScore = ctx.game().scores.highScore;
+		ctx.r2D.drawHUD(g, hud);
 	}
 
 	/**
