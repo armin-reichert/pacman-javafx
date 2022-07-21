@@ -67,11 +67,9 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 	}
 
 	public void fillText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.save();
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
-		g.restore();
 	}
 
 	public Spritesheet getSheet() {
