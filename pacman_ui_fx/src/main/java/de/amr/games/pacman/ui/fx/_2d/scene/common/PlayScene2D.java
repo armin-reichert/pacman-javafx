@@ -116,11 +116,6 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	@Override
-	public void drawHUD(GraphicsContext g) {
-		super.drawHUD(g);
-	}
-
 	private void drawMaze() {
 		var g = canvas.getGraphicsContext2D();
 		ctx.r2D.drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
