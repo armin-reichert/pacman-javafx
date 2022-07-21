@@ -105,10 +105,10 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			drawMaze();
 		}
+		ctx.r2D.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D.drawBonus(g, ctx.game().bonus());
 		ctx.r2D.drawPac(g, ctx.game().pac);
 		ctx.r2D.drawGhosts(g, ctx.game().theGhosts);
-		// TODO integrate into HUD
 		if (!hud.creditVisible) {
 			int livesDisplayed = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
 			ctx.r2D.drawLivesCounter(g, livesDisplayed);
@@ -119,7 +119,6 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void drawHUD(GraphicsContext g) {
 		super.drawHUD(g);
-		ctx.r2D.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER, getScaling());
 	}
 
 	private void drawMaze() {

@@ -66,10 +66,12 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
 	}
 
-	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	public void fillText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.save();
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
+		g.restore();
 	}
 
 	public Spritesheet getSheet() {
@@ -220,34 +222,34 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 
 	@Override
 	public void drawHUD(GraphicsContext g, HUD hud) {
-		drawScore(g, hud.score, hud.scaling * TS, hud.scaling * TS, hud.scaling);
-		drawScore(g, hud.highScore, 16 * hud.scaling * TS, hud.scaling * TS, hud.scaling);
+		g.save();
+		g.scale(hud.scaling, hud.scaling);
+		drawScore(g, hud.score, TS, TS, arcadeFont);
+		drawScore(g, hud.highScore, 16 * TS, TS, arcadeFont);
 		if (hud.creditVisible) {
-			var font = Font.font(arcadeFont.getFamily(), hud.scaling * TS);
-			drawText(g, "CREDIT  %d".formatted(hud.credit), Color.WHITE, font, t(2) * hud.scaling, t(36) * hud.scaling - 1);
+			fillText(g, "CREDIT  %d".formatted(hud.credit), Color.WHITE, arcadeFont, t(2), t(36) - 1);
 		}
+		g.restore();
 	}
 
-	private void drawScore(GraphicsContext g, Score score, double x, double y, double scaling) {
-		var font = Font.font(arcadeFont.getFamily(), scaling * TS);
+	private void drawScore(GraphicsContext g, Score score, double x, double y, Font font) {
 		if (score.visible) {
+			fillText(g, score.title, Color.WHITE, font, x, y);
 			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
+			fillText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + TS + 1);
 			var levelText = score.showContent ? "L" + score.levelNumber : "";
-			drawText(g, score.title, Color.WHITE, font, x, y);
-			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + t(1) * scaling + 1);
-			drawText(g, levelText, Color.LIGHTGRAY, font, x + t(8) * scaling, y + t(1) * scaling + 1);
+			fillText(g, levelText, Color.LIGHTGRAY, font, x + t(8), y + TS + 1);
 		}
 	}
 
 	@Override
-	public void drawGameStateMessage(GraphicsContext g, GameState state, double scaling) {
-		var font = Font.font(arcadeFont.getFamily(), scaling * TS);
+	public void drawGameStateMessage(GraphicsContext g, GameState state) {
 		if (state == GameState.GAME_OVER) {
-			drawText(g, "GAME  OVER", Color.RED, font, t(9) * scaling, t(21) * scaling);
+			fillText(g, "GAME  OVER", Color.RED, arcadeFont, t(9), t(21));
 		} else if (state == GameState.READY) {
-			drawText(g, "READY", Color.YELLOW, font, t(11) * scaling, t(21) * scaling);
-			g.setFont(Font.font(font.getFamily(), FontPosture.ITALIC, font.getSize()));
-			g.fillText("!", t(16) * scaling, t(21) * scaling);
+			fillText(g, "READY", Color.YELLOW, arcadeFont, t(11), t(21));
+			var italic = Font.font(arcadeFont.getFamily(), FontPosture.ITALIC, arcadeFont.getSize());
+			fillText(g, "!", Color.YELLOW, italic, t(16), t(21));
 		}
 	}
 

@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -85,7 +86,9 @@ public class GameUI implements GameEventAdapter {
 		GameEvents.addEventListener(this);
 		Actions.init(gameController, this);
 
-		mainScene = new Scene(createSceneContent(), width, height);
+		width *= 0.96; // MAME is smaller than the 28x36 aspect ratio. Why?
+		mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
+
 		sceneManager = new SceneManager(gameController, mainScene);
 		LOGGER.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
