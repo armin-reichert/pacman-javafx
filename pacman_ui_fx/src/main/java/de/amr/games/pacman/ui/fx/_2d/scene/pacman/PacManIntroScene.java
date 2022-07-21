@@ -88,7 +88,7 @@ public class PacManIntroScene extends GameScene2D {
 			Actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
 			ctx.game().intermissionTestNumber = 1;
-			ctx.state().startIntermissionTest(ctx.game());
+			Actions.startCutscenesTest();
 		}
 	}
 

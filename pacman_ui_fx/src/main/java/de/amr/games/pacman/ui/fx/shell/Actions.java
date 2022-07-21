@@ -110,6 +110,11 @@ public class Actions {
 		}
 	}
 
+	public static void startCutscenesTest() {
+		theGameController.state().startCutscenesTest(theGameController.game());
+		showFlashMessage("Cut scenes");
+	}
+
 	public static void restartIntro() {
 		theUI.getSceneManager().getCurrentGameScene().end();
 		theGameController.sounds().stopAll();

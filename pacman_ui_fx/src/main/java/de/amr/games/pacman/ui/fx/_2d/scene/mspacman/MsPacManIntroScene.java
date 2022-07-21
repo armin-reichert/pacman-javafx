@@ -91,7 +91,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
-			ctx.state().startIntermissionTest(ctx.game());
+			Actions.startCutscenesTest();
 		}
 	}
 
