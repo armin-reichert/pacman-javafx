@@ -57,7 +57,7 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	public record MazeColors(Color wallSideColor, Color wallTopColor, Color doorColor) {
+	public record MazeColors(Color wallBaseColor, Color wallTopColor, Color doorColor) {
 	}
 
 	public record WallData(double brickSize, double wallHeight, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
@@ -67,41 +67,65 @@ public class Maze3D extends Group {
 
 	private static final double FLOOR_THICKNESS = 0.1;
 
-	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(Env.mazeResolutionPy.get());
+	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(Env.mazeResolutionPy.get()) {
+		@Override
+		protected void invalidated() {
+			build();
+		}
+	};
+
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(Env.mazeWallHeightPy.get());
+
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(Env.mazeWallThicknessPy.get());
-	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>();
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Env.floorColorPy.get());
+
+	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>() {
+		@Override
+		protected void invalidated() {
+			updateFloorMaterial();
+		}
+	};
+
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Env.floorColorPy.get()) {
+		@Override
+		protected void invalidated() {
+			updateFloorMaterial();
+		}
+	};
 
 	private final World world;
+	private final MazeColors mazeColors;
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
+	private Box floor;
 
 	public Maze3D(World world, MazeColors mazeColors) {
 		this.world = world;
-		var floor = createFloor();
+		this.mazeColors = mazeColors;
+		createFloor();
 		getChildren().addAll(floor, wallsGroup, doorsGroup);
-		rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors);
-		resolutionPy.addListener((obs, oldVal, newVal) -> rebuild(new FloorPlan(world, resolutionPy.get()), mazeColors));
-		floorTexturePy.addListener((obs, oldVal, newVal) -> updateFloorMaterial(floor));
-		floorColorPy.addListener((obs, oldVal, newVal) -> updateFloorMaterial(floor));
+		build();
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {
 		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
 	}
 
-	private Box createFloor() {
-		double width = (double) world.numCols() * TS;
-		double height = (double) world.numRows() * TS;
+	private void createFloor() {
+		double width = (double) world.numCols() * TS - 1;
+		double height = (double) world.numRows() * TS - 1;
 		double depth = FLOOR_THICKNESS;
-		var floor = new Box(width - 1, height - 1, depth);
+		floor = new Box(width, height, depth);
 		floor.setTranslateX(0.5 * width);
 		floor.setTranslateY(0.5 * height);
 		floor.setTranslateZ(0.5 * depth);
 		floor.drawModeProperty().bind(Env.drawModePy);
-		updateFloorMaterial(floor);
-		return floor;
+		updateFloorMaterial();
+	}
+
+	private void updateFloorMaterial() {
+		var material = coloredMaterial(floorColorPy.get());
+		material.setDiffuseMap(floorTexturePy.get());
+		floor.setMaterial(material);
 	}
 
 	private PhongMaterial coloredMaterial(Color diffuseColor) {
@@ -110,11 +134,12 @@ public class Maze3D extends Group {
 		return material;
 	}
 
-	public void rebuild(FloorPlan floorPlan, MazeColors mazeColors) {
-		var wallData = new WallData(//
-				(double) TS / floorPlan.getResolution(), //
-				wallHeightPy.get(), //
-				coloredMaterial(mazeColors.wallSideColor), //
+	private void build() {
+		var resolution = resolutionPy.get();
+		var floorPlan = new FloorPlan(world, resolution);
+		var brickSize = (double) TS / resolution;
+		var wallHeight = wallHeightPy.get();
+		var wallData = new WallData(brickSize, wallHeight, coloredMaterial(mazeColors.wallBaseColor),
 				coloredMaterial(mazeColors.wallTopColor));
 
 		wallsGroup.getChildren().clear();
@@ -122,24 +147,18 @@ public class Maze3D extends Group {
 		addHorizontalWalls(floorPlan, wallData);
 		addVerticalWalls(floorPlan, wallData);
 
-		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor)).toList();
+		var doors = world.ghostHouse().doorTiles().map(this::createDoor).toList();
 		doorsGroup.getChildren().setAll(doors);
 
 		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.wallHeight);
-	}
-
-	private void updateFloorMaterial(Box floor) {
-		var material = coloredMaterial(floorColorPy.get());
-		material.setDiffuseMap(floorTexturePy.get());
-		floor.setMaterial(material);
 	}
 
 	public Stream<Door3D> doors() {
 		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
 	}
 
-	private Door3D createDoor(V2i tile, Color color) {
-		var door = new Door3D(tile, color);
+	private Door3D createDoor(V2i tile) {
+		var door = new Door3D(tile, mazeColors.doorColor);
 		door.doorHeightPy.bind(wallHeightPy);
 		return door;
 	}
