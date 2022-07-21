@@ -51,7 +51,7 @@ public class PacManCreditScene extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			ctx.state().addCredit(ctx.game());
+			Actions.addCredit();
 		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
 			Actions.startGame();
 		}

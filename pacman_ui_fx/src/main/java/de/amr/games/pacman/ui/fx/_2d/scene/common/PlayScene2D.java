@@ -51,7 +51,7 @@ public class PlayScene2D extends GameScene2D {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	private final GuysInfo infoLayer = new GuysInfo(this);
+	private final GuysInfo guysInfo = new GuysInfo(this);
 
 	@Override
 	public void setSceneContext(SceneContext context) {
@@ -66,15 +66,15 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		infoLayer.init(ctx.game());
-		hud.creditVisible = !ctx.hasCredit(); // show credit only if it is zero
+		guysInfo.init(ctx.game());
+		hud.creditVisible = !ctx.hasCredit(); // show credit only if it is zero (attract mode)
 		ctx.game().bonus().setInactive();
 	}
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.game().hasCredit()) {
-			ctx.state().addCredit(ctx.game());
+		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
+			Actions.addCredit();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
@@ -89,7 +89,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void update() {
 		if (Env.showDebugInfoPy.get()) {
-			infoLayer.update();
+			guysInfo.update();
 		}
 	}
 
@@ -100,10 +100,10 @@ public class PlayScene2D extends GameScene2D {
 			if (flashing.isPresent() && flashing.get().isRunning()) {
 				g.drawImage((Image) flashing.get().frame(), t(0), t(3));
 			} else {
-				drawMaze();
+				drawMaze(g);
 			}
 		} else {
-			drawMaze();
+			drawMaze(g);
 		}
 		ctx.r2D.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D.drawBonus(g, ctx.game().bonus());
@@ -116,8 +116,7 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	private void drawMaze() {
-		var g = canvas.getGraphicsContext2D();
+	private void drawMaze(GraphicsContext g) {
 		ctx.r2D.drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
 	}
 

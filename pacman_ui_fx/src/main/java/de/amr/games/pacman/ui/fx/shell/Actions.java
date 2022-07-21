@@ -119,6 +119,10 @@ public class Actions {
 		hint.play();
 	}
 
+	public static void addCredit() {
+		theGameController.state().addCredit(theGameController.game());
+	}
+
 	public static void addLives(int lives) {
 		if (theGameController.game().playing) {
 			theGameController.game().lives += lives;
