@@ -45,7 +45,12 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class Food3D extends Group {
 
-	public final BooleanProperty squirtingPy = new SimpleBooleanProperty(false);
+	public final BooleanProperty squirtingPy = new SimpleBooleanProperty(false) {
+		@Override
+		protected void invalidated() {
+			updateFood();
+		}
+	};
 
 	private final World world;
 	private final Group particleGroup = new Group();
@@ -56,7 +61,6 @@ public class Food3D extends Group {
 		this.world = world;
 		normalPelletMaterial = new PhongMaterial(foodColor);
 		squirtingPelletMaterial = new PhongMaterial(gameVariant == GameVariant.PACMAN ? Color.CORNFLOWERBLUE : Color.RED);
-		squirtingPy.addListener((obs, oldVal, newVal) -> updateFood());
 		createPellets(squirtingPy.get());
 		createEnergizers(squirtingPy.get());
 		getChildren().add(particleGroup);
