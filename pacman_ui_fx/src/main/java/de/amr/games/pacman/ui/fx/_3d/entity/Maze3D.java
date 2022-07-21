@@ -155,12 +155,12 @@ public class Maze3D extends Group {
 					}
 					wallSize++;
 				} else if (wallSize > 0) {
-					addWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
+					addCompositeWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
 					wallSize = 0;
 				}
 			}
 			if (wallSize > 0 && y == floorPlan.sizeY() - 1) {
-				addWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
+				addCompositeWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
 			}
 		}
 	}
@@ -176,12 +176,12 @@ public class Maze3D extends Group {
 					}
 					wallSize++;
 				} else if (wallSize > 0) {
-					addWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
+					addCompositeWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
 					wallSize = 0;
 				}
 			}
 			if (wallSize > 0 && x == floorPlan.sizeX() - 1) {
-				addWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
+				addCompositeWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
 			}
 		}
 	}
@@ -190,7 +190,7 @@ public class Maze3D extends Group {
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addWall(x, y, 1, 1, wallData, FloorPlan.CORNER);
+					addCompositeWall(x, y, 1, 1, wallData, FloorPlan.CORNER);
 				}
 			}
 		}
@@ -217,18 +217,7 @@ public class Maze3D extends Group {
 		return corner;
 	}
 
-	/**
-	 * Adds a wall at given position. A wall consists of a base and a top part which can have different color and
-	 * material.
-	 * 
-	 * @param x          x-coordinate of top-left brick
-	 * @param y          y-coordinate of top-left brick
-	 * @param numBricksX number of bricks in x-direction
-	 * @param numBricksY number of bricks in y-direction
-	 * @param data       data on how the wall look like
-	 * @param type       if it is a horizontal wall, a vertical wall or a corner
-	 */
-	private void addWall(int x, int y, int numBricksX, int numBricksY, WallData data, byte type) {
+	private void addCompositeWall(int x, int y, int numBricksX, int numBricksY, WallData data, byte type) {
 		// without ...+1 there are gaps. why?
 		var base = switch (type) {
 		case FloorPlan.HWALL -> horizontalWall(numBricksX + 1, data.brickSize);

@@ -67,7 +67,7 @@ import javafx.stage.Stage;
 public class PacManGameAppFX extends Application {
 
 	public static void main(String[] args) {
-		launch(PacManGameAppFX.class, args);
+		launch();
 	}
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
