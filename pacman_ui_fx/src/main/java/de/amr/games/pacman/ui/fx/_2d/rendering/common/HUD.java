@@ -45,7 +45,7 @@ public class HUD {
 	public final DoubleProperty heightPy = new SimpleDoubleProperty();
 	public final DoubleProperty scalingPy = new SimpleDoubleProperty();
 
-	public boolean creditVisible;
+	private boolean creditVisible;
 	private Font font;
 
 	public HUD() {
@@ -54,6 +54,14 @@ public class HUD {
 
 	public void setFont(Font font) {
 		this.font = font;
+	}
+
+	public boolean isCreditVisible() {
+		return creditVisible;
+	}
+
+	public void setCreditVisible(boolean creditVisible) {
+		this.creditVisible = creditVisible;
 	}
 
 	public void draw(GraphicsContext g, GameModel game) {

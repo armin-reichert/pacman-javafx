@@ -44,7 +44,7 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		hud.creditVisible = true;
+		hud.setCreditVisible(true);
 		arcade6 = Font.font(ctx.r2D.getArcadeFont().getName(), 6);
 	}
 
