@@ -52,8 +52,8 @@ public class Model3D {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	private static final double PAC_SIZE = 10.0;
-	private static final double GHOST_SIZE = 9.5;
+	private static final double PAC_SIZE = 9.0;
+	private static final double GHOST_SIZE = 8.5;
 
 	private static Model3D theThing;
 

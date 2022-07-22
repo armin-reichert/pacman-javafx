@@ -135,7 +135,7 @@ public class GameUI {
 		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
 		gameSceneParent = new StackPane();
-		root.getChildren().addAll(gameSceneParent, overlayPane, flashMessageView);
+		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
 		return root;
 	}
 
