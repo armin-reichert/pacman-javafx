@@ -146,8 +146,6 @@ public interface Rendering2D {
 
 	// HUD
 
-	void drawHUD(GraphicsContext g, HUD hud);
-
 	void drawGameStateMessage(GraphicsContext g, GameState state);
 
 	// Debug

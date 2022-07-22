@@ -35,7 +35,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.LevelCounter;
-import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -66,7 +65,7 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
 	}
 
-	public void fillText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	protected void fillText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
@@ -215,28 +214,6 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 			g.setFill(Color.YELLOW);
 			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
 			g.fillText("+" + excessLives, x + t(10), y + t(1));
-		}
-	}
-
-	@Override
-	public void drawHUD(GraphicsContext g, HUD hud) {
-		g.save();
-		g.scale(hud.scaling, hud.scaling);
-		drawScore(g, hud.score, TS, TS, arcadeFont);
-		drawScore(g, hud.highScore, 16 * TS, TS, arcadeFont);
-		if (hud.creditVisible) {
-			fillText(g, "CREDIT  %d".formatted(hud.credit), Color.WHITE, arcadeFont, t(2), t(36) - 1);
-		}
-		g.restore();
-	}
-
-	private void drawScore(GraphicsContext g, Score score, double x, double y, Font font) {
-		if (score.visible) {
-			fillText(g, score.title, Color.WHITE, font, x, y);
-			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
-			fillText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + TS + 1);
-			var levelText = score.showContent ? "L" + score.levelNumber : "";
-			fillText(g, levelText, Color.LIGHTGRAY, font, x + t(8), y + TS + 1);
 		}
 	}
 
