@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -54,21 +53,16 @@ public class PlayScene2D extends GameScene2D {
 	private final GuysInfo guysInfo = new GuysInfo(this);
 
 	@Override
-	public void setSceneContext(SceneContext context) {
-		super.setSceneContext(context);
+	public void init() {
+		guysInfo.init(ctx.game());
+		hud.setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
+		ctx.game().bonus().setInactive();
 		var game = ctx.game();
 		var arcadeWorld = (ArcadeWorld) game.world();
 		arcadeWorld.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(game.level.mazeNumber));
 		game.pac.setAnimationSet(ctx.r2D.createPacAnimationSet(game.pac));
 		game.ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D.createGhostAnimationSet(ghost)));
 		LOGGER.info("Recreated animations for maze, Pac-Man and the ghosts.");
-	}
-
-	@Override
-	public void init() {
-		guysInfo.init(ctx.game());
-		hud.setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
-		ctx.game().bonus().setInactive();
 	}
 
 	@Override
