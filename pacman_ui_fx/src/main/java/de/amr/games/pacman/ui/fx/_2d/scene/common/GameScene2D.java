@@ -88,6 +88,10 @@ public abstract class GameScene2D implements GameScene {
 
 		root.getChildren().addAll(canvas, overlayCanvas, overlayPane);
 		resize(unscaledSize.y());
+
+		hud.widthPy.bind(canvas.widthProperty());
+		hud.heightPy.bind(canvas.heightProperty());
+		hud.scalingPy.bind(scalingPy);
 	}
 
 	@Override
@@ -129,13 +133,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void drawHUD(GraphicsContext g) {
-		hud.width = canvas.getWidth();
-		hud.height = canvas.getHeight();
-		hud.scaling = getScaling();
-		hud.credit = ctx.game().getCredit();
-		hud.score = ctx.game().scores.gameScore;
-		hud.highScore = ctx.game().scores.highScore;
-		hud.draw(g);
+		hud.draw(g, ctx.game());
 	}
 
 	/**

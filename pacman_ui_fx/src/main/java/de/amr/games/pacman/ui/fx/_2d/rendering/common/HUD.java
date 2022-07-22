@@ -27,8 +27,11 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -38,14 +41,11 @@ import javafx.scene.text.Font;
  */
 public class HUD {
 
-	public double scaling;
-	public double width;
-	public double height;
-	public Score score;
-	public Score highScore;
-	public boolean creditVisible;
-	public int credit;
+	public final DoubleProperty widthPy = new SimpleDoubleProperty();
+	public final DoubleProperty heightPy = new SimpleDoubleProperty();
+	public final DoubleProperty scalingPy = new SimpleDoubleProperty();
 
+	public boolean creditVisible;
 	private Font font;
 
 	public HUD() {
@@ -56,13 +56,14 @@ public class HUD {
 		this.font = font;
 	}
 
-	public void draw(GraphicsContext g) {
+	public void draw(GraphicsContext g, GameModel game) {
+		var scaling = scalingPy.get();
 		g.save();
 		g.scale(scaling, scaling);
-		drawScore(g, score, TS, TS, font);
-		drawScore(g, highScore, 16 * TS, TS, font);
+		drawScore(g, game.scores.gameScore, TS, TS, font);
+		drawScore(g, game.scores.highScore, 16 * TS, TS, font);
 		if (creditVisible) {
-			fillText(g, "CREDIT  %d".formatted(credit), Color.WHITE, font, t(2), t(36) - 1);
+			fillText(g, "CREDIT  %d".formatted(game.getCredit()), Color.WHITE, font, t(2), t(36) - 1);
 		}
 		g.restore();
 	}
