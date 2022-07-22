@@ -237,10 +237,9 @@ public class Maze3D extends Group {
 	}
 
 	private void addCompositeWall(WallData wallData) {
-		// without ...+1 there are gaps. why?
 		var base = switch (wallData.type) {
-		case FloorPlan.HWALL -> horizontalWall(wallData.numBricksX + 1, wallData.brickSize);
-		case FloorPlan.VWALL -> verticalWall(wallData.numBricksY + 1, wallData.brickSize);
+		case FloorPlan.HWALL -> horizontalWall(wallData);
+		case FloorPlan.VWALL -> verticalWall(wallData);
 		case FloorPlan.CORNER -> corner();
 		default -> throw new IllegalStateException();
 		};
@@ -250,8 +249,8 @@ public class Maze3D extends Group {
 		base.drawModeProperty().bind(Env.drawModePy);
 
 		var top = switch (wallData.type) {
-		case FloorPlan.HWALL -> horizontalWall(wallData.numBricksX + 1, wallData.brickSize);
-		case FloorPlan.VWALL -> verticalWall(wallData.numBricksY + 1, wallData.brickSize);
+		case FloorPlan.HWALL -> horizontalWall(wallData);
+		case FloorPlan.VWALL -> verticalWall(wallData);
 		case FloorPlan.CORNER -> corner();
 		default -> throw new IllegalStateException();
 		};
@@ -268,17 +267,19 @@ public class Maze3D extends Group {
 		wallsGroup.getChildren().add(wall);
 	}
 
-	private Box horizontalWall(int numBricksX, double brickSize) {
+	private Box horizontalWall(WallData wallData) {
 		Box wall = new Box();
-		wall.setWidth(numBricksX * brickSize);
+		// without ...+1 there are gaps. why?
+		wall.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
 		wall.heightProperty().bind(wallThicknessPy);
 		return wall;
 	}
 
-	private Box verticalWall(int numBricksY, double brickSize) {
+	private Box verticalWall(WallData wallData) {
 		Box wall = new Box();
 		wall.widthProperty().bind(wallThicknessPy);
-		wall.setHeight(numBricksY * brickSize);
+		// without ...+1 there are gaps. why?
+		wall.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
 		return wall;
 	}
 
