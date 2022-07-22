@@ -160,7 +160,12 @@ public class Actions {
 	}
 
 	public static void togglePipViewVisible() {
-		Env.toggle(Env.pipVisiblePy);
+		Env.toggle(Env.pipEnabledPy);
+		if (Env.pipEnabledPy.get()) {
+			showFlashMessage("Picture in Picture ON");
+		} else {
+			showFlashMessage("Picture in Picture OFF");
+		}
 	}
 
 	public static void toggleDashboardVisible() {

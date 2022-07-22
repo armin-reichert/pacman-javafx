@@ -128,8 +128,7 @@ public class GameUI {
 		dashboard = new Dashboard();
 		dashboard.build(this, gameController);
 		pipView = new PiPView(new PlayScene2D());
-		pipView.sceneHeightPy.bind(Env.pipSceneHeightPy);
-		pipView.getRoot().visibleProperty().bind(Env.pipVisiblePy);
+		pipView.heightPy.bind(Env.pipSceneHeightPy);
 		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
@@ -171,8 +170,17 @@ public class GameUI {
 	private void render() {
 		flashMessageView.update();
 		dashboard.update();
+		updatePipView();
+	}
+
+	private void updatePipView() {
 		var currentScene = sceneManager.getCurrentGameScene();
-		pipView.drawContent(currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D);
+		if (Env.pipEnabledPy.get() && (currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D)) {
+			pipView.getRoot().setVisible(true);
+			pipView.draw();
+		} else {
+			pipView.getRoot().setVisible(false);
+		}
 	}
 
 	private void initKeyboardHandling() {

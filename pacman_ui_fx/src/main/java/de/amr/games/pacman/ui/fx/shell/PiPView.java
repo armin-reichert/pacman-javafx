@@ -28,7 +28,6 @@ import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -39,15 +38,19 @@ import javafx.scene.paint.Color;
  */
 public class PiPView {
 
-	private static final Image PLACEHOLDER = Ufx.image("graphics/stoerung.jpg");
+	public static final double MIN_WIDTH = 28 * 8;
+	public static final double MIN_HEIGHT = 36 * 8;
 
-	public final DoubleProperty sceneHeightPy = new SimpleDoubleProperty();
-
-	private StackPane root = new StackPane();
+	public final DoubleProperty heightPy = new SimpleDoubleProperty();
+	private final StackPane root = new StackPane();
 	private GameScene2D gameScene;
 
 	public PiPView() {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
+	}
+
+	public StackPane getRoot() {
+		return root;
 	}
 
 	public PiPView(GameScene2D embeddedGameScene) {
@@ -57,18 +60,10 @@ public class PiPView {
 
 	public void setEmbeddedGameScene(GameScene2D gameScene) {
 		this.gameScene = gameScene;
-		gameScene.resize(sceneHeightPy.doubleValue());
+		gameScene.resize(heightPy.doubleValue());
 		gameScene.getFXSubScene().setFocusTraversable(false);
 		root.getChildren().setAll(gameScene.getFXSubScene());
-		sceneHeightPy.addListener((x, y, h) -> gameScene.resize(h.doubleValue()));
-	}
-
-	public StackPane getRoot() {
-		return root;
-	}
-
-	public GameScene2D getGameScene() {
-		return gameScene;
+		heightPy.addListener((x, y, h) -> gameScene.resize(h.doubleValue()));
 	}
 
 	public void refresh(SceneManager sceneManager) {
@@ -78,19 +73,19 @@ public class PiPView {
 		}
 	}
 
-	public void drawContent(boolean drawIt) {
-		if (gameScene != null) {
-			var g = gameScene.getGameSceneCanvas().getGraphicsContext2D();
-			var width = g.getCanvas().getWidth();
-			var height = g.getCanvas().getHeight();
-			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, width, height);
-			if (drawIt) {
-				gameScene.drawHUD(g);
-				gameScene.drawSceneContent(g);
-			} else {
-				g.drawImage(PLACEHOLDER, 0, 0, 224, 288);
-			}
+	public void draw() {
+		if (gameScene == null) {
+			return;
 		}
+		var canvas = gameScene.getGameSceneCanvas();
+		var g = canvas.getGraphicsContext2D();
+		double scaling = canvas.getWidth() / MIN_WIDTH;
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		gameScene.drawHUD(g);
+		g.save();
+		g.scale(scaling, scaling);
+		gameScene.drawSceneContent(g);
+		g.restore();
 	}
 }
