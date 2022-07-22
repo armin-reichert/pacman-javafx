@@ -47,7 +47,6 @@ public class Section3D extends Section {
 	private final Slider sliderWallHeight;
 	private final Slider sliderWallThickness;
 	private final ColorPicker pickerLightColor;
-	private final ColorPicker pickerBgColor;
 	private final ComboBox<String> comboFloorTexture;
 	private final ColorPicker pickerFloorColor;
 	private final CheckBox cbAxesVisible;
@@ -58,8 +57,6 @@ public class Section3D extends Section {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 		pickerLightColor = addColorPicker("Light color", Env.lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.lightColorPy.set(pickerLightColor.getValue()));
-		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
-		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
 		comboResolution.setOnAction(e -> Env.mazeResolutionPy.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.mazeWallHeightPy.get());

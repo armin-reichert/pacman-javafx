@@ -30,6 +30,7 @@ import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -59,6 +60,7 @@ public class SectionGeneral extends Section {
 	private Tooltip tooltipStep = new Tooltip("Single Step");
 	private Slider sliderPiPSceneHeight;
 	private Slider sliderPiPOpacity;
+	private final ColorPicker pickerBgColor;
 
 	public SectionGeneral(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
@@ -99,6 +101,9 @@ public class SectionGeneral extends Section {
 		sliderPiPOpacity.setShowTickMarks(false);
 		sliderPiPOpacity.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
+
+		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
+		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
 
 		addInfo("Main scene",
 				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
