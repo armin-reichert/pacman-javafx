@@ -91,7 +91,6 @@ public abstract class GameScene2D implements GameScene {
 
 		hud.widthPy.bind(canvas.widthProperty());
 		hud.heightPy.bind(canvas.heightProperty());
-		hud.scalingPy.bind(scalingPy);
 	}
 
 	@Override

@@ -43,7 +43,6 @@ public class HUD {
 
 	public final DoubleProperty widthPy = new SimpleDoubleProperty();
 	public final DoubleProperty heightPy = new SimpleDoubleProperty();
-	public final DoubleProperty scalingPy = new SimpleDoubleProperty();
 
 	private boolean creditVisible;
 	private Font font;
@@ -65,28 +64,29 @@ public class HUD {
 	}
 
 	public void draw(GraphicsContext g, GameModel game) {
-		var scaling = scalingPy.get();
+		var scaling = heightPy.get() / (36 * TS);
 		g.save();
 		g.scale(scaling, scaling);
-		drawScore(g, game.scores.gameScore, TS, TS, font);
-		drawScore(g, game.scores.highScore, 16 * TS, TS, font);
+		drawScore(g, game.scores.gameScore, TS, TS);
+		drawScore(g, game.scores.highScore, 16 * TS, TS);
 		if (creditVisible) {
-			fillText(g, "CREDIT  %d".formatted(game.getCredit()), Color.WHITE, font, t(2), t(36) - 1);
+			drawText(g, "CREDIT  %d".formatted(game.getCredit()), Color.WHITE, t(2), t(36) - 1);
 		}
 		g.restore();
 	}
 
-	private void drawScore(GraphicsContext g, Score score, double x, double y, Font font) {
+	private void drawScore(GraphicsContext g, Score score, double x, double y) {
 		if (score.visible) {
-			fillText(g, score.title, Color.WHITE, font, x, y);
+			drawText(g, score.title, Color.WHITE, x, y);
 			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
-			fillText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + TS + 1);
-			var levelText = score.showContent ? "L" + score.levelNumber : "";
-			fillText(g, levelText, Color.LIGHTGRAY, font, x + t(8), y + TS + 1);
+			drawText(g, "%7s".formatted(pointsText), Color.WHITE, x, y + TS + 1);
+			if (score.showContent) {
+				drawText(g, "L" + score.levelNumber, Color.LIGHTGRAY, x + t(8), y + TS + 1);
+			}
 		}
 	}
 
-	private void fillText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	private void drawText(GraphicsContext g, String text, Color color, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
