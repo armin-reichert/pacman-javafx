@@ -38,26 +38,70 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
-	private Keyboard() {
-	}
-
 	public static final byte NO_MODIFIER = 0x0;
 	public static final byte ALT = 0x1;
 	public static final byte CTRL = 0x2;
 	public static final byte SHIFT = 0x4;
 
-	private static KeyEvent currentEvent;
-	private static byte currentMask;
-	private static final List<Runnable> handlers = new ArrayList<>();
+	public static boolean pressed(KeyCode code) {
+		return pressed(NO_MODIFIER, code);
+	}
+
+	public static boolean pressed(int modifierMask, KeyCode code) {
+		return KB.isPressed(modifierMask, code);
+	}
 
 	public static void clear() {
+		KB.doClear();
+	}
+
+	public static void processEvent(KeyEvent e) {
+		KB.doProcessEvent(e);
+	}
+
+	public static void addHandler(Runnable handler) {
+		KB.handlers.add(handler);
+	}
+
+	public static void removeHandler(Runnable handler) {
+		KB.handlers.remove(handler);
+	}
+
+	// Internal
+
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Keyboard KB = new Keyboard();
+
+	private KeyEvent currentEvent;
+	private byte currentMask;
+	private final List<Runnable> handlers = new ArrayList<>();
+
+	private Keyboard() {
+	}
+
+	private static String modifierText(byte mask) {
+		if (mask == NO_MODIFIER) {
+			return "(NO MODIFIER) ";
+		}
+		String text = "";
+		if ((mask & ALT) != 0) {
+			text += "ALT";
+		}
+		if ((mask & CTRL) != 0) {
+			text += " CONTROL";
+		}
+		if ((mask & SHIFT) != 0) {
+			text += " SHIFT";
+		}
+		return (text + "+").trim();
+	}
+
+	private void doClear() {
 		currentEvent = null;
 		currentMask = 0;
 	}
 
-	public static void processEvent(KeyEvent e) {
+	private void doProcessEvent(KeyEvent e) {
 		if (e.isConsumed()) {
 			return;
 		}
@@ -76,41 +120,12 @@ public class Keyboard {
 		e.consume();
 	}
 
-	public static void addHandler(Runnable handler) {
-		handlers.add(handler);
-	}
-
-	public static void removeHandler(Runnable handler) {
-		handlers.remove(handler);
-	}
-
-	public static boolean pressed(KeyCode code) {
-		return pressed(NO_MODIFIER, code);
-	}
-
-	public static boolean pressed(int modfierMask, KeyCode code) {
-		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modfierMask) {
+	private boolean isPressed(int modifierMask, KeyCode code) {
+		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modifierMask) {
 			LOGGER.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
 			currentEvent.consume();
 			return true;
 		}
 		return false;
-	}
-
-	private static String modifierText(byte mask) {
-		if (mask == NO_MODIFIER) {
-			return "(NO MODIFIER) ";
-		}
-		String text = "";
-		if ((mask & ALT) != 0) {
-			text += "ALT";
-		}
-		if ((mask & CTRL) != 0) {
-			text += " CONTROL";
-		}
-		if ((mask & SHIFT) != 0) {
-			text += " SHIFT";
-		}
-		return (text + "+").trim();
 	}
 }
