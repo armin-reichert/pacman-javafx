@@ -60,7 +60,16 @@ public class Maze3D extends Group {
 	public record MazeColors(Color wallBaseColor, Color wallTopColor, Color doorColor) {
 	}
 
-	public record WallData(double brickSize, double wallHeight, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
+	static class WallData {
+		byte type;
+		int x;
+		int y;
+		int numBricksX;
+		int numBricksY;
+		double brickSize;
+		double wallHeight;
+		PhongMaterial baseMaterial;
+		PhongMaterial topMaterial;
 	}
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
@@ -135,12 +144,13 @@ public class Maze3D extends Group {
 	}
 
 	private void build() {
-		var resolution = resolutionPy.get();
-		var floorPlan = new FloorPlan(world, resolution);
-		var brickSize = (double) TS / resolution;
-		var wallHeight = wallHeightPy.get();
-		var wallData = new WallData(brickSize, wallHeight, coloredMaterial(mazeColors.wallBaseColor),
-				coloredMaterial(mazeColors.wallTopColor));
+		var wallData = new WallData();
+		wallData.brickSize = (double) TS / resolutionPy.get();
+		wallData.wallHeight = wallHeightPy.get();
+		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor);
+		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor);
+
+		var floorPlan = new FloorPlan(world, resolutionPy.get());
 
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, wallData);
@@ -150,7 +160,7 @@ public class Maze3D extends Group {
 		var doors = world.ghostHouse().doorTiles().map(this::createDoor).toList();
 		doorsGroup.getChildren().setAll(doors);
 
-		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallData.wallHeight);
+		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
 	public Stream<Door3D> doors() {
@@ -164,55 +174,98 @@ public class Maze3D extends Group {
 	}
 
 	private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
+		wallData.type = FloorPlan.HWALL;
+		wallData.numBricksY = 1;
 		for (int y = 0; y < floorPlan.sizeY(); ++y) {
-			int wallStart = -1;
-			int wallSize = 0;
+			wallData.x = -1;
+			wallData.y = y;
+			wallData.numBricksX = 0;
 			for (int x = 0; x < floorPlan.sizeX(); ++x) {
 				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
-					if (wallSize == 0) {
-						wallStart = x;
+					if (wallData.numBricksX == 0) {
+						wallData.x = x;
 					}
-					wallSize++;
-				} else if (wallSize > 0) {
-					addCompositeWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
-					wallSize = 0;
+					wallData.numBricksX++;
+				} else if (wallData.numBricksX > 0) {
+					addCompositeWall(wallData);
+					wallData.numBricksX = 0;
 				}
 			}
-			if (wallSize > 0 && y == floorPlan.sizeY() - 1) {
-				addCompositeWall(wallStart, y, wallSize, 1, wallData, FloorPlan.HWALL);
+			if (wallData.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
+				addCompositeWall(wallData);
 			}
 		}
 	}
 
 	private void addVerticalWalls(FloorPlan floorPlan, WallData wallData) {
+		wallData.type = FloorPlan.VWALL;
+		wallData.numBricksX = 1;
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
-			int wallStart = -1;
-			int wallSize = 0;
+			wallData.x = x;
+			wallData.y = -1;
+			wallData.numBricksY = 0;
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.VWALL) {
-					if (wallSize == 0) {
-						wallStart = y;
+					if (wallData.numBricksY == 0) {
+						wallData.y = y;
 					}
-					wallSize++;
-				} else if (wallSize > 0) {
-					addCompositeWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
-					wallSize = 0;
+					wallData.numBricksY++;
+				} else if (wallData.numBricksY > 0) {
+					addCompositeWall(wallData);
+					wallData.numBricksY = 0;
 				}
 			}
-			if (wallSize > 0 && x == floorPlan.sizeX() - 1) {
-				addCompositeWall(x, wallStart, 1, wallSize, wallData, FloorPlan.VWALL);
+			if (wallData.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
+				addCompositeWall(wallData);
 			}
 		}
 	}
 
 	private void addCorners(FloorPlan floorPlan, WallData wallData) {
+		wallData.type = FloorPlan.CORNER;
+		wallData.numBricksX = 1;
+		wallData.numBricksY = 1;
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
-					addCompositeWall(x, y, 1, 1, wallData, FloorPlan.CORNER);
+					wallData.x = x;
+					wallData.y = y;
+					addCompositeWall(wallData);
 				}
 			}
 		}
+	}
+
+	private void addCompositeWall(WallData wallData) {
+		// without ...+1 there are gaps. why?
+		var base = switch (wallData.type) {
+		case FloorPlan.HWALL -> horizontalWall(wallData.numBricksX + 1, wallData.brickSize);
+		case FloorPlan.VWALL -> verticalWall(wallData.numBricksY + 1, wallData.brickSize);
+		case FloorPlan.CORNER -> corner();
+		default -> throw new IllegalStateException();
+		};
+		base.depthProperty().bind(wallHeightPy);
+		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+		base.setMaterial(wallData.baseMaterial);
+		base.drawModeProperty().bind(Env.drawModePy);
+
+		var top = switch (wallData.type) {
+		case FloorPlan.HWALL -> horizontalWall(wallData.numBricksX + 1, wallData.brickSize);
+		case FloorPlan.VWALL -> verticalWall(wallData.numBricksY + 1, wallData.brickSize);
+		case FloorPlan.CORNER -> corner();
+		default -> throw new IllegalStateException();
+		};
+		double topHeight = 0.1;
+		top.setDepth(topHeight);
+		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
+		top.setMaterial(wallData.topMaterial);
+		top.drawModeProperty().bind(Env.drawModePy);
+
+		var wall = new Group(base, top);
+		wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
+		wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
+
+		wallsGroup.getChildren().add(wall);
 	}
 
 	private Box horizontalWall(int numBricksX, double brickSize) {
@@ -234,37 +287,5 @@ public class Maze3D extends Group {
 		corner.widthProperty().bind(wallThicknessPy);
 		corner.heightProperty().bind(wallThicknessPy);
 		return corner;
-	}
-
-	private void addCompositeWall(int x, int y, int numBricksX, int numBricksY, WallData data, byte type) {
-		// without ...+1 there are gaps. why?
-		var base = switch (type) {
-		case FloorPlan.HWALL -> horizontalWall(numBricksX + 1, data.brickSize);
-		case FloorPlan.VWALL -> verticalWall(numBricksY + 1, data.brickSize);
-		case FloorPlan.CORNER -> corner();
-		default -> throw new IllegalStateException();
-		};
-		base.depthProperty().bind(wallHeightPy);
-		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-		base.setMaterial(data.baseMaterial);
-		base.drawModeProperty().bind(Env.drawModePy);
-
-		var top = switch (type) {
-		case FloorPlan.HWALL -> horizontalWall(numBricksX + 1, data.brickSize);
-		case FloorPlan.VWALL -> verticalWall(numBricksY + 1, data.brickSize);
-		case FloorPlan.CORNER -> corner();
-		default -> throw new IllegalStateException();
-		};
-		double topHeight = 0.1;
-		top.setDepth(topHeight);
-		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
-		top.setMaterial(data.topMaterial);
-		top.drawModeProperty().bind(Env.drawModePy);
-
-		var wall = new Group(base, top);
-		wall.setTranslateX((x + 0.5 * numBricksX) * data.brickSize);
-		wall.setTranslateY((y + 0.5 * numBricksY) * data.brickSize);
-
-		wallsGroup.getChildren().add(wall);
 	}
 }
