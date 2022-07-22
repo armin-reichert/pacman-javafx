@@ -123,16 +123,11 @@ public abstract class GameScene2D implements GameScene {
 	protected void render(GraphicsContext g) {
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		g.save();
-//		g.scale(getScaling(), getScaling());
-		g.setFontSmoothingType(FontSmoothingType.LCD);
 		drawSceneContent(g);
-		g.restore();
 		if (overlayCanvas.isVisible()) {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
 			og.save();
-//			og.scale(getScaling(), getScaling());
 			og.setFontSmoothingType(FontSmoothingType.LCD);
 			ctx.r2D.drawTileBorders(og);
 			og.restore();
