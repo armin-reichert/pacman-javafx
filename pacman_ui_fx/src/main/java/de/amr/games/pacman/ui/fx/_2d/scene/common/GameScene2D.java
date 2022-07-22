@@ -59,7 +59,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final SubScene fxSubScene;
 	protected final ResizableCanvas sceneCanvas;
 	protected final ResizableCanvas overlayCanvas;
-	protected final Pane overlayPane = new Pane();
+	protected final Pane infoLayer = new Pane();
 	protected final HUD hud = new HUD();
 
 	protected SceneContext ctx;
@@ -87,10 +87,10 @@ public abstract class GameScene2D implements GameScene {
 		scale(overlayCanvas);
 		scalingPy.addListener((obs, oldVal, newVal) -> scale(overlayCanvas));
 
-		overlayPane.setVisible(Env.showDebugInfoPy.get());
-		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
+		infoLayer.setVisible(Env.showDebugInfoPy.get());
+		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 
-		root.getChildren().addAll(sceneCanvas, overlayCanvas, overlayPane);
+		root.getChildren().addAll(sceneCanvas, overlayCanvas, infoLayer);
 		resize(unscaledSize.y());
 
 		hud.widthPy.bind(sceneCanvas.widthProperty());

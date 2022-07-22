@@ -65,7 +65,7 @@ public class GuysInfo {
 			texts[i].setTextAlignment(TextAlignment.CENTER);
 			texts[i].setFill(Color.WHITE);
 		}
-		playScene.overlayPane.getChildren().addAll(texts);
+		playScene.infoLayer.getChildren().addAll(texts);
 	}
 
 	public void init(GameModel game) {
