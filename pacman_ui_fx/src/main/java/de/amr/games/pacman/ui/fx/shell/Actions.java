@@ -30,6 +30,8 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.Resources;
+import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.texts.Texts;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -217,7 +219,12 @@ public class Actions {
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.use3DScenePy);
 		if (theUI.getSceneManager().hasDifferentScenesFor2DAnd3D()) {
-			theUI.on2D3DChange();
+			theUI.updateGameScene(true);
+			if (theUI.getSceneManager().getCurrentGameScene() instanceof PlayScene2D playScene2D) {
+				playScene2D.onSwitchFrom3D();
+			} else if (theUI.getSceneManager().getCurrentGameScene() instanceof PlayScene3D playScene3D) {
+				playScene3D.onSwitchFrom2D();
+			}
 		} else {
 			showFlashMessage(Texts.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}

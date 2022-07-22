@@ -61,7 +61,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI implements GameEventAdapter {
+public class GameUI {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
@@ -83,12 +83,10 @@ public class GameUI implements GameEventAdapter {
 		this.gameController = gameController;
 		this.stage = stage;
 
-		GameEvents.addEventListener(this);
 		Actions.init(gameController, this);
 
 		width *= 0.96; // MAME is smaller than the 28x36 aspect ratio. Why?
 		mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-
 		sceneManager = new SceneManager(gameController, mainScene);
 		LOGGER.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
 
@@ -96,6 +94,24 @@ public class GameUI implements GameEventAdapter {
 		updateGameScene(true);
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
+
+		GameEvents.addEventListener(new GameEventAdapter() {
+			@Override
+			public void onGameEvent(GameEvent event) {
+				GameEventAdapter.super.onGameEvent(event);
+				sceneManager.getCurrentGameScene().onGameEvent(event);
+			}
+
+			@Override
+			public void onGameStateChange(GameStateChangeEvent e) {
+				updateGameScene(false);
+			}
+
+			@Override
+			public void onUIForceUpdate(GameEvent e) {
+				updateGameScene(true);
+			}
+		});
 
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setScene(mainScene);
@@ -171,7 +187,7 @@ public class GameUI implements GameEventAdapter {
 		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
 	}
 
-	private void updateGameScene(boolean forcedReload) {
+	void updateGameScene(boolean forcedReload) {
 		boolean sceneChanged = sceneManager.selectGameScene(forcedReload);
 		if (sceneChanged) {
 			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
@@ -179,23 +195,6 @@ public class GameUI implements GameEventAdapter {
 			pipView.refresh(sceneManager);
 			updateBackground();
 		}
-	}
-
-	@Override
-	public void onGameEvent(GameEvent event) {
-		GameEventAdapter.super.onGameEvent(event);
-		// game scenes are not directly registered as game event handlers
-		sceneManager.getCurrentGameScene().onGameEvent(event);
-	}
-
-	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		updateGameScene(false);
-	}
-
-	@Override
-	public void onUIForceUpdate(GameEvent e) {
-		updateGameScene(true);
 	}
 
 	private void onKeyPressed() {
@@ -223,15 +222,6 @@ public class GameUI implements GameEventAdapter {
 			Actions.togglePipViewVisible();
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
-		}
-	}
-
-	void on2D3DChange() {
-		updateGameScene(true);
-		if (sceneManager.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
-			playScene2D.onSwitchFrom3D();
-		} else if (sceneManager.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
-			playScene3D.onSwitchFrom2D();
 		}
 	}
 
