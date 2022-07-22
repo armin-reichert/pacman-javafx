@@ -67,13 +67,9 @@ public class PiPView {
 		thumbnail.setSceneContext(gameScene.getSceneContext());
 		var canvas = thumbnail.getGameSceneCanvas();
 		var g = canvas.getGraphicsContext2D();
-		double scaling = canvas.getWidth() / MIN_WIDTH;
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		thumbnail.drawHUD(g);
-		g.save();
-		g.scale(scaling, scaling);
 		thumbnail.drawSceneContent(g);
-		g.restore();
 	}
 }

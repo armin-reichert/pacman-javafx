@@ -43,6 +43,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
+import javafx.scene.transform.Scale;
 
 /**
  * Base class of all 2D scenes that get rendered inside a canvas.
@@ -76,12 +77,16 @@ public abstract class GameScene2D implements GameScene {
 		canvas = new ResizableCanvas();
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+		scaleCanvas(canvas);
+		scalingPy.addListener((obs, oldVal, newVal) -> scaleCanvas(canvas));
 
 		overlayCanvas = new ResizableCanvas();
 		overlayCanvas.widthProperty().bind(fxSubScene.widthProperty());
 		overlayCanvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayCanvas.setMouseTransparent(true);
+		scaleCanvas(overlayCanvas);
+		scalingPy.addListener((obs, oldVal, newVal) -> scaleCanvas(overlayCanvas));
 
 		overlayPane.setVisible(Env.showDebugInfoPy.get());
 		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
@@ -91,6 +96,10 @@ public abstract class GameScene2D implements GameScene {
 
 		hud.widthPy.bind(canvas.widthProperty());
 		hud.heightPy.bind(canvas.heightProperty());
+	}
+
+	private void scaleCanvas(Canvas c) {
+		c.getTransforms().setAll(new Scale(getScaling(), getScaling()));
 	}
 
 	@Override
@@ -115,7 +124,7 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.save();
-		g.scale(getScaling(), getScaling());
+//		g.scale(getScaling(), getScaling());
 		g.setFontSmoothingType(FontSmoothingType.LCD);
 		drawSceneContent(g);
 		g.restore();
@@ -123,7 +132,7 @@ public abstract class GameScene2D implements GameScene {
 			var og = overlayCanvas.getGraphicsContext2D();
 			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
 			og.save();
-			og.scale(getScaling(), getScaling());
+//			og.scale(getScaling(), getScaling());
 			og.setFontSmoothingType(FontSmoothingType.LCD);
 			ctx.r2D.drawTileBorders(og);
 			og.restore();

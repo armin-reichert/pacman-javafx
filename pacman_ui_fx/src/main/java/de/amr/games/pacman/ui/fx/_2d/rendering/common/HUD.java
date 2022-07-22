@@ -64,15 +64,11 @@ public class HUD {
 	}
 
 	public void draw(GraphicsContext g, GameModel game) {
-		var scaling = heightPy.get() / (36 * TS);
-		g.save();
-		g.scale(scaling, scaling);
 		drawScore(g, game.scores.gameScore, TS, TS);
 		drawScore(g, game.scores.highScore, 16 * TS, TS);
 		if (creditVisible) {
 			drawText(g, "CREDIT  %d".formatted(game.getCredit()), Color.WHITE, t(2), t(36) - 1);
 		}
-		g.restore();
 	}
 
 	private void drawScore(GraphicsContext g, Score score, double x, double y) {
