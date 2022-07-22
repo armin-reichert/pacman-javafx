@@ -202,8 +202,6 @@ public class GameUI {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
 			Env.toggle(Env.showDebugInfoPy);
-		} else if (Keyboard.pressed(Keyboard.CTRL, KeyCode.I)) {
-			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {
 			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.M)) {
@@ -243,9 +241,5 @@ public class GameUI {
 
 	public Dashboard getDashboard() {
 		return dashboard;
-	}
-
-	public PiPView getPipView() {
-		return pipView;
 	}
 }

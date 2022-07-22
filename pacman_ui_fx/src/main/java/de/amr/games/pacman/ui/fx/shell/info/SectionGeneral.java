@@ -90,23 +90,20 @@ public class SectionGeneral extends Section {
 				() -> String.format("%d Hz (Target: %d Hz)", ui.getGameLoop().getFPS(), ui.getGameLoop().getTargetFramerate()));
 		addInfo("Total Ticks", ui.getGameLoop()::getTotalTicks);
 
-		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeightPy.get());
-		sliderPiPSceneHeight.setShowTickLabels(false);
-		sliderPiPSceneHeight.setShowTickMarks(false);
-		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
-
-		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
-		sliderPiPOpacity.setShowTickLabels(false);
-		sliderPiPOpacity.setShowTickMarks(false);
-		sliderPiPOpacity.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
+		addInfo("Main scene",
+				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
 
 		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
 
-		addInfo("Main scene",
-				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
+		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeightPy.get());
+		sliderPiPSceneHeight.valueProperty()
+				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
+
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
+		sliderPiPOpacity.valueProperty()
+				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
+
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Measure time", () -> Env.toggle(Env.timeMeasuredPy));
