@@ -144,8 +144,6 @@ public interface Rendering2D {
 
 	void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersDark);
 
-	// HUD
-
 	void drawGameStateMessage(GraphicsContext g, GameState state);
 
 	// Debug

@@ -42,7 +42,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 
 /**
@@ -71,8 +70,6 @@ public abstract class GameScene2D implements GameScene {
 
 	protected GameScene2D(V2d size) {
 		unscaledSize = size;
-
-		hud.setFont(Font.font("Monospaced", 8.0));
 
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 
