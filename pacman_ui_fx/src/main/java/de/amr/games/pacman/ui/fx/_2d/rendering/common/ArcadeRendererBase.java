@@ -230,13 +230,16 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 
 	@Override
 	public void drawTileBorders(GraphicsContext g) {
-		g.setStroke(Color.GRAY);
-		g.setLineWidth(0.5);
+		g.save();
+		g.translate(0.5, 0.5);
+		g.setStroke(Color.WHITE);
+		g.setLineWidth(0.2);
 		for (int row = 0; row <= ArcadeWorld.TILES_Y; ++row) {
 			g.strokeLine(0, t(row), ArcadeWorld.WORLD_SIZE.x(), t(row));
 		}
 		for (int col = 0; col <= ArcadeWorld.TILES_X; ++col) {
 			g.strokeLine(t(col), 0, t(col), ArcadeWorld.WORLD_SIZE.y());
 		}
+		g.restore();
 	}
 }

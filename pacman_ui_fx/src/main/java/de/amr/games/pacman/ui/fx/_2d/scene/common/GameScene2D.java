@@ -42,7 +42,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.transform.Scale;
 
 /**
@@ -58,7 +57,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
 	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene;
-	protected final ResizableCanvas canvas;
+	protected final ResizableCanvas sceneCanvas;
 	protected final ResizableCanvas overlayCanvas;
 	protected final Pane overlayPane = new Pane();
 	protected final HUD hud = new HUD();
@@ -74,32 +73,32 @@ public abstract class GameScene2D implements GameScene {
 
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 
-		canvas = new ResizableCanvas();
-		canvas.widthProperty().bind(fxSubScene.widthProperty());
-		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		scaleCanvas(canvas);
-		scalingPy.addListener((obs, oldVal, newVal) -> scaleCanvas(canvas));
+		sceneCanvas = new ResizableCanvas();
+		sceneCanvas.widthProperty().bind(fxSubScene.widthProperty());
+		sceneCanvas.heightProperty().bind(fxSubScene.heightProperty());
+		scale(sceneCanvas);
+		scalingPy.addListener((obs, oldVal, newVal) -> scale(sceneCanvas));
 
 		overlayCanvas = new ResizableCanvas();
 		overlayCanvas.widthProperty().bind(fxSubScene.widthProperty());
 		overlayCanvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayCanvas.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayCanvas.setMouseTransparent(true);
-		scaleCanvas(overlayCanvas);
-		scalingPy.addListener((obs, oldVal, newVal) -> scaleCanvas(overlayCanvas));
+		scale(overlayCanvas);
+		scalingPy.addListener((obs, oldVal, newVal) -> scale(overlayCanvas));
 
 		overlayPane.setVisible(Env.showDebugInfoPy.get());
 		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
 
-		root.getChildren().addAll(canvas, overlayCanvas, overlayPane);
+		root.getChildren().addAll(sceneCanvas, overlayCanvas, overlayPane);
 		resize(unscaledSize.y());
 
-		hud.widthPy.bind(canvas.widthProperty());
-		hud.heightPy.bind(canvas.heightProperty());
+		hud.widthPy.bind(sceneCanvas.widthProperty());
+		hud.heightPy.bind(sceneCanvas.heightProperty());
 	}
 
-	private void scaleCanvas(Canvas c) {
-		c.getTransforms().setAll(new Scale(getScaling(), getScaling()));
+	private void scale(Canvas canvas) {
+		canvas.getTransforms().setAll(new Scale(getScaling(), getScaling()));
 	}
 
 	@Override
@@ -111,28 +110,28 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setHeight(height);
 		scalingPy.set(scaling);
 		LOGGER.info("Game scene %s resized. Canvas size: %.0f x %.0f scaling: %.2f", getClass().getSimpleName(),
-				canvas.getWidth(), canvas.getHeight(), scaling);
+				sceneCanvas.getWidth(), sceneCanvas.getHeight(), scaling);
 	}
 
 	@Override
 	public final void updateAndRender() {
 		update();
-		render(canvas.getGraphicsContext2D());
+		renderScene(sceneCanvas.getGraphicsContext2D());
+		drawHUD(sceneCanvas.getGraphicsContext2D());
+		renderOverlayCanvas(overlayCanvas.getGraphicsContext2D());
 	}
 
-	protected void render(GraphicsContext g) {
+	public void renderScene(GraphicsContext g) {
 		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
 		drawSceneContent(g);
+	}
+
+	private void renderOverlayCanvas(GraphicsContext g) {
 		if (overlayCanvas.isVisible()) {
-			var og = overlayCanvas.getGraphicsContext2D();
-			og.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			og.save();
-			og.setFontSmoothingType(FontSmoothingType.LCD);
-			ctx.r2D.drawTileBorders(og);
-			og.restore();
+			g.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+			ctx.r2D.drawTileBorders(g);
 		}
-		drawHUD(g);
 	}
 
 	public void drawHUD(GraphicsContext g) {
@@ -181,7 +180,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public Canvas getGameSceneCanvas() {
-		return canvas;
+		return sceneCanvas;
 	}
 
 	public Canvas getOverlayCanvas() {

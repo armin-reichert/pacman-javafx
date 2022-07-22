@@ -57,6 +57,7 @@ public class PiPView {
 		root.setFocusTraversable(false);
 		root.getChildren().add(thumbnail.getFXSubScene());
 		thumbnail.resize(MIN_HEIGHT);
+		thumbnail.getOverlayCanvas().visibleProperty().unbind();
 	}
 
 	public StackPane getRoot() {
@@ -64,12 +65,9 @@ public class PiPView {
 	}
 
 	public void draw(GameScene gameScene) {
+		var g = thumbnail.getGameSceneCanvas().getGraphicsContext2D();
 		thumbnail.setSceneContext(gameScene.getSceneContext());
-		var canvas = thumbnail.getGameSceneCanvas();
-		var g = canvas.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		thumbnail.renderScene(g);
 		thumbnail.drawHUD(g);
-		thumbnail.drawSceneContent(g);
 	}
 }
