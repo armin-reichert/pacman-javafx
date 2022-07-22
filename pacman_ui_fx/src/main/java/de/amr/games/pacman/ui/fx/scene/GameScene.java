@@ -47,6 +47,8 @@ public interface GameScene extends GameEventAdapter {
 	 */
 	void setSceneContext(SceneContext context);
 
+	SceneContext getSceneContext();
+
 	/**
 	 * Called when the scene becomes the current one.
 	 */

@@ -127,7 +127,7 @@ public class GameUI {
 		var root = new StackPane();
 		dashboard = new Dashboard();
 		dashboard.build(this, gameController);
-		pipView = new PiPView(new PlayScene2D());
+		pipView = new PiPView();
 		pipView.heightPy.bind(Env.pipSceneHeightPy);
 		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
 		var overlayPane = new BorderPane();
@@ -177,7 +177,7 @@ public class GameUI {
 		var currentScene = sceneManager.getCurrentGameScene();
 		if (Env.pipEnabledPy.get() && (currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D)) {
 			pipView.getRoot().setVisible(true);
-			pipView.draw();
+			pipView.draw(currentScene);
 		} else {
 			pipView.getRoot().setVisible(false);
 		}
@@ -200,7 +200,6 @@ public class GameUI {
 		if (sceneChanged) {
 			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 			sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
-			pipView.refresh(sceneManager);
 			updateBackground();
 		}
 	}

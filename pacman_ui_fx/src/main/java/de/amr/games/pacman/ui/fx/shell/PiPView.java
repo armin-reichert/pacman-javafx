@@ -24,7 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene.SceneManager;
+import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -41,51 +42,38 @@ public class PiPView {
 	public static final double MIN_WIDTH = 28 * 8;
 	public static final double MIN_HEIGHT = 36 * 8;
 
-	public final DoubleProperty heightPy = new SimpleDoubleProperty();
+	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
+		@Override
+		protected void invalidated() {
+			thumbnail.resize(get());
+		}
+	};
+
 	private final StackPane root = new StackPane();
-	private GameScene2D gameScene;
+	private final GameScene2D thumbnail = new PlayScene2D();
 
 	public PiPView() {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
+		root.setFocusTraversable(false);
+		root.getChildren().add(thumbnail.getFXSubScene());
+		thumbnail.resize(MIN_HEIGHT);
 	}
 
 	public StackPane getRoot() {
 		return root;
 	}
 
-	public PiPView(GameScene2D embeddedGameScene) {
-		root.setBackground(Ufx.colorBackground(Color.BLACK));
-		setEmbeddedGameScene(embeddedGameScene);
-	}
-
-	public void setEmbeddedGameScene(GameScene2D gameScene) {
-		this.gameScene = gameScene;
-		gameScene.resize(heightPy.doubleValue());
-		gameScene.getFXSubScene().setFocusTraversable(false);
-		root.getChildren().setAll(gameScene.getFXSubScene());
-		heightPy.addListener((x, y, h) -> gameScene.resize(h.doubleValue()));
-	}
-
-	public void refresh(SceneManager sceneManager) {
-		if (gameScene != null) {
-			sceneManager.updateSceneContext(gameScene);
-			gameScene.init();
-		}
-	}
-
-	public void draw() {
-		if (gameScene == null) {
-			return;
-		}
-		var canvas = gameScene.getGameSceneCanvas();
+	public void draw(GameScene gameScene) {
+		thumbnail.setSceneContext(gameScene.getSceneContext());
+		var canvas = thumbnail.getGameSceneCanvas();
 		var g = canvas.getGraphicsContext2D();
 		double scaling = canvas.getWidth() / MIN_WIDTH;
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		gameScene.drawHUD(g);
+		thumbnail.drawHUD(g);
 		g.save();
 		g.scale(scaling, scaling);
-		gameScene.drawSceneContent(g);
+		thumbnail.drawSceneContent(g);
 		g.restore();
 	}
 }
