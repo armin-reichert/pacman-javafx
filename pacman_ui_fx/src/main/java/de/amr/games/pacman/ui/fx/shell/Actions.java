@@ -35,10 +35,8 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.texts.Texts;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.PauseTransition;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
-import javafx.util.Duration;
 
 /**
  * @author Armin Reichert
@@ -121,9 +119,6 @@ public class Actions {
 		theUI.getSceneManager().getCurrentGameScene().end();
 		theGameController.sounds().stopAll();
 		theGameController.restartIntro();
-		var hint = new PauseTransition(Duration.seconds(3));
-		hint.setOnFinished(e -> playVoiceMessage(VM_HELP));
-		hint.play();
 	}
 
 	public static void addCredit() {
