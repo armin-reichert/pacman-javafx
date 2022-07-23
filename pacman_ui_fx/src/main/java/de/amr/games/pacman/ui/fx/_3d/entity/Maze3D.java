@@ -34,7 +34,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
-import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
@@ -48,6 +47,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 
 /**
@@ -60,23 +60,23 @@ public class Maze3D extends Group {
 	public record MazeColors(Color wallBaseColor, Color wallTopColor, Color doorColor) {
 	}
 
-	public record WallData(double brickSize, double wallHeight, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
+	private record WallData(double brickSize, double wallHeight, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
 	}
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private static final double FLOOR_THICKNESS = 0.1;
 
-	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(Env.mazeResolutionPy.get()) {
+	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(4) {
 		@Override
 		protected void invalidated() {
 			build();
 		}
 	};
 
-	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(Env.mazeWallHeightPy.get());
+	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(2.0);
 
-	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(Env.mazeWallThicknessPy.get());
+	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(1.0);
 
 	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>() {
 		@Override
@@ -85,12 +85,14 @@ public class Maze3D extends Group {
 		}
 	};
 
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Env.floorColorPy.get()) {
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.BLACK) {
 		@Override
 		protected void invalidated() {
 			updateFloorMaterial();
 		}
 	};
+
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 
 	private final World world;
 	private final MazeColors mazeColors;
@@ -118,7 +120,7 @@ public class Maze3D extends Group {
 		floor.setTranslateX(0.5 * width);
 		floor.setTranslateY(0.5 * height);
 		floor.setTranslateZ(0.5 * depth);
-		floor.drawModeProperty().bind(Env.drawModePy);
+		floor.drawModeProperty().bind(drawModePy);
 		updateFloorMaterial();
 	}
 
@@ -247,7 +249,7 @@ public class Maze3D extends Group {
 		base.depthProperty().bind(wallHeightPy);
 		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 		base.setMaterial(data.baseMaterial);
-		base.drawModeProperty().bind(Env.drawModePy);
+		base.drawModeProperty().bind(drawModePy);
 
 		var top = switch (type) {
 		case FloorPlan.HWALL -> horizontalWall(numBricksX + 1, data.brickSize);
@@ -259,7 +261,7 @@ public class Maze3D extends Group {
 		top.setDepth(topHeight);
 		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
 		top.setMaterial(data.topMaterial);
-		top.drawModeProperty().bind(Env.drawModePy);
+		top.drawModeProperty().bind(drawModePy);
 
 		var wall = new Group(base, top);
 		wall.setTranslateX((x + 0.5 * numBricksX) * data.brickSize);

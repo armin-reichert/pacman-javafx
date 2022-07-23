@@ -74,6 +74,7 @@ public class World3D extends Group {
 				Rendering3D.getGhostHouseDoorColor(game.variant));
 
 		maze3D = new Maze3D(game.level.world, mazeColors);
+		maze3D.drawModePy.bind(Env.drawModePy);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
 				Env.floorTexturePy));
