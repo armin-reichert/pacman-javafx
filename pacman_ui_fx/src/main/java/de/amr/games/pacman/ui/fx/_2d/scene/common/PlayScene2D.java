@@ -85,6 +85,7 @@ public class PlayScene2D extends GameScene2D {
 		if (Env.showDebugInfoPy.get()) {
 			guysInfo.update();
 		}
+		hud.setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);
 	}
 
 	@Override
