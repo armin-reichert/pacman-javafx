@@ -116,7 +116,7 @@ public class Actions {
 	}
 
 	public static void restartIntro() {
-		theUI.getSceneManager().getCurrentGameScene().end();
+		theUI.getCurrentGameScene().end();
 		theGameController.sounds().stopAll();
 		theGameController.restartIntro();
 	}
@@ -184,7 +184,7 @@ public class Actions {
 	}
 
 	public static void selectNextPerspective() {
-		if (theUI.getSceneManager().getCurrentGameScene().is3D()) {
+		if (theUI.getCurrentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().next());
 			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
 			showFlashMessage(Texts.message("camera_perspective", perspectiveName));
@@ -192,7 +192,7 @@ public class Actions {
 	}
 
 	public static void selectPrevPerspective() {
-		if (theUI.getSceneManager().getCurrentGameScene().is3D()) {
+		if (theUI.getCurrentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().prev());
 			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
 			showFlashMessage(Texts.message("camera_perspective", perspectiveName));
@@ -218,11 +218,11 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.use3DScenePy);
-		if (theUI.getSceneManager().hasDifferentScenesFor2DAnd3D()) {
+		if (theUI.getSceneManager().hasDifferentScenesFor2DAnd3D(theGameController)) {
 			theUI.updateGameScene(true);
-			if (theUI.getSceneManager().getCurrentGameScene() instanceof PlayScene2D playScene2D) {
+			if (theUI.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
 				playScene2D.onSwitchFrom3D();
-			} else if (theUI.getSceneManager().getCurrentGameScene() instanceof PlayScene3D playScene3D) {
+			} else if (theUI.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
 				playScene3D.onSwitchFrom2D();
 			}
 		} else {

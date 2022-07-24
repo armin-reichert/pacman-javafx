@@ -121,7 +121,7 @@ public class SectionCamera3D extends Section {
 	}
 
 	private Optional<GameSceneCamera> configurableCam(Perspective perspective) {
-		if (ui.getSceneManager().getCurrentGameScene() instanceof PlayScene3D playScene3D) {
+		if (ui.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
 			var cam = playScene3D.getCameraForPerspective(perspective);
 			return cam.isConfigurable() ? Optional.of(cam) : Optional.empty();
 		}

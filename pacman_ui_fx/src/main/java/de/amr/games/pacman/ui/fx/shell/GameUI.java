@@ -38,6 +38,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -78,6 +79,7 @@ public class GameUI {
 	private PiPView pipView;
 
 	private Steering currentSteering;
+	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
@@ -85,7 +87,7 @@ public class GameUI {
 
 		// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
 		mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-		sceneManager = new SceneManager(gameController, mainScene);
+		sceneManager = new SceneManager(mainScene);
 		LOGGER.info("Main scene created. Size: %.0f x %.0f", width, height);
 
 		initKeyboardInput();
@@ -114,7 +116,7 @@ public class GameUI {
 			@Override
 			public void onGameEvent(GameEvent event) {
 				GameEventAdapter.super.onGameEvent(event);
-				sceneManager.getCurrentGameScene().onGameEvent(event);
+				currentGameScene.onGameEvent(event);
 			}
 
 			@Override
@@ -132,7 +134,7 @@ public class GameUI {
 	private void initKeyboardInput() {
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(() -> sceneManager.getCurrentGameScene().onKeyPressed());
+		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 	}
 
 	public void setPacSteering(Steering steering) {
@@ -154,7 +156,7 @@ public class GameUI {
 	public void startGameLoop() {
 		gameLoop.setUpdateTask(() -> {
 			gameController.update();
-			sceneManager.getCurrentGameScene().updateAndRender();
+			currentGameScene.updateAndRender();
 		});
 		gameLoop.setRenderTask(() -> {
 			flashMessageView.update();
@@ -184,18 +186,19 @@ public class GameUI {
 	}
 
 	void updateGameScene(boolean forcedReload) {
-		boolean sceneChanged = sceneManager.selectGameScene(forcedReload);
-		sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
-		if (sceneChanged) {
-			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
+		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
+		newGameScene.resize(mainScene.getHeight());
+		if (newGameScene != currentGameScene) {
+			currentGameScene = newGameScene;
+			gameSceneParent.getChildren().setAll(currentGameScene.getFXSubScene());
 			updateBackground();
-			pipView.init(sceneManager.getCurrentGameScene());
+			pipView.init(currentGameScene);
 		}
 	}
 
 	private void updatePipView() {
-		var currentScene = sceneManager.getCurrentGameScene();
-		if (Env.pipEnabledPy.get() && (currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D)) {
+		if (Env.pipEnabledPy.get()
+				&& (currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D)) {
 			pipView.getRoot().setVisible(true);
 			pipView.draw();
 		} else {
@@ -241,6 +244,10 @@ public class GameUI {
 
 	public Stage getStage() {
 		return stage;
+	}
+
+	public GameScene getCurrentGameScene() {
+		return currentGameScene;
 	}
 
 	public Scene getMainScene() {

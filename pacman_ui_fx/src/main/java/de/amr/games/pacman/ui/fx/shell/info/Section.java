@@ -91,7 +91,7 @@ public class Section extends TitledPane {
 	}
 
 	protected GameScene gameScene() {
-		return ui.getSceneManager().getCurrentGameScene();
+		return ui.getCurrentGameScene();
 	}
 
 	public void update() {

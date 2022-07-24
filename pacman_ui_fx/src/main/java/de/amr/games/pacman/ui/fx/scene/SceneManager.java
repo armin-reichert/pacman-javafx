@@ -86,17 +86,9 @@ public class SceneManager {
 		//@formatter:on
 	};
 
-	private final GameController gameController;
-	private GameScene currentGameScene;
-
-	public SceneManager(GameController gameController, Scene mainScene) {
-		this.gameController = gameController;
+	public SceneManager(Scene mainScene) {
 		allGameScenes()
 				.forEach(gameScene -> gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty()));
-	}
-
-	public GameScene getCurrentGameScene() {
-		return currentGameScene;
 	}
 
 	public Stream<GameScene> allGameScenes() {
@@ -112,31 +104,26 @@ public class SceneManager {
 	 * @param forceReload if {@code true} the scene is reloaded (end + update context + init) even if no scene change
 	 *                    would be required for the current game state
 	 * 
-	 * @return {@code true} if the current scene changed
+	 * @return the selected game scene
 	 */
-	public boolean selectGameScene(boolean forceReload) {
+	public GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean forceReload) {
 		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
-		GameScene nextGameScene = findGameScene(dimension).orElse(null);
+		GameScene nextGameScene = findGameScene(gameController, dimension).orElse(null);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
 		if (nextGameScene == currentGameScene && !forceReload) {
-			return false; // game scene is up-to-date
+			return currentGameScene;
 		}
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		updateSceneContext(nextGameScene);
+		updateSceneContext(gameController, nextGameScene);
 		nextGameScene.init();
-		if (currentGameScene != nextGameScene) {
-			LOGGER.info("Current scene changed from %s to %s", currentGameScene, nextGameScene);
-			currentGameScene = nextGameScene;
-			return true;
-		}
-		return false;
+		return nextGameScene;
 	}
 
-	public void updateSceneContext(GameScene scene) {
+	public void updateSceneContext(GameController gameController, GameScene scene) {
 		var context = new SceneContext(gameController);
 		context.r2D = switch (context.gameVariant()) {
 		case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
@@ -152,9 +139,9 @@ public class SceneManager {
 		LOGGER.info("Scene context updated for '%s'.", scene);
 	}
 
-	public boolean hasDifferentScenesFor2DAnd3D() {
-		var scene2D = findGameScene(SCENE_2D);
-		var scene3D = findGameScene(SCENE_3D);
+	public boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
+		var scene2D = findGameScene(gameController, SCENE_2D);
+		var scene3D = findGameScene(gameController, SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
 	}
 
@@ -164,7 +151,7 @@ public class SceneManager {
 	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	private Optional<GameScene> findGameScene(int dimension) {
+	private Optional<GameScene> findGameScene(GameController gameController, int dimension) {
 		var game = gameController.game();
 		var state = gameController.state();
 		var scenes = switch (game.variant) {
