@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.HUD;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -129,7 +130,7 @@ public abstract class GameScene2D implements GameScene {
 	private void renderOverlayCanvas(GraphicsContext g) {
 		if (overlayCanvas.isVisible()) {
 			g.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			ctx.r2D.drawTileBorders(g);
+			ArcadeRendererBase.drawTileBorders(g);
 		}
 	}
 
