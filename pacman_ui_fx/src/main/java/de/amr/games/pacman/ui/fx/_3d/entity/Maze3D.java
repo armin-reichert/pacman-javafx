@@ -272,6 +272,7 @@ public class Maze3D extends Group {
 		// without ...+1 there are gaps. why?
 		wall.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
 		wall.heightProperty().bind(wallThicknessPy);
+		wall.drawModeProperty().bind(drawModePy);
 		return wall;
 	}
 
@@ -280,6 +281,7 @@ public class Maze3D extends Group {
 		wall.widthProperty().bind(wallThicknessPy);
 		// without ...+1 there are gaps. why?
 		wall.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
+		wall.drawModeProperty().bind(drawModePy);
 		return wall;
 	}
 
@@ -287,6 +289,7 @@ public class Maze3D extends Group {
 		Box corner = new Box();
 		corner.widthProperty().bind(wallThicknessPy);
 		corner.heightProperty().bind(wallThicknessPy);
+		corner.drawModeProperty().bind(drawModePy);
 		return corner;
 	}
 }
