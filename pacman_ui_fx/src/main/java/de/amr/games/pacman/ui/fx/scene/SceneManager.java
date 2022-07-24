@@ -57,6 +57,9 @@ import javafx.scene.Scene;
  */
 public class SceneManager {
 
+	private SceneManager() {
+	}
+
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	public static final int SCENE_2D = 0;
@@ -86,12 +89,12 @@ public class SceneManager {
 		//@formatter:on
 	};
 
-	public SceneManager(Scene mainScene) {
+	public static void initScenes(Scene mainScene) {
 		allGameScenes()
 				.forEach(gameScene -> gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty()));
 	}
 
-	public Stream<GameScene> allGameScenes() {
+	public static Stream<GameScene> allGameScenes() {
 		return Stream.concat(Stream.of(SCENES_MS_PACMAN), Stream.of(SCENES_PACMAN)).flatMap(Stream::of)
 				.filter(Objects::nonNull);
 	}
@@ -106,7 +109,8 @@ public class SceneManager {
 	 * 
 	 * @return the selected game scene
 	 */
-	public GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean forceReload) {
+	public static GameScene selectGameScene(GameController gameController, GameScene currentGameScene,
+			boolean forceReload) {
 		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
 		GameScene nextGameScene = findGameScene(gameController, dimension).orElse(null);
 		if (nextGameScene == null) {
@@ -123,7 +127,7 @@ public class SceneManager {
 		return nextGameScene;
 	}
 
-	public void updateSceneContext(GameController gameController, GameScene scene) {
+	public static void updateSceneContext(GameController gameController, GameScene scene) {
 		var context = new SceneContext(gameController);
 		context.r2D = switch (context.gameVariant()) {
 		case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
@@ -139,7 +143,7 @@ public class SceneManager {
 		LOGGER.info("Scene context updated for '%s'.", scene);
 	}
 
-	public boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
+	public static boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
 		var scene2D = findGameScene(gameController, SCENE_2D);
 		var scene3D = findGameScene(gameController, SCENE_3D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
@@ -151,7 +155,7 @@ public class SceneManager {
 	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
 	 * @return the game scene that fits the current game state
 	 */
-	private Optional<GameScene> findGameScene(GameController gameController, int dimension) {
+	private static Optional<GameScene> findGameScene(GameController gameController, int dimension) {
 		var game = gameController.game();
 		var state = gameController.state();
 		var scenes = switch (game.variant) {

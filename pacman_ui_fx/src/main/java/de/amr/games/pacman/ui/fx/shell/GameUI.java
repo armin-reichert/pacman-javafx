@@ -71,7 +71,6 @@ public class GameUI {
 	private final GameController gameController;
 	private final Stage stage;
 	private final Scene mainScene;
-	private final SceneManager sceneManager;
 
 	private StackPane gameSceneParent;
 	private Dashboard dashboard;
@@ -87,7 +86,7 @@ public class GameUI {
 
 		// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
 		mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-		sceneManager = new SceneManager(mainScene);
+		SceneManager.initScenes(mainScene);
 		LOGGER.info("Main scene created. Size: %.0f x %.0f", width, height);
 
 		initKeyboardInput();
@@ -186,7 +185,7 @@ public class GameUI {
 	}
 
 	void updateGameScene(boolean forcedReload) {
-		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
+		var newGameScene = SceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
 		newGameScene.resize(mainScene.getHeight());
 		if (newGameScene != currentGameScene) {
 			currentGameScene = newGameScene;
@@ -236,10 +235,6 @@ public class GameUI {
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
-	}
-
-	public SceneManager getSceneManager() {
-		return sceneManager;
 	}
 
 	public Stage getStage() {
