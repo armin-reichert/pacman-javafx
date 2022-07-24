@@ -92,7 +92,7 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 
 	@Override
 	public EntityAnimationSet createPacAnimationSet(Pac pac) {
-		EntityAnimationSet set = new EntityAnimationSet(2);
+		var set = new EntityAnimationSet(2);
 		set.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
 		set.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimationMap(pac));
 		set.select(AnimKeys.PAC_MUNCHING);
@@ -101,7 +101,7 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 
 	@Override
 	public EntityAnimationSet createGhostAnimationSet(Ghost ghost) {
-		EntityAnimationSet set = new EntityAnimationSet(5);
+		var set = new EntityAnimationSet(5);
 		set.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 		set.put(AnimKeys.GHOST_EYES, createGhostEyesAnimationMap(ghost));
 		set.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
