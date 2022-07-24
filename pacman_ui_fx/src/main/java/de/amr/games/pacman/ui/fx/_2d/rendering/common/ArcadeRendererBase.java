@@ -57,6 +57,10 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class ArcadeRendererBase implements Rendering2D {
 
+	private static Optional<Rectangle2D> currentFrame(Optional<EntityAnimationSet> animSet) {
+		return animSet.map(EntityAnimationSet::selectedAnimation).map(EntityAnimation::frame).map(Rectangle2D.class::cast);
+	}
+
 	protected final Spritesheet sheet;
 	protected final Font arcadeFont;
 
@@ -146,10 +150,6 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 		if (entity.isVisible()) {
 			drawSpriteCenteredOverBox(g, sprite, entity.getPosition().x(), entity.getPosition().y());
 		}
-	}
-
-	static Optional<Rectangle2D> currentFrame(Optional<EntityAnimationSet> anims) {
-		return anims.map(EntityAnimationSet::selectedAnimation).map(EntityAnimation::frame).map(Rectangle2D.class::cast);
 	}
 
 	@Override
