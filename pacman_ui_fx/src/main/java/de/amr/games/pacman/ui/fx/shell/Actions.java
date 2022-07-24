@@ -58,7 +58,7 @@ public class Actions {
 	private static GameUI theUI;
 	private static AudioClip currentVoiceMessage;
 
-	public static void init(GameController gameController, GameUI ui) {
+	public static void assign(GameController gameController, GameUI ui) {
 		theGameController = gameController;
 		theUI = ui;
 	}

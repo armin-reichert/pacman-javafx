@@ -83,18 +83,34 @@ public class GameUI {
 		this.gameController = gameController;
 		this.stage = stage;
 
-		Actions.init(gameController, this);
-
 		// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
 		mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-		sceneManager = new SceneManager(gameController, mainScene);
-		LOGGER.info("Main scene created. Size: %.0f x %.0f", mainScene.getWidth(), mainScene.getHeight());
+		LOGGER.info("Main scene created. Size: %.0f x %.0f", width, height);
 
-		initKeyboardHandling();
-		updateGameScene(true);
+		sceneManager = new SceneManager(gameController, mainScene);
+
+		initKeyboardInput();
+		initGamEventing();
+		Actions.assign(gameController, this);
+
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 
+		stage.setOnCloseRequest(e -> gameLoop.stop());
+		stage.setScene(mainScene);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+		stage.setTitle("Pac-Man / Ms. Pac-Man");
+		stage.getIcons().add(APP_ICON);
+		stage.centerOnScreen();
+
+		updateGameScene(true);
+		stage.show();
+
+		Actions.playHelpMessageAfterSeconds(0.5);
+	}
+
+	private void initGamEventing() {
 		GameEvents.addEventListener(new GameEventAdapter() {
 			@Override
 			public void onGameEvent(GameEvent event) {
@@ -112,33 +128,12 @@ public class GameUI {
 				updateGameScene(true);
 			}
 		});
-
-		stage.setOnCloseRequest(e -> gameLoop.stop());
-		stage.setScene(mainScene);
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-		stage.setTitle("Pac-Man / Ms. Pac-Man");
-		stage.getIcons().add(APP_ICON);
-		stage.centerOnScreen();
-		stage.show();
-
-		Actions.playHelpMessageAfterSeconds(0.5);
 	}
 
-	private Parent createSceneContent() {
-		var root = new StackPane();
-		dashboard = new Dashboard();
-		dashboard.build(this, gameController);
-		pipView = new PiPView();
-		pipView.heightPy.bind(Env.pipSceneHeightPy);
-		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
-		var overlayPane = new BorderPane();
-		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView.getRoot()));
-		flashMessageView = new FlashMessageView();
-		gameSceneParent = new StackPane();
-		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
-		return root;
+	private void initKeyboardInput() {
+		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		Keyboard.addHandler(this::onKeyPressed);
+		Keyboard.addHandler(() -> sceneManager.getCurrentGameScene().onKeyPressed());
 	}
 
 	public void setPacSteering(Steering steering) {
@@ -162,17 +157,40 @@ public class GameUI {
 			gameController.update();
 			sceneManager.getCurrentGameScene().updateAndRender();
 		});
-		gameLoop.setRenderTask(this::render);
+		gameLoop.setRenderTask(() -> {
+			flashMessageView.update();
+			dashboard.update();
+			updatePipView();
+		});
 		gameLoop.pausedPy.bind(Env.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 		gameLoop.start();
 	}
 
-	private void render() {
-		flashMessageView.update();
-		dashboard.update();
-		updatePipView();
+	private Parent createSceneContent() {
+		var root = new StackPane();
+		dashboard = new Dashboard();
+		dashboard.build(this, gameController);
+		pipView = new PiPView();
+		pipView.heightPy.bind(Env.pipSceneHeightPy);
+		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
+		var overlayPane = new BorderPane();
+		overlayPane.setLeft(dashboard);
+		overlayPane.setRight(new VBox(pipView.getRoot()));
+		flashMessageView = new FlashMessageView();
+		gameSceneParent = new StackPane();
+		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
+		return root;
+	}
+
+	void updateGameScene(boolean forcedReload) {
+		boolean sceneChanged = sceneManager.selectGameScene(forcedReload);
+		sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
+		if (sceneChanged) {
+			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
+			updateBackground();
+		}
 	}
 
 	private void updatePipView() {
@@ -185,25 +203,10 @@ public class GameUI {
 		}
 	}
 
-	private void initKeyboardHandling() {
-		mainScene.setOnKeyPressed(Keyboard::processEvent);
-		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(() -> sceneManager.getCurrentGameScene().onKeyPressed());
-	}
-
 	private void updateBackground() {
 		var mode = Env.drawModePy.get();
 		var bgColor = Env.bgColorPy.get();
 		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
-	}
-
-	void updateGameScene(boolean forcedReload) {
-		boolean sceneChanged = sceneManager.selectGameScene(forcedReload);
-		if (sceneChanged) {
-			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
-			sceneManager.getCurrentGameScene().resize(mainScene.getHeight());
-			updateBackground();
-		}
 	}
 
 	private void onKeyPressed() {
