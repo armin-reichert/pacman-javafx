@@ -91,7 +91,6 @@ public abstract class GameScene2D implements GameScene {
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 
 		root.getChildren().addAll(sceneCanvas, overlayCanvas, infoLayer);
-		resize(unscaledSize.y());
 
 		hud.widthPy.bind(sceneCanvas.widthProperty());
 		hud.heightPy.bind(sceneCanvas.heightProperty());
@@ -109,8 +108,8 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		scalingPy.set(scaling);
-		LOGGER.info("Game scene %s resized. Canvas size: %.0f x %.0f scaling: %.2f", getClass().getSimpleName(),
-				sceneCanvas.getWidth(), sceneCanvas.getHeight(), scaling);
+		LOGGER.info("Scene resized: %.0f x %.0f scaled: %.2f (%s)", sceneCanvas.getWidth(), sceneCanvas.getHeight(),
+				scaling, getClass().getSimpleName());
 	}
 
 	@Override

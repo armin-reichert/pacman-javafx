@@ -85,9 +85,8 @@ public class GameUI {
 
 		// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
 		mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-		LOGGER.info("Main scene created. Size: %.0f x %.0f", width, height);
-
 		sceneManager = new SceneManager(gameController, mainScene);
+		LOGGER.info("Main scene created. Size: %.0f x %.0f", width, height);
 
 		initKeyboardInput();
 		initGamEventing();
