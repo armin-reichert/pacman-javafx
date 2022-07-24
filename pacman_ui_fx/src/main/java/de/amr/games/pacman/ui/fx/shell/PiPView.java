@@ -64,9 +64,13 @@ public class PiPView {
 		return root;
 	}
 
-	public void draw(GameScene gameScene) {
-		var g = thumbnail.getGameSceneCanvas().getGraphicsContext2D();
+	public void init(GameScene gameScene) {
 		thumbnail.setSceneContext(gameScene.getSceneContext());
+		thumbnail.init();
+	}
+
+	public void draw() {
+		var g = thumbnail.getGameSceneCanvas().getGraphicsContext2D();
 		thumbnail.renderScene(g);
 		thumbnail.drawHUD(g);
 	}

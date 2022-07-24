@@ -189,6 +189,7 @@ public class GameUI {
 		if (sceneChanged) {
 			gameSceneParent.getChildren().setAll(sceneManager.getCurrentGameScene().getFXSubScene());
 			updateBackground();
+			pipView.init(sceneManager.getCurrentGameScene());
 		}
 	}
 
@@ -196,7 +197,7 @@ public class GameUI {
 		var currentScene = sceneManager.getCurrentGameScene();
 		if (Env.pipEnabledPy.get() && (currentScene instanceof PlayScene2D || currentScene instanceof PlayScene3D)) {
 			pipView.getRoot().setVisible(true);
-			pipView.draw(currentScene);
+			pipView.draw();
 		} else {
 			pipView.getRoot().setVisible(false);
 		}
