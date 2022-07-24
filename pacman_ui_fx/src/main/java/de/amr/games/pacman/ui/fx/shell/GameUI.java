@@ -89,7 +89,7 @@ public class GameUI {
 		LOGGER.info("Main scene created. Size: %.0f x %.0f", width, height);
 
 		initKeyboardInput();
-		initGamEventing();
+		initGameEventing();
 		Actions.assign(gameController, this);
 
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
@@ -109,7 +109,7 @@ public class GameUI {
 		Actions.playHelpMessageAfterSeconds(0.5);
 	}
 
-	private void initGamEventing() {
+	private void initGameEventing() {
 		GameEvents.addEventListener(new GameEventAdapter() {
 			@Override
 			public void onGameEvent(GameEvent event) {
