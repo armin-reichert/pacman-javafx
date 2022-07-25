@@ -106,13 +106,20 @@ public class SceneManager {
 		}
 	}
 
+	public static boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
+		var scene2D = findGameScene(gameController, SCENE_2D);
+		var scene3D = findGameScene(gameController, SCENE_3D);
+		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
+	}
+
 	/**
 	 * Finds the game scene that applies to the current game state. If a new scene is selected, the old scene's
 	 * {@link GameScene#end()} method is called, the new scene's context is updated and its {@link GameScene#init()}
 	 * method is called.
 	 * 
-	 * @param forceReload if {@code true} the scene is reloaded (end + update context + init) even if no scene change
-	 *                    would be required for the current game state
+	 * @param gameController the game controller
+	 * @param forceReload    if {@code true} the scene is reloaded (end + update context + init) even if no scene change
+	 *                       would be required for the current game state
 	 * 
 	 * @return the selected game scene
 	 */
@@ -134,7 +141,7 @@ public class SceneManager {
 		return nextGameScene;
 	}
 
-	public static void updateSceneContext(GameController gameController, GameScene scene) {
+	private static void updateSceneContext(GameController gameController, GameScene scene) {
 		var context = new SceneContext(gameController);
 		context.r2D = switch (context.gameVariant()) {
 		case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
@@ -150,18 +157,6 @@ public class SceneManager {
 		LOGGER.info("Scene context updated for '%s'.", scene);
 	}
 
-	public static boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
-		var scene2D = findGameScene(gameController, SCENE_2D);
-		var scene3D = findGameScene(gameController, SCENE_3D);
-		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
-	}
-
-	/**
-	 * Returns the game scene that fits the current game state.
-	 *
-	 * @param dimension {@link GameScenes#SCENE_2D} or {@link GameScenes#SCENE_3D}
-	 * @return the game scene that fits the current game state
-	 */
 	private static Optional<GameScene> findGameScene(GameController gameController, int dimension) {
 		var game = gameController.game();
 		var state = gameController.state();
