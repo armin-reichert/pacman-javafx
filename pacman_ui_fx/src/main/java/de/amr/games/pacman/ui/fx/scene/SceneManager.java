@@ -24,9 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene;
 
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,14 +87,23 @@ public class SceneManager {
 		//@formatter:on
 	};
 
-	public static void initScenes(Scene mainScene) {
-		allGameScenes()
-				.forEach(gameScene -> gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty()));
+	public static void setMainScene(Scene mainScene) {
+		for (var gameScenes : SCENES_MS_PACMAN) {
+			for (var gameScene : gameScenes) {
+				setMainScene(mainScene, gameScene);
+			}
+		}
+		for (var gameScenes : SCENES_PACMAN) {
+			for (var gameScene : gameScenes) {
+				setMainScene(mainScene, gameScene);
+			}
+		}
 	}
 
-	public static Stream<GameScene> allGameScenes() {
-		return Stream.concat(Stream.of(SCENES_MS_PACMAN), Stream.of(SCENES_PACMAN)).flatMap(Stream::of)
-				.filter(Objects::nonNull);
+	private static void setMainScene(Scene mainScene, GameScene gameScene) {
+		if (gameScene != null) {
+			gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty());
+		}
 	}
 
 	/**
