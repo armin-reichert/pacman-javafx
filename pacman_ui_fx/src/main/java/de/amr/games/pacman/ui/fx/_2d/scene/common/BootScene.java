@@ -73,12 +73,14 @@ public class BootScene extends GameScene2D {
 		if (betweenSec(0.5, 1.5, t) && t % 5 == 0) {
 			clearBuffer();
 			drawRandomHexCodesIntoBuffer();
-		} else if (betweenSec(1.5, 4.0, t) && t % 10 == 0) {
+		} else if (betweenSec(1.5, 3.0, t) && t % 10 == 0) {
 			clearBuffer();
 			drawRandomSpritesIntoBuffer(spritesheetImage);
-		} else if (t == TickTimer.secToTicks(4.0)) {
+		} else if (t == TickTimer.secToTicks(3.0)) {
 			clearBuffer();
 			drawGridIntoBuffer();
+		} else if (t == TickTimer.secToTicks(3.5)) {
+			ctx.gameController.terminateCurrentState();
 		}
 	}
 
