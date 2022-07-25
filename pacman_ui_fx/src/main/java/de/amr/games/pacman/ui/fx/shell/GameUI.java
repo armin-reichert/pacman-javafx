@@ -145,7 +145,7 @@ public class GameUI {
 		if (steering instanceof KeyboardSteering keySteering) {
 			mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
-		gameController.setSteering(currentSteering);
+		gameController.setNormalSteering(currentSteering);
 	}
 
 	public GameLoop getGameLoop() {
