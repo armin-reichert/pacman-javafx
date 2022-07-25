@@ -91,12 +91,12 @@ public class GuysInfo {
 		if (ghost.killedIndex != -1) {
 			stateText += " killed: %d".formatted(ghost.killedIndex);
 		}
-		var ghostAnims = ghost.animationSet();
-		if (ghostAnims.isPresent()) {
-			var animState = fmtAnimationState(ghostAnims.get().selectedAnimation(), ghost.wishDir());
-			return "%s%n%s%n %s%s".formatted(name, stateText, animState, ghostAnims.get().selected());
+		var animSet = ghost.animationSet();
+		if (animSet.isPresent()) {
+			var animState = fmtAnimationState(animSet.get().selectedAnimation(), ghost.wishDir());
+			return "%s%n%s%n%s%n %s%s".formatted(ghost.tile(), name, stateText, animState, animSet.get().selected());
 		} else {
-			return "%s%n%s%n".formatted(name, stateText);
+			return "%s%n%s%n%s%n".formatted(ghost.tile(), name, stateText);
 		}
 	}
 
@@ -104,9 +104,9 @@ public class GuysInfo {
 		var pacAnims = pac.animationSet();
 		if (pacAnims.isPresent()) {
 			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
-			return "%s%n%s%s".formatted(pac.name, animState, pacAnims.get().selected());
+			return "%s%n%s%n%s%s".formatted(pac.tile(), pac.name, animState, pacAnims.get().selected());
 		}
-		return "%s%n".formatted(pac.name);
+		return "%s%n%s%n".formatted(pac.tile(), pac.name);
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
