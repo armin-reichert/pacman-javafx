@@ -60,43 +60,43 @@ public class SceneManager {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	public static final int SCENE_2D = 0;
-	public static final int SCENE_3D = 1;
+	private enum SceneDimension {
+		TWO_D, THREE_D;
+	}
 
-	private static final GameScene[][] SCENES_PACMAN = {
-		//@formatter:off
-		{ new BootScene(),                null },
-		{ new PacManIntroScene(),         null },
-		{ new PacManCreditScene(),        null },
-		{ new PacManCutscene1(),          null },
-		{ new PacManCutscene2(),          null },
-		{ new PacManCutscene3(),          null },
-		{ new PlayScene2D(),              new PlayScene3D() },
-		//@formatter:on
+	private record SceneVariants(GameScene scene2D, GameScene scene3D) {
+	}
+
+	//@formatter:off
+	private static final SceneVariants[] SCENE_PAIRS_PACMAN = {
+			new SceneVariants(new BootScene(), null),
+			new SceneVariants(new PacManIntroScene(), null),
+			new SceneVariants(new PacManCreditScene(), null),
+			new SceneVariants(new PacManCutscene1(), null),
+			new SceneVariants(new PacManCutscene2(), null),
+			new SceneVariants(new PacManCutscene3(), null),
+			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
 	};
 
-	private static final GameScene[][] SCENES_MS_PACMAN = {
-		//@formatter:off
-		{ new BootScene(),                  null },
-		{ new MsPacManIntroScene(),         null },
-		{ new MsPacManCreditScene(),        null },
-		{ new MsPacManIntermissionScene1(), null },
-		{ new MsPacManIntermissionScene2(), null },
-		{ new MsPacManIntermissionScene3(), null },
-		{ new PlayScene2D(),                new PlayScene3D() },
-		//@formatter:on
+	private static final SceneVariants[] SCENE_PAIRS_MS_PACMAN = { 
+			new SceneVariants(new BootScene(), null),
+			new SceneVariants(new MsPacManIntroScene(), null),
+			new SceneVariants(new MsPacManCreditScene(), null),
+			new SceneVariants(new MsPacManIntermissionScene1(), null),
+			new SceneVariants(new MsPacManIntermissionScene2(), null),
+			new SceneVariants(new MsPacManIntermissionScene3(), null),
+			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
 	};
+	//@formatter:on
 
 	public static void setMainScene(Scene mainScene) {
-		for (var gameScenes : SCENES_MS_PACMAN) {
-			for (var gameScene : gameScenes) {
-				setMainScene(mainScene, gameScene);
-			}
+		for (var scenes : SCENE_PAIRS_MS_PACMAN) {
+			setMainScene(mainScene, scenes.scene2D);
+			setMainScene(mainScene, scenes.scene3D);
 		}
-		for (var gameScenes : SCENES_PACMAN) {
-			for (var gameScene : gameScenes) {
-				setMainScene(mainScene, gameScene);
-			}
+		for (var scenes : SCENE_PAIRS_PACMAN) {
+			setMainScene(mainScene, scenes.scene2D);
+			setMainScene(mainScene, scenes.scene3D);
 		}
 	}
 
@@ -107,8 +107,8 @@ public class SceneManager {
 	}
 
 	public static boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
-		var scene2D = findGameScene(gameController, SCENE_2D);
-		var scene3D = findGameScene(gameController, SCENE_3D);
+		var scene2D = findGameScene(gameController, SceneDimension.TWO_D);
+		var scene3D = findGameScene(gameController, SceneDimension.THREE_D);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
 	}
 
@@ -125,7 +125,7 @@ public class SceneManager {
 	 */
 	public static GameScene selectGameScene(GameController gameController, GameScene currentGameScene,
 			boolean forceReload) {
-		int dimension = Env.use3DScenePy.get() ? SceneManager.SCENE_3D : SceneManager.SCENE_2D;
+		var dimension = Env.use3DScenePy.get() ? SceneDimension.THREE_D : SceneDimension.TWO_D;
 		GameScene nextGameScene = findGameScene(gameController, dimension).orElse(null);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
@@ -157,22 +157,31 @@ public class SceneManager {
 		LOGGER.info("Scene context updated for '%s'.", scene);
 	}
 
-	private static Optional<GameScene> findGameScene(GameController gameController, int dimension) {
+	private static Optional<GameScene> findGameScene(GameController gameController, SceneDimension dimension) {
 		var game = gameController.game();
-		var state = gameController.state();
+
 		var scenes = switch (game.variant) {
-		case MS_PACMAN -> SCENES_MS_PACMAN;
-		case PACMAN -> SCENES_PACMAN;
+		case MS_PACMAN -> SCENE_PAIRS_MS_PACMAN;
+		case PACMAN -> SCENE_PAIRS_PACMAN;
 		};
-		var index = switch (state) {
+
+		var variants = scenes[switch (gameController.state()) {
 		case BOOT -> 0;
 		case INTRO -> 1;
 		case CREDIT -> 2;
 		case INTERMISSION -> 2 + game.intermissionNumber(game.level.number);
 		case INTERMISSION_TEST -> 2 + game.intermissionTestNumber;
 		default -> 6;
+		}];
+
+		var scene = switch (dimension) {
+		case TWO_D -> variants.scene2D;
+		case THREE_D -> variants.scene3D;
 		};
-		var gameScene = Optional.ofNullable(scenes[index][dimension]).orElse(scenes[index][SCENE_2D]);
-		return Optional.ofNullable(gameScene);
+		if (scene == null) {
+			scene = variants.scene2D; // default, should always exist
+		}
+
+		return Optional.ofNullable(scene);
 	}
 }
