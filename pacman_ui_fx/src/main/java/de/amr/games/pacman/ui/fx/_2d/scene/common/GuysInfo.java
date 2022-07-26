@@ -102,11 +102,13 @@ public class GuysInfo {
 
 	private String fmtPacInfo(Pac pac) {
 		var pacAnims = pac.animationSet();
+		var stuck = pac.stuck ? " stuck" : "";
+		var locationInfo = "%s%s%s".formatted(pac.tile(), pac.offset(), stuck);
 		if (pacAnims.isPresent()) {
 			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
-			return "%s%s%n%s%n%s%s".formatted(pac.tile(), pac.offset(), pac.name, animState, pacAnims.get().selected());
+			return "%s%n%s%n%s%s".formatted(locationInfo, pac.name, animState, pacAnims.get().selected());
 		}
-		return "%s%s%n%s%n".formatted(pac.tile(), pac.offset(), pac.name);
+		return "%s%n%s".formatted(locationInfo, pac.name);
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
