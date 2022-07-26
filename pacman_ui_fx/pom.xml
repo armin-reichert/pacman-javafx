@@ -48,24 +48,6 @@
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.gluonhq</groupId>
-				<artifactId>gluonfx-maven-plugin</artifactId>
-				<version>1.0.14</version>
-				<configuration>
-					<target>${gluonfx.target}</target>
-					<mainClass>${mainClass}</mainClass>
-					<bundlesList>
-						<list>
-							de.amr.games.pacman.ui.fx.texts.messages
-						</list>
-					</bundlesList>
-					<resourcesList>
-						<item>.*/*.wav$</item>
-						<item>.*/*.mp3$</item>
-					</resourcesList>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>
