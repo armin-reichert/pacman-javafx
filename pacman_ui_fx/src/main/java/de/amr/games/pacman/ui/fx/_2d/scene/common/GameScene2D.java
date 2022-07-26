@@ -109,7 +109,7 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		scalingPy.set(scaling);
-		LOGGER.info("Scene resized: %.0f x %.0f scaled: %.2f (%s)", sceneCanvas.getWidth(), sceneCanvas.getHeight(),
+		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", sceneCanvas.getWidth(), sceneCanvas.getHeight(),
 				scaling, getClass().getSimpleName());
 	}
 
