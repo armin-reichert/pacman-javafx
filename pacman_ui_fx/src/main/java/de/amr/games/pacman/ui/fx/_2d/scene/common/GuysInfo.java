@@ -104,9 +104,9 @@ public class GuysInfo {
 		var pacAnims = pac.animationSet();
 		if (pacAnims.isPresent()) {
 			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
-			return "%s%n%s%n%s%s".formatted(pac.tile(), pac.name, animState, pacAnims.get().selected());
+			return "%s%s%n%s%n%s%s".formatted(pac.tile(), pac.offset(), pac.name, animState, pacAnims.get().selected());
 		}
-		return "%s%n%s%n".formatted(pac.tile(), pac.name);
+		return "%s%s%n%s%n".formatted(pac.tile(), pac.offset(), pac.name);
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
