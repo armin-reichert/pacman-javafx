@@ -71,7 +71,7 @@ public class GuysInfo {
 		for (int i = 0; i < 6; ++i) {
 			var text = new Text();
 			text.setTextAlignment(TextAlignment.CENTER);
-			text.setFill(Color.RED);
+			text.setFill(Color.WHITE);
 			texts.add(text);
 		}
 		for (int i = 0; i < 6; ++i) {
