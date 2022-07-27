@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
@@ -38,6 +41,9 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -56,16 +62,23 @@ public class GuysInfo {
 
 	private final PlayScene2D playScene;
 	private GameModel game;
-	private final Text[] texts = new Text[6];
+	private final List<Pane> panes = new ArrayList<>();
+	private final List<Text> texts = new ArrayList<>();
 
 	public GuysInfo(PlayScene2D playScene) {
 		this.playScene = playScene;
-		for (int i = 0; i < texts.length; ++i) {
-			texts[i] = new Text();
-			texts[i].setTextAlignment(TextAlignment.CENTER);
-			texts[i].setFill(Color.WHITE);
+		for (int i = 0; i < 6; ++i) {
+			var text = new Text();
+			text.setTextAlignment(TextAlignment.CENTER);
+			text.setFill(Color.RED);
+			texts.add(text);
 		}
-		playScene.infoLayer.getChildren().addAll(texts);
+		for (int i = 0; i < 6; ++i) {
+			var pane = new VBox(texts.get(i));
+			pane.setBackground(Ufx.colorBackground(Color.rgb(100, 100, 100, 0.7)));
+			panes.add(pane);
+		}
+		playScene.infoLayer.getChildren().addAll(panes);
 	}
 
 	public void init(GameModel game) {
@@ -94,9 +107,9 @@ public class GuysInfo {
 		var animSet = ghost.animationSet();
 		if (animSet.isPresent()) {
 			var animState = fmtAnimationState(animSet.get().selectedAnimation(), ghost.wishDir());
-			return "%s%n%s%n%s%n %s%s".formatted(ghost.tile(), name, stateText, animState, animSet.get().selected());
+			return "%s%n%s %s %s%s".formatted(ghost.tile(), name, stateText, animState, animSet.get().selected());
 		} else {
-			return "%s%n%s%n%s%n".formatted(ghost.tile(), name, stateText);
+			return "%s%n%s %s".formatted(ghost.tile(), name, stateText);
 		}
 	}
 
@@ -106,7 +119,7 @@ public class GuysInfo {
 		var locationInfo = "%s%s%s".formatted(pac.tile(), pac.offset(), stuck);
 		if (pacAnims.isPresent()) {
 			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
-			return "%s%n%s%n%s%s".formatted(locationInfo, pac.name, animState, pacAnims.get().selected());
+			return "%s%n%s %s%s".formatted(locationInfo, pac.name, animState, pacAnims.get().selected());
 		}
 		return "%s%n%s".formatted(locationInfo, pac.name);
 	}
@@ -116,33 +129,37 @@ public class GuysInfo {
 		return "%s%n%s".formatted(symbolName, game.bonus().state());
 	}
 
-	private void updateTextView(Text textView, String text, Entity entity) {
+	private void updateTextView(int i, String text, Entity entity) {
+		var textView = texts.get(i);
+		var pane = panes.get(i);
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
 		var scaling = playScene.getScaling();
-		textView.setX((entity.getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
-		textView.setY(entity.getPosition().y() * scaling - textSize.getHeight());
-		textView.setVisible(entity.isVisible());
+		pane.setTranslateX((entity.getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
+		pane.setTranslateY(entity.getPosition().y() * scaling - textSize.getHeight());
+		pane.setVisible(entity.isVisible());
 	}
 
-	private void updateTextView(Text textView, String text, Bonus bonus) {
+	private void updateTextView(int i, String text, Bonus bonus) {
+		var textView = texts.get(i);
+		var pane = panes.get(i);
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
 		var scaling = playScene.getScaling();
-		textView.setX((bonus.entity().getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
-		textView.setY(bonus.entity().getPosition().y() * scaling - textSize.getHeight());
-		textView.setVisible(bonus.state() != BonusState.INACTIVE);
+		pane.setTranslateX((bonus.entity().getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
+		pane.setTranslateY(bonus.entity().getPosition().y() * scaling - textSize.getHeight());
+		pane.setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
 	public void update() {
-		for (int i = 0; i < texts.length; ++i) {
-			if (i < texts.length - 2) {
+		for (int i = 0; i < texts.size(); ++i) {
+			if (i < texts.size() - 2) {
 				var ghost = game.theGhosts[i];
-				updateTextView(texts[i], fmtGhostInfo(ghost), ghost);
-			} else if (i == texts.length - 2) {
-				updateTextView(texts[i], fmtPacInfo(game.pac), game.pac);
+				updateTextView(i, fmtGhostInfo(ghost), ghost);
+			} else if (i == texts.size() - 2) {
+				updateTextView(i, fmtPacInfo(game.pac), game.pac);
 			} else {
-				updateTextView(texts[i], fmtBonusInfo(game.bonus()), game.bonus());
+				updateTextView(i, fmtBonusInfo(game.bonus()), game.bonus());
 			}
 		}
 	}
