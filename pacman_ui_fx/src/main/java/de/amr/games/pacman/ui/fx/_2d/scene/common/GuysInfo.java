@@ -34,6 +34,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
+import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -85,6 +86,10 @@ public class GuysInfo {
 		this.game = game;
 	}
 
+	private String locationInfo(Creature guy) {
+		return "%s%s%s".formatted(guy.tile(), guy.offset(), guy.stuck ? " stuck" : "");
+	}
+
 	private String fmtAnimationState(EntityAnimation animation, Direction dir) {
 		if (animation instanceof EntityAnimationByDirection dam) {
 			return dam.get(dir).isRunning() ? "" : "(Stopped) ";
@@ -107,21 +112,19 @@ public class GuysInfo {
 		var animSet = ghost.animationSet();
 		if (animSet.isPresent()) {
 			var animState = fmtAnimationState(animSet.get().selectedAnimation(), ghost.wishDir());
-			return "%s%n%s %s %s%s".formatted(ghost.tile(), name, stateText, animState, animSet.get().selected());
+			return "%s%n%s %s %s%s".formatted(locationInfo(ghost), name, stateText, animState, animSet.get().selected());
 		} else {
-			return "%s%n%s %s".formatted(ghost.tile(), name, stateText);
+			return "%s%n%s %s".formatted(locationInfo(ghost), name, stateText);
 		}
 	}
 
 	private String fmtPacInfo(Pac pac) {
 		var pacAnims = pac.animationSet();
-		var stuck = pac.stuck ? " stuck" : "";
-		var locationInfo = "%s%s%s".formatted(pac.tile(), pac.offset(), stuck);
 		if (pacAnims.isPresent()) {
 			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
-			return "%s%n%s %s%s".formatted(locationInfo, pac.name, animState, pacAnims.get().selected());
+			return "%s%n%s %s%s".formatted(locationInfo(pac), pac.name, animState, pacAnims.get().selected());
 		}
-		return "%s%n%s".formatted(locationInfo, pac.name);
+		return "%s%n%s".formatted(locationInfo(pac), pac.name);
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
