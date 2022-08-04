@@ -76,7 +76,7 @@ public class GuysInfo {
 		}
 		for (int i = 0; i < 6; ++i) {
 			var pane = new VBox(texts.get(i));
-			pane.setBackground(Ufx.colorBackground(Color.rgb(100, 100, 100, 0.7)));
+			pane.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 220, 0.3)));
 			panes.add(pane);
 		}
 		playScene.infoLayer.getChildren().addAll(panes);
@@ -87,7 +87,8 @@ public class GuysInfo {
 	}
 
 	private String locationInfo(Creature guy) {
-		return "%s%s%s".formatted(guy.tile(), guy.offset(), guy.stuck ? " stuck" : "");
+		return "%s%s%s%nvelocity: %s%ndir:%s wish:%s".formatted(guy.tile(), guy.offset(), guy.stuck ? " stuck" : "",
+				guy.getVelocity(), guy.moveDir(), guy.wishDir());
 	}
 
 	private String fmtAnimationState(EntityAnimation animation, Direction dir) {
