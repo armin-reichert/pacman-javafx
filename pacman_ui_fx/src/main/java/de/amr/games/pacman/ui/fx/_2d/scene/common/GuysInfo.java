@@ -87,8 +87,11 @@ public class GuysInfo {
 	}
 
 	private String locationInfo(Creature guy) {
-		return "%s%s%s%nvelocity: %s%ndir:%s wish:%s".formatted(guy.tile(), guy.offset(), guy.stuck ? " stuck" : "",
-				guy.getVelocity(), guy.moveDir(), guy.wishDir());
+		return "Tile: %s%s%s".formatted(guy.tile(), guy.offset(), guy.stuck ? " stuck" : "");
+	}
+
+	private String movementInfo(Creature guy) {
+		return "Velocity: %s%ndir:%s wish:%s".formatted(guy.getVelocity(), guy.moveDir(), guy.wishDir());
 	}
 
 	private String fmtAnimationState(EntityAnimation animation, Direction dir) {
@@ -113,9 +116,10 @@ public class GuysInfo {
 		var animSet = ghost.animationSet();
 		if (animSet.isPresent()) {
 			var animState = fmtAnimationState(animSet.get().selectedAnimation(), ghost.wishDir());
-			return "%s%n%s %s %s%s".formatted(locationInfo(ghost), name, stateText, animState, animSet.get().selected());
+			return "%s%n%s%n%s%n%s %s%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText, animState,
+					animSet.get().selected());
 		} else {
-			return "%s%n%s %s".formatted(locationInfo(ghost), name, stateText);
+			return "%s%n%s%n%s%n%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText);
 		}
 	}
 
@@ -123,9 +127,10 @@ public class GuysInfo {
 		var pacAnims = pac.animationSet();
 		if (pacAnims.isPresent()) {
 			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
-			return "%s%n%s %s%s".formatted(locationInfo(pac), pac.name, animState, pacAnims.get().selected());
+			return "%s%n%s%n%s%n%s%s".formatted(pac.name, locationInfo(pac), movementInfo(pac), animState,
+					pacAnims.get().selected());
 		}
-		return "%s%n%s".formatted(locationInfo(pac), pac.name);
+		return "%s%n%s%n%s".formatted(pac.name, locationInfo(pac), movementInfo(pac));
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
