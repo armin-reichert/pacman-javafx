@@ -110,8 +110,8 @@ public class GuysInfo {
 		if (ghost.is(GhostState.HUNTING_PAC)) {
 			stateText += game.huntingTimer.inChasingPhase() ? " (Chasing)" : " (Scattering)";
 		}
-		if (ghost.killedIndex != -1) {
-			stateText += " killed: %d".formatted(ghost.killedIndex);
+		if (game.killedIndex[ghost.id] != -1) {
+			stateText += " killed: %d".formatted(game.killedIndex[ghost.id]);
 		}
 		var animSet = ghost.animationSet();
 		if (animSet.isPresent()) {

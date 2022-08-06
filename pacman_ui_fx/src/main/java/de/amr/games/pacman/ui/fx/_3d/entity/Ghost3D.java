@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
@@ -52,8 +49,6 @@ import javafx.scene.transform.Rotate;
  * @author Armin Reichert
  */
 public class Ghost3D extends Group {
-
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private enum Look {
 		COLORED_DRESS, BLUE_DRESS, FLASHING_DRESS, EYES, NUMBER;
@@ -93,7 +88,7 @@ public class Ghost3D extends Group {
 
 	private Look lookForCurrentState(GameModel game) {
 		return switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> ghost.inDanger(game) && ghost.killedIndex == -1 ? frightenedLook(game)
+		case LOCKED, LEAVING_HOUSE -> ghost.inDanger(game) && game.killedIndex[ghost.id] == -1 ? frightenedLook(game)
 				: Look.COLORED_DRESS;
 		case FRIGHTENED -> frightenedLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
@@ -127,7 +122,7 @@ public class Ghost3D extends Group {
 			getChildren().setAll(body.getRoot());
 		}
 		case NUMBER -> {
-			value.selectNumberAtIndex(ghost.killedIndex);
+			value.selectNumberAtIndex(game.killedIndex[ghost.id]);
 			getChildren().setAll(value.getRoot());
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
