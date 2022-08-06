@@ -88,7 +88,7 @@ public class Ghost3D extends Group {
 
 	private Look lookForCurrentState(GameModel game) {
 		return switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> ghost.inDanger(game) && game.killedIndex[ghost.id] == -1 ? frightenedLook(game)
+		case LOCKED, LEAVING_HOUSE -> ghost.isThreatened(game) && game.killedIndex[ghost.id] == -1 ? frightenedLook(game)
 				: Look.COLORED_DRESS;
 		case FRIGHTENED -> frightenedLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
