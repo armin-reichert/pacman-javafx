@@ -7,10 +7,10 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Logger name="de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation" level="trace" additivity="false">
+		<Logger name="de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx.sound.GameSounds" level="trace" additivity="false">
+		<Logger name="de.amr.games.pacman.ui.fx.sound.GameSounds" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger name="de.amr.games.pacman.event.GameEvents" level="info" additivity="false">
@@ -19,10 +19,13 @@
 		<Logger name="de.amr.games.pacman.lib.fsm.Fsm" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="trace" additivity="false">
+		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.model.common.actors.Ghost" level="trace" additivity="false">
+		<Logger name="de.amr.games.pacman.model.common.actors.Ghost" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="de.amr.games.pacman.lib.FollowDirections" level="trace" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Root level="info">
