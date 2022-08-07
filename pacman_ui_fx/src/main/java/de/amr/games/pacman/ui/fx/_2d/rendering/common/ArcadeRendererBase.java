@@ -228,7 +228,7 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 		}
 	}
 
-	public static void drawTileBorders(GraphicsContext g) {
+	public static void drawTileStructure(GraphicsContext g) {
 		g.save();
 		g.translate(0.5, 0.5);
 		g.setStroke(Color.WHITE);

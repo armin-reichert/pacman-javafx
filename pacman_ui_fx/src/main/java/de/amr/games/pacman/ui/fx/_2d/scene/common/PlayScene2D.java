@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,14 +33,17 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -113,6 +117,18 @@ public class PlayScene2D extends GameScene2D {
 
 	private void drawMaze(GraphicsContext g) {
 		ctx.r2D.drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
+	}
+
+	@Override
+	protected void renderOverlayCanvas() {
+		super.renderOverlayCanvas();
+		var g = overlayCanvas.getGraphicsContext2D();
+		if (ctx.gameVariant() == GameVariant.PACMAN) {
+			g.setFill(Color.RED);
+			PacManGame.RED_ZONE.forEach(tile -> {
+				g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
+			});
+		}
 	}
 
 	public void onSwitchFrom3D() {

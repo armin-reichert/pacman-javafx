@@ -118,7 +118,9 @@ public abstract class GameScene2D implements GameScene {
 		update();
 		renderScene(sceneCanvas.getGraphicsContext2D());
 		drawHUD(sceneCanvas.getGraphicsContext2D());
-		renderOverlayCanvas(overlayCanvas.getGraphicsContext2D());
+		if (overlayCanvas.isVisible()) {
+			renderOverlayCanvas();
+		}
 	}
 
 	public void renderScene(GraphicsContext g) {
@@ -127,11 +129,10 @@ public abstract class GameScene2D implements GameScene {
 		drawSceneContent(g);
 	}
 
-	private void renderOverlayCanvas(GraphicsContext g) {
-		if (overlayCanvas.isVisible()) {
-			g.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-			ArcadeRendererBase.drawTileBorders(g);
-		}
+	protected void renderOverlayCanvas() {
+		var g = overlayCanvas.getGraphicsContext2D();
+		g.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+		ArcadeRendererBase.drawTileStructure(g);
 	}
 
 	public void drawHUD(GraphicsContext g) {
