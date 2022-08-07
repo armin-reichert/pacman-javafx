@@ -87,7 +87,7 @@ public class GuysInfo {
 	}
 
 	private String locationInfo(Creature guy) {
-		return "Tile: %s%s%s".formatted(guy.tile(), guy.offset(), guy.stuck ? " stuck" : "");
+		return "Tile: %s%s%s".formatted(guy.tile(), guy.offset(), guy.isStuck() ? " stuck" : "");
 	}
 
 	private String movementInfo(Creature guy) {
