@@ -202,8 +202,8 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		theGameController.game().autoControlled = !theGameController.game().autoControlled;
-		var on = theGameController.game().autoControlled;
+		theGameController.game().isPacAutoControlled = !theGameController.game().isPacAutoControlled;
+		var on = theGameController.game().isPacAutoControlled;
 		String message = Texts.message(on ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoiceMessage(on ? VM_AUTOPILOT_ON : VM_AUTOPILOT_OFF);
