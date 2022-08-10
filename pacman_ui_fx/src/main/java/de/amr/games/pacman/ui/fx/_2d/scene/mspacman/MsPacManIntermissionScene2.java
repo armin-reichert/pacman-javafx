@@ -47,7 +47,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	@Override
 	public void setSceneContext(SceneContext sceneContext) {
 		super.setSceneContext(sceneContext);
-		sceneController = new Intermission2Controller(sceneContext.gameController);
+		sceneController = new Intermission2Controller(sceneContext.gameController());
 		icc = sceneController.context();
 	}
 
@@ -58,9 +58,9 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		flapAnimationSet.put("flap", ArcadeRendererMsPacManGame.get().createFlapAnimation());
 		flapAnimationSet.select("flap");
 		icc.flap.setAnimationSet(flapAnimationSet);
-		icc.msPacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.msPacMan));
+		icc.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPacMan));
 		icc.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		icc.pacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.pacMan));
+		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
 		icc.pacMan.animationSet().ifPresent(animations -> {
 			var munching = ArcadeRendererMsPacManGame.get().createPacManMunchingAnimationMap(icc.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
@@ -76,8 +76,8 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		ArcadeRendererMsPacManGame.get().drawFlap(g, icc.flap);
-		ctx.r2D.drawPac(g, icc.msPacMan);
-		ctx.r2D.drawPac(g, icc.pacMan);
-		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
+		ctx.r2D().drawPac(g, icc.msPacMan);
+		ctx.r2D().drawPac(g, icc.pacMan);
+		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }

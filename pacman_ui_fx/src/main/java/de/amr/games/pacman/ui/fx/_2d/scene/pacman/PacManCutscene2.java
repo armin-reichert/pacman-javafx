@@ -65,12 +65,12 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.setAbsSpeed(1.15);
 		pac.show();
 
-		var pacAnimations = ctx.r2D.createPacAnimationSet(pac);
+		var pacAnimations = ctx.r2D().createPacAnimationSet(pac);
 		pacAnimations.select(AnimKeys.PAC_MUNCHING);
 		pacAnimations.byName(AnimKeys.PAC_MUNCHING).restart();
 		pac.setAnimationSet(pacAnimations);
 
-		stretchedDressAnimation = ((ArcadeRendererPacManGame) ctx.r2D).createBlinkyStretchedAnimation();
+		stretchedDressAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.placeAtTile(v(28, 20), 0, 0);
@@ -78,8 +78,8 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.setAbsSpeed(0);
 		blinky.hide();
 
-		var blinkyAnimations = ctx.r2D.createGhostAnimationSet(blinky);
-		damagedAnimation = ((ArcadeRendererPacManGame) ctx.r2D).createBlinkyDamagedAnimation();
+		var blinkyAnimations = ctx.r2D().createGhostAnimationSet(blinky);
+		damagedAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBlinkyDamagedAnimation();
 		blinkyAnimations.put(DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
 		blinkyAnimations.byName(AnimKeys.GHOST_COLOR).restart();
@@ -95,7 +95,7 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			ctx.gameController.sounds().play(GameSound.INTERMISSION_1);
+			ctx.sounds().play(GameSound.INTERMISSION_1);
 		} else if (frame == 110) {
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
@@ -130,7 +130,7 @@ public class PacManCutscene2 extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(ctx.r2D.getArcadeFont());
+			g.setFont(ctx.r2D().getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(3), t(3));
@@ -139,9 +139,9 @@ public class PacManCutscene2 extends GameScene2D {
 			}
 		}
 		if (stretchedDressAnimation != null) {
-			ctx.r2D.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+			ctx.r2D().drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 		}
-		ctx.r2D.drawGhost(g, blinky);
-		ctx.r2D.drawPac(g, pac);
+		ctx.r2D().drawGhost(g, blinky);
+		ctx.r2D().drawPac(g, pac);
 	}
 }

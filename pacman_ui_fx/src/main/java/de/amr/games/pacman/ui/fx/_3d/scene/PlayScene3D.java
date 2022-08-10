@@ -113,14 +113,14 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		var content = contentRoot.getChildren();
 		content.clear();
-		world3D = new World3D(ctx.game(), ctx.model3D, ctx.r2D);
+		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
 		// put first, exchanged when new level starts
 		content.add(world3D);
-		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D, Rendering3D.getPacSkullColor(),
+		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D(), Rendering3D.getPacSkullColor(),
 				Rendering3D.getPacEyesColor(), Rendering3D.getPacPalateColor());
 		pac3D.reset();
 		content.add(pac3D);
-		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D, ctx.r2D)).toArray(Ghost3D[]::new);
+		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content::add);
 		bonus3D = new Bonus3D(ctx.game().bonus());
 		content.add(bonus3D);
@@ -237,18 +237,18 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onPlayerGetsExtraLife(GameEvent e) {
-		ctx.gameController.sounds().play(GameSound.EXTRA_LIFE);
+		ctx.sounds().play(GameSound.EXTRA_LIFE);
 	}
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus3D.showSymbol(ctx.r2D);
+		bonus3D.showSymbol(ctx.r2D());
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus3D.showPoints(ctx.r2D);
-		ctx.gameController.sounds().play(GameSound.BONUS_EATEN);
+		bonus3D.showPoints(ctx.r2D());
+		ctx.sounds().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class PlayScene3D implements GameScene {
 		case HUNTING -> world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
 
 		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
-			var color = ctx.r2D.getGhostColor(killer.id);
+			var color = ctx.r2D().getGhostColor(killer.id);
 			new SequentialTransition( //
 					Ufx.pauseSec(0.0, this::blockGameController), //
 					pac3D.createDyingAnimation(color), //
@@ -281,7 +281,7 @@ public class PlayScene3D implements GameScene {
 
 		case LEVEL_STARTING -> {
 			blockGameController();
-			world3D = new World3D(game, ctx.model3D, ctx.r2D);
+			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
 			contentRoot.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(Texts.message("level_starting", game.level.number));

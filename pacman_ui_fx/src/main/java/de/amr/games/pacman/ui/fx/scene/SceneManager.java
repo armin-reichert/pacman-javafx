@@ -142,19 +142,19 @@ public class SceneManager {
 	}
 
 	private static void updateSceneContext(GameController gameController, GameScene scene) {
-		var context = new SceneContext(gameController);
-		context.r2D = switch (context.gameVariant()) {
+		var gameVariant = gameController.game().variant;
+		var r2D = switch (gameVariant) {
 		case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
 		case PACMAN -> ArcadeRendererPacManGame.get();
 		};
-		context.model3D = Model3D.get(); // no game variant-specific 3D models yet
-		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (context.gameVariant()) {
+		var model3D = Model3D.get(); // no game variant-specific 3D models yet
+		scene.setSceneContext(new SceneContext(gameController, r2D, model3D));
+		LOGGER.info("Scene context updated for '%s'.", scene);
+		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
 		gameController.setSounds(sounds);
-		scene.setSceneContext(context);
-		LOGGER.info("Scene context updated for '%s'.", scene);
 	}
 
 	private static Optional<GameScene> findGameScene(GameController gameController, SceneDimension dimension) {

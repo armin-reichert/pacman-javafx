@@ -63,9 +63,9 @@ public class PlayScene2D extends GameScene2D {
 		ctx.game().bonus().setInactive();
 		var game = ctx.game();
 		var arcadeWorld = (ArcadeWorld) game.world();
-		arcadeWorld.setFlashingAnimation(ctx.r2D.createMazeFlashingAnimation(game.level.mazeNumber));
-		game.pac.setAnimationSet(ctx.r2D.createPacAnimationSet(game.pac));
-		game.ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D.createGhostAnimationSet(ghost)));
+		arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation(game.level.mazeNumber));
+		game.pac.setAnimationSet(ctx.r2D().createPacAnimationSet(game.pac));
+		game.ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
 		LOGGER.info("Recreated animations for maze, Pac-Man and the ghosts.");
 	}
 
@@ -104,19 +104,19 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			drawMaze(g);
 		}
-		ctx.r2D.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
-		ctx.r2D.drawBonus(g, ctx.game().bonus());
-		ctx.r2D.drawPac(g, ctx.game().pac);
-		ctx.r2D.drawGhosts(g, ctx.game().theGhosts);
+		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
+		ctx.r2D().drawBonus(g, ctx.game().bonus());
+		ctx.r2D().drawPac(g, ctx.game().pac);
+		ctx.r2D().drawGhosts(g, ctx.game().theGhosts);
 		if (!hud.isCreditVisible()) {
 			int livesDisplayed = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
-			ctx.r2D.drawLivesCounter(g, livesDisplayed);
+			ctx.r2D().drawLivesCounter(g, livesDisplayed);
 		}
-		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
+		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
 	private void drawMaze(GraphicsContext g) {
-		ctx.r2D.drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
+		ctx.r2D().drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
 	}
 
 	@Override
@@ -138,11 +138,11 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		ctx.gameController.sounds().play(GameSound.BONUS_EATEN);
+		ctx.sounds().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
 	public void onPlayerGetsExtraLife(GameEvent e) {
-		ctx.gameController.sounds().play(GameSound.EXTRA_LIFE);
+		ctx.sounds().play(GameSound.EXTRA_LIFE);
 	}
 }

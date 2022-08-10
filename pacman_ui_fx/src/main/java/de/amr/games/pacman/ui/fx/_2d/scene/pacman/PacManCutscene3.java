@@ -53,9 +53,9 @@ public class PacManCutscene3 extends GameScene2D {
 		frame = -1;
 		initialDelay = 120;
 		pac = new Pac("Pac-Man");
-		pac.setAnimationSet(ctx.r2D.createPacAnimationSet(pac));
+		pac.setAnimationSet(ctx.r2D().createPacAnimationSet(pac));
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.setAnimationSet(ctx.r2D.createGhostAnimationSet(blinky));
+		blinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(blinky));
 		blinky.animationSet().ifPresent(animations -> {
 			animations.put("patched", ArcadeRendererPacManGame.get().createBlinkyPatchedAnimation());
 			animations.put("naked", ArcadeRendererPacManGame.get().createBlinkyNakedAnimation());
@@ -70,7 +70,7 @@ public class PacManCutscene3 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			ctx.gameController.sounds().loop(GameSound.INTERMISSION_1, 2);
+			ctx.sounds().loop(GameSound.INTERMISSION_1, 2);
 			pac.placeAtTile(v(29, 20), 0, 0);
 			pac.setMoveDir(Direction.LEFT);
 			pac.setAbsSpeed(1.25);
@@ -98,7 +98,7 @@ public class PacManCutscene3 extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(ctx.r2D.getArcadeFont());
+			g.setFont(ctx.r2D().getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(3), t(3));
@@ -106,7 +106,7 @@ public class PacManCutscene3 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(3), t(3));
 			}
 		}
-		ctx.r2D.drawPac(g, pac);
-		ctx.r2D.drawGhost(g, blinky);
+		ctx.r2D().drawPac(g, pac);
+		ctx.r2D().drawGhost(g, blinky);
 	}
 }

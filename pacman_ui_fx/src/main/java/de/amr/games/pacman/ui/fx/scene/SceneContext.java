@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
@@ -37,15 +38,7 @@ import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 /**
  * @author Armin Reichert
  */
-public class SceneContext {
-
-	public final GameController gameController;
-	public Rendering2D r2D;
-	public Model3D model3D;
-
-	public SceneContext(GameController gameController) {
-		this.gameController = gameController;
-	}
+public record SceneContext(GameController gameController, Rendering2D r2D, Model3D model3D) {
 
 	public GameVariant gameVariant() {
 		return game().variant;
@@ -61,6 +54,10 @@ public class SceneContext {
 
 	public GameState state() {
 		return gameController.state();
+	}
+
+	public GameSoundController sounds() {
+		return gameController.sounds();
 	}
 
 	public World world() {

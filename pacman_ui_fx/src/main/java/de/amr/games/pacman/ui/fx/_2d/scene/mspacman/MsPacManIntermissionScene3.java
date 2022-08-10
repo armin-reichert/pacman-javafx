@@ -52,20 +52,20 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	@Override
 	public void setSceneContext(SceneContext sceneContext) {
 		super.setSceneContext(sceneContext);
-		sceneController = new Intermission3Controller(sceneContext.gameController);
+		sceneController = new Intermission3Controller(sceneContext.gameController());
 		icc = sceneController.context();
 	}
 
 	@Override
 	public void init() {
-		var ssMsPacMan = (ArcadeRendererMsPacManGame) ctx.r2D;
+		var ssMsPacMan = (ArcadeRendererMsPacManGame) ctx.r2D();
 		sceneController.restartInState(Intermission3Controller.State.FLAP);
 		var flapAnimationSet = new EntityAnimationSet(1);
 		flapAnimationSet.put("flap", ssMsPacMan.createFlapAnimation());
 		flapAnimationSet.select("flap");
 		icc.flap.setAnimationSet(flapAnimationSet);
-		icc.msPacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.msPacMan));
-		icc.pacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.pacMan));
+		icc.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPacMan));
+		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
 		var munching = ssMsPacMan.createPacManMunchingAnimationMap(icc.pacMan);
 		icc.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
 		storkAnim = ssMsPacMan.createStorkFlyingAnimation();
@@ -79,12 +79,12 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var ssMsPacMan = (ArcadeRendererMsPacManGame) ctx.r2D;
+		var ssMsPacMan = (ArcadeRendererMsPacManGame) ctx.r2D();
 		ssMsPacMan.drawFlap(g, icc.flap);
-		ctx.r2D.drawPac(g, icc.msPacMan);
-		ctx.r2D.drawPac(g, icc.pacMan);
-		ctx.r2D.drawEntity(g, icc.stork, storkAnim.animate());
-		ctx.r2D.drawEntity(g, icc.bag, icc.bagOpen ? ssMsPacMan.getJunior() : ssMsPacMan.getBlueBag());
-		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
+		ctx.r2D().drawPac(g, icc.msPacMan);
+		ctx.r2D().drawPac(g, icc.pacMan);
+		ctx.r2D().drawEntity(g, icc.stork, storkAnim.animate());
+		ctx.r2D().drawEntity(g, icc.bag, icc.bagOpen ? ssMsPacMan.getJunior() : ssMsPacMan.getBlueBag());
+		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }

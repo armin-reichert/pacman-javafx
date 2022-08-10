@@ -48,7 +48,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	@Override
 	public void setSceneContext(SceneContext context) {
 		super.setSceneContext(context);
-		sceneController = new Intermission1Controller(context.gameController);
+		sceneController = new Intermission1Controller(context.gameController());
 		icc = sceneController.context();
 	}
 
@@ -59,17 +59,17 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		flapAnimationSet.put("flap", ArcadeRendererMsPacManGame.get().createFlapAnimation());
 		flapAnimationSet.select("flap");
 		icc.flap.setAnimationSet(flapAnimationSet);
-		icc.msPac.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.msPac));
+		icc.msPac.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPac));
 		icc.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		icc.pacMan.setAnimationSet(ctx.r2D.createPacAnimationSet(icc.pacMan));
+		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
 		icc.pacMan.animationSet().ifPresent(animations -> {
 			var munching = ArcadeRendererMsPacManGame.get().createPacManMunchingAnimationMap(icc.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		icc.inky.setAnimationSet(ctx.r2D.createGhostAnimationSet(icc.inky));
+		icc.inky.setAnimationSet(ctx.r2D().createGhostAnimationSet(icc.inky));
 		icc.inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		icc.pinky.setAnimationSet(ctx.r2D.createGhostAnimationSet(icc.pinky));
+		icc.pinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(icc.pinky));
 		icc.pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 	}
 
@@ -80,13 +80,13 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var ss = (ArcadeRendererMsPacManGame) ctx.r2D;
+		var ss = (ArcadeRendererMsPacManGame) ctx.r2D();
 		ss.drawFlap(g, icc.flap);
-		ctx.r2D.drawPac(g, icc.msPac);
-		ctx.r2D.drawPac(g, icc.pacMan);
-		ctx.r2D.drawGhost(g, icc.inky);
-		ctx.r2D.drawGhost(g, icc.pinky);
-		ctx.r2D.drawEntity(g, icc.heart, ss.getHeart());
-		ctx.r2D.drawLevelCounter(g, ctx.game().levelCounter);
+		ctx.r2D().drawPac(g, icc.msPac);
+		ctx.r2D().drawPac(g, icc.pacMan);
+		ctx.r2D().drawGhost(g, icc.inky);
+		ctx.r2D().drawGhost(g, icc.pinky);
+		ctx.r2D().drawEntity(g, icc.heart, ss.getHeart());
+		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }

@@ -80,7 +80,7 @@ public class BootScene extends GameScene2D {
 			clearBuffer();
 			drawGridIntoBuffer();
 		} else if (t == TickTimer.secToTicks(3.5)) {
-			ctx.gameController.terminateCurrentState();
+			ctx.gameController().terminateCurrentState();
 		}
 	}
 
@@ -105,7 +105,7 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomHexCodesIntoBuffer() {
 		bg.setFill(Color.LIGHTGRAY);
-		bg.setFont(ctx.r2D.getArcadeFont());
+		bg.setFont(ctx.r2D().getArcadeFont());
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
 				var hexCode = Integer.toHexString(rnd.nextInt(16));
@@ -127,7 +127,7 @@ public class BootScene extends GameScene2D {
 				var r2 = new Rectangle2D(rnd.nextDouble(w), rnd.nextDouble(h), cellSize, cellSize);
 				var split = numCols / 4 + rnd.nextInt(numCols / 2);
 				for (int col = 0; col < numCols; ++col) {
-					ctx.r2D.drawSprite(bg, col < split ? r1 : r2, cellSize * col, cellSize * row);
+					ctx.r2D().drawSprite(bg, col < split ? r1 : r2, cellSize * col, cellSize * row);
 				}
 			}
 		}
