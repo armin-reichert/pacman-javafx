@@ -116,16 +116,17 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public final void updateAndRender() {
 		update();
-		renderScene(sceneCanvas.getGraphicsContext2D());
+		renderScene();
 		drawHUD(sceneCanvas.getGraphicsContext2D());
 		if (overlayCanvas.isVisible()) {
 			renderOverlayCanvas();
 		}
 	}
 
-	public void renderScene(GraphicsContext g) {
+	public void renderScene() {
+		var g = sceneCanvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+		g.fillRect(0, 0, sceneCanvas.getWidth(), sceneCanvas.getHeight());
 		drawSceneContent(g);
 	}
 

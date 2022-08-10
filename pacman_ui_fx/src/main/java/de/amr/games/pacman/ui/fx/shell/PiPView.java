@@ -23,9 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -45,33 +44,35 @@ public class PiPView {
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override
 		protected void invalidated() {
-			thumbnail.resize(get());
+			playScene.resize(get());
 		}
 	};
 
 	private final StackPane root = new StackPane();
-	private final GameScene2D thumbnail = new PlayScene2D();
+	private final PlayScene2D playScene = new PlayScene2D();
 
 	public PiPView() {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		root.setFocusTraversable(false);
-		root.getChildren().add(thumbnail.getFXSubScene());
-		thumbnail.resize(MIN_HEIGHT);
-		thumbnail.getOverlayCanvas().visibleProperty().unbind();
+		root.getChildren().add(playScene.getFXSubScene());
+		playScene.resize(MIN_HEIGHT);
+		playScene.getOverlayCanvas().visibleProperty().unbind();
 	}
 
 	public StackPane getRoot() {
 		return root;
 	}
 
-	public void init(GameScene gameScene) {
-		thumbnail.setSceneContext(gameScene.getSceneContext());
-		thumbnail.init();
+	public void init(SceneContext context) {
+		playScene.setSceneContext(context);
+		playScene.init();
 	}
 
 	public void draw() {
-		var g = thumbnail.getGameSceneCanvas().getGraphicsContext2D();
-		thumbnail.renderScene(g);
-		thumbnail.drawHUD(g);
+		var g = playScene.getGameSceneCanvas().getGraphicsContext2D();
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, playScene.getGameSceneCanvas().getWidth(), playScene.getGameSceneCanvas().getHeight());
+		playScene.drawSceneContent(g);
+		playScene.drawHUD(g);
 	}
 }

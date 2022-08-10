@@ -191,7 +191,7 @@ public class GameUI {
 			currentGameScene = newGameScene;
 			gameSceneParent.getChildren().setAll(currentGameScene.getFXSubScene());
 			updateBackground();
-			pipView.init(currentGameScene);
+			pipView.init(newGameScene.getSceneContext());
 		}
 	}
 
