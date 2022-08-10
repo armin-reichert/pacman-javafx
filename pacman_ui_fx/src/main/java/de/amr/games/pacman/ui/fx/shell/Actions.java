@@ -122,6 +122,12 @@ public class Actions {
 		theGameController.restartIntro();
 	}
 
+	public static void reboot() {
+		theUI.getCurrentGameScene().end();
+		theGameController.sounds().stopAll();
+		theGameController.reboot();
+	}
+
 	public static void addCredit() {
 		theGameController.state().addCredit(theGameController.game());
 	}

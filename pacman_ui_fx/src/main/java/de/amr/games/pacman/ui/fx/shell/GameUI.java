@@ -214,6 +214,8 @@ public class GameUI {
 	private void onKeyPressed() {
 		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
+		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.B)) {
+			Actions.reboot();
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
 			Env.toggle(Env.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {
