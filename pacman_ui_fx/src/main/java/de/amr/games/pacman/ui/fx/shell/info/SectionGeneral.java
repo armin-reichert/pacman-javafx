@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.shell.PiPView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -96,7 +97,8 @@ public class SectionGeneral extends Section {
 		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
 
-		sliderPiPSceneHeight = addSlider("PiP Size", 1.0 * 288, 2.0 * 288, Env.pipSceneHeightPy.get());
+		sliderPiPSceneHeight = addSlider("PiP Size", PiPView.MIN_SIZE.y(), PiPView.MAX_SIZE.y(),
+				Env.pipSceneHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
 
