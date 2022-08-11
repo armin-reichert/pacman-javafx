@@ -34,6 +34,9 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -91,9 +94,12 @@ public class GameUI {
 
 		initKeyboardInput();
 		initGameEventing();
+		initAnimations(gameController);
 		Actions.assign(gameController, this);
 
-		Env.drawModePy.addListener((x, y, z) -> updateBackground());
+		Env.drawModePy.addListener((x, y, z) ->
+
+		updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 
 		stage.setOnCloseRequest(e -> gameLoop.stop());
@@ -108,6 +114,19 @@ public class GameUI {
 		stage.show();
 
 		Actions.playHelpMessageAfterSeconds(0.5);
+	}
+
+	private void initAnimations(GameController gameController) {
+		for (var gameVariant : GameVariant.values()) {
+			var game = gameController.game(gameVariant);
+			var r2D = switch (gameVariant) {
+			case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
+			case PACMAN -> ArcadeRendererPacManGame.get();
+			};
+			game.pac.setAnimationSet(r2D.createPacAnimationSet(game.pac));
+			game.ghosts().forEach(ghost -> ghost.setAnimationSet(r2D.createGhostAnimationSet(ghost)));
+			LOGGER.info("Game variant %s: created 2D animations for maze, Pac-Man and the ghosts.", gameVariant);
+		}
 	}
 
 	private void initGameEventing() {

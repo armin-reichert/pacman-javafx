@@ -62,12 +62,9 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInState(IntroController.State.START);
-		icc.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPacMan));
-		icc.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		Stream.of(icc.ghosts).forEach(ghost -> {
-			var animations = ctx.r2D().createGhostAnimationSet(ghost);
-			animations.ensureRunning();
-			ghost.setAnimationSet(animations);
+		icc.game.pac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		Stream.of(icc.game.theGhosts).forEach(ghost -> {
+			ghost.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		});
 	}
 
@@ -100,12 +97,12 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawTitle(g);
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {
-			drawGhostText(g, icc.ghosts[icc.ghostIndex]);
+			drawGhostText(g, icc.game.theGhosts[icc.ghostIndex]);
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
-		ctx.r2D().drawGhosts(g, icc.ghosts);
-		ctx.r2D().drawPac(g, icc.msPacMan);
+		ctx.r2D().drawGhosts(g, icc.game.theGhosts);
+		ctx.r2D().drawPac(g, icc.game.pac);
 		ctx.r2D().drawCopyright(g, 29);
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}

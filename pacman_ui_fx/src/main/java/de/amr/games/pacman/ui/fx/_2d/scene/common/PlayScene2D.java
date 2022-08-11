@@ -26,9 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
@@ -52,8 +49,6 @@ import javafx.scene.paint.Color;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
 	private final GuysInfo guysInfo = new GuysInfo(this);
 
 	@Override
@@ -64,9 +59,6 @@ public class PlayScene2D extends GameScene2D {
 		var game = ctx.game();
 		var arcadeWorld = (ArcadeWorld) game.world();
 		arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation(game.level.mazeNumber));
-		game.pac.setAnimationSet(ctx.r2D().createPacAnimationSet(game.pac));
-		game.ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
-		LOGGER.info("Recreated animations for maze, Pac-Man and the ghosts.");
 	}
 
 	@Override

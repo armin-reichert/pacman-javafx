@@ -106,10 +106,10 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 	@Override
 	public EntityAnimationSet createGhostAnimationSet(Ghost ghost) {
 		var set = new EntityAnimationSet(5);
+		set.put(AnimKeys.GHOST_COLOR, createGhostColorAnimationMap(ghost));
 		set.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 		set.put(AnimKeys.GHOST_EYES, createGhostEyesAnimationMap(ghost));
 		set.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
-		set.put(AnimKeys.GHOST_COLOR, createGhostColorAnimationMap(ghost));
 		set.put(AnimKeys.GHOST_VALUE, createGhostValueList());
 		set.select(AnimKeys.GHOST_COLOR);
 		return set;
