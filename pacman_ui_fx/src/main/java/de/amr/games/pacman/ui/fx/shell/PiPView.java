@@ -60,7 +60,6 @@ public class PiPView {
 		root.setFocusTraversable(false);
 		root.getChildren().add(playScene.getFXSubScene());
 		playScene.resize(MIN_SIZE.y());
-		playScene.getOverlayCanvas().visibleProperty().unbind();
 	}
 
 	public StackPane getRoot() {

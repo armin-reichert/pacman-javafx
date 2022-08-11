@@ -23,11 +23,16 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.HUD;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -59,7 +64,6 @@ public abstract class GameScene2D implements GameScene {
 	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene;
 	protected final ResizableCanvas sceneCanvas;
-	protected final ResizableCanvas overlayCanvas;
 	protected final Pane infoLayer = new Pane();
 	protected final HUD hud = new HUD();
 
@@ -77,21 +81,19 @@ public abstract class GameScene2D implements GameScene {
 		sceneCanvas = new ResizableCanvas();
 		sceneCanvas.widthProperty().bind(fxSubScene.widthProperty());
 		sceneCanvas.heightProperty().bind(fxSubScene.heightProperty());
+		sceneCanvas.setOnMouseClicked(e -> {
+			var tile = World.tileAt(e.getX(), e.getY());
+			LOGGER.info("Mouse click at tile %s: %s", tile, e);
+		});
+
 		scale(sceneCanvas);
 		scalingPy.addListener((obs, oldVal, newVal) -> scale(sceneCanvas));
 
-		overlayCanvas = new ResizableCanvas();
-		overlayCanvas.widthProperty().bind(fxSubScene.widthProperty());
-		overlayCanvas.heightProperty().bind(fxSubScene.heightProperty());
-		overlayCanvas.visibleProperty().bind(Env.showDebugInfoPy);
-		overlayCanvas.setMouseTransparent(true);
-		scale(overlayCanvas);
-		scalingPy.addListener((obs, oldVal, newVal) -> scale(overlayCanvas));
-
 		infoLayer.setVisible(Env.showDebugInfoPy.get());
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
+		infoLayer.setMouseTransparent(true);
 
-		root.getChildren().addAll(sceneCanvas, overlayCanvas, infoLayer);
+		root.getChildren().addAll(sceneCanvas, infoLayer);
 
 		hud.widthPy.bind(sceneCanvas.widthProperty());
 		hud.heightPy.bind(sceneCanvas.heightProperty());
@@ -117,10 +119,17 @@ public abstract class GameScene2D implements GameScene {
 	public final void updateAndRender() {
 		update();
 		renderScene();
-		drawHUD(sceneCanvas.getGraphicsContext2D());
-		if (overlayCanvas.isVisible()) {
-			renderOverlayCanvas();
+		if (Env.showDebugInfoPy.get()) {
+			var g = sceneCanvas.getGraphicsContext2D();
+			ArcadeRendererBase.drawTileStructure(g);
+			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
+				g.setFill(Color.RED);
+				PacManGame.RED_ZONE.forEach(tile -> {
+					g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
+				});
+			}
 		}
+		drawHUD(sceneCanvas.getGraphicsContext2D());
 	}
 
 	public void renderScene() {
@@ -128,12 +137,6 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, sceneCanvas.getWidth(), sceneCanvas.getHeight());
 		drawSceneContent(g);
-	}
-
-	protected void renderOverlayCanvas() {
-		var g = overlayCanvas.getGraphicsContext2D();
-		g.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-		ArcadeRendererBase.drawTileStructure(g);
 	}
 
 	public void drawHUD(GraphicsContext g) {
@@ -183,10 +186,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public Canvas getGameSceneCanvas() {
 		return sceneCanvas;
-	}
-
-	public Canvas getOverlayCanvas() {
-		return overlayCanvas;
 	}
 
 	public V2d getUnscaledSize() {
