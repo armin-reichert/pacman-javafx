@@ -188,10 +188,10 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 
 	@Override
 	public void drawLevelCounter(GraphicsContext g, LevelCounter levelCounter) {
-		if (levelCounter.isVisible()) {
-			double x = levelCounter.getPosition().x();
+		if (levelCounter.visible) {
+			double x = levelCounter.rightBorderPosition.x();
 			for (int symbol : levelCounter.symbols) {
-				drawSprite(g, getBonusSymbolSprite(symbol), x, levelCounter.getPosition().y());
+				drawSprite(g, getBonusSymbolSprite(symbol), x, levelCounter.rightBorderPosition.y());
 				x -= t(2);
 			}
 		}
