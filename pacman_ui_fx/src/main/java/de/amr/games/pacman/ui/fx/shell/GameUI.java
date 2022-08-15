@@ -245,7 +245,7 @@ public class GameUI {
 			Actions.toggleSoundMuted();
 		} else if (Keyboard.pressed(KeyCode.P)) {
 			Actions.togglePaused();
-		} else if (Keyboard.pressed(Keyboard.SHIFT, KeyCode.P)) {
+		} else if (Keyboard.pressed(Keyboard.SHIFT, KeyCode.P) || Keyboard.pressed(KeyCode.SPACE)) {
 			Actions.singleStep();
 		} else if (Keyboard.pressed(KeyCode.Q)) {
 			Actions.restartIntro();
