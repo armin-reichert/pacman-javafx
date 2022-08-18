@@ -57,8 +57,8 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(blinky));
 		blinky.animationSet().ifPresent(animations -> {
-			animations.put("patched", ArcadeRendererPacManGame.get().createBlinkyPatchedAnimation());
-			animations.put("naked", ArcadeRendererPacManGame.get().createBlinkyNakedAnimation());
+			animations.put(AnimKeys.BLINKY_PATCHED, ArcadeRendererPacManGame.get().createBlinkyPatchedAnimation());
+			animations.put(AnimKeys.BLINKY_NAKED, ArcadeRendererPacManGame.get().createBlinkyNakedAnimation());
 		});
 	}
 
@@ -80,11 +80,11 @@ public class PacManCutscene3 extends GameScene2D {
 			blinky.setMoveAndWishDir(Direction.LEFT);
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
-			blinky.selectAndRunAnimation("patched");
+			blinky.selectAndRunAnimation(AnimKeys.BLINKY_PATCHED);
 		} else if (frame == 296) {
 			blinky.placeAtTile(v(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.selectAndRunAnimation("naked");
+			blinky.selectAndRunAnimation(AnimKeys.BLINKY_NAKED);
 		} else if (frame == 516) {
 			ctx.state().timer().expire();
 			return;

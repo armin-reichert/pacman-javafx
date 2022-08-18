@@ -60,8 +60,8 @@ public class PacManCutscene1 extends GameScene2D {
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimationSet(ctx.r2D().createPacAnimationSet(pac));
-		var big = ((ArcadeRendererPacManGame) ctx.r2D()).createBigPacManMunchingAnimation();
-		pac.animationSet().ifPresent(animations -> animations.put("big", big));
+		var bigPacAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBigPacManMunchingAnimation();
+		pac.animationSet().ifPresent(animations -> animations.put(AnimKeys.PAC_BIG, bigPacAnimation));
 		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
 		pac.placeAtTile(v(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
@@ -104,7 +104,7 @@ public class PacManCutscene1 extends GameScene2D {
 			pac.placeAtTile(v(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
 			pac.animationSet().ifPresent(animations -> {
-				animations.select("big");
+				animations.select(AnimKeys.PAC_BIG);
 				animations.selectedAnimation().restart();
 			});
 		} else if (frame == 632) {

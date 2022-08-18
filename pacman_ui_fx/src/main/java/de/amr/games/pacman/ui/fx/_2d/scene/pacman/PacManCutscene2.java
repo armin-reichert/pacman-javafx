@@ -45,8 +45,6 @@ import javafx.scene.paint.Color;
  */
 public class PacManCutscene2 extends GameScene2D {
 
-	private static final String DAMAGED = "damaged";
-
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
@@ -80,7 +78,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		var blinkyAnimations = ctx.r2D().createGhostAnimationSet(blinky);
 		damagedAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBlinkyDamagedAnimation();
-		blinkyAnimations.put(DAMAGED, damagedAnimation);
+		blinkyAnimations.put(AnimKeys.BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
 		blinkyAnimations.byName(AnimKeys.GHOST_COLOR).restart();
 		blinky.setAnimationSet(blinkyAnimations);
@@ -111,7 +109,7 @@ public class PacManCutscene2 extends GameScene2D {
 		} else if (frame == 328) {
 			stretchedDressAnimation.setFrameIndex(4);
 		} else if (frame == 329) {
-			blinky.animationSet().ifPresent(animations -> animations.select(DAMAGED));
+			blinky.animationSet().ifPresent(animations -> animations.select(AnimKeys.BLINKY_DAMAGED));
 			damagedAnimation.setFrameIndex(0);
 		} else if (frame == 389) {
 			damagedAnimation.setFrameIndex(1);

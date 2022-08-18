@@ -57,7 +57,7 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class ArcadeRendererBase implements Rendering2D {
 
-	private static Optional<Rectangle2D> currentFrame(Optional<EntityAnimationSet> animSet) {
+	private static Optional<Rectangle2D> currentFrame(Optional<EntityAnimationSet<AnimKeys>> animSet) {
 		return animSet.map(EntityAnimationSet::selectedAnimation).map(EntityAnimation::frame).map(Rectangle2D.class::cast);
 	}
 
@@ -95,8 +95,8 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationSet createPacAnimationSet(Pac pac) {
-		var set = new EntityAnimationSet(2);
+	public EntityAnimationSet<AnimKeys> createPacAnimationSet(Pac pac) {
+		var set = new EntityAnimationSet<AnimKeys>(2);
 		set.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
 		set.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimationMap(pac));
 		set.select(AnimKeys.PAC_MUNCHING);
@@ -104,8 +104,8 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationSet createGhostAnimationSet(Ghost ghost) {
-		var set = new EntityAnimationSet(5);
+	public EntityAnimationSet<AnimKeys> createGhostAnimationSet(Ghost ghost) {
+		var set = new EntityAnimationSet<AnimKeys>(5);
 		set.put(AnimKeys.GHOST_COLOR, createGhostColorAnimationMap(ghost));
 		set.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 		set.put(AnimKeys.GHOST_EYES, createGhostEyesAnimationMap(ghost));
