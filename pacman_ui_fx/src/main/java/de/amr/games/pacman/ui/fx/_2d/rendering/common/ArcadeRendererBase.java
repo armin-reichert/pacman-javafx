@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.controller.common.GameState;
@@ -56,10 +55,6 @@ import javafx.scene.text.FontWeight;
  * @author Armin Reichert
  */
 public abstract class ArcadeRendererBase implements Rendering2D {
-
-	private static Optional<Rectangle2D> currentFrame(Optional<EntityAnimationSet<AnimKeys>> animSet) {
-		return animSet.map(EntityAnimationSet::selectedAnimation).map(EntityAnimation::frame).map(Rectangle2D.class::cast);
-	}
 
 	protected final Spritesheet sheet;
 	protected final Font arcadeFont;
@@ -152,14 +147,18 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 		}
 	}
 
+	private static Rectangle2D currentSprite(EntityAnimation animation) {
+		return (Rectangle2D) animation.frame();
+	}
+
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		currentFrame(pac.animationSet()).ifPresent(frame -> drawEntity(g, pac, frame));
+		pac.animation().ifPresent(animation -> drawEntity(g, pac, currentSprite(animation)));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		currentFrame(ghost.animationSet()).ifPresent(frame -> drawEntity(g, ghost, frame));
+		ghost.animation().ifPresent(animation -> drawEntity(g, ghost, currentSprite(animation)));
 	}
 
 	@Override

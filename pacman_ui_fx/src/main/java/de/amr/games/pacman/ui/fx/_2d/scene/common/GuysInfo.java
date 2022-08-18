@@ -105,7 +105,8 @@ public class GuysInfo {
 	}
 
 	private String fmtGhostInfo(Ghost ghost) {
-		String name = ghost.id == Ghost.RED_GHOST && game.cruiseElroyState > 0 ? "Elroy " + game.cruiseElroyState : ghost.name;
+		String name = ghost.id == Ghost.RED_GHOST && game.cruiseElroyState > 0 ? "Elroy " + game.cruiseElroyState
+				: ghost.name;
 		var stateText = ghost.getState().name();
 		if (ghost.is(GhostState.HUNTING_PAC)) {
 			stateText += game.huntingTimer.inChasingPhase() ? " (Chasing)" : " (Scattering)";
@@ -113,24 +114,24 @@ public class GuysInfo {
 		if (game.killedIndex[ghost.id] != -1) {
 			stateText += " killed: %d".formatted(game.killedIndex[ghost.id]);
 		}
-		var animSet = ghost.animationSet();
-		if (animSet.isPresent()) {
-			var animState = fmtAnimationState(animSet.get().selectedAnimation(), ghost.wishDir());
-			return "%s%n%s%n%s%n%s %s%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText, animState,
-					animSet.get().selected());
-		} else {
-			return "%s%n%s%n%s%n%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText);
+		var selectedAnim = ghost.animation();
+		if (selectedAnim.isPresent()) {
+			var key = ghost.animationSet().get().selectedKey();
+			var animState = fmtAnimationState(selectedAnim.get(), ghost.wishDir());
+			return "%s%n%s%n%s%n%s %s%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText, animState, key);
 		}
+		return "%s%n%s%n%s%n%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText);
 	}
 
 	private String fmtPacInfo(Pac pac) {
-		var pacAnims = pac.animationSet();
-		if (pacAnims.isPresent()) {
-			var animState = fmtAnimationState(pacAnims.get().selectedAnimation(), pac.moveDir());
-			return "%s%n%s%n%s%n%s%s".formatted(pac.name, locationInfo(pac), movementInfo(pac), animState,
-					pacAnims.get().selected());
+		var selectedAnim = pac.animation();
+		if (selectedAnim.isPresent()) {
+			var key = pac.animationSet().get().selectedKey();
+			var animState = fmtAnimationState(selectedAnim.get(), pac.moveDir());
+			return "%s%n%s%n%s%n%s%s".formatted(pac.name, locationInfo(pac), movementInfo(pac), animState, key);
+		} else {
+			return "%s%n%s%n%s".formatted(pac.name, locationInfo(pac), movementInfo(pac));
 		}
-		return "%s%n%s%n%s".formatted(pac.name, locationInfo(pac), movementInfo(pac));
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {

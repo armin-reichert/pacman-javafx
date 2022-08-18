@@ -65,7 +65,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		var pacAnimations = ctx.r2D().createPacAnimationSet(pac);
 		pacAnimations.select(AnimKeys.PAC_MUNCHING);
-		pacAnimations.byName(AnimKeys.PAC_MUNCHING).restart();
+		pacAnimations.animation(AnimKeys.PAC_MUNCHING).get().restart();
 		pac.setAnimationSet(pacAnimations);
 
 		stretchedDressAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBlinkyStretchedAnimation();
@@ -80,7 +80,7 @@ public class PacManCutscene2 extends GameScene2D {
 		damagedAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBlinkyDamagedAnimation();
 		blinkyAnimations.put(AnimKeys.BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
-		blinkyAnimations.byName(AnimKeys.GHOST_COLOR).restart();
+		blinkyAnimations.animation(AnimKeys.GHOST_COLOR).get().restart();
 		blinky.setAnimationSet(blinkyAnimations);
 
 	}
@@ -104,7 +104,7 @@ public class PacManCutscene2 extends GameScene2D {
 			stretchedDressAnimation.setFrameIndex(2);
 		} else if (frame == 248) {
 			blinky.setAbsSpeed(0);
-			blinky.animationSet().ifPresent(animations -> animations.selectedAnimation().stop());
+			blinky.animationSet().ifPresent(animations -> animations.selectedAnimation().get().stop());
 			stretchedDressAnimation.setFrameIndex(3);
 		} else if (frame == 328) {
 			stretchedDressAnimation.setFrameIndex(4);

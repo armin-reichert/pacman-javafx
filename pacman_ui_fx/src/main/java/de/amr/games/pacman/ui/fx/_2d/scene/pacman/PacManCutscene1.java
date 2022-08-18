@@ -72,7 +72,7 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(blinky));
 		blinky.animationSet().ifPresent(animations -> {
 			animations.select(AnimKeys.GHOST_COLOR);
-			animations.byName(AnimKeys.GHOST_COLOR).restart();
+			animations.animation(AnimKeys.GHOST_COLOR).get().restart();
 		});
 		blinky.placeAtTile(v(32, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
@@ -97,7 +97,7 @@ public class PacManCutscene1 extends GameScene2D {
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.animationSet().ifPresent(animations -> {
 				animations.select(AnimKeys.GHOST_BLUE);
-				animations.selectedAnimation().restart();
+				animations.selectedAnimation().get().restart();
 			});
 			blinky.setAbsSpeed(0.75);
 		} else if (frame == 400) {
@@ -105,7 +105,7 @@ public class PacManCutscene1 extends GameScene2D {
 			pac.setMoveDir(Direction.RIGHT);
 			pac.animationSet().ifPresent(animations -> {
 				animations.select(AnimKeys.PAC_BIG);
-				animations.selectedAnimation().restart();
+				animations.selectedAnimation().get().restart();
 			});
 		} else if (frame == 632) {
 			ctx.state().timer().expire();
