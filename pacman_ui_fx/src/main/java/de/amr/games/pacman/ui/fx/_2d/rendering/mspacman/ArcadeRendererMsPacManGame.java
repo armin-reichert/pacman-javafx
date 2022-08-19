@@ -34,7 +34,7 @@ import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.mspacman.Flap;
+import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -184,16 +184,16 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 		g.fillText("1980/1981", x + t(8), y + t(4));
 	}
 
-	public void drawFlap(GraphicsContext g, Flap flap) {
+	public void drawFlap(GraphicsContext g, Clapperboard flap) {
 		if (flap.isVisible()) {
 			flap.animation().map(EntityAnimation::animate).ifPresent(spriteObj -> {
 				var sprite = (Rectangle2D) spriteObj;
 				drawEntity(g, flap, sprite);
 				g.setFont(getArcadeFont());
 				g.setFill(Color.rgb(222, 222, 255));
-				g.fillText(String.valueOf(flap.number), flap.getPosition().x() + sprite.getWidth() - 25,
+				g.fillText(String.valueOf(flap.sceneNumber), flap.getPosition().x() + sprite.getWidth() - 25,
 						flap.getPosition().y() + 18);
-				g.fillText(flap.text, flap.getPosition().x() + sprite.getWidth(), flap.getPosition().y());
+				g.fillText(flap.sceneTitle, flap.getPosition().x() + sprite.getWidth(), flap.getPosition().y());
 			});
 		}
 	}
@@ -296,7 +296,7 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 		return animationByDir;
 	}
 
-	public SingleEntityAnimation<Rectangle2D> createFlapAnimation() {
+	public SingleEntityAnimation<Rectangle2D> createClapperboardAnimation() {
 		// TODO this is not 100% accurate yet
 		var animation = new SingleEntityAnimation<>( //
 				new Rectangle2D(456, 208, 32, 32), //

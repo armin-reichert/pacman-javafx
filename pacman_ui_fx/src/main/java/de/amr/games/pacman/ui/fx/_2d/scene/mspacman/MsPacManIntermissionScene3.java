@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
+import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -60,9 +61,9 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	public void init() {
 		var ssMsPacMan = (ArcadeRendererMsPacManGame) ctx.r2D();
 		sceneController.restartInState(Intermission3Controller.State.FLAP);
-		var flapAnimationSet = new EntityAnimationSet<String>(1);
-		flapAnimationSet.put("flap", ssMsPacMan.createFlapAnimation());
-		flapAnimationSet.select("flap");
+		var flapAnimationSet = new EntityAnimationSet<Integer>(1);
+		flapAnimationSet.put(Clapperboard.ACTION, ssMsPacMan.createClapperboardAnimation());
+		flapAnimationSet.select(Clapperboard.ACTION);
 		icc.flap.setAnimationSet(flapAnimationSet);
 		icc.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPacMan));
 		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
