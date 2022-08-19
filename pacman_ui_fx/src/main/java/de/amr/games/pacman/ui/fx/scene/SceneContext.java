@@ -29,7 +29,6 @@ import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameScores;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -62,10 +61,6 @@ public record SceneContext(GameController gameController, Rendering2D r2D, Model
 
 	public World world() {
 		return game().world();
-	}
-
-	public GameScores scores() {
-		return game().scores;
 	}
 
 	public boolean hasCredit() {

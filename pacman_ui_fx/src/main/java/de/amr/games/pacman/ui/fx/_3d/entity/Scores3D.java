@@ -74,10 +74,10 @@ public class Scores3D extends Group {
 	}
 
 	public void update(GameModel game) {
-		int gamePoints = game.scores.gameScore.points;
+		int gamePoints = game.gameScore.points;
 		int gameLevelNumber = game.level.number;
-		int highscorePoints = game.scores.highScore.points;
-		int highscoreLevelNumber = game.scores.highScore.levelNumber;
+		int highscorePoints = game.highScore.points;
+		int highscoreLevelNumber = game.highScore.levelNumber;
 
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);

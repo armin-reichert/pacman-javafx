@@ -64,8 +64,8 @@ public class HUD {
 	}
 
 	public void draw(GraphicsContext g, GameModel game) {
-		drawScore(g, game.scores.gameScore, TS, TS);
-		drawScore(g, game.scores.highScore, 16 * TS, TS);
+		drawScore(g, game.gameScore, TS, TS);
+		drawScore(g, game.highScore, 16 * TS, TS);
 		if (creditVisible) {
 			drawText(g, "CREDIT  %d".formatted(game.getCredit()), Color.WHITE, t(2), t(36) - 1);
 		}
