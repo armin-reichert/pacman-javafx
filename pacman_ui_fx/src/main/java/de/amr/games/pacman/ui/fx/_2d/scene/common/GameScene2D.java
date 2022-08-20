@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.HUD;
@@ -81,10 +80,6 @@ public abstract class GameScene2D implements GameScene {
 		sceneCanvas = new ResizableCanvas();
 		sceneCanvas.widthProperty().bind(fxSubScene.widthProperty());
 		sceneCanvas.heightProperty().bind(fxSubScene.heightProperty());
-		sceneCanvas.setOnMouseClicked(e -> {
-			var tile = World.tileAt(e.getX(), e.getY());
-			LOGGER.info("Mouse click at tile %s: %s", tile, e);
-		});
 
 		scale(sceneCanvas);
 		scalingPy.addListener((obs, oldVal, newVal) -> scale(sceneCanvas));

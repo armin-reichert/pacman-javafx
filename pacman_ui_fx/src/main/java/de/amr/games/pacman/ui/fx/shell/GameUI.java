@@ -200,7 +200,6 @@ public class GameUI {
 		flashMessageView = new FlashMessageView();
 		gameSceneParent = new StackPane();
 		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
-
 		return root;
 	}
 
