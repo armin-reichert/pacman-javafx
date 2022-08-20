@@ -76,7 +76,7 @@ public class GuysInfo {
 		}
 		for (int i = 0; i < 6; ++i) {
 			var pane = new VBox(texts.get(i));
-			pane.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 220, 0.3)));
+			pane.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 220, 0.5)));
 			panes.add(pane);
 		}
 		playScene.infoLayer.getChildren().addAll(panes);
