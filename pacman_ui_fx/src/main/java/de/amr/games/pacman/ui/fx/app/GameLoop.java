@@ -51,7 +51,7 @@ public class GameLoop {
 	public final BooleanProperty measuredPy = new SimpleBooleanProperty(false);
 
 	private Timeline clock;
-	private long totalTicks;
+	private long updateCount;
 	private long fps;
 	private long fpsCountStartTime;
 	private long frames;
@@ -110,8 +110,8 @@ public class GameLoop {
 		LOGGER.info("Game loop stopped");
 	}
 
-	public long getTotalTicks() {
-		return totalTicks;
+	public long getUpdateCount() {
+		return updateCount;
 	}
 
 	public long getFPS() {
@@ -126,9 +126,9 @@ public class GameLoop {
 		long tickTime = System.nanoTime();
 		if (updateEnabled) {
 			run(updateTask, "Update phase: %f milliseconds");
+			updateCount++;
 		}
 		run(renderTask, "Render phase: %f milliseconds");
-		totalTicks++;
 		++frames;
 		computeFrameRate(tickTime);
 	}

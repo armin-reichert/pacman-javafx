@@ -182,6 +182,7 @@ public class Actions {
 	public static void singleStep() {
 		if (Env.pausedPy.get()) {
 			theUI.getGameLoop().makeOneStep(true);
+			LOGGER.info("Simulation step. Total updates: %d", theUI.getGameLoop().getUpdateCount());
 		}
 	}
 

@@ -197,7 +197,6 @@ public class GameUI {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView.getRoot()));
-		overlayPane.setMouseTransparent(true);
 		flashMessageView = new FlashMessageView();
 		gameSceneParent = new StackPane();
 		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);

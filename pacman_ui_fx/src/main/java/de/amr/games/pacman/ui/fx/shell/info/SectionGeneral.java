@@ -89,7 +89,7 @@ public class SectionGeneral extends Section {
 
 		addInfo("",
 				() -> String.format("%d Hz (Target: %d Hz)", ui.getGameLoop().getFPS(), ui.getGameLoop().getTargetFramerate()));
-		addInfo("Total Ticks", ui.getGameLoop()::getTotalTicks);
+		addInfo("Total Updates", ui.getGameLoop()::getUpdateCount);
 
 		addInfo("Main scene",
 				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
