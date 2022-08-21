@@ -1,53 +1,59 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman_ui_fx</artifactId>
 	<version>1.0</version>
+
 	<properties>
-		<javafx.version>18.0.1</javafx.version>
-		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
-		<maven.compiler.source>18</maven.compiler.source>
-		<maven.compiler.target>18</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+		<maven.compiler.source>18</maven.compiler.source>
+		<maven.compiler.target>18</maven.compiler.target>
+		<version.maven.compiler.plugin>3.10.1</version.maven.compiler.plugin>
+		<version.javafx>18.0.1</version.javafx>
+		<version.javafx.maven.plugin>0.0.8</version.javafx.maven.plugin>
 	</properties>
+
 	<dependencies>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-media</artifactId>
-			<version>${javafx.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>de.amr.games.pacman</groupId>
 			<artifactId>pacman-core</artifactId>
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-		<groupId>com.interactivemesh</groupId>
-		<artifactId>objimporter</artifactId>
-		<version>1.0</version>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>${version.javafx}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${version.javafx}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.interactivemesh</groupId>
+			<artifactId>objimporter</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven.compiler.plugin.version}</version>
+				<version>${version.maven.compiler.plugin}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>0.0.8</version>
+				<version>${version.javafx.maven.plugin}</version>
 				<configuration>
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
