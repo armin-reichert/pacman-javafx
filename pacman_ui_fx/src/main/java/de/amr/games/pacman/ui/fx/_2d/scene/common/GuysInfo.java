@@ -51,6 +51,12 @@ import javafx.scene.text.TextAlignment;
  */
 public class GuysInfo {
 
+	private static final String[] PACMAN_BONUS_NAMES = { "CHERRIES", "STRAWBERRY", "PEACH", "APPLE", "GRAPES", "GALAXIAN",
+			"BELL", "KEY" };
+
+	private static final String[] MS_PACMAN_BONUS_NAMES = { "CHERRIES", "STRAWBERRY", "PEACH", "PRETZEL", "APPLE", "PEAR",
+			"BANANA" };
+
 	private final PlayScene2D playScene;
 	private GameModel game;
 	private final List<Pane> panes = new ArrayList<>();
@@ -125,8 +131,12 @@ public class GuysInfo {
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
-		var symbolName = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : game.bonusName(bonus.symbol());
-		return "%s%n%s".formatted(symbolName, game.bonus().state());
+		var bonusName = switch (game.variant) {
+		case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.symbol()];
+		case PACMAN -> PACMAN_BONUS_NAMES[bonus.symbol()];
+		};
+		var symbolText = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
+		return "%s%n%s".formatted(symbolText, game.bonus().state());
 	}
 
 	private void updateTextView(int i, String text, Entity entity) {
