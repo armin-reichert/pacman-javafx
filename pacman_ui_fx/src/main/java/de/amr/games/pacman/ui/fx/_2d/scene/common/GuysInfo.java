@@ -31,7 +31,6 @@ import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Creature;
@@ -40,8 +39,6 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.model.mspacman.MsPacManGame;
-import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -53,13 +50,6 @@ import javafx.scene.text.TextAlignment;
  * @author Armin Reichert
  */
 public class GuysInfo {
-
-	private static String bonusName(GameVariant gameVariant, int symbol) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> MsPacManGame.bonusName(symbol);
-		case PACMAN -> PacManGame.bonusName(symbol);
-		};
-	}
 
 	private final PlayScene2D playScene;
 	private GameModel game;
@@ -135,7 +125,7 @@ public class GuysInfo {
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
-		var symbolName = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName(game.variant, bonus.symbol());
+		var symbolName = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : game.bonusName(bonus.symbol());
 		return "%s%n%s".formatted(symbolName, game.bonus().state());
 	}
 
