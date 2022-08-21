@@ -54,7 +54,7 @@ public class PlayScene2D extends GameScene2D {
 		ctx.game().bonus().setInactive();
 		var game = ctx.game();
 		var arcadeWorld = (ArcadeWorld) game.world();
-		arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation(game.level.mazeNumber));
+		arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation(game.level.mazeNumber()));
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMaze(GraphicsContext g) {
-		ctx.r2D().drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber, !ctx.game().energizerPulse.frame());
+		ctx.r2D().drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber(), !ctx.game().energizerPulse.frame());
 	}
 
 	public void onSwitchFrom3D() {

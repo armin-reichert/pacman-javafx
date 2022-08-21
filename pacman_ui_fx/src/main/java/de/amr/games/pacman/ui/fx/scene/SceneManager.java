@@ -169,7 +169,7 @@ public class SceneManager {
 		case BOOT -> 0;
 		case INTRO -> 1;
 		case CREDIT -> 2;
-		case INTERMISSION -> 2 + game.intermissionNumber(game.level.number);
+		case INTERMISSION -> 2 + game.intermissionNumber(game.level.number());
 		case INTERMISSION_TEST -> 2 + game.intermissionTestNumber;
 		default -> 6;
 		}];

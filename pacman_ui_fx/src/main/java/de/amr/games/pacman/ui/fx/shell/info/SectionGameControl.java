@@ -71,7 +71,7 @@ public class SectionGameControl extends Section {
 		btnsIntermissionTest[0].setOnAction(e -> Actions.startCutscenesTest());
 		btnsIntermissionTest[1].setOnAction(e -> Actions.restartIntro());
 
-		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number);
+		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number());
 		spinnerGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
 		spinnerGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().getCredit());
 		spinnerGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
@@ -105,7 +105,7 @@ public class SectionGameControl extends Section {
 		// quit intermission test
 		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
-		spinnerGameLevel.getValueFactory().setValue(game().level.number);
+		spinnerGameLevel.getValueFactory().setValue(game().level.number());
 		if (!gc.game().playing || gc.state() == GameState.LEVEL_STARTING) {
 			spinnerGameLevel.setDisable(true);
 		} else {

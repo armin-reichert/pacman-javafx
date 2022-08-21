@@ -114,7 +114,7 @@ public class Ghost3D extends Group {
 			getChildren().setAll(body.getRoot());
 		}
 		case FLASHING_DRESS -> {
-			body.wearBlueDress(game.level.numFlashes);
+			body.wearBlueDress(game.level.numFlashes());
 			getChildren().setAll(body.getRoot());
 		}
 		case EYES -> {

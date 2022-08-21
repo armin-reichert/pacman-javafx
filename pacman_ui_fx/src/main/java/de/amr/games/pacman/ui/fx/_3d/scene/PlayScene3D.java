@@ -284,16 +284,16 @@ public class PlayScene3D implements GameScene {
 			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
 			contentRoot.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
-			Actions.showFlashMessage(Texts.message("level_starting", game.level.number));
+			Actions.showFlashMessage(Texts.message("level_starting", game.level.number()));
 			Ufx.pauseSec(3, this::unblockGameController).play();
 		}
 
 		case LEVEL_COMPLETE -> {
-			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n" + Texts.message("level_complete", game.level.number);
+			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n" + Texts.message("level_complete", game.level.number());
 			new SequentialTransition( //
 					Ufx.pauseSec(0.0, this::blockGameController), //
 					Ufx.pauseSec(2.0), //
-					world3D.getMaze3D().createMazeFlashingAnimation(game.level.numFlashes), //
+					world3D.getMaze3D().createMazeFlashingAnimation(game.level.numFlashes()), //
 					Ufx.pauseSec(1.0, game.pac::hide), //
 					Ufx.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
 					Ufx.pauseSec(2.0, this::unblockGameController) //
