@@ -38,13 +38,6 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
-	public interface Modifier {
-		public static final byte NO_MODIFIER = 0x0;
-		public static final byte ALT = 0x1;
-		public static final byte CTRL = 0x2;
-		public static final byte SHIFT = 0x4;
-	}
-
 	public static boolean pressed(KeyCode code) {
 		return pressed(Modifier.NO_MODIFIER, code);
 	}
