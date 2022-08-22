@@ -95,7 +95,7 @@ public class GameUI {
 
 		initKeyboardInput();
 		initGameEventing();
-		initAnimations(gameController);
+		initAnimations();
 		Actions.setUI(this);
 
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
@@ -115,7 +115,7 @@ public class GameUI {
 		Actions.playHelpMessageAfterSeconds(0.5);
 	}
 
-	private void initAnimations(GameController gameController) {
+	private void initAnimations() {
 		for (var gameVariant : GameVariant.values()) {
 			var game = gameController.game(gameVariant);
 			var r2D = switch (gameVariant) {
