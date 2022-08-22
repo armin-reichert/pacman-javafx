@@ -55,13 +55,13 @@ public class Actions {
 	private static final String VM_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	private static final String VM_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
-	private static GameController theGameController;
 	private static GameUI theUI;
+	private static GameController theGameController;
 	private static AudioClip currentVoiceMessage;
 
-	public static void assign(GameController gameController, GameUI ui) {
-		theGameController = gameController;
+	public static void setUI(GameUI ui) {
 		theUI = ui;
+		theGameController = theUI.getGameController();
 	}
 
 	public static void playVoiceMessage(String messageFileRelPath) {

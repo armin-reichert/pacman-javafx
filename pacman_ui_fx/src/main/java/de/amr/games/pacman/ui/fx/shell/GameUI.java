@@ -96,7 +96,7 @@ public class GameUI {
 		initKeyboardInput();
 		initGameEventing();
 		initAnimations(gameController);
-		Actions.assign(gameController, this);
+		Actions.setUI(this);
 
 		Env.drawModePy.addListener((x, y, z) ->
 
