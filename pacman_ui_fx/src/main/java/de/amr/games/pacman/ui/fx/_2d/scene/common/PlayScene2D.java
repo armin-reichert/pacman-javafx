@@ -34,6 +34,7 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
+import de.amr.games.pacman.ui.fx.shell.Keyboard.Modifier;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -61,13 +62,13 @@ public class PlayScene2D extends GameScene2D {
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
 			Actions.addCredit();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
 			Actions.addLives(3);
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.N)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.X)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
 	}

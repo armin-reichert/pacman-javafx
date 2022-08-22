@@ -52,6 +52,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
+import de.amr.games.pacman.ui.fx.shell.Keyboard.Modifier;
 import de.amr.games.pacman.ui.fx.texts.Texts;
 import de.amr.games.pacman.ui.fx.util.CoordSystem;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -134,17 +135,17 @@ public class PlayScene3D implements GameScene {
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.game().hasCredit()) {
 			Actions.addCredit();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.LEFT)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.RIGHT)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.RIGHT)) {
 			Actions.selectNextPerspective();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.E)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.L)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
 			Actions.addLives(3);
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.N)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.X)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
 	}

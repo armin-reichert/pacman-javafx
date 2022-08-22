@@ -180,10 +180,17 @@ public class Actions {
 		theGameController.sounds().setMuted(Env.pausedPy.get());
 	}
 
-	public static void singleStep() {
+	public static void oneSimulationStep() {
 		if (Env.pausedPy.get()) {
-			theUI.getGameLoop().makeOneStep(true);
+			theUI.getGameLoop().step(true);
 			LOGGER.info("Simulation step. Total updates: %d", theUI.getGameLoop().getUpdateCount());
+		}
+	}
+
+	public static void tenSimulationSteps() {
+		if (Env.pausedPy.get()) {
+			theUI.getGameLoop().nsteps(10, true);
+			LOGGER.info("10 simulation steps. Total updates: %d", theUI.getGameLoop().getUpdateCount());
 		}
 	}
 

@@ -73,7 +73,7 @@ public class GameLoop {
 			restart = true;
 		}
 		Duration frameDuration = Duration.millis(1000d / fps);
-		clock = new Timeline(fps, new KeyFrame(frameDuration, e -> makeOneStep(!isPaused())));
+		clock = new Timeline(fps, new KeyFrame(frameDuration, e -> step(!isPaused())));
 		clock.setCycleCount(Animation.INDEFINITE);
 		if (restart) {
 			clock.play();
@@ -122,25 +122,31 @@ public class GameLoop {
 		measuredPy.set(measured);
 	}
 
-	public void makeOneStep(boolean updateEnabled) {
+	public void nsteps(int n, boolean updateEnabled) {
+		for (int i = 0; i < n; ++i) {
+			step(updateEnabled);
+		}
+	}
+
+	public void step(boolean updateEnabled) {
 		long tickTime = System.nanoTime();
 		if (updateEnabled) {
-			run(updateTask, "Update phase: %f milliseconds");
+			runTask(updateTask, "Update phase: %f milliseconds");
 			updateCount++;
 		}
-		run(renderTask, "Render phase: %f milliseconds");
+		runTask(renderTask, "Render phase: %f milliseconds");
 		++frames;
 		computeFrameRate(tickTime);
 	}
 
-	private void run(Runnable phase, String message) {
+	private void runTask(Runnable task, String message) {
 		if (measuredPy.get()) {
 			double startNanos = System.nanoTime();
-			phase.run();
+			task.run();
 			double durationNanos = System.nanoTime() - startNanos;
 			LOGGER.info(message, durationNanos / 1e6);
 		} else {
-			phase.run();
+			task.run();
 		}
 	}
 

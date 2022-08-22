@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
+import de.amr.games.pacman.ui.fx.shell.Keyboard.Modifier;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -87,7 +88,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			Actions.startGame();
 		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.Z)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.Z)) {
 			Actions.startCutscenesTest();
 		}
 	}

@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
+import de.amr.games.pacman.ui.fx.shell.Keyboard.Modifier;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Parent;
@@ -231,23 +232,25 @@ public class GameUI {
 	}
 
 	private void onKeyPressed() {
-		if (Keyboard.pressed(Keyboard.ALT, KeyCode.A)) {
+		if (Keyboard.pressed(Modifier.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.B)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.B)) {
 			Actions.reboot();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.D)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.D)) {
 			Env.toggle(Env.showDebugInfoPy);
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.I)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.I)) {
 			Actions.toggleImmunity();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.M)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.M)) {
 			Actions.toggleSoundMuted();
 		} else if (Keyboard.pressed(KeyCode.P)) {
 			Actions.togglePaused();
-		} else if (Keyboard.pressed(Keyboard.SHIFT, KeyCode.P) || Keyboard.pressed(KeyCode.SPACE)) {
-			Actions.singleStep();
+		} else if (Keyboard.pressed(Modifier.SHIFT, KeyCode.P) || Keyboard.pressed(KeyCode.SPACE)) {
+			Actions.oneSimulationStep();
+		} else if (Keyboard.pressed(Modifier.SHIFT, KeyCode.SPACE)) {
+			Actions.tenSimulationSteps();
 		} else if (Keyboard.pressed(KeyCode.Q)) {
 			Actions.restartIntro();
-		} else if (Keyboard.pressed(Keyboard.ALT, KeyCode.DIGIT3)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.DIGIT3)) {
 			Actions.toggleUse3DScene();
 		} else if (Keyboard.pressed(KeyCode.F1)) {
 			Actions.toggleDashboardVisible();

@@ -38,13 +38,15 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
-	public static final byte NO_MODIFIER = 0x0;
-	public static final byte ALT = 0x1;
-	public static final byte CTRL = 0x2;
-	public static final byte SHIFT = 0x4;
+	public interface Modifier {
+		public static final byte NO_MODIFIER = 0x0;
+		public static final byte ALT = 0x1;
+		public static final byte CTRL = 0x2;
+		public static final byte SHIFT = 0x4;
+	}
 
 	public static boolean pressed(KeyCode code) {
-		return pressed(NO_MODIFIER, code);
+		return pressed(Modifier.NO_MODIFIER, code);
 	}
 
 	public static boolean pressed(int modifierMask, KeyCode code) {
@@ -80,17 +82,17 @@ public class Keyboard {
 	}
 
 	private static String modifierText(byte mask) {
-		if (mask == NO_MODIFIER) {
+		if (mask == Modifier.NO_MODIFIER) {
 			return "(NO MODIFIER) ";
 		}
 		String text = "";
-		if ((mask & ALT) != 0) {
+		if ((mask & Modifier.ALT) != 0) {
 			text += "ALT";
 		}
-		if ((mask & CTRL) != 0) {
+		if ((mask & Modifier.CTRL) != 0) {
 			text += " CONTROL";
 		}
-		if ((mask & SHIFT) != 0) {
+		if ((mask & Modifier.SHIFT) != 0) {
 			text += " SHIFT";
 		}
 		return (text + "+").trim();
@@ -106,15 +108,15 @@ public class Keyboard {
 			return;
 		}
 		currentEvent = e;
-		currentMask = NO_MODIFIER;
+		currentMask = Modifier.NO_MODIFIER;
 		if (e.isAltDown()) {
-			currentMask |= ALT;
+			currentMask |= Modifier.ALT;
 		}
 		if (e.isControlDown()) {
-			currentMask |= CTRL;
+			currentMask |= Modifier.CTRL;
 		}
 		if (e.isShiftDown()) {
-			currentMask |= SHIFT;
+			currentMask |= Modifier.SHIFT;
 		}
 		handlers.forEach(Runnable::run);
 		e.consume();
