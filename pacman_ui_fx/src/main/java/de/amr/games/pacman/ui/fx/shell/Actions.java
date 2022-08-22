@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
@@ -56,12 +57,18 @@ public class Actions {
 	private static final String VM_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
 	private static GameUI theUI;
-	private static GameController theGameController;
 	private static AudioClip currentVoiceMessage;
+
+	private static GameController theGameController() {
+		return theUI.getGameController();
+	}
+
+	private static GameModel theGame() {
+		return theGameController().game();
+	}
 
 	public static void setUI(GameUI ui) {
 		theUI = ui;
-		theGameController = theUI.getGameController();
 	}
 
 	public static void playVoiceMessage(String messageFileRelPath) {
@@ -105,60 +112,59 @@ public class Actions {
 	}
 
 	public static void startGame() {
-		if (theGameController.game().hasCredit()) {
+		if (theGame().hasCredit()) {
 			stopVoiceMessage();
-			theGameController.state().requestGame(theGameController.game());
+			theGameController().state().requestGame(theGame());
 		}
 	}
 
 	public static void startCutscenesTest() {
-		theGameController.state().startCutscenesTest(theGameController.game());
+		theGameController().state().startCutscenesTest(theGame());
 		showFlashMessage("Cut scenes");
 	}
 
 	public static void restartIntro() {
 		theUI.getCurrentGameScene().end();
-		theGameController.sounds().stopAll();
-		theGameController.restartIntro();
+		theGameController().sounds().stopAll();
+		theGameController().restartIntro();
 	}
 
 	public static void reboot() {
 		theUI.getCurrentGameScene().end();
-		theGameController.sounds().stopAll();
-		theGameController.reboot();
+		theGameController().sounds().stopAll();
+		theGameController().reboot();
 	}
 
 	public static void addCredit() {
-		theGameController.state().addCredit(theGameController.game());
+		theGameController().state().addCredit(theGame());
 	}
 
 	public static void addLives(int lives) {
-		if (theGameController.game().playing) {
-			theGameController.game().lives += lives;
-			showFlashMessage("You have %d lives", theGameController.game().lives);
+		if (theGame().playing) {
+			theGame().lives += lives;
+			showFlashMessage("You have %d lives", theGame().lives);
 		}
 	}
 
 	public static void enterLevel(int levelNumber) {
-		if (theGameController.state() == GameState.LEVEL_STARTING) {
+		if (theGameController().state() == GameState.LEVEL_STARTING) {
 			return;
 		}
-		if (theGameController.game().level.number() == levelNumber) {
+		if (theGame().level.number() == levelNumber) {
 			return;
 		}
-		theGameController.sounds().stopAll();
+		theGameController().sounds().stopAll();
 		if (levelNumber == 1) {
-			theGameController.game().reset();
-			theGameController.game().setLevel(levelNumber);
-			theGameController.changeState(GameState.READY);
+			theGame().reset();
+			theGame().setLevel(levelNumber);
+			theGameController().changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > theGameController.game().level.number() ? theGameController.game().level.number() + 1
-					: 1;
+			int start = levelNumber > theGame().level.number() ? theGame().level.number() + 1 : 1;
 			for (int n = start; n < levelNumber; ++n) {
-				theGameController.game().setLevel(n);
+				theGame().setLevel(n);
 			}
-			theGameController.changeState(GameState.LEVEL_STARTING);
+			theGameController().changeState(GameState.LEVEL_STARTING);
 		}
 	}
 
@@ -177,7 +183,7 @@ public class Actions {
 
 	public static void togglePaused() {
 		Env.toggle(Env.pausedPy);
-		theGameController.sounds().setMuted(Env.pausedPy.get());
+		theGameController().sounds().setMuted(Env.pausedPy.get());
 	}
 
 	public static void oneSimulationStep() {
@@ -193,8 +199,8 @@ public class Actions {
 	}
 
 	public static void selectNextGameVariant() {
-		var gameVariant = theGameController.game().variant.next();
-		theGameController.state().selectGameVariant(gameVariant);
+		var gameVariant = theGame().variant.next();
+		theGameController().state().selectGameVariant(gameVariant);
 	}
 
 	public static void selectNextPerspective() {
@@ -215,16 +221,16 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		theGameController.game().isPacAutoControlled = !theGameController.game().isPacAutoControlled;
-		var on = theGameController.game().isPacAutoControlled;
+		theGame().isPacAutoControlled = !theGame().isPacAutoControlled;
+		var on = theGame().isPacAutoControlled;
 		String message = Texts.message(on ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoiceMessage(on ? VM_AUTOPILOT_ON : VM_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
-		theGameController.games().forEach(game -> game.isPacImmune = !game.isPacImmune);
-		var on = theGameController.game().isPacImmune;
+		theGameController().games().forEach(game -> game.isPacImmune = !game.isPacImmune);
+		var on = theGame().isPacImmune;
 		String message = Texts.message(on ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoiceMessage(on ? VM_IMMUNITY_ON : VM_IMMUNITY_OFF);
@@ -232,7 +238,7 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.use3DScenePy);
-		if (SceneManager.hasDifferentScenesFor2DAnd3D(theGameController)) {
+		if (SceneManager.hasDifferentScenesFor2DAnd3D(theGameController())) {
 			theUI.updateGameScene(true);
 			if (theUI.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
 				playScene2D.onSwitchFrom3D();
@@ -249,7 +255,7 @@ public class Actions {
 	}
 
 	public static void toggleSoundMuted() {
-		var snd = theGameController.sounds();
+		var snd = theGameController().sounds();
 		boolean wasMuted = snd.isMuted();
 		snd.setMuted(!wasMuted);
 		var msg = Texts.message(snd.isMuted() ? "sound_off" : "sound_on");
@@ -257,17 +263,17 @@ public class Actions {
 	}
 
 	public static void cheatEatAllPellets() {
-		theGameController.state().cheatEatAllPellets(theGameController.game());
+		theGameController().state().cheatEatAllPellets(theGame());
 		var cheatMessage = Texts.TALK_CHEATING.next();
 		showFlashMessage(cheatMessage);
 	}
 
 	public static void cheatEnterNextLevel() {
-		theGameController.state().cheatEnterNextLevel(theGameController.game());
+		theGameController().state().cheatEnterNextLevel(theGame());
 	}
 
 	public static void cheatKillAllEatableGhosts() {
-		theGameController.state().cheatKillAllEatableGhosts(theGameController.game());
+		theGameController().state().cheatKillAllEatableGhosts(theGame());
 		var cheatMessage = Texts.TALK_CHEATING.next();
 		showFlashMessage(cheatMessage);
 	}
