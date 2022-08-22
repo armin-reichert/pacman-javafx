@@ -98,9 +98,7 @@ public class GameUI {
 		initAnimations(gameController);
 		Actions.setUI(this);
 
-		Env.drawModePy.addListener((x, y, z) ->
-
-		updateBackground());
+		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 
 		stage.setOnCloseRequest(e -> gameLoop.stop());
