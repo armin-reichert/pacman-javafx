@@ -71,6 +71,7 @@ public class Env {
 	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * World.TS);
 	public static final BooleanProperty pipEnabledPy = new SimpleBooleanProperty(false);
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
+	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	public static final BooleanProperty squirtingPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
 	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);

@@ -33,6 +33,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -49,6 +50,7 @@ public class SectionGeneral extends Section {
 	public static final int MAX_FRAMERATE = 120;
 
 	private Button[] btnsSimulation;
+	private Spinner<Integer> spinnerSimulationSteps;
 	private Slider sliderTargetFPS;
 	private CheckBox cbUsePlayScene3D;
 	private CheckBox cbDebugUI;
@@ -58,7 +60,7 @@ public class SectionGeneral extends Section {
 	private ImageView iconStep = new ImageView(Ufx.image("icons/step.png"));
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
-	private Tooltip tooltipStep = new Tooltip("Single Step");
+	private Tooltip tooltipStep = new Tooltip("Single Step Mode");
 	private Slider sliderPiPSceneHeight;
 	private Slider sliderPiPOpacity;
 	private final ColorPicker pickerBgColor;
@@ -67,7 +69,7 @@ public class SectionGeneral extends Section {
 			Font labelFont) {
 		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
 
-		btnsSimulation = addButtonList("Simulation", "Pause", "Step");
+		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
 		Button btnPlayPause = btnsSimulation[0];
 		Button btnStep = btnsSimulation[1];
 
@@ -79,7 +81,13 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.getGameLoop().step(true));
+		btnStep.setOnAction(e -> ui.getGameLoop().nsteps(Env.simulationStepsPy.get(), true));
+
+		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.simulationStepsPy.get());
+		spinnerSimulationSteps.valueProperty()
+				.addListener((obs, oldVal, newVal) -> Env.simulationStepsPy.set(newVal.intValue()));
+
+		addInfo("Total Updates", ui.getGameLoop()::getUpdateCount);
 
 		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
@@ -89,7 +97,6 @@ public class SectionGeneral extends Section {
 
 		addInfo("",
 				() -> String.format("%d Hz (Target: %d Hz)", ui.getGameLoop().getFPS(), ui.getGameLoop().getTargetFramerate()));
-		addInfo("Total Updates", ui.getGameLoop()::getUpdateCount);
 
 		addInfo("Main scene",
 				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
@@ -117,6 +124,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setGraphic(Env.pausedPy.get() ? iconPlay : iconStop);
 		btnsSimulation[0].setTooltip(Env.pausedPy.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.pausedPy.get());
+		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
 		sliderTargetFPS.setValue(Env.targetFrameratePy.get());
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
 		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
