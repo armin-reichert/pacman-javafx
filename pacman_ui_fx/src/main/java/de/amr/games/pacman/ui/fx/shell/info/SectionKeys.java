@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -37,9 +36,8 @@ import javafx.scene.text.Font;
  */
 public class SectionKeys extends Section {
 
-	public SectionKeys(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
-		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionKeys(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("F1", "Dashboard On/Off");
 		addInfo("F2", "PiP View On/Off");
 		addInfo("SHIFT+Cursor", "Steer player if dashboard visible");

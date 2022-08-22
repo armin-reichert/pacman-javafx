@@ -191,7 +191,7 @@ public class GameUI {
 	private Parent createSceneContent() {
 		var root = new StackPane();
 		dashboard = new Dashboard();
-		dashboard.build(this, gameController);
+		dashboard.build(this);
 		pipView = new PiPView();
 		pipView.heightPy.bind(Env.pipSceneHeightPy);
 		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
@@ -259,6 +259,10 @@ public class GameUI {
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
+	}
+
+	public GameController getGameController() {
+		return gameController;
 	}
 
 	public Stage getStage() {

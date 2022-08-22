@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;
@@ -42,9 +41,8 @@ public class SectionGameInfo extends Section {
 		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
 	}
 
-	public SectionGameInfo(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
-		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGameInfo(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
 		addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().getFXSubScene().getWidth(),
 				gameScene().getFXSubScene().getHeight()));

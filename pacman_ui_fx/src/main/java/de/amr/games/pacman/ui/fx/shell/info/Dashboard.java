@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -56,13 +55,13 @@ public class Dashboard extends BorderPane {
 	private Section secCamera3D;
 	private Section secKeys;
 
-	public void build(GameUI ui, GameController gc) {
-		secGeneral = new SectionGeneral(ui, gc, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secGameControl = new SectionGameControl(ui, gc, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secGameInfo = new SectionGameInfo(ui, gc, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		sec3D = new Section3D(ui, gc, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secCamera3D = new SectionCamera3D(ui, gc, "3D Camera", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secKeys = new SectionKeys(ui, gc, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+	public void build(GameUI ui) {
+		secGeneral = new SectionGeneral(ui, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secGameControl = new SectionGameControl(ui, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secGameInfo = new SectionGameInfo(ui, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		sec3D = new Section3D(ui, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secCamera3D = new SectionCamera3D(ui, "3D Camera", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secKeys = new SectionKeys(ui, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		lhs.getChildren().addAll(secGeneral, secGameControl, secGameInfo, sec3D, secCamera3D, secKeys);
 		setLeft(lhs);
 		setRight(rhs);

@@ -28,7 +28,6 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
@@ -57,9 +56,8 @@ public class SectionCamera3D extends Section {
 	private final Slider sliderTransformZ;
 	private final Slider sliderRotate;
 
-	public SectionCamera3D(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
-		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionCamera3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.perspectivePy.set(comboPerspective.getValue()));

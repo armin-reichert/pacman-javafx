@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -52,9 +51,8 @@ public class Section3D extends Section {
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
 
-	public Section3D(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
-		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
+	public Section3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		pickerLightColor = addColorPicker("Light color", Env.lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.lightColorPy.set(pickerLightColor.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);

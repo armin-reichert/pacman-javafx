@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -65,9 +64,8 @@ public class SectionGeneral extends Section {
 	private Slider sliderPiPOpacity;
 	private final ColorPicker pickerBgColor;
 
-	public SectionGeneral(GameUI ui, GameController gc, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
-		super(ui, gc, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGeneral(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
 		Button btnPlayPause = btnsSimulation[0];
