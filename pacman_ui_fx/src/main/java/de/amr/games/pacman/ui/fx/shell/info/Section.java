@@ -54,7 +54,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class Section extends TitledPane {
+public abstract class Section extends TitledPane {
 
 	protected final GameUI ui;
 	protected final GameController gc;
@@ -65,9 +65,10 @@ public class Section extends TitledPane {
 	private Color textColor;
 	private Font textFont;
 	private Font labelFont;
+
 	private int row;
 
-	public Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+	protected Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		this.ui = ui;
 		this.gc = ui.getGameController();
 		this.minLabelWidth = minLabelWidth;
@@ -85,6 +86,10 @@ public class Section extends TitledPane {
 		setExpanded(false);
 	}
 
+	public void update() {
+		infoTexts.forEach(InfoText::update);
+	}
+
 	protected GameModel game() {
 		return gc.game();
 	}
@@ -93,24 +98,7 @@ public class Section extends TitledPane {
 		return ui.getCurrentGameScene();
 	}
 
-	public void update() {
-		infoTexts.forEach(InfoText::update);
-	}
-
-	public InfoText addInfo(String labelText, Supplier<?> fnValue) {
-		InfoText info = new InfoText(fnValue);
-		info.setFill(textColor);
-		info.setFont(textFont);
-		infoTexts.add(info);
-		addRow(labelText, info);
-		return info;
-	}
-
-	public InfoText addInfo(String labelText, String value) {
-		return addInfo(labelText, () -> value);
-	}
-
-	public void addRow(String labelText, Node child) {
+	private void addRow(String labelText, Node child) {
 		Label label = new Label(labelText);
 		label.setTextFill(textColor);
 		label.setFont(labelFont);
@@ -120,7 +108,20 @@ public class Section extends TitledPane {
 		++row;
 	}
 
-	public Button addButton(String labelText, String buttonText, Runnable action) {
+	protected InfoText addInfo(String labelText, Supplier<?> fnValue) {
+		InfoText info = new InfoText(fnValue);
+		info.setFill(textColor);
+		info.setFont(textFont);
+		infoTexts.add(info);
+		addRow(labelText, info);
+		return info;
+	}
+
+	protected InfoText addInfo(String labelText, String value) {
+		return addInfo(labelText, () -> value);
+	}
+
+	protected Button addButton(String labelText, String buttonText, Runnable action) {
 		Button button = new Button(buttonText);
 		button.setFont(textFont);
 		button.setOnAction(e -> action.run());
@@ -128,7 +129,7 @@ public class Section extends TitledPane {
 		return button;
 	}
 
-	public Button[] addButtonList(String labelText, String... buttonTexts) {
+	protected Button[] addButtonList(String labelText, String... buttonTexts) {
 		HBox hbox = new HBox();
 		Button[] buttons = new Button[buttonTexts.length];
 		for (int i = 0; i < buttonTexts.length; ++i) {
@@ -140,7 +141,7 @@ public class Section extends TitledPane {
 		return buttons;
 	}
 
-	public CheckBox addCheckBox(String labelText, Runnable callback) {
+	protected CheckBox addCheckBox(String labelText, Runnable callback) {
 		CheckBox cb = new CheckBox();
 		cb.setTextFill(textColor);
 		cb.setFont(textFont);
@@ -150,20 +151,20 @@ public class Section extends TitledPane {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> ComboBox<T> addComboBox(String labelText, T... items) {
+	protected <T> ComboBox<T> addComboBox(String labelText, T... items) {
 		var combo = new ComboBox<T>(FXCollections.observableArrayList(items));
 		combo.setStyle(style(textFont));
 		addRow(labelText, combo);
 		return combo;
 	}
 
-	public ColorPicker addColorPicker(String labelText, Color color) {
+	protected ColorPicker addColorPicker(String labelText, Color color) {
 		var colorPicker = new ColorPicker(color);
 		addRow(labelText, colorPicker);
 		return colorPicker;
 	}
 
-	public Slider addSlider(String labelText, double min, double max, double initialValue) {
+	protected Slider addSlider(String labelText, double min, double max, double initialValue) {
 		Slider slider = new Slider(min, max, initialValue);
 		slider.setMinWidth(Dashboard.MIN_COL_WIDTH);
 		slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
@@ -175,7 +176,7 @@ public class Section extends TitledPane {
 		return slider;
 	}
 
-	public Spinner<Integer> addSpinner(String labelText, int min, int max, int initialValue) {
+	protected Spinner<Integer> addSpinner(String labelText, int min, int max, int initialValue) {
 		Spinner<Integer> spinner = new Spinner<>(min, max, initialValue);
 		spinner.setStyle(style(textFont));
 		addRow(labelText, spinner);
