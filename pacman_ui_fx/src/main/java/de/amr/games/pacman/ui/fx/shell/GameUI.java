@@ -114,6 +114,22 @@ public class GameUI {
 		Actions.playHelpMessageAfterSeconds(0.5);
 	}
 
+	private Parent createSceneContent() {
+		var root = new StackPane();
+		dashboard = new Dashboard();
+		dashboard.build(this);
+		pipView = new PiPView();
+		pipView.heightPy.bind(Env.pipSceneHeightPy);
+		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
+		var overlayPane = new BorderPane();
+		overlayPane.setLeft(dashboard);
+		overlayPane.setRight(new VBox(pipView.getRoot()));
+		flashMessageView = new FlashMessageView();
+		gameSceneParent = new StackPane();
+		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
+		return root;
+	}
+
 	private void initAnimations() {
 		for (var gameVariant : GameVariant.values()) {
 			var game = gameController.game(gameVariant);
@@ -183,22 +199,6 @@ public class GameUI {
 		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 		gameLoop.start();
-	}
-
-	private Parent createSceneContent() {
-		var root = new StackPane();
-		dashboard = new Dashboard();
-		dashboard.build(this);
-		pipView = new PiPView();
-		pipView.heightPy.bind(Env.pipSceneHeightPy);
-		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
-		var overlayPane = new BorderPane();
-		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView.getRoot()));
-		flashMessageView = new FlashMessageView();
-		gameSceneParent = new StackPane();
-		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
-		return root;
 	}
 
 	void updateGameScene(boolean forcedReload) {
