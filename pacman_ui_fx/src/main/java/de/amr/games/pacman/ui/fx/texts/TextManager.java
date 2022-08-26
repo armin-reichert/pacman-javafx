@@ -35,9 +35,9 @@ import de.amr.games.pacman.ui.fx.util.EntryPicker;
 /**
  * @author Armin Reichert
  */
-public class Texts {
+public class TextManager {
 
-	private Texts() {
+	private TextManager() {
 	}
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();

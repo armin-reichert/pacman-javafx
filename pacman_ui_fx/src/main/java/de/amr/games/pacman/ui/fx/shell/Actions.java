@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
-import de.amr.games.pacman.ui.fx.texts.Texts;
+import de.amr.games.pacman.ui.fx.texts.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
@@ -206,16 +206,16 @@ public class Actions {
 	public static void selectNextPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().next());
-			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
-			showFlashMessage(Texts.message("camera_perspective", perspectiveName));
+			String perspectiveName = TextManager.message(Env.perspectivePy.get().name());
+			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void selectPrevPerspective() {
 		if (theUI.getCurrentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().prev());
-			String perspectiveName = Texts.message(Env.perspectivePy.get().name());
-			showFlashMessage(Texts.message("camera_perspective", perspectiveName));
+			String perspectiveName = TextManager.message(Env.perspectivePy.get().name());
+			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 
 	}
@@ -223,7 +223,7 @@ public class Actions {
 	public static void toggleAutopilot() {
 		theGame().isPacAutoControlled = !theGame().isPacAutoControlled;
 		var on = theGame().isPacAutoControlled;
-		String message = Texts.message(on ? "autopilot_on" : "autopilot_off");
+		String message = TextManager.message(on ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoiceMessage(on ? VM_AUTOPILOT_ON : VM_AUTOPILOT_OFF);
 	}
@@ -231,7 +231,7 @@ public class Actions {
 	public static void toggleImmunity() {
 		theGameController().games().forEach(game -> game.isPacImmune = !game.isPacImmune);
 		var on = theGame().isPacImmune;
-		String message = Texts.message(on ? "player_immunity_on" : "player_immunity_off");
+		String message = TextManager.message(on ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoiceMessage(on ? VM_IMMUNITY_ON : VM_IMMUNITY_OFF);
 	}
@@ -246,7 +246,7 @@ public class Actions {
 				playScene3D.onSwitchFrom2D();
 			}
 		} else {
-			showFlashMessage(Texts.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(TextManager.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
@@ -258,13 +258,13 @@ public class Actions {
 		var snd = theGameController().sounds();
 		boolean wasMuted = snd.isMuted();
 		snd.setMuted(!wasMuted);
-		var msg = Texts.message(snd.isMuted() ? "sound_off" : "sound_on");
+		var msg = TextManager.message(snd.isMuted() ? "sound_off" : "sound_on");
 		showFlashMessage(msg);
 	}
 
 	public static void cheatEatAllPellets() {
 		theGameController().state().cheatEatAllPellets(theGame());
-		var cheatMessage = Texts.TALK_CHEATING.next();
+		var cheatMessage = TextManager.TALK_CHEATING.next();
 		showFlashMessage(cheatMessage);
 	}
 
@@ -274,7 +274,7 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		theGameController().state().cheatKillAllEatableGhosts(theGame());
-		var cheatMessage = Texts.TALK_CHEATING.next();
+		var cheatMessage = TextManager.TALK_CHEATING.next();
 		showFlashMessage(cheatMessage);
 	}
 }

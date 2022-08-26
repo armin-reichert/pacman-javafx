@@ -53,7 +53,7 @@ import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import de.amr.games.pacman.ui.fx.shell.Modifier;
-import de.amr.games.pacman.ui.fx.texts.Texts;
+import de.amr.games.pacman.ui.fx.texts.TextManager;
 import de.amr.games.pacman.ui.fx.util.CoordSystem;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
@@ -285,12 +285,12 @@ public class PlayScene3D implements GameScene {
 			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
 			contentRoot.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
-			Actions.showFlashMessage(Texts.message("level_starting", game.level.number()));
+			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
 			Ufx.pauseSec(3, this::unblockGameController).play();
 		}
 
 		case LEVEL_COMPLETE -> {
-			var message = Texts.TALK_LEVEL_COMPLETE.next() + "%n%n" + Texts.message("level_complete", game.level.number());
+			var message = TextManager.TALK_LEVEL_COMPLETE.next() + "%n%n" + TextManager.message("level_complete", game.level.number());
 			new SequentialTransition( //
 					Ufx.pauseSec(0.0, this::blockGameController), //
 					Ufx.pauseSec(2.0), //
@@ -301,7 +301,7 @@ public class PlayScene3D implements GameScene {
 			).play();
 		}
 
-		case GAME_OVER -> Actions.showFlashMessage(3, Texts.TALK_GAME_OVER.next());
+		case GAME_OVER -> Actions.showFlashMessage(3, TextManager.TALK_GAME_OVER.next());
 
 		default -> {
 			// ignore
