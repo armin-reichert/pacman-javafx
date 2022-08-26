@@ -83,23 +83,25 @@ public class GameUI {
 	private Steering currentSteering;
 	private GameScene currentGameScene;
 
+	// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-
-		// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
-		mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
+		this.mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
 		SceneManager.setMainScene(mainScene);
-		LOGGER.info("Main scene created. Size: %.0f x %.0f", width, height);
-
+		Env.drawModePy.addListener((x, y, z) -> updateBackground());
+		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 		initKeyboardInput();
 		initGameEventing();
 		initAnimations();
+		initStage(stage);
 		Actions.setUI(this);
+		Actions.playHelpMessageAfterSeconds(0.5);
+		updateGameScene(true);
+		stage.show();
+	}
 
-		Env.drawModePy.addListener((x, y, z) -> updateBackground());
-		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
-
+	private void initStage(Stage stage) {
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setScene(mainScene);
 		stage.setMinWidth(241);
@@ -107,11 +109,6 @@ public class GameUI {
 		stage.setTitle("Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
-
-		updateGameScene(true);
-		stage.show();
-
-		Actions.playHelpMessageAfterSeconds(0.5);
 	}
 
 	private Parent createSceneContent() {
