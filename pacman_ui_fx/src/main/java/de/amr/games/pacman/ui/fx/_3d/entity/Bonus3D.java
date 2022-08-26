@@ -60,13 +60,13 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(Rendering2D r2D) {
-		setTexture(r2D.getSpriteImage(r2D.getBonusSymbolSprite(bonus.symbol())));
+		setTexture(r2D.getSpriteImage(r2D.getBonusSymbolSprite(bonus.index())));
 		setWidth(TS);
 		rotate(1, Animation.INDEFINITE, 1);
 	}
 
 	public void showPoints(Rendering2D r2D) {
-		setTexture(r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.symbol())));
+		setTexture(r2D.getSpriteImage(r2D.getBonusValueSprite(bonus.index())));
 		setWidth(bonus.value() >= 1000 ? TS * 2 : TS);
 		rotate(1, 5, 2);
 	}

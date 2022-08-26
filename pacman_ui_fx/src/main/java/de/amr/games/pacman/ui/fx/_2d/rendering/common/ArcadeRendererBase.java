@@ -172,8 +172,8 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case INACTIVE -> null;
-		case EDIBLE -> getBonusSymbolSprite(bonus.symbol());
-		case EATEN -> getBonusValueSprite(bonus.symbol());
+		case EDIBLE -> getBonusSymbolSprite(bonus.index());
+		case EATEN -> getBonusValueSprite(bonus.index());
 		};
 		if (bonus.entity() instanceof MovingBonus movingBonus) {
 			g.save();

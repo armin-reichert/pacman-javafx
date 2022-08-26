@@ -132,8 +132,8 @@ public class GuysInfo {
 
 	private String fmtBonusInfo(Bonus bonus) {
 		var bonusName = switch (game.variant) {
-		case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.symbol()];
-		case PACMAN -> PACMAN_BONUS_NAMES[bonus.symbol()];
+		case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.index()];
+		case PACMAN -> PACMAN_BONUS_NAMES[bonus.index()];
 		};
 		var symbolText = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
 		return "%s%n%s".formatted(symbolText, game.bonus().state());
