@@ -130,6 +130,7 @@ public class PacManIntroScene extends GameScene2D {
 			drawGuys(g, 0);
 			ctx.r2D().drawCopyright(g, 32);
 		}
+		default -> throw new IllegalArgumentException("Unexpected value: " + sceneController.state());
 		}
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}

@@ -128,6 +128,7 @@ public class Ghost3D extends Group {
 			setRotationAxis(Rotate.X_AXIS);
 			setRotate(0);
 		}
+		default -> throw new IllegalArgumentException("Unexpected value: " + newLook);
 		}
 	}
 }
