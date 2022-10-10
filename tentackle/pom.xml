@@ -8,6 +8,8 @@
 		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
 		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>18</maven.compiler.source>
+		<maven.compiler.target>18</maven.compiler.target>
 	</properties>
 
 	<packaging>jlink</packaging>
