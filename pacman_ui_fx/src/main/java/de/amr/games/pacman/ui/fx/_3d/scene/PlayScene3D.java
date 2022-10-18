@@ -222,17 +222,20 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
-		var world = ctx.game().world();
-		// when cheat "eat all pellets" is used, no tile is present in the event
+		var food3D = world3D.getFood3D();
 		if (e.tile.isEmpty()) {
+			// when cheat "eat all pellets" is used, no tile is present in the event
+			// remove 3D pellets to be in synch with model:
+			var world = ctx.game().world();
 			world.tiles()//
 					.filter(world::containsEatenFood)//
-					.map(world3D.getFood3D()::pelletAt)//
+					.map(food3D::pelletAt)//
 					.filter(Optional::isPresent)//
 					.map(Optional::get)//
 					.forEach(Pellet3D::eat);
 		} else {
-			world3D.getFood3D().pelletAt(e.tile.get()).ifPresent(world3D.getFood3D()::eatPellet);
+			var tile = e.tile.get();
+			food3D.pelletAt(tile).ifPresent(food3D::eatPellet);
 		}
 	}
 
@@ -290,7 +293,8 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case LEVEL_COMPLETE -> {
-			var message = TextManager.TALK_LEVEL_COMPLETE.next() + "%n%n" + TextManager.message("level_complete", game.level.number());
+			var message = TextManager.TALK_LEVEL_COMPLETE.next() + "%n%n"
+					+ TextManager.message("level_complete", game.level.number());
 			new SequentialTransition( //
 					Ufx.pauseSec(0.0, this::blockGameController), //
 					Ufx.pauseSec(2.0), //
