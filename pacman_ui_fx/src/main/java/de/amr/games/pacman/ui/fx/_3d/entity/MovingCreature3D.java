@@ -55,15 +55,7 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 	//@formatter:on
 
 	private static int index(Direction dir) {
-		if (dir == null) {
-			return 0;
-		}
-		return switch (dir) {
-		case LEFT -> 0;
-		case RIGHT -> 1;
-		case UP -> 2;
-		case DOWN -> 3;
-		};
+		return dir == null ? 0 : dir.ordinal();
 	}
 
 	protected final C guy;
