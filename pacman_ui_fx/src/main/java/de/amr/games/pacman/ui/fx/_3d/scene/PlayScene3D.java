@@ -111,22 +111,26 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		var content = contentRoot.getChildren();
-		content.clear();
-		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
-		// put first, exchanged when new level starts
-		content.add(world3D);
-		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D(), Rendering3D.getPacSkullColor(),
+		final var game = ctx.game();
+		final var content = contentRoot.getChildren();
+		world3D = new World3D(game, ctx.model3D(), ctx.r2D());
+		pac3D = new Pac3D(game.pac, game.world(), ctx.model3D(), Rendering3D.getPacSkullColor(),
 				Rendering3D.getPacEyesColor(), Rendering3D.getPacPalateColor());
 		pac3D.reset();
+		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
+		bonus3D = new Bonus3D(game.bonus());
+
+		content.clear();
+		// put world first in content list, will get exchanged everytime a new level starts
+		content.add(world3D);
 		content.add(pac3D);
-		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
 		Stream.of(ghosts3D).forEach(content::add);
-		bonus3D = new Bonus3D(ctx.game().bonus());
 		content.add(bonus3D);
 
+		// first person camera is not really useful yet, but...
 		var fpc = (CamFirstPerson) getCameraForPerspective(Perspective.FIRST_PERSON);
-		fpc.setPac(ctx.game().pac);
+		fpc.setPac(game.pac);
+
 		changeCamera(Env.perspectivePy.get());
 	}
 
