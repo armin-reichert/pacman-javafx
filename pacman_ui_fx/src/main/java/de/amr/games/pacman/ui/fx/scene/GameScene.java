@@ -116,14 +116,14 @@ public interface GameScene extends GameEventAdapter {
 	/**
 	 * "Locks" the current game controller state by setting the timer duration to {@link TickTimer#INDEFINITE}.
 	 */
-	default void lockState() {
+	default void lockGameState() {
 		getSceneContext().state().timer().resetIndefinitely();
 	}
 
 	/**
 	 * "Unlocks" the current game controller state by forcing the timer to expire.
 	 */
-	default void unlockState() {
+	default void unlockGameState() {
 		getSceneContext().state().timer().expire();
 	}
 }

@@ -273,31 +273,31 @@ public class PlayScene3D implements GameScene {
 		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
 			var color = ctx.r2D().getGhostColor(killer.id);
 			new SequentialTransition( //
-					Ufx.pauseSec(0.0, this::lockState), //
+					Ufx.pauseSec(0.0, this::lockGameState), //
 					pac3D.createDyingAnimation(color), //
-					Ufx.pauseSec(2.0, this::unlockState) //
+					Ufx.pauseSec(2.0, this::unlockGameState) //
 			).play();
 		});
 
 		case LEVEL_STARTING -> {
-			lockState();
+			lockGameState();
 			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
 			contentRoot.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
-			Ufx.pauseSec(3, this::unlockState).play();
+			Ufx.pauseSec(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
 			var message = TextManager.TALK_LEVEL_COMPLETE.next() + "%n%n"
 					+ TextManager.message("level_complete", game.level.number());
 			new SequentialTransition( //
-					Ufx.pauseSec(0.0, this::lockState), //
+					Ufx.pauseSec(0.0, this::lockGameState), //
 					Ufx.pauseSec(2.0), //
 					world3D.getMaze3D().createMazeFlashingAnimation(game.level.numFlashes()), //
 					Ufx.pauseSec(1.0, game.pac::hide), //
 					Ufx.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
-					Ufx.pauseSec(2.0, this::unlockState) //
+					Ufx.pauseSec(2.0, this::unlockGameState) //
 			).play();
 		}
 
