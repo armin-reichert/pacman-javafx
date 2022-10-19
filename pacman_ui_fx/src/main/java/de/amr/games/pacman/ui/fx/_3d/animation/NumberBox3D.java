@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -35,15 +34,15 @@ import javafx.scene.shape.Box;
  */
 public class NumberBox3D extends Box {
 
-	private final Image[] valueImages;
+	private final Image[] numberImages;
 
-	public NumberBox3D(Rendering2D r2D) {
+	public NumberBox3D(Image[] images) {
 		super(8, 8, 8);
-		valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
+		numberImages = images;
 	}
 
 	public void selectNumberAtIndex(int index) {
-		var texture = valueImages[index];
+		var texture = numberImages[index];
 		var material = new PhongMaterial();
 		material.setBumpMap(texture);
 		material.setDiffuseMap(texture);
