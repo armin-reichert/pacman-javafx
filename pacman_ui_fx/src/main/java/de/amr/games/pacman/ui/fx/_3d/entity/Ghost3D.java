@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -48,27 +47,21 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends MovingCreature3D {
+public class Ghost3D extends MovingCreature3D<Ghost> {
 
 	private enum Look {
 		COLORED_DRESS, BLUE_DRESS, FLASHING_DRESS, EYES, NUMBER;
 	}
 
-	private final Ghost ghost;
 	private final NumberBox3D numberAnimation3D;
 	private final ColoredGhost3D coloredGhost3D;
 	private Look look;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
-		this.ghost = ghost;
+		super(ghost);
 		numberAnimation3D = new NumberBox3D(
 				r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new));
 		coloredGhost3D = new ColoredGhost3D(this, ghost, model3D);
-	}
-
-	@Override
-	public Creature guy() {
-		return ghost;
 	}
 
 	public void reset(GameModel game) {
@@ -84,17 +77,17 @@ public class Ghost3D extends MovingCreature3D {
 		if (look != Look.NUMBER) {
 			coloredGhost3D.update();
 		}
-		setVisible(ghost.isVisible() && !outsideWorld(game)); // ???
+		setVisible(guy.isVisible() && !outsideWorld(game)); // ???
 	}
 
 	private boolean outsideWorld(GameModel game) {
-		double centerX = ghost.getPosition().x() + World.HTS;
+		double centerX = guy.getPosition().x() + World.HTS;
 		return centerX < 0 || centerX > game.world().numCols() * World.TS;
 	}
 
 	private Look lookForCurrentState(GameModel game) {
-		return switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1 ? frightenedLook(game)
+		return switch (guy.getState()) {
+		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[guy.id] == -1 ? frightenedLook(game)
 				: Look.COLORED_DRESS;
 		case FRIGHTENED -> frightenedLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
@@ -128,7 +121,7 @@ public class Ghost3D extends MovingCreature3D {
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
-			numberAnimation3D.selectNumberAtIndex(game.killedIndex[ghost.id]);
+			numberAnimation3D.selectNumberAtIndex(game.killedIndex[guy.id]);
 			getChildren().setAll(numberAnimation3D);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);

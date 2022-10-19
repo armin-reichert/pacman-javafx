@@ -38,7 +38,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public abstract class MovingCreature3D extends Group {
+public abstract class MovingCreature3D<C extends Creature> extends Group {
 
 	public record Turn(int from, int to) {
 	}
@@ -64,23 +64,26 @@ public abstract class MovingCreature3D extends Group {
 		};
 	}
 
+	protected final C guy;
 	protected Direction targetDir;
 
-	public abstract Creature guy();
+	protected MovingCreature3D(C guy) {
+		this.guy = guy;
+	}
 
 	public void resetMovement() {
-		targetDir = guy().moveDir();
+		targetDir = guy.moveDir();
 		updateMovement();
 	}
 
 	public void updateMovement() {
-		setVisible(guy().isVisible());
-		setTranslateX(guy().getPosition().x() + HTS);
-		setTranslateY(guy().getPosition().y() + HTS);
+		setVisible(guy.isVisible());
+		setTranslateX(guy.getPosition().x() + HTS);
+		setTranslateY(guy.getPosition().y() + HTS);
 		setTranslateZ(-HTS);
-		if (targetDir != guy().moveDir()) {
+		if (targetDir != guy.moveDir()) {
 			int fromIndex = index(targetDir);
-			int toIndex = index(guy().moveDir());
+			int toIndex = index(guy.moveDir());
 			var turn = TURN_ANGLES[fromIndex][toIndex];
 			var animation = new RotateTransition(Duration.seconds(0.3), this);
 			animation.setAxis(Rotate.Z_AXIS);
@@ -88,7 +91,7 @@ public abstract class MovingCreature3D extends Group {
 			animation.setFromAngle(turn.from);
 			animation.setToAngle(turn.to);
 			animation.playFromStart();
-			targetDir = guy().moveDir();
+			targetDir = guy.moveDir();
 		}
 	}
 }

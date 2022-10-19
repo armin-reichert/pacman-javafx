@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
@@ -47,9 +46,8 @@ import javafx.scene.shape.Shape3D;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends MovingCreature3D {
+public class Pac3D extends MovingCreature3D<Pac> {
 
-	private final Pac pac;
 	private final Model3D model3D;
 	private final Group root3D;
 	private final PortalTraversalAnimation portalTraversal;
@@ -58,7 +56,7 @@ public class Pac3D extends MovingCreature3D {
 	private final PhongMaterial faceMaterial;
 
 	public Pac3D(Pac pac, World world, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
-		this.pac = pac;
+		super(pac);
 		this.model3D = model3D;
 		normalFaceColor = faceColor;
 		faceColorPy = new SimpleObjectProperty<>(faceColor);
@@ -70,11 +68,6 @@ public class Pac3D extends MovingCreature3D {
 		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
 		portalTraversal = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, () -> normalFaceColor);
-	}
-
-	@Override
-	public Creature guy() {
-		return pac;
 	}
 
 	public void reset() {
