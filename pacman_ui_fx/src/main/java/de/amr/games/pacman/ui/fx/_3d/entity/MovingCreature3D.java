@@ -65,12 +65,12 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		this.guy = guy;
 	}
 
-	public void resetMovement() {
+	protected void resetMovement() {
 		targetDir = guy.moveDir();
 		updateMovement();
 	}
 
-	public void updateMovement() {
+	protected void updateMovement() {
 		setVisible(guy.isVisible());
 		setTranslateX(guy.getPosition().x() + HTS);
 		setTranslateY(guy.getPosition().y() + HTS);
