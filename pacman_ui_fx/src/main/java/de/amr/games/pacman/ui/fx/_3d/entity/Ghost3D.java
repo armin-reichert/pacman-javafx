@@ -28,7 +28,7 @@ import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.animation.GhostColored3D;
+import de.amr.games.pacman.ui.fx._3d.animation.ColoredGhost3D;
 import de.amr.games.pacman.ui.fx._3d.animation.NumberBox3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.image.Image;
@@ -56,14 +56,14 @@ public class Ghost3D extends MovingCreature3D {
 
 	private final Ghost ghost;
 	private final NumberBox3D numberAnimation3D;
-	private final GhostColored3D coloredGhost3D;
+	private final ColoredGhost3D coloredGhost3D;
 	private Look look;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
 		numberAnimation3D = new NumberBox3D(
 				r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new));
-		coloredGhost3D = new GhostColored3D(this, ghost, model3D);
+		coloredGhost3D = new ColoredGhost3D(this, ghost, model3D);
 	}
 
 	@Override

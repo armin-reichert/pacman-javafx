@@ -45,7 +45,7 @@ public abstract class MovingCreature3D extends Group {
 
 	//@formatter:off
 	private static final Turn[][] TURN_ANGLES = {
-		{ new Turn(0, 0),   new Turn(  0, 180), new Turn(  0, 90), new Turn(  0, -90) }, // LEFT
+		{ new Turn(  0, 0), new Turn(  0, 180), new Turn(  0, 90), new Turn(  0, -90) }, // LEFT
 		{ new Turn(180, 0), new Turn(180, 180), new Turn(180, 90), new Turn(180, 270) }, // RIGHT
 		{ new Turn( 90, 0), new Turn( 90, 180), new Turn( 90, 90), new Turn( 90, 270) }, // UP
 		{ new Turn(-90, 0), new Turn(270, 180), new Turn(-90, 90), new Turn(-90, -90) }, // DOWN

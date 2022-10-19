@@ -41,7 +41,7 @@ import javafx.scene.shape.Shape3D;
 /**
  * @author Armin Reichert
  */
-public class GhostColored3D {
+public class ColoredGhost3D {
 
 	private final Ghost3D ghost3D;
 	private final Ghost ghost;
@@ -56,7 +56,7 @@ public class GhostColored3D {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public GhostColored3D(Ghost3D ghost3D, Ghost ghost, Model3D model3D) {
+	public ColoredGhost3D(Ghost3D ghost3D, Ghost ghost, Model3D model3D) {
 		this.ghost3D = ghost3D;
 		this.ghost = ghost;
 		this.model3D = model3D;
