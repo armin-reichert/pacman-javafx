@@ -74,7 +74,7 @@ public class PlayScene3D implements GameScene {
 
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 	private final SubScene fxSubScene;
-	private final Group contentRoot = new Group();
+	private final Group sceneContent = new Group();
 
 	private SceneContext ctx;
 	private World3D world3D;
@@ -96,13 +96,12 @@ public class PlayScene3D implements GameScene {
 		var light = new AmbientLight(Env.lightColorPy.get());
 		light.colorProperty().bind(Env.lightColorPy);
 
-		var content = new Group(contentRoot, coordSystem, light);
-
 		// set origin to center of scene content
-		contentRoot.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
+		sceneContent.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
 
 		// initial size does not matter, subscene is resized automatically
-		fxSubScene = new SubScene(content, 50, 50, true, SceneAntialiasing.BALANCED);
+		var sceneRoot = new Group(sceneContent, coordSystem, light);
+		fxSubScene = new SubScene(sceneRoot, 50, 50, true, SceneAntialiasing.BALANCED);
 	}
 
 	@Override
@@ -120,13 +119,12 @@ public class PlayScene3D implements GameScene {
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(game.bonus());
 
-		final var content = contentRoot.getChildren();
-		content.clear();
+		sceneContent.getChildren().clear();
 		// put world first in content list, will get exchanged everytime a new level starts
-		content.add(world3D);
-		content.add(pac3D);
-		Stream.of(ghosts3D).forEach(content::add);
-		content.add(bonus3D);
+		sceneContent.getChildren().add(world3D);
+		sceneContent.getChildren().add(pac3D);
+		sceneContent.getChildren().addAll(ghosts3D);
+		sceneContent.getChildren().add(bonus3D);
 
 		// first person camera is not really useful yet, but...
 		var fpc = (CamFirstPerson) getCameraForPerspective(Perspective.FIRST_PERSON);
@@ -282,7 +280,7 @@ public class PlayScene3D implements GameScene {
 		case LEVEL_STARTING -> {
 			lockGameState();
 			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
-			contentRoot.getChildren().set(0, world3D);
+			sceneContent.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
 			Ufx.pauseSec(3, this::unlockGameState).play();
