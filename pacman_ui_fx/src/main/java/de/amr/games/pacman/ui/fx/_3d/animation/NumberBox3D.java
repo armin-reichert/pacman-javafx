@@ -29,15 +29,15 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 /**
- * Animated cube displaying a number. Used for eaten ghosts.
+ * Cube displaying a number. Used for eaten ghosts.
  * 
  * @author Armin Reichert
  */
-public class NumberAnimation3D extends Box {
+public class NumberBox3D extends Box {
 
 	private final Image[] valueImages;
 
-	public NumberAnimation3D(Rendering2D r2D) {
+	public NumberBox3D(Rendering2D r2D) {
 		super(8, 8, 8);
 		valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
 	}
