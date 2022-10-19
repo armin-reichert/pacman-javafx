@@ -24,20 +24,23 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventAdapter;
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
 import javafx.beans.binding.DoubleExpression;
 import javafx.scene.SubScene;
 
 /**
- * Common interface of all game scenes (2D and 3D).
+ * Interface implemented by all game scenes (2D and 3D).
  * 
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventAdapter {
 
+	/** Default unscaled scene width in pixels (number of tiles times tile size (8) . */
 	public static final double DEFAULT_WIDTH = ArcadeWorld.WORLD_SIZE.x();
 
+	/** Default unscaled scene height in pixels (number of tiles times tile size (8) . */
 	public static final double DEFAULT_HEIGHT = ArcadeWorld.WORLD_SIZE.y();
 
 	/**
@@ -47,6 +50,9 @@ public interface GameScene extends GameEventAdapter {
 	 */
 	void setSceneContext(SceneContext context);
 
+	/**
+	 * @return the scene context (game controller, model, rendering, 3D model, sound)
+	 */
 	SceneContext getSceneContext();
 
 	/**
@@ -100,7 +106,24 @@ public interface GameScene extends GameEventAdapter {
 	default void onKeyPressed() {
 	}
 
+	/**
+	 * @return current scaling of this scene
+	 */
 	default double getScaling() {
 		return 1.0;
+	}
+
+	/**
+	 * "Locks" the current game controller state by setting the timer duration to {@link TickTimer#INDEFINITE}.
+	 */
+	default void lockState() {
+		getSceneContext().state().timer().resetIndefinitely();
+	}
+
+	/**
+	 * "Unlocks" the current game controller state by forcing the timer to expire.
+	 */
+	default void unlockState() {
+		getSceneContext().state().timer().expire();
 	}
 }

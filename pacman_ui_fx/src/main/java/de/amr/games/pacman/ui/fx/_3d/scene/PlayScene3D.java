@@ -85,7 +85,6 @@ public class PlayScene3D implements GameScene {
 	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
-
 		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.FIRST_PERSON, new CamFirstPerson());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
@@ -204,14 +203,6 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private void blockGameController() {
-		ctx.state().timer().resetIndefinitely();
-	}
-
-	private void unblockGameController() {
-		ctx.state().timer().expire();
-	}
-
 	public void onSwitchFrom2D() {
 		var world = ctx.game().world();
 		world3D.getFood3D().pellets3D().forEach(shape3D -> shape3D.setVisible(!world.containsEatenFood(shape3D.tile())));
@@ -277,31 +268,31 @@ public class PlayScene3D implements GameScene {
 		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
 			var color = ctx.r2D().getGhostColor(killer.id);
 			new SequentialTransition( //
-					Ufx.pauseSec(0.0, this::blockGameController), //
+					Ufx.pauseSec(0.0, this::lockState), //
 					pac3D.createDyingAnimation(color), //
-					Ufx.pauseSec(2.0, this::unblockGameController) //
+					Ufx.pauseSec(2.0, this::unlockState) //
 			).play();
 		});
 
 		case LEVEL_STARTING -> {
-			blockGameController();
+			lockState();
 			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
 			contentRoot.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
-			Ufx.pauseSec(3, this::unblockGameController).play();
+			Ufx.pauseSec(3, this::unlockState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
 			var message = TextManager.TALK_LEVEL_COMPLETE.next() + "%n%n"
 					+ TextManager.message("level_complete", game.level.number());
 			new SequentialTransition( //
-					Ufx.pauseSec(0.0, this::blockGameController), //
+					Ufx.pauseSec(0.0, this::lockState), //
 					Ufx.pauseSec(2.0), //
 					world3D.getMaze3D().createMazeFlashingAnimation(game.level.numFlashes()), //
 					Ufx.pauseSec(1.0, game.pac::hide), //
 					Ufx.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
-					Ufx.pauseSec(2.0, this::unblockGameController) //
+					Ufx.pauseSec(2.0, this::unlockState) //
 			).play();
 		}
 
