@@ -36,6 +36,8 @@ import javafx.util.Duration;
 /**
  * Base class for 3D creatures (Pac-Man, ghosts) that move through the maze and turn around corners.
  * 
+ * @param <C> type of creature (Ghost, Pac)
+ * 
  * @author Armin Reichert
  */
 public abstract class MovingCreature3D<C extends Creature> extends Group {
