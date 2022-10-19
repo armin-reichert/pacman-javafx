@@ -29,7 +29,6 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.animation.ColoredGhost3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -41,11 +40,11 @@ import javafx.scene.transform.Rotate;
  * <p>
  * A ghost is displayed in one of the following modes:
  * <ul>
- * <li>complete, colorful ghost with blue eyes,
- * <li>complete, blue ghost with red eyes,
- * <li>complete, blue-white flashing ghost,
- * <li>eyes only (dead ghost),
- * <li>number cube/quad (dead ghost value).
+ * <li>normal: colorful ghost with blue eyes,
+ * <li>frightened: blue ghost with red eyes,
+ * <li>frightened and flashing: blue-white flashing skin, red eyes
+ * <li>dead: eyes only,
+ * <li>eaten: number cube showing ghost value.
  * </ul>
  * 
  * @author Armin Reichert
@@ -53,7 +52,7 @@ import javafx.scene.transform.Rotate;
 public class Ghost3D extends MovingCreature3D<Ghost> {
 
 	private enum Look {
-		COLORED_DRESS, BLUE_DRESS, FLASHING_DRESS, EYES, NUMBER;
+		NORMAL_COLOR, FRIGHTENED_COLOR, FLASHING, EYES_ONLY, NUMBER;
 	}
 
 	private final ColoredGhost3D coloredGhost3D;
@@ -63,12 +62,12 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		super(ghost);
 		numberImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
-		coloredGhost3D = new ColoredGhost3D(this, ghost, model3D);
+		coloredGhost3D = new ColoredGhost3D(ghost, model3D);
 	}
 
 	public void reset(GameModel game) {
 		update(game);
-		coloredGhost3D.reset();
+		resetMovement();
 	}
 
 	public void update(GameModel game) {
@@ -77,7 +76,7 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 			changeLook(game, newLook);
 		}
 		if (look != Look.NUMBER) {
-			coloredGhost3D.update();
+			updateMovement();
 		}
 		setVisible(guy.isVisible() && !outsideWorld(game)); // ???
 	}
@@ -90,35 +89,35 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 	private Look lookForCurrentState(GameModel game) {
 		return switch (guy.getState()) {
 		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[guy.id] == -1 ? frightenedLook(game)
-				: Look.COLORED_DRESS;
+				: Look.NORMAL_COLOR;
 		case FRIGHTENED -> frightenedLook(game);
-		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
+		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES_ONLY;
 		case EATEN -> Look.NUMBER;
-		default -> Look.COLORED_DRESS;
+		default -> Look.NORMAL_COLOR;
 		};
 
 	}
 
 	private Look frightenedLook(GameModel game) {
-		return game.isPacPowerFading() ? Look.FLASHING_DRESS : Look.BLUE_DRESS;
+		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED_COLOR;
 	}
 
 	private void changeLook(GameModel game, Look newLook) {
 		look = newLook;
 		switch (newLook) {
-		case COLORED_DRESS -> {
+		case NORMAL_COLOR -> {
 			coloredGhost3D.wearColoredDress();
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
-		case BLUE_DRESS -> {
+		case FRIGHTENED_COLOR -> {
 			coloredGhost3D.wearBlueDress(0);
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
-		case FLASHING_DRESS -> {
+		case FLASHING -> {
 			coloredGhost3D.wearBlueDress(game.level.numFlashes());
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
-		case EYES -> {
+		case EYES_ONLY -> {
 			coloredGhost3D.dress().setVisible(false);
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}

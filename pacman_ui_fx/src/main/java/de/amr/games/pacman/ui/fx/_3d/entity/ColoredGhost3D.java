@@ -21,11 +21,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.animation;
+package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
+import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
+import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
@@ -43,7 +44,6 @@ import javafx.scene.shape.Shape3D;
  */
 public class ColoredGhost3D {
 
-	private final Ghost3D ghost3D;
 	private final Ghost ghost;
 	private final Model3D model3D;
 	private final Group root3D;
@@ -56,8 +56,7 @@ public class ColoredGhost3D {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(Ghost3D ghost3D, Ghost ghost, Model3D model3D) {
-		this.ghost3D = ghost3D;
+	public ColoredGhost3D(Ghost ghost, Model3D model3D) {
 		this.ghost = ghost;
 		this.model3D = model3D;
 
@@ -90,14 +89,6 @@ public class ColoredGhost3D {
 		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed(),
 				seconds, numFlashes);
 		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
-	}
-
-	public void reset() {
-		ghost3D.resetMovement();
-	}
-
-	public void update() {
-		ghost3D.updateMovement();
 	}
 
 	public Shape3D dress() {
