@@ -34,16 +34,21 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
+ * Base class for 3D creatures (Pac-Man, ghosts) that move through the maze and turn around corners.
+ * 
  * @author Armin Reichert
  */
 public abstract class MovingCreature3D extends Group {
 
+	public record Turn(int from, int to) {
+	}
+
 	//@formatter:off
-	private static final int[][][] TURN_ANGLES = {
-		{ {  0, 0}, {  0, 180}, {  0, 90}, {  0, -90} }, // LEFT
-		{ {180, 0}, {180, 180}, {180, 90}, {180, 270} }, // RIGHT
-		{ { 90, 0}, { 90, 180}, { 90, 90}, { 90, 270} }, // UP
-		{ {-90, 0}, {270, 180}, {-90, 90}, {-90, -90} }, // DOWN
+	private static final Turn[][] TURN_ANGLES = {
+		{ new Turn(0, 0),   new Turn(  0, 180), new Turn(  0, 90), new Turn(  0, -90) }, // LEFT
+		{ new Turn(180, 0), new Turn(180, 180), new Turn(180, 90), new Turn(180, 270) }, // RIGHT
+		{ new Turn( 90, 0), new Turn( 90, 180), new Turn( 90, 90), new Turn( 90, 270) }, // UP
+		{ new Turn(-90, 0), new Turn(270, 180), new Turn(-90, 90), new Turn(-90, -90) }, // DOWN
 	};
 	//@formatter:on
 
@@ -74,13 +79,15 @@ public abstract class MovingCreature3D extends Group {
 		setTranslateY(guy().getPosition().y() + HTS);
 		setTranslateZ(-HTS);
 		if (targetDir != guy().moveDir()) {
-			int[] angles = TURN_ANGLES[index(targetDir)][index(guy().moveDir())];
-			var turning = new RotateTransition(Duration.seconds(0.3), this);
-			turning.setAxis(Rotate.Z_AXIS);
-			turning.setInterpolator(Interpolator.EASE_BOTH);
-			turning.setFromAngle(angles[0]);
-			turning.setToAngle(angles[1]);
-			turning.playFromStart();
+			int fromIndex = index(targetDir);
+			int toIndex = index(guy().moveDir());
+			var turn = TURN_ANGLES[fromIndex][toIndex];
+			var animation = new RotateTransition(Duration.seconds(0.3), this);
+			animation.setAxis(Rotate.Z_AXIS);
+			animation.setInterpolator(Interpolator.EASE_BOTH);
+			animation.setFromAngle(turn.from);
+			animation.setToAngle(turn.to);
+			animation.playFromStart();
 			targetDir = guy().moveDir();
 		}
 	}
