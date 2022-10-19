@@ -23,14 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColoredGhost3D;
-import de.amr.games.pacman.ui.fx._3d.animation.NumberBox3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.image.Image;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -53,14 +56,13 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 		COLORED_DRESS, BLUE_DRESS, FLASHING_DRESS, EYES, NUMBER;
 	}
 
-	private final NumberBox3D numberAnimation3D;
 	private final ColoredGhost3D coloredGhost3D;
+	private final Image[] numberImages;
 	private Look look;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		super(ghost);
-		numberAnimation3D = new NumberBox3D(
-				r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new));
+		numberImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
 		coloredGhost3D = new ColoredGhost3D(this, ghost, model3D);
 	}
 
@@ -121,8 +123,13 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
-			numberAnimation3D.selectNumberAtIndex(game.killedIndex[guy.id]);
-			getChildren().setAll(numberAnimation3D);
+			var box = new Box(TS, TS, TS);
+			var texture = numberImages[game.killedIndex[guy.id]];
+			var material = new PhongMaterial();
+			material.setBumpMap(texture);
+			material.setDiffuseMap(texture);
+			box.setMaterial(material);
+			getChildren().setAll(box);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
 			setRotate(0);
