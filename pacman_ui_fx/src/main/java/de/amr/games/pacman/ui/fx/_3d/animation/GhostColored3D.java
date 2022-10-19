@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
@@ -40,13 +41,12 @@ import javafx.scene.shape.Shape3D;
 /**
  * @author Armin Reichert
  */
-public class GhostBodyAnimation {
+public class GhostColored3D {
 
+	private final Ghost3D ghost3D;
 	private final Ghost ghost;
 	private final Model3D model3D;
 	private final Group root3D;
-
-	private final CreatureMotionAnimation motion;
 
 	public final ObjectProperty<Color> dressColorPy;
 	private final ObjectProperty<Color> eyeBallsColorPy;
@@ -56,10 +56,10 @@ public class GhostBodyAnimation {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public GhostBodyAnimation(Ghost ghost, Model3D model3D, CreatureMotionAnimation motion) {
+	public GhostColored3D(Ghost3D ghost3D, Ghost ghost, Model3D model3D) {
+		this.ghost3D = ghost3D;
 		this.ghost = ghost;
 		this.model3D = model3D;
-		this.motion = motion;
 
 		var dressColor = Rendering3D.getGhostDressColor(ghost.id);
 		var eyeBallColor = Rendering3D.getGhostEyeBallColor();
@@ -93,11 +93,11 @@ public class GhostBodyAnimation {
 	}
 
 	public void reset() {
-		motion.reset();
+		ghost3D.resetMovement();
 	}
 
 	public void update() {
-		motion.update();
+		ghost3D.updateMovement();
 	}
 
 	public Shape3D dress() {

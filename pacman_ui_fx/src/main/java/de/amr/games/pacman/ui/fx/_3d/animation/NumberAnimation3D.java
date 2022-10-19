@@ -24,26 +24,22 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 /**
+ * Animated cube displaying a number. Used for eaten ghosts.
+ * 
  * @author Armin Reichert
  */
-public class GhostValueAnimation {
+public class NumberAnimation3D extends Box {
 
-	private final Box cube;
 	private final Image[] valueImages;
 
-	public GhostValueAnimation(Rendering2D r2D) {
-		cube = new Box(8, 8, 8);
+	public NumberAnimation3D(Rendering2D r2D) {
+		super(8, 8, 8);
 		valueImages = r2D.createGhostValueList().frames().map(r2D::getSpriteImage).toArray(Image[]::new);
-	}
-
-	public Node getRoot() {
-		return cube;
 	}
 
 	public void selectNumberAtIndex(int index) {
@@ -51,6 +47,6 @@ public class GhostValueAnimation {
 		var material = new PhongMaterial();
 		material.setBumpMap(texture);
 		material.setDiffuseMap(texture);
-		cube.setMaterial(material);
+		setMaterial(material);
 	}
 }

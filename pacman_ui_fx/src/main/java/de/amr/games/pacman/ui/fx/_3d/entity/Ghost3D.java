@@ -24,14 +24,13 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.animation.CreatureMotionAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.GhostBodyAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.GhostValueAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.GhostColored3D;
+import de.amr.games.pacman.ui.fx._3d.animation.NumberAnimation3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
-import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -48,26 +47,31 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Group {
+public class Ghost3D extends MovingCreature3D {
 
 	private enum Look {
 		COLORED_DRESS, BLUE_DRESS, FLASHING_DRESS, EYES, NUMBER;
 	}
 
 	private final Ghost ghost;
-	private final GhostValueAnimation value;
-	private final GhostBodyAnimation body;
+	private final NumberAnimation3D numberAnimation3D;
+	private final GhostColored3D coloredGhost3D;
 	private Look look;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		this.ghost = ghost;
-		value = new GhostValueAnimation(r2D);
-		body = new GhostBodyAnimation(ghost, model3D, new CreatureMotionAnimation(ghost, this));
+		numberAnimation3D = new NumberAnimation3D(r2D);
+		coloredGhost3D = new GhostColored3D(this, ghost, model3D);
+	}
+
+	@Override
+	public Creature guy() {
+		return ghost;
 	}
 
 	public void reset(GameModel game) {
 		update(game);
-		body.reset();
+		coloredGhost3D.reset();
 	}
 
 	public void update(GameModel game) {
@@ -76,7 +80,7 @@ public class Ghost3D extends Group {
 			changeLook(game, newLook);
 		}
 		if (look != Look.NUMBER) {
-			body.update();
+			coloredGhost3D.update();
 		}
 		setVisible(ghost.isVisible() && !outsideWorld(game)); // ???
 	}
@@ -106,24 +110,24 @@ public class Ghost3D extends Group {
 		look = newLook;
 		switch (newLook) {
 		case COLORED_DRESS -> {
-			body.wearColoredDress();
-			getChildren().setAll(body.getRoot());
+			coloredGhost3D.wearColoredDress();
+			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case BLUE_DRESS -> {
-			body.wearBlueDress(0);
-			getChildren().setAll(body.getRoot());
+			coloredGhost3D.wearBlueDress(0);
+			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FLASHING_DRESS -> {
-			body.wearBlueDress(game.level.numFlashes());
-			getChildren().setAll(body.getRoot());
+			coloredGhost3D.wearBlueDress(game.level.numFlashes());
+			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case EYES -> {
-			body.dress().setVisible(false);
-			getChildren().setAll(body.getRoot());
+			coloredGhost3D.dress().setVisible(false);
+			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
-			value.selectNumberAtIndex(game.killedIndex[ghost.id]);
-			getChildren().setAll(value.getRoot());
+			numberAnimation3D.selectNumberAtIndex(game.killedIndex[ghost.id]);
+			getChildren().setAll(numberAnimation3D);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
 			setRotate(0);
