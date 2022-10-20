@@ -60,41 +60,37 @@ public class SceneManager {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	private enum SceneDimension {
-		TWO_D, THREE_D;
-	}
-
 	private record SceneVariants(GameScene scene2D, GameScene scene3D) {
 	}
 
 	//@formatter:off
-	private static final SceneVariants[] SCENE_PAIRS_PACMAN = {
+	private static final SceneVariants[] SCENES_PACMAN = {
 			new SceneVariants(new BootScene(), null),
 			new SceneVariants(new PacManIntroScene(), null),
 			new SceneVariants(new PacManCreditScene(), null),
+			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
 			new SceneVariants(new PacManCutscene1(), null),
 			new SceneVariants(new PacManCutscene2(), null),
 			new SceneVariants(new PacManCutscene3(), null),
-			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
 	};
 
-	private static final SceneVariants[] SCENE_PAIRS_MS_PACMAN = { 
+	private static final SceneVariants[] SCENES_MS_PACMAN = { 
 			new SceneVariants(new BootScene(), null),
 			new SceneVariants(new MsPacManIntroScene(), null),
 			new SceneVariants(new MsPacManCreditScene(), null),
+			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
 			new SceneVariants(new MsPacManIntermissionScene1(), null),
 			new SceneVariants(new MsPacManIntermissionScene2(), null),
 			new SceneVariants(new MsPacManIntermissionScene3(), null),
-			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
 	};
 	//@formatter:on
 
 	public static void setMainScene(Scene mainScene) {
-		for (var scenes : SCENE_PAIRS_MS_PACMAN) {
+		for (var scenes : SCENES_MS_PACMAN) {
 			setMainScene(mainScene, scenes.scene2D);
 			setMainScene(mainScene, scenes.scene3D);
 		}
-		for (var scenes : SCENE_PAIRS_PACMAN) {
+		for (var scenes : SCENES_PACMAN) {
 			setMainScene(mainScene, scenes.scene2D);
 			setMainScene(mainScene, scenes.scene3D);
 		}
@@ -107,8 +103,8 @@ public class SceneManager {
 	}
 
 	public static boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
-		var scene2D = findGameScene(gameController, SceneDimension.TWO_D);
-		var scene3D = findGameScene(gameController, SceneDimension.THREE_D);
+		var scene2D = findGameScene(gameController, false);
+		var scene3D = findGameScene(gameController, true);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
 	}
 
@@ -117,20 +113,19 @@ public class SceneManager {
 	 * {@link GameScene#end()} method is called, the new scene's context is updated and its {@link GameScene#init()}
 	 * method is called.
 	 * 
-	 * @param gameController the game controller
-	 * @param forceReload    if {@code true} the scene is reloaded (end + update context + init) even if no scene change
-	 *                       would be required for the current game state
+	 * @param gameController   the game controller
+	 * @param currentGameScene current game scene
+	 * @param reload           if {@code true} the scene is reloaded (end + update context + init) even if no scene change
+	 *                         would be required for the current game state
 	 * 
 	 * @return the selected game scene
 	 */
-	public static GameScene selectGameScene(GameController gameController, GameScene currentGameScene,
-			boolean forceReload) {
-		var dimension = Env.use3DScenePy.get() ? SceneDimension.THREE_D : SceneDimension.TWO_D;
-		GameScene nextGameScene = findGameScene(gameController, dimension).orElse(null);
+	public static GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean reload) {
+		var nextGameScene = findGameScene(gameController, Env.use3DScenePy.get()).orElse(null);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
-		if (nextGameScene == currentGameScene && !forceReload) {
+		if (nextGameScene == currentGameScene && !reload) {
 			return currentGameScene;
 		}
 		if (currentGameScene != null) {
@@ -157,27 +152,24 @@ public class SceneManager {
 		gameController.setSounds(sounds);
 	}
 
-	private static Optional<GameScene> findGameScene(GameController gameController, SceneDimension dimension) {
+	private static Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
 		var game = gameController.game();
 
 		var scenes = switch (game.variant) {
-		case MS_PACMAN -> SCENE_PAIRS_MS_PACMAN;
-		case PACMAN -> SCENE_PAIRS_PACMAN;
+		case MS_PACMAN -> SCENES_MS_PACMAN;
+		case PACMAN -> SCENES_PACMAN;
 		};
 
 		var variants = scenes[switch (gameController.state()) {
 		case BOOT -> 0;
 		case INTRO -> 1;
 		case CREDIT -> 2;
-		case INTERMISSION -> 2 + game.intermissionNumber(game.level.number());
-		case INTERMISSION_TEST -> 2 + game.intermissionTestNumber;
-		default -> 6;
+		case INTERMISSION -> 3 + game.intermissionNumber(game.level.number());
+		case INTERMISSION_TEST -> 3 + game.intermissionTestNumber;
+		default -> 3; // play scene
 		}];
 
-		var scene = switch (dimension) {
-		case TWO_D -> variants.scene2D;
-		case THREE_D -> variants.scene3D;
-		};
+		var scene = threeD ? variants.scene3D : variants.scene2D;
 		if (scene == null) {
 			scene = variants.scene2D; // default, should always exist
 		}
