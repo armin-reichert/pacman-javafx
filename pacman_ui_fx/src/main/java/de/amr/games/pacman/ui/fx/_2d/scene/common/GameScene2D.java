@@ -38,9 +38,9 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
-import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -156,7 +156,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void setResizeBehavior(DoubleExpression width, DoubleExpression height) {
+	public void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height) {
 		height.addListener((x, y, h) -> resize(h.doubleValue()));
 	}
 

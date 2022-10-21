@@ -139,7 +139,7 @@ public class Actions {
 		theGameController().state().addCredit(theGame());
 	}
 
-	public static void addLives(int lives) {
+	public static void cheatAddLives(int lives) {
 		if (theGame().playing) {
 			theGame().lives += lives;
 			showFlashMessage("You have %d lives", theGame().lives);

@@ -57,7 +57,7 @@ import de.amr.games.pacman.ui.fx.texts.TextManager;
 import de.amr.games.pacman.ui.fx.util.CoordSystem;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
-import javafx.beans.binding.DoubleExpression;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
@@ -139,6 +139,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.game().hasCredit()) {
+			// when in attract mode, allow adding credit
 			Actions.addCredit();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();
@@ -147,7 +148,7 @@ public class PlayScene3D implements GameScene {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
-			Actions.addLives(3);
+			Actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
@@ -180,7 +181,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void setResizeBehavior(DoubleExpression width, DoubleExpression height) {
+	public void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height) {
 		fxSubScene.widthProperty().bind(width);
 		fxSubScene.heightProperty().bind(height);
 	}

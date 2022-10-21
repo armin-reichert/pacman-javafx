@@ -27,7 +27,7 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
-import javafx.beans.binding.DoubleExpression;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.SubScene;
 
 /**
@@ -85,7 +85,7 @@ public interface GameScene extends GameEventAdapter {
 	 * @param width  width property of scene container
 	 * @param height height property of scene container
 	 */
-	void setResizeBehavior(DoubleExpression width, DoubleExpression height);
+	void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height);
 
 	/**
 	 * Resizes the scene to the given height.
