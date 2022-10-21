@@ -130,7 +130,7 @@ public class PlayScene3D implements GameScene {
 		content.getChildren().add(bonus3D);
 
 		// first person camera is not really useful yet, but...
-		var fpc = (CamFirstPerson) getCameraForPerspective(Perspective.FIRST_PERSON);
+		var fpc = (CamFirstPerson) getCamera(Perspective.FIRST_PERSON);
 		fpc.setPac(game.pac);
 
 		changeCamera(Env.perspectivePy.get());
@@ -162,7 +162,7 @@ public class PlayScene3D implements GameScene {
 		pac3D.update();
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
 		bonus3D.update();
-		getCamera().update(pac3D);
+		currentCamera().update(pac3D);
 	}
 
 	@Override
@@ -186,33 +186,32 @@ public class PlayScene3D implements GameScene {
 		fxSubScene.heightProperty().bind(height);
 	}
 
-	public GameSceneCamera getCameraForPerspective(Perspective perspective) {
+	public GameSceneCamera getCamera(Perspective perspective) {
 		return cameraMap.get(perspective);
 	}
 
-	public GameSceneCamera getCamera() {
+	public GameSceneCamera currentCamera() {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
 	private void changeCamera(Perspective perspective) {
-		var oldCamera = fxSubScene.getCamera();
-		var camera = cameraMap.get(perspective);
-		if (camera != oldCamera) {
-			fxSubScene.setCamera(camera);
-			fxSubScene.setOnKeyPressed(camera::onKeyPressed);
+		var newCamera = getCamera(perspective);
+		if (newCamera != currentCamera()) {
+			fxSubScene.setCamera(newCamera);
+			fxSubScene.setOnKeyPressed(newCamera::onKeyPressed);
 			fxSubScene.requestFocus();
-			camera.reset();
+			newCamera.reset();
 		}
 		if (world3D != null && world3D.getScores3D() != null) {
 			var scores3D = world3D.getScores3D();
-			scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-			scores3D.rotateProperty().bind(camera.rotateProperty());
+			scores3D.rotationAxisProperty().bind(newCamera.rotationAxisProperty());
+			scores3D.rotateProperty().bind(newCamera.rotateProperty());
 		}
 	}
 
 	public void onSwitchFrom2D() {
 		var world = ctx.game().world();
-		world3D.getFood3D().pellets3D().forEach(shape3D -> shape3D.setVisible(!world.containsEatenFood(shape3D.tile())));
+		world3D.getFood3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
 		if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 			world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
 		}

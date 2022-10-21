@@ -79,7 +79,7 @@ public class SectionCamera3D extends Section {
 		sliderRotate.setDisable(true);
 
 		addInfo("Camera",
-				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.getCamera().transformInfo() : "")
+				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.currentCamera().transformInfo() : "")
 						.available(() -> gameScene().is3D());
 		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
 		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
@@ -120,7 +120,7 @@ public class SectionCamera3D extends Section {
 
 	private Optional<GameSceneCamera> configurableCam(Perspective perspective) {
 		if (ui.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
-			var cam = playScene3D.getCameraForPerspective(perspective);
+			var cam = playScene3D.getCamera(perspective);
 			return cam.isConfigurable() ? Optional.of(cam) : Optional.empty();
 		}
 		return Optional.empty();
