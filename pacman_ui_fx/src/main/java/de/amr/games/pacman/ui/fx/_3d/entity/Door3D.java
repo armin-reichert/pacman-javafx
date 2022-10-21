@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;

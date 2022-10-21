@@ -28,8 +28,8 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.Resources;
-import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;

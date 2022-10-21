@@ -30,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
@@ -46,7 +47,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import javafx.scene.Scene;
 
