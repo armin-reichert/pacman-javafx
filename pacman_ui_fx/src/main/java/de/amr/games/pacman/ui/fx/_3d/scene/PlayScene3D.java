@@ -28,6 +28,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -41,7 +44,6 @@ import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
-import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFirstPerson;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
@@ -72,6 +74,8 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D implements GameScene {
 
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
 	private final SubScene fxSubScene;
 	private final Group content = new Group();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
@@ -100,11 +104,10 @@ public class PlayScene3D implements GameScene {
 
 	private void createCameras() {
 		cameraMap.put(Perspective.DRONE, new CamDrone());
-		cameraMap.put(Perspective.FIRST_PERSON, new CamFirstPerson());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		Env.perspectivePy.addListener((obs, oldVal, newVal) -> changeCamera(newVal));
+		Env.perspectivePy.addListener((obs, oldVal, newPerspective) -> changeCamera(newPerspective));
 	}
 
 	@Override
@@ -128,10 +131,6 @@ public class PlayScene3D implements GameScene {
 		content.getChildren().add(pac3D);
 		content.getChildren().addAll(ghosts3D);
 		content.getChildren().add(bonus3D);
-
-		// first person camera is not really useful yet, but...
-		var fpc = (CamFirstPerson) getCamera(Perspective.FIRST_PERSON);
-		fpc.setPac(game.pac);
 
 		changeCamera(Env.perspectivePy.get());
 	}
@@ -194,8 +193,12 @@ public class PlayScene3D implements GameScene {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
-	private void changeCamera(Perspective perspective) {
-		var newCamera = getCamera(perspective);
+	private void changeCamera(Perspective newPerspective) {
+		var newCamera = getCamera(newPerspective);
+		if (newCamera == null) {
+			LOGGER.error("No camera found for perspective %s", newPerspective);
+			return;
+		}
 		if (newCamera != currentCamera()) {
 			fxSubScene.setCamera(newCamera);
 			fxSubScene.setOnKeyPressed(newCamera::onKeyPressed);
