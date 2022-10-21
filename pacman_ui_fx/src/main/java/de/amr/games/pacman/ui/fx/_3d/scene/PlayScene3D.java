@@ -72,9 +72,9 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D implements GameScene {
 
-	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 	private final SubScene fxSubScene;
-	private final Group sceneContent = new Group();
+	private final Group content = new Group();
+	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 
 	private SceneContext ctx;
 	private World3D world3D;
@@ -83,25 +83,28 @@ public class PlayScene3D implements GameScene {
 	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
+		var coordSystem = new CoordSystem();
+		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
+
+		var light = new AmbientLight();
+		light.colorProperty().bind(Env.lightColorPy);
+
+		var root = new Group(content, coordSystem, light);
+		fxSubScene = new SubScene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT, true, SceneAntialiasing.BALANCED);
+
+		// move origin to center of scene content
+		content.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
+
+		createCameras();
+	}
+
+	private void createCameras() {
 		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.FIRST_PERSON, new CamFirstPerson());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
 		Env.perspectivePy.addListener((obs, oldVal, newVal) -> changeCamera(newVal));
-
-		var coordSystem = new CoordSystem(1000);
-		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
-
-		var light = new AmbientLight(Env.lightColorPy.get());
-		light.colorProperty().bind(Env.lightColorPy);
-
-		// set origin to center of scene content
-		sceneContent.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
-
-		// initial size does not matter, subscene is resized automatically
-		var sceneRoot = new Group(sceneContent, coordSystem, light);
-		fxSubScene = new SubScene(sceneRoot, 50, 50, true, SceneAntialiasing.BALANCED);
 	}
 
 	@Override
@@ -119,12 +122,12 @@ public class PlayScene3D implements GameScene {
 		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(game.bonus());
 
-		sceneContent.getChildren().clear();
+		content.getChildren().clear();
 		// put world first in content list, will get exchanged everytime a new level starts
-		sceneContent.getChildren().add(world3D);
-		sceneContent.getChildren().add(pac3D);
-		sceneContent.getChildren().addAll(ghosts3D);
-		sceneContent.getChildren().add(bonus3D);
+		content.getChildren().add(world3D);
+		content.getChildren().add(pac3D);
+		content.getChildren().addAll(ghosts3D);
+		content.getChildren().add(bonus3D);
 
 		// first person camera is not really useful yet, but...
 		var fpc = (CamFirstPerson) getCameraForPerspective(Perspective.FIRST_PERSON);
@@ -280,7 +283,7 @@ public class PlayScene3D implements GameScene {
 		case LEVEL_STARTING -> {
 			lockGameState();
 			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
-			sceneContent.getChildren().set(0, world3D);
+			content.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
 			Ufx.pauseSec(3, this::unlockGameState).play();
