@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -60,9 +61,13 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 
 	protected final C guy;
 	protected Direction targetDir;
+	private RotateTransition animation;
 
 	protected MovingCreature3D(C guy) {
 		this.guy = guy;
+		animation = new RotateTransition(Duration.seconds(0.25), this);
+		animation.setAxis(Rotate.Z_AXIS);
+		animation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	protected void resetMovement() {
@@ -75,13 +80,10 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		setTranslateX(guy.getPosition().x() + HTS);
 		setTranslateY(guy.getPosition().y() + HTS);
 		setTranslateZ(-HTS);
-		if (targetDir != guy.moveDir()) {
+		if (targetDir != guy.moveDir() && animation.getStatus() != Status.RUNNING) {
 			int fromIndex = index(targetDir);
 			int toIndex = index(guy.moveDir());
 			var turn = TURN_ANGLES[fromIndex][toIndex];
-			var animation = new RotateTransition(Duration.seconds(0.3), this);
-			animation.setAxis(Rotate.Z_AXIS);
-			animation.setInterpolator(Interpolator.EASE_BOTH);
 			animation.setFromAngle(turn.from);
 			animation.setToAngle(turn.to);
 			animation.playFromStart();
