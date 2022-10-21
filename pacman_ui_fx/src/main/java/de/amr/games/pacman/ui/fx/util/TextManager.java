@@ -22,15 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.texts;
+package de.amr.games.pacman.ui.fx.util;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import de.amr.games.pacman.ui.fx.util.EntryPicker;
 
 /**
  * @author Armin Reichert

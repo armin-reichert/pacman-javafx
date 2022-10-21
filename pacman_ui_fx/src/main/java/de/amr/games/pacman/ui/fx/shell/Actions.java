@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.SceneManager;
-import de.amr.games.pacman.ui.fx.texts.TextManager;
+import de.amr.games.pacman.ui.fx.util.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
