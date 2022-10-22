@@ -36,11 +36,9 @@ import javafx.util.Duration;
 /**
  * Base class for 3D creatures (Pac-Man, ghosts) that move through the maze and turn around corners.
  * 
- * @param <C> type of creature (Ghost, Pac)
- * 
  * @author Armin Reichert
  */
-public abstract class MovingCreature3D<C extends Creature> extends Group {
+public abstract class MovingCreature3D extends Group {
 
 	public record Turn(int from, int to) {
 	}
@@ -56,21 +54,21 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 	}
 
 	private static final Turn[][] TURN_ANGLES = { //
-			{ null, new Turn(0, 180), new Turn(0, 90), new Turn(0, -90) }, // LEFT
-			{ new Turn(180, 0), null, new Turn(180, 90), new Turn(180, 270) }, // RIGHT
-			{ new Turn(90, 0), new Turn(90, 180), null, new Turn(90, 270) }, // UP
-			{ new Turn(-90, 0), new Turn(270, 180), new Turn(-90, 90), null }, // DOWN
+			{ null, new Turn(0, 180), new Turn(0, 90), new Turn(0, -90) }, // LEFT -> *
+			{ new Turn(180, 0), null, new Turn(180, 90), new Turn(180, 270) }, // RIGHT -> *
+			{ new Turn(90, 0), new Turn(90, 180), null, new Turn(90, 270) }, // UP -> *
+			{ new Turn(-90, 0), new Turn(270, 180), new Turn(-90, 90), null }, // DOWN -> *
 	};
 
 	private static int index(Direction dir) {
 		return dir == null ? 0 : dir.ordinal();
 	}
 
-	protected final C guy;
+	protected final Creature guy;
 	protected Direction animationTargetDir;
 	private RotateTransition turnAnimation;
 
-	protected MovingCreature3D(C guy) {
+	protected MovingCreature3D(Creature guy) {
 		this.guy = guy;
 		turnAnimation = new RotateTransition(Duration.seconds(0.25), this);
 		turnAnimation.setAxis(Rotate.Z_AXIS);
@@ -91,17 +89,11 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		setTranslateY(guy.getPosition().y() + HTS);
 		setTranslateZ(-HTS);
 		if (animationTargetDir != guy.moveDir()) {
-			startTurningAnimation(animationTargetDir, guy.moveDir());
-		}
-	}
-
-	private void startTurningAnimation(Direction fromDir, Direction toDir) {
-		if (fromDir != toDir) {
-			var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
+			var turn = TURN_ANGLES[index(animationTargetDir)][index(guy.moveDir())];
 			turnAnimation.setFromAngle(turn.from);
 			turnAnimation.setToAngle(turn.to);
 			turnAnimation.playFromStart();
-			animationTargetDir = toDir;
+			animationTargetDir = guy.moveDir();
 		}
 	}
 }

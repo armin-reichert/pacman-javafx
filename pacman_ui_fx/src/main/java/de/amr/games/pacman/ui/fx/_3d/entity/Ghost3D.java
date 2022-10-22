@@ -49,7 +49,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends MovingCreature3D<Ghost> {
+public class Ghost3D extends MovingCreature3D {
 
 	private enum Look {
 		NORMAL_COLOR, FRIGHTENED_COLOR, FLASHING, EYES_ONLY, NUMBER;
@@ -87,8 +87,9 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 	}
 
 	private Look lookForCurrentState(GameModel game) {
-		return switch (guy.getState()) {
-		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[guy.id] == -1 ? frightenedLook(game)
+		var ghost = (Ghost) guy;
+		return switch (ghost.getState()) {
+		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1 ? frightenedLook(game)
 				: Look.NORMAL_COLOR;
 		case FRIGHTENED -> frightenedLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES_ONLY;
@@ -125,7 +126,8 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 		}
 		case NUMBER -> {
 			var box = new Box(TS, TS, TS);
-			var texture = numberImages[game.killedIndex[guy.id]];
+			var ghost = (Ghost) guy;
+			var texture = numberImages[game.killedIndex[ghost.id]];
 			var material = new PhongMaterial();
 			material.setBumpMap(texture);
 			material.setDiffuseMap(texture);

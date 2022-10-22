@@ -46,7 +46,7 @@ import javafx.scene.shape.Shape3D;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends MovingCreature3D<Pac> {
+public class Pac3D extends MovingCreature3D {
 
 	private final Model3D model3D;
 	private final Group root3D;
