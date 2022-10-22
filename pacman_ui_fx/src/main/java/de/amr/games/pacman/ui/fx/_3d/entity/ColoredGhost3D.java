@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
 import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
@@ -44,7 +43,7 @@ import javafx.scene.shape.Shape3D;
  */
 public class ColoredGhost3D {
 
-	private final Ghost ghost;
+	private final int ghostID;
 	private final Model3D model3D;
 	private final Group root3D;
 
@@ -56,11 +55,11 @@ public class ColoredGhost3D {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(Ghost ghost, Model3D model3D) {
-		this.ghost = ghost;
+	public ColoredGhost3D(int ghostID, Model3D model3D) {
+		this.ghostID = ghostID;
 		this.model3D = model3D;
 
-		var dressColor = Rendering3D.getGhostDressColor(ghost.id);
+		var dressColor = Rendering3D.getGhostDressColor(ghostID);
 		var eyeBallColor = Rendering3D.getGhostEyeBallColor();
 		var pupilColor = Rendering3D.getGhostPupilColorBlue();
 
@@ -144,7 +143,7 @@ public class ColoredGhost3D {
 		dressColorPy.unbind();
 		eyePupilsColorPy.unbind();
 		ensureFlashingStopped();
-		dressColorPy.set(Rendering3D.getGhostDressColor(ghost.id));
+		dressColorPy.set(Rendering3D.getGhostDressColor(ghostID));
 		eyeBallsColorPy.set(Rendering3D.getGhostEyeBallColor());
 		eyePupilsColorPy.set(Rendering3D.getGhostPupilColorBlue());
 		dress().setVisible(true);
