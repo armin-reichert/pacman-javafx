@@ -140,27 +140,27 @@ public class Model3D {
 		var eyes = new Group(pupils, eyeBalls);
 		eyes.getTransforms().add(center);
 
-		var ghost = new Group(dress, eyes);
-		ghost.getTransforms().add(new Translate(0, 0, -1));
-		ghost.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		ghost.getTransforms().add(scale(ghost, GHOST_SIZE));
+		var ghost3D = new Group(dress, eyes);
+		ghost3D.getTransforms().add(new Translate(0, 0, -1));
+		ghost3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		ghost3D.getTransforms().add(scale(ghost3D, GHOST_SIZE));
 
-		return ghost;
+		return ghost3D;
 	}
 
-	public Shape3D ghostDress(Group ghost) {
-		return (Shape3D) ghost.getChildren().get(0);
+	public Shape3D ghostDress(Group ghost3D) {
+		return (Shape3D) ghost3D.getChildren().get(0);
 	}
 
-	public Group ghostEyes(Group ghost) {
-		return (Group) ghost.getChildren().get(1);
+	public Group ghostEyes(Group ghost3D) {
+		return (Group) ghost3D.getChildren().get(1);
 	}
 
-	public Shape3D ghostEyePupils(Group ghost) {
-		return (Shape3D) ghostEyes(ghost).getChildren().get(0);
+	public Shape3D ghostEyePupils(Group ghost3D) {
+		return (Shape3D) ghostEyes(ghost3D).getChildren().get(0);
 	}
 
-	public Shape3D ghostEyeBalls(Group ghost) {
-		return (Shape3D) ghostEyes(ghost).getChildren().get(1);
+	public Shape3D ghostEyeBalls(Group ghost3D) {
+		return (Shape3D) ghostEyes(ghost3D).getChildren().get(1);
 	}
 }
