@@ -55,21 +55,19 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		};
 	}
 
-	//@formatter:off
-	private static final Turn[][] TURN_ANGLES = {
-		{ new Turn(0, 0),  new Turn(180, 0),   new Turn(90, 0),   new Turn(-90, 0) }, // LEFT
-		{ new Turn(0,180), new Turn(180, 180), new Turn(90, 180), new Turn(270,180) }, // RIGHT
-		{ new Turn(0, 90), new Turn(180, 90),  new Turn(90, 90),  new Turn(270, 90) }, // UP
-		{ new Turn(0,-90), new Turn(180, 270), new Turn(90, -90), new Turn(-90, -90) }, // DOWN
+	private static final Turn[][] TURN_ANGLES = { //
+			{ null, new Turn(0, 180), new Turn(0, 90), new Turn(0, -90) }, // LEFT
+			{ new Turn(180, 0), null, new Turn(180, 90), new Turn(180, 270) }, // RIGHT
+			{ new Turn(90, 0), new Turn(90, 180), null, new Turn(90, 270) }, // UP
+			{ new Turn(-90, 0), new Turn(270, 180), new Turn(-90, 90), null }, // DOWN
 	};
-	//@formatter:on
 
 	private static int index(Direction dir) {
 		return dir == null ? 0 : dir.ordinal();
 	}
 
 	protected final C guy;
-	protected Direction targetDir;
+	protected Direction animationTargetDir;
 	private RotateTransition turnAnimation;
 
 	protected MovingCreature3D(C guy) {
@@ -81,10 +79,10 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 	}
 
 	protected void resetMovement() {
-		targetDir = guy.moveDir();
+		animationTargetDir = guy.moveDir();
 		turnAnimation.stop();
 		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(getRotation(targetDir));
+		setRotate(getRotation(animationTargetDir));
 	}
 
 	protected void updateMovement() {
@@ -92,20 +90,18 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		setTranslateX(guy.getPosition().x() + HTS);
 		setTranslateY(guy.getPosition().y() + HTS);
 		setTranslateZ(-HTS);
-		if (guy.moveDir() != targetDir) {
-			startTurningAnimation();
-			targetDir = guy.moveDir();
+		if (animationTargetDir != guy.moveDir()) {
+			startTurningAnimation(animationTargetDir, guy.moveDir());
 		}
 	}
 
-	private void startTurningAnimation() {
-		int from = index(guy.moveDir());
-		int to = index(targetDir);
-		if (from != to) {
-			var turn = TURN_ANGLES[from][to];
+	private void startTurningAnimation(Direction fromDir, Direction toDir) {
+		if (fromDir != toDir) {
+			var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
 			turnAnimation.setFromAngle(turn.from);
 			turnAnimation.setToAngle(turn.to);
 			turnAnimation.playFromStart();
+			animationTargetDir = toDir;
 		}
 	}
 }
