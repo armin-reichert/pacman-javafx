@@ -73,12 +73,12 @@ public class ColoredGhost3D {
 		eyeBallsColorPy = new SimpleObjectProperty<>(Rendering3D.getGhostEyeBallColor());
 		var eyeBallsMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(eyeBallsMaterial, eyeBallsColorPy);
-		eyeBalls().setMaterial(eyeBallsMaterial);
+		model3D.ghostEyeBalls(root3D).setMaterial(eyeBallsMaterial);
 
 		eyePupilsColorPy = new SimpleObjectProperty<>(Rendering3D.getGhostPupilColorBlue());
 		var eyePupilsMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(eyePupilsMaterial, eyePupilsColorPy);
-		eyePupils().setMaterial(eyePupilsMaterial);
+		model3D.ghostEyePupils(root3D).setMaterial(eyePupilsMaterial);
 	}
 
 	private void createFlashing(int numFlashes) {
@@ -92,14 +92,6 @@ public class ColoredGhost3D {
 
 	public Shape3D dress() {
 		return model3D.ghostDress(root3D);
-	}
-
-	private Shape3D eyeBalls() {
-		return model3D.ghostEyeBalls(root3D);
-	}
-
-	private Shape3D eyePupils() {
-		return model3D.ghostEyePupils(root3D);
 	}
 
 	public Node getRoot() {
