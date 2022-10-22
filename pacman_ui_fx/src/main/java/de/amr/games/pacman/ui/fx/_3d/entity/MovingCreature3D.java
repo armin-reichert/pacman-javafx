@@ -77,6 +77,7 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		turnAnimation = new RotateTransition(Duration.seconds(0.25), this);
 		turnAnimation.setAxis(Rotate.Z_AXIS);
 		turnAnimation.setInterpolator(Interpolator.EASE_BOTH);
+		resetMovement();
 	}
 
 	protected void resetMovement() {
