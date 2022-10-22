@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
-import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -46,12 +45,22 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 	public record Turn(int from, int to) {
 	}
 
+	private static double getRotation(Direction dir) {
+		return switch (dir) {
+		case LEFT -> 0;
+		case RIGHT -> 180;
+		case UP -> 90;
+		case DOWN -> 270;
+		default -> 0;
+		};
+	}
+
 	//@formatter:off
 	private static final Turn[][] TURN_ANGLES = {
-		{ new Turn(  0, 0), new Turn(  0, 180), new Turn(  0, 90), new Turn(  0, -90) }, // LEFT
-		{ new Turn(180, 0), new Turn(180, 180), new Turn(180, 90), new Turn(180, 270) }, // RIGHT
-		{ new Turn( 90, 0), new Turn( 90, 180), new Turn( 90, 90), new Turn( 90, 270) }, // UP
-		{ new Turn(-90, 0), new Turn(270, 180), new Turn(-90, 90), new Turn(-90, -90) }, // DOWN
+		{ new Turn(0, 0),  new Turn(180, 0),   new Turn(90, 0),   new Turn(-90, 0) }, // LEFT
+		{ new Turn(0,180), new Turn(180, 180), new Turn(90, 180), new Turn(270,180) }, // RIGHT
+		{ new Turn(0, 90), new Turn(180, 90),  new Turn(90, 90),  new Turn(270, 90) }, // UP
+		{ new Turn(0,-90), new Turn(180, 270), new Turn(90, -90), new Turn(-90, -90) }, // DOWN
 	};
 	//@formatter:on
 
@@ -61,18 +70,19 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 
 	protected final C guy;
 	protected Direction targetDir;
-	private RotateTransition animation;
+	private RotateTransition turnAnimation;
 
 	protected MovingCreature3D(C guy) {
 		this.guy = guy;
-		animation = new RotateTransition(Duration.seconds(0.25), this);
-		animation.setAxis(Rotate.Z_AXIS);
-		animation.setInterpolator(Interpolator.EASE_BOTH);
+		turnAnimation = new RotateTransition(Duration.seconds(0.25), this);
+		turnAnimation.setAxis(Rotate.Z_AXIS);
+		turnAnimation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	protected void resetMovement() {
 		targetDir = guy.moveDir();
-		updateMovement();
+		turnAnimation.stop();
+		setRotate(getRotation(targetDir));
 	}
 
 	protected void updateMovement() {
@@ -80,14 +90,20 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		setTranslateX(guy.getPosition().x() + HTS);
 		setTranslateY(guy.getPosition().y() + HTS);
 		setTranslateZ(-HTS);
-		if (targetDir != guy.moveDir() && animation.getStatus() != Status.RUNNING) {
-			int fromIndex = index(targetDir);
-			int toIndex = index(guy.moveDir());
-			var turn = TURN_ANGLES[fromIndex][toIndex];
-			animation.setFromAngle(turn.from);
-			animation.setToAngle(turn.to);
-			animation.playFromStart();
+		if (guy.moveDir() != targetDir) {
+			startTurningAnimation();
 			targetDir = guy.moveDir();
+		}
+	}
+
+	private void startTurningAnimation() {
+		int from = index(guy.moveDir());
+		int to = index(targetDir);
+		if (from != to) {
+			var turn = TURN_ANGLES[from][to];
+			turnAnimation.setFromAngle(turn.from);
+			turnAnimation.setToAngle(turn.to);
+			turnAnimation.playFromStart();
 		}
 	}
 }

@@ -107,6 +107,7 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 		switch (newLook) {
 		case NORMAL_COLOR -> {
 			coloredGhost3D.wearColoredDress();
+			resetMovement();
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED_COLOR -> {
@@ -119,6 +120,7 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 		}
 		case EYES_ONLY -> {
 			coloredGhost3D.dress().setVisible(false);
+			resetMovement();
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
