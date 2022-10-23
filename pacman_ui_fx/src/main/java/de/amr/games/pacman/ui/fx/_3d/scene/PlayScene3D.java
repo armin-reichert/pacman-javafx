@@ -94,9 +94,11 @@ public class PlayScene3D implements GameScene {
 		light.colorProperty().bind(Env.lightColorPy);
 
 		var root = new Group(content, coordSystem, light);
-		fxSubScene = new SubScene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT, true, SceneAntialiasing.BALANCED);
 
-		// move origin to center of scene content
+		// initial scene size is irrelevant as it is resized automatically
+		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
+
+		// center scene content over origin
 		content.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
 
 		createCameras();
