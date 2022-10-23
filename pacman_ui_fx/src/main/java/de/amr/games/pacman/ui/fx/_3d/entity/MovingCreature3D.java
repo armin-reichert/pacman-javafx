@@ -43,7 +43,7 @@ public abstract class MovingCreature3D extends Group {
 	public record Turn(int from, int to) {
 	}
 
-	private static double getRotation(Direction dir) {
+	private static double getAngle(Direction dir) {
 		return switch (dir) {
 		case LEFT -> 0;
 		case RIGHT -> 180;
@@ -53,7 +53,7 @@ public abstract class MovingCreature3D extends Group {
 		};
 	}
 
-	private static final Turn[][] TURN_ANGLES = { //
+	private static final Turn[][] TURNS = { //
 			{ null, new Turn(0, 180), new Turn(0, 90), new Turn(0, -90) }, // LEFT -> *
 			{ new Turn(180, 0), null, new Turn(180, 90), new Turn(180, 270) }, // RIGHT -> *
 			{ new Turn(90, 0), new Turn(90, 180), null, new Turn(90, 270) }, // UP -> *
@@ -70,6 +70,7 @@ public abstract class MovingCreature3D extends Group {
 
 	protected MovingCreature3D(Creature guy) {
 		this.guy = guy;
+		setTranslateZ(-HTS);
 		turnAnimation = new RotateTransition(Duration.seconds(0.25), this);
 		turnAnimation.setAxis(Rotate.Z_AXIS);
 		turnAnimation.setInterpolator(Interpolator.EASE_BOTH);
@@ -80,16 +81,15 @@ public abstract class MovingCreature3D extends Group {
 		animationTargetDir = guy.moveDir();
 		turnAnimation.stop();
 		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(getRotation(animationTargetDir));
+		setRotate(getAngle(animationTargetDir));
 	}
 
 	protected void updateMovement() {
 		setVisible(guy.isVisible());
 		setTranslateX(guy.getPosition().x() + HTS);
 		setTranslateY(guy.getPosition().y() + HTS);
-		setTranslateZ(-HTS);
 		if (animationTargetDir != guy.moveDir()) {
-			var turn = TURN_ANGLES[index(animationTargetDir)][index(guy.moveDir())];
+			var turn = TURNS[index(animationTargetDir)][index(guy.moveDir())];
 			turnAnimation.stop();
 			turnAnimation.setFromAngle(turn.from);
 			turnAnimation.setToAngle(turn.to);
