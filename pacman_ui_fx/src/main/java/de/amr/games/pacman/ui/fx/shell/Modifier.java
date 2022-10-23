@@ -24,9 +24,18 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.shell;
 
-public interface Modifier {
-	public static final byte NO_MODIFIER = 0x0;
-	public static final byte ALT = 0x1;
-	public static final byte CTRL = 0x2;
-	public static final byte SHIFT = 0x4;
+/**
+ * Keyboard modifiers.
+ * 
+ * @author Armin Reichert
+ */
+public enum Modifier {
+
+	NO_MODIFIER(0), ALT(1), CTRL(2), SHIFT(4);
+
+	public final byte mask;
+
+	private Modifier(int mask) {
+		this.mask = (byte) mask;
+	}
 }

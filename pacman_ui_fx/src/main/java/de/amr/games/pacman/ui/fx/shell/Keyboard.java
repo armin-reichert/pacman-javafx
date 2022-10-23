@@ -42,8 +42,8 @@ public class Keyboard {
 		return pressed(Modifier.NO_MODIFIER, code);
 	}
 
-	public static boolean pressed(int modifierMask, KeyCode code) {
-		return KB.isPressed(modifierMask, code);
+	public static boolean pressed(Modifier modifier, KeyCode code) {
+		return KB.isPressed(modifier.mask, code);
 	}
 
 	public static void clear() {
@@ -75,17 +75,17 @@ public class Keyboard {
 	}
 
 	private static String modifierText(byte mask) {
-		if (mask == Modifier.NO_MODIFIER) {
+		if (mask == Modifier.NO_MODIFIER.mask) {
 			return "(NO MODIFIER) ";
 		}
 		String text = "";
-		if ((mask & Modifier.ALT) != 0) {
+		if ((mask & Modifier.ALT.mask) != 0) {
 			text += "ALT";
 		}
-		if ((mask & Modifier.CTRL) != 0) {
+		if ((mask & Modifier.CTRL.mask) != 0) {
 			text += " CONTROL";
 		}
-		if ((mask & Modifier.SHIFT) != 0) {
+		if ((mask & Modifier.SHIFT.mask) != 0) {
 			text += " SHIFT";
 		}
 		return (text + "+").trim();
@@ -101,15 +101,15 @@ public class Keyboard {
 			return;
 		}
 		currentEvent = e;
-		currentMask = Modifier.NO_MODIFIER;
+		currentMask = Modifier.NO_MODIFIER.mask;
 		if (e.isAltDown()) {
-			currentMask |= Modifier.ALT;
+			currentMask |= Modifier.ALT.mask;
 		}
 		if (e.isControlDown()) {
-			currentMask |= Modifier.CTRL;
+			currentMask |= Modifier.CTRL.mask;
 		}
 		if (e.isShiftDown()) {
-			currentMask |= Modifier.SHIFT;
+			currentMask |= Modifier.SHIFT.mask;
 		}
 		handlers.forEach(Runnable::run);
 		e.consume();
