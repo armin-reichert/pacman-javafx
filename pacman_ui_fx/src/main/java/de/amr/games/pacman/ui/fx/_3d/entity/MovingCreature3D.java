@@ -90,6 +90,7 @@ public abstract class MovingCreature3D extends Group {
 		setTranslateZ(-HTS);
 		if (animationTargetDir != guy.moveDir()) {
 			var turn = TURN_ANGLES[index(animationTargetDir)][index(guy.moveDir())];
+			turnAnimation.stop();
 			turnAnimation.setFromAngle(turn.from);
 			turnAnimation.setToAngle(turn.to);
 			turnAnimation.playFromStart();
