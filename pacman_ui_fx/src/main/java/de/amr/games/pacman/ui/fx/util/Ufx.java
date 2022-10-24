@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.util;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -113,6 +114,7 @@ public class Ufx {
 	}
 
 	public static Font font(String relPath, double size) {
+		Objects.requireNonNull(relPath, "Font path cannot be NULL");
 		var url = Resources.urlFromRelPath(relPath);
 		if (url == null) {
 			LOGGER.error(() -> "Font at '%s' not found".formatted(Resources.absPath(relPath)));
@@ -127,6 +129,7 @@ public class Ufx {
 	}
 
 	public static Image image(String relPath) {
+		Objects.requireNonNull(relPath, "Image path cannot be NULL");
 		var url = Resources.urlFromRelPath(relPath);
 		if (url == null) {
 			LOGGER.error(() -> "No image found at path '%s'".formatted(Resources.absPath(relPath)));
