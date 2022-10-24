@@ -47,15 +47,6 @@ import javafx.scene.paint.Color;
  */
 public class ArcadeRendererPacManGame extends ArcadeRendererBase {
 
-	//@formatter:off
-	private static final Color[] GHOST_COLORS = {
-		Color.RED,
-		Color.rgb(252, 181, 255),
-		Color.CYAN,
-		Color.rgb(253, 192, 90)
-	};
-	//@formatter:on
-
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
@@ -71,7 +62,13 @@ public class ArcadeRendererPacManGame extends ArcadeRendererBase {
 
 	@Override
 	public Color getGhostColor(int ghostID) {
-		return GHOST_COLORS[ghostID];
+		return switch (ghostID) {
+		case Ghost.RED_GHOST -> Color.RED;
+		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
+		case Ghost.CYAN_GHOST -> Color.CYAN;
+		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
+		default -> throw new IllegalArgumentException("Illegal ghost ID: %d".formatted(ghostID));
+		};
 	}
 
 	@Override
