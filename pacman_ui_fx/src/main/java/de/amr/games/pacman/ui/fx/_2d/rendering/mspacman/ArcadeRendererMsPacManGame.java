@@ -49,24 +49,15 @@ import javafx.scene.text.Font;
  */
 public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 
-	private static ArcadeRendererMsPacManGame cmonManYouKnowTheThing;
-
-	public static ArcadeRendererMsPacManGame get() {
-		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new ArcadeRendererMsPacManGame();
-		}
-		return cmonManYouKnowTheThing;
-	}
-
 	//@formatter:off
-	static final Color[] GHOST_COLORS = {
+	private static final Color[] GHOST_COLORS = {
 		Color.RED,
 		Color.rgb(252, 181, 255),
 		Color.CYAN,
 		Color.rgb(253, 192, 90)
 	};
 	
-	static final Color[] MAZE_TOP_COLORS = { 
+	private static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
 		Color.rgb(71, 183, 255), 
 		Color.rgb(222, 151, 81), 
@@ -75,7 +66,7 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 		Color.rgb(255, 183, 174), 
 	};
 
-	static final Color[] MAZE_SIDE_COLORS = { 
+	private static final Color[] MAZE_SIDE_COLORS = { 
 		Color.rgb(255, 0, 0), 
 		Color.rgb(222, 222, 255), 
 		Color.rgb(222, 222, 255), 
@@ -84,7 +75,7 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 		Color.rgb(255, 0, 0), 
 	};
 
-	static final Color[] FOOD_COLORS = { 
+	private static final Color[] FOOD_COLORS = { 
 		Color.rgb(222, 222, 255), 
 		Color.rgb(255, 255, 0), 
 		Color.rgb(255, 0, 0),
@@ -94,25 +85,31 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 	};
 	//@formatter:on
 
-	private final Image midwayLogo;
-	private final Image[] mazesFull;
-	private final Image[] mazesEmpty;
-	private final Image[] mazesEmptyBW;
+	private static final Spritesheet SPRITESHEET;
 
-	private ArcadeRendererMsPacManGame() {
-		super(new Spritesheet("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-				Direction.DOWN));
-		midwayLogo = Ufx.image("graphics/mspacman/midway.png");
+	private static final Image MIDWAY_LOGO;
+	private static final Image[] MAZES_FULL;
+	private static final Image[] MAZES_EMPTY;
+	private static final Image[] MAZES_EMPTY_BW;
+
+	static {
+		SPRITESHEET = new Spritesheet("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
+				Direction.DOWN);
+		MIDWAY_LOGO = Ufx.image("graphics/mspacman/midway.png");
 		int numMazes = 6;
-		mazesFull = new Image[numMazes];
-		mazesEmpty = new Image[numMazes];
-		mazesEmptyBW = new Image[numMazes];
+		MAZES_FULL = new Image[numMazes];
+		MAZES_EMPTY = new Image[numMazes];
+		MAZES_EMPTY_BW = new Image[numMazes];
 		for (int i = 0; i < numMazes; ++i) {
-			mazesFull[i] = sheet.subImage(0, 248 * i, 226, 248);
-			mazesEmpty[i] = sheet.subImage(228, 248 * i, 226, 248);
-			mazesEmptyBW[i] = Ufx.colorsExchanged(mazesEmpty[i], //
+			MAZES_FULL[i] = SPRITESHEET.subImage(0, 248 * i, 226, 248);
+			MAZES_EMPTY[i] = SPRITESHEET.subImage(228, 248 * i, 226, 248);
+			MAZES_EMPTY_BW[i] = Ufx.colorsExchanged(MAZES_EMPTY[i], //
 					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}
+	}
+
+	public ArcadeRendererMsPacManGame() {
+		super(SPRITESHEET);
 	}
 
 	/**
@@ -151,7 +148,7 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 
 	@Override
 	public Image getMazeFullImage(int mazeNumber) {
-		return mazesFull[mazeNumber - 1];
+		return MAZES_FULL[mazeNumber - 1];
 	}
 
 	@Override
@@ -175,7 +172,7 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
 		int y = t(tileY - 1);
-		g.drawImage(midwayLogo, x, y + 2, t(4) - 2, t(4));
+		g.drawImage(MIDWAY_LOGO, x, y + 2, t(4) - 2, t(4));
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol

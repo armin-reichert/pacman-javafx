@@ -131,8 +131,8 @@ public class GameUI {
 		for (var gameVariant : GameVariant.values()) {
 			var game = gameController.game(gameVariant);
 			var r2D = switch (gameVariant) {
-			case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
-			case PACMAN -> ArcadeRendererPacManGame.get();
+			case MS_PACMAN -> new ArcadeRendererMsPacManGame();
+			case PACMAN -> new ArcadeRendererPacManGame();
 			};
 			game.pac.setAnimationSet(r2D.createPacAnimationSet(game.pac));
 			game.ghosts().forEach(ghost -> ghost.setAnimationSet(r2D.createGhostAnimationSet(ghost)));

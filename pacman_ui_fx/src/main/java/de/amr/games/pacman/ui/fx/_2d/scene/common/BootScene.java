@@ -63,8 +63,8 @@ public class BootScene extends GameScene2D {
 	public void init() {
 		clearBuffer();
 		spritesheetImage = ctx.gameVariant() == GameVariant.MS_PACMAN //
-				? ArcadeRendererMsPacManGame.get().getSheet().getSourceImage()
-				: ArcadeRendererPacManGame.get().getSheet().getSourceImage();
+				? new ArcadeRendererMsPacManGame().getSheet().getSourceImage()
+				: new ArcadeRendererPacManGame().getSheet().getSourceImage();
 	}
 
 	@Override

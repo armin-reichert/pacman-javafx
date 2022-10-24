@@ -55,16 +55,17 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
+		var renderer = new ArcadeRendererMsPacManGame();
 		sceneController.restartInState(Intermission1Controller.State.FLAP);
 		var clapperboardAnimationSet = new EntityAnimationSet<Integer>(1);
-		clapperboardAnimationSet.put(Clapperboard.ACTION, ArcadeRendererMsPacManGame.get().createClapperboardAnimation());
+		clapperboardAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
 		clapperboardAnimationSet.select(Clapperboard.ACTION);
 		icc.clapperboard.setAnimationSet(clapperboardAnimationSet);
 		icc.msPac.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPac));
 		icc.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
 		icc.pacMan.animationSet().ifPresent(animations -> {
-			var munching = ArcadeRendererMsPacManGame.get().createPacManMunchingAnimationMap(icc.pacMan);
+			var munching = renderer.createPacManMunchingAnimationMap(icc.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});

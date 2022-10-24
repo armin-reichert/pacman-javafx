@@ -139,8 +139,8 @@ public class SceneManager {
 	private static void updateSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant;
 		var r2D = switch (gameVariant) {
-		case MS_PACMAN -> ArcadeRendererMsPacManGame.get();
-		case PACMAN -> ArcadeRendererPacManGame.get();
+		case MS_PACMAN -> new ArcadeRendererMsPacManGame();
+		case PACMAN -> new ArcadeRendererPacManGame();
 		};
 		var model3D = Model3D.get(); // no game variant-specific 3D models yet
 		scene.setSceneContext(new SceneContext(gameController, r2D, model3D));

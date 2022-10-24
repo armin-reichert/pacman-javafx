@@ -47,17 +47,8 @@ import javafx.scene.paint.Color;
  */
 public class ArcadeRendererPacManGame extends ArcadeRendererBase {
 
-	private static ArcadeRendererPacManGame cmonManYouKnowTheThing;
-
-	public static ArcadeRendererPacManGame get() {
-		if (cmonManYouKnowTheThing == null) {
-			cmonManYouKnowTheThing = new ArcadeRendererPacManGame();
-		}
-		return cmonManYouKnowTheThing;
-	}
-
 	//@formatter:off
-	static final Color[] GHOST_COLORS = {
+	private static final Color[] GHOST_COLORS = {
 		Color.RED,
 		Color.rgb(252, 181, 255),
 		Color.CYAN,
@@ -65,17 +56,17 @@ public class ArcadeRendererPacManGame extends ArcadeRendererBase {
 	};
 	//@formatter:on
 
-	static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
-	static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
+	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
+	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	private final Image mazeFull;
-	private final Image mazeEmpty;
+	private static final Spritesheet SPRITESHEET = new Spritesheet("graphics/pacman/sprites.png", 16, Direction.RIGHT,
+			Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	private ArcadeRendererPacManGame() {
-		super(new Spritesheet("graphics/pacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-				Direction.DOWN));
-		mazeFull = Ufx.image("graphics/pacman/maze_full.png");
-		mazeEmpty = Ufx.image("graphics/pacman/maze_empty.png");
+	private static final Image MAZE_FULL = Ufx.image("graphics/pacman/maze_full.png");
+	private static final Image MAZE_EMPTY = Ufx.image("graphics/pacman/maze_empty.png");
+
+	public ArcadeRendererPacManGame() {
+		super(SPRITESHEET);
 	}
 
 	@Override
@@ -107,15 +98,15 @@ public class ArcadeRendererPacManGame extends ArcadeRendererBase {
 
 	@Override
 	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
-		var mazeBright = Ufx.colorsExchanged(mazeEmpty, Map.of(MAZE_WALL_COLOR, Color.WHITE));
-		var animation = new SingleEntityAnimation<>(mazeBright, mazeEmpty);
+		var mazeBright = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
+		var animation = new SingleEntityAnimation<>(mazeBright, MAZE_EMPTY);
 		animation.setFrameDuration(10);
 		return animation;
 	}
 
 	@Override
 	public Image getMazeFullImage(int mazeNumber) {
-		return mazeFull;
+		return MAZE_FULL;
 	}
 
 	@Override

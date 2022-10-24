@@ -43,6 +43,7 @@ import javafx.scene.paint.Color;
  */
 public class PacManCutscene3 extends GameScene2D {
 
+	private final ArcadeRendererPacManGame renderer = new ArcadeRendererPacManGame();
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
@@ -57,8 +58,8 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(blinky));
 		blinky.animationSet().ifPresent(animations -> {
-			animations.put(AnimKeys.BLINKY_PATCHED, ArcadeRendererPacManGame.get().createBlinkyPatchedAnimation());
-			animations.put(AnimKeys.BLINKY_NAKED, ArcadeRendererPacManGame.get().createBlinkyNakedAnimation());
+			animations.put(AnimKeys.BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
+			animations.put(AnimKeys.BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
 		});
 	}
 

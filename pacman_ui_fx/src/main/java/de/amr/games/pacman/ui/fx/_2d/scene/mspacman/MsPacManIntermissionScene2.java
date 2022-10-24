@@ -44,6 +44,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
 	private Intermission2Controller.Context icc;
+	private final ArcadeRendererMsPacManGame renderer = new ArcadeRendererMsPacManGame();
 
 	@Override
 	public void setSceneContext(SceneContext sceneContext) {
@@ -56,14 +57,14 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	public void init() {
 		sceneController.restartInState(Intermission2Controller.State.FLAP);
 		var clapperboardAnimationSet = new EntityAnimationSet<Integer>(1);
-		clapperboardAnimationSet.put(Clapperboard.ACTION, ArcadeRendererMsPacManGame.get().createClapperboardAnimation());
+		clapperboardAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
 		clapperboardAnimationSet.select(Clapperboard.ACTION);
 		icc.flap.setAnimationSet(clapperboardAnimationSet);
-		icc.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPacMan));
+		icc.msPacMan.setAnimationSet(renderer.createPacAnimationSet(icc.msPacMan));
 		icc.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
+		icc.pacMan.setAnimationSet(renderer.createPacAnimationSet(icc.pacMan));
 		icc.pacMan.animationSet().ifPresent(animations -> {
-			var munching = ArcadeRendererMsPacManGame.get().createPacManMunchingAnimationMap(icc.pacMan);
+			var munching = renderer.createPacManMunchingAnimationMap(icc.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
@@ -76,9 +77,9 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		ArcadeRendererMsPacManGame.get().drawFlap(g, icc.flap);
-		ctx.r2D().drawPac(g, icc.msPacMan);
-		ctx.r2D().drawPac(g, icc.pacMan);
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
+		renderer.drawFlap(g, icc.flap);
+		renderer.drawPac(g, icc.msPacMan);
+		renderer.drawPac(g, icc.pacMan);
+		renderer.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }
