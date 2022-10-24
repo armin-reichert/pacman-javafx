@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,7 +44,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
 	private Intermission2Controller.Context icc;
-	private final ArcadeRendererMsPacManGame renderer = new ArcadeRendererMsPacManGame();
+	private final RendererMsPacManGame renderer = new RendererMsPacManGame();
 
 	@Override
 	public void setSceneContext(SceneContext sceneContext) {

@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -68,7 +68,7 @@ public class PacManCutscene2 extends GameScene2D {
 		pacAnimations.animation(AnimKeys.PAC_MUNCHING).get().restart();
 		pac.setAnimationSet(pacAnimations);
 
-		stretchedDressAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBlinkyStretchedAnimation();
+		stretchedDressAnimation = ((RendererPacManGame) ctx.r2D()).createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.placeAtTile(v(28, 20), 0, 0);
@@ -77,7 +77,7 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.hide();
 
 		var blinkyAnimations = ctx.r2D().createGhostAnimationSet(blinky);
-		damagedAnimation = ((ArcadeRendererPacManGame) ctx.r2D()).createBlinkyDamagedAnimation();
+		damagedAnimation = ((RendererPacManGame) ctx.r2D()).createBlinkyDamagedAnimation();
 		blinkyAnimations.put(AnimKeys.BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
 		blinkyAnimations.animation(AnimKeys.GHOST_COLOR).get().restart();

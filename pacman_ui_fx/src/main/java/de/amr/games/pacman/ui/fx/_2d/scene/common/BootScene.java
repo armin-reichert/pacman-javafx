@@ -34,8 +34,8 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -63,8 +63,8 @@ public class BootScene extends GameScene2D {
 	public void init() {
 		clearBuffer();
 		spritesheetImage = ctx.gameVariant() == GameVariant.MS_PACMAN //
-				? new ArcadeRendererMsPacManGame().getSheet().getSourceImage()
-				: new ArcadeRendererPacManGame().getSheet().getSourceImage();
+				? new RendererMsPacManGame().getSheet().getSourceImage()
+				: new RendererPacManGame().getSheet().getSourceImage();
 	}
 
 	@Override

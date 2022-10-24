@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package de.amr.games.pacman.ui.fx._2d.rendering.common;
+package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
@@ -54,12 +54,12 @@ import javafx.scene.text.FontWeight;
 /**
  * @author Armin Reichert
  */
-public abstract class ArcadeRendererBase implements Rendering2D {
+public abstract class RendererBase implements Rendering2D {
 
 	protected final Spritesheet sheet;
 	protected final Font arcadeFont;
 
-	protected ArcadeRendererBase(Spritesheet sheet) {
+	protected RendererBase(Spritesheet sheet) {
 		this.sheet = sheet;
 		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
 	}

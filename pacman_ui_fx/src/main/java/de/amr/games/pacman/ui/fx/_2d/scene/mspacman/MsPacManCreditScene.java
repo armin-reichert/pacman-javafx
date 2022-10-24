@@ -27,7 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.Keyboard;
@@ -47,7 +47,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void init() {
 		hud.setCreditVisible(true);
-		msPacManSprite = new ArcadeRendererMsPacManGame().rhs(1, 0);
+		msPacManSprite = new RendererMsPacManGame().rhs(1, 0);
 		arcade6 = Font.font(ctx.r2D().getArcadeFont().getName(), 6);
 	}
 

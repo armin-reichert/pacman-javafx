@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -43,7 +43,7 @@ import javafx.scene.paint.Color;
  */
 public class PacManCutscene3 extends GameScene2D {
 
-	private final ArcadeRendererPacManGame renderer = new ArcadeRendererPacManGame();
+	private final RendererPacManGame renderer = new RendererPacManGame();
 	private int initialDelay;
 	private int frame;
 	private Pac pac;

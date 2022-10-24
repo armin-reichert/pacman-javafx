@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.mspacman.Intermission1Controller;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import javafx.scene.canvas.GraphicsContext;
@@ -55,7 +55,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = new ArcadeRendererMsPacManGame();
+		var renderer = new RendererMsPacManGame();
 		sceneController.restartInState(Intermission1Controller.State.FLAP);
 		var clapperboardAnimationSet = new EntityAnimationSet<Integer>(1);
 		clapperboardAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
@@ -82,7 +82,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var ss = (ArcadeRendererMsPacManGame) ctx.r2D();
+		var ss = (RendererMsPacManGame) ctx.r2D();
 		ss.drawFlap(g, icc.clapperboard);
 		ctx.r2D().drawPac(g, icc.msPac);
 		ctx.r2D().drawPac(g, icc.pacMan);

@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
+package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -35,8 +35,6 @@ import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -47,7 +45,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
+public class RendererMsPacManGame extends RendererBase {
 
 	//@formatter:off
 	private static final Color[] GHOST_COLORS = {
@@ -108,7 +106,7 @@ public class ArcadeRendererMsPacManGame extends ArcadeRendererBase {
 		}
 	}
 
-	public ArcadeRendererMsPacManGame() {
+	public RendererMsPacManGame() {
 		super(SPRITESHEET);
 	}
 

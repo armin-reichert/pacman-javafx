@@ -31,8 +31,8 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
@@ -139,8 +139,8 @@ public class SceneManager {
 	private static void updateSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant;
 		var r2D = switch (gameVariant) {
-		case MS_PACMAN -> new ArcadeRendererMsPacManGame();
-		case PACMAN -> new ArcadeRendererPacManGame();
+		case MS_PACMAN -> new RendererMsPacManGame();
+		case PACMAN -> new RendererPacManGame();
 		};
 		var model3D = Model3D.get(); // no game variant-specific 3D models yet
 		scene.setSceneContext(new SceneContext(gameController, r2D, model3D));

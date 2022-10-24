@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
+package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.model.common.actors.Ghost.PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.t;
@@ -34,8 +34,6 @@ import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeRendererBase;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,7 +43,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class ArcadeRendererPacManGame extends ArcadeRendererBase {
+public class RendererPacManGame extends RendererBase {
 
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
@@ -56,7 +54,7 @@ public class ArcadeRendererPacManGame extends ArcadeRendererBase {
 	private static final Image MAZE_FULL = Ufx.image("graphics/pacman/maze_full.png");
 	private static final Image MAZE_EMPTY = Ufx.image("graphics/pacman/maze_empty.png");
 
-	public ArcadeRendererPacManGame() {
+	public RendererPacManGame() {
 		super(SPRITESHEET);
 	}
 

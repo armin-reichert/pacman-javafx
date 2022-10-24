@@ -36,8 +36,8 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.ArcadeRendererMsPacManGame;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.ArcadeRendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -131,8 +131,8 @@ public class GameUI {
 		for (var gameVariant : GameVariant.values()) {
 			var game = gameController.game(gameVariant);
 			var r2D = switch (gameVariant) {
-			case MS_PACMAN -> new ArcadeRendererMsPacManGame();
-			case PACMAN -> new ArcadeRendererPacManGame();
+			case MS_PACMAN -> new RendererMsPacManGame();
+			case PACMAN -> new RendererPacManGame();
 			};
 			game.pac.setAnimationSet(r2D.createPacAnimationSet(game.pac));
 			game.ghosts().forEach(ghost -> ghost.setAnimationSet(r2D.createGhostAnimationSet(ghost)));
