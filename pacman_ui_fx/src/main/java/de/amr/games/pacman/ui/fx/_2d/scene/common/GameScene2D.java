@@ -116,12 +116,10 @@ public abstract class GameScene2D implements GameScene {
 		renderScene();
 		if (Env.showDebugInfoPy.get()) {
 			var g = sceneCanvas.getGraphicsContext2D();
-			ArcadeRendererBase.drawTileStructure(g);
+			ArcadeRendererBase.drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
 				g.setFill(Color.RED);
-				PacManGame.RED_ZONE.forEach(tile -> {
-					g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
-				});
+				PacManGame.RED_ZONE.forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS));
 			}
 		}
 		drawHUD(sceneCanvas.getGraphicsContext2D());

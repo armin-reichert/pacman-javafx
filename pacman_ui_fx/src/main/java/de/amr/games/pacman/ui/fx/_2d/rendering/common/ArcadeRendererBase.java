@@ -227,16 +227,16 @@ public abstract class ArcadeRendererBase implements Rendering2D {
 		}
 	}
 
-	public static void drawTileStructure(GraphicsContext g) {
+	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
 		g.setStroke(Color.WHITE);
 		g.setLineWidth(0.2);
-		for (int row = 0; row <= ArcadeWorld.TILES_Y; ++row) {
-			g.strokeLine(0, t(row), ArcadeWorld.WORLD_SIZE.x(), t(row));
+		for (int row = 0; row <= tilesY; ++row) {
+			g.strokeLine(0, t(row), tilesX * TS, t(row));
 		}
-		for (int col = 0; col <= ArcadeWorld.TILES_X; ++col) {
-			g.strokeLine(t(col), 0, t(col), ArcadeWorld.WORLD_SIZE.y());
+		for (int col = 0; col <= tilesY; ++col) {
+			g.strokeLine(t(col), 0, t(col), tilesY * TS);
 		}
 		g.restore();
 	}
