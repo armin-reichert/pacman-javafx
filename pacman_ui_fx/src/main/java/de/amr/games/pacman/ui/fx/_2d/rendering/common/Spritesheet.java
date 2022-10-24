@@ -23,10 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import java.net.URL;
-
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -39,23 +36,16 @@ import javafx.scene.image.WritableImage;
  */
 public class Spritesheet {
 
-	protected final URL url;
 	protected final Image source;
 	protected final int rasterSize;
 	protected final int[] dirOrder = new int[4];
 
 	public Spritesheet(String imagePath, int rasterSize, Direction... dirs) {
-		this.url = Resources.urlFromRelPath(imagePath);
 		this.source = Ufx.image(imagePath);
 		this.rasterSize = rasterSize;
 		for (int i = 0; i < dirs.length; ++i) {
 			dirOrder[dirs[i].ordinal()] = i;
 		}
-	}
-
-	@Override
-	public String toString() {
-		return "[Spritesheet url='%s']".formatted(url);
 	}
 
 	public int dirIndex(Direction dir) {
