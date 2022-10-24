@@ -67,9 +67,9 @@ public class Env {
 	public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.0);
 	public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty pipEnabledPy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * World.TS);
-	public static final BooleanProperty pipEnabledPy = new SimpleBooleanProperty(false);
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	public static final BooleanProperty squirtingPy = new SimpleBooleanProperty(false);
