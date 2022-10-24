@@ -67,10 +67,6 @@ public class KeyboardSteering implements Steering {
 	}
 
 	@Override
-	public void init() {
-	}
-
-	@Override
 	public void steer(GameModel game, Creature pac) {
 		if (dir != null) {
 			pac.setWishDir(dir);

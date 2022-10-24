@@ -23,7 +23,6 @@ module de.amr.games.pacman.ui.fx {
 	requires javafx.graphics;
 	requires org.apache.logging.log4j;
 	requires transitive de.amr.games.pacman;
-// why doesn't this work:	requires com.interactivemesh.jfx;
 	requires objimporter;
 
 	exports de.amr.games.pacman.ui.fx.app;
