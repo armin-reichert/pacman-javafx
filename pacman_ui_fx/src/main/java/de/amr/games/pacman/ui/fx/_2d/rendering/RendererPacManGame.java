@@ -34,6 +34,7 @@ import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;

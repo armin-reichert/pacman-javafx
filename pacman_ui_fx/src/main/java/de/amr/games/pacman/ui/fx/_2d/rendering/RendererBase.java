@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
