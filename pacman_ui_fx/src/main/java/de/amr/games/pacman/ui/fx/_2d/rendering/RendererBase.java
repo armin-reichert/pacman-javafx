@@ -64,18 +64,14 @@ public abstract class RendererBase implements Rendering2D {
 		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
 	}
 
-	public Spritesheet getSheet() {
+	@Override
+	public Spritesheet getSpritesheet() {
 		return sheet;
 	}
 
 	@Override
-	public Image spritesheetImage() {
-		return sheet.getSourceImage();
-	}
-
-	@Override
-	public Image getSpriteImage(Rectangle2D sprite) {
-		return sheet.subImage(sprite);
+	public Image getSpriteImage(Rectangle2D region) {
+		return sheet.subImage(region);
 	}
 
 	@Override
@@ -118,26 +114,26 @@ public abstract class RendererBase implements Rendering2D {
 	}
 
 	@Override
-	public void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			g.drawImage(spritesheetImage(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y,
-					sprite.getWidth(), sprite.getHeight());
+	public void drawSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
+		if (region != null) {
+			g.drawImage(getSpritesheet().getSourceImage(), region.getMinX(), region.getMinY(), region.getWidth(),
+					region.getHeight(), x, y, region.getWidth(), region.getHeight());
 		}
 	}
 
 	@Override
-	public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			double dx = HTS - sprite.getWidth() / 2;
-			double dy = HTS - sprite.getHeight() / 2;
-			drawSprite(g, sprite, x + dx, y + dy);
+	public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D region, double x, double y) {
+		if (region != null) {
+			double dx = HTS - region.getWidth() / 2;
+			double dy = HTS - region.getHeight() / 2;
+			drawSprite(g, region, x + dx, y + dy);
 		}
 	}
 
 	@Override
-	public void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite) {
+	public void drawEntity(GraphicsContext g, Entity entity, Rectangle2D region) {
 		if (entity.isVisible()) {
-			drawSpriteCenteredOverBox(g, sprite, entity.getPosition().x(), entity.getPosition().y());
+			drawSpriteCenteredOverBox(g, region, entity.getPosition().x(), entity.getPosition().y());
 		}
 	}
 

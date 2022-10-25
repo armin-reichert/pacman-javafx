@@ -49,9 +49,9 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	Image spritesheetImage();
+	Spritesheet getSpritesheet();
 
-	Image getSpriteImage(Rectangle2D sprite);
+	Image getSpriteImage(Rectangle2D region);
 
 	Font getArcadeFont();
 
@@ -105,18 +105,18 @@ public interface Rendering2D {
 	 * @param x      left upper corner x
 	 * @param y      left upper corner y
 	 */
-	void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y);
+	void drawSprite(GraphicsContext g, Rectangle2D region, double x, double y);
 
 	/**
 	 * Draws the sprite defined by the given spritesheet region centered of the the one square tile box with left upper
 	 * corner defined by the given coordinates.
 	 * 
 	 * @param g      graphics context
-	 * @param sprite sprite region in spritesheet, my be null
+	 * @param region sprite region in spritesheet, my be null
 	 * @param x      left upper corner of the box (one square tile)
 	 * @param y      left upper corner of the box
 	 */
-	void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D sprite, double x, double y);
+	void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D region, double x, double y);
 
 	/**
 	 * Draws the entity's sprite centered over the entity's collision box. The collision box is a square with left upper
@@ -127,7 +127,7 @@ public interface Rendering2D {
 	 * @param entity entity
 	 * @param s      entity sprite (region in spritesheet), may be null
 	 */
-	void drawEntity(GraphicsContext g, Entity entity, Rectangle2D sprite);
+	void drawEntity(GraphicsContext g, Entity entity, Rectangle2D region);
 
 	void drawPac(GraphicsContext g, Pac pac);
 

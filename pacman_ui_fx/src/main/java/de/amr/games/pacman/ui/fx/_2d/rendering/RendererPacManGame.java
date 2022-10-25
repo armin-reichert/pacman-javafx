@@ -85,8 +85,8 @@ public class RendererPacManGame extends RendererBase {
 			return sheet.tile(symbol, 9);
 		}
 		if (symbol == 4) {
-			var rect = sheet.tiles(4, 9, 3, 1);
-			return new Rectangle2D(rect.getMinX(), rect.getMinY(), rect.getWidth() - 13, rect.getHeight()); // WTF
+			var region = sheet.tiles(4, 9, 3, 1);
+			return new Rectangle2D(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
 		return sheet.tiles(3, 5 + symbol, 3, 1);
 	}

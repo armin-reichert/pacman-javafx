@@ -102,7 +102,7 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomSprites(GraphicsContext g) {
 		clearBuffer();
-		var image = ctx.r2D().spritesheetImage();
+		var image = ctx.r2D().getSpritesheet().getSourceImage();
 		var w = image.getWidth();
 		var h = image.getHeight();
 		var cellSize = 16;
