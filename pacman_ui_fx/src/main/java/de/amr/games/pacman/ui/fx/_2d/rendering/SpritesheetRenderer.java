@@ -43,7 +43,6 @@ import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -68,11 +67,6 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	protected void clearTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
-	}
-
-	@Override
-	public Image getSpriteImage(Rectangle2D region) {
-		return getSpritesheet().subImage(region);
 	}
 
 	@Override

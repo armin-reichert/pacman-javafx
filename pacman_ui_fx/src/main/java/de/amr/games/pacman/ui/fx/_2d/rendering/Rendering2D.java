@@ -52,8 +52,6 @@ public interface Rendering2D {
 
 	Spritesheet getSpritesheet();
 
-	Image getSpriteImage(Rectangle2D region);
-
 	Font getArcadeFont();
 
 	Color getGhostColor(int ghostID);
