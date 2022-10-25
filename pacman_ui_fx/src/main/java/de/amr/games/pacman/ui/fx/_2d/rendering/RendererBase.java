@@ -64,12 +64,6 @@ public abstract class RendererBase implements Rendering2D {
 		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
 	}
 
-	protected void fillText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
-
 	public Spritesheet getSheet() {
 		return sheet;
 	}
@@ -219,11 +213,16 @@ public abstract class RendererBase implements Rendering2D {
 	@Override
 	public void drawGameStateMessage(GraphicsContext g, GameState state) {
 		if (state == GameState.GAME_OVER) {
-			fillText(g, "GAME  OVER", Color.RED, arcadeFont, t(9), t(21));
+			g.setFont(arcadeFont);
+			g.setFill(Color.RED);
+			g.fillText("GAME  OVER", t(9), t(21));
 		} else if (state == GameState.READY) {
-			fillText(g, "READY", Color.YELLOW, arcadeFont, t(11), t(21));
+			g.setFont(arcadeFont);
+			g.setFill(Color.YELLOW);
+			g.fillText("READY", t(11), t(21));
 			var italic = Font.font(arcadeFont.getFamily(), FontPosture.ITALIC, arcadeFont.getSize());
-			fillText(g, "!", Color.YELLOW, italic, t(16), t(21));
+			g.setFont(italic);
+			g.fillText("!", t(16), t(21));
 		}
 	}
 
