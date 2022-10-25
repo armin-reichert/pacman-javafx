@@ -28,9 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Random;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import javafx.geometry.Rectangle2D;
@@ -42,8 +39,6 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class BootScene extends GameScene2D {
-
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private final Random rnd = new Random();
 	private final Canvas buffer;
@@ -104,7 +99,6 @@ public class BootScene extends GameScene2D {
 				bg.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
-		LOGGER.trace("Hex codes");
 	}
 
 	private void drawRandomSpritesIntoBuffer() {
@@ -124,7 +118,6 @@ public class BootScene extends GameScene2D {
 				}
 			}
 		}
-		LOGGER.trace("Random sprites");
 	}
 
 	private void drawGridIntoBuffer() {
@@ -139,6 +132,5 @@ public class BootScene extends GameScene2D {
 		for (int col = 0; col <= numCols; ++col) {
 			bg.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
 		}
-		LOGGER.trace("Grid");
 	}
 }
