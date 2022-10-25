@@ -36,35 +36,35 @@ import javafx.scene.image.WritableImage;
 public class Spritesheet {
 
 	protected final Image source;
-	protected final int rasterSize;
-	protected final int[] dirOrder = new int[4];
+	protected final int tileSize;
+	protected final int[] dirIndex = new int[4];
 
-	public Spritesheet(String imagePath, int rasterSize, Direction... dirs) {
+	public Spritesheet(String imagePath, int tileSize, Direction... dirs) {
 		this.source = Ufx.image(imagePath);
-		this.rasterSize = rasterSize;
+		this.tileSize = tileSize;
 		for (int i = 0; i < dirs.length; ++i) {
-			dirOrder[dirs[i].ordinal()] = i;
+			dirIndex[dirs[i].ordinal()] = i;
 		}
 	}
 
 	public int dirIndex(Direction dir) {
-		return dirOrder[dir.ordinal()];
+		return dirIndex[dir.ordinal()];
 	}
 
-	public Image getSourceImage() {
+	public int tileSize() {
+		return tileSize;
+	}
+
+	public Image sourceImage() {
 		return source;
 	}
 
-	public int getRasterSize() {
-		return rasterSize;
-	}
-
 	/**
-	 * @param r spritesheet region
-	 * @return copy(!) of spritesheet region
+	 * @param region spritesheet region
+	 * @return image (copy) of spritesheet region
 	 */
-	public Image subImage(Rectangle2D r) {
-		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
+	public Image subImage(Rectangle2D region) {
+		return subImage((int) region.getMinX(), (int) region.getMinY(), (int) region.getWidth(), (int) region.getHeight());
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class Spritesheet {
 	 * @param y      region y-coordinate
 	 * @param width  region width
 	 * @param height region height
-	 * @return copy(!) of spritesheet region
+	 * @return image (copy) of spritesheet region
 	 */
 	public Image subImage(int x, int y, int width, int height) {
 		WritableImage subImage = new WritableImage(width, height);
@@ -110,7 +110,7 @@ public class Spritesheet {
 	 * @return region at given grid coordinates relative to given origin
 	 */
 	public Rectangle2D tilesAtOrigin(int x, int y, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(x + col * rasterSize, y + row * rasterSize, numCols * rasterSize, numRows * rasterSize);
+		return new Rectangle2D(x + col * tileSize, y + row * tileSize, numCols * tileSize, numRows * tileSize);
 	}
 
 	/**

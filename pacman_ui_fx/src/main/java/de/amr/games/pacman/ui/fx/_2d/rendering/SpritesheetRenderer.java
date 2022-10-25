@@ -117,7 +117,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	@Override
 	public void drawSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
 		if (region != null) {
-			g.drawImage(getSpritesheet().getSourceImage(), region.getMinX(), region.getMinY(), region.getWidth(),
+			g.drawImage(getSpritesheet().sourceImage(), region.getMinX(), region.getMinY(), region.getWidth(),
 					region.getHeight(), x, y, region.getWidth(), region.getHeight());
 		}
 	}
