@@ -27,8 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.function.Consumer;
-
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
@@ -74,6 +72,11 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
 	}
 
+	protected void clearTile(GraphicsContext g, V2i tile) {
+		g.setFill(Color.BLACK);
+		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
+	}
+
 	@Override
 	public Spritesheet getSpritesheet() {
 		return sheet;
@@ -117,14 +120,10 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersDark) {
-		Consumer<V2i> clearTile = tile -> {
-			g.setFill(Color.BLACK);
-			g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
-		};
 		g.drawImage(getMazeFullImage(mazeNumber), x, y);
-		world.tiles().filter(world::containsEatenFood).forEach(clearTile::accept);
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
 		if (energizersDark) {
-			world.energizerTiles().forEach(clearTile::accept);
+			world.energizerTiles().forEach(tile -> clearTile(g, tile));
 		}
 	}
 
