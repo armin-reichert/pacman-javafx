@@ -100,8 +100,9 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 		}
 	}
 
-	public RendererMsPacManGame() {
-		super(SPRITESHEET);
+	@Override
+	public Spritesheet getSpritesheet() {
+		return SPRITESHEET;
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	public Rectangle2D rhs(int col, int row) {
-		return sheet.tilesAtOrigin(456, 0, col, row, 1, 1);
+		return getSpritesheet().tilesAtOrigin(456, 0, col, row, 1, 1);
 	}
 
 	@Override
@@ -120,7 +121,7 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 
 	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
-		return rhs(2 * sheet.dirIndex(dir) + 1, 4 + ghostID);
+		return rhs(2 * getSpritesheet().dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
@@ -185,7 +186,7 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 	@Override
 	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		int mazeIndex = mazeNumber - 1;
-		var mazeEmpty = sheet.subImage(228, 248 * mazeIndex, 226, 248);
+		var mazeEmpty = getSpritesheet().subImage(228, 248 * mazeIndex, 226, 248);
 		var brightImage = Ufx.colorsExchanged(mazeEmpty, Map.of( //
 				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
 				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
@@ -199,7 +200,7 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 	public EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = sheet.dirIndex(dir);
+			int d = getSpritesheet().dirIndex(dir);
 			var wide = rhs(0, d);
 			var middle = rhs(1, d);
 			var closed = rhs(2, d);
@@ -227,7 +228,7 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 	public EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = sheet.dirIndex(dir);
+			int d = getSpritesheet().dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(2 * d, 4 + ghost.id), rhs(2 * d + 1, 4 + ghost.id));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
@@ -255,7 +256,7 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 	public EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = sheet.dirIndex(dir);
+			int d = getSpritesheet().dirIndex(dir);
 			animationByDir.put(dir, new SingleEntityAnimation<>(rhs(8 + d, 5)));
 		}
 		return animationByDir;
@@ -271,7 +272,7 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 	public EntityAnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = sheet.dirIndex(dir);
+			int d = getSpritesheet().dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();

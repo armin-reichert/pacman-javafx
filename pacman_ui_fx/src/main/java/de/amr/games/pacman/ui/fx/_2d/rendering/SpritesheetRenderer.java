@@ -40,7 +40,6 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -64,13 +63,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	};
 	//@formatter:on
 
-	protected final Spritesheet sheet;
-	protected final Font arcadeFont;
-
-	protected SpritesheetRenderer(Spritesheet sheet) {
-		this.sheet = sheet;
-		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
-	}
+	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", 8);
 
 	protected void clearTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
@@ -78,18 +71,13 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	}
 
 	@Override
-	public Spritesheet getSpritesheet() {
-		return sheet;
-	}
-
-	@Override
 	public Image getSpriteImage(Rectangle2D region) {
-		return sheet.subImage(region);
+		return getSpritesheet().subImage(region);
 	}
 
 	@Override
 	public Font getArcadeFont() {
-		return arcadeFont;
+		return ARCADE_FONT;
 	}
 
 	@Override
@@ -223,14 +211,14 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	@Override
 	public void drawGameStateMessage(GraphicsContext g, GameState state) {
 		if (state == GameState.GAME_OVER) {
-			g.setFont(arcadeFont);
+			g.setFont(ARCADE_FONT);
 			g.setFill(Color.RED);
 			g.fillText("GAME  OVER", t(9), t(21));
 		} else if (state == GameState.READY) {
-			g.setFont(arcadeFont);
+			g.setFont(ARCADE_FONT);
 			g.setFill(Color.YELLOW);
 			g.fillText("READY", t(11), t(21));
-			var italic = Font.font(arcadeFont.getFamily(), FontPosture.ITALIC, arcadeFont.getSize());
+			var italic = Font.font(ARCADE_FONT.getFamily(), FontPosture.ITALIC, ARCADE_FONT.getSize());
 			g.setFont(italic);
 			g.fillText("!", t(16), t(21));
 		}
