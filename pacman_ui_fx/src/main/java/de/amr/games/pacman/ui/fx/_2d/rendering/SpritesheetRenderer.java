@@ -55,12 +55,12 @@ import javafx.scene.text.FontWeight;
 /**
  * @author Armin Reichert
  */
-public abstract class RendererBase implements Rendering2D {
+public abstract class SpritesheetRenderer implements Rendering2D {
 
 	protected final Spritesheet sheet;
 	protected final Font arcadeFont;
 
-	protected RendererBase(Spritesheet sheet) {
+	protected SpritesheetRenderer(Spritesheet sheet) {
 		this.sheet = sheet;
 		arcadeFont = Ufx.font("fonts/emulogic.ttf", 8);
 	}

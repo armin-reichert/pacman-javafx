@@ -46,7 +46,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class RendererMsPacManGame extends RendererBase {
+public class RendererMsPacManGame extends SpritesheetRenderer {
 
 	//@formatter:off
 	private static final Color[] GHOST_COLORS = {
