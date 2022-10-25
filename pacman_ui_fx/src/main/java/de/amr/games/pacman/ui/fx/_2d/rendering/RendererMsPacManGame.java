@@ -46,7 +46,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class RendererMsPacManGame extends SpritesheetRenderer {
+public class RendererMsPacManGame extends RendererCommon {
 
 	//@formatter:off
 	private static final Color[] MAZE_TOP_COLORS = { 

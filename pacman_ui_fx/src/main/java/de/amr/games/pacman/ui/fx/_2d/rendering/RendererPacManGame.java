@@ -44,7 +44,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class RendererPacManGame extends SpritesheetRenderer {
+public class RendererPacManGame extends RendererCommon {
 
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);

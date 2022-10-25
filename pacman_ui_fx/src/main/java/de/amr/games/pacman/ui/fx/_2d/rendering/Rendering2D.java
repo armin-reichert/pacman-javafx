@@ -142,7 +142,7 @@ public interface Rendering2D {
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
-	void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersDark);
+	void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden);
 
 	void drawGameStateMessage(GraphicsContext g, GameState state);
 }

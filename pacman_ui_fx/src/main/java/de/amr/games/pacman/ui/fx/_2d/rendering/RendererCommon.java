@@ -49,16 +49,18 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 /**
+ * Common rendering functionality for all game variants.
+ * 
  * @author Armin Reichert
  */
-public abstract class SpritesheetRenderer implements Rendering2D {
+public abstract class RendererCommon implements Rendering2D {
 
 	//@formatter:off
 	private static final Color[] GHOST_COLORS = {
 		Color.RED,
-		Color.rgb(252, 181, 255),
+		Color.rgb(252, 181, 255), // PINK
 		Color.CYAN,
-		Color.rgb(253, 192, 90)
+		Color.rgb(253, 192, 90) // ORANGE
 	};
 	//@formatter:on
 
@@ -101,10 +103,10 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersDark) {
+	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
 		g.drawImage(getMazeFullImage(mazeNumber), x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
-		if (energizersDark) {
+		if (energizersHidden) {
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));
 		}
 	}
@@ -133,18 +135,18 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		}
 	}
 
-	private static Rectangle2D currentSprite(EntityAnimation animation) {
+	private static Rectangle2D regionOfCurrentFrame(EntityAnimation animation) {
 		return (Rectangle2D) animation.frame();
 	}
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntity(g, pac, currentSprite(animation)));
+		pac.animation().ifPresent(animation -> drawEntity(g, pac, regionOfCurrentFrame(animation)));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntity(g, ghost, currentSprite(animation)));
+		ghost.animation().ifPresent(animation -> drawEntity(g, ghost, regionOfCurrentFrame(animation)));
 	}
 
 	@Override
