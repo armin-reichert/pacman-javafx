@@ -32,14 +32,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -52,7 +48,6 @@ public class BootScene extends GameScene2D {
 	private final Random rnd = new Random();
 	private final Canvas buffer;
 	private final GraphicsContext bg;
-	private Image spritesheetImage;
 
 	public BootScene() {
 		buffer = new Canvas(unscaledSize.x(), unscaledSize.y());
@@ -62,9 +57,6 @@ public class BootScene extends GameScene2D {
 	@Override
 	public void init() {
 		clearBuffer();
-		spritesheetImage = ctx.gameVariant() == GameVariant.MS_PACMAN //
-				? new RendererMsPacManGame().getSheet().getSourceImage()
-				: new RendererPacManGame().getSheet().getSourceImage();
 	}
 
 	@Override
@@ -75,7 +67,7 @@ public class BootScene extends GameScene2D {
 			drawRandomHexCodesIntoBuffer();
 		} else if (betweenSec(1.5, 3.0, t) && t % 10 == 0) {
 			clearBuffer();
-			drawRandomSpritesIntoBuffer(spritesheetImage);
+			drawRandomSpritesIntoBuffer();
 		} else if (t == TickTimer.secToTicks(3.0)) {
 			clearBuffer();
 			drawGridIntoBuffer();
@@ -115,9 +107,10 @@ public class BootScene extends GameScene2D {
 		LOGGER.trace("Hex codes");
 	}
 
-	private void drawRandomSpritesIntoBuffer(Image sheetImage) {
-		var w = sheetImage.getWidth();
-		var h = sheetImage.getHeight();
+	private void drawRandomSpritesIntoBuffer() {
+		var image = ctx.r2D().spritesheetImage();
+		var w = image.getWidth();
+		var h = image.getHeight();
 		var cellSize = 16;
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
