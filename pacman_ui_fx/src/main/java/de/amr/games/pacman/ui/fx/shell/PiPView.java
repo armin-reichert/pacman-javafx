@@ -53,7 +53,7 @@ public class PiPView {
 
 	private final StackPane root = new StackPane();
 	private final PlayScene2D playScene = new PlayScene2D();
-	private final Canvas canvas = playScene.getGameSceneCanvas();
+	private final Canvas canvas = playScene.getCanvas();
 
 	public PiPView() {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));

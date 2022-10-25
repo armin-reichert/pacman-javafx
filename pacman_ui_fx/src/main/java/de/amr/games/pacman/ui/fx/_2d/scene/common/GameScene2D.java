@@ -28,13 +28,13 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererBase;
 import de.amr.games.pacman.ui.fx._2d.rendering.HUD;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererBase;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
@@ -58,40 +58,40 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	protected final V2d unscaledSize;
+	protected final V2i unscaledSize;
 	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
 	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene;
-	protected final ResizableCanvas sceneCanvas;
+	protected final ResizableCanvas canvas;
 	protected final Pane infoLayer = new Pane();
 	protected final HUD hud = new HUD();
 
 	protected SceneContext ctx;
 
 	protected GameScene2D() {
-		this(new V2d(ArcadeWorld.WORLD_SIZE));
+		this(ArcadeWorld.WORLD_SIZE);
 	}
 
-	protected GameScene2D(V2d size) {
+	protected GameScene2D(V2i size) {
 		unscaledSize = size;
 
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 
-		sceneCanvas = new ResizableCanvas();
-		sceneCanvas.widthProperty().bind(fxSubScene.widthProperty());
-		sceneCanvas.heightProperty().bind(fxSubScene.heightProperty());
+		canvas = new ResizableCanvas();
+		canvas.widthProperty().bind(fxSubScene.widthProperty());
+		canvas.heightProperty().bind(fxSubScene.heightProperty());
 
-		scale(sceneCanvas);
-		scalingPy.addListener((obs, oldVal, newVal) -> scale(sceneCanvas));
+		scale(canvas);
+		scalingPy.addListener((obs, oldVal, newVal) -> scale(canvas));
 
 		infoLayer.setVisible(Env.showDebugInfoPy.get());
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 		infoLayer.setMouseTransparent(true);
 
-		root.getChildren().addAll(sceneCanvas, infoLayer);
+		root.getChildren().addAll(canvas, infoLayer);
 
-		hud.widthPy.bind(sceneCanvas.widthProperty());
-		hud.heightPy.bind(sceneCanvas.heightProperty());
+		hud.widthPy.bind(canvas.widthProperty());
+		hud.heightPy.bind(canvas.heightProperty());
 	}
 
 	private void scale(Canvas canvas) {
@@ -100,13 +100,13 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void resize(double height) {
-		double aspectRatio = unscaledSize.x() / unscaledSize.y();
+		double aspectRatio = (double) unscaledSize.x() / (double) unscaledSize.y();
 		double scaling = height / unscaledSize.y();
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		scalingPy.set(scaling);
-		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", sceneCanvas.getWidth(), sceneCanvas.getHeight(),
+		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", canvas.getWidth(), canvas.getHeight(),
 				scaling, getClass().getSimpleName());
 	}
 
@@ -115,20 +115,20 @@ public abstract class GameScene2D implements GameScene {
 		update();
 		renderScene();
 		if (Env.showDebugInfoPy.get()) {
-			var g = sceneCanvas.getGraphicsContext2D();
+			var g = canvas.getGraphicsContext2D();
 			RendererBase.drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
 				g.setFill(Color.RED);
 				PacManGame.RED_ZONE.forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS));
 			}
 		}
-		drawHUD(sceneCanvas.getGraphicsContext2D());
+		drawHUD(canvas.getGraphicsContext2D());
 	}
 
 	public void renderScene() {
-		var g = sceneCanvas.getGraphicsContext2D();
+		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, sceneCanvas.getWidth(), sceneCanvas.getHeight());
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent(g);
 	}
 
@@ -177,12 +177,16 @@ public abstract class GameScene2D implements GameScene {
 		return root;
 	}
 
-	public Canvas getGameSceneCanvas() {
-		return sceneCanvas;
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
-	public V2d getUnscaledSize() {
-		return unscaledSize;
+	public int getUnscaledWidth() {
+		return unscaledSize.x();
+	}
+
+	public int getUnscaledHeight() {
+		return unscaledSize.y();
 	}
 
 	@Override

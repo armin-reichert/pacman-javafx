@@ -79,8 +79,8 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setAbsSpeed(1.3);
 		blinky.show();
 
-		LOGGER.info("PacManCutscene1 initialized. Canvas size: %.0f x %.0f", sceneCanvas.getWidth(),
-				sceneCanvas.getHeight());
+		LOGGER.info("PacManCutscene1 initialized. Canvas size: %.0f x %.0f", canvas.getWidth(),
+				canvas.getHeight());
 	}
 
 	@Override

@@ -42,13 +42,13 @@ public class BootScene extends GameScene2D {
 
 	private final Random rnd = new Random();
 	private final GraphicsContext buffer;
-	private final WritableImage currentImage;
+	private final WritableImage snapshot;
 
 	public BootScene() {
-		var width = (int) unscaledSize.x();
-		var height = (int) unscaledSize.y();
+		var width = getUnscaledWidth();
+		var height = getUnscaledHeight();
 		buffer = new Canvas(width, height).getGraphicsContext2D();
-		currentImage = new WritableImage(width, height);
+		snapshot = new WritableImage(width, height);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		g.drawImage(currentImage, 0, 0);
+		g.drawImage(snapshot, 0, 0);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class BootScene extends GameScene2D {
 				g.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
-		buffer.getCanvas().snapshot(null, currentImage);
+		buffer.getCanvas().snapshot(null, snapshot);
 	}
 
 	private void drawRandomSprites(GraphicsContext g) {
@@ -118,7 +118,7 @@ public class BootScene extends GameScene2D {
 				}
 			}
 		}
-		buffer.getCanvas().snapshot(null, currentImage);
+		buffer.getCanvas().snapshot(null, snapshot);
 	}
 
 	private void drawGrid(GraphicsContext g) {
@@ -134,6 +134,6 @@ public class BootScene extends GameScene2D {
 		for (int col = 0; col <= numCols; ++col) {
 			g.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
 		}
-		buffer.getCanvas().snapshot(null, currentImage);
+		buffer.getCanvas().snapshot(null, snapshot);
 	}
 }
