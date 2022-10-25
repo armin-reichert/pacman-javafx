@@ -60,17 +60,6 @@ public class RendererPacManGame extends SpritesheetRenderer {
 	}
 
 	@Override
-	public Color getGhostColor(int ghostID) {
-		return switch (ghostID) {
-		case Ghost.RED_GHOST -> Color.RED;
-		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
-		case Ghost.CYAN_GHOST -> Color.CYAN;
-		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
-		default -> throw new IllegalArgumentException("Illegal ghost ID: %d".formatted(ghostID));
-		};
-	}
-
-	@Override
 	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
 		return sheet.tile(2 * sheet.dirIndex(dir), 4 + ghostID);
 	}

@@ -49,13 +49,6 @@ import javafx.scene.text.Font;
 public class RendererMsPacManGame extends SpritesheetRenderer {
 
 	//@formatter:off
-	private static final Color[] GHOST_COLORS = {
-		Color.RED,
-		Color.rgb(252, 181, 255),
-		Color.CYAN,
-		Color.rgb(253, 192, 90)
-	};
-	
 	private static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
 		Color.rgb(71, 183, 255), 
@@ -118,11 +111,6 @@ public class RendererMsPacManGame extends SpritesheetRenderer {
 	 */
 	public Rectangle2D rhs(int col, int row) {
 		return sheet.tilesAtOrigin(456, 0, col, row, 1, 1);
-	}
-
-	@Override
-	public Color getGhostColor(int ghostID) {
-		return GHOST_COLORS[ghostID];
 	}
 
 	@Override

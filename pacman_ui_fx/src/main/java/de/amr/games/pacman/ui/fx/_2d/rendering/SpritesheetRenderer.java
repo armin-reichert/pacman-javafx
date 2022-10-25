@@ -57,6 +57,15 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class SpritesheetRenderer implements Rendering2D {
 
+	//@formatter:off
+	private static final Color[] GHOST_COLORS = {
+		Color.RED,
+		Color.rgb(252, 181, 255),
+		Color.CYAN,
+		Color.rgb(253, 192, 90)
+	};
+	//@formatter:on
+
 	protected final Spritesheet sheet;
 	protected final Font arcadeFont;
 
@@ -78,6 +87,11 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	@Override
 	public Font getArcadeFont() {
 		return arcadeFont;
+	}
+
+	@Override
+	public Color getGhostColor(int ghostID) {
+		return GHOST_COLORS[ghostID];
 	}
 
 	@Override
