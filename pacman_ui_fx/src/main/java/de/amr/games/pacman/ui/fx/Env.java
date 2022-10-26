@@ -23,7 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx;
 
+import java.net.URL;
 import java.util.List;
+import java.util.MissingResourceException;
 
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
@@ -79,5 +81,21 @@ public class Env {
 
 	public static void toggle(BooleanProperty booleanProperty) {
 		booleanProperty.set(!booleanProperty.get());
+	}
+
+	public static String absPath(String relPath) {
+		return "/de/amr/games/pacman/ui/fx/" + relPath;
+	}
+
+	public static URL urlFromRelPath(String relPath) {
+		return url(absPath(relPath));
+	}
+
+	public static URL url(String absPath) {
+		var url = Env.class.getResource(absPath);
+		if (url == null) {
+			throw new MissingResourceException("Missing resource, path=" + absPath, "", absPath);
+		}
+		return url;
 	}
 }

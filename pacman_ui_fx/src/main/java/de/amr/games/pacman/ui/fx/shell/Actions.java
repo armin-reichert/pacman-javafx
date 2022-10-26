@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.Resources;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.util.TextManager;
@@ -77,7 +76,7 @@ public class Actions {
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
-		var url = Resources.urlFromRelPath(messageFileRelPath);
+		var url = Env.urlFromRelPath(messageFileRelPath);
 		if (url != null) {
 			try {
 				currentVoiceMessage = new AudioClip(url.toExternalForm());

@@ -29,7 +29,7 @@ import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.ui.fx.Resources;
+import de.amr.games.pacman.ui.fx.Env;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -115,14 +115,14 @@ public class Ufx {
 
 	public static Font font(String relPath, double size) {
 		Objects.requireNonNull(relPath, "Font path cannot be NULL");
-		var url = Resources.urlFromRelPath(relPath);
+		var url = Env.urlFromRelPath(relPath);
 		if (url == null) {
-			LOGGER.error(() -> "Font at '%s' not found".formatted(Resources.absPath(relPath)));
+			LOGGER.error(() -> "Font at '%s' not found".formatted(Env.absPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
-			LOGGER.error(() -> "Font at '%s' not loaded".formatted(Resources.absPath(relPath)));
+			LOGGER.error(() -> "Font at '%s' not loaded".formatted(Env.absPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		return font;
@@ -130,9 +130,9 @@ public class Ufx {
 
 	public static Image image(String relPath) {
 		Objects.requireNonNull(relPath, "Image path cannot be NULL");
-		var url = Resources.urlFromRelPath(relPath);
+		var url = Env.urlFromRelPath(relPath);
 		if (url == null) {
-			LOGGER.error(() -> "No image found at path '%s'".formatted(Resources.absPath(relPath)));
+			LOGGER.error(() -> "No image found at path '%s'".formatted(Env.absPath(relPath)));
 			return null;
 		}
 		return new Image(url.toExternalForm());

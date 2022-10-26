@@ -35,7 +35,6 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.Resources;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
@@ -106,9 +105,9 @@ public class GameSounds implements GameSoundController {
 	}
 
 	private void load(GameSound sound, String relPath) {
-		var url = Resources.urlFromRelPath(relPath);
+		var url = Env.urlFromRelPath(relPath);
 		if (url == null) {
-			var absPath = Resources.absPath(relPath);
+			var absPath = Env.absPath(relPath);
 			LOGGER.error("Game sound %s not loaded: resource '%s' not found", sound, absPath);
 			return;
 		}

@@ -29,7 +29,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.Resources;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -78,10 +77,10 @@ public class Model3D {
 	private ObjModel ghostModel;
 
 	private Model3D() {
-		var pacModelURL = Resources.url("model3D/pacman.obj");
+		var pacModelURL = Env.url("model3D/pacman.obj");
 		LOGGER.info("Pac-Man 3D model URL: %s", pacModelURL);
 		pacModel = new ObjModel(pacModelURL);
-		var ghostModelURL = Resources.url("model3D/ghost.obj");
+		var ghostModelURL = Env.url("model3D/ghost.obj");
 		LOGGER.info("Ghost 3D model URL: %s", ghostModelURL);
 		ghostModel = new ObjModel(ghostModelURL);
 	}
