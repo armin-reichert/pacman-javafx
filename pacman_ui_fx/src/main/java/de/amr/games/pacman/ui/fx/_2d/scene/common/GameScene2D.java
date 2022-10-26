@@ -84,7 +84,6 @@ public abstract class GameScene2D implements GameScene {
 		scale(canvas);
 		scalingPy.addListener((obs, oldVal, newVal) -> scale(canvas));
 
-		infoLayer.setVisible(Env.showDebugInfoPy.get());
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 		infoLayer.setMouseTransparent(true);
 

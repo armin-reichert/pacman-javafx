@@ -158,6 +158,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public void resize(double height) {
+		// nothing to do
+	}
+
+	@Override
 	public void updateAndRender() {
 		world3D.update(ctx.game());
 		pac3D.update();

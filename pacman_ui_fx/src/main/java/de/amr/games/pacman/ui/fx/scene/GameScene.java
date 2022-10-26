@@ -90,8 +90,7 @@ public interface GameScene extends GameEventAdapter {
 	 * 
 	 * @param height new height
 	 */
-	default void resize(double height) {
-	}
+	void resize(double height);
 
 	/**
 	 * @return if this is a scene with 3D content
