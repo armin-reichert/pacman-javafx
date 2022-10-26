@@ -99,7 +99,7 @@ public class PlayScene3D implements GameScene {
 		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
 
 		// center scene content over origin
-		content.getTransforms().add(new Translate(-DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2));
+		content.getTransforms().add(new Translate(-DEFAULT_SIZE.x() / 2, -DEFAULT_SIZE.y() / 2));
 
 		createCameras();
 	}

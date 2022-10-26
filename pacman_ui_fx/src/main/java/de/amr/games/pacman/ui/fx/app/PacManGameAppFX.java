@@ -37,11 +37,11 @@ import de.amr.games.pacman.lib.Option;
 import de.amr.games.pacman.lib.OptionParser;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.shell.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
@@ -101,7 +101,7 @@ public class PacManGameAppFX extends Application {
 		LOGGER.info("Starting application...");
 		stage.setFullScreen(optFullscreen.getValue());
 		var zoom = optZoom.getValue();
-		var ui = new GameUI(gameController, stage, zoom * ArcadeWorld.WORLD_SIZE.x(), zoom * ArcadeWorld.WORLD_SIZE.y());
+		var ui = new GameUI(gameController, stage, zoom * GameScene.DEFAULT_SIZE.x(), zoom * GameScene.DEFAULT_SIZE.y());
 		ui.setPacSteering(new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
 				stage.getHeight(), zoom, U.onOff(Env.use3DScenePy.get()), Env.perspectivePy.get()));

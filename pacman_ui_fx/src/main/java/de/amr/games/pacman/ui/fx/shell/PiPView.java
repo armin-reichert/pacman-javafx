@@ -24,8 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.lib.V2d;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -41,8 +41,8 @@ import javafx.scene.paint.Color;
  */
 public class PiPView {
 
-	public static final V2d MIN_SIZE = new V2d(ArcadeWorld.WORLD_SIZE);
-	public static final V2d MAX_SIZE = new V2d(ArcadeWorld.WORLD_SIZE).scaled(2.0);
+	public static final V2d MIN_SIZE = new V2d(GameScene.DEFAULT_SIZE);
+	public static final V2d MAX_SIZE = new V2d(GameScene.DEFAULT_SIZE).scaled(2.0);
 
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override

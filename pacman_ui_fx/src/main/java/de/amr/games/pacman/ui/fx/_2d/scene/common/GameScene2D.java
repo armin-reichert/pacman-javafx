@@ -69,7 +69,7 @@ public abstract class GameScene2D implements GameScene {
 	protected SceneContext ctx;
 
 	protected GameScene2D() {
-		this(ArcadeWorld.WORLD_SIZE);
+		this(DEFAULT_SIZE);
 	}
 
 	protected GameScene2D(V2i size) {
@@ -106,8 +106,8 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		scalingPy.set(scaling);
-		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", canvas.getWidth(), canvas.getHeight(),
-				scaling, getClass().getSimpleName());
+		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", canvas.getWidth(), canvas.getHeight(), scaling,
+				getClass().getSimpleName());
 	}
 
 	@Override
