@@ -53,56 +53,53 @@ import javafx.scene.Scene;
 /**
  * @author Armin Reichert
  */
-public class SceneManager {
-
-	private SceneManager() {
-	}
+public class GameSceneManager {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	private record SceneVariants(GameScene scene2D, GameScene scene3D) {
+	private record GameSceneVariants(GameScene scene2D, GameScene scene3D) {
 	}
 
 	//@formatter:off
-	private static final SceneVariants[] SCENES_PACMAN = {
-			new SceneVariants(new BootScene(), null),
-			new SceneVariants(new PacManIntroScene(), null),
-			new SceneVariants(new PacManCreditScene(), null),
-			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
-			new SceneVariants(new PacManCutscene1(), null),
-			new SceneVariants(new PacManCutscene2(), null),
-			new SceneVariants(new PacManCutscene3(), null),
+	private static final GameSceneVariants[] SCENES_PACMAN = {
+			new GameSceneVariants(new BootScene(), null),
+			new GameSceneVariants(new PacManIntroScene(), null),
+			new GameSceneVariants(new PacManCreditScene(), null),
+			new GameSceneVariants(new PlayScene2D(), new PlayScene3D()),
+			new GameSceneVariants(new PacManCutscene1(), null),
+			new GameSceneVariants(new PacManCutscene2(), null),
+			new GameSceneVariants(new PacManCutscene3(), null),
 	};
 
-	private static final SceneVariants[] SCENES_MS_PACMAN = { 
-			new SceneVariants(new BootScene(), null),
-			new SceneVariants(new MsPacManIntroScene(), null),
-			new SceneVariants(new MsPacManCreditScene(), null),
-			new SceneVariants(new PlayScene2D(), new PlayScene3D()),
-			new SceneVariants(new MsPacManIntermissionScene1(), null),
-			new SceneVariants(new MsPacManIntermissionScene2(), null),
-			new SceneVariants(new MsPacManIntermissionScene3(), null),
+	private static final GameSceneVariants[] SCENES_MS_PACMAN = { 
+			new GameSceneVariants(new BootScene(), null),
+			new GameSceneVariants(new MsPacManIntroScene(), null),
+			new GameSceneVariants(new MsPacManCreditScene(), null),
+			new GameSceneVariants(new PlayScene2D(), new PlayScene3D()),
+			new GameSceneVariants(new MsPacManIntermissionScene1(), null),
+			new GameSceneVariants(new MsPacManIntermissionScene2(), null),
+			new GameSceneVariants(new MsPacManIntermissionScene3(), null),
 	};
 	//@formatter:on
 
-	public static void embedScenes(Scene mainScene) {
+	public void embedGameScenes(Scene mainScene) {
 		for (var scenes : SCENES_MS_PACMAN) {
-			embedScene(mainScene, scenes.scene2D);
-			embedScene(mainScene, scenes.scene3D);
+			embedGameScene(mainScene, scenes.scene2D);
+			embedGameScene(mainScene, scenes.scene3D);
 		}
 		for (var scenes : SCENES_PACMAN) {
-			embedScene(mainScene, scenes.scene2D);
-			embedScene(mainScene, scenes.scene3D);
+			embedGameScene(mainScene, scenes.scene2D);
+			embedGameScene(mainScene, scenes.scene3D);
 		}
 	}
 
-	private static void embedScene(Scene mainScene, GameScene gameScene) {
+	private void embedGameScene(Scene mainScene, GameScene gameScene) {
 		if (gameScene != null) {
 			gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty());
 		}
 	}
 
-	public static boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
+	public boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
 		var scene2D = findGameScene(gameController, false);
 		var scene3D = findGameScene(gameController, true);
 		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
@@ -120,7 +117,7 @@ public class SceneManager {
 	 * 
 	 * @return the selected game scene
 	 */
-	public static GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean reload) {
+	public GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean reload) {
 		var nextGameScene = findGameScene(gameController, Env.use3DScenePy.get()).orElse(null);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
@@ -136,7 +133,7 @@ public class SceneManager {
 		return nextGameScene;
 	}
 
-	private static void updateSceneContext(GameController gameController, GameScene scene) {
+	private void updateSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant;
 		var r2D = switch (gameVariant) {
 		case MS_PACMAN -> new RendererMsPacManGame();
@@ -152,7 +149,7 @@ public class SceneManager {
 		gameController.setSounds(sounds);
 	}
 
-	private static Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
+	private Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
 		var game = gameController.game();
 
 		var scenes = switch (game.variant) {

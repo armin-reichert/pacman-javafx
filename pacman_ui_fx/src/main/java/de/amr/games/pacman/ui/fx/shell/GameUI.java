@@ -41,7 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.SceneManager;
+import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -73,6 +73,7 @@ public class GameUI {
 	private final GameLoop gameLoop = new GameLoop(60);
 	private final GameController gameController;
 	private final Stage stage;
+	private final GameSceneManager sceneManager = new GameSceneManager();
 	private final Scene mainScene;
 
 	private StackPane gameSceneParent;
@@ -88,7 +89,6 @@ public class GameUI {
 		this.gameController = gameController;
 		this.stage = stage;
 		this.mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-		SceneManager.embedScenes(mainScene);
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 		initKeyboardInput();
@@ -97,6 +97,7 @@ public class GameUI {
 		initStage(stage);
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
+		sceneManager.embedGameScenes(mainScene);
 		updateGameScene(true);
 		stage.show();
 	}
@@ -199,7 +200,7 @@ public class GameUI {
 	}
 
 	void updateGameScene(boolean forcedReload) {
-		var newGameScene = SceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
+		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
 		newGameScene.resize(mainScene.getHeight());
 		if (newGameScene != currentGameScene) {
 			currentGameScene = newGameScene;
@@ -261,6 +262,10 @@ public class GameUI {
 
 	public Stage getStage() {
 		return stage;
+	}
+
+	public GameSceneManager getSceneManager() {
+		return sceneManager;
 	}
 
 	public GameScene getCurrentGameScene() {
