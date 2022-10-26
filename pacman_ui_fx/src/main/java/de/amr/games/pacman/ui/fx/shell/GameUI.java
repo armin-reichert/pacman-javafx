@@ -88,7 +88,7 @@ public class GameUI {
 		this.gameController = gameController;
 		this.stage = stage;
 		this.mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-		SceneManager.setMainScene(mainScene);
+		SceneManager.embedScenes(mainScene);
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 		initKeyboardInput();

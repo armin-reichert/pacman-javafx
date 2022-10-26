@@ -85,18 +85,18 @@ public class SceneManager {
 	};
 	//@formatter:on
 
-	public static void setMainScene(Scene mainScene) {
+	public static void embedScenes(Scene mainScene) {
 		for (var scenes : SCENES_MS_PACMAN) {
-			setMainScene(mainScene, scenes.scene2D);
-			setMainScene(mainScene, scenes.scene3D);
+			embedScene(mainScene, scenes.scene2D);
+			embedScene(mainScene, scenes.scene3D);
 		}
 		for (var scenes : SCENES_PACMAN) {
-			setMainScene(mainScene, scenes.scene2D);
-			setMainScene(mainScene, scenes.scene3D);
+			embedScene(mainScene, scenes.scene2D);
+			embedScene(mainScene, scenes.scene3D);
 		}
 	}
 
-	private static void setMainScene(Scene mainScene, GameScene gameScene) {
+	private static void embedScene(Scene mainScene, GameScene gameScene) {
 		if (gameScene != null) {
 			gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty());
 		}
