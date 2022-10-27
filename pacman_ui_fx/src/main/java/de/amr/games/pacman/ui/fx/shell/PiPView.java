@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -53,7 +52,6 @@ public class PiPView {
 
 	private final StackPane root = new StackPane();
 	private final PlayScene2D playScene = new PlayScene2D();
-	private final Canvas canvas = playScene.getCanvas();
 
 	public PiPView() {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
@@ -72,6 +70,7 @@ public class PiPView {
 	}
 
 	public void draw() {
+		var canvas = playScene.getCanvas();
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());

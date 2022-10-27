@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon.drawTileStructure;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +35,6 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.HUD;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
@@ -111,23 +111,18 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public final void updateAndRender() {
 		update();
-		renderScene();
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawSceneContent(g);
 		if (Env.showDebugInfoPy.get()) {
-			var g = canvas.getGraphicsContext2D();
-			RendererCommon.drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
+			drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
 				g.setFill(Color.RED);
 				PacManGame.RED_ZONE.forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS));
 			}
 		}
-		drawHUD(canvas.getGraphicsContext2D());
-	}
-
-	public void renderScene() {
-		var g = canvas.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		drawSceneContent(g);
+		drawHUD(g);
 	}
 
 	public void drawHUD(GraphicsContext g) {
