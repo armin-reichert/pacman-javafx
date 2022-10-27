@@ -110,7 +110,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	 * @param row row
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
-	public Rectangle2D rhs(int col, int row) {
+	private Rectangle2D rhs(int col, int row) {
 		return getSpritesheet().tilesAtOrigin(456, 0, col, row, 1, 1);
 	}
 
@@ -141,6 +141,10 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public Rectangle2D getLifeSprite() {
+		return rhs(1, 0);
+	}
+
+	public Rectangle2D getMsPacManSprite() {
 		return rhs(1, 0);
 	}
 
