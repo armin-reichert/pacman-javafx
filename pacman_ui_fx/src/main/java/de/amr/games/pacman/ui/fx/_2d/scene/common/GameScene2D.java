@@ -78,8 +78,8 @@ public abstract class GameScene2D implements GameScene {
 
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		scale(canvas);
-		scalingPy.addListener((obs, oldVal, newVal) -> scale(canvas));
+		scaleCanvas();
+		scalingPy.addListener((obs, oldVal, newVal) -> scaleCanvas());
 
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 		infoLayer.setMouseTransparent(true);
@@ -90,10 +90,11 @@ public abstract class GameScene2D implements GameScene {
 		hud.heightPy.bind(canvas.heightProperty());
 	}
 
-	private void scale(Canvas canvas) {
-		canvas.getTransforms().setAll(new Scale(getScaling(), getScaling()));
-		LOGGER.trace("2D scene %s: scaling=%.2f width=%.0f height=%.0f", getClass().getSimpleName(), getScaling(),
-				canvas.getWidth(), canvas.getHeight());
+	private void scaleCanvas() {
+		var s = getScaling();
+		canvas.getTransforms().setAll(new Scale(s, s));
+		LOGGER.trace("2D scene %s: scaling=%.2f width=%.0f height=%.0f", getClass().getSimpleName(), s, canvas.getWidth(),
+				canvas.getHeight());
 	}
 
 	@Override
@@ -125,6 +126,12 @@ public abstract class GameScene2D implements GameScene {
 		drawHUD(g);
 	}
 
+	/**
+	 * Draws the scene content. Subclasses override this method.
+	 */
+	public void drawSceneContent(GraphicsContext g) {
+	}
+
 	public void drawHUD(GraphicsContext g) {
 		hud.draw(g, ctx.game());
 	}
@@ -133,12 +140,6 @@ public abstract class GameScene2D implements GameScene {
 	 * Updates the scene. Subclasses override this method.
 	 */
 	public void update() {
-	}
-
-	/**
-	 * Draws the scene content. Subclasses override this method.
-	 */
-	public void drawSceneContent(GraphicsContext g) {
 	}
 
 	@Override
