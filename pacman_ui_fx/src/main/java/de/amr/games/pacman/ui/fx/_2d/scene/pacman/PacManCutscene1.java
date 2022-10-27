@@ -79,8 +79,7 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setAbsSpeed(1.3);
 		blinky.show();
 
-		LOGGER.info("PacManCutscene1 initialized. Canvas size: %.0f x %.0f", canvas.getWidth(),
-				canvas.getHeight());
+		LOGGER.info("PacManCutscene1 initialized. Canvas size: %.0f x %.0f", canvas.getWidth(), canvas.getHeight());
 	}
 
 	@Override
@@ -123,9 +122,9 @@ public class PacManCutscene1 extends GameScene2D {
 			g.setFont(ctx.r2D().getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), t(3), t(3));
+				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));
 			} else {
-				g.fillText("Frame %d".formatted(frame), t(3), t(3));
+				g.fillText("Frame %d".formatted(frame), t(1), t(5));
 			}
 		}
 		ctx.r2D().drawPac(g, pac);

@@ -131,9 +131,9 @@ public class PacManCutscene2 extends GameScene2D {
 			g.setFont(ctx.r2D().getArcadeFont());
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), t(3), t(3));
+				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));
 			} else {
-				g.fillText("Frame %d".formatted(frame), t(3), t(3));
+				g.fillText("Frame %d".formatted(frame), t(1), t(5));
 			}
 		}
 		if (stretchedDressAnimation != null) {
