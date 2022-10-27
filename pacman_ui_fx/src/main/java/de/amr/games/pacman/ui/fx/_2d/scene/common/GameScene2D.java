@@ -58,14 +58,13 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	protected final V2i unscaledSize;
-	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
 	protected final StackPane root = new StackPane();
-	protected final SubScene fxSubScene;
-	protected final ResizableCanvas canvas;
+	protected final ResizableCanvas canvas = new ResizableCanvas();
 	protected final Pane infoLayer = new Pane();
 	protected final HUD hud = new HUD();
-
+	protected final V2i unscaledSize;
+	protected final SubScene fxSubScene;
 	protected SceneContext ctx;
 
 	protected GameScene2D() {
@@ -77,10 +76,8 @@ public abstract class GameScene2D implements GameScene {
 
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 
-		canvas = new ResizableCanvas();
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-
 		scale(canvas);
 		scalingPy.addListener((obs, oldVal, newVal) -> scale(canvas));
 
@@ -95,6 +92,8 @@ public abstract class GameScene2D implements GameScene {
 
 	private void scale(Canvas canvas) {
 		canvas.getTransforms().setAll(new Scale(getScaling(), getScaling()));
+		LOGGER.trace("2D scene %s: scaling=%.2f width=%.0f height=%.0f", getClass().getSimpleName(), getScaling(),
+				canvas.getWidth(), canvas.getHeight());
 	}
 
 	@Override
