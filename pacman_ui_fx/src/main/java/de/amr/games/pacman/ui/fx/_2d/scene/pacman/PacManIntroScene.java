@@ -176,7 +176,9 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGuys(GraphicsContext g, int offsetX) {
 		if (offsetX == 0) {
-			ctx.r2D().drawGhosts(g, icc.ghosts);
+			for (var ghost : icc.ghosts) {
+				ctx.r2D().drawGhost(g, ghost);
+			}
 		} else {
 			ctx.r2D().drawGhost(g, icc.ghosts[0]);
 			g.save();

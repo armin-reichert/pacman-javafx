@@ -132,8 +132,6 @@ public interface Rendering2D {
 
 	void drawGhost(GraphicsContext g, Ghost ghost);
 
-	void drawGhosts(GraphicsContext g, Ghost[] ghosts);
-
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
 	void drawCopyright(GraphicsContext g, int tileY);

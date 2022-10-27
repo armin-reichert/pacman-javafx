@@ -150,13 +150,6 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public void drawGhosts(GraphicsContext g, Ghost[] ghosts) {
-		for (var ghost : ghosts) {
-			drawGhost(g, ghost);
-		}
-	}
-
-	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case INACTIVE -> null;

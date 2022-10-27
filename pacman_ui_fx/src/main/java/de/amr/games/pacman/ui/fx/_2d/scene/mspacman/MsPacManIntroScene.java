@@ -102,7 +102,9 @@ public class MsPacManIntroScene extends GameScene2D {
 		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
-		ctx.r2D().drawGhosts(g, icc.game.theGhosts);
+		for (var ghost : icc.game.theGhosts) {
+			ctx.r2D().drawGhost(g, ghost);
+		}
 		ctx.r2D().drawPac(g, icc.game.pac);
 		ctx.r2D().drawCopyright(g, 29);
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);

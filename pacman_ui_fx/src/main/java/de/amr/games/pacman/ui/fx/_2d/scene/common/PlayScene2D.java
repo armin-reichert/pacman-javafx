@@ -96,7 +96,9 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D().drawBonus(g, ctx.game().bonus());
 		ctx.r2D().drawPac(g, ctx.game().pac);
-		ctx.r2D().drawGhosts(g, ctx.game().theGhosts);
+		for (var ghost : ctx.game().theGhosts) {
+			ctx.r2D().drawGhost(g, ghost);
+		}
 		if (!hud.isCreditVisible()) {
 			int livesDisplayed = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
 			ctx.r2D().drawLivesCounter(g, livesDisplayed);
