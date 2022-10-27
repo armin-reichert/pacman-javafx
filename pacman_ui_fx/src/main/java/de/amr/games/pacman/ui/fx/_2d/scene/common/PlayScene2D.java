@@ -84,12 +84,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
-			var flashing = arcadeWorld.flashingAnimation();
-			if (flashing.isPresent() && flashing.get().isRunning()) {
-				g.drawImage((Image) flashing.get().frame(), t(0), t(3));
-			} else {
-				drawMaze(g);
-			}
+			drawArcadeWorldMaze(g, arcadeWorld);
 		} else {
 			drawMaze(g);
 		}
@@ -104,6 +99,15 @@ public class PlayScene2D extends GameScene2D {
 			ctx.r2D().drawLivesCounter(g, livesDisplayed);
 		}
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
+	}
+
+	private void drawArcadeWorldMaze(GraphicsContext g, ArcadeWorld world) {
+		var flashing = world.flashingAnimation();
+		if (flashing.isPresent() && flashing.get().isRunning()) {
+			g.drawImage((Image) flashing.get().frame(), t(0), t(3));
+		} else {
+			drawMaze(g);
+		}
 	}
 
 	private void drawMaze(GraphicsContext g) {
