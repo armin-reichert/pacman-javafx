@@ -30,7 +30,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Creature;
@@ -57,13 +56,12 @@ public class GuysInfo {
 	private static final String[] MS_PACMAN_BONUS_NAMES = { "CHERRIES", "STRAWBERRY", "PEACH", "PRETZEL", "APPLE", "PEAR",
 			"BANANA" };
 
-	private final PlayScene2D playScene;
-	private GameModel game;
+	private final GameScene2D hostScene;
 	private final List<Pane> panes = new ArrayList<>();
 	private final List<Text> texts = new ArrayList<>();
 
-	public GuysInfo(PlayScene2D playScene) {
-		this.playScene = playScene;
+	public GuysInfo(GameScene2D hostScene) {
+		this.hostScene = hostScene;
 		for (int i = 0; i < 6; ++i) {
 			var text = new Text();
 			text.setTextAlignment(TextAlignment.CENTER);
@@ -75,11 +73,7 @@ public class GuysInfo {
 			pane.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 255, 0.5)));
 			panes.add(pane);
 		}
-		playScene.infoLayer.getChildren().addAll(panes);
-	}
-
-	public void init(GameModel game) {
-		this.game = game;
+		hostScene.infoLayer.getChildren().addAll(panes);
 	}
 
 	private String locationInfo(Creature guy) {
@@ -101,6 +95,7 @@ public class GuysInfo {
 	}
 
 	private String fmtGhostInfo(Ghost ghost) {
+		var game = hostScene.ctx.game();
 		String name = ghost.id == Ghost.RED_GHOST && game.cruiseElroyState > 0 ? "Elroy " + game.cruiseElroyState
 				: ghost.name;
 		var stateText = ghost.getState().name();
@@ -131,6 +126,7 @@ public class GuysInfo {
 	}
 
 	private String fmtBonusInfo(Bonus bonus) {
+		var game = hostScene.ctx.game();
 		var bonusName = switch (game.variant) {
 		case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.index()];
 		case PACMAN -> PACMAN_BONUS_NAMES[bonus.index()];
@@ -144,7 +140,7 @@ public class GuysInfo {
 		var pane = panes.get(i);
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
-		var scaling = playScene.getScaling();
+		var scaling = hostScene.getScaling();
 		pane.setTranslateX((entity.getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
 		pane.setTranslateY(entity.getPosition().y() * scaling - textSize.getHeight());
 		pane.setVisible(entity.isVisible());
@@ -155,13 +151,14 @@ public class GuysInfo {
 		var pane = panes.get(i);
 		textView.setText(text);
 		var textSize = textView.getBoundsInLocal();
-		var scaling = playScene.getScaling();
+		var scaling = hostScene.getScaling();
 		pane.setTranslateX((bonus.entity().getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
 		pane.setTranslateY(bonus.entity().getPosition().y() * scaling - textSize.getHeight());
 		pane.setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
 	public void update() {
+		var game = hostScene.ctx.game();
 		for (int i = 0; i < texts.size(); ++i) {
 			if (i < texts.size() - 2) {
 				var ghost = game.theGhosts[i];

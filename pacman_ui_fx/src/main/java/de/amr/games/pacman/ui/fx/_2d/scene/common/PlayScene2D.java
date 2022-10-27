@@ -50,7 +50,6 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		guysInfo.init(ctx.game());
 		hud.setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
 		ctx.game().bonus().setInactive();
 		var game = ctx.game();
