@@ -97,7 +97,7 @@ public class GameUI {
 		initKeyboardInput();
 		initGameEventing();
 		initAnimations();
-		initStage(stage);
+		initStage();
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
 		sceneManager.embedGameScenes(mainScene);
@@ -105,7 +105,7 @@ public class GameUI {
 		stage.show();
 	}
 
-	private void initStage(Stage stage) {
+	private void initStage() {
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setScene(mainScene);
 		stage.setMinWidth(241);
