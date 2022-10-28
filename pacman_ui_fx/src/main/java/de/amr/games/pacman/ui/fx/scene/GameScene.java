@@ -27,7 +27,7 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx.shell.Keyboard;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.SubScene;
 
