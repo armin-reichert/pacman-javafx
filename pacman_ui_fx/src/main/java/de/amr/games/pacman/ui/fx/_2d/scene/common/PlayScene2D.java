@@ -46,7 +46,7 @@ import javafx.scene.input.KeyCode;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private final GuysInfo guysInfo = new GuysInfo(this);
+	private final ActorsInfo actorsInfo = new ActorsInfo(this);
 
 	@Override
 	public void init() {
@@ -75,7 +75,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void update() {
 		if (Env.showDebugInfoPy.get()) {
-			guysInfo.update(ctx.game());
+			actorsInfo.update(ctx.game());
 		}
 		hud.setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);
 	}

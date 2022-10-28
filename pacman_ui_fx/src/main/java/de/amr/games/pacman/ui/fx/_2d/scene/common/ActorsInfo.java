@@ -49,7 +49,7 @@ import javafx.scene.text.TextAlignment;
 /**
  * @author Armin Reichert
  */
-public class GuysInfo {
+public class ActorsInfo {
 
 	private static final String[] PACMAN_BONUS_NAMES = { "CHERRIES", "STRAWBERRY", "PEACH", "APPLE", "GRAPES", "GALAXIAN",
 			"BELL", "KEY" };
@@ -64,7 +64,7 @@ public class GuysInfo {
 	private final List<Pane> panes = new ArrayList<>();
 	private final List<Text> texts = new ArrayList<>();
 
-	public GuysInfo(GameScene2D hostScene) {
+	public ActorsInfo(GameScene2D hostScene) {
 		this.hostScene = hostScene;
 		for (int i = 0; i < NUM_INFOS; ++i) {
 			var text = new Text();
