@@ -44,7 +44,6 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller sceneController;
 	private Intermission2Controller.Context icc;
-	private final RendererMsPacManGame renderer = new RendererMsPacManGame();
 
 	@Override
 	public void setSceneContext(SceneContext sceneContext) {
@@ -55,6 +54,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void init() {
+		var renderer = (RendererMsPacManGame) ctx.r2D();
 		sceneController.restartInState(Intermission2Controller.State.FLAP);
 		var clapperboardAnimationSet = new EntityAnimationSet<Integer>(1);
 		clapperboardAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
@@ -77,6 +77,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
+		var renderer = (RendererMsPacManGame) ctx.r2D();
 		renderer.drawFlap(g, icc.flap);
 		renderer.drawPac(g, icc.msPacMan);
 		renderer.drawPac(g, icc.pacMan);

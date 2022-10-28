@@ -59,17 +59,17 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ssMsPacMan = (RendererMsPacManGame) ctx.r2D();
+		var renderer = (RendererMsPacManGame) ctx.r2D();
 		sceneController.restartInState(Intermission3Controller.State.FLAP);
 		var flapAnimationSet = new EntityAnimationSet<Integer>(1);
-		flapAnimationSet.put(Clapperboard.ACTION, ssMsPacMan.createClapperboardAnimation());
+		flapAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
 		flapAnimationSet.select(Clapperboard.ACTION);
 		icc.flap.setAnimationSet(flapAnimationSet);
 		icc.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPacMan));
 		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
-		var munching = ssMsPacMan.createPacManMunchingAnimationMap(icc.pacMan);
+		var munching = renderer.createPacManMunchingAnimationMap(icc.pacMan);
 		icc.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
-		storkAnim = ssMsPacMan.createStorkFlyingAnimation();
+		storkAnim = renderer.createStorkFlyingAnimation();
 		storkAnim.ensureRunning();
 	}
 
@@ -80,12 +80,12 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var ssMsPacMan = (RendererMsPacManGame) ctx.r2D();
-		ssMsPacMan.drawFlap(g, icc.flap);
-		ctx.r2D().drawPac(g, icc.msPacMan);
-		ctx.r2D().drawPac(g, icc.pacMan);
-		ctx.r2D().drawEntity(g, icc.stork, storkAnim.animate());
-		ctx.r2D().drawEntity(g, icc.bag, icc.bagOpen ? ssMsPacMan.getJunior() : ssMsPacMan.getBlueBag());
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
+		var renderer = (RendererMsPacManGame) ctx.r2D();
+		renderer.drawFlap(g, icc.flap);
+		renderer.drawPac(g, icc.msPacMan);
+		renderer.drawPac(g, icc.pacMan);
+		renderer.drawEntity(g, icc.stork, storkAnim.animate());
+		renderer.drawEntity(g, icc.bag, icc.bagOpen ? renderer.getJunior() : renderer.getBlueBag());
+		renderer.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }
