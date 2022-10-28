@@ -24,6 +24,8 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene;
 
+import java.util.Objects;
+
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
@@ -38,6 +40,12 @@ import de.amr.games.pacman.ui.fx._3d.model.Model3D;
  * @author Armin Reichert
  */
 public record SceneContext(GameController gameController, Rendering2D r2D, Model3D model3D) {
+
+	public SceneContext {
+		Objects.requireNonNull(gameController, "Game controller must not be NULL");
+		Objects.requireNonNull(r2D, "2D renderer must not be NULL");
+		Objects.requireNonNull(model3D, "3D model must not be NULL");
+	}
 
 	public GameVariant gameVariant() {
 		return game().variant;
