@@ -98,11 +98,27 @@ public class GameUI {
 		initGameEventing();
 		initAnimations();
 		initStage();
-		Actions.setUI(this);
-		Actions.playHelpMessageAfterSeconds(0.5);
+		initGameLoop();
 		sceneManager.embedGameScenes(mainScene);
 		updateGameScene(true);
 		stage.show();
+		Actions.setUI(this);
+		Actions.playHelpMessageAfterSeconds(0.5);
+	}
+
+	private void initGameLoop() {
+		gameLoop.setUpdateTask(() -> {
+			gameController.update();
+			currentGameScene.updateAndRender();
+		});
+		gameLoop.setRenderTask(() -> {
+			flashMessageView.update();
+			dashboard.update();
+			updatePipView();
+		});
+		gameLoop.pausedPy.bind(Env.pausedPy);
+		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
+		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 	}
 
 	private void initStage() {
@@ -184,22 +200,6 @@ public class GameUI {
 
 	public GameLoop getGameLoop() {
 		return gameLoop;
-	}
-
-	public void startGameLoop() {
-		gameLoop.setUpdateTask(() -> {
-			gameController.update();
-			currentGameScene.updateAndRender();
-		});
-		gameLoop.setRenderTask(() -> {
-			flashMessageView.update();
-			dashboard.update();
-			updatePipView();
-		});
-		gameLoop.pausedPy.bind(Env.pausedPy);
-		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
-		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
-		gameLoop.start();
 	}
 
 	void updateGameScene(boolean forcedReload) {

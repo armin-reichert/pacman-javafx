@@ -105,6 +105,6 @@ public class PacManGameAppFX extends Application {
 		ui.setPacSteering(new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
 				stage.getHeight(), zoom, U.onOff(Env.use3DScenePy.get()), Env.perspectivePy.get()));
-		ui.startGameLoop();
+		ui.getGameLoop().start();
 	}
 }
