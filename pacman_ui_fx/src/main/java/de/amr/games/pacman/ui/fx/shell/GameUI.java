@@ -91,6 +91,8 @@ public class GameUI {
 		this.gameController = gameController;
 		this.stage = stage;
 		var mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
+		mainScene.setFill(null);
+		sceneManager.embedGameScenes(mainScene);
 		stage.setScene(mainScene);
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
@@ -99,7 +101,6 @@ public class GameUI {
 		initAnimations();
 		initStage();
 		initGameLoop();
-		sceneManager.embedGameScenes(mainScene);
 		updateGameScene(true);
 		stage.show();
 		Actions.setUI(this);
@@ -132,6 +133,7 @@ public class GameUI {
 
 	private Parent createSceneContent() {
 		var root = new StackPane();
+		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		dashboard = new Dashboard();
 		dashboard.build(this);
 		pipView = new PiPView();
@@ -142,6 +144,7 @@ public class GameUI {
 		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
 		gameSceneParent = new StackPane();
+		gameSceneParent.setBackground(Ufx.colorBackground(Color.BLACK));
 		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
 		return root;
 	}
