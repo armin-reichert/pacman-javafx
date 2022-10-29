@@ -283,7 +283,7 @@ public class PlayScene3D implements GameScene {
 		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
 			var color = ctx.r2D().getGhostColor(killer.id);
 			new SequentialTransition( //
-					Ufx.pauseSec(0.0, this::lockGameState), //
+					Ufx.pauseSec(1.0, this::lockGameState), //
 					pac3D.createDyingAnimation(color), //
 					Ufx.pauseSec(2.0, this::unlockGameState) //
 			).play();
