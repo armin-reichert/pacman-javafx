@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Score;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -45,11 +44,7 @@ public class HUD {
 	public final DoubleProperty heightPy = new SimpleDoubleProperty();
 
 	private boolean creditVisible;
-	private Font font;
-
-	public HUD() {
-		font = Ufx.font("fonts/emulogic.ttf", 8);
-	}
+	private Font font = Font.font(8.0);
 
 	public void setFont(Font font) {
 		this.font = font;

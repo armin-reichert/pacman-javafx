@@ -133,6 +133,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void drawHUD(GraphicsContext g) {
+		hud.setFont(ctx.r2D().getArcadeFont());
 		hud.draw(g, ctx.game());
 	}
 
