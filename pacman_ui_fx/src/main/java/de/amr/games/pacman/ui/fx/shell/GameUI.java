@@ -74,10 +74,9 @@ public class GameUI {
 	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
 
 	private final GameLoop gameLoop = new GameLoop(60);
+	private final GameSceneManager sceneManager = new GameSceneManager();
 	private final GameController gameController;
 	private final Stage stage;
-	private final GameSceneManager sceneManager = new GameSceneManager();
-	private final Scene mainScene;
 
 	private StackPane gameSceneParent;
 	private Dashboard dashboard;
@@ -91,7 +90,8 @@ public class GameUI {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		this.mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
+		var mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
+		stage.setScene(mainScene);
 		Env.drawModePy.addListener((x, y, z) -> updateBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
 		initKeyboardInput();
@@ -123,7 +123,6 @@ public class GameUI {
 
 	private void initStage() {
 		stage.setOnCloseRequest(e -> gameLoop.stop());
-		stage.setScene(mainScene);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.setTitle("Pac-Man / Ms. Pac-Man");
@@ -181,7 +180,7 @@ public class GameUI {
 	}
 
 	private void initKeyboardInput() {
-		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		getMainScene().setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);
 		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 	}
@@ -189,11 +188,11 @@ public class GameUI {
 	public void setPacSteering(Steering steering) {
 		Objects.requireNonNull(steering);
 		if (currentSteering instanceof KeyboardSteering keySteering) {
-			mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
+			getMainScene().removeEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
 		currentSteering = steering;
 		if (steering instanceof KeyboardSteering keySteering) {
-			mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
+			getMainScene().addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
 		gameController.setNormalSteering(currentSteering);
 	}
@@ -204,7 +203,7 @@ public class GameUI {
 
 	void updateGameScene(boolean forcedReload) {
 		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
-		newGameScene.resize(mainScene.getHeight());
+		newGameScene.resize(getMainScene().getHeight());
 		if (newGameScene != currentGameScene) {
 			currentGameScene = newGameScene;
 			gameSceneParent.getChildren().setAll(currentGameScene.getFXSubScene());
@@ -276,7 +275,7 @@ public class GameUI {
 	}
 
 	public Scene getMainScene() {
-		return mainScene;
+		return stage.getScene();
 	}
 
 	public FlashMessageView getFlashMessageView() {
