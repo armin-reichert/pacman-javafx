@@ -36,17 +36,7 @@ import javafx.scene.text.Font;
  */
 public class HUD {
 
-	private boolean creditVisible;
-
-	public boolean isCreditVisible() {
-		return creditVisible;
-	}
-
-	public void setCreditVisible(boolean creditVisible) {
-		this.creditVisible = creditVisible;
-	}
-
-	public void draw(GraphicsContext g, GameModel game, Font font) {
+	public void draw(GraphicsContext g, GameModel game, Font font, boolean creditVisible) {
 		drawScore(g, game.gameScore, font, TS, TS);
 		drawScore(g, game.highScore, font, 16 * TS, TS);
 		if (creditVisible) {

@@ -66,6 +66,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final V2i unscaledSize;
 	protected final SubScene fxSubScene;
 	protected SceneContext ctx;
+	private boolean creditVisible;
 
 	protected GameScene2D() {
 		this(DEFAULT_SIZE);
@@ -130,13 +131,21 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void drawHUD(GraphicsContext g) {
-		hud.draw(g, ctx.game(), ctx.r2D().getArcadeFont());
+		hud.draw(g, ctx.game(), ctx.r2D().getArcadeFont(), creditVisible);
 	}
 
 	/**
 	 * Updates the scene. Subclasses override this method.
 	 */
 	public void update() {
+	}
+
+	public boolean isCreditVisible() {
+		return creditVisible;
+	}
+
+	public void setCreditVisible(boolean creditVisible) {
+		this.creditVisible = creditVisible;
 	}
 
 	@Override

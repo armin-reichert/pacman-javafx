@@ -50,7 +50,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		hud.setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
+		setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
 		ctx.game().bonus().setInactive();
 		var game = ctx.game();
 		var arcadeWorld = (ArcadeWorld) game.world();
@@ -77,7 +77,7 @@ public class PlayScene2D extends GameScene2D {
 		if (Env.showDebugInfoPy.get()) {
 			actorsInfo.update(ctx.game());
 		}
-		hud.setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);
+		setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class PlayScene2D extends GameScene2D {
 		for (var ghost : ctx.game().theGhosts) {
 			ctx.r2D().drawGhost(g, ghost);
 		}
-		if (!hud.isCreditVisible()) {
+		if (!isCreditVisible()) {
 			int livesDisplayed = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
 			ctx.r2D().drawLivesCounter(g, livesDisplayed);
 		}
