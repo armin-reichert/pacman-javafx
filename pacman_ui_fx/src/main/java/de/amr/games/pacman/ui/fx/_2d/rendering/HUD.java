@@ -1,6 +1,4 @@
 /*
-MIT License
-
 Copyright (c) 2022 Armin Reichert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,8 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Score;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -39,9 +35,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class HUD {
-
-	public final DoubleProperty widthPy = new SimpleDoubleProperty();
-	public final DoubleProperty heightPy = new SimpleDoubleProperty();
 
 	private boolean creditVisible;
 	private Font font = Font.font(8.0);

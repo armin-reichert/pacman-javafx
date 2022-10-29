@@ -85,9 +85,6 @@ public abstract class GameScene2D implements GameScene {
 		infoLayer.setMouseTransparent(true);
 
 		root.getChildren().addAll(canvas, infoLayer);
-
-		hud.widthPy.bind(canvas.widthProperty());
-		hud.heightPy.bind(canvas.heightProperty());
 	}
 
 	private void scaleCanvas() {
