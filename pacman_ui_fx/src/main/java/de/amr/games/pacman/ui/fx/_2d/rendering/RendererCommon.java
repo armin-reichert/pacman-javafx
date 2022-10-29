@@ -31,7 +31,9 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.LevelCounter;
+import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -195,6 +197,33 @@ public abstract class RendererCommon implements Rendering2D {
 			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
 			g.fillText("+" + excessLives, x + t(10), y + t(1));
 		}
+	}
+
+	@Override
+	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
+		var font = getArcadeFont();
+		drawScore(g, game.gameScore, font, TS, TS);
+		drawScore(g, game.highScore, font, 16 * TS, TS);
+		if (creditVisible) {
+			drawText(g, "CREDIT  %d".formatted(game.getCredit()), Color.WHITE, font, t(2), t(36) - 1);
+		}
+	}
+
+	private void drawScore(GraphicsContext g, Score score, Font font, double x, double y) {
+		if (score.visible) {
+			drawText(g, score.title, Color.WHITE, font, x, y);
+			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
+			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + TS + 1);
+			if (score.showContent) {
+				drawText(g, "L" + score.levelNumber, Color.LIGHTGRAY, font, x + t(8), y + TS + 1);
+			}
+		}
+	}
+
+	private void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
 	}
 
 	@Override

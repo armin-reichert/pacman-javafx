@@ -29,6 +29,7 @@ import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -139,6 +140,8 @@ public interface Rendering2D {
 	void drawLevelCounter(GraphicsContext g, LevelCounter levelCounter);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
+
+	void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible);
 
 	void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden);
 

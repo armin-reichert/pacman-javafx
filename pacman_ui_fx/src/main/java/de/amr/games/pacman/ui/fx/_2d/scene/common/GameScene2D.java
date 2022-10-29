@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.HUD;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
@@ -62,7 +61,6 @@ public abstract class GameScene2D implements GameScene {
 	protected final StackPane root = new StackPane();
 	protected final ResizableCanvas canvas = new ResizableCanvas();
 	protected final Pane infoLayer = new Pane();
-	protected final HUD hud = new HUD();
 	protected final V2i unscaledSize;
 	protected final SubScene fxSubScene;
 	protected SceneContext ctx;
@@ -131,7 +129,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void drawHUD(GraphicsContext g) {
-		hud.draw(g, ctx.game(), ctx.r2D().getArcadeFont(), creditVisible);
+		ctx.r2D().drawHUD(g, ctx.game(), creditVisible);
 	}
 
 	/**
