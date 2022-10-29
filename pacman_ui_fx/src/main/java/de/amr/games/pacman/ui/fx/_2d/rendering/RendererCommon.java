@@ -68,6 +68,12 @@ public abstract class RendererCommon implements Rendering2D {
 
 	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", 8);
 
+	protected void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
+	}
+
 	protected void clearTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
@@ -193,9 +199,7 @@ public abstract class RendererCommon implements Rendering2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			g.setFill(Color.YELLOW);
-			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
-			g.fillText("+" + excessLives, x + t(10), y + t(1));
+			drawText(g, "+" + excessLives, Color.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10), y + t(1));
 		}
 	}
 
@@ -220,25 +224,14 @@ public abstract class RendererCommon implements Rendering2D {
 		}
 	}
 
-	private void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
-
 	@Override
 	public void drawGameStateMessage(GraphicsContext g, GameState state) {
 		if (state == GameState.GAME_OVER) {
-			g.setFont(ARCADE_FONT);
-			g.setFill(Color.RED);
-			g.fillText("GAME  OVER", t(9), t(21));
+			drawText(g, "GAME  OVER", Color.RED, ARCADE_FONT, t(9), t(21));
 		} else if (state == GameState.READY) {
-			g.setFont(ARCADE_FONT);
-			g.setFill(Color.YELLOW);
-			g.fillText("READY", t(11), t(21));
+			drawText(g, "READY", Color.YELLOW, ARCADE_FONT, t(11), t(21));
 			var italic = Font.font(ARCADE_FONT.getFamily(), FontPosture.ITALIC, ARCADE_FONT.getSize());
-			g.setFont(italic);
-			g.fillText("!", t(16), t(21));
+			drawText(g, "!", Color.YELLOW, italic, t(16), t(21));
 		}
 	}
 
