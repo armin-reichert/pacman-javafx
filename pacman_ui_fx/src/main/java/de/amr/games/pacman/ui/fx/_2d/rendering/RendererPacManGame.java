@@ -54,6 +54,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	private static final Image MAZE_FULL = Ufx.image("graphics/pacman/maze_full.png");
 	private static final Image MAZE_EMPTY = Ufx.image("graphics/pacman/maze_empty.png");
+	private static final Image MAZE_EMPTY_BW = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
 	@Override
 	public Spritesheet getSpritesheet() {
@@ -84,8 +85,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
-		var mazeBright = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
-		var animation = new SingleEntityAnimation<>(mazeBright, MAZE_EMPTY);
+		var animation = new SingleEntityAnimation<>(MAZE_EMPTY_BW, MAZE_EMPTY);
 		animation.setFrameDuration(10);
 		return animation;
 	}
