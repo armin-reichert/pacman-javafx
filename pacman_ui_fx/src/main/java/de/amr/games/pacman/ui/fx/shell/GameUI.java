@@ -90,12 +90,7 @@ public class GameUI {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		var mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
-		mainScene.setFill(null);
-		sceneManager.embedGameScenes(mainScene);
-		stage.setScene(mainScene);
-		Env.drawModePy.addListener((x, y, z) -> updateBackground());
-		Env.bgColorPy.addListener((x, y, z) -> updateBackground());
+		createMainScene(width, height);
 		initKeyboardInput();
 		initGameEventing();
 		initAnimations();
@@ -105,6 +100,13 @@ public class GameUI {
 		stage.show();
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
+	}
+
+	private void createMainScene(double width, double height) {
+		var mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
+		mainScene.setFill(null);
+		sceneManager.embedGameScenes(mainScene);
+		stage.setScene(mainScene);
 	}
 
 	private void initGameLoop() {
@@ -225,7 +227,7 @@ public class GameUI {
 		}
 	}
 
-	private void updateBackground() {
+	public void updateBackground() {
 		var mode = Env.drawModePy.get();
 		var bgColor = Env.bgColorPy.get();
 		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
