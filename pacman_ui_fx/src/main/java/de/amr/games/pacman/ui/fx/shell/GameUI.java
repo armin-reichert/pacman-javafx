@@ -202,10 +202,6 @@ public class GameUI {
 		gameController.setNormalSteering(currentSteering);
 	}
 
-	public GameLoop getGameLoop() {
-		return gameLoop;
-	}
-
 	void updateGameScene(boolean forcedReload) {
 		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
 		newGameScene.resize(getMainScene().getHeight());
@@ -273,6 +269,10 @@ public class GameUI {
 
 	public GameSceneManager getSceneManager() {
 		return sceneManager;
+	}
+
+	public GameLoop getGameLoop() {
+		return gameLoop;
 	}
 
 	public GameScene getCurrentGameScene() {
