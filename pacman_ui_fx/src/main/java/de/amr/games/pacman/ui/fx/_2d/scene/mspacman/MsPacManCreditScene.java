@@ -49,7 +49,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	public void init() {
 		setCreditVisible(true);
 		msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).getMsPacManSprite();
-		arcadeFont = ctx.r2D().getArcadeFont();
+		arcadeFont = ctx.r2D().arcadeFont();
 		arcadeFont6 = Font.font(arcadeFont.getName(), 6);
 	}
 
@@ -65,7 +65,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		g.setFont(arcadeFont);
-		g.setFill(ctx.r2D().getGhostColor(Ghost.ORANGE_GHOST));
+		g.setFill(ctx.r2D().ghostColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(16));
 		g.fillText("1 PLAYER ONLY", t(8), t(18));
 		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));

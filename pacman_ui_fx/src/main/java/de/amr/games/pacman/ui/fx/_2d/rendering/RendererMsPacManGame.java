@@ -101,7 +101,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public Spritesheet getSpritesheet() {
+	public Spritesheet spritesheet() {
 		return SPRITESHEET;
 	}
 
@@ -111,36 +111,36 @@ public class RendererMsPacManGame extends RendererCommon {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	private Rectangle2D rhs(int col, int row) {
-		return getSpritesheet().tilesAtOrigin(456, 0, col, row, 1, 1);
+		return spritesheet().tilesAtOrigin(456, 0, col, row, 1, 1);
 	}
 
 	@Override
-	public Color getFoodColor(int mazeNumber) {
+	public Color foodColor(int mazeNumber) {
 		return FOOD_COLORS[mazeNumber - 1];
 	}
 
 	@Override
-	public Rectangle2D getGhostSprite(int ghostID, Direction dir) {
-		return rhs(2 * getSpritesheet().dirIndex(dir) + 1, 4 + ghostID);
+	public Rectangle2D ghostSprite(int ghostID, Direction dir) {
+		return rhs(2 * spritesheet().dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
-	public Rectangle2D getBonusSymbolSprite(int symbol) {
+	public Rectangle2D bonusSymbolSprite(int symbol) {
 		return rhs(3 + symbol, 0);
 	}
 
 	@Override
-	public Rectangle2D getBonusValueSprite(int symbol) {
+	public Rectangle2D bonusValueSprite(int symbol) {
 		return rhs(3 + symbol, 1);
 	}
 
 	@Override
-	public Image getMazeFullImage(int mazeNumber) {
+	public Image mazeFullImage(int mazeNumber) {
 		return MAZES_FULL[mazeNumber - 1];
 	}
 
 	@Override
-	public Rectangle2D getLifeSprite() {
+	public Rectangle2D lifeSprite() {
 		return rhs(1, 0);
 	}
 
@@ -168,7 +168,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
-		g.setFont(getArcadeFont());
+		g.setFont(arcadeFont());
 		g.fillText("MIDWAY MFG CO", x + t(7), y + t(2));
 		g.fillText("1980/1981", x + t(8), y + t(4));
 	}
@@ -178,7 +178,7 @@ public class RendererMsPacManGame extends RendererCommon {
 			flap.animation().map(EntityAnimation::animate).ifPresent(spriteObj -> {
 				var sprite = (Rectangle2D) spriteObj;
 				drawEntity(g, flap, sprite);
-				g.setFont(getArcadeFont());
+				g.setFont(arcadeFont());
 				g.setFill(Color.rgb(222, 222, 255));
 				g.fillText(String.valueOf(flap.sceneNumber), flap.getPosition().x() + sprite.getWidth() - 25,
 						flap.getPosition().y() + 18);
@@ -199,7 +199,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	public EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = getSpritesheet().dirIndex(dir);
+			int d = spritesheet().dirIndex(dir);
 			var wide = rhs(0, d);
 			var middle = rhs(1, d);
 			var closed = rhs(2, d);
@@ -227,7 +227,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	public EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = getSpritesheet().dirIndex(dir);
+			int d = spritesheet().dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(2 * d, 4 + ghost.id), rhs(2 * d + 1, 4 + ghost.id));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
@@ -255,7 +255,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	public EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = getSpritesheet().dirIndex(dir);
+			int d = spritesheet().dirIndex(dir);
 			animationByDir.put(dir, new SingleEntityAnimation<>(rhs(8 + d, 5)));
 		}
 		return animationByDir;
@@ -271,7 +271,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	public EntityAnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = getSpritesheet().dirIndex(dir);
+			int d = spritesheet().dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();

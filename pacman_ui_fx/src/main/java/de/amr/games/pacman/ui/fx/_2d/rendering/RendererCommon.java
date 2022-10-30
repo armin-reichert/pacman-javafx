@@ -80,12 +80,12 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public Font getArcadeFont() {
+	public Font arcadeFont() {
 		return ARCADE_FONT;
 	}
 
 	@Override
-	public Color getGhostColor(int ghostID) {
+	public Color ghostColor(int ghostID) {
 		return GHOST_COLORS[ghostID];
 	}
 
@@ -112,7 +112,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
-		g.drawImage(getMazeFullImage(mazeNumber), x, y);
+		g.drawImage(mazeFullImage(mazeNumber), x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
 		if (energizersHidden) {
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));
@@ -122,7 +122,7 @@ public abstract class RendererCommon implements Rendering2D {
 	@Override
 	public void drawSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
 		if (region != null) {
-			g.drawImage(getSpritesheet().sourceImage(), region.getMinX(), region.getMinY(), region.getWidth(),
+			g.drawImage(spritesheet().sourceImage(), region.getMinX(), region.getMinY(), region.getWidth(),
 					region.getHeight(), x, y, region.getWidth(), region.getHeight());
 		}
 	}
@@ -161,8 +161,8 @@ public abstract class RendererCommon implements Rendering2D {
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case INACTIVE -> null;
-		case EDIBLE -> getBonusSymbolSprite(bonus.index());
-		case EATEN -> getBonusValueSprite(bonus.index());
+		case EDIBLE -> bonusSymbolSprite(bonus.index());
+		case EATEN -> bonusValueSprite(bonus.index());
 		};
 		if (bonus.entity() instanceof MovingBonus movingBonus) {
 			g.save();
@@ -179,7 +179,7 @@ public abstract class RendererCommon implements Rendering2D {
 		if (levelCounter.visible) {
 			double x = levelCounter.rightBorderPosition.x();
 			for (int symbol : levelCounter.symbols) {
-				drawSprite(g, getBonusSymbolSprite(symbol), x, levelCounter.rightBorderPosition.y());
+				drawSprite(g, bonusSymbolSprite(symbol), x, levelCounter.rightBorderPosition.y());
 				x -= t(2);
 			}
 		}
@@ -194,7 +194,7 @@ public abstract class RendererCommon implements Rendering2D {
 		int y = t(ArcadeWorld.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(g, getLifeSprite(), x + t(2 * i), y);
+			drawSprite(g, lifeSprite(), x + t(2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -205,7 +205,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
-		var font = getArcadeFont();
+		var font = arcadeFont();
 		drawScore(g, game.gameScore, font, TS, TS);
 		drawScore(g, game.highScore, font, 16 * TS, TS);
 		if (creditVisible) {

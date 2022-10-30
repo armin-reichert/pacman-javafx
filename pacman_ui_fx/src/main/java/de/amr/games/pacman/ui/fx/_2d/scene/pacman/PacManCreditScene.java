@@ -45,7 +45,7 @@ public class PacManCreditScene extends GameScene2D {
 	@Override
 	public void init() {
 		setCreditVisible(true);
-		arcade6 = Font.font(ctx.r2D().getArcadeFont().getName(), 6);
+		arcade6 = Font.font(ctx.r2D().arcadeFont().getName(), 6);
 	}
 
 	@Override
@@ -59,15 +59,15 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		g.setFont(ctx.r2D().getArcadeFont());
-		g.setFill(ctx.r2D().getGhostColor(Ghost.ORANGE_GHOST));
+		g.setFont(ctx.r2D().arcadeFont());
+		g.setFill(ctx.r2D().ghostColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(17));
 
-		g.setFont(ctx.r2D().getArcadeFont());
-		g.setFill(ctx.r2D().getGhostColor(Ghost.CYAN_GHOST));
+		g.setFont(ctx.r2D().arcadeFont());
+		g.setFill(ctx.r2D().ghostColor(Ghost.CYAN_GHOST));
 		g.fillText("1 PLAYER ONLY", t(8), t(21));
 
-		g.setFont(ctx.r2D().getArcadeFont());
+		g.setFont(ctx.r2D().arcadeFont());
 		g.setFill(Color.rgb(255, 184, 174));
 		g.fillText("BONUS PAC-MAN FOR 10000", t(1), t(25));
 

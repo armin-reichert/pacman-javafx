@@ -58,7 +58,7 @@ public class World3D extends Group {
 
 	public World3D(GameModel game, Model3D model3D, Rendering2D r2D) {
 		scores3D = new Scores3D();
-		scores3D.setFont(r2D.getArcadeFont());
+		scores3D.setFont(r2D.arcadeFont());
 		if (game.hasCredit()) {
 			scores3D.setComputeScoreText(true);
 		} else {
@@ -89,7 +89,7 @@ public class World3D extends Group {
 		food3D.squirtingPy.bind(Env.squirtingPy);
 		getChildren().add(food3D);
 
-		levelCounter3D = new LevelCounter3D(symbol -> r2D.getSpritesheet().subImage(r2D.getBonusSymbolSprite(symbol)));
+		levelCounter3D = new LevelCounter3D(symbol -> r2D.spritesheet().subImage(r2D.bonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world().numCols() - 1) * TS, TS);
 		levelCounter3D.update(game.levelCounter);
 		getChildren().add(levelCounter3D);

@@ -61,7 +61,7 @@ public class Ghost3D extends MovingCreature3D {
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		super(ghost);
-		numberImages = r2D.createGhostValueList().frames().map(r2D.getSpritesheet()::subImage).toArray(Image[]::new);
+		numberImages = r2D.createGhostValueList().frames().map(r2D.spritesheet()::subImage).toArray(Image[]::new);
 		coloredGhost3D = new ColoredGhost3D(ghost.id, model3D);
 	}
 

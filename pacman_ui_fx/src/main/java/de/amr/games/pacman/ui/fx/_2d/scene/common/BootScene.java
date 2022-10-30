@@ -90,7 +90,7 @@ public class BootScene extends GameScene2D {
 	private void drawRandomHexCodes(GraphicsContext g) {
 		clearBuffer();
 		g.setFill(Color.LIGHTGRAY);
-		g.setFont(ctx.r2D().getArcadeFont());
+		g.setFont(ctx.r2D().arcadeFont());
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
 				var hexCode = Integer.toHexString(rnd.nextInt(16));
@@ -102,7 +102,7 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomSprites(GraphicsContext g) {
 		clearBuffer();
-		var image = ctx.r2D().getSpritesheet().sourceImage();
+		var image = ctx.r2D().spritesheet().sourceImage();
 		var w = image.getWidth();
 		var h = image.getHeight();
 		var cellSize = 16;

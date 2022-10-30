@@ -51,21 +51,21 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	Spritesheet getSpritesheet();
+	Spritesheet spritesheet();
 
-	Font getArcadeFont();
+	Font arcadeFont();
 
-	Color getGhostColor(int ghostID);
+	Color ghostColor(int ghostID);
 
 	// Sprites
 
-	Rectangle2D getGhostSprite(int ghostID, Direction dir);
+	Rectangle2D ghostSprite(int ghostID, Direction dir);
 
-	Rectangle2D getLifeSprite();
+	Rectangle2D lifeSprite();
 
-	Rectangle2D getBonusSymbolSprite(int symbol);
+	Rectangle2D bonusSymbolSprite(int symbol);
 
-	Rectangle2D getBonusValueSprite(int symbol);
+	Rectangle2D bonusValueSprite(int symbol);
 
 	// Animations
 
@@ -91,9 +91,9 @@ public interface Rendering2D {
 
 	// Maze
 
-	Color getFoodColor(int mazeNumber);
+	Color foodColor(int mazeNumber);
 
-	Image getMazeFullImage(int mazeNumber);
+	Image mazeFullImage(int mazeNumber);
 
 	// Drawing
 
