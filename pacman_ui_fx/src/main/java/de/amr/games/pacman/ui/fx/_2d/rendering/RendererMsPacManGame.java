@@ -189,13 +189,8 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
-		int mazeIndex = mazeNumber - 1;
-		var mazeEmpty = getSpritesheet().subImage(228, 248 * mazeIndex, 226, 248);
-		var brightImage = Ufx.colorsExchanged(mazeEmpty, Map.of( //
-				MAZE_SIDE_COLORS[mazeIndex], Color.WHITE, //
-				MAZE_TOP_COLORS[mazeIndex], Color.BLACK) //
-		);
-		var animation = new SingleEntityAnimation<>(brightImage, mazeEmpty);
+		int i = mazeNumber - 1;
+		var animation = new SingleEntityAnimation<>(MAZES_EMPTY[i], MAZES_EMPTY_BW[i]);
 		animation.setFrameDuration(10);
 		return animation;
 	}
