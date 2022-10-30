@@ -38,8 +38,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
-import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
@@ -214,8 +212,7 @@ public class GameUI {
 	}
 
 	private void updatePipView() {
-		if (Env.pipEnabledPy.get()
-				&& (currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D)) {
+		if (Env.pipEnabledPy.get() && sceneManager.isPlayScene(currentGameScene)) {
 			pipView.getRoot().setVisible(true);
 			pipView.draw();
 		} else {

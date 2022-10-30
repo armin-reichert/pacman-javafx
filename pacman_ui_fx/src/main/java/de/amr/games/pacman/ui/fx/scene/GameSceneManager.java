@@ -57,6 +57,8 @@ public class GameSceneManager {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	private static final int PLAY_SCENE_INDEX = 3;
+
 	private record GameSceneVariants(GameScene scene2D, GameScene scene3D) {
 	}
 
@@ -133,6 +135,12 @@ public class GameSceneManager {
 		return nextGameScene;
 	}
 
+	public boolean isPlayScene(GameScene gameScene) {
+		return gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene2D
+				|| gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene3D
+				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene2D || gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene3D;
+	}
+
 	private void updateSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant;
 		var r2D = switch (gameVariant) {
@@ -161,9 +169,9 @@ public class GameSceneManager {
 		case BOOT -> 0;
 		case INTRO -> 1;
 		case CREDIT -> 2;
-		case INTERMISSION -> 3 + game.intermissionNumber(game.level.number());
-		case INTERMISSION_TEST -> 3 + game.intermissionTestNumber;
-		default -> 3; // play scene
+		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level.number());
+		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
+		default -> PLAY_SCENE_INDEX; // play scene
 		}];
 
 		var scene = threeD ? variants.scene3D : variants.scene2D;
