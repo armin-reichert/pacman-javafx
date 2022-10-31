@@ -52,6 +52,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	private static final int MAZE_WIDTH = 226;
 	private static final int MAZE_HEIGHT = 248;
 	private static final int SECOND_COLUMN = 228;
+	private static final int THIRD_COLUMN = 456;
 
 	//@formatter:off
 	private static final Color[] MAZE_TOP_COLORS = { 
@@ -110,7 +111,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	private Rectangle2D rhs(int col, int row) {
-		return spritesheet().tiles(456, 0, col, row, 1, 1);
+		return spritesheet().tiles(THIRD_COLUMN, 0, col, row, 1, 1);
 	}
 
 	@Override
