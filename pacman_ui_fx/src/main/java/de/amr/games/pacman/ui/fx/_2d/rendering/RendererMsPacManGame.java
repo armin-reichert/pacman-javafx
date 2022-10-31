@@ -49,6 +49,9 @@ import javafx.scene.text.Font;
  */
 public class RendererMsPacManGame extends RendererCommon {
 
+	private static final int MAZE_WIDTH = 226;
+	private static final int MAZE_HEIGHT = 248;
+
 	//@formatter:off
 	private static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
@@ -79,24 +82,20 @@ public class RendererMsPacManGame extends RendererCommon {
 	//@formatter:on
 
 	private static final Spritesheet SPRITESHEET;
-
 	private static final Image MIDWAY_LOGO;
-	private static final Image[] MAZES_FULL;
 	private static final Image[] MAZES_EMPTY;
-	private static final Image[] MAZES_EMPTY_BW;
+	private static final Image[] MAZES_EMPTY_INV;
 
 	static {
 		SPRITESHEET = new Spritesheet("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
 				Direction.DOWN);
 		MIDWAY_LOGO = Ufx.image("graphics/mspacman/midway.png");
 		int numMazes = 6;
-		MAZES_FULL = new Image[numMazes];
 		MAZES_EMPTY = new Image[numMazes];
-		MAZES_EMPTY_BW = new Image[numMazes];
+		MAZES_EMPTY_INV = new Image[numMazes];
 		for (int i = 0; i < numMazes; ++i) {
-			MAZES_FULL[i] = SPRITESHEET.subImage(0, 248 * i, 226, 248);
-			MAZES_EMPTY[i] = SPRITESHEET.subImage(228, 248 * i, 226, 248);
-			MAZES_EMPTY_BW[i] = Ufx.colorsExchanged(MAZES_EMPTY[i], //
+			MAZES_EMPTY[i] = SPRITESHEET.subImage(228, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
+			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(MAZES_EMPTY[i], //
 					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}
 	}
@@ -137,7 +136,8 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
-		g.drawImage(MAZES_FULL[mazeNumber - 1], x, y);
+		g.drawImage(spritesheet().sourceImage(), 0, 248 * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT, x, y, MAZE_WIDTH,
+				MAZE_HEIGHT);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
 		if (energizersHidden) {
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));
@@ -195,7 +195,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	@Override
 	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
 		int i = mazeNumber - 1;
-		var animation = new SingleEntityAnimation<>(MAZES_EMPTY[i], MAZES_EMPTY_BW[i]);
+		var animation = new SingleEntityAnimation<>(MAZES_EMPTY[i], MAZES_EMPTY_INV[i]);
 		animation.setFrameDuration(10);
 		return animation;
 	}
