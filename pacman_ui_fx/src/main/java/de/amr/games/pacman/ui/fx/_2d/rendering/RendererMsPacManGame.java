@@ -145,6 +145,11 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
+	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash) {
+		g.drawImage(flash ? MAZES_EMPTY_INV[mazeNumber - 1] : MAZES_EMPTY[mazeNumber - 1], x, y);
+	}
+
+	@Override
 	public Rectangle2D lifeSprite() {
 		return rhs(1, 0);
 	}
@@ -193,9 +198,8 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber) {
-		int i = mazeNumber - 1;
-		var animation = new SingleEntityAnimation<>(MAZES_EMPTY[i], MAZES_EMPTY_INV[i]);
+	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation(int mazeNumber) {
+		var animation = new SingleEntityAnimation<>(true, false);
 		animation.setFrameDuration(10);
 		return animation;
 	}

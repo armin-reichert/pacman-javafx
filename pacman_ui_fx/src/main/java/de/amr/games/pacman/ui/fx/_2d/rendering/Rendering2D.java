@@ -40,7 +40,6 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -85,7 +84,7 @@ public interface Rendering2D {
 
 	EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost);
 
-	SingleEntityAnimation<Image> createMazeFlashingAnimation(int mazeNumber);
+	SingleEntityAnimation<Boolean> createMazeFlashingAnimation(int mazeNumber);
 
 	FixedEntityAnimation<Rectangle2D> createGhostValueList();
 
@@ -140,6 +139,8 @@ public interface Rendering2D {
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
 	void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible);
+
+	void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash);
 
 	void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden);
 

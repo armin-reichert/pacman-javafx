@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -101,9 +100,10 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawArcadeWorldMaze(GraphicsContext g, ArcadeWorld world) {
-		var flashing = world.flashingAnimation();
-		if (flashing.isPresent() && flashing.get().isRunning()) {
-			g.drawImage((Image) flashing.get().frame(), t(0), t(3));
+		var flashingAnimation = world.flashingAnimation();
+		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
+			boolean flash = (boolean) flashingAnimation.get().frame();
+			ctx.r2D().drawEmptyMaze(g, t(0), t(3), ctx.level().mazeNumber(), flash);
 		} else {
 			drawMaze(g);
 		}
