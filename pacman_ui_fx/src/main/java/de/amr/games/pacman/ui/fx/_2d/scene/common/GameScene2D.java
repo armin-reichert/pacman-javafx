@@ -122,19 +122,18 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	/**
-	 * Draws the scene content. Subclasses override this method.
+	 * Updates the scene.
+	 */
+	public abstract void update();
+
+	/**
+	 * Draws the scene content.
 	 */
 	public void drawSceneContent(GraphicsContext g) {
 	}
 
 	public void drawHUD(GraphicsContext g) {
 		ctx.r2D().drawHUD(g, ctx.game(), creditVisible);
-	}
-
-	/**
-	 * Updates the scene. Subclasses override this method.
-	 */
-	public void update() {
 	}
 
 	public boolean isCreditVisible() {
