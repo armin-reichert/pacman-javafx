@@ -104,13 +104,6 @@ public interface GameScene extends GameEventAdapter {
 	}
 
 	/**
-	 * @return current scaling of this scene
-	 */
-	default double getScaling() {
-		return 1.0;
-	}
-
-	/**
 	 * "Locks" the current game controller state by setting the timer duration to {@link TickTimer#INDEFINITE}.
 	 */
 	default void lockGameState() {

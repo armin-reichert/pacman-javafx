@@ -187,7 +187,6 @@ public abstract class GameScene2D implements GameScene {
 		return unscaledSize.y();
 	}
 
-	@Override
 	public double getScaling() {
 		return scalingPy.get();
 	}
