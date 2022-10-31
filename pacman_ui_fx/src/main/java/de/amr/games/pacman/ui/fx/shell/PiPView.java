@@ -46,7 +46,7 @@ public class PiPView {
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override
 		protected void invalidated() {
-			playScene.resize(get());
+			playScene.setHeight(get());
 		}
 	};
 
@@ -57,7 +57,7 @@ public class PiPView {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		root.setFocusTraversable(false);
 		root.getChildren().add(playScene.getFXSubScene());
-		playScene.resize(MIN_SIZE.y());
+		playScene.setHeight(MIN_SIZE.y());
 	}
 
 	public StackPane getRoot() {

@@ -93,7 +93,7 @@ public abstract class GameScene2D implements GameScene {
 				canvas.getHeight());
 	}
 
-	public void resize(double height) {
+	public void setHeight(double height) {
 		double aspectRatio = (double) unscaledSize.x() / (double) unscaledSize.y();
 		double scaling = height / unscaledSize.y();
 		double width = aspectRatio * height;
@@ -152,7 +152,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height) {
-		height.addListener((x, y, h) -> resize(h.doubleValue()));
+		height.addListener((x, y, h) -> setHeight(h.doubleValue()));
 	}
 
 	@Override

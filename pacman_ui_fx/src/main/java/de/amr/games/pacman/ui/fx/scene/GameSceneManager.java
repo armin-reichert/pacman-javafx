@@ -100,7 +100,7 @@ public class GameSceneManager {
 		if (gameScene != null) {
 			gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty());
 			if (gameScene instanceof GameScene2D gameScene2D) {
-				gameScene2D.resize(mainScene.getHeight());
+				gameScene2D.setHeight(mainScene.getHeight());
 			}
 		}
 	}
