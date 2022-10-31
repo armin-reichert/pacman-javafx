@@ -110,7 +110,7 @@ public class GameUI {
 	private void initGameLoop() {
 		gameLoop.setUpdateTask(() -> {
 			gameController.update();
-			currentGameScene.updateAndRender();
+			currentGameScene.onTick();
 		});
 		gameLoop.setRenderTask(() -> {
 			flashMessageView.update();

@@ -105,7 +105,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public final void updateAndRender() {
+	public final void onTick() {
 		update();
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);

@@ -157,7 +157,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void updateAndRender() {
+	public void onTick() {
 		world3D.update(ctx.game());
 		pac3D.update();
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
