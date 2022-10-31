@@ -34,6 +34,7 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
@@ -59,7 +60,7 @@ public class GameSceneManager {
 
 	private static final int PLAY_SCENE_INDEX = 3;
 
-	private record GameSceneVariants(GameScene scene2D, GameScene scene3D) {
+	private record GameSceneVariants(GameScene2D scene2D, GameScene scene3D) {
 	}
 
 	//@formatter:off
@@ -98,6 +99,9 @@ public class GameSceneManager {
 	private void embedGameScene(Scene mainScene, GameScene gameScene) {
 		if (gameScene != null) {
 			gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty());
+			if (gameScene instanceof GameScene2D gameScene2D) {
+				gameScene2D.resize(mainScene.getHeight());
+			}
 		}
 	}
 

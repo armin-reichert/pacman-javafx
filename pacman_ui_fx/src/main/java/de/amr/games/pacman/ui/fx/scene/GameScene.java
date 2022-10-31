@@ -86,13 +86,6 @@ public interface GameScene extends GameEventAdapter {
 	void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height);
 
 	/**
-	 * Resizes the scene to the given height.
-	 * 
-	 * @param height new height
-	 */
-	void resize(double height);
-
-	/**
 	 * @return if this is a scene with 3D content
 	 */
 	boolean is3D();

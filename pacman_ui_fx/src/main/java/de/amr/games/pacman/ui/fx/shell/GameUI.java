@@ -202,7 +202,6 @@ public class GameUI {
 
 	void updateGameScene(boolean forcedReload) {
 		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
-		newGameScene.resize(getMainScene().getHeight());
 		if (newGameScene != currentGameScene) {
 			currentGameScene = newGameScene;
 			gameSceneParent.getChildren().setAll(currentGameScene.getFXSubScene());
