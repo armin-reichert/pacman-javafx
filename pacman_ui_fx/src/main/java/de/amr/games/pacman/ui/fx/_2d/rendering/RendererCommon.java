@@ -40,7 +40,6 @@ import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
@@ -108,15 +107,6 @@ public abstract class RendererCommon implements Rendering2D {
 		set.put(AnimKeys.GHOST_VALUE, createGhostValueList());
 		set.select(AnimKeys.GHOST_COLOR);
 		return set;
-	}
-
-	@Override
-	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
-		g.drawImage(mazeFullImage(mazeNumber), x, y);
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
-		if (energizersHidden) {
-			world.energizerTiles().forEach(tile -> clearTile(g, tile));
-		}
 	}
 
 	@Override

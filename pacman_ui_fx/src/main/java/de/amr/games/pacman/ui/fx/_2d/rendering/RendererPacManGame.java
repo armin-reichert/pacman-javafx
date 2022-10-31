@@ -34,6 +34,7 @@ import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
@@ -91,8 +92,12 @@ public class RendererPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public Image mazeFullImage(int mazeNumber) {
-		return MAZE_FULL;
+	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
+		g.drawImage(MAZE_FULL, x, y);
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
+		if (energizersHidden) {
+			world.energizerTiles().forEach(tile -> clearTile(g, tile));
+		}
 	}
 
 	@Override
@@ -131,7 +136,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().tilesToRight(3, 0, 11));
+		var animation = new SingleEntityAnimation<>(spritesheet().tilesRightOf(3, 0, 11));
 		animation.setFrameDuration(8);
 		return animation;
 	}
@@ -141,7 +146,7 @@ public class RendererPacManGame extends RendererCommon {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(spritesheet().tilesToRight(2 * d, 4 + ghost.id, 2));
+			var animation = new SingleEntityAnimation<>(spritesheet().tilesRightOf(2 * d, 4 + ghost.id, 2));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -159,7 +164,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().tilesToRight(8, 4, 4));
+		var animation = new SingleEntityAnimation<>(spritesheet().tilesRightOf(8, 4, 4));
 		animation.setFrameDuration(6);
 		return animation;
 	}
@@ -176,7 +181,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public FixedEntityAnimation<Rectangle2D> createGhostValueList() {
-		return new FixedEntityAnimation<>(spritesheet().tilesToRight(0, 8, 4));
+		return new FixedEntityAnimation<>(spritesheet().tilesRightOf(0, 8, 4));
 	}
 
 	// Pac-Man specific:
@@ -190,7 +195,7 @@ public class RendererPacManGame extends RendererCommon {
 	}
 
 	public FixedEntityAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new FixedEntityAnimation<>(spritesheet().tilesToRight(8, 6, 5));
+		return new FixedEntityAnimation<>(spritesheet().tilesRightOf(8, 6, 5));
 	}
 
 	public FixedEntityAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
@@ -205,8 +210,7 @@ public class RendererPacManGame extends RendererCommon {
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().tiles(8, 8, 2, 1),
-				spritesheet().tiles(10, 8, 2, 1));
+		var animation = new SingleEntityAnimation<>(spritesheet().tiles(8, 8, 2, 1), spritesheet().tiles(10, 8, 2, 1));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;

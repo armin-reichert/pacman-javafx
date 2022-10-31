@@ -93,8 +93,6 @@ public interface Rendering2D {
 
 	Color foodColor(int mazeNumber);
 
-	Image mazeFullImage(int mazeNumber);
-
 	// Drawing
 
 	/**

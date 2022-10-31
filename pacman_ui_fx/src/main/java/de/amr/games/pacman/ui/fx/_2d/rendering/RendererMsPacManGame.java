@@ -34,6 +34,7 @@ import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -111,7 +112,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
 	 */
 	private Rectangle2D rhs(int col, int row) {
-		return spritesheet().tilesAtOrigin(456, 0, col, row, 1, 1);
+		return spritesheet().tiles(456, 0, col, row, 1, 1);
 	}
 
 	@Override
@@ -135,8 +136,12 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public Image mazeFullImage(int mazeNumber) {
-		return MAZES_FULL[mazeNumber - 1];
+	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
+		g.drawImage(MAZES_FULL[mazeNumber - 1], x, y);
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
+		if (energizersHidden) {
+			world.energizerTiles().forEach(tile -> clearTile(g, tile));
+		}
 	}
 
 	@Override

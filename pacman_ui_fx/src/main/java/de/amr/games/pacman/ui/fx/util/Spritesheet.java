@@ -79,7 +79,7 @@ public class Spritesheet {
 	 * @return image (copy) of spritesheet region
 	 */
 	public Image subImage(int x, int y, int width, int height) {
-		WritableImage subImage = new WritableImage(width, height);
+		var subImage = new WritableImage(width, height);
 		subImage.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
 		return subImage;
 	}
@@ -94,40 +94,40 @@ public class Spritesheet {
 	}
 
 	/**
-	 * @param col     grid column (x)
-	 * @param row     grid row (y)
-	 * @param numCols number of grid columns
-	 * @param numRows number of grid rows
+	 * @param gridX  grid column (in tile coordinates)
+	 * @param gridY  grid row (in tile coordinates)
+	 * @param tilesX number of tiles horizontally
+	 * @param tilesY number of tiles vertically
 	 * @return region at given grid coordinates
 	 */
-	public Rectangle2D tiles(int col, int row, int numCols, int numRows) {
-		return tilesAtOrigin(0, 0, col, row, numCols, numRows);
+	public Rectangle2D tiles(int gridX, int gridY, int tilesX, int tilesY) {
+		return tiles(0, 0, gridX, gridY, tilesX, tilesY);
 	}
 
 	/**
-	 * @param x       origin x-coordinate
-	 * @param y       origin y-coordinate
-	 * @param col     grid column (x)
-	 * @param row     grid row (y)
-	 * @param numCols number of grid columns
-	 * @param numRows number of grid rows
+	 * @param origX  origin x-coordinate (in pixels)
+	 * @param origY  origin y-coordinate (in pixels)
+	 * @param gridX  grid column (in tile coordinates)
+	 * @param gridY  grid row (in tile coordinates)
+	 * @param tilesX number of tiles horizontally
+	 * @param tilesY number of tiles vertically
 	 * @return region at given grid coordinates relative to given origin
 	 */
-	public Rectangle2D tilesAtOrigin(int x, int y, int col, int row, int numCols, int numRows) {
-		return new Rectangle2D(x + col * tileSize, y + row * tileSize, numCols * tileSize, numRows * tileSize);
+	public Rectangle2D tiles(int origX, int origY, int gridX, int gridY, int tilesX, int tilesY) {
+		return new Rectangle2D(origX + gridX * tileSize, origY + gridY * tileSize, tilesX * tileSize, tilesY * tileSize);
 	}
 
 	/**
-	 * @param col      grid column (x)
-	 * @param row      grid row (y)
+	 * @param gridX    grid column (in tile coordinates)
+	 * @param gridY    grid row (in tile coordinates)
 	 * @param numTiles number of tiles
 	 * @return horizontal stripe of regions at given grid coordinates
 	 */
-	public Rectangle2D[] tilesToRight(int col, int row, int numTiles) {
-		var stripe = new Rectangle2D[numTiles];
+	public Rectangle2D[] tilesRightOf(int gridX, int gridY, int numTiles) {
+		var tiles = new Rectangle2D[numTiles];
 		for (int i = 0; i < numTiles; ++i) {
-			stripe[i] = tile(col + i, row);
+			tiles[i] = tile(gridX + i, gridY);
 		}
-		return stripe;
+		return tiles;
 	}
 }
