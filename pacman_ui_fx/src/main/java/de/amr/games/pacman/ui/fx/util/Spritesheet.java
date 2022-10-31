@@ -40,7 +40,11 @@ public class Spritesheet {
 	protected final int[] dirIndex = new int[4];
 
 	public Spritesheet(String imagePath, int tileSize, Direction... dirs) {
-		this.source = Ufx.image(imagePath);
+		this(Ufx.image(imagePath), tileSize, dirs);
+	}
+
+	public Spritesheet(Image image, int tileSize, Direction... dirs) {
+		this.source = image;
 		this.tileSize = tileSize;
 		for (int i = 0; i < dirs.length; ++i) {
 			dirIndex[dirs[i].ordinal()] = i;
