@@ -51,6 +51,7 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	private static final int MAZE_WIDTH = 226;
 	private static final int MAZE_HEIGHT = 248;
+	private static final int SECOND_COLUMN = 228;
 
 	//@formatter:off
 	private static final Color[] MAZE_TOP_COLORS = { 
@@ -83,7 +84,6 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	private static final Spritesheet SPRITESHEET;
 	private static final Image MIDWAY_LOGO;
-	private static final Image[] MAZES_EMPTY;
 	private static final Image[] MAZES_EMPTY_INV;
 
 	static {
@@ -91,11 +91,10 @@ public class RendererMsPacManGame extends RendererCommon {
 				Direction.DOWN);
 		MIDWAY_LOGO = Ufx.image("graphics/mspacman/midway.png");
 		int numMazes = 6;
-		MAZES_EMPTY = new Image[numMazes];
 		MAZES_EMPTY_INV = new Image[numMazes];
 		for (int i = 0; i < numMazes; ++i) {
-			MAZES_EMPTY[i] = SPRITESHEET.subImage(228, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
-			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(MAZES_EMPTY[i], //
+			var mazeEmpty = SPRITESHEET.subImage(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
+			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(mazeEmpty, //
 					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}
 	}
@@ -135,9 +134,9 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
-		g.drawImage(spritesheet().sourceImage(), 0, 248 * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT, x, y, MAZE_WIDTH,
-				MAZE_HEIGHT);
+	public void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
+		g.drawImage(spritesheet().sourceImage(), 0, MAZE_HEIGHT * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT, x, y,
+				MAZE_WIDTH, MAZE_HEIGHT);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
 		if (energizersHidden) {
 			world.energizerTiles().forEach(tile -> clearTile(g, tile));
@@ -146,7 +145,12 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash) {
-		g.drawImage(flash ? MAZES_EMPTY_INV[mazeNumber - 1] : MAZES_EMPTY[mazeNumber - 1], x, y);
+		if (flash) {
+			g.drawImage(MAZES_EMPTY_INV[mazeNumber - 1], x, y);
+		} else {
+			g.drawImage(spritesheet().sourceImage(), SECOND_COLUMN, MAZE_HEIGHT * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT,
+					x, y, MAZE_WIDTH, MAZE_HEIGHT);
+		}
 	}
 
 	@Override

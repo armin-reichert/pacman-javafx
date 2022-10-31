@@ -25,8 +25,11 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.Optional;
+
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -82,9 +85,10 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
-			drawArcadeWorldMaze(g, arcadeWorld);
+			drawFlashableMaze(g, t(0), t(3), arcadeWorld.flashingAnimation());
 		} else {
-			drawMaze(g);
+			ctx.r2D().drawFilledMaze(g, t(0), t(3), ctx.level().mazeNumber(), ctx.world(),
+					!ctx.game().energizerPulse.frame());
 		}
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D().drawBonus(g, ctx.game().bonus());
@@ -99,18 +103,13 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	private void drawArcadeWorldMaze(GraphicsContext g, ArcadeWorld world) {
-		var flashingAnimation = world.flashingAnimation();
+	private void drawFlashableMaze(GraphicsContext g, int x, int y, Optional<EntityAnimation> flashingAnimation) {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			boolean flash = (boolean) flashingAnimation.get().frame();
-			ctx.r2D().drawEmptyMaze(g, t(0), t(3), ctx.level().mazeNumber(), flash);
+			ctx.r2D().drawEmptyMaze(g, x, y, ctx.level().mazeNumber(), flash);
 		} else {
-			drawMaze(g);
+			ctx.r2D().drawFilledMaze(g, x, y, ctx.level().mazeNumber(), ctx.world(), !ctx.game().energizerPulse.frame());
 		}
-	}
-
-	private void drawMaze(GraphicsContext g) {
-		ctx.r2D().drawMaze(g, t(0), t(3), ctx.world(), ctx.level().mazeNumber(), !ctx.game().energizerPulse.frame());
 	}
 
 	public void onSwitchFrom3D() {

@@ -97,7 +97,7 @@ public class RendererPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public void drawMaze(GraphicsContext g, int x, int y, World world, int mazeNumber, boolean energizersHidden) {
+	public void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
 		g.drawImage(MAZE_FULL, x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
 		if (energizersHidden) {
