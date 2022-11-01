@@ -54,15 +54,18 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
 		ctx.game().bonus().setInactive();
-		var game = ctx.game();
-		var arcadeWorld = (ArcadeWorld) game.world();
-		arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation(game.level.mazeNumber()));
+		if (ctx.game().world() instanceof ArcadeWorld arcadeWorld) {
+			arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation(ctx.game().level.mazeNumber()));
+		}
 	}
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
-			Actions.addCredit();
+		if (Keyboard.pressed(KeyCode.DIGIT5)) {
+			if (!ctx.hasCredit()) {
+				// credit can only be added in attract mode
+				Actions.addCredit();
+			}
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
