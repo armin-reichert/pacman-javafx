@@ -100,18 +100,14 @@ public class RendererMsPacManGame extends RendererCommon {
 		}
 	}
 
+	// tile from third column
+	private Rectangle2D t3c(int col, int row) {
+		return spritesheet().tiles(THIRD_COLUMN, 0, col, row, 1, 1);
+	}
+
 	@Override
 	public Spritesheet spritesheet() {
 		return SPRITESHEET;
-	}
-
-	/**
-	 * @param col column
-	 * @param row row
-	 * @return Sprite at given row and column from the right-hand-side of the spritesheet
-	 */
-	private Rectangle2D rhs(int col, int row) {
-		return spritesheet().tiles(THIRD_COLUMN, 0, col, row, 1, 1);
 	}
 
 	@Override
@@ -121,17 +117,17 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public Rectangle2D ghostSprite(int ghostID, Direction dir) {
-		return rhs(2 * spritesheet().dirIndex(dir) + 1, 4 + ghostID);
+		return t3c(2 * spritesheet().dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
 	public Rectangle2D bonusSymbolSprite(int symbol) {
-		return rhs(3 + symbol, 0);
+		return t3c(3 + symbol, 0);
 	}
 
 	@Override
 	public Rectangle2D bonusValueSprite(int symbol) {
-		return rhs(3 + symbol, 1);
+		return t3c(3 + symbol, 1);
 	}
 
 	@Override
@@ -156,15 +152,11 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public Rectangle2D lifeSprite() {
-		return rhs(1, 0);
-	}
-
-	public Rectangle2D getMsPacManSprite() {
-		return rhs(1, 0);
+		return t3c(1, 0);
 	}
 
 	public Rectangle2D getHeart() {
-		return rhs(2, 10);
+		return t3c(2, 10);
 	}
 
 	public Rectangle2D getBlueBag() {
@@ -214,9 +206,9 @@ public class RendererMsPacManGame extends RendererCommon {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			var wide = rhs(0, d);
-			var middle = rhs(1, d);
-			var closed = rhs(2, d);
+			var wide = t3c(0, d);
+			var middle = t3c(1, d);
+			var closed = t3c(2, d);
 			var munching = new SingleEntityAnimation<>(middle, middle, wide, wide, middle, middle, middle, closed, closed);
 			munching.setFrameDuration(1);
 			munching.repeatForever();
@@ -227,10 +219,10 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
-		var right = rhs(1, 0);
-		var left = rhs(1, 1);
-		var up = rhs(1, 2);
-		var down = rhs(1, 3);
+		var right = t3c(1, 0);
+		var left = t3c(1, 1);
+		var up = t3c(1, 2);
+		var down = t3c(1, 3);
 		// TODO not yet 100% accurate
 		var animation = new SingleEntityAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
 		animation.setFrameDuration(8);
@@ -242,7 +234,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(rhs(2 * d, 4 + ghost.id), rhs(2 * d + 1, 4 + ghost.id));
+			var animation = new SingleEntityAnimation<>(t3c(2 * d, 4 + ghost.id), t3c(2 * d + 1, 4 + ghost.id));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -252,7 +244,7 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SingleEntityAnimation<>(rhs(8, 4), rhs(9, 4));
+		var animation = new SingleEntityAnimation<>(t3c(8, 4), t3c(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
@@ -260,7 +252,7 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SingleEntityAnimation<>(rhs(8, 4), rhs(9, 4), rhs(10, 4), rhs(11, 4));
+		var animation = new SingleEntityAnimation<>(t3c(8, 4), t3c(9, 4), t3c(10, 4), t3c(11, 4));
 		animation.setFrameDuration(4);
 		return animation;
 	}
@@ -270,14 +262,14 @@ public class RendererMsPacManGame extends RendererCommon {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			animationByDir.put(dir, new SingleEntityAnimation<>(rhs(8 + d, 5)));
+			animationByDir.put(dir, new SingleEntityAnimation<>(t3c(8 + d, 5)));
 		}
 		return animationByDir;
 	}
 
 	@Override
 	public FixedEntityAnimation<Rectangle2D> createGhostValueList() {
-		return new FixedEntityAnimation<>(rhs(0, 8), rhs(1, 8), rhs(2, 8), rhs(3, 8));
+		return new FixedEntityAnimation<>(t3c(0, 8), t3c(1, 8), t3c(2, 8), t3c(3, 8));
 	}
 
 	// Ms. Pac-Man specific:
@@ -286,7 +278,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(rhs(0, 9 + d), rhs(1, 9 + d), rhs(2, 9));
+			var animation = new SingleEntityAnimation<>(t3c(0, 9 + d), t3c(1, 9 + d), t3c(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);

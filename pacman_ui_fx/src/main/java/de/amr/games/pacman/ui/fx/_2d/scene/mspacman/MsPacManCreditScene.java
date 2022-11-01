@@ -48,7 +48,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void init() {
 		setCreditVisible(true);
-		msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).getMsPacManSprite();
+		msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).lifeSprite();
 		arcadeFont = ctx.r2D().arcadeFont();
 		arcadeFont6 = Font.font(arcadeFont.getName(), 6);
 	}
