@@ -141,23 +141,25 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
+		var font = ctx.r2D().arcadeFont();
 		if (icc.titleVisible) {
-			ctx.r2D().drawText(g, "CHARACTER", Color.WHITE, ctx.r2D().arcadeFont(), t(icc.left + 3), t(6));
-			ctx.r2D().drawText(g, "/", Color.WHITE, ctx.r2D().arcadeFont(), t(icc.left + 13), t(6));
-			ctx.r2D().drawText(g, "NICKNAME", Color.WHITE, ctx.r2D().arcadeFont(), t(icc.left + 15), t(6));
+			var color = Color.WHITE;
+			ctx.r2D().drawText(g, "CHARACTER", color, font, t(icc.left + 3), t(6));
+			ctx.r2D().drawText(g, "/", color, font, t(icc.left + 13), t(6));
+			ctx.r2D().drawText(g, "NICKNAME", color, font, t(icc.left + 15), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
-			if (icc.pictureVisible[id]) {
-				int tileY = 7 + 3 * id;
-				ctx.r2D().drawSpriteCenteredOverBox(g, ctx.r2D().ghostSprite(id, Direction.RIGHT), t(icc.left) + 4, t(tileY));
-				if (icc.characterVisible[id]) {
-					ctx.r2D().drawText(g, "-" + icc.characters[id], ctx.r2D().ghostColor(id), ctx.r2D().arcadeFont(),
-							t(icc.left + 3), t(tileY + 1));
-				}
-				if (icc.nicknameVisible[id]) {
-					ctx.r2D().drawText(g, "\"" + icc.nicknames[id] + "\"", ctx.r2D().ghostColor(id), ctx.r2D().arcadeFont(),
-							t(icc.left + 14), t(tileY + 1));
-				}
+			if (!icc.pictureVisible[id]) {
+				continue;
+			}
+			int tileY = 7 + 3 * id;
+			var color = ctx.r2D().ghostColor(id);
+			ctx.r2D().drawSpriteCenteredOverBox(g, ctx.r2D().ghostSprite(id, Direction.RIGHT), t(icc.left) + 4, t(tileY));
+			if (icc.characterVisible[id]) {
+				ctx.r2D().drawText(g, "-" + icc.characters[id], color, font, t(icc.left + 3), t(tileY + 1));
+			}
+			if (icc.nicknameVisible[id]) {
+				ctx.r2D().drawText(g, "\"" + icc.nicknames[id] + "\"", color, font, t(icc.left + 14), t(tileY + 1));
 			}
 		}
 	}
