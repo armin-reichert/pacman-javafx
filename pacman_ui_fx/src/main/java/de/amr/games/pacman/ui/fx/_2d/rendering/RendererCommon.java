@@ -67,12 +67,6 @@ public abstract class RendererCommon implements Rendering2D {
 
 	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", 8);
 
-	protected void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
-
 	protected void clearTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
