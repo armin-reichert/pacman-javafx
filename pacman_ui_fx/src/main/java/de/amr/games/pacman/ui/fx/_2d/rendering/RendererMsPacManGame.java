@@ -155,15 +155,15 @@ public class RendererMsPacManGame extends RendererCommon {
 		return t3c(1, 0);
 	}
 
-	public Rectangle2D getHeart() {
+	public Rectangle2D heartSprite() {
 		return t3c(2, 10);
 	}
 
-	public Rectangle2D getBlueBag() {
+	public Rectangle2D blueBagSprite() {
 		return new Rectangle2D(488, 199, 8, 8);
 	}
 
-	public Rectangle2D getJunior() {
+	public Rectangle2D juniorPacSprite() {
 		return new Rectangle2D(509, 200, 8, 8);
 	}
 
