@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
@@ -41,16 +40,14 @@ import javafx.scene.text.Font;
  */
 public class MsPacManCreditScene extends GameScene2D {
 
-	private Rectangle2D msPacManSprite;
-	private Font arcadeFont;
+	private Font arcadeFont8;
 	private Font arcadeFont6;
 
 	@Override
 	public void init() {
 		setCreditVisible(true);
-		msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).lifeSprite();
-		arcadeFont = ctx.r2D().arcadeFont();
-		arcadeFont6 = Font.font(arcadeFont.getName(), 6);
+		arcadeFont8 = ctx.r2D().arcadeFont();
+		arcadeFont6 = Font.font(arcadeFont8.getName(), 6);
 	}
 
 	@Override
@@ -69,11 +66,12 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		g.setFont(arcadeFont);
+		g.setFont(arcadeFont8);
 		g.setFill(ctx.r2D().ghostColor(Ghost.ORANGE_GHOST));
 		g.fillText("PUSH START BUTTON", t(6), t(16));
 		g.fillText("1 PLAYER ONLY", t(8), t(18));
 		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
+		var msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).lifeSprite();
 		ctx.r2D().drawSprite(g, msPacManSprite, t(13), t(23) + 2.0);
 		g.setFont(arcadeFont6);
 		g.fillText("PTS", t(25), t(25));
