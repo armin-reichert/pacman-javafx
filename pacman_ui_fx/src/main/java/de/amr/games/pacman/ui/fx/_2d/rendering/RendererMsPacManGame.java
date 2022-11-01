@@ -155,18 +155,6 @@ public class RendererMsPacManGame extends RendererCommon {
 		return t3c(1, 0);
 	}
 
-	public Rectangle2D heartSprite() {
-		return t3c(2, 10);
-	}
-
-	public Rectangle2D blueBagSprite() {
-		return new Rectangle2D(488, 199, 8, 8);
-	}
-
-	public Rectangle2D juniorPacSprite() {
-		return new Rectangle2D(509, 200, 8, 8);
-	}
-
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
@@ -273,6 +261,18 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	// Ms. Pac-Man specific:
+
+	public Rectangle2D heartSprite() {
+		return t3c(2, 10);
+	}
+
+	public Rectangle2D blueBagSprite() {
+		return new Rectangle2D(488, 199, 8, 8);
+	}
+
+	public Rectangle2D juniorPacSprite() {
+		return new Rectangle2D(509, 200, 8, 8);
+	}
 
 	public EntityAnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
