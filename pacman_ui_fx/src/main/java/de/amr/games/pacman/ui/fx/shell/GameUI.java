@@ -75,7 +75,6 @@ public class GameUI {
 	private final GameController gameController;
 	private final Stage stage;
 	private StackPane sceneContent;
-	private Group gameSceneParent;
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
 	private PiPView pipView;
@@ -113,8 +112,8 @@ public class GameUI {
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
-		gameSceneParent = new Group();
-		sceneContent.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
+		sceneContent.getChildren().addAll(new Group() // game scene parent
+				, flashMessageView, overlayPane);
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
 	}
@@ -198,7 +197,8 @@ public class GameUI {
 		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
 		if (newGameScene != currentGameScene) {
 			currentGameScene = newGameScene;
-			gameSceneParent.getChildren().setAll(currentGameScene.getFXSubScene());
+			Group parent = (Group) sceneContent.getChildren().get(0);
+			parent.getChildren().setAll(currentGameScene.getFXSubScene());
 			updateMainSceneBackgroundColor();
 			pipView.init(newGameScene.getSceneContext());
 		}
