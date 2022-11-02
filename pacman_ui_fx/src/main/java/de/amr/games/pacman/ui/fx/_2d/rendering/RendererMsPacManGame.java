@@ -183,7 +183,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation(int mazeNumber) {
+	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation() {
 		var animation = new SingleEntityAnimation<>(true, false);
 		animation.setFrameDuration(10);
 		return animation;

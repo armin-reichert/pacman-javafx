@@ -84,7 +84,7 @@ public interface Rendering2D {
 
 	EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost);
 
-	SingleEntityAnimation<Boolean> createMazeFlashingAnimation(int mazeNumber);
+	SingleEntityAnimation<Boolean> createMazeFlashingAnimation();
 
 	FixedEntityAnimation<Rectangle2D> createGhostValueList();
 

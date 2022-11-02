@@ -54,7 +54,7 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
 		if (ctx.game().world() instanceof ArcadeWorld arcadeWorld) {
-			arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation(ctx.game().level.mazeNumber()));
+			arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation());
 		}
 	}
 
