@@ -87,7 +87,9 @@ public class GameUI {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		createMainScene(width, height);
+		var mainScene = new Scene(createSceneContent(), width, height);
+		stage.setScene(mainScene);
+		sceneManager.embedGameScenes(mainScene);
 		initKeyboardInput();
 		initGameEventing();
 		initAnimations();
@@ -97,13 +99,6 @@ public class GameUI {
 		stage.show();
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
-	}
-
-	private void createMainScene(double width, double height) {
-		var mainScene = new Scene(createSceneContent(), width, height);
-		mainScene.setFill(null);
-		sceneManager.embedGameScenes(mainScene);
-		stage.setScene(mainScene);
 	}
 
 	private void initGameLoop() {
