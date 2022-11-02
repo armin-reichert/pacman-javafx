@@ -213,6 +213,7 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
+	@Override
 	public void onSwitchFrom2D() {
 		var world = ctx.game().world();
 		world3D.getFood3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));

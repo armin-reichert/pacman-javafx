@@ -91,6 +91,20 @@ public interface GameScene extends GameEventAdapter {
 	boolean is3D();
 
 	/**
+	 * Called when scene variants for 2D and 3D exist and variant changes from 2D to 3D.
+	 */
+	default void onSwitchFrom2D() {
+		// empty default
+	}
+
+	/**
+	 * Called when scene variants for 2D and 3D exist and variant changes from 3D to 2D.
+	 */
+	default void onSwitchFrom3D() {
+		// empty default
+	}
+
+	/**
 	 * Called when a key has been pressed. The keyboard state can be queried using the {@link Keyboard} class.
 	 */
 	default void onKeyPressed() {

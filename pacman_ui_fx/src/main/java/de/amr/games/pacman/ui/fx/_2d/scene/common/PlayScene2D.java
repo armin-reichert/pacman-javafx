@@ -114,6 +114,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
+	@Override
 	public void onSwitchFrom3D() {
 		ctx.game().pac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		ctx.game().ghosts().map(Ghost::animationSet).forEach(anim -> anim.ifPresent(EntityAnimationSet::ensureRunning));

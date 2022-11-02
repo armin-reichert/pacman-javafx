@@ -31,8 +31,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.util.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
@@ -238,10 +236,10 @@ public class Actions {
 		Env.toggle(Env.use3DScenePy);
 		if (theUI.getSceneManager().hasDifferentScenesFor2DAnd3D(theGameController())) {
 			theUI.updateGameScene(true);
-			if (theUI.getCurrentGameScene() instanceof PlayScene2D playScene2D) {
-				playScene2D.onSwitchFrom3D();
-			} else if (theUI.getCurrentGameScene() instanceof PlayScene3D playScene3D) {
-				playScene3D.onSwitchFrom2D();
+			if (theUI.getCurrentGameScene().is3D()) {
+				theUI.getCurrentGameScene().onSwitchFrom2D();
+			} else {
+				theUI.getCurrentGameScene().onSwitchFrom3D();
 			}
 		} else {
 			showFlashMessage(TextManager.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));
