@@ -112,7 +112,8 @@ public class GameUI {
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
-		sceneContent.getChildren().addAll(new Group() // game scene parent
+		sceneContent.getChildren().addAll(//
+				new Group() // single child will be the FX subscene for the current game scene
 				, flashMessageView, overlayPane);
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
