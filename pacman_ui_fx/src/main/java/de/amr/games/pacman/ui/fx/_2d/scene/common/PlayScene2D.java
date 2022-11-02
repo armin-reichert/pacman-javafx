@@ -56,6 +56,8 @@ public class PlayScene2D extends GameScene2D {
 		if (ctx.game().world() instanceof ArcadeWorld arcadeWorld) {
 			arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation());
 		}
+		ctx.game().pac.setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac));
+		ctx.game().ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
 	}
 
 	@Override

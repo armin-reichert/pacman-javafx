@@ -34,10 +34,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
@@ -92,7 +89,6 @@ public class GameUI {
 		sceneManager.embedGameScenes(mainScene);
 		initKeyboardInput();
 		initGameEventing();
-		initAnimations();
 		initStage();
 		initGameLoop();
 		updateGameScene(true);
@@ -143,19 +139,6 @@ public class GameUI {
 		stage.centerOnScreen();
 	}
 
-	private void initAnimations() {
-		for (var gameVariant : GameVariant.values()) {
-			var game = gameController.game(gameVariant);
-			var r2D = switch (gameVariant) {
-			case MS_PACMAN -> new RendererMsPacManGame();
-			case PACMAN -> new RendererPacManGame();
-			};
-			game.pac.setAnimationSet(r2D.createPacAnimationSet(game.pac));
-			game.ghosts().forEach(ghost -> ghost.setAnimationSet(r2D.createGhostAnimationSet(ghost)));
-			LOGGER.info("Game variant %s: created 2D animations for maze, Pac-Man and the ghosts.", gameVariant);
-		}
-	}
-
 	private void initGameEventing() {
 		GameEvents.addEventListener(new GameEventAdapter() {
 			@Override
@@ -202,6 +185,7 @@ public class GameUI {
 			parent.getChildren().setAll(currentGameScene.getFXSubScene());
 			updateMainSceneBackgroundColor();
 			pipView.init(newGameScene.getSceneContext());
+			LOGGER.info("Changed game scene to %s", currentGameScene);
 		}
 	}
 

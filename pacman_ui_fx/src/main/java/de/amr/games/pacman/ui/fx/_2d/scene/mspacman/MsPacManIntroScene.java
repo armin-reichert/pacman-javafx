@@ -25,12 +25,9 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.mspacman.IntroController;
 import de.amr.games.pacman.controller.mspacman.IntroController.Context;
 import de.amr.games.pacman.controller.mspacman.IntroController.State;
-import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -63,9 +60,13 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		sceneController.restartInState(IntroController.State.START);
-		icc.game.pac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		Stream.of(icc.game.theGhosts).forEach(ghost -> {
-			ghost.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		var pacAnimations = ctx.r2D().createPacAnimationSet(icc.game.pac);
+		pacAnimations.ensureRunning();
+		icc.game.pac.setAnimationSet(pacAnimations);
+		icc.game.ghosts().forEach(ghost -> {
+			var ghostAnimations = ctx.r2D().createGhostAnimationSet(ghost);
+			ghostAnimations.ensureRunning();
+			ghost.setAnimationSet(ghostAnimations);
 		});
 	}
 
