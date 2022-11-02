@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx._3d.model;
+package de.amr.games.pacman.ui.fx.util;
 
 import java.net.URL;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class ObjModel {
 		if (meshViews.containsKey(name)) {
 			return new MeshView(meshViews.get(name).getMesh());
 		}
-		return null;
+		throw new Model3DException("No mesh with name %s found", name);
 	}
 
 	public PhongMaterial getMaterial(String name) {

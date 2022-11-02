@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._3d.model;
+package de.amr.games.pacman.ui.fx.util;
 
 /**
  * @author Armin Reichert
