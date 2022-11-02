@@ -52,6 +52,13 @@ public class Model3D {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	private static final String MESH_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
+	private static final String MESH_PAC_FACE = "Sphere_yellow_packman";
+	private static final String MESH_PAC_PALATE = "Sphere_grey_wall";
+	private static final String MESH_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+	private static final String MESH_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
+	private static final String MESH_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+
 	private static final double PAC_SIZE = 9.0;
 	private static final double GHOST_SIZE = 8.5;
 
@@ -87,13 +94,13 @@ public class Model3D {
 	}
 
 	public Group createPac(Color faceColor, Color eyesColor, Color palateColor) {
-		var face = pacModel.createMeshView("Sphere_yellow_packman");
+		var face = pacModel.createMeshView(MESH_PAC_FACE);
 		face.setMaterial(new PhongMaterial(faceColor));
 
-		var eyes = pacModel.createMeshView("Sphere.008_Sphere.010_grey_wall");
+		var eyes = pacModel.createMeshView(MESH_PAC_EYES);
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		var palate = pacModel.createMeshView("Sphere_grey_wall");
+		var palate = pacModel.createMeshView(MESH_PAC_PALATE);
 		palate.setMaterial(new PhongMaterial(palateColor));
 
 		var center = centerOverOrigin(face);
@@ -123,13 +130,13 @@ public class Model3D {
 	}
 
 	public Group createGhost(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dress = ghostModel.createMeshView("Sphere.004_Sphere.034_light_blue_ghost");
+		var dress = ghostModel.createMeshView(MESH_GHOST_DRESS);
 		dress.setMaterial(new PhongMaterial(dressColor));
 
-		var eyeBalls = ghostModel.createMeshView("Sphere.009_Sphere.036_white");
+		var eyeBalls = ghostModel.createMeshView(MESH_GHOST_EYE_BALLS);
 		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
 
-		var pupils = ghostModel.createMeshView("Sphere.010_Sphere.039_grey_wall");
+		var pupils = ghostModel.createMeshView(MESH_GHOST_PUPILS);
 		pupils.setMaterial(new PhongMaterial(pupilColor));
 
 		Stream.of(dress, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawModePy));
