@@ -48,7 +48,6 @@ import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -101,7 +100,7 @@ public class GameUI {
 	}
 
 	private void createMainScene(double width, double height) {
-		var mainScene = new Scene(createSceneContent(), width, height, true, SceneAntialiasing.BALANCED);
+		var mainScene = new Scene(createSceneContent(), width, height);
 		mainScene.setFill(null);
 		sceneManager.embedGameScenes(mainScene);
 		stage.setScene(mainScene);
