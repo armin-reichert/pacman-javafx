@@ -103,10 +103,8 @@ public class PacManGameAppFX extends Application {
 		var zoom = optZoom.getValue();
 		var ui = new GameUI(gameController, stage, zoom * GameScene.DEFAULT_SIZE.x(), zoom * GameScene.DEFAULT_SIZE.y());
 		ui.setPacSteering(new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
-		Env.drawModePy.addListener((x, y, z) -> ui.updateBackground());
-		Env.bgColorPy.addListener((x, y, z) -> ui.updateBackground());
+		ui.getGameLoop().start();
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
 				stage.getHeight(), zoom, U.onOff(Env.use3DScenePy.get()), Env.perspectivePy.get()));
-		ui.getGameLoop().start();
 	}
 }

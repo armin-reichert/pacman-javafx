@@ -46,7 +46,7 @@ import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.scene.Parent;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -74,8 +74,8 @@ public class GameUI {
 	private final GameSceneManager sceneManager = new GameSceneManager();
 	private final GameController gameController;
 	private final Stage stage;
-
-	private StackPane gameSceneParent;
+	private StackPane sceneContent;
+	private Group gameSceneParent;
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
 	private PiPView pipView;
@@ -87,7 +87,8 @@ public class GameUI {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		var mainScene = new Scene(createSceneContent(), width, height);
+		createSceneContent();
+		var mainScene = new Scene(sceneContent, width, height);
 		stage.setScene(mainScene);
 		sceneManager.embedGameScenes(mainScene);
 		initKeyboardInput();
@@ -99,6 +100,23 @@ public class GameUI {
 		stage.show();
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
+	}
+
+	private void createSceneContent() {
+		sceneContent = new StackPane();
+		dashboard = new Dashboard();
+		dashboard.build(this);
+		pipView = new PiPView();
+		pipView.heightPy.bind(Env.pipSceneHeightPy);
+		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
+		var overlayPane = new BorderPane();
+		overlayPane.setLeft(dashboard);
+		overlayPane.setRight(new VBox(pipView.getRoot()));
+		flashMessageView = new FlashMessageView();
+		gameSceneParent = new Group();
+		sceneContent.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
+		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
+		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
 	}
 
 	private void initGameLoop() {
@@ -123,24 +141,6 @@ public class GameUI {
 		stage.setTitle("Pac-Man / Ms. Pac-Man");
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
-	}
-
-	private Parent createSceneContent() {
-		var root = new StackPane();
-		root.setBackground(Ufx.colorBackground(Color.BLACK));
-		dashboard = new Dashboard();
-		dashboard.build(this);
-		pipView = new PiPView();
-		pipView.heightPy.bind(Env.pipSceneHeightPy);
-		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
-		var overlayPane = new BorderPane();
-		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView.getRoot()));
-		flashMessageView = new FlashMessageView();
-		gameSceneParent = new StackPane();
-		gameSceneParent.setBackground(Ufx.colorBackground(Color.BLACK));
-		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
-		return root;
 	}
 
 	private void initAnimations() {
@@ -199,7 +199,7 @@ public class GameUI {
 		if (newGameScene != currentGameScene) {
 			currentGameScene = newGameScene;
 			gameSceneParent.getChildren().setAll(currentGameScene.getFXSubScene());
-			updateBackground();
+			updateMainSceneBackgroundColor();
 			pipView.init(newGameScene.getSceneContext());
 		}
 	}
@@ -213,10 +213,9 @@ public class GameUI {
 		}
 	}
 
-	public void updateBackground() {
-		var mode = Env.drawModePy.get();
-		var bgColor = Env.bgColorPy.get();
-		gameSceneParent.setBackground(Ufx.colorBackground(mode == DrawMode.FILL ? bgColor : Color.BLACK));
+	private void updateMainSceneBackgroundColor() {
+		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
+		sceneContent.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	private void onKeyPressed() {
