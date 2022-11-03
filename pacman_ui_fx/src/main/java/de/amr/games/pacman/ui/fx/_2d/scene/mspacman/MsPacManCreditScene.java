@@ -40,14 +40,14 @@ import javafx.scene.text.Font;
  */
 public class MsPacManCreditScene extends GameScene2D {
 
-	private Font arcadeFont8;
-	private Font arcadeFont6;
+	private Font arcade8;
+	private Font arcade6;
 
 	@Override
 	public void init() {
 		setCreditVisible(true);
-		arcadeFont8 = ctx.r2D().arcadeFont();
-		arcadeFont6 = Font.font(arcadeFont8.getName(), 6);
+		arcade8 = ctx.r2D().arcadeFont();
+		arcade6 = Font.font(arcade8.getName(), 6);
 	}
 
 	@Override
@@ -66,15 +66,12 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		g.setFont(arcadeFont8);
-		g.setFill(ctx.r2D().ghostColor(Ghost.ORANGE_GHOST));
-		g.fillText("PUSH START BUTTON", t(6), t(16));
-		g.fillText("1 PLAYER ONLY", t(8), t(18));
-		g.fillText("ADDITIONAL    AT 10000", t(2), t(25));
 		var msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).lifeSprite();
-		ctx.r2D().drawSprite(g, msPacManSprite, t(13), t(23) + 2.0);
-		g.setFont(arcadeFont6);
-		g.fillText("PTS", t(25), t(25));
+		ctx.r2D().drawText(g, "PUSH START BUTTON", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade8, t(6), t(16));
+		ctx.r2D().drawText(g, "1 PLAYER ONLY", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade8, t(8), t(18));
+		ctx.r2D().drawText(g, "ADDITIONAL    AT 10000", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade8, t(2), t(25));
+		ctx.r2D().drawSprite(g, msPacManSprite, t(13), t(23) + 1);
+		ctx.r2D().drawText(g, "PTS", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade6, t(25), t(25));
 		ctx.r2D().drawCopyright(g, 29);
 	}
 }
