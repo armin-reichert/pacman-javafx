@@ -62,7 +62,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI {
+public class GameUI implements GameEventAdapter {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
@@ -88,9 +88,9 @@ public class GameUI {
 		stage.setScene(mainScene);
 		sceneManager.embedGameScenes(mainScene);
 		initKeyboardInput();
-		initGameEventing();
 		initStage();
 		initGameLoop();
+		GameEvents.addEventListener(this);
 		updateGameScene(true);
 		stage.show();
 		Actions.setUI(this);
@@ -139,24 +139,20 @@ public class GameUI {
 		stage.centerOnScreen();
 	}
 
-	private void initGameEventing() {
-		GameEvents.addEventListener(new GameEventAdapter() {
-			@Override
-			public void onGameEvent(GameEvent event) {
-				GameEventAdapter.super.onGameEvent(event);
-				currentGameScene.onGameEvent(event);
-			}
+	@Override
+	public void onGameEvent(GameEvent event) {
+		GameEventAdapter.super.onGameEvent(event);
+		currentGameScene.onGameEvent(event);
+	}
 
-			@Override
-			public void onGameStateChange(GameStateChangeEvent e) {
-				updateGameScene(false);
-			}
+	@Override
+	public void onGameStateChange(GameStateChangeEvent e) {
+		updateGameScene(false);
+	}
 
-			@Override
-			public void onUIForceUpdate(GameEvent e) {
-				updateGameScene(true);
-			}
-		});
+	@Override
+	public void onUIForceUpdate(GameEvent e) {
+		updateGameScene(true);
 	}
 
 	private void initKeyboardInput() {
