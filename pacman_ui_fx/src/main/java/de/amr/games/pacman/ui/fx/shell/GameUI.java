@@ -85,16 +85,22 @@ public class GameUI implements GameEventAdapter {
 		this.stage = stage;
 		createSceneContent();
 		var mainScene = new Scene(sceneContent, width, height);
-		stage.setScene(mainScene);
+		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		sceneManager.embedGameScenes(mainScene);
-		initKeyboardInput();
-		initStage();
-		initGameLoop();
+		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addEventListener(this);
-		updateGameScene(true);
-		stage.show();
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
+		initGameLoop();
+		updateGameScene(true);
+		stage.setScene(mainScene);
+		stage.setOnCloseRequest(e -> gameLoop.stop());
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+		stage.setTitle("Pac-Man / Ms. Pac-Man");
+		stage.getIcons().add(APP_ICON);
+		stage.centerOnScreen();
+		stage.show();
 	}
 
 	private void createSceneContent() {
@@ -130,15 +136,6 @@ public class GameUI implements GameEventAdapter {
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 	}
 
-	private void initStage() {
-		stage.setOnCloseRequest(e -> gameLoop.stop());
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-		stage.setTitle("Pac-Man / Ms. Pac-Man");
-		stage.getIcons().add(APP_ICON);
-		stage.centerOnScreen();
-	}
-
 	@Override
 	public void onGameEvent(GameEvent event) {
 		GameEventAdapter.super.onGameEvent(event);
@@ -153,12 +150,6 @@ public class GameUI implements GameEventAdapter {
 	@Override
 	public void onUIForceUpdate(GameEvent e) {
 		updateGameScene(true);
-	}
-
-	private void initKeyboardInput() {
-		getMainScene().setOnKeyPressed(Keyboard::processEvent);
-		Keyboard.addHandler(this::onKeyPressed);
-		Keyboard.addHandler(() -> currentGameScene.onKeyPressed());
 	}
 
 	public void setPacSteering(Steering steering) {
@@ -227,6 +218,7 @@ public class GameUI implements GameEventAdapter {
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
+		currentGameScene.onKeyPressed();
 	}
 
 	public GameController getGameController() {
