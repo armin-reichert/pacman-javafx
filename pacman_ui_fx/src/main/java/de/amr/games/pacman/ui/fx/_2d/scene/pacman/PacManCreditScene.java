@@ -64,21 +64,11 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		g.setFont(ctx.r2D().arcadeFont());
-		g.setFill(ctx.r2D().ghostColor(Ghost.ORANGE_GHOST));
-		g.fillText("PUSH START BUTTON", t(6), t(17));
-
-		g.setFont(ctx.r2D().arcadeFont());
-		g.setFill(ctx.r2D().ghostColor(Ghost.CYAN_GHOST));
-		g.fillText("1 PLAYER ONLY", t(8), t(21));
-
-		g.setFont(ctx.r2D().arcadeFont());
-		g.setFill(Color.rgb(255, 184, 174));
-		g.fillText("BONUS PAC-MAN FOR 10000", t(1), t(25));
-
-		g.setFont(arcade6);
-		g.fillText("PTS", t(25), t(25));
-
+		var arcade8 = ctx.r2D().arcadeFont();
+		ctx.r2D().drawText(g, "PUSH START BUTTON", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade8, t(6), t(17));
+		ctx.r2D().drawText(g, "1 PLAYER ONLY", ctx.r2D().ghostColor(Ghost.CYAN_GHOST), arcade8, t(8), t(21));
+		ctx.r2D().drawText(g, "BONUS PAC-MAN FOR 10000", Color.rgb(255, 184, 174), arcade8, t(1), t(25));
+		ctx.r2D().drawText(g, "PTS", Color.rgb(255, 184, 174), arcade6, t(25), t(25));
 		ctx.r2D().drawCopyright(g, 29);
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
