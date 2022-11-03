@@ -44,6 +44,7 @@ import de.amr.games.pacman.ui.fx.util.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -83,8 +84,7 @@ public class GameUI implements GameEventAdapter {
 	public GameUI(GameController gameController, Stage stage, double width, double height) {
 		this.gameController = gameController;
 		this.stage = stage;
-		createSceneContent();
-		var mainScene = new Scene(sceneContent, width, height);
+		var mainScene = new Scene(createSceneContent(), width, height);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		sceneManager.embedGameScenes(mainScene);
 		Keyboard.addHandler(this::onKeyPressed);
@@ -103,7 +103,7 @@ public class GameUI implements GameEventAdapter {
 		stage.show();
 	}
 
-	private void createSceneContent() {
+	private Parent createSceneContent() {
 		sceneContent = new StackPane();
 		dashboard = new Dashboard();
 		dashboard.build(this);
@@ -119,6 +119,7 @@ public class GameUI implements GameEventAdapter {
 				, flashMessageView, overlayPane);
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
+		return sceneContent;
 	}
 
 	private void initGameLoop() {
