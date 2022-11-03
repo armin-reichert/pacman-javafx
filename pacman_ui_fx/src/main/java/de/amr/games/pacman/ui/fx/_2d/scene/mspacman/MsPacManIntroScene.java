@@ -112,29 +112,27 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawTitle(GraphicsContext g) {
-		g.setFont(ctx.r2D().arcadeFont());
-		g.setFill(Color.ORANGE);
-		g.fillText("\"MS PAC-MAN\"", icc.titlePosition.x(), icc.titlePosition.y());
+		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
+				icc.titlePosition.y());
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
-		g.setFill(Color.WHITE);
-		g.setFont(ctx.r2D().arcadeFont());
 		if (ghost.id == Ghost.RED_GHOST) {
-			g.fillText("WITH", icc.titlePosition.x(), icc.lightsTopLeft.y() + t(3));
+			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
+					icc.lightsTopLeft.y() + t(3));
 		}
-		g.setFill(ctx.r2D().ghostColor(ghost.id));
-		g.fillText(ghost.name.toUpperCase(), t(14 - ghost.name.length() / 2), icc.lightsTopLeft.y() + t(6));
+		ctx.r2D().drawText(g, ghost.name.toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(),
+				t(14 - ghost.name.length() / 2), icc.lightsTopLeft.y() + t(6));
 	}
 
 	private void drawMsPacManText(GraphicsContext g) {
-		g.setFill(Color.WHITE);
-		g.setFont(ctx.r2D().arcadeFont());
-		g.fillText("STARRING", icc.titlePosition.x(), icc.lightsTopLeft.y() + t(3));
-		g.setFill(Color.YELLOW);
-		g.fillText("MS PAC-MAN", icc.titlePosition.x(), icc.lightsTopLeft.y() + t(6));
+		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
+				icc.lightsTopLeft.y() + t(3));
+		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
+				icc.lightsTopLeft.y() + t(6));
 	}
 
+	// TODO this is not yet accurate to the original game
 	private void drawLights(GraphicsContext g, int numDotsX, int numDotsY) {
 		long time = icc.lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
