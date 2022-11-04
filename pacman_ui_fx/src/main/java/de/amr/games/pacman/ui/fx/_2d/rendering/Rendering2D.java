@@ -30,7 +30,6 @@ import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -59,11 +58,11 @@ public interface Rendering2D {
 
 	Color getMazeFoodColor(int mazeNumber);
 
-	Color getMazeTopColor(GameVariant gameVariant, int mazeNumber);
+	Color getMazeTopColor(int mazeNumber);
 
-	Color getMazeSideColor(GameVariant gameVariant, int mazeNumber);
+	Color getMazeSideColor(int mazeNumber);
 
-	Color getGhostHouseDoorColor(GameVariant gameVariant);
+	Color getGhostHouseDoorColor();
 
 	// Sprites
 

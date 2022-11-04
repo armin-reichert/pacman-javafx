@@ -32,7 +32,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
@@ -76,18 +75,6 @@ public abstract class RendererCommon implements Rendering2D {
 				Color.rgb(33, 33, 255), Color.rgb(245, 189, 180), Color.rgb(252, 187, 179), //
 				// when flashing
 				Color.rgb(224, 221, 255), Color.rgb(245, 189, 180), Color.RED);
-	}
-
-	/**
-	 * @param gameVariant game variant
-	 * @return color of ghosthouse doors in this maze
-	 */
-	@Override
-	public Color getGhostHouseDoorColor(GameVariant gameVariant) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> Color.rgb(255, 183, 255);
-		case PACMAN -> Color.rgb(252, 181, 255);
-		};
 	}
 
 	public void clearTile(GraphicsContext g, V2i tile) {

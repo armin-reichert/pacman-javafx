@@ -68,9 +68,9 @@ public class World3D extends Group {
 		getChildren().add(scores3D);
 
 		var mazeColors = new MazeColors(//
-				r2D.getMazeSideColor(game.variant, game.level.mazeNumber()), //
-				r2D.getMazeTopColor(game.variant, game.level.mazeNumber()), //
-				r2D.getGhostHouseDoorColor(game.variant));
+				r2D.getMazeSideColor(game.level.mazeNumber()), //
+				r2D.getMazeTopColor(game.level.mazeNumber()), //
+				r2D.getGhostHouseDoorColor());
 
 		maze3D = new Maze3D(game.level.world(), mazeColors);
 		maze3D.drawModePy.bind(Env.drawModePy);
