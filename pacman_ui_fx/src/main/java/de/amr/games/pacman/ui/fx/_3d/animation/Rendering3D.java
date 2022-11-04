@@ -82,14 +82,6 @@ public class Rendering3D {
 				Color.rgb(224, 221, 255), Color.rgb(245, 189, 180), Color.RED);
 	}
 
-//	public static final Color GHOST_EYE_BALL_COLOR = Color.GHOSTWHITE;
-//	public static final Color GHOST_PUPIL_COLOR = Color.rgb(33, 33, 255);
-//	public static final Color GHOST_FRIGHTENED_COLOR = Color.rgb(33, 33, 255);
-//	public static final Color GHOST_FRIGHTENED_EYE_BALL_COLOR = Color.rgb(245, 189, 180);
-//	public static final Color GHOST_FRIGHTENED_PUPIL_COLOR = Color.rgb(252, 187, 179);
-//	public static final Color GHOST_FLASHING_COLOR = Color.rgb(224, 221, 255);
-//	public static final Color GHOST_FLASHING_PUPIL_COLOR = Color.RED;
-
 	/**
 	 * @param gameVariant game variant
 	 * @param mazeNumber  the 1-based maze number
@@ -133,20 +125,6 @@ public class Rendering3D {
 		return switch (gameVariant) {
 		case MS_PACMAN -> Color.rgb(255, 183, 255);
 		case PACMAN -> Color.rgb(252, 181, 255);
-		};
-	}
-
-	/**
-	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
-	 * @return color of ghost
-	 */
-	public static Color getGhostDressColor(int ghostID) {
-		return switch (ghostID) {
-		case Ghost.RED_GHOST -> Color.RED;
-		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
-		case Ghost.CYAN_GHOST -> Color.CYAN;
-		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
-		default -> Color.WHITE; // should not happen
 		};
 	}
 }
