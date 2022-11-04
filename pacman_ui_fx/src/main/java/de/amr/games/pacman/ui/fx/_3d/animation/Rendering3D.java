@@ -65,6 +65,14 @@ public class Rendering3D {
 	};
 	//@formatter:on
 
+	public static final Color GHOST_EYE_BALL_COLOR = Color.GHOSTWHITE;
+	public static final Color GHOST_PUPIL_COLOR = Color.rgb(33, 33, 255);
+	public static final Color GHOST_FRIGHTENED_COLOR = Color.rgb(33, 33, 255);
+	public static final Color GHOST_FRIGHTENED_EYE_BALL_COLOR = Color.rgb(245, 189, 180);
+	public static final Color GHOST_FRIGHTENED_PUPIL_COLOR = Color.rgb(252, 187, 179);
+	public static final Color GHOST_FLASHING_COLOR = Color.rgb(224, 221, 255);
+	public static final Color GHOST_FLASHING_PUPIL_COLOR = Color.RED;
+
 	/**
 	 * @param gameVariant game variant
 	 * @param mazeNumber  the 1-based maze number
@@ -123,33 +131,5 @@ public class Rendering3D {
 		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
 		default -> Color.WHITE; // should not happen
 		};
-	}
-
-	public static Color getGhostDressColorBlue() {
-		return Color.rgb(33, 33, 255);
-	}
-
-	public static Color getGhostDressColorFlashing() {
-		return Color.rgb(224, 221, 255);
-	}
-
-	public static Color getGhostEyeBallColor() {
-		return Color.GHOSTWHITE;
-	}
-
-	public static Color getGhostEyeBallColorFrightened() {
-		return Color.rgb(245, 189, 180);
-	}
-
-	public static Color getGhostPupilColorBlue() {
-		return Color.rgb(33, 33, 255);
-	}
-
-	public static Color getGhostPupilColorPink() {
-		return Color.rgb(252, 187, 179);
-	}
-
-	public static Color getGhostPupilColorRed() {
-		return Color.RED;
 	}
 }

@@ -51,17 +51,36 @@ public class ColoredGhost3D {
 	private final ObjectProperty<Color> eyeBallColorPy;
 	private final ObjectProperty<Color> eyePupilColorPy;
 
+	private final Color eyeBallColor;
+	private final Color pupilColor;
+
+	private final Color frightenedColor;
+	private final Color frightenedEyeBallColor;
+	private final Color frightenedPupilColor;
+
+	private final Color flashingColor;
+	private final Color flashingPupilColor;
+
 	private ParallelTransition flashing;
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(int ghostID, Model3D model3D) {
+	public ColoredGhost3D(int ghostID, Model3D model3D, Color dressColor, Color eyeBallColor, Color pupilColor,
+			Color frightenedColor, Color frightenedEyeBallColor, Color frightenedPupilColor, Color flashingColor,
+			Color flashingPupilColor) {
+
 		this.ghostID = ghostID;
 		this.model3D = model3D;
 
-		var dressColor = Rendering3D.getGhostDressColor(ghostID);
-		var eyeBallColor = Rendering3D.getGhostEyeBallColor();
-		var pupilColor = Rendering3D.getGhostPupilColorBlue();
+		this.eyeBallColor = eyeBallColor;
+		this.pupilColor = pupilColor;
+
+		this.frightenedColor = frightenedColor;
+		this.frightenedEyeBallColor = frightenedEyeBallColor;
+		this.frightenedPupilColor = frightenedPupilColor;
+
+		this.flashingColor = flashingColor;
+		this.flashingPupilColor = flashingPupilColor;
 
 		root3D = model3D.createGhost(dressColor, eyeBallColor, pupilColor);
 
@@ -83,10 +102,8 @@ public class ColoredGhost3D {
 
 	private void createFlashing(int numFlashes) {
 		var seconds = GameModel.PAC_POWER_FADING_TICKS / (2 * 60.0); // 2 animation cycles = 1 flashing
-		dressFlashing = new ColorFlashing(Rendering3D.getGhostDressColorBlue(), Rendering3D.getGhostDressColorFlashing(),
-				seconds, numFlashes);
-		pupilsFlashing = new ColorFlashing(Rendering3D.getGhostPupilColorPink(), Rendering3D.getGhostPupilColorRed(),
-				seconds, numFlashes);
+		dressFlashing = new ColorFlashing(frightenedColor, flashingColor, seconds, numFlashes);
+		pupilsFlashing = new ColorFlashing(frightenedPupilColor, flashingPupilColor, seconds, numFlashes);
 		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
 	}
 
@@ -119,14 +136,14 @@ public class ColoredGhost3D {
 			ensureFlashingPlaying(numFlashes);
 			dressColorPy.bind(dressFlashing.colorPy);
 			eyePupilColorPy.bind(pupilsFlashing.colorPy);
-			eyeBallColorPy.set(Rendering3D.getGhostEyeBallColorFrightened());
+			eyeBallColorPy.set(frightenedEyeBallColor);
 		} else {
 			ensureFlashingStopped();
 			dressColorPy.unbind();
 			eyePupilColorPy.unbind();
-			dressColorPy.set(Rendering3D.getGhostDressColorBlue());
-			eyePupilColorPy.set(Rendering3D.getGhostPupilColorRed());
-			eyeBallColorPy.set(Rendering3D.getGhostEyeBallColorFrightened());
+			dressColorPy.set(frightenedColor);
+			eyePupilColorPy.set(frightenedPupilColor);
+			eyeBallColorPy.set(frightenedEyeBallColor);
 		}
 		dress().setVisible(true);
 	}
@@ -136,8 +153,8 @@ public class ColoredGhost3D {
 		eyePupilColorPy.unbind();
 		ensureFlashingStopped();
 		dressColorPy.set(Rendering3D.getGhostDressColor(ghostID));
-		eyeBallColorPy.set(Rendering3D.getGhostEyeBallColor());
-		eyePupilColorPy.set(Rendering3D.getGhostPupilColorBlue());
+		eyeBallColorPy.set(eyeBallColor);
+		eyePupilColorPy.set(pupilColor);
 		dress().setVisible(true);
 	}
 }
