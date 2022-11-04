@@ -36,8 +36,8 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeColors;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -69,9 +69,9 @@ public class World3D extends Group {
 		getChildren().add(scores3D);
 
 		var mazeColors = new MazeColors(//
-				Rendering3D.getMazeSideColor(game.variant, game.level.mazeNumber()), //
-				Rendering3D.getMazeTopColor(game.variant, game.level.mazeNumber()), //
-				Rendering3D.getGhostHouseDoorColor(game.variant));
+				RendererCommon.getMazeSideColor(game.variant, game.level.mazeNumber()), //
+				RendererCommon.getMazeTopColor(game.variant, game.level.mazeNumber()), //
+				RendererCommon.getGhostHouseDoorColor(game.variant));
 
 		maze3D = new Maze3D(game.level.world(), mazeColors);
 		maze3D.drawModePy.bind(Env.drawModePy);
@@ -84,7 +84,7 @@ public class World3D extends Group {
 		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
 		getChildren().add(maze3D);
 
-		var foodColor = Rendering3D.getMazeFoodColor(game.variant, game.level.mazeNumber());
+		var foodColor = RendererCommon.getMazeFoodColor(game.variant, game.level.mazeNumber());
 		food3D = new Food3D(game.variant, game.world(), foodColor);
 		food3D.squirtingPy.bind(Env.squirtingPy);
 		getChildren().add(food3D);
