@@ -56,6 +56,12 @@ public class Ufx {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> pyColor) {
+		var mat = new PhongMaterial();
+		bindMaterialColor(mat, pyColor);
+		return mat;
+	}
+
 	public static void bindMaterialColor(PhongMaterial mat, ObjectProperty<Color> pyColor) {
 		mat.diffuseColorProperty().bind(pyColor);
 		mat.specularColorProperty().bind(Bindings.createObjectBinding(() -> pyColor.get().brighter(), pyColor));

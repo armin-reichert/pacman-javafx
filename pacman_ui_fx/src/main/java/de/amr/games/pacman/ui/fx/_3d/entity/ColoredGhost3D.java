@@ -35,7 +35,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 
 /**
@@ -58,22 +57,13 @@ public class ColoredGhost3D {
 	public ColoredGhost3D(Model3D model3D, GhostColors colors) {
 		this.model3D = model3D;
 		this.colors = colors;
-		root3D = model3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
-
 		dressColorPy = new SimpleObjectProperty<>(colors.normalDress());
-		var dressMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(dressMaterial, dressColorPy);
-		model3D.ghostDress(root3D).setMaterial(dressMaterial);
-
 		eyeBallColorPy = new SimpleObjectProperty<>(colors.normalEyeBalls());
-		var eyeBallMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(eyeBallMaterial, eyeBallColorPy);
-		model3D.ghostEyeBalls(root3D).setMaterial(eyeBallMaterial);
-
 		eyePupilColorPy = new SimpleObjectProperty<>(colors.normalPupils());
-		var eyePupilMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(eyePupilMaterial, eyePupilColorPy);
-		model3D.ghostEyePupils(root3D).setMaterial(eyePupilMaterial);
+		root3D = model3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
+		model3D.ghostDress(root3D).setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
+		model3D.ghostEyeBalls(root3D).setMaterial(Ufx.createColorBoundMaterial(eyeBallColorPy));
+		model3D.ghostEyePupils(root3D).setMaterial(Ufx.createColorBoundMaterial(eyePupilColorPy));
 	}
 
 	private void createFlashing(int numFlashes) {
