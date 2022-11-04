@@ -57,6 +57,8 @@ public interface Rendering2D {
 
 	Color ghostColor(int ghostID);
 
+	Color getMazeFoodColor(int mazeNumber);
+
 	Color getMazeTopColor(GameVariant gameVariant, int mazeNumber);
 
 	Color getMazeSideColor(GameVariant gameVariant, int mazeNumber);
@@ -94,10 +96,6 @@ public interface Rendering2D {
 	SingleEntityAnimation<Boolean> createMazeFlashingAnimation();
 
 	FixedEntityAnimation<Rectangle2D> createGhostValueList();
-
-	// Maze
-
-	Color foodColor(int mazeNumber);
 
 	// Drawing
 

@@ -32,6 +32,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
@@ -114,8 +115,18 @@ public class RendererPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public Color foodColor(int mazeNumber) {
+	public Color getMazeFoodColor(int mazeNumber) {
 		return FOOD_COLOR;
+	}
+
+	@Override
+	public Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
+		return Color.AZURE;
+	}
+
+	@Override
+	public Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
+		return Color.rgb(33, 33, 255);
 	}
 
 	@Override
