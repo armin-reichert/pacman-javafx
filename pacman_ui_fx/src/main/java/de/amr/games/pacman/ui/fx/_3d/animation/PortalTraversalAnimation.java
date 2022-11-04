@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import java.util.function.Supplier;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,10 +47,10 @@ public class PortalTraversalAnimation {
 	private final World world;
 	private final Node node;
 	private final ObjectProperty<Color> colorPy;
-	private final Supplier<Color> baseColor;
+	private final Color baseColor;
 
 	public PortalTraversalAnimation(Creature guy, World world, Node node, ObjectProperty<Color> colorPy,
-			Supplier<Color> baseColor) {
+			Color baseColor) {
 		this.guy = guy;
 		this.world = world;
 		this.node = node;
@@ -72,12 +70,12 @@ public class PortalTraversalAnimation {
 			LOGGER.trace("Distance from portal: %.2f visible: %s", dist, node.isVisible());
 		} else if (dist <= FADING_DISTANCE) {
 			double fading = dist / FADING_DISTANCE;
-			var color = fade(baseColor.get(), fading);
+			var color = fade(baseColor, fading);
 			colorPy.set(color);
 			LOGGER.trace("Distance from portal: %.2f color: rgb(%.0f,%.0f,%.0f) visible: %s", dist, 256 * color.getRed(),
 					256 * color.getGreen(), 256 * color.getBlue(), node.isVisible());
 		} else {
-			colorPy.set(baseColor.get());
+			colorPy.set(baseColor);
 			node.setOpacity(1.0);
 		}
 	}

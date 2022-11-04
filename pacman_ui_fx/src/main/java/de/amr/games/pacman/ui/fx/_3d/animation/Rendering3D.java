@@ -111,18 +111,6 @@ public class Rendering3D {
 		};
 	}
 
-	public static Color getPacSkullColor() {
-		return Color.YELLOW;
-	}
-
-	public static Color getPacEyesColor() {
-		return Color.rgb(33, 33, 33);
-	}
-
-	public static Color getPacPalateColor() {
-		return Color.CORAL;
-	}
-
 	/**
 	 * @param ghostID 0=Blinky, 1=Pinky, 2=Inky, 3=Clyde/Sue
 	 * @return color of ghost

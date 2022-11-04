@@ -48,26 +48,28 @@ import javafx.scene.shape.Shape3D;
  */
 public class Pac3D extends MovingCreature3D {
 
+	private static final Color FACE_COLOR = Color.YELLOW;
+	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
+	private static final Color PALATE_COLOR = Color.CORAL;
+
 	private final Model3D model3D;
 	private final Group root3D;
-	private final PortalTraversalAnimation portalTraversal;
+	private final PortalTraversalAnimation portalTraversalAnimation;
 	private final ObjectProperty<Color> faceColorPy;
-	private final Color normalFaceColor;
 	private final PhongMaterial faceMaterial;
 
-	public Pac3D(Pac pac, World world, Model3D model3D, Color faceColor, Color eyesColor, Color palateColor) {
+	public Pac3D(Pac pac, World world, Model3D model3D) {
 		super(pac);
 		this.model3D = model3D;
-		normalFaceColor = faceColor;
-		faceColorPy = new SimpleObjectProperty<>(faceColor);
+		faceColorPy = new SimpleObjectProperty<>(FACE_COLOR);
 		faceMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
-		root3D = model3D.createPac(faceColor, eyesColor, palateColor);
+		root3D = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
 		face().setMaterial(faceMaterial);
+		portalTraversalAnimation = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, FACE_COLOR);
 		var light = new PointLight(Color.GHOSTWHITE);
 		light.setTranslateZ(-6);
 		getChildren().addAll(root3D, light);
-		portalTraversal = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, () -> normalFaceColor);
 	}
 
 	public void reset() {
@@ -83,7 +85,7 @@ public class Pac3D extends MovingCreature3D {
 
 	public void update() {
 		updateMovement();
-		portalTraversal.update();
+		portalTraversalAnimation.update();
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class Pac3D extends MovingCreature3D {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
-		return new PacDyingAnimation(root3D, faceColorPy, normalFaceColor, killingGhostColor).getAnimation();
+		return new PacDyingAnimation(root3D, faceColorPy, FACE_COLOR, killingGhostColor).getAnimation();
 	}
 
 	private Shape3D face() {
