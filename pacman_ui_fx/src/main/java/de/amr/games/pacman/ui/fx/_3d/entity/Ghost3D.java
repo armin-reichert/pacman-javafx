@@ -29,7 +29,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
+import de.amr.games.pacman.ui.fx._3d.animation.GhostColors;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -60,13 +60,10 @@ public class Ghost3D extends MovingCreature3D {
 	private final Image[] numberImages;
 	private Look look;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
+	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D, GhostColors colors) {
 		super(ghost);
 		numberImages = r2D.createGhostValueList().frames().map(r2D.spritesheet()::subImage).toArray(Image[]::new);
-		coloredGhost3D = new ColoredGhost3D(ghost.id, model3D, Rendering3D.getGhostDressColor(ghost.id),
-				Rendering3D.GHOST_EYE_BALL_COLOR, Rendering3D.GHOST_PUPIL_COLOR, Rendering3D.GHOST_FRIGHTENED_COLOR,
-				Rendering3D.GHOST_FRIGHTENED_EYE_BALL_COLOR, Rendering3D.GHOST_FRIGHTENED_PUPIL_COLOR,
-				Rendering3D.GHOST_FLASHING_COLOR, Rendering3D.GHOST_FLASHING_PUPIL_COLOR);
+		coloredGhost3D = new ColoredGhost3D(model3D, colors);
 	}
 
 	public void reset(GameModel game) {
@@ -111,16 +108,16 @@ public class Ghost3D extends MovingCreature3D {
 		look = newLook;
 		switch (newLook) {
 		case NORMAL_COLOR -> {
-			coloredGhost3D.wearColoredDress();
+			coloredGhost3D.lookNormal();
 			resetMovement();
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED_COLOR -> {
-			coloredGhost3D.wearBlueDress(0);
+			coloredGhost3D.lookFrightenedOrFlashing(0);
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FLASHING -> {
-			coloredGhost3D.wearBlueDress(game.level.numFlashes());
+			coloredGhost3D.lookFrightenedOrFlashing(game.level.numFlashes());
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case EYES_ONLY -> {

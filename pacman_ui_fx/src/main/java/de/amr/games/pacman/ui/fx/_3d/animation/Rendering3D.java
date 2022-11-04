@@ -65,13 +65,30 @@ public class Rendering3D {
 	};
 	//@formatter:on
 
-	public static final Color GHOST_EYE_BALL_COLOR = Color.GHOSTWHITE;
-	public static final Color GHOST_PUPIL_COLOR = Color.rgb(33, 33, 255);
-	public static final Color GHOST_FRIGHTENED_COLOR = Color.rgb(33, 33, 255);
-	public static final Color GHOST_FRIGHTENED_EYE_BALL_COLOR = Color.rgb(245, 189, 180);
-	public static final Color GHOST_FRIGHTENED_PUPIL_COLOR = Color.rgb(252, 187, 179);
-	public static final Color GHOST_FLASHING_COLOR = Color.rgb(224, 221, 255);
-	public static final Color GHOST_FLASHING_PUPIL_COLOR = Color.RED;
+	public static final GhostColors createGhostColors(int ghostID) {
+		var dressColor = switch (ghostID) {
+		case Ghost.RED_GHOST -> Color.RED;
+		case Ghost.PINK_GHOST -> Color.rgb(252, 181, 255);
+		case Ghost.CYAN_GHOST -> Color.CYAN;
+		case Ghost.ORANGE_GHOST -> Color.rgb(253, 192, 90);
+		default -> Color.WHITE; // should not happen
+		};
+		return new GhostColors(//
+				// dress, eyeballs, pupils
+				dressColor, Color.GHOSTWHITE, Color.rgb(33, 33, 255), //
+				// in frightened mode
+				Color.rgb(33, 33, 255), Color.rgb(245, 189, 180), Color.rgb(252, 187, 179), //
+				// when flashing
+				Color.rgb(224, 221, 255), Color.rgb(245, 189, 180), Color.RED);
+	}
+
+//	public static final Color GHOST_EYE_BALL_COLOR = Color.GHOSTWHITE;
+//	public static final Color GHOST_PUPIL_COLOR = Color.rgb(33, 33, 255);
+//	public static final Color GHOST_FRIGHTENED_COLOR = Color.rgb(33, 33, 255);
+//	public static final Color GHOST_FRIGHTENED_EYE_BALL_COLOR = Color.rgb(245, 189, 180);
+//	public static final Color GHOST_FRIGHTENED_PUPIL_COLOR = Color.rgb(252, 187, 179);
+//	public static final Color GHOST_FLASHING_COLOR = Color.rgb(224, 221, 255);
+//	public static final Color GHOST_FLASHING_PUPIL_COLOR = Color.RED;
 
 	/**
 	 * @param gameVariant game variant

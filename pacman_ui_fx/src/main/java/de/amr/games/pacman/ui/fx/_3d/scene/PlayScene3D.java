@@ -37,6 +37,7 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._3d.animation.Rendering3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -121,7 +122,9 @@ public class PlayScene3D implements GameScene {
 		world3D = new World3D(game, ctx.model3D(), ctx.r2D());
 		pac3D = new Pac3D(game.pac, game.world(), ctx.model3D());
 		pac3D.reset();
-		ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
+		ghosts3D = game.ghosts()
+				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), Rendering3D.createGhostColors(ghost.id)))
+				.toArray(Ghost3D[]::new);
 		bonus3D = new Bonus3D(game.bonus());
 
 		content.getChildren().clear();
