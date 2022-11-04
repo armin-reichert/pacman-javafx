@@ -121,7 +121,8 @@ public abstract class RendererCommon implements Rendering2D {
 	 * @param mazeNumber the 1-based maze number
 	 * @return color of maze walls on top (3D) or inside (2D)
 	 */
-	public static Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
+	@Override
+	public Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> MAZE_TOP_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.AZURE;
@@ -133,7 +134,8 @@ public abstract class RendererCommon implements Rendering2D {
 	 * @param mazeNumber  the 1-based maze number
 	 * @return color of maze walls on side (3D) or outside (2D)
 	 */
-	public static Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
+	@Override
+	public Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber - 1];
 		case PACMAN -> Color.rgb(33, 33, 255);
@@ -144,14 +146,15 @@ public abstract class RendererCommon implements Rendering2D {
 	 * @param gameVariant game variant
 	 * @return color of ghosthouse doors in this maze
 	 */
-	public static Color getGhostHouseDoorColor(GameVariant gameVariant) {
+	@Override
+	public Color getGhostHouseDoorColor(GameVariant gameVariant) {
 		return switch (gameVariant) {
 		case MS_PACMAN -> Color.rgb(255, 183, 255);
 		case PACMAN -> Color.rgb(252, 181, 255);
 		};
 	}
 
-	protected void clearTile(GraphicsContext g, V2i tile) {
+	public void clearTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}

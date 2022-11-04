@@ -30,6 +30,7 @@ import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -55,6 +56,12 @@ public interface Rendering2D {
 	Font arcadeFont();
 
 	Color ghostColor(int ghostID);
+
+	Color getMazeTopColor(GameVariant gameVariant, int mazeNumber);
+
+	Color getMazeSideColor(GameVariant gameVariant, int mazeNumber);
+
+	Color getGhostHouseDoorColor(GameVariant gameVariant);
 
 	// Sprites
 
