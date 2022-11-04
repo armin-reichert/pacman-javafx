@@ -133,4 +133,9 @@ public class ColoredGhost3D {
 		eyePupilColorPy.set(colors.normalPupils());
 		dress().setVisible(true);
 	}
+
+	public void lookEyesOnly() {
+		lookNormal();
+		dress().setVisible(false);
+	}
 }

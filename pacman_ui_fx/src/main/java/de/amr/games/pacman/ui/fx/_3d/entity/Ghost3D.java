@@ -121,7 +121,7 @@ public class Ghost3D extends MovingCreature3D {
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case EYES_ONLY -> {
-			coloredGhost3D.dress().setVisible(false);
+			coloredGhost3D.lookEyesOnly();
 			resetMovement();
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
