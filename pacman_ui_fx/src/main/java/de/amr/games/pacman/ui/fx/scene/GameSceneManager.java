@@ -178,11 +178,7 @@ public class GameSceneManager {
 		default -> PLAY_SCENE_INDEX; // play scene
 		}];
 
-		var scene = threeD ? variants.scene3D : variants.scene2D;
-		if (scene == null) {
-			scene = variants.scene2D; // default, should always exist
-		}
-
+		var scene = threeD && variants.scene3D != null ? variants.scene3D : variants.scene2D;
 		return Optional.ofNullable(scene);
 	}
 }
