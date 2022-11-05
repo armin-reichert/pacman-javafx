@@ -57,6 +57,7 @@ public class Ghost3D extends MovingCreature3D {
 	}
 
 	private final ColoredGhost3D coloredGhost3D;
+	private final Box numberCube = new Box(TS, TS, TS);
 	private final Image[] numberImages;
 	private Look look;
 
@@ -80,29 +81,6 @@ public class Ghost3D extends MovingCreature3D {
 			updateMovement();
 		}
 		setVisible(guy.isVisible() && !outsideWorld(game)); // ???
-	}
-
-	private boolean outsideWorld(GameModel game) {
-		double centerX = guy.getPosition().x() + World.HTS;
-		return centerX < 0 || centerX > game.world().numCols() * World.TS;
-	}
-
-	private Look lookForCurrentState(GameModel game) {
-		var ghost = (Ghost) guy;
-		return switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1
-				? frightenedOrFlashingLook(game)
-				: Look.NORMAL_COLOR;
-		case FRIGHTENED -> frightenedOrFlashingLook(game);
-		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES_ONLY;
-		case EATEN -> Look.NUMBER;
-		default -> Look.NORMAL_COLOR;
-		};
-
-	}
-
-	private Look frightenedOrFlashingLook(GameModel game) {
-		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED_COLOR;
 	}
 
 	private void changeLook(GameModel game, Look newLook) {
@@ -133,8 +111,8 @@ public class Ghost3D extends MovingCreature3D {
 		}
 		case NUMBER -> {
 			var ghost = (Ghost) guy;
-			var box = createNumberCube(game.killedIndex[ghost.id]);
-			getChildren().setAll(box);
+			configureNumberCube(game.killedIndex[ghost.id]);
+			getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
 			setRotate(0);
@@ -143,13 +121,33 @@ public class Ghost3D extends MovingCreature3D {
 		}
 	}
 
-	private Box createNumberCube(int valueIndex) {
-		var box = new Box(TS, TS, TS);
+	private boolean outsideWorld(GameModel game) {
+		double centerX = guy.getPosition().x() + World.HTS;
+		return centerX < 0 || centerX > game.world().numCols() * World.TS;
+	}
+
+	private Look lookForCurrentState(GameModel game) {
+		var ghost = (Ghost) guy;
+		return switch (ghost.getState()) {
+		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1
+				? frightenedOrFlashingLook(game)
+				: Look.NORMAL_COLOR;
+		case FRIGHTENED -> frightenedOrFlashingLook(game);
+		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES_ONLY;
+		case EATEN -> Look.NUMBER;
+		default -> Look.NORMAL_COLOR;
+		};
+	}
+
+	private Look frightenedOrFlashingLook(GameModel game) {
+		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED_COLOR;
+	}
+
+	private void configureNumberCube(int valueIndex) {
 		var texture = numberImages[valueIndex];
 		var material = new PhongMaterial();
 		material.setBumpMap(texture);
 		material.setDiffuseMap(texture);
-		box.setMaterial(material);
-		return box;
+		numberCube.setMaterial(material);
 	}
 }
