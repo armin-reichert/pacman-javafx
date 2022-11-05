@@ -183,19 +183,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		g.fillText("1980/1981", x + t(8), y + t(4));
 	}
 
-	public void drawFlap(GraphicsContext g, Clapperboard flap) {
-		if (flap.isVisible()) {
-			flap.animation().map(EntityAnimation::animate).ifPresent(spriteObj -> {
-				var sprite = (Rectangle2D) spriteObj;
-				drawEntity(g, flap, sprite);
-				g.setFont(arcadeFont());
-				g.setFill(Color.rgb(222, 222, 255));
-				g.fillText(String.valueOf(flap.sceneNumber), flap.getPosition().x() + sprite.getWidth() - 25,
-						flap.getPosition().y() + 18);
-				g.fillText(flap.sceneTitle, flap.getPosition().x() + sprite.getWidth(), flap.getPosition().y());
-			});
-		}
-	}
+	// Animations
 
 	@Override
 	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation() {
@@ -276,6 +264,20 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	// Ms. Pac-Man specific:
+
+	public void drawClapperboard(GraphicsContext g, Clapperboard clapper) {
+		if (clapper.isVisible()) {
+			clapper.animation().map(EntityAnimation::animate).ifPresent(frame -> {
+				var sprite = (Rectangle2D) frame;
+				drawEntity(g, clapper, sprite);
+				g.setFont(arcadeFont());
+				g.setFill(Color.rgb(222, 222, 255));
+				g.fillText(String.valueOf(clapper.sceneNumber), clapper.getPosition().x() + sprite.getWidth() - 25,
+						clapper.getPosition().y() + 18);
+				g.fillText(clapper.sceneTitle, clapper.getPosition().x() + sprite.getWidth(), clapper.getPosition().y());
+			});
+		}
+	}
 
 	public Rectangle2D heartSprite() {
 		return t3c(2, 10);

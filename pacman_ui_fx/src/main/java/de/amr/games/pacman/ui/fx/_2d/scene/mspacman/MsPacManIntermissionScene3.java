@@ -81,7 +81,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		renderer.drawFlap(g, icc.flap);
+		renderer.drawClapperboard(g, icc.flap);
 		renderer.drawPac(g, icc.msPacMan);
 		renderer.drawPac(g, icc.pacMan);
 		renderer.drawEntity(g, icc.stork, storkAnim.animate());
