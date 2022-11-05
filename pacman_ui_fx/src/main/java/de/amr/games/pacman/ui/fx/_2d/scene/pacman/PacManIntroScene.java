@@ -166,7 +166,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(icc.blinking.frame())) {
-			g.setFill(ctx.r2D().foodColor(1));
+			g.setFill(ctx.r2D().getMazeFoodColor(1));
 			g.fillOval(t(icc.left), t(20), TS, TS);
 		}
 	}
@@ -191,7 +191,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawPoints(GraphicsContext g) {
 		int tileX = icc.left + 6;
 		int tileY = 25;
-		g.setFill(ctx.r2D().foodColor(1));
+		g.setFill(ctx.r2D().getMazeFoodColor(1));
 		g.fillRect(t(tileX) + 4.0, t(tileY - 1) + 4.0, 2, 2);
 		if (Boolean.TRUE.equals(icc.blinking.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);

@@ -32,7 +32,6 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
@@ -58,33 +57,6 @@ import javafx.scene.text.FontWeight;
 public abstract class RendererCommon implements Rendering2D {
 
 	//@formatter:off
-	private static final Color[] MAZE_TOP_COLORS = { 
-		Color.rgb(255, 183, 174), 
-		Color.rgb(71, 183, 255), 
-		Color.rgb(222, 151, 81), 
-		Color.rgb(33, 33, 255), 
-		Color.rgb(255, 183, 255), 
-		Color.rgb(255, 183, 174), 
-	};
-
-	private static final Color[] MAZE_SIDE_COLORS = { 
-		Color.rgb(255, 0, 0), 
-		Color.rgb(222, 222, 255), 
-		Color.rgb(222, 222, 255), 
-		Color.rgb(255, 183, 81), 
-		Color.rgb(255, 255, 0), 
-		Color.rgb(255, 0, 0), 
-	};
-	
-	private static final Color[] FOOD_COLORS = {
-		Color.rgb(222, 222, 255),
-		Color.rgb(255, 255, 0),
-		Color.rgb(255, 0, 0),
-		Color.rgb(222, 222, 255),
-		Color.rgb(0, 255, 255),
-		Color.rgb(222, 222, 255),
-	};
-
 	private static final Color[] GHOST_COLORS = {
 		Color.RED,
 		Color.rgb(252, 181, 255), // PINK
@@ -105,53 +77,7 @@ public abstract class RendererCommon implements Rendering2D {
 				Color.rgb(224, 221, 255), Color.rgb(245, 189, 180), Color.RED);
 	}
 
-	/**
-	 * @param gameVariant game variant
-	 * @param mazeNumber  the 1-based maze number
-	 * @return color of pellets in this maze
-	 */
-	public static Color getMazeFoodColor(GameVariant gameVariant, int mazeNumber) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> FOOD_COLORS[mazeNumber - 1];
-		case PACMAN -> Color.rgb(254, 189, 180);
-		};
-	}
-
-	/**
-	 * @param mazeNumber the 1-based maze number
-	 * @return color of maze walls on top (3D) or inside (2D)
-	 */
-	public static Color getMazeTopColor(GameVariant gameVariant, int mazeNumber) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> MAZE_TOP_COLORS[mazeNumber - 1];
-		case PACMAN -> Color.AZURE;
-		};
-	}
-
-	/**
-	 * @param gameVariant game variant
-	 * @param mazeNumber  the 1-based maze number
-	 * @return color of maze walls on side (3D) or outside (2D)
-	 */
-	public static Color getMazeSideColor(GameVariant gameVariant, int mazeNumber) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> MAZE_SIDE_COLORS[mazeNumber - 1];
-		case PACMAN -> Color.rgb(33, 33, 255);
-		};
-	}
-
-	/**
-	 * @param gameVariant game variant
-	 * @return color of ghosthouse doors in this maze
-	 */
-	public static Color getGhostHouseDoorColor(GameVariant gameVariant) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> Color.rgb(255, 183, 255);
-		case PACMAN -> Color.rgb(252, 181, 255);
-		};
-	}
-
-	protected void clearTile(GraphicsContext g, V2i tile) {
+	public void clearTile(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}

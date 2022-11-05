@@ -56,6 +56,14 @@ public interface Rendering2D {
 
 	Color ghostColor(int ghostID);
 
+	Color getMazeFoodColor(int mazeNumber);
+
+	Color getMazeTopColor(int mazeNumber);
+
+	Color getMazeSideColor(int mazeNumber);
+
+	Color getGhostHouseDoorColor();
+
 	// Sprites
 
 	Rectangle2D ghostSprite(int ghostID, Direction dir);
@@ -87,10 +95,6 @@ public interface Rendering2D {
 	SingleEntityAnimation<Boolean> createMazeFlashingAnimation();
 
 	FixedEntityAnimation<Rectangle2D> createGhostValueList();
-
-	// Maze
-
-	Color foodColor(int mazeNumber);
 
 	// Drawing
 
