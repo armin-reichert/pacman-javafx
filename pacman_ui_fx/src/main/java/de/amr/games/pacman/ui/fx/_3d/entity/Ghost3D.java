@@ -90,9 +90,10 @@ public class Ghost3D extends MovingCreature3D {
 	private Look lookForCurrentState(GameModel game) {
 		var ghost = (Ghost) guy;
 		return switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1 ? frightenedLook(game)
+		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1
+				? frightenedOrFlashingLook(game)
 				: Look.NORMAL_COLOR;
-		case FRIGHTENED -> frightenedLook(game);
+		case FRIGHTENED -> frightenedOrFlashingLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES_ONLY;
 		case EATEN -> Look.NUMBER;
 		default -> Look.NORMAL_COLOR;
@@ -100,7 +101,7 @@ public class Ghost3D extends MovingCreature3D {
 
 	}
 
-	private Look frightenedLook(GameModel game) {
+	private Look frightenedOrFlashingLook(GameModel game) {
 		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED_COLOR;
 	}
 
