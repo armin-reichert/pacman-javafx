@@ -113,11 +113,16 @@ public class Ghost3D extends MovingCreature3D {
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED_COLOR -> {
-			coloredGhost3D.lookFrightenedOrFlashing(0);
+			coloredGhost3D.lookFrightened();
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FLASHING -> {
-			coloredGhost3D.lookFrightenedOrFlashing(game.level.numFlashes());
+			int numFlashes = game.level.numFlashes();
+			if (numFlashes > 0) {
+				coloredGhost3D.lookFlashing(numFlashes);
+			} else {
+				coloredGhost3D.lookFrightened();
+			}
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case EYES_ONLY -> {
@@ -126,13 +131,8 @@ public class Ghost3D extends MovingCreature3D {
 			getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
-			var box = new Box(TS, TS, TS);
 			var ghost = (Ghost) guy;
-			var texture = numberImages[game.killedIndex[ghost.id]];
-			var material = new PhongMaterial();
-			material.setBumpMap(texture);
-			material.setDiffuseMap(texture);
-			box.setMaterial(material);
+			var box = createNumberCube(game.killedIndex[ghost.id]);
 			getChildren().setAll(box);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
@@ -140,5 +140,15 @@ public class Ghost3D extends MovingCreature3D {
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + newLook);
 		}
+	}
+
+	private Box createNumberCube(int valueIndex) {
+		var box = new Box(TS, TS, TS);
+		var texture = numberImages[valueIndex];
+		var material = new PhongMaterial();
+		material.setBumpMap(texture);
+		material.setDiffuseMap(texture);
+		box.setMaterial(material);
+		return box;
 	}
 }

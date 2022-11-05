@@ -73,7 +73,7 @@ public class ColoredGhost3D {
 		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
 	}
 
-	public Shape3D dress() {
+	private Shape3D dress() {
 		return model3D.ghostDress(root3D);
 	}
 
@@ -97,27 +97,28 @@ public class ColoredGhost3D {
 		}
 	}
 
-	public void lookFrightenedOrFlashing(int numFlashes) {
-		if (numFlashes > 0) {
-			ensureFlashingPlaying(numFlashes);
-			dressColorPy.bind(dressFlashing.colorPy);
-			eyeBallColorPy.set(colors.frightenedEyeBalls());
-			eyePupilColorPy.bind(pupilsFlashing.colorPy);
-		} else {
-			ensureFlashingStopped();
-			dressColorPy.unbind();
-			eyePupilColorPy.unbind();
-			dressColorPy.set(colors.frightenedDress());
-			eyeBallColorPy.set(colors.frightenedEyeBalls());
-			eyePupilColorPy.set(colors.frightendPupils());
-		}
+	public void lookFlashing(int numFlashes) {
+		ensureFlashingPlaying(numFlashes);
+		dressColorPy.bind(dressFlashing.colorPy);
+		eyeBallColorPy.set(colors.frightenedEyeBalls());
+		eyePupilColorPy.bind(pupilsFlashing.colorPy);
+		dress().setVisible(true);
+	}
+
+	public void lookFrightened() {
+		ensureFlashingStopped();
+		dressColorPy.unbind();
+		eyePupilColorPy.unbind();
+		dressColorPy.set(colors.frightenedDress());
+		eyeBallColorPy.set(colors.frightenedEyeBalls());
+		eyePupilColorPy.set(colors.frightendPupils());
 		dress().setVisible(true);
 	}
 
 	public void lookNormal() {
+		ensureFlashingStopped();
 		dressColorPy.unbind();
 		eyePupilColorPy.unbind();
-		ensureFlashingStopped();
 		dressColorPy.set(colors.normalDress());
 		eyeBallColorPy.set(colors.normalEyeBalls());
 		eyePupilColorPy.set(colors.normalPupils());
