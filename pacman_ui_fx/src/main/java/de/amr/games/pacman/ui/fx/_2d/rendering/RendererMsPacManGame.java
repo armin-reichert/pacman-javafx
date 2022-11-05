@@ -149,9 +149,9 @@ public class RendererMsPacManGame extends RendererCommon {
 	public void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
 		g.drawImage(spritesheet().sourceImage(), 0, MAZE_HEIGHT * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT, x, y,
 				MAZE_WIDTH, MAZE_HEIGHT);
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTile(g, tile));
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTileContent(g, tile));
 		if (energizersHidden) {
-			world.energizerTiles().forEach(tile -> clearTile(g, tile));
+			world.energizerTiles().forEach(tile -> clearTileContent(g, tile));
 		}
 	}
 

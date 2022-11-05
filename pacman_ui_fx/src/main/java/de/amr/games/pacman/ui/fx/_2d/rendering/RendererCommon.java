@@ -65,7 +65,7 @@ public abstract class RendererCommon implements Rendering2D {
 	};
 	//@formatter:on
 
-	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", 8);
+	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", TS);
 
 	public static final GhostColors createGhostColors(int ghostID) {
 		return new GhostColors(//
@@ -77,7 +77,7 @@ public abstract class RendererCommon implements Rendering2D {
 				Color.rgb(224, 221, 255), Color.rgb(245, 189, 180), Color.RED);
 	}
 
-	public void clearTile(GraphicsContext g, V2i tile) {
+	public void clearTileContent(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}
@@ -114,26 +114,26 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public void drawSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
-		if (region != null) {
-			g.drawImage(spritesheet().sourceImage(), region.getMinX(), region.getMinY(), region.getWidth(),
-					region.getHeight(), x, y, region.getWidth(), region.getHeight());
+	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
+		if (r != null) {
+			g.drawImage(spritesheet().sourceImage(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y,
+					r.getWidth(), r.getHeight());
 		}
 	}
 
 	@Override
-	public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D region, double x, double y) {
-		if (region != null) {
-			double dx = HTS - region.getWidth() / 2;
-			double dy = HTS - region.getHeight() / 2;
-			drawSprite(g, region, x + dx, y + dy);
+	public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D r, double x, double y) {
+		if (r != null) {
+			double dx = HTS - r.getWidth() / 2;
+			double dy = HTS - r.getHeight() / 2;
+			drawSprite(g, r, x + dx, y + dy);
 		}
 	}
 
 	@Override
-	public void drawEntity(GraphicsContext g, Entity entity, Rectangle2D region) {
+	public void drawEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.isVisible()) {
-			drawSpriteCenteredOverBox(g, region, entity.getPosition().x(), entity.getPosition().y());
+			drawSpriteCenteredOverBox(g, r, entity.getPosition().x(), entity.getPosition().y());
 		}
 	}
 
@@ -169,11 +169,11 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, LevelCounter levelCounter) {
-		if (levelCounter.visible) {
-			double x = levelCounter.rightBorderPosition.x();
-			for (int symbol : levelCounter.symbols) {
-				drawSprite(g, bonusSymbolSprite(symbol), x, levelCounter.rightBorderPosition.y());
+	public void drawLevelCounter(GraphicsContext g, LevelCounter counter) {
+		if (counter.visible) {
+			double x = counter.rightBorderPosition.x();
+			for (int symbol : counter.symbols) {
+				drawSprite(g, bonusSymbolSprite(symbol), x, counter.rightBorderPosition.y());
 				x -= t(2);
 			}
 		}
