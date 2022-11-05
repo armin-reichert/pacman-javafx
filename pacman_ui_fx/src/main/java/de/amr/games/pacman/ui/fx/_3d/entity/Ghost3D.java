@@ -41,11 +41,11 @@ import javafx.scene.transform.Rotate;
  * <p>
  * A ghost is displayed in one of the following modes:
  * <ul>
- * <li>normal: colorful ghost with blue eyes,
- * <li>frightened: blue ghost with red eyes,
- * <li>frightened and flashing: blue-white flashing skin, red eyes
- * <li>dead: eyes only,
- * <li>eaten: number cube showing ghost value.
+ * <li>normal: colored ghost with blue eyes,
+ * <li>frightened: blue ghost with empty pinkish eyes (ghost looking blind),
+ * <li>frightened/flashing: blue-white flashing skin, pink-red flashing eyes,
+ * <li>dead: blue eyes only,
+ * <li>eaten: number cube showing eaten ghost's value.
  * </ul>
  * 
  * @author Armin Reichert
