@@ -30,11 +30,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
-import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
@@ -59,9 +59,6 @@ public class GameSceneManager {
 
 	private static final int PLAY_SCENE_INDEX = 3;
 
-	private record GameSceneVariants(GameScene2D scene2D, GameScene scene3D) {
-	}
-
 	//@formatter:off
 	private static final GameSceneVariants[] SCENES_PACMAN = {
 			new GameSceneVariants(new BootScene(), null),
@@ -83,6 +80,13 @@ public class GameSceneManager {
 			new GameSceneVariants(new MsPacManIntermissionScene3(), null),
 	};
 	//@formatter:on
+
+	private static GameSceneVariants[] scenes(GameVariant gameVariant) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> SCENES_MS_PACMAN;
+		case PACMAN -> SCENES_PACMAN;
+		};
+	}
 
 	public boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
 		var scene2D = findGameScene(gameController, false);
@@ -119,9 +123,10 @@ public class GameSceneManager {
 	}
 
 	public boolean isPlayScene(GameScene gameScene) {
-		return gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene2D
-				|| gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene3D
-				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene2D || gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene3D;
+		return gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene2D()
+				|| gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene3D()
+				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene2D()
+				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene3D();
 	}
 
 	private void updateSceneContext(GameController gameController, GameScene scene) {
@@ -142,22 +147,16 @@ public class GameSceneManager {
 
 	private Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
 		var game = gameController.game();
-
-		var scenes = switch (game.variant) {
-		case MS_PACMAN -> SCENES_MS_PACMAN;
-		case PACMAN -> SCENES_PACMAN;
-		};
-
-		var variants = scenes[switch (gameController.state()) {
+		int index = switch (gameController.state()) {
 		case BOOT -> 0;
 		case INTRO -> 1;
 		case CREDIT -> 2;
 		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level.number());
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
 		default -> PLAY_SCENE_INDEX; // play scene
-		}];
-
-		var scene = threeD && variants.scene3D != null ? variants.scene3D : variants.scene2D;
-		return Optional.ofNullable(scene);
+		};
+		var variants = scenes(game.variant)[index];
+		var scene = threeD && variants.scene3D() != null ? variants.scene3D() : variants.scene2D();
+		return Optional.of(scene);
 	}
 }
