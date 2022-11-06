@@ -139,13 +139,13 @@ public class GameUI implements GameEventAdapter {
 	void updateGameScene(boolean forcedReload) {
 		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
 		if (newGameScene != currentGameScene) {
-			currentGameScene = newGameScene;
-			embed(newGameScene);
+			setGameScene(newGameScene);
 			LOGGER.info("Game scene is now %s", newGameScene);
 		}
 	}
 
-	private void embed(GameScene gameScene) {
+	private void setGameScene(GameScene gameScene) {
+		currentGameScene = gameScene;
 		gameSceneParent.getChildren().setAll(gameScene.getFXSubScene());
 		gameScene.embedInto(stage.getScene());
 		updateMainSceneBackground();
