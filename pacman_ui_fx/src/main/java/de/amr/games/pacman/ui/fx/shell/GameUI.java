@@ -116,8 +116,8 @@ public class GameUI implements GameEventAdapter {
 		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
 		sceneContent.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
-		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
-		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
+		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
+		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
 		return sceneContent;
 	}
 
@@ -136,20 +136,26 @@ public class GameUI implements GameEventAdapter {
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 	}
 
-	private void embed(GameScene gameScene) {
-		gameSceneParent.getChildren().setAll(gameScene.getFXSubScene());
-		gameScene.embedInto(stage.getScene());
-	}
-
 	void updateGameScene(boolean forcedReload) {
 		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
 		if (newGameScene != currentGameScene) {
 			currentGameScene = newGameScene;
-			embed(currentGameScene);
-			updateMainSceneBackgroundColor();
-			pipView.init(newGameScene.getSceneContext());
-			LOGGER.info("Changed game scene to %s", currentGameScene);
+			embed(newGameScene);
+			LOGGER.info("Game scene is now %s", newGameScene);
 		}
+	}
+
+	private void embed(GameScene gameScene) {
+		gameSceneParent.getChildren().setAll(gameScene.getFXSubScene());
+		gameScene.embedInto(stage.getScene());
+		updateMainSceneBackground();
+		pipView.init(gameScene.getSceneContext());
+	}
+
+	private void updateMainSceneBackground() {
+		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
+		var sceneRoot = (Region) stage.getScene().getRoot();
+		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	@Override
@@ -187,12 +193,6 @@ public class GameUI implements GameEventAdapter {
 		} else {
 			pipView.getRoot().setVisible(false);
 		}
-	}
-
-	private void updateMainSceneBackgroundColor() {
-		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
-		var sceneRoot = (Region) stage.getScene().getRoot();
-		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	private void onKeyPressed() {
