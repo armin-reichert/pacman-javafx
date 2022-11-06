@@ -59,22 +59,25 @@ public abstract class RendererCommon implements Rendering2D {
 	//@formatter:off
 	private static final Color[] GHOST_COLORS = {
 		Color.RED,
-		Color.rgb(252, 181, 255), // PINK
+		Color.web("FCB5FF"), // PINK
 		Color.CYAN,
-		Color.rgb(253, 192, 90) // ORANGE
+		Color.web("FBBE58") // ORANGE
 	};
 	//@formatter:on
 
 	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", TS);
 
 	public static final GhostColors createGhostColors(int ghostID) {
+		// see spritesheet
+		var pink = Color.web("FCBBB3");
+		var pale = Color.web("E0DDFF");
+		var blue = Color.web("#2121FF");
+		// dress, eyeballs, pupils
 		return new GhostColors(//
-				// dress, eyeballs, pupils
-				GHOST_COLORS[ghostID], Color.GHOSTWHITE, Color.rgb(33, 33, 255), //
-				// in frightened mode
-				Color.rgb(33, 33, 255), Color.rgb(245, 189, 180), Color.rgb(252, 187, 179), //
-				// when flashing
-				Color.rgb(224, 221, 255), Color.rgb(245, 189, 180), Color.RED);
+				GHOST_COLORS[ghostID], Color.GHOSTWHITE, blue, // normal
+				blue, pink, pink, // frightened
+				pale, pink, Color.RED // flashing
+		);
 	}
 
 	public void clearTileContent(GraphicsContext g, V2i tile) {

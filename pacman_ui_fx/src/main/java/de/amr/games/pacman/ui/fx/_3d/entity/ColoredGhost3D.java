@@ -106,23 +106,23 @@ public class ColoredGhost3D {
 	}
 
 	public void lookFrightened() {
-		ensureFlashingStopped();
 		dressColorPy.unbind();
-		eyePupilColorPy.unbind();
 		dressColorPy.set(colors.frightenedDress());
 		eyeBallColorPy.set(colors.frightenedEyeBalls());
+		eyePupilColorPy.unbind();
 		eyePupilColorPy.set(colors.frightendPupils());
 		dress().setVisible(true);
+		ensureFlashingStopped();
 	}
 
 	public void lookNormal() {
-		ensureFlashingStopped();
 		dressColorPy.unbind();
-		eyePupilColorPy.unbind();
 		dressColorPy.set(colors.normalDress());
 		eyeBallColorPy.set(colors.normalEyeBalls());
+		eyePupilColorPy.unbind();
 		eyePupilColorPy.set(colors.normalPupils());
 		dress().setVisible(true);
+		ensureFlashingStopped();
 	}
 
 	public void lookEyesOnly() {
