@@ -240,7 +240,7 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.use3DScenePy);
-		if (ui.getSceneManager().hasDifferentScenesFor2DAnd3D(gameController())) {
+		if (ui.getSceneManager().has3DSceneVariant(gameController())) {
 			ui.updateGameScene(true);
 			if (ui.getCurrentGameScene().is3D()) {
 				ui.getCurrentGameScene().onSwitchFrom2D();

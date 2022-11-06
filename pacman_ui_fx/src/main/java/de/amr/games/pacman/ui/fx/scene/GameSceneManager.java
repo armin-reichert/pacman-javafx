@@ -57,6 +57,9 @@ public class GameSceneManager {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	private static final int BOOT_SCENE_INDEX = 0;
+	private static final int INTRO_SCENE_INDEX = 1;
+	private static final int CREDIT_SCENE_INDEX = 2;
 	private static final int PLAY_SCENE_INDEX = 3;
 
 	//@formatter:off
@@ -88,10 +91,31 @@ public class GameSceneManager {
 		};
 	}
 
-	public boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
-		var scene2D = findGameScene(gameController, false);
-		var scene3D = findGameScene(gameController, true);
-		return scene2D.isPresent() && scene3D.isPresent() && !scene2D.equals(scene3D);
+	private Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
+		var variants = findSceneVariants(gameController);
+		return Optional.ofNullable(threeD ? variants.scene3D() : variants.scene2D());
+	}
+
+	private GameScene getGameScene(GameController gameController, boolean threeD) {
+		var variants = findSceneVariants(gameController);
+		return threeD && variants.scene3D() != null ? variants.scene3D() : variants.scene2D();
+	}
+
+	private GameSceneVariants findSceneVariants(GameController gameController) {
+		var game = gameController.game();
+		int index = switch (gameController.state()) {
+		case BOOT -> BOOT_SCENE_INDEX;
+		case INTRO -> INTRO_SCENE_INDEX;
+		case CREDIT -> CREDIT_SCENE_INDEX;
+		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level.number());
+		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
+		default -> PLAY_SCENE_INDEX;
+		};
+		return scenes(game.variant)[index];
+	}
+
+	public boolean has3DSceneVariant(GameController gameController) {
+		return findGameScene(gameController, true).isPresent();
 	}
 
 	/**
@@ -107,7 +131,7 @@ public class GameSceneManager {
 	 * @return the selected game scene
 	 */
 	public GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean reload) {
-		var nextGameScene = findGameScene(gameController, Env.use3DScenePy.get()).orElse(null);
+		var nextGameScene = getGameScene(gameController, Env.use3DScenePy.get());
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
@@ -143,20 +167,5 @@ public class GameSceneManager {
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
 		gameController.setSounds(sounds);
-	}
-
-	private Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
-		var game = gameController.game();
-		int index = switch (gameController.state()) {
-		case BOOT -> 0;
-		case INTRO -> 1;
-		case CREDIT -> 2;
-		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level.number());
-		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
-		default -> PLAY_SCENE_INDEX; // play scene
-		};
-		var variants = scenes(game.variant)[index];
-		var scene = threeD && variants.scene3D() != null ? variants.scene3D() : variants.scene2D();
-		return Optional.of(scene);
 	}
 }
