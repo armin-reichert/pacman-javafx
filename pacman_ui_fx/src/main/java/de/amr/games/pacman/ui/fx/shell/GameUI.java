@@ -50,6 +50,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -72,7 +73,8 @@ public class GameUI implements GameEventAdapter {
 	private final GameSceneManager sceneManager = new GameSceneManager();
 	private final GameController gameController;
 	private final Stage stage;
-	private StackPane sceneContent;
+	/** Game scene placeholder, single child will be the game scene's FX subscene. */
+	private final Group gameSceneParent = new Group();
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
 	private PiPView pipView;
@@ -103,7 +105,7 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private Parent createSceneContent() {
-		sceneContent = new StackPane();
+		var sceneContent = new StackPane();
 		dashboard = new Dashboard();
 		dashboard.build(this);
 		pipView = new PiPView();
@@ -113,9 +115,7 @@ public class GameUI implements GameEventAdapter {
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView.getRoot()));
 		flashMessageView = new FlashMessageView();
-		sceneContent.getChildren().addAll(//
-				new Group() // single child will be the FX subscene for the current game scene
-				, flashMessageView, overlayPane);
+		sceneContent.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackgroundColor());
 		return sceneContent;
@@ -134,6 +134,22 @@ public class GameUI implements GameEventAdapter {
 		gameLoop.pausedPy.bind(Env.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
+	}
+
+	private void embed(GameScene gameScene) {
+		gameSceneParent.getChildren().setAll(gameScene.getFXSubScene());
+		gameScene.embedInto(stage.getScene());
+	}
+
+	void updateGameScene(boolean forcedReload) {
+		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
+		if (newGameScene != currentGameScene) {
+			currentGameScene = newGameScene;
+			embed(currentGameScene);
+			updateMainSceneBackgroundColor();
+			pipView.init(newGameScene.getSceneContext());
+			LOGGER.info("Changed game scene to %s", currentGameScene);
+		}
 	}
 
 	@Override
@@ -155,26 +171,13 @@ public class GameUI implements GameEventAdapter {
 	public void setPacSteering(Steering steering) {
 		Objects.requireNonNull(steering);
 		if (currentSteering instanceof KeyboardSteering keySteering) {
-			getMainScene().removeEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
+			stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
 		currentSteering = steering;
 		if (steering instanceof KeyboardSteering keySteering) {
-			getMainScene().addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
+			stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
 		gameController.setNormalSteering(currentSteering);
-	}
-
-	void updateGameScene(boolean forcedReload) {
-		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
-		if (newGameScene != currentGameScene) {
-			currentGameScene = newGameScene;
-			Group parent = (Group) sceneContent.getChildren().get(0);
-			parent.getChildren().setAll(currentGameScene.getFXSubScene());
-			newGameScene.embedInto(getMainScene());
-			updateMainSceneBackgroundColor();
-			pipView.init(newGameScene.getSceneContext());
-			LOGGER.info("Changed game scene to %s", currentGameScene);
-		}
 	}
 
 	private void updatePipView() {
@@ -188,7 +191,8 @@ public class GameUI implements GameEventAdapter {
 
 	private void updateMainSceneBackgroundColor() {
 		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
-		sceneContent.setBackground(Ufx.colorBackground(bgColor));
+		var sceneRoot = (Region) stage.getScene().getRoot();
+		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	private void onKeyPressed() {
@@ -240,10 +244,6 @@ public class GameUI implements GameEventAdapter {
 
 	public GameScene getCurrentGameScene() {
 		return currentGameScene;
-	}
-
-	public Scene getMainScene() {
-		return stage.getScene();
 	}
 
 	public FlashMessageView getFlashMessageView() {

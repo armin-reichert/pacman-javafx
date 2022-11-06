@@ -96,8 +96,8 @@ public class SectionGeneral extends Section {
 		addInfo("",
 				() -> String.format("%d Hz (Target: %d Hz)", ui.getGameLoop().getFPS(), ui.getGameLoop().getTargetFramerate()));
 
-		addInfo("Main scene",
-				() -> String.format("w=%.0f h=%.0f", ui.getMainScene().getWidth(), ui.getMainScene().getHeight()));
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getStage().getScene().getWidth(),
+				ui.getStage().getScene().getHeight()));
 
 		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
