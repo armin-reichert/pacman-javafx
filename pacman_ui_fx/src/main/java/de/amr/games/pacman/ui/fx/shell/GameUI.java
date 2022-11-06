@@ -94,6 +94,7 @@ public class GameUI implements GameEventAdapter {
 		Actions.playHelpMessageAfterSeconds(0.5);
 		initGameLoop();
 		stage.setScene(mainScene);
+		updateGameScene(true);
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
@@ -101,7 +102,6 @@ public class GameUI implements GameEventAdapter {
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
 		stage.show();
-		updateGameScene(true);
 	}
 
 	private Parent createSceneContent() {
