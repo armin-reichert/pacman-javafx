@@ -58,9 +58,9 @@ import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
@@ -182,9 +182,9 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height) {
-		fxSubScene.widthProperty().bind(width);
-		fxSubScene.heightProperty().bind(height);
+	public void embedInto(Scene parentScene) {
+		fxSubScene.widthProperty().bind(parentScene.widthProperty());
+		fxSubScene.heightProperty().bind(parentScene.heightProperty());
 	}
 
 	public GameSceneCamera getCamera(Perspective perspective) {

@@ -39,7 +39,8 @@ import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ObservableDoubleValue;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -150,8 +151,14 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height) {
-		height.addListener((x, y, h) -> setHeight(h.doubleValue()));
+	public void embedInto(Scene parentScene) {
+		setHeight(parentScene.getHeight());
+		parentScene.heightProperty().removeListener(this::onParentHeightChanged);
+		parentScene.heightProperty().addListener(this::onParentHeightChanged);
+	}
+
+	private void onParentHeightChanged(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+		setHeight(newValue.doubleValue());
 	}
 
 	@Override

@@ -28,7 +28,7 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
-import javafx.beans.value.ObservableDoubleValue;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
@@ -78,12 +78,11 @@ public interface GameScene extends GameEventAdapter {
 	SubScene getFXSubScene();
 
 	/**
-	 * Defines the resizing behavior.
+	 * Called when this game scene is embedded (displayed) inside its parent FX scene.
 	 * 
-	 * @param width  width property of scene container
-	 * @param height height property of scene container
+	 * @param parentScene the JavaFX parent scene
 	 */
-	void setResizeBehavior(ObservableDoubleValue width, ObservableDoubleValue height);
+	void embedInto(Scene parentScene);
 
 	/**
 	 * @return if this is a scene with 3D content

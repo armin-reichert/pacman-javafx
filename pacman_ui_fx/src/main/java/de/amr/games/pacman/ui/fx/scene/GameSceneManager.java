@@ -49,7 +49,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
-import javafx.scene.Scene;
 
 /**
  * @author Armin Reichert
@@ -84,26 +83,6 @@ public class GameSceneManager {
 			new GameSceneVariants(new MsPacManIntermissionScene3(), null),
 	};
 	//@formatter:on
-
-	public void embedGameScenes(Scene mainScene) {
-		for (var scenes : SCENES_MS_PACMAN) {
-			embedGameScene(mainScene, scenes.scene2D);
-			embedGameScene(mainScene, scenes.scene3D);
-		}
-		for (var scenes : SCENES_PACMAN) {
-			embedGameScene(mainScene, scenes.scene2D);
-			embedGameScene(mainScene, scenes.scene3D);
-		}
-	}
-
-	private void embedGameScene(Scene mainScene, GameScene gameScene) {
-		if (gameScene != null) {
-			gameScene.setResizeBehavior(mainScene.widthProperty(), mainScene.heightProperty());
-			if (gameScene instanceof GameScene2D gameScene2D) {
-				gameScene2D.setHeight(mainScene.getHeight());
-			}
-		}
-	}
 
 	public boolean hasDifferentScenesFor2DAnd3D(GameController gameController) {
 		var scene2D = findGameScene(gameController, false);

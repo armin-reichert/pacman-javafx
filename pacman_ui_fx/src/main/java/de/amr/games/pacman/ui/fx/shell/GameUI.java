@@ -86,13 +86,11 @@ public class GameUI implements GameEventAdapter {
 		this.stage = stage;
 		var mainScene = new Scene(createSceneContent(), width, height);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
-		sceneManager.embedGameScenes(mainScene);
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addEventListener(this);
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
 		initGameLoop();
-		updateGameScene(true);
 		stage.setScene(mainScene);
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setMinWidth(241);
@@ -101,6 +99,7 @@ public class GameUI implements GameEventAdapter {
 		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
 		stage.show();
+		updateGameScene(true);
 	}
 
 	private Parent createSceneContent() {
@@ -171,6 +170,7 @@ public class GameUI implements GameEventAdapter {
 			currentGameScene = newGameScene;
 			Group parent = (Group) sceneContent.getChildren().get(0);
 			parent.getChildren().setAll(currentGameScene.getFXSubScene());
+			newGameScene.embedInto(getMainScene());
 			updateMainSceneBackgroundColor();
 			pipView.init(newGameScene.getSceneContext());
 			LOGGER.info("Changed game scene to %s", currentGameScene);
