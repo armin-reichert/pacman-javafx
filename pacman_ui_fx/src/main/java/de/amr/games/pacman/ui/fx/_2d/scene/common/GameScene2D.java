@@ -37,8 +37,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -58,7 +56,6 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	protected final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0);
 	protected final StackPane root = new StackPane();
 	protected final ResizableCanvas canvas = new ResizableCanvas();
 	protected final Pane infoLayer = new Pane();
@@ -66,6 +63,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final SubScene fxSubScene;
 	protected SceneContext ctx;
 	private boolean creditVisible;
+	private double scaling = 1.0;
 
 	protected GameScene2D() {
 		this(DEFAULT_SIZE);
@@ -73,34 +71,28 @@ public abstract class GameScene2D implements GameScene {
 
 	protected GameScene2D(V2i size) {
 		unscaledSize = size;
-
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
-
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		scaleCanvas();
-		scalingPy.addListener((obs, oldVal, newVal) -> scaleCanvas());
-
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 		infoLayer.setMouseTransparent(true);
-
 		root.getChildren().addAll(canvas, infoLayer);
 	}
 
 	private void scaleCanvas() {
-		var s = getScaling();
-		canvas.getTransforms().setAll(new Scale(s, s));
-		LOGGER.trace("2D scene %s: scaling=%.2f width=%.0f height=%.0f", getClass().getSimpleName(), s, canvas.getWidth(),
-				canvas.getHeight());
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
+		LOGGER.trace("2D scene %s: scaling=%.2f width=%.0f height=%.0f", getClass().getSimpleName(), scaling,
+				canvas.getWidth(), canvas.getHeight());
 	}
 
 	public void setHeight(double height) {
 		double aspectRatio = (double) unscaledSize.x() / (double) unscaledSize.y();
-		double scaling = height / unscaledSize.y();
+		scaling = height / unscaledSize.y();
 		double width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		scalingPy.set(scaling);
+		scaleCanvas();
 		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", canvas.getWidth(), canvas.getHeight(), scaling,
 				getClass().getSimpleName());
 	}
@@ -193,6 +185,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public double getScaling() {
-		return scalingPy.get();
+		return scaling;
 	}
 }
