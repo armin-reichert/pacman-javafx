@@ -74,25 +74,19 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		scaleCanvas();
+		setHeight(unscaledSize.y());
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 		infoLayer.setMouseTransparent(true);
 		root.getChildren().addAll(canvas, infoLayer);
 	}
 
-	private void scaleCanvas() {
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-		LOGGER.trace("2D scene %s: scaling=%.2f width=%.0f height=%.0f", getClass().getSimpleName(), scaling,
-				canvas.getWidth(), canvas.getHeight());
-	}
-
 	public void setHeight(double height) {
 		double aspectRatio = (double) unscaledSize.x() / (double) unscaledSize.y();
-		scaling = height / unscaledSize.y();
 		double width = aspectRatio * height;
+		scaling = height / unscaledSize.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		scaleCanvas();
+		canvas.getTransforms().setAll(new Scale(scaling, scaling));
 		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", canvas.getWidth(), canvas.getHeight(), scaling,
 				getClass().getSimpleName());
 	}
