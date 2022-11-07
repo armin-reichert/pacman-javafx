@@ -94,7 +94,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		int numMazes = 6;
 		MAZES_EMPTY_INV = new Image[numMazes];
 		for (int i = 0; i < numMazes; ++i) {
-			var mazeEmpty = SPRITESHEET.subImage(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
+			var mazeEmpty = SPRITESHEET.region(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
 			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(mazeEmpty, //
 					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}

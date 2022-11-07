@@ -88,7 +88,7 @@ public class World3D extends Group {
 		food3D.squirtingPy.bind(Env.squirtingPy);
 		getChildren().add(food3D);
 
-		levelCounter3D = new LevelCounter3D(symbol -> r2D.spritesheet().subImage(r2D.bonusSymbolSprite(symbol)));
+		levelCounter3D = new LevelCounter3D(symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world().numCols() - 1) * TS, TS);
 		levelCounter3D.update(game.levelCounter);
 		getChildren().add(levelCounter3D);

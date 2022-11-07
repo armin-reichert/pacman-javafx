@@ -60,11 +60,11 @@ public class Spritesheet {
 	}
 
 	/**
-	 * @param region spritesheet region
+	 * @param r spritesheet region
 	 * @return image (copy) of spritesheet region
 	 */
-	public Image subImage(Rectangle2D region) {
-		return subImage((int) region.getMinX(), (int) region.getMinY(), (int) region.getWidth(), (int) region.getHeight());
+	public Image region(Rectangle2D r) {
+		return region((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 
 	/**
@@ -74,10 +74,10 @@ public class Spritesheet {
 	 * @param height region height
 	 * @return image (copy) of spritesheet region
 	 */
-	public Image subImage(int x, int y, int width, int height) {
-		var subImage = new WritableImage(width, height);
-		subImage.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
-		return subImage;
+	public Image region(int x, int y, int width, int height) {
+		var region = new WritableImage(width, height);
+		region.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
+		return region;
 	}
 
 	/**
