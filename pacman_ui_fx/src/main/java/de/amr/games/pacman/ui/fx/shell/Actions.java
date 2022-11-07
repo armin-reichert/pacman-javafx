@@ -58,7 +58,7 @@ public class Actions {
 	private static AudioClip currentVoiceMessage;
 
 	private static GameController gameController() {
-		return ui.getGameController();
+		return ui.gameController();
 	}
 
 	private static GameModel currentGame() {
@@ -110,7 +110,7 @@ public class Actions {
 	}
 
 	public static void showFlashMessage(double seconds, String message, Object... args) {
-		ui.getFlashMessageView().showMessage(String.format(message, args), seconds);
+		ui.flashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
 	public static void startGame() {
@@ -126,13 +126,13 @@ public class Actions {
 	}
 
 	public static void restartIntro() {
-		ui.getCurrentGameScene().end();
+		ui.currentGameScene().end();
 		gameController().sounds().stopAll();
 		gameController().restartIntro();
 	}
 
 	public static void reboot() {
-		ui.getCurrentGameScene().end();
+		ui.currentGameScene().end();
 		gameController().sounds().stopAll();
 		gameController().reboot();
 	}
@@ -180,7 +180,7 @@ public class Actions {
 	}
 
 	public static void toggleDashboardVisible() {
-		Env.toggle(ui.getDashboard().visibleProperty());
+		Env.toggle(ui.dashboard().visibleProperty());
 	}
 
 	public static void togglePaused() {
@@ -190,13 +190,13 @@ public class Actions {
 
 	public static void oneSimulationStep() {
 		if (Env.pausedPy.get()) {
-			ui.getGameLoop().step(true);
+			ui.gameLoop().step(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
 		if (Env.pausedPy.get()) {
-			ui.getGameLoop().nsteps(10, true);
+			ui.gameLoop().nsteps(10, true);
 		}
 	}
 
@@ -206,7 +206,7 @@ public class Actions {
 	}
 
 	public static void selectNextPerspective() {
-		if (ui.getCurrentGameScene().is3D()) {
+		if (ui.currentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().next());
 			String perspectiveName = TextManager.message(Env.perspectivePy.get().name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
@@ -214,7 +214,7 @@ public class Actions {
 	}
 
 	public static void selectPrevPerspective() {
-		if (ui.getCurrentGameScene().is3D()) {
+		if (ui.currentGameScene().is3D()) {
 			Env.perspectivePy.set(Env.perspectivePy.get().prev());
 			String perspectiveName = TextManager.message(Env.perspectivePy.get().name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
@@ -240,12 +240,12 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.use3DScenePy);
-		if (ui.getSceneManager().has3DSceneVariant(gameController())) {
+		if (ui.sceneManager().has3DSceneVariant(gameController())) {
 			ui.updateGameScene(true);
-			if (ui.getCurrentGameScene().is3D()) {
-				ui.getCurrentGameScene().onSwitchFrom2D();
+			if (ui.currentGameScene().is3D()) {
+				ui.currentGameScene().onSwitchFrom2D();
 			} else {
-				ui.getCurrentGameScene().onSwitchFrom3D();
+				ui.currentGameScene().onSwitchFrom3D();
 			}
 		} else {
 			showFlashMessage(TextManager.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));

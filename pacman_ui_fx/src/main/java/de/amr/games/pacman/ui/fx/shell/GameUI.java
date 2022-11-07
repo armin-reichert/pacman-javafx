@@ -226,31 +226,31 @@ public class GameUI implements GameEventAdapter {
 		currentGameScene.onKeyPressed();
 	}
 
-	public GameController getGameController() {
+	public GameController gameController() {
 		return gameController;
 	}
 
-	public Stage getStage() {
+	public Stage stage() {
 		return stage;
 	}
 
-	public GameSceneManager getSceneManager() {
+	public GameSceneManager sceneManager() {
 		return sceneManager;
 	}
 
-	public GameLoop getGameLoop() {
+	public GameLoop gameLoop() {
 		return gameLoop;
 	}
 
-	public GameScene getCurrentGameScene() {
+	public GameScene currentGameScene() {
 		return currentGameScene;
 	}
 
-	public FlashMessageView getFlashMessageView() {
+	public FlashMessageView flashMessageView() {
 		return flashMessageView;
 	}
 
-	public Dashboard getDashboard() {
+	public Dashboard dashboard() {
 		return dashboard;
 	}
 }

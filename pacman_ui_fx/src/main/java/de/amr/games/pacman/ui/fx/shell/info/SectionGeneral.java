@@ -79,13 +79,13 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.getGameLoop().nsteps(Env.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.gameLoop().nsteps(Env.simulationStepsPy.get(), true));
 
 		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.simulationStepsPy.get());
 		spinnerSimulationSteps.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.simulationStepsPy.set(newVal.intValue()));
 
-		addInfo("Total Updates", ui.getGameLoop()::getUpdateCount);
+		addInfo("Total Updates", ui.gameLoop()::getUpdateCount);
 
 		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
@@ -94,10 +94,10 @@ public class SectionGeneral extends Section {
 				.addListener((obs, oldValue, newValue) -> Env.targetFrameratePy.set(newValue.intValue()));
 
 		addInfo("",
-				() -> String.format("%d Hz (Target: %d Hz)", ui.getGameLoop().getFPS(), ui.getGameLoop().getTargetFramerate()));
+				() -> String.format("%d Hz (Target: %d Hz)", ui.gameLoop().getFPS(), ui.gameLoop().getTargetFramerate()));
 
-		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.getStage().getScene().getWidth(),
-				ui.getStage().getScene().getHeight()));
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.stage().getScene().getWidth(),
+				ui.stage().getScene().getHeight()));
 
 		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
