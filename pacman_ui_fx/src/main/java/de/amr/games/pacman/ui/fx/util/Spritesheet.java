@@ -39,10 +39,6 @@ public class Spritesheet {
 	protected final int tileSize;
 	protected final int[] dirIndex = new int[4];
 
-	public Spritesheet(String imagePath, int tileSize, Direction... dirs) {
-		this(Ufx.image(imagePath), tileSize, dirs);
-	}
-
 	public Spritesheet(Image image, int tileSize, Direction... dirs) {
 		this.source = image;
 		this.tileSize = tileSize;

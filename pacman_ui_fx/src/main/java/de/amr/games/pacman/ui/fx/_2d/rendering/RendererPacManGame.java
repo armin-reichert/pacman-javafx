@@ -50,8 +50,8 @@ public class RendererPacManGame extends RendererCommon {
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	private static final Spritesheet SPRITESHEET = new Spritesheet("graphics/pacman/sprites.png", 16, Direction.RIGHT,
-			Direction.LEFT, Direction.UP, Direction.DOWN);
+	private static final Spritesheet SPRITESHEET = new Spritesheet(Ufx.image("graphics/pacman/sprites.png"), 16,
+			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	private static final Image MAZE_FULL = Ufx.image("graphics/pacman/maze_full.png");
 	private static final Image MAZE_EMPTY = Ufx.image("graphics/pacman/maze_empty.png");

@@ -88,8 +88,8 @@ public class RendererMsPacManGame extends RendererCommon {
 	private static final Image[] MAZES_EMPTY_INV;
 
 	static {
-		SPRITESHEET = new Spritesheet("graphics/mspacman/sprites.png", 16, Direction.RIGHT, Direction.LEFT, Direction.UP,
-				Direction.DOWN);
+		SPRITESHEET = new Spritesheet(Ufx.image("graphics/mspacman/sprites.png"), 16, //
+				Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 		MIDWAY_LOGO = Ufx.image("graphics/mspacman/midway.png");
 		int numMazes = 6;
 		MAZES_EMPTY_INV = new Image[numMazes];
