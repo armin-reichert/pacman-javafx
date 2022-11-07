@@ -38,7 +38,6 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -112,24 +111,21 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		final var game = ctx.game();
-		world3D = new World3D(game, ctx.model3D(), ctx.r2D());
-		pac3D = new Pac3D(game.pac, game.world(), ctx.model3D());
+		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D());
 		pac3D.reset();
-		ghosts3D = game.ghosts()
-				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), RendererCommon.createGhostColors(ghost.id)))
+		ghosts3D = ctx.game().ghosts()
+				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
-		bonus3D = new Bonus3D(game.bonus());
+		bonus3D = new Bonus3D(ctx.game().bonus());
 
+		// Note: world3D comes first in content list, gets exchanged on new level start
 		content.getChildren().clear();
-		// keep world3D first in content list, gets exchanged everytime a new level starts
-		content.getChildren().add(world3D);
-		content.getChildren().add(pac3D);
+		content.getChildren().addAll(world3D, pac3D, bonus3D);
 		content.getChildren().addAll(ghosts3D);
-		content.getChildren().add(bonus3D);
 
-		double width = game.world().numCols() * World.TS;
-		double height = game.world().numRows() * World.TS;
+		double width = ctx.game().world().numCols() * World.TS;
+		double height = ctx.game().world().numRows() * World.TS;
 		var centerOverOrigin = new Translate(-width / 2, -height / 2);
 		content.getTransforms().setAll(centerOverOrigin);
 

@@ -64,6 +64,8 @@ public interface Rendering2D {
 
 	Color getGhostHouseDoorColor();
 
+	GhostColorScheme ghostColorScheme(int ghostID);
+
 	// Sprites
 
 	Rectangle2D ghostSprite(int ghostID, Direction dir);

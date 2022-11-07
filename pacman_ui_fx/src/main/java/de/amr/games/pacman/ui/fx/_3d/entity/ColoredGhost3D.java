@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx._2d.rendering.GhostColors;
+import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -44,7 +44,7 @@ public class ColoredGhost3D {
 
 	private final Model3D model3D;
 	private final Group root3D;
-	private final GhostColors colors;
+	private final GhostColorScheme colors;
 
 	private final ObjectProperty<Color> dressColorPy;
 	private final ObjectProperty<Color> eyeBallColorPy;
@@ -54,7 +54,7 @@ public class ColoredGhost3D {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(Model3D model3D, GhostColors colors) {
+	public ColoredGhost3D(Model3D model3D, GhostColorScheme colors) {
 		this.model3D = model3D;
 		this.colors = colors;
 		dressColorPy = new SimpleObjectProperty<>(colors.normalDress());
