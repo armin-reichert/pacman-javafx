@@ -228,8 +228,7 @@ public class PlayScene3D implements GameScene {
 			world.tiles()//
 					.filter(world::containsEatenFood)//
 					.map(food3D::pelletAt)//
-					.filter(Optional::isPresent)//
-					.map(Optional::get)//
+					.flatMap(Optional::stream)//
 					.forEach(Pellet3D::eat);
 		} else {
 			var tile = e.tile.get();
