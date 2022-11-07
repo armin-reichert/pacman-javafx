@@ -75,7 +75,7 @@ public class ActorsInfo {
 			textBox.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 255, 0.5)));
 			panes.add(textBox);
 		}
-		hostScene.infoLayer.getChildren().addAll(panes);
+		hostScene.overlayPane().getChildren().addAll(panes);
 	}
 
 	public void update(GameModel game) {

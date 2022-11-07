@@ -56,14 +56,14 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	protected final StackPane root = new StackPane();
-	protected final ResizableCanvas canvas = new ResizableCanvas();
-	protected final Pane infoLayer = new Pane();
-	protected final V2i unscaledSize;
-	protected final SubScene fxSubScene;
-	protected SceneContext ctx;
+	private final StackPane root = new StackPane();
+	private final ResizableCanvas canvas = new ResizableCanvas();
+	private final Pane overlayPane = new Pane();
+	private final V2i unscaledSize;
+	private final SubScene fxSubScene;
 	private boolean creditVisible;
 	private double scaling = 1.0;
+	protected SceneContext ctx;
 
 	protected GameScene2D() {
 		this(DEFAULT_SIZE);
@@ -75,9 +75,9 @@ public abstract class GameScene2D implements GameScene {
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		setHeight(size.y());
-		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
-		infoLayer.setMouseTransparent(true);
-		root.getChildren().addAll(canvas, infoLayer);
+		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
+		overlayPane.setMouseTransparent(true);
+		root.getChildren().addAll(canvas, overlayPane);
 	}
 
 	public void setHeight(double height) {
@@ -168,6 +168,10 @@ public abstract class GameScene2D implements GameScene {
 
 	public Canvas getCanvas() {
 		return canvas;
+	}
+
+	public Pane overlayPane() {
+		return overlayPane;
 	}
 
 	public int getUnscaledWidth() {
