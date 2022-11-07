@@ -137,10 +137,9 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	void updateGameScene(boolean forcedReload) {
-		var newGameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
-		if (newGameScene != currentGameScene) {
-			setGameScene(newGameScene);
-			LOGGER.info("Game scene is now %s", newGameScene);
+		var gameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
+		if (gameScene != currentGameScene) {
+			setGameScene(gameScene);
 		}
 	}
 
@@ -150,6 +149,7 @@ public class GameUI implements GameEventAdapter {
 		gameScene.embedInto(stage.getScene());
 		updateMainSceneBackground();
 		pipView.init(gameScene.getSceneContext());
+		LOGGER.info("Game scene is now %s", gameScene);
 	}
 
 	private void updateMainSceneBackground() {
