@@ -74,7 +74,7 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		setHeight(unscaledSize.y());
+		setHeight(size.y());
 		infoLayer.visibleProperty().bind(Env.showDebugInfoPy);
 		infoLayer.setMouseTransparent(true);
 		root.getChildren().addAll(canvas, infoLayer);
