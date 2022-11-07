@@ -119,8 +119,8 @@ public abstract class RendererCommon implements Rendering2D {
 	@Override
 	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {
-			g.drawImage(spritesheet().source(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y,
-					r.getWidth(), r.getHeight());
+			g.drawImage(spritesheet().source(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
+					r.getHeight());
 		}
 	}
 
