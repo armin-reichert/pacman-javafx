@@ -147,7 +147,7 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
-		g.drawImage(spritesheet().sourceImage(), 0, MAZE_HEIGHT * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT, x, y,
+		g.drawImage(spritesheet().source(), 0, MAZE_HEIGHT * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT, x, y,
 				MAZE_WIDTH, MAZE_HEIGHT);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> clearTileContent(g, tile));
 		if (energizersHidden) {
@@ -160,7 +160,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		if (flash) {
 			g.drawImage(MAZES_EMPTY_INV[mazeNumber - 1], x, y);
 		} else {
-			g.drawImage(spritesheet().sourceImage(), SECOND_COLUMN, MAZE_HEIGHT * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT,
+			g.drawImage(spritesheet().source(), SECOND_COLUMN, MAZE_HEIGHT * (mazeNumber - 1), MAZE_WIDTH, MAZE_HEIGHT,
 					x, y, MAZE_WIDTH, MAZE_HEIGHT);
 		}
 	}

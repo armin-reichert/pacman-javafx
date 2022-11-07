@@ -55,7 +55,7 @@ public class Spritesheet {
 		return tileSize;
 	}
 
-	public Image sourceImage() {
+	public Image source() {
 		return source;
 	}
 
