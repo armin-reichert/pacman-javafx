@@ -36,6 +36,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
@@ -88,18 +89,11 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D() {
 		var coordSystem = new CoordSystem();
 		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
-
 		var light = new AmbientLight();
 		light.colorProperty().bind(Env.lightColorPy);
-
 		var root = new Group(content, coordSystem, light);
-
-		// initial scene size is irrelevant as it is resized automatically
-		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
-
-		// center scene content over origin
-		content.getTransforms().add(new Translate(-DEFAULT_SIZE.x() / 2, -DEFAULT_SIZE.y() / 2));
-
+		// initial scene size is irrelevant
+		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		createCameras();
 	}
 
@@ -128,11 +122,16 @@ public class PlayScene3D implements GameScene {
 		bonus3D = new Bonus3D(game.bonus());
 
 		content.getChildren().clear();
-		// put world first in content list, will get exchanged everytime a new level starts
+		// keep world3D first in content list, gets exchanged everytime a new level starts
 		content.getChildren().add(world3D);
 		content.getChildren().add(pac3D);
 		content.getChildren().addAll(ghosts3D);
 		content.getChildren().add(bonus3D);
+
+		double width = game.world().numCols() * World.TS;
+		double height = game.world().numRows() * World.TS;
+		var centerOverOrigin = new Translate(-width / 2, -height / 2);
+		content.getTransforms().setAll(centerOverOrigin);
 
 		changeCamera(Env.perspectivePy.get());
 	}
