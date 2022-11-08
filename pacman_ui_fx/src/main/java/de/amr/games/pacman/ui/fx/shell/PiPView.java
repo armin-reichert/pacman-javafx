@@ -65,7 +65,7 @@ public class PiPView {
 	}
 
 	public void init(SceneContext context) {
-		playScene.setSceneContext(context);
+		playScene.setContext(context);
 		playScene.init();
 	}
 

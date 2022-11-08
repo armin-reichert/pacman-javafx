@@ -51,8 +51,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	private SingleEntityAnimation<Rectangle2D> storkAnim;
 
 	@Override
-	public void setSceneContext(SceneContext sceneContext) {
-		super.setSceneContext(sceneContext);
+	public void setContext(SceneContext sceneContext) {
+		super.setContext(sceneContext);
 		sceneController = new Intermission3Controller(sceneContext.gameController());
 		icc = sceneController.context();
 	}

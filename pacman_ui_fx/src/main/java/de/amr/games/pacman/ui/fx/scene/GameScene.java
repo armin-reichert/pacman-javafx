@@ -46,12 +46,12 @@ public interface GameScene extends GameEventAdapter {
 	 * <p>
 	 * This method is called before the scene's init method.
 	 */
-	void setSceneContext(SceneContext context);
+	void setContext(SceneContext context);
 
 	/**
 	 * @return the scene context (game controller, model, rendering, 3D model, sound)
 	 */
-	SceneContext getSceneContext();
+	SceneContext ctx();
 
 	/**
 	 * Called when the scene becomes the current one.
@@ -113,13 +113,13 @@ public interface GameScene extends GameEventAdapter {
 	 * "Locks" the current game controller state by setting the timer duration to {@link TickTimer#INDEFINITE}.
 	 */
 	default void lockGameState() {
-		getSceneContext().state().timer().resetIndefinitely();
+		ctx().state().timer().resetIndefinitely();
 	}
 
 	/**
 	 * "Unlocks" the current game controller state by forcing the timer to expire.
 	 */
 	default void unlockGameState() {
-		getSceneContext().state().timer().expire();
+		ctx().state().timer().expire();
 	}
 }

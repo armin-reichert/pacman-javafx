@@ -162,12 +162,12 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public SceneContext getSceneContext() {
+	public SceneContext ctx() {
 		return ctx;
 	}
 
 	@Override
-	public void setSceneContext(SceneContext ctx) {
+	public void setContext(SceneContext ctx) {
 		this.ctx = ctx;
 	}
 

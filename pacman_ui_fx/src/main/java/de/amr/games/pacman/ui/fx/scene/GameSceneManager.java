@@ -160,7 +160,7 @@ public class GameSceneManager {
 		case PACMAN -> new RendererPacManGame();
 		};
 		var model3D = Model3D.get(); // no game variant-specific 3D models yet
-		scene.setSceneContext(new SceneContext(gameController, r2D, model3D));
+		scene.setContext(new SceneContext(gameController, r2D, model3D));
 		LOGGER.info("Scene context updated for '%s'.", scene);
 		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;

@@ -142,12 +142,12 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public SceneContext getSceneContext() {
+	public SceneContext ctx() {
 		return ctx;
 	}
 
 	@Override
-	public void setSceneContext(SceneContext context) {
+	public void setContext(SceneContext context) {
 		ctx = context;
 	}
 

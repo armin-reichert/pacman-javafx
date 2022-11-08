@@ -47,8 +47,8 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	private Intermission1Controller.Context icc;
 
 	@Override
-	public void setSceneContext(SceneContext context) {
-		super.setSceneContext(context);
+	public void setContext(SceneContext context) {
+		super.setContext(context);
 		sceneController = new Intermission1Controller(context.gameController());
 		icc = sceneController.context();
 	}

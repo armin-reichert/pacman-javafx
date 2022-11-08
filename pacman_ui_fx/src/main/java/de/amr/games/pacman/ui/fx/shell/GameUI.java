@@ -148,7 +148,7 @@ public class GameUI implements GameEventAdapter {
 		gameSceneParent.getChildren().setAll(gameScene.fxSubScene());
 		gameScene.embedInto(stage.getScene());
 		updateMainSceneBackground();
-		pipView.init(gameScene.getSceneContext());
+		pipView.init(gameScene.ctx());
 		LOGGER.info("Game scene is now %s", gameScene);
 	}
 

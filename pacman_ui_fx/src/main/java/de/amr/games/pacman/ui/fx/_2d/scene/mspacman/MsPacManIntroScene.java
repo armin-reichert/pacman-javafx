@@ -51,8 +51,8 @@ public class MsPacManIntroScene extends GameScene2D {
 	private Context icc;
 
 	@Override
-	public void setSceneContext(SceneContext sceneContext) {
-		super.setSceneContext(sceneContext);
+	public void setContext(SceneContext sceneContext) {
+		super.setContext(sceneContext);
 		sceneController = new IntroController(sceneContext.gameController());
 		icc = sceneController.context();
 	}
