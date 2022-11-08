@@ -95,7 +95,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		drawTitle(g);
 		drawLights(g, 32, 16);
 		if (sceneController.state() == State.GHOSTS) {

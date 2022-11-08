@@ -45,8 +45,8 @@ public class BootScene extends GameScene2D {
 	private final WritableImage snapshot;
 
 	public BootScene() {
-		var width = getUnscaledWidth();
-		var height = getUnscaledHeight();
+		var width = ArcadeWorld.TILES_X * TS;
+		var height = ArcadeWorld.TILES_Y * TS;
 		buffer = new Canvas(width, height).getGraphicsContext2D();
 		snapshot = new WritableImage(width, height);
 	}
@@ -73,7 +73,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		g.drawImage(snapshot, 0, 0);
 	}
 

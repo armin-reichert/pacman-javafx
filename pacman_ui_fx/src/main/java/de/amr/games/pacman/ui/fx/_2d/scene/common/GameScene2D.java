@@ -59,31 +59,26 @@ public abstract class GameScene2D implements GameScene {
 	private final StackPane root = new StackPane();
 	private final ResizableCanvas canvas = new ResizableCanvas();
 	private final Pane overlayPane = new Pane();
-	private final V2i unscaledSize;
 	private final SubScene fxSubScene;
 	private boolean creditVisible;
+	private V2i size = DEFAULT_SIZE;
 	private double scaling = 1.0;
 	protected SceneContext ctx;
 
 	protected GameScene2D() {
-		this(DEFAULT_SIZE);
-	}
-
-	protected GameScene2D(V2i size) {
-		unscaledSize = size;
-		fxSubScene = new SubScene(root, unscaledSize.x(), unscaledSize.y());
+		fxSubScene = new SubScene(root, size.x(), size.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		setHeight(size.y());
+		resizeToHeight(size.y());
 		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayPane.setMouseTransparent(true);
 		root.getChildren().addAll(canvas, overlayPane);
 	}
 
-	public void setHeight(double height) {
-		double aspectRatio = (double) unscaledSize.x() / (double) unscaledSize.y();
+	public void resizeToHeight(double height) {
+		double aspectRatio = (double) size.x() / (double) size.y();
 		double width = aspectRatio * height;
-		scaling = height / unscaledSize.y();
+		scaling = height / size.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
@@ -97,7 +92,7 @@ public abstract class GameScene2D implements GameScene {
 		var g = canvas.getGraphicsContext2D();
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		drawSceneContent(g);
+		draw(g);
 		if (Env.showDebugInfoPy.get()) {
 			drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
@@ -108,6 +103,10 @@ public abstract class GameScene2D implements GameScene {
 		drawHUD(g);
 	}
 
+	public void drawHUD(GraphicsContext g) {
+		ctx.r2D().drawHUD(g, ctx.game(), creditVisible);
+	}
+
 	/**
 	 * Updates the scene.
 	 */
@@ -116,12 +115,7 @@ public abstract class GameScene2D implements GameScene {
 	/**
 	 * Draws the scene content.
 	 */
-	public void drawSceneContent(GraphicsContext g) {
-	}
-
-	public void drawHUD(GraphicsContext g) {
-		ctx.r2D().drawHUD(g, ctx.game(), creditVisible);
-	}
+	public abstract void draw(GraphicsContext g);
 
 	public boolean isCreditVisible() {
 		return creditVisible;
@@ -138,13 +132,13 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void embedInto(Scene parentScene) {
-		setHeight(parentScene.getHeight());
+		resizeToHeight(parentScene.getHeight());
 		parentScene.heightProperty().removeListener(this::onParentHeightChanged);
 		parentScene.heightProperty().addListener(this::onParentHeightChanged);
 	}
 
 	private void onParentHeightChanged(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-		setHeight(newValue.doubleValue());
+		resizeToHeight(newValue.doubleValue());
 	}
 
 	@Override
@@ -172,14 +166,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public Pane overlayPane() {
 		return overlayPane;
-	}
-
-	public int getUnscaledWidth() {
-		return unscaledSize.x();
-	}
-
-	public int getUnscaledHeight() {
-		return unscaledSize.y();
 	}
 
 	public double getScaling() {

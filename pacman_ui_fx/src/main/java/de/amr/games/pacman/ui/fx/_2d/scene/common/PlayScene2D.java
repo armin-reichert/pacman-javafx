@@ -82,7 +82,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		var mazePos = new V2i(0, 3 * TS);
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			var animation = arcadeWorld.levelCompleteAnimation();
@@ -104,8 +104,8 @@ public class PlayScene2D extends GameScene2D {
 			ctx.r2D().drawGhost(g, ghost);
 		}
 		if (!isCreditVisible()) {
-			int livesDisplayed = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
-			ctx.r2D().drawLivesCounter(g, livesDisplayed);
+			int lives = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
+			ctx.r2D().drawLivesCounter(g, lives);
 		}
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}

@@ -65,7 +65,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void draw(GraphicsContext g) {
 		var msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).lifeSprite();
 		ctx.r2D().drawText(g, "PUSH START BUTTON", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade8, t(6), t(16));
 		ctx.r2D().drawText(g, "1 PLAYER ONLY", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade8, t(8), t(18));
