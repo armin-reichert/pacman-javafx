@@ -51,27 +51,27 @@ import javafx.scene.text.Font;
  */
 public class PacManIntroScene extends GameScene2D {
 
-	private IntroController sceneController;
-	private IntroController.Context icc;
+	private IntroController intro;
+	private IntroController.Context introData;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
-		sceneController = new IntroController(sceneContext.gameController());
-		icc = sceneController.context();
+		intro = new IntroController(sceneContext.gameController());
+		introData = intro.context();
 	}
 
 	@Override
 	public void init() {
-		sceneController.restartInState(IntroController.State.START);
-		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
-		Stream.of(icc.ghosts).forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
+		intro.restartInState(IntroController.State.START);
+		introData.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(introData.pacMan));
+		Stream.of(introData.ghosts).forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
 	}
 
 	@Override
 	public void update() {
-		sceneController.update();
-		setCreditVisible(icc.creditVisible);
+		intro.update();
+		setCreditVisible(introData.creditVisible);
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void draw(GraphicsContext g) {
-		var tick = sceneController.state().timer().tick();
-		switch (sceneController.state()) {
+		var tick = intro.state().timer().tick();
+		switch (intro.state()) {
 		case START -> {
 			drawGallery(g);
 		}
@@ -130,7 +130,7 @@ public class PacManIntroScene extends GameScene2D {
 			drawGuys(g, 0);
 			ctx.r2D().drawCopyright(g, 32);
 		}
-		default -> throw new IllegalArgumentException("Unexpected value: " + sceneController.state());
+		default -> throw new IllegalArgumentException("Unexpected value: " + intro.state());
 		}
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
@@ -142,58 +142,59 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGallery(GraphicsContext g) {
 		var font = ctx.r2D().arcadeFont();
-		if (icc.titleVisible) {
+		if (introData.titleVisible) {
 			var color = Color.WHITE;
-			ctx.r2D().drawText(g, "CHARACTER", color, font, t(icc.left + 3), t(6));
-			ctx.r2D().drawText(g, "/", color, font, t(icc.left + 13), t(6));
-			ctx.r2D().drawText(g, "NICKNAME", color, font, t(icc.left + 15), t(6));
+			ctx.r2D().drawText(g, "CHARACTER", color, font, t(introData.left + 3), t(6));
+			ctx.r2D().drawText(g, "/", color, font, t(introData.left + 13), t(6));
+			ctx.r2D().drawText(g, "NICKNAME", color, font, t(introData.left + 15), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
-			if (!icc.pictureVisible[id]) {
+			if (!introData.pictureVisible[id]) {
 				continue;
 			}
 			int tileY = 7 + 3 * id;
 			var color = ctx.r2D().ghostColor(id);
-			ctx.r2D().drawSpriteCenteredOverBox(g, ctx.r2D().ghostSprite(id, Direction.RIGHT), t(icc.left) + 4, t(tileY));
-			if (icc.characterVisible[id]) {
-				ctx.r2D().drawText(g, "-" + icc.characters[id], color, font, t(icc.left + 3), t(tileY + 1));
+			ctx.r2D().drawSpriteCenteredOverBox(g, ctx.r2D().ghostSprite(id, Direction.RIGHT), t(introData.left) + 4,
+					t(tileY));
+			if (introData.characterVisible[id]) {
+				ctx.r2D().drawText(g, "-" + introData.characters[id], color, font, t(introData.left + 3), t(tileY + 1));
 			}
-			if (icc.nicknameVisible[id]) {
-				ctx.r2D().drawText(g, "\"" + icc.nicknames[id] + "\"", color, font, t(icc.left + 14), t(tileY + 1));
+			if (introData.nicknameVisible[id]) {
+				ctx.r2D().drawText(g, "\"" + introData.nicknames[id] + "\"", color, font, t(introData.left + 14), t(tileY + 1));
 			}
 		}
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
-		if (Boolean.TRUE.equals(icc.blinking.frame())) {
+		if (Boolean.TRUE.equals(introData.blinking.frame())) {
 			g.setFill(ctx.r2D().getMazeFoodColor(1));
-			g.fillOval(t(icc.left), t(20), TS, TS);
+			g.fillOval(t(introData.left), t(20), TS, TS);
 		}
 	}
 
 	private void drawGuys(GraphicsContext g, int offsetX) {
 		if (offsetX == 0) {
-			for (var ghost : icc.ghosts) {
+			for (var ghost : introData.ghosts) {
 				ctx.r2D().drawGhost(g, ghost);
 			}
 		} else {
-			ctx.r2D().drawGhost(g, icc.ghosts[0]);
+			ctx.r2D().drawGhost(g, introData.ghosts[0]);
 			g.save();
 			g.translate(offsetX, 0);
-			ctx.r2D().drawGhost(g, icc.ghosts[1]);
-			ctx.r2D().drawGhost(g, icc.ghosts[2]);
+			ctx.r2D().drawGhost(g, introData.ghosts[1]);
+			ctx.r2D().drawGhost(g, introData.ghosts[2]);
 			g.restore();
-			ctx.r2D().drawGhost(g, icc.ghosts[3]);
+			ctx.r2D().drawGhost(g, introData.ghosts[3]);
 		}
-		ctx.r2D().drawPac(g, icc.pacMan);
+		ctx.r2D().drawPac(g, introData.pacMan);
 	}
 
 	private void drawPoints(GraphicsContext g) {
-		int tileX = icc.left + 6;
+		int tileX = introData.left + 6;
 		int tileY = 25;
 		g.setFill(ctx.r2D().getMazeFoodColor(1));
 		g.fillRect(t(tileX) + 4.0, t(tileY - 1) + 4.0, 2, 2);
-		if (Boolean.TRUE.equals(icc.blinking.frame())) {
+		if (Boolean.TRUE.equals(introData.blinking.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
 		g.setFill(Color.WHITE);

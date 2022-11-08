@@ -43,52 +43,52 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacManIntermissionScene1 extends GameScene2D {
 
-	private Intermission1Controller sceneController;
-	private Intermission1Controller.Context icc;
+	private Intermission1Controller intermission;
+	private Intermission1Controller.Context intermissionData;
 
 	@Override
 	public void setContext(SceneContext context) {
 		super.setContext(context);
-		sceneController = new Intermission1Controller(context.gameController());
-		icc = sceneController.context();
+		intermission = new Intermission1Controller(context.gameController());
+		intermissionData = intermission.context();
 	}
 
 	@Override
 	public void init() {
 		var renderer = new RendererMsPacManGame();
-		sceneController.restartInState(Intermission1Controller.State.FLAP);
+		intermission.restartInState(Intermission1Controller.State.FLAP);
 		var clapperboardAnimationSet = new EntityAnimationSet<Integer>(1);
 		clapperboardAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
 		clapperboardAnimationSet.select(Clapperboard.ACTION);
-		icc.clapperboard.setAnimationSet(clapperboardAnimationSet);
-		icc.msPac.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPac));
-		icc.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
-		icc.pacMan.animationSet().ifPresent(animations -> {
-			var munching = renderer.createPacManMunchingAnimationMap(icc.pacMan);
+		intermissionData.clapperboard.setAnimationSet(clapperboardAnimationSet);
+		intermissionData.msPac.setAnimationSet(ctx.r2D().createPacAnimationSet(intermissionData.msPac));
+		intermissionData.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		intermissionData.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(intermissionData.pacMan));
+		intermissionData.pacMan.animationSet().ifPresent(animations -> {
+			var munching = renderer.createPacManMunchingAnimationMap(intermissionData.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		icc.inky.setAnimationSet(ctx.r2D().createGhostAnimationSet(icc.inky));
-		icc.inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		icc.pinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(icc.pinky));
-		icc.pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		intermissionData.inky.setAnimationSet(ctx.r2D().createGhostAnimationSet(intermissionData.inky));
+		intermissionData.inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		intermissionData.pinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(intermissionData.pinky));
+		intermissionData.pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 	}
 
 	@Override
 	public void update() {
-		sceneController.update();
+		intermission.update();
 	}
 
 	@Override
 	public void draw(GraphicsContext g) {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		renderer.drawClapperboard(g, icc.clapperboard);
-		renderer.drawPac(g, icc.msPac);
-		renderer.drawPac(g, icc.pacMan);
-		renderer.drawGhost(g, icc.inky);
-		renderer.drawGhost(g, icc.pinky);
-		renderer.drawEntity(g, icc.heart, renderer.heartSprite());
+		renderer.drawClapperboard(g, intermissionData.clapperboard);
+		renderer.drawPac(g, intermissionData.msPac);
+		renderer.drawPac(g, intermissionData.pacMan);
+		renderer.drawGhost(g, intermissionData.inky);
+		renderer.drawGhost(g, intermissionData.pinky);
+		renderer.drawEntity(g, intermissionData.heart, renderer.heartSprite());
 		renderer.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }

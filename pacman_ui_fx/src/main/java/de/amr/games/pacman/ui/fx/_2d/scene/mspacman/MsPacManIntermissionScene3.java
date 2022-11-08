@@ -46,46 +46,46 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacManIntermissionScene3 extends GameScene2D {
 
-	private Intermission3Controller sceneController;
-	private Intermission3Controller.Context icc;
+	private Intermission3Controller intermission;
+	private Intermission3Controller.Context intermissionData;
 	private SingleEntityAnimation<Rectangle2D> storkAnim;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
-		sceneController = new Intermission3Controller(sceneContext.gameController());
-		icc = sceneController.context();
+		intermission = new Intermission3Controller(sceneContext.gameController());
+		intermissionData = intermission.context();
 	}
 
 	@Override
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		sceneController.restartInState(Intermission3Controller.State.FLAP);
+		intermission.restartInState(Intermission3Controller.State.FLAP);
 		var flapAnimationSet = new EntityAnimationSet<Integer>(1);
 		flapAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
 		flapAnimationSet.select(Clapperboard.ACTION);
-		icc.flap.setAnimationSet(flapAnimationSet);
-		icc.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.msPacMan));
-		icc.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(icc.pacMan));
-		var munching = renderer.createPacManMunchingAnimationMap(icc.pacMan);
-		icc.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
+		intermissionData.flap.setAnimationSet(flapAnimationSet);
+		intermissionData.msPacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(intermissionData.msPacMan));
+		intermissionData.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(intermissionData.pacMan));
+		var munching = renderer.createPacManMunchingAnimationMap(intermissionData.pacMan);
+		intermissionData.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
 		storkAnim = renderer.createStorkFlyingAnimation();
 		storkAnim.ensureRunning();
 	}
 
 	@Override
 	public void update() {
-		sceneController.update();
+		intermission.update();
 	}
 
 	@Override
 	public void draw(GraphicsContext g) {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		renderer.drawClapperboard(g, icc.flap);
-		renderer.drawPac(g, icc.msPacMan);
-		renderer.drawPac(g, icc.pacMan);
-		renderer.drawEntity(g, icc.stork, storkAnim.animate());
-		renderer.drawEntity(g, icc.bag, icc.bagOpen ? renderer.juniorPacSprite() : renderer.blueBagSprite());
+		renderer.drawClapperboard(g, intermissionData.flap);
+		renderer.drawPac(g, intermissionData.msPacMan);
+		renderer.drawPac(g, intermissionData.pacMan);
+		renderer.drawEntity(g, intermissionData.stork, storkAnim.animate());
+		renderer.drawEntity(g, intermissionData.bag, intermissionData.bagOpen ? renderer.juniorPacSprite() : renderer.blueBagSprite());
 		renderer.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }

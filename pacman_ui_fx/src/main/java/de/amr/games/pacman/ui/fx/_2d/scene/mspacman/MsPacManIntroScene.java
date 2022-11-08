@@ -47,23 +47,23 @@ import javafx.scene.paint.Color;
  */
 public class MsPacManIntroScene extends GameScene2D {
 
-	private IntroController sceneController;
-	private Context icc;
+	private IntroController intro;
+	private Context introData;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
-		sceneController = new IntroController(sceneContext.gameController());
-		icc = sceneController.context();
+		intro = new IntroController(sceneContext.gameController());
+		introData = intro.context();
 	}
 
 	@Override
 	public void init() {
-		sceneController.restartInState(IntroController.State.START);
-		var pacAnimations = ctx.r2D().createPacAnimationSet(icc.game.pac);
+		intro.restartInState(IntroController.State.START);
+		var pacAnimations = ctx.r2D().createPacAnimationSet(introData.game.pac);
 		pacAnimations.ensureRunning();
-		icc.game.pac.setAnimationSet(pacAnimations);
-		icc.game.ghosts().forEach(ghost -> {
+		introData.game.pac.setAnimationSet(pacAnimations);
+		introData.game.ghosts().forEach(ghost -> {
 			var ghostAnimations = ctx.r2D().createGhostAnimationSet(ghost);
 			ghostAnimations.ensureRunning();
 			ghost.setAnimationSet(ghostAnimations);
@@ -72,8 +72,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void update() {
-		sceneController.update();
-		setCreditVisible(icc.creditVisible);
+		intro.update();
+		setCreditVisible(introData.creditVisible);
 	}
 
 	@Override
@@ -98,43 +98,43 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void draw(GraphicsContext g) {
 		drawTitle(g);
 		drawLights(g, 32, 16);
-		if (sceneController.state() == State.GHOSTS) {
-			drawGhostText(g, icc.game.theGhosts[icc.ghostIndex]);
-		} else if (sceneController.state() == State.MSPACMAN || sceneController.state() == State.READY_TO_PLAY) {
+		if (intro.state() == State.GHOSTS) {
+			drawGhostText(g, introData.game.theGhosts[introData.ghostIndex]);
+		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
 			drawMsPacManText(g);
 		}
-		for (var ghost : icc.game.theGhosts) {
+		for (var ghost : introData.game.theGhosts) {
 			ctx.r2D().drawGhost(g, ghost);
 		}
-		ctx.r2D().drawPac(g, icc.game.pac);
+		ctx.r2D().drawPac(g, introData.game.pac);
 		ctx.r2D().drawCopyright(g, 29);
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
 	private void drawTitle(GraphicsContext g) {
-		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
-				icc.titlePosition.y());
+		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(), introData.titlePosition.x(),
+				introData.titlePosition.y());
 	}
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
 		if (ghost.id == Ghost.RED_GHOST) {
-			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
-					icc.lightsTopLeft.y() + t(3));
+			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(), introData.titlePosition.x(),
+					introData.lightsTopLeft.y() + t(3));
 		}
 		ctx.r2D().drawText(g, ghost.name.toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(),
-				t(14 - ghost.name.length() / 2), icc.lightsTopLeft.y() + t(6));
+				t(14 - ghost.name.length() / 2), introData.lightsTopLeft.y() + t(6));
 	}
 
 	private void drawMsPacManText(GraphicsContext g) {
-		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
-				icc.lightsTopLeft.y() + t(3));
-		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(), icc.titlePosition.x(),
-				icc.lightsTopLeft.y() + t(6));
+		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(), introData.titlePosition.x(),
+				introData.lightsTopLeft.y() + t(3));
+		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(), introData.titlePosition.x(),
+				introData.lightsTopLeft.y() + t(6));
 	}
 
 	// TODO this is not yet accurate to the original game
 	private void drawLights(GraphicsContext g, int numDotsX, int numDotsY) {
-		long time = icc.lightsTimer.tick();
+		long time = introData.lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
 			int x = 0;
@@ -151,7 +151,7 @@ public class MsPacManIntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(icc.lightsTopLeft.x() + 4 * x, icc.lightsTopLeft.y() + 4 * y, 2, 2);
+			g.fillRect(introData.lightsTopLeft.x() + 4 * x, introData.lightsTopLeft.y() + 4 * y, 2, 2);
 		}
 	}
 }
