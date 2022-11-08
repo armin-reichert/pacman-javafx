@@ -54,6 +54,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
+		var renderer = (RendererPacManGame) ctx.r2D();
 		frame = -1;
 		initialDelay = 120;
 
@@ -63,12 +64,12 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.setAbsSpeed(1.15);
 		pac.show();
 
-		var pacAnimations = ctx.r2D().createPacAnimationSet(pac);
+		var pacAnimations = renderer.createPacAnimationSet(pac);
 		pacAnimations.select(AnimKeys.PAC_MUNCHING);
-		pacAnimations.animation(AnimKeys.PAC_MUNCHING).get().restart();
+		pacAnimations.animation(AnimKeys.PAC_MUNCHING).ifPresent(EntityAnimation::restart);
 		pac.setAnimationSet(pacAnimations);
 
-		stretchedDressAnimation = ((RendererPacManGame) ctx.r2D()).createBlinkyStretchedAnimation();
+		stretchedDressAnimation = renderer.createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
 		blinky.placeAtTile(v(28, 20), 0, 0);
@@ -76,13 +77,12 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.setAbsSpeed(0);
 		blinky.hide();
 
-		var blinkyAnimations = ctx.r2D().createGhostAnimationSet(blinky);
-		damagedAnimation = ((RendererPacManGame) ctx.r2D()).createBlinkyDamagedAnimation();
+		var blinkyAnimations = renderer.createGhostAnimationSet(blinky);
+		damagedAnimation = renderer.createBlinkyDamagedAnimation();
 		blinkyAnimations.put(AnimKeys.BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
-		blinkyAnimations.animation(AnimKeys.GHOST_COLOR).get().restart();
+		blinkyAnimations.animation(AnimKeys.GHOST_COLOR).ifPresent(EntityAnimation::restart);
 		blinky.setAnimationSet(blinkyAnimations);
-
 	}
 
 	@Override
