@@ -23,13 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.common.world.World.t;
-
-import java.util.Optional;
+import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.lib.animation.EntityAnimation;
+import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -85,10 +83,18 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
+		var mazePos = new V2i(0, 3 * TS);
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
-			drawMaze(g, t(0), t(3), arcadeWorld.levelCompleteAnimation());
+			var animation = arcadeWorld.levelCompleteAnimation();
+			if (animation.isPresent() && animation.get().isRunning()) {
+				boolean flash = (boolean) animation.get().frame();
+				ctx.r2D().drawEmptyMaze(g, mazePos.x(), mazePos.y(), ctx.level().mazeNumber(), flash);
+			} else {
+				ctx.r2D().drawFilledMaze(g, mazePos.x(), mazePos.y(), ctx.level().mazeNumber(), ctx.world(),
+						!ctx.game().energizerPulse.frame());
+			}
 		} else {
-			ctx.r2D().drawFilledMaze(g, t(0), t(3), ctx.level().mazeNumber(), ctx.world(),
+			ctx.r2D().drawFilledMaze(g, mazePos.x(), mazePos.y(), ctx.level().mazeNumber(), ctx.world(),
 					!ctx.game().energizerPulse.frame());
 		}
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
@@ -102,15 +108,6 @@ public class PlayScene2D extends GameScene2D {
 			ctx.r2D().drawLivesCounter(g, livesDisplayed);
 		}
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
-	}
-
-	private void drawMaze(GraphicsContext g, int x, int y, Optional<EntityAnimation> flashingAnimation) {
-		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			boolean flash = (boolean) flashingAnimation.get().frame();
-			ctx.r2D().drawEmptyMaze(g, x, y, ctx.level().mazeNumber(), flash);
-		} else {
-			ctx.r2D().drawFilledMaze(g, x, y, ctx.level().mazeNumber(), ctx.world(), !ctx.game().energizerPulse.frame());
-		}
 	}
 
 	@Override
