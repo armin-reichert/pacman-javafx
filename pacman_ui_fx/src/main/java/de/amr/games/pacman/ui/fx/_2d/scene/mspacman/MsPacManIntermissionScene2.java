@@ -42,25 +42,23 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	private Intermission2Controller intermission;
-	private Intermission2Controller.Context intermissionData;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
 		intermission = new Intermission2Controller(sceneContext.gameController());
-		intermissionData = intermission.context();
 	}
 
 	@Override
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
 		intermission.restartInState(Intermission2Controller.State.FLAP);
-		intermissionData.clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
-		intermissionData.msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermissionData.msPacMan));
-		intermissionData.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		intermissionData.pacMan.setAnimationSet(renderer.createPacAnimationSet(intermissionData.pacMan));
-		intermissionData.pacMan.animationSet().ifPresent(animations -> {
-			var munching = renderer.createPacManMunchingAnimationMap(intermissionData.pacMan);
+		intermission.context().clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
+		intermission.context().msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().msPacMan));
+		intermission.context().msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		intermission.context().pacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().pacMan));
+		intermission.context().pacMan.animationSet().ifPresent(animations -> {
+			var munching = renderer.createPacManMunchingAnimationMap(intermission.context().pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
@@ -74,9 +72,9 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	@Override
 	public void draw(GraphicsContext g) {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		renderer.drawClapperboard(g, intermissionData.clapperboard);
-		renderer.drawPac(g, intermissionData.msPacMan);
-		renderer.drawPac(g, intermissionData.pacMan);
+		renderer.drawClapperboard(g, intermission.context().clapperboard);
+		renderer.drawPac(g, intermission.context().msPacMan);
+		renderer.drawPac(g, intermission.context().pacMan);
 		renderer.drawLevelCounter(g, ctx.game().levelCounter);
 	}
 }
