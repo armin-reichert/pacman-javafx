@@ -105,7 +105,7 @@ public class ActorsInfo {
 	private void updateInfo(Pane pane, Text text, String info, Entity entity) {
 		text.setText(info);
 		var textSize = text.getBoundsInLocal();
-		var scaling = hostScene.getScaling();
+		var scaling = hostScene.scaling();
 		pane.setTranslateX((entity.getPosition().x() + World.HTS) * scaling - textSize.getWidth() / 2);
 		pane.setTranslateY(entity.getPosition().y() * scaling - textSize.getHeight());
 	}

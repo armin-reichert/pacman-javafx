@@ -152,7 +152,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public SubScene getFXSubScene() {
+	public SubScene fxSubScene() {
 		return fxSubScene;
 	}
 
@@ -168,7 +168,7 @@ public abstract class GameScene2D implements GameScene {
 		return overlayPane;
 	}
 
-	public double getScaling() {
+	public double scaling() {
 		return scaling;
 	}
 }

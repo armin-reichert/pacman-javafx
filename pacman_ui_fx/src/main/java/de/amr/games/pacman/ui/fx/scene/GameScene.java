@@ -75,7 +75,7 @@ public interface GameScene extends GameEventAdapter {
 	/**
 	 * @return the JavaFX subscene associated with this game scene
 	 */
-	SubScene getFXSubScene();
+	SubScene fxSubScene();
 
 	/**
 	 * Called when this game scene is embedded (displayed) inside its parent FX scene.

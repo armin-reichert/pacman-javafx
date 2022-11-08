@@ -56,7 +56,7 @@ public class PiPView {
 	public PiPView() {
 		root.setBackground(Ufx.colorBackground(Color.BLACK));
 		root.setFocusTraversable(false);
-		root.getChildren().add(playScene.getFXSubScene());
+		root.getChildren().add(playScene.fxSubScene());
 		playScene.resizeToHeight(MIN_SIZE.y());
 	}
 
