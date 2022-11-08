@@ -52,7 +52,6 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		setCreditVisible(!ctx.hasCredit()); // show credit only if it is zero (attract mode)
 		if (ctx.game().world() instanceof ArcadeWorld arcadeWorld) {
 			arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation());
 		}
@@ -83,7 +82,7 @@ public class PlayScene2D extends GameScene2D {
 		if (Env.showDebugInfoPy.get()) {
 			actorsInfo.update();
 		}
-		setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);
+		setCreditVisible(!ctx.hasCredit());
 	}
 
 	@Override
