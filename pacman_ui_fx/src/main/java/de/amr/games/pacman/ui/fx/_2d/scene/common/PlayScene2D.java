@@ -53,7 +53,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void init() {
 		if (ctx.game().world() instanceof ArcadeWorld arcadeWorld) {
-			arcadeWorld.setFlashingAnimation(ctx.r2D().createMazeFlashingAnimation());
+			arcadeWorld.setLevelCompleteAnimation(ctx.r2D().createMazeFlashingAnimation());
 		}
 		ctx.game().pac.setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac));
 		ctx.game().ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
@@ -87,7 +87,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
-			drawMaze(g, t(0), t(3), arcadeWorld.flashingAnimation());
+			drawMaze(g, t(0), t(3), arcadeWorld.levelCompleteAnimation());
 		} else {
 			ctx.r2D().drawFilledMaze(g, t(0), t(3), ctx.level().mazeNumber(), ctx.world(),
 					!ctx.game().energizerPulse.frame());
