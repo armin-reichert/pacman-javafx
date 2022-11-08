@@ -55,23 +55,23 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = new RendererMsPacManGame();
+		var renderer = (RendererMsPacManGame) ctx.r2D();
 		intermission.restartInState(Intermission1Controller.State.FLAP);
 		var clapperboardAnimationSet = new EntityAnimationSet<Integer>(1);
 		clapperboardAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
 		clapperboardAnimationSet.select(Clapperboard.ACTION);
 		intermissionData.clapperboard.setAnimationSet(clapperboardAnimationSet);
-		intermissionData.msPac.setAnimationSet(ctx.r2D().createPacAnimationSet(intermissionData.msPac));
+		intermissionData.msPac.setAnimationSet(renderer.createPacAnimationSet(intermissionData.msPac));
 		intermissionData.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		intermissionData.pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(intermissionData.pacMan));
+		intermissionData.pacMan.setAnimationSet(renderer.createPacAnimationSet(intermissionData.pacMan));
 		intermissionData.pacMan.animationSet().ifPresent(animations -> {
 			var munching = renderer.createPacManMunchingAnimationMap(intermissionData.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		intermissionData.inky.setAnimationSet(ctx.r2D().createGhostAnimationSet(intermissionData.inky));
+		intermissionData.inky.setAnimationSet(renderer.createGhostAnimationSet(intermissionData.inky));
 		intermissionData.inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		intermissionData.pinky.setAnimationSet(ctx.r2D().createGhostAnimationSet(intermissionData.pinky));
+		intermissionData.pinky.setAnimationSet(renderer.createGhostAnimationSet(intermissionData.pinky));
 		intermissionData.pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 	}
 
