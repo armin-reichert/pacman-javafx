@@ -58,6 +58,8 @@ public class ActorsInfo {
 
 	// 0..3: ghost info, 4: Pac info, 5: bonus info
 	private static final int NUM_INFOS = 6;
+	private static final int PAC_INDEX = 4;
+	private static final int BONUS_INDEX = 5;
 
 	private final GameScene2D hostScene;
 	private final List<Pane> panes = new ArrayList<>();
@@ -79,20 +81,18 @@ public class ActorsInfo {
 
 	public void update() {
 		var game = hostScene.ctx.game();
-		for (int i = 0; i < NUM_INFOS; ++i) {
-			if (i < 4) {
-				var ghost = game.theGhosts[i];
-				updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
-				panes.get(i).setVisible(ghost.isVisible());
-			} else if (i == 4) {
-				updateInfo(panes.get(i), texts.get(i), pacInfo(game.pac), game.pac);
-				panes.get(i).setVisible(game.pac.isVisible());
-			} else {
-				var bonus = game.bonus();
-				updateInfo(panes.get(i), texts.get(i), bonusInfo(bonus), bonus.entity());
-				panes.get(i).setVisible(bonus.state() != BonusState.INACTIVE);
-			}
+		for (int i = 0; i < 4; ++i) {
+			var ghost = game.theGhosts[i];
+			updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
+			panes.get(i).setVisible(ghost.isVisible());
 		}
+
+		updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac), game.pac);
+		panes.get(PAC_INDEX).setVisible(game.pac.isVisible());
+
+		var bonus = game.bonus();
+		updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
+		panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
 	private void updateInfo(Pane pane, Text text, String info, Entity entity) {
