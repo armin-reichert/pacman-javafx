@@ -36,8 +36,8 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -88,18 +88,11 @@ public class PlayScene3D implements GameScene {
 	public PlayScene3D() {
 		var coordSystem = new CoordSystem();
 		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
-
 		var light = new AmbientLight();
 		light.colorProperty().bind(Env.lightColorPy);
-
 		var root = new Group(content, coordSystem, light);
-
-		// initial scene size is irrelevant as it is resized automatically
-		fxSubScene = new SubScene(root, 1, 1, true, SceneAntialiasing.BALANCED);
-
-		// center scene content over origin
-		content.getTransforms().add(new Translate(-DEFAULT_SIZE.x() / 2, -DEFAULT_SIZE.y() / 2));
-
+		// initial scene size is irrelevant
+		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		createCameras();
 	}
 
@@ -118,21 +111,23 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		final var game = ctx.game();
-		world3D = new World3D(game, ctx.model3D(), ctx.r2D());
-		pac3D = new Pac3D(game.pac, game.world(), ctx.model3D());
+		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D());
 		pac3D.reset();
-		ghosts3D = game.ghosts()
-				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), RendererCommon.createGhostColors(ghost.id)))
+		ghosts3D = ctx.game().ghosts()
+				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
-		bonus3D = new Bonus3D(game.bonus());
+		bonus3D = new Bonus3D(ctx.game().bonus());
 
+		// Note: world3D comes first in content list, gets exchanged on new level start
 		content.getChildren().clear();
-		// put world first in content list, will get exchanged everytime a new level starts
-		content.getChildren().add(world3D);
-		content.getChildren().add(pac3D);
+		content.getChildren().addAll(world3D, pac3D, bonus3D);
 		content.getChildren().addAll(ghosts3D);
-		content.getChildren().add(bonus3D);
+
+		double width = ctx.game().world().numCols() * World.TS;
+		double height = ctx.game().world().numRows() * World.TS;
+		var centerOverOrigin = new Translate(-width / 2, -height / 2);
+		content.getTransforms().setAll(centerOverOrigin);
 
 		changeCamera(Env.perspectivePy.get());
 	}
@@ -233,8 +228,7 @@ public class PlayScene3D implements GameScene {
 			world.tiles()//
 					.filter(world::containsEatenFood)//
 					.map(food3D::pelletAt)//
-					.filter(Optional::isPresent)//
-					.map(Optional::get)//
+					.flatMap(Optional::stream)//
 					.forEach(Pellet3D::eat);
 		} else {
 			var tile = e.tile.get();

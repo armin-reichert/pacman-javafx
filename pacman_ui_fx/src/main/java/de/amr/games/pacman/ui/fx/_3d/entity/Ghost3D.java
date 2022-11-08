@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.GhostColors;
+import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.image.Image;
@@ -61,7 +61,7 @@ public class Ghost3D extends MovingCreature3D {
 	private final Image[] numberImages;
 	private Look look;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D, GhostColors colors) {
+	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D, GhostColorScheme colors) {
 		super(ghost);
 		numberImages = r2D.createGhostValueList().frames().map(r2D.spritesheet()::region).toArray(Image[]::new);
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);

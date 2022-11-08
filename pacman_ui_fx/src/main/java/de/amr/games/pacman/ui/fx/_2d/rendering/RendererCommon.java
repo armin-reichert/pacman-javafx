@@ -57,28 +57,41 @@ import javafx.scene.text.FontWeight;
 public abstract class RendererCommon implements Rendering2D {
 
 	//@formatter:off
-	private static final Color[] GHOST_COLORS = {
-		Color.RED,
-		Color.web("FCB5FF"), // PINK
-		Color.CYAN,
-		Color.web("FBBE58") // ORANGE
-	};
-	//@formatter:on
-
-	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", TS);
-
-	public static final GhostColors createGhostColors(int ghostID) {
+	private static final GhostColorScheme[] GHOST_COLORS = new GhostColorScheme[4];
+	
+	static {
 		// see spritesheet
 		var pink = Color.web("FCBBB3");
 		var pale = Color.web("E0DDFF");
 		var blue = Color.web("#2121FF");
-		// dress, eyeballs, pupils
-		return new GhostColors(//
-				GHOST_COLORS[ghostID], Color.GHOSTWHITE, blue, // normal
+		
+		GHOST_COLORS[Ghost.RED_GHOST] = new GhostColorScheme(//
+				Color.RED, pale, blue, // normal
+				blue, pink, pink, // frightened
+				pale, pink, Color.RED // flashing
+		);
+
+		GHOST_COLORS[Ghost.PINK_GHOST] = new GhostColorScheme(//
+				Color.web("FCB5FF"), pale, blue, // normal
+				blue, pink, pink, // frightened
+				pale, pink, Color.RED // flashing
+		);
+
+		GHOST_COLORS[Ghost.CYAN_GHOST] = new GhostColorScheme(//
+				Color.CYAN, pale, blue, // normal
+				blue, pink, pink, // frightened
+				pale, pink, Color.RED // flashing
+		);
+		
+		GHOST_COLORS[Ghost.ORANGE_GHOST] = new GhostColorScheme(//
+				Color.web("FBBE58"), pale, blue, // normal
 				blue, pink, pink, // frightened
 				pale, pink, Color.RED // flashing
 		);
 	}
+	//@formatter:on
+
+	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", TS);
 
 	public void clearTileContent(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
@@ -92,6 +105,11 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public Color ghostColor(int ghostID) {
+		return GHOST_COLORS[ghostID].normalDress();
+	}
+
+	@Override
+	public GhostColorScheme ghostColorScheme(int ghostID) {
 		return GHOST_COLORS[ghostID];
 	}
 

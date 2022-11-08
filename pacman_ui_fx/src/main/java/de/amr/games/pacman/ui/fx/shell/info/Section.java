@@ -70,7 +70,7 @@ public abstract class Section extends TitledPane {
 
 	protected Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		this.ui = ui;
-		this.gc = ui.getGameController();
+		this.gc = ui.gameController();
 		this.minLabelWidth = minLabelWidth;
 		this.textColor = textColor;
 		this.textFont = textFont;
@@ -95,7 +95,7 @@ public abstract class Section extends TitledPane {
 	}
 
 	protected GameScene gameScene() {
-		return ui.getCurrentGameScene();
+		return ui.currentGameScene();
 	}
 
 	private void addRow(String labelText, Node child) {
