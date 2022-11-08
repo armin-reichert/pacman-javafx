@@ -60,10 +60,17 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
+	public void update() {
+		if (Env.showDebugInfoPy.get()) {
+			actorsInfo.update();
+		}
+		setCreditVisible(!ctx.hasCredit());
+	}
+
+	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			if (!ctx.hasCredit()) {
-				// credit can only be added in attract mode
+			if (!ctx.hasCredit()) { // credit can only be added in attract mode
 				Actions.addCredit();
 			}
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
@@ -78,17 +85,9 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void update() {
-		if (Env.showDebugInfoPy.get()) {
-			actorsInfo.update();
-		}
-		setCreditVisible(!ctx.hasCredit());
-	}
-
-	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
-			drawFlashableMaze(g, t(0), t(3), arcadeWorld.flashingAnimation());
+			drawMaze(g, t(0), t(3), arcadeWorld.flashingAnimation());
 		} else {
 			ctx.r2D().drawFilledMaze(g, t(0), t(3), ctx.level().mazeNumber(), ctx.world(),
 					!ctx.game().energizerPulse.frame());
@@ -106,7 +105,7 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	private void drawFlashableMaze(GraphicsContext g, int x, int y, Optional<EntityAnimation> flashingAnimation) {
+	private void drawMaze(GraphicsContext g, int x, int y, Optional<EntityAnimation> flashingAnimation) {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			boolean flash = (boolean) flashingAnimation.get().frame();
 			ctx.r2D().drawEmptyMaze(g, x, y, ctx.level().mazeNumber(), flash);
