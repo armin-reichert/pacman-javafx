@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
-import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -56,10 +55,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
 		intermission.restartInState(Intermission2Controller.State.FLAP);
-		var clapperboardAnimationSet = new EntityAnimationSet<Integer>(1);
-		clapperboardAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
-		clapperboardAnimationSet.select(Clapperboard.ACTION);
-		intermissionData.flap.setAnimationSet(clapperboardAnimationSet);
+		intermissionData.clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
 		intermissionData.msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermissionData.msPacMan));
 		intermissionData.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		intermissionData.pacMan.setAnimationSet(renderer.createPacAnimationSet(intermissionData.pacMan));
@@ -78,7 +74,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	@Override
 	public void draw(GraphicsContext g) {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		renderer.drawClapperboard(g, intermissionData.flap);
+		renderer.drawClapperboard(g, intermissionData.clapperboard);
 		renderer.drawPac(g, intermissionData.msPacMan);
 		renderer.drawPac(g, intermissionData.pacMan);
 		renderer.drawLevelCounter(g, ctx.game().levelCounter);

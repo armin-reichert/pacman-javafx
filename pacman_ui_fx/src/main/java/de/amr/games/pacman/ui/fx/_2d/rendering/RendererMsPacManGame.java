@@ -30,6 +30,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
+import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -314,6 +315,13 @@ public class RendererMsPacManGame extends RendererCommon {
 		);
 		animation.setFrameDuration(4);
 		return animation;
+	}
+
+	public EntityAnimationSet<Integer> createClapperboardAnimationSet() {
+		var animationSet = new EntityAnimationSet<Integer>(1);
+		animationSet.put(Clapperboard.ACTION, createClapperboardAnimation());
+		animationSet.select(Clapperboard.ACTION);
+		return animationSet;
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createStorkFlyingAnimation() {

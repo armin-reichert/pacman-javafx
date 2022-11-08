@@ -24,10 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
-import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
-import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -61,10 +59,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
 		intermission.restartInState(Intermission3Controller.State.FLAP);
-		var flapAnimationSet = new EntityAnimationSet<Integer>(1);
-		flapAnimationSet.put(Clapperboard.ACTION, renderer.createClapperboardAnimation());
-		flapAnimationSet.select(Clapperboard.ACTION);
-		intermissionData.flap.setAnimationSet(flapAnimationSet);
+		intermissionData.clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
 		intermissionData.msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermissionData.msPacMan));
 		intermissionData.pacMan.setAnimationSet(renderer.createPacAnimationSet(intermissionData.pacMan));
 		var munching = renderer.createPacManMunchingAnimationMap(intermissionData.pacMan);
@@ -81,7 +76,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	@Override
 	public void draw(GraphicsContext g) {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		renderer.drawClapperboard(g, intermissionData.flap);
+		renderer.drawClapperboard(g, intermissionData.clapperboard);
 		renderer.drawPac(g, intermissionData.msPacMan);
 		renderer.drawPac(g, intermissionData.pacMan);
 		renderer.drawEntity(g, intermissionData.stork, storkAnim.animate());
