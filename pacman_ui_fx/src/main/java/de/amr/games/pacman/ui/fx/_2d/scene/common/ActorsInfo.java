@@ -30,7 +30,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.model.common.actors.Creature;
@@ -78,7 +77,8 @@ public class ActorsInfo {
 		hostScene.overlayPane().getChildren().addAll(panes);
 	}
 
-	public void update(GameModel game) {
+	public void update() {
+		var game = hostScene.ctx.game();
 		for (int i = 0; i < NUM_INFOS; ++i) {
 			if (i < 4) {
 				var ghost = game.theGhosts[i];
