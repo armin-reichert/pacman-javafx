@@ -57,13 +57,12 @@ public class PlayScene2D extends GameScene2D {
 		}
 		ctx.game().pac.setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac));
 		ctx.game().ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
+		actorsInfo.enabledPy.bind(Env.showDebugInfoPy);
 	}
 
 	@Override
 	public void update() {
-		if (Env.showDebugInfoPy.get()) {
-			actorsInfo.update();
-		}
+		actorsInfo.update();
 		setCreditVisible(!ctx.hasCredit());
 	}
 

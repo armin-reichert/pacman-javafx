@@ -39,6 +39,8 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -65,6 +67,8 @@ public class ActorsInfo {
 	private final List<Pane> panes = new ArrayList<>();
 	private final List<Text> texts = new ArrayList<>();
 
+	public final BooleanProperty enabledPy = new SimpleBooleanProperty();
+
 	public ActorsInfo(GameScene2D hostScene) {
 		this.hostScene = hostScene;
 		for (int i = 0; i < NUM_INFOS; ++i) {
@@ -80,6 +84,9 @@ public class ActorsInfo {
 	}
 
 	public void update() {
+		if (!enabledPy.get()) {
+			return;
+		}
 		var game = hostScene.ctx.game();
 		for (int i = 0; i < 4; ++i) {
 			var ghost = game.theGhosts[i];
