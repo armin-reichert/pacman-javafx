@@ -83,9 +83,11 @@ public class GameUI implements GameEventAdapter {
 	private GameScene currentGameScene;
 
 	// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
-	public GameUI(GameController gameController, Stage stage, double width, double height) {
+	public GameUI(GameController gameController, Stage stage, double zoom) {
 		this.gameController = gameController;
 		this.stage = stage;
+		var width = zoom * GameScene.DEFAULT_SIZE.x();
+		var height = zoom * GameScene.DEFAULT_SIZE.y();
 		var mainScene = new Scene(createSceneContent(), width, height);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		Keyboard.addHandler(this::onKeyPressed);

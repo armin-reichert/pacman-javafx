@@ -41,7 +41,6 @@ import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import de.amr.games.pacman.ui.fx.util.KeyboardSteering;
@@ -102,7 +101,7 @@ public class PacManGameAppFX extends Application {
 		LOGGER.info("Starting application...");
 		stage.setFullScreen(optFullscreen.getValue());
 		var zoom = optZoom.getValue();
-		var ui = new GameUI(gameController, stage, zoom * GameScene.DEFAULT_SIZE.x(), zoom * GameScene.DEFAULT_SIZE.y());
+		var ui = new GameUI(gameController, stage, zoom);
 		ui.setPacSteering(new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
 		ui.gameLoop().start();
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
