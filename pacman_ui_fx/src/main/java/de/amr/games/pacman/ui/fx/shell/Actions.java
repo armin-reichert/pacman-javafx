@@ -61,7 +61,7 @@ public class Actions {
 		return ui.gameController();
 	}
 
-	private static GameModel currentGame() {
+	private static GameModel game() {
 		return gameController().game();
 	}
 
@@ -114,14 +114,14 @@ public class Actions {
 	}
 
 	public static void startGame() {
-		if (currentGame().hasCredit()) {
+		if (game().hasCredit()) {
 			stopVoiceMessage();
-			currentGameState().requestGame(currentGame());
+			currentGameState().requestGame(game());
 		}
 	}
 
 	public static void startCutscenesTest() {
-		currentGameState().startCutscenesTest(currentGame());
+		currentGameState().startCutscenesTest(game());
 		showFlashMessage("Cut scenes");
 	}
 
@@ -138,13 +138,13 @@ public class Actions {
 	}
 
 	public static void addCredit() {
-		currentGameState().addCredit(currentGame());
+		currentGameState().addCredit(game());
 	}
 
 	public static void cheatAddLives(int lives) {
-		if (currentGame().playing) {
-			currentGame().lives += lives;
-			showFlashMessage("You have %d lives", currentGame().lives);
+		if (game().playing) {
+			game().lives += lives;
+			showFlashMessage("You have %d lives", game().lives);
 		}
 	}
 
@@ -152,19 +152,19 @@ public class Actions {
 		if (currentGameState() == GameState.LEVEL_STARTING) {
 			return;
 		}
-		if (currentGame().level.number() == levelNumber) {
+		if (game().level.number() == levelNumber) {
 			return;
 		}
 		gameController().sounds().stopAll();
 		if (levelNumber == 1) {
-			currentGame().reset();
-			currentGame().setLevel(levelNumber);
+			game().reset();
+			game().setLevel(levelNumber);
 			gameController().changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > currentGame().level.number() ? currentGame().level.number() + 1 : 1;
+			int start = levelNumber > game().level.number() ? game().level.number() + 1 : 1;
 			for (int n = start; n < levelNumber; ++n) {
-				currentGame().setLevel(n);
+				game().setLevel(n);
 			}
 			gameController().changeState(GameState.LEVEL_STARTING);
 		}
@@ -201,7 +201,7 @@ public class Actions {
 	}
 
 	public static void selectNextGameVariant() {
-		var gameVariant = currentGame().variant.next();
+		var gameVariant = game().variant.next();
 		currentGameState().selectGameVariant(gameVariant);
 	}
 
@@ -223,8 +223,8 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		currentGame().isPacAutoControlled = !currentGame().isPacAutoControlled;
-		var on = currentGame().isPacAutoControlled;
+		game().isPacAutoControlled = !game().isPacAutoControlled;
+		var on = game().isPacAutoControlled;
 		String message = TextManager.message(on ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoiceMessage(on ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
@@ -232,7 +232,7 @@ public class Actions {
 
 	public static void toggleImmunity() {
 		gameController().games().forEach(game -> game.isPacImmune = !game.isPacImmune);
-		var on = currentGame().isPacImmune;
+		var on = game().isPacImmune;
 		String message = TextManager.message(on ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoiceMessage(on ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
@@ -265,16 +265,16 @@ public class Actions {
 	}
 
 	public static void cheatEatAllPellets() {
-		currentGameState().cheatEatAllPellets(currentGame());
+		currentGameState().cheatEatAllPellets(game());
 		showFlashMessage(TextManager.TALK_CHEATING.next());
 	}
 
 	public static void cheatEnterNextLevel() {
-		currentGameState().cheatEnterNextLevel(currentGame());
+		currentGameState().cheatEnterNextLevel(game());
 	}
 
 	public static void cheatKillAllEatableGhosts() {
-		currentGameState().cheatKillAllEatableGhosts(currentGame());
+		currentGameState().cheatKillAllEatableGhosts(game());
 		showFlashMessage(TextManager.TALK_CHEATING.next());
 	}
 }
