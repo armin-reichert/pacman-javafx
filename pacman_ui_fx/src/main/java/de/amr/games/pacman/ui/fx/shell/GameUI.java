@@ -75,9 +75,9 @@ public class GameUI implements GameEventAdapter {
 	private final Stage stage;
 	/** Game scene placeholder, single child will be the game scene's FX subscene. */
 	private final Group gameSceneParent = new Group();
-	private Dashboard dashboard;
-	private FlashMessageView flashMessageView;
-	private PiPView pipView;
+	private final Dashboard dashboard = new Dashboard();
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final PiPView pipView = new PiPView();
 
 	private Steering currentSteering;
 	private GameScene currentGameScene;
@@ -92,23 +92,17 @@ public class GameUI implements GameEventAdapter {
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addEventListener(this);
-		Actions.setUI(this);
-		Actions.playHelpMessageAfterSeconds(0.5);
+		Actions.init(this);
 		initGameLoop();
 		updateGameScene(true);
 		updateStageTitle();
 		stage.centerOnScreen();
 		stage.show();
+		Actions.playHelpMessageAfterSeconds(0.5);
 	}
 
 	private Scene createScene(double zoom) {
-		dashboard = new Dashboard(this);
-
-		pipView = new PiPView();
-		pipView.heightPy.bind(Env.pipSceneHeightPy);
-		pipView.opacityProperty().bind(Env.pipOpacityPy);
-
-		flashMessageView = new FlashMessageView();
+		dashboard.init(this);
 
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);

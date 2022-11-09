@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -53,6 +54,8 @@ public class PiPView extends StackPane {
 	private final PlayScene2D playScene = new PlayScene2D();
 
 	public PiPView() {
+		heightPy.bind(Env.pipSceneHeightPy);
+		opacityProperty().bind(Env.pipOpacityPy);
 		setBackground(Ufx.colorBackground(Color.BLACK));
 		setFocusTraversable(false);
 		getChildren().add(playScene.fxSubScene());
