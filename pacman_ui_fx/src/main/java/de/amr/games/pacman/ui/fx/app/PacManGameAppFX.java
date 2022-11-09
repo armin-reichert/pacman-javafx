@@ -83,7 +83,7 @@ public class PacManGameAppFX extends Application {
 	private final Option<Double>      optZoom        = doubleOption("-zoom", 2.0);
 	//@formatter:on
 
-	private final GameController gameController = new GameController();
+	private GameController gameController;
 
 	@Override
 	public void init() throws Exception {
@@ -92,6 +92,7 @@ public class PacManGameAppFX extends Application {
 				.parse(getParameters().getUnnamed());
 		Env.use3DScenePy.set(opt3D.getValue());
 		Env.perspectivePy.set(optPerspective.getValue());
+		gameController = new GameController();
 		gameController.selectGame(optVariant.getValue());
 		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant);
 	}
