@@ -28,6 +28,9 @@
 		<Logger name="de.amr.games.pacman.lib.FollowRoute" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
+		<Logger name="de.amr.games.pacman.ui.fx.shell.GameUI" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
 		<Root level="info">
 			<AppenderRef ref="Console" />
 		</Root>

@@ -177,6 +177,7 @@ public class GameUI implements GameEventAdapter {
 	public void onGameEvent(GameEvent event) {
 		GameEventAdapter.super.onGameEvent(event);
 		currentGameScene.onGameEvent(event);
+		LOGGER.trace("Game UI received game event %s", event);
 	}
 
 	@Override
