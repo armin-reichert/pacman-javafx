@@ -18,7 +18,7 @@
 			<plugin>
 				<groupId>org.tentackle</groupId>
 				<artifactId>tentackle-jlink-maven-plugin</artifactId>
-				<version>11.7.4.0</version>
+				<version>17.11.0.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<mainModule>${mainModule}</mainModule>
