@@ -38,7 +38,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PiPView {
+public class PiPView extends StackPane {
 
 	public static final V2d MIN_SIZE = new V2d(GameScene.DEFAULT_SIZE);
 	public static final V2d MAX_SIZE = new V2d(GameScene.DEFAULT_SIZE).scaled(2.0);
@@ -50,18 +50,13 @@ public class PiPView {
 		}
 	};
 
-	private final StackPane root = new StackPane();
 	private final PlayScene2D playScene = new PlayScene2D();
 
 	public PiPView() {
-		root.setBackground(Ufx.colorBackground(Color.BLACK));
-		root.setFocusTraversable(false);
-		root.getChildren().add(playScene.fxSubScene());
+		setBackground(Ufx.colorBackground(Color.BLACK));
+		setFocusTraversable(false);
+		getChildren().add(playScene.fxSubScene());
 		playScene.resizeToHeight(MIN_SIZE.y());
-	}
-
-	public StackPane getRoot() {
-		return root;
 	}
 
 	public void init(SceneContext context) {
@@ -69,12 +64,14 @@ public class PiPView {
 		playScene.init();
 	}
 
-	public void draw() {
-		var canvas = playScene.getCanvas();
-		var g = canvas.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		playScene.draw(g);
-		playScene.drawHUD(g);
+	public void update() {
+		if (isVisible()) {
+			var canvas = playScene.getCanvas();
+			var g = canvas.getGraphicsContext2D();
+			g.setFill(Color.BLACK);
+			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			playScene.draw(g);
+			playScene.drawHUD(g);
+		}
 	}
 }

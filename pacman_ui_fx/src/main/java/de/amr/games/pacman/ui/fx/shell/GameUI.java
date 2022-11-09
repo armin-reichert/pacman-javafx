@@ -112,10 +112,10 @@ public class GameUI implements GameEventAdapter {
 		dashboard.build(this);
 		pipView = new PiPView();
 		pipView.heightPy.bind(Env.pipSceneHeightPy);
-		pipView.getRoot().opacityProperty().bind(Env.pipOpacityPy);
+		pipView.opacityProperty().bind(Env.pipOpacityPy);
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView.getRoot()));
+		overlayPane.setRight(new VBox(pipView));
 		flashMessageView = new FlashMessageView();
 		sceneContent.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
@@ -131,7 +131,8 @@ public class GameUI implements GameEventAdapter {
 		gameLoop.setRenderTask(() -> {
 			flashMessageView.update();
 			dashboard.update();
-			updatePipView();
+			pipView.update();
+			pipView.setVisible(Env.pipEnabledPy.get() && sceneManager.isPlayScene(currentGameScene));
 		});
 		gameLoop.pausedPy.bind(Env.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
@@ -142,6 +143,7 @@ public class GameUI implements GameEventAdapter {
 		var gameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
+			pipView.init(gameScene.ctx());
 		}
 	}
 
@@ -150,7 +152,6 @@ public class GameUI implements GameEventAdapter {
 		gameSceneParent.getChildren().setAll(gameScene.fxSubScene());
 		gameScene.embedInto(stage.getScene());
 		updateMainSceneBackground();
-		pipView.init(gameScene.ctx());
 		LOGGER.info("Game scene is now %s", gameScene);
 	}
 
@@ -186,15 +187,6 @@ public class GameUI implements GameEventAdapter {
 			stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
 		gameController.setNormalSteering(currentSteering);
-	}
-
-	private void updatePipView() {
-		if (Env.pipEnabledPy.get() && sceneManager.isPlayScene(currentGameScene)) {
-			pipView.getRoot().setVisible(true);
-			pipView.draw();
-		} else {
-			pipView.getRoot().setVisible(false);
-		}
 	}
 
 	private void onKeyPressed() {
