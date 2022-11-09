@@ -67,7 +67,8 @@ import javafx.stage.Stage;
 public class GameUI implements GameEventAdapter {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
-	private static final Image APP_ICON = Ufx.image("icons/pacman.png");
+	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
+	private static final Image APP_ICON_MSPACMAN = Ufx.image("icons/mspacman.png");
 
 	private final GameLoop gameLoop = new GameLoop(60);
 	private final GameSceneManager sceneManager = new GameSceneManager();
@@ -100,8 +101,6 @@ public class GameUI implements GameEventAdapter {
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		stage.setTitle("Pac-Man / Ms. Pac-Man");
-		stage.getIcons().add(APP_ICON);
 		stage.centerOnScreen();
 		stage.show();
 	}
@@ -144,6 +143,17 @@ public class GameUI implements GameEventAdapter {
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
 			pipView.init(gameScene.ctx());
+			switch (gameController.game().variant) {
+			case MS_PACMAN -> {
+				stage.setTitle("Ms. Pac-Man");
+				stage.getIcons().setAll(APP_ICON_MSPACMAN);
+			}
+			case PACMAN -> {
+				stage.setTitle("Pac-Man");
+				stage.getIcons().setAll(APP_ICON_PACMAN);
+			}
+			default -> throw new IllegalStateException();
+			}
 		}
 	}
 
