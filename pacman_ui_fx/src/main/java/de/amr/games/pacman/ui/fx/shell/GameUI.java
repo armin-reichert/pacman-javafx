@@ -44,7 +44,6 @@ import de.amr.games.pacman.ui.fx.util.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -87,40 +86,44 @@ public class GameUI implements GameEventAdapter {
 	public GameUI(GameController gameController, Stage stage, double zoom) {
 		this.gameController = gameController;
 		this.stage = stage;
-		var width = zoom * GameScene.DEFAULT_SIZE.x();
-		var height = zoom * GameScene.DEFAULT_SIZE.y();
-		var mainScene = new Scene(createSceneContent(), width, height);
-		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		stage.setScene(createScene(zoom));
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+		stage.setOnCloseRequest(e -> gameLoop.stop());
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addEventListener(this);
 		Actions.setUI(this);
 		Actions.playHelpMessageAfterSeconds(0.5);
 		initGameLoop();
-		stage.setScene(mainScene);
 		updateGameScene(true);
 		updateStageTitle();
-		stage.setOnCloseRequest(e -> gameLoop.stop());
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
 		stage.centerOnScreen();
 		stage.show();
 	}
 
-	private Parent createSceneContent() {
-		var sceneContent = new StackPane();
-		dashboard = new Dashboard();
-		dashboard.build(this);
+	private Scene createScene(double zoom) {
+		dashboard = new Dashboard(this);
+
 		pipView = new PiPView();
 		pipView.heightPy.bind(Env.pipSceneHeightPy);
 		pipView.opacityProperty().bind(Env.pipOpacityPy);
+
+		flashMessageView = new FlashMessageView();
+
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
-		flashMessageView = new FlashMessageView();
-		sceneContent.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
+
+		var content = new StackPane(gameSceneParent, flashMessageView, overlayPane);
+
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
-		return sceneContent;
+
+		var size = GameScene.DEFAULT_SIZE.toDoubleVec().scaled(zoom);
+		var scene = new Scene(content, size.x(), size.y());
+		scene.setOnKeyPressed(Keyboard::processEvent);
+
+		return scene;
 	}
 
 	private void initGameLoop() {
