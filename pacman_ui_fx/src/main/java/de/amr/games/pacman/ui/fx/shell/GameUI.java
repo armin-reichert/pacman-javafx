@@ -98,6 +98,7 @@ public class GameUI implements GameEventAdapter {
 		initGameLoop();
 		stage.setScene(mainScene);
 		updateGameScene(true);
+		updateStageTitle();
 		stage.setOnCloseRequest(e -> gameLoop.stop());
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
@@ -143,17 +144,20 @@ public class GameUI implements GameEventAdapter {
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
 			pipView.init(gameScene.ctx());
-			switch (gameController.game().variant) {
-			case MS_PACMAN -> {
-				stage.setTitle("Ms. Pac-Man");
-				stage.getIcons().setAll(APP_ICON_MSPACMAN);
-			}
-			case PACMAN -> {
-				stage.setTitle("Pac-Man");
-				stage.getIcons().setAll(APP_ICON_PACMAN);
-			}
-			default -> throw new IllegalStateException();
-			}
+		}
+	}
+
+	private void updateStageTitle() {
+		switch (gameController.game().variant) {
+		case MS_PACMAN -> {
+			stage.setTitle("Ms. Pac-Man");
+			stage.getIcons().setAll(APP_ICON_MSPACMAN);
+		}
+		case PACMAN -> {
+			stage.setTitle("Pac-Man");
+			stage.getIcons().setAll(APP_ICON_PACMAN);
+		}
+		default -> throw new IllegalStateException();
 		}
 	}
 
@@ -162,6 +166,7 @@ public class GameUI implements GameEventAdapter {
 		gameSceneParent.getChildren().setAll(gameScene.fxSubScene());
 		gameScene.embedInto(stage.getScene());
 		updateMainSceneBackground();
+		updateStageTitle();
 		LOGGER.info("Game scene is now %s", gameScene);
 	}
 
