@@ -55,6 +55,7 @@ public class BootScene extends GameScene2D {
 	@Override
 	public void init() {
 		clearBuffer();
+		takeSnapshot();
 	}
 
 	@Override
