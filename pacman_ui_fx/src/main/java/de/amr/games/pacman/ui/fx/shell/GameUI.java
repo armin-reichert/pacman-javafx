@@ -97,23 +97,18 @@ public class GameUI implements GameEventAdapter {
 		initGameLoop();
 		updateGameScene(true);
 		updateStageTitle();
+		dashboard.init(this);
 		stage.centerOnScreen();
 		stage.show();
 		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
 	}
 
 	private Scene createScene(double zoom) {
-		dashboard.init(this);
-
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 
 		var content = new StackPane(gameSceneParent, flashMessageView, overlayPane);
-
-		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
-		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
-
 		var size = GameScene.DEFAULT_SIZE.toDoubleVec().scaled(zoom);
 		var scene = new Scene(content, size.x(), size.y());
 		scene.setOnKeyPressed(Keyboard::processEvent);
@@ -122,6 +117,9 @@ public class GameUI implements GameEventAdapter {
 				scene2D.resizeToHeight(newHeight.doubleValue());
 			}
 		});
+
+		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
+		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
 
 		return scene;
 	}
