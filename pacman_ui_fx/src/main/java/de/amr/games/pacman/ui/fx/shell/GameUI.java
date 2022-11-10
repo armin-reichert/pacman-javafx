@@ -35,6 +35,7 @@ import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
@@ -116,6 +117,11 @@ public class GameUI implements GameEventAdapter {
 		var size = GameScene.DEFAULT_SIZE.toDoubleVec().scaled(zoom);
 		var scene = new Scene(content, size.x(), size.y());
 		scene.setOnKeyPressed(Keyboard::processEvent);
+		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> {
+			if (currentGameScene instanceof GameScene2D scene2D) {
+				scene2D.resizeToHeight(newHeight.doubleValue());
+			}
+		});
 
 		return scene;
 	}

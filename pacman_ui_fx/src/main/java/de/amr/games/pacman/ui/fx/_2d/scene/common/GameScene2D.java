@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -70,7 +69,6 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene = new SubScene(root, size.x(), size.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		resizeToHeight(size.y());
 		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
 		overlayPane.setMouseTransparent(true);
 		root.getChildren().addAll(canvas, overlayPane);
@@ -83,8 +81,8 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-		LOGGER.trace("Scene resized: %.0f x %.0f scaled: %.2f (%s)", canvas.getWidth(), canvas.getHeight(), scaling,
-				getClass().getSimpleName());
+		LOGGER.info("2D game scene resized: %.0f x %.0f scaled: %.2f (%s)", fxSubScene.getWidth(), fxSubScene.getHeight(),
+				scaling, getClass().getSimpleName());
 	}
 
 	@Override
@@ -141,12 +139,6 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public void embedInto(Scene parentScene) {
 		resizeToHeight(parentScene.getHeight());
-		parentScene.heightProperty().removeListener(this::onParentHeightChanged);
-		parentScene.heightProperty().addListener(this::onParentHeightChanged);
-	}
-
-	private void onParentHeightChanged(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-		resizeToHeight(newValue.doubleValue());
 	}
 
 	@Override
