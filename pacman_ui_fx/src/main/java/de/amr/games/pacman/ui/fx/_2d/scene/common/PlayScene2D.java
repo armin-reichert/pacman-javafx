@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -82,7 +81,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void draw(GraphicsContext g) {
+	public void draw() {
 		var mazePos = new V2i(0, 3 * TS);
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			var animation = arcadeWorld.levelCompleteAnimation();

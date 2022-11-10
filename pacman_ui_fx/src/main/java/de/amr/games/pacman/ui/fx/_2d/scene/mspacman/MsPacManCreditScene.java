@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 
@@ -60,7 +59,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void draw(GraphicsContext g) {
+	public void draw() {
 		var msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).lifeSprite();
 		var arcade8 = ctx.r2D().arcadeFont();
 		var arcade6 = Font.font(arcade8.getName(), 6);

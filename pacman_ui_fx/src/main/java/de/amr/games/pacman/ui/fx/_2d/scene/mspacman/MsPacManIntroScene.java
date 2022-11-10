@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
@@ -92,13 +91,13 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void draw(GraphicsContext g) {
-		drawTitle(g);
-		drawLights(g, 32, 16);
+	public void draw() {
+		drawTitle();
+		drawLights(32, 16);
 		if (intro.state() == State.GHOSTS) {
-			drawGhostText(g, intro.context().game.theGhosts[intro.context().ghostIndex]);
+			drawGhostText(intro.context().game.theGhosts[intro.context().ghostIndex]);
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawMsPacManText(g);
+			drawMsPacManText();
 		}
 		for (var ghost : intro.context().game.theGhosts) {
 			ctx.r2D().drawGhost(g, ghost);
@@ -108,12 +107,12 @@ public class MsPacManIntroScene extends GameScene2D {
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
 	}
 
-	private void drawTitle(GraphicsContext g) {
+	private void drawTitle() {
 		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
 				intro.context().titlePosition.y());
 	}
 
-	private void drawGhostText(GraphicsContext g, Ghost ghost) {
+	private void drawGhostText(Ghost ghost) {
 		if (ghost.id == Ghost.RED_GHOST) {
 			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
 					intro.context().lightsTopLeft.y() + t(3));
@@ -122,7 +121,7 @@ public class MsPacManIntroScene extends GameScene2D {
 				t(14 - ghost.name.length() / 2), intro.context().lightsTopLeft.y() + t(6));
 	}
 
-	private void drawMsPacManText(GraphicsContext g) {
+	private void drawMsPacManText() {
 		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
 				intro.context().lightsTopLeft.y() + t(3));
 		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
@@ -130,7 +129,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	// TODO this is not yet accurate to the original game
-	private void drawLights(GraphicsContext g, int numDotsX, int numDotsY) {
+	private void drawLights(int numDotsX, int numDotsY) {
 		long time = intro.context().lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
 		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {

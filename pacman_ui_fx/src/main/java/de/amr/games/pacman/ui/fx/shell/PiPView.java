@@ -69,12 +69,9 @@ public class PiPView extends StackPane {
 
 	public void update() {
 		if (isVisible()) {
-			var canvas = playScene.getCanvas();
-			var g = canvas.getGraphicsContext2D();
-			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-			playScene.draw(g);
-			playScene.drawHUD(g);
+			playScene.clear();
+			playScene.draw();
+			playScene.drawHUD();
 		}
 	}
 }

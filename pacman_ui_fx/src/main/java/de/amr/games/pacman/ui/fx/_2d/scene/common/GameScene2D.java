@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -57,13 +56,14 @@ public abstract class GameScene2D implements GameScene {
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private final StackPane root = new StackPane();
-	private final ResizableCanvas canvas = new ResizableCanvas();
 	private final Pane overlayPane = new Pane();
 	private final SubScene fxSubScene;
+	private double scaling = 1.0;
+	protected final ResizableCanvas canvas = new ResizableCanvas();
+	protected final GraphicsContext g = canvas.getGraphicsContext2D();
+	protected SceneContext ctx;
 	private boolean creditVisible;
 	private V2i size = DEFAULT_SIZE;
-	private double scaling = 1.0;
-	protected SceneContext ctx;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, size.x(), size.y());
@@ -89,10 +89,8 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public final void onTick() {
 		update();
-		var g = canvas.getGraphicsContext2D();
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		draw(g);
+		clear();
+		draw();
 		if (Env.showDebugInfoPy.get()) {
 			drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
@@ -100,10 +98,15 @@ public abstract class GameScene2D implements GameScene {
 				PacManGame.RED_ZONE.forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS));
 			}
 		}
-		drawHUD(g);
+		drawHUD();
 	}
 
-	public void drawHUD(GraphicsContext g) {
+	public final void clear() {
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+	}
+
+	public void drawHUD() {
 		ctx.r2D().drawHUD(g, ctx.game(), creditVisible);
 	}
 
@@ -115,7 +118,7 @@ public abstract class GameScene2D implements GameScene {
 	/**
 	 * Draws the scene content.
 	 */
-	public abstract void draw(GraphicsContext g);
+	public abstract void draw();
 
 	public boolean isCreditVisible() {
 		return creditVisible;
@@ -156,12 +159,8 @@ public abstract class GameScene2D implements GameScene {
 		return fxSubScene;
 	}
 
-	public StackPane getRoot() {
+	public StackPane root() {
 		return root;
-	}
-
-	public Canvas getCanvas() {
-		return canvas;
 	}
 
 	public Pane overlayPane() {

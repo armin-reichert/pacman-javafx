@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -92,40 +91,40 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void draw(GraphicsContext g) {
+	public void draw() {
 		var tick = intro.state().timer().tick();
 		switch (intro.state()) {
 		case START -> {
-			drawGallery(g);
+			drawGallery();
 		}
 		case PRESENTING_GHOSTS -> {
-			drawGallery(g);
+			drawGallery();
 		}
 		case SHOWING_POINTS -> {
-			drawGallery(g);
-			drawPoints(g);
+			drawGallery();
+			drawPoints();
 			if (tick > TickTimer.secToTicks(1)) {
-				drawBlinkingEnergizer(g);
+				drawBlinkingEnergizer();
 				ctx.r2D().drawCopyright(g, 32);
 			}
 		}
 		case CHASING_PAC -> {
-			drawGallery(g);
-			drawPoints(g);
-			drawBlinkingEnergizer(g);
-			drawGuys(g, flutter(tick));
+			drawGallery();
+			drawPoints();
+			drawBlinkingEnergizer();
+			drawGuys(flutter(tick));
 			ctx.r2D().drawCopyright(g, 32);
 		}
 		case CHASING_GHOSTS -> {
-			drawGallery(g);
-			drawPoints(g);
-			drawGuys(g, 0);
+			drawGallery();
+			drawPoints();
+			drawGuys(0);
 			ctx.r2D().drawCopyright(g, 32);
 		}
 		case READY_TO_PLAY -> {
-			drawGallery(g);
-			drawPoints(g);
-			drawGuys(g, 0);
+			drawGallery();
+			drawPoints();
+			drawGuys(0);
 			ctx.r2D().drawCopyright(g, 32);
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + intro.state());
@@ -138,7 +137,7 @@ public class PacManIntroScene extends GameScene2D {
 		return time % 5 < 2 ? 0 : -1;
 	}
 
-	private void drawGallery(GraphicsContext g) {
+	private void drawGallery() {
 		var font = ctx.r2D().arcadeFont();
 		if (intro.context().titleVisible) {
 			var color = Color.WHITE;
@@ -165,14 +164,14 @@ public class PacManIntroScene extends GameScene2D {
 		}
 	}
 
-	private void drawBlinkingEnergizer(GraphicsContext g) {
+	private void drawBlinkingEnergizer() {
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.setFill(ctx.r2D().getMazeFoodColor(1));
 			g.fillOval(t(intro.context().left), t(20), TS, TS);
 		}
 	}
 
-	private void drawGuys(GraphicsContext g, int offsetX) {
+	private void drawGuys(int offsetX) {
 		if (offsetX == 0) {
 			for (var ghost : intro.context().ghosts) {
 				ctx.r2D().drawGhost(g, ghost);
@@ -189,7 +188,7 @@ public class PacManIntroScene extends GameScene2D {
 		ctx.r2D().drawPac(g, intro.context().pacMan);
 	}
 
-	private void drawPoints(GraphicsContext g) {
+	private void drawPoints() {
 		int tileX = intro.context().left + 6;
 		int tileY = 25;
 		g.setFill(ctx.r2D().getMazeFoodColor(1));

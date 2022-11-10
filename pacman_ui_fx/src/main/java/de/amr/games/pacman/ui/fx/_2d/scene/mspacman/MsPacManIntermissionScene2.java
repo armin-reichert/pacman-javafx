@@ -29,7 +29,6 @@ import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 2: "The chase".
@@ -70,7 +69,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	}
 
 	@Override
-	public void draw(GraphicsContext g) {
+	public void draw() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
 		renderer.drawClapperboard(g, intermission.context().clapperboard);
 		renderer.drawPac(g, intermission.context().msPacMan);

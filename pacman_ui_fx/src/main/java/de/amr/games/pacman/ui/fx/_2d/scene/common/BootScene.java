@@ -63,22 +63,22 @@ public class BootScene extends GameScene2D {
 			ctx.gameController().terminateCurrentState();
 		} else {
 			if (timer.betweenSeconds(0.5, 1.5) && timer.tick() % 5 == 0) {
-				drawRandomHexCodes(buffer);
+				drawRandomHexCodes();
 			} else if (timer.betweenSeconds(1.5, 3.0) && timer.tick() % 10 == 0) {
-				drawRandomSprites(buffer);
+				drawRandomSprites();
 			} else if (timer.atSecond(3.0)) {
-				drawGrid(buffer);
+				drawGrid();
 			}
 		}
 	}
 
 	@Override
-	public void draw(GraphicsContext g) {
+	public void draw() {
 		g.drawImage(snapshot, 0, 0);
 	}
 
 	@Override
-	public void drawHUD(GraphicsContext g) {
+	public void drawHUD() {
 		// hide HUD
 	}
 
@@ -87,20 +87,24 @@ public class BootScene extends GameScene2D {
 		buffer.fillRect(0, 0, buffer.getCanvas().getWidth(), buffer.getCanvas().getHeight());
 	}
 
-	private void drawRandomHexCodes(GraphicsContext g) {
-		clearBuffer();
-		g.setFill(Color.LIGHTGRAY);
-		g.setFont(ctx.r2D().arcadeFont());
-		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
-			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
-				var hexCode = Integer.toHexString(rnd.nextInt(16));
-				g.fillText(hexCode, col * 8, row * 8 + 8);
-			}
-		}
+	private void takeSnapshot() {
 		buffer.getCanvas().snapshot(null, snapshot);
 	}
 
-	private void drawRandomSprites(GraphicsContext g) {
+	private void drawRandomHexCodes() {
+		clearBuffer();
+		buffer.setFill(Color.LIGHTGRAY);
+		buffer.setFont(ctx.r2D().arcadeFont());
+		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
+			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
+				var hexCode = Integer.toHexString(rnd.nextInt(16));
+				buffer.fillText(hexCode, col * 8, row * 8 + 8);
+			}
+		}
+		takeSnapshot();
+	}
+
+	private void drawRandomSprites() {
 		clearBuffer();
 		var image = ctx.r2D().spritesheet().source();
 		var w = image.getWidth();
@@ -114,26 +118,26 @@ public class BootScene extends GameScene2D {
 				var r2 = new Rectangle2D(rnd.nextDouble(w), rnd.nextDouble(h), cellSize, cellSize);
 				var split = numCols / 4 + rnd.nextInt(numCols / 2);
 				for (int col = 0; col < numCols; ++col) {
-					ctx.r2D().drawSprite(g, col < split ? r1 : r2, cellSize * col, cellSize * row);
+					ctx.r2D().drawSprite(buffer, col < split ? r1 : r2, cellSize * col, cellSize * row);
 				}
 			}
 		}
-		buffer.getCanvas().snapshot(null, snapshot);
+		takeSnapshot();
 	}
 
-	private void drawGrid(GraphicsContext g) {
+	private void drawGrid() {
 		clearBuffer();
 		var cellSize = 16;
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
-		g.setStroke(Color.LIGHTGRAY);
-		g.setLineWidth(2.0);
+		buffer.setStroke(Color.LIGHTGRAY);
+		buffer.setLineWidth(2.0);
 		for (int row = 0; row < numRows; ++row) {
-			g.strokeLine(0, row * cellSize, ArcadeWorld.TILES_X * TS, row * cellSize);
+			buffer.strokeLine(0, row * cellSize, ArcadeWorld.TILES_X * TS, row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			g.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
+			buffer.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.TILES_Y * TS);
 		}
-		buffer.getCanvas().snapshot(null, snapshot);
+		takeSnapshot();
 	}
 }
