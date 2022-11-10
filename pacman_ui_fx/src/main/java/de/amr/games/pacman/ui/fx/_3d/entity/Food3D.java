@@ -24,12 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static java.util.function.Predicate.not;
+
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -45,93 +45,56 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class Food3D extends Group {
 
-	public final BooleanProperty squirtingPy = new SimpleBooleanProperty(false) {
+	public final BooleanProperty squirtingPy = new SimpleBooleanProperty() {
 		@Override
 		protected void invalidated() {
-			updateFood();
+			energizers3D().forEach(energizer3D -> energizer3D
+					.setEatenAnimation(squirtingPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D) : null));
 		}
 	};
 
 	private final World world;
-	private final Group particleGroup = new Group();
-	private final PhongMaterial squirtingPelletMaterial;
-	private final PhongMaterial normalPelletMaterial;
+	private final Group particlesGroup = new Group();
+	private final PhongMaterial pelletMaterial;
 
-	public Food3D(GameVariant gameVariant, World world, Color foodColor) {
+	public Food3D(World world, Color foodColor) {
 		this.world = world;
-		normalPelletMaterial = new PhongMaterial(foodColor);
-		squirtingPelletMaterial = new PhongMaterial(gameVariant == GameVariant.PACMAN ? Color.CORNFLOWERBLUE : Color.RED);
-		createPellets(squirtingPy.get());
-		createEnergizers(squirtingPy.get());
-		getChildren().add(particleGroup);
+		pelletMaterial = new PhongMaterial(foodColor);
+		createNormalPellets();
+		createEnergizers();
+		getChildren().add(particlesGroup);
 	}
 
-	private void updateFood() {
-		boolean squirtingEnabled = squirtingPy.get();
-		energizers3D().forEach(energizer3D -> {
-			if (squirtingEnabled) {
-				energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
-			} else {
-				energizer3D.setEatenAnimation(null);
-			}
-		});
-		pellets3D()//
-				.filter(pellet3D -> world.containsFood(pellet3D.tile()))//
-				.filter(Predicate.not(Energizer3D.class::isInstance))//
-				.forEach(pellet3D -> {
-					if (squirtingEnabled && isSquirterTile(pellet3D.tile())) {
-						pellet3D.setRadius(1.5);
-						pellet3D.setMaterial(squirtingPelletMaterial);
-						pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
-					} else {
-						pellet3D.setRadius(1.0);
-						pellet3D.setMaterial(normalPelletMaterial);
-						pellet3D.setEatenAnimation(null);
-					}
-				});
-	}
-
-	private void createPellets(boolean squirtingEnabled) {
-		world.tiles() //
+	private void createNormalPellets() {
+		world.tiles()//
 				.filter(world::isFoodTile)//
-				.filter(Predicate.not(world::containsEatenFood))//
-				.filter(Predicate.not(world::isEnergizerTile))//
-				.map(tile -> squirtingEnabled && isSquirterTile(tile) ? createSquirtingPellet(tile) : createNormalPellet(tile))
+				.filter(not(world::containsEatenFood))//
+				.filter(not(world::isEnergizerTile))//
+				.map(this::createNormalPellet)//
 				.forEach(getChildren()::add);
 	}
 
-	private void createEnergizers(boolean squirtingEnabled) {
-		world.tiles() //
-				.filter(world::isFoodTile) //
-				.filter(Predicate.not(world::containsEatenFood))//
+	private void createEnergizers() {
+		world.tiles()//
+				.filter(world::isFoodTile)//
+				.filter(not(world::containsEatenFood))//
 				.filter(world::isEnergizerTile)//
-				.map(tile -> squirtingEnabled && isSquirterTile(tile) ? createSquirtingEnergizer(tile)
-						: createNormalEnergizer(tile))
+				.map(tile -> squirtingPy.get() ? createSquirtingEnergizer(tile) : createNormalEnergizer(tile))//
 				.forEach(getChildren()::add);
 	}
 
 	private Pellet3D createNormalPellet(V2i tile) {
-		return new Pellet3D(tile, normalPelletMaterial, 1.0);
+		return new Pellet3D(tile, pelletMaterial, 1.0);
 	}
 
 	private Energizer3D createNormalEnergizer(V2i tile) {
-		return new Energizer3D(tile, normalPelletMaterial);
-	}
-
-	private Pellet3D createSquirtingPellet(V2i tile) {
-		var pellet3D = new Pellet3D(tile, squirtingPelletMaterial, 1.5);
-		pellet3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, pellet3D));
-		return pellet3D;
+		return new Energizer3D(tile, pelletMaterial);
 	}
 
 	private Energizer3D createSquirtingEnergizer(V2i tile) {
-		var energizer3D = new Energizer3D(tile, normalPelletMaterial);
-		energizer3D.setEatenAnimation(new SquirtingAnimation(world, particleGroup, energizer3D));
+		var energizer3D = new Energizer3D(tile, pelletMaterial);
+		energizer3D.setEatenAnimation(new SquirtingAnimation(world, particlesGroup, energizer3D));
 		return energizer3D;
-	}
-
-	private boolean isSquirterTile(V2i tile) {
-		return tile.neighbors().filter(world::isWall).count() == 0;
 	}
 
 	public void eatPellet(Pellet3D pellet3D) {
@@ -164,7 +127,7 @@ public class Food3D extends Group {
 		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
 	}
 
-	public void resetAnimations() {
+	public void resetEnergizerPumping() {
 		energizers3D().forEach(e3D -> {
 			e3D.setScaleX(1.0);
 			e3D.setScaleY(1.0);

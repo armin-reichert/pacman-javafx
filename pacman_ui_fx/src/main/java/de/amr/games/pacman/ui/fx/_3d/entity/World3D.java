@@ -84,7 +84,7 @@ public class World3D extends Group {
 		getChildren().add(maze3D);
 
 		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
-		food3D = new Food3D(game.variant, game.world(), foodColor);
+		food3D = new Food3D(game.world(), foodColor);
 		food3D.squirtingPy.bind(Env.squirtingPy);
 		getChildren().add(food3D);
 
@@ -114,7 +114,7 @@ public class World3D extends Group {
 	}
 
 	public void reset() {
-		food3D.resetAnimations();
+		food3D.resetEnergizerPumping();
 	}
 
 	public void update(GameModel game) {
