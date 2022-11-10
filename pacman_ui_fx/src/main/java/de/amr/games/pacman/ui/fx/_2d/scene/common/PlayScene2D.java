@@ -25,18 +25,40 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.animation.EntityAnimation;
+import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
+import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.model.common.actors.BonusState;
+import de.amr.games.pacman.model.common.actors.Creature;
+import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
+import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -45,7 +67,7 @@ import javafx.scene.input.KeyCode;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private final ActorsInfo actorsInfo = new ActorsInfo(this);
+	private final ActorsInfo actorsInfo = new ActorsInfo();
 
 	@Override
 	public void init() {
@@ -123,5 +145,124 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onPlayerGetsExtraLife(GameEvent e) {
 		ctx.sounds().play(GameSound.EXTRA_LIFE);
+	}
+
+	/** Nested class for displaying info about the actors in this play scene. */
+	public class ActorsInfo {
+
+		private static final String[] PACMAN_BONUS_NAMES = { "CHERRIES", "STRAWBERRY", "PEACH", "APPLE", "GRAPES",
+				"GALAXIAN", "BELL", "KEY" };
+
+		private static final String[] MS_PACMAN_BONUS_NAMES = { "CHERRIES", "STRAWBERRY", "PEACH", "PRETZEL", "APPLE",
+				"PEAR", "BANANA" };
+
+		// 0..3: ghost info, 4: Pac info, 5: bonus info
+		private static final int NUM_INFOS = 6;
+		private static final int PAC_INDEX = 4;
+		private static final int BONUS_INDEX = 5;
+
+		private final List<Pane> panes = new ArrayList<>();
+		private final List<Text> texts = new ArrayList<>();
+
+		public final BooleanProperty enabledPy = new SimpleBooleanProperty();
+
+		public ActorsInfo() {
+			for (int i = 0; i < NUM_INFOS; ++i) {
+				var text = new Text();
+				text.setTextAlignment(TextAlignment.CENTER);
+				text.setFill(Color.WHITE);
+				texts.add(text);
+				var textBox = new VBox(text);
+				textBox.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 255, 0.5)));
+				panes.add(textBox);
+			}
+			panes.forEach(PlayScene2D.this::addToOverlayPane);
+		}
+
+		public void update() {
+			if (!enabledPy.get()) {
+				return;
+			}
+			var game = ctx.game();
+			for (int i = 0; i < 4; ++i) {
+				var ghost = game.theGhosts[i];
+				updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
+				panes.get(i).setVisible(ghost.isVisible());
+			}
+
+			updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac), game.pac);
+			panes.get(PAC_INDEX).setVisible(game.pac.isVisible());
+
+			var bonus = game.bonus();
+			updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
+			panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);
+		}
+
+		private void updateInfo(Pane pane, Text text, String info, Entity entity) {
+			text.setText(info);
+			var textSize = text.getBoundsInLocal();
+			pane.setTranslateX((entity.getPosition().x() + World.HTS) * scaling() - textSize.getWidth() / 2);
+			pane.setTranslateY(entity.getPosition().y() * scaling() - textSize.getHeight());
+		}
+
+		private String locationInfo(Creature guy) {
+			return "Tile: %s%s%s".formatted(guy.tile(), guy.offset(), guy.isStuck() ? " stuck" : "");
+		}
+
+		private String movementInfo(Creature guy) {
+			return "Velocity: %s%ndir:%s wish:%s".formatted(guy.getVelocity(), guy.moveDir(), guy.wishDir());
+		}
+
+		private String animationStateInfo(EntityAnimation animation, Direction dir) {
+			if (animation instanceof EntityAnimationByDirection dam) {
+				return dam.get(dir).isRunning() ? "" : "(Stopped) ";
+			} else if (animation instanceof SingleEntityAnimation<?> ssa) {
+				return ssa.isRunning() ? "" : "(Stopped) ";
+			} else {
+				return "";
+			}
+		}
+
+		private String ghostInfo(Ghost ghost) {
+			var game = ctx.game();
+			String name = ghost.id == Ghost.RED_GHOST && game.cruiseElroyState > 0 ? "Elroy " + game.cruiseElroyState
+					: ghost.name;
+			var stateText = ghost.getState().name();
+			if (ghost.is(GhostState.HUNTING_PAC)) {
+				stateText += game.huntingTimer.inChasingPhase() ? " (Chasing)" : " (Scattering)";
+			}
+			if (game.killedIndex[ghost.id] != -1) {
+				stateText += " killed: %d".formatted(game.killedIndex[ghost.id]);
+			}
+			var selectedAnim = ghost.animation();
+			if (selectedAnim.isPresent()) {
+				var key = ghost.animationSet().get().selectedKey();
+				var animState = animationStateInfo(selectedAnim.get(), ghost.wishDir());
+				return "%s%n%s%n%s%n%s %s%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText, animState,
+						key);
+			}
+			return "%s%n%s%n%s%n%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText);
+		}
+
+		private String pacInfo(Pac pac) {
+			var selectedAnim = pac.animation();
+			if (selectedAnim.isPresent()) {
+				var key = pac.animationSet().get().selectedKey();
+				var animState = animationStateInfo(selectedAnim.get(), pac.moveDir());
+				return "%s%n%s%n%s%n%s%s".formatted(pac.name, locationInfo(pac), movementInfo(pac), animState, key);
+			} else {
+				return "%s%n%s%n%s".formatted(pac.name, locationInfo(pac), movementInfo(pac));
+			}
+		}
+
+		private String bonusInfo(Bonus bonus) {
+			var game = ctx.game();
+			var bonusName = switch (game.variant) {
+			case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.index()];
+			case PACMAN -> PACMAN_BONUS_NAMES[bonus.index()];
+			};
+			var symbolText = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
+			return "%s%n%s".formatted(symbolText, game.bonus().state());
+		}
 	}
 }
