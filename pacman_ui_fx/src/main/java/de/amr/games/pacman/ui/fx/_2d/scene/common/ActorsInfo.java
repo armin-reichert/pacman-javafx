@@ -80,7 +80,7 @@ public class ActorsInfo {
 			textBox.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 255, 0.5)));
 			panes.add(textBox);
 		}
-		hostScene.overlayPane().getChildren().addAll(panes);
+		panes.forEach(hostScene::addToOverlayPane);
 	}
 
 	public void update() {

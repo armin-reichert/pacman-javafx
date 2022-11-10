@@ -38,6 +38,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.GraphicsContext;
@@ -159,15 +160,11 @@ public abstract class GameScene2D implements GameScene {
 		return fxSubScene;
 	}
 
-	public StackPane root() {
-		return root;
-	}
-
-	public Pane overlayPane() {
-		return overlayPane;
-	}
-
 	public double scaling() {
 		return scaling;
+	}
+
+	public void addToOverlayPane(Node... children) {
+		overlayPane.getChildren().addAll(children);
 	}
 }
