@@ -56,15 +56,15 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	private final StackPane root = new StackPane();
-	private final Pane overlayPane = new Pane();
-	private final SubScene fxSubScene;
-	private double scaling = 1.0;
+	protected final StackPane root = new StackPane();
+	protected final Pane overlayPane = new Pane();
+	protected final SubScene fxSubScene;
 	protected final ResizableCanvas canvas = new ResizableCanvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected SceneContext ctx;
 	private boolean creditVisible;
 	private V2i size = DEFAULT_SIZE;
+	private double scaling = 1.0;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, size.x(), size.y());
@@ -92,6 +92,11 @@ public abstract class GameScene2D implements GameScene {
 		update();
 		clear();
 		draw();
+		drawDebugInfo();
+		drawHUD();
+	}
+
+	private void drawDebugInfo() {
 		if (Env.showDebugInfoPy.get()) {
 			drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
@@ -99,10 +104,9 @@ public abstract class GameScene2D implements GameScene {
 				PacManGame.RED_ZONE.forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS));
 			}
 		}
-		drawHUD();
 	}
 
-	public final void clear() {
+	public void clear() {
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
