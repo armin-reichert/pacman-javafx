@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Random;
 
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -105,6 +106,9 @@ public class BootScene extends GameScene2D {
 	private void drawRandomSprites() {
 		clearBuffer();
 		var image = ctx.r2D().spritesheet().source();
+		if (ctx.game().variant == GameVariant.MS_PACMAN) {
+			image = ctx.r2D().spritesheet().region(0, 0, (int) image.getWidth(), 248);
+		}
 		var w = image.getWidth();
 		var h = image.getHeight();
 		var cellSize = 16;
