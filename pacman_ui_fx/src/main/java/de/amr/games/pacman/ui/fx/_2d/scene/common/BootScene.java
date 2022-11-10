@@ -45,8 +45,8 @@ public class BootScene extends GameScene2D {
 	private final WritableImage snapshot;
 
 	public BootScene() {
-		var width = ArcadeWorld.TILES_X * TS;
-		var height = ArcadeWorld.TILES_Y * TS;
+		var width = DEFAULT_SIZE.x();
+		var height = DEFAULT_SIZE.y();
 		buffer = new Canvas(width, height).getGraphicsContext2D();
 		snapshot = new WritableImage(width, height);
 	}
@@ -59,16 +59,14 @@ public class BootScene extends GameScene2D {
 	@Override
 	public void update() {
 		var timer = ctx.state().timer();
-		if (timer.atSecond(3.5)) {
+		if (timer.betweenSeconds(0.5, 1.5) && timer.tick() % 5 == 0) {
+			drawRandomHexCodes();
+		} else if (timer.betweenSeconds(1.5, 3.0) && timer.tick() % 10 == 0) {
+			drawRandomSprites();
+		} else if (timer.atSecond(3.0)) {
+			drawGrid();
+		} else if (timer.atSecond(3.5)) {
 			ctx.gameController().terminateCurrentState();
-		} else {
-			if (timer.betweenSeconds(0.5, 1.5) && timer.tick() % 5 == 0) {
-				drawRandomHexCodes();
-			} else if (timer.betweenSeconds(1.5, 3.0) && timer.tick() % 10 == 0) {
-				drawRandomSprites();
-			} else if (timer.atSecond(3.0)) {
-				drawGrid();
-			}
 		}
 	}
 
