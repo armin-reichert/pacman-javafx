@@ -43,13 +43,13 @@ public class BootScene extends GameScene2D {
 
 	private final Random rnd = new Random();
 	private final GraphicsContext buffer;
-	private final WritableImage snapshot;
+	private final WritableImage currentImage;
 
 	public BootScene() {
 		var width = DEFAULT_SIZE.x();
 		var height = DEFAULT_SIZE.y();
 		buffer = new Canvas(width, height).getGraphicsContext2D();
-		snapshot = new WritableImage(width, height);
+		currentImage = new WritableImage(width, height);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void draw() {
-		g.drawImage(snapshot, 0, 0);
+		g.drawImage(currentImage, 0, 0);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void takeSnapshot() {
-		buffer.getCanvas().snapshot(null, snapshot);
+		buffer.getCanvas().snapshot(null, currentImage);
 	}
 
 	private void drawRandomHexCodes() {
