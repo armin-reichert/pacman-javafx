@@ -275,9 +275,9 @@ public class PlayScene3D implements GameScene {
 			lockGameState();
 			var color = ctx.r2D().ghostColor(killer.id);
 			new SequentialTransition( //
-					Ufx.pauseSec(0.3), //
+					Ufx.pause(0.3), //
 					pac3D.createDyingAnimation(color), //
-					Ufx.pauseSec(2.0, this::unlockGameState) //
+					Ufx.pause(2.0, this::unlockGameState) //
 			).play();
 		});
 
@@ -287,19 +287,19 @@ public class PlayScene3D implements GameScene {
 			content.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
-			Ufx.pauseSec(3, this::unlockGameState).play();
+			Ufx.pause(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
 			var message = TextManager.TALK_LEVEL_COMPLETE.next() + "%n%n"
 					+ TextManager.message("level_complete", game.level.number());
 			new SequentialTransition( //
-					Ufx.pauseSec(0.0, this::lockGameState), //
-					Ufx.pauseSec(2.0), //
+					Ufx.pause(0.0, this::lockGameState), //
+					Ufx.pause(2.0), //
 					world3D.getMaze3D().createMazeFlashingAnimation(game.level.numFlashes()), //
-					Ufx.pauseSec(1.0, game.pac::hide), //
-					Ufx.pauseSec(0.5, () -> Actions.showFlashMessage(2, message)), //
-					Ufx.pauseSec(2.0, this::unlockGameState) //
+					Ufx.pause(1.0, game.pac::hide), //
+					Ufx.pause(0.5, () -> Actions.showFlashMessage(2, message)), //
+					Ufx.pause(2.0, this::unlockGameState) //
 			).play();
 		}
 

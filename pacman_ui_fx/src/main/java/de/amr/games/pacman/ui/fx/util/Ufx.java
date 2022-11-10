@@ -30,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.Env;
+import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -73,23 +74,24 @@ public class Ufx {
 	 * @param seconds number of seconds
 	 * @return pause transition
 	 */
-	public static PauseTransition pauseSec(double seconds) {
+	public static PauseTransition pause(double seconds) {
 		return new PauseTransition(Duration.seconds(seconds));
 	}
 
 	/**
-	 * Runs the given code after the given number of seconds.
+	 * Prepends a pause of the given duration (in seconds) before the given action can be run. Note that you have to call
+	 * {@link Animation#play()} to execute the action!
 	 * <p>
 	 * NOTE: Do NOT start an animation in the code!
 	 * 
-	 * @param seconds  number of seconds
-	 * @param runnable code to run
+	 * @param seconds number of seconds
+	 * @param action  code to run
 	 * @return pause transition
 	 */
-	public static PauseTransition pauseSec(double seconds, Runnable runnable) {
-		PauseTransition p = new PauseTransition(Duration.seconds(seconds));
-		p.setOnFinished(e -> runnable.run());
-		return p;
+	public static PauseTransition pause(double seconds, Runnable action) {
+		PauseTransition pause = pause(seconds);
+		pause.setOnFinished(e -> action.run());
+		return pause;
 	}
 
 	/**

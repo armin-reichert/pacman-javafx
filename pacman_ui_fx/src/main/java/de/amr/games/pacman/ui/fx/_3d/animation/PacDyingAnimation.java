@@ -69,7 +69,7 @@ public class PacDyingAnimation {
 		sinking.setToZ(World.HTS);
 
 		animation = new SequentialTransition( //
-				Ufx.pauseSec(0.25), //
+				Ufx.pause(0.25), //
 				poisened, //
 				new ParallelTransition(impaling, spinning, shrinking, sinking));
 	}

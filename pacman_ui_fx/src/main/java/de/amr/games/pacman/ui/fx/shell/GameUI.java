@@ -99,7 +99,7 @@ public class GameUI implements GameEventAdapter {
 		updateStageTitle();
 		stage.centerOnScreen();
 		stage.show();
-		Ufx.pauseSec(0.5, Actions::playHelpVoiceMessage).play();
+		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
 	}
 
 	private Scene createScene(double zoom) {

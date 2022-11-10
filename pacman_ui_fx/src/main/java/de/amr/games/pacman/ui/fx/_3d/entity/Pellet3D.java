@@ -62,7 +62,7 @@ public class Pellet3D extends Sphere {
 	}
 
 	public void eat() {
-		var hideAfterDelay = Ufx.pauseSec(0.05, () -> setVisible(false));
+		var hideAfterDelay = Ufx.pause(0.05, () -> setVisible(false));
 		if (animation != null) {
 			new SequentialTransition(hideAfterDelay, animation).play();
 		} else {
