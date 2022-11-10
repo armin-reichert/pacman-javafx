@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.util.TextManager;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
 
@@ -89,10 +88,6 @@ public class Actions {
 				LOGGER.error("Could not play voice message '%s'", messageFileRelPath);
 			}
 		}
-	}
-
-	public static void playHelpMessageAfterSeconds(double seconds) {
-		Ufx.pauseSec(seconds, Actions::playHelpVoiceMessage).play();
 	}
 
 	public static void stopVoiceMessage() {
