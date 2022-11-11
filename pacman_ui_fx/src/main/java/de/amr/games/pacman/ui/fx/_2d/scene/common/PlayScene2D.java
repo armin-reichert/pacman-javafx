@@ -69,6 +69,10 @@ public class PlayScene2D extends GameScene2D {
 
 	private final ActorsInfo actorsInfo = new ActorsInfo();
 
+	public PlayScene2D() {
+		actorsInfo.enabledPy.bind(Env.showDebugInfoPy);
+	}
+
 	@Override
 	public void init() {
 		if (ctx.game().world() instanceof ArcadeWorld arcadeWorld) {
@@ -76,7 +80,6 @@ public class PlayScene2D extends GameScene2D {
 		}
 		ctx.game().pac.setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac));
 		ctx.game().ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
-		actorsInfo.enabledPy.bind(Env.showDebugInfoPy);
 	}
 
 	@Override
@@ -187,12 +190,8 @@ public class PlayScene2D extends GameScene2D {
 			for (int i = 0; i < 4; ++i) {
 				var ghost = game.theGhosts[i];
 				updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
-				panes.get(i).setVisible(ghost.isVisible());
 			}
-
 			updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac), game.pac);
-			panes.get(PAC_INDEX).setVisible(game.pac.isVisible());
-
 			var bonus = game.bonus();
 			updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
 			panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);
@@ -203,6 +202,7 @@ public class PlayScene2D extends GameScene2D {
 			var textSize = text.getBoundsInLocal();
 			pane.setTranslateX((entity.getPosition().x() + World.HTS) * scaling() - textSize.getWidth() / 2);
 			pane.setTranslateY(entity.getPosition().y() * scaling() - textSize.getHeight());
+			pane.setVisible(entity.isVisible());
 		}
 
 		private String locationInfo(Creature guy) {
