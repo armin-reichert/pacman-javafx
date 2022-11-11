@@ -68,7 +68,7 @@ public record SceneContext(GameController gameController, Rendering2D r2D, Model
 	}
 
 	public World world() {
-		return game().world();
+		return game().level.world();
 	}
 
 	public boolean hasCredit() {

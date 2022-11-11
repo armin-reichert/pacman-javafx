@@ -123,7 +123,7 @@ public class Ghost3D extends MovingCreature3D {
 
 	private boolean outsideWorld(GameModel game) {
 		double centerX = guy.getPosition().x() + World.HTS;
-		return centerX < 0 || centerX > game.world().numCols() * World.TS;
+		return centerX < 0 || centerX > game.level.world().numCols() * World.TS;
 	}
 
 	private Look lookForCurrentState(GameModel game) {

@@ -74,7 +74,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		if (ctx.game().world() instanceof ArcadeWorld arcadeWorld) {
+		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			arcadeWorld.setLevelCompleteAnimation(ctx.r2D().createMazeFlashingAnimation());
 		}
 		ctx.game().pac.setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac));

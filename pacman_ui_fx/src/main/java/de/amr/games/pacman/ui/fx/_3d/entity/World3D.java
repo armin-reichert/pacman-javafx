@@ -84,7 +84,7 @@ public class World3D extends Group {
 		getChildren().add(maze3D);
 
 		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
-		food3D = new Food3D(game.world(), foodColor);
+		food3D = new Food3D(game.level.world(), foodColor);
 		food3D.squirtingPy.bind(Env.squirtingPy);
 		getChildren().add(food3D);
 
@@ -125,7 +125,7 @@ public class World3D extends Group {
 
 	// should be generalized to work with any ghost house
 	private void updateDoorState(GameModel game) {
-		if (game.world().ghostHouse() instanceof ArcadeGhostHouse) {
+		if (game.level.world().ghostHouse() instanceof ArcadeGhostHouse) {
 			var accessGranted = isAccessGranted(game.theGhosts, ArcadeGhostHouse.DOOR_CENTER);
 			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 		}

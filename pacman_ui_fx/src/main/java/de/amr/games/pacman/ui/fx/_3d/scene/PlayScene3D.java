@@ -112,7 +112,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
-		pac3D = new Pac3D(ctx.game().pac, ctx.game().world(), ctx.model3D());
+		pac3D = new Pac3D(ctx.game().pac, ctx.world(), ctx.model3D());
 		pac3D.reset();
 		ghosts3D = ctx.game().ghosts()
 				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), ctx.r2D().ghostColorScheme(ghost.id)))
@@ -124,8 +124,8 @@ public class PlayScene3D implements GameScene {
 		content.getChildren().addAll(world3D, pac3D, bonus3D);
 		content.getChildren().addAll(ghosts3D);
 
-		double width = ctx.game().world().numCols() * World.TS;
-		double height = ctx.game().world().numRows() * World.TS;
+		double width = ctx.world().numCols() * World.TS;
+		double height = ctx.world().numRows() * World.TS;
 		var centerOverOrigin = new Translate(-width / 2, -height / 2);
 		content.getTransforms().setAll(centerOverOrigin);
 
@@ -211,7 +211,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSwitchFrom2D() {
-		var world = ctx.game().world();
+		var world = ctx.world();
 		world3D.getFood3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
 		if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 			world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
@@ -224,7 +224,7 @@ public class PlayScene3D implements GameScene {
 		if (e.tile.isEmpty()) {
 			// when cheat "eat all pellets" is used, no tile is present in the event
 			// remove 3D pellets to be in synch with model:
-			var world = ctx.game().world();
+			var world = ctx.world();
 			world.tiles()//
 					.filter(world::containsEatenFood)//
 					.map(food3D::pelletAt)//
