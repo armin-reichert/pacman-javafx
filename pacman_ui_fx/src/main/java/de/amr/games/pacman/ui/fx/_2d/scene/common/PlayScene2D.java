@@ -31,7 +31,6 @@ import java.util.List;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
@@ -107,18 +106,19 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void draw() {
-		var mazePos = new V2i(0, 3 * TS);
+		int mazeX = 0;
+		int mazeY = 3 * TS;
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			var animation = arcadeWorld.levelCompleteAnimation();
 			if (animation.isPresent() && animation.get().isRunning()) {
 				boolean flash = (boolean) animation.get().frame();
-				ctx.r2D().drawEmptyMaze(g, mazePos.x(), mazePos.y(), ctx.level().mazeNumber(), flash);
+				ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), flash);
 			} else {
-				ctx.r2D().drawFilledMaze(g, mazePos.x(), mazePos.y(), ctx.level().mazeNumber(), ctx.world(),
+				ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(),
 						!ctx.game().energizerPulse.frame());
 			}
 		} else {
-			ctx.r2D().drawFilledMaze(g, mazePos.x(), mazePos.y(), ctx.level().mazeNumber(), ctx.world(),
+			ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(),
 					!ctx.game().energizerPulse.frame());
 		}
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
