@@ -236,23 +236,28 @@ public class PlayScene2D extends GameScene2D {
 			}
 			var selectedAnim = ghost.animation();
 			if (selectedAnim.isPresent()) {
-				var key = ghost.animationSet().get().selectedKey();
-				var animState = animationStateInfo(selectedAnim.get(), ghost.wishDir());
-				return "%s%n%s%n%s%n%s %s%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText, animState,
-						key);
+				var ghostAnims = ghost.animationSet();
+				if (ghostAnims.isPresent()) {
+					var key = ghostAnims.get().selectedKey();
+					var animState = animationStateInfo(selectedAnim.get(), ghost.wishDir());
+					return "%s%n%s%n%s%n%s %s%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText, animState,
+							key);
+				}
 			}
 			return "%s%n%s%n%s%n%s".formatted(name, locationInfo(ghost), movementInfo(ghost), stateText);
 		}
 
 		private String pacInfo(Pac pac) {
-			var selectedAnim = pac.animation();
-			if (selectedAnim.isPresent()) {
-				var key = pac.animationSet().get().selectedKey();
-				var animState = animationStateInfo(selectedAnim.get(), pac.moveDir());
-				return "%s%n%s%n%s%n%s%s".formatted(pac.name, locationInfo(pac), movementInfo(pac), animState, key);
-			} else {
-				return "%s%n%s%n%s".formatted(pac.name, locationInfo(pac), movementInfo(pac));
+			var pacAnims = pac.animationSet();
+			if (pacAnims.isPresent()) {
+				var selectedAnim = pacAnims.get().selectedAnimation();
+				if (selectedAnim.isPresent()) {
+					var animState = animationStateInfo(selectedAnim.get(), pac.moveDir());
+					return "%s%n%s%n%s%n%s%s".formatted(pac.name, locationInfo(pac), movementInfo(pac), animState,
+							pacAnims.get().selectedKey());
+				}
 			}
+			return "%s%n%s%n%s".formatted(pac.name, locationInfo(pac), movementInfo(pac));
 		}
 
 		private String bonusInfo(Bonus bonus) {
