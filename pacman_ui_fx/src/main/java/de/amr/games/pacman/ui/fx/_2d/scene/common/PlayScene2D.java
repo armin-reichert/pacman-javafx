@@ -175,9 +175,9 @@ public class PlayScene2D extends GameScene2D {
 				text.setTextAlignment(TextAlignment.CENTER);
 				text.setFill(Color.WHITE);
 				texts.add(text);
-				var textBox = new VBox(text);
-				textBox.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 255, 0.5)));
-				panes.add(textBox);
+				var pane = new VBox(text);
+				pane.setBackground(Ufx.colorBackground(Color.rgb(200, 200, 255, 0.5)));
+				panes.add(pane);
 			}
 			panes.forEach(PlayScene2D.this::addToOverlayPane);
 		}
@@ -214,13 +214,13 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String animationStateInfo(EntityAnimation animation, Direction dir) {
-			if (animation instanceof EntityAnimationByDirection dam) {
-				return dam.get(dir).isRunning() ? "" : "(Stopped) ";
-			} else if (animation instanceof SingleEntityAnimation<?> ssa) {
-				return ssa.isRunning() ? "" : "(Stopped) ";
-			} else {
-				return "";
+			if (animation instanceof EntityAnimationByDirection anim) {
+				return anim.get(dir).isRunning() ? "" : "(Stopped) ";
 			}
+			if (animation instanceof SingleEntityAnimation<?> anim) {
+				return anim.isRunning() ? "" : "(Stopped) ";
+			}
+			return "";
 		}
 
 		private String ghostInfo(Ghost ghost) {
@@ -266,8 +266,8 @@ public class PlayScene2D extends GameScene2D {
 			case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.index()];
 			case PACMAN -> PACMAN_BONUS_NAMES[bonus.index()];
 			};
-			var symbolText = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
-			return "%s%n%s".formatted(symbolText, game.bonus().state());
+			var text = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
+			return "%s%n%s".formatted(text, game.bonus().state());
 		}
 	}
 }
