@@ -34,6 +34,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventAdapter;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -70,7 +71,7 @@ public class GameUI implements GameEventAdapter {
 	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = Ufx.image("icons/mspacman.png");
 
-	private final GameLoop gameLoop = new GameLoop(60);
+	private final GameLoop gameLoop = new GameLoop(GameModel.FPS);
 	private final GameSceneManager sceneManager = new GameSceneManager();
 	private final GameController gameController;
 	private final Stage stage;
