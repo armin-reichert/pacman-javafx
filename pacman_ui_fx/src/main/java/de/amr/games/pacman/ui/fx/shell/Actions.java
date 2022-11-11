@@ -196,7 +196,7 @@ public class Actions {
 	}
 
 	public static void selectNextGameVariant() {
-		var gameVariant = game().variant.next();
+		var gameVariant = game().variant().next();
 		currentGameState().selectGameVariant(gameVariant);
 	}
 

@@ -48,7 +48,7 @@ public record SceneContext(GameController gameController, Rendering2D r2D, Model
 	}
 
 	public GameVariant gameVariant() {
-		return game().variant;
+		return game().variant();
 	}
 
 	public GameModel game() {

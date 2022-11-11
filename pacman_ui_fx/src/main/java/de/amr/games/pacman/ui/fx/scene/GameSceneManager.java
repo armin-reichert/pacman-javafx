@@ -111,7 +111,7 @@ public class GameSceneManager {
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
 		default -> PLAY_SCENE_INDEX;
 		};
-		return scenes(game.variant)[index];
+		return scenes(game.variant())[index];
 	}
 
 	public boolean has3DSceneVariant(GameController gameController) {
@@ -154,7 +154,7 @@ public class GameSceneManager {
 	}
 
 	private void updateSceneContext(GameController gameController, GameScene scene) {
-		var gameVariant = gameController.game().variant;
+		var gameVariant = gameController.game().variant();
 		var r2D = switch (gameVariant) {
 		case MS_PACMAN -> new RendererMsPacManGame();
 		case PACMAN -> new RendererPacManGame();

@@ -149,7 +149,7 @@ public class GameUI implements GameEventAdapter {
 	}
 
 	private void updateStageTitle() {
-		switch (gameController.game().variant) {
+		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			stage.setTitle("Ms. Pac-Man");
 			stage.getIcons().setAll(APP_ICON_MSPACMAN);

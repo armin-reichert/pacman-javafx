@@ -261,13 +261,12 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String bonusInfo(Bonus bonus) {
-			var game = ctx.game();
-			var bonusName = switch (game.variant) {
+			var bonusName = switch (ctx.gameVariant()) {
 			case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.index()];
 			case PACMAN -> PACMAN_BONUS_NAMES[bonus.index()];
 			};
 			var text = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
-			return "%s%n%s".formatted(text, game.bonus().state());
+			return "%s%n%s".formatted(text, ctx.game().bonus().state());
 		}
 	}
 }

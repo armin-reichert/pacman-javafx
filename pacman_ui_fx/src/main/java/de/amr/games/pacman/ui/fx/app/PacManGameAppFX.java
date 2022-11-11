@@ -93,7 +93,7 @@ public class PacManGameAppFX extends Application {
 		Env.perspectivePy.set(optPerspective.getValue());
 		gameController = new GameController();
 		gameController.selectGame(optVariant.getValue());
-		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant);
+		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant());
 	}
 
 	@Override

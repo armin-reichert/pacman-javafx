@@ -107,7 +107,7 @@ public class BootScene extends GameScene2D {
 	private void drawRandomSprites() {
 		clearBuffer();
 		var image = ctx.r2D().spritesheet().source();
-		if (ctx.game().variant == GameVariant.MS_PACMAN) {
+		if (ctx.gameVariant() == GameVariant.MS_PACMAN) {
 			image = ctx.r2D().spritesheet().region(0, 0, (int) image.getWidth(), 248);
 		}
 		var w = image.getWidth();
