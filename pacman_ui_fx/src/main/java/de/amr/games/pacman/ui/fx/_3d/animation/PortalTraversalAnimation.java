@@ -90,7 +90,7 @@ public class PortalTraversalAnimation {
 			if (portal instanceof HorizontalPortal horPortal) {
 				var left = new V2d(horPortal.leftTunnelEnd().minus(1, 0)).scaled(World.TS);
 				var right = new V2d(horPortal.rightTunnelEnd().plus(1, 0)).scaled(World.TS);
-				var dist = Math.min(guy.getPosition().euclideanDistance(left), guy.getPosition().euclideanDistance(right));
+				var dist = Math.min(guy.position().euclideanDistance(left), guy.position().euclideanDistance(right));
 				if (dist < minDist) {
 					minDist = dist;
 				}
@@ -100,7 +100,7 @@ public class PortalTraversalAnimation {
 	}
 
 	private boolean outsideWorld() {
-		double centerX = guy.getPosition().x() + World.HTS;
+		double centerX = guy.position().x() + World.HTS;
 		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}
 }

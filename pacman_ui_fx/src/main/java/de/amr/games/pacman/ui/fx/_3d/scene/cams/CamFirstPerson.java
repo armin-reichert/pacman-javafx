@@ -57,7 +57,7 @@ public class CamFirstPerson extends GameSceneCamera {
 
 	@Override
 	public void update(Node target) {
-		var ref = pac.getPosition().plus(new V2d(pac.moveDir().vec).scaled(6));
+		var ref = pac.position().plus(new V2d(pac.moveDir().vec).scaled(6));
 		setTranslateX(ref.x() - GameScene.DEFAULT_SIZE.x() / 2);
 		setTranslateY(ref.y() - GameScene.DEFAULT_SIZE.y() / 2);
 		setTranslateZ(-6);

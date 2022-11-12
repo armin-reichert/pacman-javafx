@@ -154,7 +154,7 @@ public abstract class RendererCommon implements Rendering2D {
 	@Override
 	public void drawEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.isVisible()) {
-			drawSpriteCenteredOverBox(g, r, entity.getPosition().x(), entity.getPosition().y());
+			drawSpriteCenteredOverBox(g, r, entity.position().x(), entity.position().y());
 		}
 	}
 

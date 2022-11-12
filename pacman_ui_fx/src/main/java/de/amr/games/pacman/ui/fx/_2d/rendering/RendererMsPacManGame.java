@@ -273,9 +273,9 @@ public class RendererMsPacManGame extends RendererCommon {
 				drawEntity(g, clapper, sprite);
 				g.setFont(arcadeFont());
 				g.setFill(Color.rgb(222, 222, 255));
-				g.fillText(String.valueOf(clapper.sceneNumber), clapper.getPosition().x() + sprite.getWidth() - 25,
-						clapper.getPosition().y() + 18);
-				g.fillText(clapper.sceneTitle, clapper.getPosition().x() + sprite.getWidth(), clapper.getPosition().y());
+				g.fillText(String.valueOf(clapper.sceneNumber), clapper.position().x() + sprite.getWidth() - 25,
+						clapper.position().y() + 18);
+				g.fillText(clapper.sceneTitle, clapper.position().x() + sprite.getWidth(), clapper.position().y());
 			});
 		}
 	}

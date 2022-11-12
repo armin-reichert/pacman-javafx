@@ -141,6 +141,6 @@ public class World3D extends Group {
 	}
 
 	private boolean inDoorDistance(Ghost ghost, V2d doorPosition) {
-		return ghost.getPosition().euclideanDistance(doorPosition) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
+		return ghost.position().euclideanDistance(doorPosition) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 }

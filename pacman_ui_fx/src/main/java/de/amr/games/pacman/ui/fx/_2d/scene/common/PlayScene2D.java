@@ -200,8 +200,8 @@ public class PlayScene2D extends GameScene2D {
 		private void updateInfo(Pane pane, Text text, String info, Entity entity) {
 			text.setText(info);
 			var textSize = text.getBoundsInLocal();
-			pane.setTranslateX((entity.getPosition().x() + World.HTS) * scaling() - textSize.getWidth() / 2);
-			pane.setTranslateY(entity.getPosition().y() * scaling() - textSize.getHeight());
+			pane.setTranslateX((entity.position().x() + World.HTS) * scaling() - textSize.getWidth() / 2);
+			pane.setTranslateY(entity.position().y() * scaling() - textSize.getHeight());
 			pane.setVisible(entity.isVisible());
 		}
 
@@ -210,7 +210,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String movementInfo(Creature guy) {
-			return "Velocity: %s%ndir:%s wish:%s".formatted(guy.getVelocity(), guy.moveDir(), guy.wishDir());
+			return "Velocity: %s%ndir:%s wish:%s".formatted(guy.velocity(), guy.moveDir(), guy.wishDir());
 		}
 
 		private String animationStateInfo(EntityAnimation animation, Direction dir) {
