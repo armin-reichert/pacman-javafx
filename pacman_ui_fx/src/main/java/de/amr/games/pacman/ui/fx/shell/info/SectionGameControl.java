@@ -72,7 +72,7 @@ public class SectionGameControl extends Section {
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, game().level.number());
 		spinnerGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
-		spinnerGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().getCredit());
+		spinnerGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
 		spinnerGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
 		cbMuted = addCheckBox("Sound muted", Actions::toggleSoundMuted);
@@ -112,7 +112,7 @@ public class SectionGameControl extends Section {
 					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.LEVEL_STARTING);
 		}
 
-		spinnerGameCredit.getValueFactory().setValue(game().getCredit());
+		spinnerGameCredit.getValueFactory().setValue(game().credit());
 
 		cbMuted.setDisable(false);
 		cbMuted.setSelected(gc.sounds().isMuted());

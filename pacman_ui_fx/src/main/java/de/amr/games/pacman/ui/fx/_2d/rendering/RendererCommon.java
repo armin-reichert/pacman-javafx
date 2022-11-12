@@ -224,7 +224,7 @@ public abstract class RendererCommon implements Rendering2D {
 		drawScore(g, game.gameScore, font, TS, TS);
 		drawScore(g, game.highScore, font, 16 * TS, TS);
 		if (creditVisible) {
-			drawText(g, "CREDIT  %d".formatted(game.getCredit()), Color.WHITE, font, t(2), t(36) - 1);
+			drawText(g, "CREDIT  %d".formatted(game.credit()), Color.WHITE, font, t(2), t(36) - 1);
 		}
 	}
 
