@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
-import static de.amr.games.pacman.lib.TickTimer.ticksToString;
-
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;
@@ -44,12 +42,12 @@ public class SectionGameInfo extends Section {
 	public SectionGameInfo(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
-		addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().fxSubScene().getWidth(),
-				gameScene().fxSubScene().getHeight()));
+		addInfo("",
+				() -> "w=%.0f h=%.0f".formatted(gameScene().fxSubScene().getWidth(), gameScene().fxSubScene().getHeight()));
 		addInfo("Game State", () -> "%s".formatted(gc.state()));
 		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
-		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
+		addInfo("", () -> "Remaining: %s".formatted(gc.state().timer().ticksToString(gc.state().timer().remaining())));
 
 		addInfo("Hunting Phase",
 				() -> "%s #%d%s".formatted(gc.game().huntingTimer.phaseName(),
@@ -57,7 +55,7 @@ public class SectionGameInfo extends Section {
 								: gc.game().huntingTimer.chasingPhase(),
 						gc.game().huntingTimer.isStopped() ? " STOPPED" : ""));
 		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));
-		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.game().huntingTimer.remaining())));
+		addInfo("", () -> "Remaining: %s".formatted(gc.state().timer().ticksToString(gc.game().huntingTimer.remaining())));
 
 		addInfo("Pellets",
 				() -> String.format("%d of %d (%d energizers)", game().level.world().foodRemaining(),

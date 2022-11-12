@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.pacman.IntroController;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -103,7 +102,7 @@ public class PacManIntroScene extends GameScene2D {
 		case SHOWING_POINTS -> {
 			drawGallery();
 			drawPoints();
-			if (tick > TickTimer.secToTicks(1)) {
+			if (tick > intro.state().timer().secToTicks(1)) {
 				drawBlinkingEnergizer();
 				ctx.r2D().drawCopyright(g, 32);
 			}
