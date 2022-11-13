@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.controller.pacman.IntroController;
+import de.amr.games.pacman.controller.pacman.PacManIntro;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -49,17 +49,17 @@ import javafx.scene.text.Font;
  */
 public class PacManIntroScene extends GameScene2D {
 
-	private IntroController intro;
+	private PacManIntro intro;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
-		intro = new IntroController(sceneContext.gameController());
+		intro = new PacManIntro(sceneContext.gameController());
 	}
 
 	@Override
 	public void init() {
-		intro.restartInState(IntroController.State.START);
+		intro.restartInState(PacManIntro.State.START);
 		intro.context().pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(intro.context().pacMan));
 		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
 	}

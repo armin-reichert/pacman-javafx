@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import de.amr.games.pacman.controller.mspacman.Intermission2Controller;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntermission2;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
@@ -40,18 +40,18 @@ import de.amr.games.pacman.ui.fx.scene.SceneContext;
  */
 public class MsPacManIntermissionScene2 extends GameScene2D {
 
-	private Intermission2Controller intermission;
+	private MsPacManIntermission2 intermission;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
-		intermission = new Intermission2Controller(sceneContext.gameController());
+		intermission = new MsPacManIntermission2(sceneContext.gameController());
 	}
 
 	@Override
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		intermission.restartInState(Intermission2Controller.State.FLAP);
+		intermission.restartInState(MsPacManIntermission2.State.FLAP);
 		intermission.context().clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
 		intermission.context().msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().msPacMan));
 		intermission.context().msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);

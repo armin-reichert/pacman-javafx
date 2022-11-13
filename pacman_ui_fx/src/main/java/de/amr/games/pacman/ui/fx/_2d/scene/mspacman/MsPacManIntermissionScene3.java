@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
-import de.amr.games.pacman.controller.mspacman.Intermission3Controller;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntermission3;
 import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
@@ -43,19 +43,19 @@ import javafx.geometry.Rectangle2D;
  */
 public class MsPacManIntermissionScene3 extends GameScene2D {
 
-	private Intermission3Controller intermission;
+	private MsPacManIntermission3 intermission;
 	private SingleEntityAnimation<Rectangle2D> storkAnim;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
-		intermission = new Intermission3Controller(sceneContext.gameController());
+		intermission = new MsPacManIntermission3(sceneContext.gameController());
 	}
 
 	@Override
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		intermission.restartInState(Intermission3Controller.State.FLAP);
+		intermission.restartInState(MsPacManIntermission3.State.FLAP);
 		intermission.context().clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
 		intermission.context().msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().msPacMan));
 		intermission.context().pacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().pacMan));

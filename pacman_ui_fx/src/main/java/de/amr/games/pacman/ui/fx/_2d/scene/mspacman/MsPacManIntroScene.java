@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.mspacman.IntroController;
-import de.amr.games.pacman.controller.mspacman.IntroController.State;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntro;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntro.State;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -45,17 +45,17 @@ import javafx.scene.paint.Color;
  */
 public class MsPacManIntroScene extends GameScene2D {
 
-	private IntroController intro;
+	private MsPacManIntro intro;
 
 	@Override
 	public void setContext(SceneContext sceneContext) {
 		super.setContext(sceneContext);
-		intro = new IntroController(sceneContext.gameController());
+		intro = new MsPacManIntro(sceneContext.gameController());
 	}
 
 	@Override
 	public void init() {
-		intro.restartInState(IntroController.State.START);
+		intro.restartInState(MsPacManIntro.State.START);
 		var pacAnimations = ctx.r2D().createPacAnimationSet(ctx.game().pac);
 		pacAnimations.ensureRunning();
 		ctx.game().pac.setAnimationSet(pacAnimations);
