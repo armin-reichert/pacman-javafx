@@ -109,17 +109,17 @@ public class MsPacManIntroScene extends GameScene2D {
 	private void drawGhostText(Ghost ghost) {
 		if (ghost.id == Ghost.RED_GHOST) {
 			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
-					intro.context().lightsTopLeft.y() + t(3));
+					intro.context().redGhostEndPosition.y() + t(3));
 		}
 		ctx.r2D().drawText(g, ghost.name.toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(),
-				t(14 - ghost.name.length() / 2), intro.context().lightsTopLeft.y() + t(6));
+				t(14 - ghost.name.length() / 2), intro.context().redGhostEndPosition.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
 		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
-				intro.context().lightsTopLeft.y() + t(3));
+				intro.context().redGhostEndPosition.y() + t(3));
 		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
-				intro.context().lightsTopLeft.y() + t(6));
+				intro.context().redGhostEndPosition.y() + t(6));
 	}
 
 	// TODO this is not yet accurate to the original game
@@ -141,7 +141,7 @@ public class MsPacManIntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(intro.context().lightsTopLeft.x() + 4 * x, intro.context().lightsTopLeft.y() + 4 * y, 2, 2);
+			g.fillRect(intro.context().redGhostEndPosition.x() + 4 * x, intro.context().redGhostEndPosition.y() + 4 * y, 2, 2);
 		}
 	}
 }
