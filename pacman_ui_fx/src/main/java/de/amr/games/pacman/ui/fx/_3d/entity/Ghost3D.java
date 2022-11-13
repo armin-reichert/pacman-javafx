@@ -31,7 +31,9 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
+import javafx.scene.PointLight;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -56,6 +58,7 @@ public class Ghost3D extends MovingCreature3D {
 		NORMAL_COLOR, FRIGHTENED_COLOR, FLASHING, EYES_ONLY, NUMBER;
 	}
 
+	private final PointLight spot;
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(TS, TS, TS);
 	private final Image[] numberImages;
@@ -65,6 +68,9 @@ public class Ghost3D extends MovingCreature3D {
 		super(ghost);
 		numberImages = r2D.createGhostValueList().frames().map(r2D.spritesheet()::region).toArray(Image[]::new);
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
+		spot = new PointLight(Color.WHITE);
+		spot.setTranslateZ(-8);
+		spot.lightOnProperty().bind(visibleProperty());
 	}
 
 	public void reset(GameModel game) {
@@ -89,11 +95,11 @@ public class Ghost3D extends MovingCreature3D {
 		case NORMAL_COLOR -> {
 			coloredGhost3D.lookNormal();
 			resetMovement();
-			getChildren().setAll(coloredGhost3D.getRoot());
+			getChildren().setAll(coloredGhost3D.getRoot(), spot);
 		}
 		case FRIGHTENED_COLOR -> {
 			coloredGhost3D.lookFrightened();
-			getChildren().setAll(coloredGhost3D.getRoot());
+			getChildren().setAll(coloredGhost3D.getRoot(), spot);
 		}
 		case FLASHING -> {
 			int numFlashes = game.level.numFlashes();
@@ -102,12 +108,12 @@ public class Ghost3D extends MovingCreature3D {
 			} else {
 				coloredGhost3D.lookFrightened();
 			}
-			getChildren().setAll(coloredGhost3D.getRoot());
+			getChildren().setAll(coloredGhost3D.getRoot(), spot);
 		}
 		case EYES_ONLY -> {
 			coloredGhost3D.lookEyesOnly();
 			resetMovement();
-			getChildren().setAll(coloredGhost3D.getRoot());
+			getChildren().setAll(coloredGhost3D.getRoot(), spot);
 		}
 		case NUMBER -> {
 			var ghost = (Ghost) guy;
