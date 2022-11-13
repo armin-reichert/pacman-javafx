@@ -28,7 +28,6 @@ import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
 
 /**
  * Intermission scene 2: "The chase".
@@ -43,15 +42,10 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	private MsPacManIntermission2 intermission;
 
 	@Override
-	public void setContext(SceneContext sceneContext) {
-		super.setContext(sceneContext);
-		intermission = new MsPacManIntermission2(sceneContext.gameController());
-	}
-
-	@Override
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
-		intermission.restartInState(MsPacManIntermission2.State.FLAP);
+		intermission = new MsPacManIntermission2(ctx.gameController());
+		intermission.restartInState(MsPacManIntermission2.IntermissionState.FLAP);
 		intermission.context().clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
 		intermission.context().msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().msPacMan));
 		intermission.context().msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);

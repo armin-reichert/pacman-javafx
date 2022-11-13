@@ -29,7 +29,6 @@ import de.amr.games.pacman.controller.mspacman.MsPacManIntro;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntro.IntroState;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
@@ -48,13 +47,8 @@ public class MsPacManIntroScene extends GameScene2D {
 	private MsPacManIntro intro;
 
 	@Override
-	public void setContext(SceneContext sceneContext) {
-		super.setContext(sceneContext);
-		intro = new MsPacManIntro(sceneContext.gameController());
-	}
-
-	@Override
 	public void init() {
+		intro = new MsPacManIntro(ctx.gameController());
 		intro.restartInState(MsPacManIntro.IntroState.START);
 		var pacAnimations = ctx.r2D().createPacAnimationSet(ctx.game().pac);
 		pacAnimations.ensureRunning();
