@@ -27,51 +27,29 @@ package de.amr.games.pacman.ui.fx.scene;
 import java.util.Objects;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameSoundController;
-import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.controller.common.SceneControllerContext;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 
 /**
  * @author Armin Reichert
  */
-public record SceneContext(GameController gameController, Rendering2D r2D, Model3D model3D) {
+public class SceneContext extends SceneControllerContext {
 
-	public SceneContext {
-		Objects.requireNonNull(gameController, "Game controller must not be NULL");
-		Objects.requireNonNull(r2D, "2D renderer must not be NULL");
-		Objects.requireNonNull(model3D, "3D model must not be NULL");
+	private final Rendering2D r2D;
+	private final Model3D model3D;
+
+	public SceneContext(GameController gameController, Rendering2D r2D, Model3D model3D) {
+		super(gameController);
+		this.r2D = Objects.requireNonNull(r2D, "2D renderer must not be NULL");
+		this.model3D = Objects.requireNonNull(model3D, "3D model must not be NULL");
 	}
 
-	public GameVariant gameVariant() {
-		return game().variant();
+	public Rendering2D r2D() {
+		return r2D;
 	}
 
-	public GameModel game() {
-		return gameController.game();
-	}
-
-	public GameLevel level() {
-		return game().level;
-	}
-
-	public GameState state() {
-		return gameController.state();
-	}
-
-	public GameSoundController sounds() {
-		return gameController.sounds();
-	}
-
-	public World world() {
-		return game().level.world();
-	}
-
-	public boolean hasCredit() {
-		return game().hasCredit();
+	public Model3D model3D() {
+		return model3D;
 	}
 }
