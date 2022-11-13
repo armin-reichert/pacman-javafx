@@ -59,7 +59,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		intro.restartInState(PacManIntro.State.START);
+		intro.restartInState(PacManIntro.IntroState.START);
 		intro.context().pacMan.setAnimationSet(ctx.r2D().createPacAnimationSet(intro.context().pacMan));
 		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
 	}

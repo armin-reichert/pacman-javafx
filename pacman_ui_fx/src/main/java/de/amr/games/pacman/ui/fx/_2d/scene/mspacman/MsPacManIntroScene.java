@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.mspacman.MsPacManIntro;
-import de.amr.games.pacman.controller.mspacman.MsPacManIntro.State;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntro.IntroState;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -55,7 +55,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		intro.restartInState(MsPacManIntro.State.START);
+		intro.restartInState(MsPacManIntro.IntroState.START);
 		var pacAnimations = ctx.r2D().createPacAnimationSet(ctx.game().pac);
 		pacAnimations.ensureRunning();
 		ctx.game().pac.setAnimationSet(pacAnimations);
@@ -94,9 +94,9 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void draw() {
 		drawTitle();
 		drawLights(32, 16);
-		if (intro.state() == State.GHOSTS) {
+		if (intro.state() == IntroState.GHOSTS) {
 			drawGhostText(ctx.game().theGhosts[intro.context().ghostIndex]);
-		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
+		} else if (intro.state() == IntroState.MSPACMAN || intro.state() == IntroState.READY_TO_PLAY) {
 			drawMsPacManText();
 		}
 		for (var ghost : ctx.game().theGhosts) {
