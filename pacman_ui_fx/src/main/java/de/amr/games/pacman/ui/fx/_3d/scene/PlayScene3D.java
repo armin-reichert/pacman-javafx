@@ -118,7 +118,7 @@ public class PlayScene3D implements GameScene {
 		pac3D = new Pac3D(ctx.game().pac, ctx.world(), ctx.model3D());
 		pac3D.reset();
 
-		var pac3DLight = new PointLight(Color.GHOSTWHITE);
+		var pac3DLight = new PointLight(Color.YELLOW);
 		pac3DLight.translateXProperty().bind(pac3D.translateXProperty());
 		pac3DLight.translateYProperty().bind(pac3D.translateYProperty());
 		pac3DLight.setTranslateZ(-8);
@@ -126,12 +126,22 @@ public class PlayScene3D implements GameScene {
 		ghosts3D = ctx.game().ghosts()
 				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
+
+		var ghost3DLights = Stream.of(ghosts3D).map(ghost3D -> {
+			var light = new PointLight(Color.GHOSTWHITE);
+			light.translateXProperty().bind(ghost3D.translateXProperty());
+			light.translateYProperty().bind(ghost3D.translateYProperty());
+			light.setTranslateZ(-8);
+			return light;
+		}).toArray(PointLight[]::new);
+
 		bonus3D = new Bonus3D(ctx.game().bonus());
 
 		// Note: world3D comes first in content list, gets exchanged on new level start
 		content.getChildren().clear();
 		content.getChildren().addAll(world3D, pac3D, pac3DLight, bonus3D);
 		content.getChildren().addAll(ghosts3D);
+		content.getChildren().addAll(ghost3DLights);
 
 		double width = ctx.world().numCols() * World.TS;
 		double height = ctx.world().numRows() * World.TS;

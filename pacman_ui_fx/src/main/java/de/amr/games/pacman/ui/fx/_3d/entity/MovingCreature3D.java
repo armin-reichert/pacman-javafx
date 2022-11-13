@@ -77,6 +77,10 @@ public abstract class MovingCreature3D extends Group {
 		resetMovement();
 	}
 
+	public Creature guy() {
+		return guy;
+	}
+
 	protected void resetMovement() {
 		animationTargetDir = guy.moveDir();
 		turnAnimation.stop();
