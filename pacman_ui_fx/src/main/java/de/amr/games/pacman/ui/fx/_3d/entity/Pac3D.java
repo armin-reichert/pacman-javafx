@@ -33,7 +33,6 @@ import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
@@ -67,9 +66,7 @@ public class Pac3D extends MovingCreature3D {
 		root3D = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
 		face().setMaterial(faceMaterial);
 		portalTraversalAnimation = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, FACE_COLOR);
-		var light = new PointLight(Color.GHOSTWHITE);
-		light.setTranslateZ(-6);
-		getChildren().addAll(root3D, light);
+		getChildren().addAll(root3D);
 	}
 
 	public void reset() {

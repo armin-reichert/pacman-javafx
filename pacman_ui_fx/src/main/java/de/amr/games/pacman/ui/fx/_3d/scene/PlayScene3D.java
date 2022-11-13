@@ -60,10 +60,12 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
 /**
@@ -112,8 +114,15 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+
 		pac3D = new Pac3D(ctx.game().pac, ctx.world(), ctx.model3D());
 		pac3D.reset();
+
+		var pac3DLight = new PointLight(Color.GHOSTWHITE);
+		pac3DLight.translateXProperty().bind(pac3D.translateXProperty());
+		pac3DLight.translateYProperty().bind(pac3D.translateYProperty());
+		pac3DLight.setTranslateZ(-8);
+
 		ghosts3D = ctx.game().ghosts()
 				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D(), ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
@@ -121,7 +130,7 @@ public class PlayScene3D implements GameScene {
 
 		// Note: world3D comes first in content list, gets exchanged on new level start
 		content.getChildren().clear();
-		content.getChildren().addAll(world3D, pac3D, bonus3D);
+		content.getChildren().addAll(world3D, pac3D, pac3DLight, bonus3D);
 		content.getChildren().addAll(ghosts3D);
 
 		double width = ctx.world().numCols() * World.TS;
