@@ -56,7 +56,8 @@ public class Scores3D extends Group {
 		txtHiscore = new Text();
 		GridPane grid = new GridPane();
 		grid.setHgap(5 * TS);
-		grid.setTranslateY(-2 * TS);
+		grid.setTranslateX(TS);
+		grid.setTranslateY(-3 * TS);
 		grid.setTranslateZ(-2 * TS);
 		grid.add(txtScoreTitle, 0, 0);
 		grid.add(txtScore, 0, 1);
