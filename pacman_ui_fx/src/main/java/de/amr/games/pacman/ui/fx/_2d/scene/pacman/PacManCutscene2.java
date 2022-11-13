@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.lib.V2i.v;
+import static de.amr.games.pacman.lib.V2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
@@ -58,7 +58,7 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.placeAtTile(v(29, 20), 0, 0);
+		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.15);
 		pac.show();
@@ -71,7 +71,7 @@ public class PacManCutscene2 extends GameScene2D {
 		stretchedDressAnimation = renderer.createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(Ghost.RED_GHOST, "Blinky");
-		blinky.placeAtTile(v(28, 20), 0, 0);
+		blinky.placeAtTile(v2i(28, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setAbsSpeed(0);
 		blinky.hide();

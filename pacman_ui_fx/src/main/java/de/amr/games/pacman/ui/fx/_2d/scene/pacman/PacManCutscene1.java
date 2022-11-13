@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.lib.V2i.v;
+import static de.amr.games.pacman.lib.V2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
@@ -57,7 +57,7 @@ public class PacManCutscene1 extends GameScene2D {
 		var bigPacAnimation = renderer.createBigPacManMunchingAnimation();
 		pac.animationSet().ifPresent(animations -> animations.put(AnimKeys.PAC_BIG, bigPacAnimation));
 		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
-		pac.placeAtTile(v(29, 20), 0, 0);
+		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setAbsSpeed(1.25);
 		pac.show();
@@ -68,7 +68,7 @@ public class PacManCutscene1 extends GameScene2D {
 			animations.select(AnimKeys.GHOST_COLOR);
 			animations.animation(AnimKeys.GHOST_COLOR).get().restart();
 		});
-		blinky.placeAtTile(v(32, 20), 0, 0);
+		blinky.placeAtTile(v2i(32, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setAbsSpeed(1.3);
 		blinky.show();
@@ -84,7 +84,7 @@ public class PacManCutscene1 extends GameScene2D {
 		if (frame == 0) {
 			ctx.sounds().loop(GameSound.INTERMISSION_1, 2);
 		} else if (frame == 260) {
-			blinky.placeAtTile(v(-2, 20), 4, 0);
+			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.animationSet().ifPresent(animations -> {
 				animations.select(AnimKeys.GHOST_BLUE);
@@ -92,7 +92,7 @@ public class PacManCutscene1 extends GameScene2D {
 			});
 			blinky.setAbsSpeed(0.75);
 		} else if (frame == 400) {
-			pac.placeAtTile(v(-3, 19), 0, 0);
+			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
 			pac.animationSet().ifPresent(animations -> {
 				animations.select(AnimKeys.PAC_BIG);

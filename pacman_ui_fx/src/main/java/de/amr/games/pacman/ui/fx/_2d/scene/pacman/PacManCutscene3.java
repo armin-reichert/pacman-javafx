@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.lib.V2i.v;
+import static de.amr.games.pacman.lib.V2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
@@ -71,18 +71,18 @@ public class PacManCutscene3 extends GameScene2D {
 		++frame;
 		if (frame == 0) {
 			ctx.sounds().loop(GameSound.INTERMISSION_1, 2);
-			pac.placeAtTile(v(29, 20), 0, 0);
+			pac.placeAtTile(v2i(29, 20), 0, 0);
 			pac.setMoveDir(Direction.LEFT);
 			pac.setAbsSpeed(1.25);
 			pac.show();
 			pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
-			blinky.placeAtTile(v(35, 20), 0, 0);
+			blinky.placeAtTile(v2i(35, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.LEFT);
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
 			blinky.selectAndRunAnimation(AnimKeys.BLINKY_PATCHED);
 		} else if (frame == 296) {
-			blinky.placeAtTile(v(-1, 20), 0, 0);
+			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.selectAndRunAnimation(AnimKeys.BLINKY_NAKED);
 		} else if (frame == 516) {
