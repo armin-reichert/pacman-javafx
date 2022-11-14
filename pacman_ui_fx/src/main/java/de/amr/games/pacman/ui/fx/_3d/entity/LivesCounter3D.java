@@ -41,18 +41,16 @@ public class LivesCounter3D extends Group {
 
 	public LivesCounter3D(Model3D model3D) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			Node indicator = model3D.createPac(Color.YELLOW, Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
-			indicator.setTranslateX(2.0 * i * TS);
-			getChildren().add(indicator);
+			Node pac = model3D.createPac(Color.YELLOW, Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
+			pac.setTranslateX(2.0 * i * TS);
+			pac.setVisible(true);
+			getChildren().add(pac);
 		}
-		update(MAX_LIVES_DISPLAYED); // show all
 	}
 
-	public void update(int numLivesDisplayed) {
-		if (numLivesDisplayed >= 0) {
-			for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-				getChildren().get(i).setVisible(i < numLivesDisplayed);
-			}
+	public void update(int numLives) {
+		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
+			getChildren().get(i).setVisible(i < numLives);
 		}
 	}
 }
