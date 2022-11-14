@@ -69,11 +69,11 @@ public class Ghost3D extends MovingCreature3D {
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
 	}
 
-	private void addSpotLight() {
+	private PointLight createSpotLight() {
 		var spot = new PointLight(Color.WHITE);
 		spot.setTranslateZ(-8);
 		spot.lightOnProperty().bind(visibleProperty());
-		getChildren().add(spot);
+		return spot;
 	}
 
 	public void reset(GameModel game) {
@@ -98,13 +98,11 @@ public class Ghost3D extends MovingCreature3D {
 		case NORMAL_COLOR -> {
 			coloredGhost3D.lookNormal();
 			resetMovement();
-			getChildren().setAll(coloredGhost3D.getRoot());
-			addSpotLight();
+			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
 		}
 		case FRIGHTENED_COLOR -> {
 			coloredGhost3D.lookFrightened();
-			getChildren().setAll(coloredGhost3D.getRoot());
-			addSpotLight();
+			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
 		}
 		case FLASHING -> {
 			int numFlashes = game.level.numFlashes();
@@ -113,14 +111,12 @@ public class Ghost3D extends MovingCreature3D {
 			} else {
 				coloredGhost3D.lookFrightened();
 			}
-			getChildren().setAll(coloredGhost3D.getRoot());
-			addSpotLight();
+			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
 		}
 		case EYES_ONLY -> {
 			coloredGhost3D.lookEyesOnly();
 			resetMovement();
-			getChildren().setAll(coloredGhost3D.getRoot());
-			addSpotLight();
+			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
 		}
 		case NUMBER -> {
 			var ghost = (Ghost) guy;
