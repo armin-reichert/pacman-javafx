@@ -131,6 +131,9 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
+		double width = ctx.world().numCols() * World.TS;
+		double height = ctx.world().numRows() * World.TS;
+
 		content.getChildren().clear();
 
 		newWorld();
@@ -140,14 +143,12 @@ public class PlayScene3D implements GameScene {
 		pac3D.reset(ctx.world());
 		content.getChildren().add(pac3D);
 
-		bonus3D = new Bonus3D(ctx.game().bonus());
-		content.getChildren().add(bonus3D);
-
 		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
 		content.getChildren().addAll(ghosts3D);
 
-		double width = ctx.world().numCols() * World.TS;
-		double height = ctx.world().numRows() * World.TS;
+		bonus3D = new Bonus3D(ctx.game().bonus());
+		content.getChildren().add(bonus3D);
+
 		var centerOverOrigin = new Translate(-width / 2, -height / 2);
 		content.getTransforms().setAll(centerOverOrigin);
 
