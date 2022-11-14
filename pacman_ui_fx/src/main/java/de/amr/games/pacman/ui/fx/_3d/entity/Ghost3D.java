@@ -25,13 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.image.Image;
@@ -55,8 +51,6 @@ import javafx.scene.transform.Rotate;
  */
 public class Ghost3D extends MovingCreature3D {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
 	private enum Look {
 		NORMAL_COLOR, FRIGHTENED_COLOR, FLASHING, EYES_ONLY, NUMBER;
 	}
@@ -66,9 +60,10 @@ public class Ghost3D extends MovingCreature3D {
 	private final Image[] numberImages;
 	private Look look;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D, GhostColorScheme colors) {
+	public Ghost3D(Ghost ghost, Model3D model3D, Rendering2D r2D) {
 		super(ghost);
 		numberImages = r2D.createGhostValueList().frames().map(r2D.spritesheet()::region).toArray(Image[]::new);
+		var colors = r2D.ghostColorScheme(ghost.id);
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
 	}
 
