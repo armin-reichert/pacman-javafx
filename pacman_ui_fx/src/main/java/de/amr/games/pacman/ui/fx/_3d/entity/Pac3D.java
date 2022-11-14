@@ -33,6 +33,7 @@ import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
@@ -67,6 +68,10 @@ public class Pac3D extends MovingCreature3D {
 		face().setMaterial(faceMaterial);
 		portalTraversalAnimation = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, FACE_COLOR);
 		getChildren().addAll(root3D);
+		var spot = new PointLight(Color.WHITE);
+		spot.setTranslateZ(-8);
+		spot.lightOnProperty().bind(visibleProperty());
+		getChildren().add(spot);
 	}
 
 	public void reset() {
@@ -83,6 +88,7 @@ public class Pac3D extends MovingCreature3D {
 	public void update() {
 		updateMovement();
 		portalTraversalAnimation.update();
+		setVisible(guy.isVisible());
 	}
 
 	/**

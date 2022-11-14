@@ -60,12 +60,10 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
-import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
 /**
@@ -121,10 +119,6 @@ public class PlayScene3D implements GameScene {
 
 		pac3D = new Pac3D(ctx.game().pac, ctx.world(), ctx.model3D());
 		pac3D.reset();
-		var spot = new PointLight(Color.WHITE);
-		pac3D.getChildren().add(spot);
-		spot.setTranslateZ(-8);
-		spot.lightOnProperty().bind(pac3D.visibleProperty());
 		content.getChildren().add(pac3D);
 
 		bonus3D = new Bonus3D(ctx.game().bonus());

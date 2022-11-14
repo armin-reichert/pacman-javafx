@@ -89,7 +89,6 @@ public abstract class MovingCreature3D extends Group {
 	}
 
 	protected void updateMovement() {
-		setVisible(guy.isVisible());
 		setTranslateX(guy.position().x() + HTS);
 		setTranslateY(guy.position().y() + HTS);
 		if (animationTargetDir != guy.moveDir()) {
