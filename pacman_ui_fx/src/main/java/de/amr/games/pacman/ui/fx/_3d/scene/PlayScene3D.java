@@ -110,32 +110,6 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void init() {
-		content.getChildren().clear();
-
-		// Note: world3D comes first in content list, gets exchanged on new level start
-		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
-		content.getChildren().add(world3D);
-
-		pac3D = new Pac3D(ctx.game().pac, ctx.world(), ctx.model3D());
-		pac3D.reset();
-		content.getChildren().add(pac3D);
-
-		bonus3D = new Bonus3D(ctx.game().bonus());
-		content.getChildren().add(bonus3D);
-
-		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
-		content.getChildren().addAll(ghosts3D);
-
-		double width = ctx.world().numCols() * World.TS;
-		double height = ctx.world().numRows() * World.TS;
-		var centerOverOrigin = new Translate(-width / 2, -height / 2);
-		content.getTransforms().setAll(centerOverOrigin);
-
-		changeCamera(Env.perspectivePy.get());
-	}
-
-	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.game().hasCredit()) {
 			// when in attract mode, allow adding credit
@@ -153,6 +127,34 @@ public class PlayScene3D implements GameScene {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
+	}
+
+	@Override
+	public void init() {
+		content.getChildren().clear();
+
+		// Note: world3D comes first in content list, gets exchanged on new level start
+		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		content.getChildren().add(world3D);
+		world3D.levelCounter3D().init(ctx.game().levelCounter);
+		world3D.livesCounter3D().setVisible(ctx.game().hasCredit());
+
+		pac3D = new Pac3D(ctx.game().pac, ctx.world(), ctx.model3D());
+		pac3D.reset();
+		content.getChildren().add(pac3D);
+
+		bonus3D = new Bonus3D(ctx.game().bonus());
+		content.getChildren().add(bonus3D);
+
+		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
+		content.getChildren().addAll(ghosts3D);
+
+		double width = ctx.world().numCols() * World.TS;
+		double height = ctx.world().numRows() * World.TS;
+		var centerOverOrigin = new Translate(-width / 2, -height / 2);
+		content.getTransforms().setAll(centerOverOrigin);
+
+		changeCamera(Env.perspectivePy.get());
 	}
 
 	@Override
@@ -205,8 +207,8 @@ public class PlayScene3D implements GameScene {
 			fxSubScene.requestFocus();
 			newCamera.reset();
 		}
-		if (world3D != null && world3D.getScores3D() != null) {
-			var scores3D = world3D.getScores3D();
+		if (world3D != null && world3D.scores3D() != null) {
+			var scores3D = world3D.scores3D();
 			scores3D.rotationAxisProperty().bind(newCamera.rotationAxisProperty());
 			scores3D.rotateProperty().bind(newCamera.rotateProperty());
 		}
@@ -215,15 +217,15 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onSwitchFrom2D() {
 		var world = ctx.world();
-		world3D.getFood3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
+		world3D.food3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
 		if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
-			world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
+			world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 		}
 	}
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
-		var food3D = world3D.getFood3D();
+		var food3D = world3D.food3D();
 		if (e.tile.isEmpty()) {
 			// when cheat "eat all pellets" is used, no tile is present in the event
 			// remove 3D pellets to be in synch with model:
@@ -272,7 +274,7 @@ public class PlayScene3D implements GameScene {
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
 
-		case HUNTING -> world3D.getFood3D().energizers3D().forEach(Energizer3D::startPumping);
+		case HUNTING -> world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 
 		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
 			lockGameState();
@@ -299,7 +301,7 @@ public class PlayScene3D implements GameScene {
 			new SequentialTransition( //
 					Ufx.pause(0.0, this::lockGameState), //
 					Ufx.pause(2.0), //
-					world3D.getMaze3D().createMazeFlashingAnimation(game.level.numFlashes()), //
+					world3D.maze3D().createMazeFlashingAnimation(game.level.numFlashes()), //
 					Ufx.pause(1.0, game.pac::hide), //
 					Ufx.pause(0.5, () -> Actions.showFlashMessage(2, message)), //
 					Ufx.pause(2.0, this::unlockGameState) //
@@ -316,7 +318,7 @@ public class PlayScene3D implements GameScene {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			world3D.getFood3D().energizers3D().forEach(Energizer3D::stopPumping);
+			world3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
 			bonus3D.setVisible(false);
 		}
 	}

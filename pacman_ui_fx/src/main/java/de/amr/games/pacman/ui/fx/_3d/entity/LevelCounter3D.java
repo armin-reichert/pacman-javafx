@@ -58,7 +58,7 @@ public class LevelCounter3D extends Group {
 		this.rightPosition = new V2d(rightX, rightY);
 	}
 
-	public void update(LevelCounter levelCounter) {
+	public void init(LevelCounter levelCounter) {
 		getChildren().clear();
 		double x = rightPosition.x();
 		for (int i = 0; i < levelCounter.size(); ++i) {

@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -57,14 +58,8 @@ public class World3D extends Group {
 
 	public World3D(GameModel game, Model3D model3D, Rendering2D r2D) {
 		scores3D = new Scores3D();
-		scores3D.setFont(r2D.arcadeFont());
-		if (game.hasCredit()) {
-			scores3D.setComputeScoreText(true);
-		} else {
-			scores3D.setComputeScoreText(false);
-			scores3D.txtScore.setFill(Color.RED);
-			scores3D.txtScore.setText("GAME OVER!");
-		}
+		var scoreFont = Font.font(r2D.arcadeFont().getFamily(), TS);
+		scores3D.setFont(scoreFont);
 		getChildren().add(scores3D);
 
 		var mazeColors = new MazeColors(//
@@ -90,26 +85,32 @@ public class World3D extends Group {
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world().numCols() - 1) * TS, TS);
-		levelCounter3D.update(game.levelCounter);
 		getChildren().add(levelCounter3D);
 
 		livesCounter3D = new LivesCounter3D(model3D);
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
-		livesCounter3D.setVisible(game.hasCredit());
 		getChildren().add(livesCounter3D);
 	}
 
-	public Scores3D getScores3D() {
+	public Scores3D scores3D() {
 		return scores3D;
 	}
 
-	public Maze3D getMaze3D() {
+	public LivesCounter3D livesCounter3D() {
+		return livesCounter3D;
+	}
+
+	public LevelCounter3D levelCounter3D() {
+		return levelCounter3D;
+	}
+
+	public Maze3D maze3D() {
 		return maze3D;
 	}
 
-	public Food3D getFood3D() {
+	public Food3D food3D() {
 		return food3D;
 	}
 
@@ -121,6 +122,13 @@ public class World3D extends Group {
 		scores3D.update(game);
 		updateDoorState(game);
 		livesCounter3D.update(game.livesOneLessShown ? game.lives - 1 : game.lives);
+		if (game.hasCredit()) {
+			scores3D.setComputeScoreText(true);
+		} else {
+			scores3D.setComputeScoreText(false);
+			scores3D.txtScore.setFill(Color.RED);
+			scores3D.txtScore.setText("GAME OVER!");
+		}
 	}
 
 	// should be generalized to work with any ghost house

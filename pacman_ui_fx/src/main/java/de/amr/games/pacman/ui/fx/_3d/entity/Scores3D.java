@@ -46,7 +46,7 @@ public class Scores3D extends Group {
 
 	private Color titleColor = Color.GHOSTWHITE;
 	private Color scoreColor = Color.YELLOW;
-	private Font font;
+	private Font font = Font.font("Courier", 12);
 	private boolean computeScoreText = true;
 
 	public Scores3D() {
