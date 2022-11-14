@@ -53,35 +53,32 @@ public class Pac3D extends MovingCreature3D {
 	private static final Color PALATE_COLOR = Color.CORAL;
 
 	private final Model3D model3D;
-	private final Group root3D;
+	private final Group root;
 	private final PortalTraversalAnimation portalTraversalAnimation;
-	private final ObjectProperty<Color> faceColorPy;
-	private final PhongMaterial faceMaterial;
+	private final ObjectProperty<Color> faceColorPy = new SimpleObjectProperty<>(FACE_COLOR);
 
 	public Pac3D(Pac pac, World world, Model3D model3D) {
 		super(pac);
 		this.model3D = model3D;
-		faceColorPy = new SimpleObjectProperty<>(FACE_COLOR);
-		faceMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
-		root3D = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
-		face().setMaterial(faceMaterial);
-		portalTraversalAnimation = new PortalTraversalAnimation(pac, world, root3D, faceColorPy, FACE_COLOR);
-		getChildren().addAll(root3D);
+		root = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
+		getChildren().addAll(root);
 		var spot = new PointLight(Color.WHITE);
 		spot.setTranslateZ(-8);
 		spot.lightOnProperty().bind(visibleProperty());
 		getChildren().add(spot);
+		var faceMaterial = new PhongMaterial();
+		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
+		face().setMaterial(faceMaterial);
+		portalTraversalAnimation = new PortalTraversalAnimation(pac, world, root, faceColorPy, FACE_COLOR);
 	}
 
 	public void reset() {
-		root3D.setScaleX(1.0);
-		root3D.setScaleY(1.0);
-		root3D.setScaleZ(1.0);
-		root3D.setTranslateZ(0);
+		root.setScaleX(1.0);
+		root.setScaleY(1.0);
+		root.setScaleZ(1.0);
+		root.setTranslateZ(0);
+		faceColorPy.set(FACE_COLOR);
 		update();
-		// without this, the initial color is not always correct. Why?
-		face().setMaterial(faceMaterial);
 		resetMovement();
 	}
 
@@ -96,10 +93,10 @@ public class Pac3D extends MovingCreature3D {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
-		return new PacDyingAnimation(root3D, faceColorPy, FACE_COLOR, killingGhostColor).getAnimation();
+		return new PacDyingAnimation(root, faceColorPy, FACE_COLOR, killingGhostColor).getAnimation();
 	}
 
 	private Shape3D face() {
-		return model3D.pacFace(root3D);
+		return model3D.pacFace(root);
 	}
 }
