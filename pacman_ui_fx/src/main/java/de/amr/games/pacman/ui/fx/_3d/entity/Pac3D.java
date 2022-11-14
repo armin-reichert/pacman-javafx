@@ -67,7 +67,6 @@ public class Pac3D extends MovingCreature3D {
 		this.model3D = model3D;
 		root = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
 		getChildren().addAll(root, createSpotLight());
-//		getChildren().addAll(root);
 		var faceMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
 		face().setMaterial(faceMaterial);
