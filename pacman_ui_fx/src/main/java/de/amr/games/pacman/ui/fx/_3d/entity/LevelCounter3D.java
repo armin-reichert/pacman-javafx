@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.function.Function;
+import java.util.function.IntFunction;
 
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.LevelCounter;
@@ -46,10 +46,10 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	private final Function<Integer, Image> fnSymbolImage;
+	private final IntFunction<Image> fnSymbolImage;
 	private V2d rightPosition = V2d.NULL;
 
-	public LevelCounter3D(Function<Integer, Image> fnSymbolImage) {
+	public LevelCounter3D(IntFunction<Image> fnSymbolImage) {
 		this.fnSymbolImage = fnSymbolImage;
 	}
 
