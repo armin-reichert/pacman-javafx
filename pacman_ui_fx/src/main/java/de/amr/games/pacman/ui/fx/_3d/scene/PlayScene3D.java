@@ -139,8 +139,8 @@ public class PlayScene3D implements GameScene {
 		world3D.levelCounter3D().init(ctx.game().levelCounter);
 		world3D.livesCounter3D().setVisible(ctx.game().hasCredit());
 
-		pac3D = new Pac3D(ctx.game().pac, ctx.world(), ctx.model3D());
-		pac3D.reset();
+		pac3D = new Pac3D(ctx.game().pac, ctx.model3D());
+		pac3D.reset(ctx.world());
 		content.getChildren().add(pac3D);
 
 		bonus3D = new Bonus3D(ctx.game().bonus());
@@ -160,7 +160,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onTick() {
 		world3D.update(ctx.game());
-		pac3D.update();
+		pac3D.update(ctx.world());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
 		bonus3D.update();
 		currentCamera().update(pac3D);
@@ -270,7 +270,7 @@ public class PlayScene3D implements GameScene {
 
 		case READY -> {
 			world3D.reset();
-			pac3D.reset();
+			pac3D.reset(ctx.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
 

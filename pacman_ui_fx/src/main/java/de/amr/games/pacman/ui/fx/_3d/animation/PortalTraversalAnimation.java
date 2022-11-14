@@ -44,27 +44,24 @@ public class PortalTraversalAnimation {
 	private static final double FADING_DISTANCE = 32.0;
 
 	private final Creature guy;
-	private final World world;
 	private final Node node;
 	private final ObjectProperty<Color> colorPy;
 	private final Color baseColor;
 
-	public PortalTraversalAnimation(Creature guy, World world, Node node, ObjectProperty<Color> colorPy,
-			Color baseColor) {
+	public PortalTraversalAnimation(Creature guy, Node node, ObjectProperty<Color> colorPy, Color baseColor) {
 		this.guy = guy;
-		this.world = world;
 		this.node = node;
 		this.colorPy = colorPy;
 		this.baseColor = baseColor;
 	}
 
-	public void update() {
+	public void update(World world) {
 		if (colorPy.isBound()) {
 			return;
 		}
 		node.setVisible(guy.isVisible());
-		double dist = distFromNearestPortal();
-		if (dist < 4.0 || outsideWorld()) {
+		double dist = distFromNearestPortal(world);
+		if (dist < 4.0 || outsideWorld(world)) {
 			node.setOpacity(1.0);
 			node.setVisible(false);
 			LOGGER.trace("Distance from portal: %.2f visible: %s", dist, node.isVisible());
@@ -84,7 +81,7 @@ public class PortalTraversalAnimation {
 		return Color.color(color.getRed() * fading, color.getGreen() * fading, color.getBlue() * fading, fading);
 	}
 
-	private double distFromNearestPortal() {
+	private double distFromNearestPortal(World world) {
 		double minDist = Double.MAX_VALUE;
 		for (var portal : world.portals()) {
 			if (portal instanceof HorizontalPortal horPortal) {
@@ -99,7 +96,7 @@ public class PortalTraversalAnimation {
 		return minDist;
 	}
 
-	private boolean outsideWorld() {
+	private boolean outsideWorld(World world) {
 		double centerX = guy.position().x() + World.HTS;
 		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}
