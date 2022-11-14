@@ -71,7 +71,7 @@ public class Pac3D extends MovingCreature3D {
 		var faceMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
 		face().setMaterial(faceMaterial);
-		portalTraversalAnimation = new PortalTraversalAnimation(pac, root, faceColorPy, FACE_COLOR);
+		portalTraversalAnimation = new PortalTraversalAnimation(faceColorPy, FACE_COLOR);
 	}
 
 	private PointLight createSpotLight() {
@@ -94,7 +94,7 @@ public class Pac3D extends MovingCreature3D {
 
 	public void update(World world) {
 		updateMovement();
-		portalTraversalAnimation.update(world);
+		portalTraversalAnimation.update(world, guy, root);
 		setVisible(guy.isVisible());
 	}
 
