@@ -133,11 +133,8 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		content.getChildren().clear();
 
-		// Note: world3D comes first in content list, gets exchanged on new level start
-		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		newWorld();
 		content.getChildren().add(world3D);
-		world3D.levelCounter3D().init(ctx.game().levelCounter);
-		world3D.livesCounter3D().setVisible(ctx.game().hasCredit());
 
 		pac3D = new Pac3D(ctx.game().pac, ctx.model3D());
 		pac3D.reset(ctx.world());
@@ -155,6 +152,12 @@ public class PlayScene3D implements GameScene {
 		content.getTransforms().setAll(centerOverOrigin);
 
 		changeCamera(Env.perspectivePy.get());
+	}
+
+	private void newWorld() {
+		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		world3D.levelCounter3D().init(ctx.game().levelCounter);
+		world3D.livesCounter3D().setVisible(ctx.game().hasCredit());
 	}
 
 	@Override
@@ -288,8 +291,9 @@ public class PlayScene3D implements GameScene {
 
 		case LEVEL_STARTING -> {
 			lockGameState();
-			world3D = new World3D(game, ctx.model3D(), ctx.r2D());
-			content.getChildren().set(0, world3D);
+			newWorld();
+			content.getChildren().remove(0);
+			content.getChildren().add(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
 			Ufx.pause(3, this::unlockGameState).play();
