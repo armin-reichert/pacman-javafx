@@ -34,9 +34,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
-import javafx.scene.PointLight;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -74,14 +72,6 @@ public class Ghost3D extends MovingCreature3D {
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
 	}
 
-	private PointLight createSpotLight() {
-		var spot = new PointLight(Color.WHITE);
-		spot.setTranslateZ(-8);
-		spot.lightOnProperty().bind(visibleProperty());
-		LOGGER.info("Spot light created: %s", spot);
-		return spot;
-	}
-
 	public void reset(GameModel game) {
 		update(game);
 		resetMovement();
@@ -98,17 +88,22 @@ public class Ghost3D extends MovingCreature3D {
 		setVisible(guy.isVisible() && !outsideWorld(game)); // ???
 	}
 
+	private void useColoredGhost() {
+		// 2022-11-14: learned today, that JavaFX only allows up to 3 point lights per subscene. Very poor.
+		getChildren().setAll(coloredGhost3D.getRoot());
+	}
+
 	private void changeLook(GameModel game, Look newLook) {
 		look = newLook;
 		switch (newLook) {
 		case NORMAL_COLOR -> {
 			coloredGhost3D.lookNormal();
 			resetMovement();
-			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
+			useColoredGhost();
 		}
 		case FRIGHTENED_COLOR -> {
 			coloredGhost3D.lookFrightened();
-			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
+			useColoredGhost();
 		}
 		case FLASHING -> {
 			int numFlashes = game.level.numFlashes();
@@ -117,12 +112,12 @@ public class Ghost3D extends MovingCreature3D {
 			} else {
 				coloredGhost3D.lookFrightened();
 			}
-			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
+			useColoredGhost();
 		}
 		case EYES_ONLY -> {
 			coloredGhost3D.lookEyesOnly();
 			resetMovement();
-			getChildren().setAll(coloredGhost3D.getRoot(), createSpotLight());
+			useColoredGhost();
 		}
 		case NUMBER -> {
 			var ghost = (Ghost) guy;
