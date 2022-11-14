@@ -11,7 +11,7 @@
 		<maven.compiler.source>18</maven.compiler.source>
 		<maven.compiler.target>18</maven.compiler.target>
 		<version.maven.compiler.plugin>3.10.1</version.maven.compiler.plugin>
-		<version.javafx>18.0.1</version.javafx>
+		<version.javafx>18.0.2</version.javafx>
 		<version.javafx.maven.plugin>0.0.8</version.javafx.maven.plugin>
 	</properties>
 
