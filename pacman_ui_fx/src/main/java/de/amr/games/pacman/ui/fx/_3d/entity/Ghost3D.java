@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
@@ -54,6 +57,8 @@ import javafx.scene.transform.Rotate;
  */
 public class Ghost3D extends MovingCreature3D {
 
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
 	private enum Look {
 		NORMAL_COLOR, FRIGHTENED_COLOR, FLASHING, EYES_ONLY, NUMBER;
 	}
@@ -73,6 +78,7 @@ public class Ghost3D extends MovingCreature3D {
 		var spot = new PointLight(Color.WHITE);
 		spot.setTranslateZ(-8);
 		spot.lightOnProperty().bind(visibleProperty());
+		LOGGER.info("Spot light created: %s", spot);
 		return spot;
 	}
 

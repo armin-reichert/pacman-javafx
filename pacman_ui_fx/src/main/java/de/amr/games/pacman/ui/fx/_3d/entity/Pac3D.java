@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
@@ -48,6 +51,8 @@ import javafx.scene.shape.Shape3D;
  */
 public class Pac3D extends MovingCreature3D {
 
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
 	private static final Color FACE_COLOR = Color.YELLOW;
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
 	private static final Color PALATE_COLOR = Color.CORAL;
@@ -61,15 +66,20 @@ public class Pac3D extends MovingCreature3D {
 		super(pac);
 		this.model3D = model3D;
 		root = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
-		getChildren().addAll(root);
-		var spot = new PointLight(Color.WHITE);
-		spot.setTranslateZ(-8);
-		spot.lightOnProperty().bind(visibleProperty());
-		getChildren().add(spot);
+		getChildren().addAll(root, createSpotLight());
+//		getChildren().addAll(root);
 		var faceMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
 		face().setMaterial(faceMaterial);
 		portalTraversalAnimation = new PortalTraversalAnimation(pac, world, root, faceColorPy, FACE_COLOR);
+	}
+
+	private PointLight createSpotLight() {
+		var spot = new PointLight(Color.WHITE);
+		spot.setTranslateZ(-8);
+		spot.lightOnProperty().bind(visibleProperty());
+		LOGGER.info("Spot light created: %s", spot);
+		return spot;
 	}
 
 	public void reset() {
