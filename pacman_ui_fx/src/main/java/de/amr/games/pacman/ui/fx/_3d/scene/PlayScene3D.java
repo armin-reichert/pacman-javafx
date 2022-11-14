@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene {
 		content.getChildren().add(world3D);
 
 		pac3D = new Pac3D(ctx.game().pac, ctx.model3D());
-		pac3D.reset(ctx.world());
+		pac3D.init(ctx.world());
 		content.getChildren().add(pac3D);
 
 		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
@@ -274,7 +274,7 @@ public class PlayScene3D implements GameScene {
 
 		case READY -> {
 			world3D.reset();
-			pac3D.reset(ctx.world());
+			pac3D.init(ctx.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
 

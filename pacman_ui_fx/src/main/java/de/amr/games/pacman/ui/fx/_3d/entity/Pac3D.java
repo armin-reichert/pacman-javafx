@@ -81,7 +81,7 @@ public class Pac3D extends MovingCreature3D {
 		return spot;
 	}
 
-	public void reset(World world) {
+	public void init(World world) {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
