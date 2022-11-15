@@ -84,7 +84,8 @@ public class Ghost3D extends MovingCreature3D {
 	}
 
 	private void useColoredGhost() {
-		// 2022-11-14: learned today, that JavaFX only allows up to 3 point lights per subscene. Very poor.
+		// 2022-11-14: I wanted to add a point light to each ghost but learned today, that JavaFX only allows up to 3 point
+		// lights per subscene. Very sad.
 		getChildren().setAll(coloredGhost3D.getRoot());
 	}
 
