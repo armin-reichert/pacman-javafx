@@ -136,8 +136,7 @@ public class PlayScene3D implements GameScene {
 
 		content.getChildren().clear();
 
-		world3D = new World3D(ctx.level(), ctx.model3D(), ctx.r2D());
-		world3D.init(ctx.game());
+		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
 		content.getChildren().add(world3D);
 
 		pac3D = new Pac3D(ctx.game().pac, ctx.model3D());
@@ -267,7 +266,7 @@ public class PlayScene3D implements GameScene {
 		switch (e.newGameState) {
 
 		case READY -> {
-			world3D.init(ctx.game());
+			world3D.food3D().resetEnergizerPumping();
 			pac3D.init(ctx.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
@@ -286,8 +285,7 @@ public class PlayScene3D implements GameScene {
 
 		case LEVEL_STARTING -> {
 			lockGameState();
-			world3D = new World3D(ctx.level(), ctx.model3D(), ctx.r2D());
-			world3D.init(ctx.game());
+			world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
 			content.getChildren().remove(0);
 			content.getChildren().add(0, world3D);
 			changeCamera(Env.perspectivePy.get());
