@@ -32,6 +32,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
@@ -56,18 +57,17 @@ public class World3D extends Group {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 
-	public World3D(GameModel game, Model3D model3D, Rendering2D r2D) {
+	public World3D(GameLevel gameLevel, Model3D model3D, Rendering2D r2D) {
 		scores3D = new Scores3D();
 		var scoreFont = Font.font(r2D.arcadeFont().getFamily(), TS);
 		scores3D.setFont(scoreFont);
 		getChildren().add(scores3D);
 
 		var mazeColors = new MazeColors(//
-				r2D.getMazeSideColor(game.level.mazeNumber()), //
-				r2D.getMazeTopColor(game.level.mazeNumber()), //
+				r2D.getMazeSideColor(gameLevel.mazeNumber()), //
+				r2D.getMazeTopColor(gameLevel.mazeNumber()), //
 				r2D.getGhostHouseDoorColor());
-
-		maze3D = new Maze3D(game.level.world(), mazeColors);
+		maze3D = new Maze3D(gameLevel.world(), mazeColors);
 		maze3D.drawModePy.bind(Env.drawModePy);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
@@ -78,13 +78,13 @@ public class World3D extends Group {
 		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
 		getChildren().add(maze3D);
 
-		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
-		food3D = new Food3D(game.level.world(), foodColor);
+		var foodColor = r2D.getMazeFoodColor(gameLevel.mazeNumber());
+		food3D = new Food3D(gameLevel.world(), foodColor);
 		food3D.squirtingPy.bind(Env.squirtingPy);
 		getChildren().add(food3D);
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
-		levelCounter3D.setRightPosition((game.level.world().numCols() - 1) * TS, TS);
+		levelCounter3D.setRightPosition((gameLevel.world().numCols() - 1) * TS, TS);
 		getChildren().add(levelCounter3D);
 
 		livesCounter3D = new LivesCounter3D(model3D);
@@ -92,6 +92,25 @@ public class World3D extends Group {
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
 		getChildren().add(livesCounter3D);
+	}
+
+	public void init(GameModel game) {
+		food3D.resetEnergizerPumping();
+		levelCounter3D().init(game.levelCounter);
+		livesCounter3D().setVisible(game.hasCredit());
+	}
+
+	public void update(GameModel game) {
+		scores3D.update(game);
+		updateDoorState(game);
+		livesCounter3D.update(game.livesOneLessShown ? game.lives - 1 : game.lives);
+		if (game.hasCredit()) {
+			scores3D.setComputeScoreText(true);
+		} else {
+			scores3D.setComputeScoreText(false);
+			scores3D.txtScore.setFill(Color.RED);
+			scores3D.txtScore.setText("GAME OVER!");
+		}
 	}
 
 	public Scores3D scores3D() {
@@ -112,23 +131,6 @@ public class World3D extends Group {
 
 	public Food3D food3D() {
 		return food3D;
-	}
-
-	public void reset() {
-		food3D.resetEnergizerPumping();
-	}
-
-	public void update(GameModel game) {
-		scores3D.update(game);
-		updateDoorState(game);
-		livesCounter3D.update(game.livesOneLessShown ? game.lives - 1 : game.lives);
-		if (game.hasCredit()) {
-			scores3D.setComputeScoreText(true);
-		} else {
-			scores3D.setComputeScoreText(false);
-			scores3D.txtScore.setFill(Color.RED);
-			scores3D.txtScore.setText("GAME OVER!");
-		}
 	}
 
 	// should be generalized to work with any ghost house

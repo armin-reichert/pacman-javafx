@@ -111,7 +111,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.game().hasCredit()) {
+		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
 			// when in attract mode, allow adding credit
 			Actions.addCredit();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
@@ -136,7 +136,8 @@ public class PlayScene3D implements GameScene {
 
 		content.getChildren().clear();
 
-		newWorld();
+		world3D = new World3D(ctx.level(), ctx.model3D(), ctx.r2D());
+		world3D.init(ctx.game());
 		content.getChildren().add(world3D);
 
 		pac3D = new Pac3D(ctx.game().pac, ctx.model3D());
@@ -153,12 +154,6 @@ public class PlayScene3D implements GameScene {
 		content.getTransforms().setAll(centerOverOrigin);
 
 		changeCamera(Env.perspectivePy.get());
-	}
-
-	private void newWorld() {
-		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
-		world3D.levelCounter3D().init(ctx.game().levelCounter);
-		world3D.livesCounter3D().setVisible(ctx.game().hasCredit());
 	}
 
 	@Override
@@ -231,13 +226,12 @@ public class PlayScene3D implements GameScene {
 	public void onPlayerFindsFood(GameEvent e) {
 		var food3D = world3D.food3D();
 		if (e.tile.isEmpty()) {
-			// when cheat "eat all pellets" is used, no tile is present in the event
-			// remove 3D pellets to be in synch with model:
-			var world = ctx.world();
-			world.tiles()//
-					.filter(world::containsEatenFood)//
-					.map(food3D::pelletAt)//
-					.flatMap(Optional::stream)//
+			// when cheat "eat all pellets" is used, no tile is present in the event. In that case, bring 3D pellets to be in
+			// synch with model:
+			ctx.world().tiles() //
+					.filter(ctx.world()::containsEatenFood) //
+					.map(food3D::pelletAt) //
+					.flatMap(Optional::stream) //
 					.forEach(Pellet3D::eat);
 		} else {
 			var tile = e.tile.get();
@@ -273,7 +267,7 @@ public class PlayScene3D implements GameScene {
 		switch (e.newGameState) {
 
 		case READY -> {
-			world3D.reset();
+			world3D.init(ctx.game());
 			pac3D.init(ctx.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
 		}
@@ -292,7 +286,8 @@ public class PlayScene3D implements GameScene {
 
 		case LEVEL_STARTING -> {
 			lockGameState();
-			newWorld();
+			world3D = new World3D(ctx.level(), ctx.model3D(), ctx.r2D());
+			world3D.init(ctx.game());
 			content.getChildren().remove(0);
 			content.getChildren().add(0, world3D);
 			changeCamera(Env.perspectivePy.get());
