@@ -66,35 +66,8 @@ public class ColoredGhost3D {
 		model3D.ghostEyePupils(root3D).setMaterial(Ufx.createColorBoundMaterial(eyePupilColorPy));
 	}
 
-	private void createFlashing(int numFlashes) {
-		var seconds = GameModel.PAC_POWER_FADING_TICKS / (2 * 60.0); // 2 animation cycles = 1 flashing
-		dressFlashing = new ColorFlashing(colors.frightenedDress(), colors.flashingDress(), seconds, numFlashes);
-		pupilsFlashing = new ColorFlashing(colors.frightendPupils(), colors.flashingPupils(), seconds, numFlashes);
-		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
-	}
-
-	private Shape3D dress() {
-		return model3D.ghostDress(root3D);
-	}
-
 	public Node getRoot() {
 		return root3D;
-	}
-
-	private void ensureFlashingPlaying(int numFlashes) {
-		if (flashing == null) {
-			createFlashing(numFlashes);
-		}
-		if (flashing.getStatus() != Status.RUNNING) {
-			flashing.playFromStart();
-		}
-	}
-
-	private void ensureFlashingStopped() {
-		if (flashing != null && flashing.getStatus() == Status.RUNNING) {
-			flashing.stop();
-			flashing = null;
-		}
 	}
 
 	public void lookFlashing(int numFlashes) {
@@ -128,5 +101,32 @@ public class ColoredGhost3D {
 	public void lookEyesOnly() {
 		lookNormal();
 		dress().setVisible(false);
+	}
+
+	private void createFlashing(int numFlashes) {
+		var seconds = (double) GameModel.PAC_POWER_FADING_TICKS / (2 * GameModel.FPS); // 2 animation cycles = 1 flashing
+		dressFlashing = new ColorFlashing(colors.frightenedDress(), colors.flashingDress(), seconds, numFlashes);
+		pupilsFlashing = new ColorFlashing(colors.frightendPupils(), colors.flashingPupils(), seconds, numFlashes);
+		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
+	}
+
+	private Shape3D dress() {
+		return model3D.ghostDress(root3D);
+	}
+
+	private void ensureFlashingPlaying(int numFlashes) {
+		if (flashing == null) {
+			createFlashing(numFlashes);
+		}
+		if (flashing.getStatus() != Status.RUNNING) {
+			flashing.playFromStart();
+		}
+	}
+
+	private void ensureFlashingStopped() {
+		if (flashing != null && flashing.getStatus() == Status.RUNNING) {
+			flashing.stop();
+			flashing = null;
+		}
 	}
 }
