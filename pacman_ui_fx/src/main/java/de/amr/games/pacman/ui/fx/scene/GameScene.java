@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import de.amr.games.pacman.event.GameEventAdapter;
+import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -36,7 +36,7 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public interface GameScene extends GameEventAdapter {
+public interface GameScene extends GameEventListener {
 
 	/** Default unscaled scene size in pixels: number of tiles times tile size (8). */
 	public static final V2i DEFAULT_SIZE = ArcadeWorld.WORLD_SIZE;

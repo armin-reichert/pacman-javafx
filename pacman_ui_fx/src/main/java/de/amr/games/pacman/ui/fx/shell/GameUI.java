@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventAdapter;
+import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
@@ -65,7 +65,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI implements GameEventAdapter {
+public class GameUI implements GameEventListener {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
@@ -180,7 +180,7 @@ public class GameUI implements GameEventAdapter {
 
 	@Override
 	public void onGameEvent(GameEvent event) {
-		GameEventAdapter.super.onGameEvent(event);
+		GameEventListener.super.onGameEvent(event);
 		currentGameScene.onGameEvent(event);
 		LOGGER.trace("Game UI received game event %s", event);
 	}
