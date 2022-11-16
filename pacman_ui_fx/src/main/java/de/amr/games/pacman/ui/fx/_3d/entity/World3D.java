@@ -34,7 +34,9 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.lib.V2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeColors;
@@ -42,6 +44,7 @@ import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -55,8 +58,12 @@ public class World3D extends Group {
 	private final Scores3D scores3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
+	private final PointLight houseLighting = new PointLight();
 
 	public World3D(GameModel game, Model3D model3D, Rendering2D r2D) {
+		double width = game.level.world().numCols() * World.TS;
+		double height = game.level.world().numRows() * World.TS;
+
 		scores3D = new Scores3D();
 		var scoreFont = Font.font(r2D.arcadeFont().getFamily(), TS);
 		scores3D.setFont(scoreFont);
@@ -76,6 +83,13 @@ public class World3D extends Group {
 		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
 		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
 		getChildren().add(maze3D);
+
+		houseLighting.setColor(Color.GHOSTWHITE);
+		houseLighting.setMaxRange(10 * TS);
+		houseLighting.setTranslateX(width / 2);
+		houseLighting.setTranslateY((height - 2 * TS) / 2);
+		houseLighting.setTranslateZ(-TS);
+		getChildren().add(houseLighting);
 
 		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
 		food3D = new Food3D(game.level.world(), foodColor);
@@ -98,6 +112,7 @@ public class World3D extends Group {
 
 	public void update(GameModel game) {
 		scores3D.update(game);
+		updateHouseLightingState(game);
 		updateDoorState(game);
 		livesCounter3D.update(game.livesOneLessShown ? game.lives - 1 : game.lives);
 		if (game.hasCredit()) {
@@ -127,6 +142,12 @@ public class World3D extends Group {
 
 	public Food3D food3D() {
 		return food3D;
+	}
+
+	private void updateHouseLightingState(GameModel game) {
+		boolean anyGhostInHouse = game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+				.count() > 0;
+		houseLighting.setLightOn(anyGhostInHouse);
 	}
 
 	// should be generalized to work with any ghost house
