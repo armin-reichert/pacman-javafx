@@ -61,24 +61,25 @@ public class Pac3D extends MovingCreature3D {
 	private final Group root;
 	private final PortalTraversalAnimation portalTraversalAnimation;
 	private final ObjectProperty<Color> faceColorPy = new SimpleObjectProperty<>(FACE_COLOR);
+	private final PointLight spot;
 
 	public Pac3D(Pac pac, Model3D model3D) {
 		super(pac);
 		this.model3D = model3D;
 		root = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
-		getChildren().addAll(root, createSpotLight());
+		getChildren().add(root);
+
+		spot = new PointLight();
+		spot.setColor(Color.ANTIQUEWHITE);
+		spot.setMaxRange(64);
+		spot.setTranslateZ(-8);
+		getChildren().add(spot);
+
 		var faceMaterial = new PhongMaterial();
 		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
 		face().setMaterial(faceMaterial);
-		portalTraversalAnimation = new PortalTraversalAnimation(faceColorPy, FACE_COLOR);
-	}
 
-	private PointLight createSpotLight() {
-		var spot = new PointLight(Color.WHITE);
-		spot.setTranslateZ(-8);
-		spot.lightOnProperty().bind(visibleProperty());
-		LOGGER.info("Spot light created: %s", spot);
-		return spot;
+		portalTraversalAnimation = new PortalTraversalAnimation(faceColorPy, FACE_COLOR);
 	}
 
 	public void init(World world) {
@@ -95,6 +96,10 @@ public class Pac3D extends MovingCreature3D {
 		updateMovement();
 		portalTraversalAnimation.update(world, guy, root);
 		setVisible(guy.isVisible());
+		spot.setLightOn(isVisible()); // why doesn't this work?
+		if (!isVisible()) {
+			LOGGER.info("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
+		}
 	}
 
 	/**
