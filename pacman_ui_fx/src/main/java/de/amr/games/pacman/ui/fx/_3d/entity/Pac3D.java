@@ -98,7 +98,7 @@ public class Pac3D extends MovingCreature3D {
 		setVisible(guy.isVisible());
 		spot.setLightOn(isVisible()); // why doesn't this work?
 		if (!isVisible()) {
-			LOGGER.info("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
+			LOGGER.trace("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
 		}
 	}
 
