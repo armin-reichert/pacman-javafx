@@ -57,9 +57,9 @@ public class ColoredGhost3D {
 	public ColoredGhost3D(Model3D model3D, GhostColorScheme colors) {
 		this.model3D = model3D;
 		this.colors = colors;
-		dressColorPy = new SimpleObjectProperty<>(colors.normalDress());
-		eyeBallColorPy = new SimpleObjectProperty<>(colors.normalEyeBalls());
-		eyePupilColorPy = new SimpleObjectProperty<>(colors.normalPupils());
+		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", colors.normalDress());
+		eyeBallColorPy = new SimpleObjectProperty<>(this, "eyeBallColor", colors.normalEyeBalls());
+		eyePupilColorPy = new SimpleObjectProperty<>(this, "eyePupilColor", colors.normalPupils());
 		root3D = model3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
 		model3D.ghostDress(root3D).setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
 		model3D.ghostEyeBalls(root3D).setMaterial(Ufx.createColorBoundMaterial(eyeBallColorPy));
