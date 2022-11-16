@@ -62,8 +62,8 @@ public class PacManCreditScene extends GameScene2D {
 	public void draw() {
 		var arcade8 = ctx.r2D().arcadeFont();
 		var arcade6 = Font.font(arcade8.getName(), 6);
-		ctx.r2D().drawText(g, "PUSH START BUTTON", ctx.r2D().ghostColor(Ghost.ORANGE_GHOST), arcade8, t(6), t(17));
-		ctx.r2D().drawText(g, "1 PLAYER ONLY", ctx.r2D().ghostColor(Ghost.CYAN_GHOST), arcade8, t(8), t(21));
+		ctx.r2D().drawText(g, "PUSH START BUTTON", ctx.r2D().ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(6), t(17));
+		ctx.r2D().drawText(g, "1 PLAYER ONLY", ctx.r2D().ghostColor(Ghost.ID_CYAN_GHOST), arcade8, t(8), t(21));
 		ctx.r2D().drawText(g, "BONUS PAC-MAN FOR 10000", Color.rgb(255, 184, 174), arcade8, t(1), t(25));
 		ctx.r2D().drawText(g, "PTS", Color.rgb(255, 184, 174), arcade6, t(25), t(25));
 		ctx.r2D().drawCopyright(g, 29);

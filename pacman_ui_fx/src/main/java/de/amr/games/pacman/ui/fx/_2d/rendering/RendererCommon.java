@@ -65,25 +65,25 @@ public abstract class RendererCommon implements Rendering2D {
 		var pale = Color.web("E0DDFF");
 		var blue = Color.web("#2121FF");
 		
-		GHOST_COLORS[Ghost.RED_GHOST] = new GhostColorScheme(//
+		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColorScheme(//
 				Color.RED, pale, blue, // normal
 				blue, pink, pink, // frightened
 				pale, pink, Color.RED // flashing
 		);
 
-		GHOST_COLORS[Ghost.PINK_GHOST] = new GhostColorScheme(//
+		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColorScheme(//
 				Color.web("FCB5FF"), pale, blue, // normal
 				blue, pink, pink, // frightened
 				pale, pink, Color.RED // flashing
 		);
 
-		GHOST_COLORS[Ghost.CYAN_GHOST] = new GhostColorScheme(//
+		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColorScheme(//
 				Color.CYAN, pale, blue, // normal
 				blue, pink, pink, // frightened
 				pale, pink, Color.RED // flashing
 		);
 		
-		GHOST_COLORS[Ghost.ORANGE_GHOST] = new GhostColorScheme(//
+		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColorScheme(//
 				Color.web("FBBE58"), pale, blue, // normal
 				blue, pink, pink, // frightened
 				pale, pink, Color.RED // flashing
