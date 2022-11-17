@@ -90,9 +90,9 @@ public class PacManCutscene3 extends GameScene2D {
 			return;
 		}
 		pac.move();
-		pac.updateAnimation();
+		pac.advanceAnimation();
 		blinky.move();
-		blinky.updateAnimation();
+		blinky.advanceAnimation();
 	}
 
 	@Override
