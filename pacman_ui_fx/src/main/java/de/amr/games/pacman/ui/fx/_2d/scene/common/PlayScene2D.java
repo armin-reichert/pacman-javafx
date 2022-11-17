@@ -234,7 +234,7 @@ public class PlayScene2D extends GameScene2D {
 			if (game.killedIndex[ghost.id] != -1) {
 				stateText += " killed: %d".formatted(game.killedIndex[ghost.id]);
 			}
-			var selectedAnim = ghost.animation();
+			var selectedAnim = ghost.selectedAnimation();
 			if (selectedAnim.isPresent()) {
 				var ghostAnims = ghost.animationSet();
 				if (ghostAnims.isPresent()) {
