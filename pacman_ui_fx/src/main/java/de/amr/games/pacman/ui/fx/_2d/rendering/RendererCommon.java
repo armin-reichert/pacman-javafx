@@ -191,7 +191,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawLevelCounter(GraphicsContext g, LevelCounter counter) {
-		if (counter.visible) {
+		if (counter.isVisible()) {
 			double x = t(24);
 			for (var symbol : counter.symbols) {
 				drawSprite(g, bonusSymbolSprite(symbol), x, t(34));
