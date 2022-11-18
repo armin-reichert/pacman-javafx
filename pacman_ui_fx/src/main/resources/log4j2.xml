@@ -25,7 +25,7 @@
 		<Logger name="de.amr.games.pacman.model.common.actors.Ghost" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.lib.FollowRoute" level="trace" additivity="false">
+		<Logger name="de.amr.games.pacman.lib.FollowRoute" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger name="de.amr.games.pacman.ui.fx.shell.GameUI" level="info" additivity="false">
