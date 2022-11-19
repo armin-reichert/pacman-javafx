@@ -319,8 +319,8 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	public EntityAnimationSet<Integer> createClapperboardAnimationSet() {
 		var animationSet = new EntityAnimationSet<Integer>(1);
-		animationSet.put(Clapperboard.ACTION, createClapperboardAnimation());
-		animationSet.select(Clapperboard.ACTION);
+		animationSet.put(0, createClapperboardAnimation());
+		animationSet.select(0);
 		return animationSet;
 	}
 
