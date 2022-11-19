@@ -57,11 +57,11 @@ import javafx.stage.Stage;
  * <p>
  * The model layer consists of the two game models {@link PacManGame} and {@link MsPacManGame}. The controller
  * {@link GameController} is a finite-state machine which is triggered 60 times per second by the {@link GameLoop}. The
- * view {@link GameUI} listens to game events which are sent by the controller.
+ * view {@link GameUI} listens to game events sent from the controller/model layer.
  * <p>
- * The model and controller layers are decoupled from the view layer which allow to create different user interfaces for
- * the games without any change in the controller or model. As a proof of concept there exists also a Swing user
- * interface.
+ * The model and controller layers are decoupled from the user interface. This allow to attach different user interfaces
+ * without having to change the controller or model. As a proof of concept I implemented also a (simpler) Swing user
+ * interface, see repository {@code pacman-ui-swing}.
  * 
  * @author Armin Reichert
  */
