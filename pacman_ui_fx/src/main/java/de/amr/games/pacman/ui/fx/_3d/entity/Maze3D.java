@@ -72,29 +72,13 @@ public class Maze3D extends Group {
 	}
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
 	private static final double FLOOR_THICKNESS = 0.1;
 
 	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(this, "resolution", 4);
-
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
-
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
-
-	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture") {
-		@Override
-		protected void invalidated() {
-			updateFloorMaterial();
-		}
-	};
-
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
-		@Override
-		protected void invalidated() {
-			updateFloorMaterial();
-		}
-	};
-
+	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture");
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final MazeColors mazeColors;
@@ -107,6 +91,8 @@ public class Maze3D extends Group {
 		createFloor(world);
 		getChildren().addAll(floor, wallsGroup, doorsGroup);
 		build(world);
+		floorColorPy.addListener(py -> updateFloorMaterial());
+		floorTexturePy.addListener(py -> updateFloorMaterial());
 		resolutionPy.addListener(py -> build(world));
 	}
 
