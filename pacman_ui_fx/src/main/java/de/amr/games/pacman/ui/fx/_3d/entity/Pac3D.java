@@ -26,20 +26,17 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Shape3D;
 
 /**
  * 3D-representation of Pac-Man or Ms. Pac-Man.
@@ -57,16 +54,13 @@ public class Pac3D extends MovingCreature3D {
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
 	private static final Color PALATE_COLOR = Color.CORAL;
 
-	private final Model3D model3D;
 	private final Group root;
-	private final PortalTraversalAnimation portalTraversalAnimation;
 	private final ObjectProperty<Color> faceColorPy = new SimpleObjectProperty<>(FACE_COLOR);
 	private final PointLight spot;
 
 	public Pac3D(Pac pac, Model3D model3D) {
 		super(pac);
-		this.model3D = model3D;
-		root = model3D.createPac(FACE_COLOR, EYES_COLOR, PALATE_COLOR);
+		root = model3D.createPac(EYES_COLOR, PALATE_COLOR);
 		getChildren().add(root);
 
 		spot = new PointLight();
@@ -74,12 +68,6 @@ public class Pac3D extends MovingCreature3D {
 		spot.setMaxRange(64);
 		spot.setTranslateZ(-8);
 		getChildren().add(spot);
-
-		var faceMaterial = new PhongMaterial();
-		Ufx.bindMaterialColor(faceMaterial, faceColorPy);
-		face().setMaterial(faceMaterial);
-
-		portalTraversalAnimation = new PortalTraversalAnimation(faceColorPy, FACE_COLOR);
 	}
 
 	public void init(World world) {
@@ -94,12 +82,17 @@ public class Pac3D extends MovingCreature3D {
 
 	public void update(World world) {
 		updateMovement();
-		portalTraversalAnimation.update(world, guy, root);
-		setVisible(guy.isVisible());
+		boolean out = outsideWorld(world, guy);
+		setVisible(guy.isVisible() && !out);
 		spot.setLightOn(isVisible()); // why doesn't this work?
 		if (!isVisible()) {
 			LOGGER.trace("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
 		}
+	}
+
+	private boolean outsideWorld(World world, Creature guy) {
+		double centerX = guy.position().x() + World.HTS;
+		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}
 
 	/**
@@ -108,9 +101,5 @@ public class Pac3D extends MovingCreature3D {
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
 		return new PacDyingAnimation(root, faceColorPy, FACE_COLOR, killingGhostColor).getAnimation();
-	}
-
-	private Shape3D face() {
-		return model3D.pacFace(root);
 	}
 }

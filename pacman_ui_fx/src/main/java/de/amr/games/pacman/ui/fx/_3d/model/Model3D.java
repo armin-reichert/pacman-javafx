@@ -30,9 +30,11 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
@@ -61,6 +63,8 @@ public class Model3D {
 
 	private static final double PAC_SIZE = 9.0;
 	private static final double GHOST_SIZE = 8.5;
+
+	private static final Image FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
 
 	private static Model3D theThing;
 
@@ -93,9 +97,12 @@ public class Model3D {
 		ghostModel = new ObjModel(ghostModelURL);
 	}
 
-	public Group createPac(Color faceColor, Color eyesColor, Color palateColor) {
+	public Group createPac(Color eyesColor, Color palateColor) {
+		var faceMaterial = new PhongMaterial();
+		faceMaterial.setDiffuseMap(FACE_TEXTURE);
+
 		var face = pacModel.createMeshView(MESH_PAC_FACE);
-		face.setMaterial(new PhongMaterial(faceColor));
+		face.setMaterial(faceMaterial);
 
 		var eyes = pacModel.createMeshView(MESH_PAC_EYES);
 		eyes.setMaterial(new PhongMaterial(eyesColor));

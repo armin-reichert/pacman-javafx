@@ -57,16 +57,19 @@ public class PortalTraversalAnimation {
 		}
 		guy3D.setVisible(guy.isVisible());
 		double dist = distFromNearestPortal(world, guy);
-		if (dist < 4.0 || outsideWorld(world, guy)) {
-			guy3D.setOpacity(1.0);
+		if (outsideWorld(world, guy)) {
 			guy3D.setVisible(false);
+		} else if (dist < 4.0) {
+			guy3D.setOpacity(1.0);
+//			guy3D.setVisible(false);
 			LOGGER.trace("Distance from portal: %.2f visible: %s", dist, guy3D.isVisible());
 		} else if (dist <= FADING_DISTANCE) {
 			double fading = dist / FADING_DISTANCE;
 			var color = fade(baseColor, fading);
-			colorPy.set(color);
-			LOGGER.trace("Distance from portal: %.2f color: rgb(%.0f,%.0f,%.0f) visible: %s", dist, 256 * color.getRed(),
-					256 * color.getGreen(), 256 * color.getBlue(), guy3D.isVisible());
+//			colorPy.set(color);
+//			guy3D.setOpacity(fading);
+			LOGGER.info("Distance from portal: %.2f fading: %.2f  color: rgb(%.0f,%.0f,%.0f) visible: %s", dist, fading,
+					256 * color.getRed(), 256 * color.getGreen(), 256 * color.getBlue(), guy3D.isVisible());
 		} else {
 			colorPy.set(baseColor);
 			guy3D.setOpacity(1.0);
