@@ -50,12 +50,12 @@ public class Bonus3D extends Box {
 	public Bonus3D(Bonus bonus) {
 		super(TS, TS, TS);
 		this.bonus = bonus;
-		setTranslateZ(-HTS);
 	}
 
 	public void update() {
-		setTranslateX(bonus.entity().position().x() + getWidth() / 2);
-		setTranslateY(bonus.entity().position().y() + getHeight() / 2);
+		setTranslateX(bonus.entity().position().x() + HTS);
+		setTranslateY(bonus.entity().position().y() + HTS);
+		setTranslateZ(-HTS);
 		setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
@@ -68,7 +68,7 @@ public class Bonus3D extends Box {
 	public void showPoints(Rendering2D r2D) {
 		setTexture(r2D.spritesheet().region(r2D.bonusValueSprite(bonus.index())));
 		setWidth(bonus.value() >= 1000 ? TS * 2 : TS);
-		rotate(1, 5, 2);
+		rotate(1, 3, 2);
 	}
 
 	private void setTexture(Image texture) {
