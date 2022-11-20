@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.V2i;
-import de.amr.games.pacman.ui.fx.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
@@ -51,7 +50,6 @@ public class Door3D extends Box {
 		setTranslateX((double) tile.x() * TS + HTS);
 		setTranslateY((double) tile.y() * TS + HTS);
 		translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
-		drawModeProperty().bind(Env.drawModePy);
 	}
 
 	public void setOpen(boolean open) {

@@ -172,6 +172,8 @@ public class Maze3D extends Group {
 	private Door3D createDoor(V2i tile) {
 		var door = new Door3D(tile, mazeColors.doorColor);
 		door.doorHeightPy.bind(wallHeightPy);
+		door.drawModeProperty().bind(drawModePy);
+
 		return door;
 	}
 
