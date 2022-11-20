@@ -52,7 +52,7 @@ import javafx.scene.transform.Rotate;
 public class Ghost3D extends MovingCreature3D {
 
 	private enum Look {
-		NORMAL_COLOR, FRIGHTENED_COLOR, FLASHING, EYES_ONLY, NUMBER;
+		NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER;
 	}
 
 	private final ColoredGhost3D coloredGhost3D;
@@ -91,12 +91,12 @@ public class Ghost3D extends MovingCreature3D {
 	private void changeLook(GameModel game, Look newLook) {
 		look = newLook;
 		switch (newLook) {
-		case NORMAL_COLOR -> {
+		case NORMAL -> {
 			coloredGhost3D.lookNormal();
 			resetMovement();
 			useColoredGhost();
 		}
-		case FRIGHTENED_COLOR -> {
+		case FRIGHTENED -> {
 			coloredGhost3D.lookFrightened();
 			useColoredGhost();
 		}
@@ -109,7 +109,7 @@ public class Ghost3D extends MovingCreature3D {
 			}
 			useColoredGhost();
 		}
-		case EYES_ONLY -> {
+		case EYES -> {
 			coloredGhost3D.lookEyesOnly();
 			resetMovement();
 			useColoredGhost();
@@ -136,16 +136,16 @@ public class Ghost3D extends MovingCreature3D {
 		return switch (ghost.getState()) {
 		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1
 				? frightenedOrFlashingLook(game)
-				: Look.NORMAL_COLOR;
+				: Look.NORMAL;
 		case FRIGHTENED -> frightenedOrFlashingLook(game);
-		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES_ONLY;
+		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
 		case EATEN -> Look.NUMBER;
-		default -> Look.NORMAL_COLOR;
+		default -> Look.NORMAL;
 		};
 	}
 
 	private Look frightenedOrFlashingLook(GameModel game) {
-		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED_COLOR;
+		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
 	}
 
 	private void configureNumberCube(int valueIndex) {
