@@ -63,6 +63,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.transform.Translate;
 
@@ -143,7 +144,12 @@ public class PlayScene3D implements GameScene {
 		pac3D.init(ctx.world());
 		content.getChildren().add(pac3D);
 
-		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.model3D(), ctx.r2D())).toArray(Ghost3D[]::new);
+		var ghostValueImages = ctx.r2D().createGhostValueList().frames()//
+				.map(ctx.r2D().spritesheet()::region)//
+				.toArray(Image[]::new);
+		ghosts3D = ctx.game().ghosts()
+				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ghostValueImages, ctx.r2D().ghostColorScheme(ghost.id)))
+				.toArray(Ghost3D[]::new);
 		content.getChildren().addAll(ghosts3D);
 
 		bonus3D = new Bonus3D(ctx.game().bonus());
