@@ -60,7 +60,7 @@ public class Maze3D extends Group {
 	public record MazeColors(Color wallBaseColor, Color wallTopColor, Color doorColor) {
 	}
 
-	static class WallData {
+	private static class WallData {
 		byte type;
 		int x;
 		int y;
@@ -76,32 +76,32 @@ public class Maze3D extends Group {
 
 	private static final double FLOOR_THICKNESS = 0.1;
 
-	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(4) {
+	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(this, "resolution", 4) {
 		@Override
 		protected void invalidated() {
 			build();
 		}
 	};
 
-	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(2.0);
+	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 
-	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(1.0);
+	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
-	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>() {
+	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture") {
 		@Override
 		protected void invalidated() {
 			updateFloorMaterial();
 		}
 	};
 
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.BLACK) {
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
 		@Override
 		protected void invalidated() {
 			updateFloorMaterial();
 		}
 	};
 
-	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final World world;
 	private final MazeColors mazeColors;
@@ -159,21 +159,20 @@ public class Maze3D extends Group {
 		addHorizontalWalls(floorPlan, wallData);
 		addVerticalWalls(floorPlan, wallData);
 
-		var doors = world.ghostHouse().doorTiles().map(this::createDoor).toList();
+		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor)).toList();
 		doorsGroup.getChildren().setAll(doors);
 
-		LOGGER.info("Built 3D maze (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
+		LOGGER.info("3D maze created (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
 	public Stream<Door3D> doors() {
 		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
 	}
 
-	private Door3D createDoor(V2i tile) {
-		var door = new Door3D(tile, mazeColors.doorColor);
+	private Door3D createDoor(V2i tile, Color color) {
+		var door = new Door3D(tile, color);
 		door.doorHeightPy.bind(wallHeightPy);
 		door.drawModeProperty().bind(drawModePy);
-
 		return door;
 	}
 
