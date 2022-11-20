@@ -2,9 +2,9 @@
 
 ## About this project
 
-A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. Both games can be played in 2D and 3D.
+A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. 
 
-Unfortunately, I have no *animated* 3D model yet. The Pac-Man and ghost models used here have been generously provided by Gianmarco Cavallaccio (https://www.artstation.com/gianmart). The 3D maze is created programmatically using the information from the 2D maps. 
+Both games can be played in 2D and 3D, you can switch between 2D and 3D by pressing key combination <kbd>Alt+3</kbd>.
 
 ## How to build (Windows)
 
