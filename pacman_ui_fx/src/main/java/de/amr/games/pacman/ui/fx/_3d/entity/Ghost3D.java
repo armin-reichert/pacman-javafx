@@ -71,6 +71,10 @@ public class Ghost3D extends MovingCreature3D {
 		resetMovement();
 	}
 
+	private Ghost ghost() {
+		return (Ghost) guy;
+	}
+
 	public void update(GameModel game) {
 		var newLook = computeLookForCurrentState(game);
 		if (look != newLook) {
@@ -82,9 +86,9 @@ public class Ghost3D extends MovingCreature3D {
 		setVisible(guy.isVisible() && !outsideWorld(game)); // ???
 	}
 
+	// 2022-11-14: I wanted to add a point light to each ghost but learned today, that JavaFX only allows up to 3 point
+	// lights per subscene. Very sad.
 	private void useColoredGhost() {
-		// 2022-11-14: I wanted to add a point light to each ghost but learned today, that JavaFX only allows up to 3 point
-		// lights per subscene. Very sad.
 		getChildren().setAll(coloredGhost3D.getRoot());
 	}
 
@@ -115,8 +119,7 @@ public class Ghost3D extends MovingCreature3D {
 			useColoredGhost();
 		}
 		case NUMBER -> {
-			var ghost = (Ghost) guy;
-			configureNumberCube(game.killedIndex[ghost.id]);
+			configureNumberCube(game.killedIndex[ghost().id]);
 			getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
@@ -132,9 +135,8 @@ public class Ghost3D extends MovingCreature3D {
 	}
 
 	private Look computeLookForCurrentState(GameModel game) {
-		var ghost = (Ghost) guy;
-		return switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(game, ghost.id);
+		return switch (ghost().getState()) {
+		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(game);
 		case FRIGHTENED -> frightenedOrFlashingLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
 		case EATEN -> Look.NUMBER;
@@ -142,8 +144,8 @@ public class Ghost3D extends MovingCreature3D {
 		};
 	}
 
-	private Look normalOrFrightenedOrFlashingLook(GameModel game, int ghostID) {
-		if (game.powerTimer.isRunning() && game.killedIndex[ghostID] == -1) {
+	private Look normalOrFrightenedOrFlashingLook(GameModel game) {
+		if (game.powerTimer.isRunning() && game.killedIndex[ghost().id] == -1) {
 			return frightenedOrFlashingLook(game);
 		}
 		return Look.NORMAL;
