@@ -58,6 +58,7 @@ import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
+import javafx.beans.binding.Bindings;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -95,6 +96,19 @@ public class PlayScene3D implements GameScene {
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		createCameras();
+	}
+
+	private void createWorld3D() {
+		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		var maze3D = world3D.maze3D();
+		maze3D.drawModePy.bind(Env.drawModePy);
+		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
+				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
+				Env.floorTexturePy));
+		maze3D.floorColorPy.bind(Env.floorColorPy);
+		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
+		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
+		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
 	}
 
 	private void createCameras() {
@@ -137,7 +151,7 @@ public class PlayScene3D implements GameScene {
 
 		content.getChildren().clear();
 
-		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		createWorld3D();
 		content.getChildren().add(world3D);
 
 		pac3D = new Pac3D(ctx.game().pac, ctx.model3D());
@@ -291,7 +305,7 @@ public class PlayScene3D implements GameScene {
 
 		case LEVEL_STARTING -> {
 			lockGameState();
-			world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+			createWorld3D();
 			content.getChildren().remove(0);
 			content.getChildren().add(0, world3D);
 			changeCamera(Env.perspectivePy.get());

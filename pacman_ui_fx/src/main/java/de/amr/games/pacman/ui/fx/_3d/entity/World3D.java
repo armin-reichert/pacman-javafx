@@ -41,8 +41,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeColors;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
-import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.beans.binding.Bindings;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -74,14 +72,6 @@ public class World3D extends Group {
 				r2D.getMazeTopColor(game.level.mazeNumber()), //
 				r2D.getGhostHouseDoorColor());
 		maze3D = new Maze3D(game.level.world(), mazeColors);
-		maze3D.drawModePy.bind(Env.drawModePy);
-		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
-				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
-				Env.floorTexturePy));
-		maze3D.floorColorPy.bind(Env.floorColorPy);
-		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
-		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
-		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
 		getChildren().add(maze3D);
 
 		houseLighting.setColor(Color.GHOSTWHITE);
