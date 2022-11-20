@@ -67,7 +67,6 @@ public class Maze3D extends Group {
 		int numBricksX;
 		int numBricksY;
 		double brickSize;
-		double wallHeight;
 		PhongMaterial baseMaterial;
 		PhongMaterial topMaterial;
 	}
@@ -148,7 +147,6 @@ public class Maze3D extends Group {
 	private void build() {
 		var wallData = new WallData();
 		wallData.brickSize = (double) TS / resolutionPy.get();
-		wallData.wallHeight = wallHeightPy.get();
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor);
 		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor);
 
