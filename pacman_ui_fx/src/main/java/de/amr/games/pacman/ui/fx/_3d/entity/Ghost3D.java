@@ -72,7 +72,7 @@ public class Ghost3D extends MovingCreature3D {
 	}
 
 	public void update(GameModel game) {
-		var newLook = lookForCurrentState(game);
+		var newLook = computeLookForCurrentState(game);
 		if (look != newLook) {
 			changeLook(game, newLook);
 		}
@@ -131,17 +131,22 @@ public class Ghost3D extends MovingCreature3D {
 		return centerX < 0 || centerX > game.level.world().numCols() * World.TS;
 	}
 
-	private Look lookForCurrentState(GameModel game) {
+	private Look computeLookForCurrentState(GameModel game) {
 		var ghost = (Ghost) guy;
 		return switch (ghost.getState()) {
-		case LOCKED, LEAVING_HOUSE -> game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1
-				? frightenedOrFlashingLook(game)
-				: Look.NORMAL;
+		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(game, ghost.id);
 		case FRIGHTENED -> frightenedOrFlashingLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
 		case EATEN -> Look.NUMBER;
 		default -> Look.NORMAL;
 		};
+	}
+
+	private Look normalOrFrightenedOrFlashingLook(GameModel game, int ghostID) {
+		if (game.powerTimer.isRunning() && game.killedIndex[ghostID] == -1) {
+			return frightenedOrFlashingLook(game);
+		}
+		return Look.NORMAL;
 	}
 
 	private Look frightenedOrFlashingLook(GameModel game) {
