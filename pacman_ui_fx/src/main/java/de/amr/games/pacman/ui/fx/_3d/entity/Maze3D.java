@@ -75,12 +75,7 @@ public class Maze3D extends Group {
 
 	private static final double FLOOR_THICKNESS = 0.1;
 
-	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(this, "resolution", 4) {
-		@Override
-		protected void invalidated() {
-			build();
-		}
-	};
+	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(this, "resolution", 4);
 
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 
@@ -102,25 +97,24 @@ public class Maze3D extends Group {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-	private final World world;
 	private final MazeColors mazeColors;
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private Box floor;
 
 	public Maze3D(World world, MazeColors mazeColors) {
-		this.world = world;
 		this.mazeColors = mazeColors;
-		createFloor();
+		createFloor(world);
 		getChildren().addAll(floor, wallsGroup, doorsGroup);
-		build();
+		build(world);
+		resolutionPy.addListener(py -> build(world));
 	}
 
 	public Animation createMazeFlashingAnimation(int times) {
 		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
 	}
 
-	private void createFloor() {
+	private void createFloor(World world) {
 		double width = (double) world.numCols() * TS - 1;
 		double height = (double) world.numRows() * TS - 1;
 		double depth = FLOOR_THICKNESS;
@@ -144,7 +138,7 @@ public class Maze3D extends Group {
 		return material;
 	}
 
-	private void build() {
+	private void build(World world) {
 		var wallData = new WallData();
 		wallData.brickSize = (double) TS / resolutionPy.get();
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor);
