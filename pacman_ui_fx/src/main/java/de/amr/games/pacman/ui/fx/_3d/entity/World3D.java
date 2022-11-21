@@ -39,7 +39,6 @@ import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.entity.Maze3D.MazeColors;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -67,7 +66,7 @@ public class World3D extends Group {
 		scores3D.setFont(scoreFont);
 		getChildren().add(scores3D);
 
-		var mazeColors = new MazeColors(//
+		var mazeColors = new Maze3DColors(//
 				r2D.getMazeSideColor(game.level.mazeNumber()), //
 				r2D.getMazeTopColor(game.level.mazeNumber()), //
 				r2D.getGhostHouseDoorColor());

@@ -57,9 +57,6 @@ import javafx.util.Duration;
  */
 public class Maze3D extends Group {
 
-	public record MazeColors(Color wallBaseColor, Color wallTopColor, Color doorColor) {
-	}
-
 	private static class WallData {
 		byte type;
 		int x;
@@ -81,12 +78,12 @@ public class Maze3D extends Group {
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-	private final MazeColors mazeColors;
+	private final Maze3DColors mazeColors;
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private Box floor;
 
-	public Maze3D(World world, MazeColors mazeColors) {
+	public Maze3D(World world, Maze3DColors mazeColors) {
 		this.mazeColors = mazeColors;
 		createFloor(world);
 		getChildren().addAll(floor, wallsGroup, doorsGroup);
@@ -127,8 +124,8 @@ public class Maze3D extends Group {
 	private void build(World world) {
 		var wallData = new WallData();
 		wallData.brickSize = (double) TS / resolutionPy.get();
-		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor);
-		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor);
+		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
+		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor());
 
 		var floorPlan = new FloorPlan(world, resolutionPy.get());
 
@@ -137,7 +134,7 @@ public class Maze3D extends Group {
 		addHorizontalWalls(floorPlan, wallData);
 		addVerticalWalls(floorPlan, wallData);
 
-		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor)).toList();
+		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor())).toList();
 		doorsGroup.getChildren().setAll(doors);
 
 		LOGGER.info("3D maze created (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
