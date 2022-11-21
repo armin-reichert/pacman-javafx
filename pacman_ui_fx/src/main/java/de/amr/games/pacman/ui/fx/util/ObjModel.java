@@ -33,9 +33,9 @@ public class ObjModel {
 			importer.read(url);
 			meshViews = importer.getNamedMeshViews();
 			materials = importer.getNamedMaterials();
-			LOGGER.info("Loading 3D model from URL '%s' succeeded", url);
+			LOGGER.info("3D model loaded successfully (URL='%s')", url);
 		} catch (ImportException e) {
-			throw new Model3DException("Loading 3D model from URL '%s' failed: %s", url, e.getMessage());
+			throw new Model3DException("Error loading 3D model (URL='%s'): %s", url, e.getMessage());
 		} finally {
 			importer.close();
 		}

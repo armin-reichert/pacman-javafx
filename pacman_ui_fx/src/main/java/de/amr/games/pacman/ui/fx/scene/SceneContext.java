@@ -29,7 +29,6 @@ import java.util.Objects;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.SceneControllerContext;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 
 /**
  * @author Armin Reichert
@@ -37,19 +36,13 @@ import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 public class SceneContext extends SceneControllerContext {
 
 	private final Rendering2D r2D;
-	private final Model3D model3D;
 
-	public SceneContext(GameController gameController, Rendering2D r2D, Model3D model3D) {
+	public SceneContext(GameController gameController, Rendering2D r2D) {
 		super(gameController);
 		this.r2D = Objects.requireNonNull(r2D, "2D renderer must not be NULL");
-		this.model3D = Objects.requireNonNull(model3D, "3D model must not be NULL");
 	}
 
 	public Rendering2D r2D() {
 		return r2D;
-	}
-
-	public Model3D model3D() {
-		return model3D;
 	}
 }

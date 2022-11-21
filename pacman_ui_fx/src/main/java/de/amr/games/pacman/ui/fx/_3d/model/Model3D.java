@@ -26,9 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.model;
 import java.net.URL;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -53,10 +50,8 @@ import javafx.scene.transform.Translate;
  */
 public class Model3D {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
-	private static URL PAC_MODEL3D_URL = Env.url("model3D/pacman.obj");
-	private static URL GHOST_MODEL3D_URL = Env.url("model3D/ghost.obj");
+	private static final URL PAC_MODEL3D_URL = Env.url("model3D/pacman.obj");
+	private static final URL GHOST_MODEL3D_URL = Env.url("model3D/ghost.obj");
 
 	private static final String MESH_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String MESH_PAC_FACE = "Sphere_yellow_packman";
@@ -84,9 +79,7 @@ public class Model3D {
 	private ObjModel ghostModel;
 
 	public Model3D() {
-		LOGGER.info("Pac-Man 3D model URL: %s", PAC_MODEL3D_URL);
 		pacModel = new ObjModel(PAC_MODEL3D_URL);
-		LOGGER.info("Ghost 3D model URL: %s", GHOST_MODEL3D_URL);
 		ghostModel = new ObjModel(GHOST_MODEL3D_URL);
 	}
 

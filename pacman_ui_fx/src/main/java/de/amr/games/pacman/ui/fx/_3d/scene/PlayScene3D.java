@@ -105,7 +105,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createWorld3D() {
-		world3D = new World3D(ctx.game(), ctx.model3D(), ctx.r2D());
+		world3D = new World3D(ctx.game(), MODEL_3D, ctx.r2D());
 		var maze3D = world3D.maze3D();
 		maze3D.drawModePy.bind(Env.drawModePy);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
@@ -160,7 +160,7 @@ public class PlayScene3D implements GameScene {
 		createWorld3D();
 		content.getChildren().add(world3D);
 
-		pac3D = new Pac3D(ctx.game().pac, ctx.model3D());
+		pac3D = new Pac3D(ctx.game().pac, MODEL_3D);
 		pac3D.init(ctx.world());
 		content.getChildren().add(pac3D);
 
@@ -168,7 +168,7 @@ public class PlayScene3D implements GameScene {
 				.map(ctx.r2D().spritesheet()::region)//
 				.toArray(Image[]::new);
 		ghosts3D = ctx.game().ghosts()
-				.map(ghost -> new Ghost3D(ghost, ctx.model3D(), ghostValueImages, ctx.r2D().ghostColorScheme(ghost.id)))
+				.map(ghost -> new Ghost3D(ghost, MODEL_3D, ghostValueImages, ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
 		content.getChildren().addAll(ghosts3D);
 

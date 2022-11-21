@@ -158,7 +158,7 @@ public class GameSceneManager {
 		case MS_PACMAN -> new RendererMsPacManGame();
 		case PACMAN -> new RendererPacManGame();
 		};
-		scene.setContext(new SceneContext(gameController, r2D, PlayScene3D.MODEL_3D));
+		scene.setContext(new SceneContext(gameController, r2D));
 		LOGGER.info("Scene context updated for '%s'.", scene);
 		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
