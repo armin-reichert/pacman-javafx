@@ -315,16 +315,18 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case LEVEL_COMPLETE -> {
-			var message = TextManager.TALK_LEVEL_COMPLETE.next() + "%n%n"
-					+ TextManager.message("level_complete", game.level.number());
-			new SequentialTransition( //
-					Ufx.pause(0.0, this::lockGameState), //
-					Ufx.pause(2.0), //
-					game.level.numFlashes() > 0 ? new SwingingWallsAnimation(game.level.numFlashes()) : Ufx.pause(1), //
+			lockGameState();
+			var message = "%s%n%n%s".formatted(TextManager.TALK_LEVEL_COMPLETE.next(),
+					TextManager.message("level_complete", game.level.number()));
+			var animation = new SequentialTransition( //
+					Ufx.pause(1.0), //
+					game.level.numFlashes() > 0 ? new SwingingWallsAnimation(game.level.numFlashes()) : Ufx.pause(1.0), //
 					Ufx.pause(1.0, game.pac::hide), //
 					Ufx.pause(0.5, () -> Actions.showFlashMessage(2, message)), //
-					Ufx.pause(2.0, this::unlockGameState) //
-			).play();
+					Ufx.pause(2.0) //
+			);
+			animation.setOnFinished(evt -> unlockGameState());
+			animation.play();
 		}
 
 		case GAME_OVER -> Actions.showFlashMessage(3, TextManager.TALK_GAME_OVER.next());
