@@ -282,7 +282,6 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		var game = ctx.game();
 		switch (e.newGameState) {
 		case READY -> {
 			world3D.food3D().resetEnergizerPumping();
@@ -292,7 +291,7 @@ public class PlayScene3D implements GameScene {
 
 		case HUNTING -> world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 
-		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
+		case PACMAN_DYING -> ctx.game().ghosts().filter(ctx.game().pac::sameTile).findAny().ifPresent(killer -> {
 			lockGameState();
 			var animation = new SequentialTransition( //
 					Ufx.pause(0.3), //
@@ -308,18 +307,19 @@ public class PlayScene3D implements GameScene {
 			createWorld3D();
 			content.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
-			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
+			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level.number()));
 			Ufx.pause(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
 			lockGameState();
 			var message = "%s%n%n%s".formatted(TextManager.TALK_LEVEL_COMPLETE.next(),
-					TextManager.message("level_complete", game.level.number()));
+					TextManager.message("level_complete", ctx.game().level.number()));
 			var animation = new SequentialTransition( //
 					Ufx.pause(1.0), //
-					game.level.numFlashes() > 0 ? new SwingingWallsAnimation(game.level.numFlashes()) : Ufx.pause(1.0), //
-					Ufx.pause(1.0, game.pac::hide), //
+					ctx.game().level.numFlashes() > 0 ? new SwingingWallsAnimation(ctx.game().level.numFlashes())
+							: Ufx.pause(1.0), //
+					Ufx.pause(1.0, ctx.game().pac::hide), //
 					Ufx.pause(0.5, () -> Actions.showFlashMessage(2, message)), //
 					Ufx.pause(2.0) //
 			);
