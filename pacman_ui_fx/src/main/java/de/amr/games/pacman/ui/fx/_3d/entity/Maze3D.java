@@ -33,9 +33,6 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.animation.RaiseAndLowerWallAnimation;
-import javafx.animation.Animation;
-import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -48,7 +45,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
-import javafx.util.Duration;
 
 /**
  * 3D-model for a maze. Creates walls/doors using information from the floor plan.
@@ -63,7 +59,7 @@ public class Maze3D extends Group {
 		int y;
 		int numBricksX;
 		int numBricksY;
-		double brickSize;
+		float brickSize;
 		PhongMaterial baseMaterial;
 		PhongMaterial topMaterial;
 	}
@@ -93,10 +89,6 @@ public class Maze3D extends Group {
 		resolutionPy.addListener(py -> build(world));
 	}
 
-	public Animation createMazeFlashingAnimation(int times) {
-		return times > 0 ? new RaiseAndLowerWallAnimation(times) : new PauseTransition(Duration.seconds(1));
-	}
-
 	private void createFloor(World world) {
 		double width = (double) world.numCols() * TS - 1;
 		double height = (double) world.numRows() * TS - 1;
@@ -123,7 +115,7 @@ public class Maze3D extends Group {
 
 	private void build(World world) {
 		var wallData = new WallData();
-		wallData.brickSize = (double) TS / resolutionPy.get();
+		wallData.brickSize = (float) TS / resolutionPy.get();
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
 		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor());
 

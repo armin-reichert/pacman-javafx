@@ -32,11 +32,11 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class RaiseAndLowerWallAnimation extends Transition {
+public class SwingingWallsAnimation extends Transition {
 
 	private double wallStartHeight;
 
-	public RaiseAndLowerWallAnimation(int times) {
+	public SwingingWallsAnimation(int times) {
 		setCycleDuration(Duration.seconds(0.25));
 		setCycleCount(2 * times);
 		setAutoReverse(true);

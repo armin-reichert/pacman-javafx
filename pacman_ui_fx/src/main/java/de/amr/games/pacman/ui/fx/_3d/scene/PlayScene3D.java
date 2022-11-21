@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
@@ -57,6 +58,7 @@ import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.scene.AmbientLight;
@@ -67,6 +69,7 @@ import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 /**
  * 3D play scene with sound and animations.
@@ -319,7 +322,8 @@ public class PlayScene3D implements GameScene {
 			new SequentialTransition( //
 					Ufx.pause(0.0, this::lockGameState), //
 					Ufx.pause(2.0), //
-					world3D.maze3D().createMazeFlashingAnimation(game.level.numFlashes()), //
+					game.level.numFlashes() > 0 ? //
+							new SwingingWallsAnimation(game.level.numFlashes()) : new PauseTransition(Duration.seconds(1)), //
 					Ufx.pause(1.0, game.pac::hide), //
 					Ufx.pause(0.5, () -> Actions.showFlashMessage(2, message)), //
 					Ufx.pause(2.0, this::unlockGameState) //
@@ -331,7 +335,6 @@ public class PlayScene3D implements GameScene {
 		default -> {
 			// ignore
 		}
-
 		}
 
 		// exit HUNTING
