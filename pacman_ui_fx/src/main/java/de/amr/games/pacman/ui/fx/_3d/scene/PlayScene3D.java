@@ -283,9 +283,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		var game = ctx.game();
-
 		switch (e.newGameState) {
-
 		case READY -> {
 			world3D.food3D().resetEnergizerPumping();
 			pac3D.init(ctx.world());
@@ -296,19 +294,19 @@ public class PlayScene3D implements GameScene {
 
 		case PACMAN_DYING -> game.ghosts().filter(game.pac::sameTile).findAny().ifPresent(killer -> {
 			lockGameState();
-			var color = ctx.r2D().ghostColor(killer.id);
-			new SequentialTransition( //
+			var animation = new SequentialTransition( //
 					Ufx.pause(0.3), //
-					pac3D.createDyingAnimation(color), //
-					Ufx.pause(2.0, this::unlockGameState) //
-			).play();
+					pac3D.createDyingAnimation(ctx.r2D().ghostColor(killer.id)), //
+					Ufx.pause(2.0) //
+			);
+			animation.setOnFinished(evt -> unlockGameState());
+			animation.play();
 		});
 
 		case LEVEL_STARTING -> {
 			lockGameState();
 			createWorld3D();
-			content.getChildren().remove(0);
-			content.getChildren().add(0, world3D);
+			content.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", game.level.number()));
 			Ufx.pause(3, this::unlockGameState).play();
@@ -331,8 +329,7 @@ public class PlayScene3D implements GameScene {
 
 		case GAME_OVER -> Actions.showFlashMessage(3, TextManager.TALK_GAME_OVER.next());
 
-		default -> {
-			// ignore
+		default -> { // ignore
 		}
 		}
 
