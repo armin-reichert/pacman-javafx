@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import static de.amr.games.pacman.ui.fx.util.Ufx.pause;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -294,9 +296,9 @@ public class PlayScene3D implements GameScene {
 		case PACMAN_DYING -> ctx.game().ghosts().filter(ctx.game().pac::sameTile).findAny().ifPresent(killer -> {
 			lockGameState();
 			var animation = new SequentialTransition( //
-					Ufx.pause(0.3), //
+					pause(0.3), //
 					pac3D.createDyingAnimation(ctx.r2D().ghostColor(killer.id)), //
-					Ufx.pause(2.0) //
+					pause(2.0) //
 			);
 			animation.setOnFinished(evt -> unlockGameState());
 			animation.play();
@@ -308,7 +310,7 @@ public class PlayScene3D implements GameScene {
 			content.getChildren().set(0, world3D);
 			changeCamera(Env.perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level.number()));
-			Ufx.pause(3, this::unlockGameState).play();
+			pause(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
@@ -316,12 +318,11 @@ public class PlayScene3D implements GameScene {
 			var message = "%s%n%n%s".formatted(TextManager.TALK_LEVEL_COMPLETE.next(),
 					TextManager.message("level_complete", ctx.game().level.number()));
 			var animation = new SequentialTransition( //
-					Ufx.pause(1.0), //
-					ctx.game().level.numFlashes() > 0 ? new SwingingWallsAnimation(ctx.game().level.numFlashes())
-							: Ufx.pause(1.0), //
-					Ufx.pause(1.0, ctx.game().pac::hide), //
-					Ufx.pause(0.5, () -> Actions.showFlashMessage(2, message)), //
-					Ufx.pause(2.0) //
+					pause(1.0), //
+					ctx.game().level.numFlashes() > 0 ? new SwingingWallsAnimation(ctx.game().level.numFlashes()) : pause(1.0), //
+					pause(1.0, ctx.game().pac::hide), //
+					pause(0.5, () -> Actions.showFlashMessage(2, message)), //
+					pause(2.0) //
 			);
 			animation.setOnFinished(evt -> unlockGameState());
 			animation.play();
