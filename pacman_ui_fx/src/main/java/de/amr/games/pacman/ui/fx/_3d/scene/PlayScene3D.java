@@ -47,6 +47,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
+import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
@@ -79,6 +80,8 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
+	public static final Model3D MODEL_3D = new Model3D();
 
 	private final SubScene fxSubScene;
 	private final Group content = new Group();

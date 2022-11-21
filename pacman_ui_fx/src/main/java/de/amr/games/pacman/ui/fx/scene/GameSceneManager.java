@@ -46,7 +46,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
@@ -159,8 +158,7 @@ public class GameSceneManager {
 		case MS_PACMAN -> new RendererMsPacManGame();
 		case PACMAN -> new RendererPacManGame();
 		};
-		var model3D = Model3D.get(); // no game variant-specific 3D models yet
-		scene.setContext(new SceneContext(gameController, r2D, model3D));
+		scene.setContext(new SceneContext(gameController, r2D, PlayScene3D.MODEL_3D));
 		LOGGER.info("Scene context updated for '%s'.", scene);
 		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;

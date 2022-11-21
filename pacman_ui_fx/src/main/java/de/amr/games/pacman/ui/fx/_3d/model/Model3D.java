@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
+import java.net.URL;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -54,6 +55,9 @@ public class Model3D {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	private static URL PAC_MODEL3D_URL = Env.url("model3D/pacman.obj");
+	private static URL GHOST_MODEL3D_URL = Env.url("model3D/ghost.obj");
+
 	private static final String MESH_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String MESH_PAC_FACE = "Sphere_yellow_packman";
 	private static final String MESH_PAC_PALATE = "Sphere_grey_wall";
@@ -65,15 +69,6 @@ public class Model3D {
 	private static final double GHOST_SIZE = 8.5;
 
 	private static final Image FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
-
-	private static Model3D theThing;
-
-	public static Model3D get() {
-		if (theThing == null) {
-			theThing = new Model3D();
-		}
-		return theThing;
-	}
 
 	private static Translate centerOverOrigin(Node node) {
 		Bounds bounds = node.getBoundsInLocal();
@@ -88,13 +83,11 @@ public class Model3D {
 	private ObjModel pacModel;
 	private ObjModel ghostModel;
 
-	private Model3D() {
-		var pacModelURL = Env.url("model3D/pacman.obj");
-		LOGGER.info("Pac-Man 3D model URL: %s", pacModelURL);
-		pacModel = new ObjModel(pacModelURL);
-		var ghostModelURL = Env.url("model3D/ghost.obj");
-		LOGGER.info("Ghost 3D model URL: %s", ghostModelURL);
-		ghostModel = new ObjModel(ghostModelURL);
+	public Model3D() {
+		LOGGER.info("Pac-Man 3D model URL: %s", PAC_MODEL3D_URL);
+		pacModel = new ObjModel(PAC_MODEL3D_URL);
+		LOGGER.info("Ghost 3D model URL: %s", GHOST_MODEL3D_URL);
+		ghostModel = new ObjModel(GHOST_MODEL3D_URL);
 	}
 
 	public Group createPac(Color eyesColor, Color palateColor) {
