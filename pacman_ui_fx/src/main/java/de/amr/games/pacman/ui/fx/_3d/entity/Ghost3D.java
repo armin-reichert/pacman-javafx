@@ -49,7 +49,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends MovingCreature3D {
+public class Ghost3D extends MovingCreature3D<Ghost> {
 
 	private enum Look {
 		NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER;
@@ -69,10 +69,6 @@ public class Ghost3D extends MovingCreature3D {
 	public void reset(GameModel game) {
 		update(game);
 		resetMovement();
-	}
-
-	private Ghost ghost() {
-		return (Ghost) guy;
 	}
 
 	public void update(GameModel game) {
@@ -119,7 +115,7 @@ public class Ghost3D extends MovingCreature3D {
 			useColoredGhost();
 		}
 		case NUMBER -> {
-			configureNumberCube(game.killedIndex[ghost().id]);
+			configureNumberCube(game.killedIndex[guy.id]);
 			getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
@@ -135,7 +131,7 @@ public class Ghost3D extends MovingCreature3D {
 	}
 
 	private Look computeLookForCurrentState(GameModel game) {
-		return switch (ghost().getState()) {
+		return switch (guy.getState()) {
 		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(game);
 		case FRIGHTENED -> frightenedOrFlashingLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
@@ -145,7 +141,7 @@ public class Ghost3D extends MovingCreature3D {
 	}
 
 	private Look normalOrFrightenedOrFlashingLook(GameModel game) {
-		if (game.powerTimer.isRunning() && game.killedIndex[ghost().id] == -1) {
+		if (game.powerTimer.isRunning() && game.killedIndex[guy.id] == -1) {
 			return frightenedOrFlashingLook(game);
 		}
 		return Look.NORMAL;

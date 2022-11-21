@@ -38,7 +38,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public abstract class MovingCreature3D extends Group {
+public abstract class MovingCreature3D<C extends Creature> extends Group {
 
 	public record Turn(int from, int to) {
 	}
@@ -64,21 +64,17 @@ public abstract class MovingCreature3D extends Group {
 		return dir == null ? 0 : dir.ordinal();
 	}
 
-	protected final Creature guy;
+	protected final C guy;
 	protected Direction animationTargetDir;
 	private RotateTransition turnAnimation;
 
-	protected MovingCreature3D(Creature guy) {
+	protected MovingCreature3D(C guy) {
 		this.guy = guy;
 		setTranslateZ(-HTS);
 		turnAnimation = new RotateTransition(Duration.seconds(0.25), this);
 		turnAnimation.setAxis(Rotate.Z_AXIS);
 		turnAnimation.setInterpolator(Interpolator.EASE_BOTH);
 		resetMovement();
-	}
-
-	public Creature guy() {
-		return guy;
 	}
 
 	protected void resetMovement() {

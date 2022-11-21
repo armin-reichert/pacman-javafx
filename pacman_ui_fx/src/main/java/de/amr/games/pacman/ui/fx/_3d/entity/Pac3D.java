@@ -46,7 +46,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends MovingCreature3D {
+public class Pac3D extends MovingCreature3D<Pac> {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
