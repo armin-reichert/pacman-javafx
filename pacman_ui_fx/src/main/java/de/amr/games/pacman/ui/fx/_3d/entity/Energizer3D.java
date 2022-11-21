@@ -68,6 +68,6 @@ public class Energizer3D extends Pellet3D {
 
 	@Override
 	public String toString() {
-		return String.format("[Energizer, tile; %s, animation running: %s]", tile(), pumping.getStatus() == Status.RUNNING);
+		return String.format("[Energizer, tile; %s, pumping: %s]", tile(), pumping.getStatus() == Status.RUNNING);
 	}
 }
