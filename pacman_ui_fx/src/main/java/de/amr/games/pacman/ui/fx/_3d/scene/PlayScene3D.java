@@ -85,6 +85,8 @@ public class PlayScene3D implements GameScene {
 
 	private final SubScene fxSubScene;
 	private final Group content = new Group();
+	private final CoordSystem coordSystem = new CoordSystem();
+	private final AmbientLight ambientLight = new AmbientLight();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 
 	private SceneContext ctx;
@@ -94,11 +96,7 @@ public class PlayScene3D implements GameScene {
 	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
-		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(Env.axesVisiblePy);
-		var light = new AmbientLight();
-		light.colorProperty().bind(Env.lightColorPy);
-		var root = new Group(content, coordSystem, light);
+		var root = new Group(content, coordSystem, ambientLight);
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		createCameras();
@@ -123,6 +121,14 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
 		Env.perspectivePy.addListener((obs, oldVal, newPerspective) -> changeCamera(newPerspective));
+	}
+
+	public CoordSystem coordSystem() {
+		return coordSystem;
+	}
+
+	public AmbientLight ambientLight() {
+		return ambientLight;
 	}
 
 	@Override

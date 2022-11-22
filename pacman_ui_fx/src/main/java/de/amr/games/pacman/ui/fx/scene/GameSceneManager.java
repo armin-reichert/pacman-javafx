@@ -165,5 +165,9 @@ public class GameSceneManager {
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
 		gameController.setSounds(sounds);
+		if (scene instanceof PlayScene3D playScene3D) {
+			playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
+			playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
+		}
 	}
 }
