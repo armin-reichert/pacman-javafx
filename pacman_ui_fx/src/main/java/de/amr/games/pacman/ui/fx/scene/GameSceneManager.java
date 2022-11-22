@@ -66,7 +66,7 @@ public class GameSceneManager {
 			new GameSceneVariants(new BootScene(), null),
 			new GameSceneVariants(new PacManIntroScene(), null),
 			new GameSceneVariants(new PacManCreditScene(), null),
-			new GameSceneVariants(new PlayScene2D(), new PlayScene3D()),
+			new GameSceneVariants(new PlayScene2D(), createPlayScene3D()),
 			new GameSceneVariants(new PacManCutscene1(), null),
 			new GameSceneVariants(new PacManCutscene2(), null),
 			new GameSceneVariants(new PacManCutscene3(), null),
@@ -76,12 +76,20 @@ public class GameSceneManager {
 			new GameSceneVariants(new BootScene(), null),
 			new GameSceneVariants(new MsPacManIntroScene(), null),
 			new GameSceneVariants(new MsPacManCreditScene(), null),
-			new GameSceneVariants(new PlayScene2D(), new PlayScene3D()),
+			new GameSceneVariants(new PlayScene2D(), createPlayScene3D()),
 			new GameSceneVariants(new MsPacManIntermissionScene1(), null),
 			new GameSceneVariants(new MsPacManIntermissionScene2(), null),
 			new GameSceneVariants(new MsPacManIntermissionScene3(), null),
 	};
 	//@formatter:on
+
+	private static PlayScene3D createPlayScene3D() {
+		var playScene3D = new PlayScene3D();
+		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
+		playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
+		Env.perspectivePy.addListener((py, oldVal, newVal) -> playScene3D.changeCamera(newVal));
+		return playScene3D;
+	}
 
 	private static GameSceneVariants[] scenes(GameVariant gameVariant) {
 		return switch (gameVariant) {
@@ -165,9 +173,5 @@ public class GameSceneManager {
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
 		gameController.setSounds(sounds);
-		if (scene instanceof PlayScene3D playScene3D) {
-			playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
-			playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
-		}
 	}
 }

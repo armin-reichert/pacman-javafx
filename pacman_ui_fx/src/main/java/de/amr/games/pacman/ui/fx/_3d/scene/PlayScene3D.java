@@ -99,28 +99,10 @@ public class PlayScene3D implements GameScene {
 		var root = new Group(content, coordSystem, ambientLight);
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-		createCameras();
-	}
-
-	private void createWorld3D() {
-		world3D = new World3D(ctx.game(), MODEL_3D, ctx.r2D());
-		var maze3D = world3D.maze3D();
-		maze3D.drawModePy.bind(Env.drawModePy);
-		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
-				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
-				Env.floorTexturePy));
-		maze3D.floorColorPy.bind(Env.floorColorPy);
-		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
-		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
-		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
-	}
-
-	private void createCameras() {
 		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		Env.perspectivePy.addListener((obs, oldVal, newPerspective) -> changeCamera(newPerspective));
 	}
 
 	public CoordSystem coordSystem() {
@@ -154,6 +136,19 @@ public class PlayScene3D implements GameScene {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
+	}
+
+	private void createWorld3D() {
+		world3D = new World3D(ctx.game(), MODEL_3D, ctx.r2D());
+		var maze3D = world3D.maze3D();
+		maze3D.drawModePy.bind(Env.drawModePy);
+		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
+				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
+				Env.floorTexturePy));
+		maze3D.floorColorPy.bind(Env.floorColorPy);
+		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
+		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
+		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
 	}
 
 	@Override
@@ -225,7 +220,7 @@ public class PlayScene3D implements GameScene {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
-	private void changeCamera(Perspective newPerspective) {
+	public void changeCamera(Perspective newPerspective) {
 		var newCamera = getCamera(newPerspective);
 		if (newCamera == null) {
 			LOGGER.error("No camera found for perspective %s", newPerspective);
