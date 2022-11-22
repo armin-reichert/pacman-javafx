@@ -94,14 +94,15 @@ public class PlayScene3D implements GameScene {
 
 	public static final Model3D MODEL_3D = new Model3D();
 
-	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode");
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor");
-	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture");
-	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution");
-	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight");
-	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness");
-	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective");
-	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect");
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture", "none");
+	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution", 4);
+	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight", 2.5);
+	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness", 1.5);
+	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
+			Perspective.TOTAL);
+	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect", true);
 
 	private final SubScene fxSubScene;
 	private final Group content = new Group();
