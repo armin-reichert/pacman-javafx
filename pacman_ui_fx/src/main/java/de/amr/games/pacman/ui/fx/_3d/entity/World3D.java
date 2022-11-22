@@ -37,9 +37,10 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -49,6 +50,8 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class World3D extends Group {
+
+	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect");
 
 	private final Maze3D maze3D;
 	private final Food3D food3D;
@@ -82,7 +85,7 @@ public class World3D extends Group {
 
 		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
 		food3D = new Food3D(game.level.world(), foodColor);
-		food3D.squirtingPy.bind(Env.squirtingPy);
+		food3D.squirtingPy.bind(squirtingEffectPy);
 		getChildren().add(food3D);
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));

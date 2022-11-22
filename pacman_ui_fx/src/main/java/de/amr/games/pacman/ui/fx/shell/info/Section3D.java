@@ -67,7 +67,7 @@ public class Section3D extends Section {
 		comboFloorTexture.setOnAction(e -> Env.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingPy));
+		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingEffectPy));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 	}
@@ -81,7 +81,7 @@ public class Section3D extends Section {
 		sliderWallHeight.setDisable(!gameScene().is3D());
 		comboFloorTexture.setValue(Env.floorTexturePy.get());
 		comboFloorTexture.setDisable(!gameScene().is3D());
-		cbSquirting.setSelected(Env.squirtingPy.get());
+		cbSquirting.setSelected(Env.squirtingEffectPy.get());
 		cbAxesVisible.setSelected(Env.axesVisiblePy.get());
 		cbAxesVisible.setDisable(!gameScene().is3D());
 		cbWireframeMode.setSelected(Env.drawModePy.get() == DrawMode.LINE);

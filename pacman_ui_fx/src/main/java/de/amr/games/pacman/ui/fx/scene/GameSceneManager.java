@@ -91,9 +91,10 @@ public class GameSceneManager {
 		playScene3D.mazeResolutionPy.bind(Env.mazeResolutionPy);
 		playScene3D.mazeWallHeightPy.bind(Env.mazeWallHeightPy);
 		playScene3D.mazeWallThicknessPy.bind(Env.mazeWallThicknessPy);
+		playScene3D.perspectivePy.bind(Env.perspectivePy);
+		playScene3D.squirtingEffectPy.bind(Env.squirtingEffectPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
 		playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
-		Env.perspectivePy.addListener((py, oldVal, newVal) -> playScene3D.changeCamera(newVal));
 		return playScene3D;
 	}
 

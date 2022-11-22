@@ -39,7 +39,6 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -63,9 +62,11 @@ import de.amr.games.pacman.ui.fx.util.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -99,6 +100,8 @@ public class PlayScene3D implements GameScene {
 	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution");
 	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight");
 	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness");
+	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective");
+	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect");
 
 	private final SubScene fxSubScene;
 	private final Group content = new Group();
@@ -120,6 +123,7 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
+		perspectivePy.addListener((py, oldVal, newVal) -> changeCamera(newVal));
 	}
 
 	public CoordSystem coordSystem() {
@@ -157,6 +161,7 @@ public class PlayScene3D implements GameScene {
 
 	private void createWorld3D() {
 		world3D = new World3D(ctx.game(), MODEL_3D, ctx.r2D());
+		world3D.squirtingEffectPy.bind(squirtingEffectPy);
 		var maze3D = world3D.maze3D();
 		maze3D.drawModePy.bind(drawModePy);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
@@ -196,7 +201,7 @@ public class PlayScene3D implements GameScene {
 		var centerOverOrigin = new Translate(-width / 2, -height / 2);
 		content.getTransforms().setAll(centerOverOrigin);
 
-		changeCamera(Env.perspectivePy.get());
+		changeCamera(perspectivePy.get());
 	}
 
 	@Override
@@ -329,7 +334,7 @@ public class PlayScene3D implements GameScene {
 			lockGameState();
 			createWorld3D();
 			content.getChildren().set(0, world3D);
-			changeCamera(Env.perspectivePy.get());
+			changeCamera(perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level.number()));
 			pause(3, this::unlockGameState).play();
 		}
