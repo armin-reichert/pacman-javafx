@@ -100,6 +100,7 @@ public class PlayScene3D implements GameScene {
 	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution", 4);
 	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight", 2.5);
 	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness", 1.5);
+	public final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(false);
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
 			Perspective.TOTAL);
 	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect", true);
@@ -185,6 +186,7 @@ public class PlayScene3D implements GameScene {
 
 		pac3D = new Pac3D(ctx.game().pac, MODEL_3D);
 		pac3D.init(ctx.world());
+		pac3D.lightOnPy.bind(pac3DLightedPy);
 		content.getChildren().add(pac3D);
 
 		var ghostValueImages = ctx.r2D().createGhostValueList().frames()//

@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,7 +34,9 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -50,12 +54,14 @@ public class Pac3D extends MovingCreature3D<Pac> {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	public final ObjectProperty<Color> faceColorPy = new SimpleObjectProperty<>(this, "faceColor", FACE_COLOR);
+	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
+
 	private static final Color FACE_COLOR = Color.YELLOW;
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
 	private static final Color PALATE_COLOR = Color.CORAL;
 
 	private final Group root;
-	private final ObjectProperty<Color> faceColorPy = new SimpleObjectProperty<>(FACE_COLOR);
 	private final PointLight spot;
 
 	public Pac3D(Pac pac, Model3D model3D) {
@@ -65,8 +71,9 @@ public class Pac3D extends MovingCreature3D<Pac> {
 
 		spot = new PointLight();
 		spot.setColor(Color.ANTIQUEWHITE);
-		spot.setMaxRange(64);
-		spot.setTranslateZ(-8);
+		spot.setMaxRange(8 * TS);
+		spot.setTranslateZ(-TS);
+		spot.lightOnProperty().bind(lightOnPy);
 		getChildren().add(spot);
 	}
 
@@ -84,7 +91,6 @@ public class Pac3D extends MovingCreature3D<Pac> {
 		updateMovement();
 		boolean out = outsideWorld(world, guy);
 		setVisible(guy.isVisible() && !out);
-		spot.setLightOn(isVisible()); // why doesn't this work?
 		if (!isVisible()) {
 			LOGGER.trace("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
 		}

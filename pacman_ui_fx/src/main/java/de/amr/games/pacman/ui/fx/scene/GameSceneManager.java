@@ -105,6 +105,7 @@ public class GameSceneManager {
 		playScene3D.mazeResolutionPy.bind(Env.mazeResolutionPy);
 		playScene3D.mazeWallHeightPy.bind(Env.mazeWallHeightPy);
 		playScene3D.mazeWallThicknessPy.bind(Env.mazeWallThicknessPy);
+		playScene3D.pac3DLightedPy.bind(Env.pac3DLightedPy);
 		playScene3D.perspectivePy.bind(Env.perspectivePy);
 		playScene3D.squirtingEffectPy.bind(Env.squirtingEffectPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);

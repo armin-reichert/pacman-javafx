@@ -50,6 +50,7 @@ public class Section3D extends Section {
 	private final ColorPicker pickerFloorColor;
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
+	private final CheckBox cbPacLighted;
 
 	public Section3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
@@ -68,6 +69,7 @@ public class Section3D extends Section {
 		pickerFloorColor = addColorPicker("Floor color", Env.floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.floorColorPy.set(pickerFloorColor.getValue()));
 		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingEffectPy));
+		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Env.toggle(Env.pac3DLightedPy));
 		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 	}
@@ -82,6 +84,7 @@ public class Section3D extends Section {
 		comboFloorTexture.setValue(Env.floorTexturePy.get());
 		comboFloorTexture.setDisable(!gameScene().is3D());
 		cbSquirting.setSelected(Env.squirtingEffectPy.get());
+		cbPacLighted.setSelected(Env.pac3DLightedPy.get());
 		cbAxesVisible.setSelected(Env.axesVisiblePy.get());
 		cbAxesVisible.setDisable(!gameScene().is3D());
 		cbWireframeMode.setSelected(Env.drawModePy.get() == DrawMode.LINE);
