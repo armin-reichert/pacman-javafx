@@ -85,6 +85,12 @@ public class GameSceneManager {
 
 	private static PlayScene3D createPlayScene3D() {
 		var playScene3D = new PlayScene3D();
+		playScene3D.drawModePy.bind(Env.drawModePy);
+		playScene3D.floorColorPy.bind(Env.floorColorPy);
+		playScene3D.floorTexturePy.bind(Env.floorTexturePy);
+		playScene3D.mazeResolutionPy.bind(Env.mazeResolutionPy);
+		playScene3D.mazeWallHeightPy.bind(Env.mazeWallHeightPy);
+		playScene3D.mazeWallThicknessPy.bind(Env.mazeWallThicknessPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
 		playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
 		Env.perspectivePy.addListener((py, oldVal, newVal) -> playScene3D.changeCamera(newVal));

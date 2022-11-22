@@ -63,6 +63,14 @@ import de.amr.games.pacman.ui.fx.util.TextManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -70,6 +78,8 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Translate;
 
 /**
@@ -82,6 +92,13 @@ public class PlayScene3D implements GameScene {
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	public static final Model3D MODEL_3D = new Model3D();
+
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode");
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor");
+	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture");
+	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution");
+	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight");
+	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness");
 
 	private final SubScene fxSubScene;
 	private final Group content = new Group();
@@ -141,14 +158,14 @@ public class PlayScene3D implements GameScene {
 	private void createWorld3D() {
 		world3D = new World3D(ctx.game(), MODEL_3D, ctx.r2D());
 		var maze3D = world3D.maze3D();
-		maze3D.drawModePy.bind(Env.drawModePy);
+		maze3D.drawModePy.bind(drawModePy);
 		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
-				() -> "none".equals(Env.floorTexturePy.get()) ? null : Ufx.image("graphics/" + Env.floorTexturePy.get()),
-				Env.floorTexturePy));
-		maze3D.floorColorPy.bind(Env.floorColorPy);
-		maze3D.resolutionPy.bind(Env.mazeResolutionPy);
-		maze3D.wallHeightPy.bind(Env.mazeWallHeightPy);
-		maze3D.wallThicknessPy.bind(Env.mazeWallThicknessPy);
+				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
+				floorTexturePy));
+		maze3D.floorColorPy.bind(floorColorPy);
+		maze3D.resolutionPy.bind(mazeResolutionPy);
+		maze3D.wallHeightPy.bind(mazeWallHeightPy);
+		maze3D.wallThicknessPy.bind(mazeWallThicknessPy);
 	}
 
 	@Override
