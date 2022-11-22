@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import java.util.Objects;
+import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,6 +53,8 @@ public class Actions {
 	private static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
 	private static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	private static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
+
+	private static final Random RND = new Random();
 
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
@@ -261,7 +264,9 @@ public class Actions {
 
 	public static void cheatEatAllPellets() {
 		currentGameState().cheatEatAllPellets(game());
-		showFlashMessage(TextManager.TALK_CHEATING.next());
+		if (RND.nextDouble() < 0.1) {
+			showFlashMessage(TextManager.TALK_CHEATING.next());
+		}
 	}
 
 	public static void cheatEnterNextLevel() {
@@ -270,6 +275,8 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		currentGameState().cheatKillAllEatableGhosts(game());
-		showFlashMessage(TextManager.TALK_CHEATING.next());
+		if (RND.nextDouble() < 0.1) {
+			showFlashMessage(TextManager.TALK_CHEATING.next());
+		}
 	}
 }
