@@ -163,15 +163,14 @@ public class PlayScene3D implements GameScene {
 	private void createWorld3D() {
 		world3D = new World3D(ctx.game(), MODEL_3D, ctx.r2D());
 		world3D.squirtingEffectPy.bind(squirtingEffectPy);
-		var maze3D = world3D.maze3D();
-		maze3D.drawModePy.bind(drawModePy);
-		maze3D.floorTexturePy.bind(Bindings.createObjectBinding(
+		world3D.maze3D().drawModePy.bind(drawModePy);
+		world3D.maze3D().floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
 				floorTexturePy));
-		maze3D.floorColorPy.bind(floorColorPy);
-		maze3D.resolutionPy.bind(mazeResolutionPy);
-		maze3D.wallHeightPy.bind(mazeWallHeightPy);
-		maze3D.wallThicknessPy.bind(mazeWallThicknessPy);
+		world3D.maze3D().floorColorPy.bind(floorColorPy);
+		world3D.maze3D().resolutionPy.bind(mazeResolutionPy);
+		world3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
+		world3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
 	}
 
 	@Override
