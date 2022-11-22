@@ -33,10 +33,11 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.pacman.PacManGame;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -55,6 +56,8 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
+	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "showOverlayPane", false);
+
 	protected final StackPane root = new StackPane();
 	protected final Pane overlayPane = new Pane();
 	protected final SubScene fxSubScene;
@@ -69,7 +72,7 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene = new SubScene(root, size.x(), size.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		overlayPane.visibleProperty().bind(Env.showDebugInfoPy);
+		overlayPane.visibleProperty().bind(overlayPaneVisiblePy);
 		overlayPane.setMouseTransparent(true);
 		root.getChildren().addAll(canvas, overlayPane);
 	}
@@ -95,7 +98,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	private void drawDebugInfo() {
-		if (Env.showDebugInfoPy.get()) {
+		if (overlayPaneVisiblePy.get()) {
 			drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
 				g.setFill(Color.RED);

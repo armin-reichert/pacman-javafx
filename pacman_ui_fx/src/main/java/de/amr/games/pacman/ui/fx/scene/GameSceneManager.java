@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
@@ -63,25 +64,38 @@ public class GameSceneManager {
 
 	//@formatter:off
 	private static final GameSceneVariants[] SCENES_PACMAN = {
-			new GameSceneVariants(new BootScene(), null),
-			new GameSceneVariants(new PacManIntroScene(), null),
-			new GameSceneVariants(new PacManCreditScene(), null),
-			new GameSceneVariants(new PlayScene2D(), createPlayScene3D()),
-			new GameSceneVariants(new PacManCutscene1(), null),
-			new GameSceneVariants(new PacManCutscene2(), null),
-			new GameSceneVariants(new PacManCutscene3(), null),
+			new GameSceneVariants(createGameScene2D(BootScene.class), null),
+			new GameSceneVariants(createGameScene2D(PacManIntroScene.class), null),
+			new GameSceneVariants(createGameScene2D(PacManCreditScene.class), null),
+			new GameSceneVariants(createGameScene2D(PlayScene2D.class), createPlayScene3D()),
+			new GameSceneVariants(createGameScene2D(PacManCutscene1.class), null),
+			new GameSceneVariants(createGameScene2D(PacManCutscene2.class), null),
+			new GameSceneVariants(createGameScene2D(PacManCutscene3.class), null),
 	};
 
 	private static final GameSceneVariants[] SCENES_MS_PACMAN = { 
-			new GameSceneVariants(new BootScene(), null),
-			new GameSceneVariants(new MsPacManIntroScene(), null),
-			new GameSceneVariants(new MsPacManCreditScene(), null),
-			new GameSceneVariants(new PlayScene2D(), createPlayScene3D()),
-			new GameSceneVariants(new MsPacManIntermissionScene1(), null),
-			new GameSceneVariants(new MsPacManIntermissionScene2(), null),
-			new GameSceneVariants(new MsPacManIntermissionScene3(), null),
+			new GameSceneVariants(createGameScene2D(BootScene.class), null),
+			new GameSceneVariants(createGameScene2D(MsPacManIntroScene.class), null),
+			new GameSceneVariants(createGameScene2D(MsPacManCreditScene.class), null),
+			new GameSceneVariants(createGameScene2D(PlayScene2D.class), createPlayScene3D()),
+			new GameSceneVariants(createGameScene2D(MsPacManIntermissionScene1.class), null),
+			new GameSceneVariants(createGameScene2D(MsPacManIntermissionScene2.class), null),
+			new GameSceneVariants(createGameScene2D(MsPacManIntermissionScene3.class), null),
 	};
 	//@formatter:on
+
+	private static GameScene2D createGameScene2D(Class<? extends GameScene2D> clazz) {
+		GameScene2D scene2D;
+		try {
+			scene2D = clazz.getDeclaredConstructor().newInstance();
+			LOGGER.info("Created 2D scene of class '%s'", clazz);
+			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
+			return scene2D;
+		} catch (Exception e) {
+			LOGGER.error("Could not create 2D scene of class '%s'", clazz);
+			throw new IllegalStateException();
+		}
+	}
 
 	private static PlayScene3D createPlayScene3D() {
 		var playScene3D = new PlayScene3D();
