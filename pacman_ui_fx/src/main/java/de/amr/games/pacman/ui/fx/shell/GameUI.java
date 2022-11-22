@@ -91,7 +91,7 @@ public class GameUI implements GameEventListener {
 		stage.setScene(createScene(zoom));
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		stage.setOnCloseRequest(e -> gameLoop.stop());
+		stage.setOnCloseRequest(e -> endApp());
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addEventListener(this);
 		Actions.init(this);
@@ -102,6 +102,11 @@ public class GameUI implements GameEventListener {
 		stage.centerOnScreen();
 		stage.show();
 		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
+	}
+
+	private void endApp() {
+		gameLoop.stop();
+		LOGGER.info("Application ended.");
 	}
 
 	private Scene createScene(double zoom) {
