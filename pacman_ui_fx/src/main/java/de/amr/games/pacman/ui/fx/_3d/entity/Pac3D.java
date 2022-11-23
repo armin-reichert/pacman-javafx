@@ -61,7 +61,7 @@ public class Pac3D extends Group {
 
 	private static final Color FACE_COLOR = Color.YELLOW;
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
-	private static final Color PALATE_COLOR = Color.CORAL;
+	private static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
 
 	private final Pac pac;
 	private final Creature3DMovement movement;

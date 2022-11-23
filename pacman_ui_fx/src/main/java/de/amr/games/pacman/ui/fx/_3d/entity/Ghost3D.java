@@ -67,10 +67,9 @@ public class Ghost3D extends Group {
 	private Look look;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, GhostColorScheme colors) {
-		Objects.requireNonNull(ghost, "Ghost must not be null");
+		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
 		Objects.requireNonNull(model3D, "3D model must not be null");
 		Objects.requireNonNull(colors, "Ghost colors must not be null");
-		this.ghost = ghost;
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
 		movement = new Creature3DMovement(this, ghost);
 	}
