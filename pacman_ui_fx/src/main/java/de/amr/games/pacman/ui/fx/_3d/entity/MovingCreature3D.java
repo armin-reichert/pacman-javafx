@@ -84,11 +84,15 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		resetMovement();
 	}
 
-	protected void resetMovement() {
-		animationTargetDir = guy.moveDir();
-		turnAnimation.stop();
+	private void turnTo(Direction dir) {
 		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(getAngle(animationTargetDir));
+		setRotate(getAngle(dir));
+	}
+
+	protected void resetMovement() {
+		turnAnimation.stop();
+		turnTo(guy.moveDir());
+		animationTargetDir = guy.moveDir();
 	}
 
 	protected void updateMovement() {
