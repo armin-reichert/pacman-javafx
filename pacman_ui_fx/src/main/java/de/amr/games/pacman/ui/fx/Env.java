@@ -78,7 +78,7 @@ public class Env {
 	public static final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(true);
 	public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
 	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
-	public static final BooleanProperty use3DScenePy = new SimpleBooleanProperty(true);
+	public static final BooleanProperty threeDScenesPy = new SimpleBooleanProperty(true);
 
 	public static void toggle(BooleanProperty booleanProperty) {
 		booleanProperty.set(!booleanProperty.get());

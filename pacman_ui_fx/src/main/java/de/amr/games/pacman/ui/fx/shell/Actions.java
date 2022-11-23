@@ -237,7 +237,7 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Env.toggle(Env.use3DScenePy);
+		Env.toggle(Env.threeDScenesPy);
 		if (ui.sceneManager().has3DSceneVariant(gameController())) {
 			ui.updateGameScene(true);
 			if (ui.currentGameScene().is3D()) {
@@ -246,7 +246,7 @@ public class Actions {
 				ui.currentGameScene().onSwitchFrom3D();
 			}
 		} else {
-			showFlashMessage(TextManager.message(Env.use3DScenePy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(TextManager.message(Env.threeDScenesPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 

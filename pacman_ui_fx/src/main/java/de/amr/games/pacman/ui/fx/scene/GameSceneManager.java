@@ -115,14 +115,14 @@ public class GameSceneManager {
 		return playScene3D;
 	}
 
-	private Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
+	private Optional<GameScene> findGameScene(GameController gameController, int dim) {
 		var variants = findSceneVariants(gameController.game(), gameController.state());
-		return Optional.ofNullable(threeD ? variants.scene3D() : variants.scene2D());
+		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	private GameScene getGameScene(GameController gameController, boolean threeD) {
+	private GameScene getGameScene(GameController gameController, int dim) {
 		var variants = findSceneVariants(gameController.game(), gameController.state());
-		return threeD && variants.scene3D() != null ? variants.scene3D() : variants.scene2D();
+		return dim == 3 && variants.scene3D() != null ? variants.scene3D() : variants.scene2D();
 	}
 
 	private GameSceneVariants findSceneVariants(GameModel game, GameState state) {
@@ -142,7 +142,7 @@ public class GameSceneManager {
 	}
 
 	public boolean has3DSceneVariant(GameController gameController) {
-		return findGameScene(gameController, true).isPresent();
+		return findGameScene(gameController, 3).isPresent();
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class GameSceneManager {
 	 * @return the selected game scene
 	 */
 	public GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean reload) {
-		var nextGameScene = getGameScene(gameController, Env.use3DScenePy.get());
+		var nextGameScene = getGameScene(gameController, Env.threeDScenesPy.get() ? 3 : 2);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}

@@ -89,7 +89,7 @@ public class PacManGameAppFX extends Application {
 		LOGGER.info("Initializing application...");
 		new OptionParser(OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE, OPT_VARIANT, OPT_ZOOM)
 				.parse(getParameters().getUnnamed());
-		Env.use3DScenePy.set(OPT_3D.getValue());
+		Env.threeDScenesPy.set(OPT_3D.getValue());
 		Env.perspectivePy.set(OPT_PERSPECTIVE.getValue());
 		gameController = new GameController();
 		gameController.selectGame(OPT_VARIANT.getValue());
@@ -105,6 +105,6 @@ public class PacManGameAppFX extends Application {
 		ui.setPacSteering(new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
 		ui.gameLoop().start();
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
-				stage.getHeight(), zoom, U.onOff(Env.use3DScenePy.get()), Env.perspectivePy.get()));
+				stage.getHeight(), zoom, U.onOff(Env.threeDScenesPy.get()), Env.perspectivePy.get()));
 	}
 }
