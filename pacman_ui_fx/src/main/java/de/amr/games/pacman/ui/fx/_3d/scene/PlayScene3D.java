@@ -308,7 +308,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		// TODO use image of suitable size
-		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().bonus().index());
+		var sprite = ctx.r2D().bonusValueSprite(ctx.game().bonus().index());
 		var image = ctx.r2D().spritesheet().region(sprite);
 		bonus3D.showPoints(image);
 		ctx.sounds().play(GameSound.BONUS_EATEN);
