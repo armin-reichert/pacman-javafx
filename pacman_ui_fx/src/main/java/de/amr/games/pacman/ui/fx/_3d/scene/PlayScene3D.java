@@ -77,7 +77,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -338,12 +337,11 @@ public class PlayScene3D implements GameScene {
 		});
 
 		case GHOST_DYING -> {
-			var numberImages = ctx.r2D().createGhostValueList().frames()//
-					.map(ctx.r2D().spritesheet()::region)//
-					.toArray(Image[]::new);
 			ctx.game().memo.killedGhosts.forEach(killedGhost -> {
 				int index = ctx.game().killedIndex[killedGhost.id];
-				ghosts3D[killedGhost.id].setNumberImage(numberImages[index]);
+				var sprite = ctx.r2D().createGhostValueList().frame(index);
+				var image = ctx.r2D().spritesheet().region(sprite);
+				ghosts3D[killedGhost.id].setNumberImage(image);
 			});
 		}
 
