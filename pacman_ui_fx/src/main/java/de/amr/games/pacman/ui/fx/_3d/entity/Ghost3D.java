@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -49,26 +50,29 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends MovingCreature3D<Ghost> {
+public class Ghost3D extends Group {
 
 	private enum Look {
 		NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER;
 	}
 
+	private final Ghost ghost;
+	private final Creature3DMovement movement;
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(TS, TS, TS);
 	private final Image[] numberImages;
 	private Look look;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Image[] numberImages, GhostColorScheme colors) {
-		super(ghost);
+		this.ghost = ghost;
 		this.numberImages = numberImages;
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
+		movement = new Creature3DMovement(this, ghost);
 	}
 
 	public void reset(GameModel game) {
 		update(game);
-		resetMovement();
+		movement.reset();
 	}
 
 	public void update(GameModel game) {
@@ -77,9 +81,9 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 			changeLook(game, newLook);
 		}
 		if (look != Look.NUMBER) {
-			updateMovement();
+			movement.update();
 		}
-		setVisible(guy.isVisible() && !outsideWorld(game)); // ???
+		setVisible(ghost.isVisible() && !outsideWorld(game)); // ???
 	}
 
 	// 2022-11-14: I wanted to add a point light to each ghost but learned today, that JavaFX only allows up to 3 point
@@ -93,7 +97,7 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 		switch (newLook) {
 		case NORMAL -> {
 			coloredGhost3D.lookNormal();
-			resetMovement();
+			movement.reset();
 			useColoredGhost();
 		}
 		case FRIGHTENED -> {
@@ -111,11 +115,11 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 		}
 		case EYES -> {
 			coloredGhost3D.lookEyesOnly();
-			resetMovement();
+			movement.reset();
 			useColoredGhost();
 		}
 		case NUMBER -> {
-			configureNumberCube(game.killedIndex[guy.id]);
+			configureNumberCube(game.killedIndex[ghost.id]);
 			getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
@@ -126,12 +130,12 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 	}
 
 	private boolean outsideWorld(GameModel game) {
-		double centerX = guy.position().x() + World.HTS;
+		double centerX = ghost.position().x() + World.HTS;
 		return centerX < 0 || centerX > game.level.world().numCols() * World.TS;
 	}
 
 	private Look computeLookForCurrentState(GameModel game) {
-		return switch (guy.getState()) {
+		return switch (ghost.getState()) {
 		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(game);
 		case FRIGHTENED -> frightenedOrFlashingLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
@@ -141,7 +145,7 @@ public class Ghost3D extends MovingCreature3D<Ghost> {
 	}
 
 	private Look normalOrFrightenedOrFlashingLook(GameModel game) {
-		if (game.powerTimer.isRunning() && game.killedIndex[guy.id] == -1) {
+		if (game.powerTimer.isRunning() && game.killedIndex[ghost.id] == -1) {
 			return frightenedOrFlashingLook(game);
 		}
 		return Look.NORMAL;

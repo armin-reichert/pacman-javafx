@@ -50,7 +50,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends MovingCreature3D<Pac> {
+public class Pac3D extends Group {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
@@ -61,11 +61,14 @@ public class Pac3D extends MovingCreature3D<Pac> {
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
 	private static final Color PALATE_COLOR = Color.CORAL;
 
+	private final Pac pac;
+	private final Creature3DMovement movement;
 	private final Group root;
 	private final PointLight spot;
 
 	public Pac3D(Pac pac, Model3D model3D) {
-		super(pac);
+		this.pac = pac;
+		movement = new Creature3DMovement(this, pac);
 		root = model3D.createPac(EYES_COLOR, PALATE_COLOR);
 		getChildren().add(root);
 
@@ -84,13 +87,13 @@ public class Pac3D extends MovingCreature3D<Pac> {
 		root.setTranslateZ(0);
 		faceColorPy.set(FACE_COLOR);
 		update(world);
-		resetMovement();
+		movement.reset();
 	}
 
 	public void update(World world) {
-		updateMovement();
-		boolean out = outsideWorld(world, guy);
-		setVisible(guy.isVisible() && !out);
+		movement.update();
+		boolean out = outsideWorld(world, pac);
+		setVisible(pac.isVisible() && !out);
 		if (!isVisible()) {
 			LOGGER.trace("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
 		}

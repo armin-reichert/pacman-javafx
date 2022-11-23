@@ -29,16 +29,16 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * Base class for 3D creatures (Pac-Man, ghosts) that move through the maze and turn around corners.
+ * Controls movement/turns of maze creatures.
  * 
  * @author Armin Reichert
  */
-public abstract class MovingCreature3D<C extends Creature> extends Group {
+public class Creature3DMovement {
 
 	public record Turn(int fromAngle, int toAngle) {
 	}
@@ -71,39 +71,37 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		return dir == null ? 0 : dir.ordinal();
 	}
 
-	protected final C guy;
-	protected Direction animationTargetDir;
-	private RotateTransition turnAnimation;
+	private final Node guy3D;
+	private final Creature guy;
+	private Direction animationTargetDir;
+	private RotateTransition rotation;
 
-	protected MovingCreature3D(C guy) {
+	public Creature3DMovement(Node guy3D, Creature guy) {
+		this.guy3D = guy3D;
 		this.guy = guy;
-		setTranslateZ(-HTS);
-		turnAnimation = new RotateTransition(Duration.seconds(0.25), this);
-		turnAnimation.setAxis(Rotate.Z_AXIS);
-		turnAnimation.setInterpolator(Interpolator.EASE_BOTH);
-		resetMovement();
+		rotation = new RotateTransition(Duration.seconds(0.25), guy3D);
+		rotation.setAxis(Rotate.Z_AXIS);
+		rotation.setInterpolator(Interpolator.EASE_BOTH);
+		reset();
 	}
 
-	private void turnTo(Direction dir) {
-		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(getAngle(dir));
-	}
-
-	protected void resetMovement() {
-		turnAnimation.stop();
-		turnTo(guy.moveDir());
+	public void reset() {
+		rotation.stop();
+		guy3D.setRotationAxis(Rotate.Z_AXIS);
+		guy3D.setRotate(getAngle(guy.moveDir()));
 		animationTargetDir = guy.moveDir();
 	}
 
-	protected void updateMovement() {
-		setTranslateX(guy.position().x() + HTS);
-		setTranslateY(guy.position().y() + HTS);
+	public void update() {
+		guy3D.setTranslateX(guy.position().x() + HTS);
+		guy3D.setTranslateY(guy.position().y() + HTS);
+		guy3D.setTranslateZ(-HTS);
 		if (animationTargetDir != guy.moveDir()) {
 			var turn = TURNS[index(animationTargetDir)][index(guy.moveDir())];
-			turnAnimation.stop();
-			turnAnimation.setFromAngle(turn.fromAngle);
-			turnAnimation.setToAngle(turn.toAngle);
-			turnAnimation.playFromStart();
+			rotation.stop();
+			rotation.setFromAngle(turn.fromAngle);
+			rotation.setToAngle(turn.toAngle);
+			rotation.playFromStart();
 			animationTargetDir = guy.moveDir();
 		}
 	}
