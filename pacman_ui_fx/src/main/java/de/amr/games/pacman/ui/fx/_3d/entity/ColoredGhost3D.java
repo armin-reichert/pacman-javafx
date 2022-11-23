@@ -42,10 +42,12 @@ import javafx.scene.shape.Shape3D;
  */
 public class ColoredGhost3D {
 
-	private final Model3D model3D;
-	private final Group root3D;
-	private final GhostColorScheme colors;
+	private final Group ghostGroup;
+	private final Shape3D dress;
+	private final Shape3D eyeBalls;
+	private final Shape3D pupils;
 
+	private final GhostColorScheme colors;
 	private final ObjectProperty<Color> dressColorPy;
 	private final ObjectProperty<Color> eyeBallColorPy;
 	private final ObjectProperty<Color> eyePupilColorPy;
@@ -55,52 +57,54 @@ public class ColoredGhost3D {
 	private ColorFlashing pupilsFlashing;
 
 	public ColoredGhost3D(Model3D model3D, GhostColorScheme colors) {
-		this.model3D = model3D;
 		this.colors = colors;
 		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", colors.normalDress());
 		eyeBallColorPy = new SimpleObjectProperty<>(this, "eyeBallColor", colors.normalEyeBalls());
 		eyePupilColorPy = new SimpleObjectProperty<>(this, "eyePupilColor", colors.normalPupils());
-		root3D = model3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
-		model3D.ghostDress(root3D).setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		model3D.ghostEyeBalls(root3D).setMaterial(Ufx.createColorBoundMaterial(eyeBallColorPy));
-		model3D.ghostEyePupils(root3D).setMaterial(Ufx.createColorBoundMaterial(eyePupilColorPy));
+		ghostGroup = model3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
+		dress = model3D.ghostDress(ghostGroup);
+		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
+		eyeBalls = model3D.ghostEyeBalls(ghostGroup);
+		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallColorPy));
+		pupils = model3D.ghostEyePupils(ghostGroup);
+		pupils.setMaterial(Ufx.createColorBoundMaterial(eyePupilColorPy));
 	}
 
-	public Node getRoot() {
-		return root3D;
+	public Node root() {
+		return ghostGroup;
 	}
 
-	public void lookFlashing(int numFlashes) {
+	public void appearFlashing(int numFlashes) {
 		ensureFlashingPlaying(numFlashes);
 		dressColorPy.bind(dressFlashing.colorPy);
 		eyeBallColorPy.set(colors.frightenedEyeBalls());
 		eyePupilColorPy.bind(pupilsFlashing.colorPy);
-		dress().setVisible(true);
+		dress.setVisible(true);
 	}
 
-	public void lookFrightened() {
+	public void appearFrightened() {
 		dressColorPy.unbind();
 		dressColorPy.set(colors.frightenedDress());
 		eyeBallColorPy.set(colors.frightenedEyeBalls());
 		eyePupilColorPy.unbind();
 		eyePupilColorPy.set(colors.frightendPupils());
-		dress().setVisible(true);
+		dress.setVisible(true);
 		ensureFlashingStopped();
 	}
 
-	public void lookNormal() {
+	public void appearNormal() {
 		dressColorPy.unbind();
 		dressColorPy.set(colors.normalDress());
 		eyeBallColorPy.set(colors.normalEyeBalls());
 		eyePupilColorPy.unbind();
 		eyePupilColorPy.set(colors.normalPupils());
-		dress().setVisible(true);
+		dress.setVisible(true);
 		ensureFlashingStopped();
 	}
 
-	public void lookEyesOnly() {
-		lookNormal();
-		dress().setVisible(false);
+	public void appearEyesOnly() {
+		appearNormal();
+		dress.setVisible(false);
 	}
 
 	private void createFlashing(int numFlashes) {
@@ -108,10 +112,6 @@ public class ColoredGhost3D {
 		dressFlashing = new ColorFlashing(colors.frightenedDress(), colors.flashingDress(), seconds, numFlashes);
 		pupilsFlashing = new ColorFlashing(colors.frightendPupils(), colors.flashingPupils(), seconds, numFlashes);
 		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
-	}
-
-	private Shape3D dress() {
-		return model3D.ghostDress(root3D);
 	}
 
 	private void ensureFlashingPlaying(int numFlashes) {

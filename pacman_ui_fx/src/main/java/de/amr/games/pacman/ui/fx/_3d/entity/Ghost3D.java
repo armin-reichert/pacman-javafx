@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.Objects;
+
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
@@ -65,6 +67,10 @@ public class Ghost3D extends Group {
 	private Look look;
 
 	public Ghost3D(Ghost ghost, Model3D model3D, Image[] numberImages, GhostColorScheme colors) {
+		Objects.requireNonNull(ghost, "Ghost must not be null");
+		Objects.requireNonNull(model3D, "3D model must not be null");
+		Objects.requireNonNull(numberImages, "Number images array must not be null");
+		Objects.requireNonNull(colors, "Ghost colors must not be null");
 		this.ghost = ghost;
 		this.numberImages = numberImages;
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
@@ -90,32 +96,32 @@ public class Ghost3D extends Group {
 	// 2022-11-14: I wanted to add a point light to each ghost but learned today, that JavaFX only allows up to 3 point
 	// lights per subscene. Very sad.
 	private void useColoredGhost() {
-		getChildren().setAll(coloredGhost3D.getRoot());
+		getChildren().setAll(coloredGhost3D.root());
 	}
 
 	private void changeLook(GameModel game, Look newLook) {
 		look = newLook;
 		switch (newLook) {
 		case NORMAL -> {
-			coloredGhost3D.lookNormal();
+			coloredGhost3D.appearNormal();
 			movement.reset();
 			useColoredGhost();
 		}
 		case FRIGHTENED -> {
-			coloredGhost3D.lookFrightened();
+			coloredGhost3D.appearFrightened();
 			useColoredGhost();
 		}
 		case FLASHING -> {
 			int numFlashes = game.level.numFlashes();
 			if (numFlashes > 0) {
-				coloredGhost3D.lookFlashing(numFlashes);
+				coloredGhost3D.appearFlashing(numFlashes);
 			} else {
-				coloredGhost3D.lookFrightened();
+				coloredGhost3D.appearFrightened();
 			}
 			useColoredGhost();
 		}
 		case EYES -> {
-			coloredGhost3D.lookEyesOnly();
+			coloredGhost3D.appearEyesOnly();
 			movement.reset();
 			useColoredGhost();
 		}
