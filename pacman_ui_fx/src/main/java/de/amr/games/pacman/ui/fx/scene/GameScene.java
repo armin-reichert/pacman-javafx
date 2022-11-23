@@ -39,7 +39,7 @@ import javafx.scene.SubScene;
 public interface GameScene extends GameEventListener {
 
 	/** Default unscaled scene size in pixels: number of tiles times tile size (8). */
-	public static final V2i DEFAULT_SIZE = ArcadeWorld.WORLD_SIZE_PX;
+	public static final V2i DEFAULT_SIZE = ArcadeWorld.SIZE_PX;
 
 	/**
 	 * Sets the scene context (game controller/model, 2D rendering, 3D model, sound).
