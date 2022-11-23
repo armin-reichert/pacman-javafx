@@ -76,7 +76,7 @@ public class Ghost3D extends Group {
 	}
 
 	public void init(GameModel game) {
-		movement.reset();
+		movement.init();
 		update(game);
 	}
 
@@ -95,23 +95,17 @@ public class Ghost3D extends Group {
 		this.numberImage = numberImage;
 	}
 
-	// 2022-11-14: I wanted to add a point light to each ghost but learned today, that JavaFX only allows up to 3 point
-	// lights per subscene. Very sad.
-	private void useColoredGhost() {
-		getChildren().setAll(coloredGhost3D.root());
-	}
-
 	private void changeLook(GameModel game, Look newLook) {
 		look = newLook;
 		switch (newLook) {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
-			movement.reset();
-			useColoredGhost();
+			movement.init();
+			getChildren().setAll(coloredGhost3D.root());
 		}
 		case FRIGHTENED -> {
 			coloredGhost3D.appearFrightened();
-			useColoredGhost();
+			getChildren().setAll(coloredGhost3D.root());
 		}
 		case FLASHING -> {
 			int numFlashes = game.level.numFlashes();
@@ -120,12 +114,12 @@ public class Ghost3D extends Group {
 			} else {
 				coloredGhost3D.appearFrightened();
 			}
-			useColoredGhost();
+			getChildren().setAll(coloredGhost3D.root());
 		}
 		case EYES -> {
 			coloredGhost3D.appearEyesOnly();
-			movement.reset();
-			useColoredGhost();
+			movement.init();
+			getChildren().setAll(coloredGhost3D.root());
 		}
 		case NUMBER -> {
 			var material = new PhongMaterial();

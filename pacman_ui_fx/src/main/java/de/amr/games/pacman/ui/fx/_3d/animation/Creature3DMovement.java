@@ -82,10 +82,10 @@ public class Creature3DMovement {
 		rotation = new RotateTransition(Duration.seconds(0.25), guy3D);
 		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
-		reset();
+		init();
 	}
 
-	public void reset() {
+	public void init() {
 		rotation.stop();
 		guy3D.setTranslateX(guy.position().x() + HTS);
 		guy3D.setTranslateY(guy.position().y() + HTS);

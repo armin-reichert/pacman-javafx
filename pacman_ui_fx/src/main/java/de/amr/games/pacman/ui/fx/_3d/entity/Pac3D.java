@@ -88,7 +88,7 @@ public class Pac3D extends Group {
 		root.setScaleZ(1.0);
 		root.setTranslateZ(0);
 		faceColorPy.set(FACE_COLOR);
-		movement.reset();
+		movement.init();
 		update(world);
 	}
 
