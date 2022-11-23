@@ -30,7 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
@@ -114,26 +115,22 @@ public class GameSceneManager {
 		return playScene3D;
 	}
 
-	private static GameSceneVariants[] scenes(GameVariant gameVariant) {
-		return switch (gameVariant) {
-		case MS_PACMAN -> SCENES_MS_PACMAN;
-		case PACMAN -> SCENES_PACMAN;
-		};
-	}
-
 	private Optional<GameScene> findGameScene(GameController gameController, boolean threeD) {
-		var variants = findSceneVariants(gameController);
+		var variants = findSceneVariants(gameController.game(), gameController.state());
 		return Optional.ofNullable(threeD ? variants.scene3D() : variants.scene2D());
 	}
 
 	private GameScene getGameScene(GameController gameController, boolean threeD) {
-		var variants = findSceneVariants(gameController);
+		var variants = findSceneVariants(gameController.game(), gameController.state());
 		return threeD && variants.scene3D() != null ? variants.scene3D() : variants.scene2D();
 	}
 
-	private GameSceneVariants findSceneVariants(GameController gameController) {
-		var game = gameController.game();
-		int index = switch (gameController.state()) {
+	private GameSceneVariants findSceneVariants(GameModel game, GameState state) {
+		var scenes = switch (game.variant()) {
+		case MS_PACMAN -> SCENES_MS_PACMAN;
+		case PACMAN -> SCENES_PACMAN;
+		};
+		int index = switch (state) {
 		case BOOT -> BOOT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
 		case CREDIT -> CREDIT_SCENE_INDEX;
@@ -141,7 +138,7 @@ public class GameSceneManager {
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
 		default -> PLAY_SCENE_INDEX;
 		};
-		return scenes(game.variant())[index];
+		return scenes[index];
 	}
 
 	public boolean has3DSceneVariant(GameController gameController) {
