@@ -197,7 +197,7 @@ public class PlayScene3D implements GameScene {
 				.toArray(Ghost3D[]::new);
 		content.getChildren().addAll(ghosts3D);
 
-		bonus3D = new Bonus3D(ctx.game().bonus());
+		bonus3D = new Bonus3D();
 		content.getChildren().add(bonus3D);
 
 		var centerOverOrigin = new Translate(-width / 2, -height / 2);
@@ -211,7 +211,7 @@ public class PlayScene3D implements GameScene {
 		world3D.update(ctx.game());
 		pac3D.update(ctx.world());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
-		bonus3D.update();
+		bonus3D.update(ctx.game().bonus());
 		currentCamera().update(pac3D);
 	}
 
@@ -296,12 +296,18 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		bonus3D.showSymbol(ctx.r2D());
+		// TODO use image of suitable size
+		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().bonus().index());
+		var image = ctx.r2D().spritesheet().region(sprite);
+		bonus3D.showSymbol(image);
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		bonus3D.showPoints(ctx.r2D());
+		// TODO use image of suitable size
+		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().bonus().index());
+		var image = ctx.r2D().spritesheet().region(sprite);
+		bonus3D.showPoints(image);
 		ctx.sounds().play(GameSound.BONUS_EATEN);
 	}
 
