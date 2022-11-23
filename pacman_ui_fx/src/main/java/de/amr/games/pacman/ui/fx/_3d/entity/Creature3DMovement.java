@@ -87,6 +87,9 @@ public class Creature3DMovement {
 
 	public void reset() {
 		rotation.stop();
+		guy3D.setTranslateX(guy.position().x() + HTS);
+		guy3D.setTranslateY(guy.position().y() + HTS);
+		guy3D.setTranslateZ(-HTS);
 		guy3D.setRotationAxis(Rotate.Z_AXIS);
 		guy3D.setRotate(getAngle(guy.moveDir()));
 		animationTargetDir = guy.moveDir();
