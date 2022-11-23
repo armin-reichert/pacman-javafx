@@ -71,9 +71,9 @@ public class Ghost3D extends Group {
 		movement = new Creature3DMovement(this, ghost);
 	}
 
-	public void reset(GameModel game) {
-		update(game);
+	public void init(GameModel game) {
 		movement.reset();
+		update(game);
 	}
 
 	public void update(GameModel game) {

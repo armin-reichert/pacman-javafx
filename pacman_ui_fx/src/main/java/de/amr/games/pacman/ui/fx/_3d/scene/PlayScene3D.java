@@ -195,6 +195,9 @@ public class PlayScene3D implements GameScene {
 		ghosts3D = ctx.game().ghosts()
 				.map(ghost -> new Ghost3D(ghost, MODEL_3D, ghostValueImages, ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
+		for (var ghost3D : ghosts3D) {
+			ghost3D.init(ctx.game());
+		}
 		content.getChildren().addAll(ghosts3D);
 
 		bonus3D = new Bonus3D();
@@ -322,7 +325,7 @@ public class PlayScene3D implements GameScene {
 		case READY -> {
 			world3D.food3D().resetEnergizerPumping();
 			pac3D.init(ctx.world());
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.reset(ctx.game()));
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.init(ctx.game()));
 		}
 
 		case HUNTING -> world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
