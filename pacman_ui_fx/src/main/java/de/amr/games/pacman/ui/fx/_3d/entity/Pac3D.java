@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation;

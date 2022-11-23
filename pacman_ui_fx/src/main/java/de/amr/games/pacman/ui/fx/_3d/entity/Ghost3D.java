@@ -29,6 +29,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
+import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
 import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
