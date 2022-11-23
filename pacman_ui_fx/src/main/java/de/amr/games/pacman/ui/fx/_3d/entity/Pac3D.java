@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import org.apache.logging.log4j.LogManager;
@@ -87,8 +88,8 @@ public class Pac3D extends Group {
 		root.setScaleZ(1.0);
 		root.setTranslateZ(0);
 		faceColorPy.set(FACE_COLOR);
-		update(world);
 		movement.reset();
+		update(world);
 	}
 
 	public void update(World world) {
@@ -101,8 +102,8 @@ public class Pac3D extends Group {
 	}
 
 	private boolean outsideWorld(World world, Creature guy) {
-		double centerX = guy.position().x() + World.HTS;
-		return centerX < 0 || centerX > world.numCols() * World.TS;
+		double centerX = guy.position().x() + HTS;
+		return centerX < HTS || centerX > world.numCols() * TS - HTS;
 	}
 
 	/**
