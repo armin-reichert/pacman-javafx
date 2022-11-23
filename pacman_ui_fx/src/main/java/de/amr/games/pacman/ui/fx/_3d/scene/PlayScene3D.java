@@ -189,11 +189,7 @@ public class PlayScene3D implements GameScene {
 		pac3D.lightOnPy.bind(pac3DLightedPy);
 		content.getChildren().add(pac3D);
 
-		var ghostValueImages = ctx.r2D().createGhostValueList().frames()//
-				.map(ctx.r2D().spritesheet()::region)//
-				.toArray(Image[]::new);
-		ghosts3D = ctx.game().ghosts()
-				.map(ghost -> new Ghost3D(ghost, MODEL_3D, ghostValueImages, ctx.r2D().ghostColorScheme(ghost.id)))
+		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, MODEL_3D, ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
 		for (var ghost3D : ghosts3D) {
 			ghost3D.init(ctx.game());
@@ -340,6 +336,16 @@ public class PlayScene3D implements GameScene {
 			animation.setOnFinished(evt -> unlockGameState());
 			animation.play();
 		});
+
+		case GHOST_DYING -> {
+			var numberImages = ctx.r2D().createGhostValueList().frames()//
+					.map(ctx.r2D().spritesheet()::region)//
+					.toArray(Image[]::new);
+			ctx.game().memo.killedGhosts.forEach(killedGhost -> {
+				int index = ctx.game().killedIndex[killedGhost.id];
+				ghosts3D[killedGhost.id].setNumberImage(numberImages[index]);
+			});
+		}
 
 		case LEVEL_STARTING -> {
 			lockGameState();

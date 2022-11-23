@@ -63,16 +63,14 @@ public class Ghost3D extends Group {
 	private final Creature3DMovement movement;
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(TS, TS, TS);
-	private final Image[] numberImages;
+	private Image numberImage;
 	private Look look;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, Image[] numberImages, GhostColorScheme colors) {
+	public Ghost3D(Ghost ghost, Model3D model3D, GhostColorScheme colors) {
 		Objects.requireNonNull(ghost, "Ghost must not be null");
 		Objects.requireNonNull(model3D, "3D model must not be null");
-		Objects.requireNonNull(numberImages, "Number images array must not be null");
 		Objects.requireNonNull(colors, "Ghost colors must not be null");
 		this.ghost = ghost;
-		this.numberImages = numberImages;
 		coloredGhost3D = new ColoredGhost3D(model3D, colors);
 		movement = new Creature3DMovement(this, ghost);
 	}
@@ -91,6 +89,10 @@ public class Ghost3D extends Group {
 			movement.update();
 		}
 		setVisible(ghost.isVisible() && !outsideWorld(game)); // ???
+	}
+
+	public void setNumberImage(Image numberImage) {
+		this.numberImage = numberImage;
 	}
 
 	// 2022-11-14: I wanted to add a point light to each ghost but learned today, that JavaFX only allows up to 3 point
@@ -126,7 +128,10 @@ public class Ghost3D extends Group {
 			useColoredGhost();
 		}
 		case NUMBER -> {
-			configureNumberCube(game.killedIndex[ghost.id]);
+			var material = new PhongMaterial();
+			material.setBumpMap(numberImage);
+			material.setDiffuseMap(numberImage);
+			numberCube.setMaterial(material);
 			getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
 			setRotationAxis(Rotate.X_AXIS);
@@ -160,13 +165,5 @@ public class Ghost3D extends Group {
 
 	private Look frightenedOrFlashingLook(GameModel game) {
 		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
-	}
-
-	private void configureNumberCube(int valueIndex) {
-		var texture = numberImages[valueIndex];
-		var material = new PhongMaterial();
-		material.setBumpMap(texture);
-		material.setDiffuseMap(texture);
-		numberCube.setMaterial(material);
 	}
 }
