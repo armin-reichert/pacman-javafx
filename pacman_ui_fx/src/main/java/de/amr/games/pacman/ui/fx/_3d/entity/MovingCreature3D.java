@@ -40,25 +40,32 @@ import javafx.util.Duration;
  */
 public abstract class MovingCreature3D<C extends Creature> extends Group {
 
-	public record Turn(int from, int to) {
+	public record Turn(int fromAngle, int toAngle) {
 	}
+
+	private static final int L = 0;
+	private static final int U = 90;
+	private static final int R = 180;
+	private static final int D = 270;
 
 	private static double getAngle(Direction dir) {
 		return switch (dir) {
-		case LEFT -> 0;
-		case RIGHT -> 180;
-		case UP -> 90;
-		case DOWN -> 270;
-		default -> 0;
+		case LEFT -> L;
+		case RIGHT -> R;
+		case UP -> U;
+		case DOWN -> D;
+		default -> L;
 		};
 	}
 
-	private static final Turn[][] TURNS = { //
-			{ null, new Turn(0, 180), new Turn(0, 90), new Turn(0, -90) }, // LEFT -> *
-			{ new Turn(180, 0), null, new Turn(180, 90), new Turn(180, 270) }, // RIGHT -> *
-			{ new Turn(90, 0), new Turn(90, 180), null, new Turn(90, 270) }, // UP -> *
-			{ new Turn(-90, 0), new Turn(270, 180), new Turn(-90, 90), null }, // DOWN -> *
+	//@formatter:off
+	private static final Turn[][] TURNS = {
+		{ null,            new Turn(L, R), new Turn(L, U), new Turn(L, -U) }, // LEFT -> *
+		{ new Turn(R, L),  null,           new Turn(R, U), new Turn(R, D)  }, // RIGHT -> *
+		{ new Turn(U, L),  new Turn(U, R), null,           new Turn(U, D)  }, // UP -> *
+		{ new Turn(-U, L), new Turn(D, R), new Turn(-U, U), null           }, // DOWN -> *
 	};
+	//@formatter:on
 
 	private static int index(Direction dir) {
 		return dir == null ? 0 : dir.ordinal();
@@ -90,8 +97,8 @@ public abstract class MovingCreature3D<C extends Creature> extends Group {
 		if (animationTargetDir != guy.moveDir()) {
 			var turn = TURNS[index(animationTargetDir)][index(guy.moveDir())];
 			turnAnimation.stop();
-			turnAnimation.setFromAngle(turn.from);
-			turnAnimation.setToAngle(turn.to);
+			turnAnimation.setFromAngle(turn.fromAngle);
+			turnAnimation.setToAngle(turn.toAngle);
 			turnAnimation.playFromStart();
 			animationTargetDir = guy.moveDir();
 		}
