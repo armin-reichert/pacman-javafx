@@ -147,7 +147,8 @@ public class GameUI implements GameEventListener {
 	}
 
 	void updateGameScene(boolean forcedReload) {
-		var gameScene = sceneManager.selectGameScene(gameController, currentGameScene, forcedReload);
+		int dim = Env.threeDScenesPy.get() ? 3 : 2;
+		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
 			pipView.init(gameScene.ctx());

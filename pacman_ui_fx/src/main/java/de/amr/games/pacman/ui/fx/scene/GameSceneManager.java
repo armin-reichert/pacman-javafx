@@ -116,19 +116,23 @@ public class GameSceneManager {
 	}
 
 	/**
-	 * Finds the game scene that applies to the current game state. If a new scene is selected, the old scene's
+	 * Selects the game scene that applies to the current game state. If a new scene is selected, the old scene's
 	 * {@link GameScene#end()} method is called, the new scene's context is updated and its {@link GameScene#init()}
 	 * method is called.
 	 * 
 	 * @param gameController   the game controller
+	 * @param dim              dimension (2 or 3)
 	 * @param currentGameScene current game scene
 	 * @param reload           if {@code true} the scene is reloaded (end + update context + init) even if no scene change
 	 *                         would be required for the current game state
 	 * 
 	 * @return the selected game scene
 	 */
-	public GameScene selectGameScene(GameController gameController, GameScene currentGameScene, boolean reload) {
-		var nextGameScene = getGameScene(gameController, Env.threeDScenesPy.get() ? 3 : 2);
+	public GameScene selectGameScene(GameController gameController, int dim, GameScene currentGameScene, boolean reload) {
+		if (dim != 2 && dim != 3) {
+			throw new IllegalArgumentException();
+		}
+		var nextGameScene = getGameScene(gameController, dim);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
