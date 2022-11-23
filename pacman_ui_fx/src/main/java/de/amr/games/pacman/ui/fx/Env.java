@@ -27,9 +27,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.MissingResourceException;
 
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -72,13 +71,13 @@ public class Env {
 	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 	public static final BooleanProperty pipEnabledPy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * World.TS);
+	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(GameScene.DEFAULT_SIZE.y());
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	public static final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(true);
 	public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
-	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
 	public static final BooleanProperty threeDScenesPy = new SimpleBooleanProperty(true);
+	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
 
 	public static void toggle(BooleanProperty booleanProperty) {
 		booleanProperty.set(!booleanProperty.get());
