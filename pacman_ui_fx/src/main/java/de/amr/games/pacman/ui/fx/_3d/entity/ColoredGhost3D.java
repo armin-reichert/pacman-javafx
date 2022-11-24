@@ -56,17 +56,17 @@ public class ColoredGhost3D {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(Model3D model3D, GhostColorScheme colors) {
+	public ColoredGhost3D(GhostColorScheme colors) {
 		this.colors = colors;
 		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", colors.normalDress());
 		eyeBallColorPy = new SimpleObjectProperty<>(this, "eyeBallColor", colors.normalEyeBalls());
 		eyePupilColorPy = new SimpleObjectProperty<>(this, "eyePupilColor", colors.normalPupils());
-		ghostGroup = model3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
-		dress = model3D.ghostDress(ghostGroup);
+		ghostGroup = Model3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
+		dress = Model3D.ghostDress(ghostGroup);
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		eyeBalls = model3D.ghostEyeBalls(ghostGroup);
+		eyeBalls = Model3D.ghostEyeBalls(ghostGroup);
 		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallColorPy));
-		pupils = model3D.ghostEyePupils(ghostGroup);
+		pupils = Model3D.ghostEyePupils(ghostGroup);
 		pupils.setMaterial(Ufx.createColorBoundMaterial(eyePupilColorPy));
 	}
 

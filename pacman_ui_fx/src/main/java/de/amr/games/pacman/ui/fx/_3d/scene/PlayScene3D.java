@@ -46,7 +46,6 @@ import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.entity.World3D;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
@@ -90,8 +89,6 @@ import javafx.scene.transform.Translate;
 public class PlayScene3D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
-	public static final Model3D MODEL_3D = new Model3D();
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
@@ -161,7 +158,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createWorld3D() {
-		world3D = new World3D(ctx.game(), MODEL_3D, ctx.r2D());
+		world3D = new World3D(ctx.game(), ctx.r2D());
 		world3D.squirtingEffectPy.bind(squirtingEffectPy);
 		world3D.maze3D().drawModePy.bind(drawModePy);
 		world3D.maze3D().floorTexturePy.bind(Bindings.createObjectBinding(
@@ -183,12 +180,12 @@ public class PlayScene3D implements GameScene {
 		createWorld3D();
 		content.getChildren().add(world3D);
 
-		pac3D = new Pac3D(ctx.game().pac, MODEL_3D);
+		pac3D = new Pac3D(ctx.game().pac);
 		pac3D.init(ctx.world());
 		pac3D.lightOnPy.bind(pac3DLightedPy);
 		content.getChildren().add(pac3D);
 
-		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, MODEL_3D, ctx.r2D().ghostColorScheme(ghost.id)))
+		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
 		for (var ghost3D : ghosts3D) {
 			ghost3D.init(ctx.game());

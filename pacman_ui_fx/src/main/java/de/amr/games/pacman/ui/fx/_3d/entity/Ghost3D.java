@@ -32,7 +32,6 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -66,11 +65,10 @@ public class Ghost3D extends Group {
 	private Image numberImage;
 	private Look look;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, GhostColorScheme colors) {
+	public Ghost3D(Ghost ghost, GhostColorScheme colors) {
 		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
-		Objects.requireNonNull(model3D, "3D model must not be null");
 		Objects.requireNonNull(colors, "Ghost colors must not be null");
-		coloredGhost3D = new ColoredGhost3D(model3D, colors);
+		coloredGhost3D = new ColoredGhost3D(colors);
 		movement = new Creature3DMovement(this, ghost);
 	}
 

@@ -68,10 +68,10 @@ public class Pac3D extends Group {
 	private final Group root;
 	private final PointLight spot;
 
-	public Pac3D(Pac pac, Model3D model3D) {
+	public Pac3D(Pac pac) {
 		this.pac = pac;
 		movement = new Creature3DMovement(this, pac);
-		root = model3D.createPac(EYES_COLOR, PALATE_COLOR);
+		root = Model3D.createPac(EYES_COLOR, PALATE_COLOR);
 		getChildren().add(root);
 
 		spot = new PointLight();

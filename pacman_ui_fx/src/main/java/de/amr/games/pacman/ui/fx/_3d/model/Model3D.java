@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.model;
 
-import java.net.URL;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.Env;
@@ -50,8 +49,8 @@ import javafx.scene.transform.Translate;
  */
 public class Model3D {
 
-	private static final URL PAC_MODEL3D_URL = Env.url("model3D/pacman.obj");
-	private static final URL GHOST_MODEL3D_URL = Env.url("model3D/ghost.obj");
+	private Model3D() {
+	}
 
 	private static final String MESH_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String MESH_PAC_FACE = "Sphere_yellow_packman";
@@ -62,6 +61,9 @@ public class Model3D {
 
 	private static final double PAC_SIZE = 9.0;
 	private static final double GHOST_SIZE = 8.5;
+
+	private static final ObjModel PAC_OBJ_MODEL = new ObjModel(Env.url("model3D/pacman.obj"));
+	private static final ObjModel GHOST_OBJ_MODEL = new ObjModel(Env.url("model3D/ghost.obj"));
 
 	private static final Image FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
 
@@ -75,25 +77,17 @@ public class Model3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	private ObjModel pacModel;
-	private ObjModel ghostModel;
-
-	public Model3D() {
-		pacModel = new ObjModel(PAC_MODEL3D_URL);
-		ghostModel = new ObjModel(GHOST_MODEL3D_URL);
-	}
-
-	public Group createPac(Color eyesColor, Color palateColor) {
+	public static Group createPac(Color eyesColor, Color palateColor) {
 		var faceMaterial = new PhongMaterial();
 		faceMaterial.setDiffuseMap(FACE_TEXTURE);
 
-		var face = pacModel.createMeshView(MESH_PAC_FACE);
+		var face = PAC_OBJ_MODEL.createMeshView(MESH_PAC_FACE);
 		face.setMaterial(faceMaterial);
 
-		var eyes = pacModel.createMeshView(MESH_PAC_EYES);
+		var eyes = PAC_OBJ_MODEL.createMeshView(MESH_PAC_EYES);
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		var palate = pacModel.createMeshView(MESH_PAC_PALATE);
+		var palate = PAC_OBJ_MODEL.createMeshView(MESH_PAC_PALATE);
 		palate.setMaterial(new PhongMaterial(palateColor));
 
 		var center = centerOverOrigin(face);
@@ -110,26 +104,26 @@ public class Model3D {
 		return root3D;
 	}
 
-	public Shape3D pacFace(Group pac) {
+	public static Shape3D pacFace(Group pac) {
 		return (Shape3D) pac.getChildren().get(0);
 	}
 
-	public Shape3D pacEyes(Group pac) {
+	public static Shape3D pacEyes(Group pac) {
 		return (Shape3D) pac.getChildren().get(1);
 	}
 
-	public Shape3D pacPalate(Group pac) {
+	public static Shape3D pacPalate(Group pac) {
 		return (Shape3D) pac.getChildren().get(2);
 	}
 
-	public Group createGhost(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dress = ghostModel.createMeshView(MESH_GHOST_DRESS);
+	public static Group createGhost(Color dressColor, Color eyeBallColor, Color pupilColor) {
+		var dress = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_DRESS);
 		dress.setMaterial(new PhongMaterial(dressColor));
 
-		var eyeBalls = ghostModel.createMeshView(MESH_GHOST_EYE_BALLS);
+		var eyeBalls = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_EYE_BALLS);
 		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
 
-		var pupils = ghostModel.createMeshView(MESH_GHOST_PUPILS);
+		var pupils = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_PUPILS);
 		pupils.setMaterial(new PhongMaterial(pupilColor));
 
 		Stream.of(dress, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawModePy));
@@ -148,19 +142,19 @@ public class Model3D {
 		return ghost3D;
 	}
 
-	public Shape3D ghostDress(Group ghost3D) {
+	public static Shape3D ghostDress(Group ghost3D) {
 		return (Shape3D) ghost3D.getChildren().get(0);
 	}
 
-	public Group ghostEyes(Group ghost3D) {
+	public static Group ghostEyes(Group ghost3D) {
 		return (Group) ghost3D.getChildren().get(1);
 	}
 
-	public Shape3D ghostEyePupils(Group ghost3D) {
+	public static Shape3D ghostEyePupils(Group ghost3D) {
 		return (Shape3D) ghostEyes(ghost3D).getChildren().get(0);
 	}
 
-	public Shape3D ghostEyeBalls(Group ghost3D) {
+	public static Shape3D ghostEyeBalls(Group ghost3D) {
 		return (Shape3D) ghostEyes(ghost3D).getChildren().get(1);
 	}
 }

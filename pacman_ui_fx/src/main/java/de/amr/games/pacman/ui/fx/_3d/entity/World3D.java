@@ -38,7 +38,6 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
@@ -60,7 +59,7 @@ public class World3D extends Group {
 	private final LivesCounter3D livesCounter3D;
 	private final PointLight houseLighting = new PointLight();
 
-	public World3D(GameModel game, Model3D model3D, Rendering2D r2D) {
+	public World3D(GameModel game, Rendering2D r2D) {
 		double width = game.level.world().numCols() * World.TS;
 		double height = game.level.world().numRows() * World.TS;
 
@@ -92,7 +91,7 @@ public class World3D extends Group {
 		levelCounter3D.setRightPosition((game.level.world().numCols() - 1) * TS, TS);
 		getChildren().add(levelCounter3D);
 
-		livesCounter3D = new LivesCounter3D(model3D);
+		livesCounter3D = new LivesCounter3D();
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
