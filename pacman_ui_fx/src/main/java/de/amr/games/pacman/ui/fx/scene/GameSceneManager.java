@@ -89,11 +89,11 @@ public class GameSceneManager {
 		GameScene2D scene2D;
 		try {
 			scene2D = clazz.getDeclaredConstructor().newInstance();
-			LOGGER.info("2D scene created, class '%s'", clazz.getName());
+			LOGGER.info("2D game scene created, class='%s'", clazz.getName());
 			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
 			return scene2D;
 		} catch (Exception e) {
-			LOGGER.error("Could not create 2D scene of class '%s'", clazz.getName());
+			LOGGER.error("Could not create 2D game scene of class '%s'", clazz.getName());
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -111,7 +111,7 @@ public class GameSceneManager {
 		playScene3D.squirtingEffectPy.bind(Env.squirtingEffectPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
 		playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
-		LOGGER.info("3D scene created, class '%s'", playScene3D.getClass().getName());
+		LOGGER.info("3D game scene created, class='%s'", playScene3D.getClass().getName());
 		return playScene3D;
 	}
 
