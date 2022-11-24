@@ -21,14 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.model;
+package de.amr.games.pacman.ui.fx._3d.entity;
 
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -52,34 +51,32 @@ public class Model3D {
 	private Model3D() {
 	}
 
+	private static final ObjModel PAC_OBJ_MODEL = new ObjModel(Env.url("model3D/pacman.obj"));
 	private static final String MESH_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String MESH_PAC_FACE = "Sphere_yellow_packman";
 	private static final String MESH_PAC_PALATE = "Sphere_grey_wall";
+	private static final double PAC_SIZE = 9.0;
+	private static final Image PAC_FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
+
+	private static final ObjModel GHOST_OBJ_MODEL = new ObjModel(Env.url("model3D/ghost.obj"));
 	private static final String MESH_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	private static final String MESH_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	private static final String MESH_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-
-	private static final double PAC_SIZE = 9.0;
 	private static final double GHOST_SIZE = 8.5;
 
-	private static final ObjModel PAC_OBJ_MODEL = new ObjModel(Env.url("model3D/pacman.obj"));
-	private static final ObjModel GHOST_OBJ_MODEL = new ObjModel(Env.url("model3D/ghost.obj"));
-
-	private static final Image FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
-
 	private static Translate centerOverOrigin(Node node) {
-		Bounds bounds = node.getBoundsInLocal();
+		var bounds = node.getBoundsInLocal();
 		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
 	}
 
 	private static Scale scale(Node node, double size) {
-		Bounds bounds = node.getBoundsInLocal();
+		var bounds = node.getBoundsInLocal();
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
 	public static Group createPac(Color eyesColor, Color palateColor) {
 		var faceMaterial = new PhongMaterial();
-		faceMaterial.setDiffuseMap(FACE_TEXTURE);
+		faceMaterial.setDiffuseMap(PAC_FACE_TEXTURE);
 
 		var face = PAC_OBJ_MODEL.createMeshView(MESH_PAC_FACE);
 		face.setMaterial(faceMaterial);

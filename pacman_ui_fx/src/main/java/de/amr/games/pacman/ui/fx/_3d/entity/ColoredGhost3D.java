@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;

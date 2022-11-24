@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
-import de.amr.games.pacman.ui.fx._3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
