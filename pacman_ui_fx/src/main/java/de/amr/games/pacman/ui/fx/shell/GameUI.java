@@ -40,6 +40,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.info.Dashboard;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.KeyboardSteering;
@@ -97,6 +98,7 @@ public class GameUI implements GameEventListener {
 		Actions.init(this);
 		initGameLoop();
 		updateGameScene(true);
+		updateSound(gameController);
 		updateStageTitle();
 		dashboard.init(this);
 		stage.centerOnScreen();
@@ -196,11 +198,21 @@ public class GameUI implements GameEventListener {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		updateGameScene(false);
+		updateSound(gameController);
 	}
 
 	@Override
 	public void onUIForceUpdate(GameEvent e) {
 		updateGameScene(true);
+	}
+
+	private void updateSound(GameController gameController) {
+		var gameVariant = gameController.game().variant();
+		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
+		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
+		case PACMAN -> GameSounds.PACMAN_SOUNDS;
+		};
+		gameController.setSounds(sounds);
 	}
 
 	public void setPacSteering(Steering steering) {

@@ -49,7 +49,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**
  * @author Armin Reichert
@@ -142,7 +141,7 @@ public class GameSceneManager {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		updateSceneContext(gameController, nextGameScene);
+		createSceneContext(gameController, nextGameScene);
 		nextGameScene.init();
 		return nextGameScene;
 	}
@@ -183,18 +182,13 @@ public class GameSceneManager {
 		return scenes[index];
 	}
 
-	private void updateSceneContext(GameController gameController, GameScene scene) {
+	private void createSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant();
 		var r2D = switch (gameVariant) {
 		case MS_PACMAN -> new RendererMsPacManGame();
 		case PACMAN -> new RendererPacManGame();
 		};
 		scene.setContext(new SceneContext(gameController, r2D));
-		LOGGER.info("Scene context updated for '%s'.", scene);
-		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
-		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
-		case PACMAN -> GameSounds.PACMAN_SOUNDS;
-		};
-		gameController.setSounds(sounds);
+		LOGGER.info("Scene context created for '%s'.", scene);
 	}
 }
