@@ -131,7 +131,8 @@ public class GameSceneManager {
 		if (dim != 2 && dim != 3) {
 			throw new IllegalArgumentException();
 		}
-		var nextGameScene = getGameScene(gameController, dim);
+		var variants = getSceneVariantsMatchingGameState(gameController.game(), gameController.state());
+		var nextGameScene = (dim == 3 && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
@@ -141,7 +142,7 @@ public class GameSceneManager {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		createSceneContext(gameController, nextGameScene);
+		setSceneContext(gameController, nextGameScene);
 		nextGameScene.init();
 		return nextGameScene;
 	}
@@ -153,42 +154,41 @@ public class GameSceneManager {
 				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene3D();
 	}
 
+	/**
+	 * @param gameController the game controller
+	 * @param dim            scene variant dimension (2 or 3)
+	 * @return (optional) game scene matching current game state and specified dimension
+	 */
 	public Optional<GameScene> findGameScene(GameController gameController, int dim) {
 		if (dim != 2 && dim != 3) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
-		var variants = findSceneVariants(gameController.game(), gameController.state());
+		var variants = getSceneVariantsMatchingGameState(gameController.game(), gameController.state());
 		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	private GameScene getGameScene(GameController gameController, int dim) {
-		var variants = findSceneVariants(gameController.game(), gameController.state());
-		return dim == 3 && variants.scene3D() != null ? variants.scene3D() : variants.scene2D();
-	}
-
-	private SceneVariants findSceneVariants(GameModel game, GameState state) {
-		var scenes = switch (game.variant()) {
-		case MS_PACMAN -> SCENES_MS_PACMAN;
-		case PACMAN -> SCENES_PACMAN;
-		};
+	private SceneVariants getSceneVariantsMatchingGameState(GameModel game, GameState state) {
 		int index = switch (state) {
 		case BOOT -> BOOT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
+		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_STARTING, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
 		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level.number());
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
-		default -> PLAY_SCENE_INDEX;
 		};
-		return scenes[index];
+		return switch (game.variant()) {
+		case MS_PACMAN -> SCENES_MS_PACMAN[index];
+		case PACMAN -> SCENES_PACMAN[index];
+		};
 	}
 
-	private void createSceneContext(GameController gameController, GameScene scene) {
+	private void setSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant();
 		var r2D = switch (gameVariant) {
 		case MS_PACMAN -> new RendererMsPacManGame();
 		case PACMAN -> new RendererPacManGame();
 		};
 		scene.setContext(new SceneContext(gameController, r2D));
-		LOGGER.info("Scene context created for '%s'.", scene);
+		LOGGER.info("Scene context set for '%s'.", scene);
 	}
 }
