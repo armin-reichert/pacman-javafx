@@ -129,7 +129,7 @@ public class GameSceneManager {
 	 */
 	public GameScene selectGameScene(GameController gameController, int dim, GameScene currentGameScene, boolean reload) {
 		if (dim != 2 && dim != 3) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
 		var variants = getSceneVariantsMatchingGameState(gameController.game(), gameController.state());
 		var nextGameScene = (dim == 3 && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
