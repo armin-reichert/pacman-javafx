@@ -126,6 +126,7 @@ public class GameUI implements GameEventListener {
 
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
+		Env.pausedPy.addListener((x, y, z) -> updateStageTitle());
 
 		return scene;
 	}
@@ -156,13 +157,14 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateStageTitle() {
+		var paused = Env.pausedPy.get() ? " (paused)" : "";
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
-			stage.setTitle("Ms. Pac-Man");
+			stage.setTitle("Ms. Pac-Man" + paused);
 			stage.getIcons().setAll(APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
-			stage.setTitle("Pac-Man");
+			stage.setTitle("Pac-Man" + paused);
 			stage.getIcons().setAll(APP_ICON_PACMAN);
 		}
 		default -> throw new IllegalStateException();
