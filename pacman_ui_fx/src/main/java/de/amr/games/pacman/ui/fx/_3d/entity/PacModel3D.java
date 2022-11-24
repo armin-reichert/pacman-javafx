@@ -39,30 +39,22 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 /**
- * This uses part of a Blender model created by Gianmarco Cavallaccio (https://www.artstation.com/gianmart).
+ * Pac-Man mesh taken from a Blender model created by Gianmarco Cavallaccio (https://www.artstation.com/gianmart).
  * <p>
- * 
- * One mesh for Pac-Man and one for a ghost are sufficient because their appearance is managed programmatically.
  * 
  * @author Armin Reichert
  */
-public class Model3D {
+public class PacModel3D {
 
-	private Model3D() {
+	private PacModel3D() {
 	}
 
 	private static final ObjModel PAC_OBJ_MODEL = new ObjModel(Env.url("model3D/pacman.obj"));
 	private static final String MESH_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
-	private static final String MESH_PAC_FACE = "Sphere_yellow_packman";
+	private static final String MESH_PAC_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_PAC_PALATE = "Sphere_grey_wall";
 	private static final double PAC_SIZE = 9.0;
 	private static final Image PAC_FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
-
-	private static final ObjModel GHOST_OBJ_MODEL = new ObjModel(Env.url("model3D/ghost.obj"));
-	private static final String MESH_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-	private static final String MESH_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
-	private static final String MESH_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-	private static final double GHOST_SIZE = 8.5;
 
 	private static Translate centerOverOrigin(Node node) {
 		var bounds = node.getBoundsInLocal();
@@ -74,12 +66,17 @@ public class Model3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
+	/**
+	 * @param eyesColor   Pac-Man eyes color
+	 * @param palateColor Pac-Man palate color
+	 * @return transformation group representing a 3D Pac-Man.
+	 */
 	public static Group createPac(Color eyesColor, Color palateColor) {
-		var faceMaterial = new PhongMaterial();
-		faceMaterial.setDiffuseMap(PAC_FACE_TEXTURE);
+		var headMaterial = new PhongMaterial();
+		headMaterial.setDiffuseMap(PAC_FACE_TEXTURE);
 
-		var face = PAC_OBJ_MODEL.createMeshView(MESH_PAC_FACE);
-		face.setMaterial(faceMaterial);
+		var head = PAC_OBJ_MODEL.createMeshView(MESH_PAC_HEAD);
+		head.setMaterial(headMaterial);
 
 		var eyes = PAC_OBJ_MODEL.createMeshView(MESH_PAC_EYES);
 		eyes.setMaterial(new PhongMaterial(eyesColor));
@@ -87,21 +84,19 @@ public class Model3D {
 		var palate = PAC_OBJ_MODEL.createMeshView(MESH_PAC_PALATE);
 		palate.setMaterial(new PhongMaterial(palateColor));
 
-		var center = centerOverOrigin(face);
-		Stream.of(face, eyes, palate).forEach(meshView -> {
+		var center = centerOverOrigin(head);
+		Stream.of(head, eyes, palate).forEach(meshView -> {
 			meshView.getTransforms().add(center);
 			meshView.drawModeProperty().bind(Env.drawModePy);
 		});
 
-		var root3D = new Group(face, eyes, palate);
-		root3D.getTransforms().add(new Translate(0, 0, -1));
-		root3D.getTransforms().add(scale(root3D, PAC_SIZE));
-		root3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		var root = new Group(head, eyes, palate);
+		root.getTransforms().addAll(new Translate(0, 0, -1), scale(root, PAC_SIZE), new Rotate(90, Rotate.X_AXIS));
 
-		return root3D;
+		return root;
 	}
 
-	public static Shape3D pacFace(Group pac) {
+	public static Shape3D pacHead(Group pac) {
 		return (Shape3D) pac.getChildren().get(0);
 	}
 
@@ -111,47 +106,5 @@ public class Model3D {
 
 	public static Shape3D pacPalate(Group pac) {
 		return (Shape3D) pac.getChildren().get(2);
-	}
-
-	public static Group createGhost(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dress = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_DRESS);
-		dress.setMaterial(new PhongMaterial(dressColor));
-
-		var eyeBalls = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_EYE_BALLS);
-		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
-
-		var pupils = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_PUPILS);
-		pupils.setMaterial(new PhongMaterial(pupilColor));
-
-		Stream.of(dress, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawModePy));
-
-		var center = centerOverOrigin(dress);
-		dress.getTransforms().add(center);
-
-		var eyes = new Group(pupils, eyeBalls);
-		eyes.getTransforms().add(center);
-
-		var ghost3D = new Group(dress, eyes);
-		ghost3D.getTransforms().add(new Translate(0, 0, -1));
-		ghost3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		ghost3D.getTransforms().add(scale(ghost3D, GHOST_SIZE));
-
-		return ghost3D;
-	}
-
-	public static Shape3D ghostDress(Group ghost3D) {
-		return (Shape3D) ghost3D.getChildren().get(0);
-	}
-
-	public static Group ghostEyes(Group ghost3D) {
-		return (Group) ghost3D.getChildren().get(1);
-	}
-
-	public static Shape3D ghostEyePupils(Group ghost3D) {
-		return (Shape3D) ghostEyes(ghost3D).getChildren().get(0);
-	}
-
-	public static Shape3D ghostEyeBalls(Group ghost3D) {
-		return (Shape3D) ghostEyes(ghost3D).getChildren().get(1);
 	}
 }

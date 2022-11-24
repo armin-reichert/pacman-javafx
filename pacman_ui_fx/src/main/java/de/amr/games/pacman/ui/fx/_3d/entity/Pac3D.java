@@ -55,10 +55,10 @@ public class Pac3D extends Group {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	public final ObjectProperty<Color> faceColorPy = new SimpleObjectProperty<>(this, "faceColor", FACE_COLOR);
+	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 
-	private static final Color FACE_COLOR = Color.YELLOW;
+	private static final Color HEAD_COLOR = Color.YELLOW;
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
 	private static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
 
@@ -70,7 +70,7 @@ public class Pac3D extends Group {
 	public Pac3D(Pac pac) {
 		this.pac = pac;
 		movement = new Creature3DMovement(this, pac);
-		root = Model3D.createPac(EYES_COLOR, PALATE_COLOR);
+		root = PacModel3D.createPac(EYES_COLOR, PALATE_COLOR);
 		getChildren().add(root);
 
 		spot = new PointLight();
@@ -86,7 +86,7 @@ public class Pac3D extends Group {
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
 		root.setTranslateZ(0);
-		faceColorPy.set(FACE_COLOR);
+		headColorPy.set(HEAD_COLOR);
 		movement.init();
 		update(world);
 	}
@@ -110,6 +110,6 @@ public class Pac3D extends Group {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
-		return new PacDyingAnimation(root, faceColorPy, FACE_COLOR, killingGhostColor).getAnimation();
+		return new PacDyingAnimation(root, headColorPy, HEAD_COLOR, killingGhostColor).getAnimation();
 	}
 }
