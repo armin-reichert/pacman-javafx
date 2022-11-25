@@ -168,6 +168,7 @@ public class PlayScene3D implements GameScene {
 		world3D.maze3D().resolutionPy.bind(mazeResolutionPy);
 		world3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
 		world3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
+		content.getChildren().add(0, world3D); // always child #0, gets exchanged on level change
 	}
 
 	private void createPac3D() {
@@ -195,7 +196,6 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		content.getChildren().clear();
 		createWorld3D();
-		content.getChildren().add(world3D); // always child #0, gets exchanged on level change
 		createPac3D();
 		createGhosts3D();
 		createBonus3D();
@@ -342,8 +342,8 @@ public class PlayScene3D implements GameScene {
 
 		case LEVEL_STARTING -> {
 			lockGameState();
+			content.getChildren().remove(world3D);
 			createWorld3D();
-			content.getChildren().set(0, world3D);
 			changeCamera(perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level.number()));
 			pause(3, this::unlockGameState).play();
