@@ -71,7 +71,7 @@ public class PacModel3D {
 	 * @param palateColor Pac-Man palate color
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
-	public static Group createPac(Color eyesColor, Color palateColor) {
+	public static Node createPac3D(Color eyesColor, Color palateColor) {
 		var headMaterial = new PhongMaterial();
 		headMaterial.setDiffuseMap(PAC_FACE_TEXTURE);
 
@@ -96,15 +96,15 @@ public class PacModel3D {
 		return root;
 	}
 
-	public static Shape3D pacHead(Group pac) {
-		return (Shape3D) pac.getChildren().get(0);
+	public static Shape3D head(Node root) {
+		return (Shape3D) ((Group) root).getChildren().get(0);
 	}
 
-	public static Shape3D pacEyes(Group pac) {
-		return (Shape3D) pac.getChildren().get(1);
+	public static Shape3D eyes(Node root) {
+		return (Shape3D) ((Group) root).getChildren().get(1);
 	}
 
-	public static Shape3D pacPalate(Group pac) {
-		return (Shape3D) pac.getChildren().get(2);
+	public static Shape3D palate(Node root) {
+		return (Shape3D) ((Group) root).getChildren().get(2);
 	}
 }

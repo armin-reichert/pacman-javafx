@@ -40,6 +40,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 
@@ -64,13 +65,13 @@ public class Pac3D extends Group {
 
 	private final Pac pac;
 	private final Creature3DMovement movement;
-	private final Group root;
+	private final Node root;
 	private final PointLight spot;
 
 	public Pac3D(Pac pac) {
 		this.pac = pac;
 		movement = new Creature3DMovement(this, pac);
-		root = PacModel3D.createPac(EYES_COLOR, PALATE_COLOR);
+		root = PacModel3D.createPac3D(EYES_COLOR, PALATE_COLOR);
 		getChildren().add(root);
 
 		spot = new PointLight();

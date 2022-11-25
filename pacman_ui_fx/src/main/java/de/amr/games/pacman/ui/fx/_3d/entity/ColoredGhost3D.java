@@ -31,7 +31,6 @@ import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
@@ -41,7 +40,7 @@ import javafx.scene.shape.Shape3D;
  */
 public class ColoredGhost3D {
 
-	private final Group ghostGroup;
+	private final Node root;
 	private final Shape3D dress;
 	private final Shape3D eyeBalls;
 	private final Shape3D pupils;
@@ -60,17 +59,17 @@ public class ColoredGhost3D {
 		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", colors.normalDress());
 		eyeBallColorPy = new SimpleObjectProperty<>(this, "eyeBallColor", colors.normalEyeBalls());
 		eyePupilColorPy = new SimpleObjectProperty<>(this, "eyePupilColor", colors.normalPupils());
-		ghostGroup = GhostModel3D.createGhost(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
-		dress = GhostModel3D.ghostDress(ghostGroup);
+		root = GhostModel3D.createGhost3D(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
+		dress = GhostModel3D.dress(root);
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		eyeBalls = GhostModel3D.ghostEyeBalls(ghostGroup);
+		eyeBalls = GhostModel3D.eyeBalls(root);
 		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallColorPy));
-		pupils = GhostModel3D.ghostEyePupils(ghostGroup);
+		pupils = GhostModel3D.pupils(root);
 		pupils.setMaterial(Ufx.createColorBoundMaterial(eyePupilColorPy));
 	}
 
 	public Node root() {
-		return ghostGroup;
+		return root;
 	}
 
 	public void appearFlashing(int numFlashes) {

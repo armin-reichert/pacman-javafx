@@ -63,7 +63,7 @@ public class GhostModel3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	public static Group createGhost(Color dressColor, Color eyeBallColor, Color pupilColor) {
+	public static Node createGhost3D(Color dressColor, Color eyeBallColor, Color pupilColor) {
 		var dress = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_DRESS);
 		dress.setMaterial(new PhongMaterial(dressColor));
 
@@ -89,19 +89,21 @@ public class GhostModel3D {
 		return ghost3D;
 	}
 
-	public static Shape3D ghostDress(Group ghost3D) {
-		return (Shape3D) ghost3D.getChildren().get(0);
+	private static Group eyes(Node ghost3D) {
+		var root = (Group) ghost3D;
+		return (Group) root.getChildren().get(1);
 	}
 
-	public static Group ghostEyes(Group ghost3D) {
-		return (Group) ghost3D.getChildren().get(1);
+	public static Shape3D dress(Node ghost3D) {
+		var root = (Group) ghost3D;
+		return (Shape3D) root.getChildren().get(0);
 	}
 
-	public static Shape3D ghostEyePupils(Group ghost3D) {
-		return (Shape3D) ghostEyes(ghost3D).getChildren().get(0);
+	public static Shape3D pupils(Node ghost3D) {
+		return (Shape3D) eyes(ghost3D).getChildren().get(0);
 	}
 
-	public static Shape3D ghostEyeBalls(Group ghost3D) {
-		return (Shape3D) ghostEyes(ghost3D).getChildren().get(1);
+	public static Shape3D eyeBalls(Node ghost3D) {
+		return (Shape3D) eyes(ghost3D).getChildren().get(1);
 	}
 }
