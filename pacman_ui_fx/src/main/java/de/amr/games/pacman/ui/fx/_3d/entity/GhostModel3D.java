@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
 import javafx.scene.Group;
@@ -47,10 +45,10 @@ public class GhostModel3D {
 	private GhostModel3D() {
 	}
 
-	private static final ObjModel GHOST_OBJ_MODEL = new ObjModel(Env.url("model3D/ghost.obj"));
-	private static final String MESH_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-	private static final String MESH_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
-	private static final String MESH_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+	private static final ObjModel OBJ_MODEL = new ObjModel(Env.url("model3D/ghost.obj"));
+	private static final String ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+	private static final String ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
+	private static final String ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 	private static final double GHOST_SIZE = 8.5;
 
 	private static Translate centerOverOrigin(Node node) {
@@ -64,16 +62,14 @@ public class GhostModel3D {
 	}
 
 	public static Node createGhost3D(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dress = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_DRESS);
+		var dress = OBJ_MODEL.createMeshView(ID_GHOST_DRESS);
 		dress.setMaterial(new PhongMaterial(dressColor));
 
-		var eyeBalls = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_EYE_BALLS);
+		var eyeBalls = OBJ_MODEL.createMeshView(ID_GHOST_EYE_BALLS);
 		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
 
-		var pupils = GHOST_OBJ_MODEL.createMeshView(MESH_GHOST_PUPILS);
+		var pupils = OBJ_MODEL.createMeshView(ID_GHOST_PUPILS);
 		pupils.setMaterial(new PhongMaterial(pupilColor));
-
-		Stream.of(dress, eyeBalls, pupils).forEach(meshView -> meshView.drawModeProperty().bind(Env.drawModePy));
 
 		var center = centerOverOrigin(dress);
 		dress.getTransforms().add(center);

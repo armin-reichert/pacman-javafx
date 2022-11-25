@@ -183,6 +183,7 @@ public class PlayScene3D implements GameScene {
 				.toArray(Ghost3D[]::new);
 		for (var ghost3D : ghosts3D) {
 			ghost3D.init(ctx.game());
+			ghost3D.drawModePy.bind(drawModePy);
 		}
 		content.getChildren().addAll(ghosts3D);
 	}

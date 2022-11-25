@@ -49,10 +49,10 @@ public class PacModel3D {
 	private PacModel3D() {
 	}
 
-	private static final ObjModel PAC_OBJ_MODEL = new ObjModel(Env.url("model3D/pacman.obj"));
-	private static final String MESH_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
-	private static final String MESH_PAC_HEAD = "Sphere_yellow_packman";
-	private static final String MESH_PAC_PALATE = "Sphere_grey_wall";
+	private static final ObjModel OBJ_MODEL = new ObjModel(Env.url("model3D/pacman.obj"));
+	private static final String ID_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
+	private static final String ID_PAC_HEAD = "Sphere_yellow_packman";
+	private static final String ID_PAC_PALATE = "Sphere_grey_wall";
 	private static final double PAC_SIZE = 9.0;
 	private static final Image PAC_FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
 
@@ -75,13 +75,13 @@ public class PacModel3D {
 		var headMaterial = new PhongMaterial();
 		headMaterial.setDiffuseMap(PAC_FACE_TEXTURE);
 
-		var head = PAC_OBJ_MODEL.createMeshView(MESH_PAC_HEAD);
+		var head = OBJ_MODEL.createMeshView(ID_PAC_HEAD);
 		head.setMaterial(headMaterial);
 
-		var eyes = PAC_OBJ_MODEL.createMeshView(MESH_PAC_EYES);
+		var eyes = OBJ_MODEL.createMeshView(ID_PAC_EYES);
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		var palate = PAC_OBJ_MODEL.createMeshView(MESH_PAC_PALATE);
+		var palate = OBJ_MODEL.createMeshView(ID_PAC_PALATE);
 		palate.setMaterial(new PhongMaterial(palateColor));
 
 		var center = centerOverOrigin(head);

@@ -72,6 +72,18 @@ public class ColoredGhost3D {
 		return root;
 	}
 
+	public Shape3D dress() {
+		return dress;
+	}
+
+	public Shape3D eyeBalls() {
+		return eyeBalls;
+	}
+
+	public Shape3D pupils() {
+		return pupils;
+	}
+
 	public void appearFlashing(int numFlashes) {
 		ensureFlashingPlaying(numFlashes);
 		dressColorPy.bind(dressFlashing.colorPy);
