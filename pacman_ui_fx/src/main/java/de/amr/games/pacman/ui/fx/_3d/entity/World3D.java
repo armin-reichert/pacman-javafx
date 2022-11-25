@@ -50,49 +50,51 @@ public class World3D extends Group {
 
 	private final Maze3D maze3D;
 	private final Food3D food3D;
-	private final Scores3D scores3D;
+	private final PointLight houseLighting;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
-	private final PointLight houseLighting = new PointLight();
+	private final Scores3D scores3D;
 
 	public World3D(GameModel game, Rendering2D r2D) {
 		double width = game.level.world().numCols() * World.TS;
 		double height = game.level.world().numRows() * World.TS;
 
-		var scoreFont = Font.font(r2D.arcadeFont().getFamily(), TS);
-		scores3D = new Scores3D(scoreFont);
-		getChildren().add(scores3D);
-
 		var mazeColors = new Maze3DColors(//
 				r2D.getMazeSideColor(game.level.mazeNumber()), //
 				r2D.getMazeTopColor(game.level.mazeNumber()), //
 				r2D.getGhostHouseDoorColor());
-		maze3D = new Maze3D(game.level.world(), mazeColors);
-		getChildren().add(maze3D);
 
+		maze3D = new Maze3D(game.level.world(), mazeColors);
+
+		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
 		houseLighting.setMaxRange(10 * TS);
 		houseLighting.setTranslateX(width / 2);
 		houseLighting.setTranslateY((height - 2 * TS) / 2);
 		houseLighting.setTranslateZ(-TS);
-		getChildren().add(houseLighting);
 
 		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
 		food3D = new Food3D(game.level.world(), foodColor);
-		getChildren().add(food3D);
 
 		levelCounter3D = new LevelCounter3D(symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
 		levelCounter3D.setRightPosition((game.level.world().numCols() - 1) * TS, TS);
-		getChildren().add(levelCounter3D);
+		levelCounter3D().init(game.levelCounter);
 
 		livesCounter3D = new LivesCounter3D();
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
-		getChildren().add(livesCounter3D);
-
-		levelCounter3D().init(game.levelCounter);
 		livesCounter3D().setVisible(game.hasCredit());
+
+		var scoreFont = Font.font(r2D.arcadeFont().getFamily(), TS);
+		scores3D = new Scores3D(scoreFont);
+
+		getChildren().add(maze3D);
+		getChildren().add(food3D);
+		getChildren().add(scores3D);
+		getChildren().add(houseLighting);
+		getChildren().add(levelCounter3D);
+		getChildren().add(livesCounter3D);
 	}
 
 	public void update(GameModel game) {

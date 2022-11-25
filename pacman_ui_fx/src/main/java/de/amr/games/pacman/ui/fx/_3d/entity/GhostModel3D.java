@@ -78,7 +78,7 @@ public class GhostModel3D {
 		eyes.getTransforms().add(center);
 
 		var ghost3D = new Group(dress, eyes);
-		ghost3D.getTransforms().add(new Translate(0, 0, -1));
+		ghost3D.getTransforms().add(new Translate(0, 0, -1.5));
 		ghost3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		ghost3D.getTransforms().add(scale(ghost3D, GHOST_SIZE));
 
