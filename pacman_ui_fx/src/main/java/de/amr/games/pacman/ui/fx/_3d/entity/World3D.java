@@ -59,9 +59,8 @@ public class World3D extends Group {
 		double width = game.level.world().numCols() * World.TS;
 		double height = game.level.world().numRows() * World.TS;
 
-		scores3D = new Scores3D();
 		var scoreFont = Font.font(r2D.arcadeFont().getFamily(), TS);
-		scores3D.setFont(scoreFont);
+		scores3D = new Scores3D(scoreFont);
 		getChildren().add(scores3D);
 
 		var mazeColors = new Maze3DColors(//
@@ -102,11 +101,9 @@ public class World3D extends Group {
 		updateDoorState(game);
 		livesCounter3D.update(game.livesOneLessShown ? game.lives - 1 : game.lives);
 		if (game.hasCredit()) {
-			scores3D.setComputeScoreText(true);
+			scores3D.setShowPoints(true);
 		} else {
-			scores3D.setComputeScoreText(false);
-			scores3D.txtScore.setFill(Color.RED);
-			scores3D.txtScore.setText("GAME OVER!");
+			scores3D.setShowText(Color.RED, "GAME OVER!");
 		}
 	}
 

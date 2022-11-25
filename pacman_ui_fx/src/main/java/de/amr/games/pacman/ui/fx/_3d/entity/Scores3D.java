@@ -39,17 +39,17 @@ import javafx.scene.text.Text;
  */
 public class Scores3D extends Group {
 
-	public final Text txtScoreTitle;
-	public final Text txtScore;
-	public final Text txtHiscoreTitle;
-	public final Text txtHiscore;
-
+	private final Text txtScoreTitle;
+	private final Text txtScore;
+	private final Text txtHiscoreTitle;
+	private final Text txtHiscore;
 	private Color titleColor = Color.GHOSTWHITE;
 	private Color scoreColor = Color.YELLOW;
 	private Font font = Font.font("Courier", 12);
-	private boolean computeScoreText = true;
+	private boolean pointsDisplayed = true;
 
-	public Scores3D() {
+	public Scores3D(Font font) {
+		this.font = font;
 		txtScoreTitle = new Text("SCORE");
 		txtScore = new Text();
 		txtHiscoreTitle = new Text("HIGH SCORE");
@@ -66,12 +66,14 @@ public class Scores3D extends Group {
 		getChildren().add(grid);
 	}
 
-	public void setFont(Font font) {
-		this.font = font;
+	public void setShowText(Color color, String text) {
+		txtScore.setFill(color);
+		txtScore.setText(text);
+		pointsDisplayed = false;
 	}
 
-	public void setComputeScoreText(boolean state) {
-		this.computeScoreText = state;
+	public void setShowPoints(boolean show) {
+		this.pointsDisplayed = show;
 	}
 
 	public void update(GameModel game) {
@@ -79,15 +81,13 @@ public class Scores3D extends Group {
 		int gameLevelNumber = game.level.number();
 		int highscorePoints = game.highScore.points;
 		int highscoreLevelNumber = game.highScore.levelNumber;
-
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
-		if (computeScoreText) {
+		if (pointsDisplayed) {
 			txtScore.setText(String.format("%7d L%d", gamePoints, gameLevelNumber));
 			txtScore.setFill(Color.YELLOW);
 		}
 		txtScore.setFont(font);
-
 		txtHiscoreTitle.setFill(titleColor);
 		txtHiscoreTitle.setFont(font);
 		txtHiscore.setFill(scoreColor);
