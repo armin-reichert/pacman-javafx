@@ -64,32 +64,31 @@ public class GameSceneManager {
 
 	//@formatter:off
 	private static final SceneVariants[] SCENES_PACMAN = {
-			new SceneVariants(createScene2D(BootScene.class), null),
-			new SceneVariants(createScene2D(PacManIntroScene.class), null),
-			new SceneVariants(createScene2D(PacManCreditScene.class), null),
-			new SceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
-			new SceneVariants(createScene2D(PacManCutscene1.class), null),
-			new SceneVariants(createScene2D(PacManCutscene2.class), null),
-			new SceneVariants(createScene2D(PacManCutscene3.class), null),
+		new SceneVariants(createScene2D(BootScene.class), null),
+		new SceneVariants(createScene2D(PacManIntroScene.class), null),
+		new SceneVariants(createScene2D(PacManCreditScene.class), null),
+		new SceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new SceneVariants(createScene2D(PacManCutscene1.class), null),
+		new SceneVariants(createScene2D(PacManCutscene2.class), null),
+		new SceneVariants(createScene2D(PacManCutscene3.class), null),
 	};
 
 	private static final SceneVariants[] SCENES_MS_PACMAN = { 
-			new SceneVariants(createScene2D(BootScene.class), null),
-			new SceneVariants(createScene2D(MsPacManIntroScene.class), null),
-			new SceneVariants(createScene2D(MsPacManCreditScene.class), null),
-			new SceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
-			new SceneVariants(createScene2D(MsPacManIntermissionScene1.class), null),
-			new SceneVariants(createScene2D(MsPacManIntermissionScene2.class), null),
-			new SceneVariants(createScene2D(MsPacManIntermissionScene3.class), null),
+		new SceneVariants(createScene2D(BootScene.class), null),
+		new SceneVariants(createScene2D(MsPacManIntroScene.class), null),
+		new SceneVariants(createScene2D(MsPacManCreditScene.class), null),
+		new SceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new SceneVariants(createScene2D(MsPacManIntermissionScene1.class), null),
+		new SceneVariants(createScene2D(MsPacManIntermissionScene2.class), null),
+		new SceneVariants(createScene2D(MsPacManIntermissionScene3.class), null),
 	};
 	//@formatter:on
 
 	private static GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
-		GameScene2D scene2D;
 		try {
-			scene2D = clazz.getDeclaredConstructor().newInstance();
-			LOGGER.info("2D game scene created, class='%s'", clazz.getName());
+			GameScene2D scene2D = clazz.getDeclaredConstructor().newInstance();
 			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
+			LOGGER.info("2D game scene created, class='%s'", clazz.getName());
 			return scene2D;
 		} catch (Exception e) {
 			LOGGER.error("Could not create 2D game scene of class '%s'", clazz.getName());
