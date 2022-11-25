@@ -31,6 +31,7 @@ import de.amr.games.pacman.model.common.actors.BonusState;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -45,7 +46,7 @@ import javafx.util.Duration;
 public class Bonus3D extends Box {
 
 	public Bonus3D() {
-		super(2 * TS, TS, TS);
+		super(TS, TS, TS);
 	}
 
 	public void update(Bonus bonus) {
@@ -56,12 +57,20 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol(Image symbolImage) {
-		setTexture(symbolImage);
+		var imageView = new ImageView(symbolImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitWidth(TS);
+		setTexture(imageView.getImage());
+		setWidth(TS);
 		rotate(1, Animation.INDEFINITE, 1);
 	}
 
 	public void showPoints(Image pointsImage) {
-		setTexture(pointsImage);
+		var imageView = new ImageView(pointsImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitWidth(2 * TS);
+		setTexture(imageView.getImage());
+		setWidth(2 * TS);
 		rotate(1, 3, 2);
 	}
 

@@ -170,34 +170,38 @@ public class PlayScene3D implements GameScene {
 		world3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
 	}
 
-	@Override
-	public void init() {
-		double width = ctx.world().numCols() * World.TS;
-		double height = ctx.world().numRows() * World.TS;
-
-		content.getChildren().clear();
-
-		createWorld3D();
-		content.getChildren().add(world3D);
-
+	private void createPac3D() {
 		pac3D = new Pac3D(ctx.game().pac);
 		pac3D.init(ctx.world());
 		pac3D.lightOnPy.bind(pac3DLightedPy);
 		content.getChildren().add(pac3D);
+	}
 
+	private void createGhosts3D() {
 		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id)))
 				.toArray(Ghost3D[]::new);
 		for (var ghost3D : ghosts3D) {
 			ghost3D.init(ctx.game());
 		}
 		content.getChildren().addAll(ghosts3D);
+	}
 
+	private void createBonus3D() {
 		bonus3D = new Bonus3D();
 		content.getChildren().add(bonus3D);
+	}
 
-		var centerOverOrigin = new Translate(-width / 2, -height / 2);
-		content.getTransforms().setAll(centerOverOrigin);
-
+	@Override
+	public void init() {
+		content.getChildren().clear();
+		createWorld3D();
+		content.getChildren().add(world3D); // always child #0, gets exchanged on level change
+		createPac3D();
+		createGhosts3D();
+		createBonus3D();
+		var width = ctx.world().numCols() * World.TS;
+		var height = ctx.world().numRows() * World.TS;
+		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 		changeCamera(perspectivePy.get());
 	}
 
@@ -245,16 +249,16 @@ public class PlayScene3D implements GameScene {
 			LOGGER.error("No camera found for perspective %s", newPerspective);
 			return;
 		}
-		if (newCamera != currentCamera()) {
+		if (newCamera != fxSubScene.getCamera()) {
 			fxSubScene.setCamera(newCamera);
 			fxSubScene.setOnKeyPressed(newCamera::onKeyPressed);
 			fxSubScene.requestFocus();
 			newCamera.reset();
 		}
+		// this rotates the scores such that the viewer always sees them frontally
 		if (world3D != null && world3D.scores3D() != null) {
-			var scores3D = world3D.scores3D();
-			scores3D.rotationAxisProperty().bind(newCamera.rotationAxisProperty());
-			scores3D.rotateProperty().bind(newCamera.rotateProperty());
+			world3D.scores3D().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
+			world3D.scores3D().rotateProperty().bind(newCamera.rotateProperty());
 		}
 	}
 
@@ -269,18 +273,16 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
-		var food3D = world3D.food3D();
 		if (e.tile.isEmpty()) {
 			// when cheat "eat all pellets" is used, no tile is present in the event. In that case, bring 3D pellets to be in
 			// synch with model:
 			ctx.world().tiles() //
 					.filter(ctx.world()::containsEatenFood) //
-					.map(food3D::pelletAt) //
+					.map(world3D.food3D()::pelletAt) //
 					.flatMap(Optional::stream) //
 					.forEach(Pellet3D::eat);
 		} else {
-			var tile = e.tile.get();
-			food3D.pelletAt(tile).ifPresent(food3D::eatPellet);
+			world3D.food3D().pelletAt(e.tile.get()).ifPresent(world3D.food3D()::eatPellet);
 		}
 	}
 
@@ -291,18 +293,14 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		// TODO use image of suitable size
 		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().bonus().index());
-		var image = ctx.r2D().spritesheet().region(sprite);
-		bonus3D.showSymbol(image);
+		bonus3D.showSymbol(ctx.r2D().spritesheet().region(sprite));
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		// TODO use image of suitable size
 		var sprite = ctx.r2D().bonusValueSprite(ctx.game().bonus().index());
-		var image = ctx.r2D().spritesheet().region(sprite);
-		bonus3D.showPoints(image);
+		bonus3D.showPoints(ctx.r2D().spritesheet().region(sprite));
 		ctx.sounds().play(GameSound.BONUS_EATEN);
 	}
 
