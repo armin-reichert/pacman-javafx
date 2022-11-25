@@ -96,7 +96,7 @@ public class PlayScene3D implements GameScene {
 	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution", 4);
 	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight", 2.5);
 	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness", 1.5);
-	public final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(false);
+	public final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(this, "pac3DLighted", false);
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
 			Perspective.TOTAL);
 	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect", true);
@@ -121,7 +121,7 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		perspectivePy.addListener((py, oldVal, newVal) -> changeCamera(newVal));
+		perspectivePy.addListener((py, oldVal, newPerspective) -> changeCamera(newPerspective));
 	}
 
 	public CoordSystem coordSystem() {
