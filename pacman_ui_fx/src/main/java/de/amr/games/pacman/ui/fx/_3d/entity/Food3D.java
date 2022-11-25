@@ -45,11 +45,11 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class Food3D extends Group {
 
-	public final BooleanProperty squirtingPy = new SimpleBooleanProperty() {
+	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty() {
 		@Override
 		protected void invalidated() {
 			energizers3D().forEach(energizer3D -> energizer3D
-					.setEatenAnimation(squirtingPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D) : null));
+					.setEatenAnimation(squirtingEffectPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D) : null));
 		}
 	};
 
@@ -79,7 +79,7 @@ public class Food3D extends Group {
 				.filter(world::isFoodTile)//
 				.filter(not(world::containsEatenFood))//
 				.filter(world::isEnergizerTile)//
-				.map(tile -> squirtingPy.get() ? createSquirtingEnergizer(tile) : createNormalEnergizer(tile))//
+				.map(tile -> squirtingEffectPy.get() ? createSquirtingEnergizer(tile) : createNormalEnergizer(tile))//
 				.forEach(getChildren()::add);
 	}
 

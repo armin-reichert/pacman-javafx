@@ -159,7 +159,7 @@ public class PlayScene3D implements GameScene {
 
 	private void createWorld3D() {
 		world3D = new World3D(ctx.game(), ctx.r2D());
-		world3D.squirtingEffectPy.bind(squirtingEffectPy);
+		world3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
 		world3D.maze3D().drawModePy.bind(drawModePy);
 		world3D.maze3D().floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
