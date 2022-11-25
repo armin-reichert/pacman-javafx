@@ -48,8 +48,8 @@ public class Food3D extends Group {
 	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty() {
 		@Override
 		protected void invalidated() {
-			energizers3D().forEach(energizer3D -> energizer3D
-					.setEatenAnimation(squirtingEffectPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D) : null));
+			energizers3D().forEach(energizer3D -> energizer3D.setEatenAnimation(
+					squirtingEffectPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D) : null));
 		}
 	};
 
@@ -125,14 +125,5 @@ public class Food3D extends Group {
 
 	public Optional<Pellet3D> pelletAt(V2i tile) {
 		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
-	}
-
-	public void resetEnergizerPumping() {
-		energizers3D().forEach(e3D -> {
-			e3D.setScaleX(1.0);
-			e3D.setScaleY(1.0);
-			e3D.setScaleZ(1.0);
-			e3D.stopPumping();
-		});
 	}
 }

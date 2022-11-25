@@ -136,12 +136,15 @@ public class GameSceneManager {
 			throw new IllegalStateException("No game scene found.");
 		}
 		if (nextGameScene == currentGameScene && !reload) {
+			LOGGER.info("Stay in game scene '%s'", nextGameScene.getClass().getName());
 			return currentGameScene;
 		}
 		if (currentGameScene != null) {
+			LOGGER.info("End game scene '%s'", currentGameScene.getClass().getName());
 			currentGameScene.end();
 		}
 		setSceneContext(gameController, nextGameScene);
+		LOGGER.info("Init game scene '%s'", nextGameScene.getClass().getName());
 		nextGameScene.init();
 		return nextGameScene;
 	}
@@ -188,6 +191,5 @@ public class GameSceneManager {
 		case PACMAN -> new RendererPacManGame();
 		};
 		scene.setContext(new SceneContext(gameController, r2D));
-		LOGGER.info("Scene context set for '%s'.", scene);
 	}
 }

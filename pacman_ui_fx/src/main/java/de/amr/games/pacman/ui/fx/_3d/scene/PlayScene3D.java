@@ -168,14 +168,14 @@ public class PlayScene3D implements GameScene {
 		world3D.maze3D().resolutionPy.bind(mazeResolutionPy);
 		world3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
 		world3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
-		content.getChildren().add(0, world3D); // always child #0, gets exchanged on level change
+		LOGGER.info("3D world created for game level %d", ctx.game().level.number());
 	}
 
 	private void createPac3D() {
 		pac3D = new Pac3D(ctx.game().pac);
 		pac3D.init(ctx.world());
 		pac3D.lightOnPy.bind(pac3DLightedPy);
-		content.getChildren().add(pac3D);
+		LOGGER.info("3D %s created", ctx.game().pac.name);
 	}
 
 	private void createGhosts3D() {
@@ -185,21 +185,24 @@ public class PlayScene3D implements GameScene {
 			ghost3D.init(ctx.game());
 			ghost3D.drawModePy.bind(drawModePy);
 		}
-		content.getChildren().addAll(ghosts3D);
+		LOGGER.info("3D ghosts created");
 	}
 
 	private void createBonus3D() {
 		bonus3D = new Bonus3D();
-		content.getChildren().add(bonus3D);
 	}
 
 	@Override
 	public void init() {
-		content.getChildren().clear();
 		createWorld3D();
 		createPac3D();
 		createGhosts3D();
 		createBonus3D();
+		content.getChildren().clear();
+		content.getChildren().add(world3D); // always child #0, gets exchanged on level change
+		content.getChildren().add(pac3D);
+		content.getChildren().addAll(ghosts3D);
+		content.getChildren().add(bonus3D);
 		var width = ctx.world().numCols() * World.TS;
 		var height = ctx.world().numRows() * World.TS;
 		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
@@ -313,8 +316,9 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
+
 		case READY -> {
-			world3D.food3D().resetEnergizerPumping();
+			world3D.food3D().energizers3D().forEach(Energizer3D::init);
 			pac3D.init(ctx.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.init(ctx.game()));
 		}
@@ -342,9 +346,10 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case LEVEL_STARTING -> {
+			LOGGER.info("Starting level %d", ctx.game().level.number());
 			lockGameState();
-			content.getChildren().remove(world3D);
 			createWorld3D();
+			content.getChildren().set(0, world3D);
 			changeCamera(perspectivePy.get());
 			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level.number()));
 			pause(3, this::unlockGameState).play();

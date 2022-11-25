@@ -118,18 +118,14 @@ public class Maze3D extends Group {
 		wallData.brickSize = (float) TS / resolutionPy.get();
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
 		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor());
-
 		var floorPlan = new FloorPlan(world, resolutionPy.get());
-
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, wallData);
 		addHorizontalWalls(floorPlan, wallData);
 		addVerticalWalls(floorPlan, wallData);
-
 		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor())).toList();
 		doorsGroup.getChildren().setAll(doors);
-
-		LOGGER.info("3D maze created (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
+		LOGGER.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
 	public Stream<Door3D> doors() {
