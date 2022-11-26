@@ -141,8 +141,8 @@ public class Actions {
 
 	public static void cheatAddLives(int lives) {
 		if (game().isPlaying()) {
-			game().lives += lives;
-			showFlashMessage("You have %d lives", game().lives);
+			game().setLives(game().lives() + lives);
+			showFlashMessage("You have %d lives", game().lives());
 		}
 	}
 
