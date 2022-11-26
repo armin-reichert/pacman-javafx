@@ -138,13 +138,13 @@ public class World3D extends Group {
 	// should be generalized to work with any ghost house
 	private void updateDoorState(GameModel game) {
 		if (game.level.world().ghostHouse() instanceof ArcadeGhostHouse) {
-			var accessGranted = isAccessGranted(game.theGhosts, ArcadeGhostHouse.DOOR_CENTER);
+			var accessGranted = isAccessGranted(game.ghosts(), ArcadeGhostHouse.DOOR_CENTER);
 			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 		}
 	}
 
-	private boolean isAccessGranted(Ghost[] ghosts, V2d doorPosition) {
-		return Stream.of(ghosts).anyMatch(ghost -> isAccessGranted(ghost, doorPosition));
+	private boolean isAccessGranted(Stream<Ghost> ghosts, V2d doorPosition) {
+		return ghosts.anyMatch(ghost -> isAccessGranted(ghost, doorPosition));
 	}
 
 	private boolean isAccessGranted(Ghost ghost, V2d doorPosition) {
