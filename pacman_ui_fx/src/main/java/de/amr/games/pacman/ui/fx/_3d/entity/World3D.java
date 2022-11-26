@@ -56,8 +56,8 @@ public class World3D extends Group {
 	private final Scores3D scores3D;
 
 	public World3D(GameModel game, Rendering2D r2D) {
-		double width = game.level.world().numCols() * World.TS;
-		double height = game.level.world().numRows() * World.TS;
+		var width = game.level.world().numCols() * World.TS;
+		var height = game.level.world().numRows() * World.TS;
 
 		var mazeColors = new Maze3DColors(//
 				r2D.getMazeSideColor(game.level.mazeNumber()), //
@@ -69,8 +69,8 @@ public class World3D extends Group {
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
 		houseLighting.setMaxRange(10 * TS);
-		houseLighting.setTranslateX(width / 2);
-		houseLighting.setTranslateY((height - 2 * TS) / 2);
+		houseLighting.setTranslateX(0.5 * width);
+		houseLighting.setTranslateY(0.5 * (height - 2 * TS));
 		houseLighting.setTranslateZ(-TS);
 
 		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
