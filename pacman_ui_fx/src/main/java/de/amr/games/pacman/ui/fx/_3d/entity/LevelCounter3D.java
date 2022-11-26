@@ -46,19 +46,9 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	private final IntFunction<Image> fnSymbolImage;
 	private V2d rightPosition = V2d.NULL;
 
-	public LevelCounter3D(IntFunction<Image> fnSymbolImage) {
-		this.fnSymbolImage = fnSymbolImage;
-	}
-
-	public void setRightPosition(double rightX, double rightY) {
-		this.rightPosition = new V2d(rightX, rightY);
-	}
-
-	public void init(LevelCounter levelCounter) {
-		getChildren().clear();
+	public LevelCounter3D(LevelCounter levelCounter, IntFunction<Image> fnSymbolImage) {
 		for (int i = 0; i < levelCounter.size(); ++i) {
 			int symbol = levelCounter.symbol(i);
 			Box cube = createSpinningCube(fnSymbolImage.apply(symbol), i % 2 == 0);
@@ -69,10 +59,14 @@ public class LevelCounter3D extends Group {
 		}
 	}
 
-	private Box createSpinningCube(Image symbol, boolean forward) {
+	public void setRightPosition(double rightX, double rightY) {
+		this.rightPosition = new V2d(rightX, rightY);
+	}
+
+	private Box createSpinningCube(Image texture, boolean forward) {
 		Box cube = new Box(TS, TS, TS);
 		PhongMaterial material = new PhongMaterial();
-		material.setDiffuseMap(symbol);
+		material.setDiffuseMap(texture);
 		cube.setMaterial(material);
 		RotateTransition spinning = new RotateTransition(Duration.seconds(6), cube);
 		spinning.setAxis(Rotate.X_AXIS);
