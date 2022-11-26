@@ -77,7 +77,7 @@ public class PlayScene2D extends GameScene2D {
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			arcadeWorld.setLevelCompleteAnimation(ctx.r2D().createMazeFlashingAnimation());
 		}
-		ctx.game().pac.setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac));
+		ctx.game().pac().setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac()));
 		ctx.game().ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
 	}
 
@@ -123,7 +123,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D().drawBonus(g, ctx.game().bonus());
-		ctx.r2D().drawPac(g, ctx.game().pac);
+		ctx.r2D().drawPac(g, ctx.game().pac());
 		ctx.game().ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
 		if (!isCreditVisible()) {
 			int lives = ctx.game().livesOneLessShown ? ctx.game().lives - 1 : ctx.game().lives;
@@ -134,7 +134,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onSwitchFrom3D() {
-		ctx.game().pac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		ctx.game().pac().animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 		ctx.game().ghosts().map(Ghost::animationSet).forEach(anim -> anim.ifPresent(EntityAnimationSet::ensureRunning));
 	}
 
@@ -189,7 +189,7 @@ public class PlayScene2D extends GameScene2D {
 				var ghost = game.ghost(i);
 				updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
 			}
-			updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac), game.pac);
+			updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac()), game.pac());
 			var bonus = game.bonus();
 			updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
 			panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);

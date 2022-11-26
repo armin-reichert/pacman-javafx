@@ -172,10 +172,10 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createPac3D() {
-		pac3D = new Pac3D(ctx.game().pac);
+		pac3D = new Pac3D(ctx.game().pac());
 		pac3D.init(ctx.world());
 		pac3D.lightOnPy.bind(pac3DLightedPy);
-		LOGGER.info("3D %s created", ctx.game().pac.name());
+		LOGGER.info("3D %s created", ctx.game().pac().name());
 	}
 
 	private void createGhosts3D() {
@@ -325,7 +325,7 @@ public class PlayScene3D implements GameScene {
 
 		case HUNTING -> world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 
-		case PACMAN_DYING -> ctx.game().ghosts().filter(ctx.game().pac::sameTile).findAny().ifPresent(killer -> {
+		case PACMAN_DYING -> ctx.game().ghosts().filter(ctx.game().pac()::sameTile).findAny().ifPresent(killer -> {
 			lockGameState();
 			var animation = new SequentialTransition( //
 					pause(0.3), //
@@ -362,7 +362,7 @@ public class PlayScene3D implements GameScene {
 			var animation = new SequentialTransition( //
 					pause(1.0), //
 					ctx.game().level.numFlashes() > 0 ? new SwingingWallsAnimation(ctx.game().level.numFlashes()) : pause(1.0), //
-					pause(1.0, ctx.game().pac::hide), //
+					pause(1.0, ctx.game().pac()::hide), //
 					pause(0.5, () -> Actions.showFlashMessage(2, message)), //
 					pause(2.0) //
 			);
