@@ -78,7 +78,7 @@ public class RendererPacManGame extends RendererCommon {
 			return spritesheet().tile(symbol, 9);
 		}
 		if (symbol == 4) {
-			var region = spritesheet().tiles(4, 9, 3, 1);
+			var region = spritesheet().tiles(4, 9, 2, 1);
 			return new Rectangle2D(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
 		return spritesheet().tiles(3, 5 + symbol, 3, 1);
