@@ -50,12 +50,13 @@ public class SectionGameInfo extends Section {
 		addInfo("", () -> "Remaining: %s".formatted(gc.state().timer().ticksToString(gc.state().timer().remaining())));
 
 		addInfo("Hunting Phase",
-				() -> "%s #%d%s".formatted(gc.game().huntingTimer.phaseName(),
-						gc.game().huntingTimer.inScatterPhase() ? gc.game().huntingTimer.scatterPhase()
-								: gc.game().huntingTimer.chasingPhase(),
-						gc.game().huntingTimer.isStopped() ? " STOPPED" : ""));
-		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer.tick()));
-		addInfo("", () -> "Remaining: %s".formatted(gc.state().timer().ticksToString(gc.game().huntingTimer.remaining())));
+				() -> "%s #%d%s".formatted(gc.game().huntingTimer().phaseName(),
+						gc.game().huntingTimer().inScatterPhase() ? gc.game().huntingTimer().scatterPhase()
+								: gc.game().huntingTimer().chasingPhase(),
+						gc.game().huntingTimer().isStopped() ? " STOPPED" : ""));
+		addInfo("", () -> "Running:   %d".formatted(gc.game().huntingTimer().tick()));
+		addInfo("",
+				() -> "Remaining: %s".formatted(gc.state().timer().ticksToString(gc.game().huntingTimer().remaining())));
 
 		addInfo("Pellets",
 				() -> String.format("%d of %d (%d energizers)", game().level().world().foodRemaining(),
