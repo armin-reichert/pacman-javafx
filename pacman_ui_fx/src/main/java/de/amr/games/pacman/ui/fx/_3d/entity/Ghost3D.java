@@ -113,7 +113,7 @@ public class Ghost3D extends Group {
 			getChildren().setAll(coloredGhost3D.root());
 		}
 		case FLASHING -> {
-			int numFlashes = game.level.numFlashes();
+			int numFlashes = game.level().numFlashes();
 			if (numFlashes > 0) {
 				coloredGhost3D.appearFlashing(numFlashes);
 			} else {
@@ -142,7 +142,7 @@ public class Ghost3D extends Group {
 
 	private boolean outsideWorld(GameModel game) {
 		double centerX = ghost.position().x() + World.HTS;
-		return centerX < 0 || centerX > game.level.world().numCols() * World.TS;
+		return centerX < 0 || centerX > game.level().world().numCols() * World.TS;
 	}
 
 	private Look computeLookForCurrentState(GameModel game) {

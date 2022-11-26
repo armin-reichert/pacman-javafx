@@ -56,15 +56,15 @@ public class World3D extends Group {
 	private final Scores3D scores3D;
 
 	public World3D(GameModel game, Rendering2D r2D) {
-		var width = game.level.world().numCols() * World.TS;
-		var height = game.level.world().numRows() * World.TS;
+		var width = game.level().world().numCols() * World.TS;
+		var height = game.level().world().numRows() * World.TS;
 
 		var mazeColors = new Maze3DColors(//
-				r2D.getMazeSideColor(game.level.mazeNumber()), //
-				r2D.getMazeTopColor(game.level.mazeNumber()), //
+				r2D.getMazeSideColor(game.level().mazeNumber()), //
+				r2D.getMazeTopColor(game.level().mazeNumber()), //
 				r2D.getGhostHouseDoorColor());
 
-		maze3D = new Maze3D(game.level.world(), mazeColors);
+		maze3D = new Maze3D(game.level().world(), mazeColors);
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
@@ -73,12 +73,12 @@ public class World3D extends Group {
 		houseLighting.setTranslateY(0.5 * (height - 2 * TS));
 		houseLighting.setTranslateZ(-TS);
 
-		var foodColor = r2D.getMazeFoodColor(game.level.mazeNumber());
-		food3D = new Food3D(game.level.world(), foodColor);
+		var foodColor = r2D.getMazeFoodColor(game.level().mazeNumber());
+		food3D = new Food3D(game.level().world(), foodColor);
 
 		levelCounter3D = new LevelCounter3D(game.levelCounter,
 				symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
-		levelCounter3D.setRightPosition((game.level.world().numCols() - 1) * TS, TS);
+		levelCounter3D.setRightPosition((game.level().world().numCols() - 1) * TS, TS);
 
 		livesCounter3D = new LivesCounter3D();
 		livesCounter3D.setTranslateX(TS);
@@ -137,7 +137,7 @@ public class World3D extends Group {
 
 	// should be generalized to work with any ghost house
 	private void updateDoorState(GameModel game) {
-		if (game.level.world().ghostHouse() instanceof ArcadeGhostHouse) {
+		if (game.level().world().ghostHouse() instanceof ArcadeGhostHouse) {
 			var accessGranted = isAccessGranted(game.ghosts(), ArcadeGhostHouse.DOOR_CENTER);
 			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 		}

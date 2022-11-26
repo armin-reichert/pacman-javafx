@@ -168,7 +168,7 @@ public class PlayScene3D implements GameScene {
 		world3D.maze3D().resolutionPy.bind(mazeResolutionPy);
 		world3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
 		world3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
-		LOGGER.info("3D world created for game level %d", ctx.game().level.number());
+		LOGGER.info("3D world created for game level %d", ctx.game().level().number());
 	}
 
 	private void createPac3D() {
@@ -346,22 +346,23 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case LEVEL_STARTING -> {
-			LOGGER.info("Starting level %d", ctx.game().level.number());
+			LOGGER.info("Starting level %d", ctx.game().level().number());
 			lockGameState();
 			createWorld3D();
 			content.getChildren().set(0, world3D);
 			changeCamera(perspectivePy.get());
-			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level.number()));
+			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level().number()));
 			pause(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
 			lockGameState();
 			var message = "%s%n%n%s".formatted(TextManager.TALK_LEVEL_COMPLETE.next(),
-					TextManager.message("level_complete", ctx.game().level.number()));
+					TextManager.message("level_complete", ctx.game().level().number()));
 			var animation = new SequentialTransition( //
 					pause(1.0), //
-					ctx.game().level.numFlashes() > 0 ? new SwingingWallsAnimation(ctx.game().level.numFlashes()) : pause(1.0), //
+					ctx.game().level().numFlashes() > 0 ? new SwingingWallsAnimation(ctx.game().level().numFlashes())
+							: pause(1.0), //
 					pause(1.0, ctx.game().pac()::hide), //
 					pause(0.5, () -> Actions.showFlashMessage(2, message)), //
 					pause(2.0) //

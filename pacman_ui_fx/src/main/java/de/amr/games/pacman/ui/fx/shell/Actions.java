@@ -150,7 +150,7 @@ public class Actions {
 		if (currentGameState() == GameState.LEVEL_STARTING) {
 			return;
 		}
-		if (game().level.number() == levelNumber) {
+		if (game().level().number() == levelNumber) {
 			return;
 		}
 		gameController().sounds().stopAll();
@@ -160,7 +160,7 @@ public class Actions {
 			gameController().changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > game().level.number() ? game().level.number() + 1 : 1;
+			int start = levelNumber > game().level().number() ? game().level().number() + 1 : 1;
 			for (int n = start; n < levelNumber; ++n) {
 				game().setLevel(n);
 			}
