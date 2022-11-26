@@ -43,12 +43,12 @@ public class SectionKeys extends Section {
 		addInfo("SHIFT+Cursor", "Steer player if dashboard visible");
 		addInfo("Alt+A", "Autopilot On/Off");
 		addInfo("Alt+B", "Reboot");
-		addInfo("Alt+E", "Eat all normal pellets").available(() -> gc.game().playing);
+		addInfo("Alt+E", "Eat all normal pellets").available(() -> gc.game().isPlaying());
 		addInfo("Alt+I", "Player immunity On/Off");
-		addInfo("Alt+L", "Add 3 player lives").available(() -> gc.game().playing);
+		addInfo("Alt+L", "Add 3 player lives").available(() -> gc.game().isPlaying());
 		addInfo("Alt+M", "Mute/Unmute");
-		addInfo("Alt+N", "Next Level").available(() -> gc.game().playing);
-		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().playing);
+		addInfo("Alt+N", "Next Level").available(() -> gc.game().isPlaying());
+		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().isPlaying());
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> Env.perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
 		addInfo("Alt+RIGHT", () -> Env.perspectivePy.get().next().name()).available(() -> gameScene().is3D());

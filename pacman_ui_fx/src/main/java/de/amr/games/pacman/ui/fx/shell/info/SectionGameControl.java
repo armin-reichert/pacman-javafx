@@ -86,17 +86,17 @@ public class SectionGameControl extends Section {
 		super.update();
 
 		comboGameVariant.setValue(gc.game().variant());
-		comboGameVariant.setDisable(gc.game().playing);
+		comboGameVariant.setDisable(gc.game().isPlaying());
 
 		cbAutopilot.setSelected(gc.game().isPacAutoControlled);
 		cbImmunity.setSelected(gc.game().isPacImmune);
 
 		// start game
-		btnsGameControl[0].setDisable(!gc.game().hasCredit() || gc.game().playing);
+		btnsGameControl[0].setDisable(!gc.game().hasCredit() || gc.game().isPlaying());
 		// quit game
 		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
 		// next level
-		btnsGameControl[2].setDisable(!gc.game().playing || (gc.state() != GameState.HUNTING
+		btnsGameControl[2].setDisable(!gc.game().isPlaying() || (gc.state() != GameState.HUNTING
 				&& gc.state() != GameState.READY && gc.state() != GameState.LEVEL_STARTING));
 
 		// start intermission test
@@ -105,7 +105,7 @@ public class SectionGameControl extends Section {
 		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
 		spinnerGameLevel.getValueFactory().setValue(game().level().number());
-		if (!gc.game().playing || gc.state() == GameState.LEVEL_STARTING) {
+		if (!gc.game().isPlaying() || gc.state() == GameState.LEVEL_STARTING) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(
