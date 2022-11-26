@@ -221,8 +221,8 @@ public abstract class RendererCommon implements Rendering2D {
 	@Override
 	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
 		var font = arcadeFont();
-		drawScore(g, game.gameScore, font, TS, TS);
-		drawScore(g, game.highScore, font, 16 * TS, TS);
+		drawScore(g, game.gameScore(), font, TS, TS);
+		drawScore(g, game.highScore(), font, 16 * TS, TS);
 		if (creditVisible) {
 			drawText(g, "CREDIT  %d".formatted(game.credit()), Color.WHITE, font, t(2), t(36) - 1);
 		}
