@@ -175,7 +175,7 @@ public class PlayScene3D implements GameScene {
 		pac3D = new Pac3D(ctx.game().pac);
 		pac3D.init(ctx.world());
 		pac3D.lightOnPy.bind(pac3DLightedPy);
-		LOGGER.info("3D %s created", ctx.game().pac.name);
+		LOGGER.info("3D %s created", ctx.game().pac.name());
 	}
 
 	private void createGhosts3D() {

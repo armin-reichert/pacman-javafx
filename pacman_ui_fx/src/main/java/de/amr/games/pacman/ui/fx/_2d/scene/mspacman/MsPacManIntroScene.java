@@ -111,8 +111,8 @@ public class MsPacManIntroScene extends GameScene2D {
 			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
 					intro.context().redGhostEndPosition.y() + t(3));
 		}
-		ctx.r2D().drawText(g, ghost.name.toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(),
-				t(14 - ghost.name.length() / 2), intro.context().redGhostEndPosition.y() + t(6));
+		ctx.r2D().drawText(g, ghost.name().toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(),
+				t(14 - ghost.name().length() / 2), intro.context().redGhostEndPosition.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
@@ -141,7 +141,8 @@ public class MsPacManIntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(intro.context().redGhostEndPosition.x() + 4 * x, intro.context().redGhostEndPosition.y() + 4 * y, 2, 2);
+			g.fillRect(intro.context().redGhostEndPosition.x() + 4 * x, intro.context().redGhostEndPosition.y() + 4 * y, 2,
+					2);
 		}
 	}
 }

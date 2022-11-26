@@ -226,7 +226,7 @@ public class PlayScene2D extends GameScene2D {
 		private String ghostInfo(Ghost ghost) {
 			var game = ctx.game();
 			String name = ghost.id == Ghost.ID_RED_GHOST && game.cruiseElroyState > 0 ? "Elroy " + game.cruiseElroyState
-					: ghost.name;
+					: ghost.name();
 			var stateText = ghost.getState().name();
 			if (ghost.is(GhostState.HUNTING_PAC)) {
 				stateText += game.huntingTimer.inChasingPhase() ? " (Chasing)" : " (Scattering)";
@@ -253,11 +253,11 @@ public class PlayScene2D extends GameScene2D {
 				var selectedAnim = pacAnims.get().selectedAnimation();
 				if (selectedAnim.isPresent()) {
 					var animState = animationStateInfo(selectedAnim.get(), pac.moveDir());
-					return "%s%n%s%n%s%n%s%s".formatted(pac.name, locationInfo(pac), movementInfo(pac), animState,
+					return "%s%n%s%n%s%n%s%s".formatted(pac.name(), locationInfo(pac), movementInfo(pac), animState,
 							pacAnims.get().selectedKey());
 				}
 			}
-			return "%s%n%s%n%s".formatted(pac.name, locationInfo(pac), movementInfo(pac));
+			return "%s%n%s%n%s".formatted(pac.name(), locationInfo(pac), movementInfo(pac));
 		}
 
 		private String bonusInfo(Bonus bonus) {
