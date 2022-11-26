@@ -76,9 +76,8 @@ public class World3D extends Group {
 		var foodColor = r2D.getMazeFoodColor(game.level().mazeNumber());
 		food3D = new Food3D(game.level().world(), foodColor);
 
-		levelCounter3D = new LevelCounter3D(game.levelCounter,
+		levelCounter3D = new LevelCounter3D(game.levelCounter, (game.level().world().numCols() - 1) * TS, TS,
 				symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
-		levelCounter3D.setRightPosition((game.level().world().numCols() - 1) * TS, TS);
 
 		livesCounter3D = new LivesCounter3D();
 		livesCounter3D.setTranslateX(TS);
