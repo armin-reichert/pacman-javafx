@@ -76,6 +76,6 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		renderer.drawGhost(g, intermission.context().inky);
 		renderer.drawGhost(g, intermission.context().pinky);
 		renderer.drawEntity(g, intermission.context().heart, renderer.heartSprite());
-		renderer.drawLevelCounter(g, ctx.game().levelCounter);
+		renderer.drawLevelCounter(g, ctx.game().levelCounter());
 	}
 }

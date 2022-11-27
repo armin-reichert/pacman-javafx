@@ -96,7 +96,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		ctx.game().ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
 		ctx.r2D().drawPac(g, ctx.game().pac());
 		ctx.r2D().drawCopyright(g, 29);
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
+		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
 	}
 
 	private void drawTitle() {

@@ -67,6 +67,6 @@ public class PacManCreditScene extends GameScene2D {
 		ctx.r2D().drawText(g, "BONUS PAC-MAN FOR 10000", Color.rgb(255, 184, 174), arcade8, t(1), t(25));
 		ctx.r2D().drawText(g, "PTS", Color.rgb(255, 184, 174), arcade6, t(25), t(25));
 		ctx.r2D().drawCopyright(g, 29);
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter);
+		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
 	}
 }
