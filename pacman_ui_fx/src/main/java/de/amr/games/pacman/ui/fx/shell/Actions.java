@@ -221,11 +221,11 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		game().isPacAutoControlled = !game().isPacAutoControlled;
-		var on = game().isPacAutoControlled;
-		String message = TextManager.message(on ? "autopilot_on" : "autopilot_off");
+		game().setAutoControlled(!game().isAutoControlled());
+		var autoOn = game().isAutoControlled();
+		String message = TextManager.message(autoOn ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoiceMessage(on ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
+		playVoiceMessage(autoOn ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
