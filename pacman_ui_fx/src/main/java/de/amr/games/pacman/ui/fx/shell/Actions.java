@@ -229,11 +229,11 @@ public class Actions {
 	}
 
 	public static void toggleImmunity() {
-		gameController().games().forEach(game -> game.isPacImmune = !game.isPacImmune);
-		var on = game().isPacImmune;
-		String message = TextManager.message(on ? "player_immunity_on" : "player_immunity_off");
+		gameController().games().forEach(game -> game.setImmune(!game.isImmune()));
+		var immune = game().isImmune();
+		String message = TextManager.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoiceMessage(on ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
+		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
 	}
 
 	public static void toggleUse3DScene() {
