@@ -176,7 +176,7 @@ public class GameSceneManager {
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_STARTING, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
 		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level().number());
-		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
+		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + GameState.INTERMISSION_TEST.intermissionTestNumber;
 		};
 		return switch (game.variant()) {
 		case MS_PACMAN -> SCENES_MS_PACMAN[index];
