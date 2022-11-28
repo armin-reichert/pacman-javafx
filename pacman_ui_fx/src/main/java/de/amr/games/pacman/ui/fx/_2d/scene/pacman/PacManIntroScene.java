@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * Intro scene of the PacMan game.
@@ -136,7 +135,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery() {
-		var font = ctx.r2D().arcadeFont();
+		var font = ctx.r2D().arcadeFont(TS);
 		if (intro.context().titleVisible) {
 			var color = Color.WHITE;
 			ctx.r2D().drawText(g, "CHARACTER", color, font, t(intro.context().left + 3), t(6));
@@ -195,10 +194,10 @@ public class PacManIntroScene extends GameScene2D {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
 		g.setFill(Color.WHITE);
-		g.setFont(ctx.r2D().arcadeFont());
+		g.setFont(ctx.r2D().arcadeFont(TS));
 		g.fillText("10", t(tileX + 2), t(tileY));
 		g.fillText("50", t(tileX + 2), t(tileY + 2));
-		g.setFont(Font.font(ctx.r2D().arcadeFont().getName(), 6));
+		g.setFont(ctx.r2D().arcadeFont(6));
 		g.fillText("PTS", t(tileX + 5), t(tileY));
 		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}

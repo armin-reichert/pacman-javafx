@@ -94,7 +94,7 @@ public class BootScene extends GameScene2D {
 	private void drawRandomHexCodes() {
 		clearBuffer();
 		buffer.setFill(Color.LIGHTGRAY);
-		buffer.setFont(ctx.r2D().arcadeFont());
+		buffer.setFont(ctx.r2D().arcadeFont(TS));
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
 				var hexCode = Integer.toHexString(rnd.nextInt(16));

@@ -91,7 +91,7 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 	//@formatter:on
 
-	private static final Font ARCADE_FONT = Ufx.font("fonts/emulogic.ttf", TS);
+	private static final Font ARCADE_FONT_TS = Ufx.font("fonts/emulogic.ttf", TS);
 
 	public void clearTileContent(GraphicsContext g, V2i tile) {
 		g.setFill(Color.BLACK);
@@ -99,8 +99,8 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public Font arcadeFont() {
-		return ARCADE_FONT;
+	public Font arcadeFont(double size) {
+		return size == TS ? ARCADE_FONT_TS : Font.font(ARCADE_FONT_TS.getFamily(), size);
 	}
 
 	@Override
@@ -220,7 +220,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
-		var font = arcadeFont();
+		var font = arcadeFont(TS);
 		drawScore(g, game.gameScore(), font, TS, TS);
 		drawScore(g, game.highScore(), font, 16 * TS, TS);
 		if (creditVisible) {
@@ -242,10 +242,10 @@ public abstract class RendererCommon implements Rendering2D {
 	@Override
 	public void drawGameStateMessage(GraphicsContext g, GameState state) {
 		if (state == GameState.GAME_OVER) {
-			drawText(g, "GAME  OVER", Color.RED, ARCADE_FONT, t(9), t(21));
+			drawText(g, "GAME  OVER", Color.RED, ARCADE_FONT_TS, t(9), t(21));
 		} else if (state == GameState.READY) {
-			drawText(g, "READY", Color.YELLOW, ARCADE_FONT, t(11), t(21));
-			var italic = Font.font(ARCADE_FONT.getFamily(), FontPosture.ITALIC, ARCADE_FONT.getSize());
+			drawText(g, "READY", Color.YELLOW, ARCADE_FONT_TS, t(11), t(21));
+			var italic = Font.font(ARCADE_FONT_TS.getFamily(), FontPosture.ITALIC, ARCADE_FONT_TS.getSize());
 			drawText(g, "!", Color.YELLOW, italic, t(16), t(21));
 		}
 	}

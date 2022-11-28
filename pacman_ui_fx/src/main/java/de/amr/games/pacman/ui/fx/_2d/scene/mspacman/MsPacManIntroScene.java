@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.mspacman.MsPacManIntro;
@@ -100,23 +101,23 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawTitle() {
-		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
+		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
 				intro.context().titlePosition.y());
 	}
 
 	private void drawGhostText(Ghost ghost) {
 		if (ghost.id == Ghost.ID_RED_GHOST) {
-			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
+			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
 					intro.context().redGhostEndPosition.y() + t(3));
 		}
-		ctx.r2D().drawText(g, ghost.name().toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(),
+		ctx.r2D().drawText(g, ghost.name().toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(TS),
 				t(14 - ghost.name().length() / 2), intro.context().redGhostEndPosition.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
-		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
+		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
 				intro.context().redGhostEndPosition.y() + t(3));
-		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(), intro.context().titlePosition.x(),
+		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
 				intro.context().redGhostEndPosition.y() + t(6));
 	}
 

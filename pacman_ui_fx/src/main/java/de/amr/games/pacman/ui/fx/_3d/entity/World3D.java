@@ -41,7 +41,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -85,7 +84,7 @@ public class World3D extends Group {
 		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D().setVisible(game.hasCredit());
 
-		var scoreFont = Font.font(r2D.arcadeFont().getFamily(), TS);
+		var scoreFont = r2D.arcadeFont(TS);
 		scores3D = new Scores3D(scoreFont);
 
 		getChildren().add(maze3D);

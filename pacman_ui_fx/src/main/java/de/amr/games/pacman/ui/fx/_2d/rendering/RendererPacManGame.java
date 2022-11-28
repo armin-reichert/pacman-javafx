@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.model.common.actors.Ghost.ID_PINK_GHOST;
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.Map;
@@ -108,7 +109,7 @@ public class RendererPacManGame extends RendererCommon {
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		String text = "\u00A9 1980 MIDWAY MFG.CO.";
-		g.setFont(arcadeFont());
+		g.setFont(arcadeFont(TS));
 		g.setFill(ghostColor(ID_PINK_GHOST));
 		g.fillText(text, t(4), t(tileY));
 	}

@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.lib.V2i.v2i;
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.Direction;
@@ -127,7 +128,7 @@ public class PacManCutscene2 extends GameScene2D {
 	@Override
 	public void draw() {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(ctx.r2D().arcadeFont());
+			g.setFont(ctx.r2D().arcadeFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));

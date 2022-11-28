@@ -52,7 +52,7 @@ public interface Rendering2D {
 
 	Spritesheet spritesheet();
 
-	Font arcadeFont();
+	Font arcadeFont(double size);
 
 	Color ghostColor(int ghostID);
 
