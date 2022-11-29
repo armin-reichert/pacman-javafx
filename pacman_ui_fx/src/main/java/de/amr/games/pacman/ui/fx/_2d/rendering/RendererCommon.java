@@ -229,12 +229,12 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	private void drawScore(GraphicsContext g, Score score, Font font, double x, double y) {
-		if (score.visible) {
-			drawText(g, score.title, Color.WHITE, font, x, y);
-			var pointsText = score.showContent ? "%02d".formatted(score.points) : "00";
+		if (score.isVisible()) {
+			drawText(g, score.title(), Color.WHITE, font, x, y);
+			var pointsText = score.isShowContent() ? "%02d".formatted(score.points()) : "00";
 			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + TS + 1);
-			if (score.showContent) {
-				drawText(g, "L" + score.levelNumber, Color.LIGHTGRAY, font, x + t(8), y + TS + 1);
+			if (score.isShowContent()) {
+				drawText(g, "L" + score.levelNumber(), Color.LIGHTGRAY, font, x + t(8), y + TS + 1);
 			}
 		}
 	}
