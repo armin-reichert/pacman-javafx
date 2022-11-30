@@ -125,13 +125,11 @@ public class Actions {
 
 	public static void restartIntro() {
 		ui.currentGameScene().end();
-		gameController().sounds().stopAll();
 		gameController().restartIntro();
 	}
 
 	public static void reboot() {
 		ui.currentGameScene().end();
-		gameController().sounds().stopAll();
 		gameController().reboot();
 	}
 
