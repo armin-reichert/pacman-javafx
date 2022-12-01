@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman-javafx-tentackle</artifactId>
 	<version>1.0</version>
+	
 	<properties>
 		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
 		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
@@ -11,7 +13,9 @@
 		<maven.compiler.target>18</maven.compiler.target>
 		<version.tentackle>17.11.0.0</version.tentackle>
 	</properties>
+	
 	<packaging>jlink</packaging>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -26,6 +30,7 @@
 			</plugin>
 		</plugins>
 	</build>
+	
 	<dependencies>
 		<dependency>
 			<groupId>de.amr.games.pacman.ui.fx</groupId>
