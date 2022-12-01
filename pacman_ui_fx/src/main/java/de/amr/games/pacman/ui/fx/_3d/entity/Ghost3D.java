@@ -156,7 +156,7 @@ public class Ghost3D extends Group {
 	}
 
 	private Look normalOrFrightenedOrFlashingLook(GameModel game) {
-		if (game.powerTimer().isRunning() && ghost.killedIndex == -1) {
+		if (game.powerTimer().isRunning() && ghost.killedIndex() == -1) {
 			return frightenedOrFlashingLook(game);
 		}
 		return Look.NORMAL;
