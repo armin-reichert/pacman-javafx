@@ -30,8 +30,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
@@ -130,7 +128,7 @@ public class GameSceneManager {
 		if (dim != 2 && dim != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
-		var variants = getSceneVariantsMatchingGameState(gameController.game(), gameController.state());
+		var variants = getSceneVariantsMatchingGameState(gameController);
 		var nextGameScene = (dim == 3 && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
@@ -165,18 +163,20 @@ public class GameSceneManager {
 		if (dim != 2 && dim != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
-		var variants = getSceneVariantsMatchingGameState(gameController.game(), gameController.state());
+		var variants = getSceneVariantsMatchingGameState(gameController);
 		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	private SceneVariants getSceneVariantsMatchingGameState(GameModel game, GameState state) {
+	private SceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
+		var game = gameController.game();
+		var state = gameController.state();
 		int index = switch (state) {
 		case BOOT -> BOOT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_STARTING, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
 		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level().number());
-		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + GameState.INTERMISSION_TEST.intermissionTestNumber;
+		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.intermissionTestNumber;
 		};
 		return switch (game.variant()) {
 		case MS_PACMAN -> SCENES_MS_PACMAN[index];
