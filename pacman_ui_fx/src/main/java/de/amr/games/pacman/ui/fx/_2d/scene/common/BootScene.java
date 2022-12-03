@@ -61,13 +61,13 @@ public class BootScene extends GameScene2D {
 	@Override
 	public void update() {
 		var timer = ctx.state().timer();
-		if (timer.betweenSeconds(0.5, 1.5) && timer.tick() % 5 == 0) {
+		if (timer.betweenSeconds(0.5, 1.5) && timer.tick() % 15 == 0) {
 			drawRandomHexCodes();
-		} else if (timer.betweenSeconds(1.5, 3.0) && timer.tick() % 10 == 0) {
+		} else if (timer.betweenSeconds(1.5, 3.5) && timer.tick() % 5 == 0) {
 			drawRandomSprites();
-		} else if (timer.atSecond(3.0)) {
-			drawGrid();
 		} else if (timer.atSecond(3.5)) {
+			drawGrid();
+		} else if (timer.atSecond(4.0)) {
 			ctx.gameController().terminateCurrentState();
 		}
 	}
