@@ -33,7 +33,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.interactivemesh</groupId>
-			<artifactId>objimporter</artifactId>
+			<artifactId>jimObjModelImporterJFX</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>

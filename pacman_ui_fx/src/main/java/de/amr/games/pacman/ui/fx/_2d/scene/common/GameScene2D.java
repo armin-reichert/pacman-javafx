@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon.drawTileStructure;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +32,7 @@ import de.amr.games.pacman.lib.V2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.ResizableCanvas;
@@ -99,7 +99,7 @@ public abstract class GameScene2D implements GameScene {
 
 	private void drawDebugInfo() {
 		if (overlayPaneVisiblePy.get()) {
-			drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
+			RendererCommon.drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 			if (ctx.gameVariant() == GameVariant.PACMAN && this instanceof PlayScene2D) {
 				g.setFill(Color.RED);
 				PacManGame.RED_ZONE.forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS));
