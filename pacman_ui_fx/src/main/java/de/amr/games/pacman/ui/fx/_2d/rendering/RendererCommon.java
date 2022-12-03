@@ -176,8 +176,8 @@ public abstract class RendererCommon implements Rendering2D {
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case INACTIVE -> null;
-		case EDIBLE -> bonusSymbolSprite(bonus.index());
-		case EATEN -> bonusValueSprite(bonus.index());
+		case EDIBLE -> bonusSymbolSprite(bonus.id());
+		case EATEN -> bonusValueSprite(bonus.id());
 		};
 		if (bonus.entity() instanceof MovingBonus movingBonus) {
 			g.save();

@@ -261,8 +261,8 @@ public class PlayScene2D extends GameScene2D {
 
 		private String bonusInfo(Bonus bonus) {
 			var bonusName = switch (ctx.gameVariant()) {
-			case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.index()];
-			case PACMAN -> PACMAN_BONUS_NAMES[bonus.index()];
+			case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.id()];
+			case PACMAN -> PACMAN_BONUS_NAMES[bonus.id()];
 			};
 			var text = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
 			return "%s%n%s".formatted(text, ctx.game().bonus().state());

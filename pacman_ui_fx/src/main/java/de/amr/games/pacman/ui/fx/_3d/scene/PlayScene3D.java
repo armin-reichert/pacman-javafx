@@ -297,13 +297,13 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().bonus().index());
+		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().bonus().id());
 		bonus3D.showSymbol(ctx.r2D().spritesheet().region(sprite));
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		var sprite = ctx.r2D().bonusValueSprite(ctx.game().bonus().index());
+		var sprite = ctx.r2D().bonusValueSprite(ctx.game().bonus().id());
 		bonus3D.showPoints(ctx.r2D().spritesheet().region(sprite));
 		ctx.sounds().play(GameSound.BONUS_EATEN);
 	}
