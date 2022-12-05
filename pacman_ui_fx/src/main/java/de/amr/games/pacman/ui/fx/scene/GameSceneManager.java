@@ -86,7 +86,7 @@ public class GameSceneManager {
 		try {
 			GameScene2D scene2D = clazz.getDeclaredConstructor().newInstance();
 			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
-			LOGGER.info("2D game scene created, class='%s'", clazz.getName());
+			LOGGER.info("2D game scene created: '%s'", scene2D.getClass().getName());
 			return scene2D;
 		} catch (Exception e) {
 			LOGGER.error("Could not create 2D game scene of class '%s'", clazz.getName());
@@ -107,7 +107,7 @@ public class GameSceneManager {
 		playScene3D.squirtingEffectPy.bind(Env.squirtingEffectPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
 		playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
-		LOGGER.info("3D game scene created, class='%s'", playScene3D.getClass().getName());
+		LOGGER.info("3D game scene created: '%s'", playScene3D.getClass().getName());
 		return playScene3D;
 	}
 
@@ -134,7 +134,7 @@ public class GameSceneManager {
 			throw new IllegalStateException("No game scene found.");
 		}
 		if (nextGameScene == currentGameScene && !reload) {
-			LOGGER.info("Stay in game scene '%s'", nextGameScene.getClass().getName());
+			LOGGER.trace("Stay in game scene '%s'", nextGameScene.getClass().getName());
 			return currentGameScene;
 		}
 		if (currentGameScene != null) {
