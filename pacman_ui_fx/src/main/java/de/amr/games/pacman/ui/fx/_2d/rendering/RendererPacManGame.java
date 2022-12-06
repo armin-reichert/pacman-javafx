@@ -147,7 +147,7 @@ public class RendererPacManGame extends RendererCommon {
 			var wide = spritesheet().tile(0, d);
 			var middle = spritesheet().tile(1, d);
 			var closed = spritesheet().tile(2, 0);
-			var animation = new SingleEntityAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle, closed);
+			var animation = new SingleEntityAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle);
 			animation.setFrameDuration(1);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
