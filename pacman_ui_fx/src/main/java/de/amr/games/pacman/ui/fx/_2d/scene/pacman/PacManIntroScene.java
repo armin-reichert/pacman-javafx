@@ -193,7 +193,7 @@ public class PacManIntroScene extends GameScene2D {
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
-		g.setFill(Color.WHITE);
+		g.setFill(Color.rgb(222, 222, 255));
 		g.setFont(ctx.r2D().arcadeFont(TS));
 		g.fillText("10", t(tileX + 2), t(tileY));
 		g.fillText("50", t(tileX + 2), t(tileY + 2));
