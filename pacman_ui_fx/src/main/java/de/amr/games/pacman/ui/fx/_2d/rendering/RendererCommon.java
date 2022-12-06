@@ -221,20 +221,21 @@ public abstract class RendererCommon implements Rendering2D {
 	@Override
 	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
 		var font = arcadeFont(TS);
-		drawScore(g, game.gameScore(), font, TS, TS);
-		drawScore(g, game.highScore(), font, 16 * TS, TS);
+		var color = Color.rgb(222, 222, 255);
+		drawScore(g, game.gameScore(), color, font, TS, TS);
+		drawScore(g, game.highScore(), color, font, 16 * TS, TS);
 		if (creditVisible) {
-			drawText(g, "CREDIT  %d".formatted(game.credit()), Color.WHITE, font, t(2), t(36) - 1);
+			drawText(g, "CREDIT  %d".formatted(game.credit()), color, font, t(2), t(36) - 1);
 		}
 	}
 
-	private void drawScore(GraphicsContext g, Score score, Font font, double x, double y) {
+	private void drawScore(GraphicsContext g, Score score, Color color, Font font, double x, double y) {
 		if (score.isVisible()) {
-			drawText(g, score.title(), Color.WHITE, font, x, y);
+			drawText(g, score.title(), color, font, x, y);
 			var pointsText = score.isShowContent() ? "%02d".formatted(score.points()) : "00";
-			drawText(g, "%7s".formatted(pointsText), Color.WHITE, font, x, y + TS + 1);
+			drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
 			if (score.isShowContent()) {
-				drawText(g, "L" + score.levelNumber(), Color.LIGHTGRAY, font, x + t(8), y + TS + 1);
+				drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
 			}
 		}
 	}

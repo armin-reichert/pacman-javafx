@@ -137,7 +137,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGallery() {
 		var font = ctx.r2D().arcadeFont(TS);
 		if (intro.context().titleVisible) {
-			var color = Color.WHITE;
+			var color = Color.rgb(222, 222, 255);
 			ctx.r2D().drawText(g, "CHARACTER", color, font, t(intro.context().left + 3), t(6));
 			ctx.r2D().drawText(g, "/", color, font, t(intro.context().left + 13), t(6));
 			ctx.r2D().drawText(g, "NICKNAME", color, font, t(intro.context().left + 15), t(6));
