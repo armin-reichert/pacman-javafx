@@ -93,7 +93,7 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomHexCodes() {
 		clearBuffer();
-		buffer.setFill(Color.LIGHTGRAY);
+		buffer.setFill(Color.rgb(222, 222, 255));
 		buffer.setFont(ctx.r2D().arcadeFont(TS));
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
@@ -133,7 +133,7 @@ public class BootScene extends GameScene2D {
 		var cellSize = 16;
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
-		buffer.setStroke(Color.LIGHTGRAY);
+		buffer.setStroke(Color.rgb(222, 222, 255));
 		buffer.setLineWidth(2.0);
 		for (int row = 0; row < numRows; ++row) {
 			buffer.strokeLine(0, row * cellSize, ArcadeWorld.TILES_X * TS, row * cellSize);
