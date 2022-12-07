@@ -223,7 +223,7 @@ public class PlayScene2D extends GameScene2D {
 
 		private String ghostInfo(Ghost ghost) {
 			var game = ctx.game();
-			String name = ghost.id == Ghost.ID_RED_GHOST && game.blinkyCruiseElroyState() > 0
+			String name = ghost.id() == Ghost.ID_RED_GHOST && game.blinkyCruiseElroyState() > 0
 					? "Elroy " + game.blinkyCruiseElroyState()
 					: ghost.name();
 			var stateText = ghost.getState().name();

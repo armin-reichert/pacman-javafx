@@ -179,7 +179,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createGhosts3D() {
-		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id)))
+		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id())))
 				.toArray(Ghost3D[]::new);
 		for (var ghost3D : ghosts3D) {
 			ghost3D.init(ctx.game());
@@ -329,7 +329,7 @@ public class PlayScene3D implements GameScene {
 			lockGameState();
 			var animation = new SequentialTransition( //
 					pause(0.3), //
-					pac3D.createDyingAnimation(ctx.r2D().ghostColor(killer.id)), //
+					pac3D.createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
 					pause(2.0) //
 			);
 			animation.setOnFinished(evt -> unlockGameState());
@@ -341,7 +341,7 @@ public class PlayScene3D implements GameScene {
 				int index = killedGhost.killedIndex();
 				var sprite = ctx.r2D().createGhostValueList().frame(index);
 				var image = ctx.r2D().spritesheet().region(sprite);
-				ghosts3D[killedGhost.id].setNumberImage(image);
+				ghosts3D[killedGhost.id()].setNumberImage(image);
 			});
 		}
 

@@ -227,7 +227,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(t3c(2 * d, 4 + ghost.id), t3c(2 * d + 1, 4 + ghost.id));
+			var animation = new SingleEntityAnimation<>(t3c(2 * d, 4 + ghost.id()), t3c(2 * d + 1, 4 + ghost.id()));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);

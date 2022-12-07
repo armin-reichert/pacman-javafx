@@ -106,11 +106,11 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGhostText(Ghost ghost) {
-		if (ghost.id == Ghost.ID_RED_GHOST) {
+		if (ghost.id() == Ghost.ID_RED_GHOST) {
 			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
 					intro.context().redGhostEndPosition.y() + t(3));
 		}
-		ctx.r2D().drawText(g, ghost.name().toUpperCase(), ctx.r2D().ghostColor(ghost.id), ctx.r2D().arcadeFont(TS),
+		ctx.r2D().drawText(g, ghost.name().toUpperCase(), ctx.r2D().ghostColor(ghost.id()), ctx.r2D().arcadeFont(TS),
 				t(14 - ghost.name().length() / 2), intro.context().redGhostEndPosition.y() + t(6));
 	}
 
