@@ -226,7 +226,7 @@ public class PlayScene2D extends GameScene2D {
 			String name = ghost.id() == Ghost.ID_RED_GHOST && game.blinkyCruiseElroyState() > 0
 					? "Elroy " + game.blinkyCruiseElroyState()
 					: ghost.name();
-			var stateText = ghost.getState().name();
+			var stateText = ghost.state().name();
 			if (ghost.is(GhostState.HUNTING_PAC)) {
 				stateText += game.huntingTimer().inChasingPhase() ? " (Chasing)" : " (Scattering)";
 			}

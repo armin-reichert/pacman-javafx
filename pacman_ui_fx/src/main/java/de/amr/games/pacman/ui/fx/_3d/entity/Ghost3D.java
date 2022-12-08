@@ -146,7 +146,7 @@ public class Ghost3D extends Group {
 	}
 
 	private Look computeLookForCurrentState(GameModel game) {
-		return switch (ghost.getState()) {
+		return switch (ghost.state()) {
 		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(game);
 		case FRIGHTENED -> frightenedOrFlashingLook(game);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
