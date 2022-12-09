@@ -88,7 +88,7 @@ public class SectionGameControl extends Section {
 		comboGameVariant.setValue(gc.game().variant());
 		comboGameVariant.setDisable(gc.game().isPlaying());
 
-		cbAutopilot.setSelected(gc.game().isAutoControlled());
+		cbAutopilot.setSelected(gc.game().pac().isAutoControlled());
 		cbImmunity.setSelected(gc.game().isImmune());
 
 		// start game
