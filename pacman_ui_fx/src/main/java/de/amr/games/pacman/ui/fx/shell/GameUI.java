@@ -94,7 +94,7 @@ public class GameUI implements GameEventListener {
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> endApp());
 		Keyboard.addHandler(this::onKeyPressed);
-		GameEvents.addEventListener(this);
+		GameEvents.addListener(this);
 		Actions.init(this);
 		initGameLoop();
 		updateGameScene(true);
