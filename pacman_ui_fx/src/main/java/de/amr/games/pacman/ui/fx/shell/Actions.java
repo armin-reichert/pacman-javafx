@@ -153,7 +153,7 @@ public class Actions {
 		}
 		gameController().sounds().stopAll();
 		if (levelNumber == 1) {
-			game().initAndSetLevel(levelNumber);
+			game().init(levelNumber);
 			gameController().changeState(GameState.READY);
 		} else {
 			// TODO game model should be able to switch directly to any level
