@@ -115,11 +115,10 @@ public class PlayScene2D extends GameScene2D {
 				ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), flash);
 			} else {
 				ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(),
-						!ctx.game().energizerPulse.frame());
+						!arcadeWorld.energizerPulse.frame());
 			}
 		} else {
-			ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(),
-					!ctx.game().energizerPulse.frame());
+			ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(), false);
 		}
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D().drawBonus(g, ctx.game().bonus());
