@@ -234,6 +234,15 @@ public class Actions {
 		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
 	}
 
+	public static void toggleLevelTestModel() {
+		gameController().levelTestMode = !gameController().levelTestMode;
+		if (!gameController().levelTestMode) {
+			gameController().reboot();
+		} else {
+			showFlashMessage("Level TEST MODE");
+		}
+	}
+
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.threeDScenesPy);
 		if (ui.sceneManager().findGameScene(gameController(), 3).isPresent()) {
