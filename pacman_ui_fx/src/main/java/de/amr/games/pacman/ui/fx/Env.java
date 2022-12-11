@@ -60,12 +60,12 @@ public class Env {
 	public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> bgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
 	public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(10, 10, 70));
+	public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(0, 0, 33));
 	public static final StringProperty floorTexturePy = new SimpleStringProperty("none");
 	public static final ObjectProperty<Color> lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
 	public static final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(4);
 	public static final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(1.5);
-	public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(2.0);
+	public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.5);
 	public static final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(true);
 	public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);

@@ -121,7 +121,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public Color getMazeTopColor(int mazeNumber) {
-		return Color.AZURE;
+		return MAZE_WALL_COLOR.darker().darker();
 	}
 
 	@Override
