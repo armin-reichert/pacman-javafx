@@ -47,10 +47,7 @@ import javafx.scene.shape.DrawMode;
  * 
  * @author Armin Reichert
  */
-public class Env {
-
-	private Env() {
-	}
+public interface Env {
 
 	// this flag disables sound support completely. Used for testing Gluon native app which has no sound support yet.
 	public static final boolean SOUND_DISABLED = false;
