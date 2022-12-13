@@ -212,10 +212,10 @@ public class PlayScene2D extends GameScene2D {
 
 		private String animationStateInfo(EntityAnimation animation, Direction dir) {
 			if (animation instanceof EntityAnimationByDirection anim) {
-				return anim.get(dir).isRunning() ? "" : "(Stopped) ";
+				return anim.get(dir).isRunning() ? "" : "(Stopped @%d) ".formatted(animation.frameIndex());
 			}
 			if (animation instanceof SingleEntityAnimation<?> anim) {
-				return anim.isRunning() ? "" : "(Stopped) ";
+				return anim.isRunning() ? "" : "(Stopped @%d) ".formatted(animation.frameIndex());
 			}
 			return "";
 		}
