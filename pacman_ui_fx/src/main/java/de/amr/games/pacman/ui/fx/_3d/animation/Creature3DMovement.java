@@ -60,10 +60,10 @@ public class Creature3DMovement {
 
 	//@formatter:off
 	private static final Turn[][] TURNS = {
-		{ null,            new Turn(L, R), new Turn(L, U),  new Turn(L, -U) }, // LEFT -> *
+		{ null,            new Turn(L, R), new Turn(L, U),  new Turn(L, -U) }, // LEFT  -> *
 		{ new Turn(R, L),  null,           new Turn(R, U),  new Turn(R, D)  }, // RIGHT -> *
-		{ new Turn(U, L),  new Turn(U, R), null,            new Turn(U, D)  }, // UP -> *
-		{ new Turn(-U, L), new Turn(D, R), new Turn(-U, U), null           }, // DOWN -> *
+		{ new Turn(U, L),  new Turn(U, R), null,            new Turn(U, D)  }, // UP    -> *
+		{ new Turn(-U, L), new Turn(D, R), new Turn(-U, U), null            }, // DOWN  -> *
 	};
 	//@formatter:on
 
