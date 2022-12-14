@@ -49,7 +49,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	public void init() {
 		var renderer = (RendererMsPacManGame) ctx.r2D();
 		intermission = new MsPacManIntermission3(ctx.gameController());
-		intermission.restartInState(MsPacManIntermission3.IntermissionState.FLAP);
+		intermission.restart(MsPacManIntermission3.IntermissionState.FLAP);
 		intermission.context().clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
 		intermission.context().msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().msPacMan));
 		intermission.context().pacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().pacMan));

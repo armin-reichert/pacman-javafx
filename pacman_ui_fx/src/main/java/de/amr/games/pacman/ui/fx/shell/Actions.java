@@ -125,12 +125,12 @@ public class Actions {
 
 	public static void restartIntro() {
 		ui.currentGameScene().end();
-		gameController().restartIntro();
+		gameController().startIntro();
 	}
 
 	public static void reboot() {
 		ui.currentGameScene().end();
-		gameController().reboot();
+		gameController().boot();
 	}
 
 	public static void addCredit() {
@@ -237,7 +237,7 @@ public class Actions {
 	public static void toggleLevelTestModel() {
 		gameController().levelTestMode = !gameController().levelTestMode;
 		if (!gameController().levelTestMode) {
-			gameController().reboot();
+			gameController().boot();
 		} else {
 			showFlashMessage("Level TEST MODE");
 		}

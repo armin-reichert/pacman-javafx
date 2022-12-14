@@ -50,7 +50,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		intro = new MsPacManIntro(ctx.gameController());
-		intro.restartInState(MsPacManIntro.IntroState.START);
+		intro.restart(MsPacManIntro.IntroState.START);
 		var pacAnimations = ctx.r2D().createPacAnimationSet(ctx.game().pac());
 		pacAnimations.ensureRunning();
 		ctx.game().pac().setAnimationSet(pacAnimations);
