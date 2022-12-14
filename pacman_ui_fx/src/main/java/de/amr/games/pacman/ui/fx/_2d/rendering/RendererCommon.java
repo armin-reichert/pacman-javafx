@@ -251,6 +251,13 @@ public abstract class RendererCommon implements Rendering2D {
 		}
 	}
 
+	@Override
+	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
+	}
+
 	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);

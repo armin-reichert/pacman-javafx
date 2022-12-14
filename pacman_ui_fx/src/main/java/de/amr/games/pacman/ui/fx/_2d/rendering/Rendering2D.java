@@ -100,11 +100,7 @@ public interface Rendering2D {
 
 	// Drawing
 
-	default void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
+	void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y);
 
 	/**
 	 * Draws sprite (region) using spritesheet.

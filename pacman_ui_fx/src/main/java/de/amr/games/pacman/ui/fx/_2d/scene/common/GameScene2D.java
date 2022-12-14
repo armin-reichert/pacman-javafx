@@ -45,6 +45,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Scale;
 
 /**
@@ -95,6 +97,9 @@ public abstract class GameScene2D implements GameScene {
 		draw();
 		drawDebugInfo();
 		drawHUD();
+		if (ctx.gameController().levelTestMode) {
+			ctx.r2D().drawText(g, "LEVEL TEST MODE", Color.WHITE, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60, 190);
+		}
 	}
 
 	private void drawDebugInfo() {
