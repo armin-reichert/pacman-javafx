@@ -91,8 +91,7 @@ public class PacManGameAppFX extends Application {
 				.parse(getParameters().getUnnamed());
 		Env.threeDScenesPy.set(OPT_3D.getValue());
 		Env.perspectivePy.set(OPT_PERSPECTIVE.getValue());
-		gameController = new GameController();
-		gameController.createGame(OPT_VARIANT.getValue());
+		gameController = new GameController(OPT_VARIANT.getValue());
 		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant());
 	}
 
