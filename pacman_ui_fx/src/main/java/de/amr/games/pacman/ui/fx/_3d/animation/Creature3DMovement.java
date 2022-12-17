@@ -79,7 +79,7 @@ public class Creature3DMovement {
 	public Creature3DMovement(Node guy3D, Creature guy) {
 		this.guy3D = guy3D;
 		this.guy = guy;
-		rotation = new RotateTransition(Duration.seconds(0.25), guy3D);
+		rotation = new RotateTransition(Duration.seconds(0.1), guy3D);
 		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
 		init();
