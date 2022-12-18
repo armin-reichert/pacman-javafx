@@ -90,7 +90,8 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void draw() {
-		var tick = intro.state().timer().tick();
+		var timer = intro.state().timer();
+
 		switch (intro.state()) {
 		case START -> {
 			drawGallery();
@@ -101,33 +102,39 @@ public class PacManIntroScene extends GameScene2D {
 		case SHOWING_POINTS -> {
 			drawGallery();
 			drawPoints();
-			if (tick > intro.state().timer().secToTicks(1)) {
+			if (timer.tick() > timer.secToTicks(1)) {
 				drawBlinkingEnergizer();
-				ctx.r2D().drawCopyright(g, 32);
+				drawCopyright();
 			}
 		}
 		case CHASING_PAC -> {
 			drawGallery();
 			drawPoints();
 			drawBlinkingEnergizer();
-			drawGuys(flutter(tick));
-			ctx.r2D().drawCopyright(g, 32);
+			drawGuys(flutter(timer.tick()));
+			drawCopyright();
 		}
 		case CHASING_GHOSTS -> {
 			drawGallery();
 			drawPoints();
 			drawGuys(0);
-			ctx.r2D().drawCopyright(g, 32);
+			drawCopyright();
 		}
 		case READY_TO_PLAY -> {
 			drawGallery();
 			drawPoints();
 			drawGuys(0);
-			ctx.r2D().drawCopyright(g, 32);
+			drawCopyright();
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + intro.state());
 		}
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
+		if (ctx.hasCredit()) {
+			ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
+		}
+	}
+
+	private void drawCopyright() {
+		ctx.r2D().drawCopyright(g, 32);
 	}
 
 	// TODO inspect in MAME what's really going on
