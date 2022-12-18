@@ -108,7 +108,7 @@ public class PlayScene2D extends GameScene2D {
 	public void draw() {
 		int mazeX = 0;
 		int mazeY = 3 * TS;
-		boolean energizersHidden = !ctx.game().energizerPulse.frame();
+		boolean energizersHidden = !ctx.game().energizerPulse().frame();
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			var flashingAnimation = arcadeWorld.levelCompleteAnimation();
 			if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
@@ -125,7 +125,7 @@ public class PlayScene2D extends GameScene2D {
 		ctx.r2D().drawPac(g, ctx.game().pac());
 		ctx.game().ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
 		if (!isCreditVisible()) {
-			int lives = ctx.game().isLivesOneLessShown() ? ctx.game().lives() - 1 : ctx.game().lives();
+			int lives = ctx.game().isOneLessLifeDisplayed() ? ctx.game().lives() - 1 : ctx.game().lives();
 			ctx.r2D().drawLivesCounter(g, lives);
 		}
 		if (ctx.game().credit() > 0) {
