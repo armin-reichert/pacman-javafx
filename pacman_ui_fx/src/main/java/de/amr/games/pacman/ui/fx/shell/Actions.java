@@ -153,13 +153,13 @@ public class Actions {
 		}
 		gameController().sounds().stopAll();
 		if (levelNumber == 1) {
-			game().resetGameAndInitLevel(levelNumber);
+			game().reset();
 			gameController().changeState(GameState.READY);
 		} else {
-			// TODO game model should be able to switch directly to any level
-			int start = levelNumber > game().level().number() ? game().level().number() + 1 : 1;
-			for (int n = start; n < levelNumber; ++n) {
-				game().setLevel(n);
+			// to update level counter, enter each level up-to new level
+			int firstLevelNumber = levelNumber > game().level().number() ? game().level().number() + 1 : 1;
+			for (int i = firstLevelNumber; i < levelNumber; ++i) {
+				game().startLevel(i);
 			}
 			gameController().changeState(GameState.LEVEL_STARTING);
 		}

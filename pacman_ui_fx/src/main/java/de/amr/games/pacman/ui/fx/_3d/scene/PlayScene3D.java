@@ -214,7 +214,7 @@ public class PlayScene3D implements GameScene {
 		world3D.update(ctx.game());
 		pac3D.update(ctx.world());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
-		bonus3D.update(ctx.game().bonus());
+		bonus3D.update(ctx.game().level().bonus());
 		currentCamera().update(pac3D);
 	}
 
@@ -297,13 +297,13 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().bonus().id());
+		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().level().bonus().symbol());
 		bonus3D.showSymbol(ctx.r2D().spritesheet().region(sprite));
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		var sprite = ctx.r2D().bonusValueSprite(ctx.game().bonus().id());
+		var sprite = ctx.r2D().bonusValueSprite(ctx.game().level().bonus().symbol());
 		bonus3D.showPoints(ctx.r2D().spritesheet().region(sprite));
 		ctx.sounds().play(GameSound.BONUS_EATEN);
 	}

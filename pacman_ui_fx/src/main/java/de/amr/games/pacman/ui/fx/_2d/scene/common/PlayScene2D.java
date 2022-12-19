@@ -121,7 +121,7 @@ public class PlayScene2D extends GameScene2D {
 			ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(), false);
 		}
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
-		ctx.r2D().drawBonus(g, ctx.game().bonus());
+		ctx.r2D().drawBonus(g, ctx.game().level().bonus());
 		ctx.r2D().drawPac(g, ctx.game().pac());
 		ctx.game().ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
 		if (!isCreditVisible()) {
@@ -191,7 +191,7 @@ public class PlayScene2D extends GameScene2D {
 				updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
 			}
 			updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac()), game.pac());
-			var bonus = game.bonus();
+			var bonus = game.level().bonus();
 			updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
 			panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);
 		}
@@ -262,11 +262,11 @@ public class PlayScene2D extends GameScene2D {
 
 		private String bonusInfo(Bonus bonus) {
 			var bonusName = switch (ctx.gameVariant()) {
-			case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.id()];
-			case PACMAN -> PACMAN_BONUS_NAMES[bonus.id()];
+			case MS_PACMAN -> MS_PACMAN_BONUS_NAMES[bonus.symbol()];
+			case PACMAN -> PACMAN_BONUS_NAMES[bonus.symbol()];
 			};
 			var text = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
-			return "%s%n%s".formatted(text, ctx.game().bonus().state());
+			return "%s%n%s".formatted(text, ctx.game().level().bonus().state());
 		}
 	}
 }
