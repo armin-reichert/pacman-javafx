@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.Vector2i;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
@@ -42,7 +42,7 @@ public class Door3D extends Box {
 
 	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(HTS);
 
-	public Door3D(V2i tile, Color color) {
+	public Door3D(Vector2i tile, Color color) {
 		setWidth(TS - 1.0);
 		setHeight(1.0); // thickness (y-direction)
 		depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)

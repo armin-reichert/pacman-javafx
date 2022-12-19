@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.Vector2i;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
@@ -39,7 +39,7 @@ public class Energizer3D extends Pellet3D {
 
 	private final ScaleTransition pumping;
 
-	public Energizer3D(V2i tile, PhongMaterial material) {
+	public Energizer3D(Vector2i tile, PhongMaterial material) {
 		super(tile, material, 3.0);
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), this);
 		pumping.setAutoReverse(true);

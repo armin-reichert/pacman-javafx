@@ -31,7 +31,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.lib.Vector2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -141,16 +141,16 @@ public class World3D extends Group {
 		}
 	}
 
-	private boolean isAccessGranted(Stream<Ghost> ghosts, V2d doorPosition) {
+	private boolean isAccessGranted(Stream<Ghost> ghosts, Vector2d doorPosition) {
 		return ghosts.anyMatch(ghost -> isAccessGranted(ghost, doorPosition));
 	}
 
-	private boolean isAccessGranted(Ghost ghost, V2d doorPosition) {
+	private boolean isAccessGranted(Ghost ghost, Vector2d doorPosition) {
 		return ghost.isVisible() && ghost.is(RETURNING_TO_HOUSE, ENTERING_HOUSE, LEAVING_HOUSE)
 				&& inDoorDistance(ghost, doorPosition);
 	}
 
-	private boolean inDoorDistance(Ghost ghost, V2d doorPosition) {
+	private boolean inDoorDistance(Ghost ghost, Vector2d doorPosition) {
 		return ghost.position().euclideanDistance(doorPosition) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
 	}
 }

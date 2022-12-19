@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.V2d;
+import de.amr.games.pacman.lib.Vector2d;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.scene.Node;
@@ -57,7 +57,7 @@ public class CamFirstPerson extends GameSceneCamera {
 
 	@Override
 	public void update(Node target) {
-		var ref = pac.position().plus(new V2d(pac.moveDir().vec).scaled(6));
+		var ref = pac.position().plus(new Vector2d(pac.moveDir().vec).scaled(6));
 		setTranslateX(ref.x() - GameScene.DEFAULT_SIZE.x() / 2);
 		setTranslateY(ref.y() - GameScene.DEFAULT_SIZE.y() / 2);
 		setTranslateZ(-6);

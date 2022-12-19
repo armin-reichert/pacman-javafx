@@ -29,7 +29,7 @@ import static java.util.function.Predicate.not;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -83,15 +83,15 @@ public class Food3D extends Group {
 				.forEach(getChildren()::add);
 	}
 
-	private Pellet3D createNormalPellet(V2i tile) {
+	private Pellet3D createNormalPellet(Vector2i tile) {
 		return new Pellet3D(tile, pelletMaterial, 1.0);
 	}
 
-	private Energizer3D createNormalEnergizer(V2i tile) {
+	private Energizer3D createNormalEnergizer(Vector2i tile) {
 		return new Energizer3D(tile, pelletMaterial);
 	}
 
-	private Energizer3D createSquirtingEnergizer(V2i tile) {
+	private Energizer3D createSquirtingEnergizer(Vector2i tile) {
 		var energizer3D = new Energizer3D(tile, pelletMaterial);
 		energizer3D.setEatenAnimation(new SquirtingAnimation(world, particlesGroup, energizer3D));
 		return energizer3D;
@@ -123,7 +123,7 @@ public class Food3D extends Group {
 		return pellets3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
-	public Optional<Pellet3D> pelletAt(V2i tile) {
+	public Optional<Pellet3D> pelletAt(Vector2i tile) {
 		return pellets3D().filter(pellet3D -> pellet3D.tile().equals(tile)).findFirst();
 	}
 }

@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.animation.EntityAnimation;
 import de.amr.games.pacman.lib.animation.EntityAnimationSet;
 import de.amr.games.pacman.model.common.GameModel;
@@ -93,7 +93,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	private static final Font ARCADE_FONT_TS = Ufx.font("fonts/emulogic.ttf", TS);
 
-	public void clearTileContent(GraphicsContext g, V2i tile) {
+	public void clearTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}

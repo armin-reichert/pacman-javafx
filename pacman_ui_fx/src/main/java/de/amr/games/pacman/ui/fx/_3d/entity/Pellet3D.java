@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -44,11 +44,11 @@ public class Pellet3D extends Sphere {
 
 	private Animation animation;
 
-	public Pellet3D(V2i tile, PhongMaterial material) {
+	public Pellet3D(Vector2i tile, PhongMaterial material) {
 		this(tile, material, 1.0);
 	}
 
-	public Pellet3D(V2i tile, PhongMaterial material, double radius) {
+	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
 		setUserData(tile);
 		setMaterial(material);
 		setRadius(radius);
@@ -57,8 +57,8 @@ public class Pellet3D extends Sphere {
 		setTranslateZ(-HTS + 1);
 	}
 
-	public V2i tile() {
-		return (V2i) getUserData();
+	public Vector2i tile() {
+		return (Vector2i) getUserData();
 	}
 
 	public void eat() {

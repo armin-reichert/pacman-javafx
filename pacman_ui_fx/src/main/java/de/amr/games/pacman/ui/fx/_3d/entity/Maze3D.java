@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.beans.property.DoubleProperty;
@@ -132,7 +132,7 @@ public class Maze3D extends Group {
 		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
 	}
 
-	private Door3D createDoor(V2i tile, Color color) {
+	private Door3D createDoor(Vector2i tile, Color color) {
 		var door = new Door3D(tile, color);
 		door.doorHeightPy.bind(wallHeightPy);
 		door.drawModeProperty().bind(drawModePy);

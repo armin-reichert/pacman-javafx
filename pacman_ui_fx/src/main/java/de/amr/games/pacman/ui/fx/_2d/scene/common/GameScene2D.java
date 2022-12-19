@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.V2i;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.pacman.PacManGame;
@@ -67,7 +67,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected SceneContext ctx;
 	private boolean creditVisible;
-	private V2i size = DEFAULT_SIZE;
+	private Vector2i size = DEFAULT_SIZE;
 	private double scaling = 1.0;
 
 	protected GameScene2D() {
