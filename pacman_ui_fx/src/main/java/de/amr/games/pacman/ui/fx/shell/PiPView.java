@@ -41,8 +41,8 @@ import javafx.scene.paint.Color;
  */
 public class PiPView extends StackPane {
 
-	public static final Vector2d MIN_SIZE = new Vector2d(GameScene.DEFAULT_SIZE);
-	public static final Vector2d MAX_SIZE = new Vector2d(GameScene.DEFAULT_SIZE).scaled(2.0);
+	public static final Vector2d MIN_SIZE = GameScene.DEFAULT_SIZE.toDoubleVec();
+	public static final Vector2d MAX_SIZE = GameScene.DEFAULT_SIZE.toDoubleVec().scaled(2.0);
 
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override

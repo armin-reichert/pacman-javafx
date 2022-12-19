@@ -23,10 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.Vector2d;
 import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.world.HorizontalPortal;
 import de.amr.games.pacman.model.common.world.World;
@@ -84,8 +85,8 @@ public class PortalTraversalAnimation {
 		double minDist = Double.MAX_VALUE;
 		for (var portal : world.portals()) {
 			if (portal instanceof HorizontalPortal horPortal) {
-				var left = new Vector2d(horPortal.leftTunnelEnd().minus(1, 0)).scaled(World.TS);
-				var right = new Vector2d(horPortal.rightTunnelEnd().plus(1, 0)).scaled(World.TS);
+				var left = horPortal.leftTunnelEnd().minus(1, 0).scaled(TS).toDoubleVec();
+				var right = horPortal.rightTunnelEnd().plus(1, 0).scaled(TS).toDoubleVec();
 				var dist = Math.min(guy.position().euclideanDistance(left), guy.position().euclideanDistance(right));
 				if (dist < minDist) {
 					minDist = dist;
