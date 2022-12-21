@@ -67,7 +67,7 @@ public class SectionGameInfo extends Section {
 		addInfo("- in tunnel", () -> fmtSpeed(game().level().ghostSpeedTunnel()));
 		addInfo("Pac-Man speed", () -> fmtSpeed(game().level().playerSpeed()));
 		addInfo("- empowered", () -> fmtSpeed(game().level().playerSpeedPowered()));
-		addInfo("Frightened time", () -> String.format("%d sec", game().level().ghostFrightenedSeconds()));
+		addInfo("Frightened time", () -> String.format("%d sec", game().level().pacPowerSeconds()));
 		addInfo("Maze flashings", () -> game().level().numFlashes());
 	}
 }
