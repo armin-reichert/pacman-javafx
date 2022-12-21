@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon.mazeNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,12 +114,12 @@ public class PlayScene2D extends GameScene2D {
 			var flashingAnimation = arcadeWorld.levelCompleteAnimation();
 			if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 				boolean flash = (boolean) flashingAnimation.get().frame();
-				ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), flash);
+				ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
 			} else {
-				ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(), energizersHidden);
+				ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), ctx.world(), energizersHidden);
 			}
 		} else {
-			ctx.r2D().drawFilledMaze(g, mazeX, mazeY, ctx.level().mazeNumber(), ctx.world(), false);
+			ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), ctx.world(), false);
 		}
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 		ctx.r2D().drawBonus(g, ctx.game().level().bonus());

@@ -41,6 +41,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -92,6 +93,14 @@ public abstract class RendererCommon implements Rendering2D {
 	//@formatter:on
 
 	private static final Font ARCADE_FONT_TS = Ufx.font("fonts/emulogic.ttf", TS);
+
+	// not sure where this belongs
+	public static int mazeNumber(GameModel game) {
+		return switch (game.variant()) {
+		case MS_PACMAN -> ((MsPacManGame) game).mazeNumber(game.level().number());
+		case PACMAN -> 1;
+		};
+	}
 
 	public void clearTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(Color.BLACK);
