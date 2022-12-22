@@ -227,8 +227,9 @@ public class Actions {
 	}
 
 	public static void toggleImmunity() {
-		gameController().game().setPacImmune(!gameController().game().isPacImmune());
-		var immune = game().isPacImmune();
+		var pac = gameController().game().pac();
+		pac.setImmune(!pac.isImmune());
+		var immune = pac.isImmune();
 		String message = TextManager.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
