@@ -163,6 +163,6 @@ public class Ghost3D extends Group {
 	}
 
 	private Look frightenedOrFlashingLook(GameModel game) {
-		return game.isPacPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
+		return game.pac().isPowerFading(game) ? Look.FLASHING : Look.FRIGHTENED;
 	}
 }
