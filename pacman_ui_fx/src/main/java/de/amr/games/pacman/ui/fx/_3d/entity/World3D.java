@@ -101,7 +101,7 @@ public class World3D extends Group {
 		scores3D.update(game);
 		updateHouseLightingState(game);
 		updateDoorState(game);
-		livesCounter3D.update(game.isOneLessLifeDisplayed() ? game.lives() - 1 : game.lives());
+		livesCounter3D.update(game.isOneLessLifeDisplayed() ? game.pac().lives() - 1 : game.pac().lives());
 		if (game.hasCredit()) {
 			scores3D.setShowPoints(true);
 		} else {
