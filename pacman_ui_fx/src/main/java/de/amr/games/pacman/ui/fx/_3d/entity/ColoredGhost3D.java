@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -118,7 +117,7 @@ public class ColoredGhost3D {
 	}
 
 	private void createFlashing(int numFlashes) {
-		var seconds = (double) GameModel.PAC_POWER_FADING_TICKS / (2 * GameModel.FPS); // 2 animation cycles = 1 flashing
+		var seconds = 1;
 		dressFlashing = new ColorFlashing(colors.frightenedDress(), colors.flashingDress(), seconds, numFlashes);
 		pupilsFlashing = new ColorFlashing(colors.frightendPupils(), colors.flashingPupils(), seconds, numFlashes);
 		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
