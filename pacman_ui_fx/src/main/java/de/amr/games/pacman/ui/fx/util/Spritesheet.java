@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.util;
 
-import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.steering.Direction;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;

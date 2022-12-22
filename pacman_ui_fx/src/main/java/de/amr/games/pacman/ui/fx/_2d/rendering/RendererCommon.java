@@ -28,9 +28,9 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.animation.EntityAnimation;
-import de.amr.games.pacman.lib.animation.EntityAnimationSet;
+import de.amr.games.pacman.lib.anim.EntityAnimation;
+import de.amr.games.pacman.lib.anim.EntityAnimationSet;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.Score;

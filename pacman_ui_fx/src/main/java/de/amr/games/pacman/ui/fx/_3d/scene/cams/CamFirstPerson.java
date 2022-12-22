@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
-import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.scene.Node;

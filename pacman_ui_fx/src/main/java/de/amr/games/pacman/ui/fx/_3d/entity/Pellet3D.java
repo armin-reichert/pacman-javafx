@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;

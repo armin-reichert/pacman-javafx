@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.beans.property.DoubleProperty;

@@ -24,11 +24,11 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.animation.EntityAnimationSet;
-import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
-import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
+import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
+import de.amr.games.pacman.lib.anim.EntityAnimationSet;
+import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
+import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.actors.AnimKeys;

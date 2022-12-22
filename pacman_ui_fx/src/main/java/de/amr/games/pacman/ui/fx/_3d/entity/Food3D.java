@@ -29,7 +29,7 @@ import static java.util.function.Predicate.not;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.util.Ufx;

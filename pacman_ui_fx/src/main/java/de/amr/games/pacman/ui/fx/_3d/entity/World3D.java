@@ -31,7 +31,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.Vector2d;
+import de.amr.games.pacman.lib.math.Vector2d;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;

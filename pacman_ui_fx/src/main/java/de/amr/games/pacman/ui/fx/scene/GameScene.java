@@ -24,8 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.Scene;

@@ -24,12 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
-import static de.amr.games.pacman.lib.Vector2i.v2i;
+import static de.amr.games.pacman.lib.math.Vector2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.EntityAnimation;
+import de.amr.games.pacman.lib.anim.EntityAnimation;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;

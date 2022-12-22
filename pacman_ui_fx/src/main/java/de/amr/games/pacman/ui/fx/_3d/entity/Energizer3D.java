@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.math.Vector2i;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;

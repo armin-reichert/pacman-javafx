@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.lib.Vector2d;
+import de.amr.games.pacman.lib.math.Vector2d;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.pacman.PacManIntro;
 import de.amr.games.pacman.controller.pacman.PacManIntro.IntroData;
-import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.shell.Actions;

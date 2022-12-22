@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 
-import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

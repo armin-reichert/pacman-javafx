@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.controller.common.Steering;
-import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.scene.input.KeyCode;

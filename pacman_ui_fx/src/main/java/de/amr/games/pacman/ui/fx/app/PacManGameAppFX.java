@@ -23,9 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Option.booleanOption;
-import static de.amr.games.pacman.lib.Option.doubleOption;
-import static de.amr.games.pacman.lib.Option.option;
+import static de.amr.games.pacman.lib.option.Option.booleanOption;
+import static de.amr.games.pacman.lib.option.Option.doubleOption;
+import static de.amr.games.pacman.lib.option.Option.option;
 
 import java.io.IOException;
 
@@ -33,9 +33,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.lib.Option;
-import de.amr.games.pacman.lib.OptionParser;
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.lib.option.Option;
+import de.amr.games.pacman.lib.option.OptionParser;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;

@@ -28,12 +28,12 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.Map;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.animation.EntityAnimation;
-import de.amr.games.pacman.lib.animation.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.animation.EntityAnimationSet;
-import de.amr.games.pacman.lib.animation.FixedEntityAnimation;
-import de.amr.games.pacman.lib.animation.SingleEntityAnimation;
+import de.amr.games.pacman.lib.anim.EntityAnimation;
+import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
+import de.amr.games.pacman.lib.anim.EntityAnimationSet;
+import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
+import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
