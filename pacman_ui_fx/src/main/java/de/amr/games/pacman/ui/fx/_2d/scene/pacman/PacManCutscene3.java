@@ -76,16 +76,16 @@ public class PacManCutscene3 extends GameScene2D {
 			pac.setMoveDir(Direction.LEFT);
 			pac.setAbsSpeed(1.25);
 			pac.show();
-			pac.runAnimation(AnimKeys.PAC_MUNCHING);
+			pac.selectRunnableAnimation(AnimKeys.PAC_MUNCHING);
 			blinky.placeAtTile(v2i(35, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.LEFT);
 			blinky.setAbsSpeed(1.25);
 			blinky.show();
-			blinky.runAnimation(AnimKeys.BLINKY_PATCHED);
+			blinky.selectRunnableAnimation(AnimKeys.BLINKY_PATCHED);
 		} else if (frame == 296) {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.runAnimation(AnimKeys.BLINKY_NAKED);
+			blinky.selectRunnableAnimation(AnimKeys.BLINKY_NAKED);
 		} else if (frame == 516) {
 			ctx.state().timer().expire();
 			return;

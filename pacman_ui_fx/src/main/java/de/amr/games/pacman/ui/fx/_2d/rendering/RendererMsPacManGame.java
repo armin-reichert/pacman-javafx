@@ -269,7 +269,7 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	public void drawClapperboard(GraphicsContext g, Clapperboard clapper) {
 		if (clapper.isVisible()) {
-			clapper.selectedAnimation().map(EntityAnimation::animate).ifPresent(frame -> {
+			clapper.animation().map(EntityAnimation::animate).ifPresent(frame -> {
 				var sprite = (Rectangle2D) frame;
 				drawEntity(g, clapper, sprite);
 				g.setFont(arcadeFont(TS));

@@ -173,12 +173,12 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.selectedAnimation().ifPresent(animation -> drawEntity(g, pac, regionOfCurrentFrame(animation)));
+		pac.animation().ifPresent(animation -> drawEntity(g, pac, regionOfCurrentFrame(animation)));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.selectedAnimation().ifPresent(animation -> drawEntity(g, ghost, regionOfCurrentFrame(animation)));
+		ghost.animation().ifPresent(animation -> drawEntity(g, ghost, regionOfCurrentFrame(animation)));
 	}
 
 	@Override
