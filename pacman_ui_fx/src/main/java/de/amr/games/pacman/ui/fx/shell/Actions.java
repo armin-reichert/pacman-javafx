@@ -156,11 +156,15 @@ public class Actions {
 			game().reset();
 			game().initLevel(1);
 			gameController().changeState(GameState.READY);
+		} else if (levelNumber > game().level().number()) {
+			for (int i = game().level().number() + 1; i < levelNumber; ++i) {
+				game().enterLevel(i);
+			}
+			gameController().changeState(GameState.LEVEL_STARTING);
 		} else {
-			int first = levelNumber > game().level().number() ? game().level().number() + 1 : 1;
-			for (int i = first; i < levelNumber; ++i) {
-				game().initLevel(i);
-				game().enterLevel();
+			game().levelCounter().clear();
+			for (int i = 1; i < levelNumber; ++i) {
+				game().enterLevel(i);
 			}
 			gameController().changeState(GameState.LEVEL_STARTING);
 		}
