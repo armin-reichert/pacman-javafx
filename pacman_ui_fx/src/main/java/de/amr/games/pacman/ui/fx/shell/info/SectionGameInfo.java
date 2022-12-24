@@ -36,7 +36,7 @@ import javafx.scene.text.Font;
 public class SectionGameInfo extends Section {
 
 	private static String fmtSpeed(float fraction) {
-		return String.format("%.2f px/sec", GameModel.BASE_SPEED * fraction);
+		return String.format("%.2f px/sec", GameModel.SPEED_100_PERCENT_PX * fraction);
 	}
 
 	public SectionGameInfo(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {

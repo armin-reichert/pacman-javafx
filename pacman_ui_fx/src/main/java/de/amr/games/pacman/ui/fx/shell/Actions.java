@@ -267,10 +267,9 @@ public class Actions {
 	}
 
 	public static void toggleSoundMuted() {
-		var snd = gameController().sounds();
-		boolean wasMuted = snd.isMuted();
-		snd.setMuted(!wasMuted);
-		var msg = TextManager.message(snd.isMuted() ? "sound_off" : "sound_on");
+		boolean muted = gameController().sounds().isMuted();
+		gameController().sounds().setMuted(!muted);
+		var msg = TextManager.message(gameController().sounds().isMuted() ? "sound_off" : "sound_on");
 		showFlashMessage(msg);
 	}
 
