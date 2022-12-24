@@ -86,7 +86,7 @@ public class GameUI implements GameEventListener {
 	private GameScene currentGameScene;
 
 	// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
-	public GameUI(GameController gameController, Stage stage, double zoom) {
+	public GameUI(GameController gameController, Stage stage, float zoom) {
 		this.gameController = gameController;
 		this.stage = stage;
 		stage.setScene(createScene(zoom));
@@ -111,18 +111,18 @@ public class GameUI implements GameEventListener {
 		LOGGER.trace("Application ended.");
 	}
 
-	private Scene createScene(double zoom) {
+	private Scene createScene(float zoom) {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 
 		var content = new StackPane(gameSceneParent, flashMessageView, overlayPane);
-		var size = GameScene.DEFAULT_SIZE.toDoubleVec().scaled(zoom);
+		var size = GameScene.DEFAULT_SIZE.toFloatVec().scaled(zoom);
 		var scene = new Scene(content, size.x(), size.y());
 		scene.setOnKeyPressed(Keyboard::processEvent);
 		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> {
 			if (currentGameScene instanceof GameScene2D scene2D) {
-				scene2D.resizeToHeight(newHeight.doubleValue());
+				scene2D.resizeToHeight(newHeight.floatValue());
 			}
 		});
 

@@ -68,7 +68,7 @@ public abstract class GameScene2D implements GameScene {
 	protected SceneContext ctx;
 	private boolean creditVisible;
 	private Vector2i size = DEFAULT_SIZE;
-	private double scaling = 1.0;
+	private float scaling = 1.0f;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, size.x(), size.y());
@@ -79,9 +79,9 @@ public abstract class GameScene2D implements GameScene {
 		root.getChildren().addAll(canvas, overlayPane);
 	}
 
-	public void resizeToHeight(double height) {
-		double aspectRatio = (double) size.x() / (double) size.y();
-		double width = aspectRatio * height;
+	public void resizeToHeight(float height) {
+		float aspectRatio = (float) size.x() / (float) size.y();
+		float width = aspectRatio * height;
 		scaling = height / size.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
@@ -146,7 +146,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void embedInto(Scene parentScene) {
-		resizeToHeight(parentScene.getHeight());
+		resizeToHeight((float) parentScene.getHeight());
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public abstract class GameScene2D implements GameScene {
 		return fxSubScene;
 	}
 
-	public double scaling() {
+	public float scaling() {
 		return scaling;
 	}
 

@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import de.amr.games.pacman.lib.math.Vector2d;
+import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -41,13 +41,13 @@ import javafx.scene.paint.Color;
  */
 public class PiPView extends StackPane {
 
-	public static final Vector2d MIN_SIZE = GameScene.DEFAULT_SIZE.toDoubleVec();
-	public static final Vector2d MAX_SIZE = GameScene.DEFAULT_SIZE.toDoubleVec().scaled(2.0);
+	public static final Vector2f MIN_SIZE = GameScene.DEFAULT_SIZE.toFloatVec();
+	public static final Vector2f MAX_SIZE = GameScene.DEFAULT_SIZE.toFloatVec().scaled(2.0f);
 
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override
 		protected void invalidated() {
-			playScene.resizeToHeight(get());
+			playScene.resizeToHeight((float) get());
 		}
 	};
 

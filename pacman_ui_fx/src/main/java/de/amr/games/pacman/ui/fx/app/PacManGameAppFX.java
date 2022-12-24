@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.option.Option.booleanOption;
-import static de.amr.games.pacman.lib.option.Option.doubleOption;
+import static de.amr.games.pacman.lib.option.Option.floatOption;
 import static de.amr.games.pacman.lib.option.Option.option;
 
 import java.io.IOException;
@@ -79,7 +79,7 @@ public class PacManGameAppFX extends Application {
 	private static final Option<Boolean>     OPT_MUTED       = booleanOption("-muted", false);
 	private static final Option<Perspective> OPT_PERSPECTIVE = option("-psp", Perspective.NEAR_PLAYER, Perspective::valueOf);
 	private static final Option<GameVariant> OPT_VARIANT     = option("-variant", GameVariant.PACMAN, GameVariant::valueOf);
-	private static final Option<Double>      OPT_ZOOM        = doubleOption("-zoom", 2.0);
+	private static final Option<Float>       OPT_ZOOM        = floatOption("-zoom", 2.0f);
 	//@formatter:on
 
 	private GameController gameController;

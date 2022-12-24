@@ -60,7 +60,7 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.selectRunnableAnimation(AnimKeys.PAC_MUNCHING);
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
-		pac.setAbsSpeed(1.25);
+		pac.setAbsSpeed(1.25f);
 		pac.show();
 
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
@@ -71,7 +71,7 @@ public class PacManCutscene1 extends GameScene2D {
 		});
 		blinky.placeAtTile(v2i(32, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
-		blinky.setAbsSpeed(1.3);
+		blinky.setAbsSpeed(1.3f);
 		blinky.show();
 	}
 
@@ -91,7 +91,7 @@ public class PacManCutscene1 extends GameScene2D {
 				animations.select(AnimKeys.GHOST_BLUE);
 				animations.selectedAnimation().get().restart();
 			});
-			blinky.setAbsSpeed(0.75);
+			blinky.setAbsSpeed(0.75f);
 		} else if (frame == 400) {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);

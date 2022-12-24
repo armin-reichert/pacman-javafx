@@ -61,7 +61,7 @@ public class PacManCutscene2 extends GameScene2D {
 		pac = new Pac("Pac-Man");
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
-		pac.setAbsSpeed(1.15);
+		pac.setAbsSpeed(1.15f);
 		pac.show();
 
 		var pacAnimations = renderer.createPacAnimationSet(pac);
@@ -95,10 +95,10 @@ public class PacManCutscene2 extends GameScene2D {
 		if (frame == 0) {
 			ctx.sounds().play(GameSound.INTERMISSION_1);
 		} else if (frame == 110) {
-			blinky.setAbsSpeed(1.25);
+			blinky.setAbsSpeed(1.25f);
 			blinky.show();
 		} else if (frame == 196) {
-			blinky.setAbsSpeed(0.17);
+			blinky.setAbsSpeed(0.17f);
 			stretchedDressAnimation.setFrameIndex(1);
 		} else if (frame == 226) {
 			stretchedDressAnimation.setFrameIndex(2);
