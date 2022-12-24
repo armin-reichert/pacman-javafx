@@ -157,9 +157,8 @@ public class Actions {
 			game().initLevel(1);
 			gameController().changeState(GameState.READY);
 		} else {
-			// to update level counter, enter each level up-to new level
-			int firstLevelNumber = levelNumber > game().level().number() ? game().level().number() + 1 : 1;
-			for (int i = firstLevelNumber; i < levelNumber; ++i) {
+			int first = levelNumber > game().level().number() ? game().level().number() + 1 : 1;
+			for (int i = first; i < levelNumber; ++i) {
 				game().initLevel(i);
 				game().enterLevel();
 			}
