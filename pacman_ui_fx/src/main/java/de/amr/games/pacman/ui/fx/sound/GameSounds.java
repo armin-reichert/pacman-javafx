@@ -97,10 +97,10 @@ public class GameSounds implements GameSoundController {
 
 	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
 		if (Env.SOUND_DISABLED) {
-			LOGGER.info("Sounds '%s' not loaded (sound is disabled)", mapName);
+			LOGGER.trace("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
 			relPathMap.forEach(this::load);
-			LOGGER.info("Sounds '%s' loaded", mapName);
+			LOGGER.trace("Sounds '%s' loaded", mapName);
 		}
 	}
 

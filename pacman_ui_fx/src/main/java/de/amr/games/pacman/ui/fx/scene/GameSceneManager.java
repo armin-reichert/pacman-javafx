@@ -86,7 +86,7 @@ public class GameSceneManager {
 		try {
 			GameScene2D scene2D = clazz.getDeclaredConstructor().newInstance();
 			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
-			LOGGER.info("2D game scene created: '%s'", scene2D.getClass().getName());
+			LOGGER.trace("2D game scene created: '%s'", scene2D.getClass().getName());
 			return scene2D;
 		} catch (Exception e) {
 			LOGGER.error("Could not create 2D game scene of class '%s'", clazz.getName());
@@ -107,7 +107,7 @@ public class GameSceneManager {
 		playScene3D.squirtingEffectPy.bind(Env.squirtingEffectPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
 		playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
-		LOGGER.info("3D game scene created: '%s'", playScene3D.getClass().getName());
+		LOGGER.trace("3D game scene created: '%s'", playScene3D.getClass().getName());
 		return playScene3D;
 	}
 
@@ -138,11 +138,11 @@ public class GameSceneManager {
 			return currentGameScene;
 		}
 		if (currentGameScene != null) {
-			LOGGER.info("End game scene '%s'", currentGameScene.getClass().getName());
+			LOGGER.trace("End game scene '%s'", currentGameScene.getClass().getName());
 			currentGameScene.end();
 		}
 		setSceneContext(gameController, nextGameScene);
-		LOGGER.info("Init game scene '%s'", nextGameScene.getClass().getName());
+		LOGGER.trace("Init game scene '%s'", nextGameScene.getClass().getName());
 		nextGameScene.init();
 		return nextGameScene;
 	}

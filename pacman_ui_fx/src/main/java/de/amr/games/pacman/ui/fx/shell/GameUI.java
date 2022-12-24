@@ -108,7 +108,7 @@ public class GameUI implements GameEventListener {
 
 	private void endApp() {
 		gameLoop.stop();
-		LOGGER.info("Application ended.");
+		LOGGER.trace("Application ended.");
 	}
 
 	private Scene createScene(double zoom) {
@@ -179,7 +179,7 @@ public class GameUI implements GameEventListener {
 		gameScene.embedInto(stage.getScene());
 		updateMainSceneBackground();
 		updateStageTitle();
-		LOGGER.info("Game scene is now %s", gameScene);
+		LOGGER.trace("Game scene is now %s", gameScene);
 	}
 
 	private void updateMainSceneBackground() {

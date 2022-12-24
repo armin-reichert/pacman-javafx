@@ -86,7 +86,7 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-		LOGGER.info("2D game scene resized: %.0f x %.0f scaled: %.2f (%s)", fxSubScene.getWidth(), fxSubScene.getHeight(),
+		LOGGER.debug("2D game scene resized: %.0f x %.0f scaled: %.2f (%s)", fxSubScene.getWidth(), fxSubScene.getHeight(),
 				scaling, getClass().getSimpleName());
 	}
 
