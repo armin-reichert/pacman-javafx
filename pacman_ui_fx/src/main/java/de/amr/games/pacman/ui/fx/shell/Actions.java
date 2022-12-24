@@ -154,12 +154,14 @@ public class Actions {
 		gameController().sounds().stopAll();
 		if (levelNumber == 1) {
 			game().reset();
+			game().initLevel(1);
 			gameController().changeState(GameState.READY);
 		} else {
 			// to update level counter, enter each level up-to new level
 			int firstLevelNumber = levelNumber > game().level().number() ? game().level().number() + 1 : 1;
 			for (int i = firstLevelNumber; i < levelNumber; ++i) {
-				game().enterLevel(i);
+				game().initLevel(i);
+				game().enterLevel();
 			}
 			gameController().changeState(GameState.LEVEL_STARTING);
 		}

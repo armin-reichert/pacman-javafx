@@ -129,9 +129,7 @@ public class PlayScene2D extends GameScene2D {
 			int lives = ctx.game().isOneLessLifeDisplayed() ? ctx.game().pac().lives() - 1 : ctx.game().pac().lives();
 			ctx.r2D().drawLivesCounter(g, lives);
 		}
-		if (ctx.game().credit() > 0) {
-			ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
-		}
+		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
 	}
 
 	@Override
