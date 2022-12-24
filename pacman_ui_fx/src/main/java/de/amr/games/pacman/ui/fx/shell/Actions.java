@@ -154,7 +154,6 @@ public class Actions {
 		gameController().sounds().stopAll();
 		if (levelNumber == 1) {
 			game().reset();
-			game().initLevel(1);
 			gameController().changeState(GameState.READY);
 		} else if (levelNumber > game().level().number()) {
 			for (int i = game().level().number() + 1; i < levelNumber; ++i) {
