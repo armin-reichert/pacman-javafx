@@ -38,7 +38,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -173,7 +173,7 @@ public class PlayScene3D implements GameScene {
 
 	private void createPac3D() {
 		pac3D = new Pac3D(ctx.game().pac());
-		pac3D.init(ctx.world());
+		ctx.world().ifPresent(pac3D::init);
 		pac3D.lightOnPy.bind(pac3DLightedPy);
 		LOGGER.info("3D %s created", ctx.game().pac().name());
 	}
@@ -203,8 +203,8 @@ public class PlayScene3D implements GameScene {
 		content.getChildren().add(pac3D);
 		content.getChildren().addAll(ghosts3D);
 		content.getChildren().add(bonus3D);
-		var width = ctx.world().numCols() * World.TS;
-		var height = ctx.world().numRows() * World.TS;
+		var width = ArcadeWorld.SIZE_PX.x();
+		var height = ArcadeWorld.SIZE_PX.y();
 		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 		changeCamera(perspectivePy.get());
 	}
@@ -212,7 +212,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onTick() {
 		world3D.update(ctx.game());
-		pac3D.update(ctx.world());
+		ctx.world().ifPresent(pac3D::update);
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
 		bonus3D.update(ctx.game().level().bonus());
 		currentCamera().update(pac3D);
@@ -268,23 +268,26 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSwitchFrom2D() {
-		var world = ctx.world();
-		world3D.food3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
-		if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
-			world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
-		}
+		ctx.world().ifPresent(world -> {
+			world3D.food3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
+			if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
+				world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
+			}
+		});
 	}
 
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
 		if (e.tile.isEmpty()) {
-			// when cheat "eat all pellets" is used, no tile is present in the event. In that case, bring 3D pellets to be in
-			// synch with model:
-			ctx.world().tiles() //
-					.filter(ctx.world()::containsEatenFood) //
-					.map(world3D.food3D()::pelletAt) //
-					.flatMap(Optional::stream) //
-					.forEach(Pellet3D::eat);
+			// when cheat "eat all pellets" is used, no tile is present in the event.
+			// In that case, bring 3D pellets to be in synch with model:
+			ctx.world().ifPresent(world -> {
+				world.tiles() //
+						.filter(world::containsEatenFood) //
+						.map(world3D.food3D()::pelletAt) //
+						.flatMap(Optional::stream) //
+						.forEach(Pellet3D::eat);
+			});
 		} else {
 			world3D.food3D().pelletAt(e.tile.get()).ifPresent(world3D.food3D()::eatPellet);
 		}
@@ -319,7 +322,7 @@ public class PlayScene3D implements GameScene {
 
 		case READY -> {
 			world3D.food3D().energizers3D().forEach(Energizer3D::init);
-			pac3D.init(ctx.world());
+			ctx.world().ifPresent(pac3D::init);
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.init(ctx.game()));
 		}
 

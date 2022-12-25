@@ -23,6 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;
@@ -47,27 +53,72 @@ public class SectionGameInfo extends Section {
 		addInfo("Game State", () -> "%s".formatted(gc.state()));
 		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
-		addInfo("", () -> "Remaining: %s".formatted(gc.state().timer().ticksToString(gc.state().timer().remaining())));
+		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
 
-		addInfo("Hunting Phase",
-				() -> "%s #%d%s".formatted(gc.game().level().huntingTimer().phaseName(),
-						gc.game().level().huntingTimer().inScatterPhase() ? gc.game().level().huntingTimer().scatterPhase()
-								: gc.game().level().huntingTimer().chasingPhase(),
-						gc.game().level().huntingTimer().isStopped() ? " STOPPED" : ""));
-		addInfo("", () -> "Running:   %d".formatted(gc.game().level().huntingTimer().tick()));
-		addInfo("", () -> "Remaining: %s"
-				.formatted(gc.state().timer().ticksToString(gc.game().level().huntingTimer().remaining())));
+		addInfo("Hunting Phase", levelPlayingInfo(this::fmtHuntingPhase));
+		addInfo("", levelPlayingInfo(this::fmtHuntingTicksRunning));
+		addInfo("", levelPlayingInfo(this::fmtHuntingTicksRemaining));
 
-		addInfo("Pellets",
-				() -> String.format("%d of %d (%d energizers)", game().level().world().foodRemaining(),
-						game().level().world().tiles().filter(game().level().world()::isFoodTile).count(),
-						game().level().world().energizerTiles().count()));
-		addInfo("Ghost speed", () -> fmtSpeed(game().level().params().ghostSpeed()));
-		addInfo("- frightened", () -> fmtSpeed(game().level().params().ghostSpeedFrightened()));
-		addInfo("- in tunnel", () -> fmtSpeed(game().level().params().ghostSpeedTunnel()));
-		addInfo("Pac-Man speed", () -> fmtSpeed(game().level().params().playerSpeed()));
-		addInfo("- empowered", () -> fmtSpeed(game().level().params().playerSpeedPowered()));
-		addInfo("Frightened time", () -> String.format("%d sec", game().level().params().pacPowerSeconds()));
-		addInfo("Maze flashings", () -> game().level().params().numFlashes());
+		addInfo("Pellets", levelPlayingInfo(this::fmtPelletCount));
+		addInfo("Ghost speed", levelPlayingInfo(this::fmtGhostSpeed));
+		addInfo("- frightened", levelPlayingInfo(this::fmtGhostSpeedFrightened));
+		addInfo("- in tunnel", levelPlayingInfo(this::fmtGhostSpeedTunnel));
+		addInfo("Pac-Man speed", levelPlayingInfo(this::fmtPlayerSpeed));
+		addInfo("- empowered", levelPlayingInfo(this::fmtPlayerSpeedPowered));
+		addInfo("Frightened time", levelPlayingInfo(this::fmtPacPowerSeconds));
+		addInfo("Maze flashings", levelPlayingInfo(this::fmtNumFlashes));
+	}
+
+	private Supplier<String> levelPlayingInfo(Function<GameLevel, String> infoSupplier) {
+		return () -> gc.game().level() == null || !gc.game().isPlaying() ? "n/a" : infoSupplier.apply(gc.game().level());
+	}
+
+	private String fmtHuntingPhase(GameLevel level) {
+		var huntingTimer = level.huntingTimer();
+		return "%s #%d%s".formatted(huntingTimer.phaseName(),
+				huntingTimer.inScatterPhase() ? huntingTimer.scatterPhase() : huntingTimer.chasingPhase(),
+				huntingTimer.isStopped() ? " STOPPED" : "");
+	}
+
+	private String fmtHuntingTicksRunning(GameLevel level) {
+		return "Running:   %d".formatted(level.huntingTimer().tick());
+	}
+
+	private String fmtHuntingTicksRemaining(GameLevel level) {
+		return "Remaining: %s".formatted(ticksToString(level.huntingTimer().remaining()));
+	}
+
+	private String fmtPelletCount(GameLevel level) {
+		var world = level.world();
+		return String.format("%d of %d (%d energizers)", world.foodRemaining(),
+				world.tiles().filter(world::isFoodTile).count(), world.energizerTiles().count());
+	}
+
+	private String fmtGhostSpeed(GameLevel level) {
+		return fmtSpeed(level.params().ghostSpeed());
+	}
+
+	private String fmtGhostSpeedFrightened(GameLevel level) {
+		return fmtSpeed(level.params().ghostSpeedFrightened());
+	}
+
+	private String fmtGhostSpeedTunnel(GameLevel level) {
+		return fmtSpeed(level.params().ghostSpeedTunnel());
+	}
+
+	private String fmtPlayerSpeed(GameLevel level) {
+		return fmtSpeed(level.params().playerSpeed());
+	}
+
+	private String fmtPlayerSpeedPowered(GameLevel level) {
+		return fmtSpeed(level.params().playerSpeedPowered());
+	}
+
+	private String fmtPacPowerSeconds(GameLevel level) {
+		return "%d sec".formatted(level.params().pacPowerSeconds());
+	}
+
+	private String fmtNumFlashes(GameLevel level) {
+		return "%d".formatted(level.params().numFlashes());
 	}
 }

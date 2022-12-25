@@ -75,11 +75,13 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
-			arcadeWorld.setLevelCompleteAnimation(ctx.r2D().createMazeFlashingAnimation());
-		}
 		ctx.game().pac().setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac()));
 		ctx.game().ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
+		ctx.world().ifPresent(world -> {
+			if (world instanceof ArcadeWorld arcadeWorld) {
+				arcadeWorld.setLevelCompleteAnimation(ctx.r2D().createMazeFlashingAnimation());
+			}
+		});
 	}
 
 	@Override
@@ -109,20 +111,24 @@ public class PlayScene2D extends GameScene2D {
 	public void draw() {
 		int mazeX = 0;
 		int mazeY = 3 * TS;
-		boolean energizersHidden = !ctx.game().level().energizerPulse().frame();
-		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
-			var flashingAnimation = arcadeWorld.levelCompleteAnimation();
-			if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-				boolean flash = (boolean) flashingAnimation.get().frame();
-				ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
-			} else {
-				ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), ctx.world(), energizersHidden);
-			}
-		} else {
-			ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), ctx.world(), false);
-		}
+		ctx.level().ifPresent(level -> {
+			boolean energizersHidden = !ctx.game().level().energizerPulse().frame();
+			ctx.world().ifPresent(world -> {
+				if (world instanceof ArcadeWorld arcadeWorld) {
+					var flashingAnimation = arcadeWorld.levelCompleteAnimation();
+					if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
+						boolean flash = (boolean) flashingAnimation.get().frame();
+						ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
+					} else {
+						ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), world, energizersHidden);
+					}
+				} else {
+					ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), world, false);
+				}
+			});
+			ctx.r2D().drawBonus(g, level.bonus());
+		});
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
-		ctx.r2D().drawBonus(g, ctx.game().level().bonus());
 		ctx.r2D().drawPac(g, ctx.game().pac());
 		ctx.game().ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
 		if (!isCreditVisible()) {
