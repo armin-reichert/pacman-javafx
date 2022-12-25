@@ -361,7 +361,8 @@ public class PlayScene3D implements GameScene {
 					TextManager.message("level_complete", ctx.game().level().number()));
 			var animation = new SequentialTransition( //
 					pause(1.0), //
-					ctx.game().level().numFlashes() > 0 ? new SwingingWallsAnimation(ctx.game().level().numFlashes())
+					ctx.game().level().params().numFlashes() > 0
+							? new SwingingWallsAnimation(ctx.game().level().params().numFlashes())
 							: pause(1.0), //
 					pause(1.0, ctx.game().pac()::hide), //
 					pause(0.5, () -> Actions.showFlashMessage(2, message)), //

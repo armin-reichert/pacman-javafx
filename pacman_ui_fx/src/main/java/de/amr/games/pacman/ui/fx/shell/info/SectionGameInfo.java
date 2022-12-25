@@ -62,12 +62,12 @@ public class SectionGameInfo extends Section {
 				() -> String.format("%d of %d (%d energizers)", game().level().world().foodRemaining(),
 						game().level().world().tiles().filter(game().level().world()::isFoodTile).count(),
 						game().level().world().energizerTiles().count()));
-		addInfo("Ghost speed", () -> fmtSpeed(game().level().ghostSpeed()));
-		addInfo("- frightened", () -> fmtSpeed(game().level().ghostSpeedFrightened()));
-		addInfo("- in tunnel", () -> fmtSpeed(game().level().ghostSpeedTunnel()));
-		addInfo("Pac-Man speed", () -> fmtSpeed(game().level().playerSpeed()));
-		addInfo("- empowered", () -> fmtSpeed(game().level().playerSpeedPowered()));
-		addInfo("Frightened time", () -> String.format("%d sec", game().level().pacPowerSeconds()));
-		addInfo("Maze flashings", () -> game().level().numFlashes());
+		addInfo("Ghost speed", () -> fmtSpeed(game().level().params().ghostSpeed()));
+		addInfo("- frightened", () -> fmtSpeed(game().level().params().ghostSpeedFrightened()));
+		addInfo("- in tunnel", () -> fmtSpeed(game().level().params().ghostSpeedTunnel()));
+		addInfo("Pac-Man speed", () -> fmtSpeed(game().level().params().playerSpeed()));
+		addInfo("- empowered", () -> fmtSpeed(game().level().params().playerSpeedPowered()));
+		addInfo("Frightened time", () -> String.format("%d sec", game().level().params().pacPowerSeconds()));
+		addInfo("Maze flashings", () -> game().level().params().numFlashes());
 	}
 }
