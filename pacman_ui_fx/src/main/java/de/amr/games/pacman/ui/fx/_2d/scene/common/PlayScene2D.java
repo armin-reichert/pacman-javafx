@@ -228,7 +228,7 @@ public class PlayScene2D extends GameScene2D {
 					: ghost.name();
 			var stateText = ghost.state().name();
 			if (ghost.is(GhostState.HUNTING_PAC)) {
-				stateText += game.huntingTimer().inChasingPhase() ? " (Chasing)" : " (Scattering)";
+				stateText += game.level().huntingTimer().inChasingPhase() ? " (Chasing)" : " (Scattering)";
 			}
 			if (ghost.killedIndex() != -1) {
 				stateText += " killed: #%d".formatted(ghost.killedIndex());
