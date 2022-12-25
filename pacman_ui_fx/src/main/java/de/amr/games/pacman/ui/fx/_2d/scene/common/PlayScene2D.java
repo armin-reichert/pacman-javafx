@@ -109,7 +109,7 @@ public class PlayScene2D extends GameScene2D {
 	public void draw() {
 		int mazeX = 0;
 		int mazeY = 3 * TS;
-		boolean energizersHidden = !ctx.game().energizerPulse().frame();
+		boolean energizersHidden = !ctx.game().level().energizerPulse().frame();
 		if (ctx.world() instanceof ArcadeWorld arcadeWorld) {
 			var flashingAnimation = arcadeWorld.levelCompleteAnimation();
 			if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
