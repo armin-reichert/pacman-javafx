@@ -75,8 +75,7 @@ public class SectionGameInfo extends Section {
 
 	private String fmtHuntingPhase(GameLevel level) {
 		var huntingTimer = level.huntingTimer();
-		return "%s #%d%s".formatted(huntingTimer.phaseName(),
-				huntingTimer.inScatterPhase() ? huntingTimer.scatterPhase() : huntingTimer.chasingPhase(),
+		return "%s #%d%s".formatted(level.currentHuntingPhaseName(), level.inScatterPhase() ? level.scatterPhaseIndex() : level.chasingPhaseIndex(),
 				huntingTimer.isStopped() ? " STOPPED" : "");
 	}
 
