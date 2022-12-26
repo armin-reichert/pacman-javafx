@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.mspacman.MsPacManIntro;
-import de.amr.games.pacman.controller.mspacman.MsPacManIntro.IntroState;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -45,12 +45,12 @@ import javafx.scene.paint.Color;
  */
 public class MsPacManIntroScene extends GameScene2D {
 
-	private MsPacManIntro intro;
+	private MsPacManIntroController intro;
 
 	@Override
 	public void init() {
-		intro = new MsPacManIntro(ctx.gameController());
-		intro.restart(MsPacManIntro.IntroState.START);
+		intro = new MsPacManIntroController(ctx.gameController());
+		intro.restart(MsPacManIntroState.START);
 		var pacAnimations = ctx.r2D().createPacAnimationSet(intro.context().pac);
 		pacAnimations.ensureRunning();
 		intro.context().pac.setAnimationSet(pacAnimations);
@@ -89,9 +89,9 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void draw() {
 		drawTitle();
 		drawLights(32, 16);
-		if (intro.state() == IntroState.GHOSTS) {
+		if (intro.state() == MsPacManIntroState.GHOSTS) {
 			drawGhostText(intro.context().ghosts.get(intro.context().ghostIndex));
-		} else if (intro.state() == IntroState.MSPACMAN || intro.state() == IntroState.READY_TO_PLAY) {
+		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
 			drawMsPacManText();
 		}
 		intro.context().ghosts.forEach(ghost -> ctx.r2D().drawGhost(g, ghost));

@@ -230,7 +230,7 @@ public class GameUI implements GameEventListener {
 	private void onKeyPressed() {
 		if (Keyboard.pressed(Modifier.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.B)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.B) || Keyboard.pressed(KeyCode.F3)) {
 			Actions.reboot();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.D)) {
 			Env.toggle(Env.showDebugInfoPy);
