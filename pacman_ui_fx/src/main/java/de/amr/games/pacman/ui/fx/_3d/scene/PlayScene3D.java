@@ -351,11 +351,13 @@ public class PlayScene3D implements GameScene {
 		});
 
 		case GHOST_DYING -> {
-			ctx.game().memo.killedGhosts.forEach(killedGhost -> {
-				int index = killedGhost.killedIndex();
-				var sprite = ctx.r2D().createGhostValueList().frame(index);
-				var image = ctx.r2D().spritesheet().region(sprite);
-				ghosts3D[killedGhost.id()].setNumberImage(image);
+			ctx.level().ifPresent(level -> {
+				level.memo.killedGhosts.forEach(killedGhost -> {
+					int index = killedGhost.killedIndex();
+					var sprite = ctx.r2D().createGhostValueList().frame(index);
+					var image = ctx.r2D().spritesheet().region(sprite);
+					ghosts3D[killedGhost.id()].setNumberImage(image);
+				});
 			});
 		}
 
