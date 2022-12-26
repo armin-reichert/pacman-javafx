@@ -150,7 +150,8 @@ public class PlayScene3D implements GameScene {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
-			Actions.cheatAddLives(3);
+			// TODO fixme
+//			Actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
@@ -172,15 +173,15 @@ public class PlayScene3D implements GameScene {
 		LOGGER.info("3D world created.");
 	}
 
-	private void createPac3D() {
-		pac3D = new Pac3D(ctx.game().pac());
+	private void createPac3D(GameLevel level) {
+		pac3D = new Pac3D(level.pac());
 		ctx.world().ifPresent(pac3D::init);
 		pac3D.lightOnPy.bind(pac3DLightedPy);
-		LOGGER.info("3D %s created", ctx.game().pac().name());
+		LOGGER.info("3D %s created", level.pac().name());
 	}
 
 	private void createGhosts3D(GameLevel level) {
-		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id())))
+		ghosts3D = level.ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id())))
 				.toArray(Ghost3D[]::new);
 		for (var ghost3D : ghosts3D) {
 			ghost3D.init(level);
@@ -197,7 +198,7 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		ctx.level().ifPresent(level -> {
 			createWorld3D(level);
-			createPac3D();
+			createPac3D(level);
 			createGhosts3D(level);
 			createBonus3D();
 			content.getChildren().clear();
@@ -339,16 +340,20 @@ public class PlayScene3D implements GameScene {
 
 		case HUNTING -> world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 
-		case PACMAN_DYING -> ctx.game().ghosts().filter(ctx.game().pac()::sameTile).findAny().ifPresent(killer -> {
-			lockGameState();
-			var animation = new SequentialTransition( //
-					pause(0.3), //
-					pac3D.createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
-					pause(2.0) //
-			);
-			animation.setOnFinished(evt -> unlockGameState());
-			animation.play();
-		});
+		case PACMAN_DYING -> {
+			ctx.game().level().ifPresent(level -> {
+				level.ghosts().filter(level.pac()::sameTile).findAny().ifPresent(killer -> {
+					lockGameState();
+					var animation = new SequentialTransition( //
+							pause(0.3), //
+							pac3D.createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
+							pause(2.0) //
+					);
+					animation.setOnFinished(evt -> unlockGameState());
+					animation.play();
+				});
+			});
+		}
 
 		case GHOST_DYING -> {
 			ctx.level().ifPresent(level -> {
@@ -381,7 +386,7 @@ public class PlayScene3D implements GameScene {
 				var animation = new SequentialTransition( //
 						pause(1.0), //
 						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : pause(1.0), //
-						pause(1.0, ctx.game().pac()::hide), //
+						pause(1.0, level.pac()::hide), //
 						pause(0.5, () -> Actions.showFlashMessage(2, message)), //
 						pause(2.0) //
 				);

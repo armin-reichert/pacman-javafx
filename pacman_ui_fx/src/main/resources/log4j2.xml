@@ -16,10 +16,13 @@
 		<Logger name="de.amr.games.pacman.model.common.GhostHouseRules" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
+		<Logger name="de.amr.games.pacman.model.common.GameLevel" level="trace" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
 		<Logger name="de.amr.games.pacman.event.GameEvents" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.lib.fsm.Fsm" level="info" additivity="false">
+		<Logger name="de.amr.games.pacman.lib.fsm.Fsm" level="trace" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="info" additivity="false">

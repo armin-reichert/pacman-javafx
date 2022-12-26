@@ -51,10 +51,10 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void init() {
 		intro = new MsPacManIntro(ctx.gameController());
 		intro.restart(MsPacManIntro.IntroState.START);
-		var pacAnimations = ctx.r2D().createPacAnimationSet(ctx.game().pac());
+		var pacAnimations = ctx.r2D().createPacAnimationSet(intro.context().pac);
 		pacAnimations.ensureRunning();
-		ctx.game().pac().setAnimationSet(pacAnimations);
-		ctx.game().ghosts().forEach(ghost -> {
+		intro.context().pac.setAnimationSet(pacAnimations);
+		intro.context().ghosts.forEach(ghost -> {
 			var ghostAnimations = ctx.r2D().createGhostAnimationSet(ghost);
 			ghostAnimations.ensureRunning();
 			ghost.setAnimationSet(ghostAnimations);
@@ -90,12 +90,12 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawTitle();
 		drawLights(32, 16);
 		if (intro.state() == IntroState.GHOSTS) {
-			drawGhostText(ctx.game().ghost(intro.context().ghostIndex));
+			drawGhostText(intro.context().ghosts.get(intro.context().ghostIndex));
 		} else if (intro.state() == IntroState.MSPACMAN || intro.state() == IntroState.READY_TO_PLAY) {
 			drawMsPacManText();
 		}
-		ctx.game().ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
-		ctx.r2D().drawPac(g, ctx.game().pac());
+		intro.context().ghosts.forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
+		ctx.r2D().drawPac(g, intro.context().pac);
 		ctx.r2D().drawCopyright(g, 29);
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
 	}

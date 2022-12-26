@@ -156,13 +156,13 @@ public class Ghost3D extends Group {
 	}
 
 	private Look normalOrFrightenedOrFlashingLook(GameLevel level) {
-		if (level.game().pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
+		if (level.pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
 			return frightenedOrFlashingLook(level);
 		}
 		return Look.NORMAL;
 	}
 
 	private Look frightenedOrFlashingLook(GameLevel level) {
-		return level.game().pac().isPowerFading(level) ? Look.FLASHING : Look.FRIGHTENED;
+		return level.pac().isPowerFading(level) ? Look.FLASHING : Look.FRIGHTENED;
 	}
 }

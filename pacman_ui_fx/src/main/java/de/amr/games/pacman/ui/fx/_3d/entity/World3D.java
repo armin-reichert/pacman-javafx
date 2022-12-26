@@ -101,8 +101,7 @@ public class World3D extends Group {
 		scores3D.update(level);
 		updateHouseLightingState(level);
 		updateDoorState(level);
-		livesCounter3D
-				.update(level.game().isOneLessLifeDisplayed() ? level.game().pac().lives() - 1 : level.game().pac().lives());
+		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
 		if (level.game().hasCredit()) {
 			scores3D.setShowPoints(true);
 		} else {
@@ -131,15 +130,15 @@ public class World3D extends Group {
 	}
 
 	private void updateHouseLightingState(GameLevel level) {
-		boolean anyGhostInHouse = level.game()
-				.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE).count() > 0;
+		boolean anyGhostInHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+				.count() > 0;
 		houseLighting.setLightOn(anyGhostInHouse);
 	}
 
 	// should be generalized to work with any ghost house
 	private void updateDoorState(GameLevel level) {
 		if (level.world().ghostHouse() instanceof ArcadeGhostHouse) {
-			var accessGranted = isAccessGranted(level.game().ghosts(), ArcadeGhostHouse.DOOR_CENTER);
+			var accessGranted = isAccessGranted(level.ghosts(), ArcadeGhostHouse.DOOR_CENTER);
 			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 		}
 	}

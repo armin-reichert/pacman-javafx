@@ -75,10 +75,10 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		ctx.game().pac().setAnimationSet(ctx.r2D().createPacAnimationSet(ctx.game().pac()));
-		ctx.game().ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
-		ctx.world().ifPresent(world -> {
-			if (world instanceof ArcadeWorld arcadeWorld) {
+		ctx.level().ifPresent(level -> {
+			level.pac().setAnimationSet(ctx.r2D().createPacAnimationSet(level.pac()));
+			level.ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
+			if (level.world() instanceof ArcadeWorld arcadeWorld) {
 				arcadeWorld.setLevelCompleteAnimation(ctx.r2D().createMazeFlashingAnimation());
 			}
 		});
@@ -99,7 +99,8 @@ public class PlayScene2D extends GameScene2D {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
-			Actions.cheatAddLives(3);
+			// TODO fixme
+//			Actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
@@ -114,35 +115,36 @@ public class PlayScene2D extends GameScene2D {
 		var game = ctx.game();
 		ctx.level().ifPresent(level -> {
 			boolean energizersHidden = !level.energizerPulse().frame();
-			ctx.world().ifPresent(world -> {
-				if (world instanceof ArcadeWorld arcadeWorld) {
-					var flashingAnimation = arcadeWorld.levelCompleteAnimation();
-					if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-						boolean flash = (boolean) flashingAnimation.get().frame();
-						ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
-					} else {
-						ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, energizersHidden);
-					}
+			var world = level.world();
+			if (world instanceof ArcadeWorld arcadeWorld) {
+				var flashingAnimation = arcadeWorld.levelCompleteAnimation();
+				if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
+					boolean flash = (boolean) flashingAnimation.get().frame();
+					ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
 				} else {
-					ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, false);
+					ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, energizersHidden);
 				}
-			});
+			} else {
+				ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, false);
+			}
 			ctx.r2D().drawBonus(g, level.bonus());
+			ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
+			ctx.r2D().drawPac(g, level.pac());
+			level.ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
+			if (!isCreditVisible()) {
+				int lives = game.isOneLessLifeDisplayed() ? game.lives() - 1 : game.lives();
+				ctx.r2D().drawLivesCounter(g, lives);
+			}
+			ctx.r2D().drawLevelCounter(g, game.levelCounter());
 		});
-		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
-		ctx.r2D().drawPac(g, game.pac());
-		game.ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
-		if (!isCreditVisible()) {
-			int lives = game.isOneLessLifeDisplayed() ? game.pac().lives() - 1 : game.pac().lives();
-			ctx.r2D().drawLivesCounter(g, lives);
-		}
-		ctx.r2D().drawLevelCounter(g, game.levelCounter());
 	}
 
 	@Override
 	public void onSwitchFrom3D() {
-		ctx.game().pac().animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		ctx.game().ghosts().map(Ghost::animationSet).forEach(anim -> anim.ifPresent(EntityAnimationSet::ensureRunning));
+		ctx.level().ifPresent(level -> {
+			level.pac().animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+			level.ghosts().map(Ghost::animationSet).forEach(anim -> anim.ifPresent(EntityAnimationSet::ensureRunning));
+		});
 	}
 
 	@Override
@@ -191,13 +193,12 @@ public class PlayScene2D extends GameScene2D {
 			if (!enabledPy.get()) {
 				return;
 			}
-			var game = ctx.game();
-			for (int i = 0; i < 4; ++i) {
-				var ghost = game.ghost(i);
-				updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
-			}
-			updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac()), game.pac());
-			game.level().ifPresent(level -> {
+			ctx.level().ifPresent(level -> {
+				for (int i = 0; i < 4; ++i) {
+					var ghost = level.ghost(i);
+					updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
+				}
+				updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(level.pac()), level.pac());
 				var bonus = level.bonus();
 				updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
 				panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);

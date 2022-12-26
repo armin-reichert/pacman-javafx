@@ -137,13 +137,6 @@ public class Actions {
 		currentGameState().addCredit(game());
 	}
 
-	public static void cheatAddLives(int lives) {
-		if (game().isPlaying()) {
-			game().pac().setLives(game().pac().lives() + lives);
-			showFlashMessage("You have %d lives", game().pac().lives());
-		}
-	}
-
 	public static void enterLevel(int levelNumber) {
 		if (currentGameState() == GameState.LEVEL_STARTING) {
 			return;
@@ -151,24 +144,26 @@ public class Actions {
 		gameController().sounds().stopAll();
 		if (game().level().isEmpty()) {
 			game().reset();
-			game().enterLevel(1);
+			game().buildAndEnterLevel(1);
 			gameController().changeState(GameState.READY);
 			return;
 		}
 		game().level().ifPresent(level -> {
-			if (levelNumber == 1) {
+			if (levelNumber == level.number()) {
+				// SKIP
+			} else if (levelNumber == 1) {
 				game().reset();
-				game().enterLevel(1);
+				game().buildAndEnterLevel(1);
 				gameController().changeState(GameState.READY);
 			} else if (levelNumber > level.number()) {
 				for (int i = level.number() + 1; i < levelNumber; ++i) {
-					game().enterLevel(i);
+					game().buildAndEnterLevel(i);
 				}
 				gameController().changeState(GameState.LEVEL_STARTING);
 			} else {
 				game().levelCounter().clear();
 				for (int i = 1; i < levelNumber; ++i) {
-					game().enterLevel(i);
+					game().buildAndEnterLevel(i);
 				}
 				gameController().changeState(GameState.LEVEL_STARTING);
 			}
@@ -228,21 +223,23 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		var pac = game().pac();
-		pac.setAutoControlled(!pac.isAutoControlled());
-		var autoOn = pac.isAutoControlled();
-		String message = TextManager.message(autoOn ? "autopilot_on" : "autopilot_off");
-		showFlashMessage(message);
-		playVoiceMessage(autoOn ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
+		// TODO fixme
+//		var pac = game().pac();
+//		pac.setAutoControlled(!pac.isAutoControlled());
+//		var autoOn = pac.isAutoControlled();
+//		String message = TextManager.message(autoOn ? "autopilot_on" : "autopilot_off");
+//		showFlashMessage(message);
+//		playVoiceMessage(autoOn ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
-		var pac = gameController().game().pac();
-		pac.setImmune(!pac.isImmune());
-		var immune = pac.isImmune();
-		String message = TextManager.message(immune ? "player_immunity_on" : "player_immunity_off");
-		showFlashMessage(message);
-		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
+		// TODO fixme
+//		var pac = gameController().game().pac();
+//		pac.setImmune(!pac.isImmune());
+//		var immune = pac.isImmune();
+//		String message = TextManager.message(immune ? "player_immunity_on" : "player_immunity_off");
+//		showFlashMessage(message);
+//		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
 	}
 
 	public static void toggleLevelTestModel() {
