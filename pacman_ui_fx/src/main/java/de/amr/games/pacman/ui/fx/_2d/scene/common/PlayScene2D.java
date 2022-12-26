@@ -99,8 +99,7 @@ public class PlayScene2D extends GameScene2D {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
-			// TODO fixme
-//			Actions.cheatAddLives(3);
+			Actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {

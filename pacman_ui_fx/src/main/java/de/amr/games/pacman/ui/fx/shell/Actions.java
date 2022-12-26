@@ -223,23 +223,19 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		// TODO fixme
-//		var pac = game().pac();
-//		pac.setAutoControlled(!pac.isAutoControlled());
-//		var autoOn = pac.isAutoControlled();
-//		String message = TextManager.message(autoOn ? "autopilot_on" : "autopilot_off");
-//		showFlashMessage(message);
-//		playVoiceMessage(autoOn ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
+		game().setAutoControlled(!game().isAutoControlled());
+		var autoOn = game().isAutoControlled();
+		String message = TextManager.message(autoOn ? "autopilot_on" : "autopilot_off");
+		showFlashMessage(message);
+		playVoiceMessage(autoOn ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
-		// TODO fixme
-//		var pac = gameController().game().pac();
-//		pac.setImmune(!pac.isImmune());
-//		var immune = pac.isImmune();
-//		String message = TextManager.message(immune ? "player_immunity_on" : "player_immunity_off");
-//		showFlashMessage(message);
-//		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
+		game().setImmune(!game().isImmune());
+		var immune = game().isImmune();
+		String message = TextManager.message(immune ? "player_immunity_on" : "player_immunity_off");
+		showFlashMessage(message);
+		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
 	}
 
 	public static void toggleLevelTestModel() {
@@ -274,6 +270,10 @@ public class Actions {
 		gameController().sounds().setMuted(!muted);
 		var msg = TextManager.message(gameController().sounds().isMuted() ? "sound_off" : "sound_on");
 		showFlashMessage(msg);
+	}
+
+	public static void cheatAddLives(int numLives) {
+		game().setLives(numLives + game().lives());
 	}
 
 	public static void cheatEatAllPellets() {
