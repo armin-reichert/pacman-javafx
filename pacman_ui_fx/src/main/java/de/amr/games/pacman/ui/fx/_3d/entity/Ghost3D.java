@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Objects;
 
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColorScheme;
@@ -80,27 +80,27 @@ public class Ghost3D extends Group {
 		movement = new Creature3DMovement(this, ghost);
 	}
 
-	public void init(GameModel game) {
+	public void init(GameLevel level) {
 		movement.init();
-		update(game);
+		update(level);
 	}
 
-	public void update(GameModel game) {
-		var newLook = computeLookForCurrentState(game);
+	public void update(GameLevel level) {
+		var newLook = computeLookForCurrentState(level);
 		if (look != newLook) {
-			changeLook(game, newLook);
+			changeLook(level, newLook);
 		}
 		if (look != Look.NUMBER) {
 			movement.update();
 		}
-		setVisible(ghost.isVisible() && !outsideWorld(game)); // ???
+		setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
 	}
 
 	public void setNumberImage(Image numberImage) {
 		this.numberImage = numberImage;
 	}
 
-	private void changeLook(GameModel game, Look newLook) {
+	private void changeLook(GameLevel level, Look newLook) {
 		look = newLook;
 		switch (newLook) {
 		case NORMAL -> {
@@ -113,7 +113,7 @@ public class Ghost3D extends Group {
 			getChildren().setAll(coloredGhost3D.root());
 		}
 		case FLASHING -> {
-			int numFlashes = game.level().params().numFlashes();
+			int numFlashes = level.params().numFlashes();
 			if (numFlashes > 0) {
 				coloredGhost3D.appearFlashing(numFlashes);
 			} else {
@@ -140,29 +140,29 @@ public class Ghost3D extends Group {
 		}
 	}
 
-	private boolean outsideWorld(GameModel game) {
+	private boolean outsideWorld(GameLevel level) {
 		double centerX = ghost.position().x() + World.HTS;
-		return centerX < 0 || centerX > game.level().world().numCols() * World.TS;
+		return centerX < 0 || centerX > level.world().numCols() * World.TS;
 	}
 
-	private Look computeLookForCurrentState(GameModel game) {
+	private Look computeLookForCurrentState(GameLevel level) {
 		return switch (ghost.state()) {
-		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(game);
-		case FRIGHTENED -> frightenedOrFlashingLook(game);
+		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(level);
+		case FRIGHTENED -> frightenedOrFlashingLook(level);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
 		case EATEN -> Look.NUMBER;
 		default -> Look.NORMAL;
 		};
 	}
 
-	private Look normalOrFrightenedOrFlashingLook(GameModel game) {
-		if (game.pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
-			return frightenedOrFlashingLook(game);
+	private Look normalOrFrightenedOrFlashingLook(GameLevel level) {
+		if (level.game().pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
+			return frightenedOrFlashingLook(level);
 		}
 		return Look.NORMAL;
 	}
 
-	private Look frightenedOrFlashingLook(GameModel game) {
-		return game.pac().isPowerFading(game) ? Look.FLASHING : Look.FRIGHTENED;
+	private Look frightenedOrFlashingLook(GameLevel level) {
+		return level.game().pac().isPowerFading(level) ? Look.FLASHING : Look.FRIGHTENED;
 	}
 }

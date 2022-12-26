@@ -111,8 +111,9 @@ public class PlayScene2D extends GameScene2D {
 	public void draw() {
 		int mazeX = 0;
 		int mazeY = 3 * TS;
+		var game = ctx.game();
 		ctx.level().ifPresent(level -> {
-			boolean energizersHidden = !ctx.game().level().energizerPulse().frame();
+			boolean energizersHidden = !level.energizerPulse().frame();
 			ctx.world().ifPresent(world -> {
 				if (world instanceof ArcadeWorld arcadeWorld) {
 					var flashingAnimation = arcadeWorld.levelCompleteAnimation();
@@ -120,22 +121,22 @@ public class PlayScene2D extends GameScene2D {
 						boolean flash = (boolean) flashingAnimation.get().frame();
 						ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
 					} else {
-						ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), world, energizersHidden);
+						ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, energizersHidden);
 					}
 				} else {
-					ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), world, false);
+					ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, false);
 				}
 			});
 			ctx.r2D().drawBonus(g, level.bonus());
 		});
 		ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
-		ctx.r2D().drawPac(g, ctx.game().pac());
-		ctx.game().ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
+		ctx.r2D().drawPac(g, game.pac());
+		game.ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
 		if (!isCreditVisible()) {
-			int lives = ctx.game().isOneLessLifeDisplayed() ? ctx.game().pac().lives() - 1 : ctx.game().pac().lives();
+			int lives = game.isOneLessLifeDisplayed() ? game.pac().lives() - 1 : game.pac().lives();
 			ctx.r2D().drawLivesCounter(g, lives);
 		}
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
+		ctx.r2D().drawLevelCounter(g, game.levelCounter());
 	}
 
 	@Override
@@ -196,9 +197,11 @@ public class PlayScene2D extends GameScene2D {
 				updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
 			}
 			updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(game.pac()), game.pac());
-			var bonus = game.level().bonus();
-			updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
-			panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);
+			game.level().ifPresent(level -> {
+				var bonus = level.bonus();
+				updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
+				panes.get(BONUS_INDEX).setVisible(bonus.state() != BonusState.INACTIVE);
+			});
 		}
 
 		private void updateInfo(Pane pane, Text text, String info, Entity entity) {
@@ -233,8 +236,10 @@ public class PlayScene2D extends GameScene2D {
 					? "Elroy " + ghost.cruiseElroyState()
 					: ghost.name();
 			var stateText = ghost.state().name();
-			if (ghost.is(GhostState.HUNTING_PAC)) {
-				stateText += game.level().inChasingPhase() ? " (Chasing)" : " (Scattering)";
+			if (game.level().isPresent()) {
+				if (ghost.is(GhostState.HUNTING_PAC)) {
+					stateText += game.level().get().inChasingPhase() ? " (Chasing)" : " (Scattering)";
+				}
 			}
 			if (ghost.killedIndex() != -1) {
 				stateText += " killed: #%d".formatted(ghost.killedIndex());
@@ -271,7 +276,7 @@ public class PlayScene2D extends GameScene2D {
 			case PACMAN -> PACMAN_BONUS_NAMES[bonus.symbol()];
 			};
 			var text = bonus.state() == BonusState.INACTIVE ? "INACTIVE" : bonusName;
-			return "%s%n%s".formatted(text, ctx.game().level().bonus().state());
+			return "%s%n%s".formatted(text, bonus.state());
 		}
 	}
 }

@@ -148,25 +148,31 @@ public class Actions {
 		if (currentGameState() == GameState.LEVEL_STARTING) {
 			return;
 		}
-		if (game().level().number() == levelNumber) {
+		gameController().sounds().stopAll();
+		if (game().level().isEmpty()) {
+			game().reset();
+			game().enterLevel(1);
+			gameController().changeState(GameState.READY);
 			return;
 		}
-		gameController().sounds().stopAll();
-		if (levelNumber == 1) {
-			game().reset();
-			gameController().changeState(GameState.READY);
-		} else if (levelNumber > game().level().number()) {
-			for (int i = game().level().number() + 1; i < levelNumber; ++i) {
-				game().enterLevel(i);
+		game().level().ifPresent(level -> {
+			if (levelNumber == 1) {
+				game().reset();
+				game().enterLevel(1);
+				gameController().changeState(GameState.READY);
+			} else if (levelNumber > level.number()) {
+				for (int i = level.number() + 1; i < levelNumber; ++i) {
+					game().enterLevel(i);
+				}
+				gameController().changeState(GameState.LEVEL_STARTING);
+			} else {
+				game().levelCounter().clear();
+				for (int i = 1; i < levelNumber; ++i) {
+					game().enterLevel(i);
+				}
+				gameController().changeState(GameState.LEVEL_STARTING);
 			}
-			gameController().changeState(GameState.LEVEL_STARTING);
-		} else {
-			game().levelCounter().clear();
-			for (int i = 1; i < levelNumber; ++i) {
-				game().enterLevel(i);
-			}
-			gameController().changeState(GameState.LEVEL_STARTING);
-		}
+		});
 	}
 
 	public static void togglePipViewVisible() {

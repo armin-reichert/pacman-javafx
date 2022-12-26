@@ -37,6 +37,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
@@ -157,8 +158,8 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private void createWorld3D() {
-		world3D = new World3D(ctx.game(), ctx.r2D());
+	private void createWorld3D(GameLevel level) {
+		world3D = new World3D(level, ctx.r2D());
 		world3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
 		world3D.maze3D().drawModePy.bind(drawModePy);
 		world3D.maze3D().floorTexturePy.bind(Bindings.createObjectBinding(
@@ -168,7 +169,7 @@ public class PlayScene3D implements GameScene {
 		world3D.maze3D().resolutionPy.bind(mazeResolutionPy);
 		world3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
 		world3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
-		LOGGER.info("3D world created for game level %d", ctx.game().level().number());
+		LOGGER.info("3D world created.");
 	}
 
 	private void createPac3D() {
@@ -178,11 +179,11 @@ public class PlayScene3D implements GameScene {
 		LOGGER.info("3D %s created", ctx.game().pac().name());
 	}
 
-	private void createGhosts3D() {
+	private void createGhosts3D(GameLevel level) {
 		ghosts3D = ctx.game().ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id())))
 				.toArray(Ghost3D[]::new);
 		for (var ghost3D : ghosts3D) {
-			ghost3D.init(ctx.game());
+			ghost3D.init(level);
 			ghost3D.drawModePy.bind(drawModePy);
 		}
 		LOGGER.info("3D ghosts created");
@@ -194,28 +195,32 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		createWorld3D();
-		createPac3D();
-		createGhosts3D();
-		createBonus3D();
-		content.getChildren().clear();
-		content.getChildren().add(world3D); // always child #0, gets exchanged on level change
-		content.getChildren().add(pac3D);
-		content.getChildren().addAll(ghosts3D);
-		content.getChildren().add(bonus3D);
-		var width = ArcadeWorld.SIZE_PX.x();
-		var height = ArcadeWorld.SIZE_PX.y();
-		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
-		changeCamera(perspectivePy.get());
+		ctx.level().ifPresent(level -> {
+			createWorld3D(level);
+			createPac3D();
+			createGhosts3D(level);
+			createBonus3D();
+			content.getChildren().clear();
+			content.getChildren().add(world3D); // always child #0, gets exchanged on level change
+			content.getChildren().add(pac3D);
+			content.getChildren().addAll(ghosts3D);
+			content.getChildren().add(bonus3D);
+			var width = ArcadeWorld.SIZE_PX.x();
+			var height = ArcadeWorld.SIZE_PX.y();
+			content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
+			changeCamera(perspectivePy.get());
+		});
 	}
 
 	@Override
 	public void onTick() {
-		world3D.update(ctx.game());
-		ctx.world().ifPresent(pac3D::update);
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(ctx.game()));
-		bonus3D.update(ctx.game().level().bonus());
-		currentCamera().update(pac3D);
+		ctx.level().ifPresent(level -> {
+			world3D.update(level);
+			pac3D.update(level.world());
+			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
+			bonus3D.update(level.bonus());
+			currentCamera().update(pac3D);
+		});
 	}
 
 	@Override
@@ -300,15 +305,19 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		var sprite = ctx.r2D().bonusSymbolSprite(ctx.game().level().bonus().symbol());
-		bonus3D.showSymbol(ctx.r2D().spritesheet().region(sprite));
+		ctx.level().ifPresent(level -> {
+			var sprite = ctx.r2D().bonusSymbolSprite(level.bonus().symbol());
+			bonus3D.showSymbol(ctx.r2D().spritesheet().region(sprite));
+		});
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		var sprite = ctx.r2D().bonusValueSprite(ctx.game().level().bonus().symbol());
-		bonus3D.showPoints(ctx.r2D().spritesheet().region(sprite));
-		ctx.sounds().play(GameSound.BONUS_EATEN);
+		ctx.level().ifPresent(level -> {
+			var sprite = ctx.r2D().bonusValueSprite(level.bonus().symbol());
+			bonus3D.showPoints(ctx.r2D().spritesheet().region(sprite));
+			ctx.sounds().play(GameSound.BONUS_EATEN);
+		});
 	}
 
 	@Override
@@ -321,9 +330,11 @@ public class PlayScene3D implements GameScene {
 		switch (e.newGameState) {
 
 		case READY -> {
-			world3D.food3D().energizers3D().forEach(Energizer3D::init);
-			ctx.world().ifPresent(pac3D::init);
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.init(ctx.game()));
+			ctx.level().ifPresent(level -> {
+				world3D.food3D().energizers3D().forEach(Energizer3D::init);
+				pac3D.init(level.world());
+				Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.init(level));
+			});
 		}
 
 		case HUNTING -> world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
@@ -349,30 +360,32 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case LEVEL_STARTING -> {
-			LOGGER.info("Starting level %d", ctx.game().level().number());
-			lockGameState();
-			createWorld3D();
-			content.getChildren().set(0, world3D);
-			changeCamera(perspectivePy.get());
-			Actions.showFlashMessage(TextManager.message("level_starting", ctx.game().level().number()));
-			pause(3, this::unlockGameState).play();
+			ctx.level().ifPresent(level -> {
+				LOGGER.info("Starting level %d", level.number());
+				lockGameState();
+				createWorld3D(level);
+				content.getChildren().set(0, world3D);
+				changeCamera(perspectivePy.get());
+				Actions.showFlashMessage(TextManager.message("level_starting", level.number()));
+				pause(3, this::unlockGameState).play();
+			});
 		}
 
 		case LEVEL_COMPLETE -> {
-			lockGameState();
-			var message = "%s%n%n%s".formatted(TextManager.TALK_LEVEL_COMPLETE.next(),
-					TextManager.message("level_complete", ctx.game().level().number()));
-			var animation = new SequentialTransition( //
-					pause(1.0), //
-					ctx.game().level().params().numFlashes() > 0
-							? new SwingingWallsAnimation(ctx.game().level().params().numFlashes())
-							: pause(1.0), //
-					pause(1.0, ctx.game().pac()::hide), //
-					pause(0.5, () -> Actions.showFlashMessage(2, message)), //
-					pause(2.0) //
-			);
-			animation.setOnFinished(evt -> unlockGameState());
-			animation.play();
+			ctx.level().ifPresent(level -> {
+				lockGameState();
+				var message = "%s%n%n%s".formatted(TextManager.TALK_LEVEL_COMPLETE.next(),
+						TextManager.message("level_complete", level.number()));
+				var animation = new SequentialTransition( //
+						pause(1.0), //
+						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : pause(1.0), //
+						pause(1.0, ctx.game().pac()::hide), //
+						pause(0.5, () -> Actions.showFlashMessage(2, message)), //
+						pause(2.0) //
+				);
+				animation.setOnFinished(evt -> unlockGameState());
+				animation.play();
+			});
 		}
 
 		case GAME_OVER -> Actions.showFlashMessage(3, TextManager.TALK_GAME_OVER.next());

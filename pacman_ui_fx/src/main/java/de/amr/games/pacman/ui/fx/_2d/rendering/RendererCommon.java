@@ -97,7 +97,7 @@ public abstract class RendererCommon implements Rendering2D {
 	// not sure where this belongs
 	public static int mazeNumber(GameModel game) {
 		return switch (game.variant()) {
-		case MS_PACMAN -> ((MsPacManGame) game).mazeNumber(game.level().number());
+		case MS_PACMAN -> ((MsPacManGame) game).mazeNumber(game.level().get().number());
 		case PACMAN -> 1;
 		};
 	}

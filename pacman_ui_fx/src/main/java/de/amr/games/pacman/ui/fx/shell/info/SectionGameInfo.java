@@ -55,27 +55,33 @@ public class SectionGameInfo extends Section {
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
 
-		addInfo("Hunting Phase", levelPlayingInfo(this::fmtHuntingPhase));
-		addInfo("", levelPlayingInfo(this::fmtHuntingTicksRunning));
-		addInfo("", levelPlayingInfo(this::fmtHuntingTicksRemaining));
+		addInfo("Hunting Phase", levelInfo(this::fmtHuntingPhase));
+		addInfo("", levelInfo(this::fmtHuntingTicksRunning));
+		addInfo("", levelInfo(this::fmtHuntingTicksRemaining));
 
-		addInfo("Pellets", levelPlayingInfo(this::fmtPelletCount));
-		addInfo("Ghost speed", levelPlayingInfo(this::fmtGhostSpeed));
-		addInfo("- frightened", levelPlayingInfo(this::fmtGhostSpeedFrightened));
-		addInfo("- in tunnel", levelPlayingInfo(this::fmtGhostSpeedTunnel));
-		addInfo("Pac-Man speed", levelPlayingInfo(this::fmtPlayerSpeed));
-		addInfo("- empowered", levelPlayingInfo(this::fmtPlayerSpeedPowered));
-		addInfo("Frightened time", levelPlayingInfo(this::fmtPacPowerSeconds));
-		addInfo("Maze flashings", levelPlayingInfo(this::fmtNumFlashes));
+		addInfo("Pellets", levelInfo(this::fmtPelletCount));
+		addInfo("Ghost speed", levelInfo(this::fmtGhostSpeed));
+		addInfo("- frightened", levelInfo(this::fmtGhostSpeedFrightened));
+		addInfo("- in tunnel", levelInfo(this::fmtGhostSpeedTunnel));
+		addInfo("Pac-Man speed", levelInfo(this::fmtPlayerSpeed));
+		addInfo("- empowered", levelInfo(this::fmtPlayerSpeedPowered));
+		addInfo("Frightened time", levelInfo(this::fmtPacPowerSeconds));
+		addInfo("Maze flashings", levelInfo(this::fmtNumFlashes));
 	}
 
-	private Supplier<String> levelPlayingInfo(Function<GameLevel, String> infoSupplier) {
-		return () -> gc.game().level() == null || !gc.game().isPlaying() ? "n/a" : infoSupplier.apply(gc.game().level());
+	private Supplier<String> levelInfo(Function<GameLevel, String> infoSupplier) {
+		return () -> {
+			if (gc.game().level().isEmpty() || !gc.game().isPlaying()) {
+				return "n/a";
+			}
+			return infoSupplier.apply(gc.game().level().get());
+		};
 	}
 
 	private String fmtHuntingPhase(GameLevel level) {
 		var huntingTimer = level.huntingTimer();
-		return "%s #%d%s".formatted(level.currentHuntingPhaseName(), level.inScatterPhase() ? level.scatterPhaseIndex() : level.chasingPhaseIndex(),
+		return "%s #%d%s".formatted(level.currentHuntingPhaseName(),
+				level.inScatterPhase() ? level.scatterPhaseIndex() : level.chasingPhaseIndex(),
 				huntingTimer.isStopped() ? " STOPPED" : "");
 	}
 

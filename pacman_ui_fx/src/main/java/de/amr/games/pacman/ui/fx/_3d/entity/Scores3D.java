@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameLevel;
 import javafx.scene.Group;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -76,11 +76,11 @@ public class Scores3D extends Group {
 		this.pointsDisplayed = show;
 	}
 
-	public void update(GameModel game) {
-		int gamePoints = game.gameScore().points();
-		int gameLevelNumber = game.level().number();
-		int highscorePoints = game.highScore().points();
-		int highscoreLevelNumber = game.highScore().levelNumber();
+	public void update(GameLevel level) {
+		int gamePoints = level.game().gameScore().points();
+		int gameLevelNumber = level.number();
+		int highscorePoints = level.game().highScore().points();
+		int highscoreLevelNumber = level.game().highScore().levelNumber();
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
 		if (pointsDisplayed) {

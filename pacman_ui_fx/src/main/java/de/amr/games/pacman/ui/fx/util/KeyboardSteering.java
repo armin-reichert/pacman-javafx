@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -67,7 +67,7 @@ public class KeyboardSteering implements Steering {
 	}
 
 	@Override
-	public void steer(GameModel game, Creature pac) {
+	public void steer(GameLevel level, Creature pac) {
 		if (dir != null) {
 			pac.setWishDir(dir);
 		}

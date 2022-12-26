@@ -32,7 +32,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
@@ -55,17 +55,17 @@ public class World3D extends Group {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 
-	public World3D(GameModel game, Rendering2D r2D) {
-		var width = game.level().world().numCols() * World.TS;
-		var height = game.level().world().numRows() * World.TS;
-		int mazeNumber = RendererCommon.mazeNumber(game);
+	public World3D(GameLevel level, Rendering2D r2D) {
+		var width = level.world().numCols() * World.TS;
+		var height = level.world().numRows() * World.TS;
+		int mazeNumber = RendererCommon.mazeNumber(level.game());
 
 		var mazeColors = new Maze3DColors(//
 				r2D.getMazeSideColor(mazeNumber), //
 				r2D.getMazeTopColor(mazeNumber), //
 				r2D.getGhostHouseDoorColor());
 
-		maze3D = new Maze3D(game.level().world(), mazeColors);
+		maze3D = new Maze3D(level.world(), mazeColors);
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
@@ -75,16 +75,16 @@ public class World3D extends Group {
 		houseLighting.setTranslateZ(-TS);
 
 		var foodColor = r2D.getMazeFoodColor(mazeNumber);
-		food3D = new Food3D(game.level().world(), foodColor);
+		food3D = new Food3D(level.world(), foodColor);
 
-		levelCounter3D = new LevelCounter3D(game.levelCounter(), (game.level().world().numCols() - 1) * TS, TS,
+		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), (level.world().numCols() - 1) * TS, TS,
 				symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
 
 		livesCounter3D = new LivesCounter3D();
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
-		livesCounter3D().setVisible(game.hasCredit());
+		livesCounter3D().setVisible(level.game().hasCredit());
 
 		var scoreFont = r2D.arcadeFont(TS);
 		scores3D = new Scores3D(scoreFont);
@@ -97,12 +97,13 @@ public class World3D extends Group {
 		getChildren().add(livesCounter3D);
 	}
 
-	public void update(GameModel game) {
-		scores3D.update(game);
-		updateHouseLightingState(game);
-		updateDoorState(game);
-		livesCounter3D.update(game.isOneLessLifeDisplayed() ? game.pac().lives() - 1 : game.pac().lives());
-		if (game.hasCredit()) {
+	public void update(GameLevel level) {
+		scores3D.update(level);
+		updateHouseLightingState(level);
+		updateDoorState(level);
+		livesCounter3D
+				.update(level.game().isOneLessLifeDisplayed() ? level.game().pac().lives() - 1 : level.game().pac().lives());
+		if (level.game().hasCredit()) {
 			scores3D.setShowPoints(true);
 		} else {
 			scores3D.setShowText(Color.RED, "GAME OVER!");
@@ -129,16 +130,16 @@ public class World3D extends Group {
 		return food3D;
 	}
 
-	private void updateHouseLightingState(GameModel game) {
-		boolean anyGhostInHouse = game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-				.count() > 0;
+	private void updateHouseLightingState(GameLevel level) {
+		boolean anyGhostInHouse = level.game()
+				.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE).count() > 0;
 		houseLighting.setLightOn(anyGhostInHouse);
 	}
 
 	// should be generalized to work with any ghost house
-	private void updateDoorState(GameModel game) {
-		if (game.level().world().ghostHouse() instanceof ArcadeGhostHouse) {
-			var accessGranted = isAccessGranted(game.ghosts(), ArcadeGhostHouse.DOOR_CENTER);
+	private void updateDoorState(GameLevel level) {
+		if (level.world().ghostHouse() instanceof ArcadeGhostHouse) {
+			var accessGranted = isAccessGranted(level.game().ghosts(), ArcadeGhostHouse.DOOR_CENTER);
 			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 		}
 	}
