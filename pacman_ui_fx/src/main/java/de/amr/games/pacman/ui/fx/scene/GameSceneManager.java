@@ -170,12 +170,13 @@ public class GameSceneManager {
 	private SceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
 		var game = gameController.game();
 		var state = gameController.state();
+		var level = game.level().orElse(null);
 		int index = switch (state) {
 		case BOOT -> BOOT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_STARTING, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
 		case CREDIT -> CREDIT_SCENE_INDEX;
-		case INTERMISSION -> PLAY_SCENE_INDEX + game.intermissionNumber(game.level().get().number());
+		case INTERMISSION -> PLAY_SCENE_INDEX + level.params().intermissionNumber();
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.intermissionTestNumber;
 		};
 		return switch (game.variant()) {
