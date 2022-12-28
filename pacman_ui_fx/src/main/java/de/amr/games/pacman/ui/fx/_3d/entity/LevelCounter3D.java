@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.function.IntFunction;
 
+import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.LevelCounter;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
@@ -45,23 +46,31 @@ import javafx.util.Duration;
  */
 public class LevelCounter3D extends Group {
 
-	public LevelCounter3D(LevelCounter levelCounter, double rx, double ry, IntFunction<Image> fnSymbolImage) {
-		for (int i = 0; i < levelCounter.size(); ++i) {
-			int symbol = levelCounter.symbol(i);
-			Box cube = createSpinningCube(fnSymbolImage.apply(symbol), i % 2 == 0);
-			cube.setTranslateX(rx - i * 2 * TS);
-			cube.setTranslateY(ry);
+	/**
+	 * @param levelCounter
+	 * @param position      right border of the level counter
+	 * @param fnSymbolImage
+	 */
+	public LevelCounter3D(LevelCounter levelCounter, Vector2f position, IntFunction<Image> fnSymbolImage) {
+		double x = position.x();
+		boolean forward = true;
+		for (int symbol : levelCounter) {
+			Box cube = createSpinningCube(TS, fnSymbolImage.apply(symbol), forward);
+			cube.setTranslateX(x);
+			cube.setTranslateY(position.y());
 			cube.setTranslateZ(-HTS);
 			getChildren().add(cube);
+			x -= 2 * TS;
+			forward = !forward;
 		}
 	}
 
-	private Box createSpinningCube(Image texture, boolean forward) {
-		Box cube = new Box(TS, TS, TS);
-		PhongMaterial material = new PhongMaterial();
+	private Box createSpinningCube(double size, Image texture, boolean forward) {
+		var material = new PhongMaterial();
 		material.setDiffuseMap(texture);
+		Box cube = new Box(size, size, size);
 		cube.setMaterial(material);
-		RotateTransition spinning = new RotateTransition(Duration.seconds(6), cube);
+		var spinning = new RotateTransition(Duration.seconds(6), cube);
 		spinning.setAxis(Rotate.X_AXIS);
 		spinning.setCycleCount(Animation.INDEFINITE);
 		spinning.setByAngle(360);

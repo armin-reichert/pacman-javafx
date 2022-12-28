@@ -56,10 +56,11 @@ public class World3D extends Group {
 	private final Scores3D scores3D;
 
 	public World3D(GameLevel level, Rendering2D r2D) {
+
 		var width = level.world().numCols() * World.TS;
 		var height = level.world().numRows() * World.TS;
-		int mazeNumber = RendererCommon.mazeNumber(level.game());
 
+		int mazeNumber = RendererCommon.mazeNumber(level.game());
 		var mazeColors = new Maze3DColors(//
 				r2D.getMazeSideColor(mazeNumber), //
 				r2D.getMazeTopColor(mazeNumber), //
@@ -77,7 +78,8 @@ public class World3D extends Group {
 		var foodColor = r2D.getMazeFoodColor(mazeNumber);
 		food3D = new Food3D(level.world(), foodColor);
 
-		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), (level.world().numCols() - 1) * TS, TS,
+		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
+		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
 				symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
 
 		livesCounter3D = new LivesCounter3D();
