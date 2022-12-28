@@ -36,6 +36,7 @@ import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationSet;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
@@ -195,7 +196,7 @@ public class PlayScene2D extends GameScene2D {
 			ctx.level().ifPresent(level -> {
 				for (int i = 0; i < 4; ++i) {
 					var ghost = level.ghost(i);
-					updateInfo(panes.get(i), texts.get(i), ghostInfo(ghost), ghost);
+					updateInfo(panes.get(i), texts.get(i), ghostInfo(level, ghost), ghost);
 				}
 				updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(level.pac()), level.pac());
 				var bonus = level.bonus();
@@ -230,10 +231,10 @@ public class PlayScene2D extends GameScene2D {
 			return "";
 		}
 
-		private String ghostInfo(Ghost ghost) {
+		private String ghostInfo(GameLevel level, Ghost ghost) {
 			var game = ctx.game();
-			String name = ghost.id() == Ghost.ID_RED_GHOST && ghost.cruiseElroyState() > 0
-					? "Elroy " + ghost.cruiseElroyState()
+			String name = ghost.id() == Ghost.ID_RED_GHOST && level.cruiseElroyState() > 0
+					? "Elroy " + level.cruiseElroyState()
 					: ghost.name();
 			var stateText = ghost.state().name();
 			if (game.level().isPresent()) {
