@@ -232,15 +232,12 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String ghostInfo(GameLevel level, Ghost ghost) {
-			var game = ctx.game();
 			String name = ghost.id() == Ghost.ID_RED_GHOST && level.cruiseElroyState() > 0
 					? "Elroy " + level.cruiseElroyState()
 					: ghost.name();
 			var stateText = ghost.state().name();
-			if (game.level().isPresent()) {
-				if (ghost.is(GhostState.HUNTING_PAC)) {
-					stateText += game.level().get().inChasingPhase() ? " (Chasing)" : " (Scattering)";
-				}
+			if (ghost.is(GhostState.HUNTING_PAC)) {
+				stateText += level.chasingPhase().isPresent() ? " (Chasing)" : " (Scattering)";
 			}
 			if (ghost.killedIndex() != -1) {
 				stateText += " killed: #%d".formatted(ghost.killedIndex());
