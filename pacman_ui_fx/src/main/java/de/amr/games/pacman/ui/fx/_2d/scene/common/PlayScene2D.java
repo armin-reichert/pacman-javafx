@@ -140,6 +140,15 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
+	protected void drawDebugInfo(GameLevel level) {
+		super.drawDebugInfo(level);
+		if (level.world() instanceof ArcadeWorld arcadeWorld) {
+			g.setFill(Color.RED);
+			arcadeWorld.upwardBlockedTiles().forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, 1));
+		}
+	}
+
+	@Override
 	public void onSwitchFrom3D() {
 		ctx.level().ifPresent(level -> {
 			level.pac().animationSet().ifPresent(EntityAnimationSet::ensureRunning);
