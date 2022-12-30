@@ -88,7 +88,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void update() {
 		actorsInfo.update();
-		setCreditVisible(!ctx.hasCredit());
+		setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);
 	}
 
 	@Override
