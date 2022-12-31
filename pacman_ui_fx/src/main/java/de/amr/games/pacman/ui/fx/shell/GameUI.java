@@ -137,6 +137,7 @@ public class GameUI implements GameEventListener {
 		gameLoop.setUpdateTask(() -> {
 			gameController.update();
 			currentGameScene.onTick();
+			Keyboard.clear();
 		});
 		gameLoop.setRenderTask(() -> {
 			flashMessageView.update();
