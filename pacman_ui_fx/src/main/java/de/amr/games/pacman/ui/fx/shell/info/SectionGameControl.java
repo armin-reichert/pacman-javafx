@@ -88,7 +88,7 @@ public class SectionGameControl extends Section {
 		comboGameVariant.setValue(gc.game().variant());
 		comboGameVariant.setDisable(gc.game().isPlaying());
 
-		cbAutopilot.setSelected(gc.game().isAutoControlled());
+		cbAutopilot.setSelected(gc.isAutoControlled());
 		cbImmunity.setSelected(gc.game().isImmune());
 
 		// start game
@@ -108,8 +108,8 @@ public class SectionGameControl extends Section {
 		if (!gc.game().isPlaying() || gc.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			spinnerGameLevel.setDisable(true);
 		} else {
-			spinnerGameLevel.setDisable(
-					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.CHANGING_TO_NEXT_LEVEL);
+			spinnerGameLevel.setDisable(gc.state() != GameState.READY && gc.state() != GameState.HUNTING
+					&& gc.state() != GameState.CHANGING_TO_NEXT_LEVEL);
 		}
 
 		spinnerGameCredit.getValueFactory().setValue(game().credit());

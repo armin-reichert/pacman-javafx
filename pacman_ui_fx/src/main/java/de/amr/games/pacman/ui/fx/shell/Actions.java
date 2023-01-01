@@ -222,11 +222,11 @@ public class Actions {
 	}
 
 	public static void toggleAutopilot() {
-		game().setAutoControlled(!game().isAutoControlled());
-		var autoOn = game().isAutoControlled();
-		String message = TextManager.message(autoOn ? "autopilot_on" : "autopilot_off");
+		gameController().toggleAutoControlled();
+		var auto = gameController().isAutoControlled();
+		String message = TextManager.message(auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoiceMessage(autoOn ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
+		playVoiceMessage(auto ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
