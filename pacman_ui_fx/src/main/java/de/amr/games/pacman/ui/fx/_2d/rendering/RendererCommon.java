@@ -32,7 +32,6 @@ import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationSet;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -226,22 +225,21 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
-		var font = arcadeFont(TS);
-		var color = Color.rgb(222, 222, 255);
-		drawScore(g, game.gameScore(), game.isScoreContentShown(), "SCORE", color, font, TS, TS);
-		drawScore(g, game.highScore(), true, "HIGH SCORE", color, font, 16 * TS, TS);
+		drawScore(g, game.gameScore().points(), game.gameScore().levelNumber(), "SCORE", TS, TS);
+		drawScore(g, game.highScore().points(), game.highScore().levelNumber(), "HIGH SCORE", 16 * TS, TS);
 		if (creditVisible) {
-			drawText(g, "CREDIT  %d".formatted(game.credit()), color, font, t(2), t(36) - 1);
+			drawText(g, "CREDIT  %d".formatted(game.credit()), Color.rgb(222, 222, 255), arcadeFont(TS), t(2), t(36) - 1);
 		}
 	}
 
-	private void drawScore(GraphicsContext g, Score score, boolean contentShown, String title, Color color, Font font,
-			double x, double y) {
+	private void drawScore(GraphicsContext g, int points, int levelNumber, String title, double x, double y) {
+		var font = arcadeFont(TS);
+		var color = Color.rgb(222, 222, 255);
 		drawText(g, title, color, font, x, y);
-		var pointsText = contentShown ? "%02d".formatted(score.points()) : "00";
+		var pointsText = "%02d".formatted(points);
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
-		if (contentShown) {
-			drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+		if (points != 0) {
+			drawText(g, "L" + levelNumber, color, font, x + t(8), y + TS + 1);
 		}
 	}
 
