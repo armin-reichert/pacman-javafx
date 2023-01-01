@@ -63,8 +63,8 @@ public class SectionGameInfo extends Section {
 		addInfo("Ghost speed", levelInfo(this::fmtGhostSpeed));
 		addInfo("- frightened", levelInfo(this::fmtGhostSpeedFrightened));
 		addInfo("- in tunnel", levelInfo(this::fmtGhostSpeedTunnel));
-		addInfo("Pac-Man speed", levelInfo(this::fmtPlayerSpeed));
-		addInfo("- empowered", levelInfo(this::fmtPlayerSpeedPowered));
+		addInfo("Pac-Man speed", levelInfo(this::fmtPacSpeed));
+		addInfo("- empowered", levelInfo(this::fmtPacSpeedPowered));
 		addInfo("Frightened time", levelInfo(this::fmtPacPowerSeconds));
 		addInfo("Maze flashings", levelInfo(this::fmtNumFlashes));
 	}
@@ -111,12 +111,12 @@ public class SectionGameInfo extends Section {
 		return fmtSpeed(level.params().ghostSpeedTunnel());
 	}
 
-	private String fmtPlayerSpeed(GameLevel level) {
-		return fmtSpeed(level.params().playerSpeed());
+	private String fmtPacSpeed(GameLevel level) {
+		return fmtSpeed(level.params().pacSpeed());
 	}
 
-	private String fmtPlayerSpeedPowered(GameLevel level) {
-		return fmtSpeed(level.params().playerSpeedPowered());
+	private String fmtPacSpeedPowered(GameLevel level) {
+		return fmtSpeed(level.params().pacSpeedPowered());
 	}
 
 	private String fmtPacPowerSeconds(GameLevel level) {
