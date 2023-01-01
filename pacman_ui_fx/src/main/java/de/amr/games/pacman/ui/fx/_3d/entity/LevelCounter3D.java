@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.function.IntFunction;
 
 import de.amr.games.pacman.lib.math.Vector2f;
-import de.amr.games.pacman.model.common.LevelCounter;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
@@ -51,7 +50,7 @@ public class LevelCounter3D extends Group {
 	 * @param position      right border of the level counter
 	 * @param fnSymbolImage
 	 */
-	public LevelCounter3D(LevelCounter levelCounter, Vector2f position, IntFunction<Image> fnSymbolImage) {
+	public LevelCounter3D(Iterable<Integer> levelCounter, Vector2f position, IntFunction<Image> fnSymbolImage) {
 		double x = position.x();
 		boolean forward = true;
 		for (int symbol : levelCounter) {

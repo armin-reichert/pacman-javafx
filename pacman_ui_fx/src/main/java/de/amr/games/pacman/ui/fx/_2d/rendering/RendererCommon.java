@@ -32,7 +32,6 @@ import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationSet;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.LevelCounter;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -199,13 +198,11 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, LevelCounter levelCounter) {
-		if (levelCounter.isVisible()) {
-			double x = t(24);
-			for (var symbol : levelCounter) {
-				drawSprite(g, bonusSymbolSprite(symbol), x, t(34));
-				x -= t(2);
-			}
+	public void drawLevelCounter(GraphicsContext g, Iterable<Integer> levelCounter) {
+		double x = t(24);
+		for (var symbol : levelCounter) {
+			drawSprite(g, bonusSymbolSprite(symbol), x, t(34));
+			x -= t(2);
 		}
 	}
 

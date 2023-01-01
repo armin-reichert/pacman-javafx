@@ -161,7 +161,6 @@ public class Actions {
 				}
 				gameController().changeState(GameState.LEVEL_STARTING);
 			} else {
-				game().levelCounter().clear();
 				for (int i = 1; i < levelNumber; ++i) {
 					game().buildAndEnterLevel(i);
 				}
