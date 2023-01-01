@@ -77,15 +77,15 @@ public class Scores3D extends Group {
 	}
 
 	public void update(GameLevel level) {
-		int gamePoints = level.game().score().points();
-		int gameLevelNumber = level.number();
 		int highscorePoints = level.game().highScore().points();
 		int highscoreLevelNumber = level.game().highScore().levelNumber();
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
 		if (pointsDisplayed) {
-			txtScore.setText(String.format("%7d L%d", gamePoints, gameLevelNumber));
-			txtScore.setFill(Color.YELLOW);
+			level.game().score().ifPresent(score -> {
+				txtScore.setText(String.format("%7d L%d", score.points(), score.levelNumber()));
+				txtScore.setFill(Color.YELLOW);
+			});
 		}
 		txtScore.setFont(font);
 		txtHiscoreTitle.setFill(titleColor);

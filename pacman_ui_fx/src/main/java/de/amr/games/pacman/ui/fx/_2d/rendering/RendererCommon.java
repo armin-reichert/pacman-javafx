@@ -225,7 +225,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
-		drawScore(g, game.score().points(), game.score().levelNumber(), "SCORE", TS, TS);
+		game.score().ifPresent(score -> drawScore(g, score.points(), score.levelNumber(), "SCORE", TS, TS));
 		drawScore(g, game.highScore().points(), game.highScore().levelNumber(), "HIGH SCORE", 16 * TS, TS);
 		if (creditVisible) {
 			drawText(g, "CREDIT  %d".formatted(game.credit()), Color.rgb(222, 222, 255), arcadeFont(TS), t(2), t(36) - 1);
