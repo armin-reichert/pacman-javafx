@@ -228,18 +228,19 @@ public abstract class RendererCommon implements Rendering2D {
 	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
 		var font = arcadeFont(TS);
 		var color = Color.rgb(222, 222, 255);
-		drawScore(g, game.gameScore(), "SCORE", color, font, TS, TS);
-		drawScore(g, game.highScore(), "HIGH SCORE", color, font, 16 * TS, TS);
+		drawScore(g, game.gameScore(), game.isScoreContentShown(), "SCORE", color, font, TS, TS);
+		drawScore(g, game.highScore(), true, "HIGH SCORE", color, font, 16 * TS, TS);
 		if (creditVisible) {
 			drawText(g, "CREDIT  %d".formatted(game.credit()), color, font, t(2), t(36) - 1);
 		}
 	}
 
-	private void drawScore(GraphicsContext g, Score score, String title, Color color, Font font, double x, double y) {
+	private void drawScore(GraphicsContext g, Score score, boolean contentShown, String title, Color color, Font font,
+			double x, double y) {
 		drawText(g, title, color, font, x, y);
-		var pointsText = score.isShowContent() ? "%02d".formatted(score.points()) : "00";
+		var pointsText = contentShown ? "%02d".formatted(score.points()) : "00";
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
-		if (score.isShowContent()) {
+		if (contentShown) {
 			drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
 		}
 	}
