@@ -77,7 +77,7 @@ public class Scores3D extends Group {
 	}
 
 	public void update(GameLevel level) {
-		int gamePoints = level.game().gameScore().points();
+		int gamePoints = level.game().score().points();
 		int gameLevelNumber = level.number();
 		int highscorePoints = level.game().highScore().points();
 		int highscoreLevelNumber = level.game().highScore().levelNumber();
