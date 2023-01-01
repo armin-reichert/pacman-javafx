@@ -138,13 +138,13 @@ public class Actions {
 	}
 
 	public static void enterLevel(int levelNumber) {
-		if (currentGameState() == GameState.LEVEL_STARTING) {
+		if (currentGameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
 		gameController().sounds().stopAll();
 		if (game().level().isEmpty()) {
 			game().reset();
-			game().buildAndEnterLevel(1);
+			game().enterLevel(1);
 			gameController().changeState(GameState.READY);
 			return;
 		}
@@ -153,18 +153,18 @@ public class Actions {
 				// SKIP
 			} else if (levelNumber == 1) {
 				game().reset();
-				game().buildAndEnterLevel(1);
+				game().enterLevel(1);
 				gameController().changeState(GameState.READY);
 			} else if (levelNumber > level.number()) {
 				for (int i = level.number() + 1; i < levelNumber; ++i) {
-					game().buildAndEnterLevel(i);
+					game().enterLevel(i);
 				}
-				gameController().changeState(GameState.LEVEL_STARTING);
+				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			} else {
 				for (int i = 1; i < levelNumber; ++i) {
-					game().buildAndEnterLevel(i);
+					game().enterLevel(i);
 				}
-				gameController().changeState(GameState.LEVEL_STARTING);
+				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			}
 		});
 	}

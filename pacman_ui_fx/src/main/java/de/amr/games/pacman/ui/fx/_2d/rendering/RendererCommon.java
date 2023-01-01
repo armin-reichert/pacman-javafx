@@ -197,7 +197,7 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, Iterable<Integer> levelCounter) {
+	public void drawLevelCounter(GraphicsContext g, Iterable<Byte> levelCounter) {
 		double x = t(24);
 		for (var symbol : levelCounter) {
 			drawSprite(g, bonusSymbolSprite(symbol), x, t(34));

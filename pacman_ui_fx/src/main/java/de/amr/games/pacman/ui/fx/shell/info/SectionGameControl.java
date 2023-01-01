@@ -97,7 +97,7 @@ public class SectionGameControl extends Section {
 		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
 		// next level
 		btnsGameControl[2].setDisable(!gc.game().isPlaying() || (gc.state() != GameState.HUNTING
-				&& gc.state() != GameState.READY && gc.state() != GameState.LEVEL_STARTING));
+				&& gc.state() != GameState.READY && gc.state() != GameState.CHANGING_TO_NEXT_LEVEL));
 
 		// start intermission test
 		btnsIntermissionTest[0].setDisable(gc.state() == GameState.INTERMISSION_TEST || gc.state() != GameState.INTRO);
@@ -105,11 +105,11 @@ public class SectionGameControl extends Section {
 		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
 		game().level().ifPresent(level -> spinnerGameLevel.getValueFactory().setValue(level.number()));
-		if (!gc.game().isPlaying() || gc.state() == GameState.LEVEL_STARTING) {
+		if (!gc.game().isPlaying() || gc.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(
-					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.LEVEL_STARTING);
+					gc.state() != GameState.READY && gc.state() != GameState.HUNTING && gc.state() != GameState.CHANGING_TO_NEXT_LEVEL);
 		}
 
 		spinnerGameCredit.getValueFactory().setValue(game().credit());

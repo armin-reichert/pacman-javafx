@@ -141,7 +141,7 @@ public interface Rendering2D {
 
 	void drawCopyright(GraphicsContext g, int tileY);
 
-	void drawLevelCounter(GraphicsContext g, Iterable<Integer> levelCounter);
+	void drawLevelCounter(GraphicsContext g, Iterable<Byte> levelCounter);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 

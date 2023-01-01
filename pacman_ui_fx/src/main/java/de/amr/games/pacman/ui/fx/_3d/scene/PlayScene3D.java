@@ -366,7 +366,7 @@ public class PlayScene3D implements GameScene {
 			});
 		}
 
-		case LEVEL_STARTING -> {
+		case CHANGING_TO_NEXT_LEVEL -> {
 			ctx.level().ifPresent(level -> {
 				LOGGER.info("Starting level %d", level.number());
 				lockGameState();

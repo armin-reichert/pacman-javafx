@@ -50,10 +50,10 @@ public class LevelCounter3D extends Group {
 	 * @param position      right border of the level counter
 	 * @param fnSymbolImage
 	 */
-	public LevelCounter3D(Iterable<Integer> levelCounter, Vector2f position, IntFunction<Image> fnSymbolImage) {
+	public LevelCounter3D(Iterable<Byte> levelCounter, Vector2f position, IntFunction<Image> fnSymbolImage) {
 		double x = position.x();
 		boolean forward = true;
-		for (int symbol : levelCounter) {
+		for (byte symbol : levelCounter) {
 			Box cube = createSpinningCube(TS, fnSymbolImage.apply(symbol), forward);
 			cube.setTranslateX(x);
 			cube.setTranslateY(position.y());
