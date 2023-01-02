@@ -76,7 +76,7 @@ public class SquirtingAnimation extends Transition {
 	protected void interpolate(double t) {
 		for (int i = 0; i < drops.length; ++i) {
 			var drop = drops[i];
-			if (drop.getTranslateZ() >= -1.0 && world.insideMap(drop.getTranslateX(), drop.getTranslateY())) {
+			if (drop.getTranslateZ() >= -1.0 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY())) {
 				drop.setScaleZ(0.1);
 				veloc[i] = Point3D.ZERO;
 			} else {
