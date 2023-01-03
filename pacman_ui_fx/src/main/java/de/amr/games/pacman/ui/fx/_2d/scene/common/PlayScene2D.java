@@ -113,20 +113,19 @@ public class PlayScene2D extends GameScene2D {
 		int mazeX = 0;
 		int mazeY = 3 * TS;
 		var game = ctx.game();
+		var r = ctx.r2D();
 		ctx.level().ifPresent(level -> {
-			var r = ctx.r2D();
 			boolean energizersHidden = !level.energizerPulse().frame();
-			var world = level.world();
-			if (world instanceof ArcadeWorld arcadeWorld) {
+			if (level.world() instanceof ArcadeWorld arcadeWorld) {
 				var flashingAnimation = arcadeWorld.levelCompleteAnimation();
 				if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 					boolean flash = (boolean) flashingAnimation.get().frame();
-					r.drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
+					r.drawEmptyMaze(g, mazeX, mazeY, mazeNumber(game), flash);
 				} else {
-					r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, energizersHidden);
+					r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), level.world(), energizersHidden);
 				}
 			} else {
-				r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, false);
+				r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), level.world(), false);
 			}
 			r.drawBonus(g, level.bonus());
 			r.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
