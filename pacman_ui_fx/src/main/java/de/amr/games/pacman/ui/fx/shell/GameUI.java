@@ -155,8 +155,8 @@ public class GameUI implements GameEventListener {
 		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
-			pipView.init(gameScene.ctx());
 		}
+		pipView.init(gameScene.ctx());
 	}
 
 	private void updateStageTitle() {
