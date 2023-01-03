@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -40,6 +43,8 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class PiPView extends StackPane {
+
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	public static final Vector2f MIN_SIZE = GameScene.DEFAULT_SIZE.toFloatVec();
 	public static final Vector2f MAX_SIZE = GameScene.DEFAULT_SIZE.toFloatVec().scaled(2.0f);
@@ -63,12 +68,14 @@ public class PiPView extends StackPane {
 	}
 
 	public void init(SceneContext context) {
+		LOGGER.trace("Initialize PiP view");
 		playScene.setContext(context);
 		playScene.init();
 	}
 
 	public void update() {
 		if (isVisible()) {
+			LOGGER.trace("Update PiP view");
 			playScene.clear();
 			playScene.draw();
 			playScene.drawHUD();

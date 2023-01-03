@@ -114,28 +114,29 @@ public class PlayScene2D extends GameScene2D {
 		int mazeY = 3 * TS;
 		var game = ctx.game();
 		ctx.level().ifPresent(level -> {
+			var r = ctx.r2D();
 			boolean energizersHidden = !level.energizerPulse().frame();
 			var world = level.world();
 			if (world instanceof ArcadeWorld arcadeWorld) {
 				var flashingAnimation = arcadeWorld.levelCompleteAnimation();
 				if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 					boolean flash = (boolean) flashingAnimation.get().frame();
-					ctx.r2D().drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
+					r.drawEmptyMaze(g, mazeX, mazeY, mazeNumber(ctx.game()), flash);
 				} else {
-					ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, energizersHidden);
+					r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, energizersHidden);
 				}
 			} else {
-				ctx.r2D().drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, false);
+				r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), world, false);
 			}
-			ctx.r2D().drawBonus(g, level.bonus());
-			ctx.r2D().drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
-			ctx.r2D().drawPac(g, level.pac());
-			level.ghosts().forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
+			r.drawBonus(g, level.bonus());
+			r.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
+			r.drawPac(g, level.pac());
+			level.ghosts().forEach(ghost -> r.drawGhost(g, ghost));
 			if (!isCreditVisible()) {
 				int lives = game.isOneLessLifeDisplayed() ? game.lives() - 1 : game.lives();
-				ctx.r2D().drawLivesCounter(g, lives);
+				r.drawLivesCounter(g, lives);
 			}
-			ctx.r2D().drawLevelCounter(g, game.levelCounter());
+			r.drawLevelCounter(g, game.levelCounter());
 		});
 	}
 
