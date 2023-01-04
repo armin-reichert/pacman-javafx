@@ -206,7 +206,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	@Override
-	public void onUIForceUpdate(GameEvent e) {
+	public void onUnspecifiedChange(GameEvent e) {
 		updateGameScene(true);
 	}
 
