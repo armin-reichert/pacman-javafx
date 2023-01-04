@@ -35,7 +35,10 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
@@ -155,8 +158,8 @@ public class GameUI implements GameEventListener {
 		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
+			pipView.init(gameScene.ctx());
 		}
-		pipView.init(gameScene.ctx());
 	}
 
 	private void updateStageTitle() {
@@ -204,6 +207,23 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onUIForceUpdate(GameEvent e) {
+		updateGameScene(true);
+	}
+
+	@Override
+	public void onLevelStarting(GameEvent e) {
+		var game = gameController.game();
+		game.level().ifPresent(level -> {
+			var r = switch (game.variant()) {
+			case MS_PACMAN -> new RendererMsPacManGame();
+			case PACMAN -> new RendererPacManGame();
+			};
+			level.pac().setAnimationSet(r.createPacAnimationSet(level.pac()));
+			level.ghosts().forEach(ghost -> ghost.setAnimationSet(r.createGhostAnimationSet(ghost)));
+			if (level.world() instanceof ArcadeWorld arcadeWorld) {
+				arcadeWorld.setLevelCompleteAnimation(r.createMazeFlashingAnimation());
+			}
+		});
 		updateGameScene(true);
 	}
 

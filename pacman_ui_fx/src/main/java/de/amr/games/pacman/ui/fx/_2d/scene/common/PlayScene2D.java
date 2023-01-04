@@ -75,17 +75,6 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void init() {
-		ctx.level().ifPresent(level -> {
-			level.pac().setAnimationSet(ctx.r2D().createPacAnimationSet(level.pac()));
-			level.ghosts().forEach(ghost -> ghost.setAnimationSet(ctx.r2D().createGhostAnimationSet(ghost)));
-			if (level.world() instanceof ArcadeWorld arcadeWorld) {
-				arcadeWorld.setLevelCompleteAnimation(ctx.r2D().createMazeFlashingAnimation());
-			}
-		});
-	}
-
-	@Override
 	public void update() {
 		actorsInfo.update();
 		setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);

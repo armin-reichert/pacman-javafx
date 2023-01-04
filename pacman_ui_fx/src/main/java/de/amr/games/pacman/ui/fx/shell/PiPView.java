@@ -70,7 +70,7 @@ public class PiPView extends StackPane {
 	public void init(SceneContext context) {
 		LOGGER.trace("Initialize PiP view");
 		playScene.setContext(context);
-		playScene.init();
+//		playScene.init();
 	}
 
 	public void update() {
