@@ -212,7 +212,7 @@ public abstract class RendererCommon implements Rendering2D {
 			return;
 		}
 		int x = t(2);
-		int y = t(ArcadeWorld.TILES_Y - 2);
+		int y = t(ArcadeWorld.SIZE_TILES.y() - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			drawSprite(g, lifeSprite(), x + t(2 * i), y);
