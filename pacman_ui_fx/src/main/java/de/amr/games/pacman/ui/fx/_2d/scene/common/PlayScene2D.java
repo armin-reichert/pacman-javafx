@@ -192,10 +192,8 @@ public class PlayScene2D extends GameScene2D {
 				return;
 			}
 			ctx.level().ifPresent(level -> {
-				for (int i = 0; i < 4; ++i) {
-					var ghost = level.ghost(i);
-					updateInfo(panes.get(i), texts.get(i), ghostInfo(level, ghost), ghost);
-				}
+				level.ghosts()
+						.forEach(ghost -> updateInfo(panes.get(ghost.id()), texts.get(ghost.id()), ghostInfo(level, ghost), ghost));
 				updateInfo(panes.get(PAC_INDEX), texts.get(PAC_INDEX), pacInfo(level.pac()), level.pac());
 				var bonus = level.bonus();
 				updateInfo(panes.get(BONUS_INDEX), texts.get(BONUS_INDEX), bonusInfo(bonus), bonus.entity());
