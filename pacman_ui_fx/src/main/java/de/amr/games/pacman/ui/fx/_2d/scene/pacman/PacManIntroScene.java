@@ -28,9 +28,9 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
-import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
@@ -155,14 +155,15 @@ public class PacManIntroScene extends GameScene2D {
 			}
 			int tileY = 7 + 3 * id;
 			var color = ctx.r2D().ghostColor(id);
-			ctx.r2D().drawSpriteCenteredOverBox(g, ctx.r2D().ghostSprite(id, Direction.RIGHT), t(PacManIntroData.LEFT_TILE) + 4,
-					t(tileY));
+			ctx.r2D().drawSpriteCenteredOverBox(g, ctx.r2D().ghostSprite(id, Direction.RIGHT),
+					t(PacManIntroData.LEFT_TILE) + 4, t(tileY));
 			if (intro.context().characterVisible[id]) {
-				ctx.r2D().drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(PacManIntroData.LEFT_TILE + 3), t(tileY + 1));
+				ctx.r2D().drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(PacManIntroData.LEFT_TILE + 3),
+						t(tileY + 1));
 			}
 			if (intro.context().nicknameVisible[id]) {
-				ctx.r2D().drawText(g, "\"" + PacManIntroData.NICKNAMES[id] + "\"", color, font, t(PacManIntroData.LEFT_TILE + 14),
-						t(tileY + 1));
+				ctx.r2D().drawText(g, "\"" + intro.context().ghosts[id].name() + "\"", color, font,
+						t(PacManIntroData.LEFT_TILE + 14), t(tileY + 1));
 			}
 		}
 	}
