@@ -23,11 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
+import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.BLINKY_END_TILE;
+import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.TITLE_TILE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.shell.Actions;
@@ -51,9 +53,9 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void init() {
 		intro = new MsPacManIntroController(ctx.gameController());
 		intro.restart(MsPacManIntroState.START);
-		var pacAnimations = ctx.r2D().createPacAnimationSet(intro.context().pac);
+		var pacAnimations = ctx.r2D().createPacAnimationSet(intro.context().msPacMan);
 		pacAnimations.ensureRunning();
-		intro.context().pac.setAnimationSet(pacAnimations);
+		intro.context().msPacMan.setAnimationSet(pacAnimations);
 		intro.context().ghosts.forEach(ghost -> {
 			var ghostAnimations = ctx.r2D().createGhostAnimationSet(ghost);
 			ghostAnimations.ensureRunning();
@@ -64,7 +66,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void update() {
 		intro.update();
-		setCreditVisible(intro.context().creditVisible);
+		setCreditVisible(intro.context().isCreditVisible());
 	}
 
 	@Override
@@ -90,38 +92,36 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawTitle();
 		drawLights(32, 16);
 		if (intro.state() == MsPacManIntroState.GHOSTS) {
-			drawGhostText(intro.context().ghosts.get(intro.context().ghostIndex));
+			drawGhostText(intro.context().ghosts.get(intro.context().ghostIndex()));
 		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
 			drawMsPacManText();
 		}
 		intro.context().ghosts.forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
-		ctx.r2D().drawPac(g, intro.context().pac);
+		ctx.r2D().drawPac(g, intro.context().msPacMan);
 		ctx.r2D().drawCopyright(g, 29);
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
 	}
 
 	private void drawTitle() {
-		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
-				intro.context().titlePosition.y());
+		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
 	}
 
 	private void drawGhostText(Ghost ghost) {
 		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
-					intro.context().redGhostEndPosition.y() + t(3));
+			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
 		}
 		ctx.r2D().drawText(g, ghost.name().toUpperCase(), ctx.r2D().ghostColor(ghost.id()), ctx.r2D().arcadeFont(TS),
-				t(14 - ghost.name().length() / 2), intro.context().redGhostEndPosition.y() + t(6));
+				t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
-		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
-				intro.context().redGhostEndPosition.y() + t(3));
-		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(TS), intro.context().titlePosition.x(),
-				intro.context().redGhostEndPosition.y() + t(6));
+		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(),
+				BLINKY_END_TILE.y() + t(3));
+		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(),
+				BLINKY_END_TILE.y() + t(6));
 	}
 
-	// TODO this is not yet accurate to the original game
+	// TODO this is not exactly as in the original game
 	private void drawLights(int numDotsX, int numDotsY) {
 		long time = intro.context().lightsTimer.tick();
 		int light = (int) (time / 2) % (numDotsX / 2);
@@ -140,8 +140,7 @@ public class MsPacManIntroScene extends GameScene2D {
 				y = 2 * (numDotsX + numDotsY) - dot;
 			}
 			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(intro.context().redGhostEndPosition.x() + 4 * x, intro.context().redGhostEndPosition.y() + 4 * y, 2,
-					2);
+			g.fillRect(BLINKY_END_TILE.x() + 4 * x, BLINKY_END_TILE.y() + 4 * y, 2, 2);
 		}
 	}
 }
