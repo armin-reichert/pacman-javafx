@@ -143,7 +143,7 @@ public class Actions {
 		}
 		gameController().sounds().stopAll();
 		if (game().level().isEmpty()) {
-			game().reset();
+			game().init();
 			game().enterLevel(1);
 			gameController().changeState(GameState.READY);
 			return;
@@ -152,7 +152,7 @@ public class Actions {
 			if (levelNumber == level.number()) {
 				// SKIP
 			} else if (levelNumber == 1) {
-				game().reset();
+				game().init();
 				game().enterLevel(1);
 				gameController().changeState(GameState.READY);
 			} else if (levelNumber > level.number()) {
