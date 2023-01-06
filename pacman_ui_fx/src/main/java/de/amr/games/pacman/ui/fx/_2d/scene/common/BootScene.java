@@ -43,15 +43,16 @@ public class BootScene extends GameScene2D {
 
 	private static final int TILES_X = ArcadeWorld.SIZE_TILES.x();
 	private static final int TILES_Y = ArcadeWorld.SIZE_TILES.y();
-	private static final Random rnd = new Random();
+	private static final int SIZE_X = ArcadeWorld.SIZE_PX.x();
+	private static final int SIZE_Y = ArcadeWorld.SIZE_PX.y();
+	private static final Random RND = new Random();
+
 	private final GraphicsContext gc;
 	private final WritableImage currentImage;
 
 	public BootScene() {
-		var width = ArcadeWorld.SIZE_PX.x();
-		var height = ArcadeWorld.SIZE_PX.y();
-		currentImage = new WritableImage(width, height);
-		gc = new Canvas(width, height).getGraphicsContext2D();
+		currentImage = new WritableImage(SIZE_X, SIZE_Y);
+		gc = new Canvas(SIZE_X, SIZE_Y).getGraphicsContext2D();
 	}
 
 	@Override
@@ -99,7 +100,7 @@ public class BootScene extends GameScene2D {
 		gc.setFont(ctx.r2D().arcadeFont(TS));
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
-				var hexCode = Integer.toHexString(rnd.nextInt(16));
+				var hexCode = Integer.toHexString(RND.nextInt(16));
 				gc.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
@@ -119,12 +120,12 @@ public class BootScene extends GameScene2D {
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
 		for (int row = 0; row < numRows; ++row) {
-			if (rnd.nextInt(100) < 10) {
+			if (RND.nextInt(100) < 10) {
 				continue;
 			}
-			var r1 = new Rectangle2D(rnd.nextDouble(w), rnd.nextDouble(h), cellSize, cellSize);
-			var r2 = new Rectangle2D(rnd.nextDouble(w), rnd.nextDouble(h), cellSize, cellSize);
-			var split = numCols / 4 + rnd.nextInt(numCols / 2);
+			var r1 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
+			var r2 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
+			var split = numCols / 4 + RND.nextInt(numCols / 2);
 			for (int col = 0; col < numCols; ++col) {
 				ctx.r2D().drawSprite(gc, col < split ? r1 : r2, cellSize * col, cellSize * row);
 			}
@@ -140,10 +141,10 @@ public class BootScene extends GameScene2D {
 		gc.setStroke(Color.rgb(222, 222, 255));
 		gc.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			gc.strokeLine(0, row * cellSize, ArcadeWorld.SIZE_PX.x(), row * cellSize);
+			gc.strokeLine(0, row * cellSize, SIZE_X, row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			gc.strokeLine(col * cellSize, 0, col * cellSize, ArcadeWorld.SIZE_PX.y());
+			gc.strokeLine(col * cellSize, 0, col * cellSize, SIZE_Y);
 		}
 		takeSnapshot();
 	}
