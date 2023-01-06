@@ -139,7 +139,7 @@ public class BootScene extends GameScene2D {
 		var numCols = TILES_X / 2;
 		gc.setStroke(Color.rgb(222, 222, 255));
 		gc.setLineWidth(2.0);
-		for (int row = 0; row < numRows; ++row) {
+		for (int row = 0; row <= numRows; ++row) {
 			gc.strokeLine(0, row * cellSize, ArcadeWorld.SIZE_PX.x(), row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
