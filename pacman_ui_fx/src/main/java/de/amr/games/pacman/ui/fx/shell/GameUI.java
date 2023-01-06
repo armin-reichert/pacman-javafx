@@ -245,7 +245,7 @@ public class GameUI implements GameEventListener {
 		if (steering instanceof KeyboardSteering keySteering) {
 			stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
 		}
-		gameController.setNormalSteering(currentSteering);
+		gameController.setNormalPacSteering(currentSteering);
 	}
 
 	private void onKeyPressed() {
