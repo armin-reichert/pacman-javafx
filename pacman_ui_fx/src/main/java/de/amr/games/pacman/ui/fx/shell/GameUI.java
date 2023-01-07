@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,35 +83,43 @@ public class GameUI implements GameEventListener {
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
+	private final KeyboardSteering manualPacSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
+			KeyCode.RIGHT);
 
 	private GameScene currentGameScene;
 
-	// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
 	public GameUI(GameController gameController, Stage stage, float zoom) {
+		Objects.requireNonNull(gameController);
+		Objects.requireNonNull(stage);
+		if (zoom < 0) {
+			throw new IllegalArgumentException("Zoom value must not be negative but is " + zoom);
+		}
+
 		this.gameController = gameController;
+		gameController.setManualPacSteering(manualPacSteering);
+
+		var mainScene = createScene(zoom);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
+
 		this.stage = stage;
-		stage.setScene(createScene(zoom));
-		GameEvents.addListener(this);
-		Actions.init(this);
-		initKeyHandlers();
-		initGameLoop();
-		updateGameScene(true);
-		selectSounds(gameController);
-		updateStageTitle();
-		dashboard.init(this);
+		stage.setScene(mainScene);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> endApp());
+
+		GameEvents.addListener(this);
+		Actions.init(this);
+		Keyboard.addHandler(this::onKeyPressed);
+		initGameLoop();
+		selectSounds(gameController);
+		updateGameScene(true);
+		updateStageTitle();
+		dashboard.init(this);
+
 		stage.centerOnScreen();
 		stage.show();
-		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
-	}
 
-	private void initKeyHandlers() {
-		Keyboard.addHandler(this::onKeyPressed);
-		var manualPacSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		gameController.setManualPacSteering(manualPacSteering);
-		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
+		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
 	}
 
 	private void endApp() {
