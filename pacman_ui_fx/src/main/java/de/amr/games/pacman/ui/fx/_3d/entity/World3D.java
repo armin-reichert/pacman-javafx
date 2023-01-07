@@ -37,7 +37,6 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -60,7 +59,7 @@ public class World3D extends Group {
 		var width = level.world().numCols() * World.TS;
 		var height = level.world().numRows() * World.TS;
 
-		int mazeNumber = RendererCommon.mazeNumber(level.game());
+		int mazeNumber = level.game().mazeNumber(level.number());
 		var mazeColors = new Maze3DColors(//
 				r2D.getMazeSideColor(mazeNumber), //
 				r2D.getMazeTopColor(mazeNumber), //

@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon.mazeNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,12 +108,12 @@ public class PlayScene2D extends GameScene2D {
 				var flashingAnimation = arcadeWorld.levelCompleteAnimation();
 				if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 					boolean flash = (boolean) flashingAnimation.get().frame();
-					r.drawEmptyMaze(g, mazeX, mazeY, mazeNumber(game), flash);
+					r.drawEmptyMaze(g, mazeX, mazeY, game.mazeNumber(level.number()), flash);
 				} else {
-					r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), level.world(), energizersHidden);
+					r.drawFilledMaze(g, mazeX, mazeY, game.mazeNumber(level.number()), level.world(), energizersHidden);
 				}
 			} else {
-				r.drawFilledMaze(g, mazeX, mazeY, mazeNumber(game), level.world(), false);
+				r.drawFilledMaze(g, mazeX, mazeY, game.mazeNumber(level.number()), level.world(), false);
 			}
 			r.drawBonus(g, level.bonus());
 			r.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
