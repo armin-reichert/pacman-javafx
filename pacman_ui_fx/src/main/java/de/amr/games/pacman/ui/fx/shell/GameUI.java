@@ -23,13 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import java.util.Objects;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
@@ -85,7 +82,6 @@ public class GameUI implements GameEventListener {
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
 
-	private Steering currentSteering;
 	private GameScene currentGameScene;
 
 	// In MAME, window is about 4% smaller than the 28x36 aspect ratio. Why?
@@ -93,20 +89,27 @@ public class GameUI implements GameEventListener {
 		this.gameController = gameController;
 		this.stage = stage;
 		stage.setScene(createScene(zoom));
+		GameEvents.addListener(this);
+		Actions.init(this);
+		initKeyHandlers();
+		initGameLoop();
+		updateGameScene(true);
+		selectSounds(gameController);
+		updateStageTitle();
+		dashboard.init(this);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> endApp());
-		Keyboard.addHandler(this::onKeyPressed);
-		GameEvents.addListener(this);
-		Actions.init(this);
-		initGameLoop();
-		updateGameScene(true);
-		updateSound(gameController);
-		updateStageTitle();
-		dashboard.init(this);
 		stage.centerOnScreen();
 		stage.show();
 		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
+	}
+
+	private void initKeyHandlers() {
+		Keyboard.addHandler(this::onKeyPressed);
+		var manualPacSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameController.setManualPacSteering(manualPacSteering);
+		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
 	}
 
 	private void endApp() {
@@ -202,7 +205,7 @@ public class GameUI implements GameEventListener {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		updateGameScene(false);
-		updateSound(gameController);
+		selectSounds(gameController);
 	}
 
 	@Override
@@ -227,25 +230,13 @@ public class GameUI implements GameEventListener {
 		updateGameScene(true);
 	}
 
-	private void updateSound(GameController gameController) {
+	private void selectSounds(GameController gameController) {
 		var gameVariant = gameController.game().variant();
 		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		};
 		gameController.setSounds(sounds);
-	}
-
-	public void setPacSteering(Steering steering) {
-		Objects.requireNonNull(steering);
-		if (currentSteering instanceof KeyboardSteering keySteering) {
-			stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
-		}
-		currentSteering = steering;
-		if (steering instanceof KeyboardSteering keySteering) {
-			stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keySteering::onKeyPressed);
-		}
-		gameController.setNormalPacSteering(currentSteering);
 	}
 
 	private void onKeyPressed() {
