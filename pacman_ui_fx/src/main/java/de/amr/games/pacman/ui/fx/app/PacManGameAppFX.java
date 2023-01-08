@@ -72,12 +72,12 @@ public class PacManGameAppFX extends Application {
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	//@formatter:off
-	private static final Option<Boolean>     OPT_3D          = booleanOption("-3D", false);
-	private static final Option<Boolean>     OPT_FULLSCREEN  = booleanOption("-fullscreen", false);
-	private static final Option<Boolean>     OPT_MUTED       = booleanOption("-muted", false);
-	private static final Option<Perspective> OPT_PERSPECTIVE = option("-psp", Perspective.NEAR_PLAYER, Perspective::valueOf);
-	private static final Option<GameVariant> OPT_VARIANT     = option("-variant", GameVariant.PACMAN, GameVariant::valueOf);
-	private static final Option<Float>       OPT_ZOOM        = floatOption("-zoom", 2.0f);
+	private static final Option<Boolean>     O_3D          = booleanOption("-3D", false);
+	private static final Option<Boolean>     O_FULLSCREEN  = booleanOption("-fullscreen", false);
+	private static final Option<Boolean>     O_MUTED       = booleanOption("-muted", false);
+	private static final Option<Perspective> O_PERSPECTIVE = option("-psp", Perspective.NEAR_PLAYER, Perspective::valueOf);
+	private static final Option<GameVariant> O_VARIANT     = option("-variant", GameVariant.PACMAN, GameVariant::valueOf);
+	private static final Option<Float>       O_ZOOM        = floatOption("-zoom", 2.0f);
 	//@formatter:on
 
 	private GameController gameController;
@@ -85,20 +85,20 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void init() throws Exception {
 		LOGGER.info("Initializing application...");
-		new OptionParser(OPT_3D, OPT_FULLSCREEN, OPT_MUTED, OPT_PERSPECTIVE, OPT_VARIANT, OPT_ZOOM)
-				.parse(getParameters().getUnnamed());
-		Env.threeDScenesPy.set(OPT_3D.getValue());
-		Env.perspectivePy.set(OPT_PERSPECTIVE.getValue());
-		gameController = new GameController(OPT_VARIANT.getValue());
+		var optionParser = new OptionParser(O_3D, O_FULLSCREEN, O_MUTED, O_PERSPECTIVE, O_VARIANT, O_ZOOM);
+		optionParser.parse(getParameters().getUnnamed());
+		Env.threeDScenesPy.set(O_3D.getValue());
+		Env.perspectivePy.set(O_PERSPECTIVE.getValue());
+		gameController = new GameController(O_VARIANT.getValue());
 		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant());
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
 		LOGGER.info("Starting application...");
-		var zoom = OPT_ZOOM.getValue();
+		var zoom = O_ZOOM.getValue();
 		var ui = new GameUI(gameController, stage, zoom);
-		stage.setFullScreen(OPT_FULLSCREEN.getValue());
+		stage.setFullScreen(O_FULLSCREEN.getValue());
 		ui.gameLoop().start();
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
 				stage.getHeight(), zoom, U.onOff(Env.threeDScenesPy.get()), Env.perspectivePy.get()));
