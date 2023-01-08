@@ -216,7 +216,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onTick() {
 		ctx.level().ifPresent(level -> {
-			world3D.update(level);
+			world3D.update();
 			pac3D.update(level.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 			bonus3D.update(level.bonus());
