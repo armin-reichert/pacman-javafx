@@ -74,22 +74,24 @@ public class Maze3D extends Group {
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
+	private final World world;
 	private final Maze3DColors mazeColors;
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
 	private Box floor;
 
 	public Maze3D(World world, Maze3DColors mazeColors) {
+		this.world = world;
 		this.mazeColors = mazeColors;
-		createFloor(world);
-		getChildren().addAll(floor, wallsGroup, doorsGroup);
-		build(world);
 		floorColorPy.addListener(py -> updateFloorMaterial());
 		floorTexturePy.addListener(py -> updateFloorMaterial());
-		resolutionPy.addListener(py -> build(world));
+		resolutionPy.addListener(py -> buildWalls());
+		buildFloor();
+		buildWalls();
+		getChildren().addAll(floor, wallsGroup, doorsGroup);
 	}
 
-	private void createFloor(World world) {
+	private void buildFloor() {
 		double width = (double) world.numCols() * TS - 1;
 		double height = (double) world.numRows() * TS - 1;
 		double depth = FLOOR_THICKNESS;
@@ -113,7 +115,7 @@ public class Maze3D extends Group {
 		return material;
 	}
 
-	private void build(World world) {
+	private void buildWalls() {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolutionPy.get();
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
