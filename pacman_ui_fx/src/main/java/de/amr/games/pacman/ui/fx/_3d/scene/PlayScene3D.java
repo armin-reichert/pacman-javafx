@@ -39,6 +39,7 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
@@ -125,38 +126,25 @@ public class PlayScene3D implements GameScene {
 		perspectivePy.addListener((py, oldVal, newPerspective) -> changeCamera(newPerspective));
 	}
 
-	public CoordSystem coordSystem() {
-		return coordSystem;
-	}
-
-	public AmbientLight ambientLight() {
-		return ambientLight;
-	}
-
 	@Override
-	public boolean is3D() {
-		return true;
+	public void init() {
+		ctx.level().ifPresent(this::createContent3D);
 	}
 
-	@Override
-	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
-			// when in attract mode, allow adding credit
-			Actions.addCredit();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
-			Actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.RIGHT)) {
-			Actions.selectNextPerspective();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
-			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
-			// TODO fixme
-//			Actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
-			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
-			Actions.cheatKillAllEatableGhosts();
-		}
+	private void createContent3D(GameLevel level) {
+		createWorld3D(level);
+		createPac3D(level);
+		createGhosts3D(level);
+		createBonus3D();
+		content.getChildren().clear();
+		content.getChildren().add(world3D);
+		content.getChildren().add(pac3D);
+		content.getChildren().addAll(ghosts3D);
+		content.getChildren().add(bonus3D);
+		var width = ArcadeWorld.SIZE_PX.x();
+		var height = ArcadeWorld.SIZE_PX.y();
+		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
+		changeCamera(perspectivePy.get());
 	}
 
 	private void createWorld3D(GameLevel level) {
@@ -181,13 +169,15 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createGhosts3D(GameLevel level) {
-		ghosts3D = level.ghosts().map(ghost -> new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id())))
-				.toArray(Ghost3D[]::new);
-		for (var ghost3D : ghosts3D) {
-			ghost3D.init(level);
-			ghost3D.drawModePy.bind(drawModePy);
-		}
+		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, level)).toArray(Ghost3D[]::new);
 		LOGGER.info("3D ghosts created");
+	}
+
+	private Ghost3D createGhost3D(Ghost ghost, GameLevel level) {
+		var ghost3D = new Ghost3D(ghost, ctx.r2D().ghostColorScheme(ghost.id()));
+		ghost3D.init(level);
+		ghost3D.drawModePy.bind(drawModePy);
+		return ghost3D;
 	}
 
 	private void createBonus3D() {
@@ -195,22 +185,24 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void init() {
-		ctx.level().ifPresent(level -> {
-			createWorld3D(level);
-			createPac3D(level);
-			createGhosts3D(level);
-			createBonus3D();
-			content.getChildren().clear();
-			content.getChildren().add(world3D); // always child #0, gets exchanged on level change
-			content.getChildren().add(pac3D);
-			content.getChildren().addAll(ghosts3D);
-			content.getChildren().add(bonus3D);
-			var width = ArcadeWorld.SIZE_PX.x();
-			var height = ArcadeWorld.SIZE_PX.y();
-			content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
-			changeCamera(perspectivePy.get());
-		});
+	public void onKeyPressed() {
+		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
+			// when in attract mode, allow adding credit
+			Actions.addCredit();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
+			Actions.selectPrevPerspective();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.RIGHT)) {
+			Actions.selectNextPerspective();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
+			Actions.cheatEatAllPellets();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
+			// TODO fixme
+//			Actions.cheatAddLives(3);
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
+			Actions.cheatEnterNextLevel();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
+			Actions.cheatKillAllEatableGhosts();
+		}
 	}
 
 	@Override
@@ -222,6 +214,11 @@ public class PlayScene3D implements GameScene {
 			bonus3D.update(level.bonus());
 			currentCamera().update(pac3D);
 		});
+	}
+
+	@Override
+	public boolean is3D() {
+		return true;
 	}
 
 	@Override
@@ -243,6 +240,14 @@ public class PlayScene3D implements GameScene {
 	public void embedInto(Scene parentScene) {
 		fxSubScene.widthProperty().bind(parentScene.widthProperty());
 		fxSubScene.heightProperty().bind(parentScene.heightProperty());
+	}
+
+	public CoordSystem coordSystem() {
+		return coordSystem;
+	}
+
+	public AmbientLight ambientLight() {
+		return ambientLight;
 	}
 
 	public GameSceneCamera getCamera(Perspective perspective) {
@@ -370,9 +375,7 @@ public class PlayScene3D implements GameScene {
 			ctx.level().ifPresent(level -> {
 				LOGGER.info("Starting level %d", level.number());
 				lockGameState();
-				createWorld3D(level);
-				content.getChildren().set(0, world3D);
-				changeCamera(perspectivePy.get());
+				createContent3D(level);
 				Actions.showFlashMessage(TextManager.message("level_starting", level.number()));
 				pause(3, this::unlockGameState).play();
 			});
