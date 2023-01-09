@@ -118,7 +118,10 @@ public class PlayScene2D extends GameScene2D {
 			r.drawBonus(g, level.bonus());
 			r.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
 			r.drawPac(g, level.pac());
-			level.ghosts().forEach(ghost -> r.drawGhost(g, ghost));
+			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
+			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
+			r.drawGhost(g, level.ghost(Ghost.ID_PINK_GHOST));
+			r.drawGhost(g, level.ghost(Ghost.ID_RED_GHOST));
 			if (!isCreditVisible()) {
 				int lives = game.isOneLessLifeDisplayed() ? game.lives() - 1 : game.lives();
 				r.drawLivesCounter(g, lives);
