@@ -49,7 +49,7 @@ public class GameSounds implements GameSoundController {
 	static {
 		//@formatter:off
 		PACMAN_MAP.put(GameSound.BONUS_EATEN,        "sound/pacman/eat_fruit.mp3");
-		PACMAN_MAP.put(GameSound.CREDIT,             "sound/pacman/credit.mp3");
+		PACMAN_MAP.put(GameSound.CREDIT,             "sound/pacman/credit.wav");
 		PACMAN_MAP.put(GameSound.EXTRA_LIFE,         "sound/pacman/extend.mp3");
 		PACMAN_MAP.put(GameSound.GAME_READY,         "sound/pacman/game_start.mp3");
 		PACMAN_MAP.put(GameSound.GHOST_EATEN,        "sound/pacman/eat_ghost.mp3");
