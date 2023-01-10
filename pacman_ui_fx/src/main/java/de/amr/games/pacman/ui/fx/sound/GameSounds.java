@@ -99,24 +99,22 @@ public class GameSounds implements GameSoundController {
 		if (Env.SOUND_DISABLED) {
 			LOGGER.trace("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
-			relPathMap.forEach(this::load);
+			relPathMap.forEach(this::loadClip);
 			LOGGER.trace("Sounds '%s' loaded", mapName);
 		}
 	}
 
-	private void load(GameSound sound, String relPath) {
+	private void loadClip(GameSound sound, String relPath) {
 		var url = Env.urlFromRelPath(relPath);
 		if (url == null) {
-			var absPath = Env.absPath(relPath);
-			LOGGER.error("Game sound %s not loaded: resource '%s' not found", sound, absPath);
+			LOGGER.error("Game sound %s could not be loaded: resource '%s' not found", sound, Env.absPath(relPath));
 			return;
 		}
-		var urlStr = url.toExternalForm();
 		try {
-			LOGGER.trace("Loading JavaFX audio clip (key=%s) from URL '%s'", sound, urlStr);
-			clips.put(sound, new AudioClip(urlStr));
+			clips.put(sound, new AudioClip(url.toExternalForm()));
+			LOGGER.trace("Audio clip created: key='%s', URL '%s'", sound, url);
 		} catch (Exception e) {
-			LOGGER.error("failed: %s", e.getMessage());
+			LOGGER.error("Audio clip creation failed: %s", e.getMessage());
 		}
 	}
 
