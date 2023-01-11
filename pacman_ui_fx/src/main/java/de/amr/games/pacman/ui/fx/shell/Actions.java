@@ -137,34 +137,18 @@ public class Actions {
 		currentGameState().addCredit(game());
 	}
 
-	public static void enterLevel(int levelNumber) {
+	public static void enterLevel(int newLevelNumber) {
 		if (currentGameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
-		gameController().sounds().stopAll();
-		if (game().level().isEmpty()) {
-			game().init();
-			game().enterLevel(1);
-			gameController().changeState(GameState.READY);
-			return;
-		}
 		game().level().ifPresent(level -> {
-			if (levelNumber == level.number()) {
-				// SKIP
-			} else if (levelNumber == 1) {
-				game().init();
-				game().enterLevel(1);
-				gameController().changeState(GameState.READY);
-			} else if (levelNumber > level.number()) {
-				for (int i = level.number() + 1; i < levelNumber; ++i) {
-					game().enterLevel(i);
+			if (newLevelNumber > level.number()) {
+				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
+					game().nextLevel();
 				}
 				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
-			} else {
-				for (int i = 1; i < levelNumber; ++i) {
-					game().enterLevel(i);
-				}
-				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+			} else if (newLevelNumber < level.number()) {
+				// not implemented
 			}
 		});
 	}
