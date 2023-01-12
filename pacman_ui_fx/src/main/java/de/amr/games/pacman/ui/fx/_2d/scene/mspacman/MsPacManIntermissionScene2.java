@@ -64,10 +64,10 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void draw() {
-		var renderer = (RendererMsPacManGame) ctx.r2D();
-		renderer.drawClapperboard(g, intermission.context().clapperboard);
-		renderer.drawPac(g, intermission.context().msPacMan);
-		renderer.drawPac(g, intermission.context().pacMan);
-		renderer.drawLevelCounter(g, ctx.game().levelCounter());
+		var r = (RendererMsPacManGame) ctx.r2D();
+		r.drawClapperboard(g, intermission.context().clapperboard);
+		r.drawPac(g, intermission.context().msPacMan);
+		r.drawPac(g, intermission.context().pacMan);
+		r.drawLevelCounter(g, ctx.game().levelCounter());
 	}
 }
