@@ -58,13 +58,13 @@ public abstract class RendererCommon implements Rendering2D {
 	private static final GhostColorScheme[] GHOST_COLORS = new GhostColorScheme[4];
 
 	static {
-		var rose = Color.web("FCBBB3");
-		var pale = Color.web("E0DDFF");
-		var blue = Color.web("#2121FF");
 		var red = Color.RED;
 		var pink = Color.web("FCB5FF");
-		var orange = Color.web("FBBE58");
 		var cyan = Color.CYAN;
+		var orange = Color.web("FBBE58");
+		var blue = Color.web("#2121FF");
+		var pale = Color.web("E0DDFF");
+		var rose = Color.web("FCBBB3");
 
 		//@formatter:off
 		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColorScheme(//
@@ -95,7 +95,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	private static final Font ARCADE_FONT_TS = Ufx.font("fonts/emulogic.ttf", TS);
 
-	public void clearTileContent(GraphicsContext g, Vector2i tile) {
+	public void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}
