@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
-import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationSet;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
@@ -149,5 +148,7 @@ public interface Rendering2D {
 
 	void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden);
 
-	void drawGameStateMessage(GraphicsContext g, GameState state);
+	void drawGameReadyMessage(GraphicsContext g);
+
+	void drawGameOverMessage(GraphicsContext g);
 }

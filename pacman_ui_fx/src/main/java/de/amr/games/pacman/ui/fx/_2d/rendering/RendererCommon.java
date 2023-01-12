@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationSet;
 import de.amr.games.pacman.lib.math.Vector2i;
@@ -234,14 +233,15 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public void drawGameStateMessage(GraphicsContext g, GameState state) {
-		if (state == GameState.GAME_OVER) {
-			drawText(g, "GAME  OVER", Color.RED, ARCADE_FONT_TS, t(9), t(21));
-		} else if (state == GameState.READY) {
-			drawText(g, "READY", Color.YELLOW, ARCADE_FONT_TS, t(11), t(21));
-			var italic = Font.font(ARCADE_FONT_TS.getFamily(), FontPosture.ITALIC, ARCADE_FONT_TS.getSize());
-			drawText(g, "!", Color.YELLOW, italic, t(16), t(21));
-		}
+	public void drawGameReadyMessage(GraphicsContext g) {
+		drawText(g, "READY", Color.YELLOW, ARCADE_FONT_TS, t(11), t(21));
+		var italic = Font.font(ARCADE_FONT_TS.getFamily(), FontPosture.ITALIC, ARCADE_FONT_TS.getSize());
+		drawText(g, "!", Color.YELLOW, italic, t(16), t(21));
+	}
+
+	@Override
+	public void drawGameOverMessage(GraphicsContext g) {
+		drawText(g, "GAME  OVER", Color.RED, ARCADE_FONT_TS, t(9), t(21));
 	}
 
 	@Override
