@@ -55,7 +55,7 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class RendererCommon implements Rendering2D {
 
-	private static final GhostColorScheme[] GHOST_COLORS = new GhostColorScheme[4];
+	public static final GhostColorScheme[] GHOST_COLOR_SCHEMES = new GhostColorScheme[4];
 
 	static {
 		var red = Color.RED;
@@ -67,25 +67,25 @@ public abstract class RendererCommon implements Rendering2D {
 		var rose = Color.web("FCBBB3");
 
 		//@formatter:off
-		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColorScheme(//
+		GHOST_COLOR_SCHEMES[Ghost.ID_RED_GHOST] = new GhostColorScheme(//
 			red, pale, blue,  // normal
 			blue, rose, rose, // frightened
 			pale, rose, red   // flashing
 		);
 
-		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColorScheme(//
+		GHOST_COLOR_SCHEMES[Ghost.ID_PINK_GHOST] = new GhostColorScheme(//
 			pink, pale, blue, // normal
 			blue, rose, rose, // frightened
 			pale, rose, red   // flashing
 		);
 
-		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColorScheme(//
+		GHOST_COLOR_SCHEMES[Ghost.ID_CYAN_GHOST] = new GhostColorScheme(//
 			cyan, pale, blue, // normal
 			blue, rose, rose, // frightened
 			pale, rose, red   // flashing
 		);
 		
-		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColorScheme(//
+		GHOST_COLOR_SCHEMES[Ghost.ID_ORANGE_GHOST] = new GhostColorScheme(//
 			orange, pale, blue, // normal
 			blue, rose, rose,   // frightened
 			pale, rose, red     // flashing
@@ -107,12 +107,7 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public Color ghostColor(int ghostID) {
-		return GHOST_COLORS[ghostID].normalDress();
-	}
-
-	@Override
-	public GhostColorScheme ghostColorScheme(int ghostID) {
-		return GHOST_COLORS[ghostID];
+		return GHOST_COLOR_SCHEMES[ghostID].normalDress();
 	}
 
 	@Override
