@@ -43,15 +43,16 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = (RendererMsPacManGame) ctx.r2D();
 		intermission = new MsPacManIntermission2(ctx.gameController());
+		var ic = intermission.context();
+		var r = (RendererMsPacManGame) ctx.r2D();
 		intermission.restart(MsPacManIntermission2.IntermissionState.FLAP);
-		intermission.context().clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
-		intermission.context().msPacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().msPacMan));
-		intermission.context().msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		intermission.context().pacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().pacMan));
-		intermission.context().pacMan.animationSet().ifPresent(animations -> {
-			var munching = renderer.createPacManMunchingAnimationMap(intermission.context().pacMan);
+		ic.clapperboard.setAnimationSet(r.createClapperboardAnimationSet());
+		ic.msPacMan.setAnimationSet(r.createPacAnimationSet(ic.msPacMan));
+		ic.msPacMan.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		ic.pacMan.setAnimationSet(r.createPacAnimationSet(ic.pacMan));
+		ic.pacMan.animationSet().ifPresent(animations -> {
+			var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
@@ -64,10 +65,11 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void draw() {
+		var ic = intermission.context();
 		var r = (RendererMsPacManGame) ctx.r2D();
-		r.drawClapperboard(g, intermission.context().clapperboard);
-		r.drawPac(g, intermission.context().msPacMan);
-		r.drawPac(g, intermission.context().pacMan);
+		r.drawClapperboard(g, ic.clapperboard);
+		r.drawPac(g, ic.msPacMan);
+		r.drawPac(g, ic.pacMan);
 		r.drawLevelCounter(g, ctx.game().levelCounter());
 	}
 }

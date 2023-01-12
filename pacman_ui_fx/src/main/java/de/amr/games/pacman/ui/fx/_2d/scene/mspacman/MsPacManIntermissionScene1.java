@@ -44,22 +44,23 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = (RendererMsPacManGame) ctx.r2D();
 		intermission = new MsPacManIntermission1(ctx.gameController());
+		var ic = intermission.context();
+		var r = (RendererMsPacManGame) ctx.r2D();
 		intermission.restart(MsPacManIntermission1.IntermissionState.FLAP);
-		intermission.context().clapperboard.setAnimationSet(renderer.createClapperboardAnimationSet());
-		intermission.context().msPac.setAnimationSet(renderer.createPacAnimationSet(intermission.context().msPac));
-		intermission.context().msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		intermission.context().pacMan.setAnimationSet(renderer.createPacAnimationSet(intermission.context().pacMan));
-		intermission.context().pacMan.animationSet().ifPresent(animations -> {
-			var munching = renderer.createPacManMunchingAnimationMap(intermission.context().pacMan);
+		ic.clapperboard.setAnimationSet(r.createClapperboardAnimationSet());
+		ic.msPac.setAnimationSet(r.createPacAnimationSet(ic.msPac));
+		ic.msPac.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		ic.pacMan.setAnimationSet(r.createPacAnimationSet(ic.pacMan));
+		ic.pacMan.animationSet().ifPresent(animations -> {
+			var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		intermission.context().inky.setAnimationSet(renderer.createGhostAnimationSet(intermission.context().inky));
-		intermission.context().inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-		intermission.context().pinky.setAnimationSet(renderer.createGhostAnimationSet(intermission.context().pinky));
-		intermission.context().pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		ic.inky.setAnimationSet(r.createGhostAnimationSet(ic.inky));
+		ic.inky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
+		ic.pinky.setAnimationSet(r.createGhostAnimationSet(ic.pinky));
+		ic.pinky.animationSet().ifPresent(EntityAnimationSet::ensureRunning);
 	}
 
 	@Override
@@ -69,13 +70,14 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void draw() {
+		var ic = intermission.context();
 		var r = (RendererMsPacManGame) ctx.r2D();
-		r.drawClapperboard(g, intermission.context().clapperboard);
-		r.drawPac(g, intermission.context().msPac);
-		r.drawPac(g, intermission.context().pacMan);
-		r.drawGhost(g, intermission.context().inky);
-		r.drawGhost(g, intermission.context().pinky);
-		r.drawEntitySprite(g, intermission.context().heart, r.heartSprite());
+		r.drawClapperboard(g, ic.clapperboard);
+		r.drawPac(g, ic.msPac);
+		r.drawPac(g, ic.pacMan);
+		r.drawGhost(g, ic.inky);
+		r.drawGhost(g, ic.pinky);
+		r.drawEntitySprite(g, ic.heart, r.heartSprite());
 		r.drawLevelCounter(g, ctx.game().levelCounter());
 	}
 }

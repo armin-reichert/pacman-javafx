@@ -54,13 +54,13 @@ public interface Rendering2D {
 
 	Color ghostColor(int ghostID);
 
-	Color getMazeFoodColor(int mazeNumber);
+	Color mazeFoodColor(int mazeNumber);
 
-	Color getMazeTopColor(int mazeNumber);
+	Color mazeTopColor(int mazeNumber);
 
-	Color getMazeSideColor(int mazeNumber);
+	Color mazeSideColor(int mazeNumber);
 
-	Color getGhostHouseDoorColor();
+	Color ghostHouseDoorColor();
 
 	// Sprites
 

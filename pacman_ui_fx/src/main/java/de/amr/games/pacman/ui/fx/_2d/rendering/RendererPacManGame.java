@@ -115,22 +115,22 @@ public class RendererPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public Color getMazeFoodColor(int mazeNumber) {
+	public Color mazeFoodColor(int mazeNumber) {
 		return FOOD_COLOR;
 	}
 
 	@Override
-	public Color getMazeTopColor(int mazeNumber) {
+	public Color mazeTopColor(int mazeNumber) {
 		return MAZE_WALL_COLOR.darker().darker();
 	}
 
 	@Override
-	public Color getGhostHouseDoorColor() {
+	public Color ghostHouseDoorColor() {
 		return Color.rgb(252, 181, 255);
 	}
 
 	@Override
-	public Color getMazeSideColor(int mazeNumber) {
+	public Color mazeSideColor(int mazeNumber) {
 		return Color.rgb(33, 33, 255);
 	}
 

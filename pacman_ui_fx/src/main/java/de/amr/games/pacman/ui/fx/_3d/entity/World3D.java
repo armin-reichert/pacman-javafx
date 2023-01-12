@@ -63,9 +63,9 @@ public class World3D extends Group {
 
 		int mazeNumber = level.game().mazeNumber(level.number());
 		var mazeColors = new Maze3DColors(//
-				r2D.getMazeSideColor(mazeNumber), //
-				r2D.getMazeTopColor(mazeNumber), //
-				r2D.getGhostHouseDoorColor());
+				r2D.mazeSideColor(mazeNumber), //
+				r2D.mazeTopColor(mazeNumber), //
+				r2D.ghostHouseDoorColor());
 
 		maze3D = new Maze3D(level.world(), mazeColors);
 
@@ -76,7 +76,7 @@ public class World3D extends Group {
 		houseLighting.setTranslateY(0.5 * (height - 2 * TS));
 		houseLighting.setTranslateZ(-TS);
 
-		var foodColor = r2D.getMazeFoodColor(mazeNumber);
+		var foodColor = r2D.mazeFoodColor(mazeNumber);
 		food3D = new Food3D(level.world(), foodColor);
 
 		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
