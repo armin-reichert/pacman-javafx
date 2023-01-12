@@ -155,18 +155,18 @@ public abstract class RendererCommon implements Rendering2D {
 		}
 	}
 
-	private static Rectangle2D regionOfCurrentFrame(EntityAnimation animation) {
+	private static Rectangle2D currentSprite(EntityAnimation animation) {
 		return (Rectangle2D) animation.frame();
 	}
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, regionOfCurrentFrame(animation)));
+		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, currentSprite(animation)));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, regionOfCurrentFrame(animation)));
+		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, currentSprite(animation)));
 	}
 
 	@Override
