@@ -116,7 +116,11 @@ public class PlayScene2D extends GameScene2D {
 				r.drawFilledMaze(g, mazeX, mazeY, game.mazeNumber(level.number()), level.world(), false);
 			}
 			r.drawBonus(g, level.bonus());
-			r.drawGameStateMessage(g, ctx.hasCredit() ? ctx.state() : GameState.GAME_OVER);
+			if (ctx.hasCredit()) {
+				r.drawGameStateMessage(g, ctx.state());
+			} else {
+				r.drawGameStateMessage(g, GameState.GAME_OVER);
+			}
 			r.drawPac(g, level.pac());
 			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
