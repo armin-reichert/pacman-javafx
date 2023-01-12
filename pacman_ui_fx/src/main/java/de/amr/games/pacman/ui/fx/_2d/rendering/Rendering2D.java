@@ -129,7 +129,7 @@ public interface Rendering2D {
 	 * @param entity entity
 	 * @param s      entity sprite (region in spritesheet), may be null
 	 */
-	void drawEntity(GraphicsContext g, Entity entity, Rectangle2D region);
+	void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D region);
 
 	void drawPac(GraphicsContext g, Pac pac);
 

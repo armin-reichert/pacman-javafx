@@ -149,7 +149,7 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public void drawEntity(GraphicsContext g, Entity entity, Rectangle2D r) {
+	public void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.isVisible()) {
 			drawSpriteCenteredOverBox(g, r, entity.position().x(), entity.position().y());
 		}
@@ -161,12 +161,12 @@ public abstract class RendererCommon implements Rendering2D {
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntity(g, pac, regionOfCurrentFrame(animation)));
+		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, regionOfCurrentFrame(animation)));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntity(g, ghost, regionOfCurrentFrame(animation)));
+		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, regionOfCurrentFrame(animation)));
 	}
 
 	@Override
@@ -179,10 +179,10 @@ public abstract class RendererCommon implements Rendering2D {
 		if (bonus.entity() instanceof MovingBonus movingBonus) {
 			g.save();
 			g.translate(0, movingBonus.dy());
-			drawEntity(g, movingBonus, sprite);
+			drawEntitySprite(g, movingBonus, sprite);
 			g.restore();
 		} else {
-			drawEntity(g, bonus.entity(), sprite);
+			drawEntitySprite(g, bonus.entity(), sprite);
 		}
 	}
 

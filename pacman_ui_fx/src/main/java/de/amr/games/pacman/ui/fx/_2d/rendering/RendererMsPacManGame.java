@@ -271,7 +271,7 @@ public class RendererMsPacManGame extends RendererCommon {
 		if (clapper.isVisible()) {
 			clapper.animation().map(EntityAnimation::animate).ifPresent(frame -> {
 				var sprite = (Rectangle2D) frame;
-				drawEntity(g, clapper, sprite);
+				drawEntitySprite(g, clapper, sprite);
 				g.setFont(arcadeFont(TS));
 				g.setFill(Color.rgb(222, 222, 255));
 				g.fillText(String.valueOf(clapper.sceneNumber), clapper.position().x() + sprite.getWidth() - 25,
