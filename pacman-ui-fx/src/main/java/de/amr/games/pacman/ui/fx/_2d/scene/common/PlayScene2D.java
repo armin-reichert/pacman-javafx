@@ -77,23 +77,6 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			if (!ctx.hasCredit()) { // credit can only be added in attract mode
-				Actions.addCredit();
-			}
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
-			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
-			Actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
-			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
-			Actions.cheatKillAllEatableGhosts();
-		}
-	}
-
-	@Override
 	public void draw() {
 		var game = ctx.game();
 		var r = ctx.r2D();
@@ -142,6 +125,23 @@ public class PlayScene2D extends GameScene2D {
 		if (level.world() instanceof ArcadeWorld arcadeWorld) {
 			g.setFill(Color.RED);
 			arcadeWorld.upwardBlockedTiles().forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, 1));
+		}
+	}
+
+	@Override
+	public void onKeyPressed() {
+		if (Keyboard.pressed(KeyCode.DIGIT5)) {
+			if (!ctx.hasCredit()) { // credit can only be added in attract mode
+				Actions.addCredit();
+			}
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
+			Actions.cheatEatAllPellets();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
+			Actions.cheatAddLives(3);
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
+			Actions.cheatEnterNextLevel();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
+			Actions.cheatKillAllEatableGhosts();
 		}
 	}
 
