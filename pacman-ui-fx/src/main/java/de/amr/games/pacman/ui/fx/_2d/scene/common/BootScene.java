@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Random;
 
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import javafx.geometry.Rectangle2D;
@@ -41,18 +42,16 @@ import javafx.scene.paint.Color;
  */
 public class BootScene extends GameScene2D {
 
-	private static final int TILES_X = ArcadeWorld.SIZE_TILES.x();
-	private static final int TILES_Y = ArcadeWorld.SIZE_TILES.y();
-	private static final int SIZE_X = ArcadeWorld.SIZE_PX.x();
-	private static final int SIZE_Y = ArcadeWorld.SIZE_PX.y();
+	private static final Vector2i SIZE_TILES = ArcadeWorld.SIZE_TILES;
+	private static final Vector2i SIZE_PIXELS = ArcadeWorld.SIZE_PX;
 	private static final Random RND = new Random();
 
 	private final GraphicsContext gc;
 	private final WritableImage currentImage;
 
 	public BootScene() {
-		currentImage = new WritableImage(SIZE_X, SIZE_Y);
-		gc = new Canvas(SIZE_X, SIZE_Y).getGraphicsContext2D();
+		currentImage = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
+		gc = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
 	}
 
 	@Override
@@ -98,8 +97,8 @@ public class BootScene extends GameScene2D {
 		clearBuffer();
 		gc.setFill(Color.rgb(222, 222, 255));
 		gc.setFont(ctx.r2D().arcadeFont(TS));
-		for (int row = 0; row < TILES_Y; ++row) {
-			for (int col = 0; col < TILES_X; ++col) {
+		for (int row = 0; row < SIZE_TILES.y(); ++row) {
+			for (int col = 0; col < SIZE_TILES.x(); ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));
 				gc.fillText(hexCode, col * 8, row * 8 + 8);
 			}
@@ -117,8 +116,8 @@ public class BootScene extends GameScene2D {
 		var w = image.getWidth();
 		var h = image.getHeight();
 		var cellSize = 16;
-		var numRows = TILES_Y / 2;
-		var numCols = TILES_X / 2;
+		var numRows = SIZE_TILES.y() / 2;
+		var numCols = SIZE_TILES.x() / 2;
 		for (int row = 0; row < numRows; ++row) {
 			if (RND.nextInt(100) < 10) {
 				continue;
@@ -136,15 +135,15 @@ public class BootScene extends GameScene2D {
 	private void drawGrid() {
 		clearBuffer();
 		var cellSize = 16;
-		var numRows = TILES_Y / 2;
-		var numCols = TILES_X / 2;
+		var numRows = SIZE_TILES.y() / 2;
+		var numCols = SIZE_TILES.x() / 2;
 		gc.setStroke(Color.rgb(222, 222, 255));
 		gc.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			gc.strokeLine(0, row * cellSize, SIZE_X, row * cellSize);
+			gc.strokeLine(0, row * cellSize, SIZE_PIXELS.x(), row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			gc.strokeLine(col * cellSize, 0, col * cellSize, SIZE_Y);
+			gc.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PIXELS.y());
 		}
 		takeSnapshot();
 	}
