@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
-	<artifactId>pacman_ui_fx</artifactId>
+	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
 
 	<properties>
