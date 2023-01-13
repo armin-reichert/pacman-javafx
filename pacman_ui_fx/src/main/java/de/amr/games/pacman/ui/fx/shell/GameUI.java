@@ -231,8 +231,8 @@ public class GameUI implements GameEventListener {
 			case MS_PACMAN -> new RendererMsPacManGame();
 			case PACMAN -> new RendererPacManGame();
 			};
-			level.pac().setAnimationSet(r.createPacAnimationSet(level.pac()));
-			level.ghosts().forEach(ghost -> ghost.setAnimationSet(r.createGhostAnimationSet(ghost)));
+			level.pac().setAnimationSet(r.createPacAnimations(level.pac()));
+			level.ghosts().forEach(ghost -> ghost.setAnimationSet(r.createGhostAnimations(ghost)));
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {
 				arcadeWorld.setFlashingAnimation(r.createMazeFlashingAnimation());
 			}

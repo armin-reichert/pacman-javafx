@@ -52,8 +52,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		var r = (RendererMsPacManGame) ctx.r2D();
 		intermission.restart(MsPacManIntermission3.IntermissionState.FLAP);
 		ic.clapperboard.setAnimationSet(r.createClapperboardAnimationSet());
-		ic.msPacMan.setAnimationSet(r.createPacAnimationSet(ic.msPacMan));
-		ic.pacMan.setAnimationSet(r.createPacAnimationSet(ic.pacMan));
+		ic.msPacMan.setAnimationSet(r.createPacAnimations(ic.msPacMan));
+		ic.pacMan.setAnimationSet(r.createPacAnimations(ic.pacMan));
 		var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
 		ic.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
 		storkAnim = r.createStorkFlyingAnimation();

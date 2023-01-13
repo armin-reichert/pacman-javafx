@@ -64,7 +64,7 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.setPixelSpeed(1.15f);
 		pac.show();
 
-		var pacAnimations = renderer.createPacAnimationSet(pac);
+		var pacAnimations = renderer.createPacAnimations(pac);
 		pacAnimations.select(AnimKeys.PAC_MUNCHING);
 		pacAnimations.animation(AnimKeys.PAC_MUNCHING).ifPresent(EntityAnimation::restart);
 		pac.setAnimationSet(pacAnimations);
@@ -77,7 +77,7 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.setPixelSpeed(0);
 		blinky.hide();
 
-		var blinkyAnimations = renderer.createGhostAnimationSet(blinky);
+		var blinkyAnimations = renderer.createGhostAnimations(blinky);
 		damagedAnimation = renderer.createBlinkyDamagedAnimation();
 		blinkyAnimations.put(AnimKeys.BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);

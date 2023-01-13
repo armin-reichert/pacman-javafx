@@ -110,20 +110,20 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationMap<AnimKeys> createPacAnimationSet(Pac pac) {
+	public EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac) {
 		var set = new EntityAnimationMap<AnimKeys>(2);
 		set.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
-		set.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimationMap(pac));
+		set.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
 		set.select(AnimKeys.PAC_MUNCHING);
 		return set;
 	}
 
 	@Override
-	public EntityAnimationMap<AnimKeys> createGhostAnimationSet(Ghost ghost) {
+	public EntityAnimationMap<AnimKeys> createGhostAnimations(Ghost ghost) {
 		var set = new EntityAnimationMap<AnimKeys>(5);
-		set.put(AnimKeys.GHOST_COLOR, createGhostColorAnimationMap(ghost));
+		set.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
 		set.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
-		set.put(AnimKeys.GHOST_EYES, createGhostEyesAnimationMap(ghost));
+		set.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
 		set.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
 		set.put(AnimKeys.GHOST_VALUE, createGhostValueList());
 		set.select(AnimKeys.GHOST_COLOR);

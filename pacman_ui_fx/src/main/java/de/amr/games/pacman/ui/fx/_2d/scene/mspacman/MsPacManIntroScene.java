@@ -53,11 +53,11 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void init() {
 		intro = new MsPacManIntroController(ctx.gameController());
 		intro.restart(MsPacManIntroState.START);
-		var pacAnimations = ctx.r2D().createPacAnimationSet(intro.context().msPacMan);
+		var pacAnimations = ctx.r2D().createPacAnimations(intro.context().msPacMan);
 		pacAnimations.ensureRunning();
 		intro.context().msPacMan.setAnimationSet(pacAnimations);
 		intro.context().ghosts.forEach(ghost -> {
-			var ghostAnimations = ctx.r2D().createGhostAnimationSet(ghost);
+			var ghostAnimations = ctx.r2D().createGhostAnimations(ghost);
 			ghostAnimations.ensureRunning();
 			ghost.setAnimationSet(ghostAnimations);
 		});

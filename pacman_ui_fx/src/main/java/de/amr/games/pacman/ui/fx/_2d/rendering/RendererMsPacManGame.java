@@ -194,7 +194,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac) {
+	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
@@ -222,7 +222,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost) {
+	public EntityAnimationByDirection createGhostColorAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);
@@ -250,7 +250,7 @@ public class RendererMsPacManGame extends RendererCommon {
 	}
 
 	@Override
-	public EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost) {
+	public EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet().dirIndex(dir);

@@ -74,21 +74,21 @@ public interface Rendering2D {
 
 	// Animations
 
-	EntityAnimationMap<AnimKeys> createPacAnimationSet(Pac pac);
+	EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac);
 
-	EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac);
+	EntityAnimationByDirection createPacMunchingAnimation(Pac pac);
 
 	SingleEntityAnimation<Rectangle2D> createPacDyingAnimation();
 
-	EntityAnimationMap<AnimKeys> createGhostAnimationSet(Ghost ghost);
+	EntityAnimationMap<AnimKeys> createGhostAnimations(Ghost ghost);
 
-	EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost);
+	EntityAnimationByDirection createGhostColorAnimation(Ghost ghost);
 
 	SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation();
 
 	SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation();
 
-	EntityAnimationByDirection createGhostEyesAnimationMap(Ghost ghost);
+	EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost);
 
 	SingleEntityAnimation<Boolean> createMazeFlashingAnimation();
 
