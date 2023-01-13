@@ -70,10 +70,6 @@ public class PlayScene2D extends GameScene2D {
 
 	private final ActorsInfo actorsInfo = new ActorsInfo();
 
-	public PlayScene2D() {
-		actorsInfo.enabledPy.bind(Env.showDebugInfoPy);
-	}
-
 	@Override
 	public void update() {
 		actorsInfo.update();
@@ -197,6 +193,7 @@ public class PlayScene2D extends GameScene2D {
 				panes.add(pane);
 			}
 			panes.forEach(PlayScene2D.this::addToOverlayPane);
+			enabledPy.bind(Env.showDebugInfoPy);
 		}
 
 		public void update() {
