@@ -50,6 +50,8 @@ import javafx.scene.paint.Color;
  */
 public class PacManIntroScene extends GameScene2D {
 
+	private static final Color PALE_WHITE = Color.rgb(222, 222, 255);
+
 	private PacManIntroController intro;
 
 	@Override
@@ -93,14 +95,9 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void draw() {
 		var timer = intro.state().timer();
-
 		switch (intro.state()) {
-		case START -> {
-			drawGallery();
-		}
-		case PRESENTING_GHOSTS -> {
-			drawGallery();
-		}
+		case START -> drawGallery();
+		case PRESENTING_GHOSTS -> drawGallery();
 		case SHOWING_POINTS -> {
 			drawGallery();
 			drawPoints();
@@ -128,7 +125,7 @@ public class PacManIntroScene extends GameScene2D {
 			drawGuys(0);
 			drawCopyright();
 		}
-		default -> throw new IllegalArgumentException("Unexpected value: " + intro.state());
+		default -> throw new IllegalArgumentException("Unknown intro state: " + intro.state());
 		}
 		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
 	}
@@ -137,36 +134,38 @@ public class PacManIntroScene extends GameScene2D {
 		ctx.r2D().drawCopyright(g, 32);
 	}
 
-	// TODO inspect in MAME what's really going on
+	// TODO inspect in MAME what's really going on here
 	private int flutter(long time) {
 		return time % 5 < 2 ? 0 : -1;
 	}
 
 	private void drawGallery() {
+		var r = ctx.r2D();
+		var col = PacManIntroData.LEFT_TILE;
 		var font = ctx.r2D().arcadeFont(TS);
 		if (intro.context().titleVisible) {
-			var color = Color.rgb(222, 222, 255);
-			ctx.r2D().drawText(g, "CHARACTER", color, font, t(PacManIntroData.LEFT_TILE + 3), t(6));
-			ctx.r2D().drawText(g, "/", color, font, t(PacManIntroData.LEFT_TILE + 13), t(6));
-			ctx.r2D().drawText(g, "NICKNAME", color, font, t(PacManIntroData.LEFT_TILE + 15), t(6));
+			r.drawText(g, "CHARACTER", PALE_WHITE, font, t(col + 3), t(6));
+			r.drawText(g, "/", PALE_WHITE, font, t(col + 13), t(6));
+			r.drawText(g, "NICKNAME", PALE_WHITE, font, t(col + 15), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().pictureVisible[id]) {
 				continue;
 			}
 			int tileY = 7 + 3 * id;
-			var color = ctx.r2D().ghostColor(id);
-			ctx.r2D().drawSpriteCenteredOverBox(g, ctx.r2D().ghostSprite(id, Direction.RIGHT),
-					t(PacManIntroData.LEFT_TILE) + 4, t(tileY));
+			var color = r.ghostColor(id);
+			r.drawSpriteCenteredOverBox(g, r.ghostSprite(id, Direction.RIGHT), t(col) + 4, t(tileY));
 			if (intro.context().characterVisible[id]) {
-				ctx.r2D().drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(PacManIntroData.LEFT_TILE + 3),
-						t(tileY + 1));
+				r.drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(tileY + 1));
 			}
 			if (intro.context().nicknameVisible[id]) {
-				ctx.r2D().drawText(g, "\"" + intro.context().ghosts[id].name() + "\"", color, font,
-						t(PacManIntroData.LEFT_TILE + 14), t(tileY + 1));
+				r.drawText(g, quote(intro.context().ghosts[id].name()), color, font, t(col + 14), t(tileY + 1));
 			}
 		}
+	}
+
+	private static String quote(String s) {
+		return "\"" + s + "\"";
 	}
 
 	private void drawBlinkingEnergizer() {
@@ -177,20 +176,22 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGuys(int offsetX) {
+		var pacMan = intro.context().pacMan;
+		var ghosts = intro.context().ghosts;
 		if (offsetX == 0) {
-			for (var ghost : intro.context().ghosts) {
+			for (var ghost : ghosts) {
 				ctx.r2D().drawGhost(g, ghost);
 			}
 		} else {
-			ctx.r2D().drawGhost(g, intro.context().ghosts[0]);
+			ctx.r2D().drawGhost(g, ghosts[0]);
 			g.save();
 			g.translate(offsetX, 0);
-			ctx.r2D().drawGhost(g, intro.context().ghosts[1]);
-			ctx.r2D().drawGhost(g, intro.context().ghosts[2]);
+			ctx.r2D().drawGhost(g, ghosts[1]);
+			ctx.r2D().drawGhost(g, ghosts[2]);
 			g.restore();
-			ctx.r2D().drawGhost(g, intro.context().ghosts[3]);
+			ctx.r2D().drawGhost(g, ghosts[3]);
 		}
-		ctx.r2D().drawPac(g, intro.context().pacMan);
+		ctx.r2D().drawPac(g, pacMan);
 	}
 
 	private void drawPoints() {
@@ -201,7 +202,7 @@ public class PacManIntroScene extends GameScene2D {
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
-		g.setFill(Color.rgb(222, 222, 255));
+		g.setFill(PALE_WHITE);
 		g.setFont(ctx.r2D().arcadeFont(TS));
 		g.fillText("10", t(tileX + 2), t(tileY));
 		g.fillText("50", t(tileX + 2), t(tileY + 2));
