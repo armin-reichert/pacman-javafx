@@ -18,7 +18,7 @@ build.bat
 This script 
 - runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
 - creates a Maven artifact wrapping the jar file of the OBJ file [importer](http://www.interactivemesh.org/models/jfx3dimporter.html), 
-- runs a Maven build of the [pacman_ui_fx](pacman_ui_fx) project (user interface),
+- runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (user interface),
 - runs the [Tentackle](https://tentackle.org/static-content/sitedocs/tentackle/latest/tentackle-jlink-maven-plugin/summary.html) packager to create a deployable zip file containing the application and all Java runtime components. 
 
 ## How to run
@@ -55,14 +55,14 @@ Cheats:
 
 ## How it looks
 
-![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/pacman-maze.png)
+![Play Scene](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/pacman-maze.png)
 
-![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/left-info-panel.png)
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/left-info-panel.png)
 
-![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/right-info-panel.png)
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/right-info-panel.png)
 
-![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/3D-info-panel.png)
+![Info Panel](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/3D-info-panel.png)
 
 YouTube:
 
-[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman_ui_fx/doc/thumbnail.jpg)](https://youtu.be/-ANLq4mMn3Q)
+[![YouTube](https://github.com/armin-reichert/pacman-javafx/blob/main/pacman-ui-fx/doc/thumbnail.jpg)](https://youtu.be/-ANLq4mMn3Q)
