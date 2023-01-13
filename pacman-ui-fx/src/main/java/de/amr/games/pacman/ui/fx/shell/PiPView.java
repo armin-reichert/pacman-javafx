@@ -27,9 +27,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2f;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -46,8 +46,8 @@ public class PiPView extends StackPane {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	public static final Vector2f MIN_SIZE = GameScene.DEFAULT_SIZE.toFloatVec();
-	public static final Vector2f MAX_SIZE = GameScene.DEFAULT_SIZE.toFloatVec().scaled(2.0f);
+	public static final Vector2f MIN_SIZE = ArcadeWorld.SIZE_PX.toFloatVec();
+	public static final Vector2f MAX_SIZE = ArcadeWorld.SIZE_PX.toFloatVec().scaled(2.0f);
 
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override

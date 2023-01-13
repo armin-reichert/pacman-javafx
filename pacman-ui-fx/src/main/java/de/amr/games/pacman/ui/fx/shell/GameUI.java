@@ -133,7 +133,7 @@ public class GameUI implements GameEventListener {
 		overlayPane.setRight(new VBox(pipView));
 
 		var content = new StackPane(gameSceneParent, flashMessageView, overlayPane);
-		var size = GameScene.DEFAULT_SIZE.toFloatVec().scaled(zoom);
+		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(zoom);
 		var scene = new Scene(content, size.x(), size.y());
 		scene.setOnKeyPressed(Keyboard::processEvent);
 		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> {

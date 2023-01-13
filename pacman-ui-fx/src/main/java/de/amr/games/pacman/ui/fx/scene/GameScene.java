@@ -24,9 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -37,9 +35,6 @@ import javafx.scene.SubScene;
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener {
-
-	/** Default unscaled scene size in pixels: number of tiles times tile size (8). */
-	public static final Vector2i DEFAULT_SIZE = ArcadeWorld.SIZE_PX;
 
 	/**
 	 * Sets the scene context (game controller/model, 2D rendering, 3D model, sound).

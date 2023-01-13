@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
@@ -57,8 +57,8 @@ public class CamFirstPerson extends GameSceneCamera {
 	@Override
 	public void update(Node target) {
 		var ref = pac.position().plus(pac.moveDir().vector().toFloatVec().scaled(6));
-		setTranslateX(ref.x() - GameScene.DEFAULT_SIZE.x() / 2);
-		setTranslateY(ref.y() - GameScene.DEFAULT_SIZE.y() / 2);
+		setTranslateX(ref.x() - ArcadeWorld.SIZE_PX.x() / 2);
+		setTranslateY(ref.y() - ArcadeWorld.SIZE_PX.y() / 2);
 		setTranslateZ(-6);
 		setRotationAxis(Rotate.Z_AXIS);
 		setRotate(rotate(pac.moveDir()));
