@@ -60,14 +60,15 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void draw() {
-		var msPacManSprite = ((RendererMsPacManGame) ctx.r2D()).lifeSprite();
-		var arcade8 = ctx.r2D().arcadeFont(TS);
-		var arcade6 = ctx.r2D().arcadeFont(6.0);
-		ctx.r2D().drawText(g, "PUSH START BUTTON", ctx.r2D().ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(6), t(16));
-		ctx.r2D().drawText(g, "1 PLAYER ONLY", ctx.r2D().ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(8), t(18));
-		ctx.r2D().drawText(g, "ADDITIONAL    AT 10000", ctx.r2D().ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(2), t(25));
-		ctx.r2D().drawSprite(g, msPacManSprite, t(13), t(23) + 1);
-		ctx.r2D().drawText(g, "PTS", ctx.r2D().ghostColor(Ghost.ID_ORANGE_GHOST), arcade6, t(25), t(25));
-		ctx.r2D().drawCopyright(g, 29);
+		var r = (RendererMsPacManGame) ctx.r2D();
+		var msPacManSprite = r.lifeSprite();
+		var arcade8 = r.arcadeFont(TS);
+		var arcade6 = r.arcadeFont(6.0);
+		r.drawText(g, "PUSH START BUTTON", r.ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(6), t(16));
+		r.drawText(g, "1 PLAYER ONLY", r.ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(8), t(18));
+		r.drawText(g, "ADDITIONAL    AT 10000", r.ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(2), t(25));
+		r.drawSprite(g, msPacManSprite, t(13), t(23) + 1);
+		r.drawText(g, "PTS", r.ghostColor(Ghost.ID_ORANGE_GHOST), arcade6, t(25), t(25));
+		r.drawCopyright(g, 29);
 	}
 }
