@@ -5,7 +5,7 @@ popd
 pushd interactivemesh
 call mvn install:install-file -Dfile=jars/jimObjModelImporterJFX.jar -DpomFile=pom.xml
 popd
-pushd pacman_ui_fx
+pushd pacman-ui-fx
 call mvn clean install
 popd
 pushd tentackle
