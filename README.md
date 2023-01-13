@@ -6,7 +6,13 @@ A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://
 
 Both games can be played in 2D and 3D, you can switch between 2D and 3D by pressing key combination <kbd>Alt+3</kbd>.
 
-## How to build (Windows)
+## How to run the released version
+
+Download the zip file `pacman-javafx-tentackle-1.0-jlink.zip` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Extract this file, open directory `bin`, start the application by executing the batch file `run.cmd`. 
+
+(Yes, this is a pain in the ass, but I haven't yet found a way to create e.g. a Windows .exe file. Gluon FX was my hope, but it seems that in the native Windows app created with Gluon, sound cannot be played. See https://stackoverflow.com/questions/72814285/gluon-fx-native-window-app-fails-no-glib-lite-in-java-library-path.)
+
+## How to build locally
 
 Clone also repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Then
 
@@ -21,11 +27,9 @@ This script
 - runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (user interface),
 - runs the [Tentackle](https://tentackle.org/static-content/sitedocs/tentackle/latest/tentackle-jlink-maven-plugin/summary.html) packager to create a deployable zip file containing the application and all Java runtime components. 
 
-## How to run
+## How to run the locally built version
 
-The `tentackle\target` directory now contains a zip file `pacman-javafx-tentackle-1.0-jlink.zip`. Extract this file, open directory `bin`, start the application by executing the batch file `run.cmd`. Yes, this is a pain in the ass, but I haven't yet found a way to create e.g. a Windows .exe file. Gluon FX was my hope, but it seems that in the native Windows app created with Gluon, sound cannot be played. See https://stackoverflow.com/questions/72814285/gluon-fx-native-window-app-fails-no-glib-lite-in-java-library-path.  
-
-In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find exactly the zip file mentioned above.
+The `tentackle\target` directory now contains a zip file `pacman-javafx-tentackle-1.0-jlink.zip`. Follow the instructions above to run the game(s).
 
 ## How to use
 
