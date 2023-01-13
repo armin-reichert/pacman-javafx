@@ -85,19 +85,18 @@ public class RendererMsPacManGame extends RendererCommon {
 	};
 	//@formatter:on
 
-	private static final Spritesheet SPRITESHEET;
-	private static final Image MIDWAY_LOGO;
-	private static final Image[] MAZES_EMPTY_INV;
+	private static final Spritesheet SPRITESHEET = new Spritesheet(//
+			Ufx.image("graphics/mspacman/sprites.png"), 16, //
+			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
+	private static final Image MIDWAY_LOGO = Ufx.image("graphics/mspacman/midway.png");
+
+	private static final Image[] MAZES_EMPTY_INV = new Image[6];
 
 	static {
-		SPRITESHEET = new Spritesheet(Ufx.image("graphics/mspacman/sprites.png"), 16, //
-				Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-		MIDWAY_LOGO = Ufx.image("graphics/mspacman/midway.png");
-		int numMazes = 6;
-		MAZES_EMPTY_INV = new Image[numMazes];
-		for (int i = 0; i < numMazes; ++i) {
-			var mazeEmpty = SPRITESHEET.region(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
-			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(mazeEmpty, //
+		for (int i = 0; i < MAZES_EMPTY_INV.length; ++i) {
+			var maze = SPRITESHEET.region(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
+			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(maze, //
 					Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
 		}
 	}
