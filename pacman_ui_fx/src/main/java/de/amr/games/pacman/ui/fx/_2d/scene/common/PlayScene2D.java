@@ -32,7 +32,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.anim.EntityAnimationSet;
+import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -148,8 +148,8 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onSwitchFrom3D() {
 		ctx.level().ifPresent(level -> {
-			level.pac().animationSet().ifPresent(EntityAnimationSet::ensureRunning);
-			level.ghosts().map(Ghost::animationSet).forEach(anim -> anim.ifPresent(EntityAnimationSet::ensureRunning));
+			level.pac().animationSet().ifPresent(EntityAnimationMap::ensureRunning);
+			level.ghosts().map(Ghost::animationSet).forEach(anim -> anim.ifPresent(EntityAnimationMap::ensureRunning));
 		});
 	}
 

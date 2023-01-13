@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.lib.anim.EntityAnimation;
-import de.amr.games.pacman.lib.anim.EntityAnimationSet;
+import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Score;
@@ -110,8 +110,8 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationSet<AnimKeys> createPacAnimationSet(Pac pac) {
-		var set = new EntityAnimationSet<AnimKeys>(2);
+	public EntityAnimationMap<AnimKeys> createPacAnimationSet(Pac pac) {
+		var set = new EntityAnimationMap<AnimKeys>(2);
 		set.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
 		set.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimationMap(pac));
 		set.select(AnimKeys.PAC_MUNCHING);
@@ -119,8 +119,8 @@ public abstract class RendererCommon implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationSet<AnimKeys> createGhostAnimationSet(Ghost ghost) {
-		var set = new EntityAnimationSet<AnimKeys>(5);
+	public EntityAnimationMap<AnimKeys> createGhostAnimationSet(Ghost ghost) {
+		var set = new EntityAnimationMap<AnimKeys>(5);
 		set.put(AnimKeys.GHOST_COLOR, createGhostColorAnimationMap(ghost));
 		set.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 		set.put(AnimKeys.GHOST_EYES, createGhostEyesAnimationMap(ghost));

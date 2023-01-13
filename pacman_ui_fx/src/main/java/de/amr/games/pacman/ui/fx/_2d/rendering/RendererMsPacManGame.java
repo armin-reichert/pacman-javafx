@@ -30,7 +30,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.anim.EntityAnimationSet;
+import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -317,8 +317,8 @@ public class RendererMsPacManGame extends RendererCommon {
 		return animation;
 	}
 
-	public EntityAnimationSet<Integer> createClapperboardAnimationSet() {
-		var animationSet = new EntityAnimationSet<Integer>(1);
+	public EntityAnimationMap<Integer> createClapperboardAnimationSet() {
+		var animationSet = new EntityAnimationMap<Integer>(1);
 		animationSet.put(0, createClapperboardAnimation());
 		animationSet.select(0);
 		return animationSet;

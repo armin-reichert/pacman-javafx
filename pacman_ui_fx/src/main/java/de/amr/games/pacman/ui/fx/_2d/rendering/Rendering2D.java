@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.anim.EntityAnimationSet;
+import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -74,13 +74,13 @@ public interface Rendering2D {
 
 	// Animations
 
-	EntityAnimationSet<AnimKeys> createPacAnimationSet(Pac pac);
+	EntityAnimationMap<AnimKeys> createPacAnimationSet(Pac pac);
 
 	EntityAnimationByDirection createPacMunchingAnimationMap(Pac pac);
 
 	SingleEntityAnimation<Rectangle2D> createPacDyingAnimation();
 
-	EntityAnimationSet<AnimKeys> createGhostAnimationSet(Ghost ghost);
+	EntityAnimationMap<AnimKeys> createGhostAnimationSet(Ghost ghost);
 
 	EntityAnimationByDirection createGhostColorAnimationMap(Ghost ghost);
 
