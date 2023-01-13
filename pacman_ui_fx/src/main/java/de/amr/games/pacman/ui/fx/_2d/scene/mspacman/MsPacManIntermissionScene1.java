@@ -48,7 +48,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		var ic = intermission.context();
 		var r = (RendererMsPacManGame) ctx.r2D();
 		intermission.restart(MsPacManIntermission1.IntermissionState.FLAP);
-		ic.clapperboard.setAnimationSet(r.createClapperboardAnimationSet());
+		ic.clapperboard.setAnimationSet(r.createClapperboardAnimations());
 		ic.msPac.setAnimationSet(r.createPacAnimations(ic.msPac));
 		ic.msPac.animationSet().ifPresent(EntityAnimationMap::ensureRunning);
 		ic.pacMan.setAnimationSet(r.createPacAnimations(ic.pacMan));
