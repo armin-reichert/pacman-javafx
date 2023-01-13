@@ -31,6 +31,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
+import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -51,7 +52,8 @@ public class RendererPacManGame extends RendererCommon {
 	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 
-	private static final Spritesheet SPRITESHEET = new Spritesheet(Ufx.image("graphics/pacman/sprites.png"), 16,
+	private static final Spritesheet SPRITESHEET = new Spritesheet(//
+			Ufx.image("graphics/pacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	private static final Image MAZE_FULL = Ufx.image("graphics/pacman/maze_full.png");
@@ -87,9 +89,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation() {
-		var animation = new SingleEntityAnimation<>(true, false);
-		animation.setFrameDuration(10);
-		return animation;
+		return new Pulse(10, true);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		String text = "\u00A9 1980 MIDWAY MFG.CO.";
+		var text = "\u00A9 1980 MIDWAY MFG.CO.";
 		g.setFont(arcadeFont(TS));
 		g.setFill(ghostColor(ID_PINK_GHOST));
 		g.fillText(text, t(4), t(tileY));
