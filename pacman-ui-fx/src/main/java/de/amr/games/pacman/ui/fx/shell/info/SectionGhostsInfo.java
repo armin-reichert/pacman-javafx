@@ -58,6 +58,7 @@ public class SectionGhostsInfo extends Section {
 		addInfo("State", () -> ghostState(ghostID));
 		addInfo("Killed Index", () -> ghostKilledIndex(ghostID));
 		addInfo("Animation", () -> ghostAnimation(ghostID));
+		addInfo("Movement", () -> ghostDirections(ghostID));
 		addInfo("Tile", () -> ghostTile(ghostID));
 	}
 
@@ -101,6 +102,15 @@ public class SectionGhostsInfo extends Section {
 		}
 		var ghost = level.get().ghost(ghostID);
 		return ghost.state().name();
+	}
+
+	private String ghostDirections(byte ghostID) {
+		var level = game().level();
+		if (level.isEmpty()) {
+			return "n/a";
+		}
+		var ghost = level.get().ghost(ghostID);
+		return "moves %s wants %s".formatted(ghost.moveDir(), ghost.wishDir());
 	}
 
 	private String ghostKilledIndex(byte ghostID) {
