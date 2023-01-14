@@ -29,7 +29,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,10 +39,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class SectionGameInfo extends Section {
-
-	private static String fmtSpeed(float fraction) {
-		return String.format("%.2f px/sec", GameModel.SPEED_100_PERCENT_PX * fraction);
-	}
 
 	public SectionGameInfo(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);

@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.shell.info;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -36,7 +35,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public class Dashboard extends BorderPane {
+public class Dashboard extends VBox {
 
 	public static final int MIN_COL_WIDTH = 100;
 	public static final int MIN_LABEL_WIDTH = 120;
@@ -44,13 +43,10 @@ public class Dashboard extends BorderPane {
 	public static final Font LABEL_FONT = Font.font("Tahoma", 12);
 	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
-	// BorderPane:
-	public final VBox lhs = new VBox();
-	public final VBox rhs = new VBox();
-
 	private Section secGeneral;
 	private Section secGameControl;
 	private Section secGameInfo;
+	private Section secGhostsInfo;
 	private Section sec3D;
 	private Section secCamera3D;
 	private Section secKeys;
@@ -59,17 +55,16 @@ public class Dashboard extends BorderPane {
 		secGeneral = new SectionGeneral(ui, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secGameControl = new SectionGameControl(ui, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secGameInfo = new SectionGameInfo(ui, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secGhostsInfo = new SectionGhostsInfo(ui, "Ghosts Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		sec3D = new Section3D(ui, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secCamera3D = new SectionCamera3D(ui, "3D Camera", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secKeys = new SectionKeys(ui, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		lhs.getChildren().addAll(secGeneral, secGameControl, secGameInfo, sec3D, secCamera3D, secKeys);
-		setLeft(lhs);
-		setRight(rhs);
+		getChildren().addAll(secGeneral, secGameControl, secGameInfo, secGhostsInfo, sec3D, secCamera3D, secKeys);
 		setVisible(false);
 	}
 
 	public Stream<Section> sections() {
-		return Stream.of(secGeneral, secGameControl, secGameInfo, sec3D, secCamera3D, secKeys);
+		return Stream.of(secGeneral, secGameControl, secGameInfo, secGhostsInfo, sec3D, secCamera3D, secKeys);
 	}
 
 	public void update() {

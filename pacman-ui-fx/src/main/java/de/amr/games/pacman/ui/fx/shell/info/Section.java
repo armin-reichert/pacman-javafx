@@ -56,6 +56,10 @@ import javafx.scene.text.Font;
  */
 public abstract class Section extends TitledPane {
 
+	public static String fmtSpeed(float fraction) {
+		return String.format("%.2f px/sec", GameModel.SPEED_100_PERCENT_PX * fraction);
+	}
+
 	protected final GameUI ui;
 	protected final GameController gc;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
@@ -115,6 +119,10 @@ public abstract class Section extends TitledPane {
 		infoTexts.add(info);
 		addRow(labelText, info);
 		return info;
+	}
+
+	protected void addEmptyLine() {
+		addInfo("", "");
 	}
 
 	protected InfoText addInfo(String labelText, String value) {
