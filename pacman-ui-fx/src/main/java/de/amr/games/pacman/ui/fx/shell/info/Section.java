@@ -25,9 +25,11 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -100,6 +102,15 @@ public abstract class Section extends TitledPane {
 
 	protected GameScene gameScene() {
 		return ui.currentGameScene();
+	}
+
+	protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
+		return () -> {
+			if (gc.game().level().isEmpty()) {
+				return "n/a";
+			}
+			return infoSupplier.apply(gc.game().level().get());
+		};
 	}
 
 	private void addRow(String labelText, Node child) {

@@ -25,9 +25,6 @@ package de.amr.games.pacman.ui.fx.shell.info;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;
@@ -62,15 +59,6 @@ public class SectionGameInfo extends Section {
 		addInfo("- empowered", ifLevelExists(this::fmtPacSpeedPowered));
 		addInfo("Frightened time", ifLevelExists(this::fmtPacPowerSeconds));
 		addInfo("Maze flashings", ifLevelExists(this::fmtNumFlashes));
-	}
-
-	private Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
-		return () -> {
-			if (gc.game().level().isEmpty()) {
-				return "n/a";
-			}
-			return infoSupplier.apply(gc.game().level().get());
-		};
 	}
 
 	private String fmtHuntingPhase(GameLevel level) {
