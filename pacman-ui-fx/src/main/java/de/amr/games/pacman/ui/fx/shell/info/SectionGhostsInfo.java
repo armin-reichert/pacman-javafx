@@ -47,7 +47,14 @@ public class SectionGhostsInfo extends Section {
 	}
 
 	private void addGhostInfo(byte ghostID) {
-		addInfo("Name", () -> ghostName(ghostID));
+		var color = switch (ghostID) {
+		case Ghost.ID_RED_GHOST -> "Red";
+		case Ghost.ID_PINK_GHOST -> "Pink";
+		case Ghost.ID_CYAN_GHOST -> "Cyan";
+		case Ghost.ID_ORANGE_GHOST -> "Orange";
+		default -> "";
+		};
+		addInfo(color + " Ghost", () -> ghostName(ghostID));
 		addInfo("State", () -> ghostState(ghostID));
 		addInfo("Killed Index", () -> ghostKilledIndex(ghostID));
 		addInfo("Animation", () -> ghostAnimation(ghostID));
