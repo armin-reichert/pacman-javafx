@@ -148,8 +148,8 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onSwitchFrom3D() {
 		ctx.level().ifPresent(level -> {
-			level.pac().animationSet().ifPresent(EntityAnimationMap::ensureRunning);
-			level.ghosts().map(Ghost::animationSet).forEach(anim -> anim.ifPresent(EntityAnimationMap::ensureRunning));
+			level.pac().animations().ifPresent(EntityAnimationMap::ensureRunning);
+			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(EntityAnimationMap::ensureRunning));
 		});
 	}
 
@@ -249,7 +249,7 @@ public class PlayScene2D extends GameScene2D {
 			}
 			var selectedAnim = ghost.animation();
 			if (selectedAnim.isPresent()) {
-				var ghostAnims = ghost.animationSet();
+				var ghostAnims = ghost.animations();
 				if (ghostAnims.isPresent()) {
 					var key = ghostAnims.get().selectedKey();
 					var animState = animationStateInfo(selectedAnim.get(), ghost.wishDir());
@@ -261,7 +261,7 @@ public class PlayScene2D extends GameScene2D {
 		}
 
 		private String pacInfo(Pac pac) {
-			var pacAnims = pac.animationSet();
+			var pacAnims = pac.animations();
 			if (pacAnims.isPresent()) {
 				var selectedAnim = pacAnims.get().selectedAnimation();
 				if (selectedAnim.isPresent()) {

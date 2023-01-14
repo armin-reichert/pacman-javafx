@@ -55,7 +55,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		ic.msPacMan.setAnimationSet(r.createPacAnimations(ic.msPacMan));
 		ic.pacMan.setAnimationSet(r.createPacAnimations(ic.pacMan));
 		var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
-		ic.pacMan.animationSet().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
+		ic.pacMan.animations().ifPresent(anims -> anims.put(AnimKeys.PAC_MUNCHING, munching));
 		storkAnim = r.createStorkFlyingAnimation();
 		storkAnim.ensureRunning();
 	}

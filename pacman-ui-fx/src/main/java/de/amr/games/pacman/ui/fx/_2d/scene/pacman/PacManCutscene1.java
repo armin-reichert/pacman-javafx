@@ -56,7 +56,7 @@ public class PacManCutscene1 extends GameScene2D {
 		pac = new Pac("Pac-Man");
 		pac.setAnimationSet(renderer.createPacAnimations(pac));
 		var bigPacAnimation = renderer.createBigPacManMunchingAnimation();
-		pac.animationSet().ifPresent(animations -> animations.put(AnimKeys.PAC_BIG, bigPacAnimation));
+		pac.animations().ifPresent(animations -> animations.put(AnimKeys.PAC_BIG, bigPacAnimation));
 		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
@@ -65,7 +65,7 @@ public class PacManCutscene1 extends GameScene2D {
 
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
 		blinky.setAnimationSet(renderer.createGhostAnimations(blinky));
-		blinky.animationSet().ifPresent(animations -> {
+		blinky.animations().ifPresent(animations -> {
 			animations.select(AnimKeys.GHOST_COLOR);
 			animations.animation(AnimKeys.GHOST_COLOR).get().restart();
 		});
@@ -87,7 +87,7 @@ public class PacManCutscene1 extends GameScene2D {
 		} else if (frame == 260) {
 			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.animationSet().ifPresent(animations -> {
+			blinky.animations().ifPresent(animations -> {
 				animations.select(AnimKeys.GHOST_BLUE);
 				animations.selectedAnimation().get().restart();
 			});
@@ -95,7 +95,7 @@ public class PacManCutscene1 extends GameScene2D {
 		} else if (frame == 400) {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
-			pac.animationSet().ifPresent(animations -> {
+			pac.animations().ifPresent(animations -> {
 				animations.select(AnimKeys.PAC_BIG);
 				animations.selectedAnimation().get().restart();
 			});

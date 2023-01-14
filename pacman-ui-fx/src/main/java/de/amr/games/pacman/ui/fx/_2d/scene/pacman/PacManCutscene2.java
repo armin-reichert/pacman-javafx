@@ -104,12 +104,12 @@ public class PacManCutscene2 extends GameScene2D {
 			stretchedDressAnimation.setFrameIndex(2);
 		} else if (frame == 248) {
 			blinky.setPixelSpeed(0);
-			blinky.animationSet().ifPresent(animations -> animations.selectedAnimation().get().stop());
+			blinky.animations().ifPresent(animations -> animations.selectedAnimation().get().stop());
 			stretchedDressAnimation.setFrameIndex(3);
 		} else if (frame == 328) {
 			stretchedDressAnimation.setFrameIndex(4);
 		} else if (frame == 329) {
-			blinky.animationSet().ifPresent(animations -> animations.select(AnimKeys.BLINKY_DAMAGED));
+			blinky.animations().ifPresent(animations -> animations.select(AnimKeys.BLINKY_DAMAGED));
 			damagedAnimation.setFrameIndex(0);
 		} else if (frame == 389) {
 			damagedAnimation.setFrameIndex(1);
