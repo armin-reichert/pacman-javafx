@@ -66,7 +66,7 @@ public class SectionGameInfo extends Section {
 
 	private Supplier<String> levelInfo(Function<GameLevel, String> infoSupplier) {
 		return () -> {
-			if (gc.game().level().isEmpty() || !gc.game().isPlaying()) {
+			if (gc.game().level().isEmpty()) {
 				return "n/a";
 			}
 			return infoSupplier.apply(gc.game().level().get());
