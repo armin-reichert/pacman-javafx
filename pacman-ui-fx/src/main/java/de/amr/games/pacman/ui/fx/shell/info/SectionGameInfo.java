@@ -50,21 +50,21 @@ public class SectionGameInfo extends Section {
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
 		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
 
-		addInfo("Hunting Phase", levelInfo(this::fmtHuntingPhase));
-		addInfo("", levelInfo(this::fmtHuntingTicksRunning));
-		addInfo("", levelInfo(this::fmtHuntingTicksRemaining));
+		addInfo("Hunting Phase", ifLevelExists(this::fmtHuntingPhase));
+		addInfo("", ifLevelExists(this::fmtHuntingTicksRunning));
+		addInfo("", ifLevelExists(this::fmtHuntingTicksRemaining));
 
-		addInfo("Pellets", levelInfo(this::fmtPelletCount));
-		addInfo("Ghost speed", levelInfo(this::fmtGhostSpeed));
-		addInfo("- frightened", levelInfo(this::fmtGhostSpeedFrightened));
-		addInfo("- in tunnel", levelInfo(this::fmtGhostSpeedTunnel));
-		addInfo("Pac-Man speed", levelInfo(this::fmtPacSpeed));
-		addInfo("- empowered", levelInfo(this::fmtPacSpeedPowered));
-		addInfo("Frightened time", levelInfo(this::fmtPacPowerSeconds));
-		addInfo("Maze flashings", levelInfo(this::fmtNumFlashes));
+		addInfo("Pellets", ifLevelExists(this::fmtPelletCount));
+		addInfo("Ghost speed", ifLevelExists(this::fmtGhostSpeed));
+		addInfo("- frightened", ifLevelExists(this::fmtGhostSpeedFrightened));
+		addInfo("- in tunnel", ifLevelExists(this::fmtGhostSpeedTunnel));
+		addInfo("Pac-Man speed", ifLevelExists(this::fmtPacSpeed));
+		addInfo("- empowered", ifLevelExists(this::fmtPacSpeedPowered));
+		addInfo("Frightened time", ifLevelExists(this::fmtPacPowerSeconds));
+		addInfo("Maze flashings", ifLevelExists(this::fmtNumFlashes));
 	}
 
-	private Supplier<String> levelInfo(Function<GameLevel, String> infoSupplier) {
+	private Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
 		return () -> {
 			if (gc.game().level().isEmpty()) {
 				return "n/a";
