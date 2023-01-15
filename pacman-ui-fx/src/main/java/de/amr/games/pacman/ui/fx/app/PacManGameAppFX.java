@@ -94,13 +94,13 @@ public class PacManGameAppFX extends Application {
 	}
 
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void start(Stage primaryStage) throws IOException {
 		LOGGER.info("Starting application...");
 		var zoom = O_ZOOM.getValue();
-		var ui = new GameUI(gameController, stage, zoom);
-		stage.setFullScreen(O_FULLSCREEN.getValue());
+		var ui = new GameUI(gameController, primaryStage, zoom);
+		primaryStage.setFullScreen(O_FULLSCREEN.getValue());
 		ui.gameLoop().start();
-		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(stage.getWidth(),
-				stage.getHeight(), zoom, U.onOff(Env.threeDScenesPy.get()), Env.perspectivePy.get()));
+		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
+				primaryStage.getHeight(), zoom, U.onOff(Env.threeDScenesPy.get()), Env.perspectivePy.get()));
 	}
 }

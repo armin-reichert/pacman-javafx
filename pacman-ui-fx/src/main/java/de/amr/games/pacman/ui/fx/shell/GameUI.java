@@ -88,9 +88,9 @@ public class GameUI implements GameEventListener {
 
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage stage, float zoom) {
+	public GameUI(GameController gameController, Stage primaryStage, float zoom) {
 		Objects.requireNonNull(gameController);
-		Objects.requireNonNull(stage);
+		Objects.requireNonNull(primaryStage);
 		if (zoom < 0) {
 			throw new IllegalArgumentException("Zoom value must not be negative but is " + zoom);
 		}
@@ -104,7 +104,7 @@ public class GameUI implements GameEventListener {
 		dashboard.attachTo(this);
 		configureGameLoop();
 
-		this.stage = stage;
+		stage = primaryStage;
 		stage.setScene(createMainScene(zoom));
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
