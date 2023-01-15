@@ -23,10 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.dashboard;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -63,18 +65,18 @@ public class SectionGhostsInfo extends Section {
 		addInfo("Tile", ifLevelExists(this::ghostTile, ghostID));
 	}
 
-	private Supplier<String> ifLevelExists(Function<Ghost, String> fnGhostInfo, byte ghostID) {
+	private Supplier<String> ifLevelExists(BiFunction<GameLevel, Ghost, String> fnGhostInfo, byte ghostID) {
 		return () -> {
 			var level = game().level();
-			return level.isPresent() ? fnGhostInfo.apply(level.get().ghost(ghostID)) : "n/a";
+			return level.isPresent() ? fnGhostInfo.apply(level.get(), level.get().ghost(ghostID)) : "n/a";
 		};
 	}
 
-	private String ghostName(Ghost ghost) {
+	private String ghostName(GameLevel level, Ghost ghost) {
 		return ghost.name();
 	}
 
-	private String ghostAnimation(Ghost ghost) {
+	private String ghostAnimation(GameLevel level, Ghost ghost) {
 		var anims = ghost.animations();
 		if (anims.isEmpty()) {
 			return "n/a";
@@ -84,19 +86,23 @@ public class SectionGhostsInfo extends Section {
 		return "%s %s".formatted(animKey, running ? "running" : "stopped");
 	}
 
-	private String ghostTile(Ghost ghost) {
+	private String ghostTile(GameLevel level, Ghost ghost) {
 		return "%s Offset %s".formatted(ghost.tile(), ghost.offset());
 	}
 
-	private String ghostState(Ghost ghost) {
-		return ghost.state().name();
+	private String ghostState(GameLevel level, Ghost ghost) {
+		var stateText = ghost.state().name();
+		if (ghost.state() == GhostState.HUNTING_PAC) {
+			stateText = level.currentHuntingPhaseName();
+		}
+		return stateText;
 	}
 
-	private String ghostDirections(Ghost ghost) {
+	private String ghostDirections(GameLevel level, Ghost ghost) {
 		return "moves %s wants %s".formatted(ghost.moveDir(), ghost.wishDir());
 	}
 
-	private String ghostKilledIndex(Ghost ghost) {
+	private String ghostKilledIndex(GameLevel level, Ghost ghost) {
 		return "%d".formatted(ghost.killedIndex());
 	}
 }
