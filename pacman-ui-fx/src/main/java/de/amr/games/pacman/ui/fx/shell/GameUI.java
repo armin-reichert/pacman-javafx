@@ -103,8 +103,8 @@ public class GameUI implements GameEventListener {
 
 		GameEvents.addListener(this);
 		Keyboard.addHandler(this::onKeyPressed);
-		Actions.init(this);
-		dashboard.init(this);
+		Actions.attachTo(this);
+		dashboard.attachTo(this);
 		configureGameLoop();
 
 		this.stage = stage;

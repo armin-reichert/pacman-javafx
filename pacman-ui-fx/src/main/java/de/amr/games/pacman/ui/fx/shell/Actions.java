@@ -71,7 +71,7 @@ public class Actions {
 		return gameController().state();
 	}
 
-	public static void init(GameUI userInterface) {
+	public static void attachTo(GameUI userInterface) {
 		ui = Objects.requireNonNull(userInterface, "User Interface for actions must not be null");
 	}
 

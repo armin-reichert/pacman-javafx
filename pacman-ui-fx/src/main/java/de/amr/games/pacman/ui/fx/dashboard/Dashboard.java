@@ -51,7 +51,7 @@ public class Dashboard extends VBox {
 	private Section secCamera3D;
 	private Section secKeys;
 
-	public void init(GameUI ui) {
+	public void attachTo(GameUI ui) {
 		secGeneral = new SectionGeneral(ui, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secGameControl = new SectionGameControl(ui, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
 		secGameInfo = new SectionGameInfo(ui, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
