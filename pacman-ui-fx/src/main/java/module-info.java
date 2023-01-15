@@ -26,9 +26,9 @@ module de.amr.games.pacman.ui.fx {
 	requires jimObjModelImporterJFX;
 
 	exports de.amr.games.pacman.ui.fx.app;
+	exports de.amr.games.pacman.ui.fx.dashboard;
 	exports de.amr.games.pacman.ui.fx.scene;
 	exports de.amr.games.pacman.ui.fx.shell;
-	exports de.amr.games.pacman.ui.fx.shell.info;
 	exports de.amr.games.pacman.ui.fx.sound;
 	exports de.amr.games.pacman.ui.fx.util;
 	exports de.amr.games.pacman.ui.fx._2d.rendering;
