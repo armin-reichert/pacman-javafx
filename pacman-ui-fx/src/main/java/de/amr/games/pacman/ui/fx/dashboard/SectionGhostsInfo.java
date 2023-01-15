@@ -82,8 +82,13 @@ public class SectionGhostsInfo extends Section {
 			return InfoText.NO_INFO;
 		}
 		var animKey = anims.get().selectedKey().name();
-		var running = anims.get().selectedAnimation().get().isRunning();
-		return "%s %s".formatted(animKey, running ? "running" : "stopped");
+		var selectedAnim = anims.get().selectedAnimation();
+		if (selectedAnim.isPresent()) {
+			var running = selectedAnim.get().isRunning();
+			return "%s %s".formatted(animKey, running ? "running" : "stopped");
+		} else {
+			return InfoText.NO_INFO;
+		}
 	}
 
 	private String ghostTile(GameLevel level, Ghost ghost) {
