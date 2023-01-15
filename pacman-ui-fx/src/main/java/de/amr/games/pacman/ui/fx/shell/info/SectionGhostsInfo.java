@@ -23,6 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell.info;
 
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
+
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.paint.Color;
@@ -52,29 +56,25 @@ public class SectionGhostsInfo extends Section {
 		case Ghost.ID_ORANGE_GHOST -> "Orange";
 		default -> "";
 		};
-		addInfo(color + " Ghost", () -> ghostName(ghostID));
-		addInfo("State", () -> ghostState(ghostID));
-		addInfo("Killed Index", () -> ghostKilledIndex(ghostID));
-		addInfo("Animation", () -> ghostAnimation(ghostID));
-		addInfo("Movement", () -> ghostDirections(ghostID));
-		addInfo("Tile", () -> ghostTile(ghostID));
+		addInfo(color + " Ghost", ifLevelExistsGhostInfo(this::ghostName, ghostID));
+		addInfo("State", ifLevelExistsGhostInfo(this::ghostState, ghostID));
+		addInfo("Killed Index", ifLevelExistsGhostInfo(this::ghostKilledIndex, ghostID));
+		addInfo("Animation", ifLevelExistsGhostInfo(this::ghostAnimation, ghostID));
+		addInfo("Movement", ifLevelExistsGhostInfo(this::ghostDirections, ghostID));
+		addInfo("Tile", ifLevelExistsGhostInfo(this::ghostTile, ghostID));
 	}
 
-	private String ghostName(byte ghostID) {
-		var level = game().level();
-		if (level.isEmpty()) {
-			return "n/a";
-		}
-		var ghost = level.get().ghost(ghostID);
+	private Supplier<String> ifLevelExistsGhostInfo(BiFunction<GameLevel, Byte, String> ghostInfoSupplier, byte ghostID) {
+		return () -> game().level().isPresent() ? ghostInfoSupplier.apply(game().level().get(), ghostID) : "n/a";
+	}
+
+	private String ghostName(GameLevel level, byte ghostID) {
+		var ghost = level.ghost(ghostID);
 		return ghost.name();
 	}
 
-	private String ghostAnimation(byte ghostID) {
-		var level = game().level();
-		if (level.isEmpty()) {
-			return "n/a";
-		}
-		var ghost = level.get().ghost(ghostID);
+	private String ghostAnimation(GameLevel level, byte ghostID) {
+		var ghost = level.ghost(ghostID);
 		var anims = ghost.animations();
 		if (anims.isEmpty()) {
 			return "n/a";
@@ -84,39 +84,23 @@ public class SectionGhostsInfo extends Section {
 		return "%s %s".formatted(animKey, running ? "running" : "stopped");
 	}
 
-	private String ghostTile(byte ghostID) {
-		var level = game().level();
-		if (level.isEmpty()) {
-			return "n/a";
-		}
-		var ghost = level.get().ghost(ghostID);
+	private String ghostTile(GameLevel level, byte ghostID) {
+		var ghost = level.ghost(ghostID);
 		return "%s Offset %s".formatted(ghost.tile(), ghost.offset());
 	}
 
-	private String ghostState(byte ghostID) {
-		var level = game().level();
-		if (level.isEmpty()) {
-			return "n/a";
-		}
-		var ghost = level.get().ghost(ghostID);
+	private String ghostState(GameLevel level, byte ghostID) {
+		var ghost = level.ghost(ghostID);
 		return ghost.state().name();
 	}
 
-	private String ghostDirections(byte ghostID) {
-		var level = game().level();
-		if (level.isEmpty()) {
-			return "n/a";
-		}
-		var ghost = level.get().ghost(ghostID);
+	private String ghostDirections(GameLevel level, byte ghostID) {
+		var ghost = level.ghost(ghostID);
 		return "moves %s wants %s".formatted(ghost.moveDir(), ghost.wishDir());
 	}
 
-	private String ghostKilledIndex(byte ghostID) {
-		var level = game().level();
-		if (level.isEmpty()) {
-			return "n/a";
-		}
-		var ghost = level.get().ghost(ghostID);
+	private String ghostKilledIndex(GameLevel level, byte ghostID) {
+		var ghost = level.ghost(ghostID);
 		return "%d".formatted(ghost.killedIndex());
 	}
 
