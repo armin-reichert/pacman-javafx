@@ -98,9 +98,6 @@ public class GameUI implements GameEventListener {
 		this.gameController = gameController;
 		gameController.setManualPacSteering(manualPacSteering);
 
-		var mainScene = createMainScene(zoom);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
-
 		GameEvents.addListener(this);
 		Keyboard.addHandler(this::onKeyPressed);
 		Actions.attachTo(this);
@@ -108,7 +105,7 @@ public class GameUI implements GameEventListener {
 		configureGameLoop();
 
 		this.stage = stage;
-		stage.setScene(mainScene);
+		stage.setScene(createMainScene(zoom));
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> endApp());
@@ -142,6 +139,8 @@ public class GameUI implements GameEventListener {
 		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
 		Env.pausedPy.addListener((x, y, z) -> updateStageTitle());
+
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
 
 		return scene;
 	}
