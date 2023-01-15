@@ -98,7 +98,7 @@ public class GameUI implements GameEventListener {
 		this.gameController = gameController;
 		gameController.setManualPacSteering(manualPacSteering);
 
-		var mainScene = createScene(zoom);
+		var mainScene = createMainScene(zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
 
 		GameEvents.addListener(this);
@@ -124,7 +124,7 @@ public class GameUI implements GameEventListener {
 		LOGGER.trace("Application ended.");
 	}
 
-	private Scene createScene(float zoom) {
+	private Scene createMainScene(float zoom) {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
