@@ -112,7 +112,6 @@ public class GameUI implements GameEventListener {
 		Keyboard.addHandler(this::onKeyPressed);
 		initGameLoop();
 		selectSounds(gameController);
-		updateGameScene(true);
 		updateStageTitle();
 		dashboard.init(this);
 
@@ -120,6 +119,7 @@ public class GameUI implements GameEventListener {
 		stage.show();
 
 		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
+		gameController.boot();
 	}
 
 	private void endApp() {
