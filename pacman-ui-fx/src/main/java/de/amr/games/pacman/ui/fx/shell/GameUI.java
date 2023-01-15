@@ -83,45 +83,36 @@ public class GameUI implements GameEventListener {
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
-	private final KeyboardSteering manualPacSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT,
-			KeyCode.RIGHT);
 
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage primaryStage, float zoom) {
-		Objects.requireNonNull(gameController);
-		Objects.requireNonNull(primaryStage);
+		this.gameController = Objects.requireNonNull(gameController);
+		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameController.setManualPacSteering(kbSteering);
+		this.stage = Objects.requireNonNull(primaryStage);
 		if (zoom < 0) {
 			throw new IllegalArgumentException("Zoom value must not be negative but is " + zoom);
 		}
-
-		this.gameController = gameController;
-		gameController.setManualPacSteering(manualPacSteering);
-
 		GameEvents.addListener(this);
 		Keyboard.addHandler(this::onKeyPressed);
 		Actions.attachTo(this);
 		dashboard.attachTo(this);
 		configureGameLoop();
-
-		stage = primaryStage;
-		stage.setScene(createMainScene(zoom));
+		stage.setScene(createMainScene(zoom, kbSteering));
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		stage.setOnCloseRequest(e -> endApp());
+		stage.setOnCloseRequest(e -> {
+			gameLoop.stop();
+			LOGGER.trace("Application closed.");
+		});
 		stage.centerOnScreen();
 		stage.show();
-
 		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
 		gameController.boot();
 	}
 
-	private void endApp() {
-		gameLoop.stop();
-		LOGGER.trace("Application ended.");
-	}
-
-	private Scene createMainScene(float zoom) {
+	private Scene createMainScene(float zoom, KeyboardSteering kbSteering) {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
@@ -140,7 +131,7 @@ public class GameUI implements GameEventListener {
 		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
 		Env.pausedPy.addListener((x, y, z) -> updateStageTitle());
 
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
 
 		return scene;
 	}
