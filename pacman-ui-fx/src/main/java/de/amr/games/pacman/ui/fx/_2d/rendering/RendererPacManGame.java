@@ -60,6 +60,11 @@ public class RendererPacManGame extends RendererCommon {
 	private static final Image MAZE_EMPTY = Ufx.image("graphics/pacman/maze_empty.png");
 	private static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
+	public static final RendererPacManGame THE_ONE_AND_ONLY = new RendererPacManGame();
+
+	private RendererPacManGame() {
+	}
+
 	@Override
 	public Spritesheet spritesheet() {
 		return SPRITESHEET;

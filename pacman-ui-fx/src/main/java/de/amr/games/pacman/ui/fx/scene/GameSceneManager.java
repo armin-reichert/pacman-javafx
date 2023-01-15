@@ -188,8 +188,8 @@ public class GameSceneManager {
 	private void setSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant();
 		var r2D = switch (gameVariant) {
-		case MS_PACMAN -> new RendererMsPacManGame();
-		case PACMAN -> new RendererPacManGame();
+		case MS_PACMAN -> RendererMsPacManGame.THE_ONE_AND_ONLY;
+		case PACMAN -> RendererPacManGame.THE_ONE_AND_ONLY;
 		};
 		scene.setContext(new SceneContext(gameController, r2D));
 	}

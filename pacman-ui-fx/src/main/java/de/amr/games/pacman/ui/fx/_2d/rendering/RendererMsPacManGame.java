@@ -101,6 +101,11 @@ public class RendererMsPacManGame extends RendererCommon {
 		}
 	}
 
+	public static final RendererMsPacManGame THE_ONE_AND_ONLY = new RendererMsPacManGame();
+
+	private RendererMsPacManGame() {
+	}
+
 	// tile from third column
 	private Rectangle2D t3c(int col, int row) {
 		return spritesheet().tiles(THIRD_COLUMN, 0, col, row, 1, 1);

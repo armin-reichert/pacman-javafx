@@ -38,6 +38,7 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -62,9 +63,9 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
- * JavaFX UI for Pac-Man / Ms. Pac-Man game.
+ * JavaFX UI for Pac-Man and Ms. Pac-Man game.
  * <p>
- * The play scene is available in 2D and 3D. The intro scenes and intermission scenes are all 2D.
+ * The play scene is available in 2D and 3D. All others scenes are 2D only.
  * 
  * @author Armin Reichert
  */
@@ -74,12 +75,11 @@ public class GameUI implements GameEventListener {
 	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = Ufx.image("icons/mspacman.png");
 
-	private final GameLoop gameLoop = new GameLoop(GameModel.FPS);
-	private final GameSceneManager sceneManager = new GameSceneManager();
 	private final GameController gameController;
 	private final Stage stage;
-	/** Game scene placeholder, single child will be the game scene's FX subscene. */
-	private final Group gameSceneParent = new Group();
+	private final GameLoop gameLoop = new GameLoop(GameModel.FPS);
+	private final GameSceneManager sceneManager = new GameSceneManager();
+	private final Group gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PiPView pipView = new PiPView();
@@ -101,19 +101,17 @@ public class GameUI implements GameEventListener {
 		var mainScene = createScene(zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualPacSteering::onKeyPressed);
 
+		GameEvents.addListener(this);
+		Keyboard.addHandler(this::onKeyPressed);
+		Actions.init(this);
+		dashboard.init(this);
+		configureGameLoop();
+
 		this.stage = stage;
 		stage.setScene(mainScene);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> endApp());
-
-		GameEvents.addListener(this);
-		Actions.init(this);
-		Keyboard.addHandler(this::onKeyPressed);
-		configureGameLoop();
-		updateStageTitle();
-		dashboard.init(this);
-
 		stage.centerOnScreen();
 		stage.show();
 
@@ -171,11 +169,7 @@ public class GameUI implements GameEventListener {
 		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
-			var sounds = switch (gameController.game().variant()) {
-			case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
-			case PACMAN -> GameSounds.PACMAN_SOUNDS;
-			};
-			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : sounds);
+			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : sounds());
 			pipView.init(gameScene.ctx());
 		}
 	}
@@ -193,6 +187,20 @@ public class GameUI implements GameEventListener {
 		}
 		default -> throw new IllegalStateException();
 		}
+	}
+
+	private Rendering2D renderer() {
+		return switch (gameController.game().variant()) {
+		case MS_PACMAN -> RendererMsPacManGame.THE_ONE_AND_ONLY;
+		case PACMAN -> RendererPacManGame.THE_ONE_AND_ONLY;
+		};
+	}
+
+	private GameSounds sounds() {
+		return switch (gameController.game().variant()) {
+		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
+		case PACMAN -> GameSounds.PACMAN_SOUNDS;
+		};
 	}
 
 	private void setGameScene(GameScene gameScene) {
@@ -230,10 +238,7 @@ public class GameUI implements GameEventListener {
 	@Override
 	public void onLevelStarting(GameEvent e) {
 		gameController.game().level().ifPresent(level -> {
-			var r = switch (gameController.game().variant()) {
-			case MS_PACMAN -> new RendererMsPacManGame();
-			case PACMAN -> new RendererPacManGame();
-			};
+			var r = renderer();
 			level.pac().setAnimationSet(r.createPacAnimations(level.pac()));
 			level.ghosts().forEach(ghost -> ghost.setAnimationSet(r.createGhostAnimations(ghost)));
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {
