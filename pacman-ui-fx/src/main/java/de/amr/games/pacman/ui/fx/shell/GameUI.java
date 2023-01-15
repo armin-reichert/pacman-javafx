@@ -110,8 +110,7 @@ public class GameUI implements GameEventListener {
 		GameEvents.addListener(this);
 		Actions.init(this);
 		Keyboard.addHandler(this::onKeyPressed);
-		initGameLoop();
-		selectSounds(gameController);
+		configureGameLoop();
 		updateStageTitle();
 		dashboard.init(this);
 
@@ -149,7 +148,7 @@ public class GameUI implements GameEventListener {
 		return scene;
 	}
 
-	private void initGameLoop() {
+	private void configureGameLoop() {
 		gameLoop.setUpdateTask(() -> {
 			gameController.update();
 			currentGameScene.onTick();
@@ -166,11 +165,17 @@ public class GameUI implements GameEventListener {
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 	}
 
+	// package visible such that Actions class can call it
 	void updateGameScene(boolean forcedReload) {
 		int dim = Env.threeDScenesPy.get() ? 3 : 2;
 		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {
 			setGameScene(gameScene);
+			var sounds = switch (gameController.game().variant()) {
+			case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
+			case PACMAN -> GameSounds.PACMAN_SOUNDS;
+			};
+			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : sounds);
 			pipView.init(gameScene.ctx());
 		}
 	}
@@ -215,7 +220,6 @@ public class GameUI implements GameEventListener {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		updateGameScene(false);
-		selectSounds(gameController);
 	}
 
 	@Override
@@ -225,9 +229,8 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onLevelStarting(GameEvent e) {
-		var game = gameController.game();
-		game.level().ifPresent(level -> {
-			var r = switch (game.variant()) {
+		gameController.game().level().ifPresent(level -> {
+			var r = switch (gameController.game().variant()) {
 			case MS_PACMAN -> new RendererMsPacManGame();
 			case PACMAN -> new RendererPacManGame();
 			};
@@ -238,15 +241,6 @@ public class GameUI implements GameEventListener {
 			}
 		});
 		updateGameScene(true);
-	}
-
-	private void selectSounds(GameController gameController) {
-		var gameVariant = gameController.game().variant();
-		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : switch (gameVariant) {
-		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
-		case PACMAN -> GameSounds.PACMAN_SOUNDS;
-		};
-		gameController.setSounds(sounds);
 	}
 
 	private void onKeyPressed() {
