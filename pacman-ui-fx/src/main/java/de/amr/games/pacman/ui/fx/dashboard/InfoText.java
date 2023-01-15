@@ -35,6 +35,8 @@ import javafx.scene.text.Text;
  */
 public class InfoText extends Text {
 
+	public static final String NO_INFO = "n/a";
+
 	private BooleanSupplier fnAvailable = () -> true;
 	private Supplier<?> fnText = () -> "Value";
 
@@ -55,7 +57,7 @@ public class InfoText extends Text {
 		if (fnAvailable.getAsBoolean()) {
 			setText(String.valueOf(fnText.get()));
 		} else {
-			setText("n/a");
+			setText(InfoText.NO_INFO);
 		}
 	}
 }

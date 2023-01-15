@@ -67,8 +67,8 @@ public class SectionGhostsInfo extends Section {
 
 	private Supplier<String> ifLevelExists(BiFunction<GameLevel, Ghost, String> fnGhostInfo, byte ghostID) {
 		return () -> {
-			var level = game().level();
-			return level.isPresent() ? fnGhostInfo.apply(level.get(), level.get().ghost(ghostID)) : "n/a";
+			var level = game().level().orElse(null);
+			return level != null ? fnGhostInfo.apply(level, level.ghost(ghostID)) : InfoText.NO_INFO;
 		};
 	}
 
@@ -79,7 +79,7 @@ public class SectionGhostsInfo extends Section {
 	private String ghostAnimation(GameLevel level, Ghost ghost) {
 		var anims = ghost.animations();
 		if (anims.isEmpty()) {
-			return "n/a";
+			return InfoText.NO_INFO;
 		}
 		var animKey = anims.get().selectedKey().name();
 		var running = anims.get().selectedAnimation().get().isRunning();

@@ -107,7 +107,7 @@ public abstract class Section extends TitledPane {
 	protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
 		return () -> {
 			if (gc.game().level().isEmpty()) {
-				return "n/a";
+				return InfoText.NO_INFO;
 			}
 			return infoSupplier.apply(gc.game().level().get());
 		};
