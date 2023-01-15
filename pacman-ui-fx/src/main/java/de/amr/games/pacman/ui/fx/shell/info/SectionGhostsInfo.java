@@ -29,8 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Game related settings.
- * 
  * @author Armin Reichert
  */
 public class SectionGhostsInfo extends Section {
