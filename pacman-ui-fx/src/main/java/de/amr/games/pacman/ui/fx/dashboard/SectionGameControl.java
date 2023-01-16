@@ -41,9 +41,17 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class SectionGameControl extends Section {
+
+	private static final int GAME_LEVEL_START = 0;
+	private static final int GAME_LEVEL_QUIT = 1;
+	private static final int GAME_LEVEL_NEXT = 2;
+
+	private static final int INTERMISSION_TEST_START = 0;
+	private static final int INTERMISSION_TEST_QUIT = 1;
+
 	private ComboBox<GameVariant> comboGameVariant;
-	private Button[] btnsGameControl;
-	private Button[] btnsIntermissionTest;
+	private Button[] blGameLevel;
+	private Button[] blIntermissionTest;
 	private Spinner<Integer> spinnerGameLevel;
 	private Spinner<Integer> spinnerGameCredit;
 	private CheckBox cbMuted;
@@ -56,19 +64,19 @@ public class SectionGameControl extends Section {
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
-			if (comboGameVariant.getValue() != gc.game().variant()) {
+			if (comboGameVariant.getValue() != game().variant()) {
 				gc.state().selectGameVariant(comboGameVariant.getValue());
 			}
 		});
 
-		btnsGameControl = addButtonList("Game", "Start", "Quit", "Next Level");
-		btnsGameControl[0].setOnAction(e -> gc.state().requestGame(gc.game()));
-		btnsGameControl[1].setOnAction(e -> Actions.restartIntro());
-		btnsGameControl[2].setOnAction(e -> gc.state().cheatEnterNextLevel(gc.game()));
+		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next Level");
+		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.state().requestGame(game()));
+		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> Actions.restartIntro());
+		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.state().cheatEnterNextLevel(game()));
 
-		btnsIntermissionTest = addButtonList("Intermission scenes", "Start", "Quit");
-		btnsIntermissionTest[0].setOnAction(e -> Actions.startCutscenesTest());
-		btnsIntermissionTest[1].setOnAction(e -> Actions.restartIntro());
+		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
+		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> Actions.startCutscenesTest());
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> Actions.restartIntro());
 
 		spinnerGameLevel = addSpinner("Level", 1, 100, 1);
 		spinnerGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
@@ -85,27 +93,28 @@ public class SectionGameControl extends Section {
 	public void update() {
 		super.update();
 
-		comboGameVariant.setValue(gc.game().variant());
+		comboGameVariant.setValue(game().variant());
 		comboGameVariant.setDisable(gc.state() != GameState.INTRO);
 
 		cbAutopilot.setSelected(gc.isAutoControlled());
-		cbImmunity.setSelected(gc.game().isImmune());
+		cbImmunity.setSelected(game().isImmune());
 
-		// start game
-		btnsGameControl[0].setDisable(!gc.game().hasCredit() || gc.game().isPlaying());
-		// quit game
-		btnsGameControl[1].setDisable(gc.state() == GameState.INTRO || gc.state() == GameState.INTERMISSION_TEST);
-		// next level
-		btnsGameControl[2].setDisable(!gc.game().isPlaying() || (gc.state() != GameState.HUNTING
-				&& gc.state() != GameState.READY && gc.state() != GameState.CHANGING_TO_NEXT_LEVEL));
+		blGameLevel[GAME_LEVEL_START].setDisable(!(game().hasCredit() && game().level().isEmpty()));
 
-		// start intermission test
-		btnsIntermissionTest[0].setDisable(gc.state() == GameState.INTERMISSION_TEST || gc.state() != GameState.INTRO);
-		// quit intermission test
-		btnsIntermissionTest[1].setDisable(gc.state() != GameState.INTERMISSION_TEST);
+		blGameLevel[GAME_LEVEL_QUIT].setDisable(game().level().isEmpty());
+
+		blGameLevel[GAME_LEVEL_NEXT].setDisable(//
+				!game().isPlaying() //
+						|| (gc.state() != GameState.HUNTING && gc.state() != GameState.READY
+								&& gc.state() != GameState.CHANGING_TO_NEXT_LEVEL));
+
+		blIntermissionTest[INTERMISSION_TEST_START].setDisable(//
+				gc.state() == GameState.INTERMISSION_TEST || gc.state() != GameState.INTRO);
+
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
 		game().level().ifPresent(level -> spinnerGameLevel.getValueFactory().setValue(level.number()));
-		if (!gc.game().isPlaying() || gc.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (!game().isPlaying() || gc.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			spinnerGameLevel.setDisable(true);
 		} else {
 			spinnerGameLevel.setDisable(gc.state() != GameState.READY && gc.state() != GameState.HUNTING
