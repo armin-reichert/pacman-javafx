@@ -242,7 +242,7 @@ public class GameUI implements GameEventListener {
 	private void onKeyPressed() {
 		if (Keyboard.pressed(Modifier.ALT, KeyCode.A)) {
 			Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.B) || Keyboard.pressed(KeyCode.F3)) {
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.B)) {
 			Actions.reboot();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.D)) {
 			Env.toggle(Env.showDebugInfoPy);
@@ -250,8 +250,6 @@ public class GameUI implements GameEventListener {
 			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.M)) {
 			Actions.toggleSoundMuted();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.T)) {
-			Actions.toggleLevelTestMode();
 		} else if (Keyboard.pressed(KeyCode.P)) {
 			Actions.togglePaused();
 		} else if (Keyboard.pressed(Modifier.SHIFT, KeyCode.P) || Keyboard.pressed(KeyCode.SPACE)) {
@@ -260,12 +258,16 @@ public class GameUI implements GameEventListener {
 			Actions.tenSimulationSteps();
 		} else if (Keyboard.pressed(KeyCode.Q)) {
 			Actions.restartIntro();
+		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.T)) {
+			Actions.toggleLevelTestMode();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.DIGIT3)) {
 			Actions.toggleUse3DScene();
 		} else if (Keyboard.pressed(KeyCode.F1)) {
 			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(KeyCode.F2)) {
 			Actions.togglePipViewVisible();
+		} else if (Keyboard.pressed(KeyCode.F3)) {
+			Actions.reboot();
 		} else if (Keyboard.pressed(KeyCode.F11)) {
 			stage.setFullScreen(true);
 		}
