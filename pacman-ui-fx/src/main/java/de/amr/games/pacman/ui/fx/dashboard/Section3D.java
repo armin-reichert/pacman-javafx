@@ -23,8 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.dashboard;
 
+import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.shell.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;

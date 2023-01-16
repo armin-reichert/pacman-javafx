@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx;
 
 import java.util.Objects;
 import java.util.Random;
@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.TextManager;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;

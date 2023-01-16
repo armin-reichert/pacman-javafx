@@ -35,6 +35,7 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererMsPacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
@@ -153,8 +154,8 @@ public class GameUI implements GameEventListener {
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 	}
 
-	// package visible such that Actions class can call it
-	void updateGameScene(boolean forcedReload) {
+	// public visible such that Actions class can call it
+	public void updateGameScene(boolean forcedReload) {
 		int dim = Env.threeDScenesPy.get() ? 3 : 2;
 		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {

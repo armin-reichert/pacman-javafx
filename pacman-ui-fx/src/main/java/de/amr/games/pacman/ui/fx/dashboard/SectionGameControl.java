@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.dashboard;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.ui.fx.shell.Actions;
+import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
