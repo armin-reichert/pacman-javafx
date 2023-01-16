@@ -36,23 +36,33 @@ import javafx.scene.image.WritableImage;
 public class Spritesheet {
 
 	protected final Image source;
-	protected final int tileSize;
-	protected final int[] dirIndex = new int[4];
+	protected final int raster;
+	protected final int[] dirIndex;
 
-	public Spritesheet(Image image, int tileSize, Direction... dirs) {
+	/**
+	 * @param image  image containing the sprites
+	 * @param raster raster size of the image tiles
+	 * @param d0     first direction in a sequence of direction-dependent images, e.g. ghost looking towards direction
+	 * @param d1     second direction
+	 * @param d2     third direction
+	 * @param d3     fourth direction
+	 */
+	public Spritesheet(Image image, int raster, Direction d0, Direction d1, Direction d2, Direction d3) {
 		this.source = image;
-		this.tileSize = tileSize;
-		for (int i = 0; i < dirs.length; ++i) {
-			dirIndex[dirs[i].ordinal()] = i;
-		}
+		this.raster = raster;
+		dirIndex = new int[4];
+		dirIndex[d0.ordinal()] = 0;
+		dirIndex[d1.ordinal()] = 1;
+		dirIndex[d2.ordinal()] = 2;
+		dirIndex[d3.ordinal()] = 3;
 	}
 
 	public int dirIndex(Direction dir) {
 		return dirIndex[dir.ordinal()];
 	}
 
-	public int tileSize() {
-		return tileSize;
+	public int raster() {
+		return raster;
 	}
 
 	public Image source() {
@@ -110,7 +120,7 @@ public class Spritesheet {
 	 * @return region at given grid coordinates relative to given origin
 	 */
 	public Rectangle2D tiles(int origX, int origY, int gridX, int gridY, int tilesX, int tilesY) {
-		return new Rectangle2D(origX + gridX * tileSize, origY + gridY * tileSize, tilesX * tileSize, tilesY * tileSize);
+		return new Rectangle2D(origX + gridX * raster, origY + gridY * raster, tilesX * raster, tilesY * raster);
 	}
 
 	/**
