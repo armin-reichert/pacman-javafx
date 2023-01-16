@@ -69,7 +69,7 @@ public class SectionGameControl extends Section {
 			}
 		});
 
-		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next Level");
+		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.state().requestGame(game()));
 		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> Actions.restartIntro());
 		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.state().cheatEnterNextLevel(game()));
