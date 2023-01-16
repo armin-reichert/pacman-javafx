@@ -59,6 +59,10 @@ public class Actions {
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
 
+	public static void attachTo(GameUI userInterface) {
+		ui = Objects.requireNonNull(userInterface, "User Interface for actions must not be null");
+	}
+
 	private static GameController gameController() {
 		return ui.gameController();
 	}
@@ -69,10 +73,6 @@ public class Actions {
 
 	private static GameState currentGameState() {
 		return gameController().state();
-	}
-
-	public static void attachTo(GameUI userInterface) {
-		ui = Objects.requireNonNull(userInterface, "User Interface for actions must not be null");
 	}
 
 	public static void playVoiceMessage(String messageFileRelPath) {
@@ -221,7 +221,7 @@ public class Actions {
 		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
 	}
 
-	public static void toggleLevelTestModel() {
+	public static void toggleLevelTestMode() {
 		gameController().levelTestMode = !gameController().levelTestMode;
 		if (!gameController().levelTestMode) {
 			gameController().boot();

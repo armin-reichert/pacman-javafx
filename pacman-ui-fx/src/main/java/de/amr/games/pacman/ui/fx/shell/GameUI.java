@@ -251,7 +251,7 @@ public class GameUI implements GameEventListener {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.M)) {
 			Actions.toggleSoundMuted();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.T)) {
-			Actions.toggleLevelTestModel();
+			Actions.toggleLevelTestMode();
 		} else if (Keyboard.pressed(KeyCode.P)) {
 			Actions.togglePaused();
 		} else if (Keyboard.pressed(Modifier.SHIFT, KeyCode.P) || Keyboard.pressed(KeyCode.SPACE)) {
