@@ -166,14 +166,14 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateStageTitle() {
-		var paused = Env.pausedPy.get() ? " (paused)" : "";
+		var pausedText = Env.pausedPy.get() ? " (paused)" : "";
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
-			stage.setTitle("Ms. Pac-Man" + paused);
+			stage.setTitle("Ms. Pac-Man" + pausedText);
 			stage.getIcons().setAll(APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
-			stage.setTitle("Pac-Man" + paused);
+			stage.setTitle("Pac-Man" + pausedText);
 			stage.getIcons().setAll(APP_ICON_PACMAN);
 		}
 		default -> throw new IllegalStateException();
@@ -230,8 +230,8 @@ public class GameUI implements GameEventListener {
 	public void onLevelStarting(GameEvent e) {
 		gameController.game().level().ifPresent(level -> {
 			var r = renderer();
-			level.pac().setAnimationSet(r.createPacAnimations(level.pac()));
-			level.ghosts().forEach(ghost -> ghost.setAnimationSet(r.createGhostAnimations(ghost)));
+			level.pac().setAnimations(r.createPacAnimations(level.pac()));
+			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {
 				arcadeWorld.setFlashingAnimation(r.createMazeFlashingAnimation());
 			}

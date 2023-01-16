@@ -49,17 +49,17 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		var r = (RendererMsPacManGame) ctx.r2D();
 		intermission.restart(MsPacManIntermission1.IntermissionState.FLAP);
 		ic.clapperboard.setAnimationSet(r.createClapperboardAnimations());
-		ic.msPac.setAnimationSet(r.createPacAnimations(ic.msPac));
+		ic.msPac.setAnimations(r.createPacAnimations(ic.msPac));
 		ic.msPac.animations().ifPresent(EntityAnimationMap::ensureRunning);
-		ic.pacMan.setAnimationSet(r.createPacAnimations(ic.pacMan));
+		ic.pacMan.setAnimations(r.createPacAnimations(ic.pacMan));
 		ic.pacMan.animations().ifPresent(animations -> {
 			var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
 			animations.put(AnimKeys.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		ic.inky.setAnimationSet(r.createGhostAnimations(ic.inky));
+		ic.inky.setAnimations(r.createGhostAnimations(ic.inky));
 		ic.inky.animations().ifPresent(EntityAnimationMap::ensureRunning);
-		ic.pinky.setAnimationSet(r.createGhostAnimations(ic.pinky));
+		ic.pinky.setAnimations(r.createGhostAnimations(ic.pinky));
 		ic.pinky.animations().ifPresent(EntityAnimationMap::ensureRunning);
 	}
 

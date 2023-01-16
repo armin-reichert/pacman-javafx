@@ -54,9 +54,9 @@ public class PacManCutscene3 extends GameScene2D {
 		frame = -1;
 		initialDelay = 120;
 		pac = new Pac("Pac-Man");
-		pac.setAnimationSet(renderer.createPacAnimations(pac));
+		pac.setAnimations(renderer.createPacAnimations(pac));
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
-		blinky.setAnimationSet(renderer.createGhostAnimations(blinky));
+		blinky.setAnimations(renderer.createGhostAnimations(blinky));
 		blinky.animations().ifPresent(animations -> {
 			animations.put(AnimKeys.BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
 			animations.put(AnimKeys.BLINKY_NAKED, renderer.createBlinkyNakedAnimation());

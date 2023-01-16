@@ -67,7 +67,7 @@ public class PacManCutscene2 extends GameScene2D {
 		var pacAnimations = renderer.createPacAnimations(pac);
 		pacAnimations.select(AnimKeys.PAC_MUNCHING);
 		pacAnimations.animation(AnimKeys.PAC_MUNCHING).ifPresent(EntityAnimation::restart);
-		pac.setAnimationSet(pacAnimations);
+		pac.setAnimations(pacAnimations);
 
 		stretchedDressAnimation = renderer.createBlinkyStretchedAnimation();
 
@@ -82,7 +82,7 @@ public class PacManCutscene2 extends GameScene2D {
 		blinkyAnimations.put(AnimKeys.BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
 		blinkyAnimations.animation(AnimKeys.GHOST_COLOR).ifPresent(EntityAnimation::restart);
-		blinky.setAnimationSet(blinkyAnimations);
+		blinky.setAnimations(blinkyAnimations);
 	}
 
 	@Override
