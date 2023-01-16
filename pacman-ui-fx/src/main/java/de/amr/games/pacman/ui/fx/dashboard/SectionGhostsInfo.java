@@ -85,7 +85,7 @@ public class SectionGhostsInfo extends Section {
 		var selectedAnim = anims.get().selectedAnimation();
 		if (selectedAnim.isPresent()) {
 			var running = selectedAnim.get().isRunning();
-			return "%s %s".formatted(animKey, running ? "running" : "stopped");
+			return "%s %s".formatted(animKey, running ? "" : "stopped");
 		} else {
 			return InfoText.NO_INFO;
 		}
