@@ -52,8 +52,8 @@ public class SectionGameControl extends Section {
 	private ComboBox<GameVariant> comboGameVariant;
 	private Button[] blGameLevel;
 	private Button[] blIntermissionTest;
-	private Spinner<Integer> spinnerGameLevel;
-	private Spinner<Integer> spinnerGameCredit;
+	private Spinner<Integer> spGameLevel;
+	private Spinner<Integer> spGameCredit;
 	private CheckBox cbMuted;
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
@@ -78,15 +78,15 @@ public class SectionGameControl extends Section {
 		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> Actions.startCutscenesTest());
 		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> Actions.restartIntro());
 
-		spinnerGameLevel = addSpinner("Level", 1, 100, 1);
-		spinnerGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
-		spinnerGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
-		spinnerGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
+		spGameLevel = addSpinner("Level", 1, 100, 1);
+		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
+
+		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
+		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
 		cbMuted = addCheckBox("Sound muted", Actions::toggleSoundMuted);
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", Actions::toggleImmunity);
-
 	}
 
 	@Override
@@ -113,15 +113,15 @@ public class SectionGameControl extends Section {
 
 		blIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(gc.state() != GameState.INTERMISSION_TEST);
 
-		game().level().ifPresent(level -> spinnerGameLevel.getValueFactory().setValue(level.number()));
+		game().level().ifPresent(level -> spGameLevel.getValueFactory().setValue(level.number()));
 		if (!game().isPlaying() || gc.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
-			spinnerGameLevel.setDisable(true);
+			spGameLevel.setDisable(true);
 		} else {
-			spinnerGameLevel.setDisable(gc.state() != GameState.READY && gc.state() != GameState.HUNTING
+			spGameLevel.setDisable(gc.state() != GameState.READY && gc.state() != GameState.HUNTING
 					&& gc.state() != GameState.CHANGING_TO_NEXT_LEVEL);
 		}
 
-		spinnerGameCredit.getValueFactory().setValue(game().credit());
+		spGameCredit.getValueFactory().setValue(game().credit());
 
 		cbMuted.setDisable(false);
 		cbMuted.setSelected(gc.sounds().isMuted());
