@@ -90,7 +90,7 @@ public final class MsPacManGameAssets {
 	}
 
 	// tile from third column
-	public static Rectangle2D t3c(int col, int row) {
+	public static Rectangle2D col3(int col, int row) {
 		return SPRITESHEET.tiles(THIRD_COLUMN, 0, col, row, 1, 1);
 	}
 
