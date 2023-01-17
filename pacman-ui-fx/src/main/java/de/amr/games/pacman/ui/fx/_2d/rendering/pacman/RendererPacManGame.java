@@ -119,7 +119,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public Color mazeSideColor(int mazeNumber) {
-		return PacManGameAssets.MAZE_SIDECOLOR;
+		return PacManGameAssets.MAZE_WALL_COLOR;
 	}
 
 	@Override
