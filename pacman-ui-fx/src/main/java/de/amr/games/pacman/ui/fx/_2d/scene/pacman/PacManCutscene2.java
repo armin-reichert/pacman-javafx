@@ -35,7 +35,7 @@ import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.RendererPacManGame;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;

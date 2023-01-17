@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.rendering;
+package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
 import static de.amr.games.pacman.model.common.actors.Ghost.ID_PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.TS;
@@ -35,6 +35,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -98,7 +99,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ghostColor(ID_PINK_GHOST), arcadeFont(TS), t(4), t(tileY));
+		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, ghostColor(ID_PINK_GHOST), arcadeFont(TS), t(4), t(tileY));
 	}
 
 	@Override

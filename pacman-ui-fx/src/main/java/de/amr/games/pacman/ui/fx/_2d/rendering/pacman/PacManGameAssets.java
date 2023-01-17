@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.rendering;
+package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
 import java.util.Map;
 
@@ -42,6 +42,8 @@ public final class PacManGameAssets {
 	public static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
 	public static final Color GHOSTHOUSE_DOOR_COLOR = Color.rgb(252, 181, 255);
 
+	public static final String COPYRIGHT_TEXT = "\u00A9 1980 MIDWAY MFG.CO.";
+
 	public static final Spritesheet SPRITESHEET = new Spritesheet(//
 			Ufx.image("graphics/pacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -51,5 +53,4 @@ public final class PacManGameAssets {
 
 	private PacManGameAssets() {
 	}
-
 }
