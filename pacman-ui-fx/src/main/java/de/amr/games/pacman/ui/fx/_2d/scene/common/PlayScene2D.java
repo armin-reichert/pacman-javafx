@@ -55,15 +55,10 @@ public class PlayScene2D extends GameScene2D {
 	public void draw() {
 		var game = ctx.game();
 		var r = ctx.r2D();
-		ctx.level().ifPresent(level -> {
+		game.level().ifPresent(level -> {
 			drawMaze(r, level);
 			r.drawBonus(g, level.bonus());
-			boolean showGameOverText = ctx.state() == GameState.GAME_OVER || !ctx.hasCredit();
-			if (showGameOverText) {
-				r.drawGameOverMessage(g);
-			} else if (ctx.state() == GameState.READY) {
-				r.drawGameReadyMessage(g);
-			}
+			drawGameState(r);
 			r.drawPac(g, level.pac());
 			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
@@ -75,6 +70,15 @@ public class PlayScene2D extends GameScene2D {
 			}
 			r.drawLevelCounter(g, game.levelCounter());
 		});
+	}
+
+	private void drawGameState(Rendering2D r) {
+		boolean showGameOverText = ctx.state() == GameState.GAME_OVER || !ctx.hasCredit();
+		if (showGameOverText) {
+			r.drawGameOverMessage(g);
+		} else if (ctx.state() == GameState.READY) {
+			r.drawGameReadyMessage(g);
+		}
 	}
 
 	private void drawMaze(Rendering2D r, GameLevel level) {
