@@ -27,8 +27,6 @@ import static de.amr.games.pacman.model.common.actors.Ghost.ID_PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import java.util.Map;
-
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.Pulse;
@@ -38,27 +36,14 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
  */
 public class RendererPacManGame extends RendererCommon {
-
-	private static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
-	private static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
-
-	private static final Spritesheet SPRITESHEET = new Spritesheet(//
-			Ufx.image("graphics/pacman/sprites.png"), 16, //
-			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-
-	private static final Image MAZE_FULL = Ufx.image("graphics/pacman/maze_full.png");
-	private static final Image MAZE_EMPTY = Ufx.image("graphics/pacman/maze_empty.png");
-	private static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
 	public static final RendererPacManGame THE_ONE_AND_ONLY = new RendererPacManGame();
 
@@ -67,7 +52,7 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public Spritesheet spritesheet() {
-		return SPRITESHEET;
+		return PacManGameAssets.SPRITESHEET;
 	}
 
 	@Override
@@ -99,12 +84,12 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash) {
-		g.drawImage(flash ? MAZE_EMPTY_INV : MAZE_EMPTY, x, y);
+		g.drawImage(flash ? PacManGameAssets.MAZE_EMPTY_INV : PacManGameAssets.MAZE_EMPTY, x, y);
 	}
 
 	@Override
 	public void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
-		g.drawImage(MAZE_FULL, x, y);
+		g.drawImage(PacManGameAssets.MAZE_FULL, x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
 		if (energizersHidden) {
 			world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
@@ -113,30 +98,27 @@ public class RendererPacManGame extends RendererCommon {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		var text = "\u00A9 1980 MIDWAY MFG.CO.";
-		g.setFont(arcadeFont(TS));
-		g.setFill(ghostColor(ID_PINK_GHOST));
-		g.fillText(text, t(4), t(tileY));
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ghostColor(ID_PINK_GHOST), arcadeFont(TS), t(4), t(tileY));
 	}
 
 	@Override
 	public Color mazeFoodColor(int mazeNumber) {
-		return FOOD_COLOR;
+		return PacManGameAssets.FOOD_COLOR;
 	}
 
 	@Override
 	public Color mazeTopColor(int mazeNumber) {
-		return MAZE_WALL_COLOR.darker().darker();
+		return PacManGameAssets.MAZE_WALL_COLOR.darker().darker();
 	}
 
 	@Override
 	public Color ghostHouseDoorColor() {
-		return Color.rgb(252, 181, 255);
+		return PacManGameAssets.GHOSTHOUSE_DOOR_COLOR;
 	}
 
 	@Override
 	public Color mazeSideColor(int mazeNumber) {
-		return Color.rgb(33, 33, 255);
+		return PacManGameAssets.MAZE_SIDECOLOR;
 	}
 
 	@Override
