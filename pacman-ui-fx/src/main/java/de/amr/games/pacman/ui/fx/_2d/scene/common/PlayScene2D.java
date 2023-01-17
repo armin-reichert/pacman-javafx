@@ -84,8 +84,8 @@ public class PlayScene2D extends GameScene2D {
 	private void drawMaze(Rendering2D r, GameLevel level) {
 		int mazeX = 0;
 		int mazeY = 3 * TS;
-		boolean energizersHidden = !level.energizerPulse().frame();
 		if (level.world() instanceof ArcadeWorld arcadeWorld) {
+			boolean energizersHidden = !arcadeWorld.energizerPulse().frame();
 			var flashing = arcadeWorld.flashingAnimation();
 			if (flashing.isPresent() && flashing.get().isRunning()) {
 				boolean flash = (boolean) flashing.get().frame();
