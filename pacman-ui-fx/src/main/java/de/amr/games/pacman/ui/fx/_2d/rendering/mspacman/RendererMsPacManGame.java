@@ -81,7 +81,7 @@ public class RendererMsPacManGame extends RendererCommon {
 
 	@Override
 	public Rectangle2D ghostSprite(int ghostID, Direction dir) {
-		return MsPacManGameAssets.t3c(2 * spritesheet().dirIndex(dir) + 1, 4 + ghostID);
+		return t3c(2 * spritesheet().dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
