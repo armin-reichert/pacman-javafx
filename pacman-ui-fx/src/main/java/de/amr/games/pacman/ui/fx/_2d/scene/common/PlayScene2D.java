@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
@@ -32,6 +33,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
@@ -56,7 +58,7 @@ public class PlayScene2D extends GameScene2D {
 		var game = ctx.game();
 		var r = ctx.r2D();
 		game.level().ifPresent(level -> {
-			drawMaze(r, level);
+			drawMaze(r, level.world(), game.mazeNumber(level.number()), 0, t(3));
 			r.drawBonus(g, level.bonus());
 			drawGameState(r);
 			r.drawPac(g, level.pac());
@@ -81,20 +83,18 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawMaze(Rendering2D r, GameLevel level) {
-		int mazeX = 0;
-		int mazeY = 3 * TS;
-		if (level.world() instanceof ArcadeWorld arcadeWorld) {
-			boolean energizersHidden = !arcadeWorld.energizerPulse().frame();
+	private void drawMaze(Rendering2D r, World world, int mazeNumber, int x, int y) {
+		if (world instanceof ArcadeWorld arcadeWorld) {
 			var flashing = arcadeWorld.flashingAnimation();
 			if (flashing.isPresent() && flashing.get().isRunning()) {
 				boolean flash = (boolean) flashing.get().frame();
-				r.drawEmptyMaze(g, mazeX, mazeY, level.game().mazeNumber(level.number()), flash);
+				r.drawEmptyMaze(g, x, y, mazeNumber, flash);
 			} else {
-				r.drawFilledMaze(g, mazeX, mazeY, level.game().mazeNumber(level.number()), level.world(), energizersHidden);
+				boolean energizersShown = arcadeWorld.energizerPulse().frame();
+				r.drawFilledMaze(g, x, y, mazeNumber, arcadeWorld, !energizersShown);
 			}
 		} else {
-			r.drawFilledMaze(g, mazeX, mazeY, level.game().mazeNumber(level.number()), level.world(), false);
+			r.drawFilledMaze(g, x, y, mazeNumber, world, false);
 		}
 	}
 
