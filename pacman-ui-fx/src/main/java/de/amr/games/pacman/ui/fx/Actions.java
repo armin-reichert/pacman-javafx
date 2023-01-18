@@ -257,6 +257,7 @@ public class Actions {
 
 	public static void cheatAddLives(int numLives) {
 		game().setLives(numLives + game().lives());
+		showFlashMessage(TextManager.message("cheat_add_lives", numLives));
 	}
 
 	public static void cheatEatAllPellets() {
