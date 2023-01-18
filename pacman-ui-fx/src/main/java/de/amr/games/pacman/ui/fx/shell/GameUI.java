@@ -280,8 +280,8 @@ public class GameUI implements GameEventListener {
 		return gameController;
 	}
 
-	public Stage stage() {
-		return stage;
+	public Scene mainScene() {
+		return stage.getScene();
 	}
 
 	public GameSceneManager sceneManager() {
