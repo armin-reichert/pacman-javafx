@@ -102,12 +102,10 @@ public class GameLoop {
 
 	public void start() {
 		clock.play();
-		LOGGER.info("Game loop started. Target frame rate: %d", getTargetFramerate());
 	}
 
 	public void stop() {
 		clock.stop();
-		LOGGER.info("Game loop stopped");
 	}
 
 	public long getUpdateCount() {

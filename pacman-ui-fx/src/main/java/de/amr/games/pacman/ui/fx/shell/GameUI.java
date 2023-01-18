@@ -87,11 +87,12 @@ public class GameUI implements GameEventListener {
 
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage primaryStage, float zoom) {
+	public GameUI(GameController gameController, Stage primaryStage, float zoom, boolean fullScreen) {
 		this.gameController = Objects.requireNonNull(gameController);
 		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		gameController.setManualPacSteering(kbSteering);
-		this.stage = Objects.requireNonNull(primaryStage);
+		stage = Objects.requireNonNull(primaryStage);
+		stage.setFullScreen(fullScreen);
 		if (zoom < 0) {
 			throw new IllegalArgumentException("Zoom value must not be negative but is " + zoom);
 		}
@@ -105,7 +106,7 @@ public class GameUI implements GameEventListener {
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> {
 			gameLoop.stop();
-			LOGGER.trace("Application closed.");
+			LOGGER.info("Game loop stopped. Application closed.");
 		});
 		stage.centerOnScreen();
 		stage.show();
