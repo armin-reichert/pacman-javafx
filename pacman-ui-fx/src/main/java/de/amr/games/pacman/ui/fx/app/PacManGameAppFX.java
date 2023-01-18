@@ -99,9 +99,11 @@ public class PacManGameAppFX extends Application {
 		var zoom = O_ZOOM.getValue();
 		var fullScreen = O_FULLSCREEN.getValue();
 		var ui = new GameUI(gameController, primaryStage, zoom, fullScreen);
+		ui.gameLoop().start();
+		ui.playGreetingVoice();
+		gameController.boot();
+		LOGGER.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
 				primaryStage.getHeight(), zoom, U.onOff(Env.threeDScenesPy.get()), Env.perspectivePy.get()));
-		ui.gameLoop().start();
-		LOGGER.info("Game loop started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
 	}
 }

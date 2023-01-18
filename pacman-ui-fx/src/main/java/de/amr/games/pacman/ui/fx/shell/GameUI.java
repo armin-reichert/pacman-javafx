@@ -76,66 +76,91 @@ public class GameUI implements GameEventListener {
 	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = Ufx.image("icons/mspacman.png");
 
-	private final GameController gameController;
-	private final Stage stage;
+	private GameController gameController;
+	private Stage stage;
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS);
 	private final GameSceneManager sceneManager = new GameSceneManager();
-	private final Group gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
-	private final Dashboard dashboard = new Dashboard();
-	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final PiPView pipView = new PiPView();
+	private Scene mainScene;
+	private Group gameSceneParent;
+	private BorderPane overlayPane;
+	private Dashboard dashboard;
+	private FlashMessageView flashMessageView;
+	private PiPView pipView;
+	private KeyboardSteering kbSteering;
 
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage primaryStage, float zoom, boolean fullScreen) {
 		this.gameController = Objects.requireNonNull(gameController);
-		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		this.stage = Objects.requireNonNull(primaryStage);
+		this.kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+
 		gameController.setManualPacSteering(kbSteering);
-		stage = Objects.requireNonNull(primaryStage);
-		stage.setFullScreen(fullScreen);
-		if (zoom < 0) {
-			throw new IllegalArgumentException("Zoom value must not be negative but is " + zoom);
-		}
-		GameEvents.addListener(this);
+
 		Keyboard.addHandler(this::onKeyPressed);
+		GameEvents.addListener(this);
 		Actions.attachTo(this);
-		dashboard.attachTo(this);
 		configureGameLoop();
-		stage.setScene(createMainScene(zoom, kbSteering));
+
+		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
+		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
+		Env.pausedPy.addListener((x, y, z) -> updateStageTitle());
+
+		createMainScene(zoom);
+		configureStage(fullScreen);
+		stage.show();
+	}
+
+	public void playGreetingVoice() {
+		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
+	}
+
+	private void configureStage(boolean fullScreen) {
+		stage.setFullScreen(fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> {
 			gameLoop.stop();
 			LOGGER.info("Game loop stopped. Application closed.");
 		});
+		stage.setScene(mainScene);
 		stage.centerOnScreen();
-		stage.show();
-		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
-		gameController.boot();
 	}
 
-	private Scene createMainScene(float zoom, KeyboardSteering kbSteering) {
-		var overlayPane = new BorderPane();
+	private void createMainScene(float zoom) {
+		if (zoom < 0) {
+			throw new IllegalArgumentException("Zoom value must not be negative but is " + zoom);
+		}
+
+		var root = new StackPane();
+		gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
+		dashboard = new Dashboard(this);
+		pipView = new PiPView();
+		flashMessageView = new FlashMessageView();
+		overlayPane = new BorderPane();
+
+		root.getChildren().add(gameSceneParent);
+		root.getChildren().add(flashMessageView);
+		root.getChildren().add(overlayPane);
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 
-		var content = new StackPane(gameSceneParent, flashMessageView, overlayPane);
 		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(zoom);
-		var scene = new Scene(content, size.x(), size.y());
-		scene.setOnKeyPressed(Keyboard::processEvent);
-		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> {
+		mainScene = new Scene(root, size.x(), size.y());
+
+		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
+		mainScene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> {
 			if (currentGameScene instanceof GameScene2D scene2D) {
 				scene2D.resizeToHeight(newHeight.floatValue());
 			}
 		});
+	}
 
-		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
-		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
-		Env.pausedPy.addListener((x, y, z) -> updateStageTitle());
-
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
-
-		return scene;
+	private void updateMainSceneBackground() {
+		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
+		var sceneRoot = (Region) mainScene.getRoot();
+		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	private void configureGameLoop() {
@@ -204,12 +229,6 @@ public class GameUI implements GameEventListener {
 		updateMainSceneBackground();
 		updateStageTitle();
 		LOGGER.trace("Game scene is now %s", gameScene);
-	}
-
-	private void updateMainSceneBackground() {
-		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
-		var sceneRoot = (Region) stage.getScene().getRoot();
-		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	@Override
