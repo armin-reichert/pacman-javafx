@@ -184,6 +184,7 @@ public class GameUI implements GameEventListener {
 		return switch (gameController.game().variant()) {
 		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
 		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
+		default -> throw new IllegalStateException();
 		};
 	}
 
@@ -191,6 +192,7 @@ public class GameUI implements GameEventListener {
 		return switch (gameController.game().variant()) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
+		default -> throw new IllegalStateException();
 		};
 	}
 
