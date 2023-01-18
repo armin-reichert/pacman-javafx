@@ -99,16 +99,22 @@ public class GameUI implements GameEventListener {
 
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addListener(this);
-		Actions.attachTo(this);
-		configureGameLoop();
+		Actions.setUI(this);
 
-		Env.drawModePy.addListener((x, y, z) -> updateMainSceneBackground());
-		Env.bgColorPy.addListener((x, y, z) -> updateMainSceneBackground());
-		Env.pausedPy.addListener((x, y, z) -> updateStageTitle());
+		Env.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+		Env.bgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageTitle());
 
 		createMainScene(zoom);
 		configureStage(fullScreen);
+		configureGameLoop();
+	}
+
+	public void start() {
+		gameController.boot();
 		stage.show();
+		playGreetingVoice();
+		gameLoop().start();
 	}
 
 	public void playGreetingVoice() {

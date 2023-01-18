@@ -59,7 +59,7 @@ public class Actions {
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
 
-	public static void attachTo(GameUI userInterface) {
+	public static void setUI(GameUI userInterface) {
 		ui = Objects.requireNonNull(userInterface, "User Interface for actions must not be null");
 	}
 

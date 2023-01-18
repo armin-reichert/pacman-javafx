@@ -84,7 +84,6 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void init() throws Exception {
-		LOGGER.info("Initializing application...");
 		var optionParser = new OptionParser(O_3D, O_FULLSCREEN, O_MUTED, O_PERSPECTIVE, O_VARIANT, O_ZOOM);
 		optionParser.parse(getParameters().getUnnamed());
 		Env.threeDScenesPy.set(O_3D.getValue());
@@ -95,15 +94,14 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		LOGGER.info("Starting application...");
-		var zoom = O_ZOOM.getValue();
-		var fullScreen = O_FULLSCREEN.getValue();
+		float zoom = O_ZOOM.getValue();
+		boolean fullScreen = O_FULLSCREEN.getValue();
+		boolean use3D = Env.threeDScenesPy.get();
+		Perspective perspective = Env.perspectivePy.get();
 		var ui = new GameUI(gameController, primaryStage, zoom, fullScreen);
-		ui.gameLoop().start();
-		ui.playGreetingVoice();
-		gameController.boot();
+		ui.start();
 		LOGGER.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
-				primaryStage.getHeight(), zoom, U.onOff(Env.threeDScenesPy.get()), Env.perspectivePy.get()));
+				primaryStage.getHeight(), zoom, U.onOff(use3D), perspective));
 	}
 }
