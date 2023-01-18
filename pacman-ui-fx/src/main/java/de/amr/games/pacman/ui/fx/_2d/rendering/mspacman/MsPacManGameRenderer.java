@@ -31,6 +31,7 @@ import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
+import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -138,9 +139,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 
 	@Override
 	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation() {
-		var animation = new SingleEntityAnimation<>(true, false);
-		animation.setFrameDuration(10);
-		return animation;
+		return new Pulse(10, true);
 	}
 
 	@Override
