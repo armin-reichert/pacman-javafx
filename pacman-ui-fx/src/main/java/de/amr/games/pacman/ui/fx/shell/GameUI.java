@@ -134,8 +134,8 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void createMainScene(float zoom) {
-		if (zoom < 0) {
-			throw new IllegalArgumentException("Zoom value must not be negative but is " + zoom);
+		if (zoom <= 0) {
+			throw new IllegalArgumentException("Zoom value must be positive, but is " + zoom);
 		}
 
 		var root = new StackPane();
