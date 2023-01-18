@@ -138,18 +138,16 @@ public class GameUI implements GameEventListener {
 			throw new IllegalArgumentException("Zoom value must be positive, but is " + zoom);
 		}
 
-		var root = new StackPane();
 		gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
-		dashboard = new Dashboard(this);
-		pipView = new PiPView();
 		flashMessageView = new FlashMessageView();
 		overlayPane = new BorderPane();
-
-		root.getChildren().add(gameSceneParent);
-		root.getChildren().add(flashMessageView);
-		root.getChildren().add(overlayPane);
+		dashboard = new Dashboard(this);
+		pipView = new PiPView();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
+
+		var root = new StackPane();
+		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
 
 		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(zoom);
 		mainScene = new Scene(root, size.x(), size.y());
