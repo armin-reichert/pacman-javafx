@@ -42,7 +42,7 @@ import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
+import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -175,7 +175,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GameLevel level) {
-		var ghost3D = new Ghost3D(ghost, RendererCommon.GHOST_COLOR_SCHEMES[ghost.id()]);
+		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLOR_SCHEMES[ghost.id()]);
 		ghost3D.init(level);
 		ghost3D.drawModePy.bind(drawModePy);
 		return ghost3D;

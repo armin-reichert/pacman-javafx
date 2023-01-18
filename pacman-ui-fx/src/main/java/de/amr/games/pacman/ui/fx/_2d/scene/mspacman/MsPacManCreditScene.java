@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx.Actions;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.RendererMsPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.input.KeyCode;
@@ -60,7 +60,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void draw() {
-		var r = (RendererMsPacManGame) ctx.r2D();
+		var r = (MsPacManGameRenderer) ctx.r2D();
 		var msPacManSprite = r.lifeSprite();
 		var arcade8 = r.arcadeFont(TS);
 		var arcade6 = r.arcadeFont(6.0);

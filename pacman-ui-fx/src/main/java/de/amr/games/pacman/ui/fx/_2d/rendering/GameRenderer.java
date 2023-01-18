@@ -52,7 +52,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class RendererCommon implements Rendering2D {
+public abstract class GameRenderer implements Rendering2D {
 
 	public static final GhostColorScheme[] GHOST_COLOR_SCHEMES = new GhostColorScheme[4];
 

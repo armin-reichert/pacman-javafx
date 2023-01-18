@@ -38,8 +38,8 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.RendererMsPacManGame;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.RendererPacManGame;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -182,8 +182,8 @@ public class GameUI implements GameEventListener {
 
 	private Rendering2D renderer() {
 		return switch (gameController.game().variant()) {
-		case MS_PACMAN -> RendererMsPacManGame.THE_ONE_AND_ONLY;
-		case PACMAN -> RendererPacManGame.THE_ONE_AND_ONLY;
+		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
+		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
 		};
 	}
 

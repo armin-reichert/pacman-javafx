@@ -37,7 +37,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
-import de.amr.games.pacman.ui.fx._2d.rendering.RendererCommon;
+import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -47,11 +47,11 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class RendererMsPacManGame extends RendererCommon {
+public class MsPacManGameRenderer extends GameRenderer {
 
-	public static final RendererMsPacManGame THE_ONE_AND_ONLY = new RendererMsPacManGame();
+	public static final MsPacManGameRenderer THE_ONE_AND_ONLY = new MsPacManGameRenderer();
 
-	private RendererMsPacManGame() {
+	private MsPacManGameRenderer() {
 	}
 
 	@Override
