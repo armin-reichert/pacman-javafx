@@ -76,10 +76,11 @@ public class GameUI implements GameEventListener {
 	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = Ufx.image("icons/mspacman.png");
 
-	private GameController gameController;
-	private Stage stage;
+	private final GameController gameController;
+	private final Stage stage;
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS);
 	private final GameSceneManager sceneManager = new GameSceneManager();
+
 	private Scene mainScene;
 	private Group gameSceneParent;
 	private BorderPane overlayPane;
@@ -87,7 +88,6 @@ public class GameUI implements GameEventListener {
 	private FlashMessageView flashMessageView;
 	private PiPView pipView;
 	private KeyboardSteering kbSteering;
-
 	private GameScene currentGameScene;
 
 	public GameUI(GameController gameController, Stage primaryStage, float zoom, boolean fullScreen) {
