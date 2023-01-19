@@ -39,17 +39,13 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
-import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
-import de.amr.games.pacman.ui.fx._3d.entity.Bonus3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
@@ -81,7 +77,6 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Translate;
 
 /**
@@ -93,13 +88,11 @@ public class PlayScene3D implements GameScene {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture", "none");
 	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution", 4);
 	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight", 2.5);
 	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness", 1.5);
-	public final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(this, "pac3DLighted", false);
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
 			Perspective.TOTAL);
 	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect", true);
@@ -112,9 +105,6 @@ public class PlayScene3D implements GameScene {
 
 	private SceneContext ctx;
 	private GameLevel3D level3D;
-	private Pac3D pac3D;
-	private Ghost3D[] ghosts3D;
-	private Bonus3D bonus3D;
 
 	public PlayScene3D() {
 		var root = new Group(content, coordSystem, ambientLight);
@@ -134,14 +124,8 @@ public class PlayScene3D implements GameScene {
 
 	private void createContent3D(GameLevel level) {
 		createGameLevel3D(level);
-		createPac3D(level);
-		createGhosts3D(level);
-		createBonus3D();
 		content.getChildren().clear();
 		content.getChildren().add(level3D);
-		content.getChildren().add(pac3D);
-		content.getChildren().addAll(ghosts3D);
-		content.getChildren().add(bonus3D);
 		var width = ArcadeWorld.SIZE_PX.x();
 		var height = ArcadeWorld.SIZE_PX.y();
 		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
@@ -150,8 +134,9 @@ public class PlayScene3D implements GameScene {
 
 	private void createGameLevel3D(GameLevel level) {
 		level3D = new GameLevel3D(level, ctx.r2D());
+		level3D.drawModePy.bind(Env.drawModePy);
+		level3D.pac3DLightedPy.bind(Env.pac3DLightedPy);
 		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
-		level3D.world3D().drawModePy.bind(drawModePy);
 		level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
 				floorTexturePy));
@@ -159,30 +144,7 @@ public class PlayScene3D implements GameScene {
 		level3D.world3D().resolutionPy.bind(mazeResolutionPy);
 		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
 		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
-		LOGGER.info("3D world created.");
-	}
-
-	private void createPac3D(GameLevel level) {
-		pac3D = new Pac3D(level.pac());
-		ctx.world().ifPresent(pac3D::init);
-		pac3D.lightOnPy.bind(pac3DLightedPy);
-		LOGGER.info("3D %s created", level.pac().name());
-	}
-
-	private void createGhosts3D(GameLevel level) {
-		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, level)).toArray(Ghost3D[]::new);
-		LOGGER.info("3D ghosts created");
-	}
-
-	private Ghost3D createGhost3D(Ghost ghost, GameLevel level) {
-		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLOR_SCHEMES[ghost.id()]);
-		ghost3D.init(level);
-		ghost3D.drawModePy.bind(drawModePy);
-		return ghost3D;
-	}
-
-	private void createBonus3D() {
-		bonus3D = new Bonus3D();
+		LOGGER.info("3D game level created.");
 	}
 
 	@Override
@@ -197,8 +159,7 @@ public class PlayScene3D implements GameScene {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
-			// TODO fixme
-//			Actions.cheatAddLives(3);
+			Actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
 			Actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
@@ -210,10 +171,7 @@ public class PlayScene3D implements GameScene {
 	public void onTick() {
 		ctx.level().ifPresent(level -> {
 			level3D.update();
-			pac3D.update(level.world());
-			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
-			bonus3D.update(level.bonus());
-			currentCamera().update(pac3D);
+			currentCamera().update(level3D.pac3D());
 		});
 	}
 
@@ -314,7 +272,7 @@ public class PlayScene3D implements GameScene {
 	public void onBonusGetsActive(GameEvent e) {
 		ctx.level().ifPresent(level -> {
 			var sprite = ctx.r2D().bonusSymbolSprite(level.bonus().symbol());
-			bonus3D.showSymbol(ctx.r2D().spritesheet().region(sprite));
+			level3D.bonus3D().showSymbol(ctx.r2D().spritesheet().region(sprite));
 		});
 	}
 
@@ -322,14 +280,14 @@ public class PlayScene3D implements GameScene {
 	public void onBonusGetsEaten(GameEvent e) {
 		ctx.level().ifPresent(level -> {
 			var sprite = ctx.r2D().bonusValueSprite(level.bonus().symbol());
-			bonus3D.showPoints(ctx.r2D().spritesheet().region(sprite));
+			level3D.bonus3D().showPoints(ctx.r2D().spritesheet().region(sprite));
 			ctx.sounds().play(GameSound.BONUS_EATEN);
 		});
 	}
 
 	@Override
 	public void onBonusExpires(GameEvent e) {
-		bonus3D.setVisible(false);
+		level3D.bonus3D().setVisible(false);
 	}
 
 	@Override
@@ -339,8 +297,8 @@ public class PlayScene3D implements GameScene {
 		case READY -> {
 			ctx.level().ifPresent(level -> {
 				level3D.food3D().energizers3D().forEach(Energizer3D::init);
-				pac3D.init(level.world());
-				Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.init(level));
+				level3D.pac3D().init(level.world());
+				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
 			});
 		}
 
@@ -352,7 +310,7 @@ public class PlayScene3D implements GameScene {
 					lockGameState();
 					var animation = new SequentialTransition( //
 							pause(0.3), //
-							pac3D.createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
+							level3D.pac3D().createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
 							pause(2.0) //
 					);
 					animation.setOnFinished(evt -> unlockGameState());
@@ -367,7 +325,7 @@ public class PlayScene3D implements GameScene {
 					int index = killedGhost.killedIndex();
 					var sprite = ctx.r2D().createGhostValueList().frame(index);
 					var image = ctx.r2D().spritesheet().region(sprite);
-					ghosts3D[killedGhost.id()].setNumberImage(image);
+					level3D.ghosts3D()[killedGhost.id()].setNumberImage(image);
 				});
 			});
 		}
@@ -408,7 +366,7 @@ public class PlayScene3D implements GameScene {
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			level3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
-			bonus3D.setVisible(false);
+			level3D.bonus3D().setVisible(false);
 		}
 	}
 }

@@ -31,29 +31,46 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 
 /**
  * @author Armin Reichert
  */
 public class GameLevel3D extends Group {
 
+	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
+	public final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(this, "pac3DLighted", false);
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+
 	private final GameLevel level;
-	private final World3D world3D;
-	private final Food3D food3D;
-	private final PointLight houseLighting;
-	private final LevelCounter3D levelCounter3D;
-	private final LivesCounter3D livesCounter3D;
-	private final Scores3D scores3D;
+	private World3D world3D;
+	private Food3D food3D;
+	private Pac3D pac3D;
+	private Ghost3D[] ghosts3D;
+	private Bonus3D bonus3D;
+	private LevelCounter3D levelCounter3D;
+	private LivesCounter3D livesCounter3D;
+	private Scores3D scores3D;
+	private PointLight houseLighting;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -68,6 +85,11 @@ public class GameLevel3D extends Group {
 				r2D.ghostHouseDoorColor());
 
 		world3D = new World3D(level.world(), mazeColors);
+		world3D.drawModePy.bind(drawModePy);
+
+		createPac3D(level);
+		createGhosts3D(level);
+		createBonus3D();
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
@@ -94,13 +116,43 @@ public class GameLevel3D extends Group {
 
 		getChildren().add(world3D);
 		getChildren().add(food3D);
+		getChildren().add(pac3D);
+		getChildren().addAll(ghosts3D);
+		getChildren().add(bonus3D);
 		getChildren().add(scores3D);
 		getChildren().add(houseLighting);
 		getChildren().add(levelCounter3D);
 		getChildren().add(livesCounter3D);
+
+	}
+
+	private void createPac3D(GameLevel level) {
+		pac3D = new Pac3D(level.pac());
+		pac3D.init(level.world());
+		pac3D.lightOnPy.bind(pac3DLightedPy);
+		LOGGER.info("3D %s created", level.pac().name());
+	}
+
+	private void createGhosts3D(GameLevel level) {
+		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, level)).toArray(Ghost3D[]::new);
+		LOGGER.info("3D ghosts created");
+	}
+
+	private Ghost3D createGhost3D(Ghost ghost, GameLevel level) {
+		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLOR_SCHEMES[ghost.id()]);
+		ghost3D.init(level);
+		ghost3D.drawModePy.bind(drawModePy);
+		return ghost3D;
+	}
+
+	private void createBonus3D() {
+		bonus3D = new Bonus3D();
 	}
 
 	public void update() {
+		pac3D.update(level.world());
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
+		bonus3D.update(level.bonus());
 		updateHouseLightingState();
 		updateDoorState();
 		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
@@ -110,6 +162,26 @@ public class GameLevel3D extends Group {
 		} else {
 			scores3D.setShowText(Color.RED, "GAME OVER!");
 		}
+	}
+
+	public World3D world3D() {
+		return world3D;
+	}
+
+	public Food3D food3D() {
+		return food3D;
+	}
+
+	public Pac3D pac3D() {
+		return pac3D;
+	}
+
+	public Ghost3D[] ghosts3D() {
+		return ghosts3D;
+	}
+
+	public Bonus3D bonus3D() {
+		return bonus3D;
 	}
 
 	public Scores3D scores3D() {
@@ -122,14 +194,6 @@ public class GameLevel3D extends Group {
 
 	public LevelCounter3D levelCounter3D() {
 		return levelCounter3D;
-	}
-
-	public World3D world3D() {
-		return world3D;
-	}
-
-	public Food3D food3D() {
-		return food3D;
 	}
 
 	private void updateHouseLightingState() {
