@@ -98,7 +98,7 @@ public class PlayScene3D implements GameScene {
 	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect", true);
 
 	private final SubScene fxSubScene;
-	private final Group content = new Group();
+	private final Group levelContainer = new Group();
 	private final CoordSystem coordSystem = new CoordSystem();
 	private final AmbientLight ambientLight = new AmbientLight();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
@@ -107,7 +107,7 @@ public class PlayScene3D implements GameScene {
 	private GameLevel3D level3D;
 
 	public PlayScene3D() {
-		var root = new Group(content, coordSystem, ambientLight);
+		var root = new Group(levelContainer, coordSystem, ambientLight);
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		cameraMap.put(Perspective.DRONE, new CamDrone());
@@ -138,9 +138,8 @@ public class PlayScene3D implements GameScene {
 		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
 		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
 
-		content.getChildren().clear();
-		content.getChildren().add(level3D);
-		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
+		levelContainer.getChildren().setAll(level3D);
+		levelContainer.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 
 		changeCameraPerspective(perspectivePy.get());
 		LOGGER.info("3D game level created.");
