@@ -93,15 +93,10 @@ public class GameUI implements GameEventListener {
 	public GameUI(GameController gameController, Stage primaryStage, float zoom, boolean fullScreen) {
 		this.gameController = Objects.requireNonNull(gameController);
 		this.stage = Objects.requireNonNull(primaryStage);
-
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addListener(this);
 		Actions.setUI(this);
-
-		Env.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
-		Env.bgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
-		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
-
+		bindWithEnv();
 		createMainScene(zoom);
 		configureStage(fullScreen);
 		configureGameLoop();
@@ -127,6 +122,14 @@ public class GameUI implements GameEventListener {
 		Ufx.pause(sec, Actions::playHelpVoiceMessage).play();
 	}
 
+	private void bindWithEnv() {
+		Env.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+		Env.bgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
+		pipView.heightPy.bind(Env.pipSceneHeightPy);
+		pipView.opacityProperty().bind(Env.pipOpacityPy);
+	}
+
 	private void configureStage(boolean fullScreen) {
 		stage.setFullScreen(fullScreen);
 		stage.setMinWidth(241);
@@ -148,8 +151,6 @@ public class GameUI implements GameEventListener {
 		flashMessageView = new FlashMessageView();
 		overlayPane = new BorderPane();
 		pipView = new PiPView(ArcadeWorld.SIZE_PX.toFloatVec(), 2.0f);
-		pipView.heightPy.bind(Env.pipSceneHeightPy);
-		pipView.opacityProperty().bind(Env.pipOpacityPy);
 		dashboard = new Dashboard(this);
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
