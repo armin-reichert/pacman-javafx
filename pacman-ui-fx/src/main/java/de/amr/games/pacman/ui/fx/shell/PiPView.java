@@ -46,9 +46,6 @@ public class PiPView extends StackPane {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	public static final Vector2f MIN_SIZE = ArcadeWorld.SIZE_PX.toFloatVec();
-	public static final Vector2f MAX_SIZE = ArcadeWorld.SIZE_PX.toFloatVec().scaled(2.0f);
-
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override
 		protected void invalidated() {
@@ -56,21 +53,32 @@ public class PiPView extends StackPane {
 		}
 	};
 
+	private Vector2f minSize;
+	private Vector2f maxSize;
 	private final PlayScene2D playScene = new PlayScene2D();
 
-	public PiPView() {
+	public PiPView(float maxZoom) {
+		minSize = ArcadeWorld.SIZE_PX.toFloatVec();
+		maxSize = minSize.scaled(maxZoom);
 		heightPy.bind(Env.pipSceneHeightPy);
 		opacityProperty().bind(Env.pipOpacityPy);
 		setBackground(Ufx.colorBackground(Color.BLACK));
 		setFocusTraversable(false);
 		getChildren().add(playScene.fxSubScene());
-		playScene.resizeToHeight(MIN_SIZE.y());
+		playScene.resizeToHeight(minSize.y());
+	}
+
+	public Vector2f minSize() {
+		return minSize;
+	}
+
+	public Vector2f maxSize() {
+		return maxSize;
 	}
 
 	public void init(SceneContext context) {
 		LOGGER.trace("Initialize PiP view");
 		playScene.setContext(context);
-//		playScene.init();
 	}
 
 	public void update() {

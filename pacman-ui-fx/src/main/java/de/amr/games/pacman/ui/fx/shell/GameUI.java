@@ -147,8 +147,8 @@ public class GameUI implements GameEventListener {
 		gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 		flashMessageView = new FlashMessageView();
 		overlayPane = new BorderPane();
+		pipView = new PiPView(2);
 		dashboard = new Dashboard(this);
-		pipView = new PiPView();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 
@@ -331,5 +331,9 @@ public class GameUI implements GameEventListener {
 
 	public Dashboard dashboard() {
 		return dashboard;
+	}
+
+	public PiPView pipView() {
+		return pipView;
 	}
 }
