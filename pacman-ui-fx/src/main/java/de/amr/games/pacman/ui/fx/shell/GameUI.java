@@ -196,7 +196,7 @@ public class GameUI implements GameEventListener {
 		if (gameScene != currentGameScene) {
 			currentGameScene = gameScene;
 			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
-			currentGameScene.embedInto(stage.getScene());
+			currentGameScene.embedInto(mainScene);
 			updateMainSceneBackground();
 			updateStageFrame();
 			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : sounds());
