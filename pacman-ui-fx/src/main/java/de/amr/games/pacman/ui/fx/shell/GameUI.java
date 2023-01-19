@@ -100,7 +100,7 @@ public class GameUI implements GameEventListener {
 
 		Env.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.bgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
-		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageTitle());
+		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
 
 		createMainScene(zoom);
 		configureStage(fullScreen);
@@ -200,7 +200,7 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private void updateStageTitle() {
+	private void updateStageFrame() {
 		var pausedText = Env.pausedPy.get() ? " (paused)" : "";
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
@@ -236,7 +236,7 @@ public class GameUI implements GameEventListener {
 		gameSceneParent.getChildren().setAll(gameScene.fxSubScene());
 		gameScene.embedInto(stage.getScene());
 		updateMainSceneBackground();
-		updateStageTitle();
+		updateStageFrame();
 		LOGGER.trace("Game scene is now %s", gameScene);
 	}
 
