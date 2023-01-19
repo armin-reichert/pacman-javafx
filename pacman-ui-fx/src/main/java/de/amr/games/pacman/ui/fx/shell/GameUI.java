@@ -119,12 +119,12 @@ public class GameUI implements GameEventListener {
 	public void start() {
 		gameController.boot();
 		stage.show();
-		playGreetingVoice();
+		playGreetingVoiceAfterSec(1.0);
 		gameLoop().start();
 	}
 
-	public void playGreetingVoice() {
-		Ufx.pause(0.5, Actions::playHelpVoiceMessage).play();
+	public void playGreetingVoiceAfterSec(double sec) {
+		Ufx.pause(sec, Actions::playHelpVoiceMessage).play();
 	}
 
 	private void configureStage(boolean fullScreen) {
