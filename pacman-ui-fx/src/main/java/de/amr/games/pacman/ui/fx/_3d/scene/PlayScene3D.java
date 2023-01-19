@@ -119,17 +119,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		ctx.level().ifPresent(this::createContent3D);
-	}
-
-	private void createContent3D(GameLevel level) {
-		createGameLevel3D(level);
-		content.getChildren().clear();
-		content.getChildren().add(level3D);
-		var width = ArcadeWorld.SIZE_PX.x();
-		var height = ArcadeWorld.SIZE_PX.y();
-		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
-		changeCamera(perspectivePy.get());
+		ctx.level().ifPresent(this::createGameLevel3D);
 	}
 
 	private void createGameLevel3D(GameLevel level) {
@@ -144,14 +134,20 @@ public class PlayScene3D implements GameScene {
 		level3D.world3D().resolutionPy.bind(mazeResolutionPy);
 		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
 		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
+
+		content.getChildren().clear();
+		content.getChildren().add(level3D);
+		var width = ArcadeWorld.SIZE_PX.x();
+		var height = ArcadeWorld.SIZE_PX.y();
+		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
+		changeCamera(perspectivePy.get());
 		LOGGER.info("3D game level created.");
 	}
 
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
-			// when in attract mode, allow adding credit
-			Actions.addCredit();
+			Actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.RIGHT)) {
@@ -334,7 +330,7 @@ public class PlayScene3D implements GameScene {
 			ctx.level().ifPresent(level -> {
 				LOGGER.info("Starting level %d", level.number());
 				lockGameState();
-				createContent3D(level);
+				createGameLevel3D(level);
 				Actions.showFlashMessage(TextManager.message("level_starting", level.number()));
 				pause(3, this::unlockGameState).play();
 			});
