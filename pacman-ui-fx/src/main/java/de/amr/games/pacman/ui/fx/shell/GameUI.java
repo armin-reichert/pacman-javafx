@@ -147,7 +147,7 @@ public class GameUI implements GameEventListener {
 		gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 		flashMessageView = new FlashMessageView();
 		overlayPane = new BorderPane();
-		pipView = new PiPView(2);
+		pipView = new PiPView(ArcadeWorld.SIZE_PX.toFloatVec(), 2.0f);
 		pipView.heightPy.bind(Env.pipSceneHeightPy);
 		pipView.opacityProperty().bind(Env.pipOpacityPy);
 		dashboard = new Dashboard(this);

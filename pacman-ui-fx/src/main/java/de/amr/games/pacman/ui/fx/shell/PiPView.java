@@ -23,18 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2f;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 /**
  * Picture-In-Picture view. Displays an embedded 2D game scene.
@@ -54,15 +53,15 @@ public class PiPView extends Pane {
 
 	private Vector2f minSize;
 	private Vector2f maxSize;
-	private final PlayScene2D playScene = new PlayScene2D();
+	private final PlayScene2D playScene;
 
-	public PiPView(float maxZoom) {
-		minSize = ArcadeWorld.SIZE_PX.toFloatVec();
+	public PiPView(Vector2f minSize, float maxZoom) {
+		this.minSize = Objects.requireNonNull(minSize);
 		maxSize = minSize.scaled(maxZoom);
-		setBackground(Ufx.colorBackground(Color.BLACK));
-		setFocusTraversable(false);
-		getChildren().add(playScene.fxSubScene());
+		playScene = new PlayScene2D();
 		playScene.resizeToHeight(minSize.y());
+		getChildren().add(playScene.fxSubScene());
+		setFocusTraversable(false);
 	}
 
 	public Vector2f minSize() {
