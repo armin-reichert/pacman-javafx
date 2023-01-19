@@ -36,7 +36,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.Pane;
 
 /**
- * Picture-In-Picture view. Displays an embedded 2D game scene.
+ * Picture-In-Picture view. Displays an embedded 2D play scene.
  * 
  * @author Armin Reichert
  */
