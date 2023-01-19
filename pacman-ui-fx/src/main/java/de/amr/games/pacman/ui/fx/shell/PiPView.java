@@ -76,7 +76,7 @@ public class PiPView extends StackPane {
 		return maxSize;
 	}
 
-	public void init(SceneContext context) {
+	public void setContext(SceneContext context) {
 		LOGGER.trace("Initialize PiP view");
 		playScene.setContext(context);
 	}

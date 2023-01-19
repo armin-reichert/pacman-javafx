@@ -194,9 +194,14 @@ public class GameUI implements GameEventListener {
 		int dim = Env.threeDScenesPy.get() ? 3 : 2;
 		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
 		if (gameScene != currentGameScene) {
-			setGameScene(gameScene);
+			currentGameScene = gameScene;
+			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
+			currentGameScene.embedInto(stage.getScene());
+			updateMainSceneBackground();
+			updateStageFrame();
 			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : sounds());
-			pipView.init(gameScene.ctx());
+			pipView.setContext(currentGameScene.ctx());
+			LOGGER.trace("Game scene is now: %s", gameScene);
 		}
 	}
 
@@ -229,15 +234,6 @@ public class GameUI implements GameEventListener {
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		default -> throw new IllegalStateException();
 		};
-	}
-
-	private void setGameScene(GameScene gameScene) {
-		currentGameScene = gameScene;
-		gameSceneParent.getChildren().setAll(gameScene.fxSubScene());
-		gameScene.embedInto(stage.getScene());
-		updateMainSceneBackground();
-		updateStageFrame();
-		LOGGER.trace("Game scene is now %s", gameScene);
 	}
 
 	@Override
