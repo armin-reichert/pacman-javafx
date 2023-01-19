@@ -114,7 +114,7 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		perspectivePy.addListener((py, oldVal, newPerspective) -> changeCameraPerspective(newPerspective));
+		perspectivePy.addListener((property, oldVal, newVal) -> changeCameraPerspective(newVal));
 	}
 
 	@Override
