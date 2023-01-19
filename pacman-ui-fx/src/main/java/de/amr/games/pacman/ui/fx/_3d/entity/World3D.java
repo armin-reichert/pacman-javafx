@@ -47,7 +47,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 
 /**
- * 3D-model for a maze. Creates walls/doors using information from the floor plan.
+ * 3D-model for the world in a game level. Creates walls/doors using information from the floor plan.
  * 
  * @author Armin Reichert
  */
@@ -85,9 +85,9 @@ public class World3D extends Group {
 		this.mazeColors = mazeColors;
 		floorColorPy.addListener(py -> updateFloorMaterial());
 		floorTexturePy.addListener(py -> updateFloorMaterial());
-		resolutionPy.addListener(py -> buildWalls());
+		resolutionPy.addListener(py -> buildMaze());
 		buildFloor();
-		buildWalls();
+		buildMaze();
 		getChildren().addAll(floor, wallsGroup, doorsGroup);
 	}
 
@@ -115,7 +115,7 @@ public class World3D extends Group {
 		return material;
 	}
 
-	private void buildWalls() {
+	private void buildMaze() {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolutionPy.get();
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
