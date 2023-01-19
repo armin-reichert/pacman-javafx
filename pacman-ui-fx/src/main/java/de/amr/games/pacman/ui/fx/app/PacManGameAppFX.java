@@ -44,6 +44,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import javafx.application.Application;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -99,6 +100,7 @@ public class PacManGameAppFX extends Application {
 		boolean use3D = Env.threeDScenesPy.get();
 		Perspective perspective = Env.perspectivePy.get();
 		var ui = new GameUI(gameController, primaryStage, zoom, fullScreen);
+		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		ui.start();
 		LOGGER.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),

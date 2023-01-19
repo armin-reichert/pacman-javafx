@@ -93,9 +93,6 @@ public class GameUI implements GameEventListener {
 	public GameUI(GameController gameController, Stage primaryStage, float zoom, boolean fullScreen) {
 		this.gameController = Objects.requireNonNull(gameController);
 		this.stage = Objects.requireNonNull(primaryStage);
-		this.kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-
-		gameController.setManualPacSteering(kbSteering);
 
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addListener(this);
@@ -108,6 +105,15 @@ public class GameUI implements GameEventListener {
 		createMainScene(zoom);
 		configureStage(fullScreen);
 		configureGameLoop();
+	}
+
+	public void setSteeringKeys(KeyCode keyUp, KeyCode keyDown, KeyCode keyLeft, KeyCode keyRight) {
+		if (kbSteering != null) {
+			mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
+		}
+		kbSteering = new KeyboardSteering(keyUp, keyDown, keyLeft, keyRight);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
+		gameController.setManualPacSteering(kbSteering);
 	}
 
 	public void start() {
@@ -153,7 +159,6 @@ public class GameUI implements GameEventListener {
 		mainScene = new Scene(root, size.x(), size.y());
 
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
 		mainScene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> {
 			if (currentGameScene instanceof GameScene2D scene2D) {
 				scene2D.resizeToHeight(newHeight.floatValue());
