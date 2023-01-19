@@ -39,7 +39,7 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
@@ -114,7 +114,7 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		perspectivePy.addListener((py, oldVal, newPerspective) -> changeCamera(newPerspective));
+		perspectivePy.addListener((py, oldVal, newPerspective) -> changeCameraPerspective(newPerspective));
 	}
 
 	@Override
@@ -123,6 +123,9 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createGameLevel3D(GameLevel level) {
+		var width = level.world().numCols() * World.TS;
+		var height = level.world().numRows() * World.TS;
+
 		level3D = new GameLevel3D(level, ctx.r2D());
 		level3D.drawModePy.bind(Env.drawModePy);
 		level3D.pac3DLightedPy.bind(Env.pac3DLightedPy);
@@ -137,10 +140,9 @@ public class PlayScene3D implements GameScene {
 
 		content.getChildren().clear();
 		content.getChildren().add(level3D);
-		var width = ArcadeWorld.SIZE_PX.x();
-		var height = ArcadeWorld.SIZE_PX.y();
 		content.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
-		changeCamera(perspectivePy.get());
+
+		changeCameraPerspective(perspectivePy.get());
 		LOGGER.info("3D game level created.");
 	}
 
@@ -213,7 +215,7 @@ public class PlayScene3D implements GameScene {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
-	public void changeCamera(Perspective newPerspective) {
+	public void changeCameraPerspective(Perspective newPerspective) {
 		var newCamera = getCamera(newPerspective);
 		if (newCamera == null) {
 			LOGGER.error("No camera found for perspective %s", newPerspective);
