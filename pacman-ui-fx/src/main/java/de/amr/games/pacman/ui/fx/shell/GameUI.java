@@ -148,6 +148,8 @@ public class GameUI implements GameEventListener {
 		flashMessageView = new FlashMessageView();
 		overlayPane = new BorderPane();
 		pipView = new PiPView(2);
+		pipView.heightPy.bind(Env.pipSceneHeightPy);
+		pipView.opacityProperty().bind(Env.pipOpacityPy);
 		dashboard = new Dashboard(this);
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));

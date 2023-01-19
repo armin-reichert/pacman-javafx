@@ -28,13 +28,12 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scene.SceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**
@@ -42,7 +41,7 @@ import javafx.scene.paint.Color;
  * 
  * @author Armin Reichert
  */
-public class PiPView extends StackPane {
+public class PiPView extends Pane {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
@@ -60,8 +59,6 @@ public class PiPView extends StackPane {
 	public PiPView(float maxZoom) {
 		minSize = ArcadeWorld.SIZE_PX.toFloatVec();
 		maxSize = minSize.scaled(maxZoom);
-		heightPy.bind(Env.pipSceneHeightPy);
-		opacityProperty().bind(Env.pipOpacityPy);
 		setBackground(Ufx.colorBackground(Color.BLACK));
 		setFocusTraversable(false);
 		getChildren().add(playScene.fxSubScene());
