@@ -151,14 +151,14 @@ public class PlayScene3D implements GameScene {
 	private void createGameLevel3D(GameLevel level) {
 		level3D = new GameLevel3D(level, ctx.r2D());
 		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
-		level3D.maze3D().drawModePy.bind(drawModePy);
-		level3D.maze3D().floorTexturePy.bind(Bindings.createObjectBinding(
+		level3D.world3D().drawModePy.bind(drawModePy);
+		level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
 				floorTexturePy));
-		level3D.maze3D().floorColorPy.bind(floorColorPy);
-		level3D.maze3D().resolutionPy.bind(mazeResolutionPy);
-		level3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
-		level3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
+		level3D.world3D().floorColorPy.bind(floorColorPy);
+		level3D.world3D().resolutionPy.bind(mazeResolutionPy);
+		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
+		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
 		LOGGER.info("3D world created.");
 	}
 

@@ -51,7 +51,7 @@ import javafx.scene.shape.DrawMode;
  * 
  * @author Armin Reichert
  */
-public class Maze3D extends Group {
+public class World3D extends Group {
 
 	private static class WallData {
 		byte type;
@@ -80,7 +80,7 @@ public class Maze3D extends Group {
 	private final Group doorsGroup = new Group();
 	private Box floor;
 
-	public Maze3D(World world, Maze3DColors mazeColors) {
+	public World3D(World world, Maze3DColors mazeColors) {
 		this.world = world;
 		this.mazeColors = mazeColors;
 		floorColorPy.addListener(py -> updateFloorMaterial());

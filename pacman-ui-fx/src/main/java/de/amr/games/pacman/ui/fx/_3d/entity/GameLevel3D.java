@@ -48,7 +48,7 @@ import javafx.scene.paint.Color;
 public class GameLevel3D extends Group {
 
 	private final GameLevel level;
-	private final Maze3D maze3D;
+	private final World3D world3D;
 	private final Food3D food3D;
 	private final PointLight houseLighting;
 	private final LevelCounter3D levelCounter3D;
@@ -67,7 +67,7 @@ public class GameLevel3D extends Group {
 				r2D.mazeTopColor(mazeNumber), //
 				r2D.ghostHouseDoorColor());
 
-		maze3D = new Maze3D(level.world(), mazeColors);
+		world3D = new World3D(level.world(), mazeColors);
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
@@ -92,7 +92,7 @@ public class GameLevel3D extends Group {
 		var scoreFont = r2D.arcadeFont(TS);
 		scores3D = new Scores3D(scoreFont);
 
-		getChildren().add(maze3D);
+		getChildren().add(world3D);
 		getChildren().add(food3D);
 		getChildren().add(scores3D);
 		getChildren().add(houseLighting);
@@ -124,8 +124,8 @@ public class GameLevel3D extends Group {
 		return levelCounter3D;
 	}
 
-	public Maze3D maze3D() {
-		return maze3D;
+	public World3D world3D() {
+		return world3D;
 	}
 
 	public Food3D food3D() {
@@ -142,7 +142,7 @@ public class GameLevel3D extends Group {
 	private void updateDoorState() {
 		if (level.world().ghostHouse() instanceof ArcadeGhostHouse) {
 			var accessGranted = isAccessGranted(level.ghosts(), ArcadeGhostHouse.DOOR_CENTER_POSITION);
-			maze3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
+			world3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 		}
 	}
 
