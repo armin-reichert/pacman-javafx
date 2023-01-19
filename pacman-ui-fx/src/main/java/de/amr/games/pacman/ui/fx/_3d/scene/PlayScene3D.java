@@ -49,7 +49,7 @@ import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
-import de.amr.games.pacman.ui.fx._3d.entity.World3D;
+import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
@@ -111,7 +111,7 @@ public class PlayScene3D implements GameScene {
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 
 	private SceneContext ctx;
-	private World3D world3D;
+	private GameLevel3D level3D;
 	private Pac3D pac3D;
 	private Ghost3D[] ghosts3D;
 	private Bonus3D bonus3D;
@@ -133,12 +133,12 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void createContent3D(GameLevel level) {
-		createWorld3D(level);
+		createGameLevel3D(level);
 		createPac3D(level);
 		createGhosts3D(level);
 		createBonus3D();
 		content.getChildren().clear();
-		content.getChildren().add(world3D);
+		content.getChildren().add(level3D);
 		content.getChildren().add(pac3D);
 		content.getChildren().addAll(ghosts3D);
 		content.getChildren().add(bonus3D);
@@ -148,17 +148,17 @@ public class PlayScene3D implements GameScene {
 		changeCamera(perspectivePy.get());
 	}
 
-	private void createWorld3D(GameLevel level) {
-		world3D = new World3D(level, ctx.r2D());
-		world3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
-		world3D.maze3D().drawModePy.bind(drawModePy);
-		world3D.maze3D().floorTexturePy.bind(Bindings.createObjectBinding(
+	private void createGameLevel3D(GameLevel level) {
+		level3D = new GameLevel3D(level, ctx.r2D());
+		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
+		level3D.maze3D().drawModePy.bind(drawModePy);
+		level3D.maze3D().floorTexturePy.bind(Bindings.createObjectBinding(
 				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
 				floorTexturePy));
-		world3D.maze3D().floorColorPy.bind(floorColorPy);
-		world3D.maze3D().resolutionPy.bind(mazeResolutionPy);
-		world3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
-		world3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
+		level3D.maze3D().floorColorPy.bind(floorColorPy);
+		level3D.maze3D().resolutionPy.bind(mazeResolutionPy);
+		level3D.maze3D().wallHeightPy.bind(mazeWallHeightPy);
+		level3D.maze3D().wallThicknessPy.bind(mazeWallThicknessPy);
 		LOGGER.info("3D world created.");
 	}
 
@@ -209,7 +209,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onTick() {
 		ctx.level().ifPresent(level -> {
-			world3D.update();
+			level3D.update();
 			pac3D.update(level.world());
 			Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 			bonus3D.update(level.bonus());
@@ -272,18 +272,18 @@ public class PlayScene3D implements GameScene {
 			newCamera.reset();
 		}
 		// this rotates the scores such that the viewer always sees them frontally
-		if (world3D != null && world3D.scores3D() != null) {
-			world3D.scores3D().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
-			world3D.scores3D().rotateProperty().bind(newCamera.rotateProperty());
+		if (level3D != null && level3D.scores3D() != null) {
+			level3D.scores3D().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
+			level3D.scores3D().rotateProperty().bind(newCamera.rotateProperty());
 		}
 	}
 
 	@Override
 	public void onSwitchFrom2D() {
 		ctx.world().ifPresent(world -> {
-			world3D.food3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
+			level3D.food3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
 			if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
-				world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
+				level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 		});
 	}
@@ -296,12 +296,12 @@ public class PlayScene3D implements GameScene {
 			ctx.world().ifPresent(world -> {
 				world.tiles() //
 						.filter(world::containsEatenFood) //
-						.map(world3D.food3D()::pelletAt) //
+						.map(level3D.food3D()::pelletAt) //
 						.flatMap(Optional::stream) //
 						.forEach(Pellet3D::eat);
 			});
 		} else {
-			world3D.food3D().pelletAt(e.tile.get()).ifPresent(world3D.food3D()::eatPellet);
+			level3D.food3D().pelletAt(e.tile.get()).ifPresent(level3D.food3D()::eatPellet);
 		}
 	}
 
@@ -338,13 +338,13 @@ public class PlayScene3D implements GameScene {
 
 		case READY -> {
 			ctx.level().ifPresent(level -> {
-				world3D.food3D().energizers3D().forEach(Energizer3D::init);
+				level3D.food3D().energizers3D().forEach(Energizer3D::init);
 				pac3D.init(level.world());
 				Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.init(level));
 			});
 		}
 
-		case HUNTING -> world3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
+		case HUNTING -> level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 
 		case PACMAN_DYING -> {
 			ctx.game().level().ifPresent(level -> {
@@ -407,7 +407,7 @@ public class PlayScene3D implements GameScene {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			world3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
+			level3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
 			bonus3D.setVisible(false);
 		}
 	}

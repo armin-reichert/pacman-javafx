@@ -45,7 +45,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class World3D extends Group {
+public class GameLevel3D extends Group {
 
 	private final GameLevel level;
 	private final Maze3D maze3D;
@@ -55,7 +55,7 @@ public class World3D extends Group {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 
-	public World3D(GameLevel level, Rendering2D r2D) {
+	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
 
 		var width = level.world().numCols() * World.TS;
