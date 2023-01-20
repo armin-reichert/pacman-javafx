@@ -78,6 +78,7 @@ public abstract class GameScene2D implements GameScene {
 		root.getChildren().addAll(canvas, overlayPane);
 	}
 
+	@Override
 	public void resizeToHeight(float height) {
 		float aspectRatio = (float) size.x() / (float) size.y();
 		float width = aspectRatio * height;

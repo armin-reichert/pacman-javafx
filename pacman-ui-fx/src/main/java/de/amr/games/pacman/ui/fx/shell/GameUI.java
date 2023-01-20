@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
@@ -162,11 +161,8 @@ public class GameUI implements GameEventListener {
 		mainScene = new Scene(root, size.x(), size.y());
 
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
-		mainScene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> {
-			if (currentGameScene instanceof GameScene2D scene2D) {
-				scene2D.resizeToHeight(newHeight.floatValue());
-			}
-		});
+		mainScene.heightProperty()
+				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 	}
 
 	private void updateMainSceneBackground() {

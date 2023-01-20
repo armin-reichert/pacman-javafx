@@ -122,6 +122,11 @@ public class PlayScene3D implements GameScene {
 		ctx.level().ifPresent(this::createGameLevel3D);
 	}
 
+	@Override
+	public void resizeToHeight(float height) {
+		// nothing to do
+	}
+
 	private void createGameLevel3D(GameLevel level) {
 		var width = level.world().numCols() * World.TS;
 		var height = level.world().numRows() * World.TS;

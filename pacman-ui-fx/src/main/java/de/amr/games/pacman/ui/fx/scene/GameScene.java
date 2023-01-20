@@ -80,6 +80,13 @@ public interface GameScene extends GameEventListener {
 	void embedInto(Scene parentScene);
 
 	/**
+	 * Called when the height of the parent of this game scene has changed.
+	 * 
+	 * @param new height height in pixels
+	 */
+	void resizeToHeight(float height);
+
+	/**
 	 * @return if this is a scene with 3D content
 	 */
 	boolean is3D();
