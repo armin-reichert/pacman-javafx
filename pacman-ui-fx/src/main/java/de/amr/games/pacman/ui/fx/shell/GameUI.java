@@ -32,8 +32,8 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
@@ -190,16 +190,16 @@ public class GameUI implements GameEventListener {
 	}
 
 	// public visible such that Actions class can call it
-	public void updateGameScene(boolean forcedReload) {
+	public void updateGameScene(boolean reload) {
 		int dim = Env.threeDScenesPy.get() ? 3 : 2;
-		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, forcedReload);
+		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, reload);
 		if (gameScene != currentGameScene) {
 			currentGameScene = gameScene;
 			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
 			currentGameScene.embedInto(mainScene);
 			updateMainSceneBackground();
 			updateStageFrame();
-			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : sounds());
+			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : gameSounds(gameController.game().variant()));
 			pipView.setContext(currentGameScene.ctx());
 			LOGGER.trace("Game scene is now: %s", gameScene);
 		}
@@ -220,8 +220,8 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private GameSounds sounds() {
-		return switch (gameController.game().variant()) {
+	private static GameSounds gameSounds(GameVariant variant) {
+		return switch (variant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		default -> throw new IllegalStateException();
@@ -230,19 +230,16 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onGameEvent(GameEvent event) {
-		GameEventListener.super.onGameEvent(event);
+		switch (event.type) {
+		case GAME_STATE_CHANGED -> updateGameScene(false);
+		case UNSPECIFIED_CHANGE -> updateGameScene(true);
+		case LEVEL_STARTING -> onLevelStarting(event);
+		default -> {
+			// ignore
+		}
+		}
 		currentGameScene.onGameEvent(event);
 		LOGGER.trace("Game UI received game event %s", event);
-	}
-
-	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		updateGameScene(false);
-	}
-
-	@Override
-	public void onUnspecifiedChange(GameEvent e) {
-		updateGameScene(true);
 	}
 
 	// this is dubios
