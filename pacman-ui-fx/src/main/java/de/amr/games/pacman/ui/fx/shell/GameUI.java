@@ -96,10 +96,10 @@ public class GameUI implements GameEventListener {
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addListener(this);
 		Actions.setUI(this);
-		bindWithEnv();
 		createMainScene(zoom);
 		configureStage(fullScreen);
 		configureGameLoop();
+		bindWithEnv();
 	}
 
 	public void setSteeringKeys(KeyCode keyUp, KeyCode keyDown, KeyCode keyLeft, KeyCode keyRight) {
@@ -113,6 +113,7 @@ public class GameUI implements GameEventListener {
 
 	public void start() {
 		gameController.boot();
+		stage.centerOnScreen();
 		stage.show();
 		playGreetingVoiceAfterSec(1.0);
 		gameLoop().start();
@@ -139,7 +140,6 @@ public class GameUI implements GameEventListener {
 			LOGGER.info("Game loop stopped. Application closed.");
 		});
 		stage.setScene(mainScene);
-		stage.centerOnScreen();
 	}
 
 	private void createMainScene(float zoom) {
