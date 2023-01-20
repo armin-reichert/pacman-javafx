@@ -169,11 +169,12 @@ public class GameSceneManager {
 		var game = gameController.game();
 		var level = game.level();
 		var state = gameController.state();
+
 		int index = switch (state) {
 		case BOOT -> BOOT_SCENE_INDEX;
+		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
-		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTERMISSION -> {
 			if (level.isPresent()) {
 				yield PLAY_SCENE_INDEX + level.get().params().intermissionNumber();
@@ -182,7 +183,9 @@ public class GameSceneManager {
 			}
 		}
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.intermissionTestNumber;
+		default -> throw new IllegalStateException();
 		};
+
 		return switch (game.variant()) {
 		case MS_PACMAN -> SCENES_MS_PACMAN[index];
 		case PACMAN -> SCENES_PACMAN[index];
