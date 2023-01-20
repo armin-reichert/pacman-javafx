@@ -65,24 +65,24 @@ public class GameSceneManager {
 	private static final int PLAY_SCENE_INDEX = 3;
 
 	//@formatter:off
-	private static final SceneVariants[] SCENES_PACMAN = {
-		new SceneVariants(createScene2D(BootScene.class), null),
-		new SceneVariants(createScene2D(PacManIntroScene.class), null),
-		new SceneVariants(createScene2D(PacManCreditScene.class), null),
-		new SceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
-		new SceneVariants(createScene2D(PacManCutscene1.class), null),
-		new SceneVariants(createScene2D(PacManCutscene2.class), null),
-		new SceneVariants(createScene2D(PacManCutscene3.class), null),
+	private static final GameSceneVariants[] SCENES_PACMAN = {
+		new GameSceneVariants(createScene2D(BootScene.class), null),
+		new GameSceneVariants(createScene2D(PacManIntroScene.class), null),
+		new GameSceneVariants(createScene2D(PacManCreditScene.class), null),
+		new GameSceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new GameSceneVariants(createScene2D(PacManCutscene1.class), null),
+		new GameSceneVariants(createScene2D(PacManCutscene2.class), null),
+		new GameSceneVariants(createScene2D(PacManCutscene3.class), null),
 	};
 
-	private static final SceneVariants[] SCENES_MS_PACMAN = { 
-		new SceneVariants(createScene2D(BootScene.class), null),
-		new SceneVariants(createScene2D(MsPacManIntroScene.class), null),
-		new SceneVariants(createScene2D(MsPacManCreditScene.class), null),
-		new SceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
-		new SceneVariants(createScene2D(MsPacManIntermissionScene1.class), null),
-		new SceneVariants(createScene2D(MsPacManIntermissionScene2.class), null),
-		new SceneVariants(createScene2D(MsPacManIntermissionScene3.class), null),
+	private static final GameSceneVariants[] SCENES_MS_PACMAN = { 
+		new GameSceneVariants(createScene2D(BootScene.class), null),
+		new GameSceneVariants(createScene2D(MsPacManIntroScene.class), null),
+		new GameSceneVariants(createScene2D(MsPacManCreditScene.class), null),
+		new GameSceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new GameSceneVariants(createScene2D(MsPacManIntermissionScene1.class), null),
+		new GameSceneVariants(createScene2D(MsPacManIntermissionScene2.class), null),
+		new GameSceneVariants(createScene2D(MsPacManIntermissionScene3.class), null),
 	};
 	//@formatter:on
 
@@ -170,7 +170,7 @@ public class GameSceneManager {
 		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	private static SceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
+	private static GameSceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
 		var game = gameController.game();
 		var level = game.level();
 		var state = gameController.state();
