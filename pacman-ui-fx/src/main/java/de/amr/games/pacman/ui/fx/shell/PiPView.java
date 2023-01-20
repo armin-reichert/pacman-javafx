@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.Pane;
@@ -72,7 +72,7 @@ public class PiPView extends Pane {
 		return maxSize;
 	}
 
-	public void setContext(SceneContext context) {
+	public void setContext(GameSceneContext context) {
 		LOGGER.trace("Initialize PiP view");
 		playScene.setContext(context);
 	}

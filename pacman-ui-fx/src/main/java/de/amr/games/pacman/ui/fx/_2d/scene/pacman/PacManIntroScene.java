@@ -34,7 +34,7 @@ import de.amr.games.pacman.controller.pacman.PacManIntroState;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import javafx.scene.input.KeyCode;
@@ -55,7 +55,7 @@ public class PacManIntroScene extends GameScene2D {
 	private PacManIntroController intro;
 
 	@Override
-	public void setContext(SceneContext sceneContext) {
+	public void setContext(GameSceneContext sceneContext) {
 		super.setContext(sceneContext);
 		intro = new PacManIntroController(sceneContext.gameController());
 	}

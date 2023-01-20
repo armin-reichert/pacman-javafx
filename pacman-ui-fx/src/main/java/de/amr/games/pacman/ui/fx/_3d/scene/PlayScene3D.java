@@ -53,7 +53,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.TextManager;
@@ -103,7 +103,7 @@ public class PlayScene3D implements GameScene {
 	private final AmbientLight ambientLight = new AmbientLight();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 
-	private SceneContext ctx;
+	private GameSceneContext ctx;
 	private GameLevel3D level3D;
 
 	public PlayScene3D() {
@@ -183,12 +183,12 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public SceneContext ctx() {
+	public GameSceneContext ctx() {
 		return ctx;
 	}
 
 	@Override
-	public void setContext(SceneContext ctx) {
+	public void setContext(GameSceneContext ctx) {
 		this.ctx = ctx;
 	}
 

@@ -33,11 +33,11 @@ import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 /**
  * @author Armin Reichert
  */
-public class SceneContext extends SceneControllerContext {
+public class GameSceneContext extends SceneControllerContext {
 
 	private final Rendering2D r2D;
 
-	public SceneContext(GameController gameController, Rendering2D r2D) {
+	public GameSceneContext(GameController gameController, Rendering2D r2D) {
 		super(gameController);
 		this.r2D = Objects.requireNonNull(r2D, "2D renderer must not be NULL");
 	}

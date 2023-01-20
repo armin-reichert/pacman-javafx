@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.SceneContext;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
@@ -64,7 +64,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final SubScene fxSubScene;
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
-	protected SceneContext ctx;
+	protected GameSceneContext ctx;
 	private boolean creditVisible;
 	private Vector2i size = ArcadeWorld.SIZE_PX;
 	private float scaling = 1.0f;
@@ -146,12 +146,12 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public SceneContext ctx() {
+	public GameSceneContext ctx() {
 		return ctx;
 	}
 
 	@Override
-	public void setContext(SceneContext context) {
+	public void setContext(GameSceneContext context) {
 		ctx = context;
 	}
 

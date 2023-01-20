@@ -203,6 +203,6 @@ public class GameSceneManager {
 		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
 		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
 		};
-		scene.setContext(new SceneContext(gameController, r2D));
+		scene.setContext(new GameSceneContext(gameController, r2D));
 	}
 }

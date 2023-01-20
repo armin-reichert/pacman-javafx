@@ -41,12 +41,12 @@ public interface GameScene extends GameEventListener {
 	 * <p>
 	 * This method is called before the scene's init method.
 	 */
-	void setContext(SceneContext context);
+	void setContext(GameSceneContext context);
 
 	/**
 	 * @return the scene context (game controller, model, rendering, 3D model, sound)
 	 */
-	SceneContext ctx();
+	GameSceneContext ctx();
 
 	/**
 	 * Called when the scene becomes the current one.
