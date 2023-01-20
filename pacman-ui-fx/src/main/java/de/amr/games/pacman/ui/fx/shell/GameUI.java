@@ -110,6 +110,7 @@ public class GameUI implements GameEventListener {
 		gameController.boot();
 		stage.centerOnScreen();
 		stage.show();
+		stage.requestFocus();
 		playGreetingVoiceAfterSec(1.0);
 		gameLoop().start();
 	}
