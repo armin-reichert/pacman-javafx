@@ -122,12 +122,24 @@ public class GameUI implements GameEventListener {
 		Ufx.pause(sec, Actions::playHelpVoiceMessage).play();
 	}
 
+	private void configureGameLoop() {
+		gameLoop.setUpdateTask(() -> {
+			gameController.update();
+			currentGameScene.onTick();
+			Keyboard.clear();
+		});
+		gameLoop.setRenderTask(this::updateUI);
+	}
+
 	private void bindWithEnv() {
 		Env.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.bgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
 		pipView.heightPy.bind(Env.pipSceneHeightPy);
 		pipView.opacityProperty().bind(Env.pipOpacityPy);
+		gameLoop.pausedPy.bind(Env.pausedPy);
+		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
+		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 	}
 
 	private void configureStage(boolean fullScreen) {
@@ -165,27 +177,19 @@ public class GameUI implements GameEventListener {
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 	}
 
+	private void updateUI() {
+		flashMessageView.update();
+		dashboard.update();
+		pipView.setVisible(Env.pipVisiblePy.get() && sceneManager.isPlayScene(currentGameScene));
+		if (pipView.isVisible()) {
+			pipView.update();
+		}
+	}
+
 	private void updateMainSceneBackground() {
 		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
 		var sceneRoot = (Region) mainScene.getRoot();
 		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
-	}
-
-	private void configureGameLoop() {
-		gameLoop.setUpdateTask(() -> {
-			gameController.update();
-			currentGameScene.onTick();
-			Keyboard.clear();
-		});
-		gameLoop.setRenderTask(() -> {
-			flashMessageView.update();
-			dashboard.update();
-			pipView.update();
-			pipView.setVisible(Env.pipVisiblePy.get() && sceneManager.isPlayScene(currentGameScene));
-		});
-		gameLoop.pausedPy.bind(Env.pausedPy);
-		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
-		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
 	}
 
 	// public visible such that Actions class can call it
