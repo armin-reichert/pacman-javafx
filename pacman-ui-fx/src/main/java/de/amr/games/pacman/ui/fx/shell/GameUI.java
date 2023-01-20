@@ -237,15 +237,14 @@ public class GameUI implements GameEventListener {
 		case GAME_STATE_CHANGED -> updateGameScene(false);
 		case UNSPECIFIED_CHANGE -> updateGameScene(true);
 		case LEVEL_STARTING -> onLevelStarting(event);
-		default -> {
-			// ignore
+		default -> { // let current scene handle event
 		}
 		}
 		currentGameScene.onGameEvent(event);
 		LOGGER.trace("Game UI received game event %s", event);
 	}
 
-	// this is dubios
+	// this is dubious but we need some point in time where the animations are created
 	@Override
 	public void onLevelStarting(GameEvent e) {
 		gameController.game().level().ifPresent(level -> {
