@@ -181,7 +181,7 @@ public class GameUI implements GameEventListener {
 			flashMessageView.update();
 			dashboard.update();
 			pipView.update();
-			pipView.setVisible(Env.pipEnabledPy.get() && sceneManager.isPlayScene(currentGameScene));
+			pipView.setVisible(Env.pipVisiblePy.get() && sceneManager.isPlayScene(currentGameScene));
 		});
 		gameLoop.pausedPy.bind(Env.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);

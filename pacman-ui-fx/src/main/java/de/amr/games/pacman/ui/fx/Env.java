@@ -66,7 +66,7 @@ public interface Env {
 	public static final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(true);
 	public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty pipEnabledPy = new SimpleBooleanProperty(false);
+	public static final BooleanProperty pipVisiblePy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.SIZE_PX.y());
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);

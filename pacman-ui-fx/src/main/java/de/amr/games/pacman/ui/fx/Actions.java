@@ -154,8 +154,8 @@ public class Actions {
 	}
 
 	public static void togglePipViewVisible() {
-		Env.toggle(Env.pipEnabledPy);
-		if (Env.pipEnabledPy.get()) {
+		Env.toggle(Env.pipVisiblePy);
+		if (Env.pipVisiblePy.get()) {
 			showFlashMessage("Picture in Picture ON");
 		} else {
 			showFlashMessage("Picture in Picture OFF");
