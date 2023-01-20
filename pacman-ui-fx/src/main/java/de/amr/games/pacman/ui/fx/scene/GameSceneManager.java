@@ -53,6 +53,10 @@ import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
  */
 public class GameSceneManager {
 
+	private GameSceneManager() {
+		// only static
+	}
+
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
 	private static final int BOOT_SCENE_INDEX = 0;
@@ -122,7 +126,8 @@ public class GameSceneManager {
 	 * 
 	 * @return the selected game scene
 	 */
-	public GameScene selectGameScene(GameController gameController, int dim, GameScene currentGameScene, boolean reload) {
+	public static GameScene selectGameScene(GameController gameController, int dim, GameScene currentGameScene,
+			boolean reload) {
 		if (dim != 2 && dim != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
@@ -145,7 +150,7 @@ public class GameSceneManager {
 		return nextGameScene;
 	}
 
-	public boolean isPlayScene(GameScene gameScene) {
+	public static boolean isPlayScene(GameScene gameScene) {
 		return gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene2D()
 				|| gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene3D()
 				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene2D()
@@ -157,7 +162,7 @@ public class GameSceneManager {
 	 * @param dim            scene variant dimension (2 or 3)
 	 * @return (optional) game scene matching current game state and specified dimension
 	 */
-	public Optional<GameScene> findGameScene(GameController gameController, int dim) {
+	public static Optional<GameScene> findGameScene(GameController gameController, int dim) {
 		if (dim != 2 && dim != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
@@ -165,7 +170,7 @@ public class GameSceneManager {
 		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	private SceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
+	private static SceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
 		var game = gameController.game();
 		var level = game.level();
 		var state = gameController.state();
@@ -192,7 +197,7 @@ public class GameSceneManager {
 		};
 	}
 
-	private void setSceneContext(GameController gameController, GameScene scene) {
+	private static void setSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant();
 		var r2D = switch (gameVariant) {
 		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;

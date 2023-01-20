@@ -74,7 +74,6 @@ public class GameUI implements GameEventListener {
 	private final GameController gameController;
 	private final Stage stage;
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS);
-	private final GameSceneManager sceneManager = new GameSceneManager();
 
 	private Scene mainScene;
 	private Group gameSceneParent;
@@ -177,7 +176,7 @@ public class GameUI implements GameEventListener {
 	private void updateUI() {
 		flashMessageView.update();
 		dashboard.update();
-		pipView.setVisible(Env.pipVisiblePy.get() && sceneManager.isPlayScene(currentGameScene));
+		pipView.setVisible(Env.pipVisiblePy.get() && GameSceneManager.isPlayScene(currentGameScene));
 		if (pipView.isVisible()) {
 			pipView.update();
 		}
@@ -207,7 +206,7 @@ public class GameUI implements GameEventListener {
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
 		int dim = Env.threeDScenesPy.get() ? 3 : 2;
-		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, reload);
+		var gameScene = GameSceneManager.selectGameScene(gameController, dim, currentGameScene, reload);
 		if (gameScene != currentGameScene) {
 			currentGameScene = gameScene;
 			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
@@ -300,10 +299,6 @@ public class GameUI implements GameEventListener {
 
 	public Scene mainScene() {
 		return stage.getScene();
-	}
-
-	public GameSceneManager sceneManager() {
-		return sceneManager;
 	}
 
 	public GameLoop gameLoop() {

@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.TextManager;
 import javafx.scene.media.AudioClip;
@@ -232,7 +233,7 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Env.toggle(Env.threeDScenesPy);
-		if (ui.sceneManager().findGameScene(gameController(), 3).isPresent()) {
+		if (GameSceneManager.findGameScene(gameController(), 3).isPresent()) {
 			ui.updateGameScene(true);
 			if (ui.currentGameScene().is3D()) {
 				ui.currentGameScene().onSwitchFrom2D();
