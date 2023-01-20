@@ -33,7 +33,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
@@ -183,28 +182,6 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private void updateMainSceneBackground() {
-		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
-		var sceneRoot = (Region) mainScene.getRoot();
-		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
-	}
-
-	// public visible such that Actions class can call it
-	public void updateGameScene(boolean reload) {
-		int dim = Env.threeDScenesPy.get() ? 3 : 2;
-		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, reload);
-		if (gameScene != currentGameScene) {
-			currentGameScene = gameScene;
-			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
-			currentGameScene.embedInto(mainScene);
-			updateMainSceneBackground();
-			updateStageFrame();
-			gameController.setSounds(Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : gameSounds(gameController.game().variant()));
-			pipView.setContext(currentGameScene.ctx());
-			LOGGER.trace("Game scene is now: %s", gameScene);
-		}
-	}
-
 	private void updateStageFrame() {
 		var pausedText = Env.pausedPy.get() ? " (paused)" : "";
 		switch (gameController.game().variant()) {
@@ -220,12 +197,38 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private static GameSounds gameSounds(GameVariant variant) {
-		return switch (variant) {
+	private void updateMainSceneBackground() {
+		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
+		var sceneRoot = (Region) mainScene.getRoot();
+		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
+	}
+
+	// public visible such that Actions class can call it
+	public void updateGameScene(boolean reload) {
+		int dim = Env.threeDScenesPy.get() ? 3 : 2;
+		var gameScene = sceneManager.selectGameScene(gameController, dim, currentGameScene, reload);
+		if (gameScene != currentGameScene) {
+			currentGameScene = gameScene;
+			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
+			currentGameScene.embedInto(mainScene);
+			pipView.setContext(currentGameScene.ctx());
+			LOGGER.trace("Game scene is now: %s", gameScene);
+		}
+		updateSounds();
+		updateMainSceneBackground();
+		updateStageFrame();
+	}
+
+	private void updateSounds() {
+		var variant = gameController.game().variant();
+		var gameSounds = switch (variant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		default -> throw new IllegalStateException();
 		};
+		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : gameSounds;
+		gameController.setSounds(sounds);
+		LOGGER.info("Using sounds for game variant %s", variant);
 	}
 
 	@Override
