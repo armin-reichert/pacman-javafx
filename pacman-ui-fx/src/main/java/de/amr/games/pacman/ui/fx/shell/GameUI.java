@@ -156,14 +156,13 @@ public class GameUI implements GameEventListener {
 
 		gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 		flashMessageView = new FlashMessageView();
-		overlayPane = new BorderPane();
 		pipView = new PiPView(ArcadeWorld.SIZE_PX.toFloatVec(), 2.0f);
 		dashboard = new Dashboard(this);
+		overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 
-		var root = new StackPane();
-		root.getChildren().addAll(gameSceneParent, flashMessageView, overlayPane);
+		var root = new StackPane(gameSceneParent, flashMessageView, overlayPane);
 
 		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(zoom);
 		mainScene = new Scene(root, size.x(), size.y());
