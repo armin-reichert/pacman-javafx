@@ -77,7 +77,6 @@ public class GameUI implements GameEventListener {
 
 	private Scene mainScene;
 	private Group gameSceneParent;
-	private BorderPane overlayPane;
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
 	private PiPView pipView;
@@ -158,10 +157,9 @@ public class GameUI implements GameEventListener {
 		flashMessageView = new FlashMessageView();
 		pipView = new PiPView(ArcadeWorld.SIZE_PX.toFloatVec(), 2.0f);
 		dashboard = new Dashboard(this);
-		overlayPane = new BorderPane();
+		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
-
 		var root = new StackPane(gameSceneParent, flashMessageView, overlayPane);
 
 		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(zoom);
