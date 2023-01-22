@@ -30,7 +30,7 @@ import java.util.Objects;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.GhostColors;
+import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -70,7 +70,7 @@ public class Ghost3D extends Group {
 	private Image numberImage;
 	private Look look;
 
-	public Ghost3D(Ghost ghost, GhostColors colors) {
+	public Ghost3D(Ghost ghost, GhostColoring colors) {
 		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
 		Objects.requireNonNull(colors, "Ghost colors must not be null");
 		coloredGhost3D = new ColoredGhost3D(colors);
