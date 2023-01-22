@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameModel;
@@ -154,18 +153,14 @@ public abstract class GameRenderer implements Rendering2D {
 		}
 	}
 
-	private static Rectangle2D currentSprite(EntityAnimation animation) {
-		return (Rectangle2D) animation.frame();
-	}
-
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, currentSprite(animation)));
+		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, currentSprite(animation)));
+		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
 	}
 
 	@Override
