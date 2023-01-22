@@ -85,8 +85,8 @@ public class GameLevel3D extends Group {
 		world3D = new World3D(level.world(), mazeColors);
 		world3D.drawModePy.bind(drawModePy);
 
-		createPac3D(level);
-		createGhosts3D(level);
+		createPac3D();
+		createGhosts3D();
 		createBonus3D();
 
 		houseLighting = new PointLight();
@@ -124,19 +124,19 @@ public class GameLevel3D extends Group {
 
 	}
 
-	private void createPac3D(GameLevel level) {
+	private void createPac3D() {
 		pac3D = new Pac3D(level.pac());
 		pac3D.init(level.world());
 		pac3D.lightOnPy.bind(Env3D.pacLightedPy);
 		LOGGER.info("3D %s created", level.pac().name());
 	}
 
-	private void createGhosts3D(GameLevel level) {
-		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, level)).toArray(Ghost3D[]::new);
+	private void createGhosts3D() {
+		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		LOGGER.info("3D ghosts created");
 	}
 
-	private Ghost3D createGhost3D(Ghost ghost, GameLevel level) {
+	private Ghost3D createGhost3D(Ghost ghost) {
 		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLORS[ghost.id()]);
 		ghost3D.init(level);
 		ghost3D.drawModePy.bind(drawModePy);
