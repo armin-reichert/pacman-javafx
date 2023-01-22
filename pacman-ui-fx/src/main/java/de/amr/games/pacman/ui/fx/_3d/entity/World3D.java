@@ -113,20 +113,55 @@ public class World3D extends Group {
 		return material;
 	}
 
-	private void buildMaze(int resolution) {
+	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
 		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor());
+		return wallData;
+	}
+
+	private void buildMaze(int resolution) {
 		var floorPlan = new FloorPlan(world, resolution);
 		wallsGroup.getChildren().clear();
-		addCorners(floorPlan, wallData);
-		addHorizontalWalls(floorPlan, wallData);
-		addVerticalWalls(floorPlan, wallData);
+		addCorners(floorPlan, createWallData(resolution));
+		addHorizontalWalls(floorPlan, createWallData(resolution));
+		addVerticalWalls(floorPlan, createWallData(resolution));
+//		transformMaze();
 		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor())).toList();
 		doorsGroup.getChildren().setAll(doors);
 		LOGGER.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
+
+//	private void transformMaze() {
+//		if (world instanceof MapBasedWorld mapWorld) {
+//			wallsGroup.getChildren().forEach(wall -> {
+//				WallData data = (WallData) wall.getUserData();
+//				LOGGER.info("Wall data type is %d", data.type);
+//				var tile = tileFromFloorPlanCoord(data.x, data.y);
+//				switch (data.type) {
+//				case FloorPlan.HWALL -> {
+//					var tileAbove = tile.plus(Direction.UP.vector());
+//					if (mapWorld.isWall(tileAbove)) {
+//						wall.getTransforms().add(new Translate(0, -2));
+//					} else {
+////						wall.getTransforms().add(new Translate(0, 2));
+//					}
+//				}
+//				case FloorPlan.VWALL -> {
+//
+//				}
+//				case FloorPlan.CORNER -> {
+//
+//				}
+//				}
+//			});
+//		}
+//	}
+//
+//	private Vector2i tileFromFloorPlanCoord(int fx, int fy) {
+//		return new Vector2i(fx / MAZE_RESOLUTION, fy / MAZE_RESOLUTION);
+//	}
 
 	public Stream<Door3D> doors() {
 		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
@@ -227,6 +262,7 @@ public class World3D extends Group {
 		var wall = new Group(base, top);
 		wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
 		wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
+		wall.setUserData(wallData);
 
 		wallsGroup.getChildren().add(wall);
 	}
