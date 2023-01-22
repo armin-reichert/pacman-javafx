@@ -75,9 +75,9 @@ public class Pac3D extends Group {
 		getChildren().add(root);
 
 		spot = new PointLight();
-		spot.setColor(Color.ANTIQUEWHITE);
-		spot.setMaxRange(8 * TS);
-		spot.setTranslateZ(-TS);
+		spot.setColor(Color.rgb(255, 255, 0, 0.25));
+		spot.setMaxRange(2 * TS);
+		spot.setTranslateZ(0);
 		spot.lightOnProperty().bind(lightOnPy);
 		getChildren().add(spot);
 	}

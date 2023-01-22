@@ -40,11 +40,10 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -58,7 +57,6 @@ public class GameLevel3D extends Group {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	public final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(this, "pac3DLighted", false);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final GameLevel level;
@@ -129,7 +127,7 @@ public class GameLevel3D extends Group {
 	private void createPac3D(GameLevel level) {
 		pac3D = new Pac3D(level.pac());
 		pac3D.init(level.world());
-		pac3D.lightOnPy.bind(pac3DLightedPy);
+		pac3D.lightOnPy.bind(Env3D.pacLightedPy);
 		LOGGER.info("3D %s created", level.pac().name());
 	}
 

@@ -130,7 +130,6 @@ public class PlayScene3D implements GameScene {
 
 			level3D = new GameLevel3D(level, ctx.r2D());
 			level3D.drawModePy.bind(Env3D.drawModePy);
-			level3D.pac3DLightedPy.bind(Env3D.pacLightedPy);
 			level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
 			level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
 					() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
