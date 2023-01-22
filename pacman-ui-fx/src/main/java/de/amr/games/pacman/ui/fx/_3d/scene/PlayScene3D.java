@@ -62,11 +62,9 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -90,7 +88,6 @@ public class PlayScene3D implements GameScene {
 
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture", "none");
-	public final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(this, "mazeResolution", 4);
 	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight", 2.5);
 	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness", 1.5);
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
@@ -139,7 +136,6 @@ public class PlayScene3D implements GameScene {
 				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
 				floorTexturePy));
 		level3D.world3D().floorColorPy.bind(floorColorPy);
-		level3D.world3D().resolutionPy.bind(mazeResolutionPy);
 		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
 		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
 

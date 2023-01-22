@@ -103,7 +103,6 @@ public class GameSceneManager {
 		var playScene3D = new PlayScene3D();
 		playScene3D.floorColorPy.bind(Env3D.floorColorPy);
 		playScene3D.floorTexturePy.bind(Env3D.floorTexturePy);
-		playScene3D.mazeResolutionPy.bind(Env3D.mazeResolutionPy);
 		playScene3D.mazeWallHeightPy.bind(Env3D.mazeWallHeightPy);
 		playScene3D.mazeWallThicknessPy.bind(Env3D.mazeWallThicknessPy);
 		playScene3D.perspectivePy.bind(Env3D.perspectivePy);

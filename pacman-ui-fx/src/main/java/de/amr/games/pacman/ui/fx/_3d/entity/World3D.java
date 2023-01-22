@@ -34,10 +34,8 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -65,9 +63,10 @@ public class World3D extends Group {
 	}
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
+
+	private static final int MAZE_RESOLUTION = 4; // 1, 2, 4, 8 are allowed values
 	private static final double FLOOR_THICKNESS = 0.1;
 
-	public final IntegerProperty resolutionPy = new SimpleIntegerProperty(this, "resolution", 4);
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture");
@@ -85,9 +84,8 @@ public class World3D extends Group {
 		this.mazeColors = mazeColors;
 		floorColorPy.addListener(py -> updateFloorMaterial());
 		floorTexturePy.addListener(py -> updateFloorMaterial());
-		resolutionPy.addListener(py -> buildMaze());
 		buildFloor();
-		buildMaze();
+		buildMaze(MAZE_RESOLUTION);
 		getChildren().addAll(floor, wallsGroup, doorsGroup);
 	}
 
@@ -115,12 +113,12 @@ public class World3D extends Group {
 		return material;
 	}
 
-	private void buildMaze() {
+	private void buildMaze(int resolution) {
 		var wallData = new WallData();
-		wallData.brickSize = (float) TS / resolutionPy.get();
+		wallData.brickSize = (float) TS / resolution;
 		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
 		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor());
-		var floorPlan = new FloorPlan(world, resolutionPy.get());
+		var floorPlan = new FloorPlan(world, resolution);
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, wallData);
 		addHorizontalWalls(floorPlan, wallData);

@@ -43,7 +43,6 @@ import javafx.scene.text.Font;
 public class Section3D extends Section {
 
 	private final CheckBox cbSquirting;
-	private final ComboBox<Integer> comboResolution;
 	private final Slider sliderWallHeight;
 	private final Slider sliderWallThickness;
 	private final ColorPicker pickerLightColor;
@@ -57,8 +56,6 @@ public class Section3D extends Section {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 		pickerLightColor = addColorPicker("Light color", Env3D.lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env3D.lightColorPy.set(pickerLightColor.getValue()));
-		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
-		comboResolution.setOnAction(e -> Env3D.mazeResolutionPy.set(comboResolution.getValue()));
 		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env3D.mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env3D.mazeWallHeightPy.set(newVal.doubleValue()));
@@ -78,8 +75,6 @@ public class Section3D extends Section {
 	@Override
 	public void update() {
 		super.update();
-		comboResolution.setValue(Env3D.mazeResolutionPy.get());
-		comboResolution.setDisable(!gameScene().is3D());
 		sliderWallHeight.setValue(Env3D.mazeWallHeightPy.get());
 		sliderWallHeight.setDisable(!gameScene().is3D());
 		comboFloorTexture.setValue(Env3D.floorTexturePy.get());
