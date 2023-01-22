@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
@@ -100,15 +101,15 @@ public class GameSceneManager {
 
 	private static PlayScene3D createPlayScene3D() {
 		var playScene3D = new PlayScene3D();
-		playScene3D.floorColorPy.bind(Env.floorColorPy);
-		playScene3D.floorTexturePy.bind(Env.floorTexturePy);
-		playScene3D.mazeResolutionPy.bind(Env.mazeResolutionPy);
-		playScene3D.mazeWallHeightPy.bind(Env.mazeWallHeightPy);
-		playScene3D.mazeWallThicknessPy.bind(Env.mazeWallThicknessPy);
-		playScene3D.perspectivePy.bind(Env.perspectivePy);
-		playScene3D.squirtingEffectPy.bind(Env.squirtingEffectPy);
-		playScene3D.coordSystem().visibleProperty().bind(Env.axesVisiblePy);
-		playScene3D.ambientLight().colorProperty().bind(Env.lightColorPy);
+		playScene3D.floorColorPy.bind(Env3D.floorColorPy);
+		playScene3D.floorTexturePy.bind(Env3D.floorTexturePy);
+		playScene3D.mazeResolutionPy.bind(Env3D.mazeResolutionPy);
+		playScene3D.mazeWallHeightPy.bind(Env3D.mazeWallHeightPy);
+		playScene3D.mazeWallThicknessPy.bind(Env3D.mazeWallThicknessPy);
+		playScene3D.perspectivePy.bind(Env3D.perspectivePy);
+		playScene3D.squirtingEffectPy.bind(Env3D.squirtingEffectPy);
+		playScene3D.coordSystem().visibleProperty().bind(Env3D.axesVisiblePy);
+		playScene3D.ambientLight().colorProperty().bind(Env3D.lightColorPy);
 		LOGGER.trace("3D game scene created: '%s'", playScene3D.getClass().getName());
 		return playScene3D;
 	}

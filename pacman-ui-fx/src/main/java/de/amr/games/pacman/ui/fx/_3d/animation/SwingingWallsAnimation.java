@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.Env3D;
 import javafx.animation.Transition;
 import javafx.util.Duration;
 
@@ -45,8 +45,8 @@ public class SwingingWallsAnimation extends Transition {
 	@Override
 	protected void interpolate(double t) {
 		if (t == 0) {
-			wallStartHeight = Env.mazeWallHeightPy.get();
+			wallStartHeight = Env3D.mazeWallHeightPy.get();
 		}
-		Env.mazeWallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
+		Env3D.mazeWallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
 	}
 }

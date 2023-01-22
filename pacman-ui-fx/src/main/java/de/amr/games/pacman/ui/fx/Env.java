@@ -24,11 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx;
 
 import java.net.URL;
-import java.util.List;
 import java.util.MissingResourceException;
 
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -37,51 +35,40 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 
 /**
  * Global stuff.
  * 
  * @author Armin Reichert
  */
-public interface Env {
+public final class Env {
+
+	private Env() {
+	}
+
+	public static final String RESOURCE_PATH = "/de/amr/games/pacman/ui/fx/";
 
 	// this flag disables sound support completely. Used for testing Gluon native app which has no sound support yet.
 	public static final boolean SOUND_DISABLED = false;
 
-	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
-
-	public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Color> bgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
-	public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(0, 0, 33));
-	public static final StringProperty floorTexturePy = new SimpleStringProperty("none");
-	public static final ObjectProperty<Color> lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-	public static final IntegerProperty mazeResolutionPy = new SimpleIntegerProperty(4);
-	public static final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(1.5);
-	public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.5);
-	public static final BooleanProperty pac3DLightedPy = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
 	public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 	public static final BooleanProperty pipVisiblePy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.SIZE_PX.y());
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
-	public static final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(true);
 	public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
-	public static final BooleanProperty threeDScenesPy = new SimpleBooleanProperty(true);
 	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
+	public static final BooleanProperty use3DPy = new SimpleBooleanProperty(true);
 
 	public static void toggle(BooleanProperty booleanProperty) {
 		booleanProperty.set(!booleanProperty.get());
 	}
 
 	public static String absPath(String relPath) {
-		return "/de/amr/games/pacman/ui/fx/" + relPath;
+		return RESOURCE_PATH + relPath;
 	}
 
 	public static URL urlFromRelPath(String relPath) {

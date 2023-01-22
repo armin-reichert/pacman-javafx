@@ -28,7 +28,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
@@ -60,8 +60,8 @@ public class SectionCamera3D extends Section {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
-		comboPerspective.setOnAction(e -> Env.perspectivePy.set(comboPerspective.getValue()));
-		Env.perspectivePy.addListener((obs, oldVal, newVal) -> onPerspectiveChanged(newVal));
+		comboPerspective.setOnAction(e -> Env3D.perspectivePy.set(comboPerspective.getValue()));
+		Env3D.perspectivePy.addListener((obs, oldVal, newVal) -> onPerspectiveChanged(newVal));
 
 		sliderTransformX = addSlider("Translate X", -500, 500, 0);
 		sliderTransformY = addSlider("Translate Y", -500, 500, 0);
@@ -81,17 +81,17 @@ public class SectionCamera3D extends Section {
 		addInfo("Camera",
 				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.currentCamera().transformInfo() : "")
 						.available(() -> gameScene().is3D());
-		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
-		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
-		addInfo("Shift+UP/DOWN", "Camera -Z / +Z")
-				.available(() -> Env.perspectivePy.get() == Perspective.TOTAL || Env.perspectivePy.get() == Perspective.DRONE);
-		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env.perspectivePy.get() == Perspective.TOTAL);
+		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env3D.perspectivePy.get() == Perspective.TOTAL);
+		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env3D.perspectivePy.get() == Perspective.TOTAL);
+		addInfo("Shift+UP/DOWN", "Camera -Z / +Z").available(
+				() -> Env3D.perspectivePy.get() == Perspective.TOTAL || Env3D.perspectivePy.get() == Perspective.DRONE);
+		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env3D.perspectivePy.get() == Perspective.TOTAL);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		comboPerspective.setValue(Env.perspectivePy.get());
+		comboPerspective.setValue(Env3D.perspectivePy.get());
 		comboPerspective.setDisable(!gameScene().is3D());
 	}
 

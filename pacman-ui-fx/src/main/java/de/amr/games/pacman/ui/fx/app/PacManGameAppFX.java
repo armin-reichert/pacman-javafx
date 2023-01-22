@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
@@ -87,8 +88,8 @@ public class PacManGameAppFX extends Application {
 	public void init() throws Exception {
 		var optionParser = new OptionParser(O_3D, O_FULLSCREEN, O_MUTED, O_PERSPECTIVE, O_VARIANT, O_ZOOM);
 		optionParser.parse(getParameters().getUnnamed());
-		Env.threeDScenesPy.set(O_3D.getValue());
-		Env.perspectivePy.set(O_PERSPECTIVE.getValue());
+		Env.use3DPy.set(O_3D.getValue());
+		Env3D.perspectivePy.set(O_PERSPECTIVE.getValue());
 		gameController = new GameController(O_VARIANT.getValue());
 		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant());
 	}
@@ -97,13 +98,12 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		float zoom = O_ZOOM.getValue();
 		boolean fullScreen = O_FULLSCREEN.getValue();
-		boolean use3D = Env.threeDScenesPy.get();
-		Perspective perspective = Env.perspectivePy.get();
+		var perspective = Env3D.perspectivePy.get();
 		var ui = new GameUI(gameController, primaryStage, zoom, fullScreen);
 		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		ui.start();
 		LOGGER.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
 		LOGGER.info(() -> "UI size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
-				primaryStage.getHeight(), zoom, U.onOff(use3D), perspective));
+				primaryStage.getHeight(), zoom, U.onOff(Env.use3DPy.get()), perspective));
 	}
 }

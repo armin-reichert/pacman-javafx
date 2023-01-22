@@ -97,8 +97,8 @@ public class SectionGeneral extends Section {
 
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.mainScene().getWidth(), ui.mainScene().getHeight()));
 
-		pickerBgColor = addColorPicker("Background color", Env.bgColorPy.get());
-		pickerBgColor.setOnAction(e -> Env.bgColorPy.set(pickerBgColor.getValue()));
+		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
+		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 
 		sliderPiPSceneHeight = addSlider("PiP Size", ui.pipView().minSize().y(), ui.pipView().maxSize().y(),
 				Env.pipSceneHeightPy.get());
@@ -124,7 +124,7 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setValue(Env.targetFrameratePy.get());
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
 		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
-		cbUsePlayScene3D.setSelected(Env.threeDScenesPy.get());
+		cbUsePlayScene3D.setSelected(Env.use3DPy.get());
 		cbTimeMeasured.setSelected(Env.timeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}

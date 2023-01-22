@@ -36,6 +36,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
@@ -127,8 +128,8 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void bindWithEnv() {
-		Env.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
-		Env.bgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+		Env3D.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+		Env.mainSceneBgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
 		pipView.heightPy.bind(Env.pipSceneHeightPy);
 		pipView.opacityProperty().bind(Env.pipOpacityPy);
@@ -195,14 +196,14 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateMainSceneBackground() {
-		var bgColor = Env.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.bgColorPy.get();
+		var bgColor = Env3D.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) mainScene.getRoot();
 		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		int dim = Env.threeDScenesPy.get() ? 3 : 2;
+		int dim = Env.use3DPy.get() ? 3 : 2;
 		var gameScene = GameSceneManager.selectGameScene(gameController, dim, currentGameScene, reload);
 		if (gameScene != currentGameScene) {
 			currentGameScene = gameScene;

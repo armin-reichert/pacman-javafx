@@ -191,16 +191,16 @@ public class Actions {
 
 	public static void selectNextPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			Env.perspectivePy.set(Env.perspectivePy.get().next());
-			String perspectiveName = TextManager.message(Env.perspectivePy.get().name());
+			Env3D.perspectivePy.set(Env3D.perspectivePy.get().next());
+			String perspectiveName = TextManager.message(Env3D.perspectivePy.get().name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void selectPrevPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			Env.perspectivePy.set(Env.perspectivePy.get().prev());
-			String perspectiveName = TextManager.message(Env.perspectivePy.get().name());
+			Env3D.perspectivePy.set(Env3D.perspectivePy.get().prev());
+			String perspectiveName = TextManager.message(Env3D.perspectivePy.get().name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 
@@ -232,7 +232,7 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Env.toggle(Env.threeDScenesPy);
+		Env.toggle(Env.use3DPy);
 		if (GameSceneManager.findGameScene(gameController(), 3).isPresent()) {
 			ui.updateGameScene(true);
 			if (ui.currentGameScene().is3D()) {
@@ -241,12 +241,12 @@ public class Actions {
 				ui.currentGameScene().onSwitchFrom3D();
 			}
 		} else {
-			showFlashMessage(TextManager.message(Env.threeDScenesPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(TextManager.message(Env.use3DPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	public static void toggleDrawMode() {
-		Env.drawModePy.set(Env.drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env3D.drawModePy.set(Env3D.drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void toggleSoundMuted() {

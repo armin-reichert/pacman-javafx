@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.dashboard;
 
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -54,40 +55,40 @@ public class Section3D extends Section {
 
 	public Section3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
-		pickerLightColor = addColorPicker("Light color", Env.lightColorPy.get());
-		pickerLightColor.setOnAction(e -> Env.lightColorPy.set(pickerLightColor.getValue()));
+		pickerLightColor = addColorPicker("Light color", Env3D.lightColorPy.get());
+		pickerLightColor.setOnAction(e -> Env3D.lightColorPy.set(pickerLightColor.getValue()));
 		comboResolution = addComboBox("Maze resolution", 1, 2, 4, 8);
-		comboResolution.setOnAction(e -> Env.mazeResolutionPy.set(comboResolution.getValue()));
-		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.mazeWallHeightPy.get());
+		comboResolution.setOnAction(e -> Env3D.mazeResolutionPy.set(comboResolution.getValue()));
+		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env3D.mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env.mazeWallHeightPy.set(newVal.doubleValue()));
-		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.mazeWallThicknessPy.get());
+				.addListener((obs, oldVal, newVal) -> Env3D.mazeWallHeightPy.set(newVal.doubleValue()));
+		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env3D.mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env.mazeWallThicknessPy.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor texture", Env.FLOOR_TEXTURES.toArray(String[]::new));
-		comboFloorTexture.setOnAction(e -> Env.floorTexturePy.set(comboFloorTexture.getValue()));
-		pickerFloorColor = addColorPicker("Floor color", Env.floorColorPy.get());
-		pickerFloorColor.setOnAction(e -> Env.floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env.squirtingEffectPy));
-		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Env.toggle(Env.pac3DLightedPy));
-		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env.axesVisiblePy));
+				.addListener((obs, oldVal, newVal) -> Env3D.mazeWallThicknessPy.set(newVal.doubleValue()));
+		comboFloorTexture = addComboBox("Floor texture", Env3D.FLOOR_TEXTURES.toArray(String[]::new));
+		comboFloorTexture.setOnAction(e -> Env3D.floorTexturePy.set(comboFloorTexture.getValue()));
+		pickerFloorColor = addColorPicker("Floor color", Env3D.floorColorPy.get());
+		pickerFloorColor.setOnAction(e -> Env3D.floorColorPy.set(pickerFloorColor.getValue()));
+		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env3D.squirtingEffectPy));
+		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Env.toggle(Env3D.pacLightedPy));
+		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env3D.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		comboResolution.setValue(Env.mazeResolutionPy.get());
+		comboResolution.setValue(Env3D.mazeResolutionPy.get());
 		comboResolution.setDisable(!gameScene().is3D());
-		sliderWallHeight.setValue(Env.mazeWallHeightPy.get());
+		sliderWallHeight.setValue(Env3D.mazeWallHeightPy.get());
 		sliderWallHeight.setDisable(!gameScene().is3D());
-		comboFloorTexture.setValue(Env.floorTexturePy.get());
+		comboFloorTexture.setValue(Env3D.floorTexturePy.get());
 		comboFloorTexture.setDisable(!gameScene().is3D());
-		cbSquirting.setSelected(Env.squirtingEffectPy.get());
-		cbPacLighted.setSelected(Env.pac3DLightedPy.get());
-		cbAxesVisible.setSelected(Env.axesVisiblePy.get());
+		cbSquirting.setSelected(Env3D.squirtingEffectPy.get());
+		cbPacLighted.setSelected(Env3D.pacLightedPy.get());
+		cbAxesVisible.setSelected(Env3D.axesVisiblePy.get());
 		cbAxesVisible.setDisable(!gameScene().is3D());
-		cbWireframeMode.setSelected(Env.drawModePy.get() == DrawMode.LINE);
+		cbWireframeMode.setSelected(Env3D.drawModePy.get() == DrawMode.LINE);
 		cbWireframeMode.setDisable(!gameScene().is3D());
 	}
 }
