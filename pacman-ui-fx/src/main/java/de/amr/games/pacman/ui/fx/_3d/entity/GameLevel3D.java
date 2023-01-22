@@ -60,15 +60,15 @@ public class GameLevel3D extends Group {
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final GameLevel level;
-	private World3D world3D;
-	private Food3D food3D;
-	private Pac3D pac3D;
-	private Ghost3D[] ghosts3D;
-	private Bonus3D bonus3D;
-	private LevelCounter3D levelCounter3D;
-	private LivesCounter3D livesCounter3D;
-	private Scores3D scores3D;
-	private PointLight houseLighting;
+	private final World3D world3D;
+	private final Food3D food3D;
+	private final Pac3D pac3D;
+	private final Ghost3D[] ghosts3D;
+	private final Bonus3D bonus3D;
+	private final LevelCounter3D levelCounter3D;
+	private final LivesCounter3D livesCounter3D;
+	private final Scores3D scores3D;
+	private final PointLight houseLighting;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -85,9 +85,15 @@ public class GameLevel3D extends Group {
 		world3D = new World3D(level.world(), mazeColors);
 		world3D.drawModePy.bind(drawModePy);
 
-		createPac3D();
-		createGhosts3D();
-		createBonus3D();
+		pac3D = new Pac3D(level.pac());
+		pac3D.init(level.world());
+		pac3D.lightOnPy.bind(Env3D.pacLightedPy);
+		LOGGER.info("3D %s created", level.pac().name());
+
+		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
+		LOGGER.info("3D ghosts created");
+
+		bonus3D = new Bonus3D();
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
@@ -124,27 +130,11 @@ public class GameLevel3D extends Group {
 
 	}
 
-	private void createPac3D() {
-		pac3D = new Pac3D(level.pac());
-		pac3D.init(level.world());
-		pac3D.lightOnPy.bind(Env3D.pacLightedPy);
-		LOGGER.info("3D %s created", level.pac().name());
-	}
-
-	private void createGhosts3D() {
-		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
-		LOGGER.info("3D ghosts created");
-	}
-
 	private Ghost3D createGhost3D(Ghost ghost) {
 		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLORS[ghost.id()]);
 		ghost3D.init(level);
 		ghost3D.drawModePy.bind(drawModePy);
 		return ghost3D;
-	}
-
-	private void createBonus3D() {
-		bonus3D = new Bonus3D();
 	}
 
 	public void update() {
