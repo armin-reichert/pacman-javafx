@@ -37,7 +37,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Actions;
@@ -116,7 +115,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		ctx.level().ifPresent(this::createGameLevel3D);
+		createGameLevel3D();
 	}
 
 	@Override
@@ -124,26 +123,28 @@ public class PlayScene3D implements GameScene {
 		// nothing to do
 	}
 
-	private void createGameLevel3D(GameLevel level) {
-		var width = level.world().numCols() * World.TS;
-		var height = level.world().numRows() * World.TS;
+	private void createGameLevel3D() {
+		ctx.level().ifPresent(level -> {
+			var width = level.world().numCols() * World.TS;
+			var height = level.world().numRows() * World.TS;
 
-		level3D = new GameLevel3D(level, ctx.r2D());
-		level3D.drawModePy.bind(Env3D.drawModePy);
-		level3D.pac3DLightedPy.bind(Env3D.pacLightedPy);
-		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
-		level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
-				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
-				floorTexturePy));
-		level3D.world3D().floorColorPy.bind(floorColorPy);
-		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
-		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
+			level3D = new GameLevel3D(level, ctx.r2D());
+			level3D.drawModePy.bind(Env3D.drawModePy);
+			level3D.pac3DLightedPy.bind(Env3D.pacLightedPy);
+			level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
+			level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
+					() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
+					floorTexturePy));
+			level3D.world3D().floorColorPy.bind(floorColorPy);
+			level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
+			level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
 
-		levelContainer.getChildren().setAll(level3D);
-		levelContainer.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
+			levelContainer.getChildren().setAll(level3D);
+			levelContainer.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 
-		changeCameraPerspective(perspectivePy.get());
-		LOGGER.info("3D game level created.");
+			changeCameraPerspective(perspectivePy.get());
+			LOGGER.info("3D game level created.");
+		});
 	}
 
 	@Override
@@ -329,13 +330,13 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case CHANGING_TO_NEXT_LEVEL -> {
+			lockGameState();
 			ctx.level().ifPresent(level -> {
 				LOGGER.info("Starting level %d", level.number());
-				lockGameState();
-				createGameLevel3D(level);
+				createGameLevel3D();
 				Actions.showFlashMessage(TextManager.message("level_starting", level.number()));
-				pause(3, this::unlockGameState).play();
 			});
+			pause(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
