@@ -57,13 +57,13 @@ public abstract class GameRenderer implements Rendering2D {
 	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
 
 	static {
-		var red = Color.RED;
-		var pink = Color.web("FCB5FF");
-		var cyan = Color.CYAN;
-		var orange = Color.web("FBBE58");
-		var blue = Color.web("#2121FF");
-		var pale = Color.web("E0DDFF");
-		var rose = Color.web("FCBBB3");
+		var red = Color.rgb(255, 0, 0);
+		var pink = Color.rgb(252, 181, 255);
+		var cyan = Color.rgb(0, 255, 255);
+		var orange = Color.rgb(251, 190, 88);
+		var blue = Color.rgb(33, 33, 255);
+		var pale = Color.rgb(224, 221, 255);
+		var rose = Color.rgb(252, 187, 179);
 
 		//@formatter:off
 		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(//
