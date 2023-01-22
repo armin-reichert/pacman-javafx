@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public record GhostColorScheme(//
+public record GhostColors(//
 		Color normalDress, Color normalEyeBalls, Color normalPupils, //
 		Color frightenedDress, Color frightenedEyeBalls, Color frightendPupils, //
 		Color flashingDress, Color flashingEyeBalls, Color flashingPupils) {

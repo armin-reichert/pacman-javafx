@@ -139,7 +139,7 @@ public class GameLevel3D extends Group {
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GameLevel level) {
-		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLOR_SCHEMES[ghost.id()]);
+		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLORS[ghost.id()]);
 		ghost3D.init(level);
 		ghost3D.drawModePy.bind(drawModePy);
 		return ghost3D;
