@@ -78,7 +78,6 @@ public class Pac3D extends Group {
 		spot.setColor(Color.rgb(255, 255, 0, 0.25));
 		spot.setMaxRange(2 * TS);
 		spot.setTranslateZ(0);
-		spot.lightOnProperty().bind(lightOnPy);
 		getChildren().add(spot);
 	}
 
@@ -96,6 +95,7 @@ public class Pac3D extends Group {
 		movement.update();
 		boolean out = outsideWorld(world, pac);
 		setVisible(pac.isVisible() && !out);
+		spot.setLightOn(lightOnPy.get() && !pac.isDead());
 		if (!isVisible()) {
 			LOGGER.trace("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
 		}
