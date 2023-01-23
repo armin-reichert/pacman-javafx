@@ -107,7 +107,7 @@ public class GameLevel3D extends Group {
 
 		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
 		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
-				symbol -> r2D.spritesheet().region(r2D.bonusSymbolSprite(symbol)));
+				symbol -> r2D.bonusSymbolSpriteImage(symbol));
 
 		livesCounter3D = new LivesCounter3D();
 		livesCounter3D.setTranslateX(TS);

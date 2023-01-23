@@ -27,7 +27,9 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Score;
@@ -38,6 +40,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -93,6 +96,8 @@ public abstract class GameRenderer implements Rendering2D {
 
 	private static final Font ARCADE_FONT_TS = Ufx.font("fonts/emulogic.ttf", TS);
 
+	public abstract Spritesheet spritesheet();
+
 	public void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(Color.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
@@ -124,9 +129,14 @@ public abstract class GameRenderer implements Rendering2D {
 		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
 		map.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
-		map.put(AnimKeys.GHOST_VALUE, createGhostValueList());
+		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
 		map.select(AnimKeys.GHOST_COLOR);
 		return map;
+	}
+
+	private EntityAnimation createGhostValueSpriteList() {
+		return new FixedEntityAnimation<>(ghostValueSprite(0), ghostValueSprite(1), ghostValueSprite(2),
+				ghostValueSprite(3));
 	}
 
 	@Override

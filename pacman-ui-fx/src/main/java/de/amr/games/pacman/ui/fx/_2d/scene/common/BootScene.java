@@ -31,6 +31,7 @@ import java.util.Random;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -108,7 +109,7 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomSprites() {
 		clearBuffer();
-		var sheet = ctx.r2D().spritesheet();
+		var sheet = ((GameRenderer) ctx.r2D()).spritesheet(); // TODO
 		var image = sheet.source();
 		if (ctx.gameVariant() == GameVariant.MS_PACMAN) {
 			image = sheet.region(0, 0, (int) image.getWidth(), 248);

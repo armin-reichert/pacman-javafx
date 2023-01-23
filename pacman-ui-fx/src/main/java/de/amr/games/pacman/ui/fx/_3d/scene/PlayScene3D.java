@@ -269,16 +269,16 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
 		ctx.level().ifPresent(level -> {
-			var sprite = ctx.r2D().bonusSymbolSprite(level.bonus().symbol());
-			level3D.bonus3D().showSymbol(ctx.r2D().spritesheet().region(sprite));
+			var symbolImage = ctx.r2D().bonusSymbolSpriteImage(level.bonus().symbol());
+			level3D.bonus3D().showSymbol(symbolImage);
 		});
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		ctx.level().ifPresent(level -> {
-			var sprite = ctx.r2D().bonusValueSprite(level.bonus().symbol());
-			level3D.bonus3D().showPoints(ctx.r2D().spritesheet().region(sprite));
+			var valueImage = ctx.r2D().bonusValueSpriteImage(level.bonus().symbol());
+			level3D.bonus3D().showPoints(valueImage);
 			ctx.sounds().play(GameSound.BONUS_EATEN);
 		});
 	}
@@ -320,10 +320,9 @@ public class PlayScene3D implements GameScene {
 		case GHOST_DYING -> {
 			ctx.level().ifPresent(level -> {
 				level.memo().killedGhosts.forEach(killedGhost -> {
+					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					var sprite = ctx.r2D().createGhostValueList().frame(index);
-					var image = ctx.r2D().spritesheet().region(sprite);
-					level3D.ghosts3D()[killedGhost.id()].setNumberImage(image);
+					ghost3D.setNumberImage(ctx.r2D().ghostValueImage(index));
 				});
 			});
 		}

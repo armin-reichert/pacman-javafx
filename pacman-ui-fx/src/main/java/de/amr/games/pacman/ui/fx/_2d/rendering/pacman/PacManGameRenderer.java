@@ -39,6 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -62,8 +63,23 @@ public class PacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
+	public Rectangle2D ghostValueSprite(int index) {
+		return spritesheet().tile(index, 8);
+	}
+
+	@Override
+	public Image ghostValueImage(int index) {
+		return spritesheet().region(ghostValueSprite(index));
+	}
+
+	@Override
 	public Rectangle2D bonusSymbolSprite(int symbol) {
 		return spritesheet().tile(2 + symbol, 3);
+	}
+
+	@Override
+	public Image bonusSymbolSpriteImage(int symbol) {
+		return spritesheet().region(bonusSymbolSprite(symbol));
 	}
 
 	@Override
@@ -76,6 +92,11 @@ public class PacManGameRenderer extends GameRenderer {
 			return new Rectangle2D(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
 		return spritesheet().tiles(3, 5 + symbol, 3, 1);
+	}
+
+	@Override
+	public Image bonusValueSpriteImage(int symbol) {
+		return spritesheet().region(bonusValueSprite(symbol));
 	}
 
 	@Override
@@ -186,11 +207,6 @@ public class PacManGameRenderer extends GameRenderer {
 			animationByDir.put(dir, new SingleEntityAnimation<>(spritesheet().tile(8 + d, 5)));
 		}
 		return animationByDir;
-	}
-
-	@Override
-	public FixedEntityAnimation<Rectangle2D> createGhostValueList() {
-		return new FixedEntityAnimation<>(spritesheet().tilesRightOf(0, 8, 4));
 	}
 
 	// Pac-Man specific:

@@ -30,7 +30,6 @@ import static de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameAsset
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -42,6 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -86,13 +86,33 @@ public class MsPacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
+	public Rectangle2D ghostValueSprite(int index) {
+		return col3(index, 8);
+	}
+
+	@Override
+	public Image ghostValueImage(int index) {
+		return spritesheet().region(ghostValueSprite(index));
+	}
+
+	@Override
 	public Rectangle2D bonusSymbolSprite(int symbol) {
 		return col3(3 + symbol, 0);
 	}
 
 	@Override
+	public Image bonusSymbolSpriteImage(int symbol) {
+		return spritesheet().region(bonusSymbolSprite(symbol));
+	}
+
+	@Override
 	public Rectangle2D bonusValueSprite(int symbol) {
 		return col3(3 + symbol, 1);
+	}
+
+	@Override
+	public Image bonusValueSpriteImage(int symbol) {
+		return spritesheet().region(bonusValueSprite(symbol));
 	}
 
 	@Override
@@ -208,10 +228,10 @@ public class MsPacManGameRenderer extends GameRenderer {
 		return animationByDir;
 	}
 
-	@Override
-	public FixedEntityAnimation<Rectangle2D> createGhostValueList() {
-		return new FixedEntityAnimation<>(col3(0, 8), col3(1, 8), col3(2, 8), col3(3, 8));
-	}
+//	@Override
+//	public FixedEntityAnimation<Rectangle2D> createGhostValueList() {
+//		return new FixedEntityAnimation<>(col3(0, 8), col3(1, 8), col3(2, 8), col3(3, 8));
+//	}
 
 	// Ms. Pac-Man specific:
 

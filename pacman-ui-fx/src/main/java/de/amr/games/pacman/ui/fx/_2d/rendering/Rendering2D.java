@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
@@ -35,9 +34,9 @@ import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -47,8 +46,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public interface Rendering2D {
-
-	Spritesheet spritesheet();
 
 	Font arcadeFont(double size);
 
@@ -62,15 +59,23 @@ public interface Rendering2D {
 
 	Color ghostHouseDoorColor();
 
-	// Sprites
+	// Sprites, images
 
 	Rectangle2D ghostSprite(int ghostID, Direction dir);
+
+	Rectangle2D ghostValueSprite(int index);
+
+	Image ghostValueImage(int index);
 
 	Rectangle2D lifeSprite();
 
 	Rectangle2D bonusSymbolSprite(int symbol);
 
+	Image bonusSymbolSpriteImage(int symbol);
+
 	Rectangle2D bonusValueSprite(int symbol);
+
+	Image bonusValueSpriteImage(int symbol);
 
 	// Animations
 
@@ -91,8 +96,6 @@ public interface Rendering2D {
 	EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost);
 
 	SingleEntityAnimation<Boolean> createMazeFlashingAnimation();
-
-	FixedEntityAnimation<Rectangle2D> createGhostValueList();
 
 	// Drawing
 
