@@ -46,22 +46,24 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
+	private final Bonus bonus;
 	private final Rendering2D r2D;
 
-	public Bonus3D(Rendering2D r2D) {
+	public Bonus3D(Bonus bonus, Rendering2D r2D) {
 		super(TS, TS, TS);
+		this.bonus = bonus;
 		this.r2D = r2D;
 	}
 
-	public void update(Bonus bonus) {
+	public void update() {
 		setTranslateX(bonus.entity().position().x() + HTS);
 		setTranslateY(bonus.entity().position().y() + HTS);
 		setTranslateZ(-HTS);
 		setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
-	public void showSymbol(byte symbol) {
-		var symbolImage = r2D.bonusSymbolSpriteImage(symbol);
+	public void showSymbol() {
+		var symbolImage = r2D.bonusSymbolSpriteImage(bonus.symbol());
 		var imageView = new ImageView(symbolImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(TS);
@@ -70,8 +72,8 @@ public class Bonus3D extends Box {
 		rotate(1, Animation.INDEFINITE, 1);
 	}
 
-	public void showPoints(byte symbol) {
-		var pointsImage = r2D.bonusValueSpriteImage(symbol);
+	public void showPoints() {
+		var pointsImage = r2D.bonusValueSpriteImage(bonus.symbol());
 		var imageView = new ImageView(pointsImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(2 * TS);

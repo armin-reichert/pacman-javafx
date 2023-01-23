@@ -93,7 +93,7 @@ public class GameLevel3D extends Group {
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		LOGGER.info("3D ghosts created");
 
-		bonus3D = new Bonus3D(r2D);
+		bonus3D = new Bonus3D(level.bonus(), r2D);
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
@@ -139,7 +139,7 @@ public class GameLevel3D extends Group {
 	public void update() {
 		pac3D.update(level.world());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
-		bonus3D.update(level.bonus());
+		bonus3D.update();
 		updateHouseLightingState();
 		updateDoorState();
 		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());

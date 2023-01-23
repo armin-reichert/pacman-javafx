@@ -268,13 +268,13 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		ctx.level().ifPresent(level -> level3D.bonus3D().showSymbol(level.bonus().symbol()));
+		ctx.level().ifPresent(level -> level3D.bonus3D().showSymbol());
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		ctx.level().ifPresent(level -> {
-			level3D.bonus3D().showPoints(level.bonus().symbol());
+			level3D.bonus3D().showPoints();
 			ctx.sounds().play(GameSound.BONUS_EATEN);
 		});
 	}
