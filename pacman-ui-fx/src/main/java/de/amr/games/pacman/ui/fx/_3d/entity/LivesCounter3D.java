@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 
 /**
  * Displays a Pac-Man shape for each live remaining.
@@ -37,11 +38,15 @@ public class LivesCounter3D extends Group {
 
 	static final int MAX_LIVES_DISPLAYED = 5;
 
-	public LivesCounter3D() {
+	public LivesCounter3D(boolean facingRight) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			var pac = PacModel3D.createPac3D(Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
 			pac.setTranslateX(2.0 * i * TS);
 			pac.setVisible(true);
+			if (facingRight) {
+				pac.setRotationAxis(Rotate.Z_AXIS);
+				pac.setRotate(180);
+			}
 			getChildren().add(pac);
 		}
 	}

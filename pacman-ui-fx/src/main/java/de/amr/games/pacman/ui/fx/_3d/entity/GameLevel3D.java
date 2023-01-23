@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
@@ -95,7 +96,8 @@ public class GameLevel3D extends Group {
 		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
 		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, r2D::bonusSymbolSpriteImage);
 
-		livesCounter3D = new LivesCounter3D();
+		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
+		livesCounter3D = new LivesCounter3D(facingRight);
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
