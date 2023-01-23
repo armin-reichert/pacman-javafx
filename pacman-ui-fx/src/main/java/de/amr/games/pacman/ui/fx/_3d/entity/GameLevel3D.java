@@ -106,8 +106,7 @@ public class GameLevel3D extends Group {
 		food3D = new Food3D(level.world(), foodColor);
 
 		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
-		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
-				symbol -> r2D.bonusSymbolSpriteImage(symbol));
+		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, r2D::bonusSymbolSpriteImage);
 
 		livesCounter3D = new LivesCounter3D();
 		livesCounter3D.setTranslateX(TS);
