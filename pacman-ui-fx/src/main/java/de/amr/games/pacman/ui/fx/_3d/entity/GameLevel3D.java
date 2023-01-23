@@ -93,7 +93,7 @@ public class GameLevel3D extends Group {
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		LOGGER.info("3D ghosts created");
 
-		bonus3D = new Bonus3D();
+		bonus3D = new Bonus3D(r2D);
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);

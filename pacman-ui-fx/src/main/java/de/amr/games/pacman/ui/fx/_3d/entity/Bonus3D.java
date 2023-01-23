@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
+import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.image.Image;
@@ -45,8 +46,11 @@ import javafx.util.Duration;
  */
 public class Bonus3D extends Box {
 
-	public Bonus3D() {
+	private final Rendering2D r2D;
+
+	public Bonus3D(Rendering2D r2D) {
 		super(TS, TS, TS);
+		this.r2D = r2D;
 	}
 
 	public void update(Bonus bonus) {
@@ -56,7 +60,8 @@ public class Bonus3D extends Box {
 		setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
-	public void showSymbol(Image symbolImage) {
+	public void showSymbol(byte symbol) {
+		var symbolImage = r2D.bonusSymbolSpriteImage(symbol);
 		var imageView = new ImageView(symbolImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(TS);
@@ -65,7 +70,8 @@ public class Bonus3D extends Box {
 		rotate(1, Animation.INDEFINITE, 1);
 	}
 
-	public void showPoints(Image pointsImage) {
+	public void showPoints(byte symbol) {
+		var pointsImage = r2D.bonusValueSpriteImage(symbol);
 		var imageView = new ImageView(pointsImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(2 * TS);
