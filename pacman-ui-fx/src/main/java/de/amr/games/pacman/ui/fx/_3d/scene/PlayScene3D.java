@@ -291,7 +291,7 @@ public class PlayScene3D implements GameScene {
 		case READY -> {
 			ctx.level().ifPresent(level -> {
 				level3D.food3D().energizers3D().forEach(Energizer3D::init);
-				level3D.pac3D().init(level.world());
+				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
 			});
 		}

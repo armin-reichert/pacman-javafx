@@ -39,14 +39,12 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
@@ -68,13 +66,9 @@ public class GameLevel3D extends Group {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
-	private final PointLight houseLighting;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
-
-		var width = level.world().numCols() * World.TS;
-		var height = level.world().numRows() * World.TS;
 
 		int mazeNumber = level.game().mazeNumber(level.number());
 		var mazeColors = new Maze3DColors(//
@@ -85,8 +79,8 @@ public class GameLevel3D extends Group {
 		world3D = new World3D(level.world(), mazeColors);
 		world3D.drawModePy.bind(drawModePy);
 
-		pac3D = new Pac3D(level.pac());
-		pac3D.init(level.world());
+		pac3D = new Pac3D(level.pac(), level.world());
+		pac3D.init();
 		pac3D.lightOnPy.bind(Env3D.pacLightedPy);
 		LOGGER.info("3D %s created", level.pac().name());
 
@@ -94,13 +88,6 @@ public class GameLevel3D extends Group {
 		LOGGER.info("3D ghosts created");
 
 		bonus3D = new Bonus3D(level.bonus(), r2D);
-
-		houseLighting = new PointLight();
-		houseLighting.setColor(Color.GHOSTWHITE);
-		houseLighting.setMaxRange(10 * TS);
-		houseLighting.setTranslateX(0.5 * width);
-		houseLighting.setTranslateY(0.5 * (height - 2 * TS));
-		houseLighting.setTranslateZ(-TS);
 
 		var foodColor = r2D.mazeFoodColor(mazeNumber);
 		food3D = new Food3D(level.world(), foodColor);
@@ -123,7 +110,6 @@ public class GameLevel3D extends Group {
 		getChildren().addAll(ghosts3D);
 		getChildren().add(bonus3D);
 		getChildren().add(scores3D);
-		getChildren().add(houseLighting);
 		getChildren().add(levelCounter3D);
 		getChildren().add(livesCounter3D);
 
@@ -137,7 +123,7 @@ public class GameLevel3D extends Group {
 	}
 
 	public void update() {
-		pac3D.update(level.world());
+		pac3D.update();
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
 		updateHouseLightingState();
@@ -186,7 +172,7 @@ public class GameLevel3D extends Group {
 	private void updateHouseLightingState() {
 		boolean anyGhostInHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
 				.count() > 0;
-		houseLighting.setLightOn(anyGhostInHouse);
+		world3D.houseLighting().setLightOn(anyGhostInHouse);
 	}
 
 	// should be generalized to work with any ghost house

@@ -38,6 +38,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -77,16 +78,29 @@ public class World3D extends Group {
 	private final Maze3DColors mazeColors;
 	private final Group wallsGroup = new Group();
 	private final Group doorsGroup = new Group();
+	private final PointLight houseLighting;
 	private Box floor;
 
 	public World3D(World world, Maze3DColors mazeColors) {
 		this.world = world;
 		this.mazeColors = mazeColors;
+
+		houseLighting = new PointLight();
+		houseLighting.setColor(Color.GHOSTWHITE);
+		houseLighting.setMaxRange(4 * TS);
+		houseLighting.setTranslateX(world.ghostHouse().entryTile().x() * TS + TS);
+		houseLighting.setTranslateY(world.ghostHouse().entryTile().y() * TS + 3 * TS);
+		houseLighting.setTranslateZ(-TS);
+
 		floorColorPy.addListener(py -> updateFloorMaterial());
 		floorTexturePy.addListener(py -> updateFloorMaterial());
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
-		getChildren().addAll(floor, wallsGroup, doorsGroup);
+		getChildren().addAll(floor, wallsGroup, doorsGroup, houseLighting);
+	}
+
+	public PointLight houseLighting() {
+		return houseLighting;
 	}
 
 	private void buildFloor() {

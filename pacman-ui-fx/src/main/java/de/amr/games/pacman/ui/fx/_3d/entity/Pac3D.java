@@ -26,9 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
@@ -54,8 +51,6 @@ import javafx.scene.paint.Color;
  */
 public class Pac3D extends Group {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
-
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 
@@ -63,42 +58,44 @@ public class Pac3D extends Group {
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
 	private static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
 
+	private final World world;
 	private final Pac pac;
 	private final Creature3DMovement movement;
 	private final Node root;
 	private final PointLight spot;
 
-	public Pac3D(Pac pac) {
+	public Pac3D(Pac pac, World world) {
 		this.pac = pac;
+		this.world = world;
 		movement = new Creature3DMovement(this, pac);
 		root = PacModel3D.createPac3D(EYES_COLOR, PALATE_COLOR);
 		getChildren().add(root);
 
 		spot = new PointLight();
 		spot.setColor(Color.rgb(255, 255, 0, 0.25));
-		spot.setMaxRange(2 * TS);
+		spot.setMaxRange(8 * TS);
 		spot.setTranslateZ(0);
 		getChildren().add(spot);
 	}
 
-	public void init(World world) {
+	public void init() {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
 		root.setTranslateZ(0);
 		headColorPy.set(HEAD_COLOR);
 		movement.init();
-		update(world);
+		update();
 	}
 
-	public void update(World world) {
+	public void update() {
 		movement.update();
-		boolean out = outsideWorld(world, pac);
-		setVisible(pac.isVisible() && !out);
-		spot.setLightOn(lightOnPy.get() && !pac.isDead());
-		if (!isVisible()) {
-			LOGGER.trace("Pac3D is invisible, spot light is %s", spot.isLightOn() ? "on" : "off");
+		if (outsideWorld(world, pac)) {
+			setVisible(false);
+		} else {
+			setVisible(pac.isVisible());
 		}
+		spot.setLightOn(lightOnPy.get() && pac.isVisible() && !pac.isDead());
 	}
 
 	private boolean outsideWorld(World world, Creature guy) {
