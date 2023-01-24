@@ -77,7 +77,7 @@ public class World3D extends Group {
 	private final World world;
 	private final Maze3DColors mazeColors;
 	private final Group wallsGroup = new Group();
-	private final Group doorPartsGroup = new Group();
+	private final Group doorWingsGroup = new Group();
 	private final PointLight houseLighting;
 	private Box floor;
 
@@ -96,7 +96,7 @@ public class World3D extends Group {
 		floorTexturePy.addListener(py -> updateFloorMaterial());
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
-		getChildren().addAll(floor, wallsGroup, doorPartsGroup, houseLighting);
+		getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting);
 	}
 
 	public PointLight houseLighting() {
@@ -142,8 +142,8 @@ public class World3D extends Group {
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 //		transformMaze();
-		var doorParts = world.ghostHouse().door().tiles().map(tile -> createDoorPart(tile, mazeColors.doorColor())).toList();
-		doorPartsGroup.getChildren().setAll(doorParts);
+		var doorWings = world.ghostHouse().door().tiles().map(tile -> createDoorWing(tile, mazeColors.doorColor())).toList();
+		doorWingsGroup.getChildren().setAll(doorWings);
 		LOGGER.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
@@ -177,12 +177,12 @@ public class World3D extends Group {
 //		return new Vector2i(fx / MAZE_RESOLUTION, fy / MAZE_RESOLUTION);
 //	}
 
-	public Stream<DoorPart3D> doorParts() {
-		return doorPartsGroup.getChildren().stream().map(DoorPart3D.class::cast);
+	public Stream<DoorWing3D> doorParts() {
+		return doorWingsGroup.getChildren().stream().map(DoorWing3D.class::cast);
 	}
 
-	private DoorPart3D createDoorPart(Vector2i tile, Color color) {
-		var door = new DoorPart3D(tile, color);
+	private DoorWing3D createDoorWing(Vector2i tile, Color color) {
+		var door = new DoorWing3D(tile, color);
 		door.doorHeightPy.bind(wallHeightPy);
 		door.drawModeProperty().bind(drawModePy);
 		return door;
