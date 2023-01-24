@@ -88,8 +88,8 @@ public class World3D extends Group {
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
 		houseLighting.setMaxRange(4 * TS);
-		houseLighting.setTranslateX(world.ghostHouse().entryTile().x() * TS + TS);
-		houseLighting.setTranslateY(world.ghostHouse().entryTile().y() * TS + 3 * TS);
+		houseLighting.setTranslateX(world.ghostHouse().door().entryTile().x() * TS + TS);
+		houseLighting.setTranslateY(world.ghostHouse().door().entryTile().y() * TS + 3 * TS);
 		houseLighting.setTranslateZ(-TS);
 
 		floorColorPy.addListener(py -> updateFloorMaterial());
