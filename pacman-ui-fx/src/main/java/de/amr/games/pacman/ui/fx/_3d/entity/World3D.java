@@ -142,7 +142,7 @@ public class World3D extends Group {
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 //		transformMaze();
-		var doors = world.ghostHouse().doorTiles().map(tile -> createDoor(tile, mazeColors.doorColor())).toList();
+		var doors = world.ghostHouse().door().tiles().map(tile -> createDoor(tile, mazeColors.doorColor())).toList();
 		doorsGroup.getChildren().setAll(doors);
 		LOGGER.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
