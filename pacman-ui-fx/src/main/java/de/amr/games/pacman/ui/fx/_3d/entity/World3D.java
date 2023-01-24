@@ -77,7 +77,7 @@ public class World3D extends Group {
 	private final World world;
 	private final Maze3DColors mazeColors;
 	private final Group wallsGroup = new Group();
-	private final Group doorsGroup = new Group();
+	private final Group doorPartsGroup = new Group();
 	private final PointLight houseLighting;
 	private Box floor;
 
@@ -96,7 +96,7 @@ public class World3D extends Group {
 		floorTexturePy.addListener(py -> updateFloorMaterial());
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
-		getChildren().addAll(floor, wallsGroup, doorsGroup, houseLighting);
+		getChildren().addAll(floor, wallsGroup, doorPartsGroup, houseLighting);
 	}
 
 	public PointLight houseLighting() {
@@ -142,8 +142,8 @@ public class World3D extends Group {
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 //		transformMaze();
-		var doors = world.ghostHouse().door().tiles().map(tile -> createDoor(tile, mazeColors.doorColor())).toList();
-		doorsGroup.getChildren().setAll(doors);
+		var doorParts = world.ghostHouse().door().tiles().map(tile -> createDoorPart(tile, mazeColors.doorColor())).toList();
+		doorPartsGroup.getChildren().setAll(doorParts);
 		LOGGER.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
@@ -177,12 +177,12 @@ public class World3D extends Group {
 //		return new Vector2i(fx / MAZE_RESOLUTION, fy / MAZE_RESOLUTION);
 //	}
 
-	public Stream<Door3D> doors() {
-		return doorsGroup.getChildren().stream().map(Door3D.class::cast);
+	public Stream<DoorPart3D> doorParts() {
+		return doorPartsGroup.getChildren().stream().map(DoorPart3D.class::cast);
 	}
 
-	private Door3D createDoor(Vector2i tile, Color color) {
-		var door = new Door3D(tile, color);
+	private DoorPart3D createDoorPart(Vector2i tile, Color color) {
+		var door = new DoorPart3D(tile, color);
 		door.doorHeightPy.bind(wallHeightPy);
 		door.drawModeProperty().bind(drawModePy);
 		return door;

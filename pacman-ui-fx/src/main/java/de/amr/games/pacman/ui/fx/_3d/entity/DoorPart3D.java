@@ -38,11 +38,11 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class Door3D extends Box {
+public class DoorPart3D extends Box {
 
 	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(HTS);
 
-	public Door3D(Vector2i tile, Color color) {
+	public DoorPart3D(Vector2i tile, Color color) {
 		setWidth(TS - 1.0);
 		setHeight(1.0); // thickness (y-direction)
 		depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)
