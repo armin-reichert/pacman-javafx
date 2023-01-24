@@ -39,7 +39,6 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.ArcadeGhostHouse;
 import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
@@ -177,12 +176,10 @@ public class GameLevel3D extends Group {
 		world3D.houseLighting().setLightOn(anyGhostInHouse);
 	}
 
-	// should be generalized to work with any ghost house
 	private void updateDoorState() {
-		if (level.world().ghostHouse() instanceof ArcadeGhostHouse) {
-			var accessGranted = isAccessGranted(level.ghosts(), ArcadeGhostHouse.DOOR_CENTER_POSITION);
-			world3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
-		}
+		var door = level.world().ghostHouse().door();
+		var accessGranted = isAccessGranted(level.ghosts(), door.centerPosition());
+		world3D.doors().forEach(door3D -> door3D.setOpen(accessGranted));
 	}
 
 	private boolean isAccessGranted(Stream<Ghost> ghosts, Vector2f doorPosition) {
@@ -195,6 +192,6 @@ public class GameLevel3D extends Group {
 	}
 
 	private boolean inDoorDistance(Ghost ghost, Vector2f doorPosition) {
-		return ghost.position().euclideanDistance(doorPosition) <= (ghost.is(LEAVING_HOUSE) ? TS : 3 * TS);
+		return ghost.position().euclideanDistance(doorPosition) <= 1.5 * TS;
 	}
 }
