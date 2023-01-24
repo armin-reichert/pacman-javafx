@@ -34,7 +34,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 /**
- * Ghosthouse door.
+ * Single wing of ghosthouse door.
  * 
  * @author Armin Reichert
  */
