@@ -87,8 +87,8 @@ public class Creature3DMovement {
 
 	public void init() {
 		rotation.stop();
-		guy3D.setTranslateX(guy.position().x() + HTS);
-		guy3D.setTranslateY(guy.position().y() + HTS);
+		guy3D.setTranslateX(guy.center().x());
+		guy3D.setTranslateY(guy.center().y());
 		guy3D.setTranslateZ(-HTS);
 		guy3D.setRotationAxis(Rotate.Z_AXIS);
 		guy3D.setRotate(getAngle(guy.moveDir()));
@@ -96,8 +96,8 @@ public class Creature3DMovement {
 	}
 
 	public void update() {
-		guy3D.setTranslateX(guy.position().x() + HTS);
-		guy3D.setTranslateY(guy.position().y() + HTS);
+		guy3D.setTranslateX(guy.center().x());
+		guy3D.setTranslateY(guy.center().y());
 		guy3D.setTranslateZ(-HTS);
 		if (animationTargetDir != guy.moveDir()) {
 			var turn = TURNS[index(animationTargetDir)][index(guy.moveDir())];
