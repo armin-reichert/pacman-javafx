@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
@@ -85,11 +86,13 @@ public class World3D extends Group {
 		this.world = world;
 		this.mazeColors = mazeColors;
 
+		var topLeft = world.ghostHouse().topLeftTile();
+		var size = world.ghostHouse().sizeInTiles();
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
-		houseLighting.setMaxRange(4 * TS);
-		houseLighting.setTranslateX(world.ghostHouse().door().entryTile().x() * TS + TS);
-		houseLighting.setTranslateY(world.ghostHouse().door().entryTile().y() * TS + 3 * TS);
+		houseLighting.setMaxRange(3 * TS);
+		houseLighting.setTranslateX(topLeft.x() * TS + size.x() * HTS);
+		houseLighting.setTranslateY(topLeft.y() * TS + size.y() * HTS - TS);
 		houseLighting.setTranslateZ(-TS);
 
 		floorColorPy.addListener(py -> updateFloorMaterial());
@@ -142,7 +145,8 @@ public class World3D extends Group {
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 //		transformMaze();
-		var doorWings = world.ghostHouse().door().tiles().map(tile -> createDoorWing(tile, mazeColors.doorColor())).toList();
+		var doorWings = world.ghostHouse().door().tiles().map(tile -> createDoorWing(tile, mazeColors.doorColor()))
+				.toList();
 		doorWingsGroup.getChildren().setAll(doorWings);
 		LOGGER.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
