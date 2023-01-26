@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -90,8 +91,8 @@ public class PlayScene2D extends GameScene2D {
 				boolean flash = (boolean) flashing.get().frame();
 				r.drawEmptyMaze(g, x, y, mazeNumber, flash);
 			} else {
-				boolean energizersShown = arcadeWorld.energizerPulse().frame();
-				r.drawFilledMaze(g, x, y, mazeNumber, arcadeWorld, !energizersShown);
+				Pulse energizerPulse = (Pulse) world.animations().get("energizerPulse");
+				r.drawFilledMaze(g, x, y, mazeNumber, arcadeWorld, !energizerPulse.frame());
 			}
 		} else {
 			r.drawFilledMaze(g, x, y, mazeNumber, world, false);
