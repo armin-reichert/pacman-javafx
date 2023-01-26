@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
+import java.util.List;
+
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
@@ -141,7 +143,7 @@ public interface Rendering2D {
 
 	void drawCopyright(GraphicsContext g, int tileY);
 
-	void drawLevelCounter(GraphicsContext g, Iterable<Byte> levelCounter);
+	void drawLevelCounter(GraphicsContext g, List<Byte> levelCounter);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 

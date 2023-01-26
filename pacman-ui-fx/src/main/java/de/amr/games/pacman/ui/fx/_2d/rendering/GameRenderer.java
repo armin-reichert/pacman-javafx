@@ -27,6 +27,8 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.List;
+
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
@@ -191,7 +193,7 @@ public abstract class GameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, Iterable<Byte> levelCounter) {
+	public void drawLevelCounter(GraphicsContext g, List<Byte> levelCounter) {
 		double x = t(24);
 		for (var symbol : levelCounter) {
 			drawSprite(g, bonusSymbolSprite(symbol), x, t(34));
