@@ -116,7 +116,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
-	public void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
+	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
 		var w = MsPacManGameAssets.MAZE_WIDTH;
 		var h = MsPacManGameAssets.MAZE_HEIGHT;
 		g.drawImage(spritesheet().source(), 0, h * (mazeNumber - 1), w, h, x, y, w, h);

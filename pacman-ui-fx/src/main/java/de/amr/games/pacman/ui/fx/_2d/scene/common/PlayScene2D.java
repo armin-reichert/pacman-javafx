@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -85,13 +84,18 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMaze(Rendering2D r, World world, int mazeNumber, int x, int y) {
-		var flashing = world.animations().get("flashing");
-		if (flashing != null && flashing.isRunning()) {
-			boolean flash = (boolean) flashing.frame();
+		var flashing = world.animation("flashing");
+		if (flashing.isPresent() && flashing.get().isRunning()) {
+			boolean flash = (boolean) flashing.get().frame();
 			r.drawEmptyMaze(g, x, y, mazeNumber, flash);
 		} else {
-			Pulse energizerPulse = (Pulse) world.animations().get("energizerPulse");
-			r.drawFilledMaze(g, x, y, mazeNumber, world, !energizerPulse.frame());
+			var energizerPulse = world.animation("energizerPulse");
+			if (energizerPulse.isPresent()) {
+				boolean dark = !(boolean) energizerPulse.get().frame();
+				r.drawMaze(g, x, y, mazeNumber, world, dark);
+			} else {
+				r.drawMaze(g, x, y, mazeNumber, world, false);
+			}
 		}
 	}
 

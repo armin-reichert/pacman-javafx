@@ -151,7 +151,7 @@ public interface Rendering2D {
 
 	void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash);
 
-	void drawFilledMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden);
+	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden);
 
 	void drawGameReadyMessage(GraphicsContext g);
 
