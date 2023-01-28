@@ -69,7 +69,7 @@ public class PacManGameAppFX extends Application {
 	}
 
 	private static class AppSettings {
-		public boolean fullScreen;
+		public final boolean fullScreen;
 		public final Perspective perspective;
 		public final boolean use3D;
 		public final GameVariant variant;
