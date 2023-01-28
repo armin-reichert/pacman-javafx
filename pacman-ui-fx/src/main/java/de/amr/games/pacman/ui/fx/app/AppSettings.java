@@ -58,6 +58,12 @@ class AppSettings {
 		zoom = parseFloat("zoom", 2.0);
 	}
 
+	@Override
+	public String toString() {
+		return "{fullScreen=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f}".formatted(fullScreen, perspective, use3D,
+				variant, zoom);
+	}
+
 	private boolean parseBoolean(String key, boolean defaultValue) {
 		try {
 			return Boolean.valueOf(parameters.getOrDefault(key, String.valueOf(defaultValue)));

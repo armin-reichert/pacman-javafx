@@ -70,16 +70,16 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void init() throws Exception {
-		LOGGER.info("Create application settings from named parameters: %s", getParameters().getNamed());
 		settings = new AppSettings(this);
-		Env.use3DPy.set(settings.use3D);
-		Env3D.perspectivePy.set(settings.perspective);
+		LOGGER.info("Application settings: %s", settings);
 		gameController = new GameController(settings.variant);
 		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant());
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+		Env.use3DPy.set(settings.use3D);
+		Env3D.perspectivePy.set(settings.perspective);
 		var ui = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
 		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		ui.start();
