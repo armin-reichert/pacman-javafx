@@ -203,18 +203,13 @@ public class GameUI implements GameEventListener {
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		var changed = selectGameScene(Env.use3DPy.get(), reload);
-		if (changed) {
-			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
-			currentGameScene.embedInto(mainScene);
-			pipView.setContext(currentGameScene.ctx());
-		}
+		selectGameScene(Env.use3DPy.get(), reload);
 		updateSounds();
 		updateMainSceneBackground();
 		updateStageFrame();
 	}
 
-	private boolean selectGameScene(boolean use3D, boolean reload) {
+	private void selectGameScene(boolean use3D, boolean reload) {
 		var variants = GameSceneManager.getSceneVariantsMatchingGameState(gameController);
 		var nextGameScene = (use3D && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
 		if (nextGameScene == null) {
@@ -222,9 +217,7 @@ public class GameUI implements GameEventListener {
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
-			return true;
 		}
-		return false;
 	}
 
 	private void changeGameScene(GameScene nextGameScene) {
@@ -234,6 +227,10 @@ public class GameUI implements GameEventListener {
 		GameSceneManager.setSceneContext(gameController, nextGameScene);
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
+		// embed game scene
+		gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
+		currentGameScene.embedInto(mainScene);
+		pipView.setContext(currentGameScene.ctx());
 	}
 
 	private void updateSounds() {
