@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 /**
  * @author Armin Reichert
  */
-record GameSceneVariants(GameScene2D scene2D, GameScene scene3D) {
+public record GameSceneVariants(GameScene2D scene2D, GameScene scene3D) {
 
 	public GameSceneVariants {
 		Objects.requireNonNull(scene2D, "2D scene must not be null");

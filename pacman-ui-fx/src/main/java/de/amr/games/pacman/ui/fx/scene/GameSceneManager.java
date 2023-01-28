@@ -113,43 +113,6 @@ public class GameSceneManager {
 		return playScene3D;
 	}
 
-	/**
-	 * Selects the game scene that applies to the current game state. If a new scene is selected, the old scene's
-	 * {@link GameScene#end()} method is called, the new scene's context is updated and its {@link GameScene#init()}
-	 * method is called.
-	 * 
-	 * @param gameController   the game controller
-	 * @param dim              dimension (2 or 3)
-	 * @param currentGameScene current game scene
-	 * @param reload           if {@code true} the scene is reloaded (end + update context + init) even if no scene change
-	 *                         would be required for the current game state
-	 * 
-	 * @return the selected game scene
-	 */
-	public static GameScene selectGameScene(GameController gameController, int dim, GameScene currentGameScene,
-			boolean reload) {
-		if (dim != 2 && dim != 3) {
-			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
-		}
-		var variants = getSceneVariantsMatchingGameState(gameController);
-		var nextGameScene = (dim == 3 && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
-		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found.");
-		}
-		if (nextGameScene == currentGameScene && !reload) {
-			LOGGER.trace("Stay in game scene '%s'", nextGameScene.getClass().getName());
-			return currentGameScene;
-		}
-		if (currentGameScene != null) {
-			LOGGER.trace("End game scene '%s'", currentGameScene.getClass().getName());
-			currentGameScene.end();
-		}
-		setSceneContext(gameController, nextGameScene);
-		LOGGER.trace("Init game scene '%s'", nextGameScene.getClass().getName());
-		nextGameScene.init();
-		return nextGameScene;
-	}
-
 	public static boolean isPlayScene(GameScene gameScene) {
 		return gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene2D()
 				|| gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene3D()
@@ -170,7 +133,7 @@ public class GameSceneManager {
 		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	private static GameSceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
+	public static GameSceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
 		var game = gameController.game();
 		var level = game.level();
 		var state = gameController.state();
@@ -197,7 +160,7 @@ public class GameSceneManager {
 		};
 	}
 
-	private static void setSceneContext(GameController gameController, GameScene scene) {
+	public static void setSceneContext(GameController gameController, GameScene scene) {
 		var gameVariant = gameController.game().variant();
 		var r2D = switch (gameVariant) {
 		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
