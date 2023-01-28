@@ -68,13 +68,13 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new AppSettings(this);
+		LOGGER.info("Application settings: %s", settings);
 		Env.use3DPy.set(settings.use3D);
 		Env3D.perspectivePy.set(settings.perspective);
 		var gameController = new GameController(settings.variant);
 		var ui = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
 		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		ui.start();
-		LOGGER.info("Application settings: %s", settings);
 		LOGGER.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
 		LOGGER.info(() -> "Window size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
 				primaryStage.getHeight(), settings.zoom, U.onOff(Env.use3DPy.get()), settings.perspective));
