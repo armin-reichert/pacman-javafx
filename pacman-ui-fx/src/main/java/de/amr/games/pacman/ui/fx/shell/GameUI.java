@@ -221,15 +221,19 @@ public class GameUI implements GameEventListener {
 			throw new IllegalStateException("No game scene found.");
 		}
 		if (reload || nextGameScene != currentGameScene) {
-			if (currentGameScene != null) {
-				currentGameScene.end();
-			}
-			GameSceneManager.setSceneContext(gameController, nextGameScene);
-			nextGameScene.init();
-			currentGameScene = nextGameScene;
+			changeGameScene(nextGameScene);
 			return true;
 		}
 		return false;
+	}
+
+	private void changeGameScene(GameScene nextGameScene) {
+		if (currentGameScene != null) {
+			currentGameScene.end();
+		}
+		GameSceneManager.setSceneContext(gameController, nextGameScene);
+		nextGameScene.init();
+		currentGameScene = nextGameScene;
 	}
 
 	private void updateSounds() {
