@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
+import javafx.application.Application;
 
 /**
  * @author Armin Reichert
@@ -45,10 +47,10 @@ class AppSettings {
 	public final GameVariant variant;
 	public final float zoom;
 
-	private final Map<String, String> namedParams;
+	private final Map<String, String> parameters;
 
-	public AppSettings(Map<String, String> namedParams) {
-		this.namedParams = namedParams;
+	public AppSettings(Application app) {
+		this.parameters = Objects.requireNonNull(app).getParameters().getNamed();
 		fullScreen = parseBoolean("fullScreen", false);
 		perspective = parse("perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
 		use3D = parseBoolean("use3D", false);
@@ -58,7 +60,7 @@ class AppSettings {
 
 	private boolean parseBoolean(String key, boolean defaultValue) {
 		try {
-			return Boolean.valueOf(namedParams.getOrDefault(key, String.valueOf(defaultValue)));
+			return Boolean.valueOf(parameters.getOrDefault(key, String.valueOf(defaultValue)));
 		} catch (Exception e) {
 			LOGGER.error("Error parsing boolean parameter '%s': %s", key, e.getMessage());
 			return defaultValue;
@@ -67,7 +69,7 @@ class AppSettings {
 
 	private float parseFloat(String key, double defaultValue) {
 		try {
-			return Float.valueOf(namedParams.getOrDefault(key, String.valueOf(defaultValue)));
+			return Float.valueOf(parameters.getOrDefault(key, String.valueOf(defaultValue)));
 		} catch (Exception e) {
 			LOGGER.error("Error parsing floating point parameter '%s': %s", key, e.getMessage());
 			return (float) defaultValue;
@@ -76,7 +78,7 @@ class AppSettings {
 
 	private <T> T parse(String key, T defaultValue, Function<String, T> parser) {
 		try {
-			return parser.apply(namedParams.getOrDefault(key, String.valueOf(defaultValue)));
+			return parser.apply(parameters.getOrDefault(key, String.valueOf(defaultValue)));
 		} catch (Exception e) {
 			LOGGER.error("Error parsing parameter '%s': %s", key, e.getMessage());
 			return defaultValue;

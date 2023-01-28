@@ -71,7 +71,7 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void init() throws Exception {
 		LOGGER.info("Create application settings from named parameters: %s", getParameters().getNamed());
-		settings = new AppSettings(getParameters().getNamed());
+		settings = new AppSettings(this);
 		Env.use3DPy.set(settings.use3D);
 		Env3D.perspectivePy.set(settings.perspective);
 		gameController = new GameController(settings.variant);
