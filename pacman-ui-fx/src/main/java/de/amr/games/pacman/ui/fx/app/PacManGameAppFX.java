@@ -66,14 +66,13 @@ public class PacManGameAppFX extends Application {
 	}
 
 	private AppSettings settings;
-	private GameController gameController;
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		settings = new AppSettings(this);
-		gameController = new GameController(settings.variant);
 		Env.use3DPy.set(settings.use3D);
 		Env3D.perspectivePy.set(settings.perspective);
+		var gameController = new GameController(settings.variant);
 		var ui = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
 		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		ui.start();
