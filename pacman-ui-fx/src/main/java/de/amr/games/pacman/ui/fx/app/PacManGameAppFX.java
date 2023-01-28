@@ -73,31 +73,35 @@ public class PacManGameAppFX extends Application {
 
 	private static final Logger LOGGER = LogManager.getFormatterLogger();
 
-	//@formatter:off
-	private static final Option<Boolean>     O_3D          = booleanOption("-3D", false);
-	private static final Option<Boolean>     O_FULLSCREEN  = booleanOption("-fullscreen", false);
-	private static final Option<Boolean>     O_MUTED       = booleanOption("-muted", false);
-	private static final Option<Perspective> O_PERSPECTIVE = option("-psp", Perspective.NEAR_PLAYER, Perspective::valueOf);
-	private static final Option<GameVariant> O_VARIANT     = option("-variant", GameVariant.PACMAN, GameVariant::valueOf);
-	private static final Option<Float>       O_ZOOM        = floatOption("-zoom", 2.0f);
-	//@formatter:on
+	private static class Options {
+		//@formatter:off
+		Option<Boolean>     use3D       = booleanOption("-3D", false);
+		Option<Boolean>     fullscreen  = booleanOption("-fullscreen", false);
+		Option<Boolean>     muted       = booleanOption("-muted", false);
+		Option<Perspective> perspective = option("-psp", Perspective.NEAR_PLAYER, Perspective::valueOf);
+		Option<GameVariant> variant     = option("-variant", GameVariant.PACMAN, GameVariant::valueOf);
+		Option<Float>       zoom        = floatOption("-zoom", 2.0f);
+		//@formatter:on
+	}
 
+	private Options options = new Options();
 	private GameController gameController;
 
 	@Override
 	public void init() throws Exception {
-		var optionParser = new OptionParser(O_3D, O_FULLSCREEN, O_MUTED, O_PERSPECTIVE, O_VARIANT, O_ZOOM);
+		var optionParser = new OptionParser(options.use3D, options.fullscreen, options.muted, options.perspective,
+				options.variant, options.zoom);
 		optionParser.parse(getParameters().getUnnamed());
-		Env.use3DPy.set(O_3D.getValue());
-		Env3D.perspectivePy.set(O_PERSPECTIVE.getValue());
-		gameController = new GameController(O_VARIANT.getValue());
+		Env.use3DPy.set(options.use3D.getValue());
+		Env3D.perspectivePy.set(options.perspective.getValue());
+		gameController = new GameController(options.variant.getValue());
 		LOGGER.info("Application initialized. Game variant: %s", gameController.game().variant());
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		float zoom = O_ZOOM.getValue();
-		boolean fullScreen = O_FULLSCREEN.getValue();
+		float zoom = options.zoom.getValue();
+		boolean fullScreen = options.fullscreen.getValue();
 		var perspective = Env3D.perspectivePy.get();
 		var ui = new GameUI(gameController, primaryStage, zoom, fullScreen);
 		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
