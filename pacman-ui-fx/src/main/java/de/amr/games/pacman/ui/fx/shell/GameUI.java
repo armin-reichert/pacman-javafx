@@ -203,20 +203,18 @@ public class GameUI implements GameEventListener {
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		var nextGameScene = selectGameScene(Env.use3DPy.get(), reload);
-		if (nextGameScene != currentGameScene) {
-			currentGameScene = nextGameScene;
+		var changed = selectGameScene(Env.use3DPy.get(), reload);
+		if (changed) {
 			gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
 			currentGameScene.embedInto(mainScene);
 			pipView.setContext(currentGameScene.ctx());
-			LOGGER.trace("Game scene is now: %s", nextGameScene);
 		}
 		updateSounds();
 		updateMainSceneBackground();
 		updateStageFrame();
 	}
 
-	private GameScene selectGameScene(boolean use3D, boolean reload) {
+	private boolean selectGameScene(boolean use3D, boolean reload) {
 		var variants = GameSceneManager.getSceneVariantsMatchingGameState(gameController);
 		var nextGameScene = (use3D && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
 		if (nextGameScene == null) {
@@ -224,17 +222,14 @@ public class GameUI implements GameEventListener {
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			if (currentGameScene != null) {
-				LOGGER.trace("End game scene '%s'", currentGameScene.getClass().getName());
 				currentGameScene.end();
 			}
 			GameSceneManager.setSceneContext(gameController, nextGameScene);
-			LOGGER.trace("Init game scene '%s'", nextGameScene.getClass().getName());
 			nextGameScene.init();
-			return nextGameScene;
-		} else {
-			LOGGER.trace("Stay in game scene '%s'", nextGameScene.getClass().getName());
-			return currentGameScene;
+			currentGameScene = nextGameScene;
+			return true;
 		}
+		return false;
 	}
 
 	private void updateSounds() {
