@@ -195,7 +195,7 @@ public class GameSounds implements GameSoundController {
 		case 3 -> GameSound.SIREN_4;
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
-		getClip(siren).ifPresent(clip -> clip.setVolume(0.2));
+		getClip(siren).ifPresent(clip -> clip.setVolume(1.0));
 		loop(siren, Animation.INDEFINITE);
 		LOGGER.trace("Siren %s started", siren);
 	}
