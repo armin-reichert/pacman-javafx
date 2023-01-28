@@ -222,18 +222,19 @@ public class GameUI implements GameEventListener {
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found.");
 		}
-		if (nextGameScene == currentGameScene && !reload) {
+		if (reload || nextGameScene != currentGameScene) {
+			if (currentGameScene != null) {
+				LOGGER.trace("End game scene '%s'", currentGameScene.getClass().getName());
+				currentGameScene.end();
+			}
+			GameSceneManager.setSceneContext(gameController, nextGameScene);
+			LOGGER.trace("Init game scene '%s'", nextGameScene.getClass().getName());
+			nextGameScene.init();
+			return nextGameScene;
+		} else {
 			LOGGER.trace("Stay in game scene '%s'", nextGameScene.getClass().getName());
 			return currentGameScene;
 		}
-		if (currentGameScene != null) {
-			LOGGER.trace("End game scene '%s'", currentGameScene.getClass().getName());
-			currentGameScene.end();
-		}
-		GameSceneManager.setSceneContext(gameController, nextGameScene);
-		LOGGER.trace("Init game scene '%s'", nextGameScene.getClass().getName());
-		nextGameScene.init();
-		return nextGameScene;
 	}
 
 	private void updateSounds() {
