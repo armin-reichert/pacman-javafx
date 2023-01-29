@@ -342,7 +342,7 @@ public class PlayScene3D implements GameScene {
 						pause(1.0), //
 						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : pause(1.0), //
 						pause(1.0, level.pac()::hide), //
-						pause(0.5, () -> Actions.showFlashMessage(2, message)), //
+						pause(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
 						pause(2.0) //
 				);
 				animation.setOnFinished(evt -> unlockGameState());
@@ -350,7 +350,7 @@ public class PlayScene3D implements GameScene {
 			});
 		}
 
-		case GAME_OVER -> Actions.showFlashMessage(3, TextManager.TALK_GAME_OVER.next());
+		case GAME_OVER -> Actions.showFlashMessageSeconds(3, TextManager.TALK_GAME_OVER.next());
 
 		default -> { // ignore
 		}

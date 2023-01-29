@@ -45,24 +45,14 @@ import javafx.scene.shape.DrawMode;
  */
 public class Actions {
 
-	private Actions() {
-	}
-
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
-	private static final String VOICE_HELP = "sound/common/press-key.mp3";
-	private static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
-	private static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
-	private static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
-	private static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
-
 	private static final Random RND = new Random();
 
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
 
-	public static void setUI(GameUI userInterface) {
-		ui = Objects.requireNonNull(userInterface, "User Interface for actions must not be null");
+	public static void setUI(GameUI ui) {
+		Actions.ui = Objects.requireNonNull(ui, "User Interface for actions must not be null");
 	}
 
 	private static GameController gameController() {
@@ -73,7 +63,7 @@ public class Actions {
 		return gameController().game();
 	}
 
-	private static GameState currentGameState() {
+	private static GameState gameState() {
 		return gameController().state();
 	}
 
@@ -99,26 +89,26 @@ public class Actions {
 	}
 
 	public static void playHelpVoiceMessage() {
-		playVoiceMessage(VOICE_HELP);
+		playVoiceMessage(ResourceMgr.VOICE_HELP);
 	}
 
 	public static void showFlashMessage(String message, Object... args) {
-		showFlashMessage(1, message, args);
+		showFlashMessageSeconds(1, message, args);
 	}
 
-	public static void showFlashMessage(double seconds, String message, Object... args) {
+	public static void showFlashMessageSeconds(double seconds, String message, Object... args) {
 		ui.flashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
 	public static void startGame() {
 		if (game().hasCredit()) {
 			stopVoiceMessage();
-			currentGameState().requestGame(game());
+			gameState().requestGame(game());
 		}
 	}
 
 	public static void startCutscenesTest() {
-		currentGameState().startCutscenesTest(game());
+		gameState().startCutscenesTest(game());
 		showFlashMessage("Cut scenes");
 	}
 
@@ -133,11 +123,11 @@ public class Actions {
 	}
 
 	public static void addCredit() {
-		currentGameState().addCredit(game());
+		gameState().addCredit(game());
 	}
 
 	public static void enterLevel(int newLevelNumber) {
-		if (currentGameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
 		game().level().ifPresent(level -> {
@@ -184,7 +174,7 @@ public class Actions {
 
 	public static void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
-		currentGameState().selectGameVariant(gameVariant);
+		gameState().selectGameVariant(gameVariant);
 	}
 
 	public static void selectNextPerspective() {
@@ -209,7 +199,7 @@ public class Actions {
 		var auto = gameController().isAutoControlled();
 		String message = TextManager.message(auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoiceMessage(auto ? VOICE_AUTOPILOT_ON : VOICE_AUTOPILOT_OFF);
+		playVoiceMessage(auto ? ResourceMgr.VOICE_AUTOPILOT_ON : ResourceMgr.VOICE_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
@@ -217,7 +207,7 @@ public class Actions {
 		var immune = game().isImmune();
 		String message = TextManager.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoiceMessage(immune ? VOICE_IMMUNITY_ON : VOICE_IMMUNITY_OFF);
+		playVoiceMessage(immune ? ResourceMgr.VOICE_IMMUNITY_ON : ResourceMgr.VOICE_IMMUNITY_OFF);
 	}
 
 	public static void toggleLevelTestMode() {
@@ -260,18 +250,18 @@ public class Actions {
 	}
 
 	public static void cheatEatAllPellets() {
-		currentGameState().cheatEatAllPellets(game());
+		gameState().cheatEatAllPellets(game());
 		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(TextManager.TALK_CHEATING.next());
 		}
 	}
 
 	public static void cheatEnterNextLevel() {
-		currentGameState().cheatEnterNextLevel(game());
+		gameState().cheatEnterNextLevel(game());
 	}
 
 	public static void cheatKillAllEatableGhosts() {
-		currentGameState().cheatKillAllEatableGhosts(game());
+		gameState().cheatKillAllEatableGhosts(game());
 		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(TextManager.TALK_CHEATING.next());
 		}

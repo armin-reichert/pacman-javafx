@@ -34,6 +34,11 @@ import java.util.MissingResourceException;
 public class ResourceMgr {
 
 	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
+	public static final String VOICE_HELP = "sound/common/press-key.mp3";
+	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
+	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
+	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
+	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
 	public static String absPath(String relPath) {
 		return "/de/amr/games/pacman/ui/fx/" + relPath;
