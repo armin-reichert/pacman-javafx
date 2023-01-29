@@ -32,7 +32,6 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
-import javafx.application.Application;
 
 /**
  * @author Armin Reichert
@@ -49,8 +48,8 @@ class AppSettings {
 
 	private final Map<String, String> parameters;
 
-	public AppSettings(Application app) {
-		this.parameters = Objects.requireNonNull(app).getParameters().getNamed();
+	public AppSettings(Map<String, String> parameters) {
+		this.parameters = Objects.requireNonNull(parameters);
 		fullScreen = parseBoolean("fullScreen", false);
 		perspective = parse("perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
 		use3D = parseBoolean("use3D", false);

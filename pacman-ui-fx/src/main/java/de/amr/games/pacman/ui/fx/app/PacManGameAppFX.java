@@ -66,7 +66,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new AppSettings(this);
+		var settings = new AppSettings(getParameters().getNamed());
 		LOG.info("Application settings: %s", settings);
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
