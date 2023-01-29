@@ -24,9 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.dashboard;
 
 import de.amr.games.pacman.ui.fx.Actions;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -66,9 +66,9 @@ public class Section3D extends Section {
 		comboFloorTexture.setOnAction(e -> Env3D.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env3D.floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env3D.floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Squirting", () -> Env.toggle(Env3D.squirtingEffectPy));
-		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Env.toggle(Env3D.pacLightedPy));
-		cbAxesVisible = addCheckBox("Show axes", () -> Env.toggle(Env3D.axesVisiblePy));
+		cbSquirting = addCheckBox("Squirting", () -> Ufx.toggle(Env3D.squirtingEnabledPy));
+		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env3D.pacLightedPy));
+		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env3D.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 	}
 
@@ -79,7 +79,7 @@ public class Section3D extends Section {
 		sliderWallHeight.setDisable(!gameScene().is3D());
 		comboFloorTexture.setValue(Env3D.floorTexturePy.get());
 		comboFloorTexture.setDisable(!gameScene().is3D());
-		cbSquirting.setSelected(Env3D.squirtingEffectPy.get());
+		cbSquirting.setSelected(Env3D.squirtingEnabledPy.get());
 		cbPacLighted.setSelected(Env3D.pacLightedPy.get());
 		cbAxesVisible.setSelected(Env3D.axesVisiblePy.get());
 		cbAxesVisible.setDisable(!gameScene().is3D());

@@ -32,7 +32,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
@@ -69,7 +68,7 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new AppSettings(this);
 		LOG.info("Application settings: %s", settings);
-		Env.use3DPy.set(settings.use3D);
+		Env3D.enabledPy.set(settings.use3D);
 		Env3D.perspectivePy.set(settings.perspective);
 		var gameController = new GameController(settings.variant);
 		var ui = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
@@ -77,6 +76,6 @@ public class PacManGameAppFX extends Application {
 		ui.start();
 		LOG.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
 		LOG.info(() -> "Window size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
-				primaryStage.getHeight(), settings.zoom, U.onOff(Env.use3DPy.get()), settings.perspective));
+				primaryStage.getHeight(), settings.zoom, U.onOff(Env3D.enabledPy.get()), settings.perspective));
 	}
 }

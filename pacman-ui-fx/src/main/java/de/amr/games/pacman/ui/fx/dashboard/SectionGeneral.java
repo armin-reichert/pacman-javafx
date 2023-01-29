@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.dashboard;
 
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
@@ -110,8 +111,8 @@ public class SectionGeneral extends Section {
 				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
 
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
-		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Env.toggle(Env.showDebugInfoPy));
-		cbTimeMeasured = addCheckBox("Measure time", () -> Env.toggle(Env.timeMeasuredPy));
+		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Ufx.toggle(Env.showDebugInfoPy));
+		cbTimeMeasured = addCheckBox("Measure time", () -> Ufx.toggle(Env.timeMeasuredPy));
 	}
 
 	@Override
@@ -124,7 +125,7 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setValue(Env.targetFrameratePy.get());
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
 		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
-		cbUsePlayScene3D.setSelected(Env.use3DPy.get());
+		cbUsePlayScene3D.setSelected(Env3D.enabledPy.get());
 		cbTimeMeasured.setSelected(Env.timeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}

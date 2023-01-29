@@ -50,6 +50,7 @@ public final class Env3D {
 
 	public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(0, 0, 33));
 	public static final StringProperty floorTexturePy = new SimpleStringProperty("none");
 	public static final ObjectProperty<Color> lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
@@ -57,5 +58,5 @@ public final class Env3D {
 	public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.5);
 	public static final BooleanProperty pacLightedPy = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(true);
+	public static final BooleanProperty squirtingEnabledPy = new SimpleBooleanProperty(true);
 }

@@ -33,6 +33,7 @@ import de.amr.games.pacman.ui.fx.Env;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
@@ -56,6 +57,10 @@ public class Ufx {
 	}
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+
+	public static void toggle(BooleanProperty booleanProperty) {
+		booleanProperty.set(!booleanProperty.get());
+	}
 
 	public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> pyColor) {
 		var mat = new PhongMaterial();

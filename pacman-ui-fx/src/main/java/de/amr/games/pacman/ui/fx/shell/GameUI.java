@@ -203,7 +203,7 @@ public class GameUI implements GameEventListener {
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		selectGameScene(Env.use3DPy.get(), reload);
+		selectGameScene(Env3D.enabledPy.get(), reload);
 		updateSounds();
 		updateMainSceneBackground();
 		updateStageFrame();
@@ -276,7 +276,7 @@ public class GameUI implements GameEventListener {
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.B)) {
 			Actions.reboot();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.D)) {
-			Env.toggle(Env.showDebugInfoPy);
+			Ufx.toggle(Env.showDebugInfoPy);
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.I)) {
 			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.M)) {

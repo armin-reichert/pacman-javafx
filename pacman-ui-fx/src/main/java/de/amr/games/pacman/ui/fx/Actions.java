@@ -36,6 +36,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.TextManager;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
 
@@ -155,7 +156,7 @@ public class Actions {
 	}
 
 	public static void togglePipViewVisible() {
-		Env.toggle(Env.pipVisiblePy);
+		Ufx.toggle(Env.pipVisiblePy);
 		if (Env.pipVisiblePy.get()) {
 			showFlashMessage("Picture in Picture ON");
 		} else {
@@ -164,11 +165,11 @@ public class Actions {
 	}
 
 	public static void toggleDashboardVisible() {
-		Env.toggle(ui.dashboard().visibleProperty());
+		Ufx.toggle(ui.dashboard().visibleProperty());
 	}
 
 	public static void togglePaused() {
-		Env.toggle(Env.pausedPy);
+		Ufx.toggle(Env.pausedPy);
 		gameController().sounds().setMuted(Env.pausedPy.get());
 	}
 
@@ -232,7 +233,7 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Env.toggle(Env.use3DPy);
+		Ufx.toggle(Env3D.enabledPy);
 		if (GameSceneManager.findGameScene(gameController(), 3).isPresent()) {
 			ui.updateGameScene(true);
 			if (ui.currentGameScene().is3D()) {
@@ -241,7 +242,7 @@ public class Actions {
 				ui.currentGameScene().onSwitchFrom3D();
 			}
 		} else {
-			showFlashMessage(TextManager.message(Env.use3DPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(TextManager.message(Env3D.enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 

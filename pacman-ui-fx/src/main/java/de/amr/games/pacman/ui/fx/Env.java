@@ -61,11 +61,6 @@ public final class Env {
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
 	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
-	public static final BooleanProperty use3DPy = new SimpleBooleanProperty(true);
-
-	public static void toggle(BooleanProperty booleanProperty) {
-		booleanProperty.set(!booleanProperty.get());
-	}
 
 	public static String absPath(String relPath) {
 		return RESOURCE_PATH + relPath;
