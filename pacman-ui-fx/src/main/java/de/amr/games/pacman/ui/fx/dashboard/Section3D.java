@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.dashboard;
 
 import de.amr.games.pacman.ui.fx.Actions;
-import de.amr.games.pacman.ui.fx.Env3D;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.CheckBox;
@@ -54,36 +54,36 @@ public class Section3D extends Section {
 
 	public Section3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
-		pickerLightColor = addColorPicker("Light color", Env3D.lightColorPy.get());
-		pickerLightColor.setOnAction(e -> Env3D.lightColorPy.set(pickerLightColor.getValue()));
-		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env3D.mazeWallHeightPy.get());
+		pickerLightColor = addColorPicker("Light color", Env.ThreeD.lightColorPy.get());
+		pickerLightColor.setOnAction(e -> Env.ThreeD.lightColorPy.set(pickerLightColor.getValue()));
+		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.ThreeD.mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env3D.mazeWallHeightPy.set(newVal.doubleValue()));
-		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env3D.mazeWallThicknessPy.get());
+				.addListener((obs, oldVal, newVal) -> Env.ThreeD.mazeWallHeightPy.set(newVal.doubleValue()));
+		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.ThreeD.mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env3D.mazeWallThicknessPy.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor texture", Env3D.FLOOR_TEXTURES.toArray(String[]::new));
-		comboFloorTexture.setOnAction(e -> Env3D.floorTexturePy.set(comboFloorTexture.getValue()));
-		pickerFloorColor = addColorPicker("Floor color", Env3D.floorColorPy.get());
-		pickerFloorColor.setOnAction(e -> Env3D.floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Squirting", () -> Ufx.toggle(Env3D.squirtingEnabledPy));
-		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env3D.pacLightedPy));
-		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env3D.axesVisiblePy));
+				.addListener((obs, oldVal, newVal) -> Env.ThreeD.mazeWallThicknessPy.set(newVal.doubleValue()));
+		comboFloorTexture = addComboBox("Floor texture", Env.ThreeD.FLOOR_TEXTURES.toArray(String[]::new));
+		comboFloorTexture.setOnAction(e -> Env.ThreeD.floorTexturePy.set(comboFloorTexture.getValue()));
+		pickerFloorColor = addColorPicker("Floor color", Env.ThreeD.floorColorPy.get());
+		pickerFloorColor.setOnAction(e -> Env.ThreeD.floorColorPy.set(pickerFloorColor.getValue()));
+		cbSquirting = addCheckBox("Squirting", () -> Ufx.toggle(Env.ThreeD.squirtingEnabledPy));
+		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.ThreeD.pacLightedPy));
+		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.ThreeD.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		sliderWallHeight.setValue(Env3D.mazeWallHeightPy.get());
+		sliderWallHeight.setValue(Env.ThreeD.mazeWallHeightPy.get());
 		sliderWallHeight.setDisable(!gameScene().is3D());
-		comboFloorTexture.setValue(Env3D.floorTexturePy.get());
+		comboFloorTexture.setValue(Env.ThreeD.floorTexturePy.get());
 		comboFloorTexture.setDisable(!gameScene().is3D());
-		cbSquirting.setSelected(Env3D.squirtingEnabledPy.get());
-		cbPacLighted.setSelected(Env3D.pacLightedPy.get());
-		cbAxesVisible.setSelected(Env3D.axesVisiblePy.get());
+		cbSquirting.setSelected(Env.ThreeD.squirtingEnabledPy.get());
+		cbPacLighted.setSelected(Env.ThreeD.pacLightedPy.get());
+		cbAxesVisible.setSelected(Env.ThreeD.axesVisiblePy.get());
 		cbAxesVisible.setDisable(!gameScene().is3D());
-		cbWireframeMode.setSelected(Env3D.drawModePy.get() == DrawMode.LINE);
+		cbWireframeMode.setSelected(Env.ThreeD.drawModePy.get() == DrawMode.LINE);
 		cbWireframeMode.setDisable(!gameScene().is3D());
 	}
 }

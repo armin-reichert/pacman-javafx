@@ -36,7 +36,6 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
@@ -128,11 +127,11 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void bindWithEnv() {
-		Env3D.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+		Env.ThreeD.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.mainSceneBgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
-		pipView.heightPy.bind(Env.pipSceneHeightPy);
-		pipView.opacityProperty().bind(Env.pipOpacityPy);
+		pipView.heightPy.bind(Env.PiP.sceneHeightPy);
+		pipView.opacityProperty().bind(Env.PiP.opacityPy);
 		gameLoop.pausedPy.bind(Env.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
@@ -174,7 +173,7 @@ public class GameUI implements GameEventListener {
 	private void updateUI() {
 		flashMessageView.update();
 		dashboard.update();
-		pipView.setVisible(Env.pipVisiblePy.get() && GameSceneManager.isPlayScene(currentGameScene));
+		pipView.setVisible(Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene));
 		if (pipView.isVisible()) {
 			pipView.update();
 		}
@@ -196,14 +195,14 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateMainSceneBackground() {
-		var bgColor = Env3D.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
+		var bgColor = Env.ThreeD.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) mainScene.getRoot();
 		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
 	}
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		selectGameScene(Env3D.enabledPy.get(), reload);
+		selectGameScene(Env.ThreeD.enabledPy.get(), reload);
 		updateSounds();
 		updateMainSceneBackground();
 		updateStageFrame();
@@ -240,7 +239,7 @@ public class GameUI implements GameEventListener {
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		default -> throw new IllegalStateException();
 		};
-		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : gameSounds;
+		var sounds = Env.SOUND_UNSUPPORTED ? GameSounds.NO_SOUNDS : gameSounds;
 		gameController.setSounds(sounds);
 		LOG.info("Using sounds for game variant %s", variant);
 	}

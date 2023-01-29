@@ -96,7 +96,7 @@ public class GameSounds implements GameSoundController {
 	private boolean muted;
 
 	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
-		if (Env.SOUND_DISABLED) {
+		if (Env.SOUND_UNSUPPORTED) {
 			LOG.trace("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
 			relPathMap.forEach(this::loadClip);

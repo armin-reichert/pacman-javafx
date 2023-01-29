@@ -40,7 +40,7 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.Actions;
-import de.amr.games.pacman.ui.fx.Env3D;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
@@ -129,7 +129,7 @@ public class PlayScene3D implements GameScene {
 			var height = level.world().numRows() * World.TS;
 
 			level3D = new GameLevel3D(level, ctx.r2D());
-			level3D.drawModePy.bind(Env3D.drawModePy);
+			level3D.drawModePy.bind(Env.ThreeD.drawModePy);
 			level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
 			level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
 					() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),

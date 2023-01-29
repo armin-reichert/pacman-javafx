@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.dashboard;
 
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.Env3D;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
@@ -102,13 +101,13 @@ public class SectionGeneral extends Section {
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 
 		sliderPiPSceneHeight = addSlider("PiP Size", ui.pipView().minSize().y(), ui.pipView().maxSize().y(),
-				Env.pipSceneHeightPy.get());
+				Env.PiP.sceneHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
+				.addListener((obs, oldValue, newValue) -> Env.PiP.sceneHeightPy.set(newValue.doubleValue()));
 
-		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.PiP.opacityPy.get());
 		sliderPiPOpacity.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
+				.addListener((obs, oldValue, newValue) -> Env.PiP.opacityPy.set(newValue.doubleValue()));
 
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Ufx.toggle(Env.showDebugInfoPy));
@@ -123,9 +122,9 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!Env.pausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
 		sliderTargetFPS.setValue(Env.targetFrameratePy.get());
-		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
-		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
-		cbUsePlayScene3D.setSelected(Env3D.enabledPy.get());
+		sliderPiPSceneHeight.setValue(Env.PiP.sceneHeightPy.get());
+		sliderPiPOpacity.setValue(Env.PiP.opacityPy.get());
+		cbUsePlayScene3D.setSelected(Env.ThreeD.enabledPy.get());
 		cbTimeMeasured.setSelected(Env.timeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}

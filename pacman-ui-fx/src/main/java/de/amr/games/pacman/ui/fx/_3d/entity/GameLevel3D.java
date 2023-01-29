@@ -39,7 +39,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.ui.fx.Env3D;
+import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import javafx.beans.property.ObjectProperty;
@@ -81,7 +81,7 @@ public class GameLevel3D extends Group {
 
 		pac3D = new Pac3D(level.pac(), level.world());
 		pac3D.init();
-		pac3D.lightOnPy.bind(Env3D.pacLightedPy);
+		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
 		LOG.info("3D %s created", level.pac().name());
 
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);

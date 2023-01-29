@@ -78,7 +78,7 @@ public class Actions {
 	}
 
 	public static void playVoiceMessage(String messageFileRelPath) {
-		if (Env.SOUND_DISABLED) {
+		if (Env.SOUND_UNSUPPORTED) {
 			return;
 		}
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
@@ -156,8 +156,8 @@ public class Actions {
 	}
 
 	public static void togglePipViewVisible() {
-		Ufx.toggle(Env.pipVisiblePy);
-		if (Env.pipVisiblePy.get()) {
+		Ufx.toggle(Env.PiP.visiblePy);
+		if (Env.PiP.visiblePy.get()) {
 			showFlashMessage("Picture in Picture ON");
 		} else {
 			showFlashMessage("Picture in Picture OFF");
@@ -192,16 +192,16 @@ public class Actions {
 
 	public static void selectNextPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			Env3D.perspectivePy.set(Env3D.perspectivePy.get().next());
-			String perspectiveName = TextManager.message(Env3D.perspectivePy.get().name());
+			Env.ThreeD.perspectivePy.set(Env.ThreeD.perspectivePy.get().next());
+			String perspectiveName = TextManager.message(Env.ThreeD.perspectivePy.get().name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void selectPrevPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			Env3D.perspectivePy.set(Env3D.perspectivePy.get().prev());
-			String perspectiveName = TextManager.message(Env3D.perspectivePy.get().name());
+			Env.ThreeD.perspectivePy.set(Env.ThreeD.perspectivePy.get().prev());
+			String perspectiveName = TextManager.message(Env.ThreeD.perspectivePy.get().name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 
@@ -233,7 +233,7 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Ufx.toggle(Env3D.enabledPy);
+		Ufx.toggle(Env.ThreeD.enabledPy);
 		if (GameSceneManager.findGameScene(gameController(), 3).isPresent()) {
 			ui.updateGameScene(true);
 			if (ui.currentGameScene().is3D()) {
@@ -242,12 +242,12 @@ public class Actions {
 				ui.currentGameScene().onSwitchFrom3D();
 			}
 		} else {
-			showFlashMessage(TextManager.message(Env3D.enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(TextManager.message(Env.ThreeD.enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	public static void toggleDrawMode() {
-		Env3D.drawModePy.set(Env3D.drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env.ThreeD.drawModePy.set(Env.ThreeD.drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void toggleSoundMuted() {
