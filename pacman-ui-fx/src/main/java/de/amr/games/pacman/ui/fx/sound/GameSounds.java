@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
@@ -96,18 +96,14 @@ public class GameSounds implements GameSoundController {
 	private boolean muted;
 
 	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
-		if (Env.SOUND_UNSUPPORTED) {
-			LOG.trace("Sounds '%s' not loaded (sound is disabled)", mapName);
-		} else {
-			relPathMap.forEach(this::loadClip);
-			LOG.trace("Sounds '%s' loaded", mapName);
-		}
+		relPathMap.forEach(this::loadClip);
+		LOG.trace("Sounds '%s' loaded", mapName);
 	}
 
 	private void loadClip(GameSound sound, String relPath) {
-		var url = Env.urlFromRelPath(relPath);
+		var url = ResourceMgr.urlFromRelPath(relPath);
 		if (url == null) {
-			LOG.error("Game sound %s could not be loaded: resource '%s' not found", sound, Env.absPath(relPath));
+			LOG.error("Game sound %s could not be loaded: resource '%s' not found", sound, ResourceMgr.absPath(relPath));
 			return;
 		}
 		try {

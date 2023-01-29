@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -45,7 +45,7 @@ public class GhostModel3D {
 	private GhostModel3D() {
 	}
 
-	private static final ObjModel OBJ_MODEL = new ObjModel(Env.url("model3D/ghost.obj"));
+	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.url("model3D/ghost.obj"));
 	private static final String ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	private static final String ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	private static final String ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";

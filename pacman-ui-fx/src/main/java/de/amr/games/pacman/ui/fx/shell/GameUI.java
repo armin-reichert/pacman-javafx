@@ -239,8 +239,7 @@ public class GameUI implements GameEventListener {
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		default -> throw new IllegalStateException();
 		};
-		var sounds = Env.SOUND_UNSUPPORTED ? GameSounds.NO_SOUNDS : gameSounds;
-		gameController.setSounds(sounds);
+		gameController.setSounds(gameSounds);
 		LOG.info("Using sounds for game variant %s", variant);
 	}
 

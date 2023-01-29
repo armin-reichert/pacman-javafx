@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;
@@ -49,7 +50,7 @@ public class PacModel3D {
 	private PacModel3D() {
 	}
 
-	private static final ObjModel OBJ_MODEL = new ObjModel(Env.url("model3D/pacman.obj"));
+	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.url("model3D/pacman.obj"));
 	private static final String ID_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String ID_PAC_HEAD = "Sphere_yellow_packman";
 	private static final String ID_PAC_PALATE = "Sphere_grey_wall";

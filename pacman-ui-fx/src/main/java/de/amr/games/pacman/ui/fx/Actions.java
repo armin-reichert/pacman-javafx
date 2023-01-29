@@ -78,13 +78,10 @@ public class Actions {
 	}
 
 	public static void playVoiceMessage(String messageFileRelPath) {
-		if (Env.SOUND_UNSUPPORTED) {
-			return;
-		}
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
-		var url = Env.urlFromRelPath(messageFileRelPath);
+		var url = ResourceMgr.urlFromRelPath(messageFileRelPath);
 		if (url != null) {
 			try {
 				currentVoiceMessage = new AudioClip(url.toExternalForm());
