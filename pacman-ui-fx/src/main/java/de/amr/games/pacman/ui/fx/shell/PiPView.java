@@ -80,7 +80,7 @@ public class PiPView extends Pane {
 	public void update() {
 		LOG.trace("Update PiP view");
 		playScene.clear();
-		playScene.draw();
+		playScene.drawSceneContent();
 		playScene.drawHUD();
 	}
 }

@@ -88,7 +88,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void draw() {
+	public void drawSceneContent() {
 		drawTitle();
 		drawLights(32, 16);
 		if (intro.state() == MsPacManIntroState.GHOSTS) {

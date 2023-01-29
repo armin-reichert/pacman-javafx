@@ -54,7 +54,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void draw() {
+	public void drawSceneContent() {
 		var game = ctx.game();
 		var r = ctx.r2D();
 		game.level().ifPresent(level -> {

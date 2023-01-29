@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -57,7 +56,7 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "showOverlayPane", false);
+	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "overlayPaneVisible", false);
 
 	protected final StackPane root = new StackPane();
 	protected final Pane overlayPane = new Pane();
@@ -67,7 +66,6 @@ public abstract class GameScene2D implements GameScene {
 	protected GameSceneContext ctx;
 	private boolean creditVisible;
 	private Vector2i size = ArcadeWorld.SIZE_PX;
-	private float scaling = 1.0f;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, size.x(), size.y());
@@ -82,7 +80,7 @@ public abstract class GameScene2D implements GameScene {
 	public void resizeToHeight(float height) {
 		float aspectRatio = (float) size.x() / (float) size.y();
 		float width = aspectRatio * height;
-		scaling = height / size.y();
+		float scaling = height / size.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
@@ -94,7 +92,7 @@ public abstract class GameScene2D implements GameScene {
 	public final void onTick() {
 		update();
 		clear();
-		draw();
+		drawSceneContent();
 		if (overlayPaneVisiblePy.get()) {
 			ctx.level().ifPresent(this::drawDebugInfo);
 		}
@@ -125,7 +123,7 @@ public abstract class GameScene2D implements GameScene {
 	/**
 	 * Draws the scene content.
 	 */
-	public abstract void draw();
+	public abstract void drawSceneContent();
 
 	public boolean isCreditVisible() {
 		return creditVisible;
@@ -158,13 +156,5 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public SubScene fxSubScene() {
 		return fxSubScene;
-	}
-
-	public float scaling() {
-		return scaling;
-	}
-
-	public void addToOverlayPane(Node... children) {
-		overlayPane.getChildren().addAll(children);
 	}
 }

@@ -93,7 +93,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void draw() {
+	public void drawSceneContent() {
 		var timer = intro.state().timer();
 		switch (intro.state()) {
 		case START -> drawGallery();

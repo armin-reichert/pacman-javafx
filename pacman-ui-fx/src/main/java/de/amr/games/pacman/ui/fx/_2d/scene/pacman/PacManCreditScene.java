@@ -59,7 +59,7 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void draw() {
+	public void drawSceneContent() {
 		var r = ctx.r2D();
 		var arcade8 = r.arcadeFont(TS);
 		var arcade6 = r.arcadeFont(6);
