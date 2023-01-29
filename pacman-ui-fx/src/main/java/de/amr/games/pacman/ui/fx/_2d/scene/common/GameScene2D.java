@@ -55,7 +55,7 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D implements GameScene {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "showOverlayPane", false);
 
@@ -86,7 +86,7 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-		LOGGER.debug("2D game scene resized: %.0f x %.0f scaled: %.2f (%s)", fxSubScene.getWidth(), fxSubScene.getHeight(),
+		LOG.debug("2D game scene resized: %.0f x %.0f scaled: %.2f (%s)", fxSubScene.getWidth(), fxSubScene.getHeight(),
 				scaling, getClass().getSimpleName());
 	}
 

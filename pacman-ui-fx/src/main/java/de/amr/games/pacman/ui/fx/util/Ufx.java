@@ -55,7 +55,7 @@ public class Ufx {
 	private Ufx() {
 	}
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> pyColor) {
 		var mat = new PhongMaterial();
@@ -125,12 +125,12 @@ public class Ufx {
 		Objects.requireNonNull(relPath, "Font path cannot be NULL");
 		var url = Env.urlFromRelPath(relPath);
 		if (url == null) {
-			LOGGER.error(() -> "Font at '%s' not found".formatted(Env.absPath(relPath)));
+			LOG.error(() -> "Font at '%s' not found".formatted(Env.absPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
-			LOGGER.error(() -> "Font at '%s' not loaded".formatted(Env.absPath(relPath)));
+			LOG.error(() -> "Font at '%s' not loaded".formatted(Env.absPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		return font;
@@ -140,7 +140,7 @@ public class Ufx {
 		Objects.requireNonNull(relPath, "Image path cannot be NULL");
 		var url = Env.urlFromRelPath(relPath);
 		if (url == null) {
-			LOGGER.error(() -> "No image found at path '%s'".formatted(Env.absPath(relPath)));
+			LOG.error(() -> "No image found at path '%s'".formatted(Env.absPath(relPath)));
 			return null;
 		}
 		return new Image(url.toExternalForm());

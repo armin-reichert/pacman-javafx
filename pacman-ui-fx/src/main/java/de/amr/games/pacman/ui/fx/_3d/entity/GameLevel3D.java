@@ -53,7 +53,7 @@ import javafx.scene.shape.DrawMode;
  */
 public class GameLevel3D extends Group {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
@@ -82,10 +82,10 @@ public class GameLevel3D extends Group {
 		pac3D = new Pac3D(level.pac(), level.world());
 		pac3D.init();
 		pac3D.lightOnPy.bind(Env3D.pacLightedPy);
-		LOGGER.info("3D %s created", level.pac().name());
+		LOG.info("3D %s created", level.pac().name());
 
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
-		LOGGER.info("3D ghosts created");
+		LOG.info("3D ghosts created");
 
 		bonus3D = new Bonus3D(level.bonus(), r2D);
 

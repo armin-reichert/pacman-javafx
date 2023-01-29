@@ -44,7 +44,7 @@ import javafx.util.Duration;
  */
 public class GameLoop {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
@@ -142,7 +142,7 @@ public class GameLoop {
 			double startNanos = System.nanoTime();
 			task.run();
 			double durationNanos = System.nanoTime() - startNanos;
-			LOGGER.info(message, durationNanos / 1e6);
+			LOG.info(message, durationNanos / 1e6);
 		} else {
 			task.run();
 		}

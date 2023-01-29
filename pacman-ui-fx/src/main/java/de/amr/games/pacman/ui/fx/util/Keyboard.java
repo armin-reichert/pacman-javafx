@@ -64,7 +64,7 @@ public class Keyboard {
 
 	// Internal
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static final Keyboard KB = new Keyboard();
 
 	private KeyEvent currentEvent;
@@ -117,7 +117,7 @@ public class Keyboard {
 
 	private boolean isPressed(int modifierMask, KeyCode code) {
 		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modifierMask) {
-			LOGGER.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
+			LOG.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
 			currentEvent.consume();
 			return true;
 		}

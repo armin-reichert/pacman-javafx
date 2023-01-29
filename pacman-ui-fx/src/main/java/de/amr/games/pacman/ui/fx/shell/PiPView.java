@@ -42,7 +42,7 @@ import javafx.scene.layout.Pane;
  */
 public class PiPView extends Pane {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
 		@Override
@@ -73,12 +73,12 @@ public class PiPView extends Pane {
 	}
 
 	public void setContext(GameSceneContext context) {
-		LOGGER.trace("Initialize PiP view");
+		LOG.trace("Initialize PiP view");
 		playScene.setContext(context);
 	}
 
 	public void update() {
-		LOGGER.trace("Update PiP view");
+		LOG.trace("Update PiP view");
 		playScene.clear();
 		playScene.draw();
 		playScene.drawHUD();

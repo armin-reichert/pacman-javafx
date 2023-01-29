@@ -38,7 +38,7 @@ public class TextManager {
 	private TextManager() {
 	}
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
@@ -46,7 +46,7 @@ public class TextManager {
 		try {
 			return BUNDLE.getString(pattern).formatted(args);
 		} catch (MissingResourceException x) {
-			LOGGER.error("No text resource found for key '%s'", pattern);
+			LOG.error("No text resource found for key '%s'", pattern);
 			return "{%s}".formatted(pattern);
 		}
 	}

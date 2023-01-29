@@ -43,7 +43,7 @@ import javafx.scene.media.AudioClip;
  */
 public class GameSounds implements GameSoundController {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final Map<GameSound, String> PACMAN_MAP = new EnumMap<>(GameSound.class);
 	static {
@@ -97,24 +97,24 @@ public class GameSounds implements GameSoundController {
 
 	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
 		if (Env.SOUND_DISABLED) {
-			LOGGER.trace("Sounds '%s' not loaded (sound is disabled)", mapName);
+			LOG.trace("Sounds '%s' not loaded (sound is disabled)", mapName);
 		} else {
 			relPathMap.forEach(this::loadClip);
-			LOGGER.trace("Sounds '%s' loaded", mapName);
+			LOG.trace("Sounds '%s' loaded", mapName);
 		}
 	}
 
 	private void loadClip(GameSound sound, String relPath) {
 		var url = Env.urlFromRelPath(relPath);
 		if (url == null) {
-			LOGGER.error("Game sound %s could not be loaded: resource '%s' not found", sound, Env.absPath(relPath));
+			LOG.error("Game sound %s could not be loaded: resource '%s' not found", sound, Env.absPath(relPath));
 			return;
 		}
 		try {
 			clips.put(sound, new AudioClip(url.toExternalForm()));
-			LOGGER.trace("Audio clip created: key='%s', URL '%s'", sound, url);
+			LOG.trace("Audio clip created: key='%s', URL '%s'", sound, url);
 		} catch (Exception e) {
-			LOGGER.error("Audio clip creation failed: %s", e.getMessage());
+			LOG.error("Audio clip creation failed: %s", e.getMessage());
 		}
 	}
 
@@ -197,7 +197,7 @@ public class GameSounds implements GameSoundController {
 		};
 		getClip(siren).ifPresent(clip -> clip.setVolume(1.0));
 		loop(siren, Animation.INDEFINITE);
-		LOGGER.trace("Siren %s started", siren);
+		LOG.trace("Siren %s started", siren);
 	}
 
 	@Override
@@ -217,7 +217,7 @@ public class GameSounds implements GameSoundController {
 		sirens().forEach(siren -> {
 			if (isPlaying(siren)) {
 				getClip(siren).ifPresent(AudioClip::stop);
-				LOGGER.trace("Siren %s stopped", siren);
+				LOG.trace("Siren %s stopped", siren);
 			}
 		});
 	}

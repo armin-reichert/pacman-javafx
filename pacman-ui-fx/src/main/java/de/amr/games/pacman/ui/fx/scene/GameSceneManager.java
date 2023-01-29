@@ -58,7 +58,7 @@ public class GameSceneManager {
 		// only static
 	}
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final int BOOT_SCENE_INDEX = 0;
 	private static final int INTRO_SCENE_INDEX = 1;
@@ -91,10 +91,10 @@ public class GameSceneManager {
 		try {
 			GameScene2D scene2D = clazz.getDeclaredConstructor().newInstance();
 			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
-			LOGGER.trace("2D game scene created: '%s'", scene2D.getClass().getName());
+			LOG.trace("2D game scene created: '%s'", scene2D.getClass().getName());
 			return scene2D;
 		} catch (Exception e) {
-			LOGGER.error("Could not create 2D game scene of class '%s'", clazz.getName());
+			LOG.error("Could not create 2D game scene of class '%s'", clazz.getName());
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -109,7 +109,7 @@ public class GameSceneManager {
 		playScene3D.squirtingEffectPy.bind(Env3D.squirtingEffectPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env3D.axesVisiblePy);
 		playScene3D.ambientLight().colorProperty().bind(Env3D.lightColorPy);
-		LOGGER.trace("3D game scene created: '%s'", playScene3D.getClass().getName());
+		LOG.trace("3D game scene created: '%s'", playScene3D.getClass().getName());
 		return playScene3D;
 	}
 

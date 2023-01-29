@@ -64,7 +64,7 @@ public class World3D extends Group {
 		PhongMaterial topMaterial;
 	}
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final int MAZE_RESOLUTION = 4; // 1, 2, 4, 8 are allowed values
 	private static final double FLOOR_THICKNESS = 0.1;
@@ -148,14 +148,14 @@ public class World3D extends Group {
 		var doorWings = world.ghostHouse().door().tiles().map(tile -> createDoorWing(tile, mazeColors.doorColor()))
 				.toList();
 		doorWingsGroup.getChildren().setAll(doorWings);
-		LOGGER.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
+		LOG.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
 //	private void transformMaze() {
 //		if (world instanceof MapBasedWorld mapWorld) {
 //			wallsGroup.getChildren().forEach(wall -> {
 //				WallData data = (WallData) wall.getUserData();
-//				LOGGER.info("Wall data type is %d", data.type);
+//				LOG.info("Wall data type is %d", data.type);
 //				var tile = tileFromFloorPlanCoord(data.x, data.y);
 //				switch (data.type) {
 //				case FloorPlan.HWALL -> {

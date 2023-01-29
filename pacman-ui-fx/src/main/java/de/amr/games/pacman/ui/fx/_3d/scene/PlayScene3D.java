@@ -83,7 +83,7 @@ import javafx.scene.transform.Translate;
  */
 public class PlayScene3D implements GameScene {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture", "none");
@@ -142,7 +142,7 @@ public class PlayScene3D implements GameScene {
 			levelContainer.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 
 			changeCameraPerspective(perspectivePy.get());
-			LOGGER.info("3D game level created.");
+			LOG.info("3D game level created.");
 		});
 	}
 
@@ -218,7 +218,7 @@ public class PlayScene3D implements GameScene {
 	public void changeCameraPerspective(Perspective newPerspective) {
 		var newCamera = getCamera(newPerspective);
 		if (newCamera == null) {
-			LOGGER.error("No camera found for perspective %s", newPerspective);
+			LOG.error("No camera found for perspective %s", newPerspective);
 			return;
 		}
 		if (newCamera != fxSubScene.getCamera()) {
@@ -326,7 +326,7 @@ public class PlayScene3D implements GameScene {
 		case CHANGING_TO_NEXT_LEVEL -> {
 			lockGameState();
 			ctx.level().ifPresent(level -> {
-				LOGGER.info("Starting level %d", level.number());
+				LOG.info("Starting level %d", level.number());
 				createGameLevel3D();
 				Actions.showFlashMessage(TextManager.message("level_starting", level.number()));
 			});

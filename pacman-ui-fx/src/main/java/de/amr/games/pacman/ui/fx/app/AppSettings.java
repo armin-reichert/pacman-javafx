@@ -39,7 +39,7 @@ import javafx.application.Application;
  */
 class AppSettings {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public final boolean fullScreen;
 	public final Perspective perspective;
@@ -68,7 +68,7 @@ class AppSettings {
 		try {
 			return Boolean.valueOf(parameters.getOrDefault(key, String.valueOf(defaultValue)));
 		} catch (Exception e) {
-			LOGGER.error("Error parsing boolean parameter '%s': %s", key, e.getMessage());
+			LOG.error("Error parsing boolean parameter '%s': %s", key, e.getMessage());
 			return defaultValue;
 		}
 	}
@@ -77,7 +77,7 @@ class AppSettings {
 		try {
 			return Float.valueOf(parameters.getOrDefault(key, String.valueOf(defaultValue)));
 		} catch (Exception e) {
-			LOGGER.error("Error parsing floating point parameter '%s': %s", key, e.getMessage());
+			LOG.error("Error parsing floating point parameter '%s': %s", key, e.getMessage());
 			return (float) defaultValue;
 		}
 	}
@@ -86,7 +86,7 @@ class AppSettings {
 		try {
 			return parser.apply(parameters.getOrDefault(key, String.valueOf(defaultValue)));
 		} catch (Exception e) {
-			LOGGER.error("Error parsing parameter '%s': %s", key, e.getMessage());
+			LOG.error("Error parsing parameter '%s': %s", key, e.getMessage());
 			return defaultValue;
 		}
 	}

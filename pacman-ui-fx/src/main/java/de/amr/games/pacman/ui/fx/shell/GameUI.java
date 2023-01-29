@@ -68,7 +68,7 @@ import javafx.stage.Stage;
  */
 public class GameUI implements GameEventListener {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = Ufx.image("icons/mspacman.png");
 
@@ -144,7 +144,7 @@ public class GameUI implements GameEventListener {
 		stage.setMinHeight(328);
 		stage.setOnCloseRequest(e -> {
 			gameLoop.stop();
-			LOGGER.info("Game loop stopped. Application closed.");
+			LOG.info("Game loop stopped. Application closed.");
 		});
 		stage.setScene(mainScene);
 	}
@@ -242,7 +242,7 @@ public class GameUI implements GameEventListener {
 		};
 		var sounds = Env.SOUND_DISABLED ? GameSounds.NO_SOUNDS : gameSounds;
 		gameController.setSounds(sounds);
-		LOGGER.info("Using sounds for game variant %s", variant);
+		LOG.info("Using sounds for game variant %s", variant);
 	}
 
 	@Override
@@ -255,7 +255,7 @@ public class GameUI implements GameEventListener {
 		}
 		}
 		currentGameScene.onGameEvent(event);
-		LOGGER.trace("Game UI received game event %s", event);
+		LOG.trace("Game UI received game event %s", event);
 	}
 
 	// this is dubious but we need some point in time where the animations are created

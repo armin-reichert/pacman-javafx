@@ -59,7 +59,7 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -68,15 +68,15 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new AppSettings(this);
-		LOGGER.info("Application settings: %s", settings);
+		LOG.info("Application settings: %s", settings);
 		Env.use3DPy.set(settings.use3D);
 		Env3D.perspectivePy.set(settings.perspective);
 		var gameController = new GameController(settings.variant);
 		var ui = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
 		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		ui.start();
-		LOGGER.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
-		LOGGER.info(() -> "Window size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
+		LOG.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
+		LOG.info(() -> "Window size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
 				primaryStage.getHeight(), settings.zoom, U.onOff(Env.use3DPy.get()), settings.perspective));
 	}
 }

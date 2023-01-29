@@ -47,7 +47,7 @@ import javafx.scene.transform.Rotate;
  */
 public class SectionCamera3D extends Section {
 
-	private static final Logger LOGGER = LogManager.getFormatterLogger();
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private final ComboBox<Perspective> comboPerspective;
 	private final ComboBox<Point3D> comboRotationAxis;
@@ -96,10 +96,10 @@ public class SectionCamera3D extends Section {
 	}
 
 	private void onPerspectiveChanged(Perspective perspective) {
-		LOGGER.info("Perspective changed to %s", perspective);
+		LOG.info("Perspective changed to %s", perspective);
 		var configurableCam = configurableCam(perspective);
 		configurableCam.ifPresent(cam -> {
-			LOGGER.info("Configurable camera: %s", cam);
+			LOG.info("Configurable camera: %s", cam);
 			sliderTransformX.setValue(cam.getTranslateX());
 			sliderTransformY.setValue(cam.getTranslateY());
 			sliderTransformZ.setValue(cam.getTranslateZ());
