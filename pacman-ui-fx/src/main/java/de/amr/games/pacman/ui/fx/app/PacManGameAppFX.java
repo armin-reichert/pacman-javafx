@@ -60,7 +60,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new AppSettings(getParameters().getNamed());
+		var settings = new Settings(getParameters().getNamed());
 		gameUI = new GameUI(primaryStage, settings);
 		gameUI.start();
 	}

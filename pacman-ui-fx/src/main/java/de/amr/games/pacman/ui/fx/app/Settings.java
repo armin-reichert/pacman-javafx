@@ -36,7 +36,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 /**
  * @author Armin Reichert
  */
-public class AppSettings {
+public class Settings {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
@@ -48,7 +48,7 @@ public class AppSettings {
 
 	private final Map<String, String> parameters;
 
-	public AppSettings(Map<String, String> parameters) {
+	public Settings(Map<String, String> parameters) {
 		this.parameters = Objects.requireNonNull(parameters);
 		fullScreen = parse("fullScreen", false, Boolean::valueOf);
 		perspective = parse("perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
