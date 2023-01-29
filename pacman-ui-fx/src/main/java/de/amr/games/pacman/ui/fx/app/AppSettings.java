@@ -50,35 +50,17 @@ class AppSettings {
 
 	public AppSettings(Map<String, String> parameters) {
 		this.parameters = Objects.requireNonNull(parameters);
-		fullScreen = parseBoolean("fullScreen", false);
+		fullScreen = parse("fullScreen", false, Boolean::valueOf);
 		perspective = parse("perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
-		use3D = parseBoolean("use3D", false);
+		use3D = parse("use3D", false, Boolean::valueOf);
 		variant = parse("variant", GameVariant.PACMAN, GameVariant::valueOf);
-		zoom = parseFloat("zoom", 2.0);
+		zoom = parse("zoom", 2.0f, Float::valueOf);
 	}
 
 	@Override
 	public String toString() {
 		return "{fullScreen=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f}".formatted(fullScreen, perspective, use3D,
 				variant, zoom);
-	}
-
-	private boolean parseBoolean(String key, boolean defaultValue) {
-		try {
-			return Boolean.valueOf(parameters.getOrDefault(key, String.valueOf(defaultValue)));
-		} catch (Exception e) {
-			LOG.error("Error parsing boolean parameter '%s': %s", key, e.getMessage());
-			return defaultValue;
-		}
-	}
-
-	private float parseFloat(String key, double defaultValue) {
-		try {
-			return Float.valueOf(parameters.getOrDefault(key, String.valueOf(defaultValue)));
-		} catch (Exception e) {
-			LOG.error("Error parsing floating point parameter '%s': %s", key, e.getMessage());
-			return (float) defaultValue;
-		}
 	}
 
 	private <T> T parse(String key, T defaultValue, Function<String, T> parser) {
