@@ -29,7 +29,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
@@ -64,6 +63,8 @@ public class PacManGameAppFX extends Application {
 		launch(args);
 	}
 
+	private GameUI gameUI;
+
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new AppSettings(getParameters().getNamed());
@@ -71,11 +72,13 @@ public class PacManGameAppFX extends Application {
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 		var gameController = new GameController(settings.variant);
-		var ui = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
-		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		ui.start();
-		LOG.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
-		LOG.info(() -> "Window size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
-				primaryStage.getHeight(), settings.zoom, U.onOff(Env.ThreeD.enabledPy.get()), settings.perspective));
+		gameUI = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
+		gameUI.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameUI.start();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		gameUI.stop();
 	}
 }

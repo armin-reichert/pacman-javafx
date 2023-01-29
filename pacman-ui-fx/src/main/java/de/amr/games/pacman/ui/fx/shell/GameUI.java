@@ -32,6 +32,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -112,6 +113,14 @@ public class GameUI implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 		gameLoop().start();
+		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.getTargetFramerate());
+		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
+				U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
+	}
+
+	public void stop() {
+		gameLoop.stop();
+		LOG.info("Game stopped");
 	}
 
 	private void configureGameLoop() {
@@ -138,10 +147,6 @@ public class GameUI implements GameEventListener {
 		stage.setFullScreen(fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		stage.setOnCloseRequest(e -> {
-			gameLoop.stop();
-			LOG.info("Game loop stopped. Application closed.");
-		});
 		stage.setScene(mainScene);
 	}
 
