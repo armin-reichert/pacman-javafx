@@ -38,6 +38,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.app.AppSettings;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
@@ -85,16 +86,18 @@ public class GameUI implements GameEventListener {
 	private KeyboardSteering kbSteering;
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage primaryStage, float zoom, boolean fullScreen) {
-		this.gameController = Objects.requireNonNull(gameController);
-		this.stage = Objects.requireNonNull(primaryStage);
+	public GameUI(Stage stage, AppSettings settings) {
+		LOG.info("Application settings: %s", settings);
+		gameController = new GameController(settings.variant);
+		this.stage = Objects.requireNonNull(stage);
 		Keyboard.addHandler(this::onKeyPressed);
+		setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		GameEvents.addListener(this);
 		Actions.setUI(this);
-		createMainScene(zoom);
-		configureStage(fullScreen);
+		createMainScene(settings.zoom);
+		configureStage(settings.fullScreen);
 		configureGameLoop();
-		bindWithEnv();
+		initEnv(settings);
 	}
 
 	public void setSteeringKeys(KeyCode keyUp, KeyCode keyDown, KeyCode keyLeft, KeyCode keyRight) {
@@ -132,7 +135,9 @@ public class GameUI implements GameEventListener {
 		gameLoop.setRenderTask(this::updateUI);
 	}
 
-	private void bindWithEnv() {
+	private void initEnv(AppSettings settings) {
+		Env.ThreeD.enabledPy.set(settings.use3D);
+		Env.ThreeD.perspectivePy.set(settings.perspective);
 		Env.mainSceneBgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.Simulation.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
 		Env.ThreeD.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());

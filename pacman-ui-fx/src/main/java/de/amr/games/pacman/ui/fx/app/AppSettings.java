@@ -36,7 +36,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 /**
  * @author Armin Reichert
  */
-class AppSettings {
+public class AppSettings {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 

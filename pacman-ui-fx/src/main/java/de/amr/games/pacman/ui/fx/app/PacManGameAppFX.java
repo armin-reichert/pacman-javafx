@@ -25,17 +25,12 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
-import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import javafx.application.Application;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -57,8 +52,6 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -68,12 +61,7 @@ public class PacManGameAppFX extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new AppSettings(getParameters().getNamed());
-		LOG.info("Application settings: %s", settings);
-		Env.ThreeD.enabledPy.set(settings.use3D);
-		Env.ThreeD.perspectivePy.set(settings.perspective);
-		var gameController = new GameController(settings.variant);
-		gameUI = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
-		gameUI.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		gameUI = new GameUI(primaryStage, settings);
 		gameUI.start();
 	}
 
