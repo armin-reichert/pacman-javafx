@@ -103,7 +103,7 @@ public class Food3D extends Group {
 		}
 		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
-		var delayHiding = Ufx.pause(0.05, () -> pellet3D.setVisible(false));
+		var delayHiding = Ufx.afterSeconds(0.05, () -> pellet3D.setVisible(false));
 		var eatenAnimation = pellet3D.getEatenAnimation();
 		if (eatenAnimation.isPresent()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();

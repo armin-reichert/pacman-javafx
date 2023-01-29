@@ -93,7 +93,7 @@ public class Ufx {
 	 * @param action  code to run
 	 * @return pause transition
 	 */
-	public static PauseTransition pause(double seconds, Runnable action) {
+	public static PauseTransition afterSeconds(double seconds, Runnable action) {
 		PauseTransition pause = pause(seconds);
 		pause.setOnFinished(e -> action.run());
 		return pause;

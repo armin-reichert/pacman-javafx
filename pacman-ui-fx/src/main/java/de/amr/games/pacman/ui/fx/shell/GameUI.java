@@ -106,16 +106,12 @@ public class GameUI implements GameEventListener {
 	}
 
 	public void start() {
-		playGreetingVoiceAfterSec(1.0);
+		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 		gameController.boot();
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
 		gameLoop().start();
-	}
-
-	public void playGreetingVoiceAfterSec(double sec) {
-		Ufx.pause(sec, Actions::playHelpVoiceMessage).play();
 	}
 
 	private void configureGameLoop() {

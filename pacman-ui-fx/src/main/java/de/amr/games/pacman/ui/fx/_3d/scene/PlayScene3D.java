@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.Ufx.pause;
+import static de.amr.games.pacman.ui.fx.util.Ufx.afterSeconds;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -330,7 +331,7 @@ public class PlayScene3D implements GameScene {
 				createGameLevel3D();
 				Actions.showFlashMessage(TextManager.message("level_starting", level.number()));
 			});
-			pause(3, this::unlockGameState).play();
+			afterSeconds(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
@@ -341,8 +342,8 @@ public class PlayScene3D implements GameScene {
 				var animation = new SequentialTransition( //
 						pause(1.0), //
 						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : pause(1.0), //
-						pause(1.0, level.pac()::hide), //
-						pause(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
+						afterSeconds(1.0, level.pac()::hide), //
+						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
 						pause(2.0) //
 				);
 				animation.setOnFinished(evt -> unlockGameState());
