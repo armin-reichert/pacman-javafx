@@ -109,6 +109,7 @@ public interface GameScene extends GameEventListener {
 	 * Called when a key has been pressed. The keyboard state can be queried using the {@link Keyboard} class.
 	 */
 	default void onKeyPressed() {
+		// empty default
 	}
 
 	/**
