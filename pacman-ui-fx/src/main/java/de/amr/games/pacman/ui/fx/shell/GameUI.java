@@ -32,6 +32,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
@@ -245,27 +246,27 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onGameEvent(GameEvent event) {
+		LOG.trace("Game UI received game event %s", event);
 		switch (event.type) {
 		case GAME_STATE_CHANGED -> updateGameScene(false);
+		case LEVEL_STARTING -> {
+			gameController.game().level().ifPresent(this::createLevelAnimations);
+			updateGameScene(true);
+		}
 		case UNSPECIFIED_CHANGE -> updateGameScene(true);
-		case LEVEL_STARTING -> onLevelStarting(event);
-		default -> { // let current scene handle event
+		default -> {
+			// ignore
 		}
 		}
 		currentGameScene.onGameEvent(event);
-		LOG.trace("Game UI received game event %s", event);
 	}
 
-	// this is dubious but we need some point in time where the animations are created
-	@Override
-	public void onLevelStarting(GameEvent e) {
-		gameController.game().level().ifPresent(level -> {
-			var r = currentGameScene.ctx().r2D();
-			level.pac().setAnimations(r.createPacAnimations(level.pac()));
-			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
-			level.world().addAnimation("flashing", r.createMazeFlashingAnimation());
-		});
-		updateGameScene(true);
+	private void createLevelAnimations(GameLevel level) {
+		var r = currentGameScene.ctx().r2D();
+		level.pac().setAnimations(r.createPacAnimations(level.pac()));
+		level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
+		level.world().addAnimation("flashing", r.createMazeFlashingAnimation());
+		LOG.trace("Created level animations for level #%d", level.number());
 	}
 
 	private void onKeyPressed() {
