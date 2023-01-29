@@ -55,11 +55,14 @@ public class Env {
 	public static final boolean SOUND_UNSUPPORTED = false;
 
 	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
-	public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
-	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
-	public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
-	public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
+
+	public static final class Simulation {
+		public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
+		public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
+		public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
+		public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
+	}
 
 	public static final class PiP {
 		public static final BooleanProperty visiblePy = new SimpleBooleanProperty(false);

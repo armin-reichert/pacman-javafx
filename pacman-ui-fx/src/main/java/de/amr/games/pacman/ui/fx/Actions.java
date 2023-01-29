@@ -169,18 +169,18 @@ public class Actions {
 	}
 
 	public static void togglePaused() {
-		Ufx.toggle(Env.pausedPy);
-		gameController().sounds().setMuted(Env.pausedPy.get());
+		Ufx.toggle(Env.Simulation.pausedPy);
+		gameController().sounds().setMuted(Env.Simulation.pausedPy.get());
 	}
 
 	public static void oneSimulationStep() {
-		if (Env.pausedPy.get()) {
+		if (Env.Simulation.pausedPy.get()) {
 			ui.gameLoop().step(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
-		if (Env.pausedPy.get()) {
+		if (Env.Simulation.pausedPy.get()) {
 			ui.gameLoop().nsteps(10, true);
 		}
 	}

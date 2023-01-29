@@ -129,12 +129,12 @@ public class GameUI implements GameEventListener {
 	private void bindWithEnv() {
 		Env.ThreeD.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.mainSceneBgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
-		Env.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
+		Env.Simulation.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
 		pipView.heightPy.bind(Env.PiP.sceneHeightPy);
 		pipView.opacityProperty().bind(Env.PiP.opacityPy);
-		gameLoop.pausedPy.bind(Env.pausedPy);
-		gameLoop.targetFrameratePy.bind(Env.targetFrameratePy);
-		gameLoop.measuredPy.bind(Env.timeMeasuredPy);
+		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
+		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
+		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
 	}
 
 	private void configureStage(boolean fullScreen) {
@@ -180,7 +180,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateStageFrame() {
-		var pausedText = Env.pausedPy.get() ? " (paused)" : "";
+		var pausedText = Env.Simulation.pausedPy.get() ? " (paused)" : "";
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			stage.setTitle("Ms. Pac-Man" + pausedText);
