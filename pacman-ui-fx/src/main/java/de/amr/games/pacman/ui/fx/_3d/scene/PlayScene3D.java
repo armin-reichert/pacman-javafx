@@ -23,8 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.ui.fx.util.Ufx.pause;
 import static de.amr.games.pacman.ui.fx.util.Ufx.afterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.pause;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -304,7 +304,7 @@ public class PlayScene3D implements GameScene {
 				level.ghosts().filter(level.pac()::sameTile).findAny().ifPresent(killer -> {
 					lockGameState();
 					var animation = new SequentialTransition( //
-							pause(0.3), //
+							pause(0.2), //
 							level3D.pac3D().createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
 							pause(2.0) //
 					);
