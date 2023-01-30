@@ -30,11 +30,8 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.model.mspacman.MsPacManGame;
-import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.util.GameLoop;
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -46,13 +43,13 @@ import javafx.stage.Stage;
  * The application is structured according to the MVC (model-view-controller) design pattern.
  * 
  * <p>
- * The model layer consists of the two game models {@link PacManGame} and {@link MsPacManGame}. The controller
- * {@link GameController} is a finite-state machine which is triggered 60 times per second by the {@link GameLoop}. The
- * view {@link GameUI} listens to game events sent from the controller/model layer.
+ * The model layer consists of the two game models <code>PacManGame</code> and <code> MsPacManGame</code>.
  * <p>
- * The model and controller layers are decoupled from the user interface. This allow to attach different user interfaces
- * without having to change the controller or model. As a proof of concept I implemented also a (simpler) Swing user
- * interface, see repository {@code pacman-ui-swing}.
+ * The game controller is a finite-state machine which is triggered 60 times per second by the game loop. The UI listens
+ * to game events sent from the controller/model layer.
+ * <p>
+ * This afrchitecture allow to attach different user interfaces without having to change the controller or model. As a
+ * proof of concept see the (simpler) Swing user interface in repository {@code pacman-ui-swing}.
  * 
  * @author Armin Reichert
  */
