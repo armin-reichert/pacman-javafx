@@ -25,15 +25,12 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.util.GameLoop;
 import javafx.application.Application;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 /**
@@ -43,36 +40,33 @@ import javafx.stage.Stage;
  * The application is structured according to the MVC (model-view-controller) design pattern.
  * 
  * <p>
- * The model layer consists of the two game models <code>PacManGame</code> and <code> MsPacManGame</code>.
+ * The model layer consists of the two game models {@link PacManGame} and {@link MsPacManGame}. The controller
+ * {@link GameController} is a finite-state machine which is triggered 60 times per second by the {@link GameLoop}. The
+ * view {@link GameUI} listens to game events sent from the controller/model layer.
  * <p>
- * The game controller is a finite-state machine which is triggered 60 times per second by the game loop. The UI listens
- * to game events sent from the controller/model layer.
- * <p>
- * This afrchitecture allow to attach different user interfaces without having to change the controller or model. As a
- * proof of concept see the (simpler) Swing user interface in repository {@code pacman-ui-swing}.
+ * The model and controller layers are decoupled from the user interface. This allow to attach different user interfaces
+ * without having to change the controller or model. As a proof of concept I implemented also a (simpler) Swing user
+ * interface, see repository {@code pacman-ui-swing}.
  * 
  * @author Armin Reichert
  */
 public class PacManGameAppFX extends Application {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	private GameUI gameUI;
+
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new AppSettings(this);
-		LOG.info("Application settings: %s", settings);
-		Env.ThreeD.enabledPy.set(settings.use3D);
-		Env.ThreeD.perspectivePy.set(settings.perspective);
-		var gameController = new GameController(settings.variant);
-		var ui = new GameUI(gameController, primaryStage, settings.zoom, settings.fullScreen);
-		ui.setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		ui.start();
-		LOG.info("Game started. Target frame rate: %d", ui.gameLoop().getTargetFramerate());
-		LOG.info(() -> "Window size: %.0f x %.0f, zoom: %.2f, 3D: %s, perspective: %s".formatted(primaryStage.getWidth(),
-				primaryStage.getHeight(), settings.zoom, U.onOff(Env.ThreeD.enabledPy.get()), settings.perspective));
+		var settings = new Settings(getParameters().getNamed());
+		gameUI = new GameUI(primaryStage, settings);
+		gameUI.start();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		gameUI.stop();
 	}
 }
