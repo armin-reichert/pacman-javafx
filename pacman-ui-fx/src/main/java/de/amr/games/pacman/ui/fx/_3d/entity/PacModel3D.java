@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.ui.fx.Env;
-import de.amr.games.pacman.ui.fx.ResourceMgr;
+import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;

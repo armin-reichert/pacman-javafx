@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.animation.Transition;
 import javafx.util.Duration;
 

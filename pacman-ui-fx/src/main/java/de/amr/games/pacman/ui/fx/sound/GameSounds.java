@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
-import de.amr.games.pacman.ui.fx.ResourceMgr;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
