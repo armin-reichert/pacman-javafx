@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.net.URL;
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Objects;
 
@@ -47,7 +46,7 @@ public class ResourceMgr {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final String RESOURCE_ROOT_DIR = "/de/amr/games/pacman/ui/fx/";
-	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
+
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
 	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";

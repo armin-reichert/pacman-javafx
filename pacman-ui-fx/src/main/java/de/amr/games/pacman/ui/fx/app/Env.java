@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import java.util.List;
+
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import javafx.beans.property.BooleanProperty;
@@ -62,6 +64,7 @@ public class Env {
 	}
 
 	public static class ThreeD {
+		public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
 		public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 		public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 		public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true);

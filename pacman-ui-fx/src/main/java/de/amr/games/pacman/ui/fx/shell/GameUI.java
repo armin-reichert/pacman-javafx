@@ -72,6 +72,7 @@ import javafx.stage.Stage;
 public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+
 	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 
