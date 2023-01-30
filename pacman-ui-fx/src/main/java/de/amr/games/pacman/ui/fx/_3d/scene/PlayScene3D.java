@@ -53,12 +53,12 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Modifier;
 import de.amr.games.pacman.ui.fx.util.TextManager;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -133,7 +133,7 @@ public class PlayScene3D implements GameScene {
 		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
 		level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
-				() -> "none".equals(floorTexturePy.get()) ? null : Ufx.image("graphics/" + floorTexturePy.get()),
+				() -> "none".equals(floorTexturePy.get()) ? null : ResourceMgr.image("graphics/" + floorTexturePy.get()),
 				floorTexturePy));
 		level3D.world3D().floorColorPy.bind(floorColorPy);
 		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);

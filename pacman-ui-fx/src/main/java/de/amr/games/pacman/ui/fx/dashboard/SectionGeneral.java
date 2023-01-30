@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
@@ -53,9 +54,9 @@ public class SectionGeneral extends Section {
 	private CheckBox cbUsePlayScene3D;
 	private CheckBox cbDebugUI;
 	private CheckBox cbTimeMeasured;
-	private ImageView iconPlay = new ImageView(Ufx.image("icons/play.png"));
-	private ImageView iconStop = new ImageView(Ufx.image("icons/stop.png"));
-	private ImageView iconStep = new ImageView(Ufx.image("icons/step.png"));
+	private ImageView iconPlay = new ImageView(ResourceMgr.image("icons/play.png"));
+	private ImageView iconStop = new ImageView(ResourceMgr.image("icons/stop.png"));
+	private ImageView iconStep = new ImageView(ResourceMgr.image("icons/step.png"));
 	private Tooltip tooltipPlay = new Tooltip("Play");
 	private Tooltip tooltipStop = new Tooltip("Stop");
 	private Tooltip tooltipStep = new Tooltip("Single Step Mode");

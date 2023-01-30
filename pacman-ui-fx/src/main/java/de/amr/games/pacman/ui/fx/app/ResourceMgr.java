@@ -27,11 +27,24 @@ package de.amr.games.pacman.ui.fx.app;
 import java.net.URL;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.Objects;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
 public class ResourceMgr {
+
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final String RESOURCE_ROOT_DIR = "/de/amr/games/pacman/ui/fx/";
 	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
@@ -67,5 +80,38 @@ public class ResourceMgr {
 			throw new MissingResourceException("Missing resource, path=" + fullPath, "", fullPath);
 		}
 		return url;
+	}
+
+	public static Font font(String relPath, double size) {
+		Objects.requireNonNull(relPath, "Font path cannot be NULL");
+		var url = ResourceMgr.urlFromRelPath(relPath);
+		if (url == null) {
+			LOG.error(() -> "Font at '%s' not found".formatted(ResourceMgr.toFullPath(relPath)));
+			return Font.font(Font.getDefault().getFamily(), size);
+		}
+		var font = Font.loadFont(url.toExternalForm(), size);
+		if (font == null) {
+			LOG.error(() -> "Font at '%s' not loaded".formatted(ResourceMgr.toFullPath(relPath)));
+			return Font.font(Font.getDefault().getFamily(), size);
+		}
+		return font;
+	}
+
+	public static Image image(String relPath) {
+		Objects.requireNonNull(relPath, "Image path cannot be NULL");
+		var url = ResourceMgr.urlFromRelPath(relPath);
+		if (url == null) {
+			LOG.error(() -> "No image found at path '%s'".formatted(ResourceMgr.toFullPath(relPath)));
+			return null;
+		}
+		return new Image(url.toExternalForm());
+	}
+
+	public static Background colorBackground(Color color) {
+		return new Background(new BackgroundFill(color, null, null));
+	}
+
+	public static Background imageBackground(String relPath) {
+		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 }

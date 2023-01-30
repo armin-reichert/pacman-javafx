@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.image.Image;
@@ -44,10 +45,10 @@ public final class PacManGameAssets {
 	public static final String COPYRIGHT_TEXT = "\u00A9 1980 MIDWAY MFG.CO.";
 
 	public static final Spritesheet SPRITESHEET = new Spritesheet(//
-			Ufx.image("graphics/pacman/sprites.png"), 16, //
+			ResourceMgr.image("graphics/pacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-	public static final Image MAZE_FULL = Ufx.image("graphics/pacman/maze_full.png");
-	public static final Image MAZE_EMPTY = Ufx.image("graphics/pacman/maze_empty.png");
+	public static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
+	public static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
 	public static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
 	private PacManGameAssets() {

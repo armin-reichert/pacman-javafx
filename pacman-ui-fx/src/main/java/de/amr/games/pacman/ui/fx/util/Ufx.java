@@ -24,12 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.util;
 
 import java.util.Map;
-import java.util.Objects;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
@@ -38,12 +33,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 /**
@@ -55,8 +46,6 @@ public class Ufx {
 
 	private Ufx() {
 	}
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static void toggle(BooleanProperty booleanProperty) {
 		booleanProperty.set(!booleanProperty.get());
@@ -116,38 +105,5 @@ public class Ufx {
 			}
 		}
 		return result;
-	}
-
-	public static Background colorBackground(Color color) {
-		return new Background(new BackgroundFill(color, null, null));
-	}
-
-	public static Background imageBackground(String relPath) {
-		return new Background(new BackgroundImage(Ufx.image(relPath), null, null, null, null));
-	}
-
-	public static Font font(String relPath, double size) {
-		Objects.requireNonNull(relPath, "Font path cannot be NULL");
-		var url = ResourceMgr.urlFromRelPath(relPath);
-		if (url == null) {
-			LOG.error(() -> "Font at '%s' not found".formatted(ResourceMgr.toFullPath(relPath)));
-			return Font.font(Font.getDefault().getFamily(), size);
-		}
-		var font = Font.loadFont(url.toExternalForm(), size);
-		if (font == null) {
-			LOG.error(() -> "Font at '%s' not loaded".formatted(ResourceMgr.toFullPath(relPath)));
-			return Font.font(Font.getDefault().getFamily(), size);
-		}
-		return font;
-	}
-
-	public static Image image(String relPath) {
-		Objects.requireNonNull(relPath, "Image path cannot be NULL");
-		var url = ResourceMgr.urlFromRelPath(relPath);
-		if (url == null) {
-			LOG.error(() -> "No image found at path '%s'".formatted(ResourceMgr.toFullPath(relPath)));
-			return null;
-		}
-		return new Image(url.toExternalForm());
 	}
 }

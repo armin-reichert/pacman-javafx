@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.ObjModel;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -55,7 +54,7 @@ public class PacModel3D {
 	private static final String ID_PAC_HEAD = "Sphere_yellow_packman";
 	private static final String ID_PAC_PALATE = "Sphere_grey_wall";
 	private static final double PAC_SIZE = 9.0;
-	private static final Image PAC_FACE_TEXTURE = Ufx.image("graphics/gold_sandblasted_specular.jpeg");
+	private static final Image PAC_FACE_TEXTURE = ResourceMgr.image("graphics/gold_sandblasted_specular.jpeg");
 
 	private static Translate centerOverOrigin(Node node) {
 		var bounds = node.getBoundsInLocal();

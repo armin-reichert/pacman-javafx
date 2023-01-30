@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
@@ -74,10 +75,10 @@ public final class MsPacManGameAssets {
 	public static final int THIRD_COLUMN = 456;
 
 	public static final Spritesheet SPRITESHEET = new Spritesheet(//
-			Ufx.image("graphics/mspacman/sprites.png"), 16, //
+			ResourceMgr.image("graphics/mspacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	public static final Image MIDWAY_LOGO = Ufx.image("graphics/mspacman/midway.png");
+	public static final Image MIDWAY_LOGO = ResourceMgr.image("graphics/mspacman/midway.png");
 
 	public static final Image[] MAZES_EMPTY_INV = new Image[6];
 	static {

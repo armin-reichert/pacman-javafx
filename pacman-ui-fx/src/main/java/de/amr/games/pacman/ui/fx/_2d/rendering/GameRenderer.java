@@ -42,8 +42,8 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -96,7 +96,7 @@ public abstract class GameRenderer implements Rendering2D {
 		//@formatter:on
 	}
 
-	private static final Font ARCADE_FONT_TS = Ufx.font("fonts/emulogic.ttf", TS);
+	private static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
 
 	public abstract Spritesheet spritesheet();
 

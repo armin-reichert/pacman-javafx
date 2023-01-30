@@ -38,6 +38,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -71,8 +72,8 @@ import javafx.stage.Stage;
 public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-	private static final Image APP_ICON_PACMAN = Ufx.image("icons/pacman.png");
-	private static final Image APP_ICON_MSPACMAN = Ufx.image("icons/mspacman.png");
+	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
+	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 
 	private final GameController gameController;
 	private final Stage stage;
@@ -205,7 +206,7 @@ public class GameUI implements GameEventListener {
 	private void updateMainSceneBackground() {
 		var bgColor = Env.ThreeD.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) mainScene.getRoot();
-		sceneRoot.setBackground(Ufx.colorBackground(bgColor));
+		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
 	}
 
 	// public visible such that Actions class can call it
