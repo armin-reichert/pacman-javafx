@@ -76,8 +76,19 @@ public class GameUI implements GameEventListener {
 
 	private final GameController gameController;
 	private final Stage stage;
-	private final GameLoop gameLoop = new GameLoop(GameModel.FPS);
+	private final GameLoop gameLoop = new GameLoop(GameModel.FPS) {
+		@Override
+		public void doUpdate() {
+			gameController.update();
+			currentGameScene.onTick();
+			Keyboard.clear();
+		}
 
+		@Override
+		public void doRender() {
+			updateUI();
+		}
+	};
 	private Scene mainScene;
 	private Group gameSceneParent;
 	private Dashboard dashboard;
@@ -95,7 +106,6 @@ public class GameUI implements GameEventListener {
 		Actions.setUI(this);
 		createMainScene(settings.zoom);
 		configureStage(settings.fullScreen);
-		configureGameLoop();
 		initEnv(settings);
 		setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 	}
@@ -124,15 +134,6 @@ public class GameUI implements GameEventListener {
 	public void stop() {
 		gameLoop.stop();
 		LOG.info("Game stopped");
-	}
-
-	private void configureGameLoop() {
-		gameLoop.setUpdateTask(() -> {
-			gameController.update();
-			currentGameScene.onTick();
-			Keyboard.clear();
-		});
-		gameLoop.setRenderTask(this::updateUI);
 	}
 
 	private void initEnv(Settings settings) {

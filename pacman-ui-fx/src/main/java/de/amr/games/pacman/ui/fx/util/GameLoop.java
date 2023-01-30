@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.util;
 
-import java.util.Objects;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,15 +53,19 @@ public class GameLoop {
 	private long fps;
 	private long fpsCountStartTime;
 	private long frames;
-	private Runnable updateTask = () -> {
-	};
-	private Runnable renderTask = () -> {
-	};
 
 	public GameLoop(int targetFramerate) {
 		targetFrameratePy.set(targetFramerate);
 		targetFrameratePy.addListener((x, y, newFramerate) -> updateClock(newFramerate.intValue()));
 		updateClock(targetFramerate);
+	}
+
+	public void doUpdate() {
+		// empty by default
+	}
+
+	public void doRender() {
+		// empty by default
 	}
 
 	private void updateClock(int fps) {
@@ -86,14 +88,6 @@ public class GameLoop {
 
 	public int getTargetFramerate() {
 		return targetFrameratePy.get();
-	}
-
-	public void setUpdateTask(Runnable updateTask) {
-		this.updateTask = Objects.requireNonNull(updateTask);
-	}
-
-	public void setRenderTask(Runnable renderTask) {
-		this.renderTask = Objects.requireNonNull(renderTask);
 	}
 
 	public boolean isPaused() {
@@ -129,10 +123,10 @@ public class GameLoop {
 	public void step(boolean updateEnabled) {
 		long tickTime = System.nanoTime();
 		if (updateEnabled) {
-			runTask(updateTask, "Update phase: %f milliseconds");
+			runTask(this::doUpdate, "Update phase: %f milliseconds");
 			updateCount++;
 		}
-		runTask(renderTask, "Render phase: %f milliseconds");
+		runTask(this::doRender, "Render phase: %f milliseconds");
 		++frames;
 		computeFrameRate(tickTime);
 	}
