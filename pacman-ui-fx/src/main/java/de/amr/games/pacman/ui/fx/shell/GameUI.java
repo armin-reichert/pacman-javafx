@@ -32,11 +32,13 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.Actions;
 import de.amr.games.pacman.ui.fx.Env;
+import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
@@ -84,16 +86,18 @@ public class GameUI implements GameEventListener {
 	private KeyboardSteering kbSteering;
 	private GameScene currentGameScene;
 
-	public GameUI(GameController gameController, Stage primaryStage, float zoom, boolean fullScreen) {
-		this.gameController = Objects.requireNonNull(gameController);
-		this.stage = Objects.requireNonNull(primaryStage);
+	public GameUI(Stage stage, Settings settings) {
+		LOG.info("Application settings: %s", settings);
+		gameController = new GameController(settings.variant);
+		this.stage = Objects.requireNonNull(stage);
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addListener(this);
 		Actions.setUI(this);
-		createMainScene(zoom);
-		configureStage(fullScreen);
+		createMainScene(settings.zoom);
+		configureStage(settings.fullScreen);
 		configureGameLoop();
-		bindWithEnv();
+		initEnv(settings);
+		setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 	}
 
 	public void setSteeringKeys(KeyCode keyUp, KeyCode keyDown, KeyCode keyLeft, KeyCode keyRight) {
@@ -106,16 +110,20 @@ public class GameUI implements GameEventListener {
 	}
 
 	public void start() {
+		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 		gameController.boot();
 		stage.centerOnScreen();
-		stage.show();
 		stage.requestFocus();
-		playGreetingVoiceAfterSec(1.0);
+		stage.show();
 		gameLoop().start();
+		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.getTargetFramerate());
+		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
+				U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
 	}
 
-	public void playGreetingVoiceAfterSec(double sec) {
-		Ufx.pause(sec, Actions::playHelpVoiceMessage).play();
+	public void stop() {
+		gameLoop.stop();
+		LOG.info("Game stopped");
 	}
 
 	private void configureGameLoop() {
@@ -127,25 +135,23 @@ public class GameUI implements GameEventListener {
 		gameLoop.setRenderTask(this::updateUI);
 	}
 
-	private void bindWithEnv() {
-		Env.ThreeD.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+	private void initEnv(Settings settings) {
+		Env.ThreeD.enabledPy.set(settings.use3D);
+		Env.ThreeD.perspectivePy.set(settings.perspective);
 		Env.mainSceneBgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		Env.Simulation.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
-		pipView.heightPy.bind(Env.PiP.sceneHeightPy);
-		pipView.opacityProperty().bind(Env.PiP.opacityPy);
+		Env.ThreeD.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
 		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
+		pipView.heightPy.bind(Env.PiP.sceneHeightPy);
+		pipView.opacityProperty().bind(Env.PiP.opacityPy);
 	}
 
 	private void configureStage(boolean fullScreen) {
 		stage.setFullScreen(fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		stage.setOnCloseRequest(e -> {
-			gameLoop.stop();
-			LOG.info("Game loop stopped. Application closed.");
-		});
 		stage.setScene(mainScene);
 	}
 
