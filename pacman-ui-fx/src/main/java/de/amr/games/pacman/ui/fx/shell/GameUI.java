@@ -111,7 +111,7 @@ public class GameUI implements GameEventListener {
 
 	public void start() {
 		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
-		gameController.boot();
+		gameController.boot(); // after booting, current game scene is initialized
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
