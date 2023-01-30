@@ -33,6 +33,7 @@ import java.util.MissingResourceException;
  */
 public class ResourceMgr {
 
+	private static final String RESOURCE_ROOT_DIR = "/de/amr/games/pacman/ui/fx/";
 	public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
@@ -40,18 +41,30 @@ public class ResourceMgr {
 	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
-	public static String absPath(String relPath) {
-		return "/de/amr/games/pacman/ui/fx/" + relPath;
+	/**
+	 * @param relativePath relative path starting from resource root directory
+	 * @return full path to resource including path to resource root directory
+	 */
+	public static String toFullPath(String relativePath) {
+		return RESOURCE_ROOT_DIR + relativePath;
 	}
 
-	public static URL urlFromRelPath(String relPath) {
-		return url(absPath(relPath));
+	/**
+	 * @param relativePath relative path starting from resource root directory
+	 * @return URL of resource addressed by this path
+	 */
+	public static URL urlFromRelPath(String relativePath) {
+		return url(toFullPath(relativePath));
 	}
 
-	public static URL url(String absPath) {
-		var url = ResourceMgr.class.getResource(absPath);
+	/**
+	 * @param fullPath full path to resource including path to resource root directory
+	 * @return URL of resource addressed by this path
+	 */
+	public static URL url(String fullPath) {
+		var url = ResourceMgr.class.getResource(fullPath);
 		if (url == null) {
-			throw new MissingResourceException("Missing resource, path=" + absPath, "", absPath);
+			throw new MissingResourceException("Missing resource, path=" + fullPath, "", fullPath);
 		}
 		return url;
 	}

@@ -130,12 +130,12 @@ public class Ufx {
 		Objects.requireNonNull(relPath, "Font path cannot be NULL");
 		var url = ResourceMgr.urlFromRelPath(relPath);
 		if (url == null) {
-			LOG.error(() -> "Font at '%s' not found".formatted(ResourceMgr.absPath(relPath)));
+			LOG.error(() -> "Font at '%s' not found".formatted(ResourceMgr.toFullPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
-			LOG.error(() -> "Font at '%s' not loaded".formatted(ResourceMgr.absPath(relPath)));
+			LOG.error(() -> "Font at '%s' not loaded".formatted(ResourceMgr.toFullPath(relPath)));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		return font;
@@ -145,7 +145,7 @@ public class Ufx {
 		Objects.requireNonNull(relPath, "Image path cannot be NULL");
 		var url = ResourceMgr.urlFromRelPath(relPath);
 		if (url == null) {
-			LOG.error(() -> "No image found at path '%s'".formatted(ResourceMgr.absPath(relPath)));
+			LOG.error(() -> "No image found at path '%s'".formatted(ResourceMgr.toFullPath(relPath)));
 			return null;
 		}
 		return new Image(url.toExternalForm());

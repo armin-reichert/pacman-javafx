@@ -103,7 +103,7 @@ public class GameSounds implements GameSoundController {
 	private void loadClip(GameSound sound, String relPath) {
 		var url = ResourceMgr.urlFromRelPath(relPath);
 		if (url == null) {
-			LOG.error("Game sound %s could not be loaded: resource '%s' not found", sound, ResourceMgr.absPath(relPath));
+			LOG.error("Game sound %s could not be loaded: resource '%s' not found", sound, ResourceMgr.toFullPath(relPath));
 			return;
 		}
 		try {
