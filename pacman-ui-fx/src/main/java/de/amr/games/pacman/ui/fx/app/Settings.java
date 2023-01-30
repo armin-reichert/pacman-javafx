@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,35 +39,33 @@ public class Settings {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
+	private static <T> T parse(Map<String, String> parameters, String key, T defaultValue, Function<String, T> parser) {
+		try {
+			String valueAsString = parameters.getOrDefault(key, String.valueOf(defaultValue));
+			return parser.apply(valueAsString);
+		} catch (Exception e) {
+			LOG.error("Error parsing parameter '%s': %s", key, e.getMessage());
+			return defaultValue;
+		}
+	}
+
 	public final boolean fullScreen;
 	public final Perspective perspective;
 	public final boolean use3D;
 	public final GameVariant variant;
 	public final float zoom;
 
-	private final Map<String, String> parameters;
-
 	public Settings(Map<String, String> parameters) {
-		this.parameters = Objects.requireNonNull(parameters);
-		fullScreen = parse("fullScreen", false, Boolean::valueOf);
-		perspective = parse("perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
-		use3D = parse("use3D", false, Boolean::valueOf);
-		variant = parse("variant", GameVariant.PACMAN, GameVariant::valueOf);
-		zoom = parse("zoom", 2.0f, Float::valueOf);
+		fullScreen = parse(parameters, "fullScreen", false, Boolean::valueOf);
+		perspective = parse(parameters, "perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
+		use3D = parse(parameters, "use3D", false, Boolean::valueOf);
+		variant = parse(parameters, "variant", GameVariant.PACMAN, GameVariant::valueOf);
+		zoom = parse(parameters, "zoom", 2.0f, Float::valueOf);
 	}
 
 	@Override
 	public String toString() {
 		return "{fullScreen=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f}".formatted(fullScreen, perspective, use3D,
 				variant, zoom);
-	}
-
-	private <T> T parse(String key, T defaultValue, Function<String, T> parser) {
-		try {
-			return parser.apply(parameters.getOrDefault(key, String.valueOf(defaultValue)));
-		} catch (Exception e) {
-			LOG.error("Error parsing parameter '%s': %s", key, e.getMessage());
-			return defaultValue;
-		}
 	}
 }
