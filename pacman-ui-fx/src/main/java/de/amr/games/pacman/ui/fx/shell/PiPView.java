@@ -78,9 +78,11 @@ public class PiPView extends Pane {
 	}
 
 	public void update() {
-		LOG.trace("Update PiP view");
-		playScene.clear();
-		playScene.drawSceneContent();
-		playScene.drawHUD();
+		if (isVisible()) {
+			LOG.trace("Update PiP view");
+			playScene.clear();
+			playScene.drawSceneContent();
+			playScene.drawHUD();
+		}
 	}
 }

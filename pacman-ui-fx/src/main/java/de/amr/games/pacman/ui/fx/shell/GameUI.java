@@ -83,12 +83,15 @@ public class GameUI implements GameEventListener {
 		public void doUpdate() {
 			gameController.update();
 			currentGameScene.onTick();
+			pipView.setVisible(Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene));
 			Keyboard.clear();
 		}
 
 		@Override
 		public void doRender() {
-			updateUI();
+			flashMessageView.update();
+			dashboard.update();
+			pipView.update();
 		}
 	};
 	private Scene mainScene;
@@ -178,15 +181,6 @@ public class GameUI implements GameEventListener {
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		mainScene.heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
-	}
-
-	private void updateUI() {
-		flashMessageView.update();
-		dashboard.update();
-		pipView.setVisible(Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene));
-		if (pipView.isVisible()) {
-			pipView.update();
-		}
 	}
 
 	private void updateStageFrame() {
