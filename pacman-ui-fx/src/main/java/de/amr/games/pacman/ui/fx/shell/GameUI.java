@@ -120,16 +120,15 @@ public class GameUI implements GameEventListener {
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
-	private void createAndSetMainScene(Vector2i dimension, float zoom) {
+	private void createAndSetMainScene(Vector2i size, float zoom) {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
-		var size = dimension.toFloatVec().scaled(zoom);
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(new VBox(pipView));
 		var root = new StackPane(gameSceneParent, flashMessageView, overlayPane);
-		mainScene = new Scene(root, size.x(), size.y());
+		mainScene = new Scene(root, size.x() * zoom, size.y() * zoom);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		mainScene.heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
