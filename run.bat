@@ -1,0 +1,1 @@
+start /min .\tentackle\target\jlink\bin\run.cmd
