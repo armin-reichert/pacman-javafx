@@ -31,8 +31,6 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.Pane;
 
 /**
@@ -43,13 +41,6 @@ import javafx.scene.layout.Pane;
 public class PiPView extends Pane {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
-	public final DoubleProperty heightPy = new SimpleDoubleProperty() {
-		@Override
-		protected void invalidated() {
-			playScene.resizeToHeight((float) get());
-		}
-	};
 
 	private Vector2f minSize;
 	private Vector2f maxSize;
@@ -70,6 +61,10 @@ public class PiPView extends Pane {
 
 	public Vector2f maxSize() {
 		return maxSize;
+	}
+
+	public void setPlaySceneHeight(double height) {
+		playScene.resizeToHeight(height);
 	}
 
 	public void setContext(GameSceneContext context) {

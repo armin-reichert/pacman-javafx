@@ -134,16 +134,19 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv(Settings settings) {
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainSceneBackground());
+
+		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> updateMainSceneBackground());
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
-		Env.mainSceneBgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
-		Env.Simulation.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
-		Env.ThreeD.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.setPlaySceneHeight(newVal.doubleValue()));
+		pipView.opacityProperty().bind(Env.PiP.opacityPy);
+
+		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateStageFrame());
 		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
-		pipView.heightPy.bind(Env.PiP.sceneHeightPy);
-		pipView.opacityProperty().bind(Env.PiP.opacityPy);
 	}
 
 	private void configureStage(boolean fullScreen) {

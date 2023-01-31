@@ -121,7 +121,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void resizeToHeight(float height) {
+	public void resizeToHeight(double height) {
 		// nothing to do
 	}
 

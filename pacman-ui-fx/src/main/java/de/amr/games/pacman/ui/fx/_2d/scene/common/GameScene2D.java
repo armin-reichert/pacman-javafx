@@ -77,10 +77,10 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void resizeToHeight(float height) {
-		float aspectRatio = (float) size.x() / (float) size.y();
-		float width = aspectRatio * height;
-		float scaling = height / size.y();
+	public void resizeToHeight(double height) {
+		var aspectRatio = (double) size.x() / (double) size.y();
+		var width = aspectRatio * height;
+		var scaling = height / size.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));

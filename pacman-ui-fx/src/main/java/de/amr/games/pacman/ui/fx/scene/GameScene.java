@@ -84,7 +84,7 @@ public interface GameScene extends GameEventListener {
 	 * 
 	 * @param new height height in pixels
 	 */
-	void resizeToHeight(float height);
+	void resizeToHeight(double height);
 
 	/**
 	 * @return if this is a scene with 3D content
