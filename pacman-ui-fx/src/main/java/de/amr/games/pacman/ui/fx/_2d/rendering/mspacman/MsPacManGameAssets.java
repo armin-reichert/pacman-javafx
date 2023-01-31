@@ -67,10 +67,12 @@ public final class MsPacManGameAssets {
 		Color.rgb(222, 222, 255), 
 	};
 	//@formatter:on
+
 	public static final Color GHOSTHOUSE_DOOR_COLOR = Color.rgb(255, 183, 255);
 
 	public static final int MAZE_WIDTH = 226;
 	public static final int MAZE_HEIGHT = 248;
+
 	public static final int SECOND_COLUMN = 228;
 	public static final int THIRD_COLUMN = 456;
 
@@ -81,12 +83,13 @@ public final class MsPacManGameAssets {
 	public static final Image MIDWAY_LOGO = ResourceMgr.image("graphics/mspacman/midway.png");
 
 	public static final Image[] MAZES_EMPTY_INV = new Image[6];
+
 	static {
 		for (int i = 0; i < MAZES_EMPTY_INV.length; ++i) {
 			var maze = SPRITESHEET.region(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
-			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(maze, //
-					Map.of(MsPacManGameAssets.MAZE_SIDE_COLORS[i], Color.WHITE, MsPacManGameAssets.MAZE_TOP_COLORS[i],
-							Color.BLACK));
+			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(maze, Map.of(//
+					MsPacManGameAssets.MAZE_SIDE_COLORS[i], Color.WHITE, //
+					MsPacManGameAssets.MAZE_TOP_COLORS[i], Color.BLACK));
 		}
 	}
 
