@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import java.util.Objects;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +31,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -78,6 +77,11 @@ public class GameUI implements GameEventListener {
 
 	private final GameController gameController;
 	private final Stage stage;
+	private final Group gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
+	private final Dashboard dashboard = new Dashboard();
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final PiPView pipView = new PiPView(ArcadeWorld.SIZE_PX.toFloatVec(), 2.0f);
+
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS) {
 		@Override
 		public void doUpdate() {
@@ -94,34 +98,41 @@ public class GameUI implements GameEventListener {
 			pipView.update();
 		}
 	};
+
 	private Scene mainScene;
-	private Group gameSceneParent;
-	private Dashboard dashboard;
-	private FlashMessageView flashMessageView;
-	private PiPView pipView;
-	private KeyboardSteering kbSteering;
 	private GameScene currentGameScene;
 
-	public GameUI(Stage stage, Settings settings) {
-		LOG.info("Application settings: %s", settings);
+	public GameUI(Stage primaryStage, Settings settings) {
+		stage = primaryStage;
+		stage.setFullScreen(settings.fullScreen);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+		createAndSetMainScene(ArcadeWorld.SIZE_PX, settings.zoom);
+		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
 		gameController = new GameController(settings.variant);
-		this.stage = Objects.requireNonNull(stage);
+		gameController.setManualPacSteering(kbSteering);
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addListener(this);
 		Actions.setUI(this);
-		createMainScene(settings.zoom);
-		configureStage(settings.fullScreen);
 		initEnv(settings);
-		setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		dashboard.init(this);
+		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
-	public void setSteeringKeys(KeyCode keyUp, KeyCode keyDown, KeyCode keyLeft, KeyCode keyRight) {
-		if (kbSteering != null) {
-			mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
+	private void createAndSetMainScene(Vector2i size, float zoom) {
+		if (zoom <= 0) {
+			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
-		kbSteering = new KeyboardSteering(keyUp, keyDown, keyLeft, keyRight);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
-		gameController.setManualPacSteering(kbSteering);
+		var overlayPane = new BorderPane();
+		overlayPane.setLeft(dashboard);
+		overlayPane.setRight(new VBox(pipView));
+		var root = new StackPane(gameSceneParent, flashMessageView, overlayPane);
+		mainScene = new Scene(root, size.x() * zoom, size.y() * zoom);
+		mainScene.setOnKeyPressed(Keyboard::processEvent);
+		mainScene.heightProperty()
+				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
+		stage.setScene(mainScene);
 	}
 
 	public void start() {
@@ -142,45 +153,19 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv(Settings settings) {
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainSceneBackground());
+
+		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> updateMainSceneBackground());
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
-		Env.mainSceneBgColorPy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
-		Env.Simulation.pausedPy.addListener((property, oldVal, newVal) -> updateStageFrame());
-		Env.ThreeD.drawModePy.addListener((property, oldVal, newVal) -> updateMainSceneBackground());
+
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.setPlaySceneHeight(newVal.doubleValue()));
+		pipView.opacityProperty().bind(Env.PiP.opacityPy);
+
+		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateStageFrame());
 		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
-		pipView.heightPy.bind(Env.PiP.sceneHeightPy);
-		pipView.opacityProperty().bind(Env.PiP.opacityPy);
-	}
-
-	private void configureStage(boolean fullScreen) {
-		stage.setFullScreen(fullScreen);
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-		stage.setScene(mainScene);
-	}
-
-	private void createMainScene(float zoom) {
-		if (zoom <= 0) {
-			throw new IllegalArgumentException("Zoom value must be positive, but is " + zoom);
-		}
-
-		gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
-		flashMessageView = new FlashMessageView();
-		pipView = new PiPView(ArcadeWorld.SIZE_PX.toFloatVec(), 2.0f);
-		dashboard = new Dashboard(this);
-		var overlayPane = new BorderPane();
-		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView));
-		var root = new StackPane(gameSceneParent, flashMessageView, overlayPane);
-
-		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(zoom);
-		mainScene = new Scene(root, size.x(), size.y());
-
-		mainScene.setOnKeyPressed(Keyboard::processEvent);
-		mainScene.heightProperty()
-				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 	}
 
 	private void updateStageFrame() {

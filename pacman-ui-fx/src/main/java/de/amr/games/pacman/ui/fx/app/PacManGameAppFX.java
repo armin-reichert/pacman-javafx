@@ -52,10 +52,6 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
 	private GameUI gameUI;
 
 	@Override

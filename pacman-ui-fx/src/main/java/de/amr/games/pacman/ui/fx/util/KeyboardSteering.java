@@ -38,10 +38,10 @@ import javafx.scene.input.KeyEvent;
 public class KeyboardSteering implements Steering {
 
 	private Direction dir;
-	private final KeyCode up;
-	private final KeyCode down;
-	private final KeyCode left;
-	private final KeyCode right;
+	public KeyCode up;
+	public KeyCode down;
+	public KeyCode left;
+	public KeyCode right;
 
 	public KeyboardSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
 		this.up = up;
@@ -51,26 +51,32 @@ public class KeyboardSteering implements Steering {
 	}
 
 	public void onKeyPressed(KeyEvent e) {
+		var code = e.getCode();
 		boolean noModifier = !(e.isAltDown() || e.isControlDown() || e.isShiftDown());
 		boolean shiftOnly = e.isShiftDown() && !e.isAltDown() && !e.isControlDown();
-		var code = e.getCode();
 		dir = null;
-		if (code == up && (noModifier || shiftOnly)) {
-			dir = Direction.UP;
-		} else if (code == down && (noModifier || shiftOnly)) {
-			dir = Direction.DOWN;
-		} else if (code == left && (noModifier || shiftOnly)) {
-			dir = Direction.LEFT;
-		} else if (code == right && (noModifier || shiftOnly)) {
-			dir = Direction.RIGHT;
+		if (noModifier || shiftOnly) {
+			if (code == up) {
+				dir = Direction.UP;
+				e.consume();
+			} else if (code == down) {
+				dir = Direction.DOWN;
+				e.consume();
+			} else if (code == left) {
+				dir = Direction.LEFT;
+				e.consume();
+			} else if (code == right) {
+				dir = Direction.RIGHT;
+				e.consume();
+			}
 		}
 	}
 
 	@Override
-	public void steer(GameLevel level, Creature pac) {
+	public void steer(GameLevel level, Creature guy) {
 		if (dir != null) {
-			pac.setWishDir(dir);
+			guy.setWishDir(dir);
+			dir = null;
 		}
-		dir = null;
 	}
 }
