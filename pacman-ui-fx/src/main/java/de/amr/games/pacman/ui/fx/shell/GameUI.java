@@ -99,7 +99,6 @@ public class GameUI implements GameEventListener {
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
 	private PiPView pipView;
-	private KeyboardSteering kbSteering;
 	private GameScene currentGameScene;
 
 	public GameUI(Stage stage, Settings settings) {
@@ -112,14 +111,7 @@ public class GameUI implements GameEventListener {
 		createMainScene(settings.zoom);
 		configureStage(settings.fullScreen);
 		initEnv(settings);
-		setSteeringKeys(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-	}
-
-	public void setSteeringKeys(KeyCode keyUp, KeyCode keyDown, KeyCode keyLeft, KeyCode keyRight) {
-		if (kbSteering != null) {
-			mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
-		}
-		kbSteering = new KeyboardSteering(keyUp, keyDown, keyLeft, keyRight);
+		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
 		gameController.setManualPacSteering(kbSteering);
 	}
