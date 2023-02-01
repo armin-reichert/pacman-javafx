@@ -35,6 +35,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
@@ -54,9 +55,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -75,21 +76,22 @@ public class GameUI implements GameEventListener {
 	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 
+	private static final float PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
+
 	private final GameController gameController;
 	private final Stage stage;
 	private final Group gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 
-	private final float pipViewMinHeight = ArcadeWorld.SIZE_PX.y();
-	private final PiPView pipView = new PiPView(pipViewMinHeight);
+	private Pane pipView;
+	private PlayScene2D pipScene;
 
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS) {
 		@Override
 		public void doUpdate() {
 			gameController.update();
 			currentGameScene.onTick();
-			pipView.setVisible(Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene));
 			Keyboard.clear();
 		}
 
@@ -97,7 +99,7 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			flashMessageView.update();
 			dashboard.update();
-			pipView.update();
+			updatePipView();
 		}
 	};
 
@@ -126,9 +128,10 @@ public class GameUI implements GameEventListener {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
+		createPiPView();
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(new VBox(pipView));
+		overlayPane.setRight(pipView);
 		var root = new StackPane(gameSceneParent, flashMessageView, overlayPane);
 		mainScene = new Scene(root, size.x() * zoom, size.y() * zoom);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
@@ -161,13 +164,34 @@ public class GameUI implements GameEventListener {
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.setPlaySceneHeight(newVal.doubleValue()));
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipScene.resizeToHeight(newVal.doubleValue()));
 		pipView.opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateStageFrame());
 		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
+	}
+
+	private boolean isPipViewVisible() {
+		return Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+	}
+
+	private void createPiPView() {
+		pipScene = new PlayScene2D();
+		pipScene.resizeToHeight(PIP_VIEW_MIN_HEIGHT);
+		pipView = new Pane(pipScene.fxSubScene());
+		pipView.setFocusTraversable(false);
+	}
+
+	private void updatePipView() {
+		pipView.setVisible(isPipViewVisible());
+		if (pipView.isVisible()) {
+			LOG.trace("Update PiP view");
+			pipScene.clear();
+			pipScene.drawSceneContent();
+			pipScene.drawHUD();
+		}
 	}
 
 	private void updateStageFrame() {
@@ -217,7 +241,7 @@ public class GameUI implements GameEventListener {
 		// embed game scene
 		gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
 		currentGameScene.embedInto(mainScene);
-		pipView.setContext(currentGameScene.ctx());
+		pipScene.setContext(currentGameScene.ctx());
 	}
 
 	private void updateSounds() {
@@ -315,15 +339,11 @@ public class GameUI implements GameEventListener {
 		return dashboard;
 	}
 
-	public PiPView pipView() {
-		return pipView;
-	}
-
 	public double pipViewMinHeight() {
-		return pipViewMinHeight;
+		return PIP_VIEW_MIN_HEIGHT;
 	}
 
 	public double pipViewMaxHeight() {
-		return pipViewMinHeight * 2;
+		return PIP_VIEW_MIN_HEIGHT * 2;
 	}
 }
