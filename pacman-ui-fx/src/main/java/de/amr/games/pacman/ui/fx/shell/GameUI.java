@@ -76,16 +76,14 @@ public class GameUI implements GameEventListener {
 	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 
-	private static final float PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
+	public static final float PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 
 	private final GameController gameController;
 	private final Stage stage;
 	private final Group gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-
-	private Pane pipView;
-	private PlayScene2D pipScene;
+	private final PipView pipView = new PipView();
 
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS) {
 		@Override
@@ -99,7 +97,7 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			flashMessageView.update();
 			dashboard.update();
-			updatePipView();
+			pipView.updatePipView(currentGameScene);
 		}
 	};
 
@@ -128,7 +126,6 @@ public class GameUI implements GameEventListener {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
-		createPiPView();
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipView);
@@ -164,34 +161,13 @@ public class GameUI implements GameEventListener {
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipScene.resizeToHeight(newVal.doubleValue()));
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.resizeToHeight(newVal.doubleValue()));
 		pipView.opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateStageFrame());
 		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
-	}
-
-	private boolean isPipViewVisible() {
-		return Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
-	}
-
-	private void createPiPView() {
-		pipScene = new PlayScene2D();
-		pipScene.resizeToHeight(PIP_VIEW_MIN_HEIGHT);
-		pipView = new Pane(pipScene.fxSubScene());
-		pipView.setFocusTraversable(false);
-	}
-
-	private void updatePipView() {
-		pipView.setVisible(isPipViewVisible());
-		if (pipView.isVisible()) {
-			LOG.trace("Update PiP view");
-			pipScene.clear();
-			pipScene.drawSceneContent();
-			pipScene.drawHUD();
-		}
 	}
 
 	private void updateStageFrame() {
@@ -241,7 +217,6 @@ public class GameUI implements GameEventListener {
 		// embed game scene
 		gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
 		currentGameScene.embedInto(mainScene);
-		pipScene.setContext(currentGameScene.ctx());
 	}
 
 	private void updateSounds() {
@@ -345,5 +320,42 @@ public class GameUI implements GameEventListener {
 
 	public double pipViewMaxHeight() {
 		return PIP_VIEW_MIN_HEIGHT * 2;
+	}
+
+	/**
+	 * Picture-in-picture view.
+	 * <p>
+	 * Displays a mini 2D view of the running play scene when activated (key F2). Size and transparency can be controlled
+	 * using the dashboard.
+	 */
+	private static class PipView extends Pane {
+
+		private final PlayScene2D playScene;
+
+		public PipView() {
+			playScene = new PlayScene2D();
+			playScene.resizeToHeight(PIP_VIEW_MIN_HEIGHT);
+			getChildren().add(playScene.fxSubScene());
+			setFocusTraversable(false);
+		}
+
+		public void resizeToHeight(double height) {
+			playScene.resizeToHeight(height);
+		}
+
+		public boolean isPipViewVisible(GameScene currentGameScene) {
+			return Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+		}
+
+		public void updatePipView(GameScene currentGameScene) {
+			setVisible(isPipViewVisible(currentGameScene));
+			if (isVisible()) {
+				LOG.trace("Update PiP view");
+				playScene.setContext(currentGameScene.ctx());
+				playScene.clear();
+				playScene.drawSceneContent();
+				playScene.drawHUD();
+			}
+		}
 	}
 }
