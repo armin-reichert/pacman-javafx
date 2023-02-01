@@ -97,7 +97,7 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			flashMessageView.update();
 			dashboard.update();
-			pipView.updatePipView(currentGameScene);
+			pipView.update(currentGameScene);
 		}
 	};
 
@@ -343,13 +343,10 @@ public class GameUI implements GameEventListener {
 			playScene.resizeToHeight(height);
 		}
 
-		public boolean isPipViewVisible(GameScene currentGameScene) {
-			return Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
-		}
-
-		public void updatePipView(GameScene currentGameScene) {
-			setVisible(isPipViewVisible(currentGameScene));
-			if (isVisible()) {
+		public void update(GameScene currentGameScene) {
+			boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+			setVisible(visible);
+			if (visible) {
 				LOG.trace("Update PiP view");
 				playScene.setContext(currentGameScene.ctx());
 				playScene.clear();
