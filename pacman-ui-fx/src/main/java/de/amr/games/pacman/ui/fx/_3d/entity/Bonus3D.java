@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.image.Image;

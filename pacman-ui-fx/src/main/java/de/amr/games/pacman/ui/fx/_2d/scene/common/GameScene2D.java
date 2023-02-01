@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.ui.fx._2d.rendering.GameRenderer.drawTileStructure;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer.drawTileStructure;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -28,7 +28,7 @@ import java.util.Objects;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.SceneControllerContext;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 
 /**
  * @author Armin Reichert
