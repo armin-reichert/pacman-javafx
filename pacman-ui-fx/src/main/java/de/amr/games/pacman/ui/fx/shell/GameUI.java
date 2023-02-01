@@ -80,7 +80,6 @@ public class GameUI implements GameEventListener {
 
 	private final GameController gameController;
 	private final Stage stage;
-	private final Group gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 	private final PipView pipView = new PipView();
@@ -129,7 +128,7 @@ public class GameUI implements GameEventListener {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipView);
-		var root = new StackPane(gameSceneParent, flashMessageView, overlayPane);
+		var root = new StackPane(new Group() /* placeholder for current game scene */, flashMessageView, overlayPane);
 		mainScene = new Scene(root, size.x() * zoom, size.y() * zoom);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		mainScene.heightProperty()
@@ -214,8 +213,9 @@ public class GameUI implements GameEventListener {
 		GameSceneManager.setSceneContext(gameController, nextGameScene);
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
-		// embed game scene
-		gameSceneParent.getChildren().setAll(currentGameScene.fxSubScene());
+		// embed game scene into main scene
+		StackPane root = (StackPane) mainScene.getRoot();
+		root.getChildren().set(0, currentGameScene.fxSubScene());
 		currentGameScene.embedInto(mainScene);
 	}
 
