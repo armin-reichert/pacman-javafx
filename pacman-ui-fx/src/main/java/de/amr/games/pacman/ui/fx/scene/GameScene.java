@@ -77,7 +77,7 @@ public interface GameScene extends GameEventListener {
 	 * 
 	 * @param parentScene the JavaFX parent scene
 	 */
-	void embedInto(Scene parentScene);
+	void onEmbed(Scene parentScene);
 
 	/**
 	 * Called when the height of the parent of this game scene has changed.

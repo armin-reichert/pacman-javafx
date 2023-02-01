@@ -221,7 +221,7 @@ public class GameUI implements GameEventListener {
 		// embed game scene into main scene
 		StackPane root = (StackPane) mainScene.getRoot();
 		root.getChildren().set(0, currentGameScene.fxSubScene());
-		currentGameScene.embedInto(mainScene);
+		currentGameScene.onEmbed(mainScene);
 	}
 
 	private GameRenderer renderer(GameModel game) {

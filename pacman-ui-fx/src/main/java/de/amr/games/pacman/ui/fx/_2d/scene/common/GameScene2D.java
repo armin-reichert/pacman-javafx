@@ -139,7 +139,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void embedInto(Scene parentScene) {
+	public void onEmbed(Scene parentScene) {
 		resizeToHeight((float) parentScene.getHeight());
 	}
 

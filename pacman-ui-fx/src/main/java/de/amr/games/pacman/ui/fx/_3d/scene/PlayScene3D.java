@@ -194,7 +194,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void embedInto(Scene parentScene) {
+	public void onEmbed(Scene parentScene) {
 		fxSubScene.widthProperty().bind(parentScene.widthProperty());
 		fxSubScene.heightProperty().bind(parentScene.heightProperty());
 	}
