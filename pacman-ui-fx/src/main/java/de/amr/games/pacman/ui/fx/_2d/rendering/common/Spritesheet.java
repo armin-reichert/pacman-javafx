@@ -73,8 +73,8 @@ public class Spritesheet {
 	 * @param r spritesheet region
 	 * @return image (copy) of spritesheet region
 	 */
-	public Image region(Rectangle2D r) {
-		return region((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
+	public Image subImage(Rectangle2D r) {
+		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 
 	/**
@@ -84,10 +84,10 @@ public class Spritesheet {
 	 * @param height region height
 	 * @return image (copy) of spritesheet region
 	 */
-	public Image region(int x, int y, int width, int height) {
-		var region = new WritableImage(width, height);
-		region.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
-		return region;
+	public Image subImage(int x, int y, int width, int height) {
+		var image = new WritableImage(width, height);
+		image.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
+		return image;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class Spritesheet {
 	 * @return region at given coordinates
 	 */
 	public Rectangle2D tile(int col, int row) {
-		return tiles(col, row, 1, 1);
+		return region(col, row, 1, 1);
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class Spritesheet {
 	 * @param tilesY number of tiles vertically
 	 * @return region at given grid coordinates
 	 */
-	public Rectangle2D tiles(int gridX, int gridY, int tilesX, int tilesY) {
-		return tiles(0, 0, gridX, gridY, tilesX, tilesY);
+	public Rectangle2D region(int gridX, int gridY, int tilesX, int tilesY) {
+		return region(0, 0, gridX, gridY, tilesX, tilesY);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class Spritesheet {
 	 * @param tilesY number of tiles vertically
 	 * @return region at given grid coordinates relative to given origin
 	 */
-	public Rectangle2D tiles(int origX, int origY, int gridX, int gridY, int tilesX, int tilesY) {
+	public Rectangle2D region(int origX, int origY, int gridX, int gridY, int tilesX, int tilesY) {
 		return new Rectangle2D(origX + gridX * raster, origY + gridY * raster, tilesX * raster, tilesY * raster);
 	}
 

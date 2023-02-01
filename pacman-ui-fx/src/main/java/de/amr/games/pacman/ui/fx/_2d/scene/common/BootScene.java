@@ -112,7 +112,7 @@ public class BootScene extends GameScene2D {
 		var sheet = ((GameRenderer) ctx.r2D()).spritesheet(); // TODO
 		var image = sheet.source();
 		if (ctx.gameVariant() == GameVariant.MS_PACMAN) {
-			image = sheet.region(0, 0, (int) image.getWidth(), 248);
+			image = sheet.subImage(0, 0, (int) image.getWidth(), 248);
 		}
 		var w = image.getWidth();
 		var h = image.getHeight();

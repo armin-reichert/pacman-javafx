@@ -92,7 +92,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 
 	@Override
 	public Image ghostValueImage(int index) {
-		return spritesheet().region(ghostValueSprite(index));
+		return spritesheet().subImage(ghostValueSprite(index));
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 
 	@Override
 	public Image bonusSymbolSpriteImage(int symbol) {
-		return spritesheet().region(bonusSymbolSprite(symbol));
+		return spritesheet().subImage(bonusSymbolSprite(symbol));
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 
 	@Override
 	public Image bonusValueSpriteImage(int symbol) {
-		return spritesheet().region(bonusValueSprite(symbol));
+		return spritesheet().subImage(bonusValueSprite(symbol));
 	}
 
 	@Override

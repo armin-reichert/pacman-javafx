@@ -86,7 +86,7 @@ public final class MsPacManGameAssets {
 
 	static {
 		for (int i = 0; i < MAZES_EMPTY_INV.length; ++i) {
-			var maze = SPRITESHEET.region(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
+			var maze = SPRITESHEET.subImage(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
 			MAZES_EMPTY_INV[i] = Ufx.colorsExchanged(maze, Map.of(//
 					MsPacManGameAssets.MAZE_SIDE_COLORS[i], Color.WHITE, //
 					MsPacManGameAssets.MAZE_TOP_COLORS[i], Color.BLACK));
@@ -95,7 +95,7 @@ public final class MsPacManGameAssets {
 
 	// tile from third column
 	public static Rectangle2D col3(int col, int row) {
-		return SPRITESHEET.tiles(THIRD_COLUMN, 0, col, row, 1, 1);
+		return SPRITESHEET.region(THIRD_COLUMN, 0, col, row, 1, 1);
 	}
 
 	private MsPacManGameAssets() {
