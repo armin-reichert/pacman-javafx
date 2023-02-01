@@ -80,7 +80,9 @@ public class GameUI implements GameEventListener {
 	private final Group gameSceneParent = new Group(); // single child is current game scenes' JavaFX subscene
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final PiPView pipView = new PiPView(ArcadeWorld.SIZE_PX.toFloatVec(), 2.0f);
+
+	private final float pipViewMinHeight = ArcadeWorld.SIZE_PX.y();
+	private final PiPView pipView = new PiPView(pipViewMinHeight);
 
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS) {
 		@Override
@@ -315,5 +317,13 @@ public class GameUI implements GameEventListener {
 
 	public PiPView pipView() {
 		return pipView;
+	}
+
+	public double pipViewMinHeight() {
+		return pipViewMinHeight;
+	}
+
+	public double pipViewMaxHeight() {
+		return pipViewMinHeight * 2;
 	}
 }

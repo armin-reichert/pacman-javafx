@@ -23,12 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import java.util.Objects;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.scene.layout.Pane;
@@ -42,25 +39,13 @@ public class PiPView extends Pane {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private Vector2f minSize;
-	private Vector2f maxSize;
 	private final PlayScene2D playScene;
 
-	public PiPView(Vector2f minSize, float maxZoom) {
-		this.minSize = Objects.requireNonNull(minSize);
-		maxSize = minSize.scaled(maxZoom);
+	public PiPView(float height) {
 		playScene = new PlayScene2D();
-		playScene.resizeToHeight(minSize.y());
+		playScene.resizeToHeight(height);
 		getChildren().add(playScene.fxSubScene());
 		setFocusTraversable(false);
-	}
-
-	public Vector2f minSize() {
-		return minSize;
-	}
-
-	public Vector2f maxSize() {
-		return maxSize;
 	}
 
 	public void setPlaySceneHeight(double height) {

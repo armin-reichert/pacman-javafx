@@ -101,7 +101,7 @@ public class SectionGeneral extends Section {
 		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 
-		sliderPiPSceneHeight = addSlider("PiP Size", ui.pipView().minSize().y(), ui.pipView().maxSize().y(),
+		sliderPiPSceneHeight = addSlider("PiP Size", ui.pipViewMinHeight(), ui.pipViewMaxHeight(),
 				Env.PiP.sceneHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.PiP.sceneHeightPy.set(newValue.doubleValue()));
