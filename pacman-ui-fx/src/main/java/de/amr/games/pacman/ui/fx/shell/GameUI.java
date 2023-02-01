@@ -318,7 +318,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	public double pipViewMaxHeight() {
-		return PIP_VIEW_MIN_HEIGHT * 2;
+		return pipViewMinHeight() * 2;
 	}
 
 	/**
