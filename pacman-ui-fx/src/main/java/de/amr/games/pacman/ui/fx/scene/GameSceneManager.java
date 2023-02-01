@@ -30,8 +30,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -157,14 +155,5 @@ public class GameSceneManager {
 		case MS_PACMAN -> SCENES_MS_PACMAN[index];
 		case PACMAN -> SCENES_PACMAN[index];
 		};
-	}
-
-	public static void setSceneContext(GameController gameController, GameScene scene) {
-		var gameVariant = gameController.game().variant();
-		var r2D = switch (gameVariant) {
-		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
-		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
-		};
-		scene.setContext(new GameSceneContext(gameController, r2D));
 	}
 }

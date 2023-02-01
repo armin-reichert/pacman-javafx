@@ -34,6 +34,9 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -45,6 +48,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.input.Modifier;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -209,13 +213,22 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		GameSceneManager.setSceneContext(gameController, nextGameScene);
+		var renderer = renderer(gameController.game());
+		var context = new GameSceneContext(gameController, renderer);
+		nextGameScene.setContext(context);
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
 		// embed game scene into main scene
 		StackPane root = (StackPane) mainScene.getRoot();
 		root.getChildren().set(0, currentGameScene.fxSubScene());
 		currentGameScene.embedInto(mainScene);
+	}
+
+	private GameRenderer renderer(GameModel game) {
+		return switch (game.variant()) {
+		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
+		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
+		};
 	}
 
 	private void updateSounds() {
