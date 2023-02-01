@@ -63,7 +63,7 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol() {
-		var symbolImage = r2D.bonusSymbolSpriteImage(bonus.symbol());
+		var symbolImage = r2D.bonusSymbolImage(bonus.symbol());
 		var imageView = new ImageView(symbolImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(TS);
@@ -73,7 +73,7 @@ public class Bonus3D extends Box {
 	}
 
 	public void showPoints() {
-		var pointsImage = r2D.bonusValueSpriteImage(bonus.symbol());
+		var pointsImage = r2D.bonusValueImage(bonus.symbol());
 		var imageView = new ImageView(pointsImage);
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(2 * TS);

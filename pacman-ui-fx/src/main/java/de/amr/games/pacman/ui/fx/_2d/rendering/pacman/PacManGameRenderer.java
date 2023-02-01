@@ -73,17 +73,17 @@ public class PacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
-	public Rectangle2D bonusSymbolSprite(int symbol) {
+	public Rectangle2D bonusSymbolRegion(int symbol) {
 		return spritesheet().tile(2 + symbol, 3);
 	}
 
 	@Override
-	public Image bonusSymbolSpriteImage(int symbol) {
-		return spritesheet().subImage(bonusSymbolSprite(symbol));
+	public Image bonusSymbolImage(int symbol) {
+		return spritesheet().subImage(bonusSymbolRegion(symbol));
 	}
 
 	@Override
-	public Rectangle2D bonusValueSprite(int symbol) {
+	public Rectangle2D bonusValueRegion(int symbol) {
 		if (symbol <= 3) {
 			return spritesheet().tile(symbol, 9);
 		}
@@ -95,8 +95,8 @@ public class PacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
-	public Image bonusValueSpriteImage(int symbol) {
-		return spritesheet().subImage(bonusValueSprite(symbol));
+	public Image bonusValueImage(int symbol) {
+		return spritesheet().subImage(bonusValueRegion(symbol));
 	}
 
 	@Override

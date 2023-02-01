@@ -96,23 +96,23 @@ public class MsPacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
-	public Rectangle2D bonusSymbolSprite(int symbol) {
+	public Rectangle2D bonusSymbolRegion(int symbol) {
 		return col3(3 + symbol, 0);
 	}
 
 	@Override
-	public Image bonusSymbolSpriteImage(int symbol) {
-		return spritesheet().subImage(bonusSymbolSprite(symbol));
+	public Image bonusSymbolImage(int symbol) {
+		return spritesheet().subImage(bonusSymbolRegion(symbol));
 	}
 
 	@Override
-	public Rectangle2D bonusValueSprite(int symbol) {
+	public Rectangle2D bonusValueRegion(int symbol) {
 		return col3(3 + symbol, 1);
 	}
 
 	@Override
-	public Image bonusValueSpriteImage(int symbol) {
-		return spritesheet().subImage(bonusValueSprite(symbol));
+	public Image bonusValueImage(int symbol) {
+		return spritesheet().subImage(bonusValueRegion(symbol));
 	}
 
 	@Override

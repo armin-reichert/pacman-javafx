@@ -71,13 +71,13 @@ public interface Rendering2D {
 
 	Rectangle2D lifeSprite();
 
-	Rectangle2D bonusSymbolSprite(int symbol);
+	Rectangle2D bonusSymbolRegion(int symbol);
 
-	Image bonusSymbolSpriteImage(int symbol);
+	Image bonusSymbolImage(int symbol);
 
-	Rectangle2D bonusValueSprite(int symbol);
+	Rectangle2D bonusValueRegion(int symbol);
 
-	Image bonusValueSpriteImage(int symbol);
+	Image bonusValueImage(int symbol);
 
 	// Animations
 

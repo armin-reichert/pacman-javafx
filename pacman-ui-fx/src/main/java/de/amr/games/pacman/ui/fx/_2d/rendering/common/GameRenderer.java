@@ -178,8 +178,8 @@ public abstract class GameRenderer implements Rendering2D {
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case INACTIVE -> null;
-		case EDIBLE -> bonusSymbolSprite(bonus.symbol());
-		case EATEN -> bonusValueSprite(bonus.symbol());
+		case EDIBLE -> bonusSymbolRegion(bonus.symbol());
+		case EATEN -> bonusValueRegion(bonus.symbol());
 		};
 		if (bonus.entity() instanceof MovingBonus movingBonus) {
 			g.save();
@@ -195,7 +195,7 @@ public abstract class GameRenderer implements Rendering2D {
 	public void drawLevelCounter(GraphicsContext g, List<Byte> levelCounter) {
 		double x = t(24);
 		for (var symbol : levelCounter) {
-			drawSprite(g, bonusSymbolSprite(symbol), x, t(34));
+			drawSprite(g, bonusSymbolRegion(symbol), x, t(34));
 			x -= t(2);
 		}
 	}
