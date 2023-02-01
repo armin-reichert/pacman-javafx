@@ -31,7 +31,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.util.Keyboard;
+import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.input.KeyCode;
 
 /**

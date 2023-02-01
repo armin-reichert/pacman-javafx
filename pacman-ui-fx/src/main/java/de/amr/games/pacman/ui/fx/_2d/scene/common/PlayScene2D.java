@@ -36,8 +36,8 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.util.Keyboard;
-import de.amr.games.pacman.ui.fx.util.Modifier;
+import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.input.Modifier;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 

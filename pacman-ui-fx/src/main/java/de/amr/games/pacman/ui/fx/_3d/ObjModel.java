@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.util;
+package de.amr.games.pacman.ui.fx._3d;
 
 import java.net.URL;
 import java.util.Map;

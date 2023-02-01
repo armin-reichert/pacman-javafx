@@ -29,7 +29,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.util.GameLoop;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

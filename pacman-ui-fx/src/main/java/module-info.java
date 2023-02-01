@@ -27,6 +27,7 @@ module de.amr.games.pacman.ui.fx {
 
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.dashboard;
+	exports de.amr.games.pacman.ui.fx.input;
 	exports de.amr.games.pacman.ui.fx.scene;
 	exports de.amr.games.pacman.ui.fx.shell;
 	exports de.amr.games.pacman.ui.fx.sound;
@@ -35,6 +36,7 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 	exports de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 	exports de.amr.games.pacman.ui.fx._2d.scene.common;
+	exports de.amr.games.pacman.ui.fx._3d;
 	exports de.amr.games.pacman.ui.fx._3d.animation;
 	exports de.amr.games.pacman.ui.fx._3d.entity;
 	exports de.amr.games.pacman.ui.fx._3d.scene;

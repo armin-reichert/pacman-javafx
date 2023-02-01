@@ -27,8 +27,8 @@ package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;

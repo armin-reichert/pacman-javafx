@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.ui.fx.util.Keyboard;
+import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
