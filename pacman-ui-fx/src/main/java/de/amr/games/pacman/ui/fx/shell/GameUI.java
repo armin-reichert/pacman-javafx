@@ -52,7 +52,6 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -131,7 +130,8 @@ public class GameUI implements GameEventListener {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipView);
-		var root = new StackPane(new Group() /* placeholder for current game scene */, flashMessageView, overlayPane);
+		var placeHolder = new Pane(); /* placeholder for current game scene */
+		var root = new StackPane(placeHolder, flashMessageView, overlayPane);
 		mainScene = new Scene(root, width * zoom, height * zoom);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		mainScene.heightProperty()
@@ -140,12 +140,12 @@ public class GameUI implements GameEventListener {
 	}
 
 	public void start() {
-		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 		gameController.boot(); // after booting, current game scene is initialized
+		gameLoop().start();
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		gameLoop().start();
+		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.getTargetFramerate());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
 				U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
