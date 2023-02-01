@@ -93,7 +93,7 @@ public class GameLevel3D extends Group {
 		food3D = new Food3D(level.world(), foodColor);
 
 		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
-		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, r2D::bonusSymbolSpriteImage);
+		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, r2D::bonusSymbolImage);
 
 		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
 		livesCounter3D = new LivesCounter3D(facingRight);
