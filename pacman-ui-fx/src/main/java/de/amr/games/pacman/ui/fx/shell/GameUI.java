@@ -75,7 +75,7 @@ public class GameUI implements GameEventListener {
 	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 
-	public static final float PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
+	private static final float PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 
 	private final GameController gameController;
 	private final Stage stage;
