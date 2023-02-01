@@ -81,18 +81,18 @@ public class MsPacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
-	public Rectangle2D ghostSprite(int ghostID, Direction dir) {
+	public Rectangle2D ghostRegion(int ghostID, Direction dir) {
 		return col3(2 * spritesheet().dirIndex(dir) + 1, 4 + ghostID);
 	}
 
 	@Override
-	public Rectangle2D ghostValueSprite(int index) {
+	public Rectangle2D ghostValueRegion(int index) {
 		return col3(index, 8);
 	}
 
 	@Override
 	public Image ghostValueImage(int index) {
-		return spritesheet().subImage(ghostValueSprite(index));
+		return spritesheet().subImage(ghostValueRegion(index));
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
-	public Rectangle2D lifeSprite() {
+	public Rectangle2D lifeSymbolRegion() {
 		return col3(1, 0);
 	}
 

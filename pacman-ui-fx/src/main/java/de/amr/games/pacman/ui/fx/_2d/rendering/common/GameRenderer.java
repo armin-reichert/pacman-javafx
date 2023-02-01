@@ -136,8 +136,8 @@ public abstract class GameRenderer implements Rendering2D {
 	}
 
 	private EntityAnimation createGhostValueSpriteList() {
-		return new FixedEntityAnimation<>(ghostValueSprite(0), ghostValueSprite(1), ghostValueSprite(2),
-				ghostValueSprite(3));
+		return new FixedEntityAnimation<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
+				ghostValueRegion(3));
 	}
 
 	@Override
@@ -209,7 +209,7 @@ public abstract class GameRenderer implements Rendering2D {
 		int y = t(ArcadeWorld.SIZE_TILES.y() - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(g, lifeSprite(), x + t(2 * i), y);
+			drawSprite(g, lifeSymbolRegion(), x + t(2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;

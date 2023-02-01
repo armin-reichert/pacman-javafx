@@ -63,13 +63,13 @@ public interface Rendering2D {
 
 	// Sprites, images
 
-	Rectangle2D ghostSprite(int ghostID, Direction dir);
+	Rectangle2D ghostRegion(int ghostID, Direction dir);
 
-	Rectangle2D ghostValueSprite(int index);
+	Rectangle2D ghostValueRegion(int index);
 
 	Image ghostValueImage(int index);
 
-	Rectangle2D lifeSprite();
+	Rectangle2D lifeSymbolRegion();
 
 	Rectangle2D bonusSymbolRegion(int symbol);
 

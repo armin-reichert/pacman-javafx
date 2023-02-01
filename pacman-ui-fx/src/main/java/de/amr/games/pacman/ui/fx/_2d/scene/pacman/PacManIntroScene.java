@@ -154,7 +154,7 @@ public class PacManIntroScene extends GameScene2D {
 			}
 			int tileY = 7 + 3 * id;
 			var color = r.ghostColor(id);
-			r.drawSpriteCenteredOverBox(g, r.ghostSprite(id, Direction.RIGHT), t(col) + 4, t(tileY));
+			r.drawSpriteCenteredOverBox(g, r.ghostRegion(id, Direction.RIGHT), t(col) + 4, t(tileY));
 			if (intro.context().characterVisible[id]) {
 				r.drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(tileY + 1));
 			}
