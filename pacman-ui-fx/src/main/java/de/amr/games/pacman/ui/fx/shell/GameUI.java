@@ -191,13 +191,7 @@ public class GameUI implements GameEventListener {
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		selectGameScene(Env.ThreeD.enabledPy.get(), reload);
-		updateSounds();
-		updateMainSceneBackground();
-		updateStageFrame();
-	}
-
-	private void selectGameScene(boolean use3D, boolean reload) {
+		var use3D = Env.ThreeD.enabledPy.get();
 		var variants = GameSceneManager.getSceneVariantsMatchingGameState(gameController);
 		var nextGameScene = (use3D && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
 		if (nextGameScene == null) {
@@ -206,6 +200,9 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
+		updateSounds();
+		updateMainSceneBackground();
+		updateStageFrame();
 	}
 
 	private void changeGameScene(GameScene nextGameScene) {
