@@ -31,7 +31,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -108,7 +107,7 @@ public class GameUI implements GameEventListener {
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		createAndSetMainScene(ArcadeWorld.SIZE_PX, settings.zoom);
+		createAndSetMainScene(ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom);
 		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
 		gameController = new GameController(settings.variant);
@@ -121,7 +120,7 @@ public class GameUI implements GameEventListener {
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
-	private void createAndSetMainScene(Vector2i size, float zoom) {
+	private void createAndSetMainScene(int width, int height, float zoom) {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
@@ -129,7 +128,7 @@ public class GameUI implements GameEventListener {
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipView);
 		var root = new StackPane(new Group() /* placeholder for current game scene */, flashMessageView, overlayPane);
-		mainScene = new Scene(root, size.x() * zoom, size.y() * zoom);
+		mainScene = new Scene(root, width * zoom, height * zoom);
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		mainScene.heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
