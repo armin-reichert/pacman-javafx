@@ -215,7 +215,7 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateSounds();
+		gameController.setSounds(sounds());
 		updateMainSceneBackground();
 		updateStageFrame();
 	}
@@ -242,15 +242,13 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
-	private void updateSounds() {
+	private GameSounds sounds() {
 		var variant = gameController.game().variant();
-		var gameSounds = switch (variant) {
+		return switch (variant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		default -> throw new IllegalStateException();
 		};
-		gameController.setSounds(gameSounds);
-		LOG.info("Using sounds for game variant %s", variant);
 	}
 
 	@Override
