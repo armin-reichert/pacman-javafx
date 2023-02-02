@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -40,7 +41,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class GameLoop {
+public abstract class GameLoop {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
@@ -48,7 +49,8 @@ public class GameLoop {
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
 	public final BooleanProperty measuredPy = new SimpleBooleanProperty(false);
 
-	private Timeline clock;
+	private Timeline frameGenerator;
+
 	private long updateCount;
 	private long fps;
 	private long fpsCountStartTime;
@@ -56,50 +58,43 @@ public class GameLoop {
 
 	public GameLoop(int targetFramerate) {
 		targetFrameratePy.set(targetFramerate);
-		targetFrameratePy.addListener((x, y, newFramerate) -> updateClock(newFramerate.intValue()));
-		updateClock(targetFramerate);
+		targetFrameratePy.addListener((py, oldValue, newValue) -> createFrameGenerator(newValue.intValue()));
+		createFrameGenerator(targetFramerate);
 	}
 
-	public void doUpdate() {
-		// empty by default
-	}
-
-	public void doRender() {
-		// empty by default
-	}
-
-	private void updateClock(int fps) {
-		boolean restart = false;
-		if (clock != null) {
-			clock.stop();
-			restart = true;
+	private void createFrameGenerator(int fps) {
+		var frameDuration = Duration.millis(1000.0 / fps);
+		boolean wasRunning = frameGenerator != null && frameGenerator.getStatus() == Status.RUNNING;
+		if (wasRunning) {
+			frameGenerator.stop();
 		}
-		Duration frameDuration = Duration.millis(1000d / fps);
-		clock = new Timeline(fps, new KeyFrame(frameDuration, e -> step(!isPaused())));
-		clock.setCycleCount(Animation.INDEFINITE);
-		if (restart) {
-			clock.play();
+		frameGenerator = new Timeline(fps, new KeyFrame(frameDuration, e -> executeSingleStep(!isPaused())));
+		frameGenerator.setCycleCount(Animation.INDEFINITE);
+		if (wasRunning) {
+			start();
 		}
 	}
 
-	public void setTargetFramerate(int fps) {
-		targetFrameratePy.set(fps);
+	/**
+	 * Code called in update phase (e.g. simulation).
+	 */
+	public abstract void doUpdate();
+
+	/**
+	 * Code called after update phase (e.g. rendering).
+	 */
+	public abstract void doRender();
+
+	public void start() {
+		frameGenerator.play();
 	}
 
-	public int getTargetFramerate() {
-		return targetFrameratePy.get();
+	public void stop() {
+		frameGenerator.stop();
 	}
 
 	public boolean isPaused() {
 		return pausedPy.get();
-	}
-
-	public void start() {
-		clock.play();
-	}
-
-	public void stop() {
-		clock.stop();
 	}
 
 	public long getUpdateCount() {
@@ -114,31 +109,31 @@ public class GameLoop {
 		measuredPy.set(measured);
 	}
 
-	public void nsteps(int n, boolean updateEnabled) {
+	public void executeSteps(int n, boolean updateEnabled) {
 		for (int i = 0; i < n; ++i) {
-			step(updateEnabled);
+			executeSingleStep(updateEnabled);
 		}
 	}
 
-	public void step(boolean updateEnabled) {
+	public void executeSingleStep(boolean updateEnabled) {
 		long tickTime = System.nanoTime();
 		if (updateEnabled) {
-			runTask(this::doUpdate, "Update phase: %f milliseconds");
+			runPhase(this::doUpdate, "Update phase: %f milliseconds");
 			updateCount++;
 		}
-		runTask(this::doRender, "Render phase: %f milliseconds");
+		runPhase(this::doRender, "Render phase: %f milliseconds");
 		++frames;
 		computeFrameRate(tickTime);
 	}
 
-	private void runTask(Runnable task, String message) {
+	private void runPhase(Runnable phase, String message) {
 		if (measuredPy.get()) {
 			double startNanos = System.nanoTime();
-			task.run();
+			phase.run();
 			double durationNanos = System.nanoTime() - startNanos;
 			LOG.info(message, durationNanos / 1e6);
 		} else {
-			task.run();
+			phase.run();
 		}
 	}
 

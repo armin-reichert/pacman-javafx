@@ -173,7 +173,7 @@ public class GameUI implements GameEventListener {
 		stage.show();
 		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 		gameLoop().start();
-		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.getTargetFramerate());
+		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.targetFrameratePy.get());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
 				U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
 	}
