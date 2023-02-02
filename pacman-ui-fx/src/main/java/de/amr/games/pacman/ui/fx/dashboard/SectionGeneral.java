@@ -85,16 +85,16 @@ public class SectionGeneral extends Section {
 		spinnerSimulationSteps.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.Simulation.simulationStepsPy.set(newVal.intValue()));
 
-		addInfo("Total Updates", ui.gameLoop()::getUpdateCount);
-
-		sliderTargetFPS = addSlider("Target Framerate", MIN_FRAMERATE, MAX_FRAMERATE, 60);
+		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.Simulation.targetFrameratePy.set(newValue.intValue()));
 
 		addInfo("",
-				() -> String.format("%d Hz (Target: %d Hz)", ui.gameLoop().getFPS(), ui.gameLoop().getTargetFramerate()));
+				() -> String.format("Target: %d Hz Actual: %d Hz", ui.gameLoop().getTargetFramerate(), ui.gameLoop().getFPS()));
+
+		addInfo("Total Updates", ui.gameLoop()::getUpdateCount);
 
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.mainScene().getWidth(), ui.mainScene().getHeight()));
 
