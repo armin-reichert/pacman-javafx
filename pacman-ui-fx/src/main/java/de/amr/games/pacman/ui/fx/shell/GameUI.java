@@ -113,24 +113,27 @@ public class GameUI implements GameEventListener {
 	private GameScene currentGameScene;
 
 	public GameUI(Stage primaryStage, Settings settings) {
+		gameController = new GameController(settings.variant);
 		stage = primaryStage;
-		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		createAndSetMainScene(ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom);
-		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
-		gameController = new GameController(settings.variant);
-		gameController.setManualPacSteering(kbSteering);
+		stage.setFullScreen(settings.fullScreen);
+		createMainScene(ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom);
+		stage.setScene(mainScene);
+		initEnv(settings);
+
 		Keyboard.addHandler(this::onKeyPressed);
 		GameEvents.addListener(this);
-		Actions.setUI(this);
-		initEnv(settings);
-		dashboard.init(this);
+
+		// keyboard steering of Pac-Man
+		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
+		gameController.setManualPacSteering(kbSteering);
+
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
-	private void createAndSetMainScene(int width, int height, float zoom) {
+	private void createMainScene(int width, int height, float zoom) {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
@@ -143,24 +146,6 @@ public class GameUI implements GameEventListener {
 		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		mainScene.heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
-		stage.setScene(mainScene);
-	}
-
-	public void start() {
-		gameController.boot(); // after booting, current game scene is initialized
-		gameLoop().start();
-		stage.centerOnScreen();
-		stage.requestFocus();
-		stage.show();
-		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
-		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.getTargetFramerate());
-		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
-				U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
-	}
-
-	public void stop() {
-		gameLoop.stop();
-		LOG.info("Game stopped");
 	}
 
 	private void initEnv(Settings settings) {
@@ -177,6 +162,25 @@ public class GameUI implements GameEventListener {
 		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
 		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
+	}
+
+	public void start() {
+		Actions.setUI(this);
+		dashboard.init(this);
+		gameController.boot(); // after booting, current game scene is initialized
+		stage.centerOnScreen();
+		stage.requestFocus();
+		stage.show();
+		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
+		gameLoop().start();
+		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.getTargetFramerate());
+		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
+				U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
+	}
+
+	public void stop() {
+		gameLoop.stop();
+		LOG.info("Game stopped");
 	}
 
 	private void updateStageFrame() {
