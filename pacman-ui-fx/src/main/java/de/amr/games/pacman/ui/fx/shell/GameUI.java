@@ -84,7 +84,14 @@ public class GameUI implements GameEventListener {
 	private final Stage stage;
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final PipView pipView = new PipView();
+
+	/**
+	 * Picture-in-picture view.
+	 * <p>
+	 * A mini 2D view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
+	 * controlled using the dashboard.
+	 */
+	private final PlayScene2D pipPlayScene = new PlayScene2D();
 
 	private final GameLoop gameLoop = new GameLoop(GameModel.FPS) {
 		@Override
@@ -98,7 +105,7 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			flashMessageView.update();
 			dashboard.update();
-			pipView.update(currentGameScene);
+			updatePipView();
 		}
 	};
 
@@ -129,7 +136,7 @@ public class GameUI implements GameEventListener {
 		}
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(pipView);
+		overlayPane.setRight(pipPlayScene.fxSubScene());
 		var placeHolder = new Pane(); /* placeholder for current game scene */
 		var root = new StackPane(placeHolder, flashMessageView, overlayPane);
 		mainScene = new Scene(root, width * zoom, height * zoom);
@@ -163,8 +170,8 @@ public class GameUI implements GameEventListener {
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.resizeToHeight(newVal.doubleValue()));
-		pipView.opacityProperty().bind(Env.PiP.opacityPy);
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipPlayScene.resizeToHeight(newVal.doubleValue()));
+		pipPlayScene.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateStageFrame());
 		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
@@ -334,37 +341,14 @@ public class GameUI implements GameEventListener {
 		return pipViewMinHeight() * 2;
 	}
 
-	/**
-	 * Picture-in-picture view.
-	 * <p>
-	 * Displays a mini 2D view of the running play scene when activated (key F2). Size and transparency can be controlled
-	 * using the dashboard.
-	 */
-	private static class PipView extends Pane {
-
-		private final PlayScene2D playScene;
-
-		public PipView() {
-			playScene = new PlayScene2D();
-			playScene.resizeToHeight(PIP_VIEW_MIN_HEIGHT);
-			getChildren().add(playScene.fxSubScene());
-			setFocusTraversable(false);
-		}
-
-		public void resizeToHeight(double height) {
-			playScene.resizeToHeight(height);
-		}
-
-		public void update(GameScene currentGameScene) {
-			boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
-			setVisible(visible);
-			if (visible) {
-				LOG.trace("Update PiP view");
-				playScene.setContext(currentGameScene.ctx());
-				playScene.clear();
-				playScene.drawSceneContent();
-				playScene.drawHUD();
-			}
+	private void updatePipView() {
+		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+		pipPlayScene.fxSubScene().setVisible(visible);
+		if (visible) {
+			pipPlayScene.setContext(currentGameScene.ctx());
+			pipPlayScene.clear();
+			pipPlayScene.drawSceneContent();
+			pipPlayScene.drawHUD();
 		}
 	}
 }
