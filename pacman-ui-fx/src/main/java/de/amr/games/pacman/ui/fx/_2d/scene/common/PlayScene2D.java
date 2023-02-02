@@ -25,11 +25,11 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer.drawTileStructure;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -100,12 +100,14 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawDebugInfo(GameLevel level) {
-		super.drawDebugInfo(level);
-		if (level.world() instanceof ArcadeWorld arcadeWorld) {
-			g.setFill(Color.RED);
-			arcadeWorld.upwardBlockedTiles().forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, 1));
-		}
+	protected void drawDebugInfo() {
+		drawTileStructure(g, size.x() / World.TS, size.y() / World.TS);
+		ctx.level().ifPresent(level -> {
+			if (level.world() instanceof ArcadeWorld arcadeWorld) {
+				g.setFill(Color.RED);
+				arcadeWorld.upwardBlockedTiles().forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, 1));
+			}
+		});
 	}
 
 	@Override

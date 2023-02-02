@@ -29,7 +29,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -64,8 +63,8 @@ public abstract class GameScene2D implements GameScene {
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected GameSceneContext ctx;
-	private boolean creditVisible;
-	private Vector2i size = ArcadeWorld.SIZE_PX;
+	protected boolean creditVisible;
+	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, size.x(), size.y());
@@ -94,7 +93,7 @@ public abstract class GameScene2D implements GameScene {
 		clear();
 		drawSceneContent();
 		if (overlayPaneVisiblePy.get()) {
-			ctx.level().ifPresent(this::drawDebugInfo);
+			drawDebugInfo();
 		}
 		drawHUD();
 		if (ctx.gameController().levelTestMode) {
@@ -102,7 +101,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	protected void drawDebugInfo(GameLevel level) {
+	protected void drawDebugInfo() {
 		drawTileStructure(g, size.x() / World.TS, size.y() / World.TS);
 	}
 
