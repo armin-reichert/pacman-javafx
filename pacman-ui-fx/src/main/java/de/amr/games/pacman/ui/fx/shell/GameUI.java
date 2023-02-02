@@ -224,8 +224,7 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		var renderer = renderer(gameController.game());
-		var context = new GameSceneContext(gameController, renderer);
+		var context = new GameSceneContext(gameController, renderer());
 		nextGameScene.setContext(context);
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
@@ -235,10 +234,12 @@ public class GameUI implements GameEventListener {
 		currentGameScene.onEmbed(mainScene);
 	}
 
-	private GameRenderer renderer(GameModel game) {
-		return switch (game.variant()) {
+	private GameRenderer renderer() {
+		var variant = gameController.game().variant();
+		return switch (variant) {
 		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
 		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
+		default -> throw new IllegalStateException();
 		};
 	}
 
