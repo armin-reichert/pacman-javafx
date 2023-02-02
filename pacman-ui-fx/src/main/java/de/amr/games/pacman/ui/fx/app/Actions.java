@@ -179,16 +179,18 @@ public class Actions {
 
 	public static void selectNextPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			Env.ThreeD.perspectivePy.set(Env.ThreeD.perspectivePy.get().next());
-			String perspectiveName = TextManager.message(Env.ThreeD.perspectivePy.get().name());
+			var nextPerspective = Env.ThreeD.perspectivePy.get().next();
+			Env.ThreeD.perspectivePy.set(nextPerspective);
+			String perspectiveName = TextManager.message(nextPerspective.name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void selectPrevPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			Env.ThreeD.perspectivePy.set(Env.ThreeD.perspectivePy.get().prev());
-			String perspectiveName = TextManager.message(Env.ThreeD.perspectivePy.get().name());
+			var prevPerspective = Env.ThreeD.perspectivePy.get().prev();
+			Env.ThreeD.perspectivePy.set(prevPerspective);
+			String perspectiveName = TextManager.message(prevPerspective.name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
 
