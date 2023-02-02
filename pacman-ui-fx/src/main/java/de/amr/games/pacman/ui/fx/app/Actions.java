@@ -52,7 +52,7 @@ public class Actions {
 	private static AudioClip currentVoiceMessage;
 
 	public static void setUI(GameUI ui) {
-		Actions.ui = Objects.requireNonNull(ui, "User Interface for actions must not be null");
+		ui = Objects.requireNonNull(ui, "User Interface for actions must not be null");
 	}
 
 	private static GameController gameController() {
@@ -193,7 +193,6 @@ public class Actions {
 			String perspectiveName = TextManager.message(prevPerspective.name());
 			showFlashMessage(TextManager.message("camera_perspective", perspectiveName));
 		}
-
 	}
 
 	public static void toggleAutopilot() {
