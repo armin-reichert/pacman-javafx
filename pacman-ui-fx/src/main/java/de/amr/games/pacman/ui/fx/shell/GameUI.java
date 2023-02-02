@@ -78,7 +78,8 @@ public class GameUI implements GameEventListener {
 	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 
-	private static final float PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
+	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
+	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
 	private final GameController gameController;
 	private final Stage stage;
@@ -334,14 +335,6 @@ public class GameUI implements GameEventListener {
 
 	public Dashboard dashboard() {
 		return dashboard;
-	}
-
-	public double pipViewMinHeight() {
-		return PIP_VIEW_MIN_HEIGHT;
-	}
-
-	public double pipViewMaxHeight() {
-		return pipViewMinHeight() * 2;
 	}
 
 	private void updatePipView() {

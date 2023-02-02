@@ -51,8 +51,8 @@ public class Actions {
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
 
-	public static void setUI(GameUI ui) {
-		ui = Objects.requireNonNull(ui, "User Interface for actions must not be null");
+	public static void setUI(GameUI theUI) {
+		ui = Objects.requireNonNull(theUI, "User Interface for actions must not be null");
 	}
 
 	private static GameController gameController() {
