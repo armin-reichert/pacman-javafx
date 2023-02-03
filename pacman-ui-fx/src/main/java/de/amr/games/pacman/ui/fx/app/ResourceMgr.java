@@ -58,15 +58,17 @@ public class ResourceMgr {
 	 * @return full path to resource including path to resource root directory
 	 */
 	public static String toFullPath(String relativePath) {
+		Objects.requireNonNull(relativePath);
 		return RESOURCE_ROOT_DIR + relativePath;
 	}
 
 	/**
-	 * @param relativePath relative path starting from resource root directory
+	 * @param relPath relative path starting from resource root directory
 	 * @return URL of resource addressed by this path
 	 */
-	public static URL urlFromRelPath(String relativePath) {
-		return url(toFullPath(relativePath));
+	public static URL urlFromRelPath(String relPath) {
+		Objects.requireNonNull(relPath);
+		return url(toFullPath(relPath));
 	}
 
 	/**
@@ -74,6 +76,7 @@ public class ResourceMgr {
 	 * @return URL of resource addressed by this path
 	 */
 	public static URL url(String fullPath) {
+		Objects.requireNonNull(fullPath);
 		var url = ResourceMgr.class.getResource(fullPath);
 		if (url == null) {
 			throw new MissingResourceException("Missing resource, path=" + fullPath, "", fullPath);
@@ -84,10 +87,6 @@ public class ResourceMgr {
 	public static Font font(String relPath, double size) {
 		Objects.requireNonNull(relPath, "Font path cannot be NULL");
 		var url = ResourceMgr.urlFromRelPath(relPath);
-		if (url == null) {
-			LOG.error(() -> "Font at '%s' not found".formatted(ResourceMgr.toFullPath(relPath)));
-			return Font.font(Font.getDefault().getFamily(), size);
-		}
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
 			LOG.error(() -> "Font at '%s' not loaded".formatted(ResourceMgr.toFullPath(relPath)));
@@ -99,18 +98,16 @@ public class ResourceMgr {
 	public static Image image(String relPath) {
 		Objects.requireNonNull(relPath, "Image path cannot be NULL");
 		var url = ResourceMgr.urlFromRelPath(relPath);
-		if (url == null) {
-			LOG.error(() -> "No image found at path '%s'".formatted(ResourceMgr.toFullPath(relPath)));
-			return null;
-		}
 		return new Image(url.toExternalForm());
 	}
 
 	public static Background colorBackground(Color color) {
+		Objects.requireNonNull(color);
 		return new Background(new BackgroundFill(color, null, null));
 	}
 
 	public static Background imageBackground(String relPath) {
+		Objects.requireNonNull(relPath);
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 }
