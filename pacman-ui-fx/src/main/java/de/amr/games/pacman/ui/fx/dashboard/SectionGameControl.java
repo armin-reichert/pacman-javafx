@@ -32,8 +32,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * Game related settings.
@@ -58,9 +56,8 @@ public class SectionGameControl extends Section {
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 
-	public SectionGameControl(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGameControl(GameUI ui, String title) {
+		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {

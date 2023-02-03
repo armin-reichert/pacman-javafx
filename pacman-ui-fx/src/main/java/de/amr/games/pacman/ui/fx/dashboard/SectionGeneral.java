@@ -35,8 +35,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * General settings.
@@ -64,8 +62,8 @@ public class SectionGeneral extends Section {
 	private Slider sliderPiPOpacity;
 	private final ColorPicker pickerBgColor;
 
-	public SectionGeneral(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGeneral(GameUI ui, String title) {
+		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
 		Button btnPlayPause = btnsSimulation[0];

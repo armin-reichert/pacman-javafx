@@ -31,9 +31,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.text.Font;
 
 /**
  * 3D related settings.
@@ -52,8 +50,8 @@ public class Section3D extends Section {
 	private final CheckBox cbWireframeMode;
 	private final CheckBox cbPacLighted;
 
-	public Section3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public Section3D(GameUI ui, String title) {
+		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		pickerLightColor = addColorPicker("Light color", Env.ThreeD.lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.ThreeD.lightColorPy.set(pickerLightColor.getValue()));
 		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.ThreeD.mazeWallHeightPy.get());

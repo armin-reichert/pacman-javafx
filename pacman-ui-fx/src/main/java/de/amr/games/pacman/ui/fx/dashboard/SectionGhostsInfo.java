@@ -30,16 +30,14 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
 public class SectionGhostsInfo extends Section {
 
-	public SectionGhostsInfo(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGhostsInfo(GameUI ui, String title) {
+		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		addGhostInfo(Ghost.ID_RED_GHOST);
 		addEmptyLine();
 		addGhostInfo(Ghost.ID_PINK_GHOST);

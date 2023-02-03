@@ -36,8 +36,6 @@ import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.geometry.Point3D;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -56,8 +54,8 @@ public class SectionCamera3D extends Section {
 	private final Slider sliderTransformZ;
 	private final Slider sliderRotate;
 
-	public SectionCamera3D(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionCamera3D(GameUI ui, String title) {
+		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.ThreeD.perspectivePy.set(comboPerspective.getValue()));

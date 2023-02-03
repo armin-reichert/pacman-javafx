@@ -52,13 +52,13 @@ public class Dashboard extends VBox {
 	private Section secKeys;
 
 	public void init(GameUI ui) {
-		secGeneral = new SectionGeneral(ui, "General", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secGameControl = new SectionGameControl(ui, "Game Control", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secGameInfo = new SectionGameInfo(ui, "Game Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secGhostsInfo = new SectionGhostsInfo(ui, "Ghosts Info", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		sec3D = new Section3D(ui, "3D Settings", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secCamera3D = new SectionCamera3D(ui, "3D Camera", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
-		secKeys = new SectionKeys(ui, "Keyboard Shortcuts", MIN_LABEL_WIDTH, TEXT_COLOR, TEXT_FONT, LABEL_FONT);
+		secGeneral = new SectionGeneral(ui, "General");
+		secGameControl = new SectionGameControl(ui, "Game Control");
+		secGameInfo = new SectionGameInfo(ui, "Game Info");
+		secGhostsInfo = new SectionGhostsInfo(ui, "Ghosts Info");
+		sec3D = new Section3D(ui, "3D Settings");
+		secCamera3D = new SectionCamera3D(ui, "3D Camera");
+		secKeys = new SectionKeys(ui, "Keyboard Shortcuts");
 		getChildren().addAll(secGeneral, secGameControl, secGameInfo, secGhostsInfo, sec3D, secCamera3D, secKeys);
 		setVisible(false);
 	}

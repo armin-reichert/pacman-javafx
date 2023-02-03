@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * Game related settings.
@@ -37,8 +35,9 @@ import javafx.scene.text.Font;
  */
 public class SectionGameInfo extends Section {
 
-	public SectionGameInfo(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-		super(ui, title, minLabelWidth, textColor, textFont, labelFont);
+	public SectionGameInfo(GameUI ui, String title) {
+		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
 		addInfo("",
 				() -> "w=%.0f h=%.0f".formatted(gameScene().fxSubScene().getWidth(), gameScene().fxSubScene().getHeight()));
