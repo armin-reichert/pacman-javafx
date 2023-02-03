@@ -30,6 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -103,15 +104,17 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawTitle() {
-		context.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, context.r2D().arcadeFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
+		context.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
+				TITLE_TILE.y());
 	}
 
 	private void drawGhostText(Ghost ghost) {
 		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			context.r2D().drawText(g, "WITH", Color.WHITE, context.r2D().arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+			context.r2D().drawText(g, "WITH", Color.WHITE, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
+					BLINKY_END_TILE.y() + t(3));
 		}
-		context.r2D().drawText(g, ghost.name().toUpperCase(), context.r2D().ghostColor(ghost.id()), context.r2D().arcadeFont(TS),
-				t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
+		context.r2D().drawText(g, ghost.name().toUpperCase(), context.r2D().ghostColor(ghost.id()),
+				context.r2D().arcadeFont(TS), t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
@@ -122,25 +125,25 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	// TODO this is not exactly as in the original game
-	private void drawLights(int numDotsX, int numDotsY) {
-		long time = intro.context().lightsTimer.tick();
-		int light = (int) (time / 2) % (numDotsX / 2);
-		for (int dot = 0; dot < 2 * (numDotsX + numDotsY); ++dot) {
-			int x = 0;
-			int y = 0;
-			if (dot <= numDotsX) {
-				x = dot;
-			} else if (dot < numDotsX + numDotsY) {
-				x = numDotsX;
-				y = dot - numDotsX;
-			} else if (dot < 2 * numDotsX + numDotsY + 1) {
-				x = 2 * numDotsX + numDotsY - dot;
-				y = numDotsY;
-			} else {
-				y = 2 * (numDotsX + numDotsY) - dot;
-			}
-			g.setFill((dot + light) % (numDotsX / 2) == 0 ? Color.PINK : Color.RED);
-			g.fillRect(BLINKY_END_TILE.x() + 4 * x, BLINKY_END_TILE.y() + 4 * y, 2, 2);
+	private void drawLights(int width, int height) {
+		long t = intro.context().lightsTimer.tick();
+		int on = (int) (t / 2) % (width / 2);
+		for (int i = 0; i < 2 * (width + height); ++i) {
+			var p = xy(i, width, height);
+			g.setFill((i + on) % (width / 2) == 0 ? Color.PINK : Color.RED);
+			g.fillRect(BLINKY_END_TILE.x() + 4 * p.x(), BLINKY_END_TILE.y() + 4 * p.y(), 2, 2);
+		}
+	}
+
+	private Vector2i xy(int i, int width, int height) {
+		if (i <= width) {
+			return new Vector2i(i, 0);
+		} else if (i < width + height) {
+			return new Vector2i(width, i - width);
+		} else if (i < 2 * width + height + 1) {
+			return new Vector2i(2 * width + height - i, height);
+		} else {
+			return new Vector2i(0, 2 * (width + height) - i);
 		}
 	}
 }
