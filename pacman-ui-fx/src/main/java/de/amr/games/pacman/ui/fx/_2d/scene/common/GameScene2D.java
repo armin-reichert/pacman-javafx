@@ -23,14 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer.drawTileStructure;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
@@ -64,6 +61,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected GameSceneContext context;
 	protected boolean creditVisible;
+	protected boolean hudVisible = true;
 	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
 	protected GameScene2D() {
@@ -90,40 +88,32 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public final void onTick() {
 		update();
-		clear();
-		drawSceneContent();
+		draw();
 		if (overlayPaneVisiblePy.get()) {
-			drawDebugInfo();
+			drawOverlayPaneContent();
 		}
-		drawHUD();
 		if (context.gameController().levelTestMode) {
 			context.r2D().drawText(g, "LEVEL TEST MODE", Color.WHITE, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60,
 					190);
 		}
 	}
 
-	protected void drawDebugInfo() {
-		drawTileStructure(g, size.x() / World.TS, size.y() / World.TS);
-	}
-
-	public void clear() {
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-	}
-
-	public void drawHUD() {
-		context.r2D().drawHUD(g, context.game(), creditVisible);
-	}
-
-	/**
-	 * Updates the scene.
-	 */
 	public abstract void update();
 
-	/**
-	 * Draws the scene content.
-	 */
-	public abstract void drawSceneContent();
+	public void draw() {
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawSceneContent();
+		if (hudVisible) {
+			context.r2D().drawHUD(g, context.game(), creditVisible);
+		}
+	}
+
+	protected abstract void drawSceneContent();
+
+	protected void drawOverlayPaneContent() {
+		// none by default
+	}
 
 	public boolean isCreditVisible() {
 		return creditVisible;

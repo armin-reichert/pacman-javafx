@@ -51,6 +51,7 @@ public class BootScene extends GameScene2D {
 	private final WritableImage currentImage;
 
 	public BootScene() {
+		hudVisible = false;
 		currentImage = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
 		bufferContext = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
 	}
@@ -78,11 +79,6 @@ public class BootScene extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		g.drawImage(currentImage, 0, 0);
-	}
-
-	@Override
-	public void drawHUD() {
-		// hide HUD
 	}
 
 	private void clearBuffer() {

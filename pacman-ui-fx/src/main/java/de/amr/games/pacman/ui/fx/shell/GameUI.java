@@ -185,14 +185,14 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateStageFrame() {
-		var pausedText = Env.Simulation.pausedPy.get() ? " (paused)" : "";
+		var paused = Env.Simulation.pausedPy.get() ? " (paused)" : "";
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
-			stage.setTitle("Ms. Pac-Man" + pausedText);
+			stage.setTitle("Ms. Pac-Man" + paused);
 			stage.getIcons().setAll(APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
-			stage.setTitle("Pac-Man" + pausedText);
+			stage.setTitle("Pac-Man" + paused);
 			stage.getIcons().setAll(APP_ICON_PACMAN);
 		}
 		default -> throw new IllegalStateException();
@@ -210,9 +210,7 @@ public class GameUI implements GameEventListener {
 		pipPlayScene.fxSubScene().setVisible(visible);
 		if (visible) {
 			pipPlayScene.setContext(currentGameScene.context());
-			pipPlayScene.clear();
-			pipPlayScene.drawSceneContent();
-			pipPlayScene.drawHUD();
+			pipPlayScene.draw();
 		}
 	}
 
