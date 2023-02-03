@@ -89,13 +89,6 @@ public abstract class GameScene2D implements GameScene {
 	public final void onTick() {
 		update();
 		draw();
-		if (overlayPaneVisiblePy.get()) {
-			drawOverlayPaneContent();
-		}
-		if (context.gameController().levelTestMode) {
-			context.r2D().drawText(g, "LEVEL TEST MODE", Color.WHITE, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60,
-					190);
-		}
 	}
 
 	public abstract void update();
@@ -109,6 +102,13 @@ public abstract class GameScene2D implements GameScene {
 		}
 		if (creditVisible) {
 			context.r2D().drawCredit(g, context.game());
+		}
+		if (overlayPaneVisiblePy.get()) {
+			drawOverlayPaneContent();
+		}
+		if (context.gameController().levelTestMode) {
+			context.r2D().drawText(g, "LEVEL TEST MODE", Color.WHITE, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60,
+					190);
 		}
 	}
 

@@ -111,6 +111,13 @@ public class PacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
+		context.r2D().drawPac(g, pac);
+		context.r2D().drawGhost(g, blinky);
+		context.r2D().drawLevelCounter(g, context.game().levelCounter());
+	}
+
+	@Override
+	protected void drawOverlayPaneContent() {
 		if (Env.showDebugInfoPy.get()) {
 			g.setFont(context.r2D().arcadeFont(TS));
 			g.setFill(Color.WHITE);
@@ -120,8 +127,5 @@ public class PacManCutscene1 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(1), t(5));
 			}
 		}
-		context.r2D().drawPac(g, pac);
-		context.r2D().drawGhost(g, blinky);
-		context.r2D().drawLevelCounter(g, context.game().levelCounter());
 	}
 }
