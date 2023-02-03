@@ -219,12 +219,14 @@ public abstract class GameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible) {
+	public void drawHUD(GraphicsContext g, GameModel game) {
 		game.score().ifPresent(score -> drawScore(g, score, "SCORE", TS, TS));
 		game.highScore().ifPresent(hiscore -> drawScore(g, hiscore, "HIGH SCORE", 16 * TS, TS));
-		if (creditVisible) {
-			drawText(g, "CREDIT  %d".formatted(game.credit()), Color.rgb(222, 222, 255), arcadeFont(TS), t(2), t(36) - 1);
-		}
+	}
+
+	@Override
+	public void drawCredit(GraphicsContext g, GameModel game) {
+		drawText(g, "CREDIT  %d".formatted(game.credit()), Color.rgb(222, 222, 255), arcadeFont(TS), t(2), t(36) - 1);
 	}
 
 	private void drawScore(GraphicsContext g, Score score, String title, double x, double y) {

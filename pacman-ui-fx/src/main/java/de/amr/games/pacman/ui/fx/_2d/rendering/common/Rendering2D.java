@@ -147,7 +147,9 @@ public interface Rendering2D {
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
-	void drawHUD(GraphicsContext g, GameModel game, boolean creditVisible);
+	void drawHUD(GraphicsContext g, GameModel game);
+
+	void drawCredit(GraphicsContext g, GameModel game);
 
 	void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash);
 
