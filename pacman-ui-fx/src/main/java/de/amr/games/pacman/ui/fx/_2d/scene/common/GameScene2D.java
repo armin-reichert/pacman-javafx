@@ -54,9 +54,9 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "overlayPaneVisible", false);
 
+	protected final SubScene fxSubScene;
 	protected final StackPane root = new StackPane();
 	protected final Pane overlayPane = new Pane();
-	protected final SubScene fxSubScene;
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected GameSceneContext context;
@@ -75,7 +75,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void resizeToHeight(double height) {
-		var aspectRatio = (double) size.x() / (double) size.y();
+		var aspectRatio = (float) size.x() / size.y();
 		var width = aspectRatio * height;
 		var scaling = height / size.y();
 		fxSubScene.setWidth(width);
