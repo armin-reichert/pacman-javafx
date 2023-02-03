@@ -205,6 +205,17 @@ public class GameUI implements GameEventListener {
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
 	}
 
+	private void updatePipView() {
+		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+		pipPlayScene.fxSubScene().setVisible(visible);
+		if (visible) {
+			pipPlayScene.setContext(currentGameScene.ctx());
+			pipPlayScene.clear();
+			pipPlayScene.drawSceneContent();
+			pipPlayScene.drawHUD();
+		}
+	}
+
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
 		var use3D = Env.ThreeD.enabledPy.get();
@@ -335,16 +346,5 @@ public class GameUI implements GameEventListener {
 
 	public Dashboard dashboard() {
 		return dashboard;
-	}
-
-	private void updatePipView() {
-		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
-		pipPlayScene.fxSubScene().setVisible(visible);
-		if (visible) {
-			pipPlayScene.setContext(currentGameScene.ctx());
-			pipPlayScene.clear();
-			pipPlayScene.drawSceneContent();
-			pipPlayScene.drawHUD();
-		}
 	}
 }
