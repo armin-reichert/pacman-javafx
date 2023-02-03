@@ -228,11 +228,6 @@ public class MsPacManGameRenderer extends GameRenderer {
 		return animationByDir;
 	}
 
-//	@Override
-//	public FixedEntityAnimation<Rectangle2D> createGhostValueList() {
-//		return new FixedEntityAnimation<>(col3(0, 8), col3(1, 8), col3(2, 8), col3(3, 8));
-//	}
-
 	// Ms. Pac-Man specific:
 
 	public void drawClapperboard(GraphicsContext g, Clapperboard clapper) {
