@@ -54,26 +54,24 @@ public class ResourceMgr {
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
 	/**
-	 * @param relativePath relative path starting from resource root directory
+	 * @param relativePath relative path (without leading slash) starting from resource root directory
 	 * @return full path to resource including path to resource root directory
 	 */
-	public static String toFullPath(String relativePath) {
-		Objects.requireNonNull(relativePath);
+	private static String toFullPath(String relativePath) {
 		return RESOURCE_ROOT_DIR + relativePath;
 	}
 
 	/**
-	 * @param relPath relative path starting from resource root directory
-	 * @return URL of resource addressed by this path
+	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
 	 */
 	public static URL urlFromRelPath(String relPath) {
-		Objects.requireNonNull(relPath);
 		return url(toFullPath(relPath));
 	}
 
 	/**
 	 * @param fullPath full path to resource including path to resource root directory
-	 * @return URL of resource addressed by this path
+	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
 	 */
 	public static URL url(String fullPath) {
 		Objects.requireNonNull(fullPath);
@@ -84,20 +82,31 @@ public class ResourceMgr {
 		return url;
 	}
 
+	/**
+	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * @param size    font size (must be a positive number)
+	 * @return font loaded from resource addressed by this path. If no such font can be loaded, a default font is returned
+	 */
 	public static Font font(String relPath, double size) {
-		Objects.requireNonNull(relPath, "Font path cannot be NULL");
-		var url = ResourceMgr.urlFromRelPath(relPath);
+		if (size <= 0) {
+			throw new IllegalArgumentException("Font size must be positive but is %.2f".formatted(size));
+		}
+		var url = urlFromRelPath(relPath);
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
-			LOG.error(() -> "Font at '%s' not loaded".formatted(ResourceMgr.toFullPath(relPath)));
+			LOG.error(() -> "Font with URL '%s' could not be loaded".formatted(url));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		return font;
 	}
 
+	/**
+	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * @return image loaded from resource addressed by this path. If no such font can be loaded, a default font is
+	 *         returned
+	 */
 	public static Image image(String relPath) {
-		Objects.requireNonNull(relPath, "Image path cannot be NULL");
-		var url = ResourceMgr.urlFromRelPath(relPath);
+		var url = urlFromRelPath(relPath);
 		return new Image(url.toExternalForm());
 	}
 
