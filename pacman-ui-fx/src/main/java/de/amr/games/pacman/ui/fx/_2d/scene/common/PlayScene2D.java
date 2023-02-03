@@ -50,7 +50,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		setCreditVisible(!context.hasCredit() || context.state() == GameState.GAME_OVER);
+		creditVisible = !context.hasCredit() || context.state() == GameState.GAME_OVER;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class PlayScene2D extends GameScene2D {
 			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_PINK_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_RED_GHOST));
-			if (!isCreditVisible()) {
+			if (!creditVisible) {
 				int lives = game.isOneLessLifeDisplayed() ? game.lives() - 1 : game.lives();
 				r.drawLivesCounter(g, lives);
 			}

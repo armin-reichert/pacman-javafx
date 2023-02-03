@@ -118,14 +118,6 @@ public abstract class GameScene2D implements GameScene {
 		// empty by default
 	}
 
-	public boolean isCreditVisible() {
-		return creditVisible;
-	}
-
-	public void setCreditVisible(boolean creditVisible) {
-		this.creditVisible = creditVisible;
-	}
-
 	@Override
 	public boolean is3D() {
 		return false;

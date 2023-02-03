@@ -41,7 +41,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		setCreditVisible(true);
+		creditVisible = true;
 	}
 
 	@Override
