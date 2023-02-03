@@ -120,9 +120,9 @@ public class MsPacManGameRenderer extends GameRenderer {
 		var w = MsPacManGameAssets.MAZE_WIDTH;
 		var h = MsPacManGameAssets.MAZE_HEIGHT;
 		g.drawImage(spritesheet().source(), 0, h * (mazeNumber - 1), w, h, x, y, w, h);
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, mazeNumber, tile));
 		if (energizersHidden) {
-			world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
+			world.energizerTiles().forEach(tile -> hideTileContent(g, mazeNumber, tile));
 		}
 	}
 

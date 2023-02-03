@@ -94,7 +94,13 @@ public abstract class GameScene2D implements GameScene {
 	public abstract void update();
 
 	public void draw() {
-		g.setFill(Color.BLACK);
+		var bgColor = Color.BLACK;
+		if (context.game().level().isPresent()) {
+			int levelNumber = context.game().level().get().number();
+			int mazeNumber = context.game().mazeNumber(levelNumber);
+			bgColor = context.r2D().mazeBackgroundColor(mazeNumber);
+		}
+		g.setFill(bgColor);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (hudVisible) {

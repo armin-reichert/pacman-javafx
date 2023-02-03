@@ -99,8 +99,13 @@ public abstract class GameRenderer implements Rendering2D {
 
 	public abstract Spritesheet spritesheet();
 
-	public void hideTileContent(GraphicsContext g, Vector2i tile) {
-		g.setFill(Color.BLACK);
+	@Override
+	public Color mazeBackgroundColor(int mazeNumber) {
+		return Color.BLACK;
+	}
+
+	public void hideTileContent(GraphicsContext g, int mazeNumber, Vector2i tile) {
+		g.setFill(mazeBackgroundColor(mazeNumber));
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}
 

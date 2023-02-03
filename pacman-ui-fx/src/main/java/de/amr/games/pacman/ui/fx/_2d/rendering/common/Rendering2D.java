@@ -53,6 +53,8 @@ public interface Rendering2D {
 
 	Color ghostColor(int ghostID);
 
+	Color mazeBackgroundColor(int mazeNumber);
+
 	Color mazeFoodColor(int mazeNumber);
 
 	Color mazeTopColor(int mazeNumber);
