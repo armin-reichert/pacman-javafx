@@ -50,13 +50,13 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		setCreditVisible(!ctx.hasCredit() || ctx.state() == GameState.GAME_OVER);
+		setCreditVisible(!context.hasCredit() || context.state() == GameState.GAME_OVER);
 	}
 
 	@Override
 	public void drawSceneContent() {
-		var game = ctx.game();
-		var r = ctx.r2D();
+		var game = context.game();
+		var r = context.r2D();
 		game.level().ifPresent(level -> {
 			drawMaze(r, level.world(), game.mazeNumber(level.number()), 0, t(3));
 			r.drawBonus(g, level.bonus());
@@ -75,10 +75,10 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawGameState(Rendering2D r) {
-		boolean showGameOverText = ctx.state() == GameState.GAME_OVER || !ctx.hasCredit();
+		boolean showGameOverText = context.state() == GameState.GAME_OVER || !context.hasCredit();
 		if (showGameOverText) {
 			r.drawGameOverMessage(g);
-		} else if (ctx.state() == GameState.READY) {
+		} else if (context.state() == GameState.READY) {
 			r.drawGameReadyMessage(g);
 		}
 	}
@@ -102,7 +102,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawDebugInfo() {
 		drawTileStructure(g, size.x() / World.TS, size.y() / World.TS);
-		ctx.level().ifPresent(level -> {
+		context.level().ifPresent(level -> {
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {
 				g.setFill(Color.RED);
 				arcadeWorld.upwardBlockedTiles().forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, 1));
@@ -113,7 +113,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onKeyPressed() {
 		if (Keyboard.pressed(KeyCode.DIGIT5)) {
-			if (!ctx.hasCredit()) { // credit can only be added in attract mode
+			if (!context.hasCredit()) { // credit can only be added in attract mode
 				Actions.addCredit();
 			}
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
@@ -129,7 +129,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onSwitchFrom3D() {
-		ctx.level().ifPresent(level -> {
+		context.level().ifPresent(level -> {
 			level.pac().animations().ifPresent(EntityAnimationMap::ensureRunning);
 			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(EntityAnimationMap::ensureRunning));
 		});
@@ -137,11 +137,11 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		ctx.sounds().play(GameSound.BONUS_EATEN);
+		context.sounds().play(GameSound.BONUS_EATEN);
 	}
 
 	@Override
 	public void onPlayerGetsExtraLife(GameEvent e) {
-		ctx.sounds().play(GameSound.EXTRA_LIFE);
+		context.sounds().play(GameSound.EXTRA_LIFE);
 	}
 }

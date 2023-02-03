@@ -63,7 +63,7 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void update() {
-		var timer = ctx.state().timer();
+		var timer = context.state().timer();
 		if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 5 == 0) {
 			drawRandomHexCodes();
 		} else if (timer.betweenSeconds(2.0, 3.5) && timer.tick() % 5 == 0) {
@@ -71,7 +71,7 @@ public class BootScene extends GameScene2D {
 		} else if (timer.atSecond(3.5)) {
 			drawGrid();
 		} else if (timer.atSecond(4.0)) {
-			ctx.gameController().terminateCurrentState();
+			context.gameController().terminateCurrentState();
 		}
 	}
 
@@ -97,7 +97,7 @@ public class BootScene extends GameScene2D {
 	private void drawRandomHexCodes() {
 		clearBuffer();
 		bufferContext.setFill(Color.rgb(222, 222, 255));
-		bufferContext.setFont(ctx.r2D().arcadeFont(TS));
+		bufferContext.setFont(context.r2D().arcadeFont(TS));
 		for (int row = 0; row < SIZE_TILES.y(); ++row) {
 			for (int col = 0; col < SIZE_TILES.x(); ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));
@@ -109,9 +109,9 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomSprites() {
 		clearBuffer();
-		var sheet = ((GameRenderer) ctx.r2D()).spritesheet(); // TODO
+		var sheet = ((GameRenderer) context.r2D()).spritesheet(); // TODO
 		var image = sheet.source();
-		if (ctx.gameVariant() == GameVariant.MS_PACMAN) {
+		if (context.gameVariant() == GameVariant.MS_PACMAN) {
 			image = sheet.subImage(0, 0, (int) image.getWidth(), 248);
 		}
 		var w = image.getWidth();
@@ -127,7 +127,7 @@ public class BootScene extends GameScene2D {
 			var r2 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
 			var split = numCols / 4 + RND.nextInt(numCols / 2);
 			for (int col = 0; col < numCols; ++col) {
-				ctx.r2D().drawSprite(bufferContext, col < split ? r1 : r2, cellSize * col, cellSize * row);
+				context.r2D().drawSprite(bufferContext, col < split ? r1 : r2, cellSize * col, cellSize * row);
 			}
 		}
 		takeSnapshot();

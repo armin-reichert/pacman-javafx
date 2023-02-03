@@ -60,7 +60,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var r = (MsPacManGameRenderer) ctx.r2D();
+		var r = (MsPacManGameRenderer) context.r2D();
 		var msPacManSprite = r.lifeSymbolRegion();
 		var arcade8 = r.arcadeFont(TS);
 		var arcade6 = r.arcadeFont(6.0);

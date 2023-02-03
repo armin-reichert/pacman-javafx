@@ -209,7 +209,7 @@ public class GameUI implements GameEventListener {
 		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
 		pipPlayScene.fxSubScene().setVisible(visible);
 		if (visible) {
-			pipPlayScene.setContext(currentGameScene.ctx());
+			pipPlayScene.setContext(currentGameScene.context());
 			pipPlayScene.clear();
 			pipPlayScene.drawSceneContent();
 			pipPlayScene.drawHUD();
@@ -282,7 +282,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void createLevelAnimations(GameLevel level) {
-		var r = currentGameScene.ctx().r2D();
+		var r = currentGameScene.context().r2D();
 		level.pac().setAnimations(r.createPacAnimations(level.pac()));
 		level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
 		level.world().addAnimation("flashing", r.createMazeFlashingAnimation());

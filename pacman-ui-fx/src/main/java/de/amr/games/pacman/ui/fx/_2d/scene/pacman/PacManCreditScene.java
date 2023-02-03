@@ -60,7 +60,7 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var r = ctx.r2D();
+		var r = context.r2D();
 		var arcade8 = r.arcadeFont(TS);
 		var arcade6 = r.arcadeFont(6);
 		r.drawText(g, "PUSH START BUTTON", r.ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(6), t(17));
@@ -68,6 +68,6 @@ public class PacManCreditScene extends GameScene2D {
 		r.drawText(g, "BONUS PAC-MAN FOR 10000", Color.rgb(255, 184, 174), arcade8, t(1), t(25));
 		r.drawText(g, "PTS", Color.rgb(255, 184, 174), arcade6, t(25), t(25));
 		r.drawCopyright(g, 29);
-		r.drawLevelCounter(g, ctx.game().levelCounter());
+		r.drawLevelCounter(g, context.game().levelCounter());
 	}
 }

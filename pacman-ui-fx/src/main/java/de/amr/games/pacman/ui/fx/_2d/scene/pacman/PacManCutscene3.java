@@ -50,7 +50,7 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = (PacManGameRenderer) ctx.r2D();
+		var renderer = (PacManGameRenderer) context.r2D();
 		frame = -1;
 		initialDelay = 120;
 		pac = new Pac("Pac-Man");
@@ -71,7 +71,7 @@ public class PacManCutscene3 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			ctx.sounds().loop(GameSound.INTERMISSION_1, 2);
+			context.sounds().loop(GameSound.INTERMISSION_1, 2);
 			pac.placeAtTile(v2i(29, 20), 0, 0);
 			pac.setMoveDir(Direction.LEFT);
 			pac.setPixelSpeed(1.25f);
@@ -87,7 +87,7 @@ public class PacManCutscene3 extends GameScene2D {
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.selectAndRunAnimation(AnimKeys.BLINKY_NAKED);
 		} else if (frame == 516) {
-			ctx.state().timer().expire();
+			context.state().timer().expire();
 			return;
 		}
 		pac.move();
@@ -99,7 +99,7 @@ public class PacManCutscene3 extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(ctx.r2D().arcadeFont(TS));
+			g.setFont(context.r2D().arcadeFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));
@@ -107,8 +107,8 @@ public class PacManCutscene3 extends GameScene2D {
 				g.fillText("Frame %d".formatted(frame), t(1), t(5));
 			}
 		}
-		ctx.r2D().drawPac(g, pac);
-		ctx.r2D().drawGhost(g, blinky);
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
+		context.r2D().drawPac(g, pac);
+		context.r2D().drawGhost(g, blinky);
+		context.r2D().drawLevelCounter(g, context.game().levelCounter());
 	}
 }

@@ -179,7 +179,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public GameSceneContext ctx() {
+	public GameSceneContext context() {
 		return ctx;
 	}
 

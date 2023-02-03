@@ -46,7 +46,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * @return the scene context (game controller, model, rendering, 3D model, sound)
 	 */
-	GameSceneContext ctx();
+	GameSceneContext context();
 
 	/**
 	 * Called when the scene becomes the current one.
@@ -116,13 +116,13 @@ public interface GameScene extends GameEventListener {
 	 * "Locks" the current game controller state by setting the timer duration to {@link TickTimer#INDEFINITE}.
 	 */
 	default void lockGameState() {
-		ctx().state().timer().resetIndefinitely();
+		context().state().timer().resetIndefinitely();
 	}
 
 	/**
 	 * "Unlocks" the current game controller state by forcing the timer to expire.
 	 */
 	default void unlockGameState() {
-		ctx().state().timer().expire();
+		context().state().timer().expire();
 	}
 }

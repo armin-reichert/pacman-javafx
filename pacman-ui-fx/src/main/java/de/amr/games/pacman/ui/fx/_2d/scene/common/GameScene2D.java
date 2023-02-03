@@ -62,7 +62,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final SubScene fxSubScene;
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
-	protected GameSceneContext ctx;
+	protected GameSceneContext context;
 	protected boolean creditVisible;
 	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
@@ -96,8 +96,9 @@ public abstract class GameScene2D implements GameScene {
 			drawDebugInfo();
 		}
 		drawHUD();
-		if (ctx.gameController().levelTestMode) {
-			ctx.r2D().drawText(g, "LEVEL TEST MODE", Color.WHITE, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60, 190);
+		if (context.gameController().levelTestMode) {
+			context.r2D().drawText(g, "LEVEL TEST MODE", Color.WHITE, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60,
+					190);
 		}
 	}
 
@@ -111,7 +112,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void drawHUD() {
-		ctx.r2D().drawHUD(g, ctx.game(), creditVisible);
+		context.r2D().drawHUD(g, context.game(), creditVisible);
 	}
 
 	/**
@@ -143,13 +144,13 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public GameSceneContext ctx() {
-		return ctx;
+	public GameSceneContext context() {
+		return context;
 	}
 
 	@Override
 	public void setContext(GameSceneContext context) {
-		ctx = context;
+		this.context = context;
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = (PacManGameRenderer) ctx.r2D();
+		var renderer = (PacManGameRenderer) context.r2D();
 		frame = -1;
 		initialDelay = 120;
 
@@ -93,7 +93,7 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			ctx.sounds().play(GameSound.INTERMISSION_1);
+			context.sounds().play(GameSound.INTERMISSION_1);
 		} else if (frame == 110) {
 			blinky.setPixelSpeed(1.25f);
 			blinky.show();
@@ -116,7 +116,7 @@ public class PacManCutscene2 extends GameScene2D {
 		} else if (frame == 508) {
 			stretchedDressAnimation = null;
 		} else if (frame == 509) {
-			ctx.state().timer().expire();
+			context.state().timer().expire();
 			return;
 		}
 		pac.move();
@@ -128,7 +128,7 @@ public class PacManCutscene2 extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(ctx.r2D().arcadeFont(TS));
+			g.setFont(context.r2D().arcadeFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));
@@ -137,10 +137,10 @@ public class PacManCutscene2 extends GameScene2D {
 			}
 		}
 		if (stretchedDressAnimation != null) {
-			ctx.r2D().drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+			context.r2D().drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 		}
-		ctx.r2D().drawGhost(g, blinky);
-		ctx.r2D().drawPac(g, pac);
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
+		context.r2D().drawGhost(g, blinky);
+		context.r2D().drawPac(g, pac);
+		context.r2D().drawLevelCounter(g, context.game().levelCounter());
 	}
 }

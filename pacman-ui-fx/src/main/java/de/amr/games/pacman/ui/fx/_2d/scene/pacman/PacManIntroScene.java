@@ -63,8 +63,8 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void init() {
 		intro.restart(PacManIntroState.START);
-		intro.context().pacMan.setAnimations(ctx.r2D().createPacAnimations(intro.context().pacMan));
-		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimations(ctx.r2D().createGhostAnimations(ghost)));
+		intro.context().pacMan.setAnimations(context.r2D().createPacAnimations(intro.context().pacMan));
+		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimations(context.r2D().createGhostAnimations(ghost)));
 		PacManIntroData.BLINKING.reset();
 	}
 
@@ -127,11 +127,11 @@ public class PacManIntroScene extends GameScene2D {
 		}
 		default -> throw new IllegalArgumentException("Unknown intro state: " + intro.state());
 		}
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
+		context.r2D().drawLevelCounter(g, context.game().levelCounter());
 	}
 
 	private void drawCopyright() {
-		ctx.r2D().drawCopyright(g, 32);
+		context.r2D().drawCopyright(g, 32);
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -140,9 +140,9 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery() {
-		var r = ctx.r2D();
+		var r = context.r2D();
 		var col = PacManIntroData.LEFT_TILE;
-		var font = ctx.r2D().arcadeFont(TS);
+		var font = context.r2D().arcadeFont(TS);
 		if (intro.context().titleVisible) {
 			r.drawText(g, "CHARACTER", PALE_WHITE, font, t(col + 3), t(6));
 			r.drawText(g, "/", PALE_WHITE, font, t(col + 13), t(6));
@@ -170,7 +170,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawBlinkingEnergizer() {
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
-			g.setFill(ctx.r2D().mazeFoodColor(1));
+			g.setFill(context.r2D().mazeFoodColor(1));
 			g.fillOval(t(PacManIntroData.LEFT_TILE), t(20), TS, TS);
 		}
 	}
@@ -180,33 +180,33 @@ public class PacManIntroScene extends GameScene2D {
 		var ghosts = intro.context().ghosts;
 		if (offsetX == 0) {
 			for (var ghost : ghosts) {
-				ctx.r2D().drawGhost(g, ghost);
+				context.r2D().drawGhost(g, ghost);
 			}
 		} else {
-			ctx.r2D().drawGhost(g, ghosts[0]);
+			context.r2D().drawGhost(g, ghosts[0]);
 			g.save();
 			g.translate(offsetX, 0);
-			ctx.r2D().drawGhost(g, ghosts[1]);
-			ctx.r2D().drawGhost(g, ghosts[2]);
+			context.r2D().drawGhost(g, ghosts[1]);
+			context.r2D().drawGhost(g, ghosts[2]);
 			g.restore();
-			ctx.r2D().drawGhost(g, ghosts[3]);
+			context.r2D().drawGhost(g, ghosts[3]);
 		}
-		ctx.r2D().drawPac(g, pacMan);
+		context.r2D().drawPac(g, pacMan);
 	}
 
 	private void drawPoints() {
 		int tileX = PacManIntroData.LEFT_TILE + 6;
 		int tileY = 25;
-		g.setFill(ctx.r2D().mazeFoodColor(1));
+		g.setFill(context.r2D().mazeFoodColor(1));
 		g.fillRect(t(tileX) + 4.0, t(tileY - 1) + 4.0, 2, 2);
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
 		g.setFill(PALE_WHITE);
-		g.setFont(ctx.r2D().arcadeFont(TS));
+		g.setFont(context.r2D().arcadeFont(TS));
 		g.fillText("10", t(tileX + 2), t(tileY));
 		g.fillText("50", t(tileX + 2), t(tileY + 2));
-		g.setFont(ctx.r2D().arcadeFont(6));
+		g.setFont(context.r2D().arcadeFont(6));
 		g.fillText("PTS", t(tileX + 5), t(tileY));
 		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}

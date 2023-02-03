@@ -51,13 +51,13 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		intro = new MsPacManIntroController(ctx.gameController());
+		intro = new MsPacManIntroController(context.gameController());
 		intro.restart(MsPacManIntroState.START);
-		var pacAnimations = ctx.r2D().createPacAnimations(intro.context().msPacMan);
+		var pacAnimations = context.r2D().createPacAnimations(intro.context().msPacMan);
 		pacAnimations.ensureRunning();
 		intro.context().msPacMan.setAnimations(pacAnimations);
 		intro.context().ghosts.forEach(ghost -> {
-			var ghostAnimations = ctx.r2D().createGhostAnimations(ghost);
+			var ghostAnimations = context.r2D().createGhostAnimations(ghost);
 			ghostAnimations.ensureRunning();
 			ghost.setAnimations(ghostAnimations);
 		});
@@ -96,28 +96,28 @@ public class MsPacManIntroScene extends GameScene2D {
 		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
 			drawMsPacManText();
 		}
-		intro.context().ghosts.forEach(ghost -> ctx.r2D().drawGhost(g, ghost));
-		ctx.r2D().drawPac(g, intro.context().msPacMan);
-		ctx.r2D().drawCopyright(g, 29);
-		ctx.r2D().drawLevelCounter(g, ctx.game().levelCounter());
+		intro.context().ghosts.forEach(ghost -> context.r2D().drawGhost(g, ghost));
+		context.r2D().drawPac(g, intro.context().msPacMan);
+		context.r2D().drawCopyright(g, 29);
+		context.r2D().drawLevelCounter(g, context.game().levelCounter());
 	}
 
 	private void drawTitle() {
-		ctx.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
+		context.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, context.r2D().arcadeFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
 	}
 
 	private void drawGhostText(Ghost ghost) {
 		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			ctx.r2D().drawText(g, "WITH", Color.WHITE, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+			context.r2D().drawText(g, "WITH", Color.WHITE, context.r2D().arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
 		}
-		ctx.r2D().drawText(g, ghost.name().toUpperCase(), ctx.r2D().ghostColor(ghost.id()), ctx.r2D().arcadeFont(TS),
+		context.r2D().drawText(g, ghost.name().toUpperCase(), context.r2D().ghostColor(ghost.id()), context.r2D().arcadeFont(TS),
 				t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
-		ctx.r2D().drawText(g, "STARRING", Color.WHITE, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(),
+		context.r2D().drawText(g, "STARRING", Color.WHITE, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
 				BLINKY_END_TILE.y() + t(3));
-		ctx.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, ctx.r2D().arcadeFont(TS), TITLE_TILE.x(),
+		context.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
 				BLINKY_END_TILE.y() + t(6));
 	}
 
