@@ -23,18 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Selects entries randomly from a list.
+ * Selects entries randomly from a list without repetitions.
  * 
  * @author Armin Reichert
  */
 public class Picker<T> {
-	private List<T> entries;
+	private final List<T> entries;
 	private int current;
 
 	@SuppressWarnings("unchecked")
@@ -42,7 +41,7 @@ public class Picker<T> {
 		if (items.length == 0) {
 			throw new IllegalArgumentException("Must provide at least one item to select");
 		}
-		this.entries = new ArrayList<>(Arrays.asList(items));
+		this.entries = Arrays.asList(Arrays.copyOf(items, items.length));
 		Collections.shuffle(entries);
 		current = 0;
 	}
