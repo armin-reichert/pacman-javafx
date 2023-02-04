@@ -27,10 +27,12 @@ package de.amr.games.pacman.ui.fx.app;
 import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -45,7 +47,12 @@ public class ResourceMgr {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final String RESOURCE_ROOT_DIR = "/de/amr/games/pacman/ui/fx/";
+	private static final String RESOURCE_ROOT_DIR = "/";
+
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("texts.messages");
+	public static final Picker<String> MESSAGES_CHEATING = createPicker(ResourceMgr.MESSAGES, "cheating");
+	public static final Picker<String> MESSAGES_LEVEL_COMPLETE = createPicker(ResourceMgr.MESSAGES, "level.complete");
+	public static final Picker<String> MESSAGES_GAME_OVER = createPicker(ResourceMgr.MESSAGES, "game.over");
 
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
@@ -118,5 +125,22 @@ public class ResourceMgr {
 	public static Background imageBackground(String relPath) {
 		Objects.requireNonNull(relPath);
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
+	}
+
+	public static String message(String pattern, Object... args) {
+		try {
+			return MESSAGES.getString(pattern).formatted(args);
+		} catch (MissingResourceException x) {
+			LOG.error("No text resource found for key '%s'", pattern);
+			return "{%s}".formatted(pattern);
+		}
+	}
+
+	private static Picker<String> createPicker(ResourceBundle bundle, String prefix) {
+		return new Picker<>(bundle.keySet().stream()//
+				.filter(key -> key.startsWith(prefix))//
+				.sorted()//
+				.map(bundle::getString)//
+				.toArray(String[]::new));
 	}
 }

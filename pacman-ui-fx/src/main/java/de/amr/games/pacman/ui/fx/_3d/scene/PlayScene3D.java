@@ -58,7 +58,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.Modifier;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.TextManager;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -328,7 +327,7 @@ public class PlayScene3D implements GameScene {
 			ctx.level().ifPresent(level -> {
 				LOG.info("Starting level %d", level.number());
 				createGameLevel3D(level);
-				Actions.showFlashMessage(TextManager.message("level_starting", level.number()));
+				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
 			});
 			afterSeconds(3, this::unlockGameState).play();
 		}
@@ -336,8 +335,8 @@ public class PlayScene3D implements GameScene {
 		case LEVEL_COMPLETE -> {
 			ctx.level().ifPresent(level -> {
 				lockGameState();
-				var message = "%s%n%n%s".formatted(TextManager.TALK_LEVEL_COMPLETE.next(),
-						TextManager.message("level_complete", level.number()));
+				var message = "%s%n%n%s".formatted(ResourceMgr.MESSAGES_LEVEL_COMPLETE.next(),
+						ResourceMgr.message("level_complete", level.number()));
 				var animation = new SequentialTransition( //
 						pause(1.0), //
 						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : pause(1.0), //
@@ -350,7 +349,7 @@ public class PlayScene3D implements GameScene {
 			});
 		}
 
-		case GAME_OVER -> Actions.showFlashMessageSeconds(3, TextManager.TALK_GAME_OVER.next());
+		case GAME_OVER -> Actions.showFlashMessageSeconds(3, ResourceMgr.MESSAGES_GAME_OVER.next());
 
 		default -> { // ignore
 		}

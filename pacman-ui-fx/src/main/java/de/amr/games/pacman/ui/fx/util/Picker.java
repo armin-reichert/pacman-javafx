@@ -33,12 +33,12 @@ import java.util.List;
  * 
  * @author Armin Reichert
  */
-public class EntryPicker<T> {
+public class Picker<T> {
 	private List<T> entries;
 	private int current;
 
 	@SuppressWarnings("unchecked")
-	public EntryPicker(T... items) {
+	public Picker(T... items) {
 		if (items.length == 0) {
 			throw new IllegalArgumentException("Must provide at least one item to select");
 		}
