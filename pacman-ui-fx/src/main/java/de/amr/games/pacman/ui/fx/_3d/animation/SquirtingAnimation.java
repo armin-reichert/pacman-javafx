@@ -23,7 +23,9 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.lib.U;
+import static de.amr.games.pacman.lib.math.MathFunctions.randomDouble;
+import static de.amr.games.pacman.lib.math.MathFunctions.randomInt;
+
 import de.amr.games.pacman.model.common.world.World;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
@@ -54,13 +56,13 @@ public class SquirtingAnimation extends Transition {
 	}
 
 	private void createDrops(Node pellet, boolean bigSquirt) {
-		var numDrops = bigSquirt ? U.randomInt(20, 30) : U.randomInt(4, 8);
+		var numDrops = bigSquirt ? randomInt(20, 30) : randomInt(4, 8);
 		var color = Color.gray(0.4, 0.25);
 		var material = new PhongMaterial(color);
 		drops = new Sphere[numDrops];
 		veloc = new Point3D[numDrops];
 		for (int i = 0; i < numDrops; ++i) {
-			var r = bigSquirt ? U.randomDouble(0.1, 1.0) : U.randomDouble(0.1, 0.5);
+			var r = bigSquirt ? randomDouble(0.1, 1.0) : randomDouble(0.1, 0.5);
 			var drop = new Sphere(r);
 			drop.setMaterial(material);
 			drop.setTranslateX(pellet.getTranslateX());
@@ -68,7 +70,7 @@ public class SquirtingAnimation extends Transition {
 			drop.setTranslateZ(-World.HTS);
 			drop.setVisible(false);
 			drops[i] = drop;
-			veloc[i] = new Point3D(U.randomDouble(0.05, 0.25), U.randomDouble(0.05, 0.25), -U.randomDouble(1.0, 4.0));
+			veloc[i] = new Point3D(randomDouble(0.05, 0.25), randomDouble(0.05, 0.25), -randomDouble(1.0, 4.0));
 		}
 	}
 
