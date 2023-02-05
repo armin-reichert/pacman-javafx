@@ -271,7 +271,7 @@ public class GameUI implements GameEventListener {
 		switch (event.type) {
 		case GAME_STATE_CHANGED -> updateGameScene(false);
 		case LEVEL_STARTING -> {
-			gameController.game().level().ifPresent(this::createLevelAnimations);
+			gameController.game().level().ifPresent(this::initAnimations);
 			updateGameScene(true);
 		}
 		case UNSPECIFIED_CHANGE -> updateGameScene(true);
@@ -282,7 +282,7 @@ public class GameUI implements GameEventListener {
 		currentGameScene.onGameEvent(event);
 	}
 
-	private void createLevelAnimations(GameLevel level) {
+	private void initAnimations(GameLevel level) {
 		var r = currentGameScene.context().r2D();
 		level.pac().setAnimations(r.createPacAnimations(level.pac()));
 		level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
