@@ -50,9 +50,9 @@ public class ResourceMgr {
 	private static final String RESOURCE_ROOT_DIR = "/";
 
 	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("texts.messages");
-	public static final Picker<String> MESSAGES_CHEATING = createPicker(ResourceMgr.MESSAGES, "cheating");
-	public static final Picker<String> MESSAGES_LEVEL_COMPLETE = createPicker(ResourceMgr.MESSAGES, "level.complete");
-	public static final Picker<String> MESSAGES_GAME_OVER = createPicker(ResourceMgr.MESSAGES, "game.over");
+	public static final Picker<String> MESSAGES_CHEATING = createPicker(MESSAGES, "cheating");
+	public static final Picker<String> MESSAGES_LEVEL_COMPLETE = createPicker(MESSAGES, "level.complete");
+	public static final Picker<String> MESSAGES_GAME_OVER = createPicker(MESSAGES, "game.over");
 
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
