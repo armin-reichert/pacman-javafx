@@ -29,7 +29,7 @@ This script
 
 ## How to run the locally built version
 
-The `tentackle\target` directory now contains a zip file `pacman-javafx-tentackle-1.0-jlink.zip`. Follow the instructions above to run the game(s).
+Execute the script `run.bat` or follow the steps above for the zip file inside the `tentackle\target` directory.
 
 ## How to use
 
