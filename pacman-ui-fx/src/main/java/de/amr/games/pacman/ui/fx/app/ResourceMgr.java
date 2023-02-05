@@ -127,12 +127,20 @@ public class ResourceMgr {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 
-	public static String message(String pattern, Object... args) {
+	/**
+	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
+	 * messages resource bundle.
+	 * 
+	 * @param keyPattern message key pattern
+	 * @param args       arguments merged into key pattern
+	 * @return message text for composed key or string indicating missing text
+	 */
+	public static String message(String keyPattern, Object... args) {
 		try {
-			return MESSAGES.getString(pattern).formatted(args);
-		} catch (MissingResourceException x) {
-			LOG.error("No text resource found for key '%s'", pattern);
-			return "{%s}".formatted(pattern);
+			return MESSAGES.getString(keyPattern).formatted(args);
+		} catch (Exception x) {
+			LOG.error("No text resource found for key '%s'", keyPattern);
+			return "missing{%s}".formatted(keyPattern);
 		}
 	}
 
