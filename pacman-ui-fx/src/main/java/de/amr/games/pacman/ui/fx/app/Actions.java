@@ -161,13 +161,13 @@ public class Actions {
 
 	public static void oneSimulationStep() {
 		if (Env.Simulation.pausedPy.get()) {
-			ui.gameLoop().executeSingleStep(true);
+			ui.simulation().executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
 		if (Env.Simulation.pausedPy.get()) {
-			ui.gameLoop().executeSteps(10, true);
+			ui.simulation().executeSteps(10, true);
 		}
 	}
 

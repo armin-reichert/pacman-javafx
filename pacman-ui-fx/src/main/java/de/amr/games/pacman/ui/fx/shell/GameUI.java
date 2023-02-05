@@ -81,20 +81,12 @@ public class GameUI implements GameEventListener {
 	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
-	private final GameController gameController;
-	private final Stage stage;
-	private final Dashboard dashboard = new Dashboard();
-	private final FlashMessageView flashMessageView = new FlashMessageView();
+	public class Simulation extends GameLoop {
 
-	/**
-	 * Picture-in-picture view.
-	 * <p>
-	 * A mini 2D view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
-	 * controlled using the dashboard.
-	 */
-	private final PlayScene2D pipPlayScene = new PlayScene2D();
+		public Simulation(int fps) {
+			super(fps);
+		}
 
-	private final GameLoop gameLoop = new GameLoop(GameModel.FPS) {
 		@Override
 		public void doUpdate() {
 			gameController.update();
@@ -108,7 +100,18 @@ public class GameUI implements GameEventListener {
 			dashboard.update();
 			updatePipView();
 		}
-	};
+	}
+
+	private final Simulation simulation = new Simulation(GameModel.FPS);
+	private final GameController gameController;
+	private final Stage stage;
+	private final Dashboard dashboard = new Dashboard();
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+	/**
+	 * Embedded 2D-view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
+	 * controlled using the dashboard.
+	 */
+	private final PlayScene2D pipPlayScene = new PlayScene2D();
 
 	private Scene mainScene;
 	private GameScene currentGameScene;
@@ -160,9 +163,9 @@ public class GameUI implements GameEventListener {
 		pipPlayScene.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateStageFrame());
-		gameLoop.pausedPy.bind(Env.Simulation.pausedPy);
-		gameLoop.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
-		gameLoop.measuredPy.bind(Env.Simulation.timeMeasuredPy);
+		simulation.pausedPy.bind(Env.Simulation.pausedPy);
+		simulation.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
+		simulation.measuredPy.bind(Env.Simulation.timeMeasuredPy);
 	}
 
 	public void start() {
@@ -173,14 +176,14 @@ public class GameUI implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
-		gameLoop().start();
-		LOG.info("Game started. Game loop target frame rate: %d", gameLoop.targetFrameratePy.get());
+		simulation.start();
+		LOG.info("Game started. Game loop target frame rate: %d", simulation.targetFrameratePy.get());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
 				U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
 	}
 
 	public void stop() {
-		gameLoop.stop();
+		simulation.stop();
 		LOG.info("Game stopped");
 	}
 
@@ -330,8 +333,8 @@ public class GameUI implements GameEventListener {
 		return stage.getScene();
 	}
 
-	public GameLoop gameLoop() {
-		return gameLoop;
+	public Simulation simulation() {
+		return simulation;
 	}
 
 	public GameScene currentGameScene() {

@@ -77,7 +77,7 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.gameLoop().executeSteps(Env.Simulation.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.simulation().executeSteps(Env.Simulation.simulationStepsPy.get(), true));
 
 		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.Simulation.simulationStepsPy.get());
 		spinnerSimulationSteps.valueProperty()
@@ -90,9 +90,9 @@ public class SectionGeneral extends Section {
 				.addListener((obs, oldValue, newValue) -> Env.Simulation.targetFrameratePy.set(newValue.intValue()));
 
 		addInfo("",
-				() -> String.format("Target %dHz Actual %dHz", ui.gameLoop().targetFrameratePy.get(), ui.gameLoop().getFPS()));
+				() -> String.format("Target %dHz Actual %dHz", ui.simulation().targetFrameratePy.get(), ui.simulation().getFPS()));
 
-		addInfo("Total Updates", ui.gameLoop()::getUpdateCount);
+		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
 		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.mainScene().getWidth(), ui.mainScene().getHeight()));
 
