@@ -228,22 +228,23 @@ public abstract class GameRenderer implements Rendering2D {
 
 	@Override
 	public void drawScores(GraphicsContext g, GameModel game) {
-		game.score().ifPresent(score -> drawScore(g, score, "SCORE", TS, TS));
-		game.highScore().ifPresent(hiscore -> drawScore(g, hiscore, "HIGH SCORE", 16 * TS, TS));
+		game.score().ifPresent(score -> drawScore(g, score, "SCORE", Palette.PALE, ARCADE_FONT_TS, t(1), t(1)));
+		game.highScore()
+				.ifPresent(hiscore -> drawScore(g, hiscore, "HIGH SCORE", Palette.PALE, ARCADE_FONT_TS, t(16), t(1)));
+	}
+
+	private void drawScore(GraphicsContext g, Score score, String title, Color color, Font font, double x, double y) {
+		drawText(g, title, color, font, x, y);
+		var pointsText = "%02d".formatted(score.points());
+		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+		if (score.points() != 0) {
+			drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+		}
 	}
 
 	@Override
 	public void drawCredit(GraphicsContext g, GameModel game) {
 		drawText(g, "CREDIT  %d".formatted(game.credit()), Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
-	}
-
-	private void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-		drawText(g, title, Palette.PALE, ARCADE_FONT_TS, x, y);
-		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), Palette.PALE, ARCADE_FONT_TS, x, y + TS + 1);
-		if (score.points() != 0) {
-			drawText(g, "L" + score.levelNumber(), Palette.PALE, ARCADE_FONT_TS, x + t(8), y + TS + 1);
-		}
 	}
 
 	@Override
