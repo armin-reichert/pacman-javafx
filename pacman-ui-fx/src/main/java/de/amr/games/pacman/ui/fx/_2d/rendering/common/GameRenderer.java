@@ -227,7 +227,7 @@ public abstract class GameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawHUD(GraphicsContext g, GameModel game) {
+	public void drawScores(GraphicsContext g, GameModel game) {
 		game.score().ifPresent(score -> drawScore(g, score, "SCORE", TS, TS));
 		game.highScore().ifPresent(hiscore -> drawScore(g, hiscore, "HIGH SCORE", 16 * TS, TS));
 	}

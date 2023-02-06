@@ -104,7 +104,7 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (hudVisible) {
-			context.r2D().drawHUD(g, context.game());
+			context.r2D().drawScores(g, context.game());
 		}
 		if (creditVisible) {
 			context.r2D().drawCredit(g, context.game());
