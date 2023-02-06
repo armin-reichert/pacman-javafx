@@ -57,40 +57,43 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class GameRenderer implements Rendering2D {
 
+	public static class Palette {
+		public static final Color RED = Color.rgb(255, 0, 0);
+		public static final Color YELLOW = Color.YELLOW;
+		public static final Color PINK = Color.rgb(252, 181, 255);
+		public static final Color CYAN = Color.rgb(0, 255, 255);
+		public static final Color ORANGE = Color.rgb(251, 190, 88);
+		public static final Color BLUE = Color.rgb(33, 33, 255);
+		public static final Color PALE = Color.rgb(222, 222, 255);
+		public static final Color ROSE = Color.rgb(252, 187, 179);
+	}
+
 	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
 
 	static {
-		var red = Color.rgb(255, 0, 0);
-		var pink = Color.rgb(252, 181, 255);
-		var cyan = Color.rgb(0, 255, 255);
-		var orange = Color.rgb(251, 190, 88);
-		var blue = Color.rgb(33, 33, 255);
-		var pale = Color.rgb(224, 221, 255);
-		var rose = Color.rgb(252, 187, 179);
-
-		//@formatter:off
+	//@formatter:off
 		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(//
-			red, pale, blue,  // normal
-			blue, rose, rose, // frightened
-			pale, rose, red   // flashing
+			Palette.RED, Palette.PALE, Palette.BLUE,  // normal
+			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
+			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
 
 		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColoring(//
-			pink, pale, blue, // normal
-			blue, rose, rose, // frightened
-			pale, rose, red   // flashing
+			Palette.PINK, Palette.PALE, Palette.BLUE, // normal
+			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
+			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
 
 		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColoring(//
-			cyan, pale, blue, // normal
-			blue, rose, rose, // frightened
-			pale, rose, red   // flashing
+			Palette.CYAN, Palette.PALE, Palette.BLUE, // normal
+			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
+			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
 		
 		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(//
-			orange, pale, blue, // normal
-			blue, rose, rose,   // frightened
-			pale, rose, red     // flashing
+			Palette.ORANGE, Palette.PALE, Palette.BLUE, // normal
+			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
+			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
 		//@formatter:on
 	}
@@ -98,11 +101,6 @@ public abstract class GameRenderer implements Rendering2D {
 	private static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
 
 	public abstract Spritesheet spritesheet();
-
-	@Override
-	public Color mazeBackgroundColor(int mazeNumber) {
-		return Color.BLACK;
-	}
 
 	public void hideTileContent(GraphicsContext g, int mazeNumber, Vector2i tile) {
 		g.setFill(mazeBackgroundColor(mazeNumber));
@@ -117,6 +115,11 @@ public abstract class GameRenderer implements Rendering2D {
 	@Override
 	public Color ghostColor(int ghostID) {
 		return GHOST_COLORS[ghostID].normalDress();
+	}
+
+	@Override
+	public Color mazeBackgroundColor(int mazeNumber) {
+		return Color.BLACK;
 	}
 
 	@Override
@@ -219,7 +222,7 @@ public abstract class GameRenderer implements Rendering2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText(g, "+" + excessLives, Color.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10), y + t(1));
+			drawText(g, "+" + excessLives, Palette.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10), y + t(1));
 		}
 	}
 
@@ -231,30 +234,28 @@ public abstract class GameRenderer implements Rendering2D {
 
 	@Override
 	public void drawCredit(GraphicsContext g, GameModel game) {
-		drawText(g, "CREDIT  %d".formatted(game.credit()), Color.rgb(222, 222, 255), arcadeFont(TS), t(2), t(36) - 1);
+		drawText(g, "CREDIT  %d".formatted(game.credit()), Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
 	}
 
 	private void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-		var font = arcadeFont(TS);
-		var color = Color.rgb(222, 222, 255);
-		drawText(g, title, color, font, x, y);
+		drawText(g, title, Palette.PALE, ARCADE_FONT_TS, x, y);
 		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+		drawText(g, "%7s".formatted(pointsText), Palette.PALE, ARCADE_FONT_TS, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+			drawText(g, "L" + score.levelNumber(), Palette.PALE, ARCADE_FONT_TS, x + t(8), y + TS + 1);
 		}
 	}
 
 	@Override
 	public void drawGameReadyMessage(GraphicsContext g) {
-		drawText(g, "READY", Color.YELLOW, ARCADE_FONT_TS, t(11), t(21));
+		drawText(g, "READY", Palette.YELLOW, ARCADE_FONT_TS, t(11), t(21));
 		var italic = Font.font(ARCADE_FONT_TS.getFamily(), FontPosture.ITALIC, ARCADE_FONT_TS.getSize());
-		drawText(g, "!", Color.YELLOW, italic, t(16), t(21));
+		drawText(g, "!", Palette.YELLOW, italic, t(16), t(21));
 	}
 
 	@Override
 	public void drawGameOverMessage(GraphicsContext g) {
-		drawText(g, "GAME  OVER", Color.RED, ARCADE_FONT_TS, t(9), t(21));
+		drawText(g, "GAME  OVER", Palette.RED, ARCADE_FONT_TS, t(9), t(21));
 	}
 
 	@Override
@@ -267,7 +268,7 @@ public abstract class GameRenderer implements Rendering2D {
 	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
-		g.setStroke(Color.WHITE);
+		g.setStroke(Palette.PALE);
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
 			g.strokeLine(0, t(row), tilesX * TS, t(row));

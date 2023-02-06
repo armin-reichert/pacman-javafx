@@ -27,12 +27,11 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -63,10 +62,10 @@ public class PacManCreditScene extends GameScene2D {
 		var r = context.r2D();
 		var arcade8 = r.arcadeFont(TS);
 		var arcade6 = r.arcadeFont(6);
-		r.drawText(g, "PUSH START BUTTON", r.ghostColor(Ghost.ID_ORANGE_GHOST), arcade8, t(6), t(17));
-		r.drawText(g, "1 PLAYER ONLY", r.ghostColor(Ghost.ID_CYAN_GHOST), arcade8, t(8), t(21));
-		r.drawText(g, "BONUS PAC-MAN FOR 10000", Color.rgb(255, 184, 174), arcade8, t(1), t(25));
-		r.drawText(g, "PTS", Color.rgb(255, 184, 174), arcade6, t(25), t(25));
+		r.drawText(g, "PUSH START BUTTON", GameRenderer.Palette.ORANGE, arcade8, t(6), t(17));
+		r.drawText(g, "1 PLAYER ONLY", GameRenderer.Palette.CYAN, arcade8, t(8), t(21));
+		r.drawText(g, "BONUS PAC-MAN FOR 10000", GameRenderer.Palette.ROSE, arcade8, t(1), t(25));
+		r.drawText(g, "PTS", GameRenderer.Palette.ROSE, arcade6, t(25), t(25));
 		r.drawCopyright(g, 29);
 		r.drawLevelCounter(g, context.game().levelCounter());
 	}

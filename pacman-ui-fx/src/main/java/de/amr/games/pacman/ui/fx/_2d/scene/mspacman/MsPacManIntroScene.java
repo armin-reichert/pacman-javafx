@@ -90,6 +90,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
+		var r = context.r2D();
 		drawTitle();
 		drawLights(32, 16);
 		if (intro.state() == MsPacManIntroState.GHOSTS) {
@@ -97,31 +98,30 @@ public class MsPacManIntroScene extends GameScene2D {
 		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
 			drawMsPacManText();
 		}
-		intro.context().ghosts.forEach(ghost -> context.r2D().drawGhost(g, ghost));
-		context.r2D().drawPac(g, intro.context().msPacMan);
-		context.r2D().drawCopyright(g, 29);
-		context.r2D().drawLevelCounter(g, context.game().levelCounter());
+		intro.context().ghosts.forEach(ghost -> r.drawGhost(g, ghost));
+		r.drawPac(g, intro.context().msPacMan);
+		r.drawCopyright(g, 29);
+		r.drawLevelCounter(g, context.game().levelCounter());
 	}
 
 	private void drawTitle() {
-		context.r2D().drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
-				TITLE_TILE.y());
+		var r = context.r2D();
+		r.drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, r.arcadeFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
 	}
 
 	private void drawGhostText(Ghost ghost) {
+		var r = context.r2D();
 		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			context.r2D().drawText(g, "WITH", Color.WHITE, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
-					BLINKY_END_TILE.y() + t(3));
+			r.drawText(g, "WITH", Color.WHITE, r.arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
 		}
-		context.r2D().drawText(g, ghost.name().toUpperCase(), context.r2D().ghostColor(ghost.id()),
-				context.r2D().arcadeFont(TS), t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
+		r.drawText(g, ghost.name().toUpperCase(), r.ghostColor(ghost.id()), r.arcadeFont(TS),
+				t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
-		context.r2D().drawText(g, "STARRING", Color.WHITE, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
-				BLINKY_END_TILE.y() + t(3));
-		context.r2D().drawText(g, "MS PAC-MAN", Color.YELLOW, context.r2D().arcadeFont(TS), TITLE_TILE.x(),
-				BLINKY_END_TILE.y() + t(6));
+		var r = context.r2D();
+		r.drawText(g, "STARRING", Color.WHITE, r.arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+		r.drawText(g, "MS PAC-MAN", Color.YELLOW, r.arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
 	}
 
 	// TODO this is not exactly as in the original game

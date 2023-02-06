@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
-import static de.amr.games.pacman.model.common.actors.Ghost.ID_PINK_GHOST;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -120,7 +119,7 @@ public class PacManGameRenderer extends GameRenderer {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, ghostColor(ID_PINK_GHOST), arcadeFont(TS), t(4), t(tileY));
+		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, GameRenderer.Palette.PINK, arcadeFont(TS), t(4), t(tileY));
 	}
 
 	@Override
