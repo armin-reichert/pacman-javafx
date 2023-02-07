@@ -25,24 +25,27 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 
 /**
  * @author Armin Reichert
  */
 public class Keys {
 
+	public static final KeyCodeCombination CHEAT_EAT_ALL = new KeyCodeCombination(KeyCode.E, KeyCombination.ALT_DOWN);
+	public static final KeyCodeCombination CHEAT_ADD_LIVES = new KeyCodeCombination(KeyCode.L, KeyCombination.ALT_DOWN);
+	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = new KeyCodeCombination(KeyCode.N, KeyCombination.ALT_DOWN);
+	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_DOWN);
+
 	public static final KeyCode AUTOPILOT = KeyCode.A;
 	public static final KeyCode DEBUG_INFO = KeyCode.D;
-	public static final KeyCode CHEAT_EAT_ALL = KeyCode.E;
 	public static final KeyCode IMMUNITIY = KeyCode.I;
-	public static final KeyCode CHEAT_ADD_LIVES = KeyCode.L;
 	public static final KeyCode MUTE = KeyCode.M;
-	public static final KeyCode CHEAT_NEXT_LEVEL = KeyCode.N;
 	public static final KeyCode PAUSE = KeyCode.P;
 	public static final KeyCode QUIT = KeyCode.Q;
 	public static final KeyCode TEST_LEVELS = KeyCode.T;
 	public static final KeyCode SELECT_VARIANT = KeyCode.V;
-	public static final KeyCode CHEAT_KILL_GHOSTS = KeyCode.X;
 	public static final KeyCode PLAY_CUTSCENES = KeyCode.Z;
 	public static final KeyCode SINGLE_STEP = KeyCode.SPACE;
 

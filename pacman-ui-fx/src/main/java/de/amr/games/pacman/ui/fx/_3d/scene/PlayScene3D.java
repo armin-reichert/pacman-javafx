@@ -153,13 +153,13 @@ public class PlayScene3D implements GameScene {
 			Actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Modifier.ALT, Keys.NEXT_CAMERA)) {
 			Actions.selectNextPerspective();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
 			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
 			Actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
 			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
 	}

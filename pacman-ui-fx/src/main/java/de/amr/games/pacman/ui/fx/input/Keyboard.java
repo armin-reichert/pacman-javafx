@@ -31,12 +31,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
 /**
  * @author Armin Reichert
  */
 public class Keyboard {
+
+	public static boolean pressed(KeyCodeCombination kcc) {
+		return KB.match(kcc);
+	}
 
 	public static boolean pressed(KeyCode code) {
 		return pressed(Modifier.NO_MODIFIER, code);
@@ -118,6 +123,14 @@ public class Keyboard {
 	private boolean isPressed(int modifierMask, KeyCode code) {
 		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modifierMask) {
 			LOG.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
+			currentEvent.consume();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean match(KeyCodeCombination combination) {
+		if (combination.match(currentEvent)) {
 			currentEvent.consume();
 			return true;
 		}

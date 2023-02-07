@@ -38,7 +38,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.Modifier;
 import javafx.scene.paint.Color;
 
 /**
@@ -116,13 +115,13 @@ public class PlayScene2D extends GameScene2D {
 			if (!context.hasCredit()) { // credit can only be added in attract mode
 				Actions.addCredit();
 			}
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
 			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
 			Actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
 			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
 	}
