@@ -112,7 +112,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5)) {
+		if (Keyboard.pressed(Actions.KEY_ADD_CREDIT)) {
 			if (!context.hasCredit()) { // credit can only be added in attract mode
 				Actions.addCredit();
 			}

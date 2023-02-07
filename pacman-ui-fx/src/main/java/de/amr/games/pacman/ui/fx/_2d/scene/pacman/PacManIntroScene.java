@@ -81,9 +81,9 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5)) {
+		if (Keyboard.pressed(Actions.KEY_ADD_CREDIT)) {
 			Actions.addCredit();
-		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
+		} else if (Keyboard.pressed(Actions.KEY_START_GAME)) {
 			Actions.startGame();
 		} else if (Keyboard.pressed(KeyCode.V)) {
 			Actions.selectNextGameVariant();

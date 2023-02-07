@@ -147,7 +147,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5) && !ctx.hasCredit()) {
+		if (Keyboard.pressed(Actions.KEY_ADD_CREDIT) && !ctx.hasCredit()) {
 			Actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
 			Actions.selectPrevPerspective();

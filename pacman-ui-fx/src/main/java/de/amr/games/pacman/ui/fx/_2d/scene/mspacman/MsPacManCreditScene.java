@@ -32,7 +32,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import javafx.scene.input.KeyCode;
 
 /**
  * @author Armin Reichert
@@ -51,9 +50,9 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(KeyCode.DIGIT5)) {
+		if (Keyboard.pressed(Actions.KEY_ADD_CREDIT)) {
 			Actions.addCredit();
-		} else if (Keyboard.pressed(KeyCode.DIGIT1)) {
+		} else if (Keyboard.pressed(Actions.KEY_START_GAME)) {
 			Actions.startGame();
 		}
 	}
