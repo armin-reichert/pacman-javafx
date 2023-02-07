@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -227,13 +226,7 @@ public abstract class GameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawScores(GraphicsContext g, GameModel game) {
-		game.score().ifPresent(score -> drawScore(g, score, "SCORE", Palette.PALE, ARCADE_FONT_TS, t(1), t(1)));
-		game.highScore()
-				.ifPresent(hiscore -> drawScore(g, hiscore, "HIGH SCORE", Palette.PALE, ARCADE_FONT_TS, t(16), t(1)));
-	}
-
-	private void drawScore(GraphicsContext g, Score score, String title, Color color, Font font, double x, double y) {
+	public void drawScore(GraphicsContext g, Score score, String title, Color color, Font font, double x, double y) {
 		drawText(g, title, color, font, x, y);
 		var pointsText = "%02d".formatted(score.points());
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
@@ -243,8 +236,8 @@ public abstract class GameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawCredit(GraphicsContext g, GameModel game) {
-		drawText(g, "CREDIT  %d".formatted(game.credit()), Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
+	public void drawCredit(GraphicsContext g, int credit) {
+		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -149,9 +149,9 @@ public interface Rendering2D {
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
-	void drawScores(GraphicsContext g, GameModel game);
+	void drawScore(GraphicsContext g, Score score, String title, Color color, Font font, double x, double y);
 
-	void drawCredit(GraphicsContext g, GameModel game);
+	void drawCredit(GraphicsContext g, int credit);
 
 	void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash);
 

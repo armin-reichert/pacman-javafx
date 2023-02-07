@@ -23,11 +23,16 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.t;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer.Palette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
@@ -94,27 +99,26 @@ public abstract class GameScene2D implements GameScene {
 	public abstract void update();
 
 	public void draw() {
-		var bgColor = Color.BLACK;
-		if (context.game().level().isPresent()) {
-			int levelNumber = context.game().level().get().number();
-			int mazeNumber = context.game().mazeNumber(levelNumber);
-			bgColor = context.r2D().mazeBackgroundColor(mazeNumber);
-		}
+		var game = context.game();
+		var r = context.r2D();
+		var mazeNumber = game.level().map(GameLevel::number);
+		var bgColor = mazeNumber.isPresent() ? r.mazeBackgroundColor(mazeNumber.get()) : Color.BLACK;
 		g.setFill(bgColor);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (hudVisible) {
-			context.r2D().drawScores(g, context.game());
+			var scoreFont = r.arcadeFont(TS);
+			game.score().ifPresent(score -> r.drawScore(g, score, "SCORE", Palette.PALE, scoreFont, t(1), t(1)));
+			game.highScore().ifPresent(score -> r.drawScore(g, score, "HISCORE", Palette.PALE, scoreFont, t(16), t(1)));
 		}
 		if (creditVisible) {
-			context.r2D().drawCredit(g, context.game());
+			r.drawCredit(g, game.credit());
 		}
 		if (overlayPaneVisiblePy.get()) {
 			drawOverlayPaneContent();
 		}
 		if (context.gameController().levelTestMode) {
-			context.r2D().drawText(g, "LEVEL TEST MODE", Color.WHITE, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60,
-					190);
+			r.drawText(g, "LEVEL TEST MODE", Color.LIGHTGRAY, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60, 190);
 		}
 	}
 
