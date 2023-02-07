@@ -36,7 +36,6 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.scene.input.KeyCode;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
 
@@ -50,9 +49,6 @@ public class Actions {
 
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
-
-	public static final KeyCode KEY_ADD_CREDIT = KeyCode.DIGIT5;
-	public static final KeyCode KEY_START_GAME = KeyCode.DIGIT1;
 
 	public static void setUI(GameUI theUI) {
 		ui = Objects.requireNonNull(theUI, "User Interface for actions must not be null");

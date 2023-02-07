@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
+import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
@@ -54,7 +55,6 @@ import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -130,9 +130,9 @@ public class GameUI implements GameEventListener {
 		GameEvents.addListener(this);
 
 		// keyboard steering of Pac-Man
-		var kbSteering = new KeyboardSteering(KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, kbSteering::onKeyPressed);
-		gameController.setManualPacSteering(kbSteering);
+		var defaultPacSteering = new KeyboardSteering(Keys.PAC_UP, Keys.PAC_DOWN, Keys.PAC_LEFT, Keys.PAC_RIGHT);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, defaultPacSteering::onKeyPressed);
+		gameController.setManualPacSteering(defaultPacSteering);
 
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
@@ -291,35 +291,33 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void onKeyPressed() {
-		if (Keyboard.pressed(Modifier.ALT, KeyCode.A)) {
+		if (Keyboard.pressed(Modifier.ALT, Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.B)) {
+		} else if (Keyboard.pressed(Keys.BOOT)) {
 			Actions.reboot();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.D)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.DEBUG_INFO)) {
 			Ufx.toggle(Env.showDebugInfoPy);
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.I)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.IMMUNITIY)) {
 			Actions.toggleImmunity();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.M)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.MUTE)) {
 			Actions.toggleSoundMuted();
-		} else if (Keyboard.pressed(KeyCode.P)) {
+		} else if (Keyboard.pressed(Keys.PAUSE)) {
 			Actions.togglePaused();
-		} else if (Keyboard.pressed(Modifier.SHIFT, KeyCode.P) || Keyboard.pressed(KeyCode.SPACE)) {
+		} else if (Keyboard.pressed(Modifier.SHIFT, Keys.PAUSE) || Keyboard.pressed(Keys.SINGLE_STEP)) {
 			Actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Modifier.SHIFT, KeyCode.SPACE)) {
+		} else if (Keyboard.pressed(Modifier.SHIFT, Keys.SINGLE_STEP)) {
 			Actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(KeyCode.Q)) {
+		} else if (Keyboard.pressed(Keys.QUIT)) {
 			Actions.restartIntro();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.T)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.TEST_LEVELS)) {
 			Actions.toggleLevelTestMode();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.DIGIT3)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.USE_3D)) {
 			Actions.toggleUse3DScene();
-		} else if (Keyboard.pressed(KeyCode.F1)) {
+		} else if (Keyboard.pressed(Keys.DASHBOARD)) {
 			Actions.toggleDashboardVisible();
-		} else if (Keyboard.pressed(KeyCode.F2)) {
+		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
 			Actions.togglePipViewVisible();
-		} else if (Keyboard.pressed(KeyCode.F3)) {
-			Actions.reboot();
-		} else if (Keyboard.pressed(KeyCode.F11)) {
+		} else if (Keyboard.pressed(Keys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
 		currentGameScene.onKeyPressed();

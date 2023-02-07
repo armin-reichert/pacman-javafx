@@ -30,6 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
+import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 
 /**
@@ -49,9 +50,9 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(Actions.KEY_ADD_CREDIT)) {
+		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
 			Actions.addCredit();
-		} else if (Keyboard.pressed(Actions.KEY_START_GAME)) {
+		} else if (Keyboard.pressed(Keys.START_GAME)) {
 			Actions.startGame();
 		}
 	}

@@ -53,6 +53,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.Modifier;
@@ -73,7 +74,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
@@ -147,19 +147,19 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(Actions.KEY_ADD_CREDIT) && !ctx.hasCredit()) {
+		if (Keyboard.pressed(Keys.ADD_CREDIT) && !ctx.hasCredit()) {
 			Actions.addCredit(); // in demo mode, allow adding credit
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.LEFT)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.PREV_CAMERA)) {
 			Actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.RIGHT)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.NEXT_CAMERA)) {
 			Actions.selectNextPerspective();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.E)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_EAT_ALL)) {
 			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.L)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_ADD_LIVES)) {
 			Actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.N)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_NEXT_LEVEL)) {
 			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Modifier.ALT, KeyCode.X)) {
+		} else if (Keyboard.pressed(Modifier.ALT, Keys.CHEAT_KILL_GHOSTS)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
 	}
