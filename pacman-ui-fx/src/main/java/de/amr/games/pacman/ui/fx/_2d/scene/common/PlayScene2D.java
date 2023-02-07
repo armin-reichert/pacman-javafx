@@ -111,10 +111,8 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
-			if (!context.hasCredit()) { // credit can only be added in attract mode
-				Actions.addCredit();
-			}
+		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
+			Actions.addCredit();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
 			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
