@@ -39,29 +39,29 @@ import javafx.scene.input.KeyEvent;
 public class Keyboard {
 
 	public static boolean pressed(KeyCodeCombination kcc) {
-		return KB.match(kcc);
+		return THE_KEYBOARD.match(kcc);
 	}
 
 	public static void clear() {
-		KB.doClear();
+		THE_KEYBOARD.doClear();
 	}
 
 	public static void processEvent(KeyEvent e) {
-		KB.doProcessEvent(e);
+		THE_KEYBOARD.doProcessEvent(e);
 	}
 
 	public static void addHandler(Runnable handler) {
-		KB.handlers.add(handler);
+		THE_KEYBOARD.handlers.add(handler);
 	}
 
 	public static void removeHandler(Runnable handler) {
-		KB.handlers.remove(handler);
+		THE_KEYBOARD.handlers.remove(handler);
 	}
 
 	// Internal
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-	private static final Keyboard KB = new Keyboard();
+	private static final Keyboard THE_KEYBOARD = new Keyboard();
 
 	private KeyEvent currentEvent;
 	private final List<Runnable> handlers = new ArrayList<>();
