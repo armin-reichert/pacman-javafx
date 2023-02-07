@@ -51,7 +51,7 @@ public class BootScene extends GameScene2D {
 	private final WritableImage currentImage;
 
 	public BootScene() {
-		hudVisible = false;
+		scoresVisible = false;
 		currentImage = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
 		bufferContext = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
 	}

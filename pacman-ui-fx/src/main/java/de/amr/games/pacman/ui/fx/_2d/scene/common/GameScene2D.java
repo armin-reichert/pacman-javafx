@@ -66,7 +66,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected GameSceneContext context;
 	protected boolean creditVisible;
-	protected boolean hudVisible = true;
+	protected boolean scoresVisible = true;
 	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
 	protected GameScene2D() {
@@ -106,7 +106,7 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(bgColor);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
-		if (hudVisible) {
+		if (scoresVisible) {
 			var scoreFont = r.arcadeFont(TS);
 			game.score().ifPresent(score -> r.drawScore(g, score, "SCORE", Palette.PALE, scoreFont, t(1), t(1)));
 			game.highScore().ifPresent(score -> r.drawScore(g, score, "HISCORE", Palette.PALE, scoreFont, t(16), t(1)));
