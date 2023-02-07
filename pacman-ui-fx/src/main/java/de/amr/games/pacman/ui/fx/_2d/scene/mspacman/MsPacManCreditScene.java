@@ -27,7 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -64,11 +64,11 @@ public class MsPacManCreditScene extends GameScene2D {
 		var msPacManSprite = r.lifeSymbolRegion();
 		var arcade8 = r.arcadeFont(TS);
 		var arcade6 = r.arcadeFont(6.0);
-		r.drawText(g, "PUSH START BUTTON", GameRenderer.Palette.ORANGE, arcade8, t(6), t(16));
-		r.drawText(g, "1 PLAYER ONLY", GameRenderer.Palette.ORANGE, arcade8, t(8), t(18));
-		r.drawText(g, "ADDITIONAL    AT 10000", GameRenderer.Palette.ORANGE, arcade8, t(2), t(25));
+		r.drawText(g, "PUSH START BUTTON", Rendering2D.Palette.ORANGE, arcade8, t(6), t(16));
+		r.drawText(g, "1 PLAYER ONLY", Rendering2D.Palette.ORANGE, arcade8, t(8), t(18));
+		r.drawText(g, "ADDITIONAL    AT 10000", Rendering2D.Palette.ORANGE, arcade8, t(2), t(25));
 		r.drawSprite(g, msPacManSprite, t(13), t(23) + 1);
-		r.drawText(g, "PTS", GameRenderer.Palette.ORANGE, arcade6, t(25), t(25));
+		r.drawText(g, "PTS", Rendering2D.Palette.ORANGE, arcade6, t(25), t(25));
 		r.drawCopyright(g, 29);
 	}
 }

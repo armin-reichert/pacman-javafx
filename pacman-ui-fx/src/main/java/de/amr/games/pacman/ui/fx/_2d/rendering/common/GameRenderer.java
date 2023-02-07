@@ -55,43 +55,32 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class GameRenderer implements Rendering2D {
 
-	public static class Palette {
-		public static final Color RED = Color.rgb(255, 0, 0);
-		public static final Color YELLOW = Color.YELLOW;
-		public static final Color PINK = Color.rgb(252, 181, 255);
-		public static final Color CYAN = Color.rgb(0, 255, 255);
-		public static final Color ORANGE = Color.rgb(251, 190, 88);
-		public static final Color BLUE = Color.rgb(33, 33, 255);
-		public static final Color PALE = Color.rgb(222, 222, 255);
-		public static final Color ROSE = Color.rgb(252, 187, 179);
-	}
-
 	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
 
 	static {
 	//@formatter:off
 		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(//
-			Palette.RED, Palette.PALE, Palette.BLUE,  // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			Rendering2D.Palette.RED, Rendering2D.Palette.PALE, Rendering2D.Palette.BLUE,  // normal
+			Rendering2D.Palette.BLUE, Rendering2D.Palette.ROSE, Rendering2D.Palette.ROSE, // frightened
+			Rendering2D.Palette.PALE, Rendering2D.Palette.ROSE, Rendering2D.Palette.RED   // flashing
 		);
 
 		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColoring(//
-			Palette.PINK, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			Rendering2D.Palette.PINK, Rendering2D.Palette.PALE, Rendering2D.Palette.BLUE, // normal
+			Rendering2D.Palette.BLUE, Rendering2D.Palette.ROSE, Rendering2D.Palette.ROSE, // frightened
+			Rendering2D.Palette.PALE, Rendering2D.Palette.ROSE, Rendering2D.Palette.RED   // flashing
 		);
 
 		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColoring(//
-			Palette.CYAN, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			Rendering2D.Palette.CYAN, Rendering2D.Palette.PALE, Rendering2D.Palette.BLUE, // normal
+			Rendering2D.Palette.BLUE, Rendering2D.Palette.ROSE, Rendering2D.Palette.ROSE, // frightened
+			Rendering2D.Palette.PALE, Rendering2D.Palette.ROSE, Rendering2D.Palette.RED   // flashing
 		);
 		
 		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(//
-			Palette.ORANGE, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			Rendering2D.Palette.ORANGE, Rendering2D.Palette.PALE, Rendering2D.Palette.BLUE, // normal
+			Rendering2D.Palette.BLUE, Rendering2D.Palette.ROSE, Rendering2D.Palette.ROSE, // frightened
+			Rendering2D.Palette.PALE, Rendering2D.Palette.ROSE, Rendering2D.Palette.RED   // flashing
 		);
 		//@formatter:on
 	}
@@ -220,7 +209,7 @@ public abstract class GameRenderer implements Rendering2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText(g, "+" + excessLives, Palette.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10), y + t(1));
+			drawText(g, "+" + excessLives, Rendering2D.Palette.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10), y + t(1));
 		}
 	}
 
@@ -237,19 +226,19 @@ public abstract class GameRenderer implements Rendering2D {
 
 	@Override
 	public void drawCredit(GraphicsContext g, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
+		drawText(g, "CREDIT  %d".formatted(credit), Rendering2D.Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
 	}
 
 	@Override
 	public void drawGameReadyMessage(GraphicsContext g) {
-		drawText(g, "READY", Palette.YELLOW, ARCADE_FONT_TS, t(11), t(21));
+		drawText(g, "READY", Rendering2D.Palette.YELLOW, ARCADE_FONT_TS, t(11), t(21));
 		var italic = Font.font(ARCADE_FONT_TS.getFamily(), FontPosture.ITALIC, ARCADE_FONT_TS.getSize());
-		drawText(g, "!", Palette.YELLOW, italic, t(16), t(21));
+		drawText(g, "!", Rendering2D.Palette.YELLOW, italic, t(16), t(21));
 	}
 
 	@Override
 	public void drawGameOverMessage(GraphicsContext g) {
-		drawText(g, "GAME  OVER", Palette.RED, ARCADE_FONT_TS, t(9), t(21));
+		drawText(g, "GAME  OVER", Rendering2D.Palette.RED, ARCADE_FONT_TS, t(9), t(21));
 	}
 
 	@Override
@@ -262,7 +251,7 @@ public abstract class GameRenderer implements Rendering2D {
 	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
-		g.setStroke(Palette.PALE);
+		g.setStroke(Rendering2D.Palette.PALE);
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
 			g.strokeLine(0, t(row), tilesX * TS, t(row));

@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
@@ -106,10 +106,10 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (scoresVisible) {
-			game.score()
-					.ifPresent(score -> r.drawScore(g, score.points(), score.levelNumber(), "SCORE", Palette.PALE, t(1), t(1)));
-			game.highScore().ifPresent(
-					score -> r.drawScore(g, score.points(), score.levelNumber(), "HISCORE", Palette.PALE, t(16), t(1)));
+			game.score().ifPresent(
+					score -> r.drawScore(g, score.points(), score.levelNumber(), "SCORE", Rendering2D.Palette.PALE, t(1), t(1)));
+			game.highScore().ifPresent(score -> r.drawScore(g, score.points(), score.levelNumber(), "HISCORE",
+					Rendering2D.Palette.PALE, t(16), t(1)));
 		}
 		if (creditVisible) {
 			r.drawCredit(g, game.credit());

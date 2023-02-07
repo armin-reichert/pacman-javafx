@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.ui.fx.util.Ufx.afterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Ufx.pause;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -58,6 +57,7 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -301,9 +301,9 @@ public class PlayScene3D implements GameScene {
 				level.ghosts().filter(level.pac()::sameTile).findAny().ifPresent(killer -> {
 					lockGameState();
 					var animation = new SequentialTransition( //
-							pause(0.2), //
+							Ufx.pause(0.2), //
 							level3D.pac3D().createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
-							pause(2.0) //
+							Ufx.pause(2.0) //
 					);
 					animation.setOnFinished(evt -> unlockGameState());
 					animation.play();
@@ -337,11 +337,11 @@ public class PlayScene3D implements GameScene {
 				var message = "%s%n%n%s".formatted(ResourceMgr.MESSAGES_LEVEL_COMPLETE.next(),
 						ResourceMgr.message("level_complete", level.number()));
 				var animation = new SequentialTransition( //
-						pause(1.0), //
-						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : pause(1.0), //
+						Ufx.pause(1.0), //
+						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : Ufx.pause(1.0), //
 						afterSeconds(1.0, level.pac()::hide), //
 						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
-						pause(2.0) //
+						Ufx.pause(2.0) //
 				);
 				animation.setOnFinished(evt -> unlockGameState());
 				animation.play();

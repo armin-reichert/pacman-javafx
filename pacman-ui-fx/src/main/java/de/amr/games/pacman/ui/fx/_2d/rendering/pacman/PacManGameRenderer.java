@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -119,7 +120,7 @@ public class PacManGameRenderer extends GameRenderer {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, GameRenderer.Palette.PINK, arcadeFont(TS), t(4), t(tileY));
+		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Rendering2D.Palette.PINK, arcadeFont(TS), t(4), t(tileY));
 	}
 
 	@Override
