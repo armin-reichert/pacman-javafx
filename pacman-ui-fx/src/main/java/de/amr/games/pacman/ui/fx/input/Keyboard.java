@@ -30,7 +30,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
@@ -41,14 +40,6 @@ public class Keyboard {
 
 	public static boolean pressed(KeyCodeCombination kcc) {
 		return KB.match(kcc);
-	}
-
-	public static boolean pressed(KeyCode code) {
-		return pressed(Modifier.NO_MODIFIER, code);
-	}
-
-	public static boolean pressed(Modifier modifier, KeyCode code) {
-		return KB.isPressed(modifier.mask, code);
 	}
 
 	public static void clear() {
@@ -73,32 +64,13 @@ public class Keyboard {
 	private static final Keyboard KB = new Keyboard();
 
 	private KeyEvent currentEvent;
-	private byte currentMask;
 	private final List<Runnable> handlers = new ArrayList<>();
 
 	private Keyboard() {
 	}
 
-	private static String modifierText(byte mask) {
-		if (mask == Modifier.NO_MODIFIER.mask) {
-			return "(NO MODIFIER) ";
-		}
-		String text = "";
-		if ((mask & Modifier.ALT.mask) != 0) {
-			text += "ALT";
-		}
-		if ((mask & Modifier.CTRL.mask) != 0) {
-			text += " CONTROL";
-		}
-		if ((mask & Modifier.SHIFT.mask) != 0) {
-			text += " SHIFT";
-		}
-		return (text + "+").trim();
-	}
-
 	private void doClear() {
 		currentEvent = null;
-		currentMask = 0;
 	}
 
 	private void doProcessEvent(KeyEvent e) {
@@ -106,31 +78,13 @@ public class Keyboard {
 			return;
 		}
 		currentEvent = e;
-		currentMask = Modifier.NO_MODIFIER.mask;
-		if (e.isAltDown()) {
-			currentMask |= Modifier.ALT.mask;
-		}
-		if (e.isControlDown()) {
-			currentMask |= Modifier.CTRL.mask;
-		}
-		if (e.isShiftDown()) {
-			currentMask |= Modifier.SHIFT.mask;
-		}
 		handlers.forEach(Runnable::run);
 		e.consume();
 	}
 
-	private boolean isPressed(int modifierMask, KeyCode code) {
-		if (currentEvent != null && currentEvent.getCode() == code && currentMask == modifierMask) {
-			LOG.trace(() -> "Key press handled: %s%s".formatted(modifierText(currentMask), code));
-			currentEvent.consume();
-			return true;
-		}
-		return false;
-	}
-
 	private boolean match(KeyCodeCombination combination) {
-		if (combination.match(currentEvent)) {
+		if (currentEvent != null && combination.match(currentEvent)) {
+			LOG.trace("Matching key code combination: %s", combination);
 			currentEvent.consume();
 			return true;
 		}

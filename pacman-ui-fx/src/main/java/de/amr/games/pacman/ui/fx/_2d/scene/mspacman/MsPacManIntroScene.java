@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.Modifier;
 import javafx.scene.paint.Color;
 
 /**
@@ -83,7 +82,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			Actions.startGame();
 		} else if (Keyboard.pressed(Keys.SELECT_VARIANT)) {
 			Actions.selectNextGameVariant();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.PLAY_CUTSCENES)) {
+		} else if (Keyboard.pressed(Keys.PLAY_CUTSCENES)) {
 			Actions.startCutscenesTest();
 		}
 	}

@@ -56,7 +56,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.Modifier;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.animation.SequentialTransition;
@@ -149,9 +148,9 @@ public class PlayScene3D implements GameScene {
 	public void onKeyPressed() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !ctx.hasCredit()) {
 			Actions.addCredit(); // in demo mode, allow adding credit
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.PREV_CAMERA)) {
+		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {
 			Actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.NEXT_CAMERA)) {
+		} else if (Keyboard.pressed(Keys.NEXT_CAMERA)) {
 			Actions.selectNextPerspective();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
 			Actions.cheatEatAllPellets();

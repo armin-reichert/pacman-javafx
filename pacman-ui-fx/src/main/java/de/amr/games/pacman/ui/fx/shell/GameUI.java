@@ -47,7 +47,6 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.input.Modifier;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
@@ -291,27 +290,27 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void onKeyPressed() {
-		if (Keyboard.pressed(Modifier.ALT, Keys.AUTOPILOT)) {
+		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
 			Actions.reboot();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.DEBUG_INFO)) {
+		} else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
 			Ufx.toggle(Env.showDebugInfoPy);
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.IMMUNITIY)) {
+		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
 			Actions.toggleImmunity();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.MUTE)) {
+		} else if (Keyboard.pressed(Keys.MUTE)) {
 			Actions.toggleSoundMuted();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
 			Actions.togglePaused();
-		} else if (Keyboard.pressed(Modifier.SHIFT, Keys.PAUSE) || Keyboard.pressed(Keys.SINGLE_STEP)) {
+		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
 			Actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Modifier.SHIFT, Keys.SINGLE_STEP)) {
+		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
 			Actions.tenSimulationSteps();
 		} else if (Keyboard.pressed(Keys.QUIT)) {
 			Actions.restartIntro();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.TEST_LEVELS)) {
+		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
 			Actions.toggleLevelTestMode();
-		} else if (Keyboard.pressed(Modifier.ALT, Keys.USE_3D)) {
+		} else if (Keyboard.pressed(Keys.USE_3D)) {
 			Actions.toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD)) {
 			Actions.toggleDashboardVisible();

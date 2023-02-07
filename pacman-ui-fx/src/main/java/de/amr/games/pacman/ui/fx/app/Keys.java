@@ -33,36 +33,52 @@ import javafx.scene.input.KeyCombination;
  */
 public class Keys {
 
-	public static final KeyCodeCombination CHEAT_EAT_ALL = new KeyCodeCombination(KeyCode.E, KeyCombination.ALT_DOWN);
-	public static final KeyCodeCombination CHEAT_ADD_LIVES = new KeyCodeCombination(KeyCode.L, KeyCombination.ALT_DOWN);
-	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = new KeyCodeCombination(KeyCode.N, KeyCombination.ALT_DOWN);
-	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = new KeyCodeCombination(KeyCode.X, KeyCombination.ALT_DOWN);
+	private static KeyCodeCombination just(KeyCode code) {
+		return new KeyCodeCombination(code);
+	}
 
-	public static final KeyCode AUTOPILOT = KeyCode.A;
-	public static final KeyCode DEBUG_INFO = KeyCode.D;
-	public static final KeyCode IMMUNITIY = KeyCode.I;
-	public static final KeyCode MUTE = KeyCode.M;
-	public static final KeyCode PAUSE = KeyCode.P;
-	public static final KeyCode QUIT = KeyCode.Q;
-	public static final KeyCode TEST_LEVELS = KeyCode.T;
-	public static final KeyCode SELECT_VARIANT = KeyCode.V;
-	public static final KeyCode PLAY_CUTSCENES = KeyCode.Z;
-	public static final KeyCode SINGLE_STEP = KeyCode.SPACE;
+	private static KeyCodeCombination alt(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
+	}
 
-	public static final KeyCode START_GAME = KeyCode.DIGIT1;
-	public static final KeyCode USE_3D = KeyCode.DIGIT3;
-	public static final KeyCode ADD_CREDIT = KeyCode.DIGIT5;
+	private static KeyCodeCombination shift(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
+	}
 
-	public static final KeyCode DASHBOARD = KeyCode.F1;
-	public static final KeyCode PIP_VIEW = KeyCode.F2;
-	public static final KeyCode BOOT = KeyCode.F3;
-	public static final KeyCode FULLSCREEN = KeyCode.F11;
+	public static final KeyCodeCombination CHEAT_EAT_ALL = alt(KeyCode.E);
+	public static final KeyCodeCombination CHEAT_ADD_LIVES = alt(KeyCode.L);
+	public static final KeyCodeCombination CHEAT_NEXT_LEVEL = alt(KeyCode.N);
+	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = alt(KeyCode.X);
+
+	public static final KeyCodeCombination AUTOPILOT = alt(KeyCode.A);
+	public static final KeyCodeCombination DEBUG_INFO = alt(KeyCode.D);
+	public static final KeyCodeCombination IMMUNITIY = alt(KeyCode.I);
+	public static final KeyCodeCombination MUTE = alt(KeyCode.M);
+
+	public static final KeyCodeCombination PAUSE = just(KeyCode.P);
+	public static final KeyCodeCombination PAUSE_STEP = shift(KeyCode.P);
+	public static final KeyCodeCombination SINGLE_STEP = just(KeyCode.SPACE);
+	public static final KeyCodeCombination TEN_STEPS = shift(KeyCode.SPACE);
+
+	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
+	public static final KeyCodeCombination TEST_LEVELS = alt(KeyCode.T);
+	public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
+	public static final KeyCodeCombination PLAY_CUTSCENES = alt(KeyCode.Z);
+
+	public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
+	public static final KeyCodeCombination USE_3D = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
+
+	public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);
+	public static final KeyCodeCombination PIP_VIEW = just(KeyCode.F2);
+	public static final KeyCodeCombination BOOT = just(KeyCode.F3);
+	public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
+
+	public static final KeyCodeCombination PREV_CAMERA = alt(KeyCode.LEFT);
+	public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 
 	public static final KeyCode PAC_UP = KeyCode.UP;
 	public static final KeyCode PAC_DOWN = KeyCode.DOWN;
 	public static final KeyCode PAC_LEFT = KeyCode.LEFT;
 	public static final KeyCode PAC_RIGHT = KeyCode.RIGHT;
-
-	public static final KeyCode PREV_CAMERA = KeyCode.LEFT;
-	public static final KeyCode NEXT_CAMERA = KeyCode.RIGHT;
 }
