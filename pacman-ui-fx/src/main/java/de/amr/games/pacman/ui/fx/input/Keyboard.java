@@ -47,7 +47,7 @@ public class Keyboard {
 	}
 
 	public static void processEvent(KeyEvent e) {
-		THE_KEYBOARD.doProcessEvent(e);
+		THE_KEYBOARD.notifyHandlersAndConsumeEvent(e);
 	}
 
 	public static void addHandler(Runnable handler) {
@@ -73,13 +73,12 @@ public class Keyboard {
 		currentEvent = null;
 	}
 
-	private void doProcessEvent(KeyEvent e) {
-		if (e.isConsumed()) {
-			return;
+	private void notifyHandlersAndConsumeEvent(KeyEvent e) {
+		if (!e.isConsumed()) {
+			currentEvent = e;
+			handlers.forEach(Runnable::run);
+			e.consume();
 		}
-		currentEvent = e;
-		handlers.forEach(Runnable::run);
-		e.consume();
 	}
 
 	private boolean match(KeyCodeCombination combination) {
