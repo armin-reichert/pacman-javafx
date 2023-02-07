@@ -32,12 +32,12 @@ import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import javafx.scene.paint.Color;
 
 /**
  * Intro scene of the PacMan game.
@@ -48,8 +48,6 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class PacManIntroScene extends GameScene2D {
-
-	private static final Color PALE_WHITE = Color.rgb(222, 222, 255);
 
 	private PacManIntroController intro;
 
@@ -143,9 +141,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = PacManIntroData.LEFT_TILE;
 		var font = context.r2D().arcadeFont(TS);
 		if (intro.context().titleVisible) {
-			r.drawText(g, "CHARACTER", PALE_WHITE, font, t(col + 3), t(6));
-			r.drawText(g, "/", PALE_WHITE, font, t(col + 13), t(6));
-			r.drawText(g, "NICKNAME", PALE_WHITE, font, t(col + 15), t(6));
+			r.drawText(g, "CHARACTER", GameRenderer.Palette.PALE, font, t(col + 3), t(6));
+			r.drawText(g, "/", GameRenderer.Palette.PALE, font, t(col + 13), t(6));
+			r.drawText(g, "NICKNAME", GameRenderer.Palette.PALE, font, t(col + 15), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().pictureVisible[id]) {
@@ -201,7 +199,7 @@ public class PacManIntroScene extends GameScene2D {
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
-		g.setFill(PALE_WHITE);
+		g.setFill(GameRenderer.Palette.PALE);
 		g.setFont(context.r2D().arcadeFont(TS));
 		g.fillText("10", t(tileX + 2), t(tileY));
 		g.fillText("50", t(tileX + 2), t(tileY + 2));
