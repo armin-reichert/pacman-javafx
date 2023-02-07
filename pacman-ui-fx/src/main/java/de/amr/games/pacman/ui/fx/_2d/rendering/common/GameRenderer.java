@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -226,12 +225,13 @@ public abstract class GameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawScore(GraphicsContext g, Score score, String title, Color color, Font font, double x, double y) {
+	public void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y) {
+		var font = ARCADE_FONT_TS;
 		drawText(g, title, color, font, x, y);
-		var pointsText = "%02d".formatted(score.points());
+		var pointsText = "%02d".formatted(points);
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
-		if (score.points() != 0) {
-			drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+		if (points != 0) {
+			drawText(g, "L" + levelNumber, color, font, x + t(8), y + TS + 1);
 		}
 	}
 

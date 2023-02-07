@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import org.apache.logging.log4j.LogManager;
@@ -107,9 +106,10 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (scoresVisible) {
-			var scoreFont = r.arcadeFont(TS);
-			game.score().ifPresent(score -> r.drawScore(g, score, "SCORE", Palette.PALE, scoreFont, t(1), t(1)));
-			game.highScore().ifPresent(score -> r.drawScore(g, score, "HISCORE", Palette.PALE, scoreFont, t(16), t(1)));
+			game.score()
+					.ifPresent(score -> r.drawScore(g, score.points(), score.levelNumber(), "SCORE", Palette.PALE, t(1), t(1)));
+			game.highScore().ifPresent(
+					score -> r.drawScore(g, score.points(), score.levelNumber(), "HISCORE", Palette.PALE, t(16), t(1)));
 		}
 		if (creditVisible) {
 			r.drawCredit(g, game.credit());
