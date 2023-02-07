@@ -58,9 +58,9 @@ public abstract class GameRenderer implements Rendering2D {
 	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
 
 	static {
-	//@formatter:off
+		//@formatter:off
 		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(//
-			Palette.RED,  Palette.PALE, Palette.BLUE,  // normal
+			Palette.RED,  Palette.PALE, Palette.BLUE, // normal
 			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
 			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
@@ -79,8 +79,8 @@ public abstract class GameRenderer implements Rendering2D {
 		
 		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(//
 			Palette.ORANGE, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			Palette.BLUE,   Palette.ROSE, Palette.ROSE, // frightened
+			Palette.PALE,   Palette.ROSE, Palette.RED   // flashing
 		);
 		//@formatter:on
 	}
