@@ -47,10 +47,11 @@ public class Keyboard {
 	 */
 	public static boolean accept(KeyEvent e) {
 		if (e.isConsumed()) {
-			LOG.trace("Keyboard: Key event (%s) not accepted: %s", e.getCode(), e);
+			LOG.trace("Key event (%s) rejected: %s", e.getCode(), e);
+			currentEvent = null;
 			return false;
 		}
-		LOG.trace("Keyboard: Key event (%s) accepted: %s", e.getCode(), e);
+		LOG.trace("Key event (%s) accepted: %s", e.getCode(), e);
 		currentEvent = e;
 		e.consume();
 		return true;
