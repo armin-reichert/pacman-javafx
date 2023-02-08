@@ -24,12 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.input;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
@@ -38,55 +32,34 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
+	private static final Keyboard KB = new Keyboard();
+
+	public static void handleKeyEvent(KeyEvent e) {
+		if (e.isConsumed()) {
+			return;
+		}
+		KB.currentEvent = e;
+		if (KB.callback != null) {
+			KB.callback.run();
+		}
+		e.consume();
+	}
+
+	public static void setCallback(Runnable callback) {
+		KB.callback = callback;
+	}
+
 	public static boolean pressed(KeyCodeCombination kcc) {
-		return THE_KEYBOARD.match(kcc);
+		return KB.currentEvent != null && kcc.match(KB.currentEvent);
 	}
 
 	public static void clear() {
-		THE_KEYBOARD.doClear();
+		KB.currentEvent = null;
 	}
-
-	public static void processEvent(KeyEvent e) {
-		THE_KEYBOARD.notifyHandlersAndConsumeEvent(e);
-	}
-
-	public static void addHandler(Runnable handler) {
-		THE_KEYBOARD.handlers.add(handler);
-	}
-
-	public static void removeHandler(Runnable handler) {
-		THE_KEYBOARD.handlers.remove(handler);
-	}
-
-	// Internal
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
-	private static final Keyboard THE_KEYBOARD = new Keyboard();
 
 	private KeyEvent currentEvent;
-	private final List<Runnable> handlers = new ArrayList<>();
+	private Runnable callback;
 
 	private Keyboard() {
-	}
-
-	private void doClear() {
-		currentEvent = null;
-	}
-
-	private void notifyHandlersAndConsumeEvent(KeyEvent e) {
-		if (!e.isConsumed()) {
-			currentEvent = e;
-			handlers.forEach(Runnable::run);
-			e.consume();
-		}
-	}
-
-	private boolean match(KeyCodeCombination combination) {
-		if (currentEvent != null && combination.match(currentEvent)) {
-			LOG.trace("Matching key code combination: %s", combination);
-			currentEvent.consume();
-			return true;
-		}
-		return false;
 	}
 }

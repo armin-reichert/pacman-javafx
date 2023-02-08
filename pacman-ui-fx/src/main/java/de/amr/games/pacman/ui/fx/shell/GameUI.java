@@ -125,7 +125,9 @@ public class GameUI implements GameEventListener {
 		stage.setScene(mainScene);
 		initEnv(settings);
 
-		Keyboard.addHandler(this::onKeyPressed);
+		mainScene.setOnKeyPressed(Keyboard::handleKeyEvent);
+		Keyboard.setCallback(this::onKeyPressed);
+
 		GameEvents.addListener(this);
 
 		// keyboard steering of Pac-Man
@@ -146,7 +148,6 @@ public class GameUI implements GameEventListener {
 		var placeHolder = new Pane(); /* placeholder for current game scene */
 		var root = new StackPane(placeHolder, flashMessageView, overlayPane);
 		mainScene = new Scene(root, width * zoom, height * zoom);
-		mainScene.setOnKeyPressed(Keyboard::processEvent);
 		mainScene.heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 	}
@@ -264,31 +265,6 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
-	@Override
-	public void onGameEvent(GameEvent event) {
-		LOG.trace("Game UI received game event %s", event);
-		switch (event.type) {
-		case GAME_STATE_CHANGED -> updateGameScene(false);
-		case LEVEL_STARTING -> {
-			gameController.game().level().ifPresent(this::initAnimations);
-			updateGameScene(true);
-		}
-		case UNSPECIFIED_CHANGE -> updateGameScene(true);
-		default -> {
-			// ignore
-		}
-		}
-		currentGameScene.onGameEvent(event);
-	}
-
-	private void initAnimations(GameLevel level) {
-		var r = currentGameScene.context().r2D();
-		level.pac().setAnimations(r.createPacAnimations(level.pac()));
-		level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
-		level.world().addAnimation("flashing", r.createMazeFlashingAnimation());
-		LOG.trace("Created level animations for level #%d", level.number());
-	}
-
 	private void onKeyPressed() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
@@ -320,6 +296,31 @@ public class GameUI implements GameEventListener {
 			stage.setFullScreen(true);
 		}
 		currentGameScene.onKeyPressed();
+	}
+
+	@Override
+	public void onGameEvent(GameEvent event) {
+		LOG.trace("Game UI received game event %s", event);
+		switch (event.type) {
+		case GAME_STATE_CHANGED -> updateGameScene(false);
+		case LEVEL_STARTING -> {
+			gameController.game().level().ifPresent(this::initAnimations);
+			updateGameScene(true);
+		}
+		case UNSPECIFIED_CHANGE -> updateGameScene(true);
+		default -> {
+			// ignore
+		}
+		}
+		currentGameScene.onGameEvent(event);
+	}
+
+	private void initAnimations(GameLevel level) {
+		var r = currentGameScene.context().r2D();
+		level.pac().setAnimations(r.createPacAnimations(level.pac()));
+		level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
+		level.world().addAnimation("flashing", r.createMazeFlashingAnimation());
+		LOG.trace("Created level animations for level #%d", level.number());
 	}
 
 	public GameController gameController() {
