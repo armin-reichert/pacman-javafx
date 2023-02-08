@@ -36,35 +36,33 @@ import javafx.scene.input.KeyEvent;
 public class Keyboard {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-	private static final Keyboard KB = new Keyboard();
+	private static KeyEvent currentEvent;
+	private static Runnable callback;
 
 	public static void handleKeyEvent(KeyEvent e) {
 		if (e.isConsumed()) {
 			LOG.trace("Keyboard: Key event ignored (already consumed): %s %s", e.getCode(), e);
 			return;
 		}
-		KB.currentEvent = e;
+		currentEvent = e;
 		e.consume();
 		LOG.trace("Keyboard: Key event consumed: %s %s", e.getCode(), e);
-		if (KB.callback != null) {
-			KB.callback.run();
+		if (callback != null) {
+			callback.run();
 		}
 	}
 
 	public static void setCallback(Runnable callback) {
-		KB.callback = callback;
+		Keyboard.callback = callback;
 	}
 
 	public static boolean pressed(KeyCodeCombination kcc) {
-		return KB.currentEvent != null && kcc.match(KB.currentEvent);
+		return currentEvent != null && kcc.match(currentEvent);
 	}
 
 	public static void clear() {
-		KB.currentEvent = null;
+		currentEvent = null;
 	}
-
-	private KeyEvent currentEvent;
-	private Runnable callback;
 
 	private Keyboard() {
 	}
