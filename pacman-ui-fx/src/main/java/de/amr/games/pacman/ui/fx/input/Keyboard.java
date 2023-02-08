@@ -24,6 +24,9 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.input;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
@@ -32,10 +35,12 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
+	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static final Keyboard KB = new Keyboard();
 
 	public static void handleKeyEvent(KeyEvent e) {
 		if (e.isConsumed()) {
+			LOG.trace("Keyboard: Key event ignored (already consumed): %s %s", e.getCode(), e);
 			return;
 		}
 		KB.currentEvent = e;
@@ -43,6 +48,7 @@ public class Keyboard {
 			KB.callback.run();
 		}
 		e.consume();
+		LOG.trace("Keyboard: Key event consumed: %s %s", e.getCode(), e);
 	}
 
 	public static void setCallback(Runnable callback) {
