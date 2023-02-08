@@ -44,11 +44,11 @@ public class Keyboard {
 			return;
 		}
 		KB.currentEvent = e;
+		e.consume();
+		LOG.trace("Keyboard: Key event consumed: %s %s", e.getCode(), e);
 		if (KB.callback != null) {
 			KB.callback.run();
 		}
-		e.consume();
-		LOG.trace("Keyboard: Key event consumed: %s %s", e.getCode(), e);
 	}
 
 	public static void setCallback(Runnable callback) {
