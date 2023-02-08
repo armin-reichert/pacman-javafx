@@ -28,6 +28,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -38,37 +39,31 @@ import javafx.scene.input.KeyEvent;
 public class KeyboardSteering implements Steering {
 
 	private Direction dir;
-	public KeyCode up;
-	public KeyCode down;
-	public KeyCode left;
-	public KeyCode right;
+	private KeyCodeCombination up;
+	private KeyCodeCombination down;
+	private KeyCodeCombination left;
+	private KeyCodeCombination right;
 
 	public KeyboardSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
-		this.up = up;
-		this.down = down;
-		this.left = left;
-		this.right = right;
+		this.up = new KeyCodeCombination(up);
+		this.down = new KeyCodeCombination(down);
+		this.left = new KeyCodeCombination(left);
+		this.right = new KeyCodeCombination(right);
 	}
 
 	public void onKeyPressed(KeyEvent e) {
-		var code = e.getCode();
-		boolean noModifier = !(e.isAltDown() || e.isControlDown() || e.isShiftDown());
-		boolean shiftOnly = e.isShiftDown() && !e.isAltDown() && !e.isControlDown();
 		dir = null;
-		if (noModifier || shiftOnly) {
-			if (code == up) {
-				dir = Direction.UP;
-				e.consume();
-			} else if (code == down) {
-				dir = Direction.DOWN;
-				e.consume();
-			} else if (code == left) {
-				dir = Direction.LEFT;
-				e.consume();
-			} else if (code == right) {
-				dir = Direction.RIGHT;
-				e.consume();
-			}
+		if (up.match(e)) {
+			dir = Direction.UP;
+		} else if (down.match(e)) {
+			dir = Direction.DOWN;
+		} else if (left.match(e)) {
+			dir = Direction.LEFT;
+		} else if (right.match(e)) {
+			dir = Direction.RIGHT;
+		}
+		if (dir != null) {
+			e.consume();
 		}
 	}
 
