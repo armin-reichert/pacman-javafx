@@ -7,10 +7,7 @@
 		</Console>
 	</Appenders>
 	<Loggers>
-		<Logger name="de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation" level="info" additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx.sound.GameSounds" level="info" additivity="false">
+		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger name="de.amr.games.pacman.model.common.GhostHouseRules" level="info" additivity="false">
@@ -28,16 +25,19 @@
 		<Logger name="de.amr.games.pacman.lib.fsm.Fsm" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="info" additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
 		<Logger name="de.amr.games.pacman.lib.FollowRoute" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger name="de.amr.games.pacman.ui.fx.shell.GameUI" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx.shell.PiPView" level="info" additivity="false">
+		<Logger name="de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="de.amr.games.pacman.ui.fx.input.Keyboard" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="de.amr.games.pacman.ui.fx.sound.GameSounds" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Root level="info">
