@@ -93,6 +93,10 @@ public abstract class GameLoop {
 		frameGenerator.stop();
 	}
 
+	public boolean isRunning() {
+		return frameGenerator.getStatus() == Status.RUNNING;
+	}
+
 	public boolean isPaused() {
 		return pausedPy.get();
 	}

@@ -125,16 +125,13 @@ public class GameUI implements GameEventListener {
 		stage.setScene(mainScene);
 		initEnv(settings);
 
-		mainScene.setOnKeyPressed(Keyboard::handleKeyEvent);
-		Keyboard.setCallback(this::onKeyPressed);
-
-		GameEvents.addListener(this);
-
 		// keyboard steering of Pac-Man
 		var defaultPacSteering = new KeyboardSteering(Keys.PAC_UP, Keys.PAC_DOWN, Keys.PAC_LEFT, Keys.PAC_RIGHT);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, defaultPacSteering::onKeyPressed);
 		gameController.setManualPacSteering(defaultPacSteering);
 
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, defaultPacSteering::onKeyPressed);
+		mainScene.setOnKeyPressed(Keyboard::handleKeyEvent);
+		Keyboard.setCallback(this::onKeyPressed);
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
@@ -169,6 +166,11 @@ public class GameUI implements GameEventListener {
 	}
 
 	public void start() {
+		if (simulation.isRunning()) {
+			LOG.info("Game has already been started");
+			return;
+		}
+		GameEvents.addListener(this);
 		Actions.setUI(this);
 		dashboard.init(this);
 		gameController.boot(); // after booting, current game scene is initialized
