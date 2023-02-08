@@ -37,27 +37,27 @@ public class Keyboard {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static KeyEvent currentEvent;
-	private static Runnable callback;
 
-	public static void handleKeyEvent(KeyEvent e) {
+	/**
+	 * If the event is not yet consumed, it is accepted as the current event and can then be queried by the application
+	 * code.
+	 * 
+	 * @param e key event
+	 * @return if the event was accepted
+	 */
+	public static boolean accept(KeyEvent e) {
 		if (e.isConsumed()) {
-			LOG.trace("Keyboard: Key event ignored (already consumed): %s %s", e.getCode(), e);
-			return;
+			LOG.trace("Keyboard: Key event (%s) not accepted: %s", e.getCode(), e);
+			return false;
 		}
+		LOG.trace("Keyboard: Key event (%s) accepted: %s", e.getCode(), e);
 		currentEvent = e;
 		e.consume();
-		LOG.trace("Keyboard: Key event consumed: %s %s", e.getCode(), e);
-		if (callback != null) {
-			callback.run();
-		}
+		return true;
 	}
 
-	public static void setCallback(Runnable callback) {
-		Keyboard.callback = callback;
-	}
-
-	public static boolean pressed(KeyCodeCombination kcc) {
-		return currentEvent != null && kcc.match(currentEvent);
+	public static boolean pressed(KeyCodeCombination combination) {
+		return currentEvent != null && combination.match(currentEvent);
 	}
 
 	public static void clear() {

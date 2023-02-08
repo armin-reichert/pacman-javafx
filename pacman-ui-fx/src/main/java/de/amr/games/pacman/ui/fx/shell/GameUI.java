@@ -130,8 +130,11 @@ public class GameUI implements GameEventListener {
 		gameController.setManualPacSteering(defaultPacSteering);
 
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, defaultPacSteering::onKeyPressed);
-		mainScene.setOnKeyPressed(Keyboard::handleKeyEvent);
-		Keyboard.setCallback(this::onKeyPressed);
+		mainScene.setOnKeyPressed(e -> {
+			if (Keyboard.accept(e)) {
+				onKeyPressed();
+			}
+		});
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
