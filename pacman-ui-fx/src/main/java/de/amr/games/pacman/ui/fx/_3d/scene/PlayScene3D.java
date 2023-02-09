@@ -33,11 +33,14 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameSound;
+import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -56,6 +59,7 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
@@ -167,6 +171,7 @@ public class PlayScene3D implements GameScene {
 		ctx.level().ifPresent(level -> {
 			level3D.update();
 			currentCamera().update(level3D.pac3D());
+			renderSound(level);
 		});
 	}
 
@@ -353,4 +358,34 @@ public class PlayScene3D implements GameScene {
 			level3D.bonus3D().setVisible(false);
 		}
 	}
+
+	// TODO this is copy-pasta from 2D play scene
+	private void renderSound(GameLevel level) {
+		var sound = GameUI.sounds(level.game());
+		if (level.huntingTimer().isRunning() && level.huntingTimer().tick() == 1) {
+			sound.ensureSirenStarted(level.huntingPhase() / 2);
+		}
+		if (level.memo().pacPowered) {
+			sound.stopSirens();
+			sound.ensureLoop(GameSound.PACMAN_POWER, GameSoundController.LOOP_FOREVER);
+		}
+		if (level.memo().pacPowerLost) {
+			sound.stop(GameSound.PACMAN_POWER);
+			sound.ensureSirenStarted(level.huntingPhase() / 2);
+		}
+		if (level.memo().foodFoundTile.isPresent()) {
+			sound.ensureLoop(GameSound.PACMAN_MUNCH, GameSoundController.LOOP_FOREVER);
+		}
+		if (level.pac().starvingTicks() >= 12) { // ???
+			sound.stop(GameSound.PACMAN_MUNCH);
+		}
+		if (level.ghosts(GhostState.RETURNING_TO_HOUSE).count() > 0) {
+			if (!sound.isPlaying(GameSound.GHOST_RETURNING)) {
+				sound.loop(GameSound.GHOST_RETURNING, GameSoundController.LOOP_FOREVER);
+			}
+		} else {
+			sound.stop(GameSound.GHOST_RETURNING);
+		}
+	}
+
 }
