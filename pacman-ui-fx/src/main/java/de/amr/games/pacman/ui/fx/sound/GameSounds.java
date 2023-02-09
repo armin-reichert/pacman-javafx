@@ -175,6 +175,7 @@ public class GameSounds implements GameSoundController {
 		for (AudioClip clip : clips.values()) {
 			clip.stop();
 		}
+		stopSirens();
 	}
 
 	@Override
