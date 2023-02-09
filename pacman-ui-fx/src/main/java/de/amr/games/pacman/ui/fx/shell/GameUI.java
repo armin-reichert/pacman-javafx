@@ -252,11 +252,12 @@ public class GameUI implements GameEventListener {
 			currentGameScene.end();
 		}
 
-		gameController.setSounds(sounds());
 		// TODO Hack. Change this.
 		var level = gameController.game().level().orElse(null);
 		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
 			gameController.setSounds(GameSoundController.NO_SOUND);
+		} else {
+			gameController.setSounds(sounds());
 		}
 
 		nextGameScene.setContext(new GameSceneContext(gameController, renderer()));
