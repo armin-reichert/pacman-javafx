@@ -58,7 +58,14 @@ public class Keyboard {
 	}
 
 	public static boolean pressed(KeyCodeCombination combination) {
-		return currentEvent != null && combination.match(currentEvent);
+		if (currentEvent == null) {
+			return false;
+		}
+		var match = combination.match(currentEvent);
+		if (match) {
+			LOG.trace("Key event matches combination %s", combination);
+		}
+		return match;
 	}
 
 	public static void clear() {
