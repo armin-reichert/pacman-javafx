@@ -57,6 +57,14 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
+	public void end() {
+		context.level().ifPresent(level -> {
+			var sound = GameUI.sounds(level.game());
+			sound.stopAll();
+		});
+	}
+
+	@Override
 	public void drawSceneContent() {
 		var game = context.game();
 		var r = context.r2D();

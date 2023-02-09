@@ -102,7 +102,7 @@ public class PlayScene3D implements GameScene {
 	private final AmbientLight ambientLight = new AmbientLight();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 
-	private GameSceneContext ctx;
+	private GameSceneContext context;
 	private GameLevel3D level3D;
 
 	public PlayScene3D() {
@@ -118,7 +118,15 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		ctx.level().ifPresent(this::createGameLevel3D);
+		context.level().ifPresent(this::createGameLevel3D);
+	}
+
+	@Override
+	public void end() {
+		context.level().ifPresent(level -> {
+			var sound = GameUI.sounds(level.game());
+			sound.stopAll();
+		});
 	}
 
 	@Override
@@ -130,7 +138,7 @@ public class PlayScene3D implements GameScene {
 		var width = level.world().numCols() * World.TS;
 		var height = level.world().numRows() * World.TS;
 
-		level3D = new GameLevel3D(level, ctx.r2D());
+		level3D = new GameLevel3D(level, context.r2D());
 		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
 		level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
@@ -149,7 +157,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onKeyPressed() {
-		if (Keyboard.pressed(Keys.ADD_CREDIT) && !ctx.hasCredit()) {
+		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
 			Actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {
 			Actions.selectPrevPerspective();
@@ -168,7 +176,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onTick() {
-		ctx.level().ifPresent(level -> {
+		context.level().ifPresent(level -> {
 			level3D.update();
 			currentCamera().update(level3D.pac3D());
 			renderSound(level);
@@ -182,12 +190,12 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public GameSceneContext context() {
-		return ctx;
+		return context;
 	}
 
 	@Override
 	public void setContext(GameSceneContext ctx) {
-		this.ctx = ctx;
+		this.context = ctx;
 	}
 
 	@Override
@@ -238,9 +246,9 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSwitchFrom2D() {
-		ctx.world().ifPresent(world -> {
+		context.world().ifPresent(world -> {
 			level3D.food3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
-			if (U.oneOf(ctx.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
+			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 		});
@@ -251,7 +259,7 @@ public class PlayScene3D implements GameScene {
 		if (e.tile.isEmpty()) {
 			// when cheat "eat all pellets" is used, no tile is present in the event.
 			// In that case, bring 3D pellets to be in synch with model:
-			ctx.world().ifPresent(world -> {
+			context.world().ifPresent(world -> {
 				world.tiles() //
 						.filter(world::containsEatenFood) //
 						.map(level3D.food3D()::pelletAt) //
@@ -265,12 +273,12 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		ctx.level().ifPresent(level -> level3D.bonus3D().showSymbol());
+		context.level().ifPresent(level -> level3D.bonus3D().showSymbol());
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		ctx.level().ifPresent(level -> {
+		context.level().ifPresent(level -> {
 			level3D.bonus3D().showPoints();
 		});
 	}
@@ -285,7 +293,7 @@ public class PlayScene3D implements GameScene {
 		switch (e.newGameState) {
 
 		case READY -> {
-			ctx.level().ifPresent(level -> {
+			context.level().ifPresent(level -> {
 				level3D.food3D().energizers3D().forEach(Energizer3D::init);
 				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
@@ -295,12 +303,12 @@ public class PlayScene3D implements GameScene {
 		case HUNTING -> level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 
 		case PACMAN_DYING -> {
-			ctx.game().level().ifPresent(level -> {
+			context.game().level().ifPresent(level -> {
 				level.ghosts().filter(level.pac()::sameTile).findAny().ifPresent(killer -> {
 					lockGameState();
 					var animation = new SequentialTransition( //
 							Ufx.pause(0.2), //
-							level3D.pac3D().createDyingAnimation(ctx.r2D().ghostColor(killer.id())), //
+							level3D.pac3D().createDyingAnimation(context.r2D().ghostColor(killer.id())), //
 							Ufx.pause(2.0) //
 					);
 					animation.setOnFinished(evt -> unlockGameState());
@@ -310,18 +318,18 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case GHOST_DYING -> {
-			ctx.level().ifPresent(level -> {
+			context.level().ifPresent(level -> {
 				level.memo().killedGhosts.forEach(killedGhost -> {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					ghost3D.setNumberImage(ctx.r2D().ghostValueImage(index));
+					ghost3D.setNumberImage(context.r2D().ghostValueImage(index));
 				});
 			});
 		}
 
 		case CHANGING_TO_NEXT_LEVEL -> {
 			lockGameState();
-			ctx.level().ifPresent(level -> {
+			context.level().ifPresent(level -> {
 				LOG.info("Starting level %d", level.number());
 				createGameLevel3D(level);
 				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
@@ -330,7 +338,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case LEVEL_COMPLETE -> {
-			ctx.level().ifPresent(level -> {
+			context.level().ifPresent(level -> {
 				lockGameState();
 				var message = "%s%n%n%s".formatted(ResourceMgr.MESSAGES_LEVEL_COMPLETE.next(),
 						ResourceMgr.message("level_complete", level.number()));
