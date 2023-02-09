@@ -31,9 +31,11 @@ import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
@@ -326,6 +328,7 @@ public class GameUI implements GameEventListener {
 			gameController.game().level().ifPresent(this::initAnimations);
 			updateGameScene(true);
 		}
+		case SOUND_EVENT -> handleSoundEvent((SoundEvent) event);
 		case UNSPECIFIED_CHANGE -> updateGameScene(true);
 		default -> {
 			// ignore
@@ -340,6 +343,18 @@ public class GameUI implements GameEventListener {
 		level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
 		level.world().addAnimation("flashing", r.createMazeFlashingAnimation());
 		LOG.trace("Created level animations for level #%d", level.number());
+	}
+
+	private void handleSoundEvent(SoundEvent event) {
+		var sounds = sounds();
+		switch (event.soundCommand) {
+		case "sound_credit_added" -> {
+			sounds.play(GameSound.CREDIT);
+		}
+		default -> {
+			// ignore
+		}
+		}
 	}
 
 	public GameController gameController() {
