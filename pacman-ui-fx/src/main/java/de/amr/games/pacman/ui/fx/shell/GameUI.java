@@ -190,7 +190,6 @@ public class GameUI implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 
-		gameController.sounds().setMuted(settings.muted);
 		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 
 		simulation.start();
@@ -253,7 +252,6 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		gameController.setSounds(sounds());
 		nextGameScene.setContext(new GameSceneContext(gameController, renderer()));
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
@@ -272,13 +270,13 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
-	private GameSoundController sounds() {
+	public static GameSoundController sounds(GameModel game) {
 		// TODO hack
-		var level = gameController.game().level().orElse(null);
+		var level = game.level().orElse(null);
 		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
 			return GameSoundController.NO_SOUND;
 		}
-		var variant = gameController.game().variant();
+		var variant = game.variant();
 		return switch (variant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
@@ -296,7 +294,7 @@ public class GameUI implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
 			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.MUTE)) {
-			Actions.toggleSoundMuted();
+//			Actions.toggleSoundMuted();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
 			Actions.togglePaused();
 		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
@@ -321,7 +319,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onGameEvent(GameEvent event) {
-		LOG.trace("Game UI received game event %s", event);
+		LOG.trace("Game UI received %s", event);
 		switch (event.type) {
 		case GAME_STATE_CHANGED -> updateGameScene(false);
 		case LEVEL_STARTING -> {
@@ -334,7 +332,9 @@ public class GameUI implements GameEventListener {
 			// ignore
 		}
 		}
-		currentGameScene.onGameEvent(event);
+		if (currentGameScene != null) {
+			currentGameScene.onGameEvent(event);
+		}
 	}
 
 	private void initAnimations(GameLevel level) {
@@ -346,11 +346,37 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void handleSoundEvent(SoundEvent event) {
-		var sounds = sounds();
+		var sounds = sounds(event.game);
 		switch (event.soundCommand) {
-		case "sound_credit_added" -> {
-			sounds.play(GameSound.CREDIT);
+		case "bonus_eaten" -> sounds.play(GameSound.BONUS_EATEN);
+		case "credit_added" -> sounds.play(GameSound.CREDIT);
+		case "extra_life" -> sounds.play(GameSound.EXTRA_LIFE);
+		case "ghost_eaten" -> sounds.play(GameSound.GHOST_EATEN);
+		case "hunting_phase_started_0" -> sounds.ensureSirenStarted(0);
+		case "hunting_phase_started_2" -> sounds.ensureSirenStarted(1);
+		case "hunting_phase_started_4" -> sounds.ensureSirenStarted(2);
+		case "hunting_phase_started_6" -> sounds.ensureSirenStarted(3);
+		case "level_starting" -> sounds.play(GameSound.GAME_READY);
+		case "pacman_death" -> sounds.play(GameSound.PACMAN_DEATH);
+		case "start_intermission_1" -> {
+			switch (event.game.variant()) {
+			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_1);
+			case PACMAN -> sounds.loop(GameSound.INTERMISSION_1, 2);
+			}
 		}
+		case "start_intermission_2" -> {
+			switch (event.game.variant()) {
+			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_2);
+			case PACMAN -> sounds.play(GameSound.INTERMISSION_1);
+			}
+		}
+		case "start_intermission_3" -> {
+			switch (event.game.variant()) {
+			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_2);
+			case PACMAN -> sounds.loop(GameSound.INTERMISSION_1, 2);
+			}
+		}
+		case "stop_all_sounds" -> sounds.stopAll();
 		default -> {
 			// ignore
 		}

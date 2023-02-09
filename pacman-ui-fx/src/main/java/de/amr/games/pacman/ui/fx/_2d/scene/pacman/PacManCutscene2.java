@@ -28,9 +28,9 @@ import static de.amr.games.pacman.lib.math.Vector2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -93,7 +93,7 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			context.sounds().play(GameSound.INTERMISSION_1);
+			GameEvents.publishSoundEvent("start_intermission_2");
 		} else if (frame == 110) {
 			blinky.setPixelSpeed(1.25f);
 			blinky.show();

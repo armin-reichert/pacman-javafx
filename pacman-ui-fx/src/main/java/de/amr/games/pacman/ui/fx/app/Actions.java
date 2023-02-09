@@ -156,7 +156,6 @@ public class Actions {
 
 	public static void togglePaused() {
 		Ufx.toggle(Env.Simulation.pausedPy);
-		gameController().sounds().setMuted(Env.Simulation.pausedPy.get());
 	}
 
 	public static void oneSimulationStep() {
@@ -235,13 +234,6 @@ public class Actions {
 
 	public static void toggleDrawMode() {
 		Env.ThreeD.drawModePy.set(Env.ThreeD.drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-	}
-
-	public static void toggleSoundMuted() {
-		boolean muted = gameController().sounds().isMuted();
-		gameController().sounds().setMuted(!muted);
-		var msg = ResourceMgr.message(gameController().sounds().isMuted() ? "sound_off" : "sound_on");
-		showFlashMessage(msg);
 	}
 
 	public static void cheatAddLives(int numLives) {

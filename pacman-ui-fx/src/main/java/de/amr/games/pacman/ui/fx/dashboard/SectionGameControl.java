@@ -52,7 +52,6 @@ public class SectionGameControl extends Section {
 	private Button[] blIntermissionTest;
 	private Spinner<Integer> spGameLevel;
 	private Spinner<Integer> spGameCredit;
-	private CheckBox cbMuted;
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 
@@ -81,7 +80,6 @@ public class SectionGameControl extends Section {
 		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
 		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
-		cbMuted = addCheckBox("Sound muted", Actions::toggleSoundMuted);
 		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", Actions::toggleImmunity);
 	}
@@ -119,8 +117,5 @@ public class SectionGameControl extends Section {
 		}
 
 		spGameCredit.getValueFactory().setValue(game().credit());
-
-		cbMuted.setDisable(false);
-		cbMuted.setSelected(gc.sounds().isMuted());
 	}
 }

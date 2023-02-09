@@ -38,7 +38,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
@@ -260,11 +259,6 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void onPlayerGetsExtraLife(GameEvent e) {
-		ctx.sounds().play(GameSound.EXTRA_LIFE);
-	}
-
-	@Override
 	public void onBonusGetsActive(GameEvent e) {
 		ctx.level().ifPresent(level -> level3D.bonus3D().showSymbol());
 	}
@@ -273,7 +267,6 @@ public class PlayScene3D implements GameScene {
 	public void onBonusGetsEaten(GameEvent e) {
 		ctx.level().ifPresent(level -> {
 			level3D.bonus3D().showPoints();
-			ctx.sounds().play(GameSound.BONUS_EATEN);
 		});
 	}
 

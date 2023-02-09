@@ -28,8 +28,8 @@ import static de.amr.games.pacman.lib.math.Vector2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -83,7 +83,7 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 		++frame;
 		if (frame == 0) {
-			context.sounds().loop(GameSound.INTERMISSION_1, 2);
+			GameEvents.publishSoundEvent("start_intermission_1");
 		} else if (frame == 260) {
 			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
