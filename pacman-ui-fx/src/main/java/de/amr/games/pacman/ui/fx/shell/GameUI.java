@@ -251,19 +251,15 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		var context = new GameSceneContext(gameController, renderer());
 
 		gameController.setSounds(sounds());
 		// TODO Hack. Change this.
-		var gameLevel = gameController.game().level();
-		if (gameLevel.isPresent()) {
-			var level = gameLevel.get();
-			if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
-				gameController.setSounds(GameSoundController.NO_SOUND);
-			}
+		var level = gameController.game().level().orElse(null);
+		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
+			gameController.setSounds(GameSoundController.NO_SOUND);
 		}
 
-		nextGameScene.setContext(context);
+		nextGameScene.setContext(new GameSceneContext(gameController, renderer()));
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
 		// embed game scene into main scene
