@@ -251,15 +251,7 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-
-		// TODO Hack. Change this.
-		var level = gameController.game().level().orElse(null);
-		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
-			gameController.setSounds(GameSoundController.NO_SOUND);
-		} else {
-			gameController.setSounds(sounds());
-		}
-
+		gameController.setSounds(sounds());
 		nextGameScene.setContext(new GameSceneContext(gameController, renderer()));
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
@@ -278,7 +270,12 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
-	private GameSounds sounds() {
+	private GameSoundController sounds() {
+		// TODO hack
+		var level = gameController.game().level().orElse(null);
+		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
+			return GameSoundController.NO_SOUND;
+		}
 		var variant = gameController.game().variant();
 		return switch (variant) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
