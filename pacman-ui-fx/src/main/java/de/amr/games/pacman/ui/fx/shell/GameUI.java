@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
@@ -34,6 +35,8 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
+import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
@@ -111,19 +114,23 @@ public class GameUI implements GameEventListener {
 	 * controlled using the dashboard.
 	 */
 	private final PlayScene2D pipPlayScene = new PlayScene2D();
+	private final Settings settings;
 
 	private Scene mainScene;
 	private GameScene currentGameScene;
 
 	public GameUI(Stage primaryStage, Settings settings) {
+		this.settings = settings;
 		gameController = new GameController(settings.variant);
+
+		initEnv();
+
 		stage = primaryStage;
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.setFullScreen(settings.fullScreen);
 		createMainScene(ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom);
 		stage.setScene(mainScene);
-		initEnv(settings);
 
 		// keyboard steering of Pac-Man
 		var defaultPacSteering = new KeyboardSteering(Keys.PAC_UP, Keys.PAC_DOWN, Keys.PAC_LEFT, Keys.PAC_RIGHT);
@@ -152,7 +159,7 @@ public class GameUI implements GameEventListener {
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 	}
 
-	private void initEnv(Settings settings) {
+	private void initEnv() {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainSceneBackground());
 
 		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> updateMainSceneBackground());
@@ -180,7 +187,10 @@ public class GameUI implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
+
+		gameController.sounds().setMuted(settings.muted);
 		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
+
 		simulation.start();
 		LOG.info("Game started. Game loop target frame rate: %d", simulation.targetFrameratePy.get());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
@@ -233,7 +243,6 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		gameController.setSounds(sounds());
 		updateMainSceneBackground();
 		updateStageFrame();
 	}
@@ -243,6 +252,17 @@ public class GameUI implements GameEventListener {
 			currentGameScene.end();
 		}
 		var context = new GameSceneContext(gameController, renderer());
+
+		gameController.setSounds(sounds());
+		// TODO Hack. Change this.
+		var gameLevel = gameController.game().level();
+		if (gameLevel.isPresent()) {
+			var level = gameLevel.get();
+			if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
+				gameController.setSounds(GameSoundController.NO_SOUND);
+			}
+		}
+
 		nextGameScene.setContext(context);
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
