@@ -362,18 +362,21 @@ public class GameUI implements GameEventListener {
 			switch (event.game.variant()) {
 			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_1);
 			case PACMAN -> sounds.loop(GameSound.INTERMISSION_1, 2);
+			default -> throw new IllegalArgumentException();
 			}
 		}
 		case "start_intermission_2" -> {
 			switch (event.game.variant()) {
 			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_2);
 			case PACMAN -> sounds.play(GameSound.INTERMISSION_1);
+			default -> throw new IllegalArgumentException();
 			}
 		}
 		case "start_intermission_3" -> {
 			switch (event.game.variant()) {
 			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_3);
 			case PACMAN -> sounds.loop(GameSound.INTERMISSION_1, 2);
+			default -> throw new IllegalArgumentException();
 			}
 		}
 		case "stop_all_sounds" -> sounds.stopAll();
