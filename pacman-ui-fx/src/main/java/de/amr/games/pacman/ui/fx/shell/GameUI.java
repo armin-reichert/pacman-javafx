@@ -30,9 +30,9 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
@@ -317,32 +317,25 @@ public class GameUI implements GameEventListener {
 	@Override
 	public void onGameEvent(GameEvent event) {
 		LOG.trace("Event received: %s", event);
-		switch (event.type) {
-		case GAME_STATE_CHANGED -> updateGameScene(false);
-		case LEVEL_STARTING -> {
-			gameController.game().level().ifPresent(this::initAnimations);
-			updateGameScene(true);
-		}
-		case SOUND_EVENT -> handleSoundEvent((SoundEvent) event);
-		case UNSPECIFIED_CHANGE -> updateGameScene(true);
-		default -> {
-			// ignore
-		}
-		}
+		// call event specific handler
+		GameEventListener.super.onGameEvent(event);
 		if (currentGameScene != null) {
 			currentGameScene.onGameEvent(event);
 		}
 	}
 
-	private void initAnimations(GameLevel level) {
-		var r = currentGameScene.context().r2D();
-		level.pac().setAnimations(r.createPacAnimations(level.pac()));
-		level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
-		level.world().addAnimation("flashing", r.createMazeFlashingAnimation());
-		LOG.trace("Created level animations for level #%d", level.number());
+	@Override
+	public void onGameStateChange(GameStateChangeEvent e) {
+		updateGameScene(false);
 	}
 
-	private void handleSoundEvent(SoundEvent event) {
+	@Override
+	public void onUnspecifiedChange(GameEvent e) {
+		updateGameScene(true);
+	}
+
+	@Override
+	public void onSoundEvent(SoundEvent event) {
 		var sounds = sounds(event.game);
 		switch (event.soundCommand) {
 		case "bonus_eaten" -> sounds.play(GameSound.BONUS_EATEN);
@@ -381,6 +374,18 @@ public class GameUI implements GameEventListener {
 			// ignore
 		}
 		}
+	}
+
+	@Override
+	public void onLevelStarting(GameEvent e) {
+		gameController.game().level().ifPresent(level -> {
+			var r = currentGameScene.context().r2D();
+			level.pac().setAnimations(r.createPacAnimations(level.pac()));
+			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
+			level.world().addAnimation("flashing", r.createMazeFlashingAnimation());
+			LOG.trace("Created level animations for level #%d", level.number());
+		});
+		updateGameScene(true);
 	}
 
 	public GameController gameController() {

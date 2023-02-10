@@ -158,10 +158,7 @@ public class PlayScene2D extends GameScene2D {
 			sound.ensureSirenStarted(level.huntingPhase() / 2);
 		}
 		if (level.memo().foodFoundTile.isPresent()) {
-			sound.ensureLoop(GameSound.PACMAN_MUNCH, AudioClip.INDEFINITE);
-		}
-		if (level.pac().starvingTicks() >= 12) { // ???
-			sound.stop(GameSound.PACMAN_MUNCH);
+			sound.ensureLoop(GameSound.PACMAN_MUNCH, 4);
 		}
 		if (level.ghosts(GhostState.RETURNING_TO_HOUSE).count() > 0) {
 			if (!sound.isPlaying(GameSound.GHOST_RETURNING)) {

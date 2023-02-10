@@ -165,6 +165,7 @@ public class GameSounds {
 			clip.stop();
 		}
 		stopSirens();
+		stop(GameSound.PACMAN_MUNCH);
 	}
 
 	public void startSiren(int sirenIndex) {
