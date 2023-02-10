@@ -58,6 +58,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void end() {
+		// TODO check if this is really needed
 		context.level().ifPresent(level -> {
 			var sound = GameUI.sounds(level.game());
 			sound.stopAll();
