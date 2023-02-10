@@ -53,7 +53,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void update() {
 		creditVisible = !context.hasCredit() || context.state() == GameState.GAME_OVER;
-		context.level().ifPresent(this::renderSound);
+		context.level().ifPresent(this::updateSound);
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class PlayScene2D extends GameScene2D {
 		});
 	}
 
-	private void renderSound(GameLevel level) {
+	private void updateSound(GameLevel level) {
 		var sounds = GameUI.sounds(level.game());
 		if (level.pac().starvingTicks() > 10) {
 			sounds.stop(GameSound.PACMAN_MUNCH);
