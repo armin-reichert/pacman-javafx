@@ -85,6 +85,28 @@ public class GameUI implements GameEventListener {
 	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
+	private static GameRenderer renderer(GameModel game) {
+		return switch (game.variant()) {
+		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
+		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
+		default -> throw new IllegalStateException();
+		};
+	}
+
+	public static GameSoundController sounds(GameModel game) {
+		// TODO hack
+		var level = game.level().orElse(null);
+		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
+			return GameSoundController.NO_SOUND;
+		}
+		var variant = game.variant();
+		return switch (variant) {
+		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
+		case PACMAN -> GameSounds.PACMAN_SOUNDS;
+		default -> throw new IllegalStateException();
+		};
+	}
+
 	public class Simulation extends GameLoop {
 
 		public Simulation(int fps) {
@@ -252,36 +274,13 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		nextGameScene.setContext(new GameSceneContext(gameController, renderer()));
+		nextGameScene.setContext(new GameSceneContext(gameController, renderer(gameController.game())));
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
 		// embed game scene into main scene
 		StackPane root = (StackPane) mainScene.getRoot();
 		root.getChildren().set(0, currentGameScene.fxSubScene());
 		currentGameScene.onEmbed(mainScene);
-	}
-
-	private GameRenderer renderer() {
-		var variant = gameController.game().variant();
-		return switch (variant) {
-		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
-		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
-		default -> throw new IllegalStateException();
-		};
-	}
-
-	public static GameSoundController sounds(GameModel game) {
-		// TODO hack
-		var level = game.level().orElse(null);
-		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
-			return GameSoundController.NO_SOUND;
-		}
-		var variant = game.variant();
-		return switch (variant) {
-		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
-		case PACMAN -> GameSounds.PACMAN_SOUNDS;
-		default -> throw new IllegalStateException();
-		};
 	}
 
 	private void onKeyPressed() {
