@@ -316,7 +316,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onGameEvent(GameEvent event) {
-		LOG.trace("Game UI received %s", event);
+		LOG.trace("Event received: %s", event);
 		switch (event.type) {
 		case GAME_STATE_CHANGED -> updateGameScene(false);
 		case LEVEL_STARTING -> {
