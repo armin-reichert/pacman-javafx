@@ -372,7 +372,7 @@ public class GameUI implements GameEventListener {
 		}
 		case "start_intermission_3" -> {
 			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_2);
+			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_3);
 			case PACMAN -> sounds.loop(GameSound.INTERMISSION_1, 2);
 			}
 		}
