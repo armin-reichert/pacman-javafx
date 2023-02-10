@@ -99,8 +99,7 @@ public class GameUI implements GameEventListener {
 		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
 			return GameSoundController.NO_SOUND;
 		}
-		var variant = game.variant();
-		return switch (variant) {
+		return switch (game.variant()) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
 		default -> throw new IllegalStateException();
