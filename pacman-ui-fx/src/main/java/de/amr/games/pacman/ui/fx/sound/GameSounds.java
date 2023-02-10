@@ -177,7 +177,7 @@ public class GameSounds {
 		case 3 -> GameSound.SIREN_4;
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
-		getClip(siren).ifPresent(clip -> clip.setVolume(1.0));
+		getClip(siren).ifPresent(clip -> clip.setVolume(0.5));
 		loop(siren, Animation.INDEFINITE);
 		LOG.trace("Siren %s started", siren);
 	}

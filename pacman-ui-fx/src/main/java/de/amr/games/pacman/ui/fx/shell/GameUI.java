@@ -349,6 +349,7 @@ public class GameUI implements GameEventListener {
 		case "hunting_phase_started_6" -> sounds.ensureSirenStarted(3);
 		case "ready_to_play" -> sounds.play(GameSound.GAME_READY);
 		case "pacman_death" -> sounds.play(GameSound.PACMAN_DEATH);
+		case "pacman_found_food" -> sounds.ensureLoop(GameSound.PACMAN_MUNCH, AudioClip.INDEFINITE);
 		case "pacman_power_starts" -> {
 			sounds.stopSirens();
 			sounds.ensureLoop(GameSound.PACMAN_POWER, AudioClip.INDEFINITE);

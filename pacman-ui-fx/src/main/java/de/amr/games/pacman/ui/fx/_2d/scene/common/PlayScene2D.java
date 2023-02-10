@@ -145,19 +145,19 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void renderSound(GameLevel level) {
-		var sound = GameUI.sounds(level.game());
-		if (level.huntingTimer().isRunning() && level.huntingTimer().tick() == 1) {
-			sound.ensureSirenStarted(level.huntingPhase() / 2);
+		var sounds = GameUI.sounds(level.game());
+		if (level.pac().starvingTicks() > 10) {
+			sounds.stop(GameSound.PACMAN_MUNCH);
 		}
-		if (level.memo().foodFoundTile.isPresent()) {
-			sound.ensureLoop(GameSound.PACMAN_MUNCH, 4);
+		if (level.huntingTimer().isRunning() && level.huntingTimer().tick() == 1) {
+			sounds.ensureSirenStarted(level.huntingPhase() / 2);
 		}
 		if (level.ghosts(GhostState.RETURNING_TO_HOUSE).count() > 0) {
-			if (!sound.isPlaying(GameSound.GHOST_RETURNING)) {
-				sound.loop(GameSound.GHOST_RETURNING, AudioClip.INDEFINITE);
+			if (!sounds.isPlaying(GameSound.GHOST_RETURNING)) {
+				sounds.loop(GameSound.GHOST_RETURNING, AudioClip.INDEFINITE);
 			}
 		} else {
-			sound.stop(GameSound.GHOST_RETURNING);
+			sounds.stop(GameSound.GHOST_RETURNING);
 		}
 	}
 }
