@@ -149,10 +149,8 @@ public class PlayScene2D extends GameScene2D {
 		if (level.pac().starvingTicks() > 10) {
 			sounds.stop(GameSound.PACMAN_MUNCH);
 		}
-		if (level.ghosts(GhostState.RETURNING_TO_HOUSE).count() > 0) {
-			if (!sounds.isPlaying(GameSound.GHOST_RETURNING)) {
-				sounds.loop(GameSound.GHOST_RETURNING, AudioClip.INDEFINITE);
-			}
+		if (level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE).count() > 0) {
+			sounds.ensureLoop(GameSound.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
 			sounds.stop(GameSound.GHOST_RETURNING);
 		}
