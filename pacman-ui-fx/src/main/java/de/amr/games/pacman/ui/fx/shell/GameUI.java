@@ -356,7 +356,7 @@ public class GameUI implements GameEventListener {
 		case "hunting_phase_started_2" -> sounds.ensureSirenStarted(1);
 		case "hunting_phase_started_4" -> sounds.ensureSirenStarted(2);
 		case "hunting_phase_started_6" -> sounds.ensureSirenStarted(3);
-		case "level_starting" -> sounds.play(GameSound.GAME_READY);
+		case "ready_to_play" -> sounds.play(GameSound.GAME_READY);
 		case "pacman_death" -> sounds.play(GameSound.PACMAN_DEATH);
 		case "start_intermission_1" -> {
 			switch (event.game.variant()) {
