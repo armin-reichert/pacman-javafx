@@ -149,10 +149,6 @@ public class PlayScene2D extends GameScene2D {
 		if (level.huntingTimer().isRunning() && level.huntingTimer().tick() == 1) {
 			sound.ensureSirenStarted(level.huntingPhase() / 2);
 		}
-		if (level.memo().pacPowerLost) {
-			sound.stop(GameSound.PACMAN_POWER);
-			sound.ensureSirenStarted(level.huntingPhase() / 2);
-		}
 		if (level.memo().foodFoundTile.isPresent()) {
 			sound.ensureLoop(GameSound.PACMAN_MUNCH, 4);
 		}

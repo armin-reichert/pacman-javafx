@@ -353,6 +353,10 @@ public class GameUI implements GameEventListener {
 			sounds.stopSirens();
 			sounds.ensureLoop(GameSound.PACMAN_POWER, AudioClip.INDEFINITE);
 		}
+		case "pacman_power_ends" -> {
+			sounds.stop(GameSound.PACMAN_POWER);
+			gameController.game().level().ifPresent(level -> sounds.ensureSirenStarted(level.huntingPhase() / 2));
+		}
 		case "start_intermission_1" -> {
 			switch (event.game.variant()) {
 			case MS_PACMAN -> sounds.play(GameSound.INTERMISSION_1);
