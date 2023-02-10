@@ -27,7 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
@@ -93,11 +92,11 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
-	public static GameSoundController sounds(GameModel game) {
+	public static GameSounds sounds(GameModel game) {
 		// TODO hack
 		var level = game.level().orElse(null);
 		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
-			return GameSoundController.NO_SOUND;
+			return GameSounds.NO_SOUNDS;
 		}
 		return switch (game.variant()) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;

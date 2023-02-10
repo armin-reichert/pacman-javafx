@@ -32,7 +32,6 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.controller.common.GameSoundController;
 import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
@@ -41,7 +40,7 @@ import javafx.scene.media.AudioClip;
 /**
  * @author Armin Reichert
  */
-public class GameSounds implements GameSoundController {
+public class GameSounds {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
@@ -120,12 +119,10 @@ public class GameSounds implements GameSoundController {
 		}
 	}
 
-	@Override
 	public boolean isMuted() {
 		return muted;
 	}
 
-	@Override
 	public void setMuted(boolean muted) {
 		this.muted = muted;
 		if (muted) {
@@ -133,31 +130,26 @@ public class GameSounds implements GameSoundController {
 		}
 	}
 
-	@Override
 	public boolean isPlaying(GameSound sound) {
 		return getClip(sound).map(AudioClip::isPlaying).orElse(false);
 	}
 
-	@Override
 	public void ensurePlaying(GameSound sound) {
 		if (!isPlaying(sound)) {
 			play(sound);
 		}
 	}
 
-	@Override
 	public void play(GameSound sound) {
 		loop(sound, 1);
 	}
 
-	@Override
 	public void ensureLoop(GameSound sound, int repetitions) {
 		if (!isPlaying(sound)) {
 			loop(sound, repetitions);
 		}
 	}
 
-	@Override
 	public void loop(GameSound sound, int repetitions) {
 		getClip(sound).ifPresent(clip -> {
 			clip.setCycleCount(repetitions);
@@ -165,12 +157,10 @@ public class GameSounds implements GameSoundController {
 		});
 	}
 
-	@Override
 	public void stop(GameSound sound) {
 		getClip(sound).ifPresent(AudioClip::stop);
 	}
 
-	@Override
 	public void stopAll() {
 		for (AudioClip clip : clips.values()) {
 			clip.stop();
@@ -178,7 +168,6 @@ public class GameSounds implements GameSoundController {
 		stopSirens();
 	}
 
-	@Override
 	public void startSiren(int sirenIndex) {
 		stopSirens();
 		var siren = switch (sirenIndex) {
@@ -193,19 +182,16 @@ public class GameSounds implements GameSoundController {
 		LOG.trace("Siren %s started", siren);
 	}
 
-	@Override
 	public Stream<GameSound> sirens() {
 		return Stream.of(GameSound.SIREN_1, GameSound.SIREN_2, GameSound.SIREN_3, GameSound.SIREN_4);
 	}
 
-	@Override
 	public void ensureSirenStarted(int sirenIndex) {
 		if (sirens().noneMatch(this::isPlaying)) {
 			startSiren(sirenIndex);
 		}
 	}
 
-	@Override
 	public void stopSirens() {
 		sirens().forEach(siren -> {
 			if (isPlaying(siren)) {
