@@ -30,7 +30,6 @@ import static de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer.drawTi
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameSound;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -40,6 +39,7 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.sound.GameSound;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
