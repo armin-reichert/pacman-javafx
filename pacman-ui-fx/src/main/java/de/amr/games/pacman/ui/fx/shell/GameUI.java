@@ -35,8 +35,6 @@ import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
-import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
@@ -94,11 +92,6 @@ public class GameUI implements GameEventListener {
 	}
 
 	public static GameSounds sounds(GameModel game) {
-		// TODO hack
-		var level = game.level().orElse(null);
-		if (level instanceof MsPacManGameDemoLevel || level instanceof PacManGameDemoLevel) {
-			return GameSounds.NO_SOUNDS;
-		}
 		return switch (game.variant()) {
 		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
 		case PACMAN -> GameSounds.PACMAN_SOUNDS;
