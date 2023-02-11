@@ -28,7 +28,7 @@ package de.amr.games.pacman.ui.fx.sound.common;
  * 
  * @author Armin Reichert
  */
-public enum GameSound {
+public enum SoundClip {
 
 	BONUS_EATEN, CREDIT, EXTRA_LIFE, GAME_READY, GHOST_EATEN, GHOST_RETURNING, INTERMISSION_1, INTERMISSION_2,
 	INTERMISSION_3, PACMAN_DEATH, PACMAN_MUNCH, PACMAN_POWER, SIREN_1, SIREN_2, SIREN_3, SIREN_4;

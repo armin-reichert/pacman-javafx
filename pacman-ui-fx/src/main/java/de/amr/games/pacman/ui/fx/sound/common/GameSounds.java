@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.sound;
+package de.amr.games.pacman.ui.fx.sound.common;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -33,7 +33,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
-import de.amr.games.pacman.ui.fx.sound.common.GameSound;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
@@ -44,16 +43,14 @@ public class GameSounds {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
-	private boolean silent;
-	private boolean muted;
+	private final Map<SoundClip, AudioClip> clips = new EnumMap<>(SoundClip.class);
 
-	public GameSounds(String mapName, Map<GameSound, String> relPathMap) {
+	public GameSounds(String mapName, Map<SoundClip, String> relPathMap) {
 		relPathMap.forEach(this::loadClip);
 		LOG.trace("Sounds '%s' loaded", mapName);
 	}
 
-	private void loadClip(GameSound sound, String relPath) {
+	private void loadClip(SoundClip sound, String relPath) {
 		var url = ResourceMgr.urlFromRelPath(relPath);
 		try {
 			clips.put(sound, new AudioClip(url.toExternalForm()));
@@ -63,55 +60,42 @@ public class GameSounds {
 		}
 	}
 
-	public Optional<AudioClip> getClip(GameSound sound) {
+	public Optional<AudioClip> getClip(SoundClip sound) {
 		return Optional.ofNullable(clips.get(sound));
 	}
 
 	private void playClip(AudioClip clip) {
-		if (!silent && !muted) {
-			clip.play();
-		}
+		clip.play();
 	}
 
-	public boolean isMuted() {
-		return muted;
-	}
-
-	public void setMuted(boolean muted) {
-		this.muted = muted;
-		if (muted) {
-			stopAll();
-		}
-	}
-
-	public boolean isPlaying(GameSound sound) {
+	public boolean isPlaying(SoundClip sound) {
 		return getClip(sound).map(AudioClip::isPlaying).orElse(false);
 	}
 
-	public void ensurePlaying(GameSound sound) {
+	public void ensurePlaying(SoundClip sound) {
 		if (!isPlaying(sound)) {
 			play(sound);
 		}
 	}
 
-	public void play(GameSound sound) {
+	public void play(SoundClip sound) {
 		loop(sound, 1);
 	}
 
-	public void ensureLoop(GameSound sound, int repetitions) {
+	public void ensureLoop(SoundClip sound, int repetitions) {
 		if (!isPlaying(sound)) {
 			loop(sound, repetitions);
 		}
 	}
 
-	public void loop(GameSound sound, int repetitions) {
+	public void loop(SoundClip sound, int repetitions) {
 		getClip(sound).ifPresent(clip -> {
 			clip.setCycleCount(repetitions);
 			playClip(clip);
 		});
 	}
 
-	public void stop(GameSound sound) {
+	public void stop(SoundClip sound) {
 		getClip(sound).ifPresent(AudioClip::stop);
 	}
 
@@ -120,16 +104,16 @@ public class GameSounds {
 			clip.stop();
 		}
 		stopSirens();
-		stop(GameSound.PACMAN_MUNCH);
+		stop(SoundClip.PACMAN_MUNCH);
 	}
 
 	public void startSiren(int sirenIndex) {
 		stopSirens();
 		var siren = switch (sirenIndex) {
-		case 0 -> GameSound.SIREN_1;
-		case 1 -> GameSound.SIREN_2;
-		case 2 -> GameSound.SIREN_3;
-		case 3 -> GameSound.SIREN_4;
+		case 0 -> SoundClip.SIREN_1;
+		case 1 -> SoundClip.SIREN_2;
+		case 2 -> SoundClip.SIREN_3;
+		case 3 -> SoundClip.SIREN_4;
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
 		getClip(siren).ifPresent(clip -> clip.setVolume(0.5));
@@ -137,8 +121,8 @@ public class GameSounds {
 		LOG.trace("Siren %s started", siren);
 	}
 
-	public Stream<GameSound> sirens() {
-		return Stream.of(GameSound.SIREN_1, GameSound.SIREN_2, GameSound.SIREN_3, GameSound.SIREN_4);
+	public Stream<SoundClip> sirens() {
+		return Stream.of(SoundClip.SIREN_1, SoundClip.SIREN_2, SoundClip.SIREN_3, SoundClip.SIREN_4);
 	}
 
 	public void ensureSirenStarted(int sirenIndex) {

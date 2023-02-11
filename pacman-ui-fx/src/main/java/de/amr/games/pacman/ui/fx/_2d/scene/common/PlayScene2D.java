@@ -41,7 +41,7 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.sound.common.GameSound;
+import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
@@ -153,12 +153,12 @@ public class PlayScene2D extends GameScene2D {
 		}
 		var sounds = GameUI.sounds(level.game());
 		if (level.pac().starvingTicks() > 10) {
-			sounds.stop(GameSound.PACMAN_MUNCH);
+			sounds.stop(SoundClip.PACMAN_MUNCH);
 		}
 		if (level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE).count() > 0) {
-			sounds.ensureLoop(GameSound.GHOST_RETURNING, AudioClip.INDEFINITE);
+			sounds.ensureLoop(SoundClip.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			sounds.stop(GameSound.GHOST_RETURNING);
+			sounds.stop(SoundClip.GHOST_RETURNING);
 		}
 	}
 }

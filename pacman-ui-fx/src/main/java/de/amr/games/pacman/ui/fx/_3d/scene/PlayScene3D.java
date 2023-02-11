@@ -58,7 +58,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.sound.common.GameSound;
+import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
@@ -375,24 +375,24 @@ public class PlayScene3D implements GameScene {
 		}
 		if (level.memo().pacPowered) {
 			sound.stopSirens();
-			sound.ensureLoop(GameSound.PACMAN_POWER, AudioClip.INDEFINITE);
+			sound.ensureLoop(SoundClip.PACMAN_POWER, AudioClip.INDEFINITE);
 		}
 		if (level.memo().pacPowerLost) {
-			sound.stop(GameSound.PACMAN_POWER);
+			sound.stop(SoundClip.PACMAN_POWER);
 			sound.ensureSirenStarted(level.huntingPhase() / 2);
 		}
 		if (level.memo().foodFoundTile.isPresent()) {
-			sound.ensureLoop(GameSound.PACMAN_MUNCH, AudioClip.INDEFINITE);
+			sound.ensureLoop(SoundClip.PACMAN_MUNCH, AudioClip.INDEFINITE);
 		}
 		if (level.pac().starvingTicks() >= 12) { // ???
-			sound.stop(GameSound.PACMAN_MUNCH);
+			sound.stop(SoundClip.PACMAN_MUNCH);
 		}
 		if (level.ghosts(GhostState.RETURNING_TO_HOUSE).count() > 0) {
-			if (!sound.isPlaying(GameSound.GHOST_RETURNING)) {
-				sound.loop(GameSound.GHOST_RETURNING, AudioClip.INDEFINITE);
+			if (!sound.isPlaying(SoundClip.GHOST_RETURNING)) {
+				sound.loop(SoundClip.GHOST_RETURNING, AudioClip.INDEFINITE);
 			}
 		} else {
-			sound.stop(GameSound.GHOST_RETURNING);
+			sound.stop(SoundClip.GHOST_RETURNING);
 		}
 	}
 
