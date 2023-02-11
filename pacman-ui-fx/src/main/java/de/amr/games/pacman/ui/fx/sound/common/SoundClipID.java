@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.sound.common;
 
 /**
- * Constants for the sounds used in the Pac-Man and Ms. Pac-Man games.
+ * IDs for the sounds used in the Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
