@@ -91,14 +91,6 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
-	public static GameSounds sounds(GameModel game) {
-		return switch (game.variant()) {
-		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
-		case PACMAN -> GameSounds.PACMAN_SOUNDS;
-		default -> throw new IllegalStateException();
-		};
-	}
-
 	public class Simulation extends GameLoop {
 
 		public Simulation(int fps) {
@@ -330,7 +322,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = sounds(event.game);
+		var sounds = GameSounds.sounds(event.game);
 		switch (event.soundCommand) {
 		case "bonus_eaten" -> sounds.play(GameSound.BONUS_EATEN);
 		case "credit_added" -> sounds.play(GameSound.CREDIT);

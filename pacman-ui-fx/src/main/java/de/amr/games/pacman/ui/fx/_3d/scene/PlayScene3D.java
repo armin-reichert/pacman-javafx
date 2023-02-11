@@ -57,8 +57,8 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
@@ -124,7 +124,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void end() {
 		context.level().ifPresent(level -> {
-			var sound = GameUI.sounds(level.game());
+			var sound = GameSounds.sounds(level.game());
 			sound.stopAll();
 		});
 	}
@@ -369,7 +369,7 @@ public class PlayScene3D implements GameScene {
 
 	// TODO this is copy-pasta from 2D play scene
 	private void renderSound(GameLevel level) {
-		var sound = GameUI.sounds(level.game());
+		var sound = GameSounds.sounds(level.game());
 		if (level.huntingTimer().isRunning() && level.huntingTimer().tick() == 1) {
 			sound.ensureSirenStarted(level.huntingPhase() / 2);
 		}

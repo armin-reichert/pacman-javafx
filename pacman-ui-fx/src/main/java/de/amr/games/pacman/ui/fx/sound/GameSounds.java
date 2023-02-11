@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
@@ -85,9 +86,16 @@ public class GameSounds {
 		//@formatter:on
 	}
 
-	public static final GameSounds NO_SOUNDS = new GameSounds("No Sounds", Map.of());
-	public static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man Sounds", MS_PACMAN_MAP);
-	public static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man Sounds", PACMAN_MAP);
+	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man Sounds", MS_PACMAN_MAP);
+	private static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man Sounds", PACMAN_MAP);
+
+	public static GameSounds sounds(GameModel game) {
+		return switch (game.variant()) {
+		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
+		case PACMAN -> GameSounds.PACMAN_SOUNDS;
+		default -> throw new IllegalStateException();
+		};
+	}
 
 	private final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
 	private boolean silent;

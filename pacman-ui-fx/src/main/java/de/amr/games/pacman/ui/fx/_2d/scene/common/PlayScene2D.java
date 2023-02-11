@@ -34,12 +34,14 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
+import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.GameSound;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
@@ -60,7 +62,7 @@ public class PlayScene2D extends GameScene2D {
 	public void end() {
 		// TODO check if this is really needed
 		context.level().ifPresent(level -> {
-			var sound = GameUI.sounds(level.game());
+			var sound = GameSounds.sounds(level.game());
 			sound.stopAll();
 		});
 	}
@@ -146,7 +148,10 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void updateSound(GameLevel level) {
-		var sounds = GameUI.sounds(level.game());
+		if (level instanceof PacManGameDemoLevel || level instanceof MsPacManGameDemoLevel) {
+			return; // TODO maybe mark level as silent?
+		}
+		var sounds = GameSounds.sounds(level.game());
 		if (level.pac().starvingTicks() > 10) {
 			sounds.stop(GameSound.PACMAN_MUNCH);
 		}
