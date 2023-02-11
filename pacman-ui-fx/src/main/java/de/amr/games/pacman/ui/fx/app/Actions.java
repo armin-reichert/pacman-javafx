@@ -156,6 +156,9 @@ public class Actions {
 
 	public static void togglePaused() {
 		Ufx.toggle(Env.Simulation.pausedPy);
+		if (Env.Simulation.pausedPy.get()) {
+			GameUI.sounds(game()).stopAll();
+		}
 	}
 
 	public static void oneSimulationStep() {
