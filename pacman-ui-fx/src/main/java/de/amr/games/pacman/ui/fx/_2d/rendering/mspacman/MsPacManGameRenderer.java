@@ -50,11 +50,6 @@ import javafx.scene.text.Font;
  */
 public class MsPacManGameRenderer extends GameRenderer {
 
-	public static final MsPacManGameRenderer THE_ONE_AND_ONLY = new MsPacManGameRenderer();
-
-	private MsPacManGameRenderer() {
-	}
-
 	@Override
 	public Spritesheet spritesheet() {
 		return MsPacManGameAssets.SPRITESHEET;

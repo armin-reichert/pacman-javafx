@@ -47,11 +47,6 @@ import javafx.scene.paint.Color;
  */
 public class PacManGameRenderer extends GameRenderer {
 
-	public static final PacManGameRenderer THE_ONE_AND_ONLY = new PacManGameRenderer();
-
-	private PacManGameRenderer() {
-	}
-
 	@Override
 	public Spritesheet spritesheet() {
 		return PacManGameAssets.SPRITESHEET;

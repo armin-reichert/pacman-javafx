@@ -96,10 +96,13 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
+	private static final GameRenderer MS_PACMAN_RENDERER = new MsPacManGameRenderer();
+	private static final GameRenderer PACMAN_RENDERER = new PacManGameRenderer();
+
 	private static GameRenderer renderer(GameModel game) {
 		return switch (game.variant()) {
-		case MS_PACMAN -> MsPacManGameRenderer.THE_ONE_AND_ONLY;
-		case PACMAN -> PacManGameRenderer.THE_ONE_AND_ONLY;
+		case MS_PACMAN -> MS_PACMAN_RENDERER;
+		case PACMAN -> PACMAN_RENDERER;
 		default -> throw new IllegalStateException();
 		};
 	}
