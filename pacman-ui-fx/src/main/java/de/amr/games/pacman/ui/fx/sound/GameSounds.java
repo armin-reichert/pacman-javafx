@@ -32,8 +32,8 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.sound.common.GameSound;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
@@ -43,59 +43,6 @@ import javafx.scene.media.AudioClip;
 public class GameSounds {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
-	private static final Map<GameSound, String> PACMAN_MAP = new EnumMap<>(GameSound.class);
-	static {
-		//@formatter:off
-		PACMAN_MAP.put(GameSound.BONUS_EATEN,        "sound/pacman/eat_fruit.mp3");
-		PACMAN_MAP.put(GameSound.CREDIT,             "sound/pacman/credit.wav");
-		PACMAN_MAP.put(GameSound.EXTRA_LIFE,         "sound/pacman/extend.mp3");
-		PACMAN_MAP.put(GameSound.GAME_READY,         "sound/pacman/game_start.mp3");
-		PACMAN_MAP.put(GameSound.GHOST_EATEN,        "sound/pacman/eat_ghost.mp3");
-		PACMAN_MAP.put(GameSound.GHOST_RETURNING,    "sound/pacman/retreating.mp3");
-		PACMAN_MAP.put(GameSound.INTERMISSION_1,     "sound/pacman/intermission.mp3");
-		PACMAN_MAP.put(GameSound.PACMAN_DEATH,       "sound/pacman/pacman_death.wav");
-		PACMAN_MAP.put(GameSound.PACMAN_MUNCH,       "sound/pacman/munch_1.wav");
-		PACMAN_MAP.put(GameSound.PACMAN_POWER,       "sound/pacman/power_pellet.mp3");
-		PACMAN_MAP.put(GameSound.SIREN_1,            "sound/pacman/siren_1.mp3");
-		PACMAN_MAP.put(GameSound.SIREN_2,            "sound/pacman/siren_2.mp3");
-		PACMAN_MAP.put(GameSound.SIREN_3,            "sound/pacman/siren_3.mp3");
-		PACMAN_MAP.put(GameSound.SIREN_4,            "sound/pacman/siren_4.mp3");
-		//@formatter:on
-	}
-
-	private static final Map<GameSound, String> MS_PACMAN_MAP = new EnumMap<>(GameSound.class);
-	static {
-		//@formatter:off
-		MS_PACMAN_MAP.put(GameSound.BONUS_EATEN,     "sound/mspacman/Fruit.mp3");
-		MS_PACMAN_MAP.put(GameSound.CREDIT,          "sound/mspacman/Coin Credit.mp3");
-		MS_PACMAN_MAP.put(GameSound.EXTRA_LIFE,      "sound/mspacman/Extra Life.mp3");
-		MS_PACMAN_MAP.put(GameSound.GAME_READY,      "sound/mspacman/Start.mp3");
-		MS_PACMAN_MAP.put(GameSound.GHOST_EATEN,     "sound/mspacman/Ghost.mp3");
-		MS_PACMAN_MAP.put(GameSound.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3");
-		MS_PACMAN_MAP.put(GameSound.INTERMISSION_1,  "sound/mspacman/They Meet Act 1.mp3");
-		MS_PACMAN_MAP.put(GameSound.INTERMISSION_2,  "sound/mspacman/The Chase Act 2.mp3");
-		MS_PACMAN_MAP.put(GameSound.INTERMISSION_3,  "sound/mspacman/Junior Act 3.mp3");
-		MS_PACMAN_MAP.put(GameSound.PACMAN_DEATH,    "sound/mspacman/Died.mp3");
-		MS_PACMAN_MAP.put(GameSound.PACMAN_MUNCH,    "sound/mspacman/Ms. Pac Man Pill.mp3");
-		MS_PACMAN_MAP.put(GameSound.PACMAN_POWER,    "sound/mspacman/Scared Ghost.mp3");
-		MS_PACMAN_MAP.put(GameSound.SIREN_1,         "sound/mspacman/Ghost Noise 1.mp3");
-		MS_PACMAN_MAP.put(GameSound.SIREN_2,         "sound/mspacman/Ghost Noise 2.mp3");
-		MS_PACMAN_MAP.put(GameSound.SIREN_3,         "sound/mspacman/Ghost Noise 3.mp3");
-		MS_PACMAN_MAP.put(GameSound.SIREN_4,         "sound/mspacman/Ghost Noise 4.mp3");
-		//@formatter:on
-	}
-
-	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man Sounds", MS_PACMAN_MAP);
-	private static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man Sounds", PACMAN_MAP);
-
-	public static GameSounds sounds(GameModel game) {
-		return switch (game.variant()) {
-		case MS_PACMAN -> GameSounds.MS_PACMAN_SOUNDS;
-		case PACMAN -> GameSounds.PACMAN_SOUNDS;
-		default -> throw new IllegalStateException();
-		};
-	}
 
 	private final Map<GameSound, AudioClip> clips = new EnumMap<>(GameSound.class);
 	private boolean silent;

@@ -51,8 +51,10 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
-import de.amr.games.pacman.ui.fx.sound.GameSound;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
+import de.amr.games.pacman.ui.fx.sound.common.GameSound;
+import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManSoundMap;
+import de.amr.games.pacman.ui.fx.sound.pacman.PacManSoundMap;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -82,6 +84,17 @@ public class GameUI implements GameEventListener {
 
 	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
+
+	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man Sounds", MsPacManSoundMap.map());
+	private static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man Sounds", PacManSoundMap.map());
+
+	public static GameSounds sounds(GameModel game) {
+		return switch (game.variant()) {
+		case MS_PACMAN -> MS_PACMAN_SOUNDS;
+		case PACMAN -> PACMAN_SOUNDS;
+		default -> throw new IllegalStateException();
+		};
+	}
 
 	private static GameRenderer renderer(GameModel game) {
 		return switch (game.variant()) {
@@ -322,7 +335,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = GameSounds.sounds(event.game);
+		var sounds = sounds(event.game);
 		switch (event.soundCommand) {
 		case "bonus_eaten" -> sounds.play(GameSound.BONUS_EATEN);
 		case "credit_added" -> sounds.play(GameSound.CREDIT);
