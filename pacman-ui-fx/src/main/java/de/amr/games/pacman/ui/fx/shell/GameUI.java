@@ -51,8 +51,8 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
-import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
 import de.amr.games.pacman.ui.fx.sound.common.GameSounds;
+import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
 import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManSoundMap;
 import de.amr.games.pacman.ui.fx.sound.pacman.PacManSoundMap;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -85,8 +85,8 @@ public class GameUI implements GameEventListener {
 	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
-	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds("Ms. Pac-Man Sounds", MsPacManSoundMap.map());
-	private static final GameSounds PACMAN_SOUNDS = new GameSounds("Pac-Man Sounds", PacManSoundMap.map());
+	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds(MsPacManSoundMap.map());
+	private static final GameSounds PACMAN_SOUNDS = new GameSounds(PacManSoundMap.map());
 
 	public static GameSounds sounds(GameModel game) {
 		return switch (game.variant()) {

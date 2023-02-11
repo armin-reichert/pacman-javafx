@@ -45,9 +45,8 @@ public class GameSounds {
 
 	private final Map<SoundClip, AudioClip> clips = new EnumMap<>(SoundClip.class);
 
-	public GameSounds(String mapName, Map<SoundClip, String> relPathMap) {
+	public GameSounds(Map<SoundClip, String> relPathMap) {
 		relPathMap.forEach(this::loadClip);
-		LOG.trace("Sounds '%s' loaded", mapName);
 	}
 
 	private void loadClip(SoundClip sound, String relPath) {
