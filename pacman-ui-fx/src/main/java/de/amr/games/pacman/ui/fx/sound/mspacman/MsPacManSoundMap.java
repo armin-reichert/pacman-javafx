@@ -38,9 +38,9 @@ public class MsPacManSoundMap {
 			{ SoundClipID.GAME_READY, "sound/mspacman/Start.mp3", 1.0 }, //
 			{ SoundClipID.GHOST_EATEN, "sound/mspacman/Ghost.mp3", 1.0 }, //
 			{ SoundClipID.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3", 1.0 }, //
-			{ SoundClipID.INTERMISSION_1, "sound/mspacman/They Meet Act 1.mp3", 1.0 }, //
-			{ SoundClipID.INTERMISSION_2, "sound/mspacman/The Chase Act 2.mp3", 1.0 }, //
-			{ SoundClipID.INTERMISSION_3, "sound/mspacman/Junior Act 3.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_1, "sound/mspacman/Act1 They Meet.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_2, "sound/mspacman/Act2 The Chase.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_3, "sound/mspacman/Act3 Junior.mp3", 1.0 }, //
 			{ SoundClipID.PACMAN_DEATH, "sound/mspacman/Died.mp3", 1.0 }, //
 			{ SoundClipID.PACMAN_MUNCH, "sound/mspacman/Ms. Pac Man Pill.mp3", 1.0 }, //
 			{ SoundClipID.PACMAN_POWER, "sound/mspacman/Scared Ghost.mp3", 1.0 }, //
