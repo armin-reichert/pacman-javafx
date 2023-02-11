@@ -43,7 +43,7 @@ public class GameSounds {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private final Map<SoundClip, AudioClip> clips = new EnumMap<>(SoundClip.class);
+	private final Map<SoundClipID, AudioClip> clips = new EnumMap<>(SoundClipID.class);
 
 	private static AudioClip loadClip(String relPath, double volume) {
 		var url = ResourceMgr.urlFromRelPath(relPath);
@@ -54,7 +54,7 @@ public class GameSounds {
 
 	public GameSounds(Object[][] data) {
 		for (var row : data) {
-			SoundClip id = (SoundClip) row[0];
+			SoundClipID id = (SoundClipID) row[0];
 			String path = (String) row[1];
 			double volume = (double) row[2];
 			var clip = loadClip(path, volume);
@@ -62,7 +62,7 @@ public class GameSounds {
 		}
 	}
 
-	public Optional<AudioClip> getClip(SoundClip sound) {
+	public Optional<AudioClip> getClip(SoundClipID sound) {
 		return Optional.ofNullable(clips.get(sound));
 	}
 
@@ -70,34 +70,34 @@ public class GameSounds {
 		clip.play();
 	}
 
-	public boolean isPlaying(SoundClip sound) {
+	public boolean isPlaying(SoundClipID sound) {
 		return getClip(sound).map(AudioClip::isPlaying).orElse(false);
 	}
 
-	public void ensurePlaying(SoundClip sound) {
+	public void ensurePlaying(SoundClipID sound) {
 		if (!isPlaying(sound)) {
 			play(sound);
 		}
 	}
 
-	public void play(SoundClip sound) {
+	public void play(SoundClipID sound) {
 		loop(sound, 1);
 	}
 
-	public void ensureLoop(SoundClip sound, int repetitions) {
+	public void ensureLoop(SoundClipID sound, int repetitions) {
 		if (!isPlaying(sound)) {
 			loop(sound, repetitions);
 		}
 	}
 
-	public void loop(SoundClip sound, int repetitions) {
+	public void loop(SoundClipID sound, int repetitions) {
 		getClip(sound).ifPresent(clip -> {
 			clip.setCycleCount(repetitions);
 			playClip(clip);
 		});
 	}
 
-	public void stop(SoundClip sound) {
+	public void stop(SoundClipID sound) {
 		getClip(sound).ifPresent(AudioClip::stop);
 	}
 
@@ -106,24 +106,24 @@ public class GameSounds {
 			clip.stop();
 		}
 		stopSirens();
-		stop(SoundClip.PACMAN_MUNCH);
+		stop(SoundClipID.PACMAN_MUNCH);
 	}
 
 	public void startSiren(int sirenIndex) {
 		stopSirens();
 		var siren = switch (sirenIndex) {
-		case 0 -> SoundClip.SIREN_1;
-		case 1 -> SoundClip.SIREN_2;
-		case 2 -> SoundClip.SIREN_3;
-		case 3 -> SoundClip.SIREN_4;
+		case 0 -> SoundClipID.SIREN_1;
+		case 1 -> SoundClipID.SIREN_2;
+		case 2 -> SoundClipID.SIREN_3;
+		case 3 -> SoundClipID.SIREN_4;
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
 		loop(siren, Animation.INDEFINITE);
 		LOG.trace("Siren %s started", siren);
 	}
 
-	public Stream<SoundClip> sirens() {
-		return Stream.of(SoundClip.SIREN_1, SoundClip.SIREN_2, SoundClip.SIREN_3, SoundClip.SIREN_4);
+	public Stream<SoundClipID> sirens() {
+		return Stream.of(SoundClipID.SIREN_1, SoundClipID.SIREN_2, SoundClipID.SIREN_3, SoundClipID.SIREN_4);
 	}
 
 	public void ensureSirenStarted(int sirenIndex) {

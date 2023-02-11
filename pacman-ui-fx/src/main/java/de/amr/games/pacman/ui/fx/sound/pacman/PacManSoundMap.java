@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound.pacman;
 
-import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
+import de.amr.games.pacman.ui.fx.sound.common.SoundClipID;
 
 /**
  * @author Armin Reichert
@@ -32,19 +32,19 @@ import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
 public class PacManSoundMap {
 
 	public static final Object[][] DATA = { //
-			{ SoundClip.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
-			{ SoundClip.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
-			{ SoundClip.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
-			{ SoundClip.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
-			{ SoundClip.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
-			{ SoundClip.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
-			{ SoundClip.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
-			{ SoundClip.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
-			{ SoundClip.PACMAN_MUNCH, "sound/pacman/munch_1.wav", 1.0 }, //
-			{ SoundClip.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
-			{ SoundClip.SIREN_1, "sound/pacman/siren_1.mp3", 0.5 }, //
-			{ SoundClip.SIREN_2, "sound/pacman/siren_2.mp3", 0.5 }, //
-			{ SoundClip.SIREN_3, "sound/pacman/siren_3.mp3", 0.5 }, //
-			{ SoundClip.SIREN_4, "sound/pacman/siren_4.mp3", 0.5 }, //
+			{ SoundClipID.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
+			{ SoundClipID.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
+			{ SoundClipID.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
+			{ SoundClipID.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
+			{ SoundClipID.PACMAN_MUNCH, "sound/pacman/munch_1.wav", 1.0 }, //
+			{ SoundClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.5 }, //
+			{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.5 }, //
+			{ SoundClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.5 }, //
+			{ SoundClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.5 }, //
 	};
 }

@@ -52,7 +52,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.sound.common.GameSounds;
-import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
+import de.amr.games.pacman.ui.fx.sound.common.SoundClipID;
 import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManSoundMap;
 import de.amr.games.pacman.ui.fx.sound.pacman.PacManSoundMap;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -340,43 +340,43 @@ public class GameUI implements GameEventListener {
 	public void onSoundEvent(SoundEvent event) {
 		var sounds = sounds(event.game);
 		switch (event.soundCommand) {
-		case "bonus_eaten" -> sounds.play(SoundClip.BONUS_EATEN);
-		case "credit_added" -> sounds.play(SoundClip.CREDIT);
-		case "extra_life" -> sounds.play(SoundClip.EXTRA_LIFE);
-		case "ghost_eaten" -> sounds.play(SoundClip.GHOST_EATEN);
+		case "bonus_eaten" -> sounds.play(SoundClipID.BONUS_EATEN);
+		case "credit_added" -> sounds.play(SoundClipID.CREDIT);
+		case "extra_life" -> sounds.play(SoundClipID.EXTRA_LIFE);
+		case "ghost_eaten" -> sounds.play(SoundClipID.GHOST_EATEN);
 		case "hunting_phase_started_0" -> sounds.ensureSirenStarted(0);
 		case "hunting_phase_started_2" -> sounds.ensureSirenStarted(1);
 		case "hunting_phase_started_4" -> sounds.ensureSirenStarted(2);
 		case "hunting_phase_started_6" -> sounds.ensureSirenStarted(3);
-		case "ready_to_play" -> sounds.play(SoundClip.GAME_READY);
-		case "pacman_death" -> sounds.play(SoundClip.PACMAN_DEATH);
-		case "pacman_found_food" -> sounds.ensureLoop(SoundClip.PACMAN_MUNCH, AudioClip.INDEFINITE);
+		case "ready_to_play" -> sounds.play(SoundClipID.GAME_READY);
+		case "pacman_death" -> sounds.play(SoundClipID.PACMAN_DEATH);
+		case "pacman_found_food" -> sounds.ensureLoop(SoundClipID.PACMAN_MUNCH, AudioClip.INDEFINITE);
 		case "pacman_power_starts" -> {
 			sounds.stopSirens();
-			sounds.ensureLoop(SoundClip.PACMAN_POWER, AudioClip.INDEFINITE);
+			sounds.ensureLoop(SoundClipID.PACMAN_POWER, AudioClip.INDEFINITE);
 		}
 		case "pacman_power_ends" -> {
-			sounds.stop(SoundClip.PACMAN_POWER);
+			sounds.stop(SoundClipID.PACMAN_POWER);
 			gameController.game().level().ifPresent(level -> sounds.ensureSirenStarted(level.huntingPhase() / 2));
 		}
 		case "start_intermission_1" -> {
 			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(SoundClip.INTERMISSION_1);
-			case PACMAN -> sounds.loop(SoundClip.INTERMISSION_1, 2);
+			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_1);
+			case PACMAN -> sounds.loop(SoundClipID.INTERMISSION_1, 2);
 			default -> throw new IllegalArgumentException();
 			}
 		}
 		case "start_intermission_2" -> {
 			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(SoundClip.INTERMISSION_2);
-			case PACMAN -> sounds.play(SoundClip.INTERMISSION_1);
+			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_2);
+			case PACMAN -> sounds.play(SoundClipID.INTERMISSION_1);
 			default -> throw new IllegalArgumentException();
 			}
 		}
 		case "start_intermission_3" -> {
 			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(SoundClip.INTERMISSION_3);
-			case PACMAN -> sounds.loop(SoundClip.INTERMISSION_1, 2);
+			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_3);
+			case PACMAN -> sounds.loop(SoundClipID.INTERMISSION_1, 2);
 			default -> throw new IllegalArgumentException();
 			}
 		}
