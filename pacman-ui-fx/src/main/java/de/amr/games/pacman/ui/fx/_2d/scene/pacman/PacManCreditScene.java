@@ -60,12 +60,12 @@ public class PacManCreditScene extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		var r = context.r2D();
-		var arcade8 = r.arcadeFont(TS);
-		var arcade6 = r.arcadeFont(6);
-		r.drawText(g, "PUSH START BUTTON", Rendering2D.Palette.ORANGE, arcade8, t(6), t(17));
-		r.drawText(g, "1 PLAYER ONLY", Rendering2D.Palette.CYAN, arcade8, t(8), t(21));
-		r.drawText(g, "BONUS PAC-MAN FOR 10000", Rendering2D.Palette.ROSE, arcade8, t(1), t(25));
-		r.drawText(g, "PTS", Rendering2D.Palette.ROSE, arcade6, t(25), t(25));
+		var normalFont = r.arcadeFont(TS);
+		var smallFont = r.arcadeFont(6); // TODO looks ugly
+		r.drawText(g, "PUSH START BUTTON", Rendering2D.Palette.ORANGE, normalFont, t(6), t(17));
+		r.drawText(g, "1 PLAYER ONLY", Rendering2D.Palette.CYAN, normalFont, t(8), t(21));
+		r.drawText(g, "BONUS PAC-MAN FOR 10000", Rendering2D.Palette.ROSE, normalFont, t(1), t(25));
+		r.drawText(g, "PTS", Rendering2D.Palette.ROSE, smallFont, t(25), t(25));
 		r.drawCopyright(g, 29);
 		r.drawLevelCounter(g, context.game().levelCounter());
 	}
