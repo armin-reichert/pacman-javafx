@@ -85,8 +85,8 @@ public class GameUI implements GameEventListener {
 	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
-	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds(MsPacManSoundMap.map());
-	private static final GameSounds PACMAN_SOUNDS = new GameSounds(PacManSoundMap.map());
+	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds(MsPacManSoundMap.DATA);
+	private static final GameSounds PACMAN_SOUNDS = new GameSounds(PacManSoundMap.DATA);
 
 	public static GameSounds sounds(GameModel game) {
 		return switch (game.variant()) {

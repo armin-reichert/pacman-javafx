@@ -24,10 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.sound.pacman;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-
 import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
 
 /**
@@ -35,28 +31,20 @@ import de.amr.games.pacman.ui.fx.sound.common.SoundClip;
  */
 public class PacManSoundMap {
 
-	private static final Map<SoundClip, String> MAP = new EnumMap<>(SoundClip.class);
-
-	static {
-		//@formatter:off
-		MAP.put(SoundClip.BONUS_EATEN,        "sound/pacman/eat_fruit.mp3");
-		MAP.put(SoundClip.CREDIT,             "sound/pacman/credit.wav");
-		MAP.put(SoundClip.EXTRA_LIFE,         "sound/pacman/extend.mp3");
-		MAP.put(SoundClip.GAME_READY,         "sound/pacman/game_start.mp3");
-		MAP.put(SoundClip.GHOST_EATEN,        "sound/pacman/eat_ghost.mp3");
-		MAP.put(SoundClip.GHOST_RETURNING,    "sound/pacman/retreating.mp3");
-		MAP.put(SoundClip.INTERMISSION_1,     "sound/pacman/intermission.mp3");
-		MAP.put(SoundClip.PACMAN_DEATH,       "sound/pacman/pacman_death.wav");
-		MAP.put(SoundClip.PACMAN_MUNCH,       "sound/pacman/munch_1.wav");
-		MAP.put(SoundClip.PACMAN_POWER,       "sound/pacman/power_pellet.mp3");
-		MAP.put(SoundClip.SIREN_1,            "sound/pacman/siren_1.mp3");
-		MAP.put(SoundClip.SIREN_2,            "sound/pacman/siren_2.mp3");
-		MAP.put(SoundClip.SIREN_3,            "sound/pacman/siren_3.mp3");
-		MAP.put(SoundClip.SIREN_4,            "sound/pacman/siren_4.mp3");
-		//@formatter:on
-	}
-
-	public static Map<SoundClip, String> map() {
-		return Collections.unmodifiableMap(MAP);
-	}
+	public static final Object[][] DATA = { //
+			{ SoundClip.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
+			{ SoundClip.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
+			{ SoundClip.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
+			{ SoundClip.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
+			{ SoundClip.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
+			{ SoundClip.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
+			{ SoundClip.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
+			{ SoundClip.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
+			{ SoundClip.PACMAN_MUNCH, "sound/pacman/munch_1.wav", 1.0 }, //
+			{ SoundClip.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
+			{ SoundClip.SIREN_1, "sound/pacman/siren_1.mp3", 0.5 }, //
+			{ SoundClip.SIREN_2, "sound/pacman/siren_2.mp3", 0.5 }, //
+			{ SoundClip.SIREN_3, "sound/pacman/siren_3.mp3", 0.5 }, //
+			{ SoundClip.SIREN_4, "sound/pacman/siren_4.mp3", 0.5 }, //
+	};
 }

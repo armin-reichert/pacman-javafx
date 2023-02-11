@@ -45,17 +45,20 @@ public class GameSounds {
 
 	private final Map<SoundClip, AudioClip> clips = new EnumMap<>(SoundClip.class);
 
-	public GameSounds(Map<SoundClip, String> relPathMap) {
-		relPathMap.forEach(this::loadClip);
+	private static AudioClip loadClip(String relPath, double volume) {
+		var url = ResourceMgr.urlFromRelPath(relPath);
+		var clip = new AudioClip(url.toExternalForm());
+		clip.setVolume(volume);
+		return clip;
 	}
 
-	private void loadClip(SoundClip sound, String relPath) {
-		var url = ResourceMgr.urlFromRelPath(relPath);
-		try {
-			clips.put(sound, new AudioClip(url.toExternalForm()));
-			LOG.trace("Audio clip created: key='%s', URL '%s'", sound, url);
-		} catch (Exception e) {
-			LOG.error("Audio clip creation failed: %s", e.getMessage());
+	public GameSounds(Object[][] data) {
+		for (var row : data) {
+			SoundClip id = (SoundClip) row[0];
+			String path = (String) row[1];
+			double volume = (double) row[2];
+			var clip = loadClip(path, volume);
+			clips.put(id, clip);
 		}
 	}
 
@@ -115,7 +118,7 @@ public class GameSounds {
 		case 3 -> SoundClip.SIREN_4;
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
-		getClip(siren).ifPresent(clip -> clip.setVolume(0.5));
+//		getClip(siren).ifPresent(clip -> clip.setVolume(0.5));
 		loop(siren, Animation.INDEFINITE);
 		LOG.trace("Siren %s started", siren);
 	}
