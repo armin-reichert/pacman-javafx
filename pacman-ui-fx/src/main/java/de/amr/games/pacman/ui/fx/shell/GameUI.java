@@ -170,6 +170,12 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void createMainScene(int width, int height, float zoom) {
+		if (width <= 0) {
+			throw new IllegalArgumentException("Scene width must be positive but is: %d".formatted(width));
+		}
+		if (height <= 0) {
+			throw new IllegalArgumentException("Scene height must be positive but is: %d".formatted(height));
+		}
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
