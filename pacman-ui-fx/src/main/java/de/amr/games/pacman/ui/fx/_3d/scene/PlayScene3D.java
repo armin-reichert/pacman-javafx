@@ -40,6 +40,8 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
+import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
@@ -179,7 +181,7 @@ public class PlayScene3D implements GameScene {
 		context.level().ifPresent(level -> {
 			level3D.update();
 			currentCamera().update(level3D.pac3D());
-			renderSound(level);
+			updateSound(level);
 		});
 	}
 
@@ -368,32 +370,18 @@ public class PlayScene3D implements GameScene {
 	}
 
 	// TODO this is copy-pasta from 2D play scene
-	private void renderSound(GameLevel level) {
-		var sound = GameUI.sounds(level.game());
-		if (level.huntingTimer().isRunning() && level.huntingTimer().tick() == 1) {
-			sound.ensureSirenStarted(level.huntingPhase() / 2);
+	private void updateSound(GameLevel level) {
+		if (level instanceof PacManGameDemoLevel || level instanceof MsPacManGameDemoLevel) {
+			return; // TODO maybe mark level as silent?
 		}
-		if (level.memo().pacPowered) {
-			sound.stopSirens();
-			sound.ensureLoop(SoundClipID.PACMAN_POWER, AudioClip.INDEFINITE);
+		var sounds = GameUI.sounds(level.game());
+		if (level.pac().starvingTicks() > 10) {
+			sounds.stop(SoundClipID.PACMAN_MUNCH);
 		}
-		if (level.memo().pacPowerLost) {
-			sound.stop(SoundClipID.PACMAN_POWER);
-			sound.ensureSirenStarted(level.huntingPhase() / 2);
-		}
-		if (level.memo().foodFoundTile.isPresent()) {
-			sound.ensureLoop(SoundClipID.PACMAN_MUNCH, AudioClip.INDEFINITE);
-		}
-		if (level.pac().starvingTicks() >= 12) { // ???
-			sound.stop(SoundClipID.PACMAN_MUNCH);
-		}
-		if (level.ghosts(GhostState.RETURNING_TO_HOUSE).count() > 0) {
-			if (!sound.isPlaying(SoundClipID.GHOST_RETURNING)) {
-				sound.loop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
-			}
+		if (level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE).count() > 0) {
+			sounds.ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			sound.stop(SoundClipID.GHOST_RETURNING);
+			sounds.stop(SoundClipID.GHOST_RETURNING);
 		}
 	}
-
 }
