@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx._3d.ObjModel;
-import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -87,7 +86,6 @@ public class PacModel3D {
 		var center = centerOverOrigin(head);
 		Stream.of(head, eyes, palate).forEach(meshView -> {
 			meshView.getTransforms().add(center);
-			meshView.drawModeProperty().bind(Env.ThreeD.drawModePy);
 		});
 
 		var root = new Group(head, eyes, palate);

@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
@@ -40,6 +42,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 
 /**
  * 3D-representation of Pac-Man or Ms. Pac-Man.
@@ -51,6 +54,7 @@ import javafx.scene.paint.Color;
  */
 public class Pac3D extends Group {
 
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 
@@ -69,6 +73,9 @@ public class Pac3D extends Group {
 		this.world = world;
 		movement = new Creature3DMovement(this, pac);
 		root = PacModel3D.createPac3D(EYES_COLOR, PALATE_COLOR);
+		Stream.of(PacModel3D.head(root), PacModel3D.eyes(root), PacModel3D.palate(root)).forEach(shape -> {
+			shape.drawModeProperty().bind(drawModePy);
+		});
 		getChildren().add(root);
 
 		spot = new PointLight();

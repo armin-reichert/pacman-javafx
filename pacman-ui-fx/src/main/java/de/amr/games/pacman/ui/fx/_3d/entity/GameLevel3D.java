@@ -81,6 +81,7 @@ public class GameLevel3D extends Group {
 
 		pac3D = new Pac3D(level.pac(), level.world());
 		pac3D.init();
+		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
 		LOG.info("3D %s created", level.pac().name());
 
