@@ -85,24 +85,24 @@ public class GameUI implements GameEventListener {
 	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
-	private static final GameSounds MS_PACMAN_SOUNDS = new GameSounds(MsPacManSoundMap.DATA);
-	private static final GameSounds PACMAN_SOUNDS = new GameSounds(PacManSoundMap.DATA);
+	private static final GameSounds SOUNDS_MS_PACMAN = new GameSounds(MsPacManSoundMap.DATA);
+	private static final GameSounds SOUNDS_PACMAN = new GameSounds(PacManSoundMap.DATA);
+
+	private static final GameRenderer RENDERER_MS_PACMAN = new MsPacManGameRenderer();
+	private static final GameRenderer RENDERER_PACMAN = new PacManGameRenderer();
 
 	public static GameSounds sounds(GameModel game) {
 		return switch (game.variant()) {
-		case MS_PACMAN -> MS_PACMAN_SOUNDS;
-		case PACMAN -> PACMAN_SOUNDS;
+		case MS_PACMAN -> SOUNDS_MS_PACMAN;
+		case PACMAN -> SOUNDS_PACMAN;
 		default -> throw new IllegalStateException();
 		};
 	}
 
-	private static final GameRenderer MS_PACMAN_RENDERER = new MsPacManGameRenderer();
-	private static final GameRenderer PACMAN_RENDERER = new PacManGameRenderer();
-
 	private static GameRenderer renderer(GameModel game) {
 		return switch (game.variant()) {
-		case MS_PACMAN -> MS_PACMAN_RENDERER;
-		case PACMAN -> PACMAN_RENDERER;
+		case MS_PACMAN -> RENDERER_MS_PACMAN;
+		case PACMAN -> RENDERER_PACMAN;
 		default -> throw new IllegalStateException();
 		};
 	}
