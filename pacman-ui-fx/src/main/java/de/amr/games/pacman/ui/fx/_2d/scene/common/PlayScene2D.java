@@ -70,21 +70,20 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		context.level().ifPresent(level -> {
-			var game = context.game();
 			var r = context.r2D();
-			drawMaze(r, level.world(), game.mazeNumber(level.number()), 0, t(3));
-			r.drawBonus(g, level.bonus());
+			drawMaze(r, level, 0, t(3));
 			drawGameState(r);
+			r.drawBonus(g, level.bonus());
 			r.drawPac(g, level.pac());
 			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_PINK_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_RED_GHOST));
 			if (!creditVisible) {
-				int lives = game.isOneLessLifeDisplayed() ? game.lives() - 1 : game.lives();
+				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
 				r.drawLivesCounter(g, lives);
 			}
-			r.drawLevelCounter(g, game.levelCounter());
+			r.drawLevelCounter(g, context.game().levelCounter());
 		});
 	}
 
@@ -97,18 +96,19 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawMaze(Rendering2D r, World world, int mazeNumber, int x, int y) {
-		var flashing = world.animation("flashing");
+	private void drawMaze(Rendering2D r, GameLevel level, int x, int y) {
+		var mazeNumber = level.game().mazeNumber(level.number());
+		var flashing = level.world().animation("flashing");
 		if (flashing.isPresent() && flashing.get().isRunning()) {
 			boolean flash = (boolean) flashing.get().frame();
 			r.drawEmptyMaze(g, x, y, mazeNumber, flash);
 		} else {
-			var energizerPulse = world.animation("energizerPulse");
+			var energizerPulse = level.world().animation("energizerPulse");
 			if (energizerPulse.isPresent()) {
 				boolean dark = !(boolean) energizerPulse.get().frame();
-				r.drawMaze(g, x, y, mazeNumber, world, dark);
+				r.drawMaze(g, x, y, mazeNumber, level.world(), dark);
 			} else {
-				r.drawMaze(g, x, y, mazeNumber, world, false);
+				r.drawMaze(g, x, y, mazeNumber, level.world(), false);
 			}
 		}
 	}
