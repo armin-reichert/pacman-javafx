@@ -69,9 +69,9 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var game = context.game();
-		var r = context.r2D();
-		game.level().ifPresent(level -> {
+		context.level().ifPresent(level -> {
+			var game = context.game();
+			var r = context.r2D();
 			drawMaze(r, level.world(), game.mazeNumber(level.number()), 0, t(3));
 			r.drawBonus(g, level.bonus());
 			drawGameState(r);
