@@ -38,6 +38,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
@@ -376,7 +377,7 @@ public class PlayScene3D implements GameScene {
 		if (level.pac().starvingTicks() > 10) {
 			sounds.stop(SoundClipID.PACMAN_MUNCH);
 		}
-		if (level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE).count() > 0) {
+		if (level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE).filter(Ghost::isVisible).count() > 0) {
 			sounds.ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
 			sounds.stop(SoundClipID.GHOST_RETURNING);
