@@ -196,8 +196,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void setContext(GameSceneContext ctx) {
-		this.context = ctx;
+	public void setContext(GameSceneContext context) {
+		this.context = context;
 	}
 
 	@Override
@@ -275,14 +275,12 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		context.level().ifPresent(level -> level3D.bonus3D().showSymbol());
+		level3D.bonus3D().showSymbol();
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		context.level().ifPresent(level -> {
-			level3D.bonus3D().showPoints();
-		});
+		level3D.bonus3D().showPoints();
 	}
 
 	@Override
