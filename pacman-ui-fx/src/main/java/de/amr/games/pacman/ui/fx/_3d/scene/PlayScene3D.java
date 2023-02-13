@@ -126,10 +126,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void end() {
-		context.level().ifPresent(level -> {
-			var sound = GameUI.sounds(level.game());
-			sound.stopAll();
-		});
+		context.level().ifPresent(level -> GameUI.sounds(level.game()).stopAll());
 	}
 
 	@Override
