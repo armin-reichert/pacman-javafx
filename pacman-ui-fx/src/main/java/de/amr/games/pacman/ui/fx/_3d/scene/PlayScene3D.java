@@ -125,6 +125,15 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public void onTick() {
+		context.level().ifPresent(level -> {
+			level3D.update();
+			currentCamera().update(level3D.pac3D());
+			updateSound(level);
+		});
+	}
+
+	@Override
 	public void end() {
 		context.level().ifPresent(level -> GameUI.sounds(level.game()).stopAll());
 	}
@@ -139,17 +148,21 @@ public class PlayScene3D implements GameScene {
 		var height = level.world().numRows() * World.TS;
 
 		level3D = new GameLevel3D(level, context.r2D());
-		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
-		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
-		level3D.world3D().floorTexturePy.bind(Bindings.createObjectBinding(
-				() -> "none".equals(floorTexturePy.get()) ? null : ResourceMgr.image("graphics/" + floorTexturePy.get()),
-				floorTexturePy));
-		level3D.world3D().floorColorPy.bind(floorColorPy);
-		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
-		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
-
 		levelContainer.getChildren().setAll(level3D);
 		levelContainer.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
+
+		// bind to Env properties
+		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
+		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
+		level3D.world3D().floorColorPy.bind(floorColorPy);
+		var textureBinding = Bindings.createObjectBinding( //
+				() -> Env.ThreeD.NO_TEXTURE.equals(floorTexturePy.get()) //
+						? null
+						: ResourceMgr.image("graphics/" + floorTexturePy.get()),
+				floorTexturePy);
+		level3D.world3D().floorTexturePy.bind(textureBinding);
+		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
+		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
 
 		changeCameraPerspective(perspectivePy.get());
 		LOG.info("3D game level created.");
@@ -172,15 +185,6 @@ public class PlayScene3D implements GameScene {
 		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
 			Actions.cheatKillAllEatableGhosts();
 		}
-	}
-
-	@Override
-	public void onTick() {
-		context.level().ifPresent(level -> {
-			level3D.update();
-			currentCamera().update(level3D.pac3D());
-			updateSound(level);
-		});
 	}
 
 	@Override
