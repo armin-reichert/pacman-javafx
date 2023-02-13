@@ -40,7 +40,7 @@ public class PacManSoundMap {
 			{ SoundClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
 			{ SoundClipID.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
 			{ SoundClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
-			{ SoundClipID.PACMAN_MUNCH, "sound/pacman/munch_1.wav", 1.0 }, //
+			{ SoundClipID.PACMAN_MUNCH, "sound/pacman/munch_2.wav", 1.0 }, //
 			{ SoundClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
 			{ SoundClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.5 }, //
 			{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.5 }, //
