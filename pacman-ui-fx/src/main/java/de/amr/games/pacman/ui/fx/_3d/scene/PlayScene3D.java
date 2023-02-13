@@ -92,7 +92,7 @@ public class PlayScene3D implements GameScene {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture", "none");
+	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture", Env.ThreeD.NO_TEXTURE);
 	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight", 2.5);
 	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness", 1.5);
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",

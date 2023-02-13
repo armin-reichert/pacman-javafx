@@ -64,7 +64,8 @@ public class Env {
 	}
 
 	public static class ThreeD {
-		public static final List<String> FLOOR_TEXTURES = List.of("none", "penrose-tiling.jpg", "escher-texture.jpg");
+		public static final String NO_TEXTURE = "none";
+		public static final List<String> FLOOR_TEXTURES = List.of(NO_TEXTURE, "penrose-tiling.jpg", "escher-texture.jpg");
 		public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 		public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 		public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
