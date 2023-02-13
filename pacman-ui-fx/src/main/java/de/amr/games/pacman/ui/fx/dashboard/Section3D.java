@@ -73,20 +73,21 @@ public class Section3D extends Section {
 	@Override
 	public void update() {
 		super.update();
-		pickerLightColor.setDisable(!gameScene().is3D());
-		sliderWallHeight.setDisable(!gameScene().is3D());
+		var no3D = !gameScene().is3D();
+		pickerLightColor.setDisable(no3D);
+		sliderWallHeight.setDisable(no3D);
 		sliderWallHeight.setValue(Env.ThreeD.mazeWallHeightPy.get());
-		sliderWallThickness.setDisable(!gameScene().is3D());
-		comboFloorTexture.setDisable(!gameScene().is3D());
+		sliderWallThickness.setDisable(no3D);
+		comboFloorTexture.setDisable(no3D);
 		comboFloorTexture.setValue(Env.ThreeD.floorTexturePy.get());
-		pickerFloorColor.setDisable(!gameScene().is3D());
-		cbSquirting.setDisable(!gameScene().is3D());
+		pickerFloorColor.setDisable(no3D);
+		cbSquirting.setDisable(no3D);
 		cbSquirting.setSelected(Env.ThreeD.squirtingEnabledPy.get());
-		cbPacLighted.setDisable(!gameScene().is3D());
+		cbPacLighted.setDisable(no3D);
 		cbPacLighted.setSelected(Env.ThreeD.pacLightedPy.get());
-		cbAxesVisible.setDisable(!gameScene().is3D());
+		cbAxesVisible.setDisable(no3D);
 		cbAxesVisible.setSelected(Env.ThreeD.axesVisiblePy.get());
-		cbWireframeMode.setDisable(!gameScene().is3D());
+		cbWireframeMode.setDisable(no3D);
 		cbWireframeMode.setSelected(Env.ThreeD.drawModePy.get() == DrawMode.LINE);
 	}
 }
