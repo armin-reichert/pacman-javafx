@@ -82,10 +82,12 @@ public class PacManCutscene1 extends GameScene2D {
 			--initialDelay;
 			return;
 		}
-		++frame;
-		if (frame == 0) {
+
+		switch (++frame) {
+		case 0 -> {
 			GameEvents.publishSoundEvent("start_intermission_1");
-		} else if (frame == 260) {
+		}
+		case 260 -> {
 			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.animations().ifPresent(animations -> {
@@ -93,17 +95,24 @@ public class PacManCutscene1 extends GameScene2D {
 				animations.selectedAnimation().get().restart();
 			});
 			blinky.setPixelSpeed(0.75f);
-		} else if (frame == 400) {
+		}
+		case 400 -> {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
 			pac.animations().ifPresent(animations -> {
 				animations.select(AnimKeys.PAC_BIG);
 				animations.selectedAnimation().get().restart();
 			});
-		} else if (frame == 632) {
+		}
+		case 632 -> {
 			context.state().timer().expire();
 			return;
 		}
+		default -> {
+			// pass
+		}
+		}
+
 		pac.move();
 		pac.animate();
 		blinky.move();
