@@ -80,32 +80,27 @@ public class PacManCutscene1 extends GameScene2D {
 	public void update() {
 		if (initialDelay > 0) {
 			--initialDelay;
+			if (initialDelay == 0) {
+				GameEvents.publishSoundEvent("start_intermission_1");
+			}
 			return;
 		}
+
 		if (context.state().timer().hasExpired()) {
 			return;
 		}
 
 		switch (++frame) {
-		case 0 -> {
-			GameEvents.publishSoundEvent("start_intermission_1");
-		}
 		case 260 -> {
 			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.animations().ifPresent(animations -> {
-				animations.select(AnimKeys.GHOST_BLUE);
-				animations.selectedAnimation().get().restart();
-			});
 			blinky.setPixelSpeed(0.75f);
+			blinky.animations().ifPresent(animations -> animations.selectAndRestart(AnimKeys.GHOST_BLUE));
 		}
 		case 400 -> {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
-			pac.animations().ifPresent(animations -> {
-				animations.select(AnimKeys.PAC_BIG);
-				animations.selectedAnimation().get().restart();
-			});
+			pac.animations().ifPresent(animations -> animations.selectAndRestart(AnimKeys.PAC_BIG));
 		}
 		case 632 -> {
 			context.state().timer().expire();
