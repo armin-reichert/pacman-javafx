@@ -82,6 +82,9 @@ public class PacManCutscene1 extends GameScene2D {
 			--initialDelay;
 			return;
 		}
+		if (context.state().timer().hasExpired()) {
+			return;
+		}
 
 		switch (++frame) {
 		case 0 -> {
@@ -106,17 +109,14 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 		case 632 -> {
 			context.state().timer().expire();
-			return;
 		}
 		default -> {
-			// pass
+			pac.move();
+			pac.animate();
+			blinky.move();
+			blinky.animate();
 		}
 		}
-
-		pac.move();
-		pac.animate();
-		blinky.move();
-		blinky.animate();
 	}
 
 	@Override
