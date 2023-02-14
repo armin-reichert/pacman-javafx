@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -54,25 +55,25 @@ public class PacManCutscene1 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(renderer.createPacAnimations(pac));
-		var bigPacAnimation = renderer.createBigPacManMunchingAnimation();
-		pac.animations().ifPresent(animations -> animations.put(AnimKeys.PAC_BIG, bigPacAnimation));
-		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
+		var pacAnimations = renderer.createPacAnimations(pac);
+		pacAnimations.put(AnimKeys.PAC_BIG, renderer.createBigPacManMunchingAnimation());
+		pac.setAnimations(pacAnimations);
+		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
+
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
-		blinky.setAnimations(renderer.createGhostAnimations(blinky));
-		blinky.animations().ifPresent(animations -> {
-			animations.select(AnimKeys.GHOST_COLOR);
-			animations.animation(AnimKeys.GHOST_COLOR).get().restart();
-		});
 		blinky.placeAtTile(v2i(32, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(1.3f);
 		blinky.show();
+
+		var blinkyAnimations = renderer.createGhostAnimations(blinky);
+		blinky.setAnimations(blinkyAnimations);
+		blinkyAnimations.selectedAnimation().ifPresent(EntityAnimation::restart);
 	}
 
 	@Override
