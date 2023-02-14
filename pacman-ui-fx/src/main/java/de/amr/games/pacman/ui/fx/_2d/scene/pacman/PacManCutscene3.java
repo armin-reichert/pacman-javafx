@@ -53,47 +53,57 @@ public class PacManCutscene3 extends GameScene2D {
 		var renderer = (PacManGameRenderer) context.r2D();
 		frame = -1;
 		initialDelay = 120;
+
 		pac = new Pac("Pac-Man");
+		pac.placeAtTile(v2i(29, 20), 0, 0);
+		pac.setMoveDir(Direction.LEFT);
+		pac.setPixelSpeed(1.25f);
+		pac.show();
+
 		pac.setAnimations(renderer.createPacAnimations(pac));
+		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
+
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
-		blinky.setAnimations(renderer.createGhostAnimations(blinky));
-		blinky.animations().ifPresent(animations -> {
-			animations.put(AnimKeys.BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
-			animations.put(AnimKeys.BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
-		});
+		blinky.placeAtTile(v2i(35, 20), 0, 0);
+		blinky.setMoveAndWishDir(Direction.LEFT);
+		blinky.setPixelSpeed(1.25f);
+		blinky.show();
+
+		var blinkyAnimations = renderer.createGhostAnimations(blinky);
+		blinkyAnimations.put(AnimKeys.BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
+		blinkyAnimations.put(AnimKeys.BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
+		blinky.setAnimations(blinkyAnimations);
+		blinky.selectAndRunAnimation(AnimKeys.BLINKY_PATCHED);
 	}
 
 	@Override
 	public void update() {
 		if (initialDelay > 0) {
 			--initialDelay;
+			if (initialDelay == 0) {
+				GameEvents.publishSoundEvent("start_intermission_3");
+			}
 			return;
 		}
-		++frame;
-		if (frame == 0) {
-			GameEvents.publishSoundEvent("start_intermission_3");
-			pac.placeAtTile(v2i(29, 20), 0, 0);
-			pac.setMoveDir(Direction.LEFT);
-			pac.setPixelSpeed(1.25f);
-			pac.show();
-			pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
-			blinky.placeAtTile(v2i(35, 20), 0, 0);
-			blinky.setMoveAndWishDir(Direction.LEFT);
-			blinky.setPixelSpeed(1.25f);
-			blinky.show();
-			blinky.selectAndRunAnimation(AnimKeys.BLINKY_PATCHED);
-		} else if (frame == 296) {
+		if (context.state().timer().hasExpired()) {
+			return;
+		}
+		switch (++frame) {
+		case 400 -> {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.selectAndRunAnimation(AnimKeys.BLINKY_NAKED);
-		} else if (frame == 516) {
-			context.state().timer().expire();
-			return;
 		}
-		pac.move();
-		pac.animate();
-		blinky.move();
-		blinky.animate();
+		case 700 -> {
+			context.state().timer().expire();
+		}
+		default -> {
+			pac.move();
+			pac.animate();
+			blinky.move();
+			blinky.animate();
+		}
+		}
 	}
 
 	@Override

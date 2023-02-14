@@ -65,8 +65,7 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.show();
 
 		var pacAnimations = renderer.createPacAnimations(pac);
-		pacAnimations.select(AnimKeys.PAC_MUNCHING);
-		pacAnimations.animation(AnimKeys.PAC_MUNCHING).ifPresent(EntityAnimation::restart);
+		pacAnimations.selectAndRestart(AnimKeys.PAC_MUNCHING);
 		pac.setAnimations(pacAnimations);
 
 		stretchedDressAnimation = renderer.createBlinkyStretchedAnimation();
@@ -80,8 +79,7 @@ public class PacManCutscene2 extends GameScene2D {
 		var blinkyAnimations = renderer.createGhostAnimations(blinky);
 		damagedAnimation = renderer.createBlinkyDamagedAnimation();
 		blinkyAnimations.put(AnimKeys.BLINKY_DAMAGED, damagedAnimation);
-		blinkyAnimations.select(AnimKeys.GHOST_COLOR);
-		blinkyAnimations.animation(AnimKeys.GHOST_COLOR).ifPresent(EntityAnimation::restart);
+		blinkyAnimations.selectAndRestart(AnimKeys.GHOST_COLOR);
 		blinky.setAnimations(blinkyAnimations);
 	}
 
@@ -89,40 +87,56 @@ public class PacManCutscene2 extends GameScene2D {
 	public void update() {
 		if (initialDelay > 0) {
 			--initialDelay;
+			if (initialDelay == 0) {
+				GameEvents.publishSoundEvent("start_intermission_2");
+			}
 			return;
 		}
-		++frame;
-		if (frame == 0) {
-			GameEvents.publishSoundEvent("start_intermission_2");
-		} else if (frame == 110) {
+
+		if (context.state().timer().hasExpired()) {
+			return;
+		}
+
+		switch (++frame) {
+		case 110 -> {
 			blinky.setPixelSpeed(1.25f);
 			blinky.show();
-		} else if (frame == 196) {
+		}
+		case 196 -> {
 			blinky.setPixelSpeed(0.17f);
 			stretchedDressAnimation.setFrameIndex(1);
-		} else if (frame == 226) {
+		}
+		case 226 -> {
 			stretchedDressAnimation.setFrameIndex(2);
-		} else if (frame == 248) {
+		}
+		case 248 -> {
 			blinky.setPixelSpeed(0);
 			blinky.animations().ifPresent(animations -> animations.selectedAnimation().get().stop());
 			stretchedDressAnimation.setFrameIndex(3);
-		} else if (frame == 328) {
+		}
+		case 328 -> {
 			stretchedDressAnimation.setFrameIndex(4);
-		} else if (frame == 329) {
+		}
+		case 329 -> {
 			blinky.animations().ifPresent(animations -> animations.select(AnimKeys.BLINKY_DAMAGED));
 			damagedAnimation.setFrameIndex(0);
-		} else if (frame == 389) {
-			damagedAnimation.setFrameIndex(1);
-		} else if (frame == 508) {
-			stretchedDressAnimation = null;
-		} else if (frame == 509) {
-			context.state().timer().expire();
-			return;
 		}
-		pac.move();
-		pac.animate();
-		blinky.move();
-		blinky.animate();
+		case 389 -> {
+			damagedAnimation.setFrameIndex(1);
+		}
+		case 508 -> {
+			stretchedDressAnimation = null;
+		}
+		case 509 -> {
+			context.state().timer().expire();
+		}
+		default -> {
+			pac.move();
+			pac.animate();
+			blinky.move();
+			blinky.animate();
+		}
+		}
 	}
 
 	@Override
