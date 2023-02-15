@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +36,6 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -98,11 +95,11 @@ public class GameUI implements GameEventListener {
 	public GameUI(Stage primaryStage, Settings settings) {
 		gameController = new GameController(settings.variant);
 
-		Map<GameVariant, Rendering2D> rendererMap = Map.of(GameVariant.MS_PACMAN, new MsPacManGameRenderer(),
-				GameVariant.PACMAN, new PacManGameRenderer());
-
 		gameView = new GameView(primaryStage, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom,
-				settings.fullScreen, rendererMap);
+				settings.fullScreen);
+
+		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
+		gameView.setRenderer(GameVariant.PACMAN, new PacManGameRenderer());
 
 		var defaultPacSteering = new KeyboardSteering(Keys.PAC_UP, Keys.PAC_DOWN, Keys.PAC_LEFT, Keys.PAC_RIGHT);
 		gameController.setManualPacSteering(defaultPacSteering);

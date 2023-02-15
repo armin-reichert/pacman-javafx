@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.shell;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.model.common.GameVariant;
@@ -64,10 +65,9 @@ public class GameView {
 	 * controlled using the dashboard.
 	 */
 	private final PlayScene2D pipPlayScene = new PlayScene2D();
-	private final Map<GameVariant, Rendering2D> rendererMap;
+	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
 
-	public GameView(Stage stage, int width, int height, float zoom, boolean fullscreen,
-			Map<GameVariant, Rendering2D> rendererMap) {
+	public GameView(Stage stage, int width, int height, float zoom, boolean fullscreen) {
 		if (width <= 0) {
 			throw new IllegalArgumentException("Layout width must be positive but is: %d".formatted(width));
 		}
@@ -77,8 +77,6 @@ public class GameView {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
-
-		this.rendererMap = rendererMap;
 
 		this.stage = stage;
 		stage.setMinWidth(241);
@@ -135,6 +133,10 @@ public class GameView {
 
 	public Rendering2D renderer(GameVariant variant) {
 		return rendererMap.get(variant);
+	}
+
+	public void setRenderer(GameVariant variant, Rendering2D renderer) {
+		rendererMap.put(variant, renderer);
 	}
 
 	public Stage stage() {
