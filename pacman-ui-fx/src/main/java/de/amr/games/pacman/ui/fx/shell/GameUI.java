@@ -219,12 +219,12 @@ public class GameUI implements GameEventListener {
 	}
 
 	@Override
-	public void onGameEvent(GameEvent event) {
-		LOG.trace("Event received: %s", event);
+	public void onGameEvent(GameEvent e) {
+		LOG.trace("Event received: %s", e);
 		// call event specific handler
-		GameEventListener.super.onGameEvent(event);
+		GameEventListener.super.onGameEvent(e);
 		if (currentGameScene != null) {
-			currentGameScene.onGameEvent(event);
+			currentGameScene.onGameEvent(e);
 		}
 	}
 
@@ -240,7 +240,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onLevelStarting(GameEvent e) {
-		gameController.game().level().ifPresent(level -> {
+		e.game.level().ifPresent(level -> {
 			var r = currentGameScene.context().r2D();
 			level.pac().setAnimations(r.createPacAnimations(level.pac()));
 			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
@@ -251,8 +251,8 @@ public class GameUI implements GameEventListener {
 	}
 
 	@Override
-	public void onSoundEvent(SoundEvent event) {
-		soundHandler.onSoundEvent(event);
+	public void onSoundEvent(SoundEvent e) {
+		soundHandler.onSoundEvent(e);
 	}
 
 	public GameController gameController() {
