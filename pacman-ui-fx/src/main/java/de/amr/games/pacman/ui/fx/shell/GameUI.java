@@ -130,8 +130,8 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv() {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> gameView.updateBackground());
-		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> gameView.updateBackground());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
+		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 
@@ -189,7 +189,6 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		gameView.updateBackground();
 		gameView.update(gameController.game().variant());
 	}
 

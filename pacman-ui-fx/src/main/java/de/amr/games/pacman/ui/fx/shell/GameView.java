@@ -103,9 +103,6 @@ public class GameView {
 		}
 		default -> throw new IllegalStateException();
 		}
-	}
-
-	public void updateBackground() {
 		var bgColor = Env.ThreeD.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) scene.getRoot();
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
