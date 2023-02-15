@@ -33,6 +33,7 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -101,12 +102,13 @@ public class GameUI implements GameEventListener {
 		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		gameView.setRenderer(GameVariant.PACMAN, new PacManGameRenderer());
 
-		var defaultPacSteering = new KeyboardSteering(Keys.PAC_UP, Keys.PAC_DOWN, Keys.PAC_LEFT, Keys.PAC_RIGHT);
-		gameController.setManualPacSteering(defaultPacSteering);
+		var manualSteering = new KeyboardSteering(settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN),
+				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+		gameController.setManualPacSteering(manualSteering);
 
 		gameView.scene().heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
-		gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, defaultPacSteering::onKeyPressed);
+		gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering::onKeyPressed);
 		gameView.scene().setOnKeyPressed(e -> {
 			if (Keyboard.accept(e))
 				onKeyPressed();

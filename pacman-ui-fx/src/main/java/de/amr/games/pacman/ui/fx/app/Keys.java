@@ -77,8 +77,4 @@ public class Keys {
 	public static final KeyCodeCombination PREV_CAMERA = alt(KeyCode.LEFT);
 	public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 
-	public static final KeyCode PAC_UP = KeyCode.UP;
-	public static final KeyCode PAC_DOWN = KeyCode.DOWN;
-	public static final KeyCode PAC_LEFT = KeyCode.LEFT;
-	public static final KeyCode PAC_RIGHT = KeyCode.RIGHT;
 }

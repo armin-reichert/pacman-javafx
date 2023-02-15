@@ -29,8 +29,10 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
+import javafx.scene.input.KeyCode;
 
 /**
  * @author Armin Reichert
@@ -49,12 +51,20 @@ public class Settings {
 		}
 	}
 
+	private static Map<Direction, KeyCode> parseKeyMap(String spec) {
+		return switch (spec) {
+		default -> Map.of(Direction.UP, KeyCode.UP, Direction.DOWN, KeyCode.DOWN, Direction.LEFT, KeyCode.LEFT,
+				Direction.RIGHT, KeyCode.RIGHT);
+		};
+	}
+
 	public final boolean fullScreen;
 	public final boolean muted;
 	public final Perspective perspective;
 	public final boolean use3D;
 	public final GameVariant variant;
 	public final float zoom;
+	public final Map<Direction, KeyCode> keyMap;
 
 	public Settings(Map<String, String> parameters) {
 		fullScreen = parse(parameters, "fullScreen", false, Boolean::valueOf);
@@ -63,11 +73,12 @@ public class Settings {
 		use3D = parse(parameters, "use3D", false, Boolean::valueOf);
 		variant = parse(parameters, "variant", GameVariant.PACMAN, GameVariant::valueOf);
 		zoom = parse(parameters, "zoom", 2.0f, Float::valueOf);
+		keyMap = (Map<Direction, KeyCode>) parse(parameters, "keys", "cursor", Settings::parseKeyMap);
 	}
 
 	@Override
 	public String toString() {
-		return "{fullScreen=%s, muted=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f}".formatted(fullScreen, muted,
-				perspective, use3D, variant, zoom);
+		return "{fullScreen=%s, muted=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f, keys=%s}".formatted(fullScreen,
+				muted, perspective, use3D, variant, zoom, keyMap);
 	}
 }
