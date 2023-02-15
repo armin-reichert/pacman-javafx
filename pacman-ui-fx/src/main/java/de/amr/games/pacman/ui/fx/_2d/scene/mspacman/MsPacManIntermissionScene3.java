@@ -69,7 +69,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	public void drawSceneContent() {
 		var ic = intermission.context();
 		var r = (MsPacManGameRenderer) context.r2D();
-		r.drawClapperboard(g, ic.clapperboard);
+		r.drawClap(g, ic.clapperboard);
 		r.drawPac(g, ic.msPacMan);
 		r.drawPac(g, ic.pacMan);
 		r.drawEntitySprite(g, ic.stork, storkAnim.animate());

@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameAssets.col3;
 
@@ -145,7 +144,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
-		g.setFont(arcadeFont(TS));
+		g.setFont(ARCADE_FONT_TS);
 		g.fillText("MIDWAY MFG CO", x + t(7), y + t(2));
 		g.fillText("1980/1981", x + t(8), y + t(4));
 	}
@@ -225,16 +224,16 @@ public class MsPacManGameRenderer extends GameRenderer {
 
 	// Ms. Pac-Man specific:
 
-	public void drawClapperboard(GraphicsContext g, Clapperboard clapper) {
-		if (clapper.isVisible()) {
-			clapper.animation().map(EntityAnimation::animate).ifPresent(frame -> {
+	public void drawClap(GraphicsContext g, Clapperboard clap) {
+		if (clap.isVisible()) {
+			clap.animation().map(EntityAnimation::animate).ifPresent(frame -> {
 				var sprite = (Rectangle2D) frame;
-				drawEntitySprite(g, clapper, sprite);
-				g.setFont(arcadeFont(TS));
-				g.setFill(Color.rgb(222, 222, 255));
-				g.fillText(String.valueOf(clapper.sceneNumber), clapper.position().x() + sprite.getWidth() - 25,
-						clapper.position().y() + 18);
-				g.fillText(clapper.sceneTitle, clapper.position().x() + sprite.getWidth(), clapper.position().y());
+				drawEntitySprite(g, clap, sprite);
+				g.setFont(ARCADE_FONT_TS);
+				g.setFill(Palette.PALE);
+				g.fillText(String.valueOf(clap.sceneNumber), clap.position().x() + sprite.getWidth() - 25,
+						clap.position().y() + 18);
+				g.fillText(clap.sceneTitle, clap.position().x() + sprite.getWidth(), clap.position().y());
 			});
 		}
 	}

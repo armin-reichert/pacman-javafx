@@ -59,25 +59,25 @@ public abstract class GameRenderer implements Rendering2D {
 
 	static {
 		//@formatter:off
-		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(//
+		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(
 			Palette.RED,  Palette.PALE, Palette.BLUE, // normal
 			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
 			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
 
-		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColoring(//
+		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColoring(
 			Palette.PINK, Palette.PALE, Palette.BLUE, // normal
 			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
 			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
 
-		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColoring(//
+		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColoring(
 			Palette.CYAN, Palette.PALE, Palette.BLUE, // normal
 			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
 			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
 		);
 		
-		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(//
+		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(
 			Palette.ORANGE, Palette.PALE, Palette.BLUE, // normal
 			Palette.BLUE,   Palette.ROSE, Palette.ROSE, // frightened
 			Palette.PALE,   Palette.ROSE, Palette.RED   // flashing
@@ -85,7 +85,7 @@ public abstract class GameRenderer implements Rendering2D {
 		//@formatter:on
 	}
 
-	private static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
+	protected static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
 
 	public abstract Spritesheet spritesheet();
 
