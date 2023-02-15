@@ -65,9 +65,6 @@ public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
-	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
-
 	private static final GameRenderer RENDERER_MS_PACMAN = new MsPacManGameRenderer();
 	private static final GameRenderer RENDERER_PACMAN = new PacManGameRenderer();
 
@@ -94,8 +91,8 @@ public class GameUI implements GameEventListener {
 
 		@Override
 		public void doRender() {
-			layout.flashMessageView().update();
-			layout.dashboard().update();
+			gameView.flashMessageView().update();
+			gameView.dashboard().update();
 			updatePipView();
 		}
 	}
@@ -103,7 +100,7 @@ public class GameUI implements GameEventListener {
 	private final Settings settings;
 	private final Simulation simulation = new Simulation(GameModel.FPS);
 	private final GameController gameController;
-	private final Layout layout;
+	private final GameView gameView;
 	private final SoundHandler soundHandler = new SoundHandler();
 
 	private GameScene currentGameScene;
@@ -112,17 +109,17 @@ public class GameUI implements GameEventListener {
 		this.settings = settings;
 		gameController = new GameController(settings.variant);
 
-		layout = new Layout(primaryStage, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom,
+		gameView = new GameView(primaryStage, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom,
 				settings.fullScreen);
 
 		// keyboard steering of Pac-Man
 		var defaultPacSteering = new KeyboardSteering(Keys.PAC_UP, Keys.PAC_DOWN, Keys.PAC_LEFT, Keys.PAC_RIGHT);
 		gameController.setManualPacSteering(defaultPacSteering);
 
-		layout.scene().heightProperty()
+		gameView.scene().heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
-		layout.scene().addEventHandler(KeyEvent.KEY_PRESSED, defaultPacSteering::onKeyPressed);
-		layout.scene().setOnKeyPressed(e -> {
+		gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, defaultPacSteering::onKeyPressed);
+		gameView.scene().setOnKeyPressed(e -> {
 			if (Keyboard.accept(e))
 				onKeyPressed();
 		});
@@ -133,16 +130,16 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv() {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> layout.updateBackground());
-		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> layout.updateBackground());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> gameView.updateBackground());
+		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> gameView.updateBackground());
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 
 		Env.PiP.sceneHeightPy
-				.addListener((py, oldVal, newVal) -> layout.pipPlayScene().resizeToHeight(newVal.doubleValue()));
-		layout.pipPlayScene().fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
+				.addListener((py, oldVal, newVal) -> gameView.pipPlayScene().resizeToHeight(newVal.doubleValue()));
+		gameView.pipPlayScene().fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
-		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> layout.update(gameController.game().variant()));
+		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
 		simulation.pausedPy.bind(Env.Simulation.pausedPy);
 		simulation.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		simulation.measuredPy.bind(Env.Simulation.timeMeasuredPy);
@@ -155,16 +152,16 @@ public class GameUI implements GameEventListener {
 		}
 		GameEvents.addListener(this);
 		Actions.setUI(this);
-		layout.dashboard().init(this);
+		gameView.dashboard().init(this);
 		gameController.boot(); // after booting, current game scene is initialized
-		layout.show();
+		gameView.show();
 
 		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 
 		simulation.start();
 		LOG.info("Game started. Game loop target frame rate: %d", simulation.targetFrameratePy.get());
-		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(layout.stage().getWidth(),
-				layout.stage().getHeight(), U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
+		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(gameView.stage().getWidth(),
+				gameView.stage().getHeight(), U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
 	}
 
 	public void stop() {
@@ -174,10 +171,10 @@ public class GameUI implements GameEventListener {
 
 	private void updatePipView() {
 		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
-		layout.pipPlayScene().fxSubScene().setVisible(visible);
+		gameView.pipPlayScene().fxSubScene().setVisible(visible);
 		if (visible) {
-			layout.pipPlayScene().setContext(currentGameScene.context());
-			layout.pipPlayScene().draw();
+			gameView.pipPlayScene().setContext(currentGameScene.context());
+			gameView.pipPlayScene().draw();
 		}
 	}
 
@@ -192,8 +189,8 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		layout.updateBackground();
-		layout.update(gameController.game().variant());
+		gameView.updateBackground();
+		gameView.update(gameController.game().variant());
 	}
 
 	private void changeGameScene(GameScene nextGameScene) {
@@ -204,9 +201,9 @@ public class GameUI implements GameEventListener {
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
 		// embed game scene into main scene
-		StackPane root = (StackPane) layout.scene().getRoot();
+		StackPane root = (StackPane) gameView.scene().getRoot();
 		root.getChildren().set(0, currentGameScene.fxSubScene());
-		currentGameScene.onEmbed(layout.scene());
+		currentGameScene.onEmbed(gameView.scene());
 	}
 
 	private void onKeyPressed() {
@@ -237,7 +234,7 @@ public class GameUI implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
 			Actions.togglePipViewVisible();
 		} else if (Keyboard.pressed(Keys.FULLSCREEN)) {
-			layout.stage().setFullScreen(true);
+			gameView.stage().setFullScreen(true);
 		}
 		currentGameScene.onKeyPressed();
 	}
@@ -283,8 +280,8 @@ public class GameUI implements GameEventListener {
 		return gameController;
 	}
 
-	public Layout mainScene() {
-		return layout;
+	public GameView gameView() {
+		return gameView;
 	}
 
 	public Simulation simulation() {

@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -41,10 +42,13 @@ import javafx.stage.Stage;
 /**
  * @author Armin Reichert
  */
-public class Layout {
+public class GameView {
 
 	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
 	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
+
+	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
+	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
 	private final Stage stage;
 	private final Scene scene;
@@ -56,7 +60,7 @@ public class Layout {
 	 */
 	private final PlayScene2D pipPlayScene = new PlayScene2D();
 
-	public Layout(Stage stage, int width, int height, float zoom, boolean fullscreen) {
+	public GameView(Stage stage, int width, int height, float zoom, boolean fullscreen) {
 		if (width <= 0) {
 			throw new IllegalArgumentException("Layout width must be positive but is: %d".formatted(width));
 		}
