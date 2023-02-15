@@ -126,10 +126,10 @@ public class MsPacManIntroScene extends GameScene2D {
 	// TODO this is not exactly as in the original game
 	private void drawLights(int width, int height) {
 		long t = intro.context().lightsTimer.tick();
-		int on = (int) (t / 2) % (width / 2);
+		int on = (int) t % (width / 2);
 		for (int i = 0; i < 2 * (width + height); ++i) {
 			var p = xy(i, width, height);
-			g.setFill((i + on) % (width / 2) == 0 ? Color.PINK : Color.RED);
+			g.setFill((i + on) % (width / 2) == 0 ? Color.WHITE : Color.RED);
 			g.fillRect(BLINKY_END_TILE.x() + 4 * p.x(), BLINKY_END_TILE.y() + 4 * p.y(), 2, 2);
 		}
 	}
