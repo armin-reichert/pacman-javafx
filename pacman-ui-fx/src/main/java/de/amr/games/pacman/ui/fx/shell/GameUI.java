@@ -51,7 +51,6 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -190,10 +189,7 @@ public class GameUI implements GameEventListener {
 		nextGameScene.setContext(new GameSceneContext(gameController, renderer(gameController.game())));
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
-		// embed game scene into main scene
-		StackPane root = (StackPane) gameView.scene().getRoot();
-		root.getChildren().set(0, currentGameScene.fxSubScene());
-		currentGameScene.onEmbed(gameView.scene());
+		gameView.embedGameScene(currentGameScene);
 	}
 
 	private void onKeyPressed() {

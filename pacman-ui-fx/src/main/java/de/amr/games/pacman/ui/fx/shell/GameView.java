@@ -119,6 +119,12 @@ public class GameView {
 		}
 	}
 
+	public void embedGameScene(GameScene gameScene) {
+		StackPane root = (StackPane) scene.getRoot();
+		root.getChildren().set(0, gameScene.fxSubScene());
+		gameScene.onEmbed(scene);
+	}
+
 	public Stage stage() {
 		return stage;
 	}
