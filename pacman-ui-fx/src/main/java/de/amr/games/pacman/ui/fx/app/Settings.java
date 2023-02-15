@@ -53,7 +53,15 @@ public class Settings {
 
 	private static Map<Direction, KeyCode> parseKeyMap(String spec) {
 		return switch (spec) {
-		default -> Map.of(Direction.UP, KeyCode.UP, Direction.DOWN, KeyCode.DOWN, Direction.LEFT, KeyCode.LEFT,
+		case "numpad" -> Map.of(//
+				Direction.UP, KeyCode.NUMPAD8, //
+				Direction.DOWN, KeyCode.NUMPAD5, //
+				Direction.LEFT, KeyCode.NUMPAD4, //
+				Direction.RIGHT, KeyCode.NUMPAD6);
+		default -> Map.of(//
+				Direction.UP, KeyCode.UP, //
+				Direction.DOWN, KeyCode.DOWN, //
+				Direction.LEFT, KeyCode.LEFT, //
 				Direction.RIGHT, KeyCode.RIGHT);
 		};
 	}
@@ -66,6 +74,7 @@ public class Settings {
 	public final float zoom;
 	public final Map<Direction, KeyCode> keyMap;
 
+	@SuppressWarnings("unchecked")
 	public Settings(Map<String, String> parameters) {
 		fullScreen = parse(parameters, "fullScreen", false, Boolean::valueOf);
 		muted = parse(parameters, "muted", false, Boolean::valueOf);
