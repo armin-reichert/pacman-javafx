@@ -87,7 +87,6 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private final Settings settings;
 	private final Simulation simulation = new Simulation();
 	private final GameController gameController;
 	private final GameView gameView;
@@ -96,7 +95,6 @@ public class GameUI implements GameEventListener {
 	private GameScene currentGameScene;
 
 	public GameUI(Stage primaryStage, Settings settings) {
-		this.settings = settings;
 		gameController = new GameController(settings.variant);
 
 		var rendererMap = Map.of(GameVariant.MS_PACMAN, new MsPacManGameRenderer(), GameVariant.PACMAN,
@@ -116,12 +114,12 @@ public class GameUI implements GameEventListener {
 				onKeyPressed();
 		});
 
-		initEnv();
+		initEnv(settings);
 
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
-	private void initEnv() {
+	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
 		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
 		Env.ThreeD.enabledPy.set(settings.use3D);
