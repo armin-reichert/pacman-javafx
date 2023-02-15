@@ -23,8 +23,11 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.shell;
 
+import java.util.Map;
+
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -61,8 +64,10 @@ public class GameView {
 	 * controlled using the dashboard.
 	 */
 	private final PlayScene2D pipPlayScene = new PlayScene2D();
+	private final Map<GameVariant, GameRenderer> rendererMap;
 
-	public GameView(Stage stage, int width, int height, float zoom, boolean fullscreen) {
+	public GameView(Stage stage, int width, int height, float zoom, boolean fullscreen,
+			Map<GameVariant, GameRenderer> rendererMap) {
 		if (width <= 0) {
 			throw new IllegalArgumentException("Layout width must be positive but is: %d".formatted(width));
 		}
@@ -72,6 +77,9 @@ public class GameView {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
+
+		this.rendererMap = rendererMap;
+
 		this.stage = stage;
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
@@ -123,6 +131,10 @@ public class GameView {
 		StackPane root = (StackPane) scene.getRoot();
 		root.getChildren().set(0, gameScene.fxSubScene());
 		gameScene.onEmbed(scene);
+	}
+
+	public GameRenderer renderer(GameVariant variant) {
+		return rendererMap.get(variant);
 	}
 
 	public Stage stage() {

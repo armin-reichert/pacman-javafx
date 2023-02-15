@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,8 +36,8 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -63,17 +65,6 @@ import javafx.stage.Stage;
 public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
-	private static final GameRenderer RENDERER_MS_PACMAN = new MsPacManGameRenderer();
-	private static final GameRenderer RENDERER_PACMAN = new PacManGameRenderer();
-
-	private static GameRenderer renderer(GameModel game) {
-		return switch (game.variant()) {
-		case MS_PACMAN -> RENDERER_MS_PACMAN;
-		case PACMAN -> RENDERER_PACMAN;
-		default -> throw new IllegalStateException();
-		};
-	}
 
 	public class Simulation extends GameLoop {
 
@@ -108,10 +99,12 @@ public class GameUI implements GameEventListener {
 		this.settings = settings;
 		gameController = new GameController(settings.variant);
 
-		gameView = new GameView(primaryStage, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom,
-				settings.fullScreen);
+		var rendererMap = Map.of(GameVariant.MS_PACMAN, new MsPacManGameRenderer(), GameVariant.PACMAN,
+				new PacManGameRenderer());
 
-		// keyboard steering of Pac-Man
+		gameView = new GameView(primaryStage, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom,
+				settings.fullScreen, rendererMap);
+
 		var defaultPacSteering = new KeyboardSteering(Keys.PAC_UP, Keys.PAC_DOWN, Keys.PAC_LEFT, Keys.PAC_RIGHT);
 		gameController.setManualPacSteering(defaultPacSteering);
 
@@ -186,7 +179,7 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		nextGameScene.setContext(new GameSceneContext(gameController, renderer(gameController.game())));
+		nextGameScene.setContext(new GameSceneContext(gameController, gameView.renderer(gameController.game().variant())));
 		nextGameScene.init();
 		currentGameScene = nextGameScene;
 		gameView.embedGameScene(currentGameScene);
