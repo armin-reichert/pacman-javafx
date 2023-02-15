@@ -39,10 +39,10 @@ public class SoundHandler {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final GameSounds SOUNDS_MS_PACMAN = new GameSounds(MsPacManSoundMap.DATA);
-	private static final GameSounds SOUNDS_PACMAN = new GameSounds(PacManSoundMap.DATA);
+	private static final Sounds SOUNDS_MS_PACMAN = new Sounds(MsPacManSoundMap.DATA);
+	private static final Sounds SOUNDS_PACMAN = new Sounds(PacManSoundMap.DATA);
 
-	public static GameSounds sounds(GameModel game) {
+	public static Sounds sounds(GameModel game) {
 		return switch (game.variant()) {
 		case MS_PACMAN -> SOUNDS_MS_PACMAN;
 		case PACMAN -> SOUNDS_PACMAN;
@@ -101,5 +101,4 @@ public class SoundHandler {
 		}
 		}
 	}
-
 }

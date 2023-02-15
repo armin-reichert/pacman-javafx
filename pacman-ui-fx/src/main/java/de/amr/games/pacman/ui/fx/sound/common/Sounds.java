@@ -39,7 +39,7 @@ import javafx.scene.media.AudioClip;
 /**
  * @author Armin Reichert
  */
-public class GameSounds {
+public class Sounds {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
@@ -52,7 +52,7 @@ public class GameSounds {
 		return clip;
 	}
 
-	public GameSounds(Object[][] data) {
+	public Sounds(Object[][] data) {
 		for (var row : data) {
 			SoundClipID id = (SoundClipID) row[0];
 			String path = (String) row[1];
