@@ -359,7 +359,8 @@ public class GameUI implements GameEventListener {
 		case "pacman_found_food" -> sounds.ensureLoop(SoundClipID.PACMAN_MUNCH, AudioClip.INDEFINITE);
 		case "pacman_power_starts" -> {
 			sounds.stopSirens();
-			sounds.ensureLoop(SoundClipID.PACMAN_POWER, AudioClip.INDEFINITE);
+			sounds.stop(SoundClipID.PACMAN_POWER);
+			sounds.loop(SoundClipID.PACMAN_POWER, AudioClip.INDEFINITE);
 		}
 		case "pacman_power_ends" -> {
 			sounds.stop(SoundClipID.PACMAN_POWER);
