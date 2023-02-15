@@ -35,6 +35,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
@@ -157,7 +158,7 @@ public class Actions {
 	public static void togglePaused() {
 		Ufx.toggle(Env.Simulation.pausedPy);
 		if (Env.Simulation.pausedPy.get()) {
-			GameUI.sounds(game()).stopAll();
+			SoundHandler.sounds(game()).stopAll();
 		}
 	}
 

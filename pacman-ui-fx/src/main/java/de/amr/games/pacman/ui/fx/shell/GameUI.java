@@ -51,10 +51,7 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
-import de.amr.games.pacman.ui.fx.sound.common.GameSounds;
-import de.amr.games.pacman.ui.fx.sound.common.SoundClipID;
-import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManSoundMap;
-import de.amr.games.pacman.ui.fx.sound.pacman.PacManSoundMap;
+import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -63,7 +60,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -85,19 +81,8 @@ public class GameUI implements GameEventListener {
 	public static final double PIP_VIEW_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_VIEW_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
-	private static final GameSounds SOUNDS_MS_PACMAN = new GameSounds(MsPacManSoundMap.DATA);
-	private static final GameSounds SOUNDS_PACMAN = new GameSounds(PacManSoundMap.DATA);
-
 	private static final GameRenderer RENDERER_MS_PACMAN = new MsPacManGameRenderer();
 	private static final GameRenderer RENDERER_PACMAN = new PacManGameRenderer();
-
-	public static GameSounds sounds(GameModel game) {
-		return switch (game.variant()) {
-		case MS_PACMAN -> SOUNDS_MS_PACMAN;
-		case PACMAN -> SOUNDS_PACMAN;
-		default -> throw new IllegalStateException();
-		};
-	}
 
 	private static GameRenderer renderer(GameModel game) {
 		return switch (game.variant()) {
@@ -138,6 +123,7 @@ public class GameUI implements GameEventListener {
 	 * controlled using the dashboard.
 	 */
 	private final PlayScene2D pipPlayScene = new PlayScene2D();
+	private final SoundHandler soundHandler = new SoundHandler();
 	private final Settings settings;
 
 	private Scene mainScene;
@@ -343,58 +329,6 @@ public class GameUI implements GameEventListener {
 	}
 
 	@Override
-	public void onSoundEvent(SoundEvent event) {
-		var sounds = sounds(event.game);
-		switch (event.soundCommand) {
-		case "bonus_eaten" -> sounds.play(SoundClipID.BONUS_EATEN);
-		case "credit_added" -> sounds.play(SoundClipID.CREDIT);
-		case "extra_life" -> sounds.play(SoundClipID.EXTRA_LIFE);
-		case "ghost_eaten" -> sounds.play(SoundClipID.GHOST_EATEN);
-		case "hunting_phase_started_0" -> sounds.ensureSirenStarted(0);
-		case "hunting_phase_started_2" -> sounds.ensureSirenStarted(1);
-		case "hunting_phase_started_4" -> sounds.ensureSirenStarted(2);
-		case "hunting_phase_started_6" -> sounds.ensureSirenStarted(3);
-		case "ready_to_play" -> sounds.play(SoundClipID.GAME_READY);
-		case "pacman_death" -> sounds.play(SoundClipID.PACMAN_DEATH);
-		case "pacman_found_food" -> sounds.ensureLoop(SoundClipID.PACMAN_MUNCH, AudioClip.INDEFINITE);
-		case "pacman_power_starts" -> {
-			sounds.stopSirens();
-			sounds.stop(SoundClipID.PACMAN_POWER);
-			sounds.loop(SoundClipID.PACMAN_POWER, AudioClip.INDEFINITE);
-		}
-		case "pacman_power_ends" -> {
-			sounds.stop(SoundClipID.PACMAN_POWER);
-			gameController.game().level().ifPresent(level -> sounds.ensureSirenStarted(level.huntingPhase() / 2));
-		}
-		case "start_intermission_1" -> {
-			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_1);
-			case PACMAN -> sounds.loop(SoundClipID.INTERMISSION_1, 2);
-			default -> throw new IllegalArgumentException();
-			}
-		}
-		case "start_intermission_2" -> {
-			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_2);
-			case PACMAN -> sounds.play(SoundClipID.INTERMISSION_1);
-			default -> throw new IllegalArgumentException();
-			}
-		}
-		case "start_intermission_3" -> {
-			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_3);
-			case PACMAN -> sounds.loop(SoundClipID.INTERMISSION_1, 2);
-			default -> throw new IllegalArgumentException();
-			}
-		}
-		case "stop_all_sounds" -> sounds.stopAll();
-		default -> {
-			// ignore
-		}
-		}
-	}
-
-	@Override
 	public void onLevelStarting(GameEvent e) {
 		gameController.game().level().ifPresent(level -> {
 			var r = currentGameScene.context().r2D();
@@ -404,6 +338,11 @@ public class GameUI implements GameEventListener {
 			LOG.trace("Created level animations for level #%d", level.number());
 		});
 		updateGameScene(true);
+	}
+
+	@Override
+	public void onSoundEvent(SoundEvent event) {
+		soundHandler.onSoundEvent(event);
 	}
 
 	public GameController gameController() {

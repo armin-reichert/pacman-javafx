@@ -40,8 +40,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.common.SoundClipID;
+import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
@@ -62,7 +62,7 @@ public class PlayScene2D extends GameScene2D {
 	public void end() {
 		// TODO check if this is really needed
 		context.level().ifPresent(level -> {
-			var sound = GameUI.sounds(level.game());
+			var sound = SoundHandler.sounds(level.game());
 			sound.stopAll();
 		});
 	}
@@ -151,7 +151,7 @@ public class PlayScene2D extends GameScene2D {
 		if (level instanceof PacManGameDemoLevel || level instanceof MsPacManGameDemoLevel) {
 			return; // TODO maybe mark level as silent?
 		}
-		var sounds = GameUI.sounds(level.game());
+		var sounds = SoundHandler.sounds(level.game());
 		if (level.pac().starvingTicks() > 10) {
 			sounds.stop(SoundClipID.PACMAN_MUNCH);
 		}
