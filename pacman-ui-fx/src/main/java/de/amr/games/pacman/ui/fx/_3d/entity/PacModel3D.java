@@ -29,7 +29,6 @@ import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
@@ -53,7 +52,6 @@ public class PacModel3D {
 	private static final String ID_PAC_HEAD = "Sphere_yellow_packman";
 	private static final String ID_PAC_PALATE = "Sphere_grey_wall";
 	private static final double PAC_SIZE = 9.0;
-	private static final Image PAC_FACE_TEXTURE = ResourceMgr.image("graphics/gold_sandblasted_specular.jpeg");
 
 	private static Translate centerOverOrigin(Node node) {
 		var bounds = node.getBoundsInLocal();
@@ -71,8 +69,7 @@ public class PacModel3D {
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
 	public static Node createPac3D(Color eyesColor, Color palateColor) {
-		var headMaterial = new PhongMaterial();
-		headMaterial.setDiffuseMap(PAC_FACE_TEXTURE);
+		var headMaterial = new PhongMaterial(Color.YELLOW);
 
 		var head = OBJ_MODEL.createMeshView(ID_PAC_HEAD);
 		head.setMaterial(headMaterial);
