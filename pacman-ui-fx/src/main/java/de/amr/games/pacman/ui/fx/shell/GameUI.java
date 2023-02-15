@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -97,8 +98,8 @@ public class GameUI implements GameEventListener {
 	public GameUI(Stage primaryStage, Settings settings) {
 		gameController = new GameController(settings.variant);
 
-		var rendererMap = Map.of(GameVariant.MS_PACMAN, new MsPacManGameRenderer(), GameVariant.PACMAN,
-				new PacManGameRenderer());
+		Map<GameVariant, Rendering2D> rendererMap = Map.of(GameVariant.MS_PACMAN, new MsPacManGameRenderer(),
+				GameVariant.PACMAN, new PacManGameRenderer());
 
 		gameView = new GameView(primaryStage, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom,
 				settings.fullScreen, rendererMap);

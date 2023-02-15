@@ -27,7 +27,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -64,10 +64,10 @@ public class GameView {
 	 * controlled using the dashboard.
 	 */
 	private final PlayScene2D pipPlayScene = new PlayScene2D();
-	private final Map<GameVariant, GameRenderer> rendererMap;
+	private final Map<GameVariant, Rendering2D> rendererMap;
 
 	public GameView(Stage stage, int width, int height, float zoom, boolean fullscreen,
-			Map<GameVariant, GameRenderer> rendererMap) {
+			Map<GameVariant, Rendering2D> rendererMap) {
 		if (width <= 0) {
 			throw new IllegalArgumentException("Layout width must be positive but is: %d".formatted(width));
 		}
@@ -133,7 +133,7 @@ public class GameView {
 		gameScene.onEmbed(scene);
 	}
 
-	public GameRenderer renderer(GameVariant variant) {
+	public Rendering2D renderer(GameVariant variant) {
 		return rendererMap.get(variant);
 	}
 
