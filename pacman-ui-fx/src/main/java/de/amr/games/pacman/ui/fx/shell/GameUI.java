@@ -177,10 +177,12 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		nextGameScene.setContext(new GameSceneContext(gameController, gameView.renderer(gameController.game().variant())));
+		var renderer = gameView.renderer(gameController.game().variant());
+		var sceneContext = new GameSceneContext(gameController, renderer);
+		nextGameScene.setContext(sceneContext);
 		nextGameScene.init();
+		gameView.embedGameScene(nextGameScene);
 		currentGameScene = nextGameScene;
-		gameView.embedGameScene(currentGameScene);
 	}
 
 	private void onKeyPressed() {
