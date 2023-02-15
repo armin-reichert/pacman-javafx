@@ -29,6 +29,8 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -106,6 +108,15 @@ public class GameView {
 		var bgColor = Env.ThreeD.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) scene.getRoot();
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
+	}
+
+	public void updatePipView(GameScene currentGameScene) {
+		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+		pipPlayScene().fxSubScene().setVisible(visible);
+		if (visible) {
+			pipPlayScene().setContext(currentGameScene.context());
+			pipPlayScene().draw();
+		}
 	}
 
 	public Stage stage() {

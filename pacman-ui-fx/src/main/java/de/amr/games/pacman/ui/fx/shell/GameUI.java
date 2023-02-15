@@ -93,7 +93,7 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			gameView.flashMessageView().update();
 			gameView.dashboard().update();
-			updatePipView();
+			gameView.updatePipView(currentGameScene);
 		}
 	}
 
@@ -167,15 +167,6 @@ public class GameUI implements GameEventListener {
 	public void stop() {
 		simulation.stop();
 		LOG.info("Game stopped");
-	}
-
-	private void updatePipView() {
-		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
-		gameView.pipPlayScene().fxSubScene().setVisible(visible);
-		if (visible) {
-			gameView.pipPlayScene().setContext(currentGameScene.context());
-			gameView.pipPlayScene().draw();
-		}
 	}
 
 	// public visible such that Actions class can call it
