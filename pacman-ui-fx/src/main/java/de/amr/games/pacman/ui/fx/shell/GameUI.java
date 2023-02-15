@@ -68,8 +68,8 @@ public class GameUI implements GameEventListener {
 
 	public class Simulation extends GameLoop {
 
-		public Simulation(int fps) {
-			super(fps);
+		public Simulation() {
+			super(GameModel.FPS);
 		}
 
 		@Override
@@ -88,7 +88,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	private final Settings settings;
-	private final Simulation simulation = new Simulation(GameModel.FPS);
+	private final Simulation simulation = new Simulation();
 	private final GameController gameController;
 	private final GameView gameView;
 	private final SoundHandler soundHandler = new SoundHandler();
