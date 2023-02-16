@@ -57,17 +57,6 @@ public class TestRenderer2D implements Rendering2D {
 	}
 
 	@Override
-	public Color ghostColor(int ghostID) {
-		return switch (ghostID) {
-		case Ghost.ID_RED_GHOST -> Palette.RED;
-		case Ghost.ID_PINK_GHOST -> Palette.PINK;
-		case Ghost.ID_CYAN_GHOST -> Palette.CYAN;
-		case Ghost.ID_ORANGE_GHOST -> Palette.ORANGE;
-		default -> throw new IllegalArgumentException();
-		};
-	}
-
-	@Override
 	public Color mazeBackgroundColor(int mazeNumber) {
 		return Color.BLACK;
 	}
