@@ -49,10 +49,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class TestRenderer implements Rendering2D {
-
-	public TestRenderer() {
-	}
+public class TestRenderer2D implements Rendering2D {
 
 	@Override
 	public Font arcadeFont(double size) {
