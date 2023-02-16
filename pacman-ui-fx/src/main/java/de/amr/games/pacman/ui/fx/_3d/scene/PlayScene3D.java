@@ -43,6 +43,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
@@ -324,7 +325,10 @@ public class PlayScene3D implements GameScene {
 				level.memo().killedGhosts.forEach(killedGhost -> {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					ghost3D.setNumberImage(context.r2D().ghostValueImage(index));
+					// TODO make this work for all renderers
+					if (context.r2D() instanceof SpritesheetGameRenderer sgr) {
+						ghost3D.setNumberImage(sgr.ghostValueImage(index));
+					}
 				});
 			});
 		}

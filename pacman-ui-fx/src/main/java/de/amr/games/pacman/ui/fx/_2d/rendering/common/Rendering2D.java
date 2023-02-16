@@ -29,7 +29,6 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
-import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -74,12 +73,6 @@ public interface Rendering2D {
 	Color ghostHouseDoorColor();
 
 	// Sprites, images
-
-	Rectangle2D ghostRegion(int ghostID, Direction dir);
-
-	Rectangle2D ghostValueRegion(int index);
-
-	Image ghostValueImage(int index);
 
 	Rectangle2D lifeSymbolRegion();
 

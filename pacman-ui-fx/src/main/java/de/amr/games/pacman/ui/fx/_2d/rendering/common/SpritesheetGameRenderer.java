@@ -45,6 +45,7 @@ import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -110,6 +111,12 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	public Color mazeBackgroundColor(int mazeNumber) {
 		return Color.BLACK;
 	}
+
+	public abstract Rectangle2D ghostRegion(int ghostID, Direction dir);
+
+	public abstract Rectangle2D ghostValueRegion(int index);
+
+	public abstract Image ghostValueImage(int index);
 
 	@Override
 	public EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac) {

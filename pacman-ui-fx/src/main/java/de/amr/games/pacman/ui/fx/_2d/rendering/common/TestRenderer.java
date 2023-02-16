@@ -35,7 +35,6 @@ import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -95,21 +94,6 @@ public class TestRenderer implements Rendering2D {
 	@Override
 	public Color ghostHouseDoorColor() {
 		return Color.PINK;
-	}
-
-	@Override
-	public Rectangle2D ghostRegion(int ghostID, Direction dir) {
-		return null;
-	}
-
-	@Override
-	public Rectangle2D ghostValueRegion(int index) {
-		return null;
-	}
-
-	@Override
-	public Image ghostValueImage(int index) {
-		return null;
 	}
 
 	@Override
