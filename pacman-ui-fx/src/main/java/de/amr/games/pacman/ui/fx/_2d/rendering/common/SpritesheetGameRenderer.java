@@ -88,7 +88,7 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		//@formatter:on
 	}
 
-	protected static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
+	public static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
 
 	public abstract Spritesheet spritesheet();
 
