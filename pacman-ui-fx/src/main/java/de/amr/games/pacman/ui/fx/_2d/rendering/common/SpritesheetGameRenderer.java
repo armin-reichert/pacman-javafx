@@ -49,11 +49,11 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 /**
- * Common rendering functionality for all game variants.
+ * Common rendering functionality for renderers using a spritesheet.
  * 
  * @author Armin Reichert
  */
-public abstract class GameRenderer implements Rendering2D {
+public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
 

@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -56,7 +58,7 @@ public class TestRenderer implements Rendering2D {
 
 	@Override
 	public Font arcadeFont(double size) {
-		return Font.font(GameRenderer.ARCADE_FONT_TS.getFamily(), size);
+		return Font.font(SpritesheetGameRenderer.ARCADE_FONT_TS.getFamily(), size);
 	}
 
 	@Override
@@ -182,6 +184,9 @@ public class TestRenderer implements Rendering2D {
 
 	@Override
 	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
 	}
 
 	@Override
@@ -198,12 +203,17 @@ public class TestRenderer implements Rendering2D {
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
-		g.setFill(Color.YELLOW);
-		g.fillOval(pac.position().x() - HTS, pac.position().y() - HTS, 2 * TS, 2 * TS);
+		if (pac.isVisible()) {
+			g.setFill(Color.YELLOW);
+			g.fillOval(pac.position().x() - HTS, pac.position().y() - HTS, 2 * TS, 2 * TS);
+		}
 	}
 
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
+		if (!ghost.isVisible()) {
+			return;
+		}
 		switch (ghost.state()) {
 		case EATEN, RETURNING_TO_HOUSE, ENTERING_HOUSE -> {
 			var color = Color.WHITE;
@@ -239,14 +249,33 @@ public class TestRenderer implements Rendering2D {
 
 	@Override
 	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
+		if (numLivesDisplayed <= 0) {
+			return;
+		}
+		int x = t(2);
+		int y = t(ArcadeWorld.SIZE_TILES.y() - 2);
+		int maxLives = 5;
+		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+			g.setFill(Color.YELLOW);
+			g.fillOval(x + t(2 * i) - HTS, y - HTS, 2 * TS, 2 * TS);
+//			drawSprite(g, lifeSymbolRegion(), x + t(2 * i), y);
+		}
 	}
 
 	@Override
 	public void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y) {
+		var font = arcadeFont(TS);
+		drawText(g, title, color, font, x, y);
+		var pointsText = "%02d".formatted(points);
+		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+		if (points != 0) {
+			drawText(g, "L" + levelNumber, color, font, x + t(8), y + TS + 1);
+		}
 	}
 
 	@Override
 	public void drawCredit(GraphicsContext g, int credit) {
+		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
 	}
 
 	@Override
@@ -277,12 +306,11 @@ public class TestRenderer implements Rendering2D {
 
 	@Override
 	public void drawGameReadyMessage(GraphicsContext g) {
-		g.setFill(Color.YELLOW);
-		g.setFont(arcadeFont(TS));
-		g.fillText("READY!", 11 * TS, 21 * TS);
+		drawText(g, "READY!", Palette.YELLOW, arcadeFont(TS), t(11), t(21));
 	}
 
 	@Override
 	public void drawGameOverMessage(GraphicsContext g) {
+		drawText(g, "GAME  OVER", Palette.RED, arcadeFont(TS), t(9), t(21));
 	}
 }

@@ -33,7 +33,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,7 +43,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class PacManGameRenderer extends GameRenderer {
+public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public Spritesheet spritesheet() {

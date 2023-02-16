@@ -39,7 +39,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.beans.property.ObjectProperty;
@@ -118,7 +118,7 @@ public class GameLevel3D extends Group {
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
-		var ghost3D = new Ghost3D(ghost, GameRenderer.GHOST_COLORS[ghost.id()]);
+		var ghost3D = new Ghost3D(ghost, SpritesheetGameRenderer.GHOST_COLORS[ghost.id()]);
 		ghost3D.init(level);
 		ghost3D.drawModePy.bind(drawModePy);
 		return ghost3D;
