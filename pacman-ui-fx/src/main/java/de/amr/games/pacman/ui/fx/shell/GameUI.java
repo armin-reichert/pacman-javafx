@@ -39,6 +39,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManTestRenderer2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -104,7 +105,7 @@ public class GameUI implements GameEventListener {
 
 		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		gameView.setRenderer(GameVariant.PACMAN, new PacManGameRenderer());
-//		gameView.setRenderer(GameVariant.PACMAN, new TestRenderer());
+		gameView.setRenderer(GameVariant.PACMAN, new PacManTestRenderer2D());
 
 		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //
