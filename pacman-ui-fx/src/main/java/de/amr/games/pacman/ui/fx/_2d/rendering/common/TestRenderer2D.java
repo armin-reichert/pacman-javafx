@@ -231,7 +231,7 @@ public class TestRenderer2D implements Rendering2D {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);
 				if (world.isWall(tile)) {
-					g.setFill(Color.BLUE.darker());
+					g.setFill(Color.CHOCOLATE);
 					g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
 				}
 				if (world.containsFood(tile)) {
