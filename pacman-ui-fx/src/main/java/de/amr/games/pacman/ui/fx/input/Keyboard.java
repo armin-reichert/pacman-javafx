@@ -36,40 +36,37 @@ import javafx.scene.input.KeyEvent;
 public class Keyboard {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-	private static KeyEvent currentEvent;
+	private static KeyEvent currentKeyEvent;
 
 	/**
-	 * If the event is not yet consumed, it is accepted as the current event and can then be queried by the application
-	 * code.
+	 * If the event is not yet consumed, it is stored and can be matched against key combinations.
 	 * 
 	 * @param e key event
-	 * @return if the event was accepted
 	 */
-	public static boolean accept(KeyEvent e) {
+	public static void consume(KeyEvent e) {
 		if (e.isConsumed()) {
+			currentKeyEvent = null;
 			LOG.trace("Key event (%s) rejected: %s", e.getCode(), e);
-			currentEvent = null;
-			return false;
+		} else {
+			currentKeyEvent = e;
+			e.consume();
+			LOG.trace("Key event (%s) consumed: %s", e.getCode(), e);
 		}
-		LOG.trace("Key event (%s) accepted: %s", e.getCode(), e);
-		currentEvent = e;
-		e.consume();
-		return true;
 	}
 
 	public static boolean pressed(KeyCodeCombination combination) {
-		if (currentEvent == null) {
+		if (currentKeyEvent == null) {
 			return false;
 		}
-		var match = combination.match(currentEvent);
+		var match = combination.match(currentKeyEvent);
 		if (match) {
-			LOG.trace("Key event matches combination %s", combination);
+			LOG.trace("Key event matches combination %s", combination.getName());
 		}
 		return match;
 	}
 
-	public static void clear() {
-		currentEvent = null;
+	public static void clearState() {
+		currentKeyEvent = null;
 	}
 
 	private Keyboard() {

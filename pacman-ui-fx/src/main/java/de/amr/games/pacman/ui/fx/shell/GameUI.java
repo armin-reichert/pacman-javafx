@@ -75,7 +75,7 @@ public class GameUI implements GameEventListener {
 		public void doUpdate() {
 			gameController.update();
 			currentGameScene.onTick();
-			Keyboard.clear();
+			Keyboard.clearState();
 		}
 
 		@Override
@@ -186,9 +186,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void onKeyPressed(KeyEvent e) {
-		if (!Keyboard.accept(e)) {
-			return;
-		}
+		Keyboard.consume(e);
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
