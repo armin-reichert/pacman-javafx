@@ -173,14 +173,6 @@ public class GameUI implements GameEventListener {
 			changeGameScene(nextGameScene);
 		}
 		gameView.update(gameController.game().variant());
-
-		// TODO check this
-		gameView.scene().removeEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
-		LOG.trace("Manual steering deactivated");
-		if (nextGameScene instanceof PlayScene2D || nextGameScene instanceof PlayScene3D) {
-			gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
-			LOG.trace("Manual steering activated");
-		}
 	}
 
 	private void changeGameScene(GameScene nextGameScene) {
@@ -191,8 +183,19 @@ public class GameUI implements GameEventListener {
 		var sceneContext = new GameSceneContext(gameController, renderer);
 		nextGameScene.setContext(sceneContext);
 		nextGameScene.init();
+		updateManualPacManSteering(nextGameScene);
 		gameView.embedGameScene(nextGameScene);
 		currentGameScene = nextGameScene;
+	}
+
+	private void updateManualPacManSteering(GameScene gameScene) {
+		boolean enabled = false;
+		gameView.scene().removeEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+		if (gameScene instanceof PlayScene2D || gameScene instanceof PlayScene3D) {
+			gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+			enabled = true;
+		}
+		LOG.trace("Manual Pac-Man steering is %s", enabled ? "enabled" : "disabled");
 	}
 
 	private void onKeyPressed(KeyEvent e) {
