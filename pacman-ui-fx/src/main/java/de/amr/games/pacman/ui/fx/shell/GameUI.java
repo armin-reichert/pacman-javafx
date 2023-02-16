@@ -104,6 +104,7 @@ public class GameUI implements GameEventListener {
 
 		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		gameView.setRenderer(GameVariant.PACMAN, new PacManGameRenderer());
+//		gameView.setRenderer(GameVariant.PACMAN, new TestRenderer());
 
 		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //

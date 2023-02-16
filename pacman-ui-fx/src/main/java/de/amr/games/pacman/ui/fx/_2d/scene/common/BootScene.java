@@ -105,29 +105,32 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void drawRandomSprites() {
-		clearBuffer();
-		var sheet = ((GameRenderer) context.r2D()).spritesheet(); // TODO
-		var image = sheet.source();
-		if (context.gameVariant() == GameVariant.MS_PACMAN) {
-			image = sheet.subImage(0, 0, (int) image.getWidth(), 248);
-		}
-		var w = image.getWidth();
-		var h = image.getHeight();
-		var cellSize = 16;
-		var numRows = SIZE_TILES.y() / 2;
-		var numCols = SIZE_TILES.x() / 2;
-		for (int row = 0; row < numRows; ++row) {
-			if (RND.nextInt(100) < 10) {
-				continue;
+		if (context.r2D() instanceof GameRenderer r) {
+			clearBuffer();
+			var sheet = r.spritesheet();
+			var image = sheet.source();
+			if (context.gameVariant() == GameVariant.MS_PACMAN) {
+				image = sheet.subImage(0, 0, (int) image.getWidth(), 248);
 			}
-			var r1 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
-			var r2 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
-			var split = numCols / 4 + RND.nextInt(numCols / 2);
-			for (int col = 0; col < numCols; ++col) {
-				context.r2D().drawSprite(bufferContext, col < split ? r1 : r2, cellSize * col, cellSize * row);
+			var w = image.getWidth();
+			var h = image.getHeight();
+			var cellSize = 16;
+			var numRows = SIZE_TILES.y() / 2;
+			var numCols = SIZE_TILES.x() / 2;
+			for (int row = 0; row < numRows; ++row) {
+				if (RND.nextInt(100) < 10) {
+					continue;
+				}
+				var r1 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
+				var r2 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
+				var split = numCols / 4 + RND.nextInt(numCols / 2);
+				for (int col = 0; col < numCols; ++col) {
+					r.drawSprite(bufferContext, col < split ? r1 : r2, cellSize * col, cellSize * row);
+				}
 			}
+			takeSnapshot();
+
 		}
-		takeSnapshot();
 	}
 
 	private void drawGrid() {
