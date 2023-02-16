@@ -38,7 +38,6 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -188,18 +187,6 @@ public class TestRenderer implements Rendering2D {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
-	}
-
-	@Override
-	public void drawSprite(GraphicsContext g, Rectangle2D region, double x, double y) {
-	}
-
-	@Override
-	public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D region, double x, double y) {
-	}
-
-	@Override
-	public void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D region) {
 	}
 
 	@Override

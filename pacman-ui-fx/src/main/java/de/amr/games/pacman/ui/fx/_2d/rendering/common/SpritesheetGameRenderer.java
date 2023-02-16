@@ -137,7 +137,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 				ghostValueRegion(3));
 	}
 
-	@Override
 	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {
 			g.drawImage(spritesheet().source(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
@@ -145,7 +144,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		}
 	}
 
-	@Override
 	public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {
 			double dx = HTS - r.getWidth() / 2;
@@ -154,7 +152,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		}
 	}
 
-	@Override
 	public void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.isVisible()) {
 			drawSpriteCenteredOverBox(g, r, entity.position().x(), entity.position().y());

@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -142,12 +143,15 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		if (stretchedDressAnimation != null) {
-			context.r2D().drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+		// TODO make this work for all renderers
+		if (context.r2D() instanceof SpritesheetGameRenderer r) {
+			if (stretchedDressAnimation != null) {
+				r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+			}
+			r.drawGhost(g, blinky);
+			r.drawPac(g, pac);
+			r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 		}
-		context.r2D().drawGhost(g, blinky);
-		context.r2D().drawPac(g, pac);
-		context.r2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	@Override

@@ -32,7 +32,6 @@ import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
@@ -115,38 +114,6 @@ public interface Rendering2D {
 	// Drawing
 
 	void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y);
-
-	/**
-	 * Draws sprite (region) using spritesheet.
-	 * 
-	 * @param g      graphics context
-	 * @param sprite sprite (region in spritesheet), may be null
-	 * @param x      left upper corner x
-	 * @param y      left upper corner y
-	 */
-	void drawSprite(GraphicsContext g, Rectangle2D region, double x, double y);
-
-	/**
-	 * Draws the sprite defined by the given spritesheet region centered of the the one square tile box with left upper
-	 * corner defined by the given coordinates.
-	 * 
-	 * @param g      graphics context
-	 * @param region sprite region in spritesheet, my be null
-	 * @param x      left upper corner of the box (one square tile)
-	 * @param y      left upper corner of the box
-	 */
-	void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D region, double x, double y);
-
-	/**
-	 * Draws the entity's sprite centered over the entity's collision box. The collision box is a square with left upper
-	 * corner defined by the entity position and side length of one tile size. Respects the current visibility of the
-	 * entity.
-	 * 
-	 * @param g      graphics context
-	 * @param entity entity
-	 * @param s      entity sprite (region in spritesheet), may be null
-	 */
-	void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D region);
 
 	void drawPac(GraphicsContext g, Pac pac);
 
