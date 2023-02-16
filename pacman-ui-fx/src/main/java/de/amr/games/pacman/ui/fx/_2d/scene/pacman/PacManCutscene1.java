@@ -51,7 +51,6 @@ public class PacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = (PacManGameRenderer) context.r2D();
 		frame = -1;
 		initialDelay = 120;
 
@@ -61,10 +60,13 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
-		var pacAnimations = renderer.createPacAnimations(pac);
-		pacAnimations.put(AnimKeys.PAC_BIG, renderer.createBigPacManMunchingAnimation());
-		pac.setAnimations(pacAnimations);
-		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
+		// TODO make this work for all renderers
+		if (context.r2D() instanceof PacManGameRenderer r) {
+			var pacAnimations = r.createPacAnimations(pac);
+			pacAnimations.put(AnimKeys.PAC_BIG, r.createBigPacManMunchingAnimation());
+			pac.setAnimations(pacAnimations);
+			pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
+		}
 
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
 		blinky.placeAtTile(v2i(32, 20), 0, 0);
@@ -72,7 +74,7 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setPixelSpeed(1.3f);
 		blinky.show();
 
-		var blinkyAnimations = renderer.createGhostAnimations(blinky);
+		var blinkyAnimations = context.r2D().createGhostAnimations(blinky);
 		blinky.setAnimations(blinkyAnimations);
 		blinkyAnimations.selectedAnimation().ifPresent(EntityAnimation::restart);
 	}
