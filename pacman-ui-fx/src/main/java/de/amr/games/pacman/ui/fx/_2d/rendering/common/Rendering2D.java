@@ -40,7 +40,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Common interface for Pac-Man and Ms. Pac-Man (spritesheet based) rendering.
+ * Common interface for all 2D renderers.
  * 
  * @author Armin Reichert
  */
