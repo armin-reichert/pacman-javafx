@@ -43,7 +43,6 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -94,31 +93,6 @@ public class TestRenderer implements Rendering2D {
 	@Override
 	public Color ghostHouseDoorColor() {
 		return Color.PINK;
-	}
-
-	@Override
-	public Rectangle2D lifeSymbolRegion() {
-		return null;
-	}
-
-	@Override
-	public Rectangle2D bonusSymbolRegion(int symbol) {
-		return null;
-	}
-
-	@Override
-	public Image bonusSymbolImage(int symbol) {
-		return null;
-	}
-
-	@Override
-	public Rectangle2D bonusValueRegion(int symbol) {
-		return null;
-	}
-
-	@Override
-	public Image bonusValueImage(int symbol) {
-		return null;
 	}
 
 	@Override

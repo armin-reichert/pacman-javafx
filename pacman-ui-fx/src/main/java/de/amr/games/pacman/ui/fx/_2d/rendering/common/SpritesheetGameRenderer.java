@@ -118,6 +118,16 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	public abstract Image ghostValueImage(int index);
 
+	public abstract Rectangle2D lifeSymbolRegion();
+
+	public abstract Rectangle2D bonusSymbolRegion(int symbol);
+
+	public abstract Rectangle2D bonusValueRegion(int symbol);
+
+	public abstract Image bonusSymbolImage(int symbol);
+
+	public abstract Image bonusValueImage(int symbol);
+
 	@Override
 	public EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac) {
 		var map = new EntityAnimationMap<AnimKeys>(2);

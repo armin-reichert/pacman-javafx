@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.image.Image;
@@ -63,21 +64,27 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol() {
-		var symbolImage = r2D.bonusSymbolImage(bonus.symbol());
-		var imageView = new ImageView(symbolImage);
-		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(TS);
-		setTexture(imageView.getImage());
+		// TODO make this work for all renderers
+		if (r2D instanceof SpritesheetGameRenderer sgr) {
+			var symbolImage = sgr.bonusSymbolImage(bonus.symbol());
+			var imageView = new ImageView(symbolImage);
+			imageView.setPreserveRatio(true);
+			imageView.setFitWidth(TS);
+			setTexture(imageView.getImage());
+		}
 		setWidth(TS);
 		rotate(1, Animation.INDEFINITE, 1);
 	}
 
 	public void showPoints() {
-		var pointsImage = r2D.bonusValueImage(bonus.symbol());
-		var imageView = new ImageView(pointsImage);
-		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(2 * TS);
-		setTexture(imageView.getImage());
+		// TODO make this work for all renderers
+		if (r2D instanceof SpritesheetGameRenderer sgr) {
+			var pointsImage = sgr.bonusValueImage(bonus.symbol());
+			var imageView = new ImageView(pointsImage);
+			imageView.setPreserveRatio(true);
+			imageView.setFitWidth(2 * TS);
+			setTexture(imageView.getImage());
+		}
 		setWidth(2 * TS);
 		rotate(1, 3, 2);
 	}

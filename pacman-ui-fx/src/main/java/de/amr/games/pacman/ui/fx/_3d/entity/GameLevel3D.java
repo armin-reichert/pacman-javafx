@@ -39,8 +39,8 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -94,8 +94,12 @@ public class GameLevel3D extends Group {
 		food3D = new Food3D(level.world(), foodColor);
 
 		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
-		levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, r2D::bonusSymbolImage);
-
+		if (r2D instanceof SpritesheetGameRenderer sgr) {
+			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, sgr::bonusSymbolImage);
+		} else {
+			// TODO
+			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbolIndex -> null);
+		}
 		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
 		livesCounter3D = new LivesCounter3D(facingRight);
 		livesCounter3D.setTranslateX(TS);

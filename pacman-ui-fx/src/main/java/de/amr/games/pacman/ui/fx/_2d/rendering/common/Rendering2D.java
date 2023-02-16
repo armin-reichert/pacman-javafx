@@ -36,7 +36,6 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -71,18 +70,6 @@ public interface Rendering2D {
 	Color mazeSideColor(int mazeNumber);
 
 	Color ghostHouseDoorColor();
-
-	// Sprites, images
-
-	Rectangle2D lifeSymbolRegion();
-
-	Rectangle2D bonusSymbolRegion(int symbol);
-
-	Image bonusSymbolImage(int symbol);
-
-	Rectangle2D bonusValueRegion(int symbol);
-
-	Image bonusValueImage(int symbol);
 
 	// Animations
 
