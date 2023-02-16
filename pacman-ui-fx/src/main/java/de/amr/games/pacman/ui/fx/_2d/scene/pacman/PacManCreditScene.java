@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -67,6 +68,6 @@ public class PacManCreditScene extends GameScene2D {
 		r.drawText(g, "BONUS PAC-MAN FOR 10000", Rendering2D.Palette.ROSE, normalFont, t(1), t(25));
 		r.drawText(g, "PTS", Rendering2D.Palette.ROSE, smallFont, t(25), t(25));
 		r.drawCopyright(g, 29);
-		r.drawLevelCounter(g, context.game().levelCounter());
+		r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 }

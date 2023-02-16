@@ -31,6 +31,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -100,7 +101,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		intro.context().ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, intro.context().msPacMan);
 		r.drawCopyright(g, 29);
-		r.drawLevelCounter(g, context.game().levelCounter());
+		r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	private void drawTitle() {

@@ -83,7 +83,7 @@ public class PlayScene2D extends GameScene2D {
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
 				r.drawLivesCounter(g, lives);
 			}
-			r.drawLevelCounter(g, context.game().levelCounter());
+			r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 		});
 	}
 

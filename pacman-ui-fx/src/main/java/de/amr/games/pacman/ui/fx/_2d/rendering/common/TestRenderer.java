@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.List;
+import java.util.Optional;
 
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
@@ -244,7 +245,10 @@ public class TestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, List<Byte> levelCounter) {
+	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
+		levelNumber.ifPresent(number -> {
+			drawText(g, "Level %s".formatted(number), Color.WHITE, arcadeFont(8), 18 * TS, 36 * TS - 2);
+		});
 	}
 
 	@Override
@@ -258,7 +262,6 @@ public class TestRenderer implements Rendering2D {
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			g.setFill(Color.YELLOW);
 			g.fillOval(x + t(2 * i) - HTS, y - HTS, 2 * TS, 2 * TS);
-//			drawSprite(g, lifeSymbolRegion(), x + t(2 * i), y);
 		}
 	}
 

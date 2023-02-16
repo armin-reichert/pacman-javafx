@@ -32,6 +32,7 @@ import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -124,7 +125,7 @@ public class PacManIntroScene extends GameScene2D {
 		}
 		default -> throw new IllegalArgumentException("Unknown intro state: " + intro.state());
 		}
-		context.r2D().drawLevelCounter(g, context.game().levelCounter());
+		context.r2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	private void drawCopyright() {
