@@ -41,6 +41,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameAssets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -180,6 +181,7 @@ public class TestRenderer2D implements Rendering2D {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
+		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, arcadeFont(8), t(4), t(tileY));
 	}
 
 	@Override
@@ -235,14 +237,13 @@ public class TestRenderer2D implements Rendering2D {
 				if (world.containsFood(tile)) {
 					g.setFill(mazeFoodColor(mazeNumber));
 					if (world.isEnergizerTile(tile)) {
-						g.fillOval(tile.x() * TS + 1, tile.y() * TS + 1, 6, 6);
+						g.fillOval(tile.x() * TS, tile.y() * TS, 8, 8);
 					} else {
 						g.fillRect(tile.x() * TS + 3, tile.y() * TS + 3, 2, 2);
 					}
 				}
 			}
 		}
-
 	}
 
 	@Override
