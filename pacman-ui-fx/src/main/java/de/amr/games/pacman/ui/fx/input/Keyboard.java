@@ -50,7 +50,7 @@ public class Keyboard {
 		} else {
 			currentKeyEvent = e;
 			e.consume();
-			LOG.trace("Key event (%s) consumed: %s", e.getCode(), e);
+			LOG.trace("Key event (%s) accepted: %s", e.getCode(), e);
 		}
 	}
 

@@ -39,6 +39,8 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
@@ -91,6 +93,7 @@ public class GameUI implements GameEventListener {
 	private final GameView gameView;
 	private final SoundHandler soundHandler = new SoundHandler();
 
+	private KeyboardSteering manualSteering;
 	private GameScene currentGameScene;
 
 	public GameUI(Stage primaryStage, Settings settings) {
@@ -102,14 +105,13 @@ public class GameUI implements GameEventListener {
 		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		gameView.setRenderer(GameVariant.PACMAN, new PacManGameRenderer());
 
-		var manualSteering = new KeyboardSteering( //
+		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //
 				settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), //
 				settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(manualSteering);
 
-		gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering::onKeyPressed);
 		gameView.scene().setOnKeyPressed(this::onKeyPressed);
 		gameView.scene().heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
@@ -171,6 +173,14 @@ public class GameUI implements GameEventListener {
 			changeGameScene(nextGameScene);
 		}
 		gameView.update(gameController.game().variant());
+
+		// TODO check this
+		gameView.scene().removeEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+		LOG.trace("Manual steering deactivated");
+		if (nextGameScene instanceof PlayScene2D || nextGameScene instanceof PlayScene3D) {
+			gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+			LOG.trace("Manual steering activated");
+		}
 	}
 
 	private void changeGameScene(GameScene nextGameScene) {

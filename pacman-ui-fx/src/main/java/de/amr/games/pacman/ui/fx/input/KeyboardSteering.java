@@ -27,6 +27,7 @@ import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Creature;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -36,7 +37,7 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-public class KeyboardSteering implements Steering {
+public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
 	private Direction dir;
 	private KeyCodeCombination up;
@@ -51,7 +52,16 @@ public class KeyboardSteering implements Steering {
 		this.right = new KeyCodeCombination(right);
 	}
 
-	public void onKeyPressed(KeyEvent e) {
+	@Override
+	public void steer(GameLevel level, Creature guy) {
+		if (dir != null) {
+			guy.setWishDir(dir);
+			dir = null;
+		}
+	}
+
+	@Override
+	public void handle(KeyEvent e) {
 		dir = null;
 		if (up.match(e)) {
 			dir = Direction.UP;
@@ -64,14 +74,6 @@ public class KeyboardSteering implements Steering {
 		}
 		if (dir != null) {
 			e.consume();
-		}
-	}
-
-	@Override
-	public void steer(GameLevel level, Creature guy) {
-		if (dir != null) {
-			guy.setWishDir(dir);
-			dir = null;
 		}
 	}
 }
