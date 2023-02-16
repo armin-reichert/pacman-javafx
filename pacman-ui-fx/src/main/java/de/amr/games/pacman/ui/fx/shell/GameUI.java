@@ -102,28 +102,28 @@ public class GameUI implements GameEventListener {
 		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		gameView.setRenderer(GameVariant.PACMAN, new PacManGameRenderer());
 
-		var manualSteering = new KeyboardSteering(settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN),
-				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+		var manualSteering = new KeyboardSteering( //
+				settings.keyMap.get(Direction.UP), //
+				settings.keyMap.get(Direction.DOWN), //
+				settings.keyMap.get(Direction.LEFT), //
+				settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(manualSteering);
 
+		gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering::onKeyPressed);
+		gameView.scene().setOnKeyPressed(this::onKeyPressed);
 		gameView.scene().heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
-		gameView.scene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering::onKeyPressed);
-		gameView.scene().setOnKeyPressed(e -> {
-			if (Keyboard.accept(e))
-				onKeyPressed();
-		});
+		gameView.dashboard().init(this);
 
 		initEnv(settings);
+		GameEvents.addListener(this);
+		Actions.setUI(this);
 
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
-		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
-		Env.ThreeD.enabledPy.set(settings.use3D);
-		Env.ThreeD.perspectivePy.set(settings.perspective);
 
 		Env.PiP.sceneHeightPy
 				.addListener((py, oldVal, newVal) -> gameView.pipPlayScene().resizeToHeight(newVal.doubleValue()));
@@ -133,6 +133,10 @@ public class GameUI implements GameEventListener {
 		simulation.pausedPy.bind(Env.Simulation.pausedPy);
 		simulation.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		simulation.measuredPy.bind(Env.Simulation.timeMeasuredPy);
+
+		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> gameView.update(gameController.game().variant()));
+		Env.ThreeD.enabledPy.set(settings.use3D);
+		Env.ThreeD.perspectivePy.set(settings.perspective);
 	}
 
 	public void start() {
@@ -140,18 +144,14 @@ public class GameUI implements GameEventListener {
 			LOG.info("Game has already been started");
 			return;
 		}
-		GameEvents.addListener(this);
-		Actions.setUI(this);
-		gameView.dashboard().init(this);
 		gameController.boot(); // after booting, current game scene is initialized
 		gameView.show();
-
-		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
-
 		simulation.start();
+
 		LOG.info("Game started. Game loop target frame rate: %d", simulation.targetFrameratePy.get());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(gameView.stage().getWidth(),
 				gameView.stage().getHeight(), U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
+		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
 	}
 
 	public void stop() {
@@ -185,7 +185,10 @@ public class GameUI implements GameEventListener {
 		currentGameScene = nextGameScene;
 	}
 
-	private void onKeyPressed() {
+	private void onKeyPressed(KeyEvent e) {
+		if (!Keyboard.accept(e)) {
+			return;
+		}
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
