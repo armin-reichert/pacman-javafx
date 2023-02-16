@@ -34,6 +34,7 @@ import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
@@ -168,6 +169,11 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	@Override
 	public void drawGhost(GraphicsContext g, Ghost ghost) {
 		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
+	}
+
+	@Override
+	public void drawGhostFacingRight(GraphicsContext g, int id, int x, int y) {
+		drawSpriteCenteredOverBox(g, ghostRegion(id, Direction.RIGHT), x, y);
 	}
 
 	@Override

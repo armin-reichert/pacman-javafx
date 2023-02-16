@@ -237,6 +237,13 @@ public class TestRenderer implements Rendering2D {
 	}
 
 	@Override
+	public void drawGhostFacingRight(GraphicsContext g, int id, int x, int y) {
+		var color = ghostColor(id);
+		g.setFill(color);
+		g.fillOval(x - HTS, y - HTS, 2 * TS, 2 * TS);
+	}
+
+	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 	}
 

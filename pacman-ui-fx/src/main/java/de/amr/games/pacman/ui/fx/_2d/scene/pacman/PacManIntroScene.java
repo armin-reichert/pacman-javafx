@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
-import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -152,7 +151,8 @@ public class PacManIntroScene extends GameScene2D {
 			}
 			int tileY = 7 + 3 * id;
 			var color = r.ghostColor(id);
-			r.drawSpriteCenteredOverBox(g, r.ghostRegion(id, Direction.RIGHT), t(col) + 4, t(tileY));
+			r.drawGhostFacingRight(g, id, t(col) + 4, t(tileY));
+//			r.drawSpriteCenteredOverBox(g, r.ghostRegion(id, Direction.RIGHT), t(col) + 4, t(tileY));
 			if (intro.context().characterVisible[id]) {
 				r.drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(tileY + 1));
 			}
