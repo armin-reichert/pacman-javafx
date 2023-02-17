@@ -182,7 +182,7 @@ public class PacManTestRenderer2D implements Rendering2D {
 
 	public void drawGhostBody(GraphicsContext g, Ghost ghost, Color color) {
 		g.setFill(color);
-		g.fillRect(ghost.position().x() - 2, ghost.position().y() - 4, 12, 16);
+		g.fillRoundRect(ghost.position().x() - 2, ghost.position().y() - 4, 12, 16, 6, 8);
 	}
 
 	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
