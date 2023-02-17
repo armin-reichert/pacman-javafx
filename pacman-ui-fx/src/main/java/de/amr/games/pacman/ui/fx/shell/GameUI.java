@@ -76,7 +76,6 @@ public class GameUI implements GameEventListener {
 		public void doUpdate() {
 			gameController.update();
 			currentGameScene.onTick();
-			Keyboard.clearState();
 		}
 
 		@Override
@@ -112,7 +111,7 @@ public class GameUI implements GameEventListener {
 				settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(manualSteering);
 
-		gameView.scene().setOnKeyPressed(this::onKeyPressed);
+		gameView.scene().setOnKeyPressed(this::handleKeyPressed);
 		gameView.scene().heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 		gameView.dashboard().init(this);
@@ -122,6 +121,12 @@ public class GameUI implements GameEventListener {
 		Actions.setUI(this);
 
 		LOG.info("Created game UI, Application settings: %s", settings);
+	}
+
+	private void handleKeyPressed(KeyEvent keyEvent) {
+		Keyboard.consume(keyEvent);
+		handleKeyboardInput();
+		Keyboard.clearState();
 	}
 
 	private void initEnv(Settings settings) {
@@ -200,8 +205,7 @@ public class GameUI implements GameEventListener {
 		LOG.trace("Manual Pac-Man steering is %s", enabled ? "enabled" : "disabled");
 	}
 
-	private void onKeyPressed(KeyEvent e) {
-		Keyboard.consume(e);
+	private void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {

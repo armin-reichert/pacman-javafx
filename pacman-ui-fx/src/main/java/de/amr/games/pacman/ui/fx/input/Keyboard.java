@@ -46,11 +46,11 @@ public class Keyboard {
 	public static void consume(KeyEvent e) {
 		if (e.isConsumed()) {
 			currentKeyEvent = null;
-			LOG.trace("Key event (%s) rejected: %s", e.getCode(), e);
+			LOG.trace("Ignored key event (%s): %s", e.getCode(), e);
 		} else {
 			currentKeyEvent = e;
 			e.consume();
-			LOG.trace("Key event (%s) accepted: %s", e.getCode(), e);
+			LOG.trace("Consumed key event (%s): %s", e.getCode(), e);
 		}
 	}
 
