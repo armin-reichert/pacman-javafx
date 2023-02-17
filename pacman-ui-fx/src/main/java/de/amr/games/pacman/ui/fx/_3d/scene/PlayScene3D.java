@@ -170,7 +170,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void onKeyPressed() {
+	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
 			Actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {

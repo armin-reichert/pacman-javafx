@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -106,9 +105,9 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-	 * Called when a key has been pressed. The keyboard state can be queried using the {@link Keyboard} class.
+	 * Handles keyboard input.
 	 */
-	default void onKeyPressed() {
+	default void handleKeyboardInput() {
 		// empty default
 	}
 
