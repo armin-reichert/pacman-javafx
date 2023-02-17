@@ -156,7 +156,26 @@ public class PacManTestRenderer2D implements Rendering2D {
 			return;
 		}
 		switch (ghost.state()) {
-		case EATEN, RETURNING_TO_HOUSE, ENTERING_HOUSE -> {
+		case EATEN -> {
+			if (ghost.killedIndex() >= 0) {
+				g.setStroke(Palette.CYAN);
+				g.setFont(Font.font("Sans", 10));
+				var text = switch (ghost.killedIndex()) {
+				case 0 -> "200";
+				case 1 -> "400";
+				case 2 -> "800";
+				case 3 -> "1600";
+				default -> "???";
+				};
+				g.strokeText(text, ghost.position().x(), ghost.position().y() + 6);
+			} else {
+				var color = Color.WHITE;
+				g.setStroke(color);
+				g.strokeOval(ghost.position().x() - 3, ghost.position().y() + 2, 4, 4);
+				g.strokeOval(ghost.position().x() + 3, ghost.position().y() + 2, 4, 4);
+			}
+		}
+		case RETURNING_TO_HOUSE, ENTERING_HOUSE -> {
 			var color = Color.WHITE;
 			g.setStroke(color);
 			g.strokeOval(ghost.position().x() - 3, ghost.position().y() + 2, 4, 4);
@@ -164,12 +183,9 @@ public class PacManTestRenderer2D implements Rendering2D {
 		}
 		case FRIGHTENED -> {
 			var color = Color.BLUE;
-			var animation = ghost.animation();
-			if (animation.isPresent()) {
-				var ga = animation.get();
-				if ((boolean) ga.frame()) {
-					color = Color.WHITE;
-				}
+			var flashing = ghost.animation();
+			if (flashing.isPresent() && (boolean) flashing.get().frame()) {
+				color = Color.WHITE;
 			}
 			g.setFill(color);
 			g.fillOval(ghost.position().x() - HTS, ghost.position().y() - HTS, 2 * TS, 2 * TS);
