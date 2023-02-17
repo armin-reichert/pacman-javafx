@@ -164,9 +164,12 @@ public class PacManTestRenderer2D implements Rendering2D {
 		}
 		case FRIGHTENED -> {
 			var color = Color.BLUE;
-			var flashing = ghost.animation();
-			if (flashing.isPresent() && (boolean) flashing.get().frame()) {
-				color = Color.WHITE;
+			var animation = ghost.animation();
+			if (animation.isPresent()) {
+				var ga = animation.get();
+				if ((boolean) ga.frame()) {
+					color = Color.WHITE;
+				}
 			}
 			g.setFill(color);
 			g.fillOval(ghost.position().x() - HTS, ghost.position().y() - HTS, 2 * TS, 2 * TS);
