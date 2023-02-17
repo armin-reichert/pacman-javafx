@@ -79,11 +79,12 @@ public class SectionGhostsInfo extends Section {
 		if (anims.isEmpty()) {
 			return InfoText.NO_INFO;
 		}
-		var animKey = anims.get().selectedKey().name();
+		var key = anims.get().selectedKey();
+		var animKeyName = key != null ? key.name() : "n/a";
 		var selectedAnim = anims.get().selectedAnimation();
 		if (selectedAnim.isPresent()) {
 			var running = selectedAnim.get().isRunning();
-			return "%s %s".formatted(animKey, running ? "" : "stopped");
+			return "%s %s".formatted(animKeyName, running ? "" : "stopped");
 		} else {
 			return InfoText.NO_INFO;
 		}

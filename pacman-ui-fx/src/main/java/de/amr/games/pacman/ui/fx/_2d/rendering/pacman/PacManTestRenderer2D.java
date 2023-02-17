@@ -101,7 +101,13 @@ public class PacManTestRenderer2D implements Rendering2D {
 
 	@Override
 	public EntityAnimationMap<AnimKeys> createGhostAnimations(Ghost ghost) {
-		return null;
+		var map = new EntityAnimationMap<AnimKeys>(5);
+//		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
+//		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
+//		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
+		map.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
+//		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
+		return map;
 	}
 
 	@Override
@@ -115,8 +121,8 @@ public class PacManTestRenderer2D implements Rendering2D {
 	}
 
 	@Override
-	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		return null;
+	public SingleEntityAnimation<Boolean> createGhostFlashingAnimation() {
+		return new Pulse(6, true);
 	}
 
 	@Override
@@ -158,6 +164,10 @@ public class PacManTestRenderer2D implements Rendering2D {
 		}
 		case FRIGHTENED -> {
 			var color = Color.BLUE;
+			var flashing = ghost.animation();
+			if (flashing.isPresent() && (boolean) flashing.get().frame()) {
+				color = Color.WHITE;
+			}
 			g.setFill(color);
 			g.fillOval(ghost.position().x() - HTS, ghost.position().y() - HTS, 2 * TS, 2 * TS);
 

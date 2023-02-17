@@ -93,7 +93,7 @@ public interface Rendering2D {
 
 	SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation();
 
-	SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation();
+	SingleEntityAnimation<?> createGhostFlashingAnimation();
 
 	EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost);
 
