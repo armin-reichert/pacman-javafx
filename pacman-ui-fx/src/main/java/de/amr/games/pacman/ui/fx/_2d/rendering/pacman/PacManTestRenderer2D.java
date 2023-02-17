@@ -33,6 +33,7 @@ import java.util.Optional;
 
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
@@ -125,7 +126,7 @@ public class PacManTestRenderer2D implements Rendering2D {
 
 	@Override
 	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation() {
-		return null;
+		return new Pulse(10, true);
 	}
 
 	@Override
@@ -223,22 +224,22 @@ public class PacManTestRenderer2D implements Rendering2D {
 	}
 
 	@Override
-	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash) {
-//		drawWalls(g, mazeNumber, world);
+	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
+		drawWalls(g, mazeNumber, world, flash);
 	}
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
-		drawWalls(g, mazeNumber, world);
+		drawWalls(g, mazeNumber, world, false);
 		drawFood(g, mazeNumber, world, energizersHidden);
 	}
 
-	private void drawWalls(GraphicsContext g, int mazeNumber, World world) {
+	private void drawWalls(GraphicsContext g, int mazeNumber, World world, boolean flash) {
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);
 				if (world.isWall(tile)) {
-					g.setFill(Color.CHOCOLATE);
+					g.setFill(flash ? Color.WHITE : Color.CHOCOLATE);
 					g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
 				}
 			}

@@ -101,7 +101,7 @@ public class PlayScene2D extends GameScene2D {
 		var flashing = level.world().animation(ArcadeWorld.FLASHING);
 		if (flashing.isPresent() && flashing.get().isRunning()) {
 			boolean flash = (boolean) flashing.get().frame();
-			r.drawEmptyMaze(g, x, y, mazeNumber, flash);
+			r.drawEmptyMaze(g, x, y, mazeNumber, level.world(), flash);
 		} else {
 			var energizerPulse = level.world().animation(ArcadeWorld.ENERGIZER_PULSE);
 			if (energizerPulse.isPresent()) {

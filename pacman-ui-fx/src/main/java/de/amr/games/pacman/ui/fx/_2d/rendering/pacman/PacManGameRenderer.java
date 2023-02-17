@@ -33,8 +33,8 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -98,7 +98,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash) {
+	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
 		g.drawImage(flash ? PacManGameAssets.MAZE_EMPTY_INV : PacManGameAssets.MAZE_EMPTY, x, y);
 	}
 
