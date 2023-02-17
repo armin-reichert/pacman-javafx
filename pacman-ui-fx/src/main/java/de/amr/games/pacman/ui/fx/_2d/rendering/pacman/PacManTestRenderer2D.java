@@ -158,28 +158,13 @@ public class PacManTestRenderer2D implements Rendering2D {
 		switch (ghost.state()) {
 		case EATEN -> {
 			if (ghost.killedIndex() >= 0) {
-				g.setStroke(Palette.CYAN);
-				g.setFont(Font.font("Sans", 10));
-				var text = switch (ghost.killedIndex()) {
-				case 0 -> "200";
-				case 1 -> "400";
-				case 2 -> "800";
-				case 3 -> "1600";
-				default -> "???";
-				};
-				g.strokeText(text, ghost.position().x(), ghost.position().y() + 6);
+				drawGhostBounty(g, ghost);
 			} else {
-				var color = Color.WHITE;
-				g.setStroke(color);
-				g.strokeOval(ghost.position().x() - 3, ghost.position().y() + 2, 4, 4);
-				g.strokeOval(ghost.position().x() + 3, ghost.position().y() + 2, 4, 4);
+				drawGhostEyes(g, ghost);
 			}
 		}
 		case RETURNING_TO_HOUSE, ENTERING_HOUSE -> {
-			var color = Color.WHITE;
-			g.setStroke(color);
-			g.strokeOval(ghost.position().x() - 3, ghost.position().y() + 2, 4, 4);
-			g.strokeOval(ghost.position().x() + 3, ghost.position().y() + 2, 4, 4);
+			drawGhostEyes(g, ghost);
 		}
 		case FRIGHTENED -> {
 			var color = Color.BLUE;
@@ -197,6 +182,26 @@ public class PacManTestRenderer2D implements Rendering2D {
 			g.fillOval(ghost.position().x() - HTS, ghost.position().y() - HTS, 2 * TS, 2 * TS);
 		}
 		}
+	}
+
+	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
+		g.setStroke(Palette.CYAN);
+		g.setFont(Font.font("Sans", 10));
+		var text = switch (ghost.killedIndex()) {
+		case 0 -> "200";
+		case 1 -> "400";
+		case 2 -> "800";
+		case 3 -> "1600";
+		default -> "???";
+		};
+		g.strokeText(text, ghost.position().x(), ghost.position().y() + 6);
+	}
+
+	public void drawGhostEyes(GraphicsContext g, Ghost ghost) {
+		var color = Color.WHITE;
+		g.setStroke(color);
+		g.strokeOval(ghost.position().x() - 3, ghost.position().y() + 2, 4, 4);
+		g.strokeOval(ghost.position().x() + 3, ghost.position().y() + 2, 4, 4);
 	}
 
 	@Override
