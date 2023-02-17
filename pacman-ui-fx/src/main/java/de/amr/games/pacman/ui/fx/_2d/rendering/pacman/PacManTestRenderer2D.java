@@ -224,10 +224,16 @@ public class PacManTestRenderer2D implements Rendering2D {
 
 	@Override
 	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, boolean flash) {
+//		drawWalls(g, mazeNumber, world);
 	}
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
+		drawWalls(g, mazeNumber, world);
+		drawFood(g, mazeNumber, world, energizersHidden);
+	}
+
+	private void drawWalls(GraphicsContext g, int mazeNumber, World world) {
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);
@@ -235,10 +241,20 @@ public class PacManTestRenderer2D implements Rendering2D {
 					g.setFill(Color.CHOCOLATE);
 					g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
 				}
+			}
+		}
+	}
+
+	private void drawFood(GraphicsContext g, int mazeNumber, World world, boolean energizersHidden) {
+		for (int row = 0; row < world.numRows(); ++row) {
+			for (int col = 0; col < world.numCols(); ++col) {
+				var tile = new Vector2i(col, row);
 				if (world.containsFood(tile)) {
 					g.setFill(mazeFoodColor(mazeNumber));
 					if (world.isEnergizerTile(tile)) {
-						g.fillOval(tile.x() * TS, tile.y() * TS, TS, TS);
+						if (!energizersHidden) {
+							g.fillOval(tile.x() * TS, tile.y() * TS, TS, TS);
+						}
 					} else {
 						g.fillRect(tile.x() * TS + 3, tile.y() * TS + 3, 2, 2);
 					}
