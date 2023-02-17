@@ -172,21 +172,22 @@ public class PacManTestRenderer2D implements Rendering2D {
 			if (flashing.isPresent() && (boolean) flashing.get().frame()) {
 				color = Color.WHITE;
 			}
-			g.setFill(color);
-			g.fillOval(ghost.position().x() - HTS, ghost.position().y() - HTS, 2 * TS, 2 * TS);
-
+			drawGhostBody(g, ghost, color);
 		}
 		default -> {
-			var color = ghostColor(ghost.id());
-			g.setFill(color);
-			g.fillOval(ghost.position().x() - HTS, ghost.position().y() - HTS, 2 * TS, 2 * TS);
+			drawGhostBody(g, ghost, ghostColor(ghost.id()));
 		}
 		}
 	}
 
+	public void drawGhostBody(GraphicsContext g, Ghost ghost, Color color) {
+		g.setFill(color);
+		g.fillRect(ghost.position().x() - 2, ghost.position().y() - 4, 12, 16);
+	}
+
 	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
 		g.setStroke(Palette.CYAN);
-		g.setFont(Font.font("Sans", 10));
+		g.setFont(Font.font("Sans", 8));
 		var text = switch (ghost.killedIndex()) {
 		case 0 -> "200";
 		case 1 -> "400";
@@ -208,11 +209,19 @@ public class PacManTestRenderer2D implements Rendering2D {
 	public void drawGhostFacingRight(GraphicsContext g, int id, int x, int y) {
 		var color = ghostColor(id);
 		g.setFill(color);
-		g.fillOval(x - HTS, y - HTS, 2 * TS, 2 * TS);
+		g.fillRect(x - 2, y - 4, 12, 16);
 	}
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
+		var x = bonus.entity().position().x();
+		var y = bonus.entity().position().y() + 8;
+		switch (bonus.state()) {
+		case EDIBLE -> drawText(g, "Bonus", Color.YELLOW, arcadeFont(8), x - 20, y);
+		case EATEN -> drawText(g, bonus.points() + "", Color.RED, arcadeFont(8), x - 8, y);
+		default -> {
+		}
+		}
 	}
 
 	@Override
