@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -85,13 +84,13 @@ public interface Rendering2D {
 
 	EntityAnimationByDirection createPacMunchingAnimation(Pac pac);
 
-	SingleEntityAnimation<Rectangle2D> createPacDyingAnimation();
+	SingleEntityAnimation<?> createPacDyingAnimation();
 
 	EntityAnimationMap<AnimKeys> createGhostAnimations(Ghost ghost);
 
 	EntityAnimationByDirection createGhostColorAnimation(Ghost ghost);
 
-	SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation();
+	SingleEntityAnimation<?> createGhostBlueAnimation();
 
 	SingleEntityAnimation<?> createGhostFlashingAnimation();
 
