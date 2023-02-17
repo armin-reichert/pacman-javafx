@@ -32,7 +32,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -152,10 +151,11 @@ public class GameUI implements GameEventListener {
 		gameView.show();
 		simulation.start();
 
-		LOG.info("Game started. Game loop target frame rate: %d", simulation.targetFrameratePy.get());
+		LOG.info("Game started. Target frame rate: %d", simulation.targetFrameratePy.get());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(gameView.stage().getWidth(),
-				gameView.stage().getHeight(), U.onOff(Env.ThreeD.enabledPy.get()), Env.ThreeD.perspectivePy.get()));
-		Ufx.afterSeconds(1.0, Actions::playHelpVoiceMessage).play();
+				gameView.stage().getHeight(), Env.ThreeD.enabledPy.get(), Env.ThreeD.perspectivePy.get()));
+
+		Ufx.afterSeconds(1, Actions::playHelpVoiceMessage).play();
 	}
 
 	public void stop() {
@@ -165,11 +165,11 @@ public class GameUI implements GameEventListener {
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
+		var matching = GameSceneManager.getSceneVariantsMatchingGameState(gameController);
 		var use3D = Env.ThreeD.enabledPy.get();
-		var variants = GameSceneManager.getSceneVariantsMatchingGameState(gameController);
-		var nextGameScene = (use3D && variants.scene3D() != null) ? variants.scene3D() : variants.scene2D();
+		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
 		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found.");
+			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
@@ -188,6 +188,7 @@ public class GameUI implements GameEventListener {
 		updateManualPacManSteering(nextGameScene);
 		gameView.embedGameScene(nextGameScene);
 		currentGameScene = nextGameScene;
+		LOG.trace("Game scene changed to %s".formatted(nextGameScene));
 	}
 
 	private void updateManualPacManSteering(GameScene gameScene) {
