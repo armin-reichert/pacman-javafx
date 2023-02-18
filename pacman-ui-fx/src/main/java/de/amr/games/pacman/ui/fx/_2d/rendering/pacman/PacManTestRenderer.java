@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
@@ -291,11 +290,12 @@ public class PacManTestRenderer implements Rendering2D {
 			return;
 		}
 		int x = t(2);
-		int y = t(ArcadeWorld.SIZE_TILES.y() - 2);
+		int y = t(ArcadeWorld.SIZE_TILES.y() - 1);
 		int maxLives = 5;
+		int size = 14;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			g.setFill(Color.YELLOW);
-			g.fillOval(x + t(2 * i) - HTS, y - HTS, 2 * TS, 2 * TS);
+			g.fillOval(x + t(2 * i) - 7, y - 7, size, size);
 		}
 	}
 
