@@ -46,7 +46,6 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -134,7 +133,7 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
+	public SingleEntityAnimation<?> createGhostBlueAnimation() {
 		return null;
 	}
 
