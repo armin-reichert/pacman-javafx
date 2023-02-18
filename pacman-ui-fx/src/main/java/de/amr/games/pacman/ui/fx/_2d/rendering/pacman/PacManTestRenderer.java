@@ -31,6 +31,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
+import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.Pulse;
@@ -91,7 +92,7 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac) {
 		var map = new EntityAnimationMap<AnimKeys>(2);
-//		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
+		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
 		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
 		map.select(AnimKeys.PAC_MUNCHING);
 		return map;
@@ -110,8 +111,10 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
-		return null;
+	public SingleEntityAnimation<Integer> createPacDyingAnimation() {
+		var animation = new SingleEntityAnimation<>(45, 60, 75, 90, 135, 180, 225, 270, 315, 360);
+		animation.setFrameDuration(8);
+		return animation;
 	}
 
 	@Override
@@ -160,22 +163,41 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
-			pac.animation().ifPresent(munching -> {
-				int radius = 7;
-				float x = pac.position().x() - radius / 2;
-				float y = pac.position().y() - radius / 2;
-				int openess = (int) munching.frame();
-				int start = openess / 2;
-				int fromAngle = switch (pac.moveDir()) {
-				case RIGHT -> start;
-				case UP -> start + 90;
-				case LEFT -> start + 180;
-				case DOWN -> start + 270;
-				};
-				g.setFill(Color.YELLOW);
-				g.fillArc(x, y, 2 * radius, 2 * radius, fromAngle, 360 - openess, ArcType.ROUND);
+			pac.animation().ifPresent(animation -> {
+				if (pac.animations().get().isSelected(AnimKeys.PAC_MUNCHING)) {
+					drawPacMunching(g, pac, animation);
+				} else if (pac.animations().get().isSelected(AnimKeys.PAC_DYING)) {
+					drawPacDying(g, pac, animation);
+				}
 			});
 		}
+	}
+
+	private void drawPacMunching(GraphicsContext g, Pac pac, EntityAnimation munching) {
+		int radius = 7;
+		float x = pac.position().x() - radius / 2;
+		float y = pac.position().y() - radius / 2;
+		int openess = (int) munching.frame();
+		int start = openess / 2;
+		int fromAngle = switch (pac.moveDir()) {
+		case RIGHT -> start;
+		case UP -> start + 90;
+		case LEFT -> start + 180;
+		case DOWN -> start + 270;
+		};
+		g.setFill(Color.YELLOW);
+		g.fillArc(x, y, 2 * radius, 2 * radius, fromAngle, 360 - openess, ArcType.ROUND);
+	}
+
+	private void drawPacDying(GraphicsContext g, Pac pac, EntityAnimation dying) {
+		int radius = 7;
+		float x = pac.position().x() - radius / 2;
+		float y = pac.position().y() - radius / 2;
+		int openess = (int) (dying.isRunning() ? dying.frame() : 360);
+		int start = openess / 2;
+		int fromAngle = start + 90;
+		g.setFill(Color.YELLOW);
+		g.fillArc(x, y, 2 * radius, 2 * radius, fromAngle, 360 - openess, ArcType.ROUND);
 	}
 
 	@Override
