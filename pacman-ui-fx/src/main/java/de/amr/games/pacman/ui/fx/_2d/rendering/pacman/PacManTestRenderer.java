@@ -153,13 +153,11 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
-			pac.animation().ifPresent(animation -> {
-				if (pac.animations().get().isSelected(AnimKeys.PAC_MUNCHING)) {
-					drawPacMunching(g, pac, animation);
-				} else if (pac.animations().get().isSelected(AnimKeys.PAC_DYING)) {
-					drawPacDying(g, pac, animation);
-				}
-			});
+			if (pac.isAnimationSelected(AnimKeys.PAC_MUNCHING)) {
+				drawPacMunching(g, pac, pac.animation().get());
+			} else if (pac.isAnimationSelected(AnimKeys.PAC_DYING)) {
+				drawPacDying(g, pac, pac.animation().get());
+			}
 		}
 	}
 
