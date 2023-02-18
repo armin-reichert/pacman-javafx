@@ -331,7 +331,7 @@ public class PacManTestRenderer implements Rendering2D {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);
 				if (world.isWall(tile)) {
-					g.setFill(flash ? Color.WHITE : Color.CHOCOLATE);
+					g.setFill(flash ? Color.WHITE : Color.SADDLEBROWN);
 					g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
 				}
 			}

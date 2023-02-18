@@ -65,8 +65,6 @@ import javafx.stage.Stage;
  */
 public class GameUI implements GameEventListener {
 
-	private static boolean useTestRenderer = true;
-
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public class Simulation extends GameLoop {
@@ -104,7 +102,8 @@ public class GameUI implements GameEventListener {
 				settings.fullScreen);
 
 		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		gameView.setRenderer(GameVariant.PACMAN, useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+		gameView.setRenderer(GameVariant.PACMAN,
+				settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
 
 		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //

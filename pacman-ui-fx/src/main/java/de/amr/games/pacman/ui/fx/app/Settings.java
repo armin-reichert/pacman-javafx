@@ -73,6 +73,7 @@ public class Settings {
 	public final GameVariant variant;
 	public final float zoom;
 	public final Map<Direction, KeyCode> keyMap;
+	public final boolean useTestRenderer;
 
 	@SuppressWarnings("unchecked")
 	public Settings(Map<String, String> parameters) {
@@ -83,6 +84,7 @@ public class Settings {
 		variant = parse(parameters, "variant", GameVariant.PACMAN, GameVariant::valueOf);
 		zoom = parse(parameters, "zoom", 2.0f, Float::valueOf);
 		keyMap = (Map<Direction, KeyCode>) parse(parameters, "keys", "cursor", Settings::parseKeyMap);
+		useTestRenderer = parse(parameters, "useTestRenderer", false, Boolean::valueOf);
 	}
 
 	@Override
