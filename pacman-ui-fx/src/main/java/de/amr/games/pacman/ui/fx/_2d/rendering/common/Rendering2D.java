@@ -90,7 +90,11 @@ public interface Rendering2D {
 
 	// Drawing
 
-	void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y);
+	default void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
+	}
 
 	void drawPac(GraphicsContext g, Pac pac);
 

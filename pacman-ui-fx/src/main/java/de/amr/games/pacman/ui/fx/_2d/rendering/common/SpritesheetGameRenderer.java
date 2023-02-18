@@ -231,11 +231,4 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		drawText(g, "GAME  OVER", Palette.RED, SCREEN_FONT, t(9), t(21));
 	}
 
-	@Override
-	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
-
 }
