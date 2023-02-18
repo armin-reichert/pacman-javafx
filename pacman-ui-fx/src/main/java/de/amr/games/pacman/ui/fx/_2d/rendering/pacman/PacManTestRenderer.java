@@ -151,13 +151,6 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
-
-	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
 			pac.animation().ifPresent(animation -> {
