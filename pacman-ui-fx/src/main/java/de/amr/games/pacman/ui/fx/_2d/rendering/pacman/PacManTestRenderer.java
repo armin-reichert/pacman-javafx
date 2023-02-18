@@ -235,7 +235,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
 		g.setStroke(Palette.CYAN);
-		g.setFont(Font.font("Sans", 8));
+		g.setFont(Font.font("Sans", 10));
 		var text = switch (ghost.killedIndex()) {
 		case 0 -> "200";
 		case 1 -> "400";
@@ -243,7 +243,7 @@ public class PacManTestRenderer implements Rendering2D {
 		case 3 -> "1600";
 		default -> "???";
 		};
-		g.strokeText(text, ghost.position().x(), ghost.position().y() + 6);
+		g.strokeText(text, ghost.position().x() - 4, ghost.position().y() + 6);
 	}
 
 	public void drawGhostEyes(GraphicsContext g, Ghost ghost) {

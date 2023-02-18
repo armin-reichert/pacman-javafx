@@ -81,7 +81,9 @@ public class Sounds {
 	}
 
 	public void play(SoundClipID sound) {
-		loop(sound, 1);
+		if (!isPlaying(sound)) {
+			loop(sound, 1);
+		}
 	}
 
 	public void ensureLoop(SoundClipID sound, int repetitions) {

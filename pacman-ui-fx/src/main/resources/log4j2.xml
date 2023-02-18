@@ -37,7 +37,7 @@
 		<Logger name="de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx.input.Keyboard" level="trace" additivity="false">
+		<Logger name="de.amr.games.pacman.ui.fx.input.Keyboard" level="info" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Logger name="de.amr.games.pacman.ui.fx.sound.common.GameSounds" level="trace" additivity="false">
