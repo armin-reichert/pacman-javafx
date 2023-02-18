@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
@@ -55,6 +56,20 @@ import javafx.scene.transform.Scale;
 public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+
+	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
+		g.save();
+		g.translate(0.5, 0.5);
+		g.setStroke(Palette.PALE);
+		g.setLineWidth(0.2);
+		for (int row = 0; row <= tilesY; ++row) {
+			g.strokeLine(0, t(row), tilesX * TS, t(row));
+		}
+		for (int col = 0; col <= tilesY; ++col) {
+			g.strokeLine(t(col), 0, t(col), tilesY * TS);
+		}
+		g.restore();
+	}
 
 	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "overlayPaneVisible", false);
 
@@ -106,10 +121,10 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (scoresVisible) {
-			game.score().ifPresent(
-					score -> r.drawScore(g, score.points(), score.levelNumber(), "SCORE", Rendering2D.Palette.PALE, t(1), t(1)));
-			game.highScore().ifPresent(score -> r.drawScore(g, score.points(), score.levelNumber(), "HISCORE",
-					Rendering2D.Palette.PALE, t(16), t(1)));
+			game.score()
+					.ifPresent(score -> r.drawScore(g, score.points(), score.levelNumber(), "SCORE", Palette.PALE, t(1), t(1)));
+			game.highScore().ifPresent(
+					score -> r.drawScore(g, score.points(), score.levelNumber(), "HISCORE", Palette.PALE, t(16), t(1)));
 		}
 		if (creditVisible) {
 			r.drawCredit(g, game.credit());

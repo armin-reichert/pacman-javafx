@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.SCREEN_FONT;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -58,38 +59,6 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class SpritesheetGameRenderer implements Rendering2D {
 
-	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
-
-	static {
-		//@formatter:off
-		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(
-			Palette.RED,  Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
-		);
-
-		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColoring(
-			Palette.PINK, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
-		);
-
-		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColoring(
-			Palette.CYAN, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
-		);
-		
-		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(
-			Palette.ORANGE, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE,   Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE,   Palette.ROSE, Palette.RED   // flashing
-		);
-		//@formatter:on
-	}
-
-	public static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
-
 	public abstract Spritesheet spritesheet();
 
 	public void hideTileContent(GraphicsContext g, int mazeNumber, Vector2i tile) {
@@ -98,13 +67,13 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public Font arcadeFont(double size) {
-		return size == TS ? ARCADE_FONT_TS : Font.font(ARCADE_FONT_TS.getFamily(), size);
+	public Font screenFont(double size) {
+		return size == TS ? SCREEN_FONT : Font.font(SCREEN_FONT.getFamily(), size);
 	}
 
 	@Override
 	public Color ghostColor(int ghostID) {
-		return GHOST_COLORS[ghostID].normalDress();
+		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
 	}
 
 	@Override
@@ -236,7 +205,7 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	@Override
 	public void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y) {
-		var font = ARCADE_FONT_TS;
+		var font = SCREEN_FONT;
 		drawText(g, title, color, font, x, y);
 		var pointsText = "%02d".formatted(points);
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
@@ -247,19 +216,19 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	@Override
 	public void drawCredit(GraphicsContext g, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, arcadeFont(TS), t(2), t(36) - 1);
+		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, screenFont(TS), t(2), t(36) - 1);
 	}
 
 	@Override
 	public void drawGameReadyMessage(GraphicsContext g) {
-		drawText(g, "READY", Palette.YELLOW, ARCADE_FONT_TS, t(11), t(21));
-		var italic = Font.font(ARCADE_FONT_TS.getFamily(), FontPosture.ITALIC, ARCADE_FONT_TS.getSize());
+		drawText(g, "READY", Palette.YELLOW, SCREEN_FONT, t(11), t(21));
+		var italic = Font.font(SCREEN_FONT.getFamily(), FontPosture.ITALIC, SCREEN_FONT.getSize());
 		drawText(g, "!", Palette.YELLOW, italic, t(16), t(21));
 	}
 
 	@Override
 	public void drawGameOverMessage(GraphicsContext g) {
-		drawText(g, "GAME  OVER", Palette.RED, ARCADE_FONT_TS, t(9), t(21));
+		drawText(g, "GAME  OVER", Palette.RED, SCREEN_FONT, t(9), t(21));
 	}
 
 	@Override
@@ -269,17 +238,4 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		g.fillText(text, x, y);
 	}
 
-	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
-		g.save();
-		g.translate(0.5, 0.5);
-		g.setStroke(Palette.PALE);
-		g.setLineWidth(0.2);
-		for (int row = 0; row <= tilesY; ++row) {
-			g.strokeLine(0, t(row), tilesX * TS, t(row));
-		}
-		for (int col = 0; col <= tilesY; ++col) {
-			g.strokeLine(t(col), 0, t(col), tilesY * TS);
-		}
-		g.restore();
-	}
 }

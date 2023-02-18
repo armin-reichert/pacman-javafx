@@ -31,7 +31,7 @@ import java.util.Random;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -93,8 +93,8 @@ public class BootScene extends GameScene2D {
 
 	private void drawRandomHexCodes() {
 		clearBuffer();
-		bufferContext.setFill(Rendering2D.Palette.PALE);
-		bufferContext.setFont(context.r2D().arcadeFont(TS));
+		bufferContext.setFill(Palette.PALE);
+		bufferContext.setFont(context.r2D().screenFont(TS));
 		for (int row = 0; row < SIZE_TILES.y(); ++row) {
 			for (int col = 0; col < SIZE_TILES.x(); ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));
@@ -139,7 +139,7 @@ public class BootScene extends GameScene2D {
 		var cellSize = 16;
 		var numRows = SIZE_TILES.y() / 2;
 		var numCols = SIZE_TILES.x() / 2;
-		bufferContext.setStroke(Rendering2D.Palette.PALE);
+		bufferContext.setStroke(Palette.PALE);
 		bufferContext.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
 			bufferContext.strokeLine(0, row * cellSize, SIZE_PIXELS.x(), row * cellSize);

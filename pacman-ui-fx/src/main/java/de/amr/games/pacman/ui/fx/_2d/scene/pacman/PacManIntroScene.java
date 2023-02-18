@@ -32,7 +32,7 @@ import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -139,11 +139,11 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGallery() {
 		var r = context.r2D();
 		var col = PacManIntroData.LEFT_TILE;
-		var font = context.r2D().arcadeFont(TS);
+		var font = context.r2D().screenFont(TS);
 		if (intro.context().titleVisible) {
-			r.drawText(g, "CHARACTER", Rendering2D.Palette.PALE, font, t(col + 3), t(6));
-			r.drawText(g, "/", Rendering2D.Palette.PALE, font, t(col + 13), t(6));
-			r.drawText(g, "NICKNAME", Rendering2D.Palette.PALE, font, t(col + 15), t(6));
+			r.drawText(g, "CHARACTER", Palette.PALE, font, t(col + 3), t(6));
+			r.drawText(g, "/", Palette.PALE, font, t(col + 13), t(6));
+			r.drawText(g, "NICKNAME", Palette.PALE, font, t(col + 15), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().pictureVisible[id]) {
@@ -199,11 +199,11 @@ public class PacManIntroScene extends GameScene2D {
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
 			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
 		}
-		g.setFill(Rendering2D.Palette.PALE);
-		g.setFont(context.r2D().arcadeFont(TS));
+		g.setFill(Palette.PALE);
+		g.setFont(context.r2D().screenFont(TS));
 		g.fillText("10", t(tileX + 2), t(tileY));
 		g.fillText("50", t(tileX + 2), t(tileY + 2));
-		g.setFont(context.r2D().arcadeFont(6));
+		g.setFont(context.r2D().screenFont(6));
 		g.fillText("PTS", t(tileX + 5), t(tileY));
 		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
 	}

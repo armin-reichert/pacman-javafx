@@ -106,22 +106,22 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	private void drawTitle() {
 		var r = context.r2D();
-		r.drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, r.arcadeFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
+		r.drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, r.screenFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
 	}
 
 	private void drawGhostText(Ghost ghost) {
 		var r = context.r2D();
 		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			r.drawText(g, "WITH", Color.WHITE, r.arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+			r.drawText(g, "WITH", Color.WHITE, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
 		}
-		r.drawText(g, ghost.name().toUpperCase(), r.ghostColor(ghost.id()), r.arcadeFont(TS),
+		r.drawText(g, ghost.name().toUpperCase(), r.ghostColor(ghost.id()), r.screenFont(TS),
 				t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
 		var r = context.r2D();
-		r.drawText(g, "STARRING", Color.WHITE, r.arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
-		r.drawText(g, "MS PAC-MAN", Color.YELLOW, r.arcadeFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
+		r.drawText(g, "STARRING", Color.WHITE, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+		r.drawText(g, "MS PAC-MAN", Color.YELLOW, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
 	}
 
 	// TODO this is not exactly as in the original game

@@ -36,6 +36,8 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
@@ -144,7 +146,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		g.setFill(Color.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
-		g.setFont(ARCADE_FONT_TS);
+		g.setFont(ArcadeTheme.SCREEN_FONT);
 		g.fillText("MIDWAY MFG CO", x + t(7), y + t(2));
 		g.fillText("1980/1981", x + t(8), y + t(4));
 	}
@@ -229,7 +231,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 			clap.animation().map(EntityAnimation::animate).ifPresent(frame -> {
 				var sprite = (Rectangle2D) frame;
 				drawEntitySprite(g, clap, sprite);
-				g.setFont(ARCADE_FONT_TS);
+				g.setFont(ArcadeTheme.SCREEN_FONT);
 				g.setFill(Palette.PALE);
 				g.fillText(String.valueOf(clap.sceneNumber), clap.position().x() + sprite.getWidth() - 25,
 						clap.position().y() + 18);

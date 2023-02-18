@@ -34,6 +34,7 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -45,18 +46,7 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	class Palette {
-		public static final Color RED = Color.rgb(255, 0, 0);
-		public static final Color YELLOW = Color.YELLOW;
-		public static final Color PINK = Color.rgb(252, 181, 255);
-		public static final Color CYAN = Color.rgb(0, 255, 255);
-		public static final Color ORANGE = Color.rgb(251, 190, 88);
-		public static final Color BLUE = Color.rgb(33, 33, 255);
-		public static final Color PALE = Color.rgb(222, 222, 255);
-		public static final Color ROSE = Color.rgb(252, 187, 179);
-	}
-
-	Font arcadeFont(double size);
+	Font screenFont(double size);
 
 	default Color ghostColor(int ghostID) {
 		return switch (ghostID) {

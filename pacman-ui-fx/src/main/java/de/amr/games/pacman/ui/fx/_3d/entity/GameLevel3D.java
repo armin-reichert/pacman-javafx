@@ -39,6 +39,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -107,7 +108,7 @@ public class GameLevel3D extends Group {
 		livesCounter3D.setTranslateZ(-HTS);
 		livesCounter3D().setVisible(level.game().hasCredit());
 
-		var scoreFont = r2D.arcadeFont(TS);
+		var scoreFont = r2D.screenFont(TS);
 		scores3D = new Scores3D(scoreFont);
 
 		getChildren().add(world3D);
@@ -122,7 +123,7 @@ public class GameLevel3D extends Group {
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
-		var ghost3D = new Ghost3D(ghost, SpritesheetGameRenderer.GHOST_COLORS[ghost.id()]);
+		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
 		ghost3D.init(level);
 		ghost3D.drawModePy.bind(drawModePy);
 		return ghost3D;

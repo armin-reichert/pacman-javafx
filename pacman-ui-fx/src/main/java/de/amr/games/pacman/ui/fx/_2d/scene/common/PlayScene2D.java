@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer.drawTileStructure;
 
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;

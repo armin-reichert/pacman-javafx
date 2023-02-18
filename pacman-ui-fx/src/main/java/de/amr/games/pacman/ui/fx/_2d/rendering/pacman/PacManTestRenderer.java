@@ -43,6 +43,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.canvas.GraphicsContext;
@@ -58,7 +59,7 @@ public class PacManTestRenderer implements Rendering2D {
 	public static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
 
 	@Override
-	public Font arcadeFont(double size) {
+	public Font screenFont(double size) {
 		return Font.font(ARCADE_FONT_TS.getFamily(), size);
 	}
 

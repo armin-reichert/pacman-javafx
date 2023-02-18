@@ -117,7 +117,7 @@ public class PacManCutscene3 extends GameScene2D {
 	@Override
 	protected void drawOverlayPaneContent() {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(context.r2D().arcadeFont(TS));
+			g.setFont(context.r2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));
