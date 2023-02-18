@@ -47,6 +47,7 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 
 /**
@@ -147,8 +148,16 @@ public class PacManTestRenderer2D implements Rendering2D {
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
+			var start = 45;
+			var extent = 360 - 2 * start;
+			var startAngle = switch (pac.moveDir()) {
+			case RIGHT -> start;
+			case UP -> start + 90;
+			case LEFT -> start + 180;
+			case DOWN -> start + 270;
+			};
 			g.setFill(Color.YELLOW);
-			g.fillOval(pac.position().x() - HTS, pac.position().y() - HTS, 2 * TS, 2 * TS);
+			g.fillArc(pac.position().x() - HTS, pac.position().y() - HTS, 2 * TS, 2 * TS, startAngle, extent, ArcType.ROUND);
 		}
 	}
 
@@ -265,7 +274,7 @@ public class PacManTestRenderer2D implements Rendering2D {
 
 	@Override
 	public void drawCredit(GraphicsContext g, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, ARCADE_FONT_TS, t(2), t(36) - 1);
+		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, ARCADE_FONT_TS, t(2), t(36) - 2);
 	}
 
 	@Override
