@@ -100,7 +100,7 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
-		var animation = new SingleEntityAnimation<>(0, 0, 1, 1, 2, 2, 1, 1);
+		var animation = new SingleEntityAnimation<>(0, 0, 90, 90, 120, 120, 90, 90);
 		animation.setFrameDuration(1);
 		animation.repeatForever();
 		for (var dir : Direction.values()) {
@@ -161,23 +161,19 @@ public class PacManTestRenderer implements Rendering2D {
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
 			pac.animation().ifPresent(munching -> {
-				var openess = (int) munching.frame();
-				var start = switch (openess) {
-				case 0 -> 0;
-				case 1 -> 45;
-				case 2 -> 60;
-				default -> 0;
-				};
-				var extent = 360 - 2 * start;
-				var startAngle = switch (pac.moveDir()) {
+				int radius = 7;
+				float x = pac.position().x() - radius / 2;
+				float y = pac.position().y() - radius / 2;
+				int openess = (int) munching.frame();
+				int start = openess / 2;
+				int fromAngle = switch (pac.moveDir()) {
 				case RIGHT -> start;
 				case UP -> start + 90;
 				case LEFT -> start + 180;
 				case DOWN -> start + 270;
 				};
 				g.setFill(Color.YELLOW);
-				g.fillArc(pac.position().x() - HTS, pac.position().y() - HTS, 2 * TS, 2 * TS, startAngle, extent,
-						ArcType.ROUND);
+				g.fillArc(x, y, 2 * radius, 2 * radius, fromAngle, 360 - openess, ArcType.ROUND);
 			});
 		}
 	}
