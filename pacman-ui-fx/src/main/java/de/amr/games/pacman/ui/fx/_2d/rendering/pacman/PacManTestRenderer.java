@@ -36,6 +36,7 @@ import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -89,12 +90,23 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac) {
-		return null;
+		var map = new EntityAnimationMap<AnimKeys>(2);
+//		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
+		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
+		map.select(AnimKeys.PAC_MUNCHING);
+		return map;
 	}
 
 	@Override
 	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
-		return null;
+		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
+		var animation = new SingleEntityAnimation<>(0, 0, 1, 1, 2, 2, 1, 1);
+		animation.setFrameDuration(1);
+		animation.repeatForever();
+		for (var dir : Direction.values()) {
+			animationByDir.put(dir, animation);
+		}
+		return animationByDir;
 	}
 
 	@Override
@@ -148,16 +160,25 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
-			var start = 45;
-			var extent = 360 - 2 * start;
-			var startAngle = switch (pac.moveDir()) {
-			case RIGHT -> start;
-			case UP -> start + 90;
-			case LEFT -> start + 180;
-			case DOWN -> start + 270;
-			};
-			g.setFill(Color.YELLOW);
-			g.fillArc(pac.position().x() - HTS, pac.position().y() - HTS, 2 * TS, 2 * TS, startAngle, extent, ArcType.ROUND);
+			pac.animation().ifPresent(munching -> {
+				var openess = (int) munching.frame();
+				var start = switch (openess) {
+				case 0 -> 0;
+				case 1 -> 45;
+				case 2 -> 60;
+				default -> 0;
+				};
+				var extent = 360 - 2 * start;
+				var startAngle = switch (pac.moveDir()) {
+				case RIGHT -> start;
+				case UP -> start + 90;
+				case LEFT -> start + 180;
+				case DOWN -> start + 270;
+				};
+				g.setFill(Color.YELLOW);
+				g.fillArc(pac.position().x() - HTS, pac.position().y() - HTS, 2 * TS, 2 * TS, startAngle, extent,
+						ArcType.ROUND);
+			});
 		}
 	}
 
