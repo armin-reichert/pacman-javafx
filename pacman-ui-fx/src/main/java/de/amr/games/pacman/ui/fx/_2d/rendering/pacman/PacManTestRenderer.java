@@ -53,7 +53,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class PacManTestRenderer2D implements Rendering2D {
+public class PacManTestRenderer implements Rendering2D {
 
 	public static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
 

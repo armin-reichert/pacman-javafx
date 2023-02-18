@@ -38,7 +38,7 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManTestRenderer2D;
+import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -64,6 +64,8 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class GameUI implements GameEventListener {
+
+	private static boolean useTestRenderer = true;
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
@@ -102,8 +104,7 @@ public class GameUI implements GameEventListener {
 				settings.fullScreen);
 
 		gameView.setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		gameView.setRenderer(GameVariant.PACMAN, new PacManGameRenderer());
-		gameView.setRenderer(GameVariant.PACMAN, new PacManTestRenderer2D());
+		gameView.setRenderer(GameVariant.PACMAN, useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
 
 		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //
