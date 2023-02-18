@@ -43,9 +43,9 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -56,11 +56,9 @@ import javafx.scene.text.Font;
  */
 public class PacManTestRenderer implements Rendering2D {
 
-	public static final Font ARCADE_FONT_TS = ResourceMgr.font("fonts/emulogic.ttf", TS);
-
 	@Override
 	public Font screenFont(double size) {
-		return Font.font(ARCADE_FONT_TS.getFamily(), size);
+		return Font.font(ArcadeTheme.SCREEN_FONT.getFamily(), size);
 	}
 
 	@Override
@@ -266,8 +264,8 @@ public class PacManTestRenderer implements Rendering2D {
 		var x = bonus.entity().position().x();
 		var y = bonus.entity().position().y() + 8;
 		switch (bonus.state()) {
-		case EDIBLE -> drawText(g, "Bonus", Color.YELLOW, ARCADE_FONT_TS, x - 20, y);
-		case EATEN -> drawText(g, bonus.points() + "", Color.RED, ARCADE_FONT_TS, x - 8, y);
+		case EDIBLE -> drawText(g, "Bonus", Color.YELLOW, ArcadeTheme.SCREEN_FONT, x - 20, y);
+		case EATEN -> drawText(g, bonus.points() + "", Color.RED, ArcadeTheme.SCREEN_FONT, x - 8, y);
 		default -> {
 		}
 		}
@@ -275,13 +273,13 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, ARCADE_FONT_TS, t(4), t(tileY));
+		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(tileY));
 	}
 
 	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
 		levelNumber.ifPresent(number -> {
-			drawText(g, "Level %s".formatted(number), Color.WHITE, ARCADE_FONT_TS, 18 * TS, 36 * TS - 2);
+			drawText(g, "Level %s".formatted(number), Color.WHITE, ArcadeTheme.SCREEN_FONT, 18 * TS, 36 * TS - 2);
 		});
 	}
 
@@ -302,7 +300,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y) {
-		var font = ARCADE_FONT_TS;
+		var font = ArcadeTheme.SCREEN_FONT;
 		drawText(g, title, color, font, x, y);
 		var pointsText = "%02d".formatted(points);
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
@@ -313,7 +311,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawCredit(GraphicsContext g, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, ARCADE_FONT_TS, t(2), t(36) - 2);
+		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, ArcadeTheme.SCREEN_FONT, t(2), t(36) - 2);
 	}
 
 	@Override
@@ -359,11 +357,11 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawGameReadyMessage(GraphicsContext g) {
-		drawText(g, "READY!", Palette.YELLOW, ARCADE_FONT_TS, t(11), t(21));
+		drawText(g, "READY!", Palette.YELLOW, ArcadeTheme.SCREEN_FONT, t(11), t(21));
 	}
 
 	@Override
 	public void drawGameOverMessage(GraphicsContext g) {
-		drawText(g, "GAME  OVER", Palette.RED, ARCADE_FONT_TS, t(9), t(21));
+		drawText(g, "GAME  OVER", Palette.RED, ArcadeTheme.SCREEN_FONT, t(9), t(21));
 	}
 }
