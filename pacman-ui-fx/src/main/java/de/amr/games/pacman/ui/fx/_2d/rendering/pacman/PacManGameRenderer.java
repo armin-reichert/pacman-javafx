@@ -53,6 +53,11 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
+	public Color mazeBackgroundColor(int mazeNumber) {
+		return Palette.BLACK;
+	}
+
+	@Override
 	public Rectangle2D ghostRegion(int ghostID, Direction dir) {
 		return spritesheet().tile(2 * spritesheet().dirIndex(dir), 4 + ghostID);
 	}

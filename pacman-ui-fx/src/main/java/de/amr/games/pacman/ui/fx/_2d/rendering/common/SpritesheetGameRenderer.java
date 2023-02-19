@@ -69,11 +69,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
 	}
 
-	@Override
-	public Color mazeBackgroundColor(int mazeNumber) {
-		return Color.BLACK;
-	}
-
 	public abstract Rectangle2D ghostRegion(int ghostID, Direction dir);
 
 	public abstract Rectangle2D ghostValueRegion(int index);
