@@ -31,6 +31,7 @@ import de.amr.games.pacman.model.common.actors.BonusState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -101,6 +102,7 @@ public class Bonus3D extends Box {
 		rot.setAxis(Rotate.X_AXIS);
 		rot.setFromAngle(0);
 		rot.setToAngle(360);
+		rot.setInterpolator(Interpolator.LINEAR);
 		rot.setCycleCount(cycleCount);
 		rot.setRate(rate);
 		rot.play();

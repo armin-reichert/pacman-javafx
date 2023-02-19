@@ -30,6 +30,7 @@ import java.util.function.IntFunction;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -74,6 +75,7 @@ public class LevelCounter3D extends Group {
 		spinning.setCycleCount(Animation.INDEFINITE);
 		spinning.setByAngle(360);
 		spinning.setRate(forward ? 1 : -1);
+		spinning.setInterpolator(Interpolator.LINEAR);
 		spinning.play();
 		return cube;
 	}
