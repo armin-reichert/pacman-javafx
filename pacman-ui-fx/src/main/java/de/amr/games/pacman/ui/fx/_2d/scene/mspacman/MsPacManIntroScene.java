@@ -130,7 +130,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		int on = (int) t % (width / 2);
 		for (int i = 0; i < 2 * (width + height); ++i) {
 			var p = xy(i, width, height);
-			g.setFill((i + on) % (width / 2) == 0 ? Color.WHITE : Color.RED);
+			g.setFill(p.x() > 0 && (i + on) % (width / 2) == 0 ? Color.WHITE : Color.RED);
 			g.fillRect(BLINKY_END_TILE.x() + 4 * p.x(), BLINKY_END_TILE.y() + 4 * p.y(), 2, 2);
 		}
 	}
