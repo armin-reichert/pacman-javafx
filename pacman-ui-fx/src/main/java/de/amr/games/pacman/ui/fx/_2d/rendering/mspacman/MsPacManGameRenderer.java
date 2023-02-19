@@ -81,11 +81,6 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public Rectangle2D ghostRegion(int ghostID, Direction dir) {
-		return col3(2 * spritesheet().dirIndex(dir) + 1, 4 + ghostID);
-	}
-
-	@Override
 	public Rectangle2D ghostValueRegion(int index) {
 		return col3(index, 8);
 	}
@@ -98,6 +93,12 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public Rectangle2D bonusValueRegion(int symbol) {
 		return col3(3 + symbol, 1);
+	}
+
+	@Override
+	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
+		var region = col3(2 * spritesheet().dirIndex(Direction.RIGHT) + 1, 4 + ghostID);
+		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
 	@Override

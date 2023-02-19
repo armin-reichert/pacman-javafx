@@ -57,11 +57,6 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public Rectangle2D ghostRegion(int ghostID, Direction dir) {
-		return spritesheet().tile(2 * spritesheet().dirIndex(dir), 4 + ghostID);
-	}
-
-	@Override
 	public Rectangle2D ghostValueRegion(int index) {
 		return spritesheet().tile(index, 8);
 	}
@@ -86,6 +81,12 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation() {
 		return new Pulse(10, true);
+	}
+
+	@Override
+	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
+		var region = spritesheet().tile(2 * spritesheet().dirIndex(Direction.RIGHT), 4 + ghostID);
+		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
 	@Override
