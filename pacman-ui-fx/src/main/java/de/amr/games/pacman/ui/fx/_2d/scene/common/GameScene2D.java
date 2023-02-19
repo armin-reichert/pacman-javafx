@@ -124,7 +124,7 @@ public abstract class GameScene2D implements GameScene {
 			game.score()
 					.ifPresent(score -> r.drawScore(g, score.points(), score.levelNumber(), "SCORE", Palette.PALE, t(1), t(1)));
 			game.highScore().ifPresent(
-					score -> r.drawScore(g, score.points(), score.levelNumber(), "HISCORE", Palette.PALE, t(16), t(1)));
+					score -> r.drawScore(g, score.points(), score.levelNumber(), "HIGH SCORE", Palette.PALE, t(16), t(1)));
 		}
 		if (creditVisible) {
 			r.drawCredit(g, game.credit());
