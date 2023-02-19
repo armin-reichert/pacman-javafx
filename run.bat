@@ -1,1 +1,1 @@
-start /min .\tentackle\target\jlink\bin\run.cmd
+start "Pac-Man Game" /min .\tentackle\target\jlink\bin\run.cmd
