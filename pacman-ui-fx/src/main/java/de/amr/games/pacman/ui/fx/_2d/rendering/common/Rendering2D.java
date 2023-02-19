@@ -112,7 +112,7 @@ public interface Rendering2D {
 
 	void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y);
 
-	void drawCredit(GraphicsContext g, int credit);
+	void drawCredit(GraphicsContext g, int credit, int x, int y);
 
 	void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash);
 

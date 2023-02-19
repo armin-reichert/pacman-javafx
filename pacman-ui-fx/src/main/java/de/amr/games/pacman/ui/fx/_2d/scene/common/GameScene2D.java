@@ -127,7 +127,7 @@ public abstract class GameScene2D implements GameScene {
 					score -> r.drawScore(g, score.points(), score.levelNumber(), "HIGH SCORE", Palette.PALE, t(16), t(1)));
 		}
 		if (creditVisible) {
-			r.drawCredit(g, game.credit());
+			r.drawCredit(g, game.credit(), t(2), t(36) - 1);
 		}
 		if (overlayPaneVisiblePy.get()) {
 			drawOverlayPaneContent();

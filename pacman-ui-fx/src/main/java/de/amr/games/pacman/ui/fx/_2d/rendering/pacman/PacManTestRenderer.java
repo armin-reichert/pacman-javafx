@@ -301,8 +301,8 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawCredit(GraphicsContext g, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, ArcadeTheme.SCREEN_FONT, t(2), t(36) - 2);
+	public void drawCredit(GraphicsContext g, int credit, int x, int y) {
+		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, ArcadeTheme.SCREEN_FONT, x, y);
 	}
 
 	@Override

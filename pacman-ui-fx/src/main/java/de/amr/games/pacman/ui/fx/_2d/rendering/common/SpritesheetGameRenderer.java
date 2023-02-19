@@ -214,7 +214,7 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawCredit(GraphicsContext g, int credit) {
-		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, screenFont(TS), t(2), t(36) - 1);
+	public void drawCredit(GraphicsContext g, int credit, int x, int y) {
+		drawText(g, "CREDIT %2d".formatted(credit), Palette.PALE, screenFont(TS), x, y);
 	}
 }
