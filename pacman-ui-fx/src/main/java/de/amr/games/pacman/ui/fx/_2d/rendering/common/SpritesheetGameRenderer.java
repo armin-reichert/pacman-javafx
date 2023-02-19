@@ -49,7 +49,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 /**
@@ -218,17 +217,4 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	public void drawCredit(GraphicsContext g, int credit) {
 		drawText(g, "CREDIT  %d".formatted(credit), Palette.PALE, screenFont(TS), t(2), t(36) - 1);
 	}
-
-	@Override
-	public void drawGameReadyMessage(GraphicsContext g) {
-		drawText(g, "READY", Palette.YELLOW, SCREEN_FONT, t(11), t(21));
-		var italic = Font.font(SCREEN_FONT.getFamily(), FontPosture.ITALIC, SCREEN_FONT.getSize());
-		drawText(g, "!", Palette.YELLOW, italic, t(16), t(21));
-	}
-
-	@Override
-	public void drawGameOverMessage(GraphicsContext g) {
-		drawText(g, "GAME  OVER", Palette.RED, SCREEN_FONT, t(9), t(21));
-	}
-
 }

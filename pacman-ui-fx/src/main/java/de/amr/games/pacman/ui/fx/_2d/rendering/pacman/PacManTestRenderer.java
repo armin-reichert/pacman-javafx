@@ -345,14 +345,4 @@ public class PacManTestRenderer implements Rendering2D {
 			}
 		}
 	}
-
-	@Override
-	public void drawGameReadyMessage(GraphicsContext g) {
-		drawText(g, "READY!", Palette.YELLOW, ArcadeTheme.SCREEN_FONT, t(11), t(21));
-	}
-
-	@Override
-	public void drawGameOverMessage(GraphicsContext g) {
-		drawText(g, "GAME  OVER", Palette.RED, ArcadeTheme.SCREEN_FONT, t(9), t(21));
-	}
 }
