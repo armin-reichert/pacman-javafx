@@ -37,7 +37,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public final class MsPacManGameAssets {
+final class MsPacManGameAssets {
 
 	//@formatter:off
 	public static final Color[] MAZE_TOP_COLORS = { 

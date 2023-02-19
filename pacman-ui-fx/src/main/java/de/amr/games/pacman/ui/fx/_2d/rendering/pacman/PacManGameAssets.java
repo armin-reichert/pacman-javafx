@@ -36,7 +36,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public final class PacManGameAssets {
+final class PacManGameAssets {
 
 	public static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
 	public static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
