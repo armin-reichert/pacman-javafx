@@ -306,7 +306,7 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
+	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
 		drawWalls(g, mazeNumber, world, flash);
 	}
 

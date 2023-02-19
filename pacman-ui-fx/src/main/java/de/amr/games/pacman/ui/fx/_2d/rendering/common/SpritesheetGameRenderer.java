@@ -198,12 +198,12 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	@Override
 	public void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y) {
-		var font = SCREEN_FONT;
+		var font = screenFont(TS);
 		drawText(g, title, color, font, x, y);
 		var pointsText = "%02d".formatted(points);
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
 		if (points != 0) {
-			drawText(g, "L" + levelNumber, color, font, x + t(8), y + TS + 1);
+			drawText(g, "L%d".formatted(levelNumber), color, font, x + t(8), y + TS + 1);
 		}
 	}
 

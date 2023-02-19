@@ -123,7 +123,7 @@ public interface Rendering2D {
 
 	void drawCredit(GraphicsContext g, int credit, int x, int y);
 
-	void drawEmptyMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash);
+	void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash);
 
 	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden);
 }

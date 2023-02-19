@@ -71,7 +71,7 @@ public class PlayScene2D extends GameScene2D {
 	public void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			var r = context.r2D();
-			drawMaze(r, level, 0, t(3));
+			drawMaze(r, level.world(), level.game().mazeNumber(level.number()), 0, t(3));
 			drawGameState(r);
 			r.drawBonus(g, level.bonus());
 			r.drawPac(g, level.pac());
@@ -96,19 +96,18 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawMaze(Rendering2D r, GameLevel level, int x, int y) {
-		var mazeNumber = level.game().mazeNumber(level.number());
-		var flashing = level.world().animation(ArcadeWorld.FLASHING);
+	private void drawMaze(Rendering2D r, World world, int mazeNumber, int x, int y) {
+		var flashing = world.animation(ArcadeWorld.FLASHING);
 		if (flashing.isPresent() && flashing.get().isRunning()) {
 			boolean flash = (boolean) flashing.get().frame();
-			r.drawEmptyMaze(g, x, y, mazeNumber, level.world(), flash);
+			r.drawFlashingMaze(g, x, y, mazeNumber, world, flash);
 		} else {
-			var energizerPulse = level.world().animation(ArcadeWorld.ENERGIZER_PULSE);
+			var energizerPulse = world.animation(ArcadeWorld.ENERGIZER_PULSE);
 			if (energizerPulse.isPresent()) {
 				boolean dark = !(boolean) energizerPulse.get().frame();
-				r.drawMaze(g, x, y, mazeNumber, level.world(), dark);
+				r.drawMaze(g, x, y, mazeNumber, world, dark);
 			} else {
-				r.drawMaze(g, x, y, mazeNumber, level.world(), false);
+				r.drawMaze(g, x, y, mazeNumber, world, false);
 			}
 		}
 	}
