@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -91,9 +90,9 @@ public class PlayScene2D extends GameScene2D {
 	private void drawGameState(Rendering2D r) {
 		boolean showGameOverText = context.state() == GameState.GAME_OVER || !context.hasCredit();
 		if (showGameOverText) {
-			r.drawText(g, "GAME  OVER", Palette.RED, ArcadeTheme.SCREEN_FONT, t(9), t(21));
+			r.drawText(g, "GAME  OVER", Palette.RED, r.screenFont(TS), t(9), t(21));
 		} else if (context.state() == GameState.READY) {
-			r.drawText(g, "READY!", Palette.YELLOW, ArcadeTheme.SCREEN_FONT, t(11), t(21));
+			r.drawText(g, "READY!", Palette.YELLOW, r.screenFont(TS), t(11), t(21));
 		}
 	}
 
