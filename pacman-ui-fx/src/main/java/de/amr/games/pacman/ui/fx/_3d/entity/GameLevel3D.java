@@ -96,10 +96,11 @@ public class GameLevel3D extends Group {
 
 		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
 		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, sgr::bonusSymbolImage);
+			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
+					symbol -> sgr.image(sgr.bonusSymbolRegion(symbol)));
 		} else {
-			// TODO
-			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbolIndex -> null);
+			// TODO make this work for non-spritesheet based renderer
+			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbol -> null);
 		}
 		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
 		livesCounter3D = new LivesCounter3D(facingRight);

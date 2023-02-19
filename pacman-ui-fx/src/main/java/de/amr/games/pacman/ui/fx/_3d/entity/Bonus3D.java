@@ -66,8 +66,8 @@ public class Bonus3D extends Box {
 	public void showSymbol() {
 		// TODO make this work for all renderers
 		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			var symbolImage = sgr.bonusSymbolImage(bonus.symbol());
-			var imageView = new ImageView(symbolImage);
+			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
+			var imageView = new ImageView(sgr.image(symbolSprite));
 			imageView.setPreserveRatio(true);
 			imageView.setFitWidth(TS);
 			setTexture(imageView.getImage());
@@ -79,8 +79,8 @@ public class Bonus3D extends Box {
 	public void showPoints() {
 		// TODO make this work for all renderers
 		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			var pointsImage = sgr.bonusValueImage(bonus.symbol());
-			var imageView = new ImageView(pointsImage);
+			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
+			var imageView = new ImageView(sgr.image(pointsSprite));
 			imageView.setPreserveRatio(true);
 			imageView.setFitWidth(2 * TS);
 			setTexture(imageView.getImage());

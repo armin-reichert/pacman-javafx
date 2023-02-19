@@ -327,7 +327,7 @@ public class PlayScene3D implements GameScene {
 					int index = killedGhost.killedIndex();
 					// TODO make this work for all renderers
 					if (context.r2D() instanceof SpritesheetGameRenderer sgr) {
-						ghost3D.setNumberImage(sgr.ghostValueImage(index));
+						ghost3D.setNumberImage(sgr.image(sgr.ghostValueRegion(index)));
 					}
 				});
 			});

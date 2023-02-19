@@ -59,6 +59,10 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	public abstract Spritesheet spritesheet();
 
+	public Image image(Rectangle2D region) {
+		return spritesheet().subImage(region);
+	}
+
 	@Override
 	public Font screenFont(double size) {
 		return size == TS ? SCREEN_FONT : Font.font(SCREEN_FONT.getFamily(), size);
@@ -73,17 +77,11 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	public abstract Rectangle2D ghostValueRegion(int index);
 
-	public abstract Image ghostValueImage(int index);
-
 	public abstract Rectangle2D lifeSymbolRegion();
 
 	public abstract Rectangle2D bonusSymbolRegion(int symbol);
 
 	public abstract Rectangle2D bonusValueRegion(int symbol);
-
-	public abstract Image bonusSymbolImage(int symbol);
-
-	public abstract Image bonusValueImage(int symbol);
 
 	@Override
 	public EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac) {

@@ -39,7 +39,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -68,18 +67,8 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public Image ghostValueImage(int index) {
-		return spritesheet().subImage(ghostValueRegion(index));
-	}
-
-	@Override
 	public Rectangle2D bonusSymbolRegion(int symbol) {
 		return spritesheet().tile(2 + symbol, 3);
-	}
-
-	@Override
-	public Image bonusSymbolImage(int symbol) {
-		return spritesheet().subImage(bonusSymbolRegion(symbol));
 	}
 
 	@Override
@@ -92,11 +81,6 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 			return new Rectangle2D(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
 		return spritesheet().region(3, 5 + symbol, 3, 1);
-	}
-
-	@Override
-	public Image bonusValueImage(int symbol) {
-		return spritesheet().subImage(bonusValueRegion(symbol));
 	}
 
 	@Override
