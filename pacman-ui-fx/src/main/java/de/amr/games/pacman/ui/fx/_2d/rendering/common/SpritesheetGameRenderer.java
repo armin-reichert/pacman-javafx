@@ -34,7 +34,6 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -59,11 +58,6 @@ import javafx.scene.text.FontWeight;
 public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	public abstract Spritesheet spritesheet();
-
-	public void hideTileContent(GraphicsContext g, int mazeNumber, Vector2i tile) {
-		g.setFill(mazeBackgroundColor(mazeNumber));
-		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
-	}
 
 	@Override
 	public Font screenFont(double size) {

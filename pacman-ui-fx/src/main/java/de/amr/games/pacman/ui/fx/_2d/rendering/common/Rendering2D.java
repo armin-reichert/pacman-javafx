@@ -23,12 +23,16 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
+import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.t;
+
 import java.util.List;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -94,6 +98,11 @@ public interface Rendering2D {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
+	}
+
+	default void hideTileContent(GraphicsContext g, int mazeNumber, Vector2i tile) {
+		g.setFill(mazeBackgroundColor(mazeNumber));
+		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}
 
 	void drawPac(GraphicsContext g, Pac pac);
