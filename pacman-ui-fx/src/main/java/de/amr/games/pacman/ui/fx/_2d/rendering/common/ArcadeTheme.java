@@ -23,8 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
-
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.Color;
@@ -77,5 +75,5 @@ public class ArcadeTheme {
 		//@formatter:on
 	}
 
-	public static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", TS);
+	public static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", 8);
 }
