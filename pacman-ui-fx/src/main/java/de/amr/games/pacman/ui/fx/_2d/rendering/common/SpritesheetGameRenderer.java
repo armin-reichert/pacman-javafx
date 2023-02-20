@@ -67,11 +67,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		return size == TS ? SCREEN_FONT : Font.font(SCREEN_FONT.getFamily(), size);
 	}
 
-	@Override
-	public Color ghostColor(int ghostID) {
-		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
-	}
-
 	public abstract Rectangle2D ghostValueRegion(int index);
 
 	public abstract Rectangle2D lifeSymbolRegion();

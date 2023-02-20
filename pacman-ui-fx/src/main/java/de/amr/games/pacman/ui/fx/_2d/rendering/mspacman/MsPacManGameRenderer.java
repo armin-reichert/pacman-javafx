@@ -56,6 +56,11 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
+	public Color ghostColor(int ghostID) {
+		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
+	}
+
+	@Override
 	public Color mazeBackgroundColor(int mazeNumber) {
 		return Palette.BLACK;
 	}

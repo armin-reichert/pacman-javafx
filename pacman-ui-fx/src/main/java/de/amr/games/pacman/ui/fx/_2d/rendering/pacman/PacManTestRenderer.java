@@ -62,6 +62,11 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
+	public Color ghostColor(int ghostID) {
+		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
+	}
+
+	@Override
 	public Color mazeBackgroundColor(int mazeNumber) {
 		return Color.BLACK;
 	}

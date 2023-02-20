@@ -38,7 +38,6 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -52,15 +51,7 @@ public interface Rendering2D {
 
 	Font screenFont(double size);
 
-	default Color ghostColor(int ghostID) {
-		return switch (ghostID) {
-		case Ghost.ID_RED_GHOST -> Palette.RED;
-		case Ghost.ID_PINK_GHOST -> Palette.PINK;
-		case Ghost.ID_CYAN_GHOST -> Palette.CYAN;
-		case Ghost.ID_ORANGE_GHOST -> Palette.ORANGE;
-		default -> throw new IllegalArgumentException();
-		};
-	}
+	Color ghostColor(int ghostID);
 
 	Color mazeBackgroundColor(int mazeNumber);
 

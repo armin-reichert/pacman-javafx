@@ -31,6 +31,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
@@ -46,6 +47,11 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public Spritesheet spritesheet() {
 		return PacManGameAssets.SPRITESHEET;
+	}
+
+	@Override
+	public Color ghostColor(int ghostID) {
+		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
 	}
 
 	@Override
