@@ -132,7 +132,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		int x = t(6);
 		int y = t(tileY - 1);
 		g.drawImage(MsPacManGameAssets.MIDWAY_LOGO, x, y + 2, t(4) - 2, t(4));
-		g.setFill(Color.RED);
+		g.setFill(Palette.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
 		g.setFont(ArcadeTheme.SCREEN_FONT);
