@@ -34,6 +34,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -91,7 +92,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var r = context.r2D();
+		var r = (MsPacManGameRenderer) context.r2D();
 		drawTitle();
 		drawLights(32, 16);
 		if (intro.state() == MsPacManIntroState.GHOSTS) {

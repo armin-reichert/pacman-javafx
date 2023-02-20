@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
-import static de.amr.games.pacman.model.common.world.World.t;
-
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.Pulse;
@@ -33,7 +31,6 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
@@ -103,10 +100,10 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 		}
 	}
 
-	@Override
-	public void drawCopyright(GraphicsContext g, int tileY) {
-		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(tileY));
-	}
+//	@Override
+//	public void drawCopyright(GraphicsContext g, int tileY) {
+//		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(tileY));
+//	}
 
 	@Override
 	public Color mazeFoodColor(int mazeNumber) {

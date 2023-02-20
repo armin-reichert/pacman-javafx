@@ -263,11 +263,6 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawCopyright(GraphicsContext g, int tileY) {
-		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(tileY));
-	}
-
-	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
 		levelNumber.ifPresent(number -> {
 			drawText(g, "Level %s".formatted(number), Color.WHITE, ArcadeTheme.SCREEN_FONT, 18 * TS, 36 * TS - 2);

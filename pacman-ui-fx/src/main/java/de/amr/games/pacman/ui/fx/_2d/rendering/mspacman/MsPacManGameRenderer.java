@@ -128,7 +128,6 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		return col3(1, 0);
 	}
 
-	@Override
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
 		int y = t(tileY - 1);
