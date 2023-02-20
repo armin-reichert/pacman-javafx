@@ -175,38 +175,40 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGuys(int offsetX) {
+		var r = context.r2D();
 		var pacMan = intro.context().pacMan;
 		var ghosts = intro.context().ghosts;
 		if (offsetX == 0) {
 			for (var ghost : ghosts) {
-				context.r2D().drawGhost(g, ghost);
+				r.drawGhost(g, ghost);
 			}
 		} else {
-			context.r2D().drawGhost(g, ghosts[0]);
+			r.drawGhost(g, ghosts[0]);
 			g.save();
 			g.translate(offsetX, 0);
-			context.r2D().drawGhost(g, ghosts[1]);
-			context.r2D().drawGhost(g, ghosts[2]);
+			r.drawGhost(g, ghosts[1]);
+			r.drawGhost(g, ghosts[2]);
 			g.restore();
-			context.r2D().drawGhost(g, ghosts[3]);
+			r.drawGhost(g, ghosts[3]);
 		}
-		context.r2D().drawPac(g, pacMan);
+		r.drawPac(g, pacMan);
 	}
 
 	private void drawPoints() {
-		int tileX = PacManIntroData.LEFT_TILE + 6;
-		int tileY = 25;
-		g.setFill(context.r2D().mazeFoodColor(1));
-		g.fillRect(t(tileX) + 4.0, t(tileY - 1) + 4.0, 2, 2);
+		var r = context.r2D();
+		int col = PacManIntroData.LEFT_TILE + 6;
+		int row = 25;
+		g.setFill(r.mazeFoodColor(1));
+		g.fillRect(t(col) + 4, t(row - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
-			g.fillOval(t(tileX), t(tileY + 1), TS, TS);
+			g.fillOval(t(col), t(row + 1), TS, TS);
 		}
 		g.setFill(Palette.PALE);
-		g.setFont(context.r2D().screenFont(TS));
-		g.fillText("10", t(tileX + 2), t(tileY));
-		g.fillText("50", t(tileX + 2), t(tileY + 2));
-		g.setFont(context.r2D().screenFont(6));
-		g.fillText("PTS", t(tileX + 5), t(tileY));
-		g.fillText("PTS", t(tileX + 5), t(tileY + 2));
+		g.setFont(r.screenFont(TS));
+		g.fillText("10", t(col + 2), t(row));
+		g.fillText("50", t(col + 2), t(row + 2));
+		g.setFont(r.screenFont(6));
+		g.fillText("PTS", t(col + 5), t(row));
+		g.fillText("PTS", t(col + 5), t(row + 2));
 	}
 }
