@@ -100,11 +100,6 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 		}
 	}
 
-//	@Override
-//	public void drawCopyright(GraphicsContext g, int tileY) {
-//		drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(tileY));
-//	}
-
 	@Override
 	public Color mazeFoodColor(int mazeNumber) {
 		return PacManGameAssets.FOOD_COLOR;
