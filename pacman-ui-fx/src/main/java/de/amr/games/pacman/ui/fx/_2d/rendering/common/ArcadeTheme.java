@@ -37,7 +37,7 @@ public class ArcadeTheme {
 
 	public class Palette {
 		public static final Color RED = Color.rgb(255, 0, 0);
-		public static final Color YELLOW = Color.YELLOW;
+		public static final Color YELLOW = Color.rgb(255, 255, 0);
 		public static final Color PINK = Color.rgb(252, 181, 255);
 		public static final Color CYAN = Color.rgb(0, 255, 255);
 		public static final Color ORANGE = Color.rgb(251, 190, 88);
