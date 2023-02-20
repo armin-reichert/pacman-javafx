@@ -113,8 +113,6 @@ public interface Rendering2D {
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
-//	void drawCopyright(GraphicsContext g, int tileY);
-
 	void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
