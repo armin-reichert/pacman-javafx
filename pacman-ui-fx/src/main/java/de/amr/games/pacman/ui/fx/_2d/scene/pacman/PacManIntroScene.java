@@ -151,14 +151,14 @@ public class PacManIntroScene extends GameScene2D {
 			if (!intro.context().pictureVisible[id]) {
 				continue;
 			}
-			int tileY = 7 + 3 * id;
+			int row = 7 + 3 * id;
 			var color = r.ghostColor(id);
-			r.drawGhostFacingRight(g, id, t(col) + 4, t(tileY));
+			r.drawGhostFacingRight(g, id, t(col) + 4, t(row));
 			if (intro.context().characterVisible[id]) {
-				r.drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(tileY + 1));
+				r.drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(row + 1));
 			}
 			if (intro.context().nicknameVisible[id]) {
-				r.drawText(g, quote(intro.context().ghosts[id].name()), color, font, t(col + 14), t(tileY + 1));
+				r.drawText(g, quote(intro.context().ghosts[id].name()), color, font, t(col + 14), t(row + 1));
 			}
 		}
 	}
