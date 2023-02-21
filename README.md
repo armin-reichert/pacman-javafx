@@ -8,9 +8,7 @@ Both games can be played in 2D and 3D, you can switch between 2D and 3D by press
 
 ## How to run the released version
 
-Download the zip file `pacman-javafx-tentackle-1.0-jlink.zip` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Extract this file, open directory `bin`, start the application by executing the batch file `run.cmd`. 
-
-(Yes, this is a pain in the ass, but I haven't yet found a way to create e.g. a Windows .exe file. Gluon FX was my hope, but it seems that in the native Windows app created with Gluon, sound cannot be played. See https://stackoverflow.com/questions/72814285/gluon-fx-native-window-app-fails-no-glib-lite-in-java-library-path.)
+Download the executable jar file `pacman-ui-fx-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the File explorer. 
 
 ## How to build locally
 
@@ -25,11 +23,10 @@ This script
 - runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
 - creates a Maven artifact wrapping the jar file of the OBJ file [importer](http://www.interactivemesh.org/models/jfx3dimporter.html), 
 - runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (user interface),
-- runs the [Tentackle](https://tentackle.org/static-content/sitedocs/tentackle/latest/tentackle-jlink-maven-plugin/summary.html) packager to create a deployable zip file containing the application and all Java runtime components. 
 
 ## How to run the locally built version
 
-Execute the script `run.bat` or follow the steps above for the zip file inside the `tentackle\target` directory.
+The executable jar file is located in folder `pacman-javafx/pacman-ui-fx/target`. Run it by double-click.
 
 ## How to use
 
