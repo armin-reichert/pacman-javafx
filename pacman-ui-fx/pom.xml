@@ -1,20 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
 		<maven.compiler.source>18</maven.compiler.source>
 		<maven.compiler.target>18</maven.compiler.target>
 		<version.maven.compiler.plugin>3.10.1</version.maven.compiler.plugin>
 		<version.javafx>18.0.1</version.javafx>
 		<version.javafx.maven.plugin>0.0.8</version.javafx.maven.plugin>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>de.amr.games.pacman</groupId>
@@ -37,13 +34,24 @@
 			<version>1.0</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${version.maven.compiler.plugin}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Multi-Release>true</Multi-Release>
+						</manifestEntries>
+					</archive>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.openjfx</groupId>
@@ -53,7 +61,35 @@
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.4.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${mainClass}</mainClass>
+								</transformer>
+								<transformer
+									implementation="io.github.edwgiz.log4j.maven.plugins.shade.transformer.Log4j2PluginCacheFileTransformer"></transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>io.github.edwgiz</groupId>
+						<artifactId>log4j-maven-shade-plugin-extensions</artifactId>
+						<version>2.18.0</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
