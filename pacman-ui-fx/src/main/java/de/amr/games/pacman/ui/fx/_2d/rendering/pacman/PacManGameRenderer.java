@@ -33,7 +33,6 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,9 +43,8 @@ import javafx.scene.paint.Color;
  */
 public class PacManGameRenderer extends SpritesheetGameRenderer {
 
-	@Override
-	public Spritesheet spritesheet() {
-		return PacManGameAssets.SPRITESHEET;
+	public PacManGameRenderer() {
+		super(PacManGameAssets.SPRITESHEET);
 	}
 
 	@Override
@@ -61,24 +59,24 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public Rectangle2D ghostValueRegion(int index) {
-		return spritesheet().tile(index, 8);
+		return spritesheet.tile(index, 8);
 	}
 
 	@Override
 	public Rectangle2D bonusSymbolRegion(int symbol) {
-		return spritesheet().tile(2 + symbol, 3);
+		return spritesheet.tile(2 + symbol, 3);
 	}
 
 	@Override
 	public Rectangle2D bonusValueRegion(int symbol) {
 		if (symbol <= 3) {
-			return spritesheet().tile(symbol, 9);
+			return spritesheet.tile(symbol, 9);
 		}
 		if (symbol == 4) {
-			var region = spritesheet().region(4, 9, 2, 1);
+			var region = spritesheet.region(4, 9, 2, 1);
 			return new Rectangle2D(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
-		return spritesheet().region(3, 5 + symbol, 3, 1);
+		return spritesheet.region(3, 5 + symbol, 3, 1);
 	}
 
 	@Override
@@ -88,7 +86,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
-		var region = spritesheet().tile(2 * spritesheet().dirIndex(Direction.RIGHT), 4 + ghostID);
+		var region = spritesheet.tile(2 * spritesheet.dirIndex(Direction.RIGHT), 4 + ghostID);
 		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
@@ -128,17 +126,17 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public Rectangle2D lifeSymbolRegion() {
-		return spritesheet().tile(8, 1);
+		return spritesheet.tile(8, 1);
 	}
 
 	@Override
 	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
-			var wide = spritesheet().tile(0, d);
-			var middle = spritesheet().tile(1, d);
-			var closed = spritesheet().tile(2, 0);
+			int d = spritesheet.dirIndex(dir);
+			var wide = spritesheet.tile(0, d);
+			var middle = spritesheet.tile(1, d);
+			var closed = spritesheet.tile(2, 0);
 			var animation = new SingleEntityAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle);
 			animation.setFrameDuration(1);
 			animation.repeatForever();
@@ -149,7 +147,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().tilesRightOf(3, 0, 11));
+		var animation = new SingleEntityAnimation<>(spritesheet.tilesRightOf(3, 0, 11));
 		animation.setFrameDuration(8);
 		return animation;
 	}
@@ -158,8 +156,8 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	public EntityAnimationByDirection createGhostColorAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(spritesheet().tilesRightOf(2 * d, 4 + ghost.id(), 2));
+			int d = spritesheet.dirIndex(dir);
+			var animation = new SingleEntityAnimation<>(spritesheet.tilesRightOf(2 * d, 4 + ghost.id(), 2));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -169,7 +167,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().tile(8, 4), spritesheet().tile(9, 4));
+		var animation = new SingleEntityAnimation<>(spritesheet.tile(8, 4), spritesheet.tile(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
@@ -177,7 +175,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().tilesRightOf(8, 4, 4));
+		var animation = new SingleEntityAnimation<>(spritesheet.tilesRightOf(8, 4, 4));
 		animation.setFrameDuration(6);
 		return animation;
 	}
@@ -186,8 +184,8 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	public EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
-			animationByDir.put(dir, new SingleEntityAnimation<>(spritesheet().tile(8 + d, 5)));
+			int d = spritesheet.dirIndex(dir);
+			animationByDir.put(dir, new SingleEntityAnimation<>(spritesheet.tile(8 + d, 5)));
 		}
 		return animationByDir;
 	}
@@ -195,30 +193,30 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	// Pac-Man specific:
 
 	public SingleEntityAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().region(2, 1, 2, 2), spritesheet().region(4, 1, 2, 2),
-				spritesheet().region(6, 1, 2, 2));
+		var animation = new SingleEntityAnimation<>(spritesheet.region(2, 1, 2, 2), spritesheet.region(4, 1, 2, 2),
+				spritesheet.region(6, 1, 2, 2));
 		animation.setFrameDuration(3);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public FixedEntityAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new FixedEntityAnimation<>(spritesheet().tilesRightOf(8, 6, 5));
+		return new FixedEntityAnimation<>(spritesheet.tilesRightOf(8, 6, 5));
 	}
 
 	public FixedEntityAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new FixedEntityAnimation<>(spritesheet().tile(8, 7), spritesheet().tile(9, 7));
+		return new FixedEntityAnimation<>(spritesheet.tile(8, 7), spritesheet.tile(9, 7));
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().tile(10, 7), spritesheet().tile(11, 7));
+		var animation = new SingleEntityAnimation<>(spritesheet.tile(10, 7), spritesheet.tile(11, 7));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SingleEntityAnimation<>(spritesheet().region(8, 8, 2, 1), spritesheet().region(10, 8, 2, 1));
+		var animation = new SingleEntityAnimation<>(spritesheet.region(8, 8, 2, 1), spritesheet.region(10, 8, 2, 1));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;

@@ -38,7 +38,6 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -50,9 +49,8 @@ import javafx.scene.text.Font;
  */
 public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 
-	@Override
-	public Spritesheet spritesheet() {
-		return MsPacManGameAssets.SPRITESHEET;
+	public MsPacManGameRenderer() {
+		super(MsPacManGameAssets.SPRITESHEET);
 	}
 
 	@Override
@@ -102,7 +100,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
-		var region = col3(2 * spritesheet().dirIndex(Direction.RIGHT) + 1, 4 + ghostID);
+		var region = col3(2 * spritesheet.dirIndex(Direction.RIGHT) + 1, 4 + ghostID);
 		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
@@ -110,7 +108,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden) {
 		var w = MsPacManGameAssets.MAZE_WIDTH;
 		var h = MsPacManGameAssets.MAZE_HEIGHT;
-		g.drawImage(spritesheet().source(), 0, h * (mazeNumber - 1), w, h, x, y, w, h);
+		g.drawImage(spritesheet.source(), 0, h * (mazeNumber - 1), w, h, x, y, w, h);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, mazeNumber, tile));
 		if (energizersHidden) {
 			world.energizerTiles().forEach(tile -> hideTileContent(g, mazeNumber, tile));
@@ -124,7 +122,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		if (flash) {
 			g.drawImage(MsPacManGameAssets.MAZES_EMPTY_INV[mazeNumber - 1], x, y);
 		} else {
-			g.drawImage(spritesheet().source(), MsPacManGameAssets.SECOND_COLUMN, h * (mazeNumber - 1), w, h, x, y, w, h);
+			g.drawImage(spritesheet.source(), MsPacManGameAssets.SECOND_COLUMN, h * (mazeNumber - 1), w, h, x, y, w, h);
 		}
 	}
 
@@ -156,7 +154,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			var wide = col3(0, d);
 			var middle = col3(1, d);
 			var closed = col3(2, d);
@@ -184,7 +182,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	public EntityAnimationByDirection createGhostColorAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(col3(2 * d, 4 + ghost.id()), col3(2 * d + 1, 4 + ghost.id()));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
@@ -212,7 +210,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	public EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			animationByDir.put(dir, new SingleEntityAnimation<>(col3(8 + d, 5)));
 		}
 		return animationByDir;
@@ -249,7 +247,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	public EntityAnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet().dirIndex(dir);
+			int d = spritesheet.dirIndex(dir);
 			var animation = new SingleEntityAnimation<>(col3(0, 9 + d), col3(1, 9 + d), col3(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();

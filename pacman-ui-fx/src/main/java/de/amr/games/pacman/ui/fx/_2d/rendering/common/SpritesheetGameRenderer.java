@@ -56,10 +56,18 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class SpritesheetGameRenderer implements Rendering2D {
 
-	public abstract Spritesheet spritesheet();
+	protected final Spritesheet spritesheet;
+
+	protected SpritesheetGameRenderer(Spritesheet spritesheet) {
+		this.spritesheet = spritesheet;
+	}
+
+	public Spritesheet spritesheet() {
+		return spritesheet;
+	}
 
 	public Image image(Rectangle2D region) {
-		return spritesheet().subImage(region);
+		return spritesheet.subImage(region);
 	}
 
 	@Override
@@ -103,7 +111,7 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {
-			g.drawImage(spritesheet().source(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
+			g.drawImage(spritesheet.source(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
 					r.getHeight());
 		}
 	}
