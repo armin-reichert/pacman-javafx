@@ -10,6 +10,6 @@ popd
 pushd pacman-ui-fx
 call mvn clean install
 popd
-rem pushd tentackle
-rem call mvn clean install
-rem popd
+pushd tentackle
+call mvn clean install
+popd

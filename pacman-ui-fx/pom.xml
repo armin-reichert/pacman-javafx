@@ -15,28 +15,6 @@
 		<maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jimObjModelImporterJFX</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>de.amr.games.pacman</groupId>
-			<artifactId>pacman-core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-media</artifactId>
-			<version>${javafx.version}</version>
-		</dependency>
-	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -95,4 +73,26 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.interactivemesh</groupId>
+			<artifactId>jimObjModelImporterJFX</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+	</dependencies>
 </project>

@@ -6,12 +6,14 @@
 	<version>1.0</version>
 	
 	<properties>
-		<mainClass>de.amr.games.pacman.ui.fx.app.PacManGameAppFX</mainClass>
+		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
 		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>18</maven.compiler.source>
 		<maven.compiler.target>18</maven.compiler.target>
 		<version.tentackle>17.11.0.0</version.tentackle>
+		<javafx.version>18.0.1</javafx.version>
+		<log4j.version>2.18.0</log4j.version>
 	</properties>
 	
 	<packaging>jlink</packaging>
@@ -33,9 +35,40 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>de.amr.games.pacman.ui.fx</groupId>
 			<artifactId>pacman-ui-fx</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.interactivemesh</groupId>
+			<artifactId>jimObjModelImporterJFX</artifactId>
+			<version>1.0</version>
+		</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+					<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+
 	</dependencies>
 </project>
