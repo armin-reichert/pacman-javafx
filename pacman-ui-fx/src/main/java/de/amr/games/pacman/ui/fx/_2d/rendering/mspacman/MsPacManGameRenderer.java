@@ -120,7 +120,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		var w = MsPacManGameAssets.MAZE_WIDTH;
 		var h = MsPacManGameAssets.MAZE_HEIGHT;
 		if (flash) {
-			g.drawImage(MsPacManGameAssets.MAZES_EMPTY_INV[mazeNumber - 1], x, y);
+			g.drawImage(MsPacManGameAssets.MAZES_EMPTY_FLASHING[mazeNumber - 1], x, y);
 		} else {
 			g.drawImage(spritesheet.source(), MsPacManGameAssets.SECOND_COLUMN, h * (mazeNumber - 1), w, h, x, y, w, h);
 		}
