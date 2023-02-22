@@ -24,9 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.SCREEN_FONT;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +69,8 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		return size == TS ? SCREEN_FONT : Font.font(SCREEN_FONT.getFamily(), size);
+		return size == ArcadeTheme.SCREEN_FONT.getSize() ? ArcadeTheme.SCREEN_FONT
+				: Font.font(ArcadeTheme.SCREEN_FONT.getFamily(), size);
 	}
 
 	public abstract Rectangle2D ghostValueRegion(int index);
