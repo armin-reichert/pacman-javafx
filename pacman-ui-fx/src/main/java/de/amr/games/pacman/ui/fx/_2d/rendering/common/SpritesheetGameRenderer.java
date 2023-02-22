@@ -45,7 +45,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -181,17 +180,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
 			drawText(g, "+" + excessLives, Palette.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10), y + t(1));
-		}
-	}
-
-	@Override
-	public void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y) {
-		var font = screenFont(TS);
-		drawText(g, title, color, font, x, y);
-		var pointsText = "%02d".formatted(points);
-		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
-		if (points != 0) {
-			drawText(g, "L%d".formatted(levelNumber), color, font, x + t(8), y + TS + 1);
 		}
 	}
 }

@@ -26,11 +26,14 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -121,10 +124,8 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (scoresVisible) {
-			game.score()
-					.ifPresent(score -> r.drawScore(g, score.points(), score.levelNumber(), "SCORE", Palette.PALE, t(1), t(1)));
-			game.highScore().ifPresent(
-					score -> r.drawScore(g, score.points(), score.levelNumber(), "HIGH SCORE", Palette.PALE, t(16), t(1)));
+			drawScore(game.score(), "SCORE", Palette.PALE, t(1), t(1));
+			drawScore(game.highScore(), "HIGH SCORE", Palette.PALE, t(16), t(1));
 		}
 		if (creditVisible) {
 			r.drawText(g, "CREDIT %2d".formatted(game.credit()), Palette.PALE, r.screenFont(TS), t(2), t(36) - 1);
@@ -135,6 +136,19 @@ public abstract class GameScene2D implements GameScene {
 		if (context.gameController().levelTestMode) {
 			r.drawText(g, "LEVEL TEST MODE", Color.LIGHTGRAY, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60, 190);
 		}
+	}
+
+	private void drawScore(Optional<Score> optionalScore, String title, Color color, double x, double y) {
+		optionalScore.ifPresent(score -> {
+			var r = context.r2D();
+			var font = r.screenFont(TS);
+			r.drawText(g, title, color, font, x, y);
+			var pointsText = "%02d".formatted(score.points());
+			r.drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+			if (score.points() != 0) {
+				r.drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + t(8), y + TS + 1);
+			}
+		});
 	}
 
 	protected abstract void drawSceneContent();

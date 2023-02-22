@@ -290,17 +290,6 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y) {
-		var font = ArcadeTheme.SCREEN_FONT;
-		drawText(g, title, color, font, x, y);
-		var pointsText = "%02d".formatted(points);
-		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
-		if (points != 0) {
-			drawText(g, "L" + levelNumber, color, font, x + t(8), y + TS + 1);
-		}
-	}
-
-	@Override
 	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
 		drawWalls(g, mazeNumber, world, flash);
 	}

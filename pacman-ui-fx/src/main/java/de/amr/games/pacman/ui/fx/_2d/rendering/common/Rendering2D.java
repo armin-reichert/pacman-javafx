@@ -108,8 +108,6 @@ public interface Rendering2D {
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
-	void drawScore(GraphicsContext g, int points, int levelNumber, String title, Color color, double x, double y);
-
 	void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash);
 
 	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden);
