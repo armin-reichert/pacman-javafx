@@ -124,8 +124,8 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (scoresVisible) {
-			drawScore(game.score(), "SCORE", Palette.PALE, t(1), t(1));
-			drawScore(game.highScore(), "HIGH SCORE", Palette.PALE, t(16), t(1));
+			drawScore(game.score(), "SCORE", t(1), t(1));
+			drawScore(game.highScore(), "HIGH SCORE", t(16), t(1));
 		}
 		if (creditVisible) {
 			r.drawText(g, "CREDIT %2d".formatted(game.credit()), Palette.PALE, r.screenFont(TS), t(2), t(36) - 1);
@@ -138,15 +138,15 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	private void drawScore(Optional<Score> optionalScore, String title, Color color, double x, double y) {
+	private void drawScore(Optional<Score> optionalScore, String title, double x, double y) {
 		optionalScore.ifPresent(score -> {
 			var r = context.r2D();
 			var font = r.screenFont(TS);
-			r.drawText(g, title, color, font, x, y);
+			r.drawText(g, title, Palette.PALE, font, x, y);
 			var pointsText = "%02d".formatted(score.points());
-			r.drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+			r.drawText(g, "%7s".formatted(pointsText), Palette.PALE, font, x, y + TS + 1);
 			if (score.points() != 0) {
-				r.drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + t(8), y + TS + 1);
+				r.drawText(g, "L%d".formatted(score.levelNumber()), Palette.PALE, font, x + t(8), y + TS + 1);
 			}
 		});
 	}
