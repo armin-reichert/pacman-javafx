@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.pacman.PacManIntroState;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
-import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameAssets;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -130,7 +129,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright() {
-		context.r2D().drawText(g, PacManGameAssets.COPYRIGHT_TEXT, Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
+		context.r2D().drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
 	}
 
 	// TODO inspect in MAME what's really going on here

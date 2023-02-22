@@ -38,19 +38,15 @@ import javafx.scene.paint.Color;
  */
 public final class PacManGameAssets {
 
-	public static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
-	public static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
-	public static final Color GHOSTHOUSE_DOOR_COLOR = Color.rgb(252, 181, 255);
-
-	public static final String COPYRIGHT_TEXT = "\u00A9 1980 MIDWAY MFG.CO.";
-
-	public static final Spritesheet SPRITESHEET = new Spritesheet(//
+	static final Spritesheet SPRITESHEET = new Spritesheet(//
 			ResourceMgr.image("graphics/pacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
-	public static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
-	public static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	public static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 
-	private PacManGameAssets() {
-	}
+	static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
+	static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
+	static final Color GHOSTHOUSE_DOOR_COLOR = Color.rgb(252, 181, 255);
+
+	static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
+	static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
+	static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
 }

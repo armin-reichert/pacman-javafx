@@ -40,6 +40,10 @@ import javafx.scene.paint.Color;
  */
 public final class MsPacManGameAssets {
 
+	static final Spritesheet SPRITESHEET = new Spritesheet(//
+			ResourceMgr.image("graphics/mspacman/sprites.png"), 16, //
+			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
 	//@formatter:off
 	static final Color[] MAZE_TOP_COLORS = { 
 		Color.rgb(255, 183, 174), 
@@ -75,10 +79,6 @@ public final class MsPacManGameAssets {
 	static final int MAZE_HEIGHT = 248;
 	static final int SECOND_COLUMN = 228;
 	static final int THIRD_COLUMN = 456;
-
-	static final Spritesheet SPRITESHEET = new Spritesheet(//
-			ResourceMgr.image("graphics/mspacman/sprites.png"), 16, //
-			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	static final Image MIDWAY_LOGO = ResourceMgr.image("graphics/mspacman/midway.png");
 
