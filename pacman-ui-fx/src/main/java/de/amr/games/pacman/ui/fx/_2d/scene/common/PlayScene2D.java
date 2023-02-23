@@ -36,7 +36,6 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -71,8 +70,8 @@ public class PlayScene2D extends GameScene2D {
 	public void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			var r = context.r2D();
-			drawMaze(r, level.world(), level.game().mazeNumber(level.number()), 0, t(3));
-			drawGameState(r);
+			drawMaze(level.world(), level.game().mazeNumber(level.number()), 0, t(3));
+			drawGameState();
 			r.drawBonus(g, level.bonus());
 			r.drawPac(g, level.pac());
 			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
@@ -87,7 +86,8 @@ public class PlayScene2D extends GameScene2D {
 		});
 	}
 
-	private void drawGameState(Rendering2D r) {
+	private void drawGameState() {
+		var r = context.r2D();
 		boolean showGameOverText = context.state() == GameState.GAME_OVER || !context.hasCredit();
 		if (showGameOverText) {
 			r.drawText(g, "GAME  OVER", Palette.RED, r.screenFont(TS), t(9), t(21));
@@ -96,7 +96,8 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawMaze(Rendering2D r, World world, int mazeNumber, int x, int y) {
+	private void drawMaze(World world, int mazeNumber, int x, int y) {
+		var r = context.r2D();
 		var flashing = world.animation(ArcadeWorld.FLASHING);
 		if (flashing.isPresent() && flashing.get().isRunning()) {
 			boolean flash = (boolean) flashing.get().frame();
@@ -104,8 +105,8 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			var energizerPulse = world.animation(ArcadeWorld.ENERGIZER_PULSE);
 			if (energizerPulse.isPresent()) {
-				boolean dark = !(boolean) energizerPulse.get().frame();
-				r.drawMaze(g, x, y, mazeNumber, world, dark);
+				boolean on = (boolean) energizerPulse.get().frame();
+				r.drawMaze(g, x, y, mazeNumber, world, !on);
 			} else {
 				r.drawMaze(g, x, y, mazeNumber, world, false);
 			}
