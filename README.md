@@ -32,7 +32,7 @@ This script
 
 ## How to run the locally built version
 
-If Java runtime 18+ is installed, you can run the executable jar by double-click. Alternatively, extract the zip file and execute the `run.cmd`file as described above.
+If Java runtime 18+ is installed, you can run the executable jar by double-click. Alternatively, extract the zip file and execute the `run.cmd`file as described above. Or just execute the `run.bat`file in folder `pacman-javafx`.
 
 ## How to use
 
