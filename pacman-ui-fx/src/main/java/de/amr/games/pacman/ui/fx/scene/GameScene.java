@@ -57,7 +57,14 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Called on every tick.
 	 */
-	void onTick();
+	default void onTick() {
+		update();
+		draw();
+	}
+
+	void update();
+
+	void draw();
 
 	/**
 	 * Called when the scene is replaced by another one.

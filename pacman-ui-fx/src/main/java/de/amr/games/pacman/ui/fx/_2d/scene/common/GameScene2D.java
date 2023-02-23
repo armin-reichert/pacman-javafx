@@ -108,13 +108,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public final void onTick() {
-		update();
-		draw();
-	}
-
-	public abstract void update();
-
 	public void draw() {
 		var game = context.game();
 		var r = context.r2D();

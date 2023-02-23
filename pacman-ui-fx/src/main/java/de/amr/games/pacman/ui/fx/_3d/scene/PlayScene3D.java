@@ -126,7 +126,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void onTick() {
+	public void update() {
 		context.level().ifPresent(level -> {
 			level3D.update();
 			currentCamera().update(level3D.pac3D());
@@ -137,6 +137,11 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void end() {
 		context.level().ifPresent(level -> SoundHandler.sounds(level.game()).stopAll());
+	}
+
+	@Override
+	public void draw() {
+		// nothing to do
 	}
 
 	@Override
