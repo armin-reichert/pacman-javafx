@@ -29,6 +29,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
+							<!-- to get log4j working inside an executable jar -->
 							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 					</archive>
@@ -64,6 +65,7 @@
 					</execution>
 				</executions>
 				<dependencies>
+					<!-- to get log4j working with Maven shade -->
 					<dependency>
 						<groupId>io.github.edwgiz</groupId>
 						<artifactId>log4j-maven-shade-plugin-extensions</artifactId>
@@ -95,4 +97,15 @@
 			<version>${javafx.version}</version>
 		</dependency>
 	</dependencies>
+	<name>Pac-Man and Ms. Pac-Man in JavaFX</name>
+	<url>https://github.com/armin-reichert/pacman-javafx</url>
+	<description>This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games. 
+
+The game model and logic are implemented using the Model-View-Controller architecture, see https://github.com/armin-reichert/pacman-basic. 
+
+The user interface listens to game events and updates itself accordingly.
+
+There are two excutables built:
+1. An executable jar file (using Maven shade)
+2. A zip file containing the Java/JavaFX runtime and the game</description>
 </project>
