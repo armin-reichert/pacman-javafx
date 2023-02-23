@@ -36,6 +36,12 @@ If Java runtime 18+ is installed, you can run the executable jar by double-click
 
 ## How to use
 
+Starting the game and switching game variant:
+- <kbd>V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
+- <kbd>5</kbd> Add credit (insert coin)
+- <kbd>1</kbd> Start game
+- <kbd>Q</kbd> Quit game
+
 General shortcuts:
 
 - <kbd>F11</kbd> Enter fullscreen mode
@@ -44,7 +50,6 @@ General shortcuts:
 - <kbd>F2</kbd> Toggle picture-in-picture view
 - <kbd>Alt+A</kbd> Toggle autopilot mode
 - <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
 - <kbd>Alt+Z</kbd> Play all intermission scenes
 - <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
 
