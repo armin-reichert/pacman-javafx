@@ -8,7 +8,11 @@ Both games can be played in 2D and 3D, you can switch between 2D and 3D by press
 
 ## How to run the released version
 
-Download the executable jar file `pacman-ui-fx-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the File explorer. 
+### With Java runtime 18+ installed on your computer:
+- Download the executable jar file `pacman-ui-fx-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
+
+### Without locally installed Java runtime:
+- Download the zip file `pacman-javafx-tentackle-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
 ## How to build locally
 
@@ -23,12 +27,20 @@ This script
 - runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
 - creates a Maven artifact wrapping the jar file of the OBJ file [importer](http://www.interactivemesh.org/models/jfx3dimporter.html), 
 - runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (user interface),
+- creates the executable jar file `pacman-ui-fx-1.0-shaded.jar` in folder `pacman-javafx\pacman-ui-fx\target`,
+- creates the zip file `pacman-javafx-tentackle-1.0-jlink.zip in folder `pacman-javafx\tentackle\target`.
 
 ## How to run the locally built version
 
-The executable jar file is located in folder `pacman-javafx/pacman-ui-fx/target`. Run it by double-click.
+If Java runtime 18+ is installed, you can run the executable jar by double-click. Alternatively, extract the zip file and execute the `run.cmd`file as described above. Or just execute the `run.bat`file in folder `pacman-javafx`.
 
 ## How to use
+
+Starting the game and switching game variant:
+- <kbd>V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
+- <kbd>5</kbd> Add credit (insert coin)
+- <kbd>1</kbd> Start game
+- <kbd>Q</kbd> Quit game
 
 General shortcuts:
 
@@ -38,7 +50,6 @@ General shortcuts:
 - <kbd>F2</kbd> Toggle picture-in-picture view
 - <kbd>Alt+A</kbd> Toggle autopilot mode
 - <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
 - <kbd>Alt+Z</kbd> Play all intermission scenes
 - <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
 
