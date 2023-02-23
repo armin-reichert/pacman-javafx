@@ -67,11 +67,6 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public Color mazeBackgroundColor(int mazeNumber) {
-		return Color.BLACK;
-	}
-
-	@Override
 	public Color mazeFoodColor(int mazeNumber) {
 		return Color.PINK;
 	}

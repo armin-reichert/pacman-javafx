@@ -32,7 +32,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
@@ -111,9 +110,7 @@ public abstract class GameScene2D implements GameScene {
 	public void draw() {
 		var game = context.game();
 		var r = context.r2D();
-		var mazeNumber = game.level().map(GameLevel::number);
-		var bgColor = mazeNumber.isPresent() ? r.mazeBackgroundColor(mazeNumber.get()) : Color.BLACK;
-		g.setFill(bgColor);
+		g.setFill(Palette.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
 		if (scoresVisible) {

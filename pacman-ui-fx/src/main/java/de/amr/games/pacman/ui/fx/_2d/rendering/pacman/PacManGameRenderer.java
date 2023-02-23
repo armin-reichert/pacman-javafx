@@ -32,7 +32,6 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -50,11 +49,6 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public Color ghostColor(int ghostID) {
 		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
-	}
-
-	@Override
-	public Color mazeBackgroundColor(int mazeNumber) {
-		return Palette.BLACK;
 	}
 
 	@Override

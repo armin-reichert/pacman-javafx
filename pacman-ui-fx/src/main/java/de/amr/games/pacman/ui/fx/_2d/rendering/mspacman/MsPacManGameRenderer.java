@@ -59,11 +59,6 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public Color mazeBackgroundColor(int mazeNumber) {
-		return Palette.BLACK;
-	}
-
-	@Override
 	public Color mazeFoodColor(int mazeNumber) {
 		return MsPacManGameAssets.FOOD_COLORS[mazeNumber - 1];
 	}
