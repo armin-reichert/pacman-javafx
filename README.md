@@ -46,7 +46,7 @@ General shortcuts:
 
 - <kbd>F11</kbd> Enter fullscreen mode
 - <kbd>Esc</kbd> Exit fullscreen mode
-- <kbd>F1</kbd> Toggle dashboard
+- <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggle dashboard
 - <kbd>F2</kbd> Toggle picture-in-picture view
 - <kbd>Alt+A</kbd> Toggle autopilot mode
 - <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
