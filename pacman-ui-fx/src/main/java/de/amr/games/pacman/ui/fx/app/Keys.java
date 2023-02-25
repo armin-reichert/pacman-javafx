@@ -70,6 +70,7 @@ public class Keys {
 	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
 
 	public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);
+	public static final KeyCodeCombination DASHBOARD2 = alt(KeyCode.B);
 	public static final KeyCodeCombination PIP_VIEW = just(KeyCode.F2);
 	public static final KeyCodeCombination BOOT = just(KeyCode.F3);
 	public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);

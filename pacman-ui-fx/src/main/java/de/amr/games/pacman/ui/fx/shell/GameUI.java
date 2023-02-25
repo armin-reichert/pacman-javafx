@@ -229,7 +229,7 @@ public class GameUI implements GameEventListener {
 			Actions.toggleLevelTestMode();
 		} else if (Keyboard.pressed(Keys.USE_3D)) {
 			Actions.toggleUse3DScene();
-		} else if (Keyboard.pressed(Keys.DASHBOARD)) {
+		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
 			Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
 			Actions.togglePipViewVisible();
