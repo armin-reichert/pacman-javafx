@@ -90,7 +90,7 @@ public interface Rendering2D {
 		g.fillText(text, x, y);
 	}
 
-	default void hideTileContent(GraphicsContext g, int mazeNumber, Vector2i tile) {
+	default void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(Palette.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}
