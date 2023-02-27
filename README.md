@@ -42,16 +42,12 @@ Starting the game and switching game variant:
 - <kbd>V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
 - <kbd>5</kbd> Add credit (insert coin)
 - <kbd>1</kbd> Start game
-- <kbd>Q</kbd> Quit game
 
 General shortcuts:
-
 - <kbd>F11</kbd> Enter fullscreen mode
 - <kbd>Esc</kbd> Exit fullscreen mode
 - <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggle dashboard
 - <kbd>F2</kbd> Toggle picture-in-picture view
-- <kbd>Alt+A</kbd> Toggle autopilot mode
-- <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
 - <kbd>Alt+Z</kbd> Play all intermission scenes
 - <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
 
@@ -59,10 +55,12 @@ Play screen shortcuts:
 - <kbd>Alt+LEFT</kbd> Select next camera perspective
 - <kbd>Alt+RIGHT</kbd> Select previous camera perspective
 - <kbd>Alt+L</kbd> Toggle draw mode (line vs. shaded)
-- <kbd>Q</kbd> Quit scene
+- <kbd>Q</kbd>Quit play scene and show intro screen
 
 Cheats:
+  - <kbd>Alt+A</kbd> Toggle autopilot mode
   - <kbd>Alt+E</kbd> Eat all pills except the energizers
+  - <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
   - <kbd>Alt+L</kbd> Add 3 player lives
   - <kbd>Alt+N</kbd> Enter next game level
   - <kbd>Alt+X</kbd> Kill all ghosts outside of the ghosthouse 
