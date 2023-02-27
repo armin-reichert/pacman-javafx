@@ -49,10 +49,10 @@ public class ResourceMgr {
 
 	private static final String RESOURCE_ROOT_DIR = "/assets/";
 
-	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("assets.texts.messages");
-	public static final Picker<String> MESSAGES_CHEATING = createPicker(MESSAGES, "cheating");
-	public static final Picker<String> MESSAGES_LEVEL_COMPLETE = createPicker(MESSAGES, "level.complete");
-	public static final Picker<String> MESSAGES_GAME_OVER = createPicker(MESSAGES, "game.over");
+	public static final ResourceBundle MESSAGES_BUNDLE = ResourceBundle.getBundle("assets.texts.messages");
+	public static final Picker<String> PICK_MSG_CHEATING = createPicker(MESSAGES_BUNDLE, "cheating");
+	public static final Picker<String> PICK_MSG_LEVEL_COMPLETE = createPicker(MESSAGES_BUNDLE, "level.complete");
+	public static final Picker<String> PICK_MSG_GAME_OVER = createPicker(MESSAGES_BUNDLE, "game.over");
 
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
@@ -137,7 +137,7 @@ public class ResourceMgr {
 	 */
 	public static String message(String keyPattern, Object... args) {
 		try {
-			return MESSAGES.getString(keyPattern).formatted(args);
+			return MESSAGES_BUNDLE.getString(keyPattern).formatted(args);
 		} catch (Exception x) {
 			LOG.error("No text resource found for key '%s'", keyPattern);
 			return "missing{%s}".formatted(keyPattern);

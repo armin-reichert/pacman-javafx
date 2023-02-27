@@ -248,7 +248,7 @@ public class Actions {
 	public static void cheatEatAllPellets() {
 		gameState().cheatEatAllPellets(game());
 		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(ResourceMgr.MESSAGES_CHEATING.next());
+			showFlashMessage(ResourceMgr.PICK_MSG_CHEATING.next());
 		}
 	}
 
@@ -259,7 +259,7 @@ public class Actions {
 	public static void cheatKillAllEatableGhosts() {
 		gameState().cheatKillAllEatableGhosts(game());
 		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(ResourceMgr.MESSAGES_CHEATING.next());
+			showFlashMessage(ResourceMgr.PICK_MSG_CHEATING.next());
 		}
 	}
 }

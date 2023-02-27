@@ -351,7 +351,7 @@ public class PlayScene3D implements GameScene {
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
 				lockGameState();
-				var message = "%s%n%n%s".formatted(ResourceMgr.MESSAGES_LEVEL_COMPLETE.next(),
+				var message = "%s%n%n%s".formatted(ResourceMgr.PICK_MSG_LEVEL_COMPLETE.next(),
 						ResourceMgr.message("level_complete", level.number()));
 				var animation = new SequentialTransition( //
 						Ufx.pause(1.0), //
@@ -365,7 +365,7 @@ public class PlayScene3D implements GameScene {
 			});
 		}
 
-		case GAME_OVER -> Actions.showFlashMessageSeconds(3, ResourceMgr.MESSAGES_GAME_OVER.next());
+		case GAME_OVER -> Actions.showFlashMessageSeconds(3, ResourceMgr.PICK_MSG_GAME_OVER.next());
 
 		default -> { // ignore
 		}
