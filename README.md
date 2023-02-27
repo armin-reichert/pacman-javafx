@@ -14,7 +14,7 @@ Both games can be played in 2D and 3D, you can switch between 2D and 3D by press
 ### Without locally installed Java runtime:
 - Download the zip file `pacman-javafx-tentackle-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
-For other operating systems, you have to build the executable by yourself as described in the README. Any help in creating a fat executable jar or adding OS-specific Maven targets is welcome.
+For other operating systems, you have to build the executable by yourself (execute the steps in the build script manually or create a shell script or whatever). Any help in creating a fat executable jar or adding OS-specific Maven targets is welcome.
 
 ## How to build locally
 
