@@ -47,9 +47,9 @@ public class ResourceMgr {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final String RESOURCE_ROOT_DIR = "/";
+	private static final String RESOURCE_ROOT_DIR = "/assets/";
 
-	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("texts.messages");
+	public static final ResourceBundle MESSAGES = ResourceBundle.getBundle("assets.texts.messages");
 	public static final Picker<String> MESSAGES_CHEATING = createPicker(MESSAGES, "cheating");
 	public static final Picker<String> MESSAGES_LEVEL_COMPLETE = createPicker(MESSAGES, "level.complete");
 	public static final Picker<String> MESSAGES_GAME_OVER = createPicker(MESSAGES, "game.over");
