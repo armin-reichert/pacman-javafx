@@ -45,19 +45,13 @@ public class Sounds {
 
 	private final Map<SoundClipID, AudioClip> clips = new EnumMap<>(SoundClipID.class);
 
-	private static AudioClip loadClip(String relPath, double volume) {
-		var url = ResourceMgr.urlFromRelPath(relPath);
-		var clip = new AudioClip(url.toExternalForm());
-		clip.setVolume(volume);
-		return clip;
-	}
-
 	public Sounds(Object[][] data) {
 		for (var row : data) {
 			SoundClipID id = (SoundClipID) row[0];
 			String path = (String) row[1];
 			double volume = (double) row[2];
-			var clip = loadClip(path, volume);
+			var clip = ResourceMgr.audioClip(path);
+			clip.setVolume(volume);
 			clips.put(id, clip);
 		}
 	}
@@ -66,23 +60,13 @@ public class Sounds {
 		return Optional.ofNullable(clips.get(sound));
 	}
 
-	private void playClip(AudioClip clip) {
-		clip.play();
-	}
-
 	public boolean isPlaying(SoundClipID sound) {
 		return getClip(sound).map(AudioClip::isPlaying).orElse(false);
 	}
 
-	public void ensurePlaying(SoundClipID sound) {
-		if (!isPlaying(sound)) {
-			play(sound);
-		}
-	}
-
 	public void play(SoundClipID sound) {
 		if (!isPlaying(sound)) {
-			loop(sound, 1);
+			getClip(sound).ifPresent(AudioClip::play);
 		}
 	}
 
@@ -95,7 +79,7 @@ public class Sounds {
 	public void loop(SoundClipID sound, int repetitions) {
 		getClip(sound).ifPresent(clip -> {
 			clip.setCycleCount(repetitions);
-			playClip(clip);
+			clip.play();
 		});
 	}
 

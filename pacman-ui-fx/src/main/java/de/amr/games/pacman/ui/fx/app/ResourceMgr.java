@@ -37,6 +37,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -86,6 +87,15 @@ public class ResourceMgr {
 			throw new MissingResourceException("Missing resource, path=" + fullPath, "", fullPath);
 		}
 		return url;
+	}
+
+	/**
+	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * @return audio clip from resource addressed by this path
+	 */
+	public static AudioClip audioClip(String relPath) {
+		var url = urlFromRelPath(relPath);
+		return new AudioClip(url.toExternalForm());
 	}
 
 	/**
