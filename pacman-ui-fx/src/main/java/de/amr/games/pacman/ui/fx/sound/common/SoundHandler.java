@@ -53,7 +53,7 @@ public class SoundHandler {
 	public void onSoundEvent(SoundEvent event) {
 		var sounds = sounds(event.game);
 		LOG.trace("Handle sound event: %s", event);
-		switch (event.soundCommand) {
+		switch (event.id) {
 		case "bonus_eaten" -> sounds.play(SoundClipID.BONUS_EATEN);
 		case "credit_added" -> sounds.play(SoundClipID.CREDIT);
 		case "extra_life" -> sounds.play(SoundClipID.EXTRA_LIFE);

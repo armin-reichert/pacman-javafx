@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -114,6 +115,7 @@ public class Actions {
 
 	public static void restartIntro() {
 		ui.currentGameScene().end();
+		GameEvents.setSoundEventsEnabled(true);
 		gameController().startIntro();
 	}
 
@@ -123,6 +125,7 @@ public class Actions {
 	}
 
 	public static void addCredit() {
+		GameEvents.setSoundEventsEnabled(true);
 		gameState().addCredit(game());
 	}
 
