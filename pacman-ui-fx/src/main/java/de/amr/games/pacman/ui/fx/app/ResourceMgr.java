@@ -46,13 +46,12 @@ import javafx.scene.text.Font;
 public class ResourceMgr {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+	private static final String ROOT = "/assets/";
+	private static final ResourceBundle MESSAGES_BUNDLE = ResourceBundle.getBundle("assets.texts.messages");
 
-	private static final String RESOURCE_ROOT_DIR = "/assets/";
-
-	public static final ResourceBundle MESSAGES_BUNDLE = ResourceBundle.getBundle("assets.texts.messages");
-	public static final Picker<String> PICK_MSG_CHEATING = createPicker(MESSAGES_BUNDLE, "cheating");
-	public static final Picker<String> PICK_MSG_LEVEL_COMPLETE = createPicker(MESSAGES_BUNDLE, "level.complete");
-	public static final Picker<String> PICK_MSG_GAME_OVER = createPicker(MESSAGES_BUNDLE, "game.over");
+	private static final Picker<String> PICKER_MSG_CHEATING = createPicker(MESSAGES_BUNDLE, "cheating");
+	private static final Picker<String> PICKER_MSG_LEVEL_COMPLETE = createPicker(MESSAGES_BUNDLE, "level.complete");
+	private static final Picker<String> PICKER_MSG_GAME_OVER = createPicker(MESSAGES_BUNDLE, "game.over");
 
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
@@ -65,7 +64,7 @@ public class ResourceMgr {
 	 * @return full path to resource including path to resource root directory
 	 */
 	private static String toFullPath(String relativePath) {
-		return RESOURCE_ROOT_DIR + relativePath;
+		return ROOT + relativePath;
 	}
 
 	/**
@@ -150,5 +149,17 @@ public class ResourceMgr {
 				.sorted()//
 				.map(bundle::getString)//
 				.toArray(String[]::new));
+	}
+
+	public static String getCheatingMessage() {
+		return PICKER_MSG_CHEATING.next();
+	}
+
+	public static String getGameOverMessage() {
+		return PICKER_MSG_GAME_OVER.next();
+	}
+
+	public static String getLevelCompleteMessage() {
+		return PICKER_MSG_LEVEL_COMPLETE.next();
 	}
 }
