@@ -25,8 +25,11 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -38,6 +41,8 @@ public class LivesCounter3D extends Group {
 
 	static final int MAX_LIVES_DISPLAYED = 5;
 
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+
 	public LivesCounter3D(boolean facingRight) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
 			var pac = PacModel3D.createPac3D(Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
@@ -47,6 +52,7 @@ public class LivesCounter3D extends Group {
 				pac.setRotationAxis(Rotate.Z_AXIS);
 				pac.setRotate(180);
 			}
+			PacModel3D.head(pac).drawModeProperty().bind(drawModePy);
 			getChildren().add(pac);
 		}
 	}

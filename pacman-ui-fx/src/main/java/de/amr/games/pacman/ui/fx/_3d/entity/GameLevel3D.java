@@ -127,14 +127,8 @@ public class GameLevel3D extends Group {
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		getChildren().add(world3D);
-		getChildren().add(food3D);
-		getChildren().add(pac3D);
+		getChildren().addAll(world3D, food3D, pac3D, bonus3D, scores3D, levelCounter3D, livesCounter3D);
 		getChildren().addAll(ghosts3D);
-		getChildren().add(bonus3D);
-		getChildren().add(scores3D);
-		getChildren().add(levelCounter3D);
-		getChildren().add(livesCounter3D);
 
 		world3D.drawModePy.bind(drawModePy);
 		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
@@ -142,6 +136,7 @@ public class GameLevel3D extends Group {
 		for (var ghost3D : ghosts3D) {
 			ghost3D.drawModePy.bind(drawModePy);
 		}
+		livesCounter3D.drawModePy.bind(drawModePy);
 	}
 
 	public void update() {
