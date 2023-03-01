@@ -6,15 +6,15 @@ A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://
 
 Both games can be played in 2D and 3D, you can switch between 2D and 3D by pressing key combination <kbd>Alt+3</kbd>.
 
-## How to run the released version (Windows)
+## How to run the released version
 
-### With Java runtime 18+ installed on your computer:
+### With Java runtime 18+ installed on your computer (Windows, Linux, Mac-OS):
 - Download the executable jar file `pacman-ui-fx-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
 
-### Without locally installed Java runtime:
+### Without locally installed Java runtime (Windows):
 - Download the zip file `pacman-javafx-tentackle-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
-For other operating systems, you have to build the executable by yourself (execute the steps in the build script manually or create a shell script or whatever). Any help in creating a fat executable jar or adding OS-specific Maven targets is welcome.
+To build the executable by yourself on non-Windows systems, run the steps in the build script manually or create a shell script or whatever.
 
 ## How to build locally
 
