@@ -75,8 +75,6 @@ public class GameLevel3D extends Group {
 	private static Pac3D createPac3D(GameLevel level) {
 		var pac3D = new Pac3D(level.pac(), level.world());
 		pac3D.init();
-		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
-		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
 		return pac3D;
 	}
 
@@ -139,6 +137,8 @@ public class GameLevel3D extends Group {
 		getChildren().add(livesCounter3D);
 
 		world3D.drawModePy.bind(drawModePy);
+		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
+		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
 		for (var ghost3D : ghosts3D) {
 			ghost3D.drawModePy.bind(drawModePy);
 		}
