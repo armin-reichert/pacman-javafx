@@ -28,8 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -49,12 +47,14 @@ import javafx.util.Duration;
 public class Bonus3D extends Box {
 
 	private final Bonus bonus;
-	private final Rendering2D r2D;
+	private final Image symbolImage;
+	private final Image pointsImage;
 
-	public Bonus3D(Bonus bonus, Rendering2D r2D) {
+	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
 		super(TS, TS, TS);
 		this.bonus = bonus;
-		this.r2D = r2D;
+		this.symbolImage = symbolImage;
+		this.pointsImage = pointsImage;
 	}
 
 	public void update() {
@@ -65,27 +65,19 @@ public class Bonus3D extends Box {
 	}
 
 	public void showSymbol() {
-		// TODO make this work for all renderers
-		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
-			var imageView = new ImageView(sgr.image(symbolSprite));
-			imageView.setPreserveRatio(true);
-			imageView.setFitWidth(TS);
-			setTexture(imageView.getImage());
-		}
+		var imageView = new ImageView(symbolImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitWidth(TS);
+		setTexture(imageView.getImage());
 		setWidth(TS);
 		rotate(1, Animation.INDEFINITE, 1);
 	}
 
 	public void showPoints() {
-		// TODO make this work for all renderers
-		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
-			var imageView = new ImageView(sgr.image(pointsSprite));
-			imageView.setPreserveRatio(true);
-			imageView.setFitWidth(2 * TS);
-			setTexture(imageView.getImage());
-		}
+		var imageView = new ImageView(pointsImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitWidth(2 * TS);
+		setTexture(imageView.getImage());
 		setWidth(2 * TS);
 		rotate(1, 3, 2);
 	}

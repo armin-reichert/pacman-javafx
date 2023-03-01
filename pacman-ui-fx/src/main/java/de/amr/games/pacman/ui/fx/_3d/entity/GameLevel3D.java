@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
@@ -89,7 +90,7 @@ public class GameLevel3D extends Group {
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		LOG.info("3D ghosts created");
 
-		bonus3D = new Bonus3D(level.bonus(), r2D);
+		bonus3D = createBonus3D(level.bonus(), r2D);
 
 		var foodColor = r2D.mazeFoodColor(mazeNumber);
 		food3D = new Food3D(level.world(), foodColor);
@@ -121,6 +122,15 @@ public class GameLevel3D extends Group {
 		getChildren().add(levelCounter3D);
 		getChildren().add(livesCounter3D);
 
+	}
+
+	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
+		if (r2D instanceof SpritesheetGameRenderer sgr) {
+			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
+			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
+			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
+		}
+		return null; // TODO make this work for other renderers too
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
