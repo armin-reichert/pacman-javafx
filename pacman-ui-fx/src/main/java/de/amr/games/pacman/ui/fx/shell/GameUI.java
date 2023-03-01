@@ -226,7 +226,7 @@ public class GameUI implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.QUIT)) {
 			Actions.restartIntro();
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
-			Actions.toggleLevelTestMode();
+			Actions.startLevelTestMode();
 		} else if (Keyboard.pressed(Keys.USE_3D)) {
 			Actions.toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {

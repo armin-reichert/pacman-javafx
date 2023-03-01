@@ -216,11 +216,9 @@ public class Actions {
 		playVoiceMessage(immune ? ResourceMgr.VOICE_IMMUNITY_ON : ResourceMgr.VOICE_IMMUNITY_OFF);
 	}
 
-	public static void toggleLevelTestMode() {
-		gameController().levelTestMode = !gameController().levelTestMode;
-		if (!gameController().levelTestMode) {
-			gameController().boot();
-		} else {
+	public static void startLevelTestMode() {
+		if (gameState() == GameState.INTRO) {
+			gameController().restart(GameState.LEVEL_TEST);
 			showFlashMessage("Level TEST MODE");
 		}
 	}

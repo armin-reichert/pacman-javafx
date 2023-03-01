@@ -45,9 +45,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Scale;
 
 /**
@@ -122,9 +119,6 @@ public abstract class GameScene2D implements GameScene {
 		}
 		if (overlayPaneVisiblePy.get()) {
 			drawOverlayPaneContent();
-		}
-		if (context.gameController().levelTestMode) {
-			r.drawText(g, "LEVEL TEST MODE", Color.LIGHTGRAY, Font.font("Monospaced", FontWeight.MEDIUM, 12), 60, 190);
 		}
 	}
 

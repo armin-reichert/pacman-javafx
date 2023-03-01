@@ -88,8 +88,10 @@ public class PlayScene2D extends GameScene2D {
 
 	private void drawGameState() {
 		var r = context.r2D();
-		boolean showGameOverText = context.state() == GameState.GAME_OVER || !context.hasCredit();
-		if (showGameOverText) {
+		int levelNumber = context.level().isPresent() ? context.level().get().number() : 0;
+		if (context.state() == GameState.LEVEL_TEST) {
+			r.drawText(g, "LEVEL %d TEST".formatted(levelNumber), Palette.YELLOW, r.screenFont(TS), t(8), t(5));
+		} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
 			r.drawText(g, "GAME  OVER", Palette.RED, r.screenFont(TS), t(9), t(21));
 		} else if (context.state() == GameState.READY) {
 			r.drawText(g, "READY!", Palette.YELLOW, r.screenFont(TS), t(11), t(21));

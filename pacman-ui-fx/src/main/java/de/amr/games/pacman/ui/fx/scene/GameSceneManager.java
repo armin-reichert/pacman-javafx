@@ -147,6 +147,7 @@ public class GameSceneManager {
 				throw new IllegalStateException();
 			}
 		}
+		case LEVEL_TEST -> PLAY_SCENE_INDEX;
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.intermissionTestNumber;
 		default -> throw new IllegalStateException();
 		};
