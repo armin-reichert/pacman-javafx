@@ -99,7 +99,7 @@
 			<version>${javafx.version}</version>
 			<classifier>win</classifier>
 		</dependency>
-		<!-- Linux -->
+		<!--
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -112,7 +112,6 @@
 			<version>${javafx.version}</version>
 			<classifier>linux</classifier>
 		</dependency>
-		<!-- Mac -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -125,6 +124,7 @@
 			<version>${javafx.version}</version>
 			<classifier>mac</classifier>
 		</dependency>
+		-->
 	</dependencies>
 	<name>Pac-Man and Ms. Pac-Man in JavaFX</name>
 	<url>https://github.com/armin-reichert/pacman-javafx</url>
