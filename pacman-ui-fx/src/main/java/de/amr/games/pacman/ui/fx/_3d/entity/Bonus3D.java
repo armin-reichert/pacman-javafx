@@ -76,9 +76,9 @@ public class Bonus3D extends Box {
 	public void showPoints() {
 		var imageView = new ImageView(pointsImage);
 		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(2 * TS);
+		imageView.setFitWidth(1.8 * TS);
 		setTexture(imageView.getImage());
-		setWidth(2 * TS);
+		setWidth(1.8 * TS);
 		rotate(1, 3, 2);
 	}
 

@@ -31,9 +31,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -55,8 +52,6 @@ import javafx.scene.shape.DrawMode;
  */
 public class GameLevel3D extends Group {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final GameLevel level;
@@ -69,49 +64,70 @@ public class GameLevel3D extends Group {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 
-	public GameLevel3D(GameLevel level, Rendering2D r2D) {
-		this.level = level;
-
-		int mazeNumber = level.game().mazeNumber(level.number());
+	private static World3D createWorld3D(GameLevel level, Rendering2D r2D, int mazeNumber) {
 		var mazeColors = new Maze3DColors(//
 				r2D.mazeSideColor(mazeNumber), //
 				r2D.mazeTopColor(mazeNumber), //
 				r2D.ghostHouseDoorColor());
+		return new World3D(level.world(), mazeColors);
+	}
 
-		world3D = new World3D(level.world(), mazeColors);
-		world3D.drawModePy.bind(drawModePy);
-
-		pac3D = new Pac3D(level.pac(), level.world());
+	private static Pac3D createPac3D(GameLevel level) {
+		var pac3D = new Pac3D(level.pac(), level.world());
 		pac3D.init();
 		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
-		LOG.info("3D %s created", level.pac().name());
+		return pac3D;
+	}
 
-		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
-		LOG.info("3D ghosts created");
-
-		bonus3D = createBonus3D(level.bonus(), r2D);
-
-		var foodColor = r2D.mazeFoodColor(mazeNumber);
-		food3D = new Food3D(level.world(), foodColor);
-
-		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
+	private static Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
 		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
-					symbol -> sgr.image(sgr.bonusSymbolRegion(symbol)));
-		} else {
-			// TODO make this work for non-spritesheet based renderer
-			levelCounter3D = new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbol -> null);
+			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
+			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
+			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
 		}
+		return null; // TODO make this work for other renderers too
+	}
+
+	private static Ghost3D createGhost3D(GameLevel level, Ghost ghost) {
+		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
+		ghost3D.init(level);
+		return ghost3D;
+	}
+
+	private static LivesCounter3D createLivesCounter3D(GameLevel level) {
 		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
-		livesCounter3D = new LivesCounter3D(facingRight);
+		var livesCounter3D = new LivesCounter3D(facingRight);
 		livesCounter3D.setTranslateX(TS);
 		livesCounter3D.setTranslateY(TS);
 		livesCounter3D.setTranslateZ(-HTS);
-		livesCounter3D().setVisible(level.game().hasCredit());
+		livesCounter3D.setVisible(level.game().hasCredit());
+		return livesCounter3D;
+	}
 
-		var scoreFont = r2D.screenFont(TS);
-		scores3D = new Scores3D(scoreFont);
+	private static LevelCounter3D createLevelCounter3D(GameLevel level, Rendering2D r2D) {
+		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
+		if (r2D instanceof SpritesheetGameRenderer sgr) {
+			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
+					symbol -> sgr.image(sgr.bonusSymbolRegion(symbol)));
+		} else {
+			// TODO make this work for non-spritesheet based renderer
+			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbol -> null);
+		}
+	}
+
+	public GameLevel3D(GameLevel level, Rendering2D r2D) {
+		this.level = level;
+		int mazeNumber = level.game().mazeNumber(level.number());
+
+		world3D = createWorld3D(level, r2D, mazeNumber);
+		pac3D = createPac3D(level);
+		ghosts3D = level.ghosts().map(ghost -> createGhost3D(level, ghost)).toArray(Ghost3D[]::new);
+		bonus3D = createBonus3D(level.bonus(), r2D);
+		food3D = new Food3D(level.world(), r2D.mazeFoodColor(mazeNumber));
+		levelCounter3D = createLevelCounter3D(level, r2D);
+		livesCounter3D = createLivesCounter3D(level);
+		scores3D = new Scores3D(r2D.screenFont(TS));
 
 		getChildren().add(world3D);
 		getChildren().add(food3D);
@@ -122,22 +138,10 @@ public class GameLevel3D extends Group {
 		getChildren().add(levelCounter3D);
 		getChildren().add(livesCounter3D);
 
-	}
-
-	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
-		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
-			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
-			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
+		world3D.drawModePy.bind(drawModePy);
+		for (var ghost3D : ghosts3D) {
+			ghost3D.drawModePy.bind(drawModePy);
 		}
-		return null; // TODO make this work for other renderers too
-	}
-
-	private Ghost3D createGhost3D(Ghost ghost) {
-		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
-		ghost3D.init(level);
-		ghost3D.drawModePy.bind(drawModePy);
-		return ghost3D;
 	}
 
 	public void update() {
