@@ -88,7 +88,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public EntityAnimationMap createPacAnimations(Pac pac) {
-		var map = new EntityAnimationMap(2);
+		var map = new EntityAnimationMap();
 		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
 		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
 		map.select(AnimKeys.PAC_MUNCHING);
@@ -116,7 +116,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
-		var map = new EntityAnimationMap(5);
+		var map = new EntityAnimationMap();
 //		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
 //		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 //		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
