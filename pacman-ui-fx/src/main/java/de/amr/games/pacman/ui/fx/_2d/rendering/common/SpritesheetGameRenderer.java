@@ -29,10 +29,10 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
+import de.amr.games.pacman.lib.anim.AnimKeys;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
-import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -82,8 +82,8 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	public abstract Rectangle2D bonusValueRegion(int symbol);
 
 	@Override
-	public EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac) {
-		var map = new EntityAnimationMap<AnimKeys>(2);
+	public EntityAnimationMap createPacAnimations(Pac pac) {
+		var map = new EntityAnimationMap(2);
 		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
 		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
 		map.select(AnimKeys.PAC_MUNCHING);
@@ -91,8 +91,8 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationMap<AnimKeys> createGhostAnimations(Ghost ghost) {
-		var map = new EntityAnimationMap<AnimKeys>(5);
+	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
+		var map = new EntityAnimationMap(5);
 		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
 		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));

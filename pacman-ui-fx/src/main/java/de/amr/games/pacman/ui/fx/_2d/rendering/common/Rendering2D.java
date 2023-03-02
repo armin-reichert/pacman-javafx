@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -64,13 +63,13 @@ public interface Rendering2D {
 
 	// Animations
 
-	EntityAnimationMap<AnimKeys> createPacAnimations(Pac pac);
+	EntityAnimationMap createPacAnimations(Pac pac);
 
 	EntityAnimationByDirection createPacMunchingAnimation(Pac pac);
 
 	SingleEntityAnimation<?> createPacDyingAnimation();
 
-	EntityAnimationMap<AnimKeys> createGhostAnimations(Ghost ghost);
+	EntityAnimationMap createGhostAnimations(Ghost ghost);
 
 	EntityAnimationByDirection createGhostColorAnimation(Ghost ghost);
 

@@ -29,9 +29,9 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.lib.anim.AnimKeys;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;

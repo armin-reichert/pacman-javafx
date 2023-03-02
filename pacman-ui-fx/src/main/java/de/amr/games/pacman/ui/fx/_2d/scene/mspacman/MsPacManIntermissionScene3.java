@@ -24,9 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.MsPacManIntermission3;
+import de.amr.games.pacman.lib.anim.AnimKeys;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.actors.AnimKeys;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import javafx.geometry.Rectangle2D;
