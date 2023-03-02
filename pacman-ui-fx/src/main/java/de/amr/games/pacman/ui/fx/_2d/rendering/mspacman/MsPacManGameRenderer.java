@@ -26,10 +26,8 @@ package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameAssets.col3;
 
-import de.amr.games.pacman.lib.anim.AnimKeys;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -263,13 +261,6 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		);
 		animation.setFrameDuration(4);
 		return animation;
-	}
-
-	public EntityAnimationMap createClapperboardAnimations() {
-		var animationSet = new EntityAnimationMap(1);
-		animationSet.put(AnimKeys.CLAPPERBOARD, createClapperboardAnimation());
-		animationSet.select(AnimKeys.CLAPPERBOARD);
-		return animationSet;
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createStorkFlyingAnimation() {
