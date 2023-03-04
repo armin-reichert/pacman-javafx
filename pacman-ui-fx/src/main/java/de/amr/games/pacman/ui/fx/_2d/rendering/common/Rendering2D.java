@@ -51,7 +51,7 @@ public interface Rendering2D {
 
 	GhostColoring ghostColoring(int ghostID);
 
-	MazeColoring mazeColors(int mazeNumber);
+	MazeColoring mazeColoring(int mazeNumber);
 
 	// Animations
 

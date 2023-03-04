@@ -64,7 +64,7 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public MazeColoring mazeColors(int mazeNumber) {
+	public MazeColoring mazeColoring(int mazeNumber) {
 		return PacManGameAssets.MAZE_COLORS;
 	}
 
@@ -284,7 +284,7 @@ public class PacManTestRenderer implements Rendering2D {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);
 				if (world.containsFood(tile)) {
-					g.setFill(mazeColors(mazeNumber).foodColor());
+					g.setFill(mazeColoring(mazeNumber).foodColor());
 					if (world.isEnergizerTile(tile)) {
 						if (!energizersHidden) {
 							g.fillOval(tile.x() * TS, tile.y() * TS, TS, TS);

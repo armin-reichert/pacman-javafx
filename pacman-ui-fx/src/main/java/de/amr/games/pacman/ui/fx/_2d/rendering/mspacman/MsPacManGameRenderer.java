@@ -62,7 +62,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public MazeColoring mazeColors(int mazeNumber) {
+	public MazeColoring mazeColoring(int mazeNumber) {
 		return MsPacManGameAssets.MAZE_COLORS[mazeNumber - 1];
 	}
 
