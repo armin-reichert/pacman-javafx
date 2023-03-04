@@ -258,7 +258,7 @@ public class GameUI implements GameEventListener {
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		var matching = GameSceneManager.getSceneVariantsMatchingGameState(gameController);
+		var matching = GameSceneManager.sceneSelectionMatchingCurrentGameState(gameController);
 		var use3D = Env.ThreeD.enabledPy.get();
 		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
 		if (nextGameScene == null) {

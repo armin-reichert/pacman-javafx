@@ -88,11 +88,7 @@ public class Sounds {
 	}
 
 	public void stopAll() {
-		for (AudioClip clip : clips.values()) {
-			clip.stop();
-		}
-		stopSirens();
-		stop(SoundClipID.PACMAN_MUNCH);
+		clips.values().forEach(AudioClip::stop);
 	}
 
 	public void startSiren(int sirenIndex) {

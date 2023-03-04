@@ -30,6 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameLevel.Parameters;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -63,24 +65,24 @@ public class GameSceneManager {
 	private static final int PLAY_SCENE_INDEX = 3;
 
 	//@formatter:off
-	private static final GameSceneVariants[] SCENES_PACMAN = {
-		new GameSceneVariants(createScene2D(BootScene.class), null),
-		new GameSceneVariants(createScene2D(PacManIntroScene.class), null),
-		new GameSceneVariants(createScene2D(PacManCreditScene.class), null),
-		new GameSceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
-		new GameSceneVariants(createScene2D(PacManCutscene1.class), null),
-		new GameSceneVariants(createScene2D(PacManCutscene2.class), null),
-		new GameSceneVariants(createScene2D(PacManCutscene3.class), null),
+	private static final GameSceneSelection[] SCENES_PACMAN = {
+		new GameSceneSelection(createScene2D(BootScene.class), null),
+		new GameSceneSelection(createScene2D(PacManIntroScene.class), null),
+		new GameSceneSelection(createScene2D(PacManCreditScene.class), null),
+		new GameSceneSelection(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new GameSceneSelection(createScene2D(PacManCutscene1.class), null),
+		new GameSceneSelection(createScene2D(PacManCutscene2.class), null),
+		new GameSceneSelection(createScene2D(PacManCutscene3.class), null),
 	};
 
-	private static final GameSceneVariants[] SCENES_MS_PACMAN = { 
-		new GameSceneVariants(createScene2D(BootScene.class), null),
-		new GameSceneVariants(createScene2D(MsPacManIntroScene.class), null),
-		new GameSceneVariants(createScene2D(MsPacManCreditScene.class), null),
-		new GameSceneVariants(createScene2D(PlayScene2D.class), createPlayScene3D()),
-		new GameSceneVariants(createScene2D(MsPacManIntermissionScene1.class), null),
-		new GameSceneVariants(createScene2D(MsPacManIntermissionScene2.class), null),
-		new GameSceneVariants(createScene2D(MsPacManIntermissionScene3.class), null),
+	private static final GameSceneSelection[] SCENES_MS_PACMAN = { 
+		new GameSceneSelection(createScene2D(BootScene.class), null),
+		new GameSceneSelection(createScene2D(MsPacManIntroScene.class), null),
+		new GameSceneSelection(createScene2D(MsPacManCreditScene.class), null),
+		new GameSceneSelection(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new GameSceneSelection(createScene2D(MsPacManIntermissionScene1.class), null),
+		new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
+		new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null),
 	};
 	//@formatter:on
 
@@ -126,11 +128,11 @@ public class GameSceneManager {
 		if (dim != 2 && dim != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
-		var variants = getSceneVariantsMatchingGameState(gameController);
+		var variants = sceneSelectionMatchingCurrentGameState(gameController);
 		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	public static GameSceneVariants getSceneVariantsMatchingGameState(GameController gameController) {
+	public static GameSceneSelection sceneSelectionMatchingCurrentGameState(GameController gameController) {
 		var game = gameController.game();
 		var level = game.level();
 		var state = gameController.state();
@@ -139,17 +141,16 @@ public class GameSceneManager {
 		case BOOT -> BOOT_SCENE_INDEX;
 		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
-		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
+		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
 		case INTERMISSION -> {
-			if (level.isPresent()) {
-				yield PLAY_SCENE_INDEX + level.get().params().intermissionNumber();
-			} else {
-				throw new IllegalStateException();
+			var intermissionNumber = level.map(GameLevel::params).map(Parameters::intermissionNumber);
+			if (intermissionNumber.isEmpty()) {
+				throw new IllegalStateException("No intermission number available");
 			}
+			yield PLAY_SCENE_INDEX + intermissionNumber.get();
 		}
-		case LEVEL_TEST -> PLAY_SCENE_INDEX;
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.intermissionTestNumber;
-		default -> throw new IllegalStateException();
+		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
 		};
 
 		return switch (game.variant()) {
