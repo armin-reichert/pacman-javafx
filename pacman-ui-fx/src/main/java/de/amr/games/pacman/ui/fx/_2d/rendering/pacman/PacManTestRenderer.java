@@ -30,7 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.anim.AnimKeys;
+import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
@@ -89,9 +89,9 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public EntityAnimationMap createPacAnimations(Pac pac) {
 		var map = new EntityAnimationMap();
-		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
-		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
-		map.select(AnimKeys.PAC_MUNCHING);
+		map.put(AnimationKey.PAC_DYING, createPacDyingAnimation());
+		map.put(AnimationKey.PAC_MUNCHING, createPacMunchingAnimation(pac));
+		map.select(AnimationKey.PAC_MUNCHING);
 		return map;
 	}
 
@@ -118,7 +118,7 @@ public class PacManTestRenderer implements Rendering2D {
 //		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
 //		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 //		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(AnimKeys.GHOST_FLASHING, new Pulse(6, true));
+		map.put(AnimationKey.GHOST_FLASHING, new Pulse(6, true));
 //		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
 		return map;
 	}
@@ -126,17 +126,17 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public EntityAnimationMap createWorldAnimations(World world) {
 		var map = new EntityAnimationMap();
-		map.put(AnimKeys.MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
-		map.put(AnimKeys.MAZE_FLASHING, new Pulse(10, true));
+		map.put(AnimationKey.MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
+		map.put(AnimationKey.MAZE_FLASHING, new Pulse(10, true));
 		return null;
 	}
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
-			if (pac.isAnimationSelected(AnimKeys.PAC_MUNCHING)) {
+			if (pac.isAnimationSelected(AnimationKey.PAC_MUNCHING)) {
 				drawPacMunching(g, pac, pac.animation().get());
-			} else if (pac.isAnimationSelected(AnimKeys.PAC_DYING)) {
+			} else if (pac.isAnimationSelected(AnimationKey.PAC_DYING)) {
 				drawPacDying(g, pac, pac.animation().get());
 			}
 		}

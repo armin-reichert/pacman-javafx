@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.lib.anim.AnimKeys;
+import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -62,7 +62,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.show();
 
 		pac.setAnimations(renderer.createPacAnimations(pac));
-		pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
+		pac.selectAndRunAnimation(AnimationKey.PAC_MUNCHING);
 
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
 		blinky.placeAtTile(v2i(35, 20), 0, 0);
@@ -71,10 +71,10 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky.show();
 
 		var blinkyAnimations = renderer.createGhostAnimations(blinky);
-		blinkyAnimations.put(AnimKeys.BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
-		blinkyAnimations.put(AnimKeys.BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
+		blinkyAnimations.put(AnimationKey.BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
+		blinkyAnimations.put(AnimationKey.BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
 		blinky.setAnimations(blinkyAnimations);
-		blinky.selectAndRunAnimation(AnimKeys.BLINKY_PATCHED);
+		blinky.selectAndRunAnimation(AnimationKey.BLINKY_PATCHED);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class PacManCutscene3 extends GameScene2D {
 		case 400 -> {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.selectAndRunAnimation(AnimKeys.BLINKY_NAKED);
+			blinky.selectAndRunAnimation(AnimationKey.BLINKY_NAKED);
 		}
 		case 700 -> {
 			context.state().timer().expire();

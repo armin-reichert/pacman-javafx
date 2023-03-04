@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.mspacman.MsPacManIntermission1;
-import de.amr.games.pacman.lib.anim.AnimKeys;
+import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
@@ -55,7 +55,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		ic.pacMan.setAnimations(r.createPacAnimations(ic.pacMan));
 		ic.pacMan.animations().ifPresent(animations -> {
 			var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
-			animations.put(AnimKeys.PAC_MUNCHING, munching);
+			animations.put(AnimationKey.PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
 		ic.inky.setAnimations(r.createGhostAnimations(ic.inky));

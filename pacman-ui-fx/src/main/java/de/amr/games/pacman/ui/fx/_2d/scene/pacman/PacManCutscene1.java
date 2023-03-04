@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.lib.anim.AnimKeys;
+import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -63,9 +63,9 @@ public class PacManCutscene1 extends GameScene2D {
 		// TODO make this work for all renderers
 		if (context.r2D() instanceof PacManGameRenderer r) {
 			var pacAnimations = r.createPacAnimations(pac);
-			pacAnimations.put(AnimKeys.PAC_BIG, r.createBigPacManMunchingAnimation());
+			pacAnimations.put(AnimationKey.PAC_BIG, r.createBigPacManMunchingAnimation());
 			pac.setAnimations(pacAnimations);
-			pac.selectAndRunAnimation(AnimKeys.PAC_MUNCHING);
+			pac.selectAndRunAnimation(AnimationKey.PAC_MUNCHING);
 		}
 
 		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
@@ -98,12 +98,12 @@ public class PacManCutscene1 extends GameScene2D {
 			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.setPixelSpeed(0.75f);
-			blinky.animations().ifPresent(animations -> animations.selectAndRestart(AnimKeys.GHOST_BLUE));
+			blinky.animations().ifPresent(animations -> animations.selectAndRestart(AnimationKey.GHOST_BLUE));
 		}
 		case 400 -> {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
-			pac.animations().ifPresent(animations -> animations.selectAndRestart(AnimKeys.PAC_BIG));
+			pac.animations().ifPresent(animations -> animations.selectAndRestart(AnimationKey.PAC_BIG));
 		}
 		case 632 -> {
 			context.state().timer().expire();

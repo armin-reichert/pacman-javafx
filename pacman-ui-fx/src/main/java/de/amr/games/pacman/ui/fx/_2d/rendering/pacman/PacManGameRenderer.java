@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
-import de.amr.games.pacman.lib.anim.AnimKeys;
+import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
@@ -79,8 +79,8 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public EntityAnimationMap createWorldAnimations(World world) {
 		var map = new EntityAnimationMap();
-		map.put(AnimKeys.MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
-		map.put(AnimKeys.MAZE_FLASHING, new Pulse(10, true));
+		map.put(AnimationKey.MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
+		map.put(AnimationKey.MAZE_FLASHING, new Pulse(10, true));
 		return map;
 	}
 
@@ -132,9 +132,9 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public EntityAnimationMap createPacAnimations(Pac pac) {
 		var map = new EntityAnimationMap();
-		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
-		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
-		map.select(AnimKeys.PAC_MUNCHING);
+		map.put(AnimationKey.PAC_DYING, createPacDyingAnimation());
+		map.put(AnimationKey.PAC_MUNCHING, createPacMunchingAnimation(pac));
+		map.select(AnimationKey.PAC_MUNCHING);
 		return map;
 	}
 
@@ -162,12 +162,12 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
 		var map = new EntityAnimationMap();
-		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
-		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
-		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
-		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
-		map.select(AnimKeys.GHOST_COLOR);
+		map.put(AnimationKey.GHOST_COLOR, createGhostColorAnimation(ghost));
+		map.put(AnimationKey.GHOST_BLUE, createGhostBlueAnimation());
+		map.put(AnimationKey.GHOST_EYES, createGhostEyesAnimation(ghost));
+		map.put(AnimationKey.GHOST_FLASHING, createGhostFlashingAnimation());
+		map.put(AnimationKey.GHOST_VALUE, createGhostValueSpriteList());
+		map.select(AnimationKey.GHOST_COLOR);
 		return map;
 	}
 
