@@ -80,7 +80,7 @@ public class SectionGhostsInfo extends Section {
 			return InfoText.NO_INFO;
 		}
 		var key = anims.get().selectedKey();
-		var animKeyName = key != null ? key.name() : "n/a";
+		var animKeyName = key != null ? key : "n/a";
 		var selectedAnim = anims.get().selectedAnimation();
 		if (selectedAnim.isPresent()) {
 			var running = selectedAnim.get().isRunning();
