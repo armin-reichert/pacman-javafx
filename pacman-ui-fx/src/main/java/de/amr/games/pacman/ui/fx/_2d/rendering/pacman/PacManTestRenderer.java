@@ -30,7 +30,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
@@ -38,6 +37,7 @@ import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.common.AnimationKey;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;

@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
-import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
@@ -31,6 +30,7 @@ import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.common.AnimationKey;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
