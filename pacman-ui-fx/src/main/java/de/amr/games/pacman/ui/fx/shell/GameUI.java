@@ -356,7 +356,6 @@ public class GameUI implements GameEventListener {
 			var r = currentGameScene.context().r2D();
 			level.pac().setAnimations(r.createPacAnimations(level.pac()));
 			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
-//			level.world().addAnimation(AnimKeys.MAZE_FLASHING, r.createMazeFlashingAnimation());
 			level.world().setAnimations(r.createWorldAnimations(level.world()));
 			LOG.trace("Created creature and world animations for level #%d", level.number());
 		});
