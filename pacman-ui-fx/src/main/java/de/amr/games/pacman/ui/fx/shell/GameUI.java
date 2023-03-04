@@ -194,17 +194,19 @@ public class GameUI implements GameEventListener {
 
 	private void updateView() {
 		var variant = gameController.game().variant();
-		var paused = Env.Simulation.pausedPy.get() ? " (paused)" : "";
+		var paused = Env.Simulation.pausedPy.get();
 		switch (variant) {
 		case MS_PACMAN -> {
-			stage.setTitle("Ms. Pac-Man" + paused);
+			var title = ResourceMgr.message(paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman");
+			stage.setTitle(title);
 			stage.getIcons().setAll(APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
-			stage.setTitle("Pac-Man" + paused);
+			var title = ResourceMgr.message(paused ? "app.title.pacman.paused" : "app.title.pacman");
+			stage.setTitle(title);
 			stage.getIcons().setAll(APP_ICON_PACMAN);
 		}
-		default -> throw new IllegalStateException();
+		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
 		}
 		var bgColor = Env.ThreeD.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) mainScene.getRoot();
