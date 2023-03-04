@@ -41,12 +41,11 @@ import javafx.scene.paint.Color;
  */
 public final class MsPacManGameAssets {
 
-	static final Spritesheet SPRITESHEET = new Spritesheet(//
-			ResourceMgr.image("graphics/mspacman/sprites.png"), 16, //
+	//@formatter:off
+	static final Spritesheet SPRITESHEET = new Spritesheet(
+			ResourceMgr.image("graphics/mspacman/sprites.png"), 16,
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	//@formatter:off
-	
 	static final MazeColoring[] MAZE_COLORS = {
 			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 			new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
