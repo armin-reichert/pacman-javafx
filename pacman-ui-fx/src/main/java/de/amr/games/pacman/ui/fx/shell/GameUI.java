@@ -114,11 +114,10 @@ public class GameUI implements GameEventListener {
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
 	private KeyboardSteering manualSteering;
 	private GameScene currentGameScene;
-
 	private Scene mainScene;
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
-	/*
+	/**
 	 * Embedded 2D-view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
 	 * controlled using the dashboard.
 	 */
@@ -128,9 +127,10 @@ public class GameUI implements GameEventListener {
 		gameController = new GameController(settings.variant);
 
 		stage = primaryStage;
+		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-		stage.setFullScreen(settings.fullScreen);
+
 		mainScene = createMainScene(ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom);
 		stage.setScene(mainScene);
 
@@ -142,13 +142,10 @@ public class GameUI implements GameEventListener {
 				settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), //
 				settings.keyMap.get(Direction.RIGHT));
+
 		gameController.setManualPacSteering(manualSteering);
 
-		mainScene.setOnKeyPressed(this::handleKeyPressed);
-		mainScene.heightProperty()
-				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 		dashboard.init(this);
-
 		initEnv(settings);
 		GameEvents.addListener(this);
 		Actions.setUI(this);
@@ -158,10 +155,10 @@ public class GameUI implements GameEventListener {
 
 	private Scene createMainScene(int width, int height, float zoom) {
 		if (width <= 0) {
-			throw new IllegalArgumentException("Layout width must be positive but is: %d".formatted(width));
+			throw new IllegalArgumentException("Scene width must be positive but is: %d".formatted(width));
 		}
 		if (height <= 0) {
-			throw new IllegalArgumentException("Layout height must be positive but is: %d".formatted(height));
+			throw new IllegalArgumentException("Scene height must be positive but is: %d".formatted(height));
 		}
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
@@ -172,15 +169,15 @@ public class GameUI implements GameEventListener {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipPlayScene.fxSubScene());
-		var placeHolder = new Pane(); /* placeholder for current game scene */
-		var root = new StackPane(placeHolder, flashMessageView, overlayPane);
-		return new Scene(root, width * zoom, height * zoom);
-	}
+		/* First child is placeholder for current game scene */
+		var root = new StackPane(new Pane(), flashMessageView, overlayPane);
 
-	private void showView() {
-		stage.centerOnScreen();
-		stage.requestFocus();
-		stage.show();
+		var scene = new Scene(root, width * zoom, height * zoom);
+		scene.setOnKeyPressed(this::handleKeyPressed);
+		scene.heightProperty()
+				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
+
+		return scene;
 	}
 
 	private void updateView() {
@@ -244,15 +241,15 @@ public class GameUI implements GameEventListener {
 			LOG.info("Game has already been started");
 			return;
 		}
+		Ufx.afterSeconds(1, Actions::playHelpVoiceMessage).play();
 		gameController.boot(); // after booting, current game scene is initialized
-		showView();
 		simulation.start();
-
+		stage.centerOnScreen();
+		stage.requestFocus();
+		stage.show();
 		LOG.info("Game started. Target frame rate: %d", simulation.targetFrameratePy.get());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
 				Env.ThreeD.enabledPy.get(), Env.ThreeD.perspectivePy.get()));
-
-		Ufx.afterSeconds(1, Actions::playHelpVoiceMessage).play();
 	}
 
 	public void stop() {
