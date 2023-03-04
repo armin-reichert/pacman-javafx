@@ -94,7 +94,7 @@ public class SectionGeneral extends Section {
 
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
-		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.scene().getWidth(), ui.scene().getHeight()));
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.mainScene().getWidth(), ui.mainScene().getHeight()));
 
 		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));

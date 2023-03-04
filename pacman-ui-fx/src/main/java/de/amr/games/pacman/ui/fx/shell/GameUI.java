@@ -107,29 +107,35 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private final Simulation simulation = new Simulation();
+	private final Stage stage;
 	private final GameController gameController;
+	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
-	private final Dashboard dashboard = new Dashboard();
-	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
+	private KeyboardSteering manualSteering;
+	private GameScene currentGameScene;
+
+	private Scene mainScene;
+	private Dashboard dashboard;
+	private FlashMessageView flashMessageView;
 	/*
 	 * Embedded 2D-view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
 	 * controlled using the dashboard.
 	 */
-	private final PlayScene2D pipPlayScene = new PlayScene2D();
-	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
-	private KeyboardSteering manualSteering;
-	private GameScene currentGameScene;
-	private Stage stage;
-	private Scene scene;
+	private PlayScene2D pipPlayScene;
 
 	public GameUI(Stage primaryStage, Settings settings) {
 		gameController = new GameController(settings.variant);
 
-		createGameView(primaryStage, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom, settings.fullScreen);
+		stage = primaryStage;
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+		stage.setFullScreen(settings.fullScreen);
+		mainScene = createMainScene(ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y(), settings.zoom);
+		stage.setScene(mainScene);
 
-		setRenderer(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		setRenderer(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
+		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
 
 		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //
@@ -138,8 +144,8 @@ public class GameUI implements GameEventListener {
 				settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(manualSteering);
 
-		scene.setOnKeyPressed(this::handleKeyPressed);
-		scene.heightProperty()
+		mainScene.setOnKeyPressed(this::handleKeyPressed);
+		mainScene.heightProperty()
 				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
 		dashboard.init(this);
 
@@ -150,7 +156,7 @@ public class GameUI implements GameEventListener {
 		LOG.info("Created game UI, Application settings: %s", settings);
 	}
 
-	private void createGameView(Stage stage, int width, int height, float zoom, boolean fullscreen) {
+	private Scene createMainScene(int width, int height, float zoom) {
 		if (width <= 0) {
 			throw new IllegalArgumentException("Layout width must be positive but is: %d".formatted(width));
 		}
@@ -160,29 +166,25 @@ public class GameUI implements GameEventListener {
 		if (zoom <= 0) {
 			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
 		}
-
-		this.stage = stage;
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-		stage.setFullScreen(fullscreen);
-
+		dashboard = new Dashboard();
+		flashMessageView = new FlashMessageView();
+		pipPlayScene = new PlayScene2D();
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipPlayScene.fxSubScene());
 		var placeHolder = new Pane(); /* placeholder for current game scene */
 		var root = new StackPane(placeHolder, flashMessageView, overlayPane);
-		scene = new Scene(root, width * zoom, height * zoom);
-		stage.setScene(scene);
+		return new Scene(root, width * zoom, height * zoom);
 	}
 
-	private void showGameView() {
+	private void showView() {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-
 	}
 
-	private void updateGameView(GameVariant variant) {
+	private void updateView() {
+		var variant = gameController.game().variant();
 		var paused = Env.Simulation.pausedPy.get() ? " (paused)" : "";
 		switch (variant) {
 		case MS_PACMAN -> {
@@ -196,22 +198,14 @@ public class GameUI implements GameEventListener {
 		default -> throw new IllegalStateException();
 		}
 		var bgColor = Env.ThreeD.drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
-		var sceneRoot = (Region) scene.getRoot();
+		var sceneRoot = (Region) mainScene.getRoot();
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
 	}
 
 	private void embedGameScene(GameScene gameScene) {
-		StackPane root = (StackPane) scene.getRoot();
+		StackPane root = (StackPane) mainScene.getRoot();
 		root.getChildren().set(0, gameScene.fxSubScene());
-		gameScene.onEmbed(scene);
-	}
-
-	private Rendering2D renderer(GameVariant variant) {
-		return rendererMap.get(variant);
-	}
-
-	private void setRenderer(GameVariant variant, Rendering2D renderer) {
-		rendererMap.put(variant, renderer);
+		gameScene.onEmbed(mainScene);
 	}
 
 	public void updatePipView(GameScene currentGameScene) {
@@ -230,17 +224,17 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateGameView(gameController.game().variant()));
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateView());
 
 		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipPlayScene.resizeToHeight(newVal.doubleValue()));
 		pipPlayScene.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
-		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateGameView(gameController.game().variant()));
+		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateView());
 		simulation.pausedPy.bind(Env.Simulation.pausedPy);
 		simulation.targetFrameratePy.bind(Env.Simulation.targetFrameratePy);
 		simulation.measuredPy.bind(Env.Simulation.timeMeasuredPy);
 
-		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> updateGameView(gameController.game().variant()));
+		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> updateView());
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 	}
@@ -251,7 +245,7 @@ public class GameUI implements GameEventListener {
 			return;
 		}
 		gameController.boot(); // after booting, current game scene is initialized
-		showGameView();
+		showView();
 		simulation.start();
 
 		LOG.info("Game started. Target frame rate: %d", simulation.targetFrameratePy.get());
@@ -277,14 +271,14 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateGameView(gameController.game().variant());
+		updateView();
 	}
 
 	private void changeGameScene(GameScene nextGameScene) {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		var renderer = renderer(gameController.game().variant());
+		var renderer = rendererMap.get(gameController.game().variant());
 		var sceneContext = new GameSceneContext(gameController, renderer);
 		nextGameScene.setContext(sceneContext);
 		nextGameScene.init();
@@ -296,9 +290,9 @@ public class GameUI implements GameEventListener {
 
 	private void updateManualPacManSteering(GameScene gameScene) {
 		boolean enabled = false;
-		scene.removeEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+		mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
 		if (gameScene instanceof PlayScene2D || gameScene instanceof PlayScene3D) {
-			scene.addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+			mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
 			enabled = true;
 		}
 		LOG.trace("Manual Pac-Man steering is %s", enabled ? "enabled" : "disabled");
@@ -378,8 +372,8 @@ public class GameUI implements GameEventListener {
 		return gameController;
 	}
 
-	public Scene scene() {
-		return scene;
+	public Scene mainScene() {
+		return mainScene;
 	}
 
 	public Simulation simulation() {
