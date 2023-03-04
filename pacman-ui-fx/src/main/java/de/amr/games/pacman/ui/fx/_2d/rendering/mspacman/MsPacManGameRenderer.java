@@ -143,8 +143,11 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	// Animations
 
 	@Override
-	public SingleEntityAnimation<Boolean> createMazeFlashingAnimation() {
-		return new Pulse(10, true);
+	public EntityAnimationMap createWorldAnimations(World world) {
+		var map = new EntityAnimationMap();
+		map.put(AnimKeys.MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
+		map.put(AnimKeys.MAZE_FLASHING, new Pulse(10, true));
+		return map;
 	}
 
 	@Override

@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -66,7 +65,7 @@ public interface Rendering2D {
 
 	EntityAnimationMap createGhostAnimations(Ghost ghost);
 
-	SingleEntityAnimation<Boolean> createMazeFlashingAnimation();
+	EntityAnimationMap createWorldAnimations(World world);
 
 	// Drawing
 
