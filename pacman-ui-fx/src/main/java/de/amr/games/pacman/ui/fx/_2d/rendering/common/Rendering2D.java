@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
@@ -66,14 +65,6 @@ public interface Rendering2D {
 	EntityAnimationMap createPacAnimations(Pac pac);
 
 	EntityAnimationMap createGhostAnimations(Ghost ghost);
-
-	EntityAnimationByDirection createGhostColorAnimation(Ghost ghost);
-
-	SingleEntityAnimation<?> createGhostBlueAnimation();
-
-	SingleEntityAnimation<?> createGhostFlashingAnimation();
-
-	EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost);
 
 	SingleEntityAnimation<Boolean> createMazeFlashingAnimation();
 

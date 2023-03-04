@@ -29,10 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.anim.AnimKeys;
-import de.amr.games.pacman.lib.anim.EntityAnimation;
-import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -80,23 +76,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	public abstract Rectangle2D bonusSymbolRegion(int symbol);
 
 	public abstract Rectangle2D bonusValueRegion(int symbol);
-
-	@Override
-	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
-		var map = new EntityAnimationMap();
-		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
-		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
-		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
-		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
-		map.select(AnimKeys.GHOST_COLOR);
-		return map;
-	}
-
-	private EntityAnimation createGhostValueSpriteList() {
-		return new FixedEntityAnimation<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
-				ghostValueRegion(3));
-	}
 
 	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {

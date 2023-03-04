@@ -30,6 +30,7 @@ import de.amr.games.pacman.lib.anim.AnimKeys;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -182,7 +183,18 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public EntityAnimationByDirection createGhostColorAnimation(Ghost ghost) {
+	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
+		var map = new EntityAnimationMap();
+		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
+		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
+		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
+		map.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
+		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
+		map.select(AnimKeys.GHOST_COLOR);
+		return map;
+	}
+
+	private EntityAnimationByDirection createGhostColorAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
@@ -194,29 +206,31 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		return animationByDir;
 	}
 
-	@Override
-	public SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
+	private SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
 		var animation = new SingleEntityAnimation<>(col3(8, 4), col3(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
-	@Override
-	public SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
+	private SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
 		var animation = new SingleEntityAnimation<>(col3(8, 4), col3(9, 4), col3(10, 4), col3(11, 4));
 		animation.setFrameDuration(4);
 		return animation;
 	}
 
-	@Override
-	public EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost) {
+	private EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost) {
 		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
 			animationByDir.put(dir, new SingleEntityAnimation<>(col3(8 + d, 5)));
 		}
 		return animationByDir;
+	}
+
+	private EntityAnimation createGhostValueSpriteList() {
+		return new FixedEntityAnimation<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
+				ghostValueRegion(3));
 	}
 
 	// Ms. Pac-Man specific:

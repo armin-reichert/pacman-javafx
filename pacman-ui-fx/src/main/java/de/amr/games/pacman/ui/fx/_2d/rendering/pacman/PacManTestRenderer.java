@@ -118,29 +118,9 @@ public class PacManTestRenderer implements Rendering2D {
 //		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
 //		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 //		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(AnimKeys.GHOST_FLASHING, createGhostFlashingAnimation());
+		map.put(AnimKeys.GHOST_FLASHING, new Pulse(6, true));
 //		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
 		return map;
-	}
-
-	@Override
-	public EntityAnimationByDirection createGhostColorAnimation(Ghost ghost) {
-		return null;
-	}
-
-	@Override
-	public SingleEntityAnimation<?> createGhostBlueAnimation() {
-		return null;
-	}
-
-	@Override
-	public SingleEntityAnimation<Boolean> createGhostFlashingAnimation() {
-		return new Pulse(6, true);
-	}
-
-	@Override
-	public EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost) {
-		return null;
 	}
 
 	@Override
