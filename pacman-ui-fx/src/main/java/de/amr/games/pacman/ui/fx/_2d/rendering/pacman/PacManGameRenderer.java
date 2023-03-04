@@ -97,7 +97,12 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
+	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
+		boolean flash = false;
+		var flashingAnimation = world.animation(AnimationKey.MAZE_FLASHING);
+		if (flashingAnimation.isPresent()) {
+			flash = (boolean) flashingAnimation.get().frame();
+		}
 		g.drawImage(flash ? PacManGameAssets.MAZE_EMPTY_INV : PacManGameAssets.MAZE_EMPTY, x, y);
 	}
 

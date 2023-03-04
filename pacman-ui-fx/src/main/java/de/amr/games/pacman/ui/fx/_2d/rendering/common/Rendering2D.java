@@ -86,7 +86,7 @@ public interface Rendering2D {
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
-	void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash);
+	void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
 
 	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden);
 }

@@ -99,9 +99,14 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
+	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
 		var w = MsPacManGameAssets.MAZE_WIDTH;
 		var h = MsPacManGameAssets.MAZE_HEIGHT;
+		boolean flash = false;
+		var flashingAnimation = world.animation(AnimationKey.MAZE_FLASHING);
+		if (flashingAnimation.isPresent()) {
+			flash = (boolean) flashingAnimation.get().frame();
+		}
 		if (flash) {
 			g.drawImage(MsPacManGameAssets.MAZES_EMPTY_FLASHING[mazeNumber - 1], x, y);
 		} else {

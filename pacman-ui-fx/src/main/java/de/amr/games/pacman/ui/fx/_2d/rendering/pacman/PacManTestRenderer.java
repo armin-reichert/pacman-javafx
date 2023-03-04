@@ -253,7 +253,12 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean flash) {
+	public void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
+		boolean flash = false;
+		var flashingAnimation = world.animation(AnimationKey.MAZE_FLASHING);
+		if (flashingAnimation.isPresent()) {
+			flash = (boolean) flashingAnimation.get().frame();
+		}
 		drawWalls(g, mazeNumber, world, flash);
 	}
 
