@@ -27,7 +27,6 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.shell.GameView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -95,13 +94,12 @@ public class SectionGeneral extends Section {
 
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
-		addInfo("Main scene",
-				() -> String.format("w=%.0f h=%.0f", ui.gameView().scene().getWidth(), ui.gameView().scene().getHeight()));
+		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.scene().getWidth(), ui.scene().getHeight()));
 
 		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 
-		sliderPiPSceneHeight = addSlider("PiP Size", GameView.PIP_VIEW_MIN_HEIGHT, GameView.PIP_VIEW_MAX_HEIGHT,
+		sliderPiPSceneHeight = addSlider("PiP Size", GameUI.PIP_VIEW_MIN_HEIGHT, GameUI.PIP_VIEW_MAX_HEIGHT,
 				Env.PiP.sceneHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.PiP.sceneHeightPy.set(newValue.doubleValue()));

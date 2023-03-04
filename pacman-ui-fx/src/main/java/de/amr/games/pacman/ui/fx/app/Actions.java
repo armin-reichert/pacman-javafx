@@ -98,7 +98,7 @@ public class Actions {
 	}
 
 	public static void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		ui.gameView().flashMessageView().showMessage(String.format(message, args), seconds);
+		ui.flashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
 	public static void startGame() {
@@ -155,7 +155,7 @@ public class Actions {
 	}
 
 	public static void toggleDashboardVisible() {
-		Ufx.toggle(ui.gameView().dashboard().visibleProperty());
+		Ufx.toggle(ui.dashboard().visibleProperty());
 	}
 
 	public static void togglePaused() {
