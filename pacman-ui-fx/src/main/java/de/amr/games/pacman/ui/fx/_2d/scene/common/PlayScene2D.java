@@ -59,11 +59,8 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void end() {
-		// TODO check if this is really needed
-		context.level().ifPresent(level -> {
-			var sound = SoundHandler.sounds(level.game());
-			sound.stopAll();
-		});
+		// TODO is this really needed?
+		context.level().ifPresent(level -> SoundHandler.sounds(level.game()).stopAll());
 	}
 
 	@Override
@@ -90,7 +87,7 @@ public class PlayScene2D extends GameScene2D {
 		var r = context.r2D();
 		int levelNumber = context.level().isPresent() ? context.level().get().number() : 0;
 		if (context.state() == GameState.LEVEL_TEST) {
-			r.drawText(g, "LEVEL %d TEST".formatted(levelNumber), Palette.YELLOW, r.screenFont(TS), t(8), t(5));
+			r.drawText(g, "TESTING LEVEL %d".formatted(levelNumber), Palette.YELLOW, r.screenFont(TS), t(6), t(4));
 		} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
 			r.drawText(g, "GAME  OVER", Palette.RED, r.screenFont(TS), t(9), t(21));
 		} else if (context.state() == GameState.READY) {
