@@ -23,8 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import static de.amr.games.pacman.lib.math.MathFunctions.randomDouble;
-import static de.amr.games.pacman.lib.math.MathFunctions.randomInt;
+import static de.amr.games.pacman.lib.U.randomDouble;
+import static de.amr.games.pacman.lib.U.randomInt;
 
 import de.amr.games.pacman.model.common.world.World;
 import javafx.animation.Transition;
