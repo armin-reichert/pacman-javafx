@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -63,7 +64,7 @@ public class PacManCutscene1 extends GameScene2D {
 		// TODO make this work for all renderers
 		if (context.r2D() instanceof PacManGameRenderer r) {
 			var pacAnimations = r.createPacAnimations(pac);
-			pacAnimations.put(GameModel.AK_PAC_BIG, r.createBigPacManMunchingAnimation());
+			pacAnimations.put(PacManGame.AK_PAC_BIG, r.createBigPacManMunchingAnimation());
 			pac.setAnimations(pacAnimations);
 			pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
 		}
@@ -103,7 +104,7 @@ public class PacManCutscene1 extends GameScene2D {
 		case 400 -> {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
-			pac.animations().ifPresent(animations -> animations.selectAndRestart(GameModel.AK_PAC_BIG));
+			pac.animations().ifPresent(animations -> animations.selectAndRestart(PacManGame.AK_PAC_BIG));
 		}
 		case 632 -> {
 			context.state().timer().expire();

@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -80,7 +81,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		var blinkyAnimations = renderer.createGhostAnimations(blinky);
 		damagedAnimation = renderer.createBlinkyDamagedAnimation();
-		blinkyAnimations.put(GameModel.AK_BLINKY_DAMAGED, damagedAnimation);
+		blinkyAnimations.put(PacManGame.AK_BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.selectAndRestart(GameModel.AK_GHOST_COLOR);
 		blinky.setAnimations(blinkyAnimations);
 	}
@@ -120,7 +121,7 @@ public class PacManCutscene2 extends GameScene2D {
 			stretchedDressAnimation.setFrameIndex(4);
 		}
 		case 329 -> {
-			blinky.animations().ifPresent(animations -> animations.select(GameModel.AK_BLINKY_DAMAGED));
+			blinky.animations().ifPresent(animations -> animations.select(PacManGame.AK_BLINKY_DAMAGED));
 			damagedAnimation.setFrameIndex(0);
 		}
 		case 389 -> {

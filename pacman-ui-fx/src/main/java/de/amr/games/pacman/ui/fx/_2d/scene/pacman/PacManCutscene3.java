@@ -34,6 +34,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -71,10 +72,10 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky.show();
 
 		var blinkyAnimations = renderer.createGhostAnimations(blinky);
-		blinkyAnimations.put(GameModel.AK_BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
-		blinkyAnimations.put(GameModel.AK_BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
+		blinkyAnimations.put(PacManGame.AK_BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
+		blinkyAnimations.put(PacManGame.AK_BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
 		blinky.setAnimations(blinkyAnimations);
-		blinky.selectAndRunAnimation(GameModel.AK_BLINKY_PATCHED);
+		blinky.selectAndRunAnimation(PacManGame.AK_BLINKY_PATCHED);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class PacManCutscene3 extends GameScene2D {
 		case 400 -> {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.selectAndRunAnimation(GameModel.AK_BLINKY_NAKED);
+			blinky.selectAndRunAnimation(PacManGame.AK_BLINKY_NAKED);
 		}
 		case 700 -> {
 			context.state().timer().expire();
