@@ -66,7 +66,11 @@ public class Sounds {
 
 	public void play(SoundClipID sound) {
 		if (!isPlaying(sound)) {
-			getClip(sound).ifPresent(AudioClip::play);
+			var optionalClip = getClip(sound);
+			optionalClip.ifPresent(clip -> {
+				clip.setCycleCount(1); // might have been looped at previous call
+				clip.play();
+			});
 		}
 	}
 
