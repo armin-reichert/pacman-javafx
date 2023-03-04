@@ -316,7 +316,7 @@ public class PlayScene3D implements GameScene {
 					lockGameState();
 					var animation = new SequentialTransition( //
 							Ufx.pause(0.2), //
-							level3D.pac3D().createDyingAnimation(context.r2D().ghostColor(killer.id())), //
+							level3D.pac3D().createDyingAnimation(context.r2D().ghostColoring(killer.id()).normalDress()), //
 							Ufx.pause(2.0) //
 					);
 					animation.setOnFinished(evt -> unlockGameState());

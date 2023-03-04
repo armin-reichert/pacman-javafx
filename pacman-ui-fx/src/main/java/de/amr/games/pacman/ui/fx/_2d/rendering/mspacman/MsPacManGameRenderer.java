@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -56,8 +57,8 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public Color ghostColor(int ghostID) {
-		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
+	public GhostColoring ghostColoring(int ghostID) {
+		return ArcadeTheme.GHOST_COLORS[ghostID];
 	}
 
 	@Override

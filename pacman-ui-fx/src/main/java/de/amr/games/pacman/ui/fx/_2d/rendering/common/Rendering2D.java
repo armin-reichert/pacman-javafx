@@ -49,7 +49,7 @@ public interface Rendering2D {
 
 	Font screenFont(double size);
 
-	Color ghostColor(int ghostID);
+	GhostColoring ghostColoring(int ghostID);
 
 	Color mazeFoodColor(int mazeNumber);
 

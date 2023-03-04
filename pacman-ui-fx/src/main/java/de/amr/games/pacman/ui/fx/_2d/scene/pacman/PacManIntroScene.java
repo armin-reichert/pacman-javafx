@@ -151,7 +151,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int row = 7 + 3 * id;
-			var color = r.ghostColor(id);
+			var color = r.ghostColoring(id).normalDress();
 			r.drawGhostFacingRight(g, id, t(col) + 4, t(row));
 			if (intro.context().characterVisible[id]) {
 				r.drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(row + 1));

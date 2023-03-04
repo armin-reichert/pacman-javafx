@@ -45,6 +45,7 @@ import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -62,8 +63,8 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public Color ghostColor(int ghostID) {
-		return ArcadeTheme.GHOST_COLORS[ghostID].normalDress();
+	public GhostColoring ghostColoring(int ghostID) {
+		return ArcadeTheme.GHOST_COLORS[ghostID];
 	}
 
 	@Override
@@ -194,7 +195,7 @@ public class PacManTestRenderer implements Rendering2D {
 			drawGhostBody(g, ghost, color);
 		}
 		default -> {
-			drawGhostBody(g, ghost, ghostColor(ghost.id()));
+			drawGhostBody(g, ghost, ghostColoring(ghost.id()).normalDress());
 		}
 		}
 	}
@@ -226,7 +227,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int id, int x, int y) {
-		var color = ghostColor(id);
+		var color = ghostColoring(id).normalDress();
 		g.setFill(color);
 		g.fillRect(x - 2, y - 4, 12, 16);
 	}
