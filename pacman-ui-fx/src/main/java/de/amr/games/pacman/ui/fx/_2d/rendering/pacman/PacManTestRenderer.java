@@ -37,7 +37,7 @@ import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.AnimationKey;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -76,9 +76,9 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public EntityAnimationMap createPacAnimations(Pac pac) {
 		var map = new EntityAnimationMap();
-		map.put(AnimationKey.PAC_DYING, createPacDyingAnimation());
-		map.put(AnimationKey.PAC_MUNCHING, createPacMunchingAnimation(pac));
-		map.select(AnimationKey.PAC_MUNCHING);
+		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
+		map.put(GameModel.AK_PAC_MUNCHING, createPacMunchingAnimation(pac));
+		map.select(GameModel.AK_PAC_MUNCHING);
 		return map;
 	}
 
@@ -105,7 +105,7 @@ public class PacManTestRenderer implements Rendering2D {
 //		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
 //		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 //		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(AnimationKey.GHOST_FLASHING, new Pulse(6, true));
+		map.put(GameModel.AK_GHOST_FLASHING, new Pulse(6, true));
 //		map.put(AnimKeys.GHOST_VALUE, createGhostValueSpriteList());
 		return map;
 	}
@@ -113,17 +113,17 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public EntityAnimationMap createWorldAnimations(World world) {
 		var map = new EntityAnimationMap();
-		map.put(AnimationKey.MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
-		map.put(AnimationKey.MAZE_FLASHING, new Pulse(10, true));
+		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
+		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
 		return null;
 	}
 
 	@Override
 	public void drawPac(GraphicsContext g, Pac pac) {
 		if (pac.isVisible()) {
-			if (pac.isAnimationSelected(AnimationKey.PAC_MUNCHING)) {
+			if (pac.isAnimationSelected(GameModel.AK_PAC_MUNCHING)) {
 				drawPacMunching(g, pac, pac.animation().get());
-			} else if (pac.isAnimationSelected(AnimationKey.PAC_DYING)) {
+			} else if (pac.isAnimationSelected(GameModel.AK_PAC_DYING)) {
 				drawPacDying(g, pac, pac.animation().get());
 			}
 		}
@@ -255,13 +255,13 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
 		boolean flash = false;
-		var flashingAnimation = world.animation(AnimationKey.MAZE_FLASHING);
+		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			flash = (boolean) flashingAnimation.get().frame();
 			drawWalls(g, mazeNumber, world, flash);
 			return;
 		}
-		var energizerBlinking = world.animation(AnimationKey.MAZE_ENERGIZER_BLINKING);
+		var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 		boolean on = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 		drawWalls(g, mazeNumber, world, false);
 		drawFood(g, mazeNumber, world, !on);

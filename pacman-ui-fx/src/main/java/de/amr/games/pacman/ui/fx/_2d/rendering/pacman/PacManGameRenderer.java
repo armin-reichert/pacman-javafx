@@ -30,7 +30,7 @@ import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.AnimationKey;
+import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
@@ -85,8 +85,8 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public EntityAnimationMap createWorldAnimations(World world) {
 		var map = new EntityAnimationMap();
-		map.put(AnimationKey.MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
-		map.put(AnimationKey.MAZE_FLASHING, new Pulse(10, true));
+		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
+		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
 		return map;
 	}
 
@@ -99,7 +99,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
 		boolean flash = false;
-		var flashingAnimation = world.animation(AnimationKey.MAZE_FLASHING);
+		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			flash = (boolean) flashingAnimation.get().frame();
 			g.drawImage(flash ? PacManGameAssets.MAZE_EMPTY_INV : PacManGameAssets.MAZE_EMPTY, x, y);
@@ -108,7 +108,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 		g.drawImage(PacManGameAssets.MAZE_FULL, x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
-		var energizerBlinking = world.animation(AnimationKey.MAZE_ENERGIZER_BLINKING);
+		var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 		boolean on = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 		if (!on) {
 			world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
@@ -123,9 +123,9 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public EntityAnimationMap createPacAnimations(Pac pac) {
 		var map = new EntityAnimationMap();
-		map.put(AnimationKey.PAC_DYING, createPacDyingAnimation());
-		map.put(AnimationKey.PAC_MUNCHING, createPacMunchingAnimation(pac));
-		map.select(AnimationKey.PAC_MUNCHING);
+		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
+		map.put(GameModel.AK_PAC_MUNCHING, createPacMunchingAnimation(pac));
+		map.select(GameModel.AK_PAC_MUNCHING);
 		return map;
 	}
 
@@ -153,12 +153,12 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	@Override
 	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
 		var map = new EntityAnimationMap();
-		map.put(AnimationKey.GHOST_COLOR, createGhostColorAnimation(ghost));
-		map.put(AnimationKey.GHOST_BLUE, createGhostBlueAnimation());
-		map.put(AnimationKey.GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(AnimationKey.GHOST_FLASHING, createGhostFlashingAnimation());
-		map.put(AnimationKey.GHOST_VALUE, createGhostValueSpriteList());
-		map.select(AnimationKey.GHOST_COLOR);
+		map.put(GameModel.AK_GHOST_COLOR, createGhostColorAnimation(ghost));
+		map.put(GameModel.AK_GHOST_BLUE, createGhostBlueAnimation());
+		map.put(GameModel.AK_GHOST_EYES, createGhostEyesAnimation(ghost));
+		map.put(GameModel.AK_GHOST_FLASHING, createGhostFlashingAnimation());
+		map.put(GameModel.AK_GHOST_VALUE, createGhostValueSpriteList());
+		map.select(GameModel.AK_GHOST_COLOR);
 		return map;
 	}
 
