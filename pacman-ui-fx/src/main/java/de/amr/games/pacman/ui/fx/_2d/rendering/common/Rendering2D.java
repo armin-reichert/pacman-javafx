@@ -53,8 +53,6 @@ public interface Rendering2D {
 
 	MazeColoring mazeColors(int mazeNumber);
 
-	Color ghostHouseDoorColor();
-
 	// Animations
 
 	EntityAnimationMap createPacAnimations(Pac pac);

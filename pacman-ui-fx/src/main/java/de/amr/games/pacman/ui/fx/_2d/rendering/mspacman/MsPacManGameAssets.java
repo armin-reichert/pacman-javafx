@@ -47,17 +47,15 @@ public final class MsPacManGameAssets {
 
 	//@formatter:off
 	
-	static final MazeColoring[] COLORS = {
-			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0)),
-			new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255)),
-			new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255)),
-			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb( 33,  33, 255),  Color.rgb(255, 183,  81)),
-			new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0)),
-			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255, 255,   0)),
+	static final MazeColoring[] MAZE_COLORS = {
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb( 33,  33, 255),  Color.rgb(255, 183,  81), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
 	};
 	//@formatter:on
-
-	static final Color GHOSTHOUSE_DOOR_COLOR = Color.rgb(255, 183, 255);
 
 	static final int MAZE_WIDTH = 226;
 	static final int MAZE_HEIGHT = 248;
@@ -75,7 +73,7 @@ public final class MsPacManGameAssets {
 
 	static Image emptyMazeFlashing(int i) {
 		return Ufx.colorsExchanged(emptyMaze(i),
-				Map.of(COLORS[i].sideColor(), Color.WHITE, COLORS[i].topColor(), Color.BLACK));
+				Map.of(MAZE_COLORS[i].sideColor(), Color.WHITE, MAZE_COLORS[i].topColor(), Color.BLACK));
 	}
 
 	// tile from third column

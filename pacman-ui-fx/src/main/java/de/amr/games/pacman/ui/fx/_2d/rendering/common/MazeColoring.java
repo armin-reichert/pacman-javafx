@@ -28,6 +28,6 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public record MazeColoring(Color foodColor, Color topColor, Color sideColor) {
+public record MazeColoring(Color foodColor, Color topColor, Color sideColor, Color houseDoorColor) {
 
 }

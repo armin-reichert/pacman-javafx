@@ -45,7 +45,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -64,12 +63,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public MazeColoring mazeColors(int mazeNumber) {
-		return MsPacManGameAssets.COLORS[mazeNumber - 1];
-	}
-
-	@Override
-	public Color ghostHouseDoorColor() {
-		return MsPacManGameAssets.GHOSTHOUSE_DOOR_COLOR;
+		return MsPacManGameAssets.MAZE_COLORS[mazeNumber - 1];
 	}
 
 	@Override

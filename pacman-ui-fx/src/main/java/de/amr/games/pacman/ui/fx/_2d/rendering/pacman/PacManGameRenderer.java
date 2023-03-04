@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -53,7 +52,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	@Override
 	public MazeColoring mazeColors(int mazeNumber) {
-		return PacManGameAssets.COLORS;
+		return PacManGameAssets.MAZE_COLORS;
 	}
 
 	@Override
@@ -109,26 +108,6 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 		if (energizerDark) {
 			world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
 		}
-	}
-
-//	@Override
-//	public Color mazeFoodColor(int mazeNumber) {
-//		return PacManGameAssets.FOOD_COLOR;
-//	}
-//
-//	@Override
-//	public Color mazeTopColor(int mazeNumber) {
-//		return PacManGameAssets.MAZE_WALL_COLOR.darker().darker();
-//	}
-//
-//	@Override
-//	public Color mazeSideColor(int mazeNumber) {
-//		return PacManGameAssets.MAZE_WALL_COLOR;
-//	}
-
-	@Override
-	public Color ghostHouseDoorColor() {
-		return PacManGameAssets.GHOSTHOUSE_DOOR_COLOR;
 	}
 
 	@Override

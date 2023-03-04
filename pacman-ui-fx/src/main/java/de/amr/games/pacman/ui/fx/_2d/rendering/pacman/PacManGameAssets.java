@@ -43,11 +43,10 @@ public final class PacManGameAssets {
 			ResourceMgr.image("graphics/pacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	static final MazeColoring COLORS = new MazeColoring(Color.rgb(254, 189, 180), Color.rgb(33, 33, 255),
-			Color.rgb(33, 33, 255));
-	static final Color GHOSTHOUSE_DOOR_COLOR = Color.rgb(252, 181, 255);
+	static final MazeColoring MAZE_COLORS = new MazeColoring(Color.rgb(254, 189, 180), Color.rgb(33, 33, 255),
+			Color.rgb(33, 33, 255), Color.rgb(252, 181, 255));
 
 	static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
 	static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(COLORS.topColor(), Color.WHITE));
+	static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_COLORS.topColor(), Color.WHITE));
 }

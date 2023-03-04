@@ -65,11 +65,7 @@ public class GameLevel3D extends Group {
 	private final Scores3D scores3D;
 
 	private static World3D createWorld3D(GameLevel level, Rendering2D r2D, int mazeNumber) {
-		var mazeColors = new Maze3DColors(//
-				r2D.mazeColors(mazeNumber).sideColor(), //
-				r2D.mazeColors(mazeNumber).topColor(), //
-				r2D.ghostHouseDoorColor());
-		return new World3D(level.world(), mazeColors);
+		return new World3D(level.world(), r2D.mazeColors(mazeNumber));
 	}
 
 	private static Pac3D createPac3D(GameLevel level) {

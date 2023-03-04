@@ -34,6 +34,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -76,13 +77,13 @@ public class World3D extends Group {
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final World world;
-	private final Maze3DColors mazeColors;
+	private final MazeColoring mazeColors;
 	private final Group wallsGroup = new Group();
 	private final Group doorWingsGroup = new Group();
 	private final PointLight houseLighting;
 	private Box floor;
 
-	public World3D(World world, Maze3DColors mazeColors) {
+	public World3D(World world, MazeColoring mazeColors) {
 		this.world = world;
 		this.mazeColors = mazeColors;
 
@@ -133,8 +134,8 @@ public class World3D extends Group {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = coloredMaterial(mazeColors.wallBaseColor());
-		wallData.topMaterial = coloredMaterial(mazeColors.wallTopColor());
+		wallData.baseMaterial = coloredMaterial(mazeColors.sideColor());
+		wallData.topMaterial = coloredMaterial(mazeColors.topColor());
 		return wallData;
 	}
 
@@ -145,7 +146,7 @@ public class World3D extends Group {
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 //		transformMaze();
-		var doorWings = world.ghostHouse().door().tiles().map(tile -> createDoorWing(tile, mazeColors.doorColor()))
+		var doorWings = world.ghostHouse().door().tiles().map(tile -> createDoorWing(tile, mazeColors.houseDoorColor()))
 				.toList();
 		doorWingsGroup.getChildren().setAll(doorWings);
 		LOG.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
