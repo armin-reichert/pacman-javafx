@@ -88,5 +88,5 @@ public interface Rendering2D {
 
 	void drawFlashingMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
 
-	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizersHidden);
+	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
 }

@@ -107,10 +107,12 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world, boolean energizerDark) {
+	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
 		g.drawImage(PacManGameAssets.MAZE_FULL, x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
-		if (energizerDark) {
+		var energizerBlinking = world.animation(AnimationKey.MAZE_ENERGIZER_BLINKING);
+		boolean on = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
+		if (!on) {
 			world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
 		}
 	}
