@@ -241,8 +241,7 @@ public class GameUI implements GameEventListener {
 			LOG.info("Game has already been started");
 			return;
 		}
-		Ufx.afterSeconds(1, Actions::playHelpVoiceMessage).play();
-		gameController.boot(); // after booting, current game scene is initialized
+		Actions.reboot();
 		simulation.start();
 		stage.centerOnScreen();
 		stage.requestFocus();

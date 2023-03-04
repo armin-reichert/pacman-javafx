@@ -89,10 +89,6 @@ public class Actions {
 		}
 	}
 
-	public static void playHelpVoiceMessage() {
-		playVoiceMessage(ResourceMgr.VOICE_HELP);
-	}
-
 	public static void showFlashMessage(String message, Object... args) {
 		showFlashMessageSeconds(1, message, args);
 	}
@@ -120,8 +116,15 @@ public class Actions {
 	}
 
 	public static void reboot() {
-		ui.currentGameScene().end();
+		if (ui.currentGameScene() != null) {
+			ui.currentGameScene().end();
+		}
+		playHelpVoiceMessage(4);
 		gameController().boot();
+	}
+
+	public static void playHelpVoiceMessage(int delaySeconds) {
+		Ufx.afterSeconds(delaySeconds, () -> playVoiceMessage(ResourceMgr.VOICE_HELP)).play();
 	}
 
 	public static void addCredit() {
@@ -180,6 +183,7 @@ public class Actions {
 	public static void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
 		gameState().selectGameVariant(gameVariant);
+		playHelpVoiceMessage(4);
 	}
 
 	public static void selectNextPerspective() {
