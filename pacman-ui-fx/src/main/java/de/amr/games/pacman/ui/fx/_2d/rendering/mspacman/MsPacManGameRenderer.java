@@ -41,6 +41,7 @@ import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -62,18 +63,8 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public Color mazeFoodColor(int mazeNumber) {
-		return MsPacManGameAssets.FOOD_COLORS[mazeNumber - 1];
-	}
-
-	@Override
-	public Color mazeTopColor(int mazeNumber) {
-		return MsPacManGameAssets.MAZE_TOP_COLORS[mazeNumber - 1];
-	}
-
-	@Override
-	public Color mazeSideColor(int mazeNumber) {
-		return MsPacManGameAssets.MAZE_SIDE_COLORS[mazeNumber - 1];
+	public MazeColoring mazeColors(int mazeNumber) {
+		return MsPacManGameAssets.COLORS[mazeNumber - 1];
 	}
 
 	@Override

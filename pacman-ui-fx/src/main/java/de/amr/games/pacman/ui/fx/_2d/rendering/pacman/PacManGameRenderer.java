@@ -36,6 +36,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -48,6 +49,11 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 
 	public PacManGameRenderer() {
 		super(PacManGameAssets.SPRITESHEET);
+	}
+
+	@Override
+	public MazeColoring mazeColors(int mazeNumber) {
+		return PacManGameAssets.COLORS;
 	}
 
 	@Override
@@ -105,24 +111,24 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 		}
 	}
 
-	@Override
-	public Color mazeFoodColor(int mazeNumber) {
-		return PacManGameAssets.FOOD_COLOR;
-	}
-
-	@Override
-	public Color mazeTopColor(int mazeNumber) {
-		return PacManGameAssets.MAZE_WALL_COLOR.darker().darker();
-	}
+//	@Override
+//	public Color mazeFoodColor(int mazeNumber) {
+//		return PacManGameAssets.FOOD_COLOR;
+//	}
+//
+//	@Override
+//	public Color mazeTopColor(int mazeNumber) {
+//		return PacManGameAssets.MAZE_WALL_COLOR.darker().darker();
+//	}
+//
+//	@Override
+//	public Color mazeSideColor(int mazeNumber) {
+//		return PacManGameAssets.MAZE_WALL_COLOR;
+//	}
 
 	@Override
 	public Color ghostHouseDoorColor() {
 		return PacManGameAssets.GHOSTHOUSE_DOOR_COLOR;
-	}
-
-	@Override
-	public Color mazeSideColor(int mazeNumber) {
-		return PacManGameAssets.MAZE_WALL_COLOR;
 	}
 
 	@Override

@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -45,31 +46,14 @@ public final class MsPacManGameAssets {
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	//@formatter:off
-	static final Color[] MAZE_TOP_COLORS = { 
-		Color.rgb(255, 183, 174), 
-		Color.rgb(71, 183, 255), 
-		Color.rgb(222, 151, 81), 
-		Color.rgb(33, 33, 255), 
-		Color.rgb(255, 183, 255), 
-		Color.rgb(255, 183, 174), 
-	};
-
-	static final Color[] MAZE_SIDE_COLORS = { 
-		Color.rgb(255, 0, 0), 
-		Color.rgb(222, 222, 255), 
-		Color.rgb(222, 222, 255), 
-		Color.rgb(255, 183, 81), 
-		Color.rgb(255, 255, 0), 
-		Color.rgb(255, 0, 0), 
-	};
-
-	static final Color[] FOOD_COLORS = { 
-		Color.rgb(222, 222, 255), 
-		Color.rgb(255, 255, 0), 
-		Color.rgb(255, 0, 0),
-		Color.rgb(222, 222, 255), 
-		Color.rgb(0, 255, 255), 
-		Color.rgb(222, 222, 255), 
+	
+	static final MazeColoring[] COLORS = {
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0)),
+			new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255)),
+			new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255)),
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb( 33,  33, 255),  Color.rgb(255, 183,  81)),
+			new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0)),
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255, 255,   0)),
 	};
 	//@formatter:on
 
@@ -90,7 +74,8 @@ public final class MsPacManGameAssets {
 	}
 
 	static Image emptyMazeFlashing(int i) {
-		return Ufx.colorsExchanged(emptyMaze(i), Map.of(MAZE_SIDE_COLORS[i], Color.WHITE, MAZE_TOP_COLORS[i], Color.BLACK));
+		return Ufx.colorsExchanged(emptyMaze(i),
+				Map.of(COLORS[i].sideColor(), Color.WHITE, COLORS[i].topColor(), Color.BLACK));
 	}
 
 	// tile from third column

@@ -46,6 +46,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -63,23 +64,13 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
+	public MazeColoring mazeColors(int mazeNumber) {
+		return PacManGameAssets.COLORS;
+	}
+
+	@Override
 	public GhostColoring ghostColoring(int ghostID) {
 		return ArcadeTheme.GHOST_COLORS[ghostID];
-	}
-
-	@Override
-	public Color mazeFoodColor(int mazeNumber) {
-		return Color.PINK;
-	}
-
-	@Override
-	public Color mazeTopColor(int mazeNumber) {
-		return Color.BLUE;
-	}
-
-	@Override
-	public Color mazeSideColor(int mazeNumber) {
-		return Color.BLUE;
 	}
 
 	@Override
@@ -294,7 +285,7 @@ public class PacManTestRenderer implements Rendering2D {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);
 				if (world.containsFood(tile)) {
-					g.setFill(mazeFoodColor(mazeNumber));
+					g.setFill(mazeColors(mazeNumber).foodColor());
 					if (world.isEnergizerTile(tile)) {
 						if (!energizersHidden) {
 							g.fillOval(tile.x() * TS, tile.y() * TS, TS, TS);

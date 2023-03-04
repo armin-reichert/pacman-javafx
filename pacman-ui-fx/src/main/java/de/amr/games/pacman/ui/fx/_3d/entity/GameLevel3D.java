@@ -66,8 +66,8 @@ public class GameLevel3D extends Group {
 
 	private static World3D createWorld3D(GameLevel level, Rendering2D r2D, int mazeNumber) {
 		var mazeColors = new Maze3DColors(//
-				r2D.mazeSideColor(mazeNumber), //
-				r2D.mazeTopColor(mazeNumber), //
+				r2D.mazeColors(mazeNumber).sideColor(), //
+				r2D.mazeColors(mazeNumber).topColor(), //
 				r2D.ghostHouseDoorColor());
 		return new World3D(level.world(), mazeColors);
 	}
@@ -122,7 +122,7 @@ public class GameLevel3D extends Group {
 		pac3D = createPac3D(level);
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(level, ghost)).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
-		food3D = new Food3D(level.world(), r2D.mazeFoodColor(mazeNumber));
+		food3D = new Food3D(level.world(), r2D.mazeColors(mazeNumber).foodColor());
 		levelCounter3D = createLevelCounter3D(level, r2D);
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));

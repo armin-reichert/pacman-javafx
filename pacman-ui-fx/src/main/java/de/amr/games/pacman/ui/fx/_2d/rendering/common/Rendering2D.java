@@ -51,11 +51,7 @@ public interface Rendering2D {
 
 	GhostColoring ghostColoring(int ghostID);
 
-	Color mazeFoodColor(int mazeNumber);
-
-	Color mazeTopColor(int mazeNumber);
-
-	Color mazeSideColor(int mazeNumber);
+	MazeColoring mazeColors(int mazeNumber);
 
 	Color ghostHouseDoorColor();
 

@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -42,11 +43,11 @@ public final class PacManGameAssets {
 			ResourceMgr.image("graphics/pacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	static final Color MAZE_WALL_COLOR = Color.rgb(33, 33, 255);
-	static final Color FOOD_COLOR = Color.rgb(254, 189, 180);
+	static final MazeColoring COLORS = new MazeColoring(Color.rgb(254, 189, 180), Color.rgb(33, 33, 255),
+			Color.rgb(33, 33, 255));
 	static final Color GHOSTHOUSE_DOOR_COLOR = Color.rgb(252, 181, 255);
 
 	static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
 	static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_WALL_COLOR, Color.WHITE));
+	static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(COLORS.topColor(), Color.WHITE));
 }
