@@ -103,25 +103,37 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			flashMessageView.update();
 			dashboard.update();
-			updatePipView(currentGameScene);
+			pipView.update();
+		}
+	}
+
+	/**
+	 * Embedded 2D-view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
+	 * controlled using the dashboard.
+	 */
+	private class PipView extends PlayScene2D {
+		@Override
+		public void update() {
+			boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+			pipView.fxSubScene().setVisible(visible);
+			if (visible) {
+				pipView.setContext(currentGameScene.context());
+				pipView.draw();
+			}
 		}
 	}
 
 	private final Stage stage;
+	private final Scene mainScene;
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
 	private KeyboardSteering manualSteering;
 	private GameScene currentGameScene;
-	private Scene mainScene;
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
-	/**
-	 * Embedded 2D-view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
-	 * controlled using the dashboard.
-	 */
-	private PlayScene2D pipPlayScene;
+	private PipView pipView;
 
 	public GameUI(Stage primaryStage, Settings settings) {
 		gameController = new GameController(settings.variant);
@@ -165,10 +177,10 @@ public class GameUI implements GameEventListener {
 		}
 		dashboard = new Dashboard();
 		flashMessageView = new FlashMessageView();
-		pipPlayScene = new PlayScene2D();
+		pipView = new PipView();
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(pipPlayScene.fxSubScene());
+		overlayPane.setRight(pipView.fxSubScene());
 		/* First child is placeholder for current game scene */
 		var root = new StackPane(new Pane(), flashMessageView, overlayPane);
 
@@ -199,21 +211,6 @@ public class GameUI implements GameEventListener {
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
 	}
 
-	private void embedGameScene(GameScene gameScene) {
-		StackPane root = (StackPane) mainScene.getRoot();
-		root.getChildren().set(0, gameScene.fxSubScene());
-		gameScene.onEmbed(mainScene);
-	}
-
-	public void updatePipView(GameScene currentGameScene) {
-		boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
-		pipPlayScene.fxSubScene().setVisible(visible);
-		if (visible) {
-			pipPlayScene.setContext(currentGameScene.context());
-			pipPlayScene.draw();
-		}
-	}
-
 	private void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.consume(keyEvent);
 		handleKeyboardInput();
@@ -223,8 +220,8 @@ public class GameUI implements GameEventListener {
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateView());
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipPlayScene.resizeToHeight(newVal.doubleValue()));
-		pipPlayScene.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.resizeToHeight(newVal.doubleValue()));
+		pipView.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateView());
 		simulation.pausedPy.bind(Env.Simulation.pausedPy);
@@ -280,7 +277,9 @@ public class GameUI implements GameEventListener {
 		nextGameScene.setContext(sceneContext);
 		nextGameScene.init();
 		updateManualPacManSteering(nextGameScene);
-		embedGameScene(nextGameScene);
+		var root = (StackPane) mainScene.getRoot();
+		root.getChildren().set(0, nextGameScene.fxSubScene());
+		nextGameScene.onEmbed(mainScene);
 		currentGameScene = nextGameScene;
 		LOG.trace("Game scene changed to %s".formatted(nextGameScene));
 	}
