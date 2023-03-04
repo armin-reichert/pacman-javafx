@@ -65,10 +65,6 @@ public interface Rendering2D {
 
 	EntityAnimationMap createPacAnimations(Pac pac);
 
-	EntityAnimationByDirection createPacMunchingAnimation(Pac pac);
-
-	SingleEntityAnimation<?> createPacDyingAnimation();
-
 	EntityAnimationMap createGhostAnimations(Ghost ghost);
 
 	EntityAnimationByDirection createGhostColorAnimation(Ghost ghost);

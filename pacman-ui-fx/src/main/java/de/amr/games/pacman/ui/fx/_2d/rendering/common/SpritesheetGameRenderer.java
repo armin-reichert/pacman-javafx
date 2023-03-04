@@ -82,15 +82,6 @@ public abstract class SpritesheetGameRenderer implements Rendering2D {
 	public abstract Rectangle2D bonusValueRegion(int symbol);
 
 	@Override
-	public EntityAnimationMap createPacAnimations(Pac pac) {
-		var map = new EntityAnimationMap();
-		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
-		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
-		map.select(AnimKeys.PAC_MUNCHING);
-		return map;
-	}
-
-	@Override
 	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
 		var map = new EntityAnimationMap();
 		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));

@@ -95,8 +95,7 @@ public class PacManTestRenderer implements Rendering2D {
 		return map;
 	}
 
-	@Override
-	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
+	private EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		var animation = new SingleEntityAnimation<>(0, 0, 90, 90, 120, 120, 90, 90);
 		animation.setFrameDuration(1);
@@ -107,8 +106,7 @@ public class PacManTestRenderer implements Rendering2D {
 		return animationByDir;
 	}
 
-	@Override
-	public SingleEntityAnimation<Integer> createPacDyingAnimation() {
+	private SingleEntityAnimation<Integer> createPacDyingAnimation() {
 		var animation = new SingleEntityAnimation<>(45, 60, 75, 90, 135, 180, 225, 270, 315, 360);
 		animation.setFrameDuration(8);
 		return animation;

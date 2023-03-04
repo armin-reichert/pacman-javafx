@@ -26,8 +26,10 @@ package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameAssets.col3;
 
+import de.amr.games.pacman.lib.anim.AnimKeys;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
+import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -145,7 +147,15 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
+	public EntityAnimationMap createPacAnimations(Pac pac) {
+		var map = new EntityAnimationMap();
+		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
+		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
+		map.select(AnimKeys.PAC_MUNCHING);
+		return map;
+	}
+
+	private EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
@@ -160,8 +170,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		return animationByDir;
 	}
 
-	@Override
-	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
+	private SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
 		var right = col3(1, 0);
 		var left = col3(1, 1);
 		var up = col3(1, 2);

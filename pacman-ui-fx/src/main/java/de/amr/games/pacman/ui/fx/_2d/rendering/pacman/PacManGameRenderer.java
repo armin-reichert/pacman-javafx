@@ -23,7 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
+import de.amr.games.pacman.lib.anim.AnimKeys;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
+import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
@@ -124,7 +126,15 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 	}
 
 	@Override
-	public EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
+	public EntityAnimationMap createPacAnimations(Pac pac) {
+		var map = new EntityAnimationMap();
+		map.put(AnimKeys.PAC_DYING, createPacDyingAnimation());
+		map.put(AnimKeys.PAC_MUNCHING, createPacMunchingAnimation(pac));
+		map.select(AnimKeys.PAC_MUNCHING);
+		return map;
+	}
+
+	private EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
@@ -139,8 +149,7 @@ public class PacManGameRenderer extends SpritesheetGameRenderer {
 		return animationByDir;
 	}
 
-	@Override
-	public SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
+	private SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
 		var animation = new SingleEntityAnimation<>(spritesheet.tilesRightOf(3, 0, 11));
 		animation.setFrameDuration(8);
 		return animation;
