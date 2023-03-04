@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.lib.anim.AnimationKey;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -100,13 +99,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMaze(World world, int mazeNumber, int x, int y) {
-		var r = context.r2D();
-		var flashingAnimation = world.animation(AnimationKey.MAZE_FLASHING);
-		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			r.drawFlashingMaze(g, x, y, mazeNumber, world);
-		} else {
-			r.drawMaze(g, x, y, mazeNumber, world);
-		}
+		context.r2D().drawMaze(g, x, y, mazeNumber, world);
 	}
 
 	@Override
