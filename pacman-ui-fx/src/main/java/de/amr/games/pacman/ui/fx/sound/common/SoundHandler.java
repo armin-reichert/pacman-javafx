@@ -51,8 +51,8 @@ public class SoundHandler {
 	}
 
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = sounds(event.game);
 		LOG.trace("Handle sound event: %s", event);
+		var sounds = sounds(event.game);
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN -> sounds.play(SoundClipID.BONUS_EATEN);
 		case GameModel.SE_CREDIT_ADDED -> sounds.play(SoundClipID.CREDIT);
@@ -64,6 +64,7 @@ public class SoundHandler {
 		case GameModel.SE_HUNTING_PHASE_STARTED_6 -> sounds.ensureSirenStarted(3);
 		case GameModel.SE_READY_TO_PLAY -> sounds.play(SoundClipID.GAME_READY);
 		case GameModel.SE_PACMAN_DEATH -> sounds.play(SoundClipID.PACMAN_DEATH);
+		// TODO this does not sound as in the original game
 		case GameModel.SE_PACMAN_FOUND_FOOD -> sounds.ensureLoop(SoundClipID.PACMAN_MUNCH, AudioClip.INDEFINITE);
 		case GameModel.SE_PACMAN_POWER_ENDS -> {
 			sounds.stop(SoundClipID.PACMAN_POWER);
