@@ -46,11 +46,9 @@ public class Pellet3D implements Eatable3D {
 	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 	private static final String MESH_NAME = "Fruit";
 
-	private Shape3D shape;
+	private final Shape3D shape = OBJ_MODEL.createMeshView(MESH_NAME);
 
 	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
-
-		shape = OBJ_MODEL.createMeshView(MESH_NAME);
 		shape.setMaterial(material);
 
 		shape.setTranslateX(tile.x() * TS + HTS);
