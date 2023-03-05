@@ -37,6 +37,7 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -45,9 +46,9 @@ import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
+import de.amr.games.pacman.ui.fx._3d.entity.Eatable;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
@@ -257,7 +258,8 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onSwitchFrom2D() {
 		context.world().ifPresent(world -> {
-			level3D.food3D().pellets3D().forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood(pellet3D.tile())));
+			level3D.food3D().pellets3D()
+					.forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood((Vector2i) pellet3D.getUserData())));
 			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
@@ -274,7 +276,7 @@ public class PlayScene3D implements GameScene {
 						.filter(world::containsEatenFood) //
 						.map(level3D.food3D()::pelletAt) //
 						.flatMap(Optional::stream) //
-						.forEach(Pellet3D::eat);
+						.map(Eatable.class::cast).forEach(Eatable::eat);
 			});
 		} else {
 			level3D.food3D().pelletAt(e.tile.get()).ifPresent(level3D.food3D()::eatPellet);

@@ -29,42 +29,50 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.ui.fx._3d.ObjModel;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Sphere;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 
 /**
  * 3D pellet.
  * 
  * @author Armin Reichert
  */
-public class Pellet3D extends Group {
+public class Pellet3D extends Group implements Eatable {
 
-	private Sphere shape;
+	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
+
+	private Shape3D shape;
 	private Animation animation;
 
-	public Pellet3D(Vector2i tile, PhongMaterial material) {
-		this(tile, material, 1.0);
-	}
-
 	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
-		shape = new Sphere();
+		shape = OBJ_MODEL.createMeshView("Fruit");
 		shape.setMaterial(material);
-		shape.setRadius(radius);
+		getChildren().add(shape);
+
 		setTranslateX(tile.x() * TS + HTS);
 		setTranslateY(tile.y() * TS + HTS);
 		setTranslateZ(-HTS + 1);
+
+		setRotationAxis(Rotate.Z_AXIS);
+		setRotate(90);
 		setUserData(tile);
-		getChildren().add(shape);
+
+		var bounds = shape.getBoundsInLocal();
+		var max = Math.max(bounds.getWidth(), bounds.getHeight());
+		max = Math.max(max, bounds.getDepth());
+		var scaling = new Scale(2 * radius / max, 2 * radius / max, 2 * radius / max);
+		getTransforms().setAll(scaling);
 	}
 
-	public Vector2i tile() {
-		return (Vector2i) getUserData();
-	}
-
+	@Override
 	public void eat() {
 		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> setVisible(false));
 		if (animation != null) {
@@ -74,6 +82,7 @@ public class Pellet3D extends Group {
 		}
 	}
 
+	@Override
 	public Optional<Animation> getEatenAnimation() {
 		return Optional.ofNullable(animation);
 	}
@@ -84,6 +93,6 @@ public class Pellet3D extends Group {
 
 	@Override
 	public String toString() {
-		return String.format("[Pellet, tile: %s]", tile());
+		return String.format("[Pellet, tile: %s]", getUserData());
 	}
 }

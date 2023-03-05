@@ -23,11 +23,21 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
+import static de.amr.games.pacman.model.common.world.World.TS;
+
+import java.util.Optional;
+
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
+import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
 /**
@@ -35,12 +45,22 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Energizer3D extends Pellet3D {
+public class Energizer3D extends Group implements Eatable {
 
+	private Shape3D shape;
+	private Animation animation;
 	private final ScaleTransition pumping;
 
 	public Energizer3D(Vector2i tile, PhongMaterial material) {
-		super(tile, material, 3.0);
+		shape = new Sphere(3.0);
+		shape.setMaterial(material);
+		getChildren().add(shape);
+
+		setTranslateX(tile.x() * TS + HTS);
+		setTranslateY(tile.y() * TS + HTS);
+		setTranslateZ(-HTS + 1);
+		setUserData(tile);
+
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), this);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);
@@ -60,9 +80,23 @@ public class Energizer3D extends Pellet3D {
 	}
 
 	@Override
+	public Optional<Animation> getEatenAnimation() {
+		return Optional.ofNullable(animation);
+	}
+
+	public void setEatenAnimation(Animation animation) {
+		this.animation = animation;
+	}
+
+	@Override
 	public void eat() {
 		pumping.stop();
-		super.eat();
+		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> setVisible(false));
+		if (animation != null) {
+			new SequentialTransition(hideAfterDelay, animation).play();
+		} else {
+			hideAfterDelay.play();
+		}
 	}
 
 	public void startPumping() {
@@ -75,6 +109,6 @@ public class Energizer3D extends Pellet3D {
 
 	@Override
 	public String toString() {
-		return String.format("[Energizer, tile; %s, pumping: %s]", tile(), pumping.getStatus() == Status.RUNNING);
+		return String.format("[Energizer, tile; %s, pumping: %s]", getUserData(), pumping.getStatus() == Status.RUNNING);
 	}
 }
