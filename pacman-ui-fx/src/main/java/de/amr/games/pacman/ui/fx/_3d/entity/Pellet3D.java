@@ -32,6 +32,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 
@@ -40,8 +41,9 @@ import javafx.scene.shape.Sphere;
  * 
  * @author Armin Reichert
  */
-public class Pellet3D extends Sphere {
+public class Pellet3D extends Group {
 
+	private Sphere shape;
 	private Animation animation;
 
 	public Pellet3D(Vector2i tile, PhongMaterial material) {
@@ -49,12 +51,14 @@ public class Pellet3D extends Sphere {
 	}
 
 	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
-		setUserData(tile);
-		setMaterial(material);
-		setRadius(radius);
+		shape = new Sphere();
+		shape.setMaterial(material);
+		shape.setRadius(radius);
 		setTranslateX(tile.x() * TS + HTS);
 		setTranslateY(tile.y() * TS + HTS);
 		setTranslateZ(-HTS + 1);
+		setUserData(tile);
+		getChildren().add(shape);
 	}
 
 	public Vector2i tile() {
