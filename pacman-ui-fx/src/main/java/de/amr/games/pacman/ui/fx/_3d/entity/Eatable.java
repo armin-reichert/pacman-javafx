@@ -25,12 +25,20 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import java.util.Optional;
 
+import de.amr.games.pacman.lib.math.Vector2i;
 import javafx.animation.Animation;
+import javafx.scene.Node;
 
 /**
  * @author Armin Reichert
  */
 public interface Eatable {
+
+	Node getRoot();
+
+	default Vector2i tile() {
+		return (Vector2i) getRoot().getUserData();
+	}
 
 	void eat();
 

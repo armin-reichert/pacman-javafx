@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static java.util.function.Predicate.not;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -37,7 +39,6 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
@@ -57,12 +58,14 @@ public class Food3D extends Group {
 	private final World world;
 	private final Group particlesGroup = new Group();
 	private final PhongMaterial pelletMaterial;
+	private final List<Eatable> eatables = new ArrayList<>();
 
 	public Food3D(World world, Color foodColor) {
 		this.world = world;
 		pelletMaterial = new PhongMaterial(foodColor);
 		createNormalPellets();
 		createEnergizers();
+		eatables.forEach(pellet -> getChildren().add(pellet.getRoot()));
 		getChildren().add(particlesGroup);
 	}
 
@@ -72,7 +75,7 @@ public class Food3D extends Group {
 				.filter(not(world::containsEatenFood))//
 				.filter(not(world::isEnergizerTile))//
 				.map(this::createNormalPellet)//
-				.forEach(getChildren()::add);
+				.forEach(eatables::add);
 	}
 
 	private void createEnergizers() {
@@ -81,7 +84,7 @@ public class Food3D extends Group {
 				.filter(not(world::containsEatenFood))//
 				.filter(world::isEnergizerTile)//
 				.map(tile -> squirtingEffectPy.get() ? createSquirtingEnergizer(tile) : createNormalEnergizer(tile))//
-				.forEach(getChildren()::add);
+				.forEach(eatables::add);
 	}
 
 	private Pellet3D createNormalPellet(Vector2i tile) {
@@ -98,20 +101,18 @@ public class Food3D extends Group {
 		return energizer3D;
 	}
 
-	public void eatPellet(Node pellet3D) {
+	public void eatPellet(Eatable pellet3D) {
 		if (pellet3D instanceof Energizer3D energizer) {
 			energizer.stopPumping();
 		}
 		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
-		var delayHiding = Ufx.afterSeconds(0.05, () -> pellet3D.setVisible(false));
-		if (pellet3D instanceof Eatable eatable) {
-			var eatenAnimation = eatable.getEatenAnimation();
-			if (eatenAnimation.isPresent()) {
-				new SequentialTransition(delayHiding, eatenAnimation.get()).play();
-			} else {
-				delayHiding.play();
-			}
+		var delayHiding = Ufx.afterSeconds(0.05, () -> pellet3D.getRoot().setVisible(false));
+		var eatenAnimation = pellet3D.getEatenAnimation();
+		if (eatenAnimation.isPresent()) {
+			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
+		} else {
+			delayHiding.play();
 		}
 	}
 
@@ -119,14 +120,14 @@ public class Food3D extends Group {
 	 * @return all 3D pellets, including energizers
 	 */
 	public Stream<Pellet3D> pellets3D() {
-		return getChildren().stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
+		return eatables.stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
 	}
 
 	public Stream<Energizer3D> energizers3D() {
-		return getChildren().stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+		return eatables.stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
-	public Optional<Node> pelletAt(Vector2i tile) {
-		return getChildren().stream().filter(pellet3D -> pellet3D.getUserData().equals(tile)).findFirst();
+	public Optional<Eatable> eatableAt(Vector2i tile) {
+		return eatables.stream().filter(pellet3D -> pellet3D.getRoot().getUserData().equals(tile)).findFirst();
 	}
 }

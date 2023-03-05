@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -45,37 +46,45 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public class Pellet3D extends Group implements Eatable {
+public class Pellet3D implements Eatable {
 
 	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 	private static final String MESH_NAME = "Fruit";
 
+	private Group root;
 	private Shape3D shape;
 	private Animation animation;
 
 	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
+
+		root = new Group();
 		shape = OBJ_MODEL.createMeshView(MESH_NAME);
 		shape.setMaterial(material);
-		getChildren().add(shape);
+		root.getChildren().add(shape);
 
-		setTranslateX(tile.x() * TS + HTS);
-		setTranslateY(tile.y() * TS + HTS);
-		setTranslateZ(-HTS + 1);
+		root.setTranslateX(tile.x() * TS + HTS);
+		root.setTranslateY(tile.y() * TS + HTS);
+		root.setTranslateZ(-HTS + 1);
 
-		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(90);
-		setUserData(tile);
+		root.setRotationAxis(Rotate.Z_AXIS);
+		root.setRotate(90);
+		root.setUserData(tile);
 
 		var bounds = shape.getBoundsInLocal();
 		var max = Math.max(bounds.getWidth(), bounds.getHeight());
 		max = Math.max(max, bounds.getDepth());
 		var scaling = new Scale(2 * radius / max, 2 * radius / max, 2 * radius / max);
-		getTransforms().setAll(scaling);
+		root.getTransforms().setAll(scaling);
+	}
+
+	@Override
+	public Node getRoot() {
+		return root;
 	}
 
 	@Override
 	public void eat() {
-		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> setVisible(false));
+		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> root.setVisible(false));
 		if (animation != null) {
 			new SequentialTransition(hideAfterDelay, animation).play();
 		} else {
@@ -94,6 +103,6 @@ public class Pellet3D extends Group implements Eatable {
 
 	@Override
 	public String toString() {
-		return String.format("[Pellet, tile: %s]", getUserData());
+		return String.format("[Pellet, tile: %s]", tile());
 	}
 }

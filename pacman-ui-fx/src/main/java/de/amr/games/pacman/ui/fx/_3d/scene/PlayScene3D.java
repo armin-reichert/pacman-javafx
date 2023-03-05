@@ -37,7 +37,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -259,7 +258,7 @@ public class PlayScene3D implements GameScene {
 	public void onSwitchFrom2D() {
 		context.world().ifPresent(world -> {
 			level3D.food3D().pellets3D()
-					.forEach(pellet3D -> pellet3D.setVisible(!world.containsEatenFood((Vector2i) pellet3D.getUserData())));
+					.forEach(pellet3D -> pellet3D.getRoot().setVisible(!world.containsEatenFood(pellet3D.tile())));
 			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
@@ -274,12 +273,13 @@ public class PlayScene3D implements GameScene {
 			context.world().ifPresent(world -> {
 				world.tiles() //
 						.filter(world::containsEatenFood) //
-						.map(level3D.food3D()::pelletAt) //
+						.map(level3D.food3D()::eatableAt) //
 						.flatMap(Optional::stream) //
-						.map(Eatable.class::cast).forEach(Eatable::eat);
+						.forEach(Eatable::eat);
 			});
 		} else {
-			level3D.food3D().pelletAt(e.tile.get()).ifPresent(level3D.food3D()::eatPellet);
+			var eatable = level3D.food3D().eatableAt(e.tile.get());
+			eatable.ifPresent(level3D.food3D()::eatPellet);
 		}
 	}
 

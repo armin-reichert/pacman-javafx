@@ -35,6 +35,7 @@ import javafx.animation.Animation.Status;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
@@ -70,6 +71,11 @@ public class Energizer3D extends Group implements Eatable {
 		pumping.setToX(0.1);
 		pumping.setToY(0.1);
 		pumping.setToZ(0.1);
+	}
+
+	@Override
+	public Node getRoot() {
+		return this;
 	}
 
 	public void init() {
@@ -109,6 +115,6 @@ public class Energizer3D extends Group implements Eatable {
 
 	@Override
 	public String toString() {
-		return String.format("[Energizer, tile; %s, pumping: %s]", getUserData(), pumping.getStatus() == Status.RUNNING);
+		return String.format("[Energizer, tile; %s, pumping: %s]", tile(), pumping.getStatus() == Status.RUNNING);
 	}
 }
