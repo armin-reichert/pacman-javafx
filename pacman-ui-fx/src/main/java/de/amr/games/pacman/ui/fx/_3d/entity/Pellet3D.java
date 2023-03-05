@@ -26,14 +26,10 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.Animation;
-import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
@@ -51,7 +47,6 @@ public class Pellet3D implements Eatable3D {
 	private static final String MESH_NAME = "Fruit";
 
 	private Shape3D shape;
-	private Animation animation;
 
 	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
 
@@ -81,20 +76,7 @@ public class Pellet3D implements Eatable3D {
 	@Override
 	public void eat() {
 		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> shape.setVisible(false));
-		if (animation != null) {
-			new SequentialTransition(hideAfterDelay, animation).play();
-		} else {
-			hideAfterDelay.play();
-		}
-	}
-
-	@Override
-	public Optional<Animation> getEatenAnimation() {
-		return Optional.ofNullable(animation);
-	}
-
-	public void setEatenAnimation(Animation animation) {
-		this.animation = animation;
+		hideAfterDelay.play();
 	}
 
 	@Override

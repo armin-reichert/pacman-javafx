@@ -42,5 +42,7 @@ public interface Eatable3D {
 
 	void eat();
 
-	Optional<Animation> getEatenAnimation();
+	default Optional<Animation> getEatenAnimation() {
+		return Optional.empty();
+	}
 }

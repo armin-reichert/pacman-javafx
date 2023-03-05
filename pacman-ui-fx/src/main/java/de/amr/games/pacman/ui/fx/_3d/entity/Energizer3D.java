@@ -48,7 +48,7 @@ import javafx.util.Duration;
 public class Energizer3D implements Eatable3D {
 
 	private Shape3D shape;
-	private Animation animation;
+	private Animation eatenAnimation;
 	private final ScaleTransition pumping;
 
 	public Energizer3D(Vector2i tile, PhongMaterial material) {
@@ -87,19 +87,19 @@ public class Energizer3D implements Eatable3D {
 
 	@Override
 	public Optional<Animation> getEatenAnimation() {
-		return Optional.ofNullable(animation);
+		return Optional.ofNullable(eatenAnimation);
 	}
 
 	public void setEatenAnimation(Animation animation) {
-		this.animation = animation;
+		this.eatenAnimation = animation;
 	}
 
 	@Override
 	public void eat() {
 		pumping.stop();
 		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> shape.setVisible(false));
-		if (animation != null) {
-			new SequentialTransition(hideAfterDelay, animation).play();
+		if (eatenAnimation != null) {
+			new SequentialTransition(hideAfterDelay, eatenAnimation).play();
 		} else {
 			hideAfterDelay.play();
 		}
