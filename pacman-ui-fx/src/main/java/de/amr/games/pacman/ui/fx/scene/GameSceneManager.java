@@ -149,7 +149,7 @@ public class GameSceneManager {
 			}
 			yield PLAY_SCENE_INDEX + intermissionNumber.get();
 		}
-		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.intermissionTestNumber;
+		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
 		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
 		};
 
