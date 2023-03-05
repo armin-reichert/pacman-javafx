@@ -257,8 +257,8 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onSwitchFrom2D() {
 		context.world().ifPresent(world -> {
-			level3D.food3D().pellets3D()
-					.forEach(pellet3D -> pellet3D.getRoot().setVisible(!world.containsEatenFood(pellet3D.tile())));
+			level3D.food3D().eatables3D()
+					.forEach(eatable3D -> eatable3D.getRoot().setVisible(!world.containsEatenFood(eatable3D.tile())));
 			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
 			}

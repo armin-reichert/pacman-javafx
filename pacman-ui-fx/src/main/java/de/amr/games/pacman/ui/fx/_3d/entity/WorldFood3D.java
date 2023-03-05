@@ -119,8 +119,8 @@ public class WorldFood3D extends Group {
 	/**
 	 * @return all 3D pellets, including energizers
 	 */
-	public Stream<Pellet3D> pellets3D() {
-		return eatables.stream().filter(Pellet3D.class::isInstance).map(Pellet3D.class::cast);
+	public Stream<Eatable3D> eatables3D() {
+		return eatables.stream();
 	}
 
 	public Stream<Energizer3D> energizers3D() {
@@ -128,6 +128,6 @@ public class WorldFood3D extends Group {
 	}
 
 	public Optional<Eatable3D> eatableAt(Vector2i tile) {
-		return eatables.stream().filter(pellet3D -> pellet3D.getRoot().getUserData().equals(tile)).findFirst();
+		return eatables.stream().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 }
