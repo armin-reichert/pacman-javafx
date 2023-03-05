@@ -101,14 +101,14 @@ public class WorldFood3D extends Group {
 		return energizer3D;
 	}
 
-	public void eatPellet(Eatable3D pellet3D) {
-		if (pellet3D instanceof Energizer3D energizer) {
+	public void eatPellet(Eatable3D eatable3D) {
+		if (eatable3D instanceof Energizer3D energizer) {
 			energizer.stopPumping();
 		}
 		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
-		var delayHiding = Ufx.afterSeconds(0.05, () -> pellet3D.getRoot().setVisible(false));
-		var eatenAnimation = pellet3D.getEatenAnimation();
+		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
+		var eatenAnimation = eatable3D.getEatenAnimation();
 		if (eatenAnimation.isPresent()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
