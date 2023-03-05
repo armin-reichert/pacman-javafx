@@ -46,23 +46,27 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Energizer3D extends Group implements Eatable {
+public class Energizer3D implements Eatable3D {
 
+	private Group root;
 	private Shape3D shape;
 	private Animation animation;
 	private final ScaleTransition pumping;
 
 	public Energizer3D(Vector2i tile, PhongMaterial material) {
+
+		root = new Group();
 		shape = new Sphere(3.0);
 		shape.setMaterial(material);
-		getChildren().add(shape);
+		root.getChildren().add(shape);
 
-		setTranslateX(tile.x() * TS + HTS);
-		setTranslateY(tile.y() * TS + HTS);
-		setTranslateZ(-HTS + 1);
-		setUserData(tile);
+		root.setTranslateX(tile.x() * TS + HTS);
+		root.setTranslateY(tile.y() * TS + HTS);
+		root.setTranslateZ(-HTS + 1);
 
-		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), this);
+		root.setUserData(tile);
+
+		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), root);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);
 		pumping.setFromX(1.0);
@@ -75,14 +79,14 @@ public class Energizer3D extends Group implements Eatable {
 
 	@Override
 	public Node getRoot() {
-		return this;
+		return root;
 	}
 
 	public void init() {
 		pumping.stop();
-		setScaleX(1.0);
-		setScaleY(1.0);
-		setScaleZ(1.0);
+		root.setScaleX(1.0);
+		root.setScaleY(1.0);
+		root.setScaleZ(1.0);
 	}
 
 	@Override
@@ -97,7 +101,7 @@ public class Energizer3D extends Group implements Eatable {
 	@Override
 	public void eat() {
 		pumping.stop();
-		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> setVisible(false));
+		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> root.setVisible(false));
 		if (animation != null) {
 			new SequentialTransition(hideAfterDelay, animation).play();
 		} else {

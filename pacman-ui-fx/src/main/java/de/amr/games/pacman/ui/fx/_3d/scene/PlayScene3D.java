@@ -45,7 +45,7 @@ import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
-import de.amr.games.pacman.ui.fx._3d.entity.Eatable;
+import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
@@ -275,7 +275,7 @@ public class PlayScene3D implements GameScene {
 						.filter(world::containsEatenFood) //
 						.map(level3D.food3D()::eatableAt) //
 						.flatMap(Optional::stream) //
-						.forEach(Eatable::eat);
+						.forEach(Eatable3D::eat);
 			});
 		} else {
 			var eatable = level3D.food3D().eatableAt(e.tile.get());

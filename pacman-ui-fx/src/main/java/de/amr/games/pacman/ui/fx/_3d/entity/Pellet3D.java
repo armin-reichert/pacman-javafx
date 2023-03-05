@@ -46,7 +46,7 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public class Pellet3D implements Eatable {
+public class Pellet3D implements Eatable3D {
 
 	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 	private static final String MESH_NAME = "Fruit";

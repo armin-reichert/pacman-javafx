@@ -45,22 +45,22 @@ import javafx.scene.paint.PhongMaterial;
 /**
  * @author Armin Reichert
  */
-public class Food3D extends Group {
+public class WorldFood3D extends Group {
 
 	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty() {
 		@Override
 		protected void invalidated() {
 			energizers3D().forEach(energizer3D -> energizer3D.setEatenAnimation(
-					squirtingEffectPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D) : null));
+					squirtingEffectPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot()) : null));
 		}
 	};
 
 	private final World world;
 	private final Group particlesGroup = new Group();
 	private final PhongMaterial pelletMaterial;
-	private final List<Eatable> eatables = new ArrayList<>();
+	private final List<Eatable3D> eatables = new ArrayList<>();
 
-	public Food3D(World world, Color foodColor) {
+	public WorldFood3D(World world, Color foodColor) {
 		this.world = world;
 		pelletMaterial = new PhongMaterial(foodColor);
 		createNormalPellets();
@@ -97,11 +97,11 @@ public class Food3D extends Group {
 
 	private Energizer3D createSquirtingEnergizer(Vector2i tile) {
 		var energizer3D = new Energizer3D(tile, pelletMaterial);
-		energizer3D.setEatenAnimation(new SquirtingAnimation(world, particlesGroup, energizer3D));
+		energizer3D.setEatenAnimation(new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot()));
 		return energizer3D;
 	}
 
-	public void eatPellet(Eatable pellet3D) {
+	public void eatPellet(Eatable3D pellet3D) {
 		if (pellet3D instanceof Energizer3D energizer) {
 			energizer.stopPumping();
 		}
@@ -127,7 +127,7 @@ public class Food3D extends Group {
 		return eatables.stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
 	}
 
-	public Optional<Eatable> eatableAt(Vector2i tile) {
+	public Optional<Eatable3D> eatableAt(Vector2i tile) {
 		return eatables.stream().filter(pellet3D -> pellet3D.getRoot().getUserData().equals(tile)).findFirst();
 	}
 }

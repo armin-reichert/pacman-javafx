@@ -56,7 +56,7 @@ public class GameLevel3D extends Group {
 
 	private final GameLevel level;
 	private final World3D world3D;
-	private final Food3D food3D;
+	private final WorldFood3D food3D;
 	private final Pac3D pac3D;
 	private final Ghost3D[] ghosts3D;
 	private final Bonus3D bonus3D;
@@ -118,7 +118,7 @@ public class GameLevel3D extends Group {
 		pac3D = createPac3D(level);
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(level, ghost)).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
-		food3D = new Food3D(level.world(), r2D.mazeColoring(mazeNumber).foodColor());
+		food3D = new WorldFood3D(level.world(), r2D.mazeColoring(mazeNumber).foodColor());
 		levelCounter3D = createLevelCounter3D(level, r2D);
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));
@@ -154,7 +154,7 @@ public class GameLevel3D extends Group {
 		return world3D;
 	}
 
-	public Food3D food3D() {
+	public WorldFood3D food3D() {
 		return food3D;
 	}
 

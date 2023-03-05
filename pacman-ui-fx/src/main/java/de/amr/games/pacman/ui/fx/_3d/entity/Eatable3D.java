@@ -32,7 +32,7 @@ import javafx.scene.Node;
 /**
  * @author Armin Reichert
  */
-public interface Eatable {
+public interface Eatable3D {
 
 	Node getRoot();
 
