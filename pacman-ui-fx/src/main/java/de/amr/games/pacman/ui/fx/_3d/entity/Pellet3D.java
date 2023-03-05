@@ -34,7 +34,6 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
@@ -51,40 +50,37 @@ public class Pellet3D implements Eatable3D {
 	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 	private static final String MESH_NAME = "Fruit";
 
-	private Group root;
 	private Shape3D shape;
 	private Animation animation;
 
 	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
 
-		root = new Group();
 		shape = OBJ_MODEL.createMeshView(MESH_NAME);
 		shape.setMaterial(material);
-		root.getChildren().add(shape);
 
-		root.setTranslateX(tile.x() * TS + HTS);
-		root.setTranslateY(tile.y() * TS + HTS);
-		root.setTranslateZ(-HTS + 1);
+		shape.setTranslateX(tile.x() * TS + HTS);
+		shape.setTranslateY(tile.y() * TS + HTS);
+		shape.setTranslateZ(-HTS + 1);
 
-		root.setRotationAxis(Rotate.Z_AXIS);
-		root.setRotate(90);
-		root.setUserData(tile);
+		shape.setRotationAxis(Rotate.Z_AXIS);
+		shape.setRotate(90);
+		shape.setUserData(tile);
 
 		var bounds = shape.getBoundsInLocal();
 		var max = Math.max(bounds.getWidth(), bounds.getHeight());
 		max = Math.max(max, bounds.getDepth());
 		var scaling = new Scale(2 * radius / max, 2 * radius / max, 2 * radius / max);
-		root.getTransforms().setAll(scaling);
+		shape.getTransforms().setAll(scaling);
 	}
 
 	@Override
 	public Node getRoot() {
-		return root;
+		return shape;
 	}
 
 	@Override
 	public void eat() {
-		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> root.setVisible(false));
+		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> shape.setVisible(false));
 		if (animation != null) {
 			new SequentialTransition(hideAfterDelay, animation).play();
 		} else {
