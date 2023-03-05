@@ -48,5 +48,5 @@ public final class PacManGameAssets {
 
 	static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
 	static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(MAZE_COLORS.topColor(), Color.WHITE));
+	static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(Color.rgb(33, 33, 255), Color.WHITE));
 }
