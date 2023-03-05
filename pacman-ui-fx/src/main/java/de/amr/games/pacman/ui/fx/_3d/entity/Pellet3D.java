@@ -60,8 +60,7 @@ public class Pellet3D implements Eatable3D {
 		shape.setUserData(tile);
 
 		var bounds = shape.getBoundsInLocal();
-		var max = Math.max(bounds.getWidth(), bounds.getHeight());
-		max = Math.max(max, bounds.getDepth());
+		var max = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
 		var scaling = new Scale(2 * radius / max, 2 * radius / max, 2 * radius / max);
 		shape.getTransforms().setAll(scaling);
 	}
