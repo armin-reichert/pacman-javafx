@@ -61,14 +61,14 @@ public class SectionGameControl extends Section {
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
 			if (comboGameVariant.getValue() != game().variant()) {
-				gc.state().selectGameVariant(comboGameVariant.getValue());
+				gc.selectGameVariant(comboGameVariant.getValue());
 			}
 		});
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
-		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.state().requestGame(game()));
+		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.startPlaying());
 		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> Actions.restartIntro());
-		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.state().cheatEnterNextLevel(game()));
+		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.cheatEnterNextLevel());
 
 		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
 		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> Actions.startCutscenesTest());

@@ -103,12 +103,12 @@ public class Actions {
 	public static void startGame() {
 		if (game().hasCredit()) {
 			stopVoiceMessage();
-			gameState().requestGame(game());
+			gameController().startPlaying();
 		}
 	}
 
 	public static void startCutscenesTest() {
-		gameState().startCutscenesTest(game());
+		gameController().startCutscenesTest();
 		showFlashMessage("Cut scenes");
 	}
 
@@ -136,7 +136,7 @@ public class Actions {
 
 	public static void addCredit() {
 		GameEvents.setSoundEventsEnabled(true);
-		gameState().addCredit(game());
+		gameController().addCredit();
 	}
 
 	public static void enterLevel(int newLevelNumber) {
@@ -189,7 +189,7 @@ public class Actions {
 
 	public static void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
-		gameState().selectGameVariant(gameVariant);
+		gameController().selectGameVariant(gameVariant);
 		playHelpVoiceMessage(4);
 	}
 
@@ -258,18 +258,18 @@ public class Actions {
 	}
 
 	public static void cheatEatAllPellets() {
-		gameState().cheatEatAllPellets(game());
+		gameController().cheatEatAllPellets();
 		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(ResourceMgr.getCheatingMessage());
 		}
 	}
 
 	public static void cheatEnterNextLevel() {
-		gameState().cheatEnterNextLevel(game());
+		gameController().cheatEnterNextLevel();
 	}
 
 	public static void cheatKillAllEatableGhosts() {
-		gameState().cheatKillAllEatableGhosts(game());
+		gameController().cheatKillAllEatableGhosts();
 		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(ResourceMgr.getCheatingMessage());
 		}
