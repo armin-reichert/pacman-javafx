@@ -51,11 +51,12 @@ import javafx.scene.shape.DrawMode;
 /**
  * @author Armin Reichert
  */
-public class GameLevel3D extends Group {
+public class GameLevel3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final GameLevel level;
+	private final Group root = new Group();
 	private final World3D world3D;
 	private final WorldFood3D food3D;
 	private final Pac3D pac3D;
@@ -122,9 +123,9 @@ public class GameLevel3D extends Group {
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		getChildren().addAll(world3D, food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D, levelCounter3D,
+		root.getChildren().addAll(world3D, food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D, levelCounter3D,
 				livesCounter3D.getRoot());
-		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(getChildren()::add);
+		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
 
 		world3D.drawModePy.bind(drawModePy);
 		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
@@ -133,6 +134,10 @@ public class GameLevel3D extends Group {
 			ghost3D.drawModePy.bind(drawModePy);
 		}
 		livesCounter3D.drawModePy.bind(drawModePy);
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	public void update() {

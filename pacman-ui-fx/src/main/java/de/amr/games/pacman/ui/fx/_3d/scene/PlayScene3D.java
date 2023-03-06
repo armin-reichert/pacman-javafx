@@ -154,7 +154,7 @@ public class PlayScene3D implements GameScene {
 		var height = level.world().numRows() * World.TS;
 
 		level3D = new GameLevel3D(level, context.r2D());
-		levelContainer.getChildren().setAll(level3D);
+		levelContainer.getChildren().setAll(level3D.getRoot());
 		levelContainer.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 
 		// bind to Env properties
