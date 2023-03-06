@@ -94,7 +94,7 @@ public class WorldFood3D extends Group {
 	}
 
 	private Energizer3D createNormalEnergizer(Vector2i tile) {
-		var energizer3D = new Energizer3D(pelletMaterial, 3.0);
+		var energizer3D = new Energizer3D(pelletMaterial, 3.5);
 		energizer3D.setTile(tile);
 		return energizer3D;
 	}

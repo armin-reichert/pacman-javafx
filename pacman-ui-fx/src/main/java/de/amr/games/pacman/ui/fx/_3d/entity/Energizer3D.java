@@ -32,6 +32,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
@@ -47,6 +48,8 @@ import javafx.util.Duration;
  */
 public class Energizer3D implements Eatable3D {
 
+	private static final double MIN_SCALE = 0.25;
+
 	private final Shape3D shape;
 	private final ScaleTransition pumping;
 	private Animation eatenAnimation;
@@ -54,15 +57,16 @@ public class Energizer3D implements Eatable3D {
 	public Energizer3D(PhongMaterial material, double radius) {
 		shape = new Sphere(radius);
 		shape.setMaterial(material);
-		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), shape);
+		pumping = new ScaleTransition(Duration.seconds(1.0 / 4), shape);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);
+		pumping.setInterpolator(Interpolator.EASE_BOTH);
 		pumping.setFromX(1.0);
 		pumping.setFromY(1.0);
 		pumping.setFromZ(1.0);
-		pumping.setToX(0.1);
-		pumping.setToY(0.1);
-		pumping.setToZ(0.1);
+		pumping.setToX(MIN_SCALE);
+		pumping.setToY(MIN_SCALE);
+		pumping.setToZ(MIN_SCALE);
 	}
 
 	public void setTile(Vector2i tile) {
