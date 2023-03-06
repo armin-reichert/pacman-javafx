@@ -58,12 +58,7 @@ public class WorldFood3D extends Group {
 		this.world = world;
 		pelletMaterial = new PhongMaterial(foodColor);
 		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
-			Eatable3D eatable3D = null;
-			if (world.isEnergizerTile(tile)) {
-				eatable3D = createEnergizer(tile);
-			} else {
-				eatable3D = createNormalPellet(tile);
-			}
+			Eatable3D eatable3D = world.isEnergizerTile(tile) ? createEnergizer(tile) : createNormalPellet(tile);
 			eatables.add(eatable3D);
 			getChildren().add(eatable3D.getRoot());
 		});
