@@ -45,15 +45,15 @@ public class LivesCounter3D extends Group {
 
 	public LivesCounter3D(boolean facingRight) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			var pac = PacModel3D.createPac3D(Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
-			pac.setTranslateX(2.0 * i * TS);
-			pac.setVisible(true);
+			var pacTG = Pac3D.createTransformationGroup(Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
+			pacTG.setTranslateX(2.0 * i * TS);
+			pacTG.setVisible(true);
 			if (facingRight) {
-				pac.setRotationAxis(Rotate.Z_AXIS);
-				pac.setRotate(180);
+				pacTG.setRotationAxis(Rotate.Z_AXIS);
+				pacTG.setRotate(180);
 			}
-			PacModel3D.head(pac).drawModeProperty().bind(drawModePy);
-			getChildren().add(pac);
+			Pac3D.head(pacTG).drawModeProperty().bind(drawModePy);
+			getChildren().add(pacTG);
 		}
 	}
 

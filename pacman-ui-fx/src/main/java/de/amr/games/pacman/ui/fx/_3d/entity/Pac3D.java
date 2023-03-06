@@ -31,8 +31,10 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.common.actors.Creature;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -42,7 +44,12 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 /**
  * 3D-representation of Pac-Man or Ms. Pac-Man.
@@ -53,6 +60,63 @@ import javafx.scene.shape.DrawMode;
  * @author Armin Reichert
  */
 public class Pac3D {
+
+	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/pacman.obj"));
+	private static final String MESH_ID_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
+	private static final String MESH_ID_PAC_HEAD = "Sphere_yellow_packman";
+	private static final String MESH_ID_PAC_PALATE = "Sphere_grey_wall";
+
+	private static final double PAC_SIZE = 9.0;
+
+	private static Translate centerOverOrigin(Node node) {
+		var bounds = node.getBoundsInLocal();
+		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+	}
+
+	private static Scale scale(Node node, double size) {
+		var bounds = node.getBoundsInLocal();
+		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
+	}
+
+	/**
+	 * @param eyesColor   Pac-Man eyes color
+	 * @param palateColor Pac-Man palate color
+	 * @return transformation group representing a 3D Pac-Man.
+	 */
+	public static Node createTransformationGroup(Color eyesColor, Color palateColor) {
+		var headMaterial = new PhongMaterial(Color.YELLOW);
+
+		var head = OBJ_MODEL.createMeshView(MESH_ID_PAC_HEAD);
+		head.setMaterial(headMaterial);
+
+		var eyes = OBJ_MODEL.createMeshView(MESH_ID_PAC_EYES);
+		eyes.setMaterial(new PhongMaterial(eyesColor));
+
+		var palate = OBJ_MODEL.createMeshView(MESH_ID_PAC_PALATE);
+		palate.setMaterial(new PhongMaterial(palateColor));
+
+		var center = centerOverOrigin(head);
+		Stream.of(head, eyes, palate).forEach(meshView -> {
+			meshView.getTransforms().add(center);
+		});
+
+		var root = new Group(head, eyes, palate);
+		root.getTransforms().addAll(new Translate(0, 0, -1), scale(root, PAC_SIZE), new Rotate(90, Rotate.X_AXIS));
+
+		return root;
+	}
+
+	public static Shape3D head(Node root) {
+		return (Shape3D) ((Group) root).getChildren().get(0);
+	}
+
+	public static Shape3D eyes(Node root) {
+		return (Shape3D) ((Group) root).getChildren().get(1);
+	}
+
+	public static Shape3D palate(Node root) {
+		return (Shape3D) ((Group) root).getChildren().get(2);
+	}
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
@@ -73,8 +137,8 @@ public class Pac3D {
 		this.pac = pac;
 		this.world = world;
 		movement = new Creature3DMovement(root, pac);
-		shape = PacModel3D.createPac3D(EYES_COLOR, PALATE_COLOR);
-		Stream.of(PacModel3D.head(shape), PacModel3D.eyes(shape), PacModel3D.palate(shape)).forEach(part -> {
+		shape = createTransformationGroup(EYES_COLOR, PALATE_COLOR);
+		Stream.of(head(shape), eyes(shape), palate(shape)).forEach(part -> {
 			part.drawModeProperty().bind(drawModePy);
 		});
 		root.getChildren().add(shape);
