@@ -159,7 +159,7 @@ public class PlayScene3D implements GameScene {
 
 		// bind to Env properties
 		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
-		level3D.food3D().squirtingEffectPy.bind(squirtingEffectPy);
+		level3D.food3D().eatenAnimationEnabledPy.bind(squirtingEffectPy);
 		level3D.world3D().floorColorPy.bind(floorColorPy);
 		var textureBinding = Bindings.createObjectBinding( //
 				() -> Env.ThreeD.NO_TEXTURE.equals(floorTexturePy.get()) //

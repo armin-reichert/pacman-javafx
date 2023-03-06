@@ -76,6 +76,6 @@ public class Env {
 		public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.5);
 		public static final BooleanProperty pacLightedPy = new SimpleBooleanProperty(true);
 		public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-		public static final BooleanProperty squirtingEnabledPy = new SimpleBooleanProperty(true);
+		public static final BooleanProperty energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
 	}
 }

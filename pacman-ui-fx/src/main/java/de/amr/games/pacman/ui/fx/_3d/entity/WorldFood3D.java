@@ -47,13 +47,7 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class WorldFood3D extends Group {
 
-	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty() {
-		@Override
-		protected void invalidated() {
-			energizers3D().forEach(energizer3D -> energizer3D.setEatenAnimation(
-					squirtingEffectPy.get() ? new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot()) : null));
-		}
-	};
+	public final BooleanProperty eatenAnimationEnabledPy = new SimpleBooleanProperty(this, "eatenAnimationEnabled");
 
 	private final World world;
 	private final Group particlesGroup = new Group();
@@ -63,28 +57,17 @@ public class WorldFood3D extends Group {
 	public WorldFood3D(World world, Color foodColor) {
 		this.world = world;
 		pelletMaterial = new PhongMaterial(foodColor);
-		createNormalPellets();
-		createEnergizers();
-		eatables.forEach(pellet -> getChildren().add(pellet.getRoot()));
+		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
+			Eatable3D eatable3D = null;
+			if (world.isEnergizerTile(tile)) {
+				eatable3D = createEnergizer(tile);
+			} else {
+				eatable3D = createNormalPellet(tile);
+			}
+			eatables.add(eatable3D);
+			getChildren().add(eatable3D.getRoot());
+		});
 		getChildren().add(particlesGroup);
-	}
-
-	private void createNormalPellets() {
-		world.tiles()//
-				.filter(world::isFoodTile)//
-				.filter(not(world::containsEatenFood))//
-				.filter(not(world::isEnergizerTile))//
-				.map(this::createNormalPellet)//
-				.forEach(eatables::add);
-	}
-
-	private void createEnergizers() {
-		world.tiles()//
-				.filter(world::isFoodTile)//
-				.filter(not(world::containsEatenFood))//
-				.filter(world::isEnergizerTile)//
-				.map(tile -> squirtingEffectPy.get() ? createSquirtingEnergizer(tile) : createNormalEnergizer(tile))//
-				.forEach(eatables::add);
 	}
 
 	private Pellet3D createNormalPellet(Vector2i tile) {
@@ -93,16 +76,11 @@ public class WorldFood3D extends Group {
 		return pellet3D;
 	}
 
-	private Energizer3D createNormalEnergizer(Vector2i tile) {
+	private Energizer3D createEnergizer(Vector2i tile) {
 		var energizer3D = new Energizer3D(pelletMaterial, 3.5);
 		energizer3D.setTile(tile);
-		return energizer3D;
-	}
-
-	private Energizer3D createSquirtingEnergizer(Vector2i tile) {
-		var energizer3D = createNormalEnergizer(tile);
-		var squirtingAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
-		energizer3D.setEatenAnimation(squirtingAnimation);
+		var eatenAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
+		energizer3D.setEatenAnimation(eatenAnimation);
 		return energizer3D;
 	}
 
@@ -114,7 +92,7 @@ public class WorldFood3D extends Group {
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
 		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
 		var eatenAnimation = eatable3D.getEatenAnimation();
-		if (eatenAnimation.isPresent()) {
+		if (eatenAnimation.isPresent() && eatenAnimationEnabledPy.get()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
 			delayHiding.play();

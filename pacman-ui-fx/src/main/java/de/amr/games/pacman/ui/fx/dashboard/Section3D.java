@@ -64,7 +64,7 @@ public class Section3D extends Section {
 		comboFloorTexture.setOnAction(e -> Env.ThreeD.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.ThreeD.floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.ThreeD.floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Squirting", () -> Ufx.toggle(Env.ThreeD.squirtingEnabledPy));
+		cbSquirting = addCheckBox("Energizer Eaten Animation", () -> Ufx.toggle(Env.ThreeD.energizerEatenAnimationEnabledPy));
 		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.ThreeD.pacLightedPy));
 		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.ThreeD.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
@@ -82,7 +82,7 @@ public class Section3D extends Section {
 		comboFloorTexture.setValue(Env.ThreeD.floorTexturePy.get());
 		pickerFloorColor.setDisable(no3D);
 		cbSquirting.setDisable(no3D);
-		cbSquirting.setSelected(Env.ThreeD.squirtingEnabledPy.get());
+		cbSquirting.setSelected(Env.ThreeD.energizerEatenAnimationEnabledPy.get());
 		cbPacLighted.setDisable(no3D);
 		cbPacLighted.setSelected(Env.ThreeD.pacLightedPy.get());
 		cbAxesVisible.setDisable(no3D);

@@ -105,7 +105,7 @@ public class GameSceneManager {
 		playScene3D.mazeWallHeightPy.bind(Env.ThreeD.mazeWallHeightPy);
 		playScene3D.mazeWallThicknessPy.bind(Env.ThreeD.mazeWallThicknessPy);
 		playScene3D.perspectivePy.bind(Env.ThreeD.perspectivePy);
-		playScene3D.squirtingEffectPy.bind(Env.ThreeD.squirtingEnabledPy);
+		playScene3D.squirtingEffectPy.bind(Env.ThreeD.energizerEatenAnimationEnabledPy);
 		playScene3D.coordSystem().visibleProperty().bind(Env.ThreeD.axesVisiblePy);
 		playScene3D.ambientLight().colorProperty().bind(Env.ThreeD.lightColorPy);
 		LOG.trace("3D game scene created: '%s'", playScene3D.getClass().getName());
