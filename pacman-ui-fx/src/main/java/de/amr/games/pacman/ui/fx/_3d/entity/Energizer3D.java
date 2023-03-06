@@ -47,11 +47,12 @@ import javafx.util.Duration;
  */
 public class Energizer3D implements Eatable3D {
 
-	private final Shape3D shape = new Sphere(3.0);
+	private final Shape3D shape;
 	private final ScaleTransition pumping;
 	private Animation eatenAnimation;
 
-	public Energizer3D(PhongMaterial material) {
+	public Energizer3D(PhongMaterial material, double radius) {
+		shape = new Sphere(radius);
 		shape.setMaterial(material);
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), shape);
 		pumping.setAutoReverse(true);
