@@ -26,11 +26,13 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.BonusState;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -44,24 +46,37 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Bonus3D extends Box {
+public class Bonus3D {
 
+	private final Box shape;
 	private final Bonus bonus;
 	private final Image symbolImage;
 	private final Image pointsImage;
 
 	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
-		super(TS, TS, TS);
+		shape = new Box(TS, TS, TS);
 		this.bonus = bonus;
 		this.symbolImage = symbolImage;
 		this.pointsImage = pointsImage;
 	}
 
+	public Node getRoot() {
+		return shape;
+	}
+
+	public void hide() {
+		shape.setVisible(false);
+	}
+
+	public void setPosition(Vector2f position) {
+		shape.setTranslateX(position.x());
+		shape.setTranslateY(position.y());
+		shape.setTranslateZ(-HTS);
+	}
+
 	public void update() {
-		setTranslateX(bonus.entity().position().x() + HTS);
-		setTranslateY(bonus.entity().position().y() + HTS);
-		setTranslateZ(-HTS);
-		setVisible(bonus.state() != BonusState.INACTIVE);
+		setPosition(bonus.entity().position());
+		shape.setVisible(bonus.state() != BonusState.INACTIVE);
 	}
 
 	public void showSymbol() {
@@ -69,7 +84,7 @@ public class Bonus3D extends Box {
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(TS);
 		setTexture(imageView.getImage());
-		setWidth(TS);
+		shape.setWidth(TS);
 		rotate(1, Animation.INDEFINITE, 1);
 	}
 
@@ -78,7 +93,7 @@ public class Bonus3D extends Box {
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(1.8 * TS);
 		setTexture(imageView.getImage());
-		setWidth(1.8 * TS);
+		shape.setWidth(1.8 * TS);
 		rotate(1, 3, 2);
 	}
 
@@ -86,11 +101,11 @@ public class Bonus3D extends Box {
 		var skin = new PhongMaterial(Color.WHITE);
 		skin.setBumpMap(texture);
 		skin.setDiffuseMap(texture);
-		setMaterial(skin);
+		shape.setMaterial(skin);
 	}
 
 	private void rotate(double seconds, int cycleCount, int rate) {
-		var rot = new RotateTransition(Duration.seconds(seconds), this);
+		var rot = new RotateTransition(Duration.seconds(seconds), shape);
 		rot.setAxis(Rotate.X_AXIS);
 		rot.setFromAngle(0);
 		rot.setToAngle(360);

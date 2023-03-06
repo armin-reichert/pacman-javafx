@@ -295,7 +295,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusExpires(GameEvent e) {
-		level3D.bonus3D().setVisible(false);
+		level3D.bonus3D().hide();
 	}
 
 	@Override
@@ -376,7 +376,7 @@ public class PlayScene3D implements GameScene {
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			level3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
-			level3D.bonus3D().setVisible(false);
+			level3D.bonus3D().hide();
 		}
 	}
 
