@@ -83,7 +83,7 @@ public class Pac3D {
 	 * @param palateColor Pac-Man palate color
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
-	public static Node createTransformationGroup(Color eyesColor, Color palateColor) {
+	public static Node createTG(Color eyesColor, Color palateColor) {
 		var headMaterial = new PhongMaterial(Color.YELLOW);
 
 		var head = OBJ_MODEL.createMeshView(MESH_ID_PAC_HEAD);
@@ -137,7 +137,7 @@ public class Pac3D {
 		this.pac = pac;
 		this.world = world;
 		movement = new Creature3DMovement(root, pac);
-		shape = createTransformationGroup(EYES_COLOR, PALATE_COLOR);
+		shape = createTG(EYES_COLOR, PALATE_COLOR);
 		Stream.of(head(shape), eyes(shape), palate(shape)).forEach(part -> {
 			part.drawModeProperty().bind(drawModePy);
 		});

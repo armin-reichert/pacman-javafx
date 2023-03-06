@@ -93,10 +93,8 @@ public class GameLevel3D extends Group {
 	private static LivesCounter3D createLivesCounter3D(GameLevel level) {
 		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
 		var livesCounter3D = new LivesCounter3D(facingRight);
-		livesCounter3D.setTranslateX(TS);
-		livesCounter3D.setTranslateY(TS);
-		livesCounter3D.setTranslateZ(-HTS);
-		livesCounter3D.setVisible(level.game().hasCredit());
+		livesCounter3D.setPosition(TS, TS, -HTS);
+		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
 		return livesCounter3D;
 	}
 
@@ -124,7 +122,8 @@ public class GameLevel3D extends Group {
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		getChildren().addAll(world3D, food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D, levelCounter3D, livesCounter3D);
+		getChildren().addAll(world3D, food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D, levelCounter3D,
+				livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(getChildren()::add);
 
 		world3D.drawModePy.bind(drawModePy);

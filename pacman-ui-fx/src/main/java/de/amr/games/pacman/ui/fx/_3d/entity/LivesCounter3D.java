@@ -37,29 +37,40 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class LivesCounter3D extends Group {
+public class LivesCounter3D {
 
 	static final int MAX_LIVES_DISPLAYED = 5;
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+	private final Group root = new Group();
 
 	public LivesCounter3D(boolean facingRight) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			var pacTG = Pac3D.createTransformationGroup(Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
-			pacTG.setTranslateX(2.0 * i * TS);
-			pacTG.setVisible(true);
+			var pac3D = Pac3D.createTG(Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
+			pac3D.setTranslateX(2.0 * i * TS);
+			pac3D.setVisible(true);
 			if (facingRight) {
-				pacTG.setRotationAxis(Rotate.Z_AXIS);
-				pacTG.setRotate(180);
+				pac3D.setRotationAxis(Rotate.Z_AXIS);
+				pac3D.setRotate(180);
 			}
-			Pac3D.head(pacTG).drawModeProperty().bind(drawModePy);
-			getChildren().add(pacTG);
+			Pac3D.head(pac3D).drawModeProperty().bind(drawModePy);
+			root.getChildren().add(pac3D);
 		}
+	}
+
+	public Group getRoot() {
+		return root;
+	}
+
+	public void setPosition(double x, double y, double z) {
+		root.setTranslateX(x);
+		root.setTranslateY(y);
+		root.setTranslateZ(z);
 	}
 
 	public void update(int numLives) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			getChildren().get(i).setVisible(i < numLives);
+			root.getChildren().get(i).setVisible(i < numLives);
 		}
 	}
 }
