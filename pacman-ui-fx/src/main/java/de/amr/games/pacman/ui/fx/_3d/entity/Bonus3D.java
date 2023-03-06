@@ -69,8 +69,8 @@ public class Bonus3D {
 	}
 
 	public void setPosition(Vector2f position) {
-		shape.setTranslateX(position.x());
-		shape.setTranslateY(position.y());
+		shape.setTranslateX(position.x() + HTS);
+		shape.setTranslateY(position.y() + HTS);
 		shape.setTranslateZ(-HTS);
 	}
 
