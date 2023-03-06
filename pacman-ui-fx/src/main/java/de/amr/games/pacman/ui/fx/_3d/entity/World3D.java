@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -79,6 +81,7 @@ public class World3D extends Group {
 	private final World world;
 	private final MazeColoring mazeColors;
 	private final Group wallsGroup = new Group();
+	private final List<DoorWing3D> doorWings3D = new ArrayList<>();
 	private final Group doorWingsGroup = new Group();
 	private final PointLight houseLighting;
 	private Box floor;
@@ -146,9 +149,11 @@ public class World3D extends Group {
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 //		transformMaze();
-		var doorWings = world.ghostHouse().door().tiles().map(tile -> createDoorWing(tile, mazeColors.houseDoorColor()))
-				.toList();
-		doorWingsGroup.getChildren().setAll(doorWings);
+		world.ghostHouse().door().tiles().forEach(tile -> {
+			var doorWing3D = createDoorWing3D(tile, mazeColors.houseDoorColor());
+			doorWings3D.add(doorWing3D);
+			doorWingsGroup.getChildren().add(doorWing3D.getRoot());
+		});
 		LOG.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
@@ -182,14 +187,14 @@ public class World3D extends Group {
 //		return new Vector2i(fx / MAZE_RESOLUTION, fy / MAZE_RESOLUTION);
 //	}
 
-	public Stream<DoorWing3D> doorParts() {
-		return doorWingsGroup.getChildren().stream().map(DoorWing3D.class::cast);
+	public Stream<DoorWing3D> doorWings3D() {
+		return doorWings3D.stream().map(DoorWing3D.class::cast);
 	}
 
-	private DoorWing3D createDoorWing(Vector2i tile, Color color) {
+	private DoorWing3D createDoorWing3D(Vector2i tile, Color color) {
 		var door = new DoorWing3D(tile, color);
 		door.doorHeightPy.bind(wallHeightPy);
-		door.drawModeProperty().bind(drawModePy);
+		door.getRoot().drawModeProperty().bind(drawModePy);
 		return door;
 	}
 

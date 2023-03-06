@@ -38,21 +38,26 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class DoorWing3D extends Box {
+public class DoorWing3D {
 
 	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(HTS);
+	private final Box root = new Box();
 
 	public DoorWing3D(Vector2i tile, Color color) {
-		setWidth(TS - 1.0);
-		setHeight(1.0); // thickness (y-direction)
-		depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)
-		setMaterial(new PhongMaterial(color));
-		setTranslateX((double) tile.x() * TS + HTS);
-		setTranslateY((double) tile.y() * TS + HTS);
-		translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
+		root.setWidth(TS - 1.0);
+		root.setHeight(1.0); // thickness (y-direction)
+		root.depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)
+		root.setMaterial(new PhongMaterial(color));
+		root.setTranslateX((double) tile.x() * TS + HTS);
+		root.setTranslateY((double) tile.y() * TS + HTS);
+		root.translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
+	}
+
+	public Box getRoot() {
+		return root;
 	}
 
 	public void setOpen(boolean open) {
-		setVisible(!open);
+		root.setVisible(!open);
 	}
 }

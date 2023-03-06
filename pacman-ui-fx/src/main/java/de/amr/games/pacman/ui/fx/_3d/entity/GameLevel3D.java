@@ -192,7 +192,7 @@ public class GameLevel3D extends Group {
 	private void updateDoorState() {
 		var door = level.world().ghostHouse().door();
 		var accessGranted = isAccessGranted(level.ghosts(), door.entryPosition());
-		world3D.doorParts().forEach(door3D -> door3D.setOpen(accessGranted));
+		world3D.doorWings3D().forEach(door3D -> door3D.setOpen(accessGranted));
 	}
 
 	private boolean isAccessGranted(Stream<Ghost> ghosts, Vector2f doorPosition) {
