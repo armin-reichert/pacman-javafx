@@ -51,15 +51,8 @@ public class Energizer3D implements Eatable3D {
 	private final ScaleTransition pumping;
 	private Animation eatenAnimation;
 
-	public Energizer3D(Vector2i tile, PhongMaterial material) {
+	public Energizer3D(PhongMaterial material) {
 		shape.setMaterial(material);
-
-		shape.setTranslateX(tile.x() * TS + HTS);
-		shape.setTranslateY(tile.y() * TS + HTS);
-		shape.setTranslateZ(-HTS + 1);
-
-		shape.setUserData(tile);
-
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 6), shape);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);
@@ -69,6 +62,13 @@ public class Energizer3D implements Eatable3D {
 		pumping.setToX(0.1);
 		pumping.setToY(0.1);
 		pumping.setToZ(0.1);
+	}
+
+	public void setTile(Vector2i tile) {
+		shape.setUserData(tile);
+		shape.setTranslateX(tile.x() * TS + HTS);
+		shape.setTranslateY(tile.y() * TS + HTS);
+		shape.setTranslateZ(-HTS + 1);
 	}
 
 	@Override

@@ -48,21 +48,21 @@ public class Pellet3D implements Eatable3D {
 
 	private final Shape3D shape = OBJ_MODEL.createMeshView(MESH_NAME);
 
-	public Pellet3D(Vector2i tile, PhongMaterial material, double radius) {
+	public Pellet3D(PhongMaterial material, double radius) {
 		shape.setMaterial(material);
-
-		shape.setTranslateX(tile.x() * TS + HTS);
-		shape.setTranslateY(tile.y() * TS + HTS);
-		shape.setTranslateZ(-HTS + 1);
-
 		shape.setRotationAxis(Rotate.Z_AXIS);
 		shape.setRotate(90);
-		shape.setUserData(tile);
-
 		var bounds = shape.getBoundsInLocal();
 		var max = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
 		var scaling = new Scale(2 * radius / max, 2 * radius / max, 2 * radius / max);
 		shape.getTransforms().setAll(scaling);
+	}
+
+	public void setTile(Vector2i tile) {
+		shape.setUserData(tile);
+		shape.setTranslateX(tile.x() * TS + HTS);
+		shape.setTranslateY(tile.y() * TS + HTS);
+		shape.setTranslateZ(-HTS + 1);
 	}
 
 	@Override

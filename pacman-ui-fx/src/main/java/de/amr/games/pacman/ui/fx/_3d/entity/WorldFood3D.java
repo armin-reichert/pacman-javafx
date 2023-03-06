@@ -88,16 +88,21 @@ public class WorldFood3D extends Group {
 	}
 
 	private Pellet3D createNormalPellet(Vector2i tile) {
-		return new Pellet3D(tile, pelletMaterial, 1.0);
+		var pellet3D = new Pellet3D(pelletMaterial, 1.0);
+		pellet3D.setTile(tile);
+		return pellet3D;
 	}
 
 	private Energizer3D createNormalEnergizer(Vector2i tile) {
-		return new Energizer3D(tile, pelletMaterial);
+		var energizer3D = new Energizer3D(pelletMaterial);
+		energizer3D.setTile(tile);
+		return energizer3D;
 	}
 
 	private Energizer3D createSquirtingEnergizer(Vector2i tile) {
-		var energizer3D = new Energizer3D(tile, pelletMaterial);
-		energizer3D.setEatenAnimation(new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot()));
+		var energizer3D = createNormalEnergizer(tile);
+		var squirtingAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
+		energizer3D.setEatenAnimation(squirtingAnimation);
 		return energizer3D;
 	}
 
