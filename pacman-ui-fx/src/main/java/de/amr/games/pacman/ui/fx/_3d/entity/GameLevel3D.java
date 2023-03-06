@@ -124,7 +124,7 @@ public class GameLevel3D extends Group {
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		getChildren().addAll(world3D, food3D, pac3D, bonus3D.getRoot(), scores3D, levelCounter3D, livesCounter3D);
+		getChildren().addAll(world3D, food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D, levelCounter3D, livesCounter3D);
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(getChildren()::add);
 
 		world3D.drawModePy.bind(drawModePy);

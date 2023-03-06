@@ -129,7 +129,7 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		context.level().ifPresent(level -> {
 			level3D.update();
-			currentCamera().update(level3D.pac3D());
+			currentCamera().update(level3D.pac3D().getRoot());
 			updateSound(level);
 		});
 	}

@@ -52,7 +52,7 @@ import javafx.scene.shape.DrawMode;
  * 
  * @author Armin Reichert
  */
-public class Pac3D extends Group {
+public class Pac3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
@@ -65,31 +65,36 @@ public class Pac3D extends Group {
 	private final World world;
 	private final Pac pac;
 	private final Creature3DMovement movement;
-	private final Node root;
+	private final Group root = new Group();
+	private final Node shape;
 	private final PointLight spot;
 
 	public Pac3D(Pac pac, World world) {
 		this.pac = pac;
 		this.world = world;
-		movement = new Creature3DMovement(this, pac);
-		root = PacModel3D.createPac3D(EYES_COLOR, PALATE_COLOR);
-		Stream.of(PacModel3D.head(root), PacModel3D.eyes(root), PacModel3D.palate(root)).forEach(shape -> {
-			shape.drawModeProperty().bind(drawModePy);
+		movement = new Creature3DMovement(root, pac);
+		shape = PacModel3D.createPac3D(EYES_COLOR, PALATE_COLOR);
+		Stream.of(PacModel3D.head(shape), PacModel3D.eyes(shape), PacModel3D.palate(shape)).forEach(part -> {
+			part.drawModeProperty().bind(drawModePy);
 		});
-		getChildren().add(root);
+		root.getChildren().add(shape);
 
 		spot = new PointLight();
 		spot.setColor(Color.rgb(255, 255, 0, 0.25));
 		spot.setMaxRange(8 * TS);
 		spot.setTranslateZ(0);
-		getChildren().add(spot);
+		root.getChildren().add(spot);
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	public void init() {
-		root.setScaleX(1.0);
-		root.setScaleY(1.0);
-		root.setScaleZ(1.0);
-		root.setTranslateZ(0);
+		shape.setScaleX(1.0);
+		shape.setScaleY(1.0);
+		shape.setScaleZ(1.0);
+		shape.setTranslateZ(0);
 		headColorPy.set(HEAD_COLOR);
 		movement.init();
 		update();
@@ -98,9 +103,9 @@ public class Pac3D extends Group {
 	public void update() {
 		movement.update();
 		if (outsideWorld(world, pac)) {
-			setVisible(false);
+			root.setVisible(false);
 		} else {
-			setVisible(pac.isVisible());
+			root.setVisible(pac.isVisible());
 		}
 		spot.setLightOn(lightOnPy.get() && pac.isVisible() && !pac.isDead());
 	}
@@ -115,6 +120,6 @@ public class Pac3D extends Group {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
-		return new PacDyingAnimation(root, headColorPy, HEAD_COLOR, killingGhostColor).getAnimation();
+		return new PacDyingAnimation(shape, headColorPy, HEAD_COLOR, killingGhostColor).getAnimation();
 	}
 }
