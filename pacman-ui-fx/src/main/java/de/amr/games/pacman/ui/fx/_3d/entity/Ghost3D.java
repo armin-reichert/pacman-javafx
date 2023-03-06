@@ -55,7 +55,7 @@ import javafx.scene.transform.Rotate;
  * 
  * @author Armin Reichert
  */
-public class Ghost3D extends Group {
+public class Ghost3D {
 
 	private enum Look {
 		NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER;
@@ -65,6 +65,7 @@ public class Ghost3D extends Group {
 
 	private final Ghost ghost;
 	private final Creature3DMovement movement;
+	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(TS, TS, TS);
 	private Image numberImage;
@@ -77,7 +78,11 @@ public class Ghost3D extends Group {
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
-		movement = new Creature3DMovement(this, ghost);
+		movement = new Creature3DMovement(root, ghost);
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	public void init(GameLevel level) {
@@ -93,7 +98,7 @@ public class Ghost3D extends Group {
 		if (look != Look.NUMBER) {
 			movement.update();
 		}
-		setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
+		root.setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
 	}
 
 	public void setNumberImage(Image numberImage) {
@@ -106,11 +111,11 @@ public class Ghost3D extends Group {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
 			movement.init();
-			getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.root());
 		}
 		case FRIGHTENED -> {
 			coloredGhost3D.appearFrightened();
-			getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.root());
 		}
 		case FLASHING -> {
 			int numFlashes = level.params().numFlashes();
@@ -119,22 +124,22 @@ public class Ghost3D extends Group {
 			} else {
 				coloredGhost3D.appearFrightened();
 			}
-			getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.root());
 		}
 		case EYES -> {
 			coloredGhost3D.appearEyesOnly();
 			movement.init();
-			getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.root());
 		}
 		case NUMBER -> {
 			var material = new PhongMaterial();
 			material.setBumpMap(numberImage);
 			material.setDiffuseMap(numberImage);
 			numberCube.setMaterial(material);
-			getChildren().setAll(numberCube);
+			root.getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
-			setRotationAxis(Rotate.X_AXIS);
-			setRotate(0);
+			root.setRotationAxis(Rotate.X_AXIS);
+			root.setRotate(0);
 		}
 		default -> throw new IllegalArgumentException("Unexpected value: " + newLook);
 		}

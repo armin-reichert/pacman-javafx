@@ -29,6 +29,7 @@ import static de.amr.games.pacman.model.common.actors.GhostState.RETURNING_TO_HO
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
@@ -124,7 +125,7 @@ public class GameLevel3D extends Group {
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
 		getChildren().addAll(world3D, food3D, pac3D, bonus3D.getRoot(), scores3D, levelCounter3D, livesCounter3D);
-		getChildren().addAll(ghosts3D);
+		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(getChildren()::add);
 
 		world3D.drawModePy.bind(drawModePy);
 		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
