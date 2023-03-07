@@ -63,7 +63,7 @@ public class ColoredGhost3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	public static Node createGhost3D(Color dressColor, Color eyeBallColor, Color pupilColor) {
+	public static Group createGhost3D(Color dressColor, Color eyeBallColor, Color pupilColor) {
 		var dress = OBJ_MODEL.createMeshView(MESH_ID_GHOST_DRESS);
 		dress.setMaterial(new PhongMaterial(dressColor));
 
@@ -87,25 +87,7 @@ public class ColoredGhost3D {
 		return ghost3D;
 	}
 
-	private static Group eyes(Node ghost3D) {
-		var root = (Group) ghost3D;
-		return (Group) root.getChildren().get(1);
-	}
-
-	public static Shape3D dress(Node ghost3D) {
-		var root = (Group) ghost3D;
-		return (Shape3D) root.getChildren().get(0);
-	}
-
-	public static Shape3D pupils(Node ghost3D) {
-		return (Shape3D) eyes(ghost3D).getChildren().get(0);
-	}
-
-	public static Shape3D eyeBalls(Node ghost3D) {
-		return (Shape3D) eyes(ghost3D).getChildren().get(1);
-	}
-
-	private final Node root;
+	private final Group root;
 	private final Shape3D dress;
 	private final Shape3D eyeBalls;
 	private final Shape3D pupils;
@@ -125,11 +107,12 @@ public class ColoredGhost3D {
 		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", coloring.normalDress());
 		eyeBallsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", coloring.normalEyeBalls());
 		pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", coloring.normalPupils());
-		dress = dress(root);
+		dress = (Shape3D) root.getChildren().get(0);
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		eyeBalls = eyeBalls(root);
+		var eyes = (Group) root.getChildren().get(1);
+		eyeBalls = (Shape3D) eyes.getChildren().get(1);
 		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallsColorPy));
-		pupils = pupils(root);
+		pupils = (Shape3D) eyes.getChildren().get(0);
 		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 	}
 

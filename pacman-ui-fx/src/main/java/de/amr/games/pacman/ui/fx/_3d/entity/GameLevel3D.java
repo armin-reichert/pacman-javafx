@@ -82,7 +82,7 @@ public class GameLevel3D {
 			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
 			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
 		}
-		return null; // TODO make this work for other renderers too
+		throw new IllegalStateException(); // TODO make this work for other renderers too
 	}
 
 	private static Ghost3D createGhost3D(GameLevel level, Ghost ghost) {
