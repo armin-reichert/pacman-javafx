@@ -83,10 +83,8 @@ public class Pac3D {
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
 	public static Node createTG(Color eyesColor, Color palateColor) {
-		var headMaterial = new PhongMaterial(Color.YELLOW);
-
 		var head = OBJ_MODEL.createMeshView(MESH_ID_PAC_HEAD);
-		head.setMaterial(headMaterial);
+		head.setMaterial(new PhongMaterial(Color.YELLOW));
 
 		var eyes = OBJ_MODEL.createMeshView(MESH_ID_PAC_EYES);
 		eyes.setMaterial(new PhongMaterial(eyesColor));
@@ -99,10 +97,10 @@ public class Pac3D {
 			meshView.getTransforms().add(center);
 		});
 
-		var root = new Group(head, eyes, palate);
-		root.getTransforms().addAll(new Translate(0, 0, -1), scale(root, PAC_SIZE), new Rotate(90, Rotate.X_AXIS));
+		var group = new Group(head, eyes, palate);
+		group.getTransforms().addAll(new Translate(0, 0, -1), scale(group, PAC_SIZE), new Rotate(90, Rotate.X_AXIS));
 
-		return root;
+		return group;
 	}
 
 	public static Shape3D head(Node root) {
