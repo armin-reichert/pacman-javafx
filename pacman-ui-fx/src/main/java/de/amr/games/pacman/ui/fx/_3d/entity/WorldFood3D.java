@@ -45,11 +45,12 @@ import javafx.scene.paint.PhongMaterial;
 /**
  * @author Armin Reichert
  */
-public class WorldFood3D extends Group {
+public class WorldFood3D {
 
 	public final BooleanProperty eatenAnimationEnabledPy = new SimpleBooleanProperty(this, "eatenAnimationEnabled");
 
 	private final World world;
+	private final Group root = new Group();
 	private final Group particlesGroup = new Group();
 	private final PhongMaterial pelletMaterial;
 	private final List<Eatable3D> eatables = new ArrayList<>();
@@ -60,9 +61,13 @@ public class WorldFood3D extends Group {
 		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
 			Eatable3D eatable3D = world.isEnergizerTile(tile) ? createEnergizer(tile) : createNormalPellet(tile);
 			eatables.add(eatable3D);
-			getChildren().add(eatable3D.getRoot());
+			root.getChildren().add(eatable3D.getRoot());
 		});
-		getChildren().add(particlesGroup);
+		root.getChildren().add(particlesGroup);
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	private Pellet3D createNormalPellet(Vector2i tile) {

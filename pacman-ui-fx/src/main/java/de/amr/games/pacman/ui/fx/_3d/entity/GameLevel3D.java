@@ -123,8 +123,8 @@ public class GameLevel3D {
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		root.getChildren().addAll(world3D.getRoot(), food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
-				levelCounter3D.getRoot(), livesCounter3D.getRoot());
+		root.getChildren().addAll(world3D.getRoot(), food3D.getRoot(), pac3D.getRoot(), bonus3D.getRoot(),
+				scores3D.getRoot(), levelCounter3D.getRoot(), livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
 
 		world3D.drawModePy.bind(drawModePy);
