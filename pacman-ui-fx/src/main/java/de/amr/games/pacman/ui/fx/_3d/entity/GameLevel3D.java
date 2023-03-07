@@ -123,7 +123,7 @@ public class GameLevel3D {
 		livesCounter3D = createLivesCounter3D(level);
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		root.getChildren().addAll(world3D, food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D, levelCounter3D,
+		root.getChildren().addAll(world3D, food3D, pac3D.getRoot(), bonus3D.getRoot(), scores3D, levelCounter3D.getRoot(),
 				livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
 

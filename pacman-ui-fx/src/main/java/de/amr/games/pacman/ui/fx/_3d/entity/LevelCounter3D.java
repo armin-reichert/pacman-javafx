@@ -44,7 +44,9 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class LevelCounter3D extends Group {
+public class LevelCounter3D {
+
+	private final Group root = new Group();
 
 	/**
 	 * @param levelCounter
@@ -59,10 +61,14 @@ public class LevelCounter3D extends Group {
 			cube.setTranslateX(x);
 			cube.setTranslateY(position.y());
 			cube.setTranslateZ(-HTS);
-			getChildren().add(cube);
+			root.getChildren().add(cube);
 			x -= 2 * TS;
 			forward = !forward;
 		}
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	private Box createSpinningCube(double size, Image texture, boolean forward) {
