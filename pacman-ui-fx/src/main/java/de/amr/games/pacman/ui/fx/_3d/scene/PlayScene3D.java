@@ -101,7 +101,7 @@ public class PlayScene3D implements GameScene {
 	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect", true);
 
 	private final SubScene fxSubScene;
-	private final Group levelContainer = new Group();
+	private final Group root;
 	private final CoordSystem coordSystem = new CoordSystem();
 	private final AmbientLight ambientLight = new AmbientLight();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
@@ -110,7 +110,7 @@ public class PlayScene3D implements GameScene {
 	private GameLevel3D level3D;
 
 	public PlayScene3D() {
-		var root = new Group(levelContainer, coordSystem, ambientLight);
+		root = new Group(new Group() /* placeholder for level3D */, coordSystem, ambientLight);
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		cameraMap.put(Perspective.DRONE, new CamDrone());
@@ -122,7 +122,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		context.level().ifPresent(this::createGameLevel3D);
+		context.level().ifPresent(this::replaceGameLevel3D);
 	}
 
 	@Override
@@ -149,15 +149,12 @@ public class PlayScene3D implements GameScene {
 		// nothing to do
 	}
 
-	private void createGameLevel3D(GameLevel level) {
+	private void replaceGameLevel3D(GameLevel level) {
 		var width = level.world().numCols() * World.TS;
 		var height = level.world().numRows() * World.TS;
 
 		level3D = new GameLevel3D(level, context.r2D());
-		levelContainer.getChildren().setAll(level3D.getRoot());
-		levelContainer.getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
-
-		// bind to Env properties
+		level3D.getRoot().getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		level3D.eatenAnimationEnabledPy.bind(squirtingEffectPy);
 		level3D.world3D().floorColorPy.bind(floorColorPy);
@@ -170,6 +167,7 @@ public class PlayScene3D implements GameScene {
 		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
 		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
 
+		root.getChildren().set(0, level3D.getRoot());
 		changeCameraPerspective(perspectivePy.get());
 		LOG.info("3D game level created.");
 	}
@@ -344,7 +342,7 @@ public class PlayScene3D implements GameScene {
 			lockGameState();
 			context.level().ifPresent(level -> {
 				LOG.info("Starting level %d", level.number());
-				createGameLevel3D(level);
+				replaceGameLevel3D(level);
 				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
 			});
 			afterSeconds(3, this::unlockGameState).play();
