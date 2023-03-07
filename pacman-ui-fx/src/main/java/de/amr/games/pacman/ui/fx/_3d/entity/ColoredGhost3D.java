@@ -24,20 +24,86 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
+import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 /**
  * @author Armin Reichert
  */
 public class ColoredGhost3D {
+
+	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/ghost.obj"));
+	private static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+	private static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
+	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+
+	private static final double SIZE = 8.5;
+
+	private static Translate centerOverOrigin(Node node) {
+		var bounds = node.getBoundsInLocal();
+		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+	}
+
+	private static Scale scale(Node node, double size) {
+		var bounds = node.getBoundsInLocal();
+		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
+	}
+
+	public static Node createGhost3D(Color dressColor, Color eyeBallColor, Color pupilColor) {
+		var dress = OBJ_MODEL.createMeshView(MESH_ID_GHOST_DRESS);
+		dress.setMaterial(new PhongMaterial(dressColor));
+
+		var eyeBalls = OBJ_MODEL.createMeshView(MESH_ID_GHOST_EYE_BALLS);
+		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
+
+		var pupils = OBJ_MODEL.createMeshView(MESH_ID_GHOST_PUPILS);
+		pupils.setMaterial(new PhongMaterial(pupilColor));
+
+		var center = centerOverOrigin(dress);
+		dress.getTransforms().add(center);
+
+		var eyes = new Group(pupils, eyeBalls);
+		eyes.getTransforms().add(center);
+
+		var ghost3D = new Group(dress, eyes);
+		ghost3D.getTransforms().add(new Translate(0, 0, -1.5));
+		ghost3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		ghost3D.getTransforms().add(scale(ghost3D, SIZE));
+
+		return ghost3D;
+	}
+
+	private static Group eyes(Node ghost3D) {
+		var root = (Group) ghost3D;
+		return (Group) root.getChildren().get(1);
+	}
+
+	public static Shape3D dress(Node ghost3D) {
+		var root = (Group) ghost3D;
+		return (Shape3D) root.getChildren().get(0);
+	}
+
+	public static Shape3D pupils(Node ghost3D) {
+		return (Shape3D) eyes(ghost3D).getChildren().get(0);
+	}
+
+	public static Shape3D eyeBalls(Node ghost3D) {
+		return (Shape3D) eyes(ghost3D).getChildren().get(1);
+	}
 
 	private final Node root;
 	private final Shape3D dress;
@@ -55,15 +121,15 @@ public class ColoredGhost3D {
 
 	public ColoredGhost3D(GhostColoring coloring) {
 		this.coloring = coloring;
-		root = GhostModel3D.createGhost3D(coloring.normalDress(), coloring.normalEyeBalls(), coloring.normalPupils());
+		root = createGhost3D(coloring.normalDress(), coloring.normalEyeBalls(), coloring.normalPupils());
 		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", coloring.normalDress());
 		eyeBallsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", coloring.normalEyeBalls());
 		pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", coloring.normalPupils());
-		dress = GhostModel3D.dress(root);
+		dress = dress(root);
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		eyeBalls = GhostModel3D.eyeBalls(root);
+		eyeBalls = eyeBalls(root);
 		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallsColorPy));
-		pupils = GhostModel3D.pupils(root);
+		pupils = pupils(root);
 		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 	}
 
