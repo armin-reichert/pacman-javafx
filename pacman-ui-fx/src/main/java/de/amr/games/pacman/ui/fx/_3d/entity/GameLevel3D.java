@@ -156,7 +156,7 @@ public class GameLevel3D {
 			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
 			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
 		}
-		throw new IllegalStateException(); // TODO make this work for other renderers too
+		throw new UnsupportedOperationException(); // TODO make this work for other renderers too
 	}
 
 	private LivesCounter3D createLivesCounter3D() {

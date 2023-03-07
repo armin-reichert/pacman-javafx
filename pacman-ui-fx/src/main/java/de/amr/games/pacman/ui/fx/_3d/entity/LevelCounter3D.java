@@ -47,16 +47,14 @@ public class LevelCounter3D {
 	private final Group root = new Group();
 
 	public LevelCounter3D(Image[] symbolImages, Vector2f rightPosition) {
-		double x = rightPosition.x();
 		boolean forward = true;
 		for (int i = 0; i < symbolImages.length; ++i) {
 			var symbolImage = symbolImages[i];
 			Box cube = createSpinningCube(TS, symbolImage, forward);
-			cube.setTranslateX(x);
+			cube.setTranslateX(rightPosition.x() - 2 * i * TS);
 			cube.setTranslateY(rightPosition.y());
 			cube.setTranslateZ(-HTS);
 			root.getChildren().add(cube);
-			x -= 2 * TS;
 			forward = !forward;
 		}
 	}
