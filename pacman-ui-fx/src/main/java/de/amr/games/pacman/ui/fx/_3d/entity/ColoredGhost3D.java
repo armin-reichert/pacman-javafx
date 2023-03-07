@@ -62,28 +62,35 @@ public class ColoredGhost3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	public static Group createGhost3D(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dress = OBJ_MODEL.createMeshView(MESH_ID_GHOST_DRESS);
-		dress.setMaterial(new PhongMaterial(dressColor));
+	/**
+	 * 
+	 * @param dressColor   color of dress
+	 * @param eyeBallColor color of eye balls
+	 * @param pupilColor   color of pupils
+	 * @return transformation group representing colored 3D ghost
+	 */
+	private static Group createTG(Color dressColor, Color eyeBallColor, Color pupilColor) {
+		var dressMesh = OBJ_MODEL.createMeshView(MESH_ID_GHOST_DRESS);
+		dressMesh.setMaterial(new PhongMaterial(dressColor));
 
-		var eyeBalls = OBJ_MODEL.createMeshView(MESH_ID_GHOST_EYE_BALLS);
-		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
+		var eyeBallsMesh = OBJ_MODEL.createMeshView(MESH_ID_GHOST_EYE_BALLS);
+		eyeBallsMesh.setMaterial(new PhongMaterial(eyeBallColor));
 
-		var pupils = OBJ_MODEL.createMeshView(MESH_ID_GHOST_PUPILS);
-		pupils.setMaterial(new PhongMaterial(pupilColor));
+		var pupilsMesh = OBJ_MODEL.createMeshView(MESH_ID_GHOST_PUPILS);
+		pupilsMesh.setMaterial(new PhongMaterial(pupilColor));
 
-		var center = centerOverOrigin(dress);
-		dress.getTransforms().add(center);
+		var center = centerOverOrigin(dressMesh);
+		dressMesh.getTransforms().add(center);
 
-		var eyes = new Group(pupils, eyeBalls);
+		var eyes = new Group(pupilsMesh, eyeBallsMesh);
 		eyes.getTransforms().add(center);
 
-		var ghost3D = new Group(dress, eyes);
-		ghost3D.getTransforms().add(new Translate(0, 0, -1.5));
-		ghost3D.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		ghost3D.getTransforms().add(scale(ghost3D, SIZE));
+		var group = new Group(dressMesh, eyes);
+		group.getTransforms().add(new Translate(0, 0, -1.5));
+		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		group.getTransforms().add(scale(group, SIZE));
 
-		return ghost3D;
+		return group;
 	}
 
 	private final Group root;
@@ -92,9 +99,9 @@ public class ColoredGhost3D {
 	private final Shape3D pupils;
 
 	private final GhostColoring coloring;
-	private final ObjectProperty<Color> dressColorPy;
-	private final ObjectProperty<Color> eyeBallsColorPy;
-	private final ObjectProperty<Color> pupilsColorPy;
+	private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
+	private final ObjectProperty<Color> eyeBallsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", Color.WHITE);
+	private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
 	private ParallelTransition flashing;
 	private ColorFlashing dressFlashing;
@@ -102,10 +109,10 @@ public class ColoredGhost3D {
 
 	public ColoredGhost3D(GhostColoring coloring) {
 		this.coloring = coloring;
-		root = createGhost3D(coloring.normalDress(), coloring.normalEyeBalls(), coloring.normalPupils());
-		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", coloring.normalDress());
-		eyeBallsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", coloring.normalEyeBalls());
-		pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", coloring.normalPupils());
+		dressColorPy.set(coloring.normalDress());
+		eyeBallsColorPy.set(coloring.normalEyeBalls());
+		pupilsColorPy.set(coloring.normalPupils());
+		root = createTG(coloring.normalDress(), coloring.normalEyeBalls(), coloring.normalPupils());
 		dress = (Shape3D) root.getChildren().get(0);
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
 		var eyes = (Group) root.getChildren().get(1);
