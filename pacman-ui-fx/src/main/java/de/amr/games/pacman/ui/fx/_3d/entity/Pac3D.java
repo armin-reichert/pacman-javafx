@@ -45,6 +45,7 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -83,13 +84,13 @@ public class Pac3D {
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
 	public static Node createTG(Color eyesColor, Color palateColor) {
-		var head = OBJ_MODEL.createMeshView(MESH_ID_PAC_HEAD);
+		var head = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_HEAD));
 		head.setMaterial(new PhongMaterial(Color.YELLOW));
 
-		var eyes = OBJ_MODEL.createMeshView(MESH_ID_PAC_EYES);
+		var eyes = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_EYES));
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		var palate = OBJ_MODEL.createMeshView(MESH_ID_PAC_PALATE);
+		var palate = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_PALATE));
 		palate.setMaterial(new PhongMaterial(palateColor));
 
 		var center = centerOverOrigin(head);

@@ -13,7 +13,6 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
 
 /**
  * A 3D-model imported from a Wavefront .obj file.
@@ -51,9 +50,9 @@ public class ObjModel {
 		this(ResourceMgr.urlFromRelPath(relPath));
 	}
 
-	public MeshView createMeshView(String name) {
+	public Mesh mesh(String name) {
 		if (meshes.containsKey(name)) {
-			return new MeshView(meshes.get(name));
+			return meshes.get(name);
 		}
 		throw new Model3DException("No mesh with name %s found", name);
 	}

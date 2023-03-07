@@ -35,6 +35,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -70,13 +71,13 @@ public class ColoredGhost3D {
 	 * @return transformation group representing colored 3D ghost
 	 */
 	private static Group createTG(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dressMesh = OBJ_MODEL.createMeshView(MESH_ID_GHOST_DRESS);
+		var dressMesh = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_DRESS));
 		dressMesh.setMaterial(new PhongMaterial(dressColor));
 
-		var eyeBallsMesh = OBJ_MODEL.createMeshView(MESH_ID_GHOST_EYE_BALLS);
+		var eyeBallsMesh = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_EYE_BALLS));
 		eyeBallsMesh.setMaterial(new PhongMaterial(eyeBallColor));
 
-		var pupilsMesh = OBJ_MODEL.createMeshView(MESH_ID_GHOST_PUPILS);
+		var pupilsMesh = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_PUPILS));
 		pupilsMesh.setMaterial(new PhongMaterial(pupilColor));
 
 		var center = centerOverOrigin(dressMesh);

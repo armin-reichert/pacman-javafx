@@ -31,6 +31,7 @@ import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -43,9 +44,9 @@ import javafx.scene.transform.Scale;
 public class Pellet3D implements Eatable3D {
 
 	private static final ObjModel OBJ_MODEL = new ObjModel("model3D/12206_Fruit_v1_L3.obj");
-	private static final String MESH_NAME = "Fruit";
+	private static final String MESH_ID = "Fruit";
 
-	private final Shape3D shape = OBJ_MODEL.createMeshView(MESH_NAME);
+	private final Shape3D shape = new MeshView(OBJ_MODEL.mesh(MESH_ID));
 
 	public Pellet3D(PhongMaterial material, double radius) {
 		shape.setMaterial(material);
