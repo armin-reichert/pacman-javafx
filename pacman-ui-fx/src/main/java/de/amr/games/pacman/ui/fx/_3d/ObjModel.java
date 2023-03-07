@@ -58,6 +58,9 @@ public class ObjModel {
 	}
 
 	public PhongMaterial material(String name) {
-		return materials.get(name);
+		if (materials.containsKey(name)) {
+			return materials.get(name);
+		}
+		throw new Model3DException("No material with name %s found", name);
 	}
 }
