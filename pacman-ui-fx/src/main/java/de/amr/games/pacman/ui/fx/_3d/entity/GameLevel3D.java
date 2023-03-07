@@ -28,24 +28,36 @@ import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.actors.GhostState.RETURNING_TO_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static java.util.function.Predicate.not;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
+import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
+import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.SequentialTransition;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -54,77 +66,36 @@ import javafx.scene.shape.DrawMode;
 public class GameLevel3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+	public final BooleanProperty eatenAnimationEnabledPy = new SimpleBooleanProperty(this, "eatenAnimationEnabled");
 
 	private final GameLevel level;
 	private final Group root = new Group();
 	private final World3D world3D;
-	private final WorldFood3D food3D;
 	private final Pac3D pac3D;
 	private final Ghost3D[] ghosts3D;
 	private final Bonus3D bonus3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
-
-	private static World3D createWorld3D(GameLevel level, Rendering2D r2D, int mazeNumber) {
-		return new World3D(level.world(), r2D.mazeColoring(mazeNumber));
-	}
-
-	private static Pac3D createPac3D(GameLevel level) {
-		var pac3D = new Pac3D(level.pac(), level.world());
-		pac3D.init();
-		return pac3D;
-	}
-
-	private static Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
-		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
-			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
-			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
-		}
-		throw new IllegalStateException(); // TODO make this work for other renderers too
-	}
-
-	private static Ghost3D createGhost3D(GameLevel level, Ghost ghost) {
-		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
-		ghost3D.init(level);
-		return ghost3D;
-	}
-
-	private static LivesCounter3D createLivesCounter3D(GameLevel level) {
-		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
-		var livesCounter3D = new LivesCounter3D(facingRight);
-		livesCounter3D.setPosition(TS, TS, -HTS);
-		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
-		return livesCounter3D;
-	}
-
-	private static LevelCounter3D createLevelCounter3D(GameLevel level, Rendering2D r2D) {
-		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
-		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
-					symbol -> sgr.image(sgr.bonusSymbolRegion(symbol)));
-		} else {
-			// TODO make this work for non-spritesheet based renderer
-			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbol -> null);
-		}
-	}
+	private final Group foodRoot;
+	private final Group particlesGroup = new Group();
+	private final List<Eatable3D> eatables = new ArrayList<>();
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		world3D = createWorld3D(level, r2D, mazeNumber);
-		pac3D = createPac3D(level);
-		ghosts3D = level.ghosts().map(ghost -> createGhost3D(level, ghost)).toArray(Ghost3D[]::new);
+		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber));
+		pac3D = createPac3D();
+		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost)).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
-		food3D = new WorldFood3D(level.world(), r2D.mazeColoring(mazeNumber).foodColor());
-		levelCounter3D = createLevelCounter3D(level, r2D);
-		livesCounter3D = createLivesCounter3D(level);
+		levelCounter3D = createLevelCounter3D(r2D);
+		livesCounter3D = createLivesCounter3D();
 		scores3D = new Scores3D(r2D.screenFont(TS));
+		foodRoot = createFood3D(r2D.mazeColoring(mazeNumber).foodColor());
 
-		root.getChildren().addAll(world3D.getRoot(), food3D.getRoot(), pac3D.getRoot(), bonus3D.getRoot(),
-				scores3D.getRoot(), levelCounter3D.getRoot(), livesCounter3D.getRoot());
+		root.getChildren().addAll(world3D.getRoot(), foodRoot, pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
+				levelCounter3D.getRoot(), livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
 
 		world3D.drawModePy.bind(drawModePy);
@@ -134,6 +105,74 @@ public class GameLevel3D {
 			ghost3D.drawModePy.bind(drawModePy);
 		}
 		livesCounter3D.drawModePy.bind(drawModePy);
+	}
+
+	private Group createFood3D(Color foodColor) {
+		var root = new Group();
+		var pelletMaterial = new PhongMaterial(foodColor);
+		var world = level.world();
+		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
+			Eatable3D eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, pelletMaterial)
+					: createNormalPellet3D(tile, pelletMaterial);
+			eatables.add(eatable3D);
+			root.getChildren().add(eatable3D.getRoot());
+		});
+		root.getChildren().add(particlesGroup);
+		return root;
+	}
+
+	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial pelletMaterial) {
+		var pellet3D = new Pellet3D(pelletMaterial, 1.0);
+		pellet3D.setTile(tile);
+		return pellet3D;
+	}
+
+	private Energizer3D createEnergizer3D(World world, Vector2i tile, PhongMaterial pelletMaterial) {
+		var energizer3D = new Energizer3D(pelletMaterial, 3.5);
+		energizer3D.setTile(tile);
+		var eatenAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
+		energizer3D.setEatenAnimation(eatenAnimation);
+		return energizer3D;
+	}
+
+	private Pac3D createPac3D() {
+		var pac3D = new Pac3D(level.pac(), level.world());
+		pac3D.init();
+		return pac3D;
+	}
+
+	private Ghost3D createGhost3D(Ghost ghost) {
+		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
+		ghost3D.init(level);
+		return ghost3D;
+	}
+
+	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
+		if (r2D instanceof SpritesheetGameRenderer sgr) {
+			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
+			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
+			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
+		}
+		throw new IllegalStateException(); // TODO make this work for other renderers too
+	}
+
+	private LivesCounter3D createLivesCounter3D() {
+		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
+		var livesCounter3D = new LivesCounter3D(facingRight);
+		livesCounter3D.setPosition(TS, TS, -HTS);
+		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
+		return livesCounter3D;
+	}
+
+	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
+		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
+		if (r2D instanceof SpritesheetGameRenderer sgr) {
+			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
+					symbol -> sgr.image(sgr.bonusSymbolRegion(symbol)));
+		} else {
+			// TODO make this work for non-spritesheet based renderer
+			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbol -> null);
+		}
 	}
 
 	public Group getRoot() {
@@ -159,10 +198,6 @@ public class GameLevel3D {
 		return world3D;
 	}
 
-	public WorldFood3D food3D() {
-		return food3D;
-	}
-
 	public Pac3D pac3D() {
 		return pac3D;
 	}
@@ -179,12 +214,34 @@ public class GameLevel3D {
 		return scores3D;
 	}
 
-	public LivesCounter3D livesCounter3D() {
-		return livesCounter3D;
+	public void eat(Eatable3D eatable3D) {
+		if (eatable3D instanceof Energizer3D energizer3D) {
+			energizer3D.stopPumping();
+		}
+		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
+		// the pellet disappears too early (collision by same tile in game model is too simplistic).
+		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
+		var eatenAnimation = eatable3D.getEatenAnimation();
+		if (eatenAnimation.isPresent() && eatenAnimationEnabledPy.get()) {
+			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
+		} else {
+			delayHiding.play();
+		}
 	}
 
-	public LevelCounter3D levelCounter3D() {
-		return levelCounter3D;
+	/**
+	 * @return all 3D pellets, including energizers
+	 */
+	public Stream<Eatable3D> eatables3D() {
+		return eatables.stream();
+	}
+
+	public Stream<Energizer3D> energizers3D() {
+		return eatables.stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+	}
+
+	public Optional<Eatable3D> eatableAt(Vector2i tile) {
+		return eatables.stream().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 
 	private void updateHouseLightingState() {

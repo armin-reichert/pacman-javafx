@@ -159,7 +159,7 @@ public class PlayScene3D implements GameScene {
 
 		// bind to Env properties
 		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
-		level3D.food3D().eatenAnimationEnabledPy.bind(squirtingEffectPy);
+		level3D.eatenAnimationEnabledPy.bind(squirtingEffectPy);
 		level3D.world3D().floorColorPy.bind(floorColorPy);
 		var textureBinding = Bindings.createObjectBinding( //
 				() -> Env.ThreeD.NO_TEXTURE.equals(floorTexturePy.get()) //
@@ -257,10 +257,10 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onSwitchFrom2D() {
 		context.world().ifPresent(world -> {
-			level3D.food3D().eatables3D()
+			level3D.eatables3D()
 					.forEach(eatable3D -> eatable3D.getRoot().setVisible(!world.containsEatenFood(eatable3D.tile())));
 			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
-				level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
+				level3D.energizers3D().forEach(Energizer3D::startPumping);
 			}
 		});
 	}
@@ -273,13 +273,13 @@ public class PlayScene3D implements GameScene {
 			context.world().ifPresent(world -> {
 				world.tiles() //
 						.filter(world::containsEatenFood) //
-						.map(level3D.food3D()::eatableAt) //
+						.map(level3D::eatableAt) //
 						.flatMap(Optional::stream) //
 						.forEach(Eatable3D::eat);
 			});
 		} else {
-			var eatable = level3D.food3D().eatableAt(e.tile.get());
-			eatable.ifPresent(level3D.food3D()::eatPellet);
+			var eatable = level3D.eatableAt(e.tile.get());
+			eatable.ifPresent(level3D::eat);
 		}
 	}
 
@@ -304,13 +304,13 @@ public class PlayScene3D implements GameScene {
 
 		case READY -> {
 			context.level().ifPresent(level -> {
-				level3D.food3D().energizers3D().forEach(Energizer3D::init);
+				level3D.energizers3D().forEach(Energizer3D::init);
 				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
 			});
 		}
 
-		case HUNTING -> level3D.food3D().energizers3D().forEach(Energizer3D::startPumping);
+		case HUNTING -> level3D.energizers3D().forEach(Energizer3D::startPumping);
 
 		case PACMAN_DYING -> {
 			context.game().level().ifPresent(level -> {
@@ -375,7 +375,7 @@ public class PlayScene3D implements GameScene {
 
 		// exit HUNTING
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			level3D.food3D().energizers3D().forEach(Energizer3D::stopPumping);
+			level3D.energizers3D().forEach(Energizer3D::stopPumping);
 			level3D.bonus3D().hide();
 		}
 	}
