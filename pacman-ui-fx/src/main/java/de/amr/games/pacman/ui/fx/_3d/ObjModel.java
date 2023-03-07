@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 
@@ -39,6 +40,10 @@ public class ObjModel {
 		} finally {
 			importer.close();
 		}
+	}
+
+	public ObjModel(String relPath) {
+		this(ResourceMgr.urlFromRelPath(relPath));
 	}
 
 	public MeshView createMeshView(String name) {

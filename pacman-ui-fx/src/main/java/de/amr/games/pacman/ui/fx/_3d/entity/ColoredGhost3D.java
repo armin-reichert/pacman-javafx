@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
@@ -46,7 +45,7 @@ import javafx.scene.transform.Translate;
  */
 public class ColoredGhost3D {
 
-	private static final ObjModel OBJ_MODEL = new ObjModel(ResourceMgr.urlFromRelPath("model3D/ghost.obj"));
+	private static final ObjModel OBJ_MODEL = new ObjModel("model3D/ghost.obj");
 	private static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	private static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
