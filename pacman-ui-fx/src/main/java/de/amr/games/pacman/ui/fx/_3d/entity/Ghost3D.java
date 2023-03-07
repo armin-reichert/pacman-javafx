@@ -111,25 +111,25 @@ public class Ghost3D {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
 			movement.init();
-			root.getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED -> {
 			coloredGhost3D.appearFrightened();
-			root.getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FLASHING -> {
 			int numFlashes = level.params().numFlashes();
 			if (numFlashes > 0) {
-				coloredGhost3D.appearFlashing(numFlashes);
+				coloredGhost3D.appearFlashing(numFlashes, 1.0);
 			} else {
 				coloredGhost3D.appearFrightened();
 			}
-			root.getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case EYES -> {
 			coloredGhost3D.appearEyesOnly();
 			movement.init();
-			root.getChildren().setAll(coloredGhost3D.root());
+			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
 			var material = new PhongMaterial();

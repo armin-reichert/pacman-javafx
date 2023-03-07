@@ -44,30 +44,30 @@ public class ColoredGhost3D {
 	private final Shape3D eyeBalls;
 	private final Shape3D pupils;
 
-	private final GhostColoring colors;
+	private final GhostColoring coloring;
 	private final ObjectProperty<Color> dressColorPy;
-	private final ObjectProperty<Color> eyeBallColorPy;
-	private final ObjectProperty<Color> eyePupilColorPy;
+	private final ObjectProperty<Color> eyeBallsColorPy;
+	private final ObjectProperty<Color> pupilsColorPy;
 
 	private ParallelTransition flashing;
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(GhostColoring colors) {
-		this.colors = colors;
-		root = GhostModel3D.createGhost3D(colors.normalDress(), colors.normalEyeBalls(), colors.normalPupils());
-		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", colors.normalDress());
-		eyeBallColorPy = new SimpleObjectProperty<>(this, "eyeBallColor", colors.normalEyeBalls());
-		eyePupilColorPy = new SimpleObjectProperty<>(this, "eyePupilColor", colors.normalPupils());
+	public ColoredGhost3D(GhostColoring coloring) {
+		this.coloring = coloring;
+		root = GhostModel3D.createGhost3D(coloring.normalDress(), coloring.normalEyeBalls(), coloring.normalPupils());
+		dressColorPy = new SimpleObjectProperty<>(this, "dressColor", coloring.normalDress());
+		eyeBallsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", coloring.normalEyeBalls());
+		pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", coloring.normalPupils());
 		dress = GhostModel3D.dress(root);
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
 		eyeBalls = GhostModel3D.eyeBalls(root);
-		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallColorPy));
+		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallsColorPy));
 		pupils = GhostModel3D.pupils(root);
-		pupils.setMaterial(Ufx.createColorBoundMaterial(eyePupilColorPy));
+		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 	}
 
-	public Node root() {
+	public Node getRoot() {
 		return root;
 	}
 
@@ -83,30 +83,30 @@ public class ColoredGhost3D {
 		return pupils;
 	}
 
-	public void appearFlashing(int numFlashes) {
-		ensureFlashingPlaying(numFlashes);
+	public void appearFlashing(int numFlashes, double durationSeconds) {
+		ensureFlashingPlaying(numFlashes, durationSeconds);
 		dressColorPy.bind(dressFlashing.colorPy);
-		eyeBallColorPy.set(colors.frightenedEyeBalls());
-		eyePupilColorPy.bind(pupilsFlashing.colorPy);
+		eyeBallsColorPy.set(coloring.frightenedEyeBalls());
+		pupilsColorPy.bind(pupilsFlashing.colorPy);
 		dress.setVisible(true);
 	}
 
 	public void appearFrightened() {
 		dressColorPy.unbind();
-		dressColorPy.set(colors.frightenedDress());
-		eyeBallColorPy.set(colors.frightenedEyeBalls());
-		eyePupilColorPy.unbind();
-		eyePupilColorPy.set(colors.frightendPupils());
+		dressColorPy.set(coloring.frightenedDress());
+		eyeBallsColorPy.set(coloring.frightenedEyeBalls());
+		pupilsColorPy.unbind();
+		pupilsColorPy.set(coloring.frightendPupils());
 		dress.setVisible(true);
 		ensureFlashingStopped();
 	}
 
 	public void appearNormal() {
 		dressColorPy.unbind();
-		dressColorPy.set(colors.normalDress());
-		eyeBallColorPy.set(colors.normalEyeBalls());
-		eyePupilColorPy.unbind();
-		eyePupilColorPy.set(colors.normalPupils());
+		dressColorPy.set(coloring.normalDress());
+		eyeBallsColorPy.set(coloring.normalEyeBalls());
+		pupilsColorPy.unbind();
+		pupilsColorPy.set(coloring.normalPupils());
 		dress.setVisible(true);
 		ensureFlashingStopped();
 	}
@@ -116,16 +116,17 @@ public class ColoredGhost3D {
 		dress.setVisible(false);
 	}
 
-	private void createFlashing(int numFlashes) {
-		var seconds = 1;
-		dressFlashing = new ColorFlashing(colors.frightenedDress(), colors.flashingDress(), seconds, numFlashes);
-		pupilsFlashing = new ColorFlashing(colors.frightendPupils(), colors.flashingPupils(), seconds, numFlashes);
+	private void createFlashing(int numFlashes, double durationSeconds) {
+		dressFlashing = new ColorFlashing(coloring.frightenedDress(), coloring.flashingDress(), durationSeconds,
+				numFlashes);
+		pupilsFlashing = new ColorFlashing(coloring.frightendPupils(), coloring.flashingPupils(), durationSeconds,
+				numFlashes);
 		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
 	}
 
-	private void ensureFlashingPlaying(int numFlashes) {
+	private void ensureFlashingPlaying(int numFlashes, double durationSeconds) {
 		if (flashing == null) {
-			createFlashing(numFlashes);
+			createFlashing(numFlashes, durationSeconds);
 		}
 		if (flashing.getStatus() != Status.RUNNING) {
 			flashing.playFromStart();
