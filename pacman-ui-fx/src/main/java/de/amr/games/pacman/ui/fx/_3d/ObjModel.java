@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx._3d;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 
 /**
@@ -22,7 +24,7 @@ public class ObjModel {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private Map<String, MeshView> meshViews;
+	private Map<String, Mesh> meshes;
 	private Map<String, PhongMaterial> materials;
 
 	public ObjModel(URL url) {
@@ -32,7 +34,10 @@ public class ObjModel {
 		ObjModelImporter importer = new ObjModelImporter();
 		try {
 			importer.read(url);
-			meshViews = importer.getNamedMeshViews();
+			meshes = new HashMap<>();
+			for (var entry : importer.getNamedMeshViews().entrySet()) {
+				meshes.put(entry.getKey(), entry.getValue().getMesh());
+			}
 			materials = importer.getNamedMaterials();
 			LOG.info("3D model loaded, URL='%s'", url);
 		} catch (ImportException e) {
@@ -47,8 +52,8 @@ public class ObjModel {
 	}
 
 	public MeshView createMeshView(String name) {
-		if (meshViews.containsKey(name)) {
-			return new MeshView(meshViews.get(name).getMesh());
+		if (meshes.containsKey(name)) {
+			return new MeshView(meshes.get(name));
 		}
 		throw new Model3DException("No mesh with name %s found", name);
 	}
