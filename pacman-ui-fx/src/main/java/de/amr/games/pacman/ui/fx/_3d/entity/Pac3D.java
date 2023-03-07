@@ -66,6 +66,10 @@ public class Pac3D {
 	private static final String MESH_ID_PAC_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_ID_PAC_PALATE = "Sphere_grey_wall";
 
+	private static final Color HEAD_COLOR = Color.YELLOW;
+	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
+	private static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
+
 	private static final double PAC_SIZE = 9.0;
 
 	private static Translate centerOverOrigin(Node node) {
@@ -83,9 +87,9 @@ public class Pac3D {
 	 * @param palateColor Pac-Man palate color
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
-	public static Node createTG(Color eyesColor, Color palateColor) {
+	public static Node createTG(Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_HEAD));
-		head.setMaterial(new PhongMaterial(Color.YELLOW));
+		head.setMaterial(new PhongMaterial(headColor));
 
 		var eyes = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_EYES));
 		eyes.setMaterial(new PhongMaterial(eyesColor));
@@ -120,10 +124,6 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 
-	private static final Color HEAD_COLOR = Color.YELLOW;
-	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
-	private static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
-
 	private final World world;
 	private final Pac pac;
 	private final Creature3DMovement movement;
@@ -135,7 +135,7 @@ public class Pac3D {
 		this.pac = pac;
 		this.world = world;
 		movement = new Creature3DMovement(root, pac);
-		shape = createTG(EYES_COLOR, PALATE_COLOR);
+		shape = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
 		Stream.of(head(shape), eyes(shape), palate(shape)).forEach(part -> {
 			part.drawModeProperty().bind(drawModePy);
 		});

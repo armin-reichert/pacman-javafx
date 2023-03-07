@@ -46,7 +46,7 @@ public class LivesCounter3D {
 
 	public LivesCounter3D(boolean facingRight) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			var pac3D = Pac3D.createTG(Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
+			var pac3D = Pac3D.createTG(Color.rgb(255, 255, 0), Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
 			pac3D.setTranslateX(2.0 * i * TS);
 			pac3D.setVisible(true);
 			if (facingRight) {
