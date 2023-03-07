@@ -34,7 +34,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -63,37 +62,6 @@ public class ColoredGhost3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	/**
-	 * 
-	 * @param dressColor   color of dress
-	 * @param eyeBallColor color of eye balls
-	 * @param pupilColor   color of pupils
-	 * @return transformation group representing colored 3D ghost
-	 */
-	private static Group createTG(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dress = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_DRESS));
-		dress.setMaterial(new PhongMaterial(dressColor));
-
-		var eyeBalls = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_EYE_BALLS));
-		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
-
-		var pupils = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_PUPILS));
-		pupils.setMaterial(new PhongMaterial(pupilColor));
-
-		var center = centerOverOrigin(dress);
-		dress.getTransforms().add(center);
-
-		var eyes = new Group(pupils, eyeBalls);
-		eyes.getTransforms().add(center);
-
-		var group = new Group(dress, eyes);
-		group.getTransforms().add(new Translate(0, 0, -1.5));
-		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		group.getTransforms().add(scale(group, SIZE));
-
-		return group;
-	}
-
 	private final Group root;
 	private final Shape3D dress;
 	private final Shape3D eyeBalls;
@@ -110,17 +78,29 @@ public class ColoredGhost3D {
 
 	public ColoredGhost3D(GhostColoring coloring) {
 		this.coloring = coloring;
-		dressColorPy.set(coloring.normalDress());
-		eyeBallsColorPy.set(coloring.normalEyeBalls());
-		pupilsColorPy.set(coloring.normalPupils());
-		root = createTG(coloring.normalDress(), coloring.normalEyeBalls(), coloring.normalPupils());
-		dress = (Shape3D) root.getChildren().get(0);
+
+		dress = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_DRESS));
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		var eyes = (Group) root.getChildren().get(1);
-		eyeBalls = (Shape3D) eyes.getChildren().get(1);
+		dressColorPy.set(coloring.normalDress());
+
+		eyeBalls = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_EYE_BALLS));
 		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallsColorPy));
-		pupils = (Shape3D) eyes.getChildren().get(0);
+		eyeBallsColorPy.set(coloring.normalEyeBalls());
+
+		pupils = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_PUPILS));
 		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
+		pupilsColorPy.set(coloring.normalPupils());
+
+		var centerTransform = centerOverOrigin(dress);
+		dress.getTransforms().add(centerTransform);
+
+		var eyes = new Group(pupils, eyeBalls);
+		eyes.getTransforms().add(centerTransform);
+
+		root = new Group(dress, eyes);
+		root.getTransforms().add(new Translate(0, 0, -1.5));
+		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		root.getTransforms().add(scale(root, SIZE));
 	}
 
 	public Node getRoot() {
