@@ -71,22 +71,22 @@ public class ColoredGhost3D {
 	 * @return transformation group representing colored 3D ghost
 	 */
 	private static Group createTG(Color dressColor, Color eyeBallColor, Color pupilColor) {
-		var dressMesh = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_DRESS));
-		dressMesh.setMaterial(new PhongMaterial(dressColor));
+		var dress = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_DRESS));
+		dress.setMaterial(new PhongMaterial(dressColor));
 
-		var eyeBallsMesh = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_EYE_BALLS));
-		eyeBallsMesh.setMaterial(new PhongMaterial(eyeBallColor));
+		var eyeBalls = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_EYE_BALLS));
+		eyeBalls.setMaterial(new PhongMaterial(eyeBallColor));
 
-		var pupilsMesh = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_PUPILS));
-		pupilsMesh.setMaterial(new PhongMaterial(pupilColor));
+		var pupils = new MeshView(OBJ_MODEL.mesh(MESH_ID_GHOST_PUPILS));
+		pupils.setMaterial(new PhongMaterial(pupilColor));
 
-		var center = centerOverOrigin(dressMesh);
-		dressMesh.getTransforms().add(center);
+		var center = centerOverOrigin(dress);
+		dress.getTransforms().add(center);
 
-		var eyes = new Group(pupilsMesh, eyeBallsMesh);
+		var eyes = new Group(pupils, eyeBalls);
 		eyes.getTransforms().add(center);
 
-		var group = new Group(dressMesh, eyes);
+		var group = new Group(dress, eyes);
 		group.getTransforms().add(new Translate(0, 0, -1.5));
 		group.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		group.getTransforms().add(scale(group, SIZE));
