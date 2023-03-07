@@ -249,8 +249,8 @@ public class PlayScene3D implements GameScene {
 		}
 		// this rotates the scores such that the viewer always sees them frontally
 		if (level3D != null && level3D.scores3D() != null) {
-			level3D.scores3D().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
-			level3D.scores3D().rotateProperty().bind(newCamera.rotateProperty());
+			level3D.scores3D().getRoot().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
+			level3D.scores3D().getRoot().rotateProperty().bind(newCamera.rotateProperty());
 		}
 	}
 
