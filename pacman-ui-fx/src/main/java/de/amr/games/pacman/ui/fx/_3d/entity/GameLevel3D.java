@@ -57,6 +57,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -168,13 +169,13 @@ public class GameLevel3D {
 	}
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
-		var levelCounterPos = new Vector2f((level.world().numCols() - 1) * TS, TS);
+		var rightPosition = new Vector2f((level.world().numCols() - 1) * TS, TS);
 		if (r2D instanceof SpritesheetGameRenderer sgr) {
-			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos,
-					symbol -> sgr.image(sgr.bonusSymbolRegion(symbol)));
+			var symbolImages = level.game().levelCounter().stream().map(sgr::bonusSymbolRegion).map(sgr::image)
+					.toArray(Image[]::new);
+			return new LevelCounter3D(symbolImages, rightPosition);
 		} else {
-			// TODO make this work for non-spritesheet based renderer
-			return new LevelCounter3D(level.game().levelCounter(), levelCounterPos, symbol -> null);
+			throw new UnsupportedOperationException(); // TODO implement fom non spritesheet-based renderer
 		}
 	}
 

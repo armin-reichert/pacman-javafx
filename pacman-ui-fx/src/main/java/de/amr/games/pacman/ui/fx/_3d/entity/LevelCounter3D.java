@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.function.IntFunction;
-
 import de.amr.games.pacman.lib.math.Vector2f;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -48,18 +46,14 @@ public class LevelCounter3D {
 
 	private final Group root = new Group();
 
-	/**
-	 * @param levelCounter
-	 * @param position      right border of the level counter
-	 * @param fnSymbolImage
-	 */
-	public LevelCounter3D(Iterable<Byte> levelCounter, Vector2f position, IntFunction<Image> fnSymbolImage) {
-		double x = position.x();
+	public LevelCounter3D(Image[] symbolImages, Vector2f rightPosition) {
+		double x = rightPosition.x();
 		boolean forward = true;
-		for (byte symbol : levelCounter) {
-			Box cube = createSpinningCube(TS, fnSymbolImage.apply(symbol), forward);
+		for (int i = 0; i < symbolImages.length; ++i) {
+			var symbolImage = symbolImages[i];
+			Box cube = createSpinningCube(TS, symbolImage, forward);
 			cube.setTranslateX(x);
-			cube.setTranslateY(position.y());
+			cube.setTranslateY(rightPosition.y());
 			cube.setTranslateZ(-HTS);
 			root.getChildren().add(cube);
 			x -= 2 * TS;
