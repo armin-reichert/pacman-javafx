@@ -54,7 +54,7 @@ import javafx.scene.shape.DrawMode;
  * 
  * @author Armin Reichert
  */
-public class World3D extends Group {
+public class World3D {
 
 	private static class WallData {
 		byte type;
@@ -80,6 +80,7 @@ public class World3D extends Group {
 
 	private final World world;
 	private final MazeColoring mazeColors;
+	private final Group root = new Group();
 	private final Group wallsGroup = new Group();
 	private final List<DoorWing3D> doorWings3D = new ArrayList<>();
 	private final Group doorWingsGroup = new Group();
@@ -103,7 +104,11 @@ public class World3D extends Group {
 		floorTexturePy.addListener(py -> updateFloorMaterial());
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
-		getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting);
+		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting);
+	}
+
+	public Group getRoot() {
+		return root;
 	}
 
 	public PointLight houseLighting() {
