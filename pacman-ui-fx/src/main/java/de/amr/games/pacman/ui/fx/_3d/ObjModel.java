@@ -57,7 +57,7 @@ public class ObjModel {
 		throw new Model3DException("No mesh with name %s found", name);
 	}
 
-	public PhongMaterial getMaterial(String name) {
+	public PhongMaterial material(String name) {
 		return materials.get(name);
 	}
 }
