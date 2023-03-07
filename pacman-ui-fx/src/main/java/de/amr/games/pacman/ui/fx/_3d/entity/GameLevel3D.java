@@ -45,6 +45,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
@@ -85,7 +86,7 @@ public class GameLevel3D {
 		this.level = level;
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber));
+		world3D = createWorld3D(r2D.mazeColoring(mazeNumber));
 		pac3D = createPac3D();
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost)).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
@@ -97,14 +98,12 @@ public class GameLevel3D {
 		root.getChildren().addAll(world3D.getRoot(), foodRoot, pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
 				levelCounter3D.getRoot(), livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
+	}
 
+	private World3D createWorld3D(MazeColoring mazeColoring) {
+		var world3D = new World3D(level.world(), mazeColoring);
 		world3D.drawModePy.bind(drawModePy);
-		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
-		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
-		for (var ghost3D : ghosts3D) {
-			ghost3D.drawModePy.bind(drawModePy);
-		}
-		livesCounter3D.drawModePy.bind(drawModePy);
+		return world3D;
 	}
 
 	private Group createFood3D(Color foodColor) {
@@ -138,12 +137,15 @@ public class GameLevel3D {
 	private Pac3D createPac3D() {
 		var pac3D = new Pac3D(level.pac(), level.world());
 		pac3D.init();
+		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
+		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
 		return pac3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
 		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
 		ghost3D.init(level);
+		ghost3D.drawModePy.bind(drawModePy);
 		return ghost3D;
 	}
 
@@ -161,6 +163,7 @@ public class GameLevel3D {
 		var livesCounter3D = new LivesCounter3D(facingRight);
 		livesCounter3D.setPosition(TS, TS, -HTS);
 		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
+		livesCounter3D.drawModePy.bind(drawModePy);
 		return livesCounter3D;
 	}
 
