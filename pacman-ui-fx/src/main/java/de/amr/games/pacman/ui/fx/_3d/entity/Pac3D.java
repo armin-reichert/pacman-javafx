@@ -61,9 +61,9 @@ import javafx.scene.transform.Translate;
 public class Pac3D {
 
 	private static final ObjModel OBJ_MODEL = new ObjModel("model3D/pacman.obj");
-	private static final String MESH_ID_PAC_EYES = "Sphere.008_Sphere.010_grey_wall";
-	private static final String MESH_ID_PAC_HEAD = "Sphere_yellow_packman";
-	private static final String MESH_ID_PAC_PALATE = "Sphere_grey_wall";
+	private static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
+	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
+	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
 	private static final Color HEAD_COLOR = Color.YELLOW;
 	private static final Color EYES_COLOR = Color.rgb(33, 33, 33);
@@ -87,13 +87,13 @@ public class Pac3D {
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
 	public static Group createTG(Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_HEAD));
+		var head = new MeshView(OBJ_MODEL.mesh(MESH_ID_HEAD));
 		head.setMaterial(new PhongMaterial(headColor));
 
-		var eyes = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_EYES));
+		var eyes = new MeshView(OBJ_MODEL.mesh(MESH_ID_EYES));
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		var palate = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_PALATE));
+		var palate = new MeshView(OBJ_MODEL.mesh(MESH_ID_PALATE));
 		palate.setMaterial(new PhongMaterial(palateColor));
 
 		var center = centerOverOrigin(head);
