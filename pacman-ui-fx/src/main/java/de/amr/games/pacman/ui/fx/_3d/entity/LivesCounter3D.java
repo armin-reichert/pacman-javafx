@@ -39,22 +39,24 @@ import javafx.scene.transform.Rotate;
  */
 public class LivesCounter3D {
 
-	static final int MAX_LIVES_DISPLAYED = 5;
+	private static final Color EYES_COLOR = Color.rgb(60, 60, 60);
+	private static final Color PALATE_COLOR = Color.rgb(60, 60, 60);
+	private static final Color HEAD_COLOR = Color.rgb(255, 255, 0);
+	private static final int MAX_LIVES_DISPLAYED = 5;
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	private final Group root = new Group();
 
 	public LivesCounter3D(boolean facingRight) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			var pac3D = Pac3D.createTG(Color.rgb(255, 255, 0), Color.rgb(60, 60, 60), Color.rgb(60, 60, 60));
-			pac3D.setTranslateX(2.0 * i * TS);
-			pac3D.setVisible(true);
+			var pacRoot = Pac3D.createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+			pacRoot.setTranslateX(2.0 * i * TS);
 			if (facingRight) {
-				pac3D.setRotationAxis(Rotate.Z_AXIS);
-				pac3D.setRotate(180);
+				pacRoot.setRotationAxis(Rotate.Z_AXIS);
+				pacRoot.setRotate(180);
 			}
-			Pac3D.head(pac3D).drawModeProperty().bind(drawModePy);
-			root.getChildren().add(pac3D);
+			Pac3D.head(pacRoot).drawModeProperty().bind(drawModePy);
+			root.getChildren().add(pacRoot);
 		}
 	}
 
