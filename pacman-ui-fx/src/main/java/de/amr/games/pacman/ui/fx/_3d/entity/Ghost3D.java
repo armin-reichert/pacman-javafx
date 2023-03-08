@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
-
 import java.util.Objects;
 
 import de.amr.games.pacman.model.common.GameLevel;
@@ -67,7 +65,6 @@ public class Ghost3D {
 	private final MoveAnimation moveAnimation;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
-	private final Box numberCube = new Box(TS, TS, TS);
 	private Image numberImage;
 	private Look look;
 
@@ -135,6 +132,7 @@ public class Ghost3D {
 			var material = new PhongMaterial();
 			material.setBumpMap(numberImage);
 			material.setDiffuseMap(numberImage);
+			var numberCube = new Box(World.TS, World.TS, World.TS);
 			numberCube.setMaterial(material);
 			root.getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
