@@ -73,7 +73,6 @@ public class GameLevel3D {
 
 	private final GameLevel level;
 	private final Group root = new Group();
-	private final Group foodRoot;
 	private final Group particlesGroup = new Group();
 	private final World3D world3D;
 	private final Pac3D pac3D;
@@ -96,31 +95,28 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = createLivesCounter3D();
 		scores3D = new Scores3D(r2D.screenFont(TS));
-		foodRoot = createFoodTG(r2D.mazeColoring(mazeNumber));
 
-		root.getChildren().addAll(world3D.getRoot(), foodRoot, pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
+		root.getChildren().addAll(world3D.getRoot(), pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
 				levelCounter3D.getRoot(), livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
 	}
 
 	private World3D createWorld3D(MazeColoring mazeColoring) {
-		var world3D = new World3D(level.world(), mazeColoring);
-		world3D.drawModePy.bind(drawModePy);
-		return world3D;
-	}
-
-	private Group createFoodTG(MazeColoring mazeColoring) {
-		var tg = new Group();
-		var material = new PhongMaterial(mazeColoring.foodColor());
 		var world = level.world();
+		var world3D = new World3D(world, mazeColoring);
+		world3D.drawModePy.bind(drawModePy);
+		// add food
+		var foodGroup = new Group();
+		var material = new PhongMaterial(mazeColoring.foodColor());
 		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
 			var eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, material)
 					: createNormalPellet3D(tile, material);
 			eatables.add(eatable3D);
-			tg.getChildren().add(eatable3D.getRoot());
+			foodGroup.getChildren().add(eatable3D.getRoot());
 		});
-		tg.getChildren().add(particlesGroup);
-		return tg;
+		foodGroup.getChildren().add(particlesGroup);
+		world3D.getRoot().getChildren().add(foodGroup);
+		return world3D;
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial pelletMaterial) {
