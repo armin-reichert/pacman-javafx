@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.model.common.actors.Creature;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.ObjModel;
@@ -121,14 +121,12 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 
-	private final World world;
 	private final Pac pac;
 	private final Creature3DMovement movement;
 	private final Group root;
 
-	public Pac3D(Pac pac, World world) {
+	public Pac3D(Pac pac) {
 		this.pac = pac;
-		this.world = world;
 		root = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
 		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
 		movement = new Creature3DMovement(root, pac);
@@ -143,21 +141,21 @@ public class Pac3D {
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
 		movement.init();
+		movement.update();
 		headColorPy.set(HEAD_COLOR);
-		update();
 	}
 
-	public void update() {
+	public void update(GameLevel level) {
 		movement.update();
-		if (outsideWorld(world, pac)) {
+		if (outsideWorld(level.world())) {
 			root.setVisible(false);
 		} else {
 			root.setVisible(pac.isVisible());
 		}
 	}
 
-	private boolean outsideWorld(World world, Creature guy) {
-		double centerX = guy.position().x() + HTS;
+	private boolean outsideWorld(World world) {
+		double centerX = pac.position().x() + HTS;
 		return centerX < HTS || centerX > world.numCols() * TS - HTS;
 	}
 

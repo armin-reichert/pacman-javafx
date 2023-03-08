@@ -138,7 +138,7 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPac3D() {
-		var pac3D = new Pac3D(level.pac(), level.world());
+		var pac3D = new Pac3D(level.pac());
 		pac3D.init();
 		spot = new PointLight();
 		spot.setColor(Color.rgb(255, 255, 0, 0.25));
@@ -191,7 +191,7 @@ public class GameLevel3D {
 	}
 
 	public void update() {
-		pac3D.update();
+		pac3D.update(level);
 		spot.setLightOn(pac3D.lightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
