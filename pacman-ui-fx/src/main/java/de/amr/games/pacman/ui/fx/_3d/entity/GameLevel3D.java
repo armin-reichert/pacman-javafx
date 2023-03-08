@@ -91,7 +91,7 @@ public class GameLevel3D {
 
 		world3D = createWorld3D(r2D.mazeColoring(mazeNumber));
 		pac3D = createPac3D();
-		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost)).toArray(Ghost3D[]::new);
+		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = createLivesCounter3D();
@@ -169,14 +169,14 @@ public class GameLevel3D {
 	private LivesCounter3D createLivesCounter3D() {
 		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
 		var livesCounter3D = new LivesCounter3D(facingRight);
-		livesCounter3D.setPosition(TS, TS, -HTS);
+		livesCounter3D.setPosition(2 * TS, TS, -HTS);
 		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
 		livesCounter3D.drawModePy.bind(drawModePy);
 		return livesCounter3D;
 	}
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
-		var rightPosition = new Vector2f((level.world().numCols() - 1) * TS, TS);
+		var rightPosition = new Vector2f((level.world().numCols() - 2) * TS, TS);
 		if (r2D instanceof SpritesheetGameRenderer sgr) {
 			var symbolImages = level.game().levelCounter().stream().map(sgr::bonusSymbolRegion).map(sgr::image)
 					.toArray(Image[]::new);
