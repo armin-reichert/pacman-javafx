@@ -35,8 +35,6 @@ import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
-import javafx.scene.Node;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -54,9 +52,8 @@ public class Energizer3D implements Eatable3D {
 	private final ScaleTransition pumping;
 	private Animation eatenAnimation;
 
-	public Energizer3D(PhongMaterial material, double radius) {
+	public Energizer3D(double radius) {
 		shape = new Sphere(radius);
-		shape.setMaterial(material);
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 4), shape);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);
@@ -77,7 +74,7 @@ public class Energizer3D implements Eatable3D {
 	}
 
 	@Override
-	public Node getRoot() {
+	public Shape3D getRoot() {
 		return shape;
 	}
 

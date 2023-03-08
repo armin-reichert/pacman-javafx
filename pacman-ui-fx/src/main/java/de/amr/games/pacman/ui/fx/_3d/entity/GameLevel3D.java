@@ -124,13 +124,15 @@ public class GameLevel3D {
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial pelletMaterial) {
-		var pellet3D = new Pellet3D(pelletMaterial, 1.0);
+		var pellet3D = new Pellet3D(1.0);
+		pellet3D.getRoot().setMaterial(pelletMaterial);
 		pellet3D.setTile(tile);
 		return pellet3D;
 	}
 
 	private Energizer3D createEnergizer3D(World world, Vector2i tile, PhongMaterial pelletMaterial) {
-		var energizer3D = new Energizer3D(pelletMaterial, 3.5);
+		var energizer3D = new Energizer3D(3.5);
+		energizer3D.getRoot().setMaterial(pelletMaterial);
 		energizer3D.setTile(tile);
 		var eatenAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
 		energizer3D.setEatenAnimation(eatenAnimation);

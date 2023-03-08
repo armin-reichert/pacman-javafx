@@ -29,8 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.scene.Node;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -48,8 +46,7 @@ public class Pellet3D implements Eatable3D {
 
 	private final Shape3D shape = new MeshView(OBJ_MODEL.mesh(MESH_ID));
 
-	public Pellet3D(PhongMaterial material, double radius) {
-		shape.setMaterial(material);
+	public Pellet3D(double radius) {
 		shape.setRotationAxis(Rotate.Z_AXIS);
 		shape.setRotate(90);
 		var bounds = shape.getBoundsInLocal();
@@ -66,7 +63,7 @@ public class Pellet3D implements Eatable3D {
 	}
 
 	@Override
-	public Node getRoot() {
+	public Shape3D getRoot() {
 		return shape;
 	}
 
