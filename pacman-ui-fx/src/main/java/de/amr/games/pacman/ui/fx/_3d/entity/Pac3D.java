@@ -87,7 +87,7 @@ public class Pac3D {
 	 * @param palateColor Pac-Man palate color
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
-	public static Node createTG(Color headColor, Color eyesColor, Color palateColor) {
+	public static Group createTG(Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(OBJ_MODEL.mesh(MESH_ID_PAC_HEAD));
 		head.setMaterial(new PhongMaterial(headColor));
 
@@ -108,16 +108,16 @@ public class Pac3D {
 		return group;
 	}
 
-	public static Shape3D head(Node root) {
-		return (Shape3D) ((Group) root).getChildren().get(0);
+	public static Shape3D head(Group root) {
+		return (Shape3D) root.getChildren().get(0);
 	}
 
-	public static Shape3D eyes(Node root) {
-		return (Shape3D) ((Group) root).getChildren().get(1);
+	public static Shape3D eyes(Group root) {
+		return (Shape3D) root.getChildren().get(1);
 	}
 
-	public static Shape3D palate(Node root) {
-		return (Shape3D) ((Group) root).getChildren().get(2);
+	public static Shape3D palate(Group root) {
+		return (Shape3D) root.getChildren().get(2);
 	}
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
@@ -128,24 +128,23 @@ public class Pac3D {
 	private final Pac pac;
 	private final Creature3DMovement movement;
 	private final Group root = new Group();
-	private final Node shape;
+	private final Group body;
 	private final PointLight spot;
 
 	public Pac3D(Pac pac, World world) {
 		this.pac = pac;
 		this.world = world;
 		movement = new Creature3DMovement(root, pac);
-		shape = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
-		Stream.of(head(shape), eyes(shape), palate(shape)).forEach(part -> {
-			part.drawModeProperty().bind(drawModePy);
-		});
-		root.getChildren().add(shape);
+
+		body = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+		Stream.of(head(body), eyes(body), palate(body)).forEach(part -> part.drawModeProperty().bind(drawModePy));
 
 		spot = new PointLight();
 		spot.setColor(Color.rgb(255, 255, 0, 0.25));
 		spot.setMaxRange(8 * TS);
 		spot.setTranslateZ(0);
-		root.getChildren().add(spot);
+
+		root.getChildren().addAll(body, spot);
 	}
 
 	public Group getRoot() {
@@ -153,10 +152,10 @@ public class Pac3D {
 	}
 
 	public void init() {
-		shape.setScaleX(1.0);
-		shape.setScaleY(1.0);
-		shape.setScaleZ(1.0);
-		shape.setTranslateZ(0);
+		body.setScaleX(1.0);
+		body.setScaleY(1.0);
+		body.setScaleZ(1.0);
+		body.setTranslateZ(0);
 		headColorPy.set(HEAD_COLOR);
 		movement.init();
 		update();
@@ -182,6 +181,6 @@ public class Pac3D {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
-		return new PacDyingAnimation(shape, headColorPy, HEAD_COLOR, killingGhostColor).getAnimation();
+		return new PacDyingAnimation(body, headColorPy, HEAD_COLOR, killingGhostColor).getAnimation();
 	}
 }
