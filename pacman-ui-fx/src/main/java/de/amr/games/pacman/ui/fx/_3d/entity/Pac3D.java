@@ -96,10 +96,8 @@ public class Pac3D {
 		var palate = new MeshView(OBJ_MODEL.mesh(MESH_ID_PALATE));
 		palate.setMaterial(new PhongMaterial(palateColor));
 
-		var center = centerOverOrigin(head);
-		Stream.of(head, eyes, palate).forEach(meshView -> {
-			meshView.getTransforms().add(center);
-		});
+		var centerTransform = centerOverOrigin(head);
+		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
 
 		var group = new Group(head, eyes, palate);
 		group.getTransforms().addAll(new Translate(0, 0, -1), scale(group, PAC_SIZE), new Rotate(90, Rotate.X_AXIS));
