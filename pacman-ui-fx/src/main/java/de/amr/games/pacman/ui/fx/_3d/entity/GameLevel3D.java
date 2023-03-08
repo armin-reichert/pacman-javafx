@@ -57,6 +57,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -82,6 +83,7 @@ public class GameLevel3D {
 	private final Group foodRoot;
 	private final Group particlesGroup = new Group();
 	private final List<Eatable3D> eatables = new ArrayList<>();
+	private PointLight spot;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -138,6 +140,11 @@ public class GameLevel3D {
 	private Pac3D createPac3D() {
 		var pac3D = new Pac3D(level.pac(), level.world());
 		pac3D.init();
+		spot = new PointLight();
+		spot.setColor(Color.rgb(255, 255, 0, 0.25));
+		spot.setMaxRange(8 * TS);
+		spot.setTranslateZ(0);
+		pac3D.getRoot().getChildren().add(spot);
 		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
 		return pac3D;
@@ -185,6 +192,7 @@ public class GameLevel3D {
 
 	public void update() {
 		pac3D.update();
+		spot.setLightOn(pac3D.lightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
 		updateHouseLightingState();

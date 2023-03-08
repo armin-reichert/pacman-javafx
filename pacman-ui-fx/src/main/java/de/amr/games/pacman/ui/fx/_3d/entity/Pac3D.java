@@ -41,7 +41,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -129,7 +128,6 @@ public class Pac3D {
 	private final Creature3DMovement movement;
 	private final Group root = new Group();
 	private final Group body;
-	private final PointLight spot;
 
 	public Pac3D(Pac pac, World world) {
 		this.pac = pac;
@@ -139,12 +137,7 @@ public class Pac3D {
 		body = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
 		Stream.of(head(body), eyes(body), palate(body)).forEach(part -> part.drawModeProperty().bind(drawModePy));
 
-		spot = new PointLight();
-		spot.setColor(Color.rgb(255, 255, 0, 0.25));
-		spot.setMaxRange(8 * TS);
-		spot.setTranslateZ(0);
-
-		root.getChildren().addAll(body, spot);
+		root.getChildren().addAll(body);
 	}
 
 	public Group getRoot() {
@@ -168,7 +161,6 @@ public class Pac3D {
 		} else {
 			root.setVisible(pac.isVisible());
 		}
-		spot.setLightOn(lightOnPy.get() && pac.isVisible() && !pac.isDead());
 	}
 
 	private boolean outsideWorld(World world, Creature guy) {
