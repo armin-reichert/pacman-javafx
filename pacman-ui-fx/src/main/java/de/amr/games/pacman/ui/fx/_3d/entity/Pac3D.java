@@ -126,18 +126,14 @@ public class Pac3D {
 	private final World world;
 	private final Pac pac;
 	private final Creature3DMovement movement;
-	private final Group root = new Group();
-	private final Group body;
+	private final Group root;
 
 	public Pac3D(Pac pac, World world) {
 		this.pac = pac;
 		this.world = world;
+		root = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
 		movement = new Creature3DMovement(root, pac);
-
-		body = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
-		Stream.of(head(body), eyes(body), palate(body)).forEach(part -> part.drawModeProperty().bind(drawModePy));
-
-		root.getChildren().addAll(body);
 	}
 
 	public Group getRoot() {
@@ -145,12 +141,11 @@ public class Pac3D {
 	}
 
 	public void init() {
-		body.setScaleX(1.0);
-		body.setScaleY(1.0);
-		body.setScaleZ(1.0);
-		body.setTranslateZ(0);
-		headColorPy.set(HEAD_COLOR);
+		root.setScaleX(1.0);
+		root.setScaleY(1.0);
+		root.setScaleZ(1.0);
 		movement.init();
+		headColorPy.set(HEAD_COLOR);
 		update();
 	}
 
@@ -173,6 +168,6 @@ public class Pac3D {
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation(Color killingGhostColor) {
-		return new PacDyingAnimation(body, headColorPy, HEAD_COLOR, killingGhostColor).getAnimation();
+		return new PacDyingAnimation(root, headColorPy, HEAD_COLOR, killingGhostColor).getAnimation();
 	}
 }

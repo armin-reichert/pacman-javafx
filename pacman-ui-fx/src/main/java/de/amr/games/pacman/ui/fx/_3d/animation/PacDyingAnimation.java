@@ -65,8 +65,8 @@ public class PacDyingAnimation {
 		shrinking.setToZ(0.0);
 
 		var sinking = new TranslateTransition(collapsingTime, root3D);
-		sinking.setFromZ(0);
-		sinking.setToZ(World.HTS);
+		sinking.setFromZ(-World.HTS);
+		sinking.setToZ(0);
 
 		animation = new SequentialTransition( //
 				Ufx.pause(0.25), //
