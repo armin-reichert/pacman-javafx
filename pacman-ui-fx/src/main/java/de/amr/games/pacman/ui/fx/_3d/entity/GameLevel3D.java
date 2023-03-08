@@ -96,7 +96,7 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = createLivesCounter3D();
 		scores3D = new Scores3D(r2D.screenFont(TS));
-		foodRoot = createFoodTG(r2D.mazeColoring(mazeNumber).foodColor());
+		foodRoot = createFoodTG(r2D.mazeColoring(mazeNumber));
 
 		root.getChildren().addAll(world3D.getRoot(), foodRoot, pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
 				levelCounter3D.getRoot(), livesCounter3D.getRoot());
@@ -109,13 +109,13 @@ public class GameLevel3D {
 		return world3D;
 	}
 
-	private Group createFoodTG(Color foodColor) {
+	private Group createFoodTG(MazeColoring mazeColoring) {
 		var tg = new Group();
-		var pelletMaterial = new PhongMaterial(foodColor);
+		var material = new PhongMaterial(mazeColoring.foodColor());
 		var world = level.world();
 		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
-			Eatable3D eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, pelletMaterial)
-					: createNormalPellet3D(tile, pelletMaterial);
+			var eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, material)
+					: createNormalPellet3D(tile, material);
 			eatables.add(eatable3D);
 			tg.getChildren().add(eatable3D.getRoot());
 		});
