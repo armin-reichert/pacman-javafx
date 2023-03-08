@@ -31,7 +31,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
-import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
+import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -64,7 +64,7 @@ public class Ghost3D {
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final Ghost ghost;
-	private final Creature3DMovement movement;
+	private final MoveAnimation moveAnimation;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(TS, TS, TS);
@@ -78,7 +78,7 @@ public class Ghost3D {
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
-		movement = new Creature3DMovement(root, ghost);
+		moveAnimation = new MoveAnimation(root, ghost);
 	}
 
 	public Group getRoot() {
@@ -86,7 +86,7 @@ public class Ghost3D {
 	}
 
 	public void init(GameLevel level) {
-		movement.init();
+		moveAnimation.init();
 		update(level);
 	}
 
@@ -96,7 +96,7 @@ public class Ghost3D {
 			changeLook(level, newLook);
 		}
 		if (look != Look.NUMBER) {
-			movement.update();
+			moveAnimation.update();
 		}
 		root.setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
 	}
@@ -110,7 +110,7 @@ public class Ghost3D {
 		switch (newLook) {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
-			movement.init();
+			moveAnimation.init();
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED -> {
@@ -128,7 +128,7 @@ public class Ghost3D {
 		}
 		case EYES -> {
 			coloredGhost3D.appearEyesOnly();
-			movement.init();
+			moveAnimation.init();
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {

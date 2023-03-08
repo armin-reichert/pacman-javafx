@@ -38,7 +38,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Creature3DMovement {
+public class MoveAnimation {
 
 	public record Turn(int fromAngle, int toAngle) {
 	}
@@ -76,7 +76,7 @@ public class Creature3DMovement {
 	private Direction animationTargetDir;
 	private RotateTransition rotation;
 
-	public Creature3DMovement(Node guy3D, Creature guy) {
+	public MoveAnimation(Node guy3D, Creature guy) {
 		this.guy3D = guy3D;
 		this.guy = guy;
 		rotation = new RotateTransition(Duration.seconds(0.1), guy3D);

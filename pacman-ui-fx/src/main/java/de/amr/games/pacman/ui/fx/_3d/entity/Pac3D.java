@@ -32,7 +32,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.ObjModel;
-import de.amr.games.pacman.ui.fx._3d.animation.Creature3DMovement;
+import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
 import javafx.animation.Animation;
 import javafx.beans.property.BooleanProperty;
@@ -122,14 +122,14 @@ public class Pac3D {
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 
 	private final Pac pac;
-	private final Creature3DMovement movement;
+	private final MoveAnimation moveAnimation;
 	private final Group root;
 
 	public Pac3D(Pac pac) {
 		this.pac = pac;
 		root = createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
 		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
-		movement = new Creature3DMovement(root, pac);
+		moveAnimation = new MoveAnimation(root, pac);
 	}
 
 	public Group getRoot() {
@@ -140,13 +140,13 @@ public class Pac3D {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		movement.init();
-		movement.update();
+		moveAnimation.init();
+		moveAnimation.update();
 		headColorPy.set(HEAD_COLOR);
 	}
 
 	public void update(GameLevel level) {
-		movement.update();
+		moveAnimation.update();
 		if (outsideWorld(level.world())) {
 			root.setVisible(false);
 		} else {
