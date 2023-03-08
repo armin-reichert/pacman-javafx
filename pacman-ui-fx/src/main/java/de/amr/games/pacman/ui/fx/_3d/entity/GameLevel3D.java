@@ -73,6 +73,8 @@ public class GameLevel3D {
 
 	private final GameLevel level;
 	private final Group root = new Group();
+	private final Group foodRoot;
+	private final Group particlesGroup = new Group();
 	private final World3D world3D;
 	private final Pac3D pac3D;
 	private final Ghost3D[] ghosts3D;
@@ -80,10 +82,8 @@ public class GameLevel3D {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
-	private final Group foodRoot;
-	private final Group particlesGroup = new Group();
 	private final List<Eatable3D> eatables = new ArrayList<>();
-	private PointLight spot;
+	private PointLight pacLight;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -96,7 +96,7 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = createLivesCounter3D();
 		scores3D = new Scores3D(r2D.screenFont(TS));
-		foodRoot = createFood3D(r2D.mazeColoring(mazeNumber).foodColor());
+		foodRoot = createFoodTG(r2D.mazeColoring(mazeNumber).foodColor());
 
 		root.getChildren().addAll(world3D.getRoot(), foodRoot, pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
 				levelCounter3D.getRoot(), livesCounter3D.getRoot());
@@ -109,18 +109,18 @@ public class GameLevel3D {
 		return world3D;
 	}
 
-	private Group createFood3D(Color foodColor) {
-		var root = new Group();
+	private Group createFoodTG(Color foodColor) {
+		var tg = new Group();
 		var pelletMaterial = new PhongMaterial(foodColor);
 		var world = level.world();
 		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
 			Eatable3D eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, pelletMaterial)
 					: createNormalPellet3D(tile, pelletMaterial);
 			eatables.add(eatable3D);
-			root.getChildren().add(eatable3D.getRoot());
+			tg.getChildren().add(eatable3D.getRoot());
 		});
-		root.getChildren().add(particlesGroup);
-		return root;
+		tg.getChildren().add(particlesGroup);
+		return tg;
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial pelletMaterial) {
@@ -140,11 +140,11 @@ public class GameLevel3D {
 	private Pac3D createPac3D() {
 		var pac3D = new Pac3D(level.pac());
 		pac3D.init();
-		spot = new PointLight();
-		spot.setColor(Color.rgb(255, 255, 0, 0.25));
-		spot.setMaxRange(8 * TS);
-		spot.setTranslateZ(0);
-		pac3D.getRoot().getChildren().add(spot);
+		pacLight = new PointLight();
+		pacLight.setColor(Color.rgb(255, 255, 0, 0.25));
+		pacLight.setMaxRange(8 * TS);
+		pacLight.setTranslateZ(0);
+		pac3D.getRoot().getChildren().add(pacLight);
 		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
 		return pac3D;
@@ -168,11 +168,11 @@ public class GameLevel3D {
 
 	private LivesCounter3D createLivesCounter3D() {
 		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
-		var livesCounter3D = new LivesCounter3D(facingRight);
-		livesCounter3D.setPosition(2 * TS, TS, -HTS);
-		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
-		livesCounter3D.drawModePy.bind(drawModePy);
-		return livesCounter3D;
+		var counter3D = new LivesCounter3D(facingRight);
+		counter3D.setPosition(2 * TS, TS, -HTS);
+		counter3D.getRoot().setVisible(level.game().hasCredit());
+		counter3D.drawModePy.bind(drawModePy);
+		return counter3D;
 	}
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
@@ -192,7 +192,7 @@ public class GameLevel3D {
 
 	public void update() {
 		pac3D.update(level);
-		spot.setLightOn(pac3D.lightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
+		pacLight.setLightOn(pac3D.lightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
 		updateHouseLightingState();
