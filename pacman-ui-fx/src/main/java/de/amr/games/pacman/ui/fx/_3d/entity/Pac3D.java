@@ -35,9 +35,7 @@ import de.amr.games.pacman.ui.fx._3d.ObjModel;
 import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
 import javafx.animation.Animation;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -119,7 +117,6 @@ public class Pac3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
-	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 
 	private final Pac pac;
 	private final MoveAnimation moveAnimation;

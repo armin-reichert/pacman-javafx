@@ -3,6 +3,17 @@
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
+	<name>Pac-Man and Ms. Pac-Man in JavaFX</name>
+	<url>https://github.com/armin-reichert/pacman-javafx</url>
+	<description>This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games. 
+
+The game model and logic are implemented using the Model-View-Controller architecture, see https://github.com/armin-reichert/pacman-basic. 
+
+The user interface listens to game events and updates itself accordingly.
+
+There are two excutables built:
+1. An executable jar file (using Maven shade)
+2. A zip file containing the Java/JavaFX runtime and the game</description>
 	<properties>
 		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
 		<javafx.version>18.0.1</javafx.version>
@@ -124,15 +135,4 @@
 		</dependency>
 		-->
 	</dependencies>
-	<name>Pac-Man and Ms. Pac-Man in JavaFX</name>
-	<url>https://github.com/armin-reichert/pacman-javafx</url>
-	<description>This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games. 
-
-The game model and logic are implemented using the Model-View-Controller architecture, see https://github.com/armin-reichert/pacman-basic. 
-
-The user interface listens to game events and updates itself accordingly.
-
-There are two excutables built:
-1. An executable jar file (using Maven shade)
-2. A zip file containing the Java/JavaFX runtime and the game</description>
 </project>

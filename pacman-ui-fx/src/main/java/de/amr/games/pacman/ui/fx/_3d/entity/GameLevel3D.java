@@ -70,6 +70,7 @@ public class GameLevel3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final BooleanProperty eatenAnimationEnabledPy = new SimpleBooleanProperty(this, "eatenAnimationEnabled");
+	public final BooleanProperty pacLightOnPy = new SimpleBooleanProperty(this, "pacLightOn", true);
 
 	private final GameLevel level;
 	private final Group root = new Group();
@@ -103,8 +104,8 @@ public class GameLevel3D {
 
 	private World3D createWorld3D(MazeColoring mazeColoring) {
 		var world = level.world();
-		var world3D = new World3D(world, mazeColoring);
-		world3D.drawModePy.bind(drawModePy);
+		var newWorld3D = new World3D(world, mazeColoring);
+		newWorld3D.drawModePy.bind(drawModePy);
 		// add food
 		var foodGroup = new Group();
 		var material = new PhongMaterial(mazeColoring.foodColor());
@@ -115,8 +116,8 @@ public class GameLevel3D {
 			foodGroup.getChildren().add(eatable3D.getRoot());
 		});
 		foodGroup.getChildren().add(particlesGroup);
-		world3D.getRoot().getChildren().add(foodGroup);
-		return world3D;
+		newWorld3D.getRoot().getChildren().add(foodGroup);
+		return newWorld3D;
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial pelletMaterial) {
@@ -136,16 +137,16 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPac3D() {
-		var pac3D = new Pac3D(level.pac());
-		pac3D.init();
+		var newPac3D = new Pac3D(level.pac());
+		newPac3D.init();
 		pacLight = new PointLight();
 		pacLight.setColor(Color.rgb(255, 255, 0, 0.25));
 		pacLight.setMaxRange(8 * TS);
 		pacLight.setTranslateZ(0);
-		pac3D.getRoot().getChildren().add(pacLight);
-		pac3D.drawModePy.bind(Env.ThreeD.drawModePy);
-		pac3D.lightOnPy.bind(Env.ThreeD.pacLightedPy);
-		return pac3D;
+		pacLightOnPy.bind(Env.ThreeD.pacLightedPy);
+		newPac3D.getRoot().getChildren().add(pacLight);
+		newPac3D.drawModePy.bind(Env.ThreeD.drawModePy);
+		return newPac3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
@@ -190,7 +191,7 @@ public class GameLevel3D {
 
 	public void update() {
 		pac3D.update(level);
-		pacLight.setLightOn(pac3D.lightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
+		pacLight.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
 		updateHouseLightingState();
