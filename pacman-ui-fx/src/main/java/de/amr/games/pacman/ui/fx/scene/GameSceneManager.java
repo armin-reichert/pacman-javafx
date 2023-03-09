@@ -69,7 +69,7 @@ public class GameSceneManager {
 		new GameSceneSelection(createScene2D(BootScene.class), null),
 		new GameSceneSelection(createScene2D(PacManIntroScene.class), null),
 		new GameSceneSelection(createScene2D(PacManCreditScene.class), null),
-		new GameSceneSelection(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D()),
 		new GameSceneSelection(createScene2D(PacManCutscene1.class), null),
 		new GameSceneSelection(createScene2D(PacManCutscene2.class), null),
 		new GameSceneSelection(createScene2D(PacManCutscene3.class), null),
@@ -79,7 +79,7 @@ public class GameSceneManager {
 		new GameSceneSelection(createScene2D(BootScene.class), null),
 		new GameSceneSelection(createScene2D(MsPacManIntroScene.class), null),
 		new GameSceneSelection(createScene2D(MsPacManCreditScene.class), null),
-		new GameSceneSelection(createScene2D(PlayScene2D.class), createPlayScene3D()),
+		new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D()),
 		new GameSceneSelection(createScene2D(MsPacManIntermissionScene1.class), null),
 		new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
 		new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null),
@@ -96,20 +96,6 @@ public class GameSceneManager {
 			LOG.error("Could not create 2D game scene of class '%s'", clazz.getName());
 			throw new IllegalArgumentException(e);
 		}
-	}
-
-	private static PlayScene3D createPlayScene3D() {
-		var playScene3D = new PlayScene3D();
-		playScene3D.floorColorPy.bind(Env.ThreeD.floorColorPy);
-		playScene3D.floorTexturePy.bind(Env.ThreeD.floorTexturePy);
-		playScene3D.mazeWallHeightPy.bind(Env.ThreeD.mazeWallHeightPy);
-		playScene3D.mazeWallThicknessPy.bind(Env.ThreeD.mazeWallThicknessPy);
-		playScene3D.perspectivePy.bind(Env.ThreeD.perspectivePy);
-		playScene3D.squirtingEffectPy.bind(Env.ThreeD.energizerEatenAnimationEnabledPy);
-		playScene3D.coordSystem().visibleProperty().bind(Env.ThreeD.axesVisiblePy);
-		playScene3D.ambientLight().colorProperty().bind(Env.ThreeD.lightColorPy);
-		LOG.trace("3D game scene created: '%s'", playScene3D.getClass().getName());
-		return playScene3D;
 	}
 
 	public static boolean isPlayScene(GameScene gameScene) {

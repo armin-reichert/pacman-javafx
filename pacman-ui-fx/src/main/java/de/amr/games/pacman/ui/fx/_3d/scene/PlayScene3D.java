@@ -65,22 +65,14 @@ import de.amr.games.pacman.ui.fx.sound.common.SoundClipID;
 import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
 /**
@@ -92,13 +84,8 @@ public class PlayScene3D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-	public final StringProperty floorTexturePy = new SimpleStringProperty(this, "floorTexture", Env.ThreeD.NO_TEXTURE);
-	public final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(this, "mazeWallHeight", 2.5);
-	public final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(this, "mazeWallThickness", 1.5);
-	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
+	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
 			Perspective.TOTAL);
-	public final BooleanProperty squirtingEffectPy = new SimpleBooleanProperty(this, "squirtingEffect", true);
 
 	private final SubScene fxSubScene;
 	private final Group root;
@@ -118,6 +105,9 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
 		perspectivePy.addListener((property, oldVal, newVal) -> changeCameraPerspective(newVal));
+		perspectivePy.bind(Env.ThreeD.perspectivePy);
+		coordSystem().visibleProperty().bind(Env.ThreeD.axesVisiblePy);
+		ambientLight().colorProperty().bind(Env.ThreeD.lightColorPy);
 	}
 
 	@Override
@@ -152,21 +142,8 @@ public class PlayScene3D implements GameScene {
 	private void replaceGameLevel3D(GameLevel level) {
 		var width = level.world().numCols() * World.TS;
 		var height = level.world().numRows() * World.TS;
-
 		level3D = new GameLevel3D(level, context.r2D());
 		level3D.getRoot().getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
-		level3D.drawModePy.bind(Env.ThreeD.drawModePy);
-		level3D.eatenAnimationEnabledPy.bind(squirtingEffectPy);
-		level3D.world3D().floorColorPy.bind(floorColorPy);
-		var textureBinding = Bindings.createObjectBinding( //
-				() -> Env.ThreeD.NO_TEXTURE.equals(floorTexturePy.get()) //
-						? null
-						: ResourceMgr.image("graphics/" + floorTexturePy.get()),
-				floorTexturePy);
-		level3D.world3D().floorTexturePy.bind(textureBinding);
-		level3D.world3D().wallHeightPy.bind(mazeWallHeightPy);
-		level3D.world3D().wallThicknessPy.bind(mazeWallThicknessPy);
-
 		root.getChildren().set(0, level3D.getRoot());
 		changeCameraPerspective(perspectivePy.get());
 		LOG.info("3D game level created.");

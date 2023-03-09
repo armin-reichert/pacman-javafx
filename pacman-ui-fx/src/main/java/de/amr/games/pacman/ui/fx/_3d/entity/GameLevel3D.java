@@ -50,8 +50,10 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -68,9 +70,9 @@ import javafx.scene.shape.DrawMode;
  */
 public class GameLevel3D {
 
-	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-	public final BooleanProperty eatenAnimationEnabledPy = new SimpleBooleanProperty(this, "eatenAnimationEnabled");
-	public final BooleanProperty pacLightOnPy = new SimpleBooleanProperty(this, "pacLightOn", true);
+	private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+	private final BooleanProperty eatenAnimationEnabledPy = new SimpleBooleanProperty(this, "eatenAnimationEnabled");
+	private final BooleanProperty pacLightOnPy = new SimpleBooleanProperty(this, "pacLightOn", true);
 
 	private final GameLevel level;
 	private final Group root = new Group();
@@ -100,6 +102,18 @@ public class GameLevel3D {
 		root.getChildren().addAll(world3D.getRoot(), pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
 				levelCounter3D.getRoot(), livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
+
+		drawModePy.bind(Env.ThreeD.drawModePy);
+		eatenAnimationEnabledPy.bind(Env.ThreeD.energizerEatenAnimationEnabledPy);
+		world3D.floorColorPy.bind(Env.ThreeD.floorColorPy);
+		var textureBinding = Bindings.createObjectBinding( //
+				() -> Env.ThreeD.NO_TEXTURE.equals(Env.ThreeD.floorTexturePy.get()) //
+						? null
+						: ResourceMgr.image("graphics/" + Env.ThreeD.floorTexturePy.get()),
+				Env.ThreeD.floorTexturePy);
+		world3D.floorTexturePy.bind(textureBinding);
+		world3D.wallHeightPy.bind(Env.ThreeD.mazeWallHeightPy);
+		world3D.wallThicknessPy.bind(Env.ThreeD.mazeWallThicknessPy);
 	}
 
 	private World3D createWorld3D(MazeColoring mazeColoring) {
