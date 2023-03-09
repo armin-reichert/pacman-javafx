@@ -78,13 +78,6 @@ public class Energizer3D implements Eatable3D {
 		return shape;
 	}
 
-	public void init() {
-		pumping.stop();
-		shape.setScaleX(1.0);
-		shape.setScaleY(1.0);
-		shape.setScaleZ(1.0);
-	}
-
 	@Override
 	public Optional<Animation> getEatenAnimation() {
 		return Optional.ofNullable(eatenAnimation);
