@@ -95,10 +95,9 @@ public class SectionCamera3D extends Section {
 	}
 
 	private void onPerspectiveChanged(Perspective perspective) {
-		LOG.info("Perspective changed to %s", perspective);
 		var configurableCam = configurableCam(perspective);
 		configurableCam.ifPresent(cam -> {
-			LOG.info("Configurable camera: %s", cam);
+			LOG.trace("Configurable camera: %s", cam);
 			sliderTransformX.setValue(cam.getTranslateX());
 			sliderTransformY.setValue(cam.getTranslateY());
 			sliderTransformZ.setValue(cam.getTranslateZ());

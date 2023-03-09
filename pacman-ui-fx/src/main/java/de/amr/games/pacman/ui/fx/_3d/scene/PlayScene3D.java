@@ -105,7 +105,6 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
 		perspectivePy.addListener((property, oldVal, newVal) -> changeCameraPerspective(newVal));
-		perspectivePy.bind(Env.ThreeD.perspectivePy);
 		coordSystem().visibleProperty().bind(Env.ThreeD.axesVisiblePy);
 		ambientLight().colorProperty().bind(Env.ThreeD.lightColorPy);
 	}
@@ -113,6 +112,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		context.level().ifPresent(this::replaceGameLevel3D);
+		perspectivePy.bind(Env.ThreeD.perspectivePy);
 	}
 
 	@Override
@@ -127,6 +127,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void end() {
 		context.level().ifPresent(level -> SoundHandler.sounds(level.game()).stopAll());
+		perspectivePy.unbind();
 	}
 
 	@Override
@@ -227,6 +228,7 @@ public class PlayScene3D implements GameScene {
 			level3D.scores3D().getRoot().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
 			level3D.scores3D().getRoot().rotateProperty().bind(newCamera.rotateProperty());
 		}
+		LOG.info("Perspective changed to %s (%s)", newPerspective, this);
 	}
 
 	@Override
