@@ -31,6 +31,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -77,13 +78,14 @@ public abstract class GameScene2D implements GameScene {
 	protected final Pane overlayPane = new Pane();
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
-	protected GameSceneContext context;
+	protected final GameSceneContext context;
 	protected boolean creditVisible;
 	protected boolean scoresVisible = true;
 	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
-	protected GameScene2D() {
+	protected GameScene2D(GameController gameController) {
 		fxSubScene = new SubScene(root, size.x(), size.y());
+		context = new GameSceneContext(gameController);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayPane.visibleProperty().bind(overlayPaneVisiblePy);
@@ -154,11 +156,6 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public GameSceneContext context() {
 		return context;
-	}
-
-	@Override
-	public void setContext(GameSceneContext context) {
-		this.context = context;
 	}
 
 	@Override

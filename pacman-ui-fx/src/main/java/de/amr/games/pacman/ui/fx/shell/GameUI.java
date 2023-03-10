@@ -56,7 +56,6 @@ import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -113,12 +112,17 @@ public class GameUI implements GameEventListener {
 	 * controlled using the dashboard.
 	 */
 	private class PipView extends PlayScene2D {
+
+		public PipView(GameController gameController) {
+			super(gameController);
+		}
+
 		@Override
 		public void update() {
-			boolean visible = Env.PiP.visiblePy.get() && GameSceneManager.isPlayScene(currentGameScene);
+			boolean visible = Env.PiP.visiblePy.get() && gameSceneManager.isPlayScene(currentGameScene);
 			pipView.fxSubScene().setVisible(visible);
 			if (visible) {
-				pipView.setContext(currentGameScene.context());
+				pipView.context.setRenderer(currentGameScene.context().r2D());
 				pipView.draw();
 			}
 		}
@@ -127,6 +131,7 @@ public class GameUI implements GameEventListener {
 	private final Stage stage;
 	private final Scene mainScene;
 	private final GameController gameController;
+	private final GameSceneManager gameSceneManager;
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
@@ -149,6 +154,9 @@ public class GameUI implements GameEventListener {
 
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+
+		// requires renderer map already initialized
+		gameSceneManager = new GameSceneManager(gameController);
 
 		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //
@@ -178,7 +186,7 @@ public class GameUI implements GameEventListener {
 		}
 		dashboard = new Dashboard();
 		flashMessageView = new FlashMessageView();
-		pipView = new PipView();
+		pipView = new PipView(gameController);
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipView.fxSubScene());
@@ -260,7 +268,7 @@ public class GameUI implements GameEventListener {
 
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		var matching = GameSceneManager.sceneSelectionMatchingCurrentGameState(gameController);
+		var matching = gameSceneManager.sceneSelectionMatchingCurrentGameState(gameController);
 		var use3D = Env.ThreeD.enabledPy.get();
 		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
 		if (nextGameScene == null) {
@@ -277,8 +285,7 @@ public class GameUI implements GameEventListener {
 			currentGameScene.end();
 		}
 		var renderer = rendererMap.get(gameController.game().variant());
-		var sceneContext = new GameSceneContext(gameController, renderer);
-		nextGameScene.setContext(sceneContext);
+		nextGameScene.context().setRenderer(renderer);
 		nextGameScene.init();
 		updateManualPacManSteering(nextGameScene);
 		var root = (StackPane) mainScene.getRoot();
@@ -370,6 +377,10 @@ public class GameUI implements GameEventListener {
 
 	public GameController gameController() {
 		return gameController;
+	}
+
+	public GameSceneManager gameSceneManager() {
+		return gameSceneManager;
 	}
 
 	public Scene mainScene() {

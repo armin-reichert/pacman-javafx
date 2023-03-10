@@ -53,42 +53,44 @@ import de.amr.games.pacman.ui.fx.app.Env;
  */
 public class GameSceneManager {
 
-	private GameSceneManager() {
-		// only static
-	}
-
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	private static final int BOOT_SCENE_INDEX = 0;
 	private static final int INTRO_SCENE_INDEX = 1;
 	private static final int CREDIT_SCENE_INDEX = 2;
 	private static final int PLAY_SCENE_INDEX = 3;
 
-	//@formatter:off
-	private static final GameSceneSelection[] SCENES_PACMAN = {
-		new GameSceneSelection(createScene2D(BootScene.class), null),
-		new GameSceneSelection(createScene2D(PacManIntroScene.class), null),
-		new GameSceneSelection(createScene2D(PacManCreditScene.class), null),
-		new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D()),
-		new GameSceneSelection(createScene2D(PacManCutscene1.class), null),
-		new GameSceneSelection(createScene2D(PacManCutscene2.class), null),
-		new GameSceneSelection(createScene2D(PacManCutscene3.class), null),
-	};
+	private final GameController gameController;
+	private final GameSceneSelection[] scenesMsPacMan;
+	private final GameSceneSelection[] scenesPacMan;
 
-	private static final GameSceneSelection[] SCENES_MS_PACMAN = { 
-		new GameSceneSelection(createScene2D(BootScene.class), null),
-		new GameSceneSelection(createScene2D(MsPacManIntroScene.class), null),
-		new GameSceneSelection(createScene2D(MsPacManCreditScene.class), null),
-		new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D()),
-		new GameSceneSelection(createScene2D(MsPacManIntermissionScene1.class), null),
-		new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
-		new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null),
-	};
-	//@formatter:on
+	public GameSceneManager(GameController gameController) {
+		this.gameController = gameController;
+		//@formatter:off
+		scenesMsPacMan = new GameSceneSelection[] {
+			new GameSceneSelection(createScene2D(BootScene.class), null),
+			new GameSceneSelection(createScene2D(PacManIntroScene.class), null),
+			new GameSceneSelection(createScene2D(PacManCreditScene.class), null),
+			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
+			new GameSceneSelection(createScene2D(PacManCutscene1.class), null),
+			new GameSceneSelection(createScene2D(PacManCutscene2.class), null),
+			new GameSceneSelection(createScene2D(PacManCutscene3.class), null),
+		};
 
-	private static GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
+		scenesPacMan = new GameSceneSelection[] { 
+			new GameSceneSelection(createScene2D(BootScene.class), null),
+			new GameSceneSelection(createScene2D(MsPacManIntroScene.class), null),
+			new GameSceneSelection(createScene2D(MsPacManCreditScene.class), null),
+			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
+			new GameSceneSelection(createScene2D(MsPacManIntermissionScene1.class), null),
+			new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
+			new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null),
+		};
+		//@formatter:on
+	}
+
+	private GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
 		try {
-			GameScene2D scene2D = clazz.getDeclaredConstructor().newInstance();
+			GameScene2D scene2D = clazz.getDeclaredConstructor(GameController.class).newInstance(gameController);
 			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
 			LOG.trace("2D game scene created: '%s'", scene2D.getClass().getName());
 			return scene2D;
@@ -98,11 +100,11 @@ public class GameSceneManager {
 		}
 	}
 
-	public static boolean isPlayScene(GameScene gameScene) {
-		return gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene2D()
-				|| gameScene == SCENES_MS_PACMAN[PLAY_SCENE_INDEX].scene3D()
-				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene2D()
-				|| gameScene == SCENES_PACMAN[PLAY_SCENE_INDEX].scene3D();
+	public boolean isPlayScene(GameScene gameScene) {
+		return gameScene == scenesPacMan[PLAY_SCENE_INDEX].scene2D()
+				|| gameScene == scenesPacMan[PLAY_SCENE_INDEX].scene3D()
+				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene2D()
+				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene3D();
 	}
 
 	/**
@@ -110,7 +112,7 @@ public class GameSceneManager {
 	 * @param dim            scene variant dimension (2 or 3)
 	 * @return (optional) game scene matching current game state and specified dimension
 	 */
-	public static Optional<GameScene> findGameScene(GameController gameController, int dim) {
+	public Optional<GameScene> findGameScene(GameController gameController, int dim) {
 		if (dim != 2 && dim != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
 		}
@@ -118,7 +120,7 @@ public class GameSceneManager {
 		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
-	public static GameSceneSelection sceneSelectionMatchingCurrentGameState(GameController gameController) {
+	public GameSceneSelection sceneSelectionMatchingCurrentGameState(GameController gameController) {
 		var game = gameController.game();
 		var level = game.level();
 		var state = gameController.state();
@@ -140,8 +142,8 @@ public class GameSceneManager {
 		};
 
 		return switch (game.variant()) {
-		case MS_PACMAN -> SCENES_MS_PACMAN[index];
-		case PACMAN -> SCENES_PACMAN[index];
+		case MS_PACMAN -> scenesPacMan[index];
+		case PACMAN -> scenesMsPacMan[index];
 		};
 	}
 }

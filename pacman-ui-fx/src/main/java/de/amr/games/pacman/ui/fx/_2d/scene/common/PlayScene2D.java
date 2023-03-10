@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -50,6 +51,10 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
+
+	public PlayScene2D(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void handleKeyboardInput() {

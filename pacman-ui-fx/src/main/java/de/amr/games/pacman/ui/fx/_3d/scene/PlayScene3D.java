@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -92,14 +93,14 @@ public class PlayScene3D implements GameScene {
 	private final CoordSystem coordSystem = new CoordSystem();
 	private final AmbientLight ambientLight = new AmbientLight();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
-
-	private GameSceneContext context;
+	private final GameSceneContext context;
 	private GameLevel3D level3D;
 
-	public PlayScene3D() {
+	public PlayScene3D(GameController gameController) {
 		root = new Group(new Group() /* placeholder for level3D */, coordSystem, ambientLight);
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+		context = new GameSceneContext(gameController);
 		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
@@ -177,11 +178,6 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public GameSceneContext context() {
 		return context;
-	}
-
-	@Override
-	public void setContext(GameSceneContext context) {
-		this.context = context;
 	}
 
 	@Override

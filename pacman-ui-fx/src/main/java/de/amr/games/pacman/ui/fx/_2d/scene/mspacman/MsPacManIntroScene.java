@@ -28,6 +28,7 @@ import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.TITLE_TI
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
 import de.amr.games.pacman.lib.math.Vector2i;
@@ -51,6 +52,10 @@ import javafx.scene.paint.Color;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntroController intro;
+
+	public MsPacManIntroScene(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void init() {

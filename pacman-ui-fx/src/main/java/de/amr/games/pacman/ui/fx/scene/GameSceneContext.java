@@ -41,15 +41,18 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 public class GameSceneContext {
 
 	private final GameController gameController;
-	private final Rendering2D r2D;
+	private Rendering2D r2D;
 
-	public GameSceneContext(GameController gameController, Rendering2D r2D) {
+	public GameSceneContext(GameController gameController) {
 		this.gameController = Objects.requireNonNull(gameController, "Game controller must not be NULL");
-		this.r2D = Objects.requireNonNull(r2D, "2D renderer must not be NULL");
 	}
 
 	public Rendering2D r2D() {
 		return r2D;
+	}
+
+	public void setRenderer(Rendering2D renderer) {
+		this.r2D = Objects.requireNonNull(renderer, "2D renderer must not be NULL");
 	}
 
 	public GameController gameController() {

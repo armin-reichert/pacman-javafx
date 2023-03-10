@@ -37,7 +37,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -236,7 +235,7 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Ufx.toggle(Env.ThreeD.enabledPy);
-		if (GameSceneManager.findGameScene(gameController(), 3).isPresent()) {
+		if (ui.gameSceneManager().findGameScene(gameController(), 3).isPresent()) {
 			ui.updateGameScene(true);
 			if (ui.currentGameScene().is3D()) {
 				ui.currentGameScene().onSwitchFrom2D();

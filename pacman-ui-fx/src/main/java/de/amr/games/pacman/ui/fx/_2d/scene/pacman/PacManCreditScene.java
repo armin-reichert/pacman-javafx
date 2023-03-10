@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
@@ -39,6 +40,10 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
  * @author Armin Reichert
  */
 public class PacManCreditScene extends GameScene2D {
+
+	public PacManCreditScene(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void init() {

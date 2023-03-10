@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntermission2;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -41,6 +42,10 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	private MsPacManIntermission2 intermission;
+
+	public MsPacManIntermissionScene2(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void init() {

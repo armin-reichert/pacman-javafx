@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
@@ -38,7 +39,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 
 /**
  * Intro scene of the PacMan game.
@@ -52,14 +52,13 @@ public class PacManIntroScene extends GameScene2D {
 
 	private PacManIntroController intro;
 
-	@Override
-	public void setContext(GameSceneContext sceneContext) {
-		super.setContext(sceneContext);
-		intro = new PacManIntroController(sceneContext.gameController());
+	public PacManIntroScene(GameController gameController) {
+		super(gameController);
 	}
 
 	@Override
 	public void init() {
+		intro = new PacManIntroController(context().gameController());
 		intro.restart(PacManIntroState.START);
 		intro.context().pacMan.setAnimations(context.r2D().createPacAnimations(intro.context().pacMan));
 		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimations(context.r2D().createGhostAnimations(ghost)));

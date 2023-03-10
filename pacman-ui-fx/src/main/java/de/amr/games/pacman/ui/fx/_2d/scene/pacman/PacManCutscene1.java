@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.math.Vector2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -49,6 +50,10 @@ public class PacManCutscene1 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
+
+	public PacManCutscene1(GameController gameController) {
+		super(gameController);
+	}
 
 	@Override
 	public void init() {

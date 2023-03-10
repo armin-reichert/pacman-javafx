@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -47,7 +48,8 @@ public class BootScene extends GameScene2D {
 	private final GraphicsContext imgCtx;
 	private final WritableImage currentImage;
 
-	public BootScene() {
+	public BootScene(GameController gameController) {
+		super(gameController);
 		scoresVisible = false;
 		currentImage = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
 		imgCtx = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
