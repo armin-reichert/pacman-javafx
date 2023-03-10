@@ -79,7 +79,6 @@ public abstract class GameScene2D implements GameScene {
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final GameSceneContext context;
-	protected boolean creditVisible;
 	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
 	protected GameScene2D(GameController gameController) {
@@ -115,7 +114,7 @@ public abstract class GameScene2D implements GameScene {
 			drawScore(game.score(), "SCORE", t(1), t(1));
 			drawScore(game.highScore(), "HIGH SCORE", t(16), t(1));
 		}
-		if (creditVisible) {
+		if (context.isCreditVisible()) {
 			r.drawText(g, "CREDIT %2d".formatted(game.credit()), Palette.PALE, r.screenFont(TS), t(2), t(36) - 1);
 		}
 		if (overlayPaneVisiblePy.get()) {

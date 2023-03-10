@@ -42,6 +42,7 @@ public class GameSceneContext {
 
 	private final GameController gameController;
 	private boolean scoresVisible = true;
+	private boolean creditVisible;
 	private Rendering2D r2D;
 
 	public GameSceneContext(GameController gameController) {
@@ -62,6 +63,14 @@ public class GameSceneContext {
 
 	public void setScoresVisible(boolean scoresVisible) {
 		this.scoresVisible = scoresVisible;
+	}
+
+	public boolean isCreditVisible() {
+		return creditVisible;
+	}
+
+	public void setCreditVisible(boolean creditVisible) {
+		this.creditVisible = creditVisible;
 	}
 
 	public GameController gameController() {

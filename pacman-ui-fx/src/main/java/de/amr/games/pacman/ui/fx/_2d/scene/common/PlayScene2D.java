@@ -73,7 +73,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		creditVisible = !context.hasCredit() || context.state() == GameState.GAME_OVER;
+		context.setCreditVisible(!context.hasCredit() || context.state() == GameState.GAME_OVER);
 		context.level().ifPresent(this::updateSound);
 	}
 
@@ -102,7 +102,7 @@ public class PlayScene2D extends GameScene2D {
 			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_PINK_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_RED_GHOST));
-			if (!creditVisible) {
+			if (!context.isCreditVisible()) {
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
 				r.drawLivesCounter(g, lives);
 			}

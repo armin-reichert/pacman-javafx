@@ -68,7 +68,7 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void update() {
 		intro.update();
-		creditVisible = intro.context().creditVisible;
+		context.setCreditVisible(intro.context().creditVisible);
 	}
 
 	@Override
