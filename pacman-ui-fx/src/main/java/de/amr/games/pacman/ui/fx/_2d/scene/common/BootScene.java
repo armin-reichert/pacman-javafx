@@ -26,8 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.Random;
-
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
@@ -44,7 +43,6 @@ public class BootScene extends GameScene2D {
 
 	private static final Vector2i SIZE_TILES = ArcadeWorld.SIZE_TILES;
 	private static final Vector2i SIZE_PIXELS = ArcadeWorld.SIZE_PX;
-	private static final Random RND = new Random();
 
 	private final GraphicsContext imgCtx;
 	private final WritableImage currentImage;
@@ -95,7 +93,7 @@ public class BootScene extends GameScene2D {
 		imgCtx.setFont(context.r2D().screenFont(TS));
 		for (int row = 0; row < SIZE_TILES.y(); ++row) {
 			for (int col = 0; col < SIZE_TILES.x(); ++col) {
-				var hexCode = Integer.toHexString(RND.nextInt(16));
+				var hexCode = Integer.toHexString(U.RND.nextInt(16));
 				imgCtx.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
@@ -106,10 +104,10 @@ public class BootScene extends GameScene2D {
 		clearImage();
 		if (context.r2D() instanceof SpritesheetGameRenderer sgr) {
 			for (int row = 0; row < SIZE_TILES.y() / 2; ++row) {
-				if (RND.nextInt(100) > 10) {
+				if (U.RND.nextInt(100) > 10) {
 					var r1 = sgr.spritesheet().randomCell();
 					var r2 = sgr.spritesheet().randomCell();
-					var splitX = SIZE_TILES.x() / 8 + RND.nextInt(SIZE_TILES.x() / 4);
+					var splitX = SIZE_TILES.x() / 8 + U.RND.nextInt(SIZE_TILES.x() / 4);
 					for (int col = 0; col < SIZE_TILES.x() / 2; ++col) {
 						var r = col < splitX ? r1 : r2;
 						sgr.drawSprite(imgCtx, r, r.getWidth() * col, r.getHeight() * row);
