@@ -29,11 +29,9 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.Random;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -48,30 +46,30 @@ public class BootScene extends GameScene2D {
 	private static final Vector2i SIZE_PIXELS = ArcadeWorld.SIZE_PX;
 	private static final Random RND = new Random();
 
-	private final GraphicsContext bufferContext;
+	private final GraphicsContext imgCtx;
 	private final WritableImage currentImage;
 
 	public BootScene() {
 		scoresVisible = false;
 		currentImage = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
-		bufferContext = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
+		imgCtx = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
 	}
 
 	@Override
 	public void init() {
-		clearBuffer();
-		takeSnapshot();
+		clearImage();
+		saveImage();
 	}
 
 	@Override
 	public void update() {
 		var timer = context.state().timer();
 		if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 5 == 0) {
-			drawRandomHexCodes();
+			produceRandomHexCodesImage();
 		} else if (timer.betweenSeconds(2.0, 3.5) && timer.tick() % 5 == 0) {
-			drawRandomSprites();
+			produceRandomSpriteImage();
 		} else if (timer.atSecond(3.5)) {
-			drawGrid();
+			produceGridImage();
 		} else if (timer.atSecond(4.0)) {
 			context.gameController().terminateCurrentState();
 		}
@@ -82,71 +80,59 @@ public class BootScene extends GameScene2D {
 		g.drawImage(currentImage, 0, 0);
 	}
 
-	private void clearBuffer() {
-		bufferContext.setFill(Color.BLACK);
-		bufferContext.fillRect(0, 0, currentImage.getWidth(), currentImage.getHeight());
+	private void clearImage() {
+		imgCtx.setFill(Color.BLACK);
+		imgCtx.fillRect(0, 0, currentImage.getWidth(), currentImage.getHeight());
 	}
 
-	private void takeSnapshot() {
-		bufferContext.getCanvas().snapshot(null, currentImage);
+	private void saveImage() {
+		imgCtx.getCanvas().snapshot(null, currentImage);
 	}
 
-	private void drawRandomHexCodes() {
-		clearBuffer();
-		bufferContext.setFill(Palette.PALE);
-		bufferContext.setFont(context.r2D().screenFont(TS));
+	private void produceRandomHexCodesImage() {
+		clearImage();
+		imgCtx.setFill(Palette.PALE);
+		imgCtx.setFont(context.r2D().screenFont(TS));
 		for (int row = 0; row < SIZE_TILES.y(); ++row) {
 			for (int col = 0; col < SIZE_TILES.x(); ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));
-				bufferContext.fillText(hexCode, col * 8, row * 8 + 8);
+				imgCtx.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
-		takeSnapshot();
+		saveImage();
 	}
 
-	private void drawRandomSprites() {
-		// TODO make this work for all renderers
-		if (context.r2D() instanceof SpritesheetGameRenderer r) {
-			clearBuffer();
-			var sheet = r.spritesheet();
-			var image = sheet.source();
-			if (context.gameVariant() == GameVariant.MS_PACMAN) {
-				image = sheet.subImage(0, 0, (int) image.getWidth(), 248);
-			}
-			var w = image.getWidth();
-			var h = image.getHeight();
-			var cellSize = 16;
-			var numRows = SIZE_TILES.y() / 2;
-			var numCols = SIZE_TILES.x() / 2;
-			for (int row = 0; row < numRows; ++row) {
-				if (RND.nextInt(100) < 10) {
-					continue;
-				}
-				var r1 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
-				var r2 = new Rectangle2D(RND.nextDouble(w), RND.nextDouble(h), cellSize, cellSize);
-				var split = numCols / 4 + RND.nextInt(numCols / 2);
-				for (int col = 0; col < numCols; ++col) {
-					r.drawSprite(bufferContext, col < split ? r1 : r2, cellSize * col, cellSize * row);
+	private void produceRandomSpriteImage() {
+		clearImage();
+		if (context.r2D() instanceof SpritesheetGameRenderer sgr) {
+			for (int row = 0; row < SIZE_TILES.y() / 2; ++row) {
+				if (RND.nextInt(100) > 10) {
+					var r1 = sgr.spritesheet().randomCell();
+					var r2 = sgr.spritesheet().randomCell();
+					var splitX = SIZE_TILES.x() / 8 + RND.nextInt(SIZE_TILES.x() / 4);
+					for (int col = 0; col < SIZE_TILES.x() / 2; ++col) {
+						var r = col < splitX ? r1 : r2;
+						sgr.drawSprite(imgCtx, r, r.getWidth() * col, r.getHeight() * row);
+					}
 				}
 			}
-			takeSnapshot();
-
 		}
+		saveImage();
 	}
 
-	private void drawGrid() {
-		clearBuffer();
+	private void produceGridImage() {
+		clearImage();
 		var cellSize = 16;
 		var numRows = SIZE_TILES.y() / 2;
 		var numCols = SIZE_TILES.x() / 2;
-		bufferContext.setStroke(Palette.PALE);
-		bufferContext.setLineWidth(2.0);
+		imgCtx.setStroke(Palette.PALE);
+		imgCtx.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			bufferContext.strokeLine(0, row * cellSize, SIZE_PIXELS.x(), row * cellSize);
+			imgCtx.strokeLine(0, row * cellSize, SIZE_PIXELS.x(), row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			bufferContext.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PIXELS.y());
+			imgCtx.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PIXELS.y());
 		}
-		takeSnapshot();
+		saveImage();
 	}
 }
