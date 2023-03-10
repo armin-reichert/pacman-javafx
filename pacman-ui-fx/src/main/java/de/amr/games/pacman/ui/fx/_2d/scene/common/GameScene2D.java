@@ -80,7 +80,6 @@ public abstract class GameScene2D implements GameScene {
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final GameSceneContext context;
 	protected boolean creditVisible;
-	protected boolean scoresVisible = true;
 	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
 	protected GameScene2D(GameController gameController) {
@@ -112,7 +111,7 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Palette.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		drawSceneContent();
-		if (scoresVisible) {
+		if (context.isScoresVisible()) {
 			drawScore(game.score(), "SCORE", t(1), t(1));
 			drawScore(game.highScore(), "HIGH SCORE", t(16), t(1));
 		}

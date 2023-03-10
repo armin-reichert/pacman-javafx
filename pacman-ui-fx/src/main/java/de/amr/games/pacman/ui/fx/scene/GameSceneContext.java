@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 public class GameSceneContext {
 
 	private final GameController gameController;
+	private boolean scoresVisible = true;
 	private Rendering2D r2D;
 
 	public GameSceneContext(GameController gameController) {
@@ -53,6 +54,14 @@ public class GameSceneContext {
 
 	public void setRenderer(Rendering2D renderer) {
 		this.r2D = Objects.requireNonNull(renderer, "2D renderer must not be NULL");
+	}
+
+	public boolean isScoresVisible() {
+		return scoresVisible;
+	}
+
+	public void setScoresVisible(boolean scoresVisible) {
+		this.scoresVisible = scoresVisible;
 	}
 
 	public GameController gameController() {

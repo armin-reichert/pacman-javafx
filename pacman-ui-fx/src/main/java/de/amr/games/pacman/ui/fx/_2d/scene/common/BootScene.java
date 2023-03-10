@@ -50,7 +50,7 @@ public class BootScene extends GameScene2D {
 
 	public BootScene(GameController gameController) {
 		super(gameController);
-		scoresVisible = false;
+		context.setScoresVisible(false);
 		currentImage = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
 		imgCtx = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
 	}
