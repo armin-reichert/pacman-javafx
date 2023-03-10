@@ -25,24 +25,58 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.SceneControllerContext;
+import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 
 /**
  * @author Armin Reichert
  */
-public class GameSceneContext extends SceneControllerContext {
+public class GameSceneContext {
 
+	private final GameController gameController;
 	private final Rendering2D r2D;
 
 	public GameSceneContext(GameController gameController, Rendering2D r2D) {
-		super(gameController);
+		this.gameController = Objects.requireNonNull(gameController, "Game controller must not be NULL");
 		this.r2D = Objects.requireNonNull(r2D, "2D renderer must not be NULL");
 	}
 
 	public Rendering2D r2D() {
 		return r2D;
+	}
+
+	public GameController gameController() {
+		return gameController;
+	}
+
+	public GameModel game() {
+		return gameController.game();
+	}
+
+	public GameVariant gameVariant() {
+		return game().variant();
+	}
+
+	public GameState state() {
+		return gameController.state();
+	}
+
+	public boolean hasCredit() {
+		return game().hasCredit();
+	}
+
+	public Optional<GameLevel> level() {
+		return game().level();
+	}
+
+	public Optional<World> world() {
+		return level().map(GameLevel::world);
 	}
 }
