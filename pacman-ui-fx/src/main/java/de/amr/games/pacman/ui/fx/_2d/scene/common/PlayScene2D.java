@@ -52,6 +52,21 @@ import javafx.scene.paint.Color;
 public class PlayScene2D extends GameScene2D {
 
 	@Override
+	public void handleKeyboardInput() {
+		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
+			Actions.addCredit();
+		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
+			Actions.cheatEatAllPellets();
+		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
+			Actions.cheatAddLives(3);
+		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
+			Actions.cheatEnterNextLevel();
+		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
+			Actions.cheatKillAllEatableGhosts();
+		}
+	}
+
+	@Override
 	public void update() {
 		creditVisible = !context.hasCredit() || context.state() == GameState.GAME_OVER;
 		context.level().ifPresent(this::updateSound);
@@ -67,8 +82,15 @@ public class PlayScene2D extends GameScene2D {
 	public void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			var r = context.r2D();
-			drawMaze(level.world(), level.game().mazeNumber(level.number()), 0, t(3));
-			drawGameState();
+			var mazeNumber = level.game().mazeNumber(level.number());
+			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
+			if (context.state() == GameState.LEVEL_TEST) {
+				r.drawText(g, "TESTING LEVEL %d".formatted(level.number()), Palette.YELLOW, r.screenFont(TS), t(6), t(4));
+			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
+				r.drawText(g, "GAME  OVER", Palette.RED, r.screenFont(TS), t(9), t(21));
+			} else if (context.state() == GameState.READY) {
+				r.drawText(g, "READY!", Palette.YELLOW, r.screenFont(TS), t(11), t(21));
+			}
 			r.drawBonus(g, level.bonus());
 			r.drawPac(g, level.pac());
 			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
@@ -83,22 +105,6 @@ public class PlayScene2D extends GameScene2D {
 		});
 	}
 
-	private void drawGameState() {
-		var r = context.r2D();
-		int levelNumber = context.level().isPresent() ? context.level().get().number() : 0;
-		if (context.state() == GameState.LEVEL_TEST) {
-			r.drawText(g, "TESTING LEVEL %d".formatted(levelNumber), Palette.YELLOW, r.screenFont(TS), t(6), t(4));
-		} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-			r.drawText(g, "GAME  OVER", Palette.RED, r.screenFont(TS), t(9), t(21));
-		} else if (context.state() == GameState.READY) {
-			r.drawText(g, "READY!", Palette.YELLOW, r.screenFont(TS), t(11), t(21));
-		}
-	}
-
-	private void drawMaze(World world, int mazeNumber, int x, int y) {
-		context.r2D().drawMaze(g, x, y, mazeNumber, world);
-	}
-
 	@Override
 	protected void drawOverlayPaneContent() {
 		drawTileStructure(g, size.x() / World.TS, size.y() / World.TS);
@@ -108,21 +114,6 @@ public class PlayScene2D extends GameScene2D {
 				arcadeWorld.upwardBlockedTiles().forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, 1));
 			}
 		});
-	}
-
-	@Override
-	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
-			Actions.addCredit();
-		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
-			Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
-			Actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
-			Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
-			Actions.cheatKillAllEatableGhosts();
-		}
 	}
 
 	@Override
