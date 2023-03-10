@@ -25,6 +25,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.net.URL;
+import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -146,7 +148,8 @@ public class ResourceMgr {
 	 */
 	public static String message(String keyPattern, Object... args) {
 		try {
-			return MESSAGES_BUNDLE.getString(keyPattern).formatted(args);
+			var f = new MessageFormat(MESSAGES_BUNDLE.getString(keyPattern), Locale.getDefault());
+			return f.format(args);
 		} catch (Exception x) {
 			LOG.error("No text resource found for key '%s'", keyPattern);
 			return "missing{%s}".formatted(keyPattern);

@@ -196,14 +196,15 @@ public class GameUI implements GameEventListener {
 	private void updateView() {
 		var variant = gameController.game().variant();
 		var paused = Env.Simulation.pausedPy.get();
+		var dimension = ResourceMgr.message(Env.ThreeD.enabledPy.get() ? "threeD" : "twoD");
 		switch (variant) {
 		case MS_PACMAN -> {
-			var title = ResourceMgr.message(paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman");
+			var title = ResourceMgr.message(paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman", dimension);
 			stage.setTitle(title);
 			stage.getIcons().setAll(APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
-			var title = ResourceMgr.message(paused ? "app.title.pacman.paused" : "app.title.pacman");
+			var title = ResourceMgr.message(paused ? "app.title.pacman.paused" : "app.title.pacman", dimension);
 			stage.setTitle(title);
 			stage.getIcons().setAll(APP_ICON_PACMAN);
 		}
@@ -232,6 +233,7 @@ public class GameUI implements GameEventListener {
 		simulation.measuredPy.bind(Env.Simulation.timeMeasuredPy);
 
 		Env.ThreeD.drawModePy.addListener((py, oldVal, newVal) -> updateView());
+		Env.ThreeD.enabledPy.addListener((py, oldVal, newVal) -> updateView());
 		Env.ThreeD.enabledPy.set(settings.use3D);
 		Env.ThreeD.perspectivePy.set(settings.perspective);
 	}
