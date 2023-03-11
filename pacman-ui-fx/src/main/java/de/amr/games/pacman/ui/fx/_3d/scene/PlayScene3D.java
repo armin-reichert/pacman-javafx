@@ -207,7 +207,7 @@ public class PlayScene3D implements GameScene {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
-	public void changeCameraPerspective(Perspective newPerspective) {
+	private void changeCameraPerspective(Perspective newPerspective) {
 		var newCamera = getCamera(newPerspective);
 		if (newCamera == null) {
 			LOG.error("No camera found for perspective %s", newPerspective);
@@ -290,7 +290,7 @@ public class PlayScene3D implements GameScene {
 					lockGameState();
 					var animation = new SequentialTransition( //
 							Ufx.pause(0.2), //
-							level3D.pac3D().createDyingAnimation(context.r2D().ghostColoring(killer.id()).normalDress()), //
+							level3D.pac3D().createDyingAnimation(), //
 							Ufx.pause(2.0) //
 					);
 					animation.setOnFinished(evt -> unlockGameState());

@@ -33,9 +33,7 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -46,12 +44,9 @@ public class PacDyingAnimation {
 
 	private final Animation animation;
 
-	public PacDyingAnimation(Node root3D, ObjectProperty<Color> faceColorPy, Color normalFaceColor, Color ghostColor) {
+	public PacDyingAnimation(Node root3D) {
 		var collapsingTime = Duration.seconds(2.0);
 		var numSpins = 10;
-
-		var poisened = new ColorChangeTransition(Duration.seconds(1.0), normalFaceColor, ghostColor, faceColorPy);
-		var impaling = new ColorChangeTransition(collapsingTime, ghostColor, Color.GHOSTWHITE, faceColorPy);
 
 		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
 		spinning.setAxis(Rotate.Z_AXIS);
@@ -70,8 +65,7 @@ public class PacDyingAnimation {
 
 		animation = new SequentialTransition( //
 				Ufx.pause(0.25), //
-				poisened, //
-				new ParallelTransition(impaling, spinning, shrinking, sinking));
+				new ParallelTransition(spinning, shrinking, sinking));
 	}
 
 	public Animation getAnimation() {
