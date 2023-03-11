@@ -118,6 +118,12 @@ public class GameUI implements GameEventListener {
 			super(gameController);
 		}
 
+		public void setHeight(double height) {
+			var aspectRatio = ArcadeWorld.SIZE_PX.x() / ArcadeWorld.SIZE_PX.y();
+			pipView.fxSubScene.setHeight(height);
+			pipView.fxSubScene.setWidth(height * aspectRatio);
+		}
+
 		@Override
 		public void update() {
 			boolean visible = Env.PiP.visiblePy.get() && gameSceneManager.isPlayScene(currentGameScene);
@@ -196,8 +202,7 @@ public class GameUI implements GameEventListener {
 
 		var scene = new Scene(root, size.x() * zoom, size.y() * zoom);
 		scene.setOnKeyPressed(this::handleKeyPressed);
-		scene.heightProperty()
-				.addListener((heightPy, oldHeight, newHeight) -> currentGameScene.resizeToHeight(newHeight.floatValue()));
+		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> currentGameScene.onParentSceneResize(scene));
 
 		return scene;
 	}
@@ -233,7 +238,7 @@ public class GameUI implements GameEventListener {
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateView());
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.resizeToHeight(newVal.doubleValue()));
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.setHeight(newVal.doubleValue()));
 		pipView.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateView());
@@ -291,7 +296,7 @@ public class GameUI implements GameEventListener {
 		updateManualPacManSteering(nextGameScene);
 		var root = (StackPane) mainScene.getRoot();
 		root.getChildren().set(0, nextGameScene.fxSubScene());
-		nextGameScene.onEmbed(mainScene);
+		nextGameScene.onEmbedIntoParentScene(mainScene);
 		currentGameScene = nextGameScene;
 		LOG.trace("Game scene changed to %s".formatted(nextGameScene));
 	}

@@ -47,8 +47,14 @@ public interface GameScene extends GameEventListener {
 		// empty default
 	}
 
+	/**
+	 * Called on every tick of the simulation if not paused.
+	 */
 	void update();
 
+	/**
+	 * Called on every tick of the simulation.
+	 */
 	void draw();
 
 	/**
@@ -64,23 +70,23 @@ public interface GameScene extends GameEventListener {
 	SubScene fxSubScene();
 
 	/**
+	 * @return if this is a scene with 3D content
+	 */
+	boolean is3D();
+
+	/**
 	 * Called when this game scene is embedded (displayed) inside its parent FX scene.
 	 * 
 	 * @param parentScene the JavaFX parent scene
 	 */
-	void onEmbed(Scene parentScene);
+	void onEmbedIntoParentScene(Scene parentScene);
 
 	/**
-	 * Called when the height of the parent of this game scene has changed.
+	 * Called when the size of the parent of this game scene changes.
 	 * 
-	 * @param new height height in pixels
+	 * @param parentScene the JavaFX parent scene
 	 */
-	void resizeToHeight(double height);
-
-	/**
-	 * @return if this is a scene with 3D content
-	 */
-	boolean is3D();
+	void onParentSceneResize(Scene parentScene);
 
 	/**
 	 * Called when scene variants for 2D and 3D exist and variant changes from 2D to 3D.

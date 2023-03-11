@@ -92,9 +92,18 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void resizeToHeight(double height) {
-		var aspectRatio = (float) size.x() / size.y();
-		var width = aspectRatio * height;
+	public void onEmbedIntoParentScene(Scene parentScene) {
+		var aspectRatio = fxSubScene.getWidth() / fxSubScene.getHeight();
+		adaptSize(parentScene.getHeight() * aspectRatio, parentScene.getHeight());
+	}
+
+	@Override
+	public void onParentSceneResize(Scene parentScene) {
+		var aspectRatio = fxSubScene.getWidth() / fxSubScene.getHeight();
+		adaptSize(parentScene.getHeight() * aspectRatio, parentScene.getHeight());
+	}
+
+	private void adaptSize(double width, double height) {
 		var scaling = height / size.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
@@ -144,11 +153,6 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public boolean is3D() {
 		return false;
-	}
-
-	@Override
-	public void onEmbed(Scene parentScene) {
-		resizeToHeight((float) parentScene.getHeight());
 	}
 
 	@Override
