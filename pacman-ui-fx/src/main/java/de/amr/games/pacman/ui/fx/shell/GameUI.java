@@ -96,7 +96,7 @@ public class GameUI implements GameEventListener {
 		@Override
 		public void doUpdate() {
 			gameController.update();
-			currentGameScene.onTick();
+			currentGameScene.update();
 		}
 
 		@Override
@@ -104,6 +104,7 @@ public class GameUI implements GameEventListener {
 			flashMessageView.update();
 			dashboard.update();
 			pipView.update();
+			currentGameScene.draw();
 		}
 	}
 
