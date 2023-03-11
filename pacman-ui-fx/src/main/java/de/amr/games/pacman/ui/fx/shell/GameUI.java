@@ -190,8 +190,8 @@ public class GameUI implements GameEventListener {
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipView.fxSubScene());
-		/* First child is placeholder for current game scene */
-		var root = new StackPane(new Pane(), flashMessageView, overlayPane);
+		var gameSceneComesHere = new Pane();
+		var root = new StackPane(gameSceneComesHere, flashMessageView, overlayPane);
 
 		var scene = new Scene(root, size.x() * zoom, size.y() * zoom);
 		scene.setOnKeyPressed(this::handleKeyPressed);

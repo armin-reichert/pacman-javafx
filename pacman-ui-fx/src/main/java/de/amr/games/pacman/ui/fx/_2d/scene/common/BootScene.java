@@ -45,28 +45,35 @@ public class BootScene extends GameScene2D {
 	private static final Vector2i SIZE_TILES = ArcadeWorld.SIZE_TILES;
 	private static final Vector2i SIZE_PIXELS = ArcadeWorld.SIZE_PX;
 
-	private final GraphicsContext imgCtx;
-	private final WritableImage currentImage;
+	private final GraphicsContext pen = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
+	private final WritableImage image = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
 
 	public BootScene(GameController gameController) {
 		super(gameController);
-		context.setScoresVisible(false);
-		currentImage = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
-		imgCtx = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
 	}
 
 	@Override
 	public void init() {
+		context.setScoresVisible(false);
 		clearImage();
 		saveImage();
+	}
+
+	private void clearImage() {
+		pen.setFill(Color.BLACK);
+		pen.fillRect(0, 0, image.getWidth(), image.getHeight());
+	}
+
+	private void saveImage() {
+		pen.getCanvas().snapshot(null, image);
 	}
 
 	@Override
 	public void update() {
 		var timer = context.state().timer();
-		if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 5 == 0) {
+		if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 4 == 0) {
 			produceRandomHexCodesImage();
-		} else if (timer.betweenSeconds(2.0, 3.5) && timer.tick() % 5 == 0) {
+		} else if (timer.betweenSeconds(2.0, 3.5) && timer.tick() % 4 == 0) {
 			produceRandomSpriteImage();
 		} else if (timer.atSecond(3.5)) {
 			produceGridImage();
@@ -77,26 +84,17 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		g.drawImage(currentImage, 0, 0);
-	}
-
-	private void clearImage() {
-		imgCtx.setFill(Color.BLACK);
-		imgCtx.fillRect(0, 0, currentImage.getWidth(), currentImage.getHeight());
-	}
-
-	private void saveImage() {
-		imgCtx.getCanvas().snapshot(null, currentImage);
+		g.drawImage(image, 0, 0);
 	}
 
 	private void produceRandomHexCodesImage() {
 		clearImage();
-		imgCtx.setFill(Palette.PALE);
-		imgCtx.setFont(context.r2D().screenFont(TS));
+		pen.setFill(Palette.PALE);
+		pen.setFont(context.r2D().screenFont(TS));
 		for (int row = 0; row < SIZE_TILES.y(); ++row) {
 			for (int col = 0; col < SIZE_TILES.x(); ++col) {
 				var hexCode = Integer.toHexString(U.RND.nextInt(16));
-				imgCtx.fillText(hexCode, col * 8, row * 8 + 8);
+				pen.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
 		saveImage();
@@ -112,7 +110,7 @@ public class BootScene extends GameScene2D {
 					var splitX = SIZE_TILES.x() / 8 + U.RND.nextInt(SIZE_TILES.x() / 4);
 					for (int col = 0; col < SIZE_TILES.x() / 2; ++col) {
 						var r = col < splitX ? r1 : r2;
-						sgr.drawSprite(imgCtx, r, r.getWidth() * col, r.getHeight() * row);
+						sgr.drawSprite(pen, r, r.getWidth() * col, r.getHeight() * row);
 					}
 				}
 			}
@@ -125,13 +123,13 @@ public class BootScene extends GameScene2D {
 		var cellSize = 16;
 		var numRows = SIZE_TILES.y() / 2;
 		var numCols = SIZE_TILES.x() / 2;
-		imgCtx.setStroke(Palette.PALE);
-		imgCtx.setLineWidth(2.0);
+		pen.setStroke(Palette.PALE);
+		pen.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			imgCtx.strokeLine(0, row * cellSize, SIZE_PIXELS.x(), row * cellSize);
+			pen.strokeLine(0, row * cellSize, SIZE_PIXELS.x(), row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			imgCtx.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PIXELS.y());
+			pen.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PIXELS.y());
 		}
 		saveImage();
 	}
