@@ -79,8 +79,8 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void end() {
-		// TODO is this really needed?
-		context.level().ifPresent(level -> SoundHandler.sounds(level.game()).stopAll());
+		// TODO check if this is needed
+		SoundHandler.sounds(context.game()).stopAll();
 	}
 
 	@Override
@@ -103,6 +103,7 @@ public class PlayScene2D extends GameScene2D {
 			r.drawGhost(g, level.ghost(Ghost.ID_PINK_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_RED_GHOST));
 			if (!context.isCreditVisible()) {
+				// TODO get rid of this crap
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
 				r.drawLivesCounter(g, lives);
 			}
@@ -130,8 +131,9 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void updateSound(GameLevel level) {
+		// TODO don't check for specific level, maybe mark level as silent
 		if (level instanceof PacManGameDemoLevel || level instanceof MsPacManGameDemoLevel) {
-			return; // TODO maybe mark level as silent?
+			return;
 		}
 		var sounds = SoundHandler.sounds(level.game());
 		if (level.pac().starvingTicks() > 10) {
