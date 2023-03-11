@@ -64,7 +64,7 @@ public class PacDyingAnimation {
 		sinking.setToZ(0);
 
 		animation = new SequentialTransition( //
-				Ufx.pause(0.25), //
+				Ufx.pause(1.25), //
 				new ParallelTransition(spinning, shrinking, sinking));
 	}
 

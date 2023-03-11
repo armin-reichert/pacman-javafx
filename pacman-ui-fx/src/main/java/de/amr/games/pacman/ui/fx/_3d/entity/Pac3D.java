@@ -157,7 +157,6 @@ public class Pac3D {
 	}
 
 	/**
-	 * @param killingGhostColor color of ghost that killed Pac-Man
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation() {
