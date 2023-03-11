@@ -118,12 +118,6 @@ public class GameUI implements GameEventListener {
 			super(gameController);
 		}
 
-		public void setHeight(double height) {
-			var aspectRatio = ArcadeWorld.SIZE_PX.x() / ArcadeWorld.SIZE_PX.y();
-			pipView.fxSubScene.setHeight(height);
-			pipView.fxSubScene.setWidth(height * aspectRatio);
-		}
-
 		@Override
 		public void update() {
 			boolean visible = Env.PiP.visiblePy.get() && gameSceneManager.isPlayScene(currentGameScene);
@@ -238,7 +232,11 @@ public class GameUI implements GameEventListener {
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateView());
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.setHeight(newVal.doubleValue()));
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newHeight) -> {
+			var aspectRatio = pipView.fxSubScene().getWidth() / pipView.fxSubScene().getHeight();
+			pipView.adaptSize(aspectRatio * newHeight.doubleValue(), newHeight.doubleValue());
+
+		});
 		pipView.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateView());

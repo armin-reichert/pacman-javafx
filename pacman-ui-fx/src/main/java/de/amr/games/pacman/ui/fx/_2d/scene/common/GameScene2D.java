@@ -103,7 +103,7 @@ public abstract class GameScene2D implements GameScene {
 		adaptSize(parentScene.getHeight() * aspectRatio, parentScene.getHeight());
 	}
 
-	private void adaptSize(double width, double height) {
+	public void adaptSize(double width, double height) {
 		var scaling = height / size.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
