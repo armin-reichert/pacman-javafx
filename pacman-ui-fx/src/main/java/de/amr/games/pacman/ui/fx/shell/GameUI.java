@@ -198,6 +198,12 @@ public class GameUI implements GameEventListener {
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> currentGameScene.onParentSceneResize(scene));
 
+		scene.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 2 && currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
+				stage.setWidth(currentGameScene.fxSubScene().getWidth());
+			}
+		});
+
 		return scene;
 	}
 
