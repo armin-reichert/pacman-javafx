@@ -39,6 +39,9 @@ public class ObjModel {
 			}
 			materials = importer.getNamedMaterials();
 			LOG.info("3D model loaded, URL='%s'", url);
+			for (var entry : meshes.entrySet()) {
+				LOG.info("Mesh id=%s, value=%s", entry.getKey(), entry.getValue());
+			}
 		} catch (ImportException e) {
 			throw new Model3DException("Error loading 3D model, URL='%s': %s", url, e.getMessage());
 		} finally {
