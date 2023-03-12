@@ -33,7 +33,6 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
@@ -113,7 +112,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawOverlayPaneContent() {
-		drawTileStructure(g, size.x() / World.TS, size.y() / World.TS);
+		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 		context.level().ifPresent(level -> {
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {
 				g.setFill(Color.RED);

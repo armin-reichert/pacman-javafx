@@ -232,11 +232,7 @@ public class GameUI implements GameEventListener {
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateView());
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newHeight) -> {
-			var aspectRatio = pipView.fxSubScene().getWidth() / pipView.fxSubScene().getHeight();
-			pipView.adaptSize(aspectRatio * newHeight.doubleValue(), newHeight.doubleValue());
-
-		});
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.resize(newVal.doubleValue()));
 		pipView.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateView());

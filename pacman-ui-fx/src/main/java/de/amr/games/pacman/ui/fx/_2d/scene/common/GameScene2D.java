@@ -32,10 +32,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
@@ -79,61 +79,64 @@ public abstract class GameScene2D implements GameScene {
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final GameSceneContext context;
-	protected Vector2i size = ArcadeWorld.SIZE_PX;
 
 	protected GameScene2D(GameController gameController) {
-		fxSubScene = new SubScene(root, size.x(), size.y());
-		context = new GameSceneContext(gameController);
+		fxSubScene = new SubScene(root, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayPane.visibleProperty().bind(overlayPaneVisiblePy);
 		overlayPane.setMouseTransparent(true);
 		root.getChildren().addAll(canvas, overlayPane);
+		context = new GameSceneContext(gameController);
 	}
 
 	@Override
 	public void onEmbedIntoParentScene(Scene parentScene) {
-		var aspectRatio = fxSubScene.getWidth() / fxSubScene.getHeight();
-		adaptSize(parentScene.getHeight() * aspectRatio, parentScene.getHeight());
+		resize(parentScene.getHeight());
 	}
 
 	@Override
 	public void onParentSceneResize(Scene parentScene) {
-		var aspectRatio = fxSubScene.getWidth() / fxSubScene.getHeight();
-		adaptSize(parentScene.getHeight() * aspectRatio, parentScene.getHeight());
+		resize(parentScene.getHeight());
 	}
 
-	public void adaptSize(double width, double height) {
-		var scaling = height / size.y();
+	/**
+	 * Resizes the game scene to the given height, keeping the aspect ratio. The scaling of the canvas is adapted such
+	 * that the canvas content is stretched to the new scene size.
+	 * 
+	 * @param height new game scene height
+	 */
+	public void resize(double height) {
+		var aspectRatio = fxSubScene.getWidth() / fxSubScene.getHeight();
+		var width = aspectRatio * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
+		var scaling = height / ArcadeWorld.SIZE_PX.y();
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-		LOG.debug("2D game scene resized: %.0f x %.0f scaled: %.2f (%s)", fxSubScene.getWidth(), fxSubScene.getHeight(),
-				scaling, getClass().getSimpleName());
+		LOG.trace("2D game scene resized: %.0f x %.0f canvas scaling: %.2f (%s)", fxSubScene.getWidth(),
+				fxSubScene.getHeight(), scaling, getClass().getSimpleName());
 	}
 
 	@Override
 	public void draw() {
-		var game = context.game();
 		var r = context.r2D();
 		g.setFill(Palette.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		drawSceneContent();
 		if (context.isScoresVisible()) {
-			drawScore(game.score(), "SCORE", t(1), t(1));
-			drawScore(game.highScore(), "HIGH SCORE", t(16), t(1));
+			drawScore(r, context.game().score(), "SCORE", t(1), t(1));
+			drawScore(r, context.game().highScore(), "HIGH SCORE", t(16), t(1));
 		}
+		drawSceneContent();
 		if (context.isCreditVisible()) {
-			r.drawText(g, "CREDIT %2d".formatted(game.credit()), Palette.PALE, r.screenFont(TS), t(2), t(36) - 1);
+			r.drawText(g, "CREDIT %2d".formatted(context.game().credit()), Palette.PALE, r.screenFont(TS), t(2), t(36) - 1);
 		}
 		if (overlayPaneVisiblePy.get()) {
 			drawOverlayPaneContent();
 		}
 	}
 
-	private void drawScore(Optional<Score> optionalScore, String title, double x, double y) {
+	private void drawScore(Rendering2D r, Optional<Score> optionalScore, String title, double x, double y) {
 		optionalScore.ifPresent(score -> {
-			var r = context.r2D();
 			var font = r.screenFont(TS);
 			r.drawText(g, title, Palette.PALE, font, x, y);
 			var pointsText = "%02d".formatted(score.points());
