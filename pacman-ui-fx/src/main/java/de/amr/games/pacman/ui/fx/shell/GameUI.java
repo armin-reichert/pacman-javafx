@@ -200,7 +200,7 @@ public class GameUI implements GameEventListener {
 
 		scene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2 && currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-				stage.setWidth(currentGameScene.fxSubScene().getWidth());
+				stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16);
 			}
 		});
 
