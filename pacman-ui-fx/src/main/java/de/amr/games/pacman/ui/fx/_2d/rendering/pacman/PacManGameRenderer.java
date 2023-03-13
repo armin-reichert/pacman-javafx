@@ -68,7 +68,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	private static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
 	private static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	private static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(WALL_COLOR, Color.WHITE));
+	private static final Image MAZE_EMPTY_FLASHING = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(WALL_COLOR, Color.WHITE));
 
 	public PacManGameRenderer() {
 		super(PACMAN_SPRITESHEET);
@@ -126,7 +126,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			flash = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flash ? MAZE_EMPTY_INV : MAZE_EMPTY, x, y);
+			g.drawImage(flash ? MAZE_EMPTY_FLASHING : MAZE_EMPTY, x, y);
 			return;
 		}
 
