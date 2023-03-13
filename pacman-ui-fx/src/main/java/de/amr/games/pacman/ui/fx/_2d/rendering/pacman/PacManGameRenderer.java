@@ -37,14 +37,14 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
  * @author Armin Reichert
  */
-public class PacManGameRenderer extends SpritesheetGameRenderer {
+public class PacManGameRenderer extends SpritesheetRenderer {
 
 	public PacManGameRenderer() {
 		super(PacManGameAssets.SPRITESHEET);

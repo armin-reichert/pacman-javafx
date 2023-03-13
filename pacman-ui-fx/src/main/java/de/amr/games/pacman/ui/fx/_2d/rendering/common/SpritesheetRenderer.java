@@ -46,11 +46,11 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public abstract class SpritesheetGameRenderer implements Rendering2D {
+public abstract class SpritesheetRenderer implements Rendering2D {
 
 	protected final Spritesheet spritesheet;
 
-	protected SpritesheetGameRenderer(Spritesheet spritesheet) {
+	protected SpritesheetRenderer(Spritesheet spritesheet) {
 		this.spritesheet = spritesheet;
 	}
 

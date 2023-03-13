@@ -41,7 +41,7 @@ import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
@@ -49,7 +49,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer extends SpritesheetGameRenderer {
+public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	public MsPacManGameRenderer() {
 		super(MsPacManGameAssets.SPRITESHEET);

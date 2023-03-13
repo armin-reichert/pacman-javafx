@@ -47,7 +47,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -171,7 +171,7 @@ public class GameLevel3D {
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
-		if (r2D instanceof SpritesheetGameRenderer sgr) {
+		if (r2D instanceof SpritesheetRenderer sgr) {
 			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
 			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
 			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
@@ -190,7 +190,7 @@ public class GameLevel3D {
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
 		var rightPosition = new Vector2f((level.world().numCols() - 2) * TS, TS);
-		if (r2D instanceof SpritesheetGameRenderer sgr) {
+		if (r2D instanceof SpritesheetRenderer sgr) {
 			var symbolImages = level.game().levelCounter().stream().map(sgr::bonusSymbolRegion).map(sgr::image)
 					.toArray(Image[]::new);
 			return new LevelCounter3D(symbolImages, rightPosition);

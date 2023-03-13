@@ -31,7 +31,7 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -102,7 +102,7 @@ public class BootScene extends GameScene2D {
 
 	private void produceRandomSpriteImage() {
 		clearImage();
-		if (context.r2D() instanceof SpritesheetGameRenderer sgr) {
+		if (context.r2D() instanceof SpritesheetRenderer sgr) {
 			for (int row = 0; row < SIZE_TILES.y() / 2; ++row) {
 				if (U.RND.nextInt(100) > 10) {
 					var r1 = sgr.spritesheet().randomCell();
