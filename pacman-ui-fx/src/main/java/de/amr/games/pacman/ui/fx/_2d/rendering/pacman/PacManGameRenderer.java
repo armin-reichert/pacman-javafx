@@ -57,13 +57,18 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 			ResourceMgr.image("graphics/pacman/sprites.png"), 16, //
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	private static final MazeColoring MAZE_COLORS = new MazeColoring(Color.rgb(254, 189, 180),
-			Color.rgb(33, 33, 255).darker(), Color.rgb(33, 33, 255).brighter(), Color.rgb(252, 181, 255));
+	private static final Color WALL_COLOR = Color.rgb(33, 33, 255);
+
+	private static final MazeColoring MAZE_COLORS = new MazeColoring(//
+			Color.rgb(254, 189, 180), // food color
+			WALL_COLOR.darker(), // wall top color
+			WALL_COLOR.brighter(), // wall side color
+			Color.rgb(252, 181, 255) // ghosthouse door color
+	);
 
 	private static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
 	private static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	private static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY,
-			Map.of(Color.rgb(33, 33, 255), Color.WHITE));
+	private static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(WALL_COLOR, Color.WHITE));
 
 	public PacManGameRenderer() {
 		super(PACMAN_SPRITESHEET);
@@ -216,8 +221,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private Animated createGhostValueSpriteList() {
-		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
-				ghostValueRegion(3));
+		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2), ghostValueRegion(3));
 	}
 
 	// Pac-Man specific:

@@ -53,6 +53,8 @@ import javafx.scene.shape.ArcType;
 import javafx.scene.text.Font;
 
 /**
+ * This test class is used to check if the Rendering2D interface is adequate.
+ * 
  * @author Armin Reichert
  */
 public class PacManTestRenderer implements Rendering2D {
