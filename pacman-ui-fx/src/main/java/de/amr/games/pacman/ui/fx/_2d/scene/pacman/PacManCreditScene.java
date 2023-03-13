@@ -30,7 +30,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -69,11 +68,11 @@ public class PacManCreditScene extends GameScene2D {
 		var r = context.r2D();
 		var normalFont = r.screenFont(TS);
 		var smallFont = r.screenFont(6); // TODO looks ugly
-		r.drawText(g, "PUSH START BUTTON", Palette.ORANGE, normalFont, t(6), t(17));
-		r.drawText(g, "1 PLAYER ONLY", Palette.CYAN, normalFont, t(8), t(21));
-		r.drawText(g, "BONUS PAC-MAN FOR 10000", Palette.ROSE, normalFont, t(1), t(25));
-		r.drawText(g, "PTS", Palette.ROSE, smallFont, t(25), t(25));
-		r.drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(29));
+		r.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, normalFont, t(6), t(17));
+		r.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, normalFont, t(8), t(21));
+		r.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, normalFont, t(1), t(25));
+		r.drawText(g, "PTS", ArcadeTheme.ROSE, smallFont, t(25), t(25));
+		r.drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(29));
 		r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 }

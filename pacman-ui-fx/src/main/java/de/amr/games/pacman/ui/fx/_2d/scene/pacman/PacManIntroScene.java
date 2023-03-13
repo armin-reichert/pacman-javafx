@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -128,7 +127,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright() {
-		context.r2D().drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", Palette.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
+		context.r2D().drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -141,9 +140,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = PacManIntroData.LEFT_TILE;
 		var font = context.r2D().screenFont(TS);
 		if (intro.context().titleVisible) {
-			r.drawText(g, "CHARACTER", Palette.PALE, font, t(col + 3), t(6));
-			r.drawText(g, "/", Palette.PALE, font, t(col + 13), t(6));
-			r.drawText(g, "NICKNAME", Palette.PALE, font, t(col + 15), t(6));
+			r.drawText(g, "CHARACTER", ArcadeTheme.PALE, font, t(col + 3), t(6));
+			r.drawText(g, "/", ArcadeTheme.PALE, font, t(col + 13), t(6));
+			r.drawText(g, "NICKNAME", ArcadeTheme.PALE, font, t(col + 15), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().pictureVisible[id]) {
@@ -201,7 +200,7 @@ public class PacManIntroScene extends GameScene2D {
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
 			g.fillOval(t(col), t(row + 1), TS, TS);
 		}
-		g.setFill(Palette.PALE);
+		g.setFill(ArcadeTheme.PALE);
 		g.setFont(r.screenFont(TS));
 		g.fillText("10", t(col + 2), t(row));
 		g.fillText("50", t(col + 2), t(row + 2));

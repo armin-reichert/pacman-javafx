@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -60,7 +60,7 @@ public abstract class GameScene2D implements GameScene {
 	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
-		g.setStroke(Palette.PALE);
+		g.setStroke(ArcadeTheme.PALE);
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
 			g.strokeLine(0, t(row), tilesX * TS, t(row));
@@ -120,7 +120,7 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public void draw() {
 		var r = context.r2D();
-		g.setFill(Palette.BLACK);
+		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		if (context.isScoresVisible()) {
 			drawScore(r, context.game().score(), "SCORE", t(1), t(1));
@@ -128,7 +128,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 		drawSceneContent();
 		if (context.isCreditVisible()) {
-			r.drawText(g, "CREDIT %2d".formatted(context.game().credit()), Palette.PALE, r.screenFont(TS), t(2), t(36) - 1);
+			r.drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2), t(36) - 1);
 		}
 		if (overlayPaneVisiblePy.get()) {
 			drawOverlayPaneContent();
@@ -138,11 +138,11 @@ public abstract class GameScene2D implements GameScene {
 	private void drawScore(Rendering2D r, Optional<Score> optionalScore, String title, double x, double y) {
 		optionalScore.ifPresent(score -> {
 			var font = r.screenFont(TS);
-			r.drawText(g, title, Palette.PALE, font, x, y);
+			r.drawText(g, title, ArcadeTheme.PALE, font, x, y);
 			var pointsText = "%02d".formatted(score.points());
-			r.drawText(g, "%7s".formatted(pointsText), Palette.PALE, font, x, y + TS + 1);
+			r.drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
 			if (score.points() != 0) {
-				r.drawText(g, "L%d".formatted(score.levelNumber()), Palette.PALE, font, x + t(8), y + TS + 1);
+				r.drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + t(8), y + TS + 1);
 			}
 		});
 	}

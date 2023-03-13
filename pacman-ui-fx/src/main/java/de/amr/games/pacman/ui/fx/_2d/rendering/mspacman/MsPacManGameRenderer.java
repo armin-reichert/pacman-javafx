@@ -39,7 +39,6 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetGameRenderer;
@@ -121,7 +120,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 		int x = t(6);
 		int y = t(tileY - 1);
 		g.drawImage(MsPacManGameAssets.MIDWAY_LOGO, x, y + 2, t(4) - 2, t(4));
-		g.setFill(Palette.RED);
+		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol
 		g.setFont(ArcadeTheme.SCREEN_FONT);
@@ -233,7 +232,7 @@ public class MsPacManGameRenderer extends SpritesheetGameRenderer {
 				var sprite = (Rectangle2D) frame;
 				drawEntitySprite(g, clap, sprite);
 				g.setFont(ArcadeTheme.SCREEN_FONT);
-				g.setFill(Palette.PALE);
+				g.setFill(ArcadeTheme.PALE);
 				g.fillText(String.valueOf(clap.sceneNumber), clap.position().x() + sprite.getWidth() - 25,
 						clap.position().y() + 18);
 				g.fillText(clap.sceneTitle, clap.position().x() + sprite.getWidth(), clap.position().y());

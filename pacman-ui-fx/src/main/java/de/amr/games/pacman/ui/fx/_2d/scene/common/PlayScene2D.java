@@ -35,7 +35,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -89,11 +89,11 @@ public class PlayScene2D extends GameScene2D {
 			var mazeNumber = level.game().mazeNumber(level.number());
 			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
-				r.drawText(g, "TESTING LEVEL %d".formatted(level.number()), Palette.YELLOW, r.screenFont(TS), t(6), t(4));
+				r.drawText(g, "TESTING LEVEL %d".formatted(level.number()), ArcadeTheme.YELLOW, r.screenFont(TS), t(6), t(4));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				r.drawText(g, "GAME  OVER", Palette.RED, r.screenFont(TS), t(9), t(21));
+				r.drawText(g, "GAME  OVER", ArcadeTheme.RED, r.screenFont(TS), t(9), t(21));
 			} else if (context.state() == GameState.READY) {
-				r.drawText(g, "READY!", Palette.YELLOW, r.screenFont(TS), t(11), t(21));
+				r.drawText(g, "READY!", ArcadeTheme.YELLOW, r.screenFont(TS), t(11), t(21));
 			}
 			r.drawBonus(g, level.bonus());
 			r.drawPac(g, level.pac());

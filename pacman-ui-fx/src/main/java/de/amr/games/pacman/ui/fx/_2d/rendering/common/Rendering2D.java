@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -70,7 +69,7 @@ public interface Rendering2D {
 	}
 
 	default void hideTileContent(GraphicsContext g, Vector2i tile) {
-		g.setFill(Palette.BLACK);
+		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}
 

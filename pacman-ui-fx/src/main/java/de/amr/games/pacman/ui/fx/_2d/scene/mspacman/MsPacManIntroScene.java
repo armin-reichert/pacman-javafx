@@ -34,7 +34,7 @@ import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -137,7 +137,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		int on = (int) t % (width / 2);
 		for (int i = 0; i < 2 * (width + height); ++i) {
 			var p = xy(i, width, height);
-			g.setFill(p.x() > 0 && (i + on) % (width / 2) == 0 ? Palette.PALE : Palette.RED);
+			g.setFill(p.x() > 0 && (i + on) % (width / 2) == 0 ? ArcadeTheme.PALE : ArcadeTheme.RED);
 			g.fillRect(BLINKY_END_TILE.x() + 4 * p.x(), BLINKY_END_TILE.y() + 4 * p.y(), 2, 2);
 		}
 	}

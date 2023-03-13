@@ -33,44 +33,42 @@ import javafx.scene.text.Font;
  */
 public class ArcadeTheme {
 
-	public class Palette {
-		public static final Color RED = Color.rgb(255, 0, 0);
-		public static final Color YELLOW = Color.rgb(255, 255, 0);
-		public static final Color PINK = Color.rgb(252, 181, 255);
-		public static final Color CYAN = Color.rgb(0, 255, 255);
-		public static final Color ORANGE = Color.rgb(251, 190, 88);
-		public static final Color BLACK = Color.rgb(0, 0, 0);
-		public static final Color BLUE = Color.rgb(33, 33, 255);
-		public static final Color PALE = Color.rgb(222, 222, 255);
-		public static final Color ROSE = Color.rgb(252, 187, 179);
-	}
+	public static final Color RED = Color.rgb(255, 0, 0);
+	public static final Color YELLOW = Color.rgb(255, 255, 0);
+	public static final Color PINK = Color.rgb(252, 181, 255);
+	public static final Color CYAN = Color.rgb(0, 255, 255);
+	public static final Color ORANGE = Color.rgb(251, 190, 88);
+	public static final Color BLACK = Color.rgb(0, 0, 0);
+	public static final Color BLUE = Color.rgb(33, 33, 255);
+	public static final Color PALE = Color.rgb(222, 222, 255);
+	public static final Color ROSE = Color.rgb(252, 187, 179);
 
 	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
 
 	static {
 		//@formatter:off
 		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(
-			Palette.RED,  Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			RED,  PALE, BLUE, // normal
+			BLUE, ROSE, ROSE, // frightened
+			PALE, ROSE, RED   // flashing
 		);
 
 		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColoring(
-			Palette.PINK, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			PINK, PALE, BLUE, // normal
+			BLUE, ROSE, ROSE, // frightened
+			PALE, ROSE, RED   // flashing
 		);
 
 		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColoring(
-			Palette.CYAN, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE, Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE, Palette.ROSE, Palette.RED   // flashing
+			CYAN, PALE, BLUE, // normal
+			BLUE, ROSE, ROSE, // frightened
+			PALE, ROSE, RED   // flashing
 		);
 		
 		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(
-			Palette.ORANGE, Palette.PALE, Palette.BLUE, // normal
-			Palette.BLUE,   Palette.ROSE, Palette.ROSE, // frightened
-			Palette.PALE,   Palette.ROSE, Palette.RED   // flashing
+			ORANGE, PALE, BLUE, // normal
+			BLUE,   ROSE, ROSE, // frightened
+			PALE,   ROSE, RED   // flashing
 		);
 		//@formatter:on
 	}

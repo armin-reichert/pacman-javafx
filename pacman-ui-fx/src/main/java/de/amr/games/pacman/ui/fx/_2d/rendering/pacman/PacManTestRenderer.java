@@ -44,7 +44,6 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme.Palette;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
@@ -192,7 +191,7 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
-		g.setStroke(Palette.CYAN);
+		g.setStroke(ArcadeTheme.CYAN);
 		g.setFont(Font.font("Sans", 10));
 		var text = switch (ghost.killedIndex()) {
 		case 0 -> "200";
