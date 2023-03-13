@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
-import java.util.Map;
-
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -42,7 +40,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -68,7 +65,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	private static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
 	private static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	private static final Image MAZE_EMPTY_FLASHING = Ufx.colorsExchanged(MAZE_EMPTY, Map.of(WALL_COLOR, Color.WHITE));
+	private static final Image MAZE_EMPTY_FLASHING = ResourceMgr.image("graphics/pacman/maze_empty_flashing.png");
 
 	public PacManGameRenderer() {
 		super(PACMAN_SPRITESHEET);
