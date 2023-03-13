@@ -24,7 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.mspacman;
 
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameAssets.col3;
+
+import java.util.Map;
+import java.util.stream.IntStream;
 
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
@@ -41,9 +43,14 @@ import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -51,8 +58,47 @@ import javafx.scene.text.Font;
  */
 public class MsPacManGameRenderer extends SpritesheetRenderer {
 
+	//@formatter:off
+	private static final Spritesheet MS_PACMAN_SPRITESHEET = new Spritesheet(
+			ResourceMgr.image("graphics/mspacman/sprites.png"), 16,
+			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
+	private static final MazeColoring[] MAZE_COLORS = {
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb( 33,  33, 255),  Color.rgb(255, 183,  81), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
+			new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
+	};
+	//@formatter:on
+
+	private static final int MAZE_WIDTH = 226;
+	private static final int MAZE_HEIGHT = 248;
+	private static final int SECOND_COLUMN = 228;
+	private static final int THIRD_COLUMN = 456;
+
+	private static final Image MIDWAY_LOGO = ResourceMgr.image("graphics/mspacman/midway.png");
+
+	private static final Image[] MAZES_EMPTY_FLASHING = IntStream.range(0, 6)
+			.mapToObj(MsPacManGameRenderer::emptyMazeFlashing).toArray(Image[]::new);
+
+	private static Image emptyMaze(int i) {
+		return MS_PACMAN_SPRITESHEET.subImage(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
+	}
+
+	private static Image emptyMazeFlashing(int i) {
+		return Ufx.colorsExchanged(emptyMaze(i),
+				Map.of(MAZE_COLORS[i].sideColor(), Color.WHITE, MAZE_COLORS[i].topColor(), Color.BLACK));
+	}
+
+	// tile from third column
+	private static Rectangle2D col3(int col, int row) {
+		return MS_PACMAN_SPRITESHEET.region(THIRD_COLUMN, 0, col, row, 1, 1);
+	}
+
 	public MsPacManGameRenderer() {
-		super(MsPacManGameAssets.SPRITESHEET);
+		super(MS_PACMAN_SPRITESHEET);
 	}
 
 	@Override
@@ -62,7 +108,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public MazeColoring mazeColoring(int mazeNumber) {
-		return MsPacManGameAssets.MAZE_COLORS[mazeNumber - 1];
+		return MAZE_COLORS[mazeNumber - 1];
 	}
 
 	@Override
@@ -88,17 +134,17 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
-		var w = MsPacManGameAssets.MAZE_WIDTH;
-		var h = MsPacManGameAssets.MAZE_HEIGHT;
+		var w = MAZE_WIDTH;
+		var h = MAZE_HEIGHT;
 
 		boolean flashing = false;
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				g.drawImage(MsPacManGameAssets.MAZES_EMPTY_FLASHING[mazeNumber - 1], x, y);
+				g.drawImage(MAZES_EMPTY_FLASHING[mazeNumber - 1], x, y);
 			} else {
-				g.drawImage(spritesheet.source(), MsPacManGameAssets.SECOND_COLUMN, h * (mazeNumber - 1), w, h, x, y, w, h);
+				g.drawImage(spritesheet.source(), SECOND_COLUMN, h * (mazeNumber - 1), w, h, x, y, w, h);
 			}
 			return;
 		}
@@ -119,7 +165,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public void drawCopyright(GraphicsContext g, int tileY) {
 		int x = t(6);
 		int y = t(tileY - 1);
-		g.drawImage(MsPacManGameAssets.MIDWAY_LOGO, x, y + 2, t(4) - 2, t(4));
+		g.drawImage(MIDWAY_LOGO, x, y + 2, t(4) - 2, t(4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + t(5), y + t(2) + 2); // (c) symbol

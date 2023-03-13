@@ -57,6 +57,9 @@ import javafx.scene.text.Font;
  */
 public class PacManTestRenderer implements Rendering2D {
 
+	static final MazeColoring MAZE_COLORS = new MazeColoring(Color.rgb(254, 189, 180), Color.rgb(33, 33, 255).darker(),
+			Color.rgb(33, 33, 255).brighter(), Color.rgb(252, 181, 255));
+
 	@Override
 	public Font screenFont(double size) {
 		return Font.font(ArcadeTheme.SCREEN_FONT.getFamily(), size);
@@ -64,7 +67,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public MazeColoring mazeColoring(int mazeNumber) {
-		return PacManGameAssets.MAZE_COLORS;
+		return MAZE_COLORS;
 	}
 
 	@Override

@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
 
+import java.util.Map;
+
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
@@ -37,22 +39,39 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
  */
 public class PacManGameRenderer extends SpritesheetRenderer {
 
+	private static final Spritesheet PACMAN_SPRITESHEET = new Spritesheet(//
+			ResourceMgr.image("graphics/pacman/sprites.png"), 16, //
+			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+
+	private static final MazeColoring MAZE_COLORS = new MazeColoring(Color.rgb(254, 189, 180),
+			Color.rgb(33, 33, 255).darker(), Color.rgb(33, 33, 255).brighter(), Color.rgb(252, 181, 255));
+
+	private static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
+	private static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
+	private static final Image MAZE_EMPTY_INV = Ufx.colorsExchanged(MAZE_EMPTY,
+			Map.of(Color.rgb(33, 33, 255), Color.WHITE));
+
 	public PacManGameRenderer() {
-		super(PacManGameAssets.SPRITESHEET);
+		super(PACMAN_SPRITESHEET);
 	}
 
 	@Override
 	public MazeColoring mazeColoring(int mazeNumber) {
-		return PacManGameAssets.MAZE_COLORS;
+		return MAZE_COLORS;
 	}
 
 	@Override
@@ -102,11 +121,11 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			flash = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flash ? PacManGameAssets.MAZE_EMPTY_INV : PacManGameAssets.MAZE_EMPTY, x, y);
+			g.drawImage(flash ? MAZE_EMPTY_INV : MAZE_EMPTY, x, y);
 			return;
 		}
 
-		g.drawImage(PacManGameAssets.MAZE_FULL, x, y);
+		g.drawImage(MAZE_FULL, x, y);
 		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
 		var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 		boolean on = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
