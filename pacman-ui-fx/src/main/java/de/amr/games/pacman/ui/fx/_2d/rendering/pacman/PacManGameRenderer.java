@@ -28,7 +28,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
+import de.amr.games.pacman.lib.anim.FrameSequence;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -216,7 +216,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private EntityAnimation createGhostValueSpriteList() {
-		return new FixedEntityAnimation<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
+		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
 				ghostValueRegion(3));
 	}
 
@@ -230,12 +230,12 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		return animation;
 	}
 
-	public FixedEntityAnimation<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new FixedEntityAnimation<>(spritesheet.tilesRightOf(8, 6, 5));
+	public FrameSequence<Rectangle2D> createBlinkyStretchedAnimation() {
+		return new FrameSequence<>(spritesheet.tilesRightOf(8, 6, 5));
 	}
 
-	public FixedEntityAnimation<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new FixedEntityAnimation<>(spritesheet.tile(8, 7), spritesheet.tile(9, 7));
+	public FrameSequence<Rectangle2D> createBlinkyDamagedAnimation() {
+		return new FrameSequence<>(spritesheet.tile(8, 7), spritesheet.tile(9, 7));
 	}
 
 	public SingleEntityAnimation<Rectangle2D> createBlinkyPatchedAnimation() {

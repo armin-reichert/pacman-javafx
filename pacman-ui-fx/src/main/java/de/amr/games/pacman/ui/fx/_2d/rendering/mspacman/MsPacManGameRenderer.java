@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
 import de.amr.games.pacman.lib.anim.EntityAnimation;
 import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
 import de.amr.games.pacman.lib.anim.EntityAnimationMap;
-import de.amr.games.pacman.lib.anim.FixedEntityAnimation;
+import de.amr.games.pacman.lib.anim.FrameSequence;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -266,7 +266,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private EntityAnimation createGhostValueSpriteList() {
-		return new FixedEntityAnimation<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
+		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
 				ghostValueRegion(3));
 	}
 
