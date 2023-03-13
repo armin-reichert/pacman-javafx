@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntermission3;
-import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
+import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
@@ -45,7 +45,7 @@ import javafx.geometry.Rectangle2D;
 public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	private MsPacManIntermission3 intermission;
-	private SingleEntityAnimation<Rectangle2D> storkAnim;
+	private SimpleAnimation<Rectangle2D> storkAnim;
 
 	public MsPacManIntermissionScene3(GameController gameController) {
 		super(gameController);

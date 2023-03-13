@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntermission1;
-import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
@@ -56,7 +56,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		intermission.restart(MsPacManIntermission1.IntermissionState.FLAP);
 		ic.clapperboard.setAnimation(r.createClapperboardAnimation());
 		ic.msPac.setAnimations(r.createPacAnimations(ic.msPac));
-		ic.msPac.animations().ifPresent(EntityAnimationMap::ensureRunning);
+		ic.msPac.animations().ifPresent(AnimationMap::ensureRunning);
 		ic.pacMan.setAnimations(r.createPacAnimations(ic.pacMan));
 		ic.pacMan.animations().ifPresent(animations -> {
 			var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
@@ -64,9 +64,9 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 			animations.ensureRunning();
 		});
 		ic.inky.setAnimations(r.createGhostAnimations(ic.inky));
-		ic.inky.animations().ifPresent(EntityAnimationMap::ensureRunning);
+		ic.inky.animations().ifPresent(AnimationMap::ensureRunning);
 		ic.pinky.setAnimations(r.createGhostAnimations(ic.pinky));
-		ic.pinky.animations().ifPresent(EntityAnimationMap::ensureRunning);
+		ic.pinky.animations().ifPresent(AnimationMap::ensureRunning);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -54,11 +54,11 @@ public interface Rendering2D {
 
 	// Animations
 
-	EntityAnimationMap createPacAnimations(Pac pac);
+	AnimationMap createPacAnimations(Pac pac);
 
-	EntityAnimationMap createGhostAnimations(Ghost ghost);
+	AnimationMap createGhostAnimations(Ghost ghost);
 
-	EntityAnimationMap createWorldAnimations(World world);
+	AnimationMap createWorldAnimations(World world);
 
 	// Drawing
 

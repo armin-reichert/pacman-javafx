@@ -30,7 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.lib.anim.EntityAnimation;
+import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
@@ -82,7 +82,7 @@ public class PacManCutscene1 extends GameScene2D {
 
 		var blinkyAnimations = context.r2D().createGhostAnimations(blinky);
 		blinky.setAnimations(blinkyAnimations);
-		blinkyAnimations.selectedAnimation().ifPresent(EntityAnimation::restart);
+		blinkyAnimations.selectedAnimation().ifPresent(Animated::restart);
 	}
 
 	@Override

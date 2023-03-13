@@ -28,12 +28,12 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import de.amr.games.pacman.lib.anim.EntityAnimation;
-import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.Animated;
+import de.amr.games.pacman.lib.anim.AnimationByDirection;
+import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.anim.FrameSequence;
 import de.amr.games.pacman.lib.anim.Pulse;
-import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
+import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
@@ -177,30 +177,30 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	// Animations
 
 	@Override
-	public EntityAnimationMap createWorldAnimations(World world) {
-		var map = new EntityAnimationMap();
+	public AnimationMap createWorldAnimations(World world) {
+		var map = new AnimationMap();
 		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
 		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
 		return map;
 	}
 
 	@Override
-	public EntityAnimationMap createPacAnimations(Pac pac) {
-		var map = new EntityAnimationMap();
+	public AnimationMap createPacAnimations(Pac pac) {
+		var map = new AnimationMap();
 		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
 		map.put(GameModel.AK_PAC_MUNCHING, createPacMunchingAnimation(pac));
 		map.select(GameModel.AK_PAC_MUNCHING);
 		return map;
 	}
 
-	private EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
-		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
+	private AnimationByDirection createPacMunchingAnimation(Pac pac) {
+		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
 			var wide = col3(0, d);
 			var middle = col3(1, d);
 			var closed = col3(2, d);
-			var munching = new SingleEntityAnimation<>(middle, middle, wide, wide, middle, middle, middle, closed, closed);
+			var munching = new SimpleAnimation<>(middle, middle, wide, wide, middle, middle, middle, closed, closed);
 			munching.setFrameDuration(1);
 			munching.repeatForever();
 			animationByDir.put(dir, munching);
@@ -208,20 +208,20 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return animationByDir;
 	}
 
-	private SingleEntityAnimation<Rectangle2D> createPacDyingAnimation() {
+	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
 		var right = col3(1, 0);
 		var left = col3(1, 1);
 		var up = col3(1, 2);
 		var down = col3(1, 3);
 		// TODO not yet 100% accurate
-		var animation = new SingleEntityAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
+		var animation = new SimpleAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
 		animation.setFrameDuration(8);
 		return animation;
 	}
 
 	@Override
-	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
-		var map = new EntityAnimationMap();
+	public AnimationMap createGhostAnimations(Ghost ghost) {
+		var map = new AnimationMap();
 		map.put(GameModel.AK_GHOST_COLOR, createGhostColorAnimation(ghost));
 		map.put(GameModel.AK_GHOST_BLUE, createGhostBlueAnimation());
 		map.put(GameModel.AK_GHOST_EYES, createGhostEyesAnimation(ghost));
@@ -231,11 +231,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return map;
 	}
 
-	private EntityAnimationByDirection createGhostColorAnimation(Ghost ghost) {
-		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
+	private AnimationByDirection createGhostColorAnimation(Ghost ghost) {
+		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(col3(2 * d, 4 + ghost.id()), col3(2 * d + 1, 4 + ghost.id()));
+			var animation = new SimpleAnimation<>(col3(2 * d, 4 + ghost.id()), col3(2 * d + 1, 4 + ghost.id()));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -243,29 +243,29 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return animationByDir;
 	}
 
-	private SingleEntityAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SingleEntityAnimation<>(col3(8, 4), col3(9, 4));
+	private SimpleAnimation<Rectangle2D> createGhostBlueAnimation() {
+		var animation = new SimpleAnimation<>(col3(8, 4), col3(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
-	private SingleEntityAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SingleEntityAnimation<>(col3(8, 4), col3(9, 4), col3(10, 4), col3(11, 4));
+	private SimpleAnimation<Rectangle2D> createGhostFlashingAnimation() {
+		var animation = new SimpleAnimation<>(col3(8, 4), col3(9, 4), col3(10, 4), col3(11, 4));
 		animation.setFrameDuration(4);
 		return animation;
 	}
 
-	private EntityAnimationByDirection createGhostEyesAnimation(Ghost ghost) {
-		var animationByDir = new EntityAnimationByDirection(ghost::wishDir);
+	private AnimationByDirection createGhostEyesAnimation(Ghost ghost) {
+		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
-			animationByDir.put(dir, new SingleEntityAnimation<>(col3(8 + d, 5)));
+			animationByDir.put(dir, new SimpleAnimation<>(col3(8 + d, 5)));
 		}
 		return animationByDir;
 	}
 
-	private EntityAnimation createGhostValueSpriteList() {
+	private Animated createGhostValueSpriteList() {
 		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
 				ghostValueRegion(3));
 	}
@@ -274,7 +274,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	public void drawClap(GraphicsContext g, Clapperboard clap) {
 		if (clap.isVisible()) {
-			clap.animation().map(EntityAnimation::animate).ifPresent(frame -> {
+			clap.animation().map(Animated::animate).ifPresent(frame -> {
 				var sprite = (Rectangle2D) frame;
 				drawEntitySprite(g, clap, sprite);
 				g.setFont(ArcadeTheme.SCREEN_FONT);
@@ -298,11 +298,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return new Rectangle2D(509, 200, 8, 8);
 	}
 
-	public EntityAnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
-		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
+	public AnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
+		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = spritesheet.dirIndex(dir);
-			var animation = new SingleEntityAnimation<>(col3(0, 9 + d), col3(1, 9 + d), col3(2, 9));
+			var animation = new SimpleAnimation<>(col3(0, 9 + d), col3(1, 9 + d), col3(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -310,9 +310,9 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return animationByDir;
 	}
 
-	public SingleEntityAnimation<Rectangle2D> createClapperboardAnimation() {
+	public SimpleAnimation<Rectangle2D> createClapperboardAnimation() {
 		// TODO this is not 100% accurate yet
-		var animation = new SingleEntityAnimation<>( //
+		var animation = new SimpleAnimation<>( //
 				new Rectangle2D(456, 208, 32, 32), //
 				new Rectangle2D(488, 208, 32, 32), //
 				new Rectangle2D(520, 208, 32, 32), //
@@ -323,8 +323,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return animation;
 	}
 
-	public SingleEntityAnimation<Rectangle2D> createStorkFlyingAnimation() {
-		var animation = new SingleEntityAnimation<>( //
+	public SimpleAnimation<Rectangle2D> createStorkFlyingAnimation() {
+		var animation = new SimpleAnimation<>( //
 				new Rectangle2D(489, 176, 32, 16), //
 				new Rectangle2D(521, 176, 32, 16) //
 		);

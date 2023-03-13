@@ -30,11 +30,11 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import java.util.List;
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.anim.EntityAnimation;
-import de.amr.games.pacman.lib.anim.EntityAnimationByDirection;
-import de.amr.games.pacman.lib.anim.EntityAnimationMap;
+import de.amr.games.pacman.lib.anim.Animated;
+import de.amr.games.pacman.lib.anim.AnimationByDirection;
+import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.anim.Pulse;
-import de.amr.games.pacman.lib.anim.SingleEntityAnimation;
+import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
@@ -76,17 +76,17 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationMap createPacAnimations(Pac pac) {
-		var map = new EntityAnimationMap();
+	public AnimationMap createPacAnimations(Pac pac) {
+		var map = new AnimationMap();
 		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
 		map.put(GameModel.AK_PAC_MUNCHING, createPacMunchingAnimation(pac));
 		map.select(GameModel.AK_PAC_MUNCHING);
 		return map;
 	}
 
-	private EntityAnimationByDirection createPacMunchingAnimation(Pac pac) {
-		var animationByDir = new EntityAnimationByDirection(pac::moveDir);
-		var animation = new SingleEntityAnimation<>(0, 0, 90, 90, 120, 120, 90, 90);
+	private AnimationByDirection createPacMunchingAnimation(Pac pac) {
+		var animationByDir = new AnimationByDirection(pac::moveDir);
+		var animation = new SimpleAnimation<>(0, 0, 90, 90, 120, 120, 90, 90);
 		animation.setFrameDuration(1);
 		animation.repeatForever();
 		for (var dir : Direction.values()) {
@@ -95,15 +95,15 @@ public class PacManTestRenderer implements Rendering2D {
 		return animationByDir;
 	}
 
-	private SingleEntityAnimation<Integer> createPacDyingAnimation() {
-		var animation = new SingleEntityAnimation<>(45, 60, 75, 90, 135, 180, 225, 270, 315, 360);
+	private SimpleAnimation<Integer> createPacDyingAnimation() {
+		var animation = new SimpleAnimation<>(45, 60, 75, 90, 135, 180, 225, 270, 315, 360);
 		animation.setFrameDuration(8);
 		return animation;
 	}
 
 	@Override
-	public EntityAnimationMap createGhostAnimations(Ghost ghost) {
-		var map = new EntityAnimationMap();
+	public AnimationMap createGhostAnimations(Ghost ghost) {
+		var map = new AnimationMap();
 //		map.put(AnimKeys.GHOST_COLOR, createGhostColorAnimation(ghost));
 //		map.put(AnimKeys.GHOST_BLUE, createGhostBlueAnimation());
 //		map.put(AnimKeys.GHOST_EYES, createGhostEyesAnimation(ghost));
@@ -113,8 +113,8 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public EntityAnimationMap createWorldAnimations(World world) {
-		var map = new EntityAnimationMap();
+	public AnimationMap createWorldAnimations(World world) {
+		var map = new AnimationMap();
 		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
 		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
 		return null;
@@ -131,7 +131,7 @@ public class PacManTestRenderer implements Rendering2D {
 		}
 	}
 
-	private void drawPacMunching(GraphicsContext g, Pac pac, EntityAnimation munching) {
+	private void drawPacMunching(GraphicsContext g, Pac pac, Animated munching) {
 		int radius = 7;
 		float x = pac.position().x() - radius / 2;
 		float y = pac.position().y() - radius / 2;
@@ -147,7 +147,7 @@ public class PacManTestRenderer implements Rendering2D {
 		g.fillArc(x, y, 2 * radius, 2 * radius, fromAngle, 360 - openess, ArcType.ROUND);
 	}
 
-	private void drawPacDying(GraphicsContext g, Pac pac, EntityAnimation dying) {
+	private void drawPacDying(GraphicsContext g, Pac pac, Animated dying) {
 		int radius = 7;
 		float x = pac.position().x() - radius / 2;
 		float y = pac.position().y() - radius / 2;

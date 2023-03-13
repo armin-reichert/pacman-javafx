@@ -30,7 +30,7 @@ import static de.amr.games.pacman.model.common.world.World.t;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.lib.anim.EntityAnimation;
+import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
@@ -54,8 +54,8 @@ public class PacManCutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
-	private EntityAnimation stretchedDressAnimation;
-	private EntityAnimation damagedAnimation;
+	private Animated stretchedDressAnimation;
+	private Animated damagedAnimation;
 
 	public PacManCutscene2(GameController gameController) {
 		super(gameController);
