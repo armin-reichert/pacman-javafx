@@ -279,6 +279,9 @@ public class PlayScene3D implements GameScene {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
+				if (Env.ThreeD.foodOscillationEnabledPy.get()) {
+					level3D.foodOscillation().play();
+				}
 			});
 		}
 
@@ -288,6 +291,7 @@ public class PlayScene3D implements GameScene {
 			context.game().level().ifPresent(level -> {
 				level.ghosts().filter(level.pac()::sameTile).findAny().ifPresent(killer -> {
 					lockGameState();
+					level3D.foodOscillation().stop();
 					var animation = new SequentialTransition( //
 							Ufx.pause(0.2), //
 							level3D.pac3D().createDyingAnimation(), //
@@ -325,6 +329,7 @@ public class PlayScene3D implements GameScene {
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
 				lockGameState();
+				level3D.foodOscillation().stop();
 				var message = "%s%n%n%s".formatted(ResourceMgr.getLevelCompleteMessage(),
 						ResourceMgr.message("level_complete", level.number()));
 				var animation = new SequentialTransition( //
@@ -339,7 +344,10 @@ public class PlayScene3D implements GameScene {
 			});
 		}
 
-		case GAME_OVER -> Actions.showFlashMessageSeconds(3, ResourceMgr.getGameOverMessage());
+		case GAME_OVER -> {
+			level3D.foodOscillation().stop();
+			Actions.showFlashMessageSeconds(3, ResourceMgr.getGameOverMessage());
+		}
 
 		default -> { // ignore
 		}

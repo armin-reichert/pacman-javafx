@@ -48,6 +48,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
+import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -85,6 +86,7 @@ public class GameLevel3D {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 	private final List<Eatable3D> eatables = new ArrayList<>();
+	private FoodOscillation foodOscillation = new FoodOscillation(eatables);
 	private PointLight pacLight;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
@@ -129,8 +131,7 @@ public class GameLevel3D {
 			eatables.add(eatable3D);
 			foodGroup.getChildren().add(eatable3D.getRoot());
 		});
-		foodGroup.getChildren().add(particlesGroup);
-		newWorld3D.getRoot().getChildren().add(foodGroup);
+		newWorld3D.getRoot().getChildren().addAll(foodGroup, particlesGroup);
 		return newWorld3D;
 	}
 
@@ -221,6 +222,10 @@ public class GameLevel3D {
 
 	public World3D world3D() {
 		return world3D;
+	}
+
+	public FoodOscillation foodOscillation() {
+		return foodOscillation;
 	}
 
 	public Pac3D pac3D() {

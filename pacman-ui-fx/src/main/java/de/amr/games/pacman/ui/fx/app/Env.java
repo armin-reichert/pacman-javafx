@@ -77,5 +77,6 @@ public class Env {
 		public static final BooleanProperty pacLightedPy = new SimpleBooleanProperty(true);
 		public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 		public static final BooleanProperty energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
+		public static final BooleanProperty foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 	}
 }
