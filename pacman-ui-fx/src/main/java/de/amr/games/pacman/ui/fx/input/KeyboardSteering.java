@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.input;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -30,6 +33,7 @@ import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -39,17 +43,38 @@ import javafx.scene.input.KeyEvent;
  */
 public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
-	private Direction dir;
-	private KeyCodeCombination up;
-	private KeyCodeCombination down;
-	private KeyCodeCombination left;
-	private KeyCodeCombination right;
+	private static final KeyboardSteering DEFAULT_STEERING = new KeyboardSteering(//
+			new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN),
+			new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN),
+			new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_DOWN),
+			new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_DOWN));
 
-	public KeyboardSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
-		this.up = new KeyCodeCombination(up);
-		this.down = new KeyCodeCombination(down);
-		this.left = new KeyCodeCombination(left);
-		this.right = new KeyCodeCombination(right);
+	private static Direction computeDirection(KeyEvent event, EnumMap<Direction, KeyCodeCombination> map) {
+		var dir = map.entrySet().stream()//
+				.filter(e -> e.getValue().match(event)).findFirst()//
+				.map(Map.Entry::getKey).orElse(null);
+		if (dir != null) {
+			event.consume();
+		}
+		return dir;
+	}
+
+	private final EnumMap<Direction, KeyCodeCombination> keyCombinations = new EnumMap<>(Direction.class);
+	private Direction dir;
+
+	public KeyboardSteering(KeyCodeCombination kccUp, KeyCodeCombination kccDown, KeyCodeCombination kccLeft,
+			KeyCodeCombination kccRight) {
+		keyCombinations.put(Direction.UP, kccUp);
+		keyCombinations.put(Direction.DOWN, kccDown);
+		keyCombinations.put(Direction.LEFT, kccLeft);
+		keyCombinations.put(Direction.RIGHT, kccRight);
+	}
+
+	public KeyboardSteering(KeyCode keyUp, KeyCode keyDown, KeyCode keyLeft, KeyCode keyRight) {
+		keyCombinations.put(Direction.UP, new KeyCodeCombination(keyUp));
+		keyCombinations.put(Direction.DOWN, new KeyCodeCombination(keyDown));
+		keyCombinations.put(Direction.LEFT, new KeyCodeCombination(keyLeft));
+		keyCombinations.put(Direction.RIGHT, new KeyCodeCombination(keyRight));
 	}
 
 	@Override
@@ -61,19 +86,10 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 	}
 
 	@Override
-	public void handle(KeyEvent e) {
-		dir = null;
-		if (up.match(e)) {
-			dir = Direction.UP;
-		} else if (down.match(e)) {
-			dir = Direction.DOWN;
-		} else if (left.match(e)) {
-			dir = Direction.LEFT;
-		} else if (right.match(e)) {
-			dir = Direction.RIGHT;
-		}
-		if (dir != null) {
-			e.consume();
+	public void handle(KeyEvent event) {
+		dir = computeDirection(event, keyCombinations);
+		if (dir == null) {
+			dir = computeDirection(event, DEFAULT_STEERING.keyCombinations);
 		}
 	}
 }
