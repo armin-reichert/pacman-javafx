@@ -15,6 +15,7 @@ There are two excutables built:
 1. An executable jar file (using Maven shade)
 2. A zip file containing the Java/JavaFX runtime and the game</description>
 	<properties>
+		<classifier>win</classifier>
 		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
 		<javafx.version>18.0.1</javafx.version>
 		<log4j.maven.shade.plugin.extensions.version>2.18.0</log4j.maven.shade.plugin.extensions.version>
@@ -97,42 +98,17 @@ There are two excutables built:
 			<artifactId>pacman-core</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<!-- Windows -->
 		<dependency>
+			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
+			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
-			<classifier>linux</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-media</artifactId>
-			<version>${javafx.version}</version>
-			<classifier>linux</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
-			<classifier>mac</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-media</artifactId>
-			<version>${javafx.version}</version>
-			<classifier>mac</classifier>
-		</dependency>
-		-->
 	</dependencies>
 </project>
