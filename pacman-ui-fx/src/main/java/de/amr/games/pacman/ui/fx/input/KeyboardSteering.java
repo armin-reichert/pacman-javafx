@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.input;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -48,16 +49,6 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 			new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN),
 			new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_DOWN),
 			new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_DOWN));
-
-	private static Direction computeDirection(KeyEvent event, EnumMap<Direction, KeyCodeCombination> map) {
-		var dir = map.entrySet().stream()//
-				.filter(e -> e.getValue().match(event)).findFirst()//
-				.map(Map.Entry::getKey).orElse(null);
-		if (dir != null) {
-			event.consume();
-		}
-		return dir;
-	}
 
 	private final EnumMap<Direction, KeyCodeCombination> keyCombinations = new EnumMap<>(Direction.class);
 	private Direction dir;
@@ -87,9 +78,15 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
 	@Override
 	public void handle(KeyEvent event) {
-		dir = computeDirection(event, keyCombinations);
-		if (dir == null) {
-			dir = computeDirection(event, DEFAULT_STEERING.keyCombinations);
+		dir = computeDirection(event).or(() -> DEFAULT_STEERING.computeDirection(event)).orElse(null);
+		if (dir != null) {
+			event.consume();
 		}
+	}
+
+	private Optional<Direction> computeDirection(KeyEvent event) {
+		return keyCombinations.entrySet().stream()//
+				.filter(e -> e.getValue().match(event)).findFirst()//
+				.map(Map.Entry::getKey);
 	}
 }
