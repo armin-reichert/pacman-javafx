@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 
 import java.util.List;
 
+import de.amr.games.pacman.lib.math.Vector2f;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import javafx.animation.Interpolator;
@@ -41,7 +43,7 @@ public class FoodOscillation extends Transition {
 
 	public FoodOscillation(List<Eatable3D> eatables) {
 		this.eatables = eatables;
-		setCycleDuration(Duration.seconds(0.5));
+		setCycleDuration(Duration.seconds(0.6));
 		setCycleCount(INDEFINITE);
 		setAutoReverse(true);
 		setInterpolator(Interpolator.LINEAR);
@@ -52,8 +54,11 @@ public class FoodOscillation extends Transition {
 		for (var eatable : eatables) {
 			if (eatable instanceof Pellet3D) {
 				var tile = eatable.tile();
-				double dz = -1.5 * t * Math.sin(tile.x());
-				eatable.getRoot().setTranslateZ(-3 + dz);
+				var cx = 0.5f * ArcadeWorld.SIZE_TILES.x();
+				var cy = 0.5f * ArcadeWorld.SIZE_TILES.y();
+				var centerDistance = tile.toFloatVec().euclideanDistance(new Vector2f(cx, cy));
+				double dz = 2 * Math.sin(2 * centerDistance) * t;
+				eatable.getRoot().setTranslateZ(-4 + dz);
 			}
 		}
 	}
