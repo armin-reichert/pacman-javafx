@@ -23,11 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.util.Map;
-
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -39,7 +36,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -66,7 +62,6 @@ public class Env {
 	}
 
 	public static class ThreeD {
-
 		public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 		public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 		public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
@@ -79,21 +74,5 @@ public class Env {
 		public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 		public static final BooleanProperty energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
 		public static final BooleanProperty foodOscillationEnabledPy = new SimpleBooleanProperty(false);
-
-		private static PhongMaterial createFloorMaterial(String imagePath) {
-			var material = new PhongMaterial();
-			material.setDiffuseMap(ResourceMgr.image(imagePath));
-			material.diffuseColorProperty().bind(floorColorPy);
-			material.specularColorProperty().bind(Bindings.createObjectBinding(floorColorPy.get()::brighter, floorColorPy));
-			return material;
-		}
-
-		public static final String KEY_NO_TEXTURE = "None";
-		public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Escher", "Penrose" };
-
-		public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
-				"Escher", createFloorMaterial("graphics/escher-texture.jpg"), //
-				"Penrose", createFloorMaterial("graphics/penrose-tiling.jpg")//
-		);
 	}
 }

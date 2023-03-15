@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx.app;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -35,12 +36,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.util.Picker;
+import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 
 /**
@@ -61,6 +64,23 @@ public class ResourceMgr {
 	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
 	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
+
+	private static PhongMaterial createFloorMaterial(String imagePath) {
+		var material = new PhongMaterial();
+		material.setDiffuseMap(ResourceMgr.image(imagePath));
+		material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
+		material.specularColorProperty()
+				.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
+		return material;
+	}
+
+	public static final String KEY_NO_TEXTURE = "None";
+	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Escher", "Penrose" };
+
+	public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
+			"Escher", createFloorMaterial("graphics/escher-texture.jpg"), //
+			"Penrose", createFloorMaterial("graphics/penrose-tiling.jpg")//
+	);
 
 	/**
 	 * @param relativePath relative path (without leading slash) starting from resource root directory
