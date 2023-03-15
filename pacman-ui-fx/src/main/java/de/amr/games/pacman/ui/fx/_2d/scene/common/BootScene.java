@@ -99,15 +99,15 @@ public class BootScene extends GameScene2D {
 
 	private void produceRandomSpriteImage() {
 		clearImage();
-		if (context.r2D() instanceof SpritesheetRenderer sgr) {
+		if (context.r2D() instanceof SpritesheetRenderer ssr) {
 			for (int row = 0; row < SIZE_TILES.y() / 2; ++row) {
 				if (U.RND.nextInt(100) > 10) {
-					var r1 = sgr.spritesheet().randomCell();
-					var r2 = sgr.spritesheet().randomCell();
+					var region1 = ssr.spritesheet().randomRasterCell();
+					var region2 = ssr.spritesheet().randomRasterCell();
 					var splitX = SIZE_TILES.x() / 8 + U.RND.nextInt(SIZE_TILES.x() / 4);
 					for (int col = 0; col < SIZE_TILES.x() / 2; ++col) {
-						var r = col < splitX ? r1 : r2;
-						sgr.drawSprite(pen, r, r.getWidth() * col, r.getHeight() * row);
+						var region = col < splitX ? region1 : region2;
+						ssr.drawSprite(pen, region, region.getWidth() * col, region.getHeight() * row);
 					}
 				}
 			}

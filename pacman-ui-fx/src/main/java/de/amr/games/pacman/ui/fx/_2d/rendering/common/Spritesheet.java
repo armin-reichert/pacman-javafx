@@ -78,8 +78,10 @@ public class Spritesheet {
 		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 
-	public Rectangle2D randomCell() {
-		return new Rectangle2D(U.RND.nextDouble(source.getWidth()), U.RND.nextDouble(source.getHeight()), raster, raster);
+	public Rectangle2D randomRasterCell() {
+		double x = U.RND.nextDouble(source.getWidth() - raster);
+		double y = U.RND.nextDouble(source.getHeight() - raster);
+		return new Rectangle2D(x, y, raster, raster);
 	}
 
 	/**
