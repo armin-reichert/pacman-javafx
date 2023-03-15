@@ -43,6 +43,7 @@ import de.amr.games.pacman.model.mspacman.Clapperboard;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -151,9 +152,9 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 		boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 		g.drawImage(spritesheet.source(), 0, h * (mazeNumber - 1), w, h, x, y, w, h);
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
+		world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
 		if (!energizerVisible) {
-			world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
+			world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
 		}
 	}
 
@@ -266,8 +267,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private Animated createGhostValueSpriteList() {
-		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2),
-				ghostValueRegion(3));
+		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2), ghostValueRegion(3));
 	}
 
 	// Ms. Pac-Man specific:

@@ -57,20 +57,6 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
-		g.save();
-		g.translate(0.5, 0.5);
-		g.setStroke(ArcadeTheme.PALE);
-		g.setLineWidth(0.2);
-		for (int row = 0; row <= tilesY; ++row) {
-			g.strokeLine(0, t(row), tilesX * TS, t(row));
-		}
-		for (int col = 0; col <= tilesY; ++col) {
-			g.strokeLine(t(col), 0, t(col), tilesY * TS);
-		}
-		g.restore();
-	}
-
 	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "overlayPaneVisible", false);
 
 	protected final SubScene fxSubScene;
@@ -128,7 +114,8 @@ public abstract class GameScene2D implements GameScene {
 		}
 		drawSceneContent();
 		if (context.isCreditVisible()) {
-			r.drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2), t(36) - 1);
+			Rendering2D.drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2),
+					t(36) - 1);
 		}
 		if (overlayPaneVisiblePy.get()) {
 			drawOverlayPaneContent();
@@ -138,11 +125,11 @@ public abstract class GameScene2D implements GameScene {
 	private void drawScore(Rendering2D r, Optional<Score> optionalScore, String title, double x, double y) {
 		optionalScore.ifPresent(score -> {
 			var font = r.screenFont(TS);
-			r.drawText(g, title, ArcadeTheme.PALE, font, x, y);
+			Rendering2D.drawText(g, title, ArcadeTheme.PALE, font, x, y);
 			var pointsText = "%02d".formatted(score.points());
-			r.drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
+			Rendering2D.drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
 			if (score.points() != 0) {
-				r.drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + t(8), y + TS + 1);
+				Rendering2D.drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + t(8), y + TS + 1);
 			}
 		});
 	}

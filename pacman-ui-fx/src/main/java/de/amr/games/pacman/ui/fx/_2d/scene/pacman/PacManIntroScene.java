@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
 
 import java.util.stream.Stream;
 
@@ -127,7 +128,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright() {
-		context.r2D().drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -140,9 +141,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = PacManIntroData.LEFT_TILE;
 		var font = context.r2D().screenFont(TS);
 		if (intro.context().titleVisible) {
-			r.drawText(g, "CHARACTER", ArcadeTheme.PALE, font, t(col + 3), t(6));
-			r.drawText(g, "/", ArcadeTheme.PALE, font, t(col + 13), t(6));
-			r.drawText(g, "NICKNAME", ArcadeTheme.PALE, font, t(col + 15), t(6));
+			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, t(col + 3), t(6));
+			drawText(g, "/", ArcadeTheme.PALE, font, t(col + 13), t(6));
+			drawText(g, "NICKNAME", ArcadeTheme.PALE, font, t(col + 15), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().pictureVisible[id]) {
@@ -152,10 +153,10 @@ public class PacManIntroScene extends GameScene2D {
 			var color = r.ghostColoring(id).normalDress();
 			r.drawGhostFacingRight(g, id, t(col) + 4, t(row));
 			if (intro.context().characterVisible[id]) {
-				r.drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(row + 1));
+				drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(row + 1));
 			}
 			if (intro.context().nicknameVisible[id]) {
-				r.drawText(g, quote(intro.context().ghosts[id].name()), color, font, t(col + 14), t(row + 1));
+				drawText(g, quote(intro.context().ghosts[id].name()), color, font, t(col + 14), t(row + 1));
 			}
 		}
 	}

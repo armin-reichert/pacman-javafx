@@ -147,7 +147,8 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10), y + t(1));
+			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + t(10),
+					y + t(1));
 		}
 	}
 }

@@ -62,13 +62,27 @@ public interface Rendering2D {
 
 	// Drawing
 
-	default void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
+		g.save();
+		g.translate(0.5, 0.5);
+		g.setStroke(ArcadeTheme.PALE);
+		g.setLineWidth(0.2);
+		for (int row = 0; row <= tilesY; ++row) {
+			g.strokeLine(0, t(row), tilesX * TS, t(row));
+		}
+		for (int col = 0; col <= tilesY; ++col) {
+			g.strokeLine(t(col), 0, t(col), tilesY * TS);
+		}
+		g.restore();
+	}
+
+	public static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
 	}
 
-	default void hideTileContent(GraphicsContext g, Vector2i tile) {
+	public static void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
 	}

@@ -27,6 +27,7 @@ import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.BLINKY_E
 import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.TITLE_TILE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
@@ -113,22 +114,21 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	private void drawTitle() {
 		var r = context.r2D();
-		r.drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, r.screenFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
+		drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, r.screenFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
 	}
 
 	private void drawGhostText(Ghost ghost) {
-		var r = context.r2D();
 		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			r.drawText(g, "WITH", Color.WHITE, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+			drawText(g, "WITH", Color.WHITE, context.r2D().screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
 		}
-		r.drawText(g, ghost.name().toUpperCase(), r.ghostColoring(ghost.id()).normalDress(), r.screenFont(TS),
-				t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
+		drawText(g, ghost.name().toUpperCase(), context.r2D().ghostColoring(ghost.id()).normalDress(),
+				context.r2D().screenFont(TS), t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
 	}
 
 	private void drawMsPacManText() {
 		var r = context.r2D();
-		r.drawText(g, "STARRING", Color.WHITE, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
-		r.drawText(g, "MS PAC-MAN", Color.YELLOW, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
+		drawText(g, "STARRING", Color.WHITE, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+		drawText(g, "MS PAC-MAN", Color.YELLOW, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
 	}
 
 	// TODO this is not exactly as in the original game

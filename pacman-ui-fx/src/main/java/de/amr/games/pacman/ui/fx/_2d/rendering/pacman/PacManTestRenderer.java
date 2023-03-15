@@ -227,8 +227,8 @@ public class PacManTestRenderer implements Rendering2D {
 		var x = bonus.entity().position().x();
 		var y = bonus.entity().position().y() + 8;
 		switch (bonus.state()) {
-		case EDIBLE -> drawText(g, "Bonus", Color.YELLOW, ArcadeTheme.SCREEN_FONT, x - 20, y);
-		case EATEN -> drawText(g, bonus.points() + "", Color.RED, ArcadeTheme.SCREEN_FONT, x - 8, y);
+		case EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, ArcadeTheme.SCREEN_FONT, x - 20, y);
+		case EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, ArcadeTheme.SCREEN_FONT, x - 8, y);
 		default -> {
 		}
 		}
@@ -237,7 +237,7 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
 		levelNumber.ifPresent(number -> {
-			drawText(g, "Level %s".formatted(number), Color.WHITE, ArcadeTheme.SCREEN_FONT, 18 * TS, 36 * TS - 2);
+			Rendering2D.drawText(g, "Level %s".formatted(number), Color.WHITE, ArcadeTheme.SCREEN_FONT, 18 * TS, 36 * TS - 2);
 		});
 	}
 
