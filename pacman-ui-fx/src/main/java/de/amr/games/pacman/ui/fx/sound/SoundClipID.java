@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2022 Armin Reichert
+Copyright (c) 2021-2023 Armin Reichert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
-
-package de.amr.games.pacman.ui.fx.sound.common;
+ */
+package de.amr.games.pacman.ui.fx.sound;
 
 /**
+ * IDs for the sounds used in the Pac-Man and Ms. Pac-Man games.
+ * 
  * @author Armin Reichert
- *
  */
-public class SoundException extends RuntimeException {
+public enum SoundClipID {
 
-	public SoundException(String message, Object... args) {
-		super(message.formatted(args));
-	}
+	BONUS_EATEN, CREDIT, EXTRA_LIFE, GAME_READY, GHOST_EATEN, GHOST_RETURNING, INTERMISSION_1, INTERMISSION_2,
+	INTERMISSION_3, PACMAN_DEATH, PACMAN_MUNCH, PACMAN_POWER, SIREN_1, SIREN_2, SIREN_3, SIREN_4;
 }

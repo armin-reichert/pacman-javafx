@@ -41,8 +41,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.sound.common.SoundClipID;
-import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
+import de.amr.games.pacman.ui.fx.sound.SoundClipID;
+import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 

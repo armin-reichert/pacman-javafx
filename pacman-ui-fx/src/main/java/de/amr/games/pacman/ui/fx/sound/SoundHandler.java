@@ -21,15 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package de.amr.games.pacman.ui.fx.sound.common;
+package de.amr.games.pacman.ui.fx.sound;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.ui.fx.sound.mspacman.MsPacManSoundMap;
-import de.amr.games.pacman.ui.fx.sound.pacman.PacManSoundMap;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -39,10 +37,46 @@ public class SoundHandler {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final Sounds SOUNDS_MS_PACMAN = new Sounds(MsPacManSoundMap.DATA);
-	private static final Sounds SOUNDS_PACMAN = new Sounds(PacManSoundMap.DATA);
+	public static final Object[][] MS_PACMAN_SOUND_DATA = { //
+			{ SoundClipID.BONUS_EATEN, "sound/mspacman/Fruit.mp3", 1.0 }, //
+			{ SoundClipID.CREDIT, "sound/mspacman/Coin Credit.mp3", 1.0 }, //
+			{ SoundClipID.EXTRA_LIFE, "sound/mspacman/Extra Life.mp3", 1.0 }, //
+			{ SoundClipID.GAME_READY, "sound/mspacman/Start.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_EATEN, "sound/mspacman/Ghost.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_1, "sound/mspacman/Act1 They Meet.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_2, "sound/mspacman/Act2 The Chase.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_3, "sound/mspacman/Act3 Junior.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_DEATH, "sound/mspacman/Died.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_MUNCH, "sound/mspacman/Ms. Pac Man Pill.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_POWER, "sound/mspacman/Scared Ghost.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_1, "sound/mspacman/Ghost Noise 1.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_2, "sound/mspacman/Ghost Noise 2.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_3, "sound/mspacman/Ghost Noise 3.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_4, "sound/mspacman/Ghost Noise 4.mp3", 1.0 }, //
+	};
 
-	public static Sounds sounds(GameModel game) {
+	public static final Object[][] PACMAN_SOUND_DATA = { //
+			{ SoundClipID.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
+			{ SoundClipID.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
+			{ SoundClipID.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
+			{ SoundClipID.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
+			{ SoundClipID.PACMAN_MUNCH, "sound/pacman/munch_2.wav", 1.0 }, //
+			{ SoundClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.5 }, //
+			{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.5 }, //
+			{ SoundClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.5 }, //
+			{ SoundClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.5 }, //
+	};
+
+	private static final SoundPlayer SOUNDS_MS_PACMAN = new SoundPlayer(MS_PACMAN_SOUND_DATA);
+	private static final SoundPlayer SOUNDS_PACMAN = new SoundPlayer(PACMAN_SOUND_DATA);
+
+	public static SoundPlayer sounds(GameModel game) {
 		return switch (game.variant()) {
 		case MS_PACMAN -> SOUNDS_MS_PACMAN;
 		case PACMAN -> SOUNDS_PACMAN;

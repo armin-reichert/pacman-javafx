@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.sound.common;
+package de.amr.games.pacman.ui.fx.sound;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -39,13 +39,13 @@ import javafx.scene.media.AudioClip;
 /**
  * @author Armin Reichert
  */
-public class Sounds {
+public class SoundPlayer {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private final Map<SoundClipID, AudioClip> clips = new EnumMap<>(SoundClipID.class);
 
-	public Sounds(Object[][] data) {
+	public SoundPlayer(Object[][] data) {
 		for (var row : data) {
 			SoundClipID id = (SoundClipID) row[0];
 			String path = (String) row[1];

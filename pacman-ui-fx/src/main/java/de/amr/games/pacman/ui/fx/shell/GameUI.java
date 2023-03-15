@@ -58,7 +58,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
-import de.amr.games.pacman.ui.fx.sound.common.SoundHandler;
+import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
