@@ -23,10 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -38,6 +41,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -64,8 +68,7 @@ public class Env {
 	}
 
 	public static class ThreeD {
-		public static final String NO_TEXTURE = "none";
-		public static final List<String> FLOOR_TEXTURES = List.of(NO_TEXTURE, "penrose-tiling.jpg", "escher-texture.jpg");
+
 		public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
 		public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 		public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
@@ -78,5 +81,21 @@ public class Env {
 		public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 		public static final BooleanProperty energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
 		public static final BooleanProperty foodOscillationEnabledPy = new SimpleBooleanProperty(false);
+
+		private static PhongMaterial createMaterial(String imagePath) {
+			var material = new PhongMaterial();
+			material.setDiffuseMap(ResourceMgr.image(imagePath));
+			material.diffuseColorProperty().bind(floorColorPy);
+			material.specularColorProperty().bind(Bindings.createObjectBinding(floorColorPy.get()::brighter, floorColorPy));
+			return material;
+		}
+
+		public static final String NO_TEXTURE = "none";
+		public static final List<String> FLOOR_TEXTURES = List.of(NO_TEXTURE, "penrose-tiling", "escher-texture");
+		public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = new HashMap<>();
+		static {
+			FLOOR_TEXTURE_MAP.put("escher-texture", createMaterial("graphics/escher-texture.jpg"));
+			FLOOR_TEXTURE_MAP.put("penrose-tiling", createMaterial("graphics/penrose-tiling.jpg"));
+		}
 	}
 }

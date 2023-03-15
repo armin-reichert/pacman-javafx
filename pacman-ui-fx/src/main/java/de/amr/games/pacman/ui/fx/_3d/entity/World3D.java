@@ -37,13 +37,13 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -74,7 +74,8 @@ public class World3D {
 
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
-	public final ObjectProperty<Image> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture");
+	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
+			Env.ThreeD.NO_TEXTURE);
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
@@ -128,12 +129,12 @@ public class World3D {
 	}
 
 	private void updateFloorMaterial() {
-		var material = coloredMaterial(floorColorPy.get());
-		material.setDiffuseMap(floorTexturePy.get());
+		String key = floorTexturePy.get();
+		PhongMaterial material = Env.ThreeD.FLOOR_TEXTURE_MAP.getOrDefault(key, coloredMaterial(floorColorPy.get()));
 		floor.setMaterial(material);
 	}
 
-	private PhongMaterial coloredMaterial(Color diffuseColor) {
+	private static PhongMaterial coloredMaterial(Color diffuseColor) {
 		var material = new PhongMaterial(diffuseColor);
 		material.setSpecularColor(diffuseColor.brighter());
 		return material;

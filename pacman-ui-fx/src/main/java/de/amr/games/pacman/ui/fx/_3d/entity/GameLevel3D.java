@@ -51,10 +51,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -108,12 +106,7 @@ public class GameLevel3D {
 		drawModePy.bind(Env.ThreeD.drawModePy);
 		eatenAnimationEnabledPy.bind(Env.ThreeD.energizerEatenAnimationEnabledPy);
 		world3D.floorColorPy.bind(Env.ThreeD.floorColorPy);
-		var textureBinding = Bindings.createObjectBinding( //
-				() -> Env.ThreeD.NO_TEXTURE.equals(Env.ThreeD.floorTexturePy.get()) //
-						? null
-						: ResourceMgr.image("graphics/" + Env.ThreeD.floorTexturePy.get()),
-				Env.ThreeD.floorTexturePy);
-		world3D.floorTexturePy.bind(textureBinding);
+		world3D.floorTexturePy.bind(Env.ThreeD.floorTexturePy);
 		world3D.wallHeightPy.bind(Env.ThreeD.mazeWallHeightPy);
 		world3D.wallThicknessPy.bind(Env.ThreeD.mazeWallThicknessPy);
 	}
