@@ -112,19 +112,16 @@ public class GameUI implements GameEventListener {
 	 * Embedded 2D-view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
 	 * controlled using the dashboard.
 	 */
-	private class PipView extends PlayScene2D {
+	private class PipView {
 
-		public PipView() {
-			super(gameController);
-		}
+		private PlayScene2D embeddedScene = new PlayScene2D(gameController);
 
-		@Override
 		public void update() {
 			boolean visible = Env.PiP.visiblePy.get() && gameSceneManager.isPlayScene(currentGameScene);
-			pipView.fxSubScene().setVisible(visible);
+			embeddedScene.fxSubScene().setVisible(visible);
 			if (visible) {
-				pipView.context.setRenderer(currentGameScene.context().r2D());
-				pipView.draw();
+				embeddedScene.context().setRenderer(currentGameScene.context().r2D());
+				embeddedScene.draw();
 			}
 		}
 	}
@@ -190,7 +187,7 @@ public class GameUI implements GameEventListener {
 		pipView = new PipView();
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(pipView.fxSubScene());
+		overlayPane.setRight(pipView.embeddedScene.fxSubScene());
 		var gameSceneComesHere = new Pane();
 		var root = new StackPane(gameSceneComesHere, flashMessageView, overlayPane);
 
@@ -238,8 +235,8 @@ public class GameUI implements GameEventListener {
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateView());
 
-		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.resize(newVal.doubleValue()));
-		pipView.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
+		Env.PiP.sceneHeightPy.addListener((py, oldVal, newVal) -> pipView.embeddedScene.resize(newVal.doubleValue()));
+		pipView.embeddedScene.fxSubScene().opacityProperty().bind(Env.PiP.opacityPy);
 
 		Env.Simulation.pausedPy.addListener((py, oldVal, newVal) -> updateView());
 		simulation.pausedPy.bind(Env.Simulation.pausedPy);
