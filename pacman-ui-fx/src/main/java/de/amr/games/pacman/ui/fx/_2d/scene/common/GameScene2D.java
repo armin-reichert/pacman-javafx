@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
 
 import java.util.Optional;
 
@@ -114,8 +115,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 		drawSceneContent();
 		if (context.isCreditVisible()) {
-			Rendering2D.drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2),
-					t(36) - 1);
+			drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2), t(36) - 1);
 		}
 		if (overlayPaneVisiblePy.get()) {
 			drawOverlayPaneContent();
@@ -125,11 +125,11 @@ public abstract class GameScene2D implements GameScene {
 	private void drawScore(Rendering2D r, Optional<Score> optionalScore, String title, double x, double y) {
 		optionalScore.ifPresent(score -> {
 			var font = r.screenFont(TS);
-			Rendering2D.drawText(g, title, ArcadeTheme.PALE, font, x, y);
+			drawText(g, title, ArcadeTheme.PALE, font, x, y);
 			var pointsText = "%02d".formatted(score.points());
-			Rendering2D.drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
+			drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
 			if (score.points() != 0) {
-				Rendering2D.drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + t(8), y + TS + 1);
+				drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + t(8), y + TS + 1);
 			}
 		});
 	}
