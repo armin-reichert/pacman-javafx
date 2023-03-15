@@ -114,7 +114,7 @@ public class GameUI implements GameEventListener {
 	 */
 	private class PipView extends PlayScene2D {
 
-		public PipView(GameController gameController) {
+		public PipView() {
 			super(gameController);
 		}
 
@@ -187,7 +187,7 @@ public class GameUI implements GameEventListener {
 		}
 		dashboard = new Dashboard();
 		flashMessageView = new FlashMessageView();
-		pipView = new PipView(gameController);
+		pipView = new PipView();
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipView.fxSubScene());
