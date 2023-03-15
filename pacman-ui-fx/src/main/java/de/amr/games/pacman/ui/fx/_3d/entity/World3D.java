@@ -75,7 +75,7 @@ public class World3D {
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			Env.ThreeD.NO_TEXTURE);
+			Env.ThreeD.KEY_NO_TEXTURE);
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 

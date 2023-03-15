@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
@@ -82,7 +80,7 @@ public class Env {
 		public static final BooleanProperty energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
 		public static final BooleanProperty foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 
-		private static PhongMaterial createMaterial(String imagePath) {
+		private static PhongMaterial createFloorMaterial(String imagePath) {
 			var material = new PhongMaterial();
 			material.setDiffuseMap(ResourceMgr.image(imagePath));
 			material.diffuseColorProperty().bind(floorColorPy);
@@ -90,12 +88,12 @@ public class Env {
 			return material;
 		}
 
-		public static final String NO_TEXTURE = "none";
-		public static final List<String> FLOOR_TEXTURES = List.of(NO_TEXTURE, "penrose-tiling", "escher-texture");
-		public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = new HashMap<>();
-		static {
-			FLOOR_TEXTURE_MAP.put("escher-texture", createMaterial("graphics/escher-texture.jpg"));
-			FLOOR_TEXTURE_MAP.put("penrose-tiling", createMaterial("graphics/penrose-tiling.jpg"));
-		}
+		public static final String KEY_NO_TEXTURE = "None";
+		public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Escher", "Penrose" };
+
+		public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
+				"Escher", createFloorMaterial("graphics/escher-texture.jpg"), //
+				"Penrose", createFloorMaterial("graphics/penrose-tiling.jpg")//
+		);
 	}
 }

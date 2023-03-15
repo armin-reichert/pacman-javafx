@@ -60,11 +60,12 @@ public class Section3D extends Section {
 		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.ThreeD.mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.ThreeD.mazeWallThicknessPy.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor texture", Env.ThreeD.FLOOR_TEXTURES.toArray(String[]::new));
+		comboFloorTexture = addComboBox("Floor texture", Env.ThreeD.FLOOR_TEXTURE_KEYS);
 		comboFloorTexture.setOnAction(e -> Env.ThreeD.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.ThreeD.floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.ThreeD.floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Energizer Eaten Animation", () -> Ufx.toggle(Env.ThreeD.energizerEatenAnimationEnabledPy));
+		cbSquirting = addCheckBox("Energizer Eaten Animation",
+				() -> Ufx.toggle(Env.ThreeD.energizerEatenAnimationEnabledPy));
 		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.ThreeD.pacLightedPy));
 		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.ThreeD.axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
