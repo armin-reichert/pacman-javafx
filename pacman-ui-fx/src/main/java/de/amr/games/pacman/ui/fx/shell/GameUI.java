@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -151,7 +152,7 @@ public class GameUI implements GameEventListener {
 		GameEvents.addListener(this);
 		Actions.setUI(this);
 
-		LOG.info("Created game UI, Application settings: %s", settings);
+		LOG.info("Created game UI, Locale: %s, Application settings: %s", Locale.getDefault(), settings);
 	}
 
 	private Scene createMainScene(Vector2i size, float zoom) {
