@@ -24,12 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene.common;
 
+import static de.amr.games.pacman.model.common.world.ArcadeWorld.SIZE_PX;
+import static de.amr.games.pacman.model.common.world.ArcadeWorld.SIZE_TILES;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import javafx.scene.canvas.Canvas;
@@ -42,11 +42,8 @@ import javafx.scene.paint.Color;
  */
 public class BootScene extends GameScene2D {
 
-	private static final Vector2i SIZE_TILES = ArcadeWorld.SIZE_TILES;
-	private static final Vector2i SIZE_PIXELS = ArcadeWorld.SIZE_PX;
-
-	private final GraphicsContext pen = new Canvas(SIZE_PIXELS.x(), SIZE_PIXELS.y()).getGraphicsContext2D();
-	private final WritableImage image = new WritableImage(SIZE_PIXELS.x(), SIZE_PIXELS.y());
+	private final GraphicsContext pen = new Canvas(SIZE_PX.x(), SIZE_PX.y()).getGraphicsContext2D();
+	private final WritableImage image = new WritableImage(SIZE_PX.x(), SIZE_PX.y());
 
 	public BootScene(GameController gameController) {
 		super(gameController);
@@ -126,10 +123,10 @@ public class BootScene extends GameScene2D {
 		pen.setStroke(ArcadeTheme.PALE);
 		pen.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			pen.strokeLine(0, row * cellSize, SIZE_PIXELS.x(), row * cellSize);
+			pen.strokeLine(0, row * cellSize, SIZE_PX.x(), row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			pen.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PIXELS.y());
+			pen.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PX.y());
 		}
 		saveImage();
 	}
