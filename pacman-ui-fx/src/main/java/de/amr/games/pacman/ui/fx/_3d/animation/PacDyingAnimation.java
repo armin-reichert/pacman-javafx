@@ -25,13 +25,11 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
@@ -45,7 +43,7 @@ public class PacDyingAnimation {
 	private final Animation animation;
 
 	public PacDyingAnimation(Node root3D) {
-		var collapsingTime = Duration.seconds(2.0);
+		var collapsingTime = Duration.seconds(1.5);
 		var numSpins = 10;
 
 		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
@@ -63,9 +61,7 @@ public class PacDyingAnimation {
 		sinking.setFromZ(-World.HTS);
 		sinking.setToZ(0);
 
-		animation = new SequentialTransition( //
-				Ufx.pause(1.25), //
-				new ParallelTransition(spinning, shrinking, sinking));
+		animation = new ParallelTransition(spinning, shrinking, sinking);
 	}
 
 	public Animation getAnimation() {

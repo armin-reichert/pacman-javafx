@@ -294,8 +294,7 @@ public class PlayScene3D implements GameScene {
 					level3D.foodOscillation().stop();
 					var animation = new SequentialTransition( //
 							Ufx.pause(0.2), //
-							level3D.pac3D().createDyingAnimation(), //
-							Ufx.pause(2.0) //
+							level3D.pac3D().createDyingAnimation() //
 					);
 					animation.setOnFinished(evt -> unlockGameState());
 					animation.play();
