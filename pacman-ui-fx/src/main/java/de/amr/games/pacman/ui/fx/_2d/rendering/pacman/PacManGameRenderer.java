@@ -120,20 +120,18 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
-		boolean flash = false;
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			flash = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flash ? MAZE_EMPTY_FLASHING : MAZE_EMPTY, x, y);
-			return;
-		}
-
-		g.drawImage(MAZE_FULL, x, y);
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
-		var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
-		boolean on = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
-		if (!on) {
-			world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
+			var flashing = (boolean) flashingAnimation.get().frame();
+			g.drawImage(flashing ? MAZE_EMPTY_FLASHING : MAZE_EMPTY, x, y);
+		} else {
+			g.drawImage(MAZE_FULL, x, y);
+			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
+			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
+			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
+			if (!energizerVisible) {
+				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
+			}
 		}
 	}
 
