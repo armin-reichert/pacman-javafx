@@ -98,10 +98,10 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 			return spritesheet.tile(symbol, 9);
 		}
 		if (symbol == 4) {
-			var region = spritesheet.region(4, 9, 2, 1);
-			return new Rectangle2D(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
+			var region = spritesheet.tiles(4, 9, 2, 1);
+			return spritesheet.region(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
-		return spritesheet.region(3, 5 + symbol, 3, 1);
+		return spritesheet.tiles(3, 5 + symbol, 3, 1);
 	}
 
 	@Override
@@ -223,8 +223,8 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	// Pac-Man specific:
 
 	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet.region(2, 1, 2, 2), spritesheet.region(4, 1, 2, 2),
-				spritesheet.region(6, 1, 2, 2));
+		var animation = new SimpleAnimation<>(spritesheet.tiles(2, 1, 2, 2), spritesheet.tiles(4, 1, 2, 2),
+				spritesheet.tiles(6, 1, 2, 2));
 		animation.setFrameDuration(3);
 		animation.repeatForever();
 		return animation;
@@ -246,7 +246,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	public SimpleAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet.region(8, 8, 2, 1), spritesheet.region(10, 8, 2, 1));
+		var animation = new SimpleAnimation<>(spritesheet.tiles(8, 8, 2, 1), spritesheet.tiles(10, 8, 2, 1));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;

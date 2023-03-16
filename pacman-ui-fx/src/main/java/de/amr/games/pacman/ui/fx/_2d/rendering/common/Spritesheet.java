@@ -103,43 +103,47 @@ public class Spritesheet {
 	 * @return region at given coordinates
 	 */
 	public Rectangle2D tile(int col, int row) {
-		return region(col, row, 1, 1);
+		return tiles(col, row, 1, 1);
+	}
+
+	public Rectangle2D region(double x, double y, double w, double h) {
+		return new Rectangle2D(x, y, w, h);
 	}
 
 	/**
-	 * @param gridX  grid column (in tile coordinates)
-	 * @param gridY  grid row (in tile coordinates)
+	 * @param col    grid column (in tile coordinates)
+	 * @param row    grid row (in tile coordinates)
 	 * @param tilesX number of tiles horizontally
 	 * @param tilesY number of tiles vertically
 	 * @return region at given grid coordinates
 	 */
-	public Rectangle2D region(int gridX, int gridY, int tilesX, int tilesY) {
-		return region(0, 0, gridX, gridY, tilesX, tilesY);
+	public Rectangle2D tiles(int col, int row, int tilesX, int tilesY) {
+		return tilesFrom(0, 0, col, row, tilesX, tilesY);
 	}
 
 	/**
-	 * @param origX  origin x-coordinate (in pixels)
-	 * @param origY  origin y-coordinate (in pixels)
-	 * @param gridX  grid column (in tile coordinates)
-	 * @param gridY  grid row (in tile coordinates)
+	 * @param x      origin x-coordinate (in pixels)
+	 * @param y      origin y-coordinate (in pixels)
+	 * @param col    grid column (in tile coordinates)
+	 * @param row    grid row (in tile coordinates)
 	 * @param tilesX number of tiles horizontally
 	 * @param tilesY number of tiles vertically
 	 * @return region at given grid coordinates relative to given origin
 	 */
-	public Rectangle2D region(int origX, int origY, int gridX, int gridY, int tilesX, int tilesY) {
-		return new Rectangle2D(origX + gridX * raster, origY + gridY * raster, tilesX * raster, tilesY * raster);
+	public Rectangle2D tilesFrom(int x, int y, int col, int row, int tilesX, int tilesY) {
+		return new Rectangle2D(x + col * raster, y + row * raster, tilesX * raster, tilesY * raster);
 	}
 
 	/**
-	 * @param gridX    grid column (in tile coordinates)
-	 * @param gridY    grid row (in tile coordinates)
+	 * @param col      grid column (in tile coordinates)
+	 * @param row      grid row (in tile coordinates)
 	 * @param numTiles number of tiles
 	 * @return horizontal stripe of regions at given grid coordinates
 	 */
-	public Rectangle2D[] tilesRightOf(int gridX, int gridY, int numTiles) {
+	public Rectangle2D[] tilesRightOf(int col, int row, int numTiles) {
 		var tiles = new Rectangle2D[numTiles];
 		for (int i = 0; i < numTiles; ++i) {
-			tiles[i] = tile(gridX + i, gridY);
+			tiles[i] = tile(col + i, row);
 		}
 		return tiles;
 	}

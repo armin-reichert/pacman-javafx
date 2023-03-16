@@ -95,7 +95,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	// tile from third column
 	private static Rectangle2D col3(int col, int row) {
-		return MS_PACMAN_SPRITESHEET.region(THIRD_COLUMN, 0, col, row, 1, 1);
+		return MS_PACMAN_SPRITESHEET.tilesFrom(THIRD_COLUMN, 0, col, row, 1, 1);
 	}
 
 	public MsPacManGameRenderer() {
@@ -143,10 +143,10 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 			if (flashing) {
 				g.drawImage(MAZES_EMPTY_FLASHING[mazeNumber - 1], x, y);
 			} else {
-				drawSprite(g, new Rectangle2D(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
+				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
 		} else {
-			drawSprite(g, new Rectangle2D(0, h * (mazeNumber - 1), w, h), x, y);
+			drawSprite(g, spritesheet.region(0, h * (mazeNumber - 1), w, h), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
@@ -289,11 +289,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	public Rectangle2D blueBagSprite() {
-		return new Rectangle2D(488, 199, 8, 8);
+		return spritesheet.region(488, 199, 8, 8);
 	}
 
 	public Rectangle2D juniorPacSprite() {
-		return new Rectangle2D(509, 200, 8, 8);
+		return spritesheet.region(509, 200, 8, 8);
 	}
 
 	public AnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
@@ -311,11 +311,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public SimpleAnimation<Rectangle2D> createClapperboardAnimation() {
 		// TODO this is not 100% accurate yet
 		var animation = new SimpleAnimation<>( //
-				new Rectangle2D(456, 208, 32, 32), //
-				new Rectangle2D(488, 208, 32, 32), //
-				new Rectangle2D(520, 208, 32, 32), //
-				new Rectangle2D(488, 208, 32, 32), //
-				new Rectangle2D(456, 208, 32, 32)//
+				spritesheet.region(456, 208, 32, 32), //
+				spritesheet.region(488, 208, 32, 32), //
+				spritesheet.region(520, 208, 32, 32), //
+				spritesheet.region(488, 208, 32, 32), //
+				spritesheet.region(456, 208, 32, 32)//
 		);
 		animation.setFrameDuration(4);
 		return animation;
@@ -323,8 +323,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	public SimpleAnimation<Rectangle2D> createStorkFlyingAnimation() {
 		var animation = new SimpleAnimation<>( //
-				new Rectangle2D(489, 176, 32, 16), //
-				new Rectangle2D(521, 176, 32, 16) //
+				spritesheet.region(489, 176, 32, 16), //
+				spritesheet.region(521, 176, 32, 16) //
 		);
 		animation.repeatForever();
 		animation.setFrameDuration(8);
