@@ -137,24 +137,22 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
 		var w = MAZE_WIDTH;
 		var h = MAZE_HEIGHT;
-
-		boolean flashing = false;
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			flashing = (boolean) flashingAnimation.get().frame();
+			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
 				g.drawImage(MAZES_EMPTY_FLASHING[mazeNumber - 1], x, y);
 			} else {
-				g.drawImage(spritesheet.source(), SECOND_COLUMN, h * (mazeNumber - 1), w, h, x, y, w, h);
+				drawSprite(g, new Rectangle2D(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
-			return;
-		}
-		var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
-		boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
-		g.drawImage(spritesheet.source(), 0, h * (mazeNumber - 1), w, h, x, y, w, h);
-		world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
-		if (!energizerVisible) {
-			world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
+		} else {
+			drawSprite(g, new Rectangle2D(0, h * (mazeNumber - 1), w, h), x, y);
+			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
+			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
+			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
+			if (!energizerVisible) {
+				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
+			}
 		}
 	}
 
