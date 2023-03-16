@@ -36,7 +36,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -130,7 +129,7 @@ public class GameUI implements GameEventListener {
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 
-		mainScene = createMainScene(ArcadeWorld.SIZE_PX, settings.zoom);
+		mainScene = createMainScene(settings);
 		stage.setScene(mainScene);
 
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
@@ -155,26 +154,19 @@ public class GameUI implements GameEventListener {
 		LOG.info("Created game UI, Locale: %s, Application settings: %s", Locale.getDefault(), settings);
 	}
 
-	private Scene createMainScene(Vector2i size, float zoom) {
-		if (size.x() <= 0) {
-			throw new IllegalArgumentException("Scene width must be positive but is: %d".formatted(size.x()));
-		}
-		if (size.y() <= 0) {
-			throw new IllegalArgumentException("Scene height must be positive but is: %d".formatted(size.y()));
-		}
-		if (zoom <= 0) {
-			throw new IllegalArgumentException("Zoom value must be positive but is: %.2f".formatted(zoom));
-		}
+	private Scene createMainScene(Settings settings) {
 		dashboard = new Dashboard();
 		flashMessageView = new FlashMessageView();
 		pipViewScene = new PlayScene2D(gameController);
+
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
 		overlayPane.setRight(pipViewScene.fxSubScene());
-		var gameSceneComesHere = new Pane();
-		var root = new StackPane(gameSceneComesHere, flashMessageView, overlayPane);
+		var gameScenePlaceholder = new Pane();
+		var root = new StackPane(gameScenePlaceholder, flashMessageView, overlayPane);
 
-		var scene = new Scene(root, size.x() * zoom, size.y() * zoom);
+		var size = ArcadeWorld.SIZE_PX;
+		var scene = new Scene(root, size.x() * settings.zoom, size.y() * settings.zoom);
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> currentGameScene.onParentSceneResize(scene));
 

@@ -38,23 +38,23 @@ public class SectionKeys extends Section {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		addInfo("F1", "Dashboard On/Off");
 		addInfo("F2", "PiP View On/Off");
+		addInfo("F3", "Reboot");
 		addInfo("Alt+A", "Autopilot On/Off");
-		addInfo("Alt+B", "Reboot");
+		addInfo("Alt+B", "Dashboard On/Off");
 		addInfo("Alt+E", "Eat all normal pellets").available(() -> gc.game().isPlaying());
 		addInfo("Alt+I", "Player immunity On/Off");
 		addInfo("Alt+L", "Add 3 player lives").available(() -> gc.game().isPlaying());
-		addInfo("Alt+M", "Mute/Unmute");
 		addInfo("Alt+N", "Next Level").available(() -> gc.game().isPlaying());
 		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().isPlaying());
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> Env.ThreeD.perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
 		addInfo("Alt+RIGHT", () -> Env.ThreeD.perspectivePy.get().next().name()).available(() -> gameScene().is3D());
-		addInfo("Alt+3", "3D Playscene On/Off");
+		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
-		addInfo("SHIFT+P", "Single Step");
-		addInfo("Q", "Return to Intro Scene").available(() -> gc.state() != GameState.INTRO);
-		addInfo("V", "Switch Pac-Man / Ms. Pac-Man").available(() -> gc.state() == GameState.INTRO);
-		addInfo("1", "Start Playing (Credit?)");
+		addInfo("SHIFT+P/SPACE", "Single Step");
+		addInfo("Q", "Return to Intro Scene");
+		addInfo("V", "Switch Pac-Man / Ms. Pac-Man");
+		addInfo("1", "Start Playing (credit required)");
 		addInfo("5", "Add credit");
 	}
 }
