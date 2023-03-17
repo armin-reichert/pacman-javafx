@@ -122,7 +122,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawOverlayPaneContent(GraphicsContext g) {
+	protected void drawSceneInfo(GraphicsContext g) {
 		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 		context.level().ifPresent(level -> {
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {

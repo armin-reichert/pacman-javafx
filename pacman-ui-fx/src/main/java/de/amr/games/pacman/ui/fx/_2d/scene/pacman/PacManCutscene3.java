@@ -126,7 +126,7 @@ public class PacManCutscene3 extends GameScene2D {
 	}
 
 	@Override
-	protected void drawOverlayPaneContent(GraphicsContext g) {
+	protected void drawSceneInfo(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
 			g.setFont(context.r2D().screenFont(TS));
 			g.setFill(Color.WHITE);

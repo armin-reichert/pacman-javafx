@@ -27,8 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
 
-import java.util.Optional;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +34,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
@@ -46,7 +43,8 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 
 /**
@@ -58,21 +56,18 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "overlayPaneVisible", false);
+	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	protected final SubScene fxSubScene;
 	protected final StackPane root;
-	protected final VBox overlayPane = new VBox();
 	protected final Canvas canvas = new Canvas();
 	protected final GameSceneContext context;
 
 	protected GameScene2D(GameController gameController) {
-		root = new StackPane(canvas, overlayPane);
+		root = new StackPane(canvas);
 		fxSubScene = new SubScene(root, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		overlayPane.visibleProperty().bind(overlayPaneVisiblePy);
-		overlayPane.setMouseTransparent(true);
 		context = new GameSceneContext(gameController);
 	}
 
@@ -110,34 +105,42 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		if (context.isScoreVisible()) {
-			drawScore(r, context.game().score(), "SCORE", t(1), t(1));
-			drawScore(r, context.game().highScore(), "HIGH SCORE", t(16), t(1));
+			context.game().score()
+					.ifPresent(score -> drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, t(1), t(1)));
+			context.game().highScore()
+					.ifPresent(score -> drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, t(16), t(1)));
 		}
 		drawSceneContent(canvas.getGraphicsContext2D());
 		if (context.isCreditVisible()) {
 			drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2), t(36) - 1);
 		}
-		if (overlayPaneVisiblePy.get()) {
-			drawOverlayPaneContent(g);
+		if (infoVisiblePy.get()) {
+			drawSceneInfo(g);
 		}
 	}
 
-	private void drawScore(Rendering2D r, Optional<Score> optionalScore, String title, double x, double y) {
-		optionalScore.ifPresent(score -> {
-			var g = canvas.getGraphicsContext2D();
-			var font = r.screenFont(TS);
-			drawText(g, title, ArcadeTheme.PALE, font, x, y);
-			var pointsText = "%02d".formatted(score.points());
-			drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
-			if (score.points() != 0) {
-				drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + t(8), y + TS + 1);
-			}
-		});
+	private void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
+		drawText(g, title, color, font, x, y);
+		var pointsText = "%02d".formatted(score.points());
+		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+		if (score.points() != 0) {
+			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + t(8), y + TS + 1);
+		}
 	}
 
+	/**
+	 * Draws the scene content, e.g. the maze and the guys.
+	 * 
+	 * @param g graphics context
+	 */
 	protected abstract void drawSceneContent(GraphicsContext g);
 
-	protected void drawOverlayPaneContent(GraphicsContext g) {
+	/**
+	 * Draws scene info, e.g. maze structure and special tiles
+	 * 
+	 * @param g graphics context
+	 */
+	protected void drawSceneInfo(GraphicsContext g) {
 		// empty by default
 	}
 
