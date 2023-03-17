@@ -36,7 +36,7 @@ import javafx.scene.SubScene;
 public interface GameScene extends GameEventListener {
 
 	/**
-	 * @return the scene context (game controller, model, rendering, 3D model, sound)
+	 * @return the scene context (access to game controller, game model, game level, rendering).
 	 */
 	GameSceneContext context();
 
