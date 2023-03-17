@@ -91,7 +91,7 @@ public class PlayScene2D extends GameScene2D {
 			var mazeNumber = level.game().mazeNumber(level.number());
 			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
-				drawText(g, "TESTING LEVEL %d".formatted(level.number()), ArcadeTheme.YELLOW, r.screenFont(TS), t(6), t(4));
+				drawText(g, "TEST    L%d".formatted(level.number()), ArcadeTheme.YELLOW, r.screenFont(TS), t(8) + 4, t(21));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
 				drawText(g, "GAME  OVER", ArcadeTheme.RED, r.screenFont(TS), t(9), t(21));
 			} else if (context.state() == GameState.READY) {
