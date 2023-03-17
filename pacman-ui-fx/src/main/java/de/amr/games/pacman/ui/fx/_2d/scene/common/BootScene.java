@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -57,7 +56,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void clearImage() {
-		pen.setFill(Color.BLACK);
+		pen.setFill(ArcadeTheme.BLACK);
 		pen.fillRect(0, 0, image.getWidth(), image.getHeight());
 	}
 
