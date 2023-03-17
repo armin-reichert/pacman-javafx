@@ -42,6 +42,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
@@ -149,7 +150,7 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		// TODO make this work for all renderers
 		if (context.r2D() instanceof SpritesheetRenderer r) {
 			if (stretchedDressAnimation != null) {
@@ -162,7 +163,7 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	protected void drawOverlayPaneContent() {
+	protected void drawOverlayPaneContent(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
 			g.setFont(context.r2D().screenFont(TS));
 			g.setFill(Color.WHITE);

@@ -39,6 +39,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intro scene of the PacMan game.
@@ -90,44 +91,44 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		var timer = intro.state().timer();
 		switch (intro.state()) {
-		case START -> drawGallery();
-		case PRESENTING_GHOSTS -> drawGallery();
+		case START -> drawGallery(g);
+		case PRESENTING_GHOSTS -> drawGallery(g);
 		case SHOWING_POINTS -> {
-			drawGallery();
-			drawPoints();
+			drawGallery(g);
+			drawPoints(g);
 			if (timer.tick() > timer.secToTicks(1)) {
-				drawBlinkingEnergizer();
-				drawCopyright();
+				drawBlinkingEnergizer(g);
+				drawCopyright(g);
 			}
 		}
 		case CHASING_PAC -> {
-			drawGallery();
-			drawPoints();
-			drawBlinkingEnergizer();
-			drawGuys(flutter(timer.tick()));
-			drawCopyright();
+			drawGallery(g);
+			drawPoints(g);
+			drawBlinkingEnergizer(g);
+			drawGuys(g, flutter(timer.tick()));
+			drawCopyright(g);
 		}
 		case CHASING_GHOSTS -> {
-			drawGallery();
-			drawPoints();
-			drawGuys(0);
-			drawCopyright();
+			drawGallery(g);
+			drawPoints(g);
+			drawGuys(g, 0);
+			drawCopyright(g);
 		}
 		case READY_TO_PLAY -> {
-			drawGallery();
-			drawPoints();
-			drawGuys(0);
-			drawCopyright();
+			drawGallery(g);
+			drawPoints(g);
+			drawGuys(g, 0);
+			drawCopyright(g);
 		}
 		default -> throw new IllegalArgumentException("Unknown intro state: " + intro.state());
 		}
 		context.r2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
-	private void drawCopyright() {
+	private void drawCopyright(GraphicsContext g) {
 		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
 	}
 
@@ -136,7 +137,7 @@ public class PacManIntroScene extends GameScene2D {
 		return time % 5 < 2 ? 0 : -1;
 	}
 
-	private void drawGallery() {
+	private void drawGallery(GraphicsContext g) {
 		var r = context.r2D();
 		var col = PacManIntroData.LEFT_TILE;
 		var font = context.r2D().screenFont(TS);
@@ -165,14 +166,14 @@ public class PacManIntroScene extends GameScene2D {
 		return "\"" + s + "\"";
 	}
 
-	private void drawBlinkingEnergizer() {
+	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
 			g.setFill(context.r2D().mazeColoring(1).foodColor());
 			g.fillOval(t(PacManIntroData.LEFT_TILE), t(20), TS, TS);
 		}
 	}
 
-	private void drawGuys(int offsetX) {
+	private void drawGuys(GraphicsContext g, int offsetX) {
 		var r = context.r2D();
 		var pacMan = intro.context().pacMan;
 		var ghosts = intro.context().ghosts;
@@ -192,7 +193,7 @@ public class PacManIntroScene extends GameScene2D {
 		r.drawPac(g, pacMan);
 	}
 
-	private void drawPoints() {
+	private void drawPoints(GraphicsContext g) {
 		var r = context.r2D();
 		int col = PacManIntroData.LEFT_TILE + 6;
 		int row = 25;

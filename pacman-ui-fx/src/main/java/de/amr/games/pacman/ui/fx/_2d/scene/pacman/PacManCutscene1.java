@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
@@ -124,14 +125,14 @@ public class PacManCutscene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		context.r2D().drawPac(g, pac);
 		context.r2D().drawGhost(g, blinky);
 		context.r2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	@Override
-	protected void drawOverlayPaneContent() {
+	protected void drawOverlayPaneContent(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
 			g.setFont(context.r2D().screenFont(TS));
 			g.setFill(Color.WHITE);

@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
@@ -85,7 +86,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		context.level().ifPresent(level -> {
 			var r = context.r2D();
 			var mazeNumber = level.game().mazeNumber(level.number());
@@ -113,7 +114,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawOverlayPaneContent() {
+	protected void drawOverlayPaneContent(GraphicsContext g) {
 		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 		context.level().ifPresent(level -> {
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {

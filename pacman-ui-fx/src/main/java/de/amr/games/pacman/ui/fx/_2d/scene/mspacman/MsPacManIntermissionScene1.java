@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 1: "They meet".
@@ -75,7 +76,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		var ic = intermission.context();
 		var r = (MsPacManGameRenderer) context.r2D();
 		r.drawClap(g, ic.clapperboard);

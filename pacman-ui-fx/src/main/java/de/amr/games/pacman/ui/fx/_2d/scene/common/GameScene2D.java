@@ -64,7 +64,6 @@ public abstract class GameScene2D implements GameScene {
 	protected final StackPane root;
 	protected final VBox overlayPane = new VBox();
 	protected final Canvas canvas = new Canvas();
-	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final GameSceneContext context;
 
 	protected GameScene2D(GameController gameController) {
@@ -106,6 +105,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void draw() {
+		var g = canvas.getGraphicsContext2D();
 		var r = context.r2D();
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -113,17 +113,18 @@ public abstract class GameScene2D implements GameScene {
 			drawScore(r, context.game().score(), "SCORE", t(1), t(1));
 			drawScore(r, context.game().highScore(), "HIGH SCORE", t(16), t(1));
 		}
-		drawSceneContent();
+		drawSceneContent(canvas.getGraphicsContext2D());
 		if (context.isCreditVisible()) {
 			drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2), t(36) - 1);
 		}
 		if (overlayPaneVisiblePy.get()) {
-			drawOverlayPaneContent();
+			drawOverlayPaneContent(g);
 		}
 	}
 
 	private void drawScore(Rendering2D r, Optional<Score> optionalScore, String title, double x, double y) {
 		optionalScore.ifPresent(score -> {
+			var g = canvas.getGraphicsContext2D();
 			var font = r.screenFont(TS);
 			drawText(g, title, ArcadeTheme.PALE, font, x, y);
 			var pointsText = "%02d".formatted(score.points());
@@ -134,9 +135,9 @@ public abstract class GameScene2D implements GameScene {
 		});
 	}
 
-	protected abstract void drawSceneContent();
+	protected abstract void drawSceneContent(GraphicsContext g);
 
-	protected void drawOverlayPaneContent() {
+	protected void drawOverlayPaneContent(GraphicsContext g) {
 		// empty by default
 	}
 

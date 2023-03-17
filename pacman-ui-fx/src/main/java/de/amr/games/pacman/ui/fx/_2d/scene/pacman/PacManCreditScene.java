@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * @author Armin Reichert
@@ -65,7 +66,7 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawSceneContent(GraphicsContext g) {
 		var r = context.r2D();
 		var normalFont = r.screenFont(TS);
 		var smallFont = r.screenFont(6); // TODO looks ugly
