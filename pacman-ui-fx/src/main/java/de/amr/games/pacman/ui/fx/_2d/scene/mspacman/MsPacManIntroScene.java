@@ -65,7 +65,8 @@ public class MsPacManIntroScene extends GameScene2D {
 		context.setScoreVisible(true);
 
 		intro = new MsPacManIntroController(context.gameController());
-		intro.restart(MsPacManIntroState.START);
+		intro.changeState(MsPacManIntroState.START);
+
 		var pacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
 		pacAnimations.ensureRunning();
 		intro.context().msPacMan.setAnimations(pacAnimations);
@@ -79,7 +80,6 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void update() {
 		intro.update();
-		context.setCreditVisible(intro.context().isCreditVisible());
 	}
 
 	@Override
@@ -123,7 +123,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	private void drawGhostText(GraphicsContext g, Ghost ghost) {
 		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			drawText(g, "WITH", Color.WHITE, context.rendering2D().screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+			drawText(g, "WITH", Color.WHITE, context.rendering2D().screenFont(TS), TITLE_TILE.x(),
+					BLINKY_END_TILE.y() + t(3));
 		}
 		drawText(g, ghost.name().toUpperCase(), context.rendering2D().ghostColoring(ghost.id()).normalDress(),
 				context.rendering2D().screenFont(TS), t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
