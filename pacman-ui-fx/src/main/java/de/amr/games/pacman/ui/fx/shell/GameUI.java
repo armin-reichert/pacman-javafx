@@ -104,7 +104,7 @@ public class GameUI implements GameEventListener {
 			flashMessageView.update();
 			dashboard.update();
 			updatePiPView();
-			currentGameScene.draw();
+			currentGameScene.render();
 		}
 	}
 
@@ -209,7 +209,7 @@ public class GameUI implements GameEventListener {
 		if (Env.PiP.visiblePy.get() && gameSceneManager.isPlayScene(currentGameScene)) {
 			pipViewScene.fxSubScene().setVisible(true);
 			pipViewScene.context().setRenderer(currentGameScene.context().r2D());
-			pipViewScene.draw();
+			pipViewScene.render();
 		} else {
 			pipViewScene.fxSubScene().setVisible(false);
 		}

@@ -104,7 +104,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void draw() {
+	public void render() {
 		var g = canvas.getGraphicsContext2D();
 		var r = context.r2D();
 		g.setFill(ArcadeTheme.BLACK);

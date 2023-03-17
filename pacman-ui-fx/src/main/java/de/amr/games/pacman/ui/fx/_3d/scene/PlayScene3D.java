@@ -132,7 +132,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void draw() {
+	public void render() {
 		// nothing to do
 	}
 

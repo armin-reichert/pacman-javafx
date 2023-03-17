@@ -55,7 +55,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Called on every tick of the simulation.
 	 */
-	void draw();
+	void render();
 
 	/**
 	 * Called when the scene is replaced by another one.
