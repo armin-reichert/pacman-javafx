@@ -91,7 +91,7 @@ public class GameSceneManager {
 	private GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
 		try {
 			GameScene2D scene2D = clazz.getDeclaredConstructor(GameController.class).newInstance(gameController);
-			scene2D.overlayPaneVisiblePy.bind(Env.showDebugInfoPy);
+			scene2D.infoVisiblePy.bind(Env.showDebugInfoPy);
 			LOG.trace("2D game scene created: '%s'", scene2D.getClass().getName());
 			return scene2D;
 		} catch (Exception e) {

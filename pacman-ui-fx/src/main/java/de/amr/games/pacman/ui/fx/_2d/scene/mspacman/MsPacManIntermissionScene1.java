@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 1: "They meet".
@@ -50,9 +51,12 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
+		context.setCreditVisible(true);
+		context.setScoreVisible(true);
+
 		intermission = new MsPacManIntermission1(context.gameController());
 		var ic = intermission.context();
-		var r = (MsPacManGameRenderer) context.r2D();
+		var r = (MsPacManGameRenderer) context.rendering2D();
 		intermission.restart(MsPacManIntermission1.IntermissionState.FLAP);
 		ic.clapperboard.setAnimation(r.createClapperboardAnimation());
 		ic.msPac.setAnimations(r.createPacAnimations(ic.msPac));
@@ -75,9 +79,9 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawScene(GraphicsContext g) {
 		var ic = intermission.context();
-		var r = (MsPacManGameRenderer) context.r2D();
+		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawClap(g, ic.clapperboard);
 		r.drawPac(g, ic.msPac);
 		r.drawPac(g, ic.pacMan);

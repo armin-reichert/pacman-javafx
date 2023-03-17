@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
@@ -57,6 +58,9 @@ public class PacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void init() {
+		context.setCreditVisible(true);
+		context.setScoreVisible(true);
+
 		frame = -1;
 		initialDelay = 120;
 
@@ -67,7 +71,7 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.show();
 
 		// TODO make this work for all renderers
-		if (context.r2D() instanceof PacManGameRenderer r) {
+		if (context.rendering2D() instanceof PacManGameRenderer r) {
 			var pacAnimations = r.createPacAnimations(pac);
 			pacAnimations.put(PacManGame.AK_PAC_BIG, r.createBigPacManMunchingAnimation());
 			pac.setAnimations(pacAnimations);
@@ -80,7 +84,7 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setPixelSpeed(1.3f);
 		blinky.show();
 
-		var blinkyAnimations = context.r2D().createGhostAnimations(blinky);
+		var blinkyAnimations = context.rendering2D().createGhostAnimations(blinky);
 		blinky.setAnimations(blinkyAnimations);
 		blinkyAnimations.selectedAnimation().ifPresent(Animated::restart);
 	}
@@ -124,16 +128,16 @@ public class PacManCutscene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
-		context.r2D().drawPac(g, pac);
-		context.r2D().drawGhost(g, blinky);
-		context.r2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+	public void drawScene(GraphicsContext g) {
+		context.rendering2D().drawPac(g, pac);
+		context.rendering2D().drawGhost(g, blinky);
+		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	@Override
-	protected void drawOverlayPaneContent() {
+	protected void drawInfo(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(context.r2D().screenFont(TS));
+			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));

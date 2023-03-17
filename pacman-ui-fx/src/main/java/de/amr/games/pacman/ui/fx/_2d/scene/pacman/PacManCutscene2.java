@@ -42,6 +42,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Env;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
@@ -63,7 +64,10 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var renderer = (PacManGameRenderer) context.r2D();
+		context.setCreditVisible(true);
+		context.setScoreVisible(true);
+
+		var renderer = (PacManGameRenderer) context.rendering2D();
 		frame = -1;
 		initialDelay = 120;
 
@@ -149,9 +153,9 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawScene(GraphicsContext g) {
 		// TODO make this work for all renderers
-		if (context.r2D() instanceof SpritesheetRenderer r) {
+		if (context.rendering2D() instanceof SpritesheetRenderer r) {
 			if (stretchedDressAnimation != null) {
 				r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 			}
@@ -162,9 +166,9 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	protected void drawOverlayPaneContent() {
+	protected void drawInfo(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(context.r2D().screenFont(TS));
+			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));

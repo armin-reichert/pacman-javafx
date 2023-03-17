@@ -237,11 +237,7 @@ public class Actions {
 		Ufx.toggle(Env.ThreeD.enabledPy);
 		if (ui.gameSceneManager().findGameScene(gameController(), 3).isPresent()) {
 			ui.updateGameScene(true);
-			if (ui.currentGameScene().is3D()) {
-				ui.currentGameScene().onSwitchFrom2D();
-			} else {
-				ui.currentGameScene().onSwitchFrom3D();
-			}
+			ui.currentGameScene().onSceneVariantSwitch();
 		} else {
 			showFlashMessage(ResourceMgr.message(Env.ThreeD.enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}

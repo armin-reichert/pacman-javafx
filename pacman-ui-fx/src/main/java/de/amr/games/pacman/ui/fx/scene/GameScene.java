@@ -36,7 +36,7 @@ import javafx.scene.SubScene;
 public interface GameScene extends GameEventListener {
 
 	/**
-	 * @return the scene context (game controller, model, rendering, 3D model, sound)
+	 * @return the scene context (access to game controller, game model, game level, rendering).
 	 */
 	GameSceneContext context();
 
@@ -55,7 +55,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Called on every tick of the simulation.
 	 */
-	void draw();
+	void render();
 
 	/**
 	 * Called when the scene is replaced by another one.
@@ -89,16 +89,9 @@ public interface GameScene extends GameEventListener {
 	void onParentSceneResize(Scene parentScene);
 
 	/**
-	 * Called when scene variants for 2D and 3D exist and variant changes from 2D to 3D.
+	 * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
 	 */
-	default void onSwitchFrom2D() {
-		// empty default
-	}
-
-	/**
-	 * Called when scene variants for 2D and 3D exist and variant changes from 3D to 2D.
-	 */
-	default void onSwitchFrom3D() {
+	default void onSceneVariantSwitch() {
 		// empty default
 	}
 

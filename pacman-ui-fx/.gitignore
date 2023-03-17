@@ -3,6 +3,8 @@
 /.settings/
 /src/main/resources/META-INF
 
+dependency-reduced-pom.xml
+
 # Compiled class file
 *.class
 

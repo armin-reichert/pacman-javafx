@@ -31,6 +31,7 @@ import java.util.Optional;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -82,9 +83,23 @@ public interface Rendering2D {
 		g.fillText(text, x, y);
 	}
 
-	public static void hideTileContent(GraphicsContext g, Vector2i tile) {
+	default void fillCanvas(GraphicsContext g, Color color) {
+		g.setFill(ArcadeTheme.BLACK);
+		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+	}
+
+	default void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
+	}
+
+	default void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
+		drawText(g, title, color, font, x, y);
+		var pointsText = "%02d".formatted(score.points());
+		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
+		if (score.points() != 0) {
+			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + t(8), y + TS + 1);
+		}
 	}
 
 	void drawPac(GraphicsContext g, Pac pac);
@@ -95,7 +110,7 @@ public interface Rendering2D {
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
-	void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter);
+	void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelSymbols);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 

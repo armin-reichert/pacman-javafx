@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * @author Armin Reichert
@@ -48,6 +49,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
+		context.setScoreVisible(true);
 	}
 
 	@Override
@@ -65,8 +67,8 @@ public class MsPacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
-		var r = (MsPacManGameRenderer) context.r2D();
+	public void drawScene(GraphicsContext g) {
+		var r = (MsPacManGameRenderer) context.rendering2D();
 		var arcade8 = r.screenFont(TS);
 		var arcade6 = r.screenFont(6.0);
 		drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, arcade8, t(6), t(16));

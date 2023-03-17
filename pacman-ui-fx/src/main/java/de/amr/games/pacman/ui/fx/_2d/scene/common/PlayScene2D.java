@@ -43,6 +43,7 @@ import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
@@ -73,8 +74,16 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
+	public void init() {
+		context.setCreditVisible(!context.hasCredit());
+		context.setScoreVisible(true);
+	}
+
+	@Override
 	public void update() {
-		context.setCreditVisible(!context.hasCredit() || context.state() == GameState.GAME_OVER);
+		if (context.state() == GameState.GAME_OVER) {
+			context.setCreditVisible(true);
+		}
 		context.level().ifPresent(this::updateSound);
 	}
 
@@ -85,9 +94,9 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent() {
+	public void drawScene(GraphicsContext g) {
 		context.level().ifPresent(level -> {
-			var r = context.r2D();
+			var r = context.rendering2D();
 			var mazeNumber = level.game().mazeNumber(level.number());
 			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
@@ -113,7 +122,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawOverlayPaneContent() {
+	protected void drawInfo(GraphicsContext g) {
 		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 		context.level().ifPresent(level -> {
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {
@@ -124,7 +133,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void onSwitchFrom3D() {
+	public void onSceneVariantSwitch() {
 		context.level().ifPresent(level -> {
 			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
 			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
