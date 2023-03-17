@@ -31,7 +31,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.model.common.Score;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -43,8 +42,6 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 
 /**
@@ -106,9 +103,9 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		if (context.isScoreVisible()) {
 			context.game().score()
-					.ifPresent(score -> drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, t(1), t(1)));
+					.ifPresent(score -> r.drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, t(1), t(1)));
 			context.game().highScore()
-					.ifPresent(score -> drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, t(16), t(1)));
+					.ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, t(16), t(1)));
 		}
 		drawSceneContent(canvas.getGraphicsContext2D());
 		if (context.isCreditVisible()) {
@@ -116,15 +113,6 @@ public abstract class GameScene2D implements GameScene {
 		}
 		if (infoVisiblePy.get()) {
 			drawSceneInfo(g);
-		}
-	}
-
-	private void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
-		drawText(g, title, color, font, x, y);
-		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
-		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + t(8), y + TS + 1);
 		}
 	}
 
