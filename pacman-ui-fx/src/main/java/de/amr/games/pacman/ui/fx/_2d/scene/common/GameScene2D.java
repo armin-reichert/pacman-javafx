@@ -45,8 +45,8 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 
 /**
@@ -61,19 +61,19 @@ public abstract class GameScene2D implements GameScene {
 	public final BooleanProperty overlayPaneVisiblePy = new SimpleBooleanProperty(this, "overlayPaneVisible", false);
 
 	protected final SubScene fxSubScene;
-	protected final StackPane root = new StackPane();
-	protected final Pane overlayPane = new Pane();
+	protected final StackPane root;
+	protected final VBox overlayPane = new VBox();
 	protected final Canvas canvas = new Canvas();
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final GameSceneContext context;
 
 	protected GameScene2D(GameController gameController) {
+		root = new StackPane(canvas, overlayPane);
 		fxSubScene = new SubScene(root, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 		overlayPane.visibleProperty().bind(overlayPaneVisiblePy);
 		overlayPane.setMouseTransparent(true);
-		root.getChildren().addAll(canvas, overlayPane);
 		context = new GameSceneContext(gameController);
 	}
 
