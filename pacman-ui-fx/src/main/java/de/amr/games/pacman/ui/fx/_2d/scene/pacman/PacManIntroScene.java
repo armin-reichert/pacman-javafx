@@ -51,6 +51,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacManIntroScene extends GameScene2D {
 
+	private static final String QUOTE = "\"";
+
 	private PacManIntroController intro;
 
 	public PacManIntroScene(GameController gameController) {
@@ -65,7 +67,8 @@ public class PacManIntroScene extends GameScene2D {
 		intro = new PacManIntroController(context().gameController());
 		intro.restart(PacManIntroState.START);
 		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
-		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
+		Stream.of(intro.context().ghosts)
+				.forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
 		PacManIntroData.BLINKING.reset();
 	}
 
@@ -160,13 +163,9 @@ public class PacManIntroScene extends GameScene2D {
 				drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(row + 1));
 			}
 			if (intro.context().nicknameVisible[id]) {
-				drawText(g, quote(intro.context().ghosts[id].name()), color, font, t(col + 14), t(row + 1));
+				drawText(g, QUOTE + intro.context().ghosts[id].name() + QUOTE, color, font, t(col + 14), t(row + 1));
 			}
 		}
-	}
-
-	private static String quote(String s) {
-		return "\"" + s + "\"";
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
