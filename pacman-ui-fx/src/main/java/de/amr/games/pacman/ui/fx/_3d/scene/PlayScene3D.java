@@ -228,7 +228,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void onSwitchFrom2D() {
+	public void onSceneVariantSwitch() {
 		context.world().ifPresent(world -> {
 			level3D.eatables3D()
 					.forEach(eatable3D -> eatable3D.getRoot().setVisible(!world.containsEatenFood(eatable3D.tile())));

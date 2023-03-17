@@ -89,16 +89,9 @@ public interface GameScene extends GameEventListener {
 	void onParentSceneResize(Scene parentScene);
 
 	/**
-	 * Called when scene variants for 2D and 3D exist and variant changes from 2D to 3D.
+	 * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
 	 */
-	default void onSwitchFrom2D() {
-		// empty default
-	}
-
-	/**
-	 * Called when scene variants for 2D and 3D exist and variant changes from 3D to 2D.
-	 */
-	default void onSwitchFrom3D() {
+	default void onSceneVariantSwitch() {
 		// empty default
 	}
 

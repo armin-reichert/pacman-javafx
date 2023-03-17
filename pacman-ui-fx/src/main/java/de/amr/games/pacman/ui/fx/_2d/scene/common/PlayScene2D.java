@@ -125,7 +125,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void onSwitchFrom3D() {
+	public void onSceneVariantSwitch() {
 		context.level().ifPresent(level -> {
 			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
 			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
