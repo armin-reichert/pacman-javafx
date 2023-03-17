@@ -262,16 +262,16 @@ public class PacManTestRenderer implements Rendering2D {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			flash = (boolean) flashingAnimation.get().frame();
-			drawWalls(g, mazeNumber, world, flash);
+			drawWalls(g, world, flash);
 			return;
 		}
 		var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 		boolean on = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
-		drawWalls(g, mazeNumber, world, false);
+		drawWalls(g, world, false);
 		drawFood(g, mazeNumber, world, !on);
 	}
 
-	private void drawWalls(GraphicsContext g, int mazeNumber, World world, boolean flash) {
+	private void drawWalls(GraphicsContext g, World world, boolean flash) {
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);

@@ -62,7 +62,7 @@ public class PacManCutscene3 extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		var renderer = (PacManGameRenderer) context.r2D();
+		var renderer = (PacManGameRenderer) context.rendering2D();
 		frame = -1;
 		initialDelay = 120;
 
@@ -119,16 +119,16 @@ public class PacManCutscene3 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		context.r2D().drawPac(g, pac);
-		context.r2D().drawGhost(g, blinky);
-		context.r2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+	public void drawScene(GraphicsContext g) {
+		context.rendering2D().drawPac(g, pac);
+		context.rendering2D().drawGhost(g, blinky);
+		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawInfo(GraphicsContext g) {
 		if (Env.showDebugInfoPy.get()) {
-			g.setFont(context.r2D().screenFont(TS));
+			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
 				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));

@@ -94,9 +94,9 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void drawScene(GraphicsContext g) {
 		context.level().ifPresent(level -> {
-			var r = context.r2D();
+			var r = context.rendering2D();
 			var mazeNumber = level.game().mazeNumber(level.number());
 			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
@@ -122,7 +122,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawInfo(GraphicsContext g) {
 		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 		context.level().ifPresent(level -> {
 			if (level.world() instanceof ArcadeWorld arcadeWorld) {

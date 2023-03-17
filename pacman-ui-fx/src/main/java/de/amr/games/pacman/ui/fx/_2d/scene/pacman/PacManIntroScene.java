@@ -64,8 +64,8 @@ public class PacManIntroScene extends GameScene2D {
 
 		intro = new PacManIntroController(context().gameController());
 		intro.restart(PacManIntroState.START);
-		intro.context().pacMan.setAnimations(context.r2D().createPacAnimations(intro.context().pacMan));
-		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimations(context.r2D().createGhostAnimations(ghost)));
+		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
+		Stream.of(intro.context().ghosts).forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
 		PacManIntroData.BLINKING.reset();
 	}
 
@@ -94,7 +94,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void drawScene(GraphicsContext g) {
 		var timer = intro.state().timer();
 		switch (intro.state()) {
 		case START -> drawGallery(g);
@@ -128,7 +128,7 @@ public class PacManIntroScene extends GameScene2D {
 		}
 		default -> throw new IllegalArgumentException("Unknown intro state: " + intro.state());
 		}
-		context.r2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	private void drawCopyright(GraphicsContext g) {
@@ -141,9 +141,9 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
-		var r = context.r2D();
+		var r = context.rendering2D();
 		var col = PacManIntroData.LEFT_TILE;
-		var font = context.r2D().screenFont(TS);
+		var font = context.rendering2D().screenFont(TS);
 		if (intro.context().titleVisible) {
 			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, t(col + 3), t(6));
 			drawText(g, "/", ArcadeTheme.PALE, font, t(col + 13), t(6));
@@ -171,13 +171,13 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
-			g.setFill(context.r2D().mazeColoring(1).foodColor());
+			g.setFill(context.rendering2D().mazeColoring(1).foodColor());
 			g.fillOval(t(PacManIntroData.LEFT_TILE), t(20), TS, TS);
 		}
 	}
 
 	private void drawGuys(GraphicsContext g, int offsetX) {
-		var r = context.r2D();
+		var r = context.rendering2D();
 		var pacMan = intro.context().pacMan;
 		var ghosts = intro.context().ghosts;
 		if (offsetX == 0) {
@@ -197,7 +197,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints(GraphicsContext g) {
-		var r = context.r2D();
+		var r = context.rendering2D();
 		int col = PacManIntroData.LEFT_TILE + 6;
 		int row = 25;
 		g.setFill(r.mazeColoring(1).foodColor());

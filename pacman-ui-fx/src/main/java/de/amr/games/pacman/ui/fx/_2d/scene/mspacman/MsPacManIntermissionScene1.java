@@ -56,7 +56,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 		intermission = new MsPacManIntermission1(context.gameController());
 		var ic = intermission.context();
-		var r = (MsPacManGameRenderer) context.r2D();
+		var r = (MsPacManGameRenderer) context.rendering2D();
 		intermission.restart(MsPacManIntermission1.IntermissionState.FLAP);
 		ic.clapperboard.setAnimation(r.createClapperboardAnimation());
 		ic.msPac.setAnimations(r.createPacAnimations(ic.msPac));
@@ -79,9 +79,9 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void drawScene(GraphicsContext g) {
 		var ic = intermission.context();
-		var r = (MsPacManGameRenderer) context.r2D();
+		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawClap(g, ic.clapperboard);
 		r.drawPac(g, ic.msPac);
 		r.drawPac(g, ic.pacMan);

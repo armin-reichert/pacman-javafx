@@ -67,8 +67,8 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		var r = context.r2D();
+	public void drawScene(GraphicsContext g) {
+		var r = context.rendering2D();
 		var normalFont = r.screenFont(TS);
 		var smallFont = r.screenFont(6); // TODO looks ugly
 		drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, normalFont, t(6), t(17));

@@ -80,14 +80,14 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void drawScene(GraphicsContext g) {
 		g.drawImage(image, 0, 0);
 	}
 
 	private void produceRandomHexCodesImage() {
 		clearImage();
 		pen.setFill(ArcadeTheme.PALE);
-		pen.setFont(context.r2D().screenFont(TS));
+		pen.setFont(context.rendering2D().screenFont(TS));
 		for (int row = 0; row < SIZE_TILES.y(); ++row) {
 			for (int col = 0; col < SIZE_TILES.x(); ++col) {
 				var hexCode = Integer.toHexString(U.RND.nextInt(16));
@@ -99,7 +99,7 @@ public class BootScene extends GameScene2D {
 
 	private void produceRandomSpriteImage() {
 		clearImage();
-		if (context.r2D() instanceof SpritesheetRenderer ssr) {
+		if (context.rendering2D() instanceof SpritesheetRenderer ssr) {
 			for (int row = 0; row < SIZE_TILES.y() / 2; ++row) {
 				if (U.RND.nextInt(100) > 10) {
 					var region1 = ssr.spritesheet().randomRasterCell();

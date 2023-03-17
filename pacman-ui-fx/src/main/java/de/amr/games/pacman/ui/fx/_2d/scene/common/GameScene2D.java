@@ -98,21 +98,20 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
-		var r = context.r2D();
-		g.setFill(ArcadeTheme.BLACK);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		var r = context.rendering2D();
+		r.fillCanvas(g, ArcadeTheme.BLACK);
 		if (context.isScoreVisible()) {
 			context.game().score()
 					.ifPresent(score -> r.drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, t(1), t(1)));
 			context.game().highScore()
 					.ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, t(16), t(1)));
 		}
-		drawSceneContent(canvas.getGraphicsContext2D());
+		drawScene(g);
 		if (context.isCreditVisible()) {
 			drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2), t(36) - 1);
 		}
 		if (infoVisiblePy.get()) {
-			drawSceneInfo(g);
+			drawInfo(g);
 		}
 	}
 
@@ -121,14 +120,14 @@ public abstract class GameScene2D implements GameScene {
 	 * 
 	 * @param g graphics context
 	 */
-	protected abstract void drawSceneContent(GraphicsContext g);
+	protected abstract void drawScene(GraphicsContext g);
 
 	/**
 	 * Draws scene info, e.g. maze structure and special tiles
 	 * 
 	 * @param g graphics context
 	 */
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawInfo(GraphicsContext g) {
 		// empty by default
 	}
 

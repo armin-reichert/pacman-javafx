@@ -150,7 +150,7 @@ public class PlayScene3D implements GameScene {
 	private void replaceGameLevel3D(GameLevel level) {
 		var width = level.world().numCols() * World.TS;
 		var height = level.world().numRows() * World.TS;
-		level3D = new GameLevel3D(level, context.r2D());
+		level3D = new GameLevel3D(level, context.rendering2D());
 		level3D.getRoot().getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 		root.getChildren().set(0, level3D.getRoot());
 		changeCameraPerspective(perspectivePy.get());
@@ -308,7 +308,7 @@ public class PlayScene3D implements GameScene {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
 					// TODO make this work for all renderers
-					if (context.r2D() instanceof SpritesheetRenderer sgr) {
+					if (context.rendering2D() instanceof SpritesheetRenderer sgr) {
 						ghost3D.setNumberImage(sgr.image(sgr.ghostValueRegion(index)));
 					}
 				});

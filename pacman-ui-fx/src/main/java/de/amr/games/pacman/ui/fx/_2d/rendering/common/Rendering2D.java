@@ -83,6 +83,11 @@ public interface Rendering2D {
 		g.fillText(text, x, y);
 	}
 
+	default void fillCanvas(GraphicsContext g, Color color) {
+		g.setFill(ArcadeTheme.BLACK);
+		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+	}
+
 	default void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(t(tile.x()), t(tile.y()), TS, TS);
