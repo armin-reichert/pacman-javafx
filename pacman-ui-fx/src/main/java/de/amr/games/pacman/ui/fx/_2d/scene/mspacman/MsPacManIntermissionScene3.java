@@ -54,6 +54,9 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void init() {
+		context.setCreditVisible(true);
+		context.setScoreVisible(true);
+
 		intermission = new MsPacManIntermission3(context.gameController());
 		var ic = intermission.context();
 		var r = (MsPacManGameRenderer) context.r2D();

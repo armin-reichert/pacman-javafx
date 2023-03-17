@@ -64,6 +64,9 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
+		context.setCreditVisible(true);
+		context.setScoreVisible(true);
+
 		var renderer = (PacManGameRenderer) context.r2D();
 		frame = -1;
 		initialDelay = 120;

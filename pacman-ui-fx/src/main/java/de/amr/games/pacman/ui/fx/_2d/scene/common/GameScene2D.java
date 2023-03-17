@@ -109,7 +109,7 @@ public abstract class GameScene2D implements GameScene {
 		var r = context.r2D();
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		if (context.isScoresVisible()) {
+		if (context.isScoreVisible()) {
 			drawScore(r, context.game().score(), "SCORE", t(1), t(1));
 			drawScore(r, context.game().highScore(), "HIGH SCORE", t(16), t(1));
 		}

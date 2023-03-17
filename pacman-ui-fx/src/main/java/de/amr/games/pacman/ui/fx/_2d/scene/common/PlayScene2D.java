@@ -74,8 +74,16 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
+	public void init() {
+		context.setCreditVisible(!context.hasCredit());
+		context.setScoreVisible(true);
+	}
+
+	@Override
 	public void update() {
-		context.setCreditVisible(!context.hasCredit() || context.state() == GameState.GAME_OVER);
+		if (context.state() == GameState.GAME_OVER) {
+			context.setCreditVisible(true);
+		}
 		context.level().ifPresent(this::updateSound);
 	}
 

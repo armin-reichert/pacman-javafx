@@ -59,6 +59,9 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
+		context.setCreditVisible(true);
+		context.setScoreVisible(true);
+
 		intro = new PacManIntroController(context().gameController());
 		intro.restart(PacManIntroState.START);
 		intro.context().pacMan.setAnimations(context.r2D().createPacAnimations(intro.context().pacMan));

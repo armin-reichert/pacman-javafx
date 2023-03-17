@@ -49,6 +49,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
+		context.setScoreVisible(true);
 	}
 
 	@Override
