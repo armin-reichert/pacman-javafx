@@ -42,7 +42,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacManIntermissionScene2 extends GameScene2D {
 
-	private MsPacManIntermission2 intermission;
+	private MsPacManIntermission2 im;
 
 	public MsPacManIntermissionScene2(GameController gameController) {
 		super(gameController);
@@ -53,16 +53,16 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		intermission = new MsPacManIntermission2(context.gameController());
-		var ic = intermission.context();
+		im = new MsPacManIntermission2(context.gameController());
+		im.changeState(MsPacManIntermission2.IntermissionState.FLAP);
+
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		intermission.restart(MsPacManIntermission2.IntermissionState.FLAP);
-		ic.clapperboard.setAnimation(r.createClapperboardAnimation());
-		ic.msPacMan.setAnimations(r.createPacAnimations(ic.msPacMan));
-		ic.msPacMan.animations().ifPresent(AnimationMap::ensureRunning);
-		ic.pacMan.setAnimations(r.createPacAnimations(ic.pacMan));
-		ic.pacMan.animations().ifPresent(animations -> {
-			var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
+		im.context().clapperboard.setAnimation(r.createClapperboardAnimation());
+		im.context().msPacMan.setAnimations(r.createPacAnimations(im.context().msPacMan));
+		im.context().msPacMan.animations().ifPresent(AnimationMap::ensureRunning);
+		im.context().pacMan.setAnimations(r.createPacAnimations(im.context().pacMan));
+		im.context().pacMan.animations().ifPresent(animations -> {
+			var munching = r.createPacManMunchingAnimationMap(im.context().pacMan);
 			animations.put(GameModel.AK_PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
@@ -70,16 +70,15 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void update() {
-		intermission.update();
+		im.update();
 	}
 
 	@Override
 	public void drawScene(GraphicsContext g) {
-		var ic = intermission.context();
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		r.drawClap(g, ic.clapperboard);
-		r.drawPac(g, ic.msPacMan);
-		r.drawPac(g, ic.pacMan);
+		r.drawClap(g, im.context().clapperboard);
+		r.drawPac(g, im.context().msPacMan);
+		r.drawPac(g, im.context().pacMan);
 		r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 }

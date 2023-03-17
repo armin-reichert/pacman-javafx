@@ -64,8 +64,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		im.context().clapperboard.setAnimation(r.createClapperboardAnimation());
 		im.context().msPacMan.setAnimations(r.createPacAnimations(im.context().msPacMan));
 		im.context().pacMan.setAnimations(r.createPacAnimations(im.context().pacMan));
-		var munching = r.createPacManMunchingAnimationMap(im.context().pacMan);
-		im.context().pacMan.animations().ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, munching));
+		im.context().pacMan.animations().ifPresent(
+				anims -> anims.put(GameModel.AK_PAC_MUNCHING, r.createPacManMunchingAnimationMap(im.context().pacMan)));
 		flyingStork = r.createStorkFlyingAnimation();
 		flyingStork.ensureRunning();
 	}
