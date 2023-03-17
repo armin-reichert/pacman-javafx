@@ -110,7 +110,7 @@ public interface Rendering2D {
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
-	void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter);
+	void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelSymbols);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
