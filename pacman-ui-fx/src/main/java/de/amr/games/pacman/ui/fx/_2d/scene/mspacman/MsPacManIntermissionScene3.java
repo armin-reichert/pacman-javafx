@@ -45,8 +45,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacManIntermissionScene3 extends GameScene2D {
 
-	private MsPacManIntermission3 intermission;
-	private SimpleAnimation<Rectangle2D> storkAnim;
+	private MsPacManIntermission3 im;
+	private SimpleAnimation<Rectangle2D> flyingStork;
 
 	public MsPacManIntermissionScene3(GameController gameController) {
 		super(gameController);
@@ -57,33 +57,32 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		intermission = new MsPacManIntermission3(context.gameController());
-		var ic = intermission.context();
+		im = new MsPacManIntermission3(context.gameController());
+		im.changeState(MsPacManIntermission3.IntermissionState.FLAP);
+
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		intermission.restart(MsPacManIntermission3.IntermissionState.FLAP);
-		ic.clapperboard.setAnimation(r.createClapperboardAnimation());
-		ic.msPacMan.setAnimations(r.createPacAnimations(ic.msPacMan));
-		ic.pacMan.setAnimations(r.createPacAnimations(ic.pacMan));
-		var munching = r.createPacManMunchingAnimationMap(ic.pacMan);
-		ic.pacMan.animations().ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, munching));
-		storkAnim = r.createStorkFlyingAnimation();
-		storkAnim.ensureRunning();
+		im.context().clapperboard.setAnimation(r.createClapperboardAnimation());
+		im.context().msPacMan.setAnimations(r.createPacAnimations(im.context().msPacMan));
+		im.context().pacMan.setAnimations(r.createPacAnimations(im.context().pacMan));
+		var munching = r.createPacManMunchingAnimationMap(im.context().pacMan);
+		im.context().pacMan.animations().ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, munching));
+		flyingStork = r.createStorkFlyingAnimation();
+		flyingStork.ensureRunning();
 	}
 
 	@Override
 	public void update() {
-		intermission.update();
+		im.update();
 	}
 
 	@Override
 	public void drawScene(GraphicsContext g) {
-		var ic = intermission.context();
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		r.drawClap(g, ic.clapperboard);
-		r.drawPac(g, ic.msPacMan);
-		r.drawPac(g, ic.pacMan);
-		r.drawEntitySprite(g, ic.stork, storkAnim.animate());
-		r.drawEntitySprite(g, ic.bag, ic.bagOpen ? r.juniorPacSprite() : r.blueBagSprite());
+		r.drawClap(g, im.context().clapperboard);
+		r.drawPac(g, im.context().msPacMan);
+		r.drawPac(g, im.context().pacMan);
+		r.drawEntitySprite(g, im.context().stork, flyingStork.animate());
+		r.drawEntitySprite(g, im.context().bag, im.context().bagOpen ? r.juniorPacSprite() : r.blueBagSprite());
 		r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 }
