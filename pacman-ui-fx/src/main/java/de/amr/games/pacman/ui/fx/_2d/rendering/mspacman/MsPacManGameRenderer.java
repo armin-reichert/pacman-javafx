@@ -273,12 +273,14 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		if (clap.isVisible()) {
 			clap.animation().map(Animated::animate).ifPresent(frame -> {
 				var sprite = (Rectangle2D) frame;
-				drawEntitySprite(g, clap, sprite);
+				if (clap.isVisible()) {
+					drawSpriteCenteredOverBox(g, sprite, clap.position().x(), clap.position().y());
+				}
 				g.setFont(ArcadeTheme.SCREEN_FONT);
 				g.setFill(ArcadeTheme.PALE);
-				g.fillText(String.valueOf(clap.sceneNumber), clap.position().x() + sprite.getWidth() - 25,
+				g.fillText(String.valueOf(clap.sceneNumber()), clap.position().x() + sprite.getWidth() - 25,
 						clap.position().y() + 18);
-				g.fillText(clap.sceneTitle, clap.position().x() + sprite.getWidth(), clap.position().y());
+				g.fillText(clap.sceneTitle(), clap.position().x() + sprite.getWidth(), clap.position().y());
 			});
 		}
 	}
