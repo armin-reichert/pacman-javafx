@@ -74,13 +74,22 @@ public class ResourceMgr {
 		return material;
 	}
 
+	private static PhongMaterial createWoodMaterial() {
+		var material = new PhongMaterial();
+		material.setDiffuseMap(ResourceMgr.image("graphics/wood-texture-diffuse.jpg"));
+		material.setBumpMap(ResourceMgr.image("graphics/wood-texture-bump.jpg"));
+		material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
+		material.specularColorProperty()
+				.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
+		return material;
+	}
+
 	public static final String KEY_NO_TEXTURE = "None";
-	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Escher", "Penrose" };
+	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Escher", "Wood" };
 
 	public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
 			"Escher", createFloorMaterial("graphics/escher-texture.jpg"), //
-			"Penrose", createFloorMaterial("graphics/penrose-tiling.jpg")//
-	);
+			"Wood", createWoodMaterial());
 
 	/**
 	 * @param relativePath relative path (without leading slash) starting from resource root directory
