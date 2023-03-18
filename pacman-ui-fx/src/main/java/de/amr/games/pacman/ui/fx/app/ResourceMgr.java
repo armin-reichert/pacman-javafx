@@ -65,31 +65,23 @@ public class ResourceMgr {
 	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
-	private static PhongMaterial createFloorMaterial(String imagePath) {
+	private static PhongMaterial createTexture(String name) {
 		var material = new PhongMaterial();
-		material.setDiffuseMap(ResourceMgr.image(imagePath));
+		material.setDiffuseMap(ResourceMgr.image("graphics/textures/" + name + "-diffuse.jpg"));
+		material.setBumpMap(ResourceMgr.image("graphics/textures/" + name + "-bump.jpg"));
 		material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
 		material.specularColorProperty()
 				.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
 		return material;
 	}
 
-	private static PhongMaterial createWoodMaterial() {
-		var material = new PhongMaterial();
-		material.setDiffuseMap(ResourceMgr.image("graphics/wood-texture-diffuse.jpg"));
-		material.setBumpMap(ResourceMgr.image("graphics/wood-texture-bump.jpg"));
-		material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
-		material.specularColorProperty()
-				.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
-		return material;
-	}
-
-	public static final String KEY_NO_TEXTURE = "None";
-	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Escher", "Wood" };
+	public static final String KEY_NO_TEXTURE = "No Texture";
+	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Wood", "Rocks" };
 
 	public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
-			"Escher", createFloorMaterial("graphics/escher-texture.jpg"), //
-			"Wood", createWoodMaterial());
+			"Wood", createTexture("wood"), //
+			"Rocks", createTexture("rocks") //
+	);
 
 	/**
 	 * @param relativePath relative path (without leading slash) starting from resource root directory
