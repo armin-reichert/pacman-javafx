@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.BonusState;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -76,7 +75,7 @@ public class Bonus3D {
 
 	public void update() {
 		setPosition(bonus.entity().position());
-		shape.setVisible(bonus.state() != BonusState.INACTIVE);
+		shape.setVisible(bonus.state() != Bonus.STATE_INACTIVE);
 	}
 
 	public void showSymbol() {

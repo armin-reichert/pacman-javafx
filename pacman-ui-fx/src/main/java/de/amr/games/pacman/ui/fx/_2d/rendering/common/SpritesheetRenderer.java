@@ -110,9 +110,10 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
-		case INACTIVE -> null;
-		case EDIBLE -> bonusSymbolRegion(bonus.symbol());
-		case EATEN -> bonusValueRegion(bonus.symbol());
+		case Bonus.STATE_INACTIVE -> null;
+		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
+		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
+		default -> throw new IllegalArgumentException();
 		};
 		if (bonus.entity() instanceof MovingBonus movingBonus) {
 			g.save();

@@ -227,8 +227,9 @@ public class PacManTestRenderer implements Rendering2D {
 		var x = bonus.entity().position().x();
 		var y = bonus.entity().position().y() + 8;
 		switch (bonus.state()) {
-		case EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, ArcadeTheme.SCREEN_FONT, x - 20, y);
-		case EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, ArcadeTheme.SCREEN_FONT, x - 8, y);
+		case Bonus.STATE_EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, ArcadeTheme.SCREEN_FONT, x - 20, y);
+		case Bonus.STATE_EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, ArcadeTheme.SCREEN_FONT, x - 8,
+				y);
 		default -> {
 		}
 		}
