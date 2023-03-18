@@ -66,7 +66,7 @@ public class Env {
 		public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 		public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 		public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(0, 0, 33));
-		public static final StringProperty floorTexturePy = new SimpleStringProperty("none");
+		public static final StringProperty floorTexturePy = new SimpleStringProperty(ResourceMgr.KEY_NO_TEXTURE);
 		public static final ObjectProperty<Color> lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
 		public static final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(1.5);
 		public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.5);
