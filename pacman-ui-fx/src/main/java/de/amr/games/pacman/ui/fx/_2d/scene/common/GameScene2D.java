@@ -52,20 +52,18 @@ import javafx.scene.transform.Scale;
 public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+	private static final double ASPECT_RATIO = (double) ArcadeWorld.SIZE_PX.x() / ArcadeWorld.SIZE_PX.y();
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
-
-	protected final SubScene fxSubScene;
-	protected final StackPane root;
-	protected final Canvas canvas = new Canvas();
 	protected final GameSceneContext context;
+	protected final SubScene fxSubScene;
+	protected final Canvas canvas = new Canvas();
 
 	protected GameScene2D(GameController gameController) {
-		root = new StackPane(canvas);
-		fxSubScene = new SubScene(root, ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
+		context = new GameSceneContext(gameController);
+		fxSubScene = new SubScene(new StackPane(canvas), ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		context = new GameSceneContext(gameController);
 	}
 
 	@Override
@@ -85,14 +83,16 @@ public abstract class GameScene2D implements GameScene {
 	 * @param height new game scene height
 	 */
 	public void resize(double height) {
-		var aspectRatio = fxSubScene.getWidth() / fxSubScene.getHeight();
-		var width = aspectRatio * height;
+		if (height <= 0) {
+			throw new IllegalArgumentException("Scene height must be positive");
+		}
+		var width = ASPECT_RATIO * height;
+		var scaling = height / ArcadeWorld.SIZE_PX.y();
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		var scaling = height / ArcadeWorld.SIZE_PX.y();
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-		LOG.trace("2D game scene resized: %.0f x %.0f canvas scaling: %.2f (%s)", fxSubScene.getWidth(),
-				fxSubScene.getHeight(), scaling, getClass().getSimpleName());
+		LOG.trace("2D game scene resized: %.0f x %.0f, canvas scaling: %.2f (%s)", width, height, scaling,
+				getClass().getSimpleName());
 	}
 
 	@Override
