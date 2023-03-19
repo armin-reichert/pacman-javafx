@@ -149,7 +149,7 @@ public class GameLevel3D {
 		newPac3D.init();
 		pacLight = new PointLight();
 		pacLight.setColor(Color.rgb(255, 255, 0, 0.25));
-		pacLight.setMaxRange(8 * TS);
+		pacLight.setMaxRange(2 * TS);
 		pacLight.setTranslateZ(0);
 		pacLightOnPy.bind(Env.ThreeD.pacLightedPy);
 		newPac3D.getRoot().getChildren().add(pacLight);
@@ -200,6 +200,7 @@ public class GameLevel3D {
 	public void update() {
 		pac3D.update(level);
 		pacLight.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
+		pacLight.setMaxRange(level.pac().powerTimer().isRunning() ? 8 * TS : 2 * TS);
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
 		updateHouseLightingState();
