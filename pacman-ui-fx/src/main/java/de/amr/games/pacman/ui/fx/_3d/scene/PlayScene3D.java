@@ -154,7 +154,7 @@ public class PlayScene3D implements GameScene {
 		level3D.getRoot().getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 		root.getChildren().set(0, level3D.getRoot());
 		changeCameraPerspective(perspectivePy.get());
-		LOG.info("3D game level created.");
+		LOG.trace("3D game level created.");
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class PlayScene3D implements GameScene {
 			level3D.scores3D().getRoot().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
 			level3D.scores3D().getRoot().rotateProperty().bind(newCamera.rotateProperty());
 		}
-		LOG.info("Perspective changed to %s (%s)", newPerspective, this);
+		LOG.trace("Perspective changed to %s (%s)", newPerspective, this);
 	}
 
 	@Override
@@ -318,7 +318,7 @@ public class PlayScene3D implements GameScene {
 		case CHANGING_TO_NEXT_LEVEL -> {
 			lockGameState();
 			context.level().ifPresent(level -> {
-				LOG.info("Starting level %d", level.number());
+				LOG.trace("Starting level %d", level.number());
 				replaceGameLevel3D(level);
 				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
 			});
