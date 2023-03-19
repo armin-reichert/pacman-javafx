@@ -292,10 +292,7 @@ public class PlayScene3D implements GameScene {
 				level.ghosts().filter(level.pac()::sameTile).findAny().ifPresent(killer -> {
 					lockGameState();
 					level3D.foodOscillation().stop();
-					var animation = new SequentialTransition( //
-							Ufx.pause(0.2), //
-							level3D.pac3D().createDyingAnimation() //
-					);
+					var animation = new SequentialTransition(Ufx.pause(1.3), level3D.pac3D().createDyingAnimation());
 					animation.setOnFinished(evt -> unlockGameState());
 					animation.play();
 				});

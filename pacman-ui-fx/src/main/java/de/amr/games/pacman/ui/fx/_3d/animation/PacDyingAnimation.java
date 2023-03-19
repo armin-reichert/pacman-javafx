@@ -43,7 +43,7 @@ public class PacDyingAnimation {
 	private final Animation animation;
 
 	public PacDyingAnimation(Node root3D) {
-		var collapsingTime = Duration.seconds(1.5);
+		var collapsingTime = Duration.seconds(2.0);
 		var numSpins = 10;
 
 		var spinning = new RotateTransition(collapsingTime.divide(numSpins), root3D);
@@ -53,8 +53,8 @@ public class PacDyingAnimation {
 		spinning.setInterpolator(Interpolator.EASE_OUT);
 
 		var shrinking = new ScaleTransition(collapsingTime, root3D);
-		shrinking.setToX(0.8);
-		shrinking.setToY(0.8);
+		shrinking.setToX(0.2);
+		shrinking.setToY(0.2);
 		shrinking.setToZ(0.0);
 
 		var sinking = new TranslateTransition(collapsingTime, root3D);
