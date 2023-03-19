@@ -58,7 +58,6 @@ General shortcuts:
 Play screen shortcuts:
 - <kbd>Alt+LEFT</kbd> Select next camera perspective
 - <kbd>Alt+RIGHT</kbd> Select previous camera perspective
-- <kbd>Alt+L</kbd> Toggle draw mode (line vs. shaded)
 - <kbd>Q</kbd>Quit play scene and show intro screen
 
 Cheats:
