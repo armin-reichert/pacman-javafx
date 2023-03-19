@@ -36,10 +36,12 @@ import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.Clapperboard;
+import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
@@ -124,6 +126,24 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	@Override
 	public Rectangle2D bonusValueRegion(int symbol) {
 		return col3(3 + symbol, 1);
+	}
+
+	@Override
+	public void drawBonus(GraphicsContext g, Bonus bonus) {
+		var sprite = switch (bonus.state()) {
+		case Bonus.STATE_INACTIVE -> null;
+		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
+		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
+		default -> throw new IllegalArgumentException();
+		};
+		if (bonus instanceof MovingBonus movingBonus) {
+			g.save();
+			g.translate(0, movingBonus.dy());
+			drawEntitySprite(g, movingBonus.entity(), sprite);
+			g.restore();
+		} else {
+			super.drawBonus(g, bonus);
+		}
 	}
 
 	@Override

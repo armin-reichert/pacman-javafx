@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.mspacman.MovingBonus;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -115,14 +114,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
 		default -> throw new IllegalArgumentException();
 		};
-		if (bonus.entity() instanceof MovingBonus movingBonus) {
-			g.save();
-			g.translate(0, movingBonus.dy());
-			drawEntitySprite(g, movingBonus, sprite);
-			g.restore();
-		} else {
-			drawEntitySprite(g, bonus.entity(), sprite);
-		}
+		drawEntitySprite(g, bonus.entity(), sprite);
 	}
 
 	@Override
