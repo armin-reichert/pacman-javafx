@@ -45,7 +45,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 
 /**
- * Base class of all 2D scenes that get rendered inside a canvas.
+ * Base class of all 2D scenes. Each 2D scene has its own canvas.
  * 
  * @author Armin Reichert
  */
