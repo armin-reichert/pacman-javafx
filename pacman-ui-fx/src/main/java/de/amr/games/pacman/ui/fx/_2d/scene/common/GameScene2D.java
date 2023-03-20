@@ -31,6 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -129,6 +130,10 @@ public abstract class GameScene2D implements GameScene {
 	 */
 	protected void drawInfo(GraphicsContext g) {
 		// empty by default
+	}
+
+	protected void drawLevelCounter(GraphicsContext g) {
+		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
 
 	@Override

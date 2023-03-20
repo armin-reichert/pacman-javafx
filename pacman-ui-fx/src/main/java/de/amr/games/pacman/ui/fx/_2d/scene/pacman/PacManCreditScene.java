@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -76,6 +75,6 @@ public class PacManCreditScene extends GameScene2D {
 		drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, normalFont, t(1), t(25));
 		drawText(g, "PTS", ArcadeTheme.ROSE, smallFont, t(25), t(25));
 		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(29));
-		r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+		drawLevelCounter(g);
 	}
 }

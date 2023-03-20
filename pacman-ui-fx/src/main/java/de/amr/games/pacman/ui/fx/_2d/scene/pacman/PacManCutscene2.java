@@ -32,7 +32,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -161,7 +160,7 @@ public class PacManCutscene2 extends GameScene2D {
 			}
 			r.drawGhost(g, blinky);
 			r.drawPac(g, pac);
-			r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+			drawLevelCounter(g);
 		}
 	}
 

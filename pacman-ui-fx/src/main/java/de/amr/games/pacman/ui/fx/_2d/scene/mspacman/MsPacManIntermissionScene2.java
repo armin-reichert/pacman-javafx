@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntermission2;
 import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -79,6 +78,6 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		r.drawClap(g, im.context().clapperboard);
 		r.drawPac(g, im.context().msPacMan);
 		r.drawPac(g, im.context().pacMan);
-		r.drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+		drawLevelCounter(g);
 	}
 }
