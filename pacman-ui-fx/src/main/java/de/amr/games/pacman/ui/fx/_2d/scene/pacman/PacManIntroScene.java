@@ -65,11 +65,12 @@ public class PacManIntroScene extends GameScene2D {
 		context.setScoreVisible(true);
 
 		intro = new PacManIntroController(context().gameController());
-		intro.restart(PacManIntroState.START);
+		intro.changeState(PacManIntroState.START);
+
 		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
 		Stream.of(intro.context().ghosts)
 				.forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
-		PacManIntroData.BLINKING.reset();
+		intro.context().blinking.reset();
 	}
 
 	@Override
@@ -169,7 +170,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
-		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
+		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.setFill(context.rendering2D().mazeColoring(1).foodColor());
 			g.fillOval(t(PacManIntroData.LEFT_TILE), t(20), TS, TS);
 		}
@@ -201,7 +202,7 @@ public class PacManIntroScene extends GameScene2D {
 		int row = 25;
 		g.setFill(r.mazeColoring(1).foodColor());
 		g.fillRect(t(col) + 4, t(row - 1) + 4, 2, 2);
-		if (Boolean.TRUE.equals(PacManIntroData.BLINKING.frame())) {
+		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.fillOval(t(col), t(row + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);

@@ -31,7 +31,6 @@ import static de.amr.games.pacman.model.common.world.World.t;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -122,7 +121,7 @@ public class PacManCutscene3 extends GameScene2D {
 	public void drawScene(GraphicsContext g) {
 		context.rendering2D().drawPac(g, pac);
 		context.rendering2D().drawGhost(g, blinky);
-		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+		drawLevelCounter(g);
 	}
 
 	@Override
