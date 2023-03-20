@@ -41,7 +41,6 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -66,13 +65,13 @@ public class MsPacManIntroScene extends GameScene2D {
 		intro = new MsPacManIntroController(context.gameController());
 		intro.changeState(MsPacManIntroState.START);
 
-		var pacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
-		pacAnimations.ensureRunning();
-		intro.context().msPacMan.setAnimations(pacAnimations);
+		var msPacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
+		intro.context().msPacMan.setAnimations(msPacAnimations);
+		msPacAnimations.start();
 		intro.context().ghosts.forEach(ghost -> {
 			var ghostAnimations = context.rendering2D().createGhostAnimations(ghost);
-			ghostAnimations.ensureRunning();
 			ghost.setAnimations(ghostAnimations);
+			ghostAnimations.start();
 		});
 	}
 
@@ -101,41 +100,30 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawScene(GraphicsContext g) {
+		var ic = intro.context();
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		drawTitle(g);
+		var font = r.screenFont(TS);
 		drawLights(g, 32, 16);
+		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font, TITLE_TILE.x(), TITLE_TILE.y());
 		if (intro.state() == MsPacManIntroState.GHOSTS) {
-			drawGhostText(g, intro.context().ghosts.get(intro.context().ghostIndex()));
+			var ghost = ic.ghosts.get(ic.ghostIndex());
+			var ghostColor = r.ghostColoring(ghost.id()).normalDress();
+			if (ghost.id() == Ghost.ID_RED_GHOST) {
+				drawText(g, "WITH", ArcadeTheme.PALE, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+			}
+			drawText(g, ghost.name().toUpperCase(), ghostColor, font, t(14 - ghost.name().length() / 2),
+					BLINKY_END_TILE.y() + t(6));
 		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
-			drawMsPacManText(g);
+			drawText(g, "STARRING", ArcadeTheme.PALE, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
 		}
-		intro.context().ghosts.forEach(ghost -> r.drawGhost(g, ghost));
-		r.drawPac(g, intro.context().msPacMan);
+		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
+		r.drawPac(g, ic.msPacMan);
 		r.drawCopyright(g, 29);
 		drawLevelCounter(g);
 	}
 
-	private void drawTitle(GraphicsContext g) {
-		var r = context.rendering2D();
-		drawText(g, "\"MS PAC-MAN\"", Color.ORANGE, r.screenFont(TS), TITLE_TILE.x(), TITLE_TILE.y());
-	}
-
-	private void drawGhostText(GraphicsContext g, Ghost ghost) {
-		if (ghost.id() == Ghost.ID_RED_GHOST) {
-			drawText(g, "WITH", Color.WHITE, context.rendering2D().screenFont(TS), TITLE_TILE.x(),
-					BLINKY_END_TILE.y() + t(3));
-		}
-		drawText(g, ghost.name().toUpperCase(), context.rendering2D().ghostColoring(ghost.id()).normalDress(),
-				context.rendering2D().screenFont(TS), t(14 - ghost.name().length() / 2), BLINKY_END_TILE.y() + t(6));
-	}
-
-	private void drawMsPacManText(GraphicsContext g) {
-		var r = context.rendering2D();
-		drawText(g, "STARRING", Color.WHITE, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
-		drawText(g, "MS PAC-MAN", Color.YELLOW, r.screenFont(TS), TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
-	}
-
-	// TODO this is not exactly as in the original game
+	// TODO this is not exactly as in the original game, but looks quite ok
 	private void drawLights(GraphicsContext g, int width, int height) {
 		long t = intro.context().lightsTimer.tick();
 		int on = (int) t % (width / 2);

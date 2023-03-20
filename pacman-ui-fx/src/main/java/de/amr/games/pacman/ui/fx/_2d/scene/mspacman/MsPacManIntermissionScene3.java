@@ -66,7 +66,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		im.context().pacMan.animations().ifPresent(
 				anims -> anims.put(GameModel.AK_PAC_MUNCHING, r.createPacManMunchingAnimationMap(im.context().pacMan)));
 		flyingStork = r.createStorkFlyingAnimation();
-		flyingStork.ensureRunning();
+		flyingStork.start();
 	}
 
 	@Override
