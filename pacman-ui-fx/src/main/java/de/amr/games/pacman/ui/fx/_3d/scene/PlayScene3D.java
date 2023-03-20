@@ -63,7 +63,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
@@ -127,7 +126,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void end() {
-		context.level().ifPresent(level -> SoundHandler.sounds(level.game()).stopAll());
+		context.sounds().stopAll();
 		perspectivePy.unbind();
 	}
 
@@ -361,15 +360,14 @@ public class PlayScene3D implements GameScene {
 		if (level instanceof PacManGameDemoLevel || level instanceof MsPacManGameDemoLevel) {
 			return; // TODO maybe mark level as silent?
 		}
-		var sounds = SoundHandler.sounds(level.game());
 		if (level.pac().starvingTicks() > 10) {
-			sounds.stop(SoundClipID.PACMAN_MUNCH);
+			context.sounds().stop(SoundClipID.PACMAN_MUNCH);
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			sounds.ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
+			context.sounds().ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			sounds.stop(SoundClipID.GHOST_RETURNING);
+			context.sounds().stop(SoundClipID.GHOST_RETURNING);
 		}
 	}
 }

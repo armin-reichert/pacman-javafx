@@ -169,6 +169,7 @@ public class Actions {
 
 	public static void togglePaused() {
 		Ufx.toggle(Env.Simulation.pausedPy);
+		// TODO mute and unmute?
 		if (Env.Simulation.pausedPy.get()) {
 			SoundHandler.sounds(game()).stopAll();
 		}

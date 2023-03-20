@@ -42,7 +42,6 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -90,7 +89,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void end() {
 		// TODO check if this is needed
-		SoundHandler.sounds(context.game()).stopAll();
+		context.sounds().stopAll();
 	}
 
 	@Override
@@ -145,15 +144,14 @@ public class PlayScene2D extends GameScene2D {
 		if (level instanceof PacManGameDemoLevel || level instanceof MsPacManGameDemoLevel) {
 			return;
 		}
-		var sounds = SoundHandler.sounds(level.game());
 		if (level.pac().starvingTicks() > 10) {
-			sounds.stop(SoundClipID.PACMAN_MUNCH);
+			context.sounds().stop(SoundClipID.PACMAN_MUNCH);
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			sounds.ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
+			context.sounds().ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			sounds.stop(SoundClipID.GHOST_RETURNING);
+			context.sounds().stop(SoundClipID.GHOST_RETURNING);
 		}
 	}
 }
