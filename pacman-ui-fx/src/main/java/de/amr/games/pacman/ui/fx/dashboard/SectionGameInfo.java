@@ -77,7 +77,7 @@ public class SectionGameInfo extends Section {
 
 	private String fmtPelletCount(GameLevel level) {
 		var world = level.world();
-		return String.format("%d of %d (%d energizers)", world.foodRemaining(),
+		return String.format("%d of %d (%d energizers)", world.uneatenFoodCount(),
 				world.tiles().filter(world::isFoodTile).count(), world.energizerTiles().count());
 	}
 
