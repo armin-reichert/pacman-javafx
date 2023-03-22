@@ -1,6 +1,6 @@
 module de.amr.objimport {
 
-	requires java.logging;
+	requires transitive org.apache.logging.log4j;
 	requires transitive javafx.controls;
 	requires transitive javafx.fxml;
 

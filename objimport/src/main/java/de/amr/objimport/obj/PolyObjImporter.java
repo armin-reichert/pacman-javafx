@@ -43,8 +43,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.objimport.SmoothingGroups;
 import de.amr.objimport.shape3d.PolygonMesh;
@@ -57,6 +58,8 @@ import javafx.scene.paint.PhongMaterial;
  * OBJ object loader
  */
 public class PolyObjImporter {
+
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private int vertexIndex(int vertexIndex) {
 		if (vertexIndex < 0) {
@@ -247,7 +250,7 @@ public class PolyObjImporter {
 					log("line skipped: " + line);
 				}
 			} catch (Exception ex) {
-				Logger.getLogger(MtlReader.class.getName()).log(Level.SEVERE, "Failed to parse line:" + line, ex);
+				LOG.error("Failed to parse line: %s", line);
 			}
 		}
 		addMesh(key);

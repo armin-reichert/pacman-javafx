@@ -40,8 +40,9 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -51,6 +52,8 @@ import javafx.scene.paint.PhongMaterial;
 /** Reader for OBJ file MTL material files. */
 public class MtlReader {
 
+	private static final Logger LOG = LogManager.getFormatterLogger();
+
 	private String baseUrl;
 
 	public MtlReader(String filename, String parentUrl) {
@@ -58,10 +61,10 @@ public class MtlReader {
 		String fileUrl = baseUrl + filename;
 		try {
 			URL mtlUrl = new URL(fileUrl);
-			System.err.println("Reading material from filename = " + mtlUrl);
+			LOG.info("Reading material from filename = " + mtlUrl);
 			read(mtlUrl.openStream());
 		} catch (FileNotFoundException ex) {
-			System.err.println("No material file found for obj. [" + fileUrl + "]");
+			LOG.info("No material file found for obj. [" + fileUrl + "]");
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -107,10 +110,11 @@ public class MtlReader {
 					 * Casts shadows onto invisible surfaces
 					 */
 				} else {
-					System.err.println("material line ignored for " + name + ": " + line);
+					LOG.trace("material line ignored for " + name + ": " + line);
 				}
-			} catch (Exception ex) {
-				Logger.getLogger(MtlReader.class.getName()).log(Level.SEVERE, "Failed to parse line:" + line, ex);
+			} catch (Exception x) {
+				x.printStackTrace();
+				LOG.error("Failed to parse line: %s", line);
 			}
 		}
 		addMaterial(name);
@@ -121,7 +125,7 @@ public class MtlReader {
 			if (!materials.containsKey(name)) {
 				materials.put(name, material);
 			} else {
-				System.err.println("This material is already added. Ignoring " + name);
+				LOG.info("This material is already added. Ignoring " + name);
 			}
 			material = new PhongMaterial(Color.WHITE);
 		}
@@ -137,7 +141,7 @@ public class MtlReader {
 
 	private Image loadImage(String filename) {
 		filename = baseUrl + filename;
-		System.err.println("Loading image from " + filename);
+		LOG.info("Loading image from " + filename);
 		return new Image(filename);
 	}
 

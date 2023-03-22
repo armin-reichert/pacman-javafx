@@ -42,8 +42,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.objimport.SmoothingGroups;
 import javafx.scene.paint.Color;
@@ -55,6 +56,8 @@ import javafx.scene.shape.TriangleMesh;
 
 /** Obj file reader */
 public class ObjImporter {
+
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private int vertexIndex(int vertexIndex) {
 		if (vertexIndex < 0) {
@@ -301,7 +304,7 @@ public class ObjImporter {
 					log("line skipped: " + line);
 				}
 			} catch (Exception ex) {
-				Logger.getLogger(MtlReader.class.getName()).log(Level.SEVERE, "Failed to parse line:" + line, ex);
+				LOG.error("Failed to parse line: %s", line);
 			}
 		}
 		addMesh(key);

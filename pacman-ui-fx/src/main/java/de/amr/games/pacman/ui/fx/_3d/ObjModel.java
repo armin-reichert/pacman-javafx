@@ -44,7 +44,7 @@ public class ObjModel {
 				meshes.put(meshName, mesh);
 			}
 			materials = Collections.emptyMap(); // TODO implement
-			LOG.trace("3D model loaded, URL='%s'", url);
+			LOG.info("3D model loaded, URL='%s'", url);
 			for (var entry : meshes.entrySet()) {
 				LOG.trace("Mesh id=%s, value=%s", entry.getKey(), entry.getValue());
 			}
