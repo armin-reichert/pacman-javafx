@@ -29,16 +29,11 @@
 			<artifactId>log4j-core</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-	<dependency>
-		<groupId>org.openjfx</groupId>
-		<artifactId>javafx-controls</artifactId>
-		<version>${javafx.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>org.openjfx</groupId>
-		<artifactId>javafx-fxml</artifactId>
-		<version>${javafx.version}</version>
-	</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
