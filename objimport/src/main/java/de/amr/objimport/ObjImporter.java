@@ -161,7 +161,7 @@ public class ObjImporter {
 					key = line.length() > 2 ? line.substring(2) : "default";
 					LOG.trace("key = " + key);
 				} else if (line.startsWith("v ")) {
-					String[] split = line.substring(2).trim().split(" +");
+					String[] split = line.substring(2).trim().split("\\s+");
 					float x = Float.parseFloat(split[0]) * scale;
 					float y = Float.parseFloat(split[1]) * scale;
 					float z = Float.parseFloat(split[2]) * scale;
@@ -171,7 +171,7 @@ public class ObjImporter {
 						uvs.addAll(x, z);
 					}
 				} else if (line.startsWith("vt ")) {
-					String[] split = line.substring(3).trim().split(" +");
+					String[] split = line.substring(3).trim().split("\\s+");
 					float u = Float.parseFloat(split[0]);
 					float v = Float.parseFloat(split[1]);
 
@@ -179,7 +179,7 @@ public class ObjImporter {
 
 					uvs.addAll(u, 1 - v);
 				} else if (line.startsWith("f ")) {
-					String[] split = line.substring(2).trim().split(" +");
+					String[] split = line.substring(2).trim().split("\\s+");
 					int[][] data = new int[split.length][];
 					boolean uvProvided = true;
 					boolean normalProvided = true;
@@ -260,7 +260,7 @@ public class ObjImporter {
 					}
 				} else if (line.startsWith("mtllib ")) {
 					// setting materials lib
-					String[] split = line.substring("mtllib ".length()).trim().split(" +");
+					String[] split = line.substring("mtllib ".length()).trim().split("\\s+");
 					for (String filename : split) {
 						MtlReader mtlReader = new MtlReader(filename, objFileUrl);
 						materialLibrary.add(mtlReader.getMaterials());
@@ -279,7 +279,7 @@ public class ObjImporter {
 				} else if (line.isEmpty() || line.startsWith("#")) {
 					// comments and empty lines are ignored
 				} else if (line.startsWith("vn ")) {
-					String[] split = line.substring(2).trim().split(" +");
+					String[] split = line.substring(2).trim().split("\\s+");
 					float x = Float.parseFloat(split[0]);
 					float y = Float.parseFloat(split[1]);
 					float z = Float.parseFloat(split[2]);
