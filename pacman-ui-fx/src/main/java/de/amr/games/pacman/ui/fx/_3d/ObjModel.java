@@ -10,8 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.objimport.ObjImporter;
 import de.amr.objimport.Validator;
-import de.amr.objimport.obj.ObjImporter;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 

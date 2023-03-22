@@ -5,5 +5,4 @@ module de.amr.objimport {
 	requires transitive javafx.fxml;
 
 	exports de.amr.objimport;
-	exports de.amr.objimport.obj;
 }
