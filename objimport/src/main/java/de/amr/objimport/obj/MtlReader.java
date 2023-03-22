@@ -138,7 +138,6 @@ public class MtlReader {
 	private Image loadImage(String filename) {
 		filename = baseUrl + filename;
 		System.err.println("Loading image from " + filename);
-		Image image = new Image(filename);
 		return new Image(filename);
 	}
 
