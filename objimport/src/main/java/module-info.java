@@ -6,6 +6,4 @@ module de.amr.objimport {
 
 	exports de.amr.objimport;
 	exports de.amr.objimport.obj;
-	exports de.amr.objimport.shape3d;
-	exports de.amr.objimport.shape3d.symbolic;
 }
