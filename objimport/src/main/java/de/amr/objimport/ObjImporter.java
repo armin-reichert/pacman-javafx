@@ -58,6 +58,81 @@ public class ObjImporter {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
+	private static float scale = 1;
+	private static boolean flatXZ = false;
+
+	public static void setScale(float scale) {
+		ObjImporter.scale = scale;
+	}
+
+	public static void setFlatXZ(boolean flatXZ) {
+		ObjImporter.flatXZ = flatXZ;
+	}
+
+	private Map<String, TriangleMesh> meshes = new HashMap<>();
+	private Map<String, Material> materials = new HashMap<>();
+	private List<Map<String, Material>> materialLibrary = new ArrayList<>();
+	private String objFileUrl;
+
+	private FloatArrayList vertexes = new FloatArrayList();
+
+	private FloatArrayList uvs = new FloatArrayList();
+
+	private IntegerArrayList faces = new IntegerArrayList();
+
+	private IntegerArrayList smoothingGroups = new IntegerArrayList();
+
+	private FloatArrayList normals = new FloatArrayList();
+
+	private IntegerArrayList faceNormals = new IntegerArrayList();
+
+	private Material material = new PhongMaterial(Color.WHITE);
+
+	private int facesStart = 0;
+
+	private int facesNormalStart = 0;
+
+	private int smoothingGroupsStart = 0;
+
+	public ObjImporter(String objFileUrl) throws FileNotFoundException, IOException {
+		this.objFileUrl = objFileUrl;
+		LOG.info("Reading filename = " + objFileUrl);
+		read(new URL(objFileUrl).openStream());
+	}
+
+	public ObjImporter(InputStream inputStream) throws IOException {
+		read(inputStream);
+	}
+
+	public Set<String> getMeshes() {
+		return meshes.keySet();
+	}
+
+	public TriangleMesh getMesh() {
+		return meshes.values().iterator().next();
+	}
+
+	public TriangleMesh getMesh(String key) {
+		return meshes.get(key);
+	}
+
+	public MeshView buildMeshView(String key) {
+		MeshView meshView = new MeshView();
+		meshView.setId(key);
+		meshView.setMaterial(materials.get(key));
+		meshView.setMesh(meshes.get(key));
+		meshView.setCullFace(CullFace.NONE);
+		return meshView;
+	}
+
+	public Material getMaterial() {
+		return materials.values().iterator().next();
+	}
+
+	public Material getMaterial(String key) {
+		return materials.get(key);
+	}
+
 	private int vertexIndex(int vertexIndex) {
 		if (vertexIndex < 0) {
 			return vertexIndex + vertexes.size() / 3;
@@ -82,79 +157,6 @@ public class ObjImporter {
 		}
 	}
 
-	private static boolean debug = false;
-	private static float scale = 1;
-	private static boolean flatXZ = false;
-
-	static void log(String string) {
-		if (debug) {
-			System.out.println(string);
-		}
-	}
-
-	public Set<String> getMeshes() {
-		return meshes.keySet();
-	}
-
-	private Map<String, TriangleMesh> meshes = new HashMap<>();
-	private Map<String, Material> materials = new HashMap<>();
-	private List<Map<String, Material>> materialLibrary = new ArrayList<>();
-	private String objFileUrl;
-
-	public ObjImporter(String objFileUrl) throws FileNotFoundException, IOException {
-		this.objFileUrl = objFileUrl;
-		log("Reading filename = " + objFileUrl);
-		read(new URL(objFileUrl).openStream());
-	}
-
-	public ObjImporter(InputStream inputStream) throws IOException {
-		read(inputStream);
-	}
-
-	public TriangleMesh getMesh() {
-		return meshes.values().iterator().next();
-	}
-
-	public Material getMaterial() {
-		return materials.values().iterator().next();
-	}
-
-	public TriangleMesh getMesh(String key) {
-		return meshes.get(key);
-	}
-
-	public Material getMaterial(String key) {
-		return materials.get(key);
-	}
-
-	public MeshView buildMeshView(String key) {
-		MeshView meshView = new MeshView();
-		meshView.setId(key);
-		meshView.setMaterial(materials.get(key));
-		meshView.setMesh(meshes.get(key));
-		meshView.setCullFace(CullFace.NONE);
-		return meshView;
-	}
-
-	public static void setDebug(boolean debug) {
-		ObjImporter.debug = debug;
-	}
-
-	public static void setScale(float scale) {
-		ObjImporter.scale = scale;
-	}
-
-	private FloatArrayList vertexes = new FloatArrayList();
-	private FloatArrayList uvs = new FloatArrayList();
-	private IntegerArrayList faces = new IntegerArrayList();
-	private IntegerArrayList smoothingGroups = new IntegerArrayList();
-	private FloatArrayList normals = new FloatArrayList();
-	private IntegerArrayList faceNormals = new IntegerArrayList();
-	private Material material = new PhongMaterial(Color.WHITE);
-	private int facesStart = 0;
-	private int facesNormalStart = 0;
-	private int smoothingGroupsStart = 0;
-
 	private void read(InputStream inputStream) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 		String line;
@@ -165,14 +167,14 @@ public class ObjImporter {
 				if (line.startsWith("g ") || line.equals("g")) {
 					addMesh(key);
 					key = line.length() > 2 ? line.substring(2) : "default";
-					log("key = " + key);
+					LOG.trace("key = " + key);
 				} else if (line.startsWith("v ")) {
 					String[] split = line.substring(2).trim().split(" +");
 					float x = Float.parseFloat(split[0]) * scale;
 					float y = Float.parseFloat(split[1]) * scale;
 					float z = Float.parseFloat(split[2]) * scale;
 
-					// log("x = " + x + ", y = " + y + ", z = " + z);
+					// LOG.trace("x = " + x + ", y = " + y + ", z = " + z);
 
 					vertexes.add(x);
 					vertexes.add(y);
@@ -187,7 +189,7 @@ public class ObjImporter {
 					float u = Float.parseFloat(split[0]);
 					float v = Float.parseFloat(split[1]);
 
-					// log("u = " + u + ", v = " + v);
+					// LOG.trace("u = " + u + ", v = " + v);
 
 					uvs.add(u);
 					uvs.add(1 - v);
@@ -250,8 +252,8 @@ public class ObjImporter {
 							n3 = normalIndex(data[i + 1][2]);
 						}
 
-						// log("v1 = " + v1 + ", v2 = " + v2 + ", v3 = " + v3);
-						// log("uv1 = " + uv1 + ", uv2 = " + uv2 + ", uv3 = " + uv3);
+						// LOG.trace("v1 = " + v1 + ", v2 = " + v2 + ", v3 = " + v3);
+						// LOG.trace("uv1 = " + uv1 + ", uv2 = " + uv2 + ", uv3 = " + uv3);
 
 						faces.add(v1);
 						faces.add(uv1);
@@ -300,7 +302,7 @@ public class ObjImporter {
 					normals.add(y);
 					normals.add(z);
 				} else {
-					log("line skipped: " + line);
+					LOG.trace("line skipped: " + line);
 				}
 			} catch (Exception ex) {
 				LOG.error("Failed to parse line: %s", line);
@@ -308,8 +310,8 @@ public class ObjImporter {
 		}
 		addMesh(key);
 
-		log("Totally loaded " + (vertexes.size() / 3.) + " vertexes, " + (uvs.size() / 2.) + " uvs, " + (faces.size() / 6.)
-				+ " faces, " + smoothingGroups.size() + " smoothing groups.");
+		LOG.info("Totally loaded " + (vertexes.size() / 3.) + " vertexes, " + (uvs.size() / 2.) + " uvs, "
+				+ (faces.size() / 6.) + " faces, " + smoothingGroups.size() + " smoothing groups.");
 	}
 
 	private void addMesh(String key) {
@@ -399,19 +401,15 @@ public class ObjImporter {
 		meshes.put(key, mesh);
 		materials.put(key, material);
 
-		log("Added mesh '" + key + "' of " + mesh.getPoints().size() / mesh.getPointElementSize() + " vertexes, "
+		LOG.trace("Added mesh '" + key + "' of " + mesh.getPoints().size() / mesh.getPointElementSize() + " vertexes, "
 				+ mesh.getTexCoords().size() / mesh.getTexCoordElementSize() + " uvs, "
 				+ mesh.getFaces().size() / mesh.getFaceElementSize() + " faces, " + mesh.getFaceSmoothingGroups().size()
 				+ " smoothing groups.");
-		log("material diffuse color = " + ((PhongMaterial) material).getDiffuseColor());
-		log("material diffuse map = " + ((PhongMaterial) material).getDiffuseMap());
+		LOG.trace("material diffuse color = " + ((PhongMaterial) material).getDiffuseColor());
+		LOG.trace("material diffuse map = " + ((PhongMaterial) material).getDiffuseMap());
 
 		facesStart = faces.size();
 		facesNormalStart = faceNormals.size();
 		smoothingGroupsStart = smoothingGroups.size();
-	}
-
-	public static void setFlatXZ(boolean flatXZ) {
-		ObjImporter.flatXZ = flatXZ;
 	}
 }
