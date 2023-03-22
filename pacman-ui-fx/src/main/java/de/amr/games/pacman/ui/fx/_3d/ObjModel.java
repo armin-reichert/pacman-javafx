@@ -39,7 +39,7 @@ public class ObjModel {
 			meshes = new HashMap<>();
 			for (var meshName : importer.getMeshes()) {
 				var mesh = importer.getMesh(meshName);
-				Validator.validate(mesh);
+				Validator.validateMesh(mesh);
 				meshes.put(meshName, mesh);
 			}
 			materials = Collections.emptyMap(); // TODO implement

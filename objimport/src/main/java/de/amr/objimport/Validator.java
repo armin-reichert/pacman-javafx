@@ -48,9 +48,8 @@ public class Validator {
 	}
 
 	public static void validate(Node node) {
-		if (node instanceof MeshView) {
-			MeshView meshView = (MeshView) node;
-			validate(meshView.getMesh());
+		if (node instanceof MeshView meshView) {
+			validateMesh(meshView.getMesh());
 		} else if (node instanceof Parent) {
 			for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
 				validate(child);
@@ -58,7 +57,7 @@ public class Validator {
 		}
 	}
 
-	public static void validate(Mesh mesh) {
+	public static void validateMesh(Mesh mesh) {
 		if (!(mesh instanceof TriangleMesh)) {
 			throw new AssertionError("Mesh is not TriangleMesh: " + mesh.getClass() + ", mesh = " + mesh);
 		}
