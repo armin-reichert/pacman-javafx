@@ -9,9 +9,6 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.interactivemesh.jfx.importer.ImportException;
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.objimport.obj.ObjImporter;
 import javafx.scene.paint.PhongMaterial;
@@ -31,29 +28,6 @@ public class ObjModel {
 
 	private Map<String, Mesh> meshes;
 	private Map<String, PhongMaterial> materials;
-
-	public ObjModel(URL url, int deprecated) {
-		if (url == null) {
-			throw new Model3DException("OBJ model cannot be created: URL is null");
-		}
-		ObjModelImporter importer = new ObjModelImporter();
-		try {
-			importer.read(url);
-			meshes = new HashMap<>();
-			for (var entry : importer.getNamedMeshViews().entrySet()) {
-				meshes.put(entry.getKey(), entry.getValue().getMesh());
-			}
-			materials = importer.getNamedMaterials();
-			LOG.trace("3D model loaded, URL='%s'", url);
-			for (var entry : meshes.entrySet()) {
-				LOG.trace("Mesh id=%s, value=%s", entry.getKey(), entry.getValue());
-			}
-		} catch (ImportException e) {
-			throw new Model3DException("Error loading 3D model, URL='%s': %s", url, e.getMessage());
-		} finally {
-			importer.close();
-		}
-	}
 
 	public ObjModel(URL url) {
 		if (url == null) {

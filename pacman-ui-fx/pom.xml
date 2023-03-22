@@ -88,11 +88,13 @@ There are two excutables built:
 		</plugins>
 	</build>
 	<dependencies>
+		<!--
 		<dependency>
 			<groupId>com.interactivemesh</groupId>
 			<artifactId>jimObjModelImporterJFX</artifactId>
 			<version>1.0</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>de.amr.objimport</groupId>
 			<artifactId>importer</artifactId>
