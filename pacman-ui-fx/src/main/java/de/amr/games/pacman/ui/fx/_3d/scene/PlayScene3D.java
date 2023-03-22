@@ -329,7 +329,7 @@ public class PlayScene3D implements GameScene {
 						ResourceMgr.message("level_complete", level.number()));
 				var animation = new SequentialTransition( //
 						Ufx.pause(1.0), //
-						level.params().numFlashes() > 0 ? new SwingingWallsAnimation(level.params().numFlashes()) : Ufx.pause(1.0), //
+						level.numFlashes > 0 ? new SwingingWallsAnimation(level.numFlashes) : Ufx.pause(1.0), //
 						afterSeconds(1.0, level.pac()::hide), //
 						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
 						Ufx.pause(2.0) //

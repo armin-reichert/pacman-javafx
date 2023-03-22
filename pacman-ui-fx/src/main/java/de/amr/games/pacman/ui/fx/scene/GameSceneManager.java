@@ -30,8 +30,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameLevel.Parameters;
 import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
@@ -130,13 +128,7 @@ public class GameSceneManager {
 		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
-		case INTERMISSION -> {
-			var intermissionNumber = level.map(GameLevel::params).map(Parameters::intermissionNumber);
-			if (intermissionNumber.isEmpty()) {
-				throw new IllegalStateException("No intermission number available");
-			}
-			yield PLAY_SCENE_INDEX + intermissionNumber.get();
-		}
+		case INTERMISSION -> PLAY_SCENE_INDEX + level.get().intermissionNumber;
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
 		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
 		};

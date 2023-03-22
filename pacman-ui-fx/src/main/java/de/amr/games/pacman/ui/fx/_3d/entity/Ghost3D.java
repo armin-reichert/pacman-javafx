@@ -115,7 +115,7 @@ public class Ghost3D {
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FLASHING -> {
-			int numFlashes = level.params().numFlashes();
+			int numFlashes = level.numFlashes;
 			if (numFlashes > 0) {
 				coloredGhost3D.appearFlashing(numFlashes, 1.0);
 			} else {

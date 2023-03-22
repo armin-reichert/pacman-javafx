@@ -82,30 +82,30 @@ public class SectionGameInfo extends Section {
 	}
 
 	private String fmtGhostSpeed(GameLevel level) {
-		return fmtSpeed(level.params().ghostSpeed());
+		return fmtSpeed(level.ghostSpeed);
 	}
 
 	private String fmtGhostSpeedFrightened(GameLevel level) {
-		return fmtSpeed(level.params().ghostSpeedFrightened());
+		return fmtSpeed(level.ghostSpeedFrightened);
 	}
 
 	private String fmtGhostSpeedTunnel(GameLevel level) {
-		return fmtSpeed(level.params().ghostSpeedTunnel());
+		return fmtSpeed(level.ghostSpeedTunnel);
 	}
 
 	private String fmtPacSpeed(GameLevel level) {
-		return fmtSpeed(level.params().pacSpeed());
+		return fmtSpeed(level.pacSpeed);
 	}
 
 	private String fmtPacSpeedPowered(GameLevel level) {
-		return fmtSpeed(level.params().pacSpeedPowered());
+		return fmtSpeed(level.pacSpeedPowered);
 	}
 
 	private String fmtPacPowerSeconds(GameLevel level) {
-		return "%d sec".formatted(level.params().pacPowerSeconds());
+		return "%d sec".formatted(level.pacPowerSeconds);
 	}
 
 	private String fmtNumFlashes(GameLevel level) {
-		return "%d".formatted(level.params().numFlashes());
+		return "%d".formatted(level.numFlashes);
 	}
 }
