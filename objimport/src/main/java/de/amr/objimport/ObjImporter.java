@@ -293,8 +293,8 @@ public class ObjImporter {
 		}
 		addMesh(key);
 
-		LOG.info("Totally loaded " + (vertexes.size() / 3.) + " vertexes, " + (uvs.size() / 2.) + " uvs, "
-				+ (faces.size() / 6.) + " faces, " + smoothingGroups.size() + " smoothing groups.");
+		LOG.info("Loaded %d vertices, %d uvs, %d faces, %d smoothing groups", vertexes.size() / 3, uvs.size() / 2,
+				faces.size() / 6, smoothingGroups.size());
 	}
 
 	private void addMesh(String key) {
