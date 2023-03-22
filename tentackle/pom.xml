@@ -51,13 +51,6 @@
 			<artifactId>importer</artifactId>
 			<version>1.0</version>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-		<artifactId>jimObjModelImporterJFX</artifactId>
-			<version>1.0</version>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -78,6 +71,5 @@
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
-
 	</dependencies>
 </project>

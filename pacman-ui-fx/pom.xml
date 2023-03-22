@@ -1,19 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
 	<name>Pac-Man and Ms. Pac-Man in JavaFX</name>
 	<url>https://github.com/armin-reichert/pacman-javafx</url>
-	<description>This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games. 
+	<description>This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games.
 
-The game model and logic are implemented using the Model-View-Controller architecture, see https://github.com/armin-reichert/pacman-basic. 
+		The game model and logic are implemented using the Model-View-Controller
+		architecture, see https://github.com/armin-reichert/pacman-basic.
 
-The user interface listens to game events and updates itself accordingly.
-
-There are two excutables built:
-1. An executable jar file (using Maven shade)
-2. A zip file containing the Java/JavaFX runtime and the game</description>
+		The user interface listens to game events and updates itself accordingly.
+		There are two excutables built:
+		1. An executable jar file (using Maven shade)
+		2. A zip file containing the Java/JavaFX runtime and the game</description>
 	<properties>
 		<classifier>win</classifier>
 		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
@@ -67,7 +69,8 @@ There are two excutables built:
 						<configuration>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
 							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>${mainClass}</mainClass>
 								</transformer>
 								<transformer
@@ -88,13 +91,6 @@ There are two excutables built:
 		</plugins>
 	</build>
 	<dependencies>
-		<!--
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jimObjModelImporterJFX</artifactId>
-			<version>1.0</version>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>de.amr.objimport</groupId>
 			<artifactId>importer</artifactId>
