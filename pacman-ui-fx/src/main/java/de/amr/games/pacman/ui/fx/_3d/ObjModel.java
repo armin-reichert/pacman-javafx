@@ -36,11 +36,10 @@ public class ObjModel {
 		}
 		try {
 			ObjImporter importer = new ObjImporter(url.toExternalForm());
-			Validator validator = new Validator();
 			meshes = new HashMap<>();
 			for (var meshName : importer.getMeshes()) {
 				var mesh = importer.getMesh(meshName);
-				validator.validate(mesh);
+				Validator.validate(mesh);
 				meshes.put(meshName, mesh);
 			}
 			materials = Collections.emptyMap(); // TODO implement
