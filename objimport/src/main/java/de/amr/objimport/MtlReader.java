@@ -61,7 +61,7 @@ public class MtlReader {
 		String fileUrl = baseUrl + filename;
 		try {
 			URL mtlUrl = new URL(fileUrl);
-			LOG.info("Reading material from filename = " + mtlUrl);
+			LOG.info("Reading material from URL %s", mtlUrl);
 			read(mtlUrl.openStream());
 		} catch (FileNotFoundException ex) {
 			LOG.info("No material file found for obj. [" + fileUrl + "]");

@@ -73,30 +73,20 @@ public class ObjImporter {
 	private Map<String, Material> materials = new HashMap<>();
 	private List<Map<String, Material>> materialLibrary = new ArrayList<>();
 	private String objFileUrl;
-
 	private FloatArrayList vertexes = new FloatArrayList();
-
 	private FloatArrayList uvs = new FloatArrayList();
-
 	private IntegerArrayList faces = new IntegerArrayList();
-
 	private IntegerArrayList smoothingGroups = new IntegerArrayList();
-
 	private FloatArrayList normals = new FloatArrayList();
-
 	private IntegerArrayList faceNormals = new IntegerArrayList();
-
 	private Material material = new PhongMaterial(Color.WHITE);
-
 	private int facesStart = 0;
-
 	private int facesNormalStart = 0;
-
 	private int smoothingGroupsStart = 0;
 
 	public ObjImporter(String objFileUrl) throws FileNotFoundException, IOException {
 		this.objFileUrl = objFileUrl;
-		LOG.info("Reading filename = " + objFileUrl);
+		LOG.info("Reading OBJ file from URL %s", objFileUrl);
 		read(new URL(objFileUrl).openStream());
 	}
 
