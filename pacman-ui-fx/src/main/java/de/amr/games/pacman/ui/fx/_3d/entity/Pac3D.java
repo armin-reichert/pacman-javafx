@@ -100,6 +100,10 @@ public class Pac3D {
 		var group = new Group(head, eyes, palate);
 		group.getTransforms().addAll(new Translate(0, 0, -1), scale(group, PAC_SIZE), new Rotate(90, Rotate.X_AXIS));
 
+		// TODO new obj importer has all meshes upside-down and backwards. Why?
+		group.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+		group.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+
 		return group;
 	}
 

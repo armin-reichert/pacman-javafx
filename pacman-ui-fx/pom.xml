@@ -94,6 +94,11 @@ There are two excutables built:
 			<version>1.0</version>
 		</dependency>
 		<dependency>
+			<groupId>de.amr.objimport</groupId>
+			<artifactId>importer</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>de.amr.games.pacman</groupId>
 			<artifactId>pacman-core</artifactId>
 			<version>1.0</version>

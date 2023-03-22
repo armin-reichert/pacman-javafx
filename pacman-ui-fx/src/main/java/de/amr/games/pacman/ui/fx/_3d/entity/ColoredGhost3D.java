@@ -99,6 +99,11 @@ public class ColoredGhost3D {
 
 		root = new Group(dress, eyes);
 		root.getTransforms().add(new Translate(0, 0, -1.5));
+
+		// TODO new obj importer has all meshes upside-down and backwards. Why?
+		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		root.getTransforms().add(scale(root, SIZE));
 	}
