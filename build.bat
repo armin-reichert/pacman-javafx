@@ -4,9 +4,6 @@ rem Expects that the Git repositories "pacman-basic" and "pacman-javafx" are loc
 pushd ..\pacman-basic\pacman-core
 call mvn clean install
 popd
-rem pushd interactivemesh
-rem call mvn install:install-file -Dfile=jars/jimObjModelImporterJFX.jar -DpomFile=pom.xml
-rem popd
 pushd objimport
 call mvn clean install
 popd
