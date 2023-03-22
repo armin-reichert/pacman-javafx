@@ -80,7 +80,7 @@
 					</execution>
 				</executions>
 				<dependencies>
-					<!-- to get log4j working with Maven shade -->
+					<!-- to get log4j working with Maven shade. WTF! -->
 					<dependency>
 						<groupId>io.github.edwgiz</groupId>
 						<artifactId>log4j-maven-shade-plugin-extensions</artifactId>

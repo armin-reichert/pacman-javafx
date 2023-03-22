@@ -39,21 +39,21 @@ public class SoundHandler {
 
 	public static final Object[][] MS_PACMAN_SOUND_DATA = { //
 			{ SoundClipID.BONUS_EATEN, "sound/mspacman/Fruit.mp3", 1.0 }, //
-			{ SoundClipID.CREDIT, "sound/mspacman/Coin Credit.mp3", 1.0 }, //
-			{ SoundClipID.EXTRA_LIFE, "sound/mspacman/Extra Life.mp3", 1.0 }, //
+			{ SoundClipID.CREDIT, "sound/mspacman/Credit.mp3", 1.0 }, //
+			{ SoundClipID.EXTRA_LIFE, "sound/mspacman/ExtraLife.mp3", 1.0 }, //
 			{ SoundClipID.GAME_READY, "sound/mspacman/Start.mp3", 1.0 }, //
 			{ SoundClipID.GHOST_EATEN, "sound/mspacman/Ghost.mp3", 1.0 }, //
-			{ SoundClipID.GHOST_RETURNING, "sound/mspacman/Ghost Eyes.mp3", 1.0 }, //
-			{ SoundClipID.INTERMISSION_1, "sound/mspacman/Act1 They Meet.mp3", 1.0 }, //
-			{ SoundClipID.INTERMISSION_2, "sound/mspacman/Act2 The Chase.mp3", 1.0 }, //
-			{ SoundClipID.INTERMISSION_3, "sound/mspacman/Act3 Junior.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_RETURNING, "sound/mspacman/GhostEyes.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_1, "sound/mspacman/Act1TheyMeet.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_2, "sound/mspacman/Act2TheChase.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_3, "sound/mspacman/Act3Junior.mp3", 1.0 }, //
 			{ SoundClipID.PACMAN_DEATH, "sound/mspacman/Died.mp3", 1.0 }, //
-			{ SoundClipID.PACMAN_MUNCH, "sound/mspacman/Ms. Pac Man Pill.mp3", 1.0 }, //
-			{ SoundClipID.PACMAN_POWER, "sound/mspacman/Scared Ghost.mp3", 1.0 }, //
-			{ SoundClipID.SIREN_1, "sound/mspacman/Ghost Noise 1.mp3", 1.0 }, //
-			{ SoundClipID.SIREN_2, "sound/mspacman/Ghost Noise 2.mp3", 1.0 }, //
-			{ SoundClipID.SIREN_3, "sound/mspacman/Ghost Noise 3.mp3", 1.0 }, //
-			{ SoundClipID.SIREN_4, "sound/mspacman/Ghost Noise 4.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_MUNCH, "sound/mspacman/Pill.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_POWER, "sound/mspacman/ScaredGhost.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_1, "sound/mspacman/GhostNoise1.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_2, "sound/mspacman/GhostNoise2.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_3, "sound/mspacman/GhostNoise3.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
 	};
 
 	public static final Object[][] PACMAN_SOUND_DATA = { //
