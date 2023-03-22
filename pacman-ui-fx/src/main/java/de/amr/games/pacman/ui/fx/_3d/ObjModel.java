@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.objimport.Validator;
 import de.amr.objimport.obj.ObjImporter;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
@@ -35,9 +36,11 @@ public class ObjModel {
 		}
 		try {
 			ObjImporter importer = new ObjImporter(url.toExternalForm());
+			Validator validator = new Validator();
 			meshes = new HashMap<>();
 			for (var meshName : importer.getMeshes()) {
 				var mesh = importer.getMesh(meshName);
+				validator.validate(mesh);
 				meshes.put(meshName, mesh);
 			}
 			materials = Collections.emptyMap(); // TODO implement
