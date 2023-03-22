@@ -7,14 +7,11 @@
 	<version>1.0</version>
 
 	<properties>
-		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
 		<javafx.version>18.0.1</javafx.version>
 		<log4j.version>2.18.0</log4j.version>
-		<mainClass>de.amr.objimport.Main</mainClass>
 		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
 		<maven.compiler.source>18</maven.compiler.source>
 		<maven.compiler.target>18</maven.compiler.target>
-		<maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
