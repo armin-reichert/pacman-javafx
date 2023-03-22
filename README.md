@@ -27,7 +27,6 @@ build.bat
 
 This script 
 - runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
-- creates a Maven artifact wrapping the jar file of the OBJ file [importer](http://www.interactivemesh.org/models/jfx3dimporter.html), 
 - runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (user interface),
 - creates the executable jar file `pacman-ui-fx-1.0-shaded.jar` in folder `pacman-javafx\pacman-ui-fx\target`,
 - creates the zip file `pacman-javafx-tentackle-1.0-jlink.zip in folder `pacman-javafx\tentackle\target`.
