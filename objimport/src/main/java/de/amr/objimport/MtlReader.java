@@ -56,6 +56,10 @@ public class MtlReader {
 
 	private String baseUrl;
 
+	private Map<String, Material> materials = new HashMap<>();
+	private PhongMaterial material = new PhongMaterial();
+	private boolean modified = false;
+
 	public MtlReader(String filename, String parentUrl) {
 		baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
 		String fileUrl = baseUrl + filename;
@@ -70,9 +74,9 @@ public class MtlReader {
 		}
 	}
 
-	private Map<String, Material> materials = new HashMap<>();
-	private PhongMaterial material = new PhongMaterial();
-	private boolean modified = false;
+	public Map<String, Material> getMaterials() {
+		return Collections.unmodifiableMap(materials);
+	}
 
 	private void read(InputStream inputStream) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
@@ -143,9 +147,5 @@ public class MtlReader {
 		filename = baseUrl + filename;
 		LOG.info("Loading image from " + filename);
 		return new Image(filename);
-	}
-
-	public Map<String, Material> getMaterials() {
-		return Collections.unmodifiableMap(materials);
 	}
 }
