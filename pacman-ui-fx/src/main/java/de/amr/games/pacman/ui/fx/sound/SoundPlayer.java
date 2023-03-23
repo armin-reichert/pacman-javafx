@@ -112,6 +112,9 @@ public class SoundPlayer {
 		return Stream.of(SoundClipID.SIREN_1, SoundClipID.SIREN_2, SoundClipID.SIREN_3, SoundClipID.SIREN_4);
 	}
 
+	/**
+	 * @param sirenIndex index of siren (0..3)
+	 */
 	public void ensureSirenStarted(int sirenIndex) {
 		if (sirens().noneMatch(this::isPlaying)) {
 			startSiren(sirenIndex);

@@ -63,6 +63,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
+import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
@@ -228,12 +229,14 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		context.world().ifPresent(world -> {
+		context.level().ifPresent(level -> {
 			level3D.eatables3D()
-					.forEach(eatable3D -> eatable3D.getRoot().setVisible(!world.containsEatenFood(eatable3D.tile())));
+					.forEach(eatable3D -> eatable3D.getRoot().setVisible(!level.world().containsEatenFood(eatable3D.tile())));
 			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.energizers3D().forEach(Energizer3D::startPumping);
 			}
+			var sounds = SoundHandler.sounds(context.game());
+			sounds.ensureSirenStarted(level.huntingPhase() / 2);
 		});
 	}
 
