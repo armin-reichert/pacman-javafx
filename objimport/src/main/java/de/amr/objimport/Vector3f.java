@@ -25,8 +25,10 @@ SOFTWARE.
 package de.amr.objimport;
 
 /**
+ * Immutable 3D vector with float precision. No full fledged implementation, just the methods used by the OBJ importer
+ * classes.
+ * 
  * @author Armin Reichert
- *
  */
 public record Vector3f(float x, float y, float z) {
 
