@@ -208,6 +208,8 @@ public class GameUI implements GameEventListener {
 	private void updatePiPView() {
 		if (Env.PiP.visiblePy.get() && gameSceneManager.isPlayScene(currentGameScene)) {
 			pipViewScene.fxSubScene().setVisible(true);
+			pipViewScene.context().setCreditVisible(false);
+			pipViewScene.context().setScoreVisible(true);
 			pipViewScene.context().setRendering2D(currentGameScene.context().rendering2D());
 			pipViewScene.render();
 		} else {
