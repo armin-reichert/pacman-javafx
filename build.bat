@@ -4,9 +4,6 @@ rem Expects that the Git repositories "pacman-basic" and "pacman-javafx" are loc
 pushd ..\pacman-basic\pacman-core
 call mvn clean install
 popd
-pushd objimport
-call mvn clean install
-popd
 pushd pacman-ui-fx
 call mvn clean install
 popd
