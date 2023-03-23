@@ -32,7 +32,6 @@
 package de.amr.objimport;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,17 +74,17 @@ public class ObjImporter {
 		ObjImporter.flatXZ = flatXZ;
 	}
 
-	public void validate(Node node) {
+	public static void validate(Node node) {
 		if (node instanceof MeshView meshView) {
 			validateMesh(meshView.getMesh());
-		} else if (node instanceof Parent) {
-			for (Node child : ((Parent) node).getChildrenUnmodifiable()) {
+		} else if (node instanceof Parent parent) {
+			for (Node child : parent.getChildrenUnmodifiable()) {
 				validate(child);
 			}
 		}
 	}
 
-	public void validateMesh(Mesh mesh) {
+	public static void validateMesh(Mesh mesh) {
 		if (!(mesh instanceof TriangleMesh)) {
 			throw new AssertionError("Mesh is not TriangleMesh: " + mesh.getClass() + ", mesh = " + mesh);
 		}
@@ -134,7 +133,7 @@ public class ObjImporter {
 	private int facesNormalStart = 0;
 	private int smoothingGroupsStart = 0;
 
-	public ObjImporter(String objFileUrl) throws FileNotFoundException, IOException {
+	public ObjImporter(String objFileUrl) throws IOException {
 		this.objFileUrl = objFileUrl;
 		LOG.info("Reading OBJ file from URL %s", objFileUrl);
 		read(new URL(objFileUrl).openStream());
@@ -144,7 +143,7 @@ public class ObjImporter {
 		read(inputStream);
 	}
 
-	public Set<String> getMeshes() {
+	public Set<String> getMeshNames() {
 		return meshes.keySet();
 	}
 
@@ -207,13 +206,12 @@ public class ObjImporter {
 				if (line.startsWith("g ") || line.equals("g")) {
 					addMesh(key);
 					key = line.length() > 2 ? line.substring(2) : "default";
-					LOG.trace("key = " + key);
+					LOG.trace("key = %s", key);
 				} else if (line.startsWith("v ")) {
 					String[] split = line.substring(2).trim().split("\\s+");
 					float x = Float.parseFloat(split[0]) * scale;
 					float y = Float.parseFloat(split[1]) * scale;
 					float z = Float.parseFloat(split[2]) * scale;
-					// LOG.trace("x = " + x + ", y = " + y + ", z = " + z);
 					vertexes.addAll(x, y, z);
 					if (flatXZ) {
 						uvs.addAll(x, z);
@@ -222,9 +220,6 @@ public class ObjImporter {
 					String[] split = line.substring(3).trim().split("\\s+");
 					float u = Float.parseFloat(split[0]);
 					float v = Float.parseFloat(split[1]);
-
-					// LOG.trace("u = " + u + ", v = " + v);
-
 					uvs.addAll(u, 1 - v);
 				} else if (line.startsWith("f ")) {
 					String[] split = line.substring(2).trim().split("\\s+");
@@ -284,10 +279,6 @@ public class ObjImporter {
 							n2 = normalIndex(data[i][2]);
 							n3 = normalIndex(data[i + 1][2]);
 						}
-
-						// LOG.trace("v1 = " + v1 + ", v2 = " + v2 + ", v3 = " + v3);
-						// LOG.trace("uv1 = " + uv1 + ", uv2 = " + uv2 + ", uv3 = " + uv3);
-
 						faces.add(v1);
 						faces.add(uv1);
 						faces.add(v2);
@@ -297,7 +288,6 @@ public class ObjImporter {
 						faceNormals.add(n1);
 						faceNormals.add(n2);
 						faceNormals.add(n3);
-
 						smoothingGroups.add(currentSmoothGroup);
 					}
 				} else if (line.startsWith("s ")) {
@@ -333,14 +323,13 @@ public class ObjImporter {
 					float z = Float.parseFloat(split[2]);
 					normals.addAll(x, y, z);
 				} else {
-					LOG.trace("line skipped: " + line);
+					LOG.trace("Line skipped: %s", line);
 				}
 			} catch (Exception ex) {
 				LOG.error("Failed to parse line: %s", line);
 			}
 		}
 		addMesh(key);
-
 		LOG.info("Loaded %d vertices, %d uvs, %d faces, %d smoothing groups", vertexes.size() / 3, uvs.size() / 2,
 				faces.size() / 6, smoothingGroups.size());
 	}
@@ -351,9 +340,9 @@ public class ObjImporter {
 			smoothingGroupsStart = smoothingGroups.size();
 			return;
 		}
-		Map<Integer, Integer> vertexMap = new HashMap<>(vertexes.size() / 2);
-		Map<Integer, Integer> uvMap = new HashMap<>(uvs.size() / 2);
-		Map<Integer, Integer> normalMap = new HashMap<>(normals.size() / 2);
+		var vertexMap = new HashMap<Integer, Integer>(vertexes.size() / 2);
+		var uvMap = new HashMap<Integer, Integer>(uvs.size() / 2);
+		var normalMap = new HashMap<Integer, Integer>(normals.size() / 2);
 		var newVertexes = FXCollections.observableFloatArray();
 		var newUVs = FXCollections.observableFloatArray();
 		var newNormals = FXCollections.observableFloatArray();
@@ -425,12 +414,12 @@ public class ObjImporter {
 		meshes.put(key, mesh);
 		materials.put(key, material);
 
-		LOG.trace("Added mesh '" + key + "' of " + mesh.getPoints().size() / mesh.getPointElementSize() + " vertexes, "
-				+ mesh.getTexCoords().size() / mesh.getTexCoordElementSize() + " uvs, "
-				+ mesh.getFaces().size() / mesh.getFaceElementSize() + " faces, " + mesh.getFaceSmoothingGroups().size()
-				+ " smoothing groups.");
-		LOG.trace("material diffuse color = " + ((PhongMaterial) material).getDiffuseColor());
-		LOG.trace("material diffuse map = " + ((PhongMaterial) material).getDiffuseMap());
+		LOG.trace("Mesh '%s' added, vertices: %d, uvs: %d, faces: %d, smoothing groups: %d", key,
+				mesh.getPoints().size() / mesh.getPointElementSize(),
+				mesh.getTexCoords().size() / mesh.getTexCoordElementSize(), mesh.getFaces().size() / mesh.getFaceElementSize(),
+				mesh.getFaceSmoothingGroups().size());
+		LOG.trace("Material diffuse color = %s", ((PhongMaterial) material).getDiffuseColor());
+		LOG.trace("Material diffuse map   = %s", ((PhongMaterial) material).getDiffuseMap());
 
 		facesStart = faces.size();
 		facesNormalStart = faceNormals.size();

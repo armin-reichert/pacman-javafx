@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui.fx._3d;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,22 +25,20 @@ public class ObjModel {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private Map<String, Mesh> meshes;
-	private Map<String, PhongMaterial> materials;
+	private Map<String, Mesh> meshes = new HashMap<>();
+	private Map<String, PhongMaterial> materials = new HashMap<>();
 
 	public ObjModel(URL url) {
 		if (url == null) {
 			throw new Model3DException("OBJ model cannot be created: URL is null");
 		}
 		try {
-			ObjImporter importer = new ObjImporter(url.toExternalForm());
-			meshes = new HashMap<>();
-			for (var meshName : importer.getMeshes()) {
+			var importer = new ObjImporter(url.toExternalForm());
+			for (var meshName : importer.getMeshNames()) {
 				var mesh = importer.getMesh(meshName);
-				importer.validateMesh(mesh);
+				ObjImporter.validateMesh(mesh);
 				meshes.put(meshName, mesh);
 			}
-			materials = Collections.emptyMap(); // TODO implement
 			LOG.info("3D model loaded, URL='%s'", url);
 			for (var entry : meshes.entrySet()) {
 				LOG.trace("Mesh id=%s, value=%s", entry.getKey(), entry.getValue());
