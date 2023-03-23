@@ -35,18 +35,16 @@ public record Vector3f(float x, float y, float z) {
 	}
 
 	/**
-	 * Computes the dot product of this vector and vector v1.
+	 * Computes the dot product of this vector and the given vector.
 	 *
-	 * @param v the other vector
-	 * @return the dot product of this vector and v1
+	 * @param v other vector
+	 * @return the dot product
 	 */
 	public float dot(Vector3f v) {
 		return x * v.x + y * v.y + z * v.z;
 	}
 
 	/**
-	 * Returns the length of this vector.
-	 *
 	 * @return the length of this vector
 	 */
 	public float length() {
@@ -54,7 +52,7 @@ public record Vector3f(float x, float y, float z) {
 	}
 
 	/**
-	 * Normalize this vector.
+	 * @return normalized (length 1) vector
 	 */
 	public Vector3f normalized() {
 		float norm = 1.0f / length();
