@@ -29,7 +29,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package de.amr.objimport;
+package de.amr.games.pacman.ui.fx._3d.objimport;
 
 import java.util.ArrayList;
 import java.util.Arrays;

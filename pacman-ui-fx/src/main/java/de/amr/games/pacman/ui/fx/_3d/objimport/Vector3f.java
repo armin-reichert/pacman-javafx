@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.objimport;
+package de.amr.games.pacman.ui.fx._3d.objimport;
 
 /**
  * Immutable 3D vector with float precision. No full fledged implementation, just the methods used by the OBJ importer
