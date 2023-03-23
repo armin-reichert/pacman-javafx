@@ -71,8 +71,8 @@ public class ResourceMgr {
 
 	private static PhongMaterial createTexture(String name) {
 		var material = new PhongMaterial();
-		material.setBumpMap(ResourceMgr.image("graphics/textures/" + name + "-bump.jpg"));
-		material.setDiffuseMap(ResourceMgr.image("graphics/textures/" + name + "-diffuse.jpg"));
+		material.setBumpMap(image("graphics/textures/" + name + "-bump.jpg"));
+		material.setDiffuseMap(image("graphics/textures/" + name + "-diffuse.jpg"));
 		material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
 		material.specularColorProperty()
 				.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
