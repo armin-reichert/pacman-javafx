@@ -45,7 +45,11 @@ import javafx.scene.shape.TriangleMesh;
 
 /** Util for converting Normals to Smoothing Groups */
 public class SmoothingGroups {
-	private BitSet visited, notVisited;
+
+	private static final float NORMAL_ANGLE = 0.9994f; // cos(2)
+
+	private BitSet visited;
+	private BitSet unvisited;
 	private Queue<Integer> q;
 
 	private int[][] faces;
@@ -54,23 +58,23 @@ public class SmoothingGroups {
 
 	private Edge[][] faceEdges;
 
-	public SmoothingGroups(int faces[][], int[][] faceNormals, float[] normals) {
+	public SmoothingGroups(int[][] faces, int[][] faceNormals, float[] normals) {
 		this.faces = faces;
 		this.faceNormals = faceNormals;
 		this.normals = normals;
 		visited = new BitSet(faces.length);
-		notVisited = new BitSet(faces.length);
-		notVisited.set(0, faces.length, true);
-		q = new LinkedList<Integer>();
+		unvisited = new BitSet(faces.length);
+		unvisited.set(0, faces.length, true);
+		q = new LinkedList<>();
 	}
 
 	// edge -> [faces]
 	private List<Integer> getNextConnectedComponent(Map<Edge, List<Integer>> adjacentFaces) {
-		int index = notVisited.previousSetBit(faces.length - 1);
+		int index = unvisited.previousSetBit(faces.length - 1);
 		q.add(index);
 		visited.set(index);
-		notVisited.set(index, false);
-		List<Integer> res = new ArrayList<Integer>();
+		unvisited.set(index, false);
+		var res = new ArrayList<Integer>();
 		while (!q.isEmpty()) {
 			Integer faceIndex = q.remove();
 			res.add(faceIndex);
@@ -83,7 +87,7 @@ public class SmoothingGroups {
 				if (!visited.get(adjFaceIndex)) {
 					q.add(adjFaceIndex);
 					visited.set(adjFaceIndex);
-					notVisited.set(adjFaceIndex, false);
+					unvisited.set(adjFaceIndex, false);
 				}
 			}
 		}
@@ -91,7 +95,7 @@ public class SmoothingGroups {
 	}
 
 	private boolean hasNextConnectedComponent() {
-		return !notVisited.isEmpty();
+		return !unvisited.isEmpty();
 	}
 
 	private void computeFaceEdges() {
@@ -115,7 +119,7 @@ public class SmoothingGroups {
 	}
 
 	private Map<Edge, List<Integer>> getAdjacentFaces() {
-		Map<Edge, List<Integer>> adjacentFaces = new HashMap<Edge, List<Integer>>();
+		var adjacentFaces = new HashMap<Edge, List<Integer>>();
 		for (int f = 0; f < faceEdges.length; f++) {
 			for (Edge edge : faceEdges[f]) {
 				if (!adjacentFaces.containsKey(edge)) {
@@ -134,28 +138,22 @@ public class SmoothingGroups {
 		return adjacentFaces;
 	}
 
-	Vec3f getNormal(int index) {
-		return new Vec3f(normals[index * 3], normals[index * 3 + 1], normals[index * 3 + 2]);
+	private Vector3f getNormal(int index) {
+		return new Vector3f(normals[index * 3], normals[index * 3 + 1], normals[index * 3 + 2]);
 	}
 
-	private static final float normalAngle = 0.9994f; // cos(2)
-
-	private static boolean isNormalsEqual(Vec3f n1, Vec3f n2) {
-		if (n1.x == 1.0e20f || n1.y == 1.0e20f || n1.z == 1.0e20f || n2.x == 1.0e20f || n2.y == 1.0e20f
-				|| n2.z == 1.0e20f) {
-			// System.out.println("unlocked normal found, skipping");
+	private static boolean areNormalsEqual(Vector3f v1, Vector3f v2) {
+		if (v1.x() == 1.0e20f || v1.y() == 1.0e20f || v1.z() == 1.0e20f || v2.x() == 1.0e20f || v2.y() == 1.0e20f
+				|| v2.z() == 1.0e20f) {
 			return false;
 		}
-		Vec3f myN1 = new Vec3f(n1);
-		myN1.normalize();
-		Vec3f myN2 = new Vec3f(n2);
-		myN2.normalize();
-		return myN1.dot(myN2) >= normalAngle;
+		Vector3f normal1 = new Vector3f(v1).normalized();
+		Vector3f normal2 = new Vector3f(v2).normalized();
+		return normal1.dot(normal2) >= NORMAL_ANGLE;
 	}
 
 	private Map<Edge, List<Integer>> getSmoothEdges(Map<Edge, List<Integer>> adjacentFaces) {
-		Map<Edge, List<Integer>> smoothEdges = new HashMap<Edge, List<Integer>>();
-
+		var smoothEdges = new HashMap<Edge, List<Integer>>();
 		for (int face = 0; face < faceEdges.length; face++) {
 			for (Edge edge : faceEdges[face]) {
 				List<Integer> adjFaces = adjacentFaces.get(edge);
@@ -240,11 +238,10 @@ public class SmoothingGroups {
 		}
 
 		public boolean isSmooth(Edge edge) {
-			boolean smooth = (isNormalsEqual(getNormal(fromNormal), getNormal(edge.fromNormal))
-					&& isNormalsEqual(getNormal(toNormal), getNormal(edge.toNormal)))
-					|| (isNormalsEqual(getNormal(fromNormal), getNormal(edge.toNormal))
-							&& isNormalsEqual(getNormal(toNormal), getNormal(edge.fromNormal)));
-			return smooth;
+			return (areNormalsEqual(getNormal(fromNormal), getNormal(edge.fromNormal))
+					&& areNormalsEqual(getNormal(toNormal), getNormal(edge.toNormal)))
+					|| (areNormalsEqual(getNormal(fromNormal), getNormal(edge.toNormal))
+							&& areNormalsEqual(getNormal(toNormal), getNormal(edge.fromNormal)));
 		}
 
 		@Override
