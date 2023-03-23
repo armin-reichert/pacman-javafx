@@ -47,11 +47,6 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.amr.objimport</groupId>
-			<artifactId>importer</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j.version}</version>
