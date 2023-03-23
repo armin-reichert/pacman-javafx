@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.objimport.ObjImporter;
-import de.amr.objimport.Validator;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 
@@ -39,7 +38,7 @@ public class ObjModel {
 			meshes = new HashMap<>();
 			for (var meshName : importer.getMeshes()) {
 				var mesh = importer.getMesh(meshName);
-				Validator.validateMesh(mesh);
+				importer.validateMesh(mesh);
 				meshes.put(meshName, mesh);
 			}
 			materials = Collections.emptyMap(); // TODO implement
