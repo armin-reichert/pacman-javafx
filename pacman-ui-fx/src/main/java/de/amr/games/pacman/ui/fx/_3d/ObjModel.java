@@ -36,7 +36,7 @@ public class ObjModel {
 			var importer = new ObjImporter(url.toExternalForm());
 			for (var meshName : importer.getMeshNames()) {
 				var mesh = importer.getMesh(meshName);
-				ObjImporter.validateMesh(mesh);
+				ObjImporter.validateTriangleMesh(mesh);
 				meshes.put(meshName, mesh);
 			}
 			LOG.info("3D model loaded, URL='%s'", url);

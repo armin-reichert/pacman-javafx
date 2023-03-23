@@ -54,47 +54,48 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
-import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
-/** Obj file reader */
+/**
+ * Simplified version of Oracle's OBJ importer.
+ *
+ * TODO: materials
+ * 
+ * @author Armin Reichert
+ */
 public class ObjImporter {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static void validate(Node node) {
+	public static void validateTree(Node node) {
 		if (node instanceof MeshView meshView) {
-			validateMesh(meshView.getMesh());
+			validateTriangleMesh((TriangleMesh) meshView.getMesh());
 		} else if (node instanceof Parent parent) {
 			for (Node child : parent.getChildrenUnmodifiable()) {
-				validate(child);
+				validateTree(child);
 			}
 		}
 	}
 
-	public static void validateMesh(Mesh mesh) {
-		if (!(mesh instanceof TriangleMesh)) {
-			throw new AssertionError("Mesh is not TriangleMesh: " + mesh.getClass() + ", mesh = " + mesh);
+	public static void validateTriangleMesh(TriangleMesh mesh) {
+		int numPoints = mesh.getPoints().size() / mesh.getPointElementSize();
+		int numTexCoords = mesh.getTexCoords().size() / mesh.getTexCoordElementSize();
+		int numFaces = mesh.getFaces().size() / mesh.getFaceElementSize();
+		if (numPoints == 0 || numPoints * mesh.getPointElementSize() != mesh.getPoints().size()) {
+			throw new AssertionError("Points array size is not correct: " + mesh.getPoints().size());
 		}
-		TriangleMesh tMesh = (TriangleMesh) mesh;
-		int numPoints = tMesh.getPoints().size() / tMesh.getPointElementSize();
-		int numTexCoords = tMesh.getTexCoords().size() / tMesh.getTexCoordElementSize();
-		int numFaces = tMesh.getFaces().size() / tMesh.getFaceElementSize();
-		if (numPoints == 0 || numPoints * tMesh.getPointElementSize() != tMesh.getPoints().size()) {
-			throw new AssertionError("Points array size is not correct: " + tMesh.getPoints().size());
+		if (numTexCoords == 0 || numTexCoords * mesh.getTexCoordElementSize() != mesh.getTexCoords().size()) {
+			throw new AssertionError("TexCoords array size is not correct: " + mesh.getPoints().size());
 		}
-		if (numTexCoords == 0 || numTexCoords * tMesh.getTexCoordElementSize() != tMesh.getTexCoords().size()) {
-			throw new AssertionError("TexCoords array size is not correct: " + tMesh.getPoints().size());
+		if (numFaces == 0 || numFaces * mesh.getFaceElementSize() != mesh.getFaces().size()) {
+			throw new AssertionError("Faces array size is not correct: " + mesh.getPoints().size());
 		}
-		if (numFaces == 0 || numFaces * tMesh.getFaceElementSize() != tMesh.getFaces().size()) {
-			throw new AssertionError("Faces array size is not correct: " + tMesh.getPoints().size());
-		}
-		if (numFaces != tMesh.getFaceSmoothingGroups().size() && tMesh.getFaceSmoothingGroups().size() > 0) {
+		if (numFaces != mesh.getFaceSmoothingGroups().size() && mesh.getFaceSmoothingGroups().size() > 0) {
 			throw new AssertionError(
-					"FaceSmoothingGroups array size is not correct: " + tMesh.getPoints().size() + ", numFaces = " + numFaces);
+					"FaceSmoothingGroups array size is not correct: " + mesh.getPoints().size() + ", numFaces = " + numFaces);
 		}
-		ObservableIntegerArray faces = tMesh.getFaces();
+		ObservableIntegerArray faces = mesh.getFaces();
 		for (int i = 0; i < faces.size(); i += 2) {
 			int pIndex = faces.get(i);
 			if (pIndex < 0 || pIndex > numPoints) {
@@ -107,10 +108,10 @@ public class ObjImporter {
 		}
 	}
 
+	private String objFileUrl;
 	private Map<String, TriangleMesh> meshes = new HashMap<>();
 	private Map<String, Material> materials = new HashMap<>();
 	private List<Map<String, Material>> materialLibrary = new ArrayList<>();
-	private String objFileUrl;
 	private ObservableFloatArray vertexes = FXCollections.observableFloatArray();
 	private ObservableFloatArray uvs = FXCollections.observableFloatArray();
 	private IntegerArrayList faces = new IntegerArrayList();
@@ -136,10 +137,6 @@ public class ObjImporter {
 		return meshes.keySet();
 	}
 
-	public TriangleMesh getMesh() {
-		return meshes.values().iterator().next();
-	}
-
 	public TriangleMesh getMesh(String key) {
 		return meshes.get(key);
 	}
@@ -151,10 +148,6 @@ public class ObjImporter {
 		meshView.setMesh(meshes.get(key));
 		meshView.setCullFace(CullFace.NONE);
 		return meshView;
-	}
-
-	public Material getMaterial() {
-		return materials.values().iterator().next();
 	}
 
 	public Material getMaterial(String key) {
@@ -195,7 +188,7 @@ public class ObjImporter {
 				if (line.startsWith("g ") || line.equals("g")) {
 					addMesh(key);
 					key = line.length() > 2 ? line.substring(2) : "default";
-					LOG.trace("key = %s", key);
+					LOG.trace("Mesh key = %s", key);
 				} else if (line.startsWith("v ")) {
 					String[] split = line.substring(2).trim().split("\\s+");
 					float x = Float.parseFloat(split[0]);
