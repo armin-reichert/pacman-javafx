@@ -29,7 +29,7 @@ This script
 - runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
 - runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (user interface),
 - creates the executable jar file `pacman-ui-fx-1.0-shaded.jar` in folder `pacman-javafx\pacman-ui-fx\target`,
-- creates the zip file `pacman-javafx-tentackle-1.0-jlink.zip in folder `pacman-javafx\tentackle\target`.
+- creates the zip file `pacman-javafx-tentackle-1.0-jlink.zip` in folder `pacman-javafx\tentackle\target`.
 
 ## How to run the locally built version
 
