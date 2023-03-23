@@ -21,7 +21,7 @@ To build the executable by yourself on non-Windows systems, run the steps in the
 Clone also repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Then
 
 ```
-cd \path\to\git\pacman-javafx\pacman-ui-fx\build 
+cd \path\to\git\pacman-javafx\pacman-ui-fx 
 build.bat
 ```
 
