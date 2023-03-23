@@ -63,17 +63,6 @@ public class ObjImporter {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static float scale = 1;
-	private static boolean flatXZ = false;
-
-	public static void setScale(float scale) {
-		ObjImporter.scale = scale;
-	}
-
-	public static void setFlatXZ(boolean flatXZ) {
-		ObjImporter.flatXZ = flatXZ;
-	}
-
 	public static void validate(Node node) {
 		if (node instanceof MeshView meshView) {
 			validateMesh(meshView.getMesh());
@@ -209,13 +198,10 @@ public class ObjImporter {
 					LOG.trace("key = %s", key);
 				} else if (line.startsWith("v ")) {
 					String[] split = line.substring(2).trim().split("\\s+");
-					float x = Float.parseFloat(split[0]) * scale;
-					float y = Float.parseFloat(split[1]) * scale;
-					float z = Float.parseFloat(split[2]) * scale;
+					float x = Float.parseFloat(split[0]);
+					float y = Float.parseFloat(split[1]);
+					float z = Float.parseFloat(split[2]);
 					vertexes.addAll(x, y, z);
-					if (flatXZ) {
-						uvs.addAll(x, z);
-					}
 				} else if (line.startsWith("vt ")) {
 					String[] split = line.substring(3).trim().split("\\s+");
 					float u = Float.parseFloat(split[0]);
@@ -252,7 +238,7 @@ public class ObjImporter {
 					int v1 = vertexIndex(data[0][0]);
 					int uv1 = -1;
 					int n1 = -1;
-					if (uvProvided && !flatXZ) {
+					if (uvProvided) {
 						uv1 = uvIndex(data[0][1]);
 						if (uv1 < 0) {
 							uvProvided = false;
@@ -271,7 +257,7 @@ public class ObjImporter {
 						int uv3 = -1;
 						int n2 = -1;
 						int n3 = -1;
-						if (uvProvided && !flatXZ) {
+						if (uvProvided) {
 							uv2 = uvIndex(data[i][1]);
 							uv3 = uvIndex(data[i + 1][1]);
 						}
