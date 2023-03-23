@@ -6,4 +6,4 @@ pushd ..\..\pacman-basic\pacman-core
 call mvn clean install
 popd
 call mvn clean install
-call mvn -f deploy.xml clean install
+call mvn -f deploy.xml install
