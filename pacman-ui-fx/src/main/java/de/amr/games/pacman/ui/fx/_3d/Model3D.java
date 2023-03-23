@@ -37,10 +37,15 @@ public class Model3D {
 				var mesh = importer.getMesh(meshName);
 				ObjImporter.validateTriangleMesh(mesh);
 				meshes.put(meshName, mesh);
+				var material = importer.getMaterial(meshName);
+				materials.put(meshName, (PhongMaterial) material);
 			}
 			LOG.info("3D model loaded, URL='%s'", url);
 			for (var entry : meshes.entrySet()) {
-				LOG.trace("Mesh id=%s, value=%s", entry.getKey(), entry.getValue());
+				LOG.trace("Mesh key=%s, value=%s", entry.getKey(), entry.getValue());
+			}
+			for (var entry : materials.entrySet()) {
+				LOG.trace("Material key=%s, value=%s", entry.getKey(), entry.getValue());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
