@@ -2,11 +2,12 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>de.amr.games.pacman.ui.fx</groupId>
 	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
-	<name>Pac-Man and Ms. Pac-Man in JavaFX</name>
-	<url>https://github.com/armin-reichert/pacman-javafx</url>
+
+	<name>Pac-Man and Ms. Pac-Man UI in JavaFX</name>
 	<description>This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games.
 
 		The game model and logic are implemented using the Model-View-Controller
@@ -16,6 +17,8 @@
 		There are two excutables built:
 		1. An executable jar file (using Maven shade)
 		2. A zip file containing the Java/JavaFX runtime and the game</description>
+	<url>https://github.com/armin-reichert/pacman-javafx</url>
+
 	<properties>
 		<classifier>win</classifier>
 		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
@@ -29,6 +32,27 @@
 		<maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<classifier>${classifier}</classifier>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<classifier>${classifier}</classifier>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -90,23 +114,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>de.amr.games.pacman</groupId>
-			<artifactId>pacman-core</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<classifier>${classifier}</classifier>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
-		</dependency>
-		<dependency>
-			<classifier>${classifier}</classifier>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-media</artifactId>
-			<version>${javafx.version}</version>
-		</dependency>
-	</dependencies>
+
 </project>
