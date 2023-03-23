@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.ObjModel;
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
 import javafx.animation.Animation;
@@ -58,7 +58,7 @@ import javafx.scene.transform.Translate;
  */
 public class Pac3D {
 
-	private static final ObjModel OBJ_MODEL = new ObjModel("model3D/pacman.obj");
+	private static final Model3D OBJ_MODEL = new Model3D("model3D/pacman.obj");
 	private static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_ID_PALATE = "Sphere_grey_wall";

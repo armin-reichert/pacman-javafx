@@ -27,7 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.ui.fx._3d.ObjModel;
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
@@ -41,7 +41,7 @@ import javafx.scene.transform.Scale;
  */
 public class Pellet3D implements Eatable3D {
 
-	private static final ObjModel OBJ_MODEL = new ObjModel("model3D/12206_Fruit_v1_L3.obj");
+	private static final Model3D OBJ_MODEL = new Model3D("model3D/12206_Fruit_v1_L3.obj");
 	private static final String MESH_ID = "Fruit";
 
 	private final Shape3D shape = new MeshView(OBJ_MODEL.mesh(MESH_ID));

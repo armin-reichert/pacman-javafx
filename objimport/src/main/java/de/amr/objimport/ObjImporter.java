@@ -58,11 +58,14 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
- * Simplified version of Oracle's OBJ importer.
- *
+ * Simplified version of Oracle's OBJ importer from the 3DViewer sample project.
+ * <p>
  * TODO: materials
  * 
  * @author Armin Reichert
+ * @see <a href=
+ *      "https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers">3DViewer
+ *      Sample</a>
  */
 public class ObjImporter {
 

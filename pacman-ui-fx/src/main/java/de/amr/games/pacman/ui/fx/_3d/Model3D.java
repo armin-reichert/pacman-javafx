@@ -19,16 +19,15 @@ import javafx.scene.shape.Mesh;
  * Uses the importer code from Oracle's JFX3DViewer sample project.
  * 
  * @author Armin Reichert
- * @see https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers
  */
-public class ObjModel {
+public class Model3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private Map<String, Mesh> meshes = new HashMap<>();
 	private Map<String, PhongMaterial> materials = new HashMap<>();
 
-	public ObjModel(URL url) {
+	public Model3D(URL url) {
 		if (url == null) {
 			throw new Model3DException("OBJ model cannot be created: URL is null");
 		}
@@ -48,7 +47,7 @@ public class ObjModel {
 		}
 	}
 
-	public ObjModel(String relPath) {
+	public Model3D(String relPath) {
 		this(ResourceMgr.urlFromRelPath(relPath));
 	}
 
