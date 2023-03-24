@@ -83,7 +83,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
- * JavaFX UI for Pac-Man and Ms. Pac-Man game.
+ * User interface for Pac-Man and Ms. Pac-Man games.
  * <p>
  * The play scene is available in 2D and 3D. All others scenes are 2D only.
  * 
@@ -122,9 +122,6 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private final GameSceneSelection[] scenesMsPacMan;
-	private final GameSceneSelection[] scenesPacMan;
-
 	private final Stage stage;
 	private final Scene mainScene;
 	private final GameController gameController;
@@ -133,6 +130,8 @@ public class GameUI implements GameEventListener {
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
 	private PlayScene2D pipViewScene;
 	private KeyboardSteering manualSteering;
+	private final GameSceneSelection[] scenesMsPacMan;
+	private final GameSceneSelection[] scenesPacMan;
 	private GameScene currentGameScene;
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
@@ -295,6 +294,18 @@ public class GameUI implements GameEventListener {
 		LOG.info("Game stopped");
 	}
 
+	/**
+	 * @param dim scene variant dimension (2 or 3)
+	 * @return (optional) game scene matching current game state and specified dimension
+	 */
+	public Optional<GameScene> findGameScene(int dim) {
+		if (dim != 2 && dim != 3) {
+			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
+		}
+		var variants = sceneSelectionMatchingCurrentGameState();
+		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
+	}
+
 	private GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
 		try {
 			GameScene2D scene2D = clazz.getDeclaredConstructor(GameController.class).newInstance(gameController);
@@ -312,18 +323,6 @@ public class GameUI implements GameEventListener {
 				|| gameScene == scenesPacMan[PLAY_SCENE_INDEX].scene3D()
 				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene2D()
 				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene3D();
-	}
-
-	/**
-	 * @param dim scene variant dimension (2 or 3)
-	 * @return (optional) game scene matching current game state and specified dimension
-	 */
-	public Optional<GameScene> findGameScene(int dim) {
-		if (dim != 2 && dim != 3) {
-			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
-		}
-		var variants = sceneSelectionMatchingCurrentGameState();
-		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
 	}
 
 	private GameSceneSelection sceneSelectionMatchingCurrentGameState() {
@@ -347,7 +346,6 @@ public class GameUI implements GameEventListener {
 		};
 	}
 
-	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
 		var matching = sceneSelectionMatchingCurrentGameState();
 		var use3D = Env.ThreeD.enabledPy.get();
@@ -395,8 +393,6 @@ public class GameUI implements GameEventListener {
 			Ufx.toggle(Env.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
 			Actions.toggleImmunity();
-//		} else if (Keyboard.pressed(Keys.MUTE)) {
-//			Actions.toggleSoundMuted();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
 			Actions.togglePaused();
 		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
