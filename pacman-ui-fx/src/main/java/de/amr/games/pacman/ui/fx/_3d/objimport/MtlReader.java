@@ -55,7 +55,6 @@ public class MtlReader {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private String baseUrl;
-
 	private Map<String, Material> materials = new HashMap<>();
 	private PhongMaterial material = new PhongMaterial();
 	private boolean modified = false;
@@ -68,7 +67,7 @@ public class MtlReader {
 			LOG.info("Reading material from URL %s", mtlUrl);
 			read(mtlUrl.openStream());
 		} catch (FileNotFoundException ex) {
-			LOG.info("No material file found for obj. [" + fileUrl + "]");
+			LOG.info("No material file found for obj. [%s]", fileUrl);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -114,7 +113,7 @@ public class MtlReader {
 					 * Casts shadows onto invisible surfaces
 					 */
 				} else {
-					LOG.trace("material line ignored for " + name + ": " + line);
+					LOG.trace("Material file line ignored for name %s: %s", name, line);
 				}
 			} catch (Exception x) {
 				x.printStackTrace();
@@ -129,7 +128,7 @@ public class MtlReader {
 			if (!materials.containsKey(name)) {
 				materials.put(name, material);
 			} else {
-				LOG.info("This material is already added. Ignoring " + name);
+				LOG.info("Material already added. Ignoring %s", name);
 			}
 			material = new PhongMaterial(Color.WHITE);
 		}
@@ -145,7 +144,7 @@ public class MtlReader {
 
 	private Image loadImage(String filename) {
 		filename = baseUrl + filename;
-		LOG.info("Loading image from " + filename);
+		LOG.info("Loading image from %s", filename);
 		return new Image(filename);
 	}
 }

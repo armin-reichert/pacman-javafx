@@ -29,16 +29,20 @@ public class Model3D {
 
 	public Model3D(URL url) {
 		if (url == null) {
-			throw new Model3DException("OBJ model cannot be created: URL is null");
+			throw new Model3DException("3D model cannot be created: URL is null");
 		}
+		LOG.info("Reading 3D model from URL %s", url);
 		try {
 			var importer = new ObjImporter(url.toExternalForm());
 			for (var meshName : importer.getMeshNames()) {
 				var mesh = importer.getMesh(meshName);
 				ObjImporter.validateTriangleMesh(mesh);
 				meshes.put(meshName, mesh);
-				var material = importer.getMaterial(meshName);
-				materials.put(meshName, (PhongMaterial) material);
+			}
+			for (var materialMap : importer.materialLibrary()) {
+				for (var entry : materialMap.entrySet()) {
+					materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
+				}
 			}
 			LOG.info("3D model loaded, URL='%s'", url);
 			for (var entry : meshes.entrySet()) {
