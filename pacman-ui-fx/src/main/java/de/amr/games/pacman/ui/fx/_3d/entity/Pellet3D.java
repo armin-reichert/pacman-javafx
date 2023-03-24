@@ -59,7 +59,7 @@ public class Pellet3D implements Eatable3D {
 		shape.setUserData(tile);
 		shape.setTranslateX(tile.x() * TS + HTS);
 		shape.setTranslateY(tile.y() * TS + HTS);
-		shape.setTranslateZ(-HTS + 1);
+		shape.setTranslateZ(-HTS);
 	}
 
 	@Override
