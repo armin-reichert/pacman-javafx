@@ -67,7 +67,6 @@ public class Settings {
 	}
 
 	public final boolean fullScreen;
-	public final boolean muted;
 	public final Perspective perspective;
 	public final boolean use3D;
 	public final GameVariant variant;
@@ -78,7 +77,6 @@ public class Settings {
 	@SuppressWarnings("unchecked")
 	public Settings(Map<String, String> parameters) {
 		fullScreen = parse(parameters, "fullScreen", false, Boolean::valueOf);
-		muted = parse(parameters, "muted", false, Boolean::valueOf);
 		perspective = parse(parameters, "perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
 		use3D = parse(parameters, "use3D", false, Boolean::valueOf);
 		variant = parse(parameters, "variant", GameVariant.PACMAN, GameVariant::valueOf);
@@ -89,7 +87,7 @@ public class Settings {
 
 	@Override
 	public String toString() {
-		return "{fullScreen=%s, muted=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f, keys=%s}".formatted(fullScreen,
-				muted, perspective, use3D, variant, zoom, keyMap);
+		return "{fullScreen=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f, keys=%s}".formatted(fullScreen,
+				perspective, use3D, variant, zoom, keyMap);
 	}
 }
