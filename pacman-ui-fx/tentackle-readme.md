@@ -1,8 +1,8 @@
 ## How to create the deployable archive
 
-To create a zip file containing the Java/JavaFX runtime modules and the application, run ```mvn clean install```
+To create a zip file containing the Java/JavaFX runtime modules and the application, run `mvn -f deploy.xml install`.
 
-To run the application, unzip and start the command file ```run.cmd``` in the folder ```bin```.
+To run the application, unzip the archive, then execute file `run.cmd` in folder `bin`.
 
 ## Tentackle help
 
