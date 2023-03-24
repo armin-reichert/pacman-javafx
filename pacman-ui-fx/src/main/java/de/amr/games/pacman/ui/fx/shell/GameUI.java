@@ -297,15 +297,15 @@ public class GameUI implements GameEventListener {
 	}
 
 	/**
-	 * @param dim scene variant dimension (2 or 3)
+	 * @param dimension scene dimension (2 or 3)
 	 * @return (optional) game scene matching current game state and specified dimension
 	 */
-	public Optional<GameScene> findGameScene(int dim) {
-		if (dim != 2 && dim != 3) {
-			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
+	public Optional<GameScene> findGameScene(int dimension) {
+		if (dimension != 2 && dimension != 3) {
+			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
 		}
-		var variants = sceneSelectionMatchingCurrentGameState();
-		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
+		var matching = sceneSelectionMatchingCurrentGameState();
+		return Optional.ofNullable(dimension == 3 ? matching.scene3D() : matching.scene2D());
 	}
 
 	private GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
