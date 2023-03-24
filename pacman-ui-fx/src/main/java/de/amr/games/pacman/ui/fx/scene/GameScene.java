@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.lib.timer.TickTimer;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
@@ -36,7 +35,7 @@ import javafx.scene.SubScene;
 public interface GameScene extends GameEventListener {
 
 	/**
-	 * @return the scene context (access to game controller, game model, game level, rendering).
+	 * @return the scene context (game controller, game model, game level, rendering, sounds).
 	 */
 	GameSceneContext context();
 
@@ -48,17 +47,17 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-	 * Called on every tick of the simulation if not paused.
+	 * Called when the scene needs to be updated.
 	 */
 	void update();
 
 	/**
-	 * Called on every tick of the simulation.
+	 * Called when the scene needs to be rendered.
 	 */
 	void render();
 
 	/**
-	 * Called when the scene is replaced by another one.
+	 * Called when the scene ends and gets replaced by another scene.
 	 */
 	default void end() {
 		// empty default
@@ -103,14 +102,14 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-	 * "Locks" the current game controller state by setting the timer duration to {@link TickTimer#INDEFINITE}.
+	 * "Locks" the current game state by setting an indefinite timer duration.
 	 */
 	default void lockGameState() {
 		context().state().timer().resetIndefinitely();
 	}
 
 	/**
-	 * "Unlocks" the current game controller state by forcing the timer to expire.
+	 * "Unlocks" the current game state by forcing the timer to expire.
 	 */
 	default void unlockGameState() {
 		context().state().timer().expire();
