@@ -326,21 +326,16 @@ public class GameUI implements GameEventListener {
 	}
 
 	private GameSceneSelection sceneSelectionMatchingCurrentGameState() {
-		var game = gameController.game();
-		var level = game.level();
-		var state = gameController.state();
-
-		int index = switch (state) {
+		int index = switch (gameController.state()) {
 		case BOOT -> BOOT_SCENE_INDEX;
 		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
-		case INTERMISSION -> PLAY_SCENE_INDEX + level.get().intermissionNumber;
-		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
-		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
+		case INTERMISSION -> PLAY_SCENE_INDEX + gameController.game().level().get().intermissionNumber;
+		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.game().intermissionTestNumber;
+		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameController.state()));
 		};
-
-		return switch (game.variant()) {
+		return switch (gameController.game().variant()) {
 		case MS_PACMAN -> scenesPacMan[index];
 		case PACMAN -> scenesMsPacMan[index];
 		};
