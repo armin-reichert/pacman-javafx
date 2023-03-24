@@ -46,10 +46,10 @@ public class Model3D {
 			}
 			LOG.info("3D model loaded, URL='%s'", url);
 			for (var entry : meshes.entrySet()) {
-				LOG.trace("Mesh key=%s, value=%s", entry.getKey(), entry.getValue());
+				LOG.trace("Mesh '%s': %s", entry.getKey(), entry.getValue());
 			}
 			for (var entry : materials.entrySet()) {
-				LOG.trace("Material key=%s, value=%s", entry.getKey(), entry.getValue());
+				LOG.trace("Material '%s': %s", entry.getKey(), entry.getValue());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
