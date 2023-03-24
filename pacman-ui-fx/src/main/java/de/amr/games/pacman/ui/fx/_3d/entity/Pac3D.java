@@ -58,7 +58,7 @@ import javafx.scene.transform.Translate;
  */
 public class Pac3D {
 
-	private static final Model3D OBJ_MODEL = new Model3D("model3D/pacman.obj");
+	private static final Model3D MODEL3D = new Model3D("model3D/pacman.obj");
 	private static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
@@ -85,13 +85,13 @@ public class Pac3D {
 	 * @return transformation group representing a 3D Pac-Man.
 	 */
 	public static Group createTG(Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(OBJ_MODEL.mesh(MESH_ID_HEAD));
+		var head = new MeshView(MODEL3D.mesh(MESH_ID_HEAD));
 		head.setMaterial(new PhongMaterial(headColor));
 
-		var eyes = new MeshView(OBJ_MODEL.mesh(MESH_ID_EYES));
+		var eyes = new MeshView(MODEL3D.mesh(MESH_ID_EYES));
 		eyes.setMaterial(new PhongMaterial(eyesColor));
 
-		var palate = new MeshView(OBJ_MODEL.mesh(MESH_ID_PALATE));
+		var palate = new MeshView(MODEL3D.mesh(MESH_ID_PALATE));
 		palate.setMaterial(new PhongMaterial(palateColor));
 
 		var centerTransform = centerOverOrigin(head);
