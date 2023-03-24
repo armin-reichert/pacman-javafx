@@ -31,7 +31,7 @@ public class Model3D {
 		if (url == null) {
 			throw new Model3DException("3D model cannot be created: URL is null");
 		}
-		LOG.info("Reading 3D model from URL %s", url);
+		LOG.info("Load 3D model from URL %s", url);
 		try {
 			var importer = new ObjImporter(url.toExternalForm());
 			for (var meshName : importer.getMeshNames()) {
@@ -44,12 +44,12 @@ public class Model3D {
 					materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
 				}
 			}
-			LOG.info("3D model loaded, URL='%s'", url);
+			LOG.info("Model content:");
 			for (var entry : meshes.entrySet()) {
-				LOG.trace("Mesh '%s': %s", entry.getKey(), entry.getValue());
+				LOG.trace("\t'%s': %s", entry.getKey(), entry.getValue());
 			}
 			for (var entry : materials.entrySet()) {
-				LOG.trace("Material '%s': %s", entry.getKey(), entry.getValue());
+				LOG.trace("\t'%s': %s", entry.getKey(), entry.getValue());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
