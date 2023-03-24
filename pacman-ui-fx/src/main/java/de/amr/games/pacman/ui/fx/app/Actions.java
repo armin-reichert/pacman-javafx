@@ -234,7 +234,7 @@ public class Actions {
 
 	public static void toggleUse3DScene() {
 		Ufx.toggle(Env.ThreeD.enabledPy);
-		if (ui.gameSceneManager().findGameScene(gameController(), 3).isPresent()) {
+		if (ui.findGameScene(3).isPresent()) {
 			ui.updateGameScene(true);
 			ui.currentGameScene().onSceneVariantSwitch();
 		} else {

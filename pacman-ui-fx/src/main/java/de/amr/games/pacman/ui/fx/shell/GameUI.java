@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.shell;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +45,19 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManTestRenderer;
+import de.amr.games.pacman.ui.fx._2d.scene.common.BootScene;
+import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx._2d.scene.common.PlayScene2D;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManCreditScene;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene1;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene2;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntermissionScene3;
+import de.amr.games.pacman.ui.fx._2d.scene.mspacman.MsPacManIntroScene;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCreditScene;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
+import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -56,7 +69,7 @@ import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneManager;
+import de.amr.games.pacman.ui.fx.scene.GameSceneSelection;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
@@ -83,6 +96,11 @@ public class GameUI implements GameEventListener {
 	public static final double PIP_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
 	public static final double PIP_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
 
+	private static final int BOOT_SCENE_INDEX = 0;
+	private static final int INTRO_SCENE_INDEX = 1;
+	private static final int CREDIT_SCENE_INDEX = 2;
+	private static final int PLAY_SCENE_INDEX = 3;
+
 	public class Simulation extends GameLoop {
 
 		public Simulation() {
@@ -104,10 +122,12 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
+	private final GameSceneSelection[] scenesMsPacMan;
+	private final GameSceneSelection[] scenesPacMan;
+
 	private final Stage stage;
 	private final Scene mainScene;
 	private final GameController gameController;
-	private final GameSceneManager gameSceneManager;
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
@@ -131,8 +151,27 @@ public class GameUI implements GameEventListener {
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
 
-		// requires renderer map already initialized
-		gameSceneManager = new GameSceneManager(gameController);
+		//@formatter:off
+		scenesMsPacMan = new GameSceneSelection[] {
+			new GameSceneSelection(createScene2D(BootScene.class), null),
+			new GameSceneSelection(createScene2D(PacManIntroScene.class), null),
+			new GameSceneSelection(createScene2D(PacManCreditScene.class), null),
+			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
+			new GameSceneSelection(createScene2D(PacManCutscene1.class), null),
+			new GameSceneSelection(createScene2D(PacManCutscene2.class), null),
+			new GameSceneSelection(createScene2D(PacManCutscene3.class), null),
+		};
+
+		scenesPacMan = new GameSceneSelection[] { 
+			new GameSceneSelection(createScene2D(BootScene.class), null),
+			new GameSceneSelection(createScene2D(MsPacManIntroScene.class), null),
+			new GameSceneSelection(createScene2D(MsPacManCreditScene.class), null),
+			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
+			new GameSceneSelection(createScene2D(MsPacManIntermissionScene1.class), null),
+			new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
+			new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null),
+		};
+		//@formatter:on
 
 		manualSteering = new KeyboardSteering( //
 				settings.keyMap.get(Direction.UP), //
@@ -202,7 +241,7 @@ public class GameUI implements GameEventListener {
 	 * controlled using the dashboard.
 	 */
 	private void updatePiPView() {
-		if (Env.PiP.visiblePy.get() && gameSceneManager.isPlayScene(currentGameScene)) {
+		if (Env.PiP.visiblePy.get() && isPlayScene(currentGameScene)) {
 			pipViewScene.fxSubScene().setVisible(true);
 			pipViewScene.context().setCreditVisible(false);
 			pipViewScene.context().setScoreVisible(true);
@@ -256,9 +295,61 @@ public class GameUI implements GameEventListener {
 		LOG.info("Game stopped");
 	}
 
+	private GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
+		try {
+			GameScene2D scene2D = clazz.getDeclaredConstructor(GameController.class).newInstance(gameController);
+			scene2D.infoVisiblePy.bind(Env.showDebugInfoPy);
+			LOG.trace("2D game scene created: '%s'", scene2D.getClass().getName());
+			return scene2D;
+		} catch (Exception e) {
+			LOG.error("Could not create 2D game scene of class '%s'", clazz.getName());
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	private boolean isPlayScene(GameScene gameScene) {
+		return gameScene == scenesPacMan[PLAY_SCENE_INDEX].scene2D()
+				|| gameScene == scenesPacMan[PLAY_SCENE_INDEX].scene3D()
+				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene2D()
+				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene3D();
+	}
+
+	/**
+	 * @param dim scene variant dimension (2 or 3)
+	 * @return (optional) game scene matching current game state and specified dimension
+	 */
+	public Optional<GameScene> findGameScene(int dim) {
+		if (dim != 2 && dim != 3) {
+			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dim));
+		}
+		var variants = sceneSelectionMatchingCurrentGameState();
+		return Optional.ofNullable(dim == 3 ? variants.scene3D() : variants.scene2D());
+	}
+
+	private GameSceneSelection sceneSelectionMatchingCurrentGameState() {
+		var game = gameController.game();
+		var level = game.level();
+		var state = gameController.state();
+
+		int index = switch (state) {
+		case BOOT -> BOOT_SCENE_INDEX;
+		case CREDIT -> CREDIT_SCENE_INDEX;
+		case INTRO -> INTRO_SCENE_INDEX;
+		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
+		case INTERMISSION -> PLAY_SCENE_INDEX + level.get().intermissionNumber;
+		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + game.intermissionTestNumber;
+		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
+		};
+
+		return switch (game.variant()) {
+		case MS_PACMAN -> scenesPacMan[index];
+		case PACMAN -> scenesMsPacMan[index];
+		};
+	}
+
 	// public visible such that Actions class can call it
 	public void updateGameScene(boolean reload) {
-		var matching = gameSceneManager.sceneSelectionMatchingCurrentGameState(gameController);
+		var matching = sceneSelectionMatchingCurrentGameState();
 		var use3D = Env.ThreeD.enabledPy.get();
 		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
 		if (nextGameScene == null) {
@@ -367,10 +458,6 @@ public class GameUI implements GameEventListener {
 
 	public GameController gameController() {
 		return gameController;
-	}
-
-	public GameSceneManager gameSceneManager() {
-		return gameSceneManager;
 	}
 
 	public Scene mainScene() {
