@@ -171,14 +171,14 @@ public class GameUI implements GameEventListener {
 			new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
 			new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null),
 		};
+
+		manualSteering = new KeyboardSteering(
+			settings.keyMap.get(Direction.UP),
+			settings.keyMap.get(Direction.DOWN),
+			settings.keyMap.get(Direction.LEFT),
+			settings.keyMap.get(Direction.RIGHT)
+		);
 		//@formatter:on
-
-		manualSteering = new KeyboardSteering( //
-				settings.keyMap.get(Direction.UP), //
-				settings.keyMap.get(Direction.DOWN), //
-				settings.keyMap.get(Direction.LEFT), //
-				settings.keyMap.get(Direction.RIGHT));
-
 		gameController.setManualPacSteering(manualSteering);
 
 		dashboard.init(this);
