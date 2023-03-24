@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.controller.common.GameState.CREDIT;
 import static de.amr.games.pacman.controller.common.GameState.INTRO;
 
 import java.util.Objects;
@@ -114,8 +113,7 @@ public class Actions {
 	public static void restartIntro() {
 		ui.currentGameScene().end();
 		GameEvents.setSoundEventsEnabled(true);
-		// TODO check this
-		if (gameController().state() != CREDIT && gameController().state() != INTRO) {
+		if (game().isPlaying()) {
 			game().changeCredit(-1);
 		}
 		gameController().restart(INTRO);
