@@ -69,7 +69,6 @@ import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneSelection;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
@@ -100,6 +99,9 @@ public class GameUI implements GameEventListener {
 	private static final int INTRO_SCENE_INDEX = 1;
 	private static final int CREDIT_SCENE_INDEX = 2;
 	private static final int PLAY_SCENE_INDEX = 3;
+
+	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
+	}
 
 	public class Simulation extends GameLoop {
 
