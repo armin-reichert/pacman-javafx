@@ -71,8 +71,8 @@ public class ResourceMgr {
 
 	private static PhongMaterial createTexture(String name) {
 		var material = new PhongMaterial();
-		material.setBumpMap(image("graphics/textures/" + name + "-bump.jpg"));
-		material.setDiffuseMap(image("graphics/textures/" + name + "-diffuse.jpg"));
+		material.setBumpMap(image("graphics/textures/%s-bump.jpg".formatted(name)));
+		material.setDiffuseMap(image("graphics/textures/%s-diffuse.jpg".formatted(name)));
 		material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
 		material.specularColorProperty()
 				.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
@@ -80,11 +80,11 @@ public class ResourceMgr {
 	}
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
-	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Chrome", "Rocks", "Wood" };
+	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Chrome", "Knobs", "Wood" };
 
 	public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
 			"Chrome", createTexture("chrome"), //
-			"Rocks", createTexture("rocks"), //
+			"Knobs", createTexture("knobs"), //
 			"Wood", createTexture("wood") //
 	);
 
