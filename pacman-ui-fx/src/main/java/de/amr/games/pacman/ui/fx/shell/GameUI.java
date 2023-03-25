@@ -340,7 +340,10 @@ public class GameUI implements GameEventListener {
 		case CREDIT -> CREDIT_SCENE_INDEX;
 		case INTRO -> INTRO_SCENE_INDEX;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
-		case INTERMISSION -> PLAY_SCENE_INDEX + gameController.game().level().get().intermissionNumber;
+		case INTERMISSION -> {
+			var level = gameController.game().level().orElseThrow(IllegalStateException::new);
+			yield PLAY_SCENE_INDEX + level.intermissionNumber;
+		}
 		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.game().intermissionTestNumber;
 		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameController.state()));
 		};
