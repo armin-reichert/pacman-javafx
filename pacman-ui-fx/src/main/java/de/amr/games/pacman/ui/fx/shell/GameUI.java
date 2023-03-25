@@ -41,6 +41,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
@@ -92,8 +93,8 @@ public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static final double PIP_MIN_HEIGHT = ArcadeWorld.SIZE_PX.y();
-	public static final double PIP_MAX_HEIGHT = ArcadeWorld.SIZE_PX.y() * 2;
+	public static final double PIP_MIN_HEIGHT = World.t(36);
+	public static final double PIP_MAX_HEIGHT = 2 * PIP_MIN_HEIGHT;
 
 	private static final int BOOT_SCENE_INDEX = 0;
 	private static final int INTRO_SCENE_INDEX = 1;
