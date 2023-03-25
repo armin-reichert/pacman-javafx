@@ -33,7 +33,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
-import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -100,11 +99,9 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void drawScene(GraphicsContext g) {
 		var timer = intro.state().timer();
+		drawGallery(g);
 		switch (intro.state()) {
-		case START -> drawGallery(g);
-		case PRESENTING_GHOSTS -> drawGallery(g);
 		case SHOWING_POINTS -> {
-			drawGallery(g);
 			drawPoints(g);
 			if (timer.tick() > timer.secToTicks(1)) {
 				drawBlinkingEnergizer(g);
@@ -112,27 +109,25 @@ public class PacManIntroScene extends GameScene2D {
 			}
 		}
 		case CHASING_PAC -> {
-			drawGallery(g);
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
 			drawCopyright(g);
 		}
 		case CHASING_GHOSTS -> {
-			drawGallery(g);
 			drawPoints(g);
 			drawGuys(g, 0);
 			drawCopyright(g);
 		}
 		case READY_TO_PLAY -> {
-			drawGallery(g);
 			drawPoints(g);
 			drawGuys(g, 0);
 			drawCopyright(g);
 		}
-		default -> throw new IllegalArgumentException("Unknown intro state: " + intro.state());
+		default -> { // nothing to do
 		}
-		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+		}
+		drawLevelCounter(g);
 	}
 
 	private void drawCopyright(GraphicsContext g) {
@@ -147,7 +142,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGallery(GraphicsContext g) {
 		var r = context.rendering2D();
 		var col = PacManIntroData.LEFT_TILE;
-		var font = context.rendering2D().screenFont(TS);
+		var font = r.screenFont(TS);
 		if (intro.context().titleVisible) {
 			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, t(col + 3), t(6));
 			drawText(g, "/", ArcadeTheme.PALE, font, t(col + 13), t(6));
