@@ -61,7 +61,7 @@ public class Section3D extends Section {
 		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.ThreeD.mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.ThreeD.mazeWallThicknessPy.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor texture", ResourceMgr.FLOOR_TEXTURE_KEYS);
+		comboFloorTexture = addComboBox("Floor texture", ResourceMgr.floorTextureKeys());
 		comboFloorTexture.setOnAction(e -> Env.ThreeD.floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.ThreeD.floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.ThreeD.floorColorPy.set(pickerFloorColor.getValue()));

@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -69,24 +70,38 @@ public class ResourceMgr {
 	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
-	private static PhongMaterial createTexture(String name) {
-		var material = new PhongMaterial();
-		material.setBumpMap(image("graphics/textures/%s-bump.jpg".formatted(name)));
-		material.setDiffuseMap(image("graphics/textures/%s-diffuse.jpg".formatted(name)));
-		material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
-		material.specularColorProperty()
-				.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
-		return material;
+	private static final Map<String, PhongMaterial> FLOOR_TEXTURES = new LinkedHashMap<>();
+
+	private static void addFloorTexture(String key, String textureName) {
+		if (textureName != null) {
+			var material = new PhongMaterial();
+			material.setBumpMap(image("graphics/textures/%s-bump.jpg".formatted(textureName)));
+			material.setDiffuseMap(image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
+			material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
+			material.specularColorProperty()
+					.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
+			FLOOR_TEXTURES.put(key, material);
+		} else {
+			FLOOR_TEXTURES.put(key, null);
+		}
+	}
+
+	public static PhongMaterial floorTexture(String key) {
+		return FLOOR_TEXTURES.get(key);
+	}
+
+	public static String[] floorTextureKeys() {
+		return FLOOR_TEXTURES.keySet().toArray(String[]::new);
 	}
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
-	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Chrome", "Knobs", "Wood" };
 
-	public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
-			"Chrome", createTexture("chrome"), //
-			"Knobs", createTexture("knobs"), //
-			"Wood", createTexture("wood") //
-	);
+	static {
+		addFloorTexture(KEY_NO_TEXTURE, null);
+		addFloorTexture("Chrome", "chrome");
+		addFloorTexture("Knobs & Bumps", "knobs");
+		addFloorTexture("Wood", "wood");
+	}
 
 	/**
 	 * @param relativePath relative path (without leading slash) starting from resource root directory
@@ -162,6 +177,12 @@ public class ResourceMgr {
 	public static Background imageBackground(String relPath) {
 		Objects.requireNonNull(relPath);
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
+	}
+
+	public static PhongMaterial coloredMaterial(Color diffuseColor) {
+		var material = new PhongMaterial(diffuseColor);
+		material.setSpecularColor(diffuseColor.brighter());
+		return material;
 	}
 
 	/**

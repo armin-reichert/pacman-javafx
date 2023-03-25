@@ -101,8 +101,15 @@ public class World3D {
 		houseLighting.setTranslateY(topLeft.y() * TS + size.y() * HTS - TS);
 		houseLighting.setTranslateZ(-TS);
 
-		floorColorPy.addListener(py -> updateFloorMaterial());
-		floorTexturePy.addListener(py -> updateFloorMaterial());
+		floorColorPy.addListener(py -> {
+			LOG.trace("Floor color change detected");
+			updateFloorMaterial();
+		});
+		floorTexturePy.addListener(py -> {
+			LOG.trace("Floor texture change detected");
+			updateFloorMaterial();
+		});
+
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
 		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting);
@@ -130,21 +137,18 @@ public class World3D {
 
 	private void updateFloorMaterial() {
 		String key = floorTexturePy.get();
-		PhongMaterial material = ResourceMgr.FLOOR_TEXTURE_MAP.getOrDefault(key, coloredMaterial(floorColorPy.get()));
-		floor.setMaterial(material);
-	}
-
-	private static PhongMaterial coloredMaterial(Color diffuseColor) {
-		var material = new PhongMaterial(diffuseColor);
-		material.setSpecularColor(diffuseColor.brighter());
-		return material;
+		var texture = ResourceMgr.floorTexture(key);
+		if (texture == null) {
+			texture = ResourceMgr.coloredMaterial(floorColorPy.get());
+		}
+		floor.setMaterial(texture);
 	}
 
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = coloredMaterial(mazeColors.sideColor());
-		wallData.topMaterial = coloredMaterial(mazeColors.topColor());
+		wallData.baseMaterial = ResourceMgr.coloredMaterial(mazeColors.sideColor());
+		wallData.topMaterial = ResourceMgr.coloredMaterial(mazeColors.topColor());
 		return wallData;
 	}
 
@@ -154,7 +158,6 @@ public class World3D {
 		addCorners(floorPlan, createWallData(resolution));
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
-//		transformMaze();
 		world.ghostHouse().door().tiles().forEach(tile -> {
 			var doorWing3D = createDoorWing3D(tile, mazeColors.houseDoorColor());
 			doorWings3D.add(doorWing3D);
