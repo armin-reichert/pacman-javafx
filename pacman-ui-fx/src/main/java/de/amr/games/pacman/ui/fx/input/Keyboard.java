@@ -43,7 +43,7 @@ public class Keyboard {
 	 * 
 	 * @param e key event
 	 */
-	public static void consume(KeyEvent e) {
+	public static void accept(KeyEvent e) {
 		if (e.isConsumed()) {
 			currentKeyEvent = null;
 			LOG.trace("Ignored key event (%s): %s", e.getCode(), e);

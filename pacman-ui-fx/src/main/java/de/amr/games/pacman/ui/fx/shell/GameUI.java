@@ -261,7 +261,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void handleKeyPressed(KeyEvent keyEvent) {
-		Keyboard.consume(keyEvent);
+		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
 		Keyboard.clearState();
 	}
