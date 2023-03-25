@@ -294,8 +294,8 @@ public class GameUI implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 		LOG.info("Game started. Target frame rate: %d", simulation.targetFrameratePy.get());
-		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s".formatted(stage.getWidth(), stage.getHeight(),
-				Env.ThreeD.enabledPy.get(), Env.ThreeD.perspectivePy.get()));
+		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s", stage.getWidth(), stage.getHeight(),
+				Env.ThreeD.enabledPy.get(), Env.ThreeD.perspectivePy.get());
 	}
 
 	public void stop() {
@@ -378,7 +378,7 @@ public class GameUI implements GameEventListener {
 		root.getChildren().set(0, nextGameScene.fxSubScene());
 		nextGameScene.onEmbedIntoParentScene(mainScene);
 		currentGameScene = nextGameScene;
-		LOG.trace("Game scene changed to %s".formatted(nextGameScene));
+		LOG.trace("Game scene changed to %s", nextGameScene);
 	}
 
 	private void updateManualPacManSteering(GameScene gameScene) {
