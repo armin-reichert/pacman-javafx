@@ -85,7 +85,7 @@ public class GameLevel3D {
 	private final Scores3D scores3D;
 	private final List<Eatable3D> eatables = new ArrayList<>();
 	private FoodOscillation foodOscillation = new FoodOscillation(eatables);
-	private PointLight pacLight;
+	private PointLight light;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -93,13 +93,16 @@ public class GameLevel3D {
 
 		world3D = createWorld3D(r2D.mazeColoring(mazeNumber));
 		pac3D = createPac3D();
+		light = createPacLight();
+		pacLightOnPy.bind(Env.ThreeD.pacLightedPy);
+
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = createLivesCounter3D();
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		root.getChildren().addAll(world3D.getRoot(), pac3D.getRoot(), bonus3D.getRoot(), scores3D.getRoot(),
+		root.getChildren().addAll(world3D.getRoot(), pac3D.getRoot(), light, bonus3D.getRoot(), scores3D.getRoot(),
 				levelCounter3D.getRoot(), livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
 
@@ -147,14 +150,18 @@ public class GameLevel3D {
 	private Pac3D createPac3D() {
 		var newPac3D = new Pac3D(level.pac());
 		newPac3D.init();
-		pacLight = new PointLight();
-		pacLight.setColor(Color.rgb(255, 255, 0, 0.25));
-		pacLight.setMaxRange(2 * TS);
-		pacLight.setTranslateZ(0);
-		pacLightOnPy.bind(Env.ThreeD.pacLightedPy);
-		newPac3D.getRoot().getChildren().add(pacLight);
 		newPac3D.drawModePy.bind(Env.ThreeD.drawModePy);
 		return newPac3D;
+	}
+
+	private PointLight createPacLight() {
+		light = new PointLight();
+		light.setColor(Color.rgb(255, 255, 0, 0.25));
+		light.setMaxRange(2 * TS);
+		light.translateXProperty().bind(pac3D.getRoot().translateXProperty());
+		light.translateYProperty().bind(pac3D.getRoot().translateYProperty());
+		light.setTranslateZ(-TS);
+		return light;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
@@ -199,9 +206,9 @@ public class GameLevel3D {
 
 	public void update() {
 		pac3D.update(level);
-		pacLight.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
+		light.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
 		int range = !level.pac().powerTimer().isRunning() ? 2 : level.pac().isPowerFading(level) ? 4 : 8;
-		pacLight.setMaxRange(range * TS);
+		light.setMaxRange(range * TS);
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
 		updateHouseLightingState();
@@ -271,7 +278,7 @@ public class GameLevel3D {
 
 	private void updateHouseLightingState() {
 		boolean anyGhostInHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-				.count() > 0;
+				.filter(Ghost::isVisible).count() > 0;
 		world3D.houseLighting().setLightOn(anyGhostInHouse);
 	}
 
