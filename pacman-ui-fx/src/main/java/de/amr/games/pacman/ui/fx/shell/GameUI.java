@@ -202,18 +202,24 @@ public class GameUI implements GameEventListener {
 		var gameScenePlaceholder = new Pane();
 		var root = new StackPane(gameScenePlaceholder, flashMessageView, overlayPane);
 
-		var size = ArcadeWorld.SIZE_PX;
-		var scene = new Scene(root, size.x() * settings.zoom, size.y() * settings.zoom);
-		scene.setOnKeyPressed(this::handleKeyPressed);
+		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(settings.zoom);
+		var scene = new Scene(root, size.x(), size.y());
 		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> currentGameScene.onParentSceneResize(scene));
 
+		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2 && currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-				stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16);
+			if (e.getClickCount() == 2) {
+				resizeStageToOptimalSize();
 			}
 		});
 
 		return scene;
+	}
+
+	private void resizeStageToOptimalSize() {
+		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
+			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16);
+		}
 	}
 
 	private void updateView() {
