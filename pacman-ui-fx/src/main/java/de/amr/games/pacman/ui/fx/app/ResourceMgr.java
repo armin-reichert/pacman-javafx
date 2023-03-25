@@ -80,10 +80,10 @@ public class ResourceMgr {
 	}
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
-	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Mosaic", "Rocks", "Wood" };
+	public static final String[] FLOOR_TEXTURE_KEYS = { KEY_NO_TEXTURE, "Chrome", "Rocks", "Wood" };
 
 	public static final Map<String, PhongMaterial> FLOOR_TEXTURE_MAP = Map.of(//
-			"Mosaic", createTexture("pavement"), //
+			"Chrome", createTexture("chrome"), //
 			"Rocks", createTexture("rocks"), //
 			"Wood", createTexture("wood") //
 	);
