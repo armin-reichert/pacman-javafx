@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
+import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -38,6 +39,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * 3D representation of a ghost.
@@ -63,6 +65,7 @@ public class Ghost3D {
 
 	private final Ghost ghost;
 	private final MoveAnimation moveAnimation;
+	private RotateTransition brakeEffect;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private Image numberImage;
@@ -94,6 +97,19 @@ public class Ghost3D {
 		}
 		if (look != Look.NUMBER) {
 			moveAnimation.update();
+		}
+		// brake effect
+		if (level.world().isTunnel(ghost.tile())) {
+			brakeEffect = new RotateTransition(Duration.seconds(0.15), coloredGhost3D.getRoot());
+			brakeEffect.setAxis(Rotate.Y_AXIS);
+			brakeEffect.setToAngle(-30);
+			brakeEffect.play();
+		} else {
+			if (brakeEffect != null) {
+				brakeEffect.stop();
+				coloredGhost3D.getRoot().setRotationAxis(Rotate.Y_AXIS);
+				coloredGhost3D.getRoot().setRotate(0);
+			}
 		}
 		root.setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
 	}
