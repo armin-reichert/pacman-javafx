@@ -51,6 +51,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
@@ -91,7 +92,7 @@ public class GameLevel3D {
 		this.level = level;
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		world3D = createWorld3D(r2D.mazeColoring(mazeNumber));
+		world3D = createWorld3D(level.world(), r2D.mazeColoring(mazeNumber));
 		pac3D = createPac3D();
 		light = createPacLight();
 		pacLightOnPy.bind(Env.d3pacLightedPy);
@@ -114,10 +115,9 @@ public class GameLevel3D {
 		world3D.wallThicknessPy.bind(Env.d3mazeWallThicknessPy);
 	}
 
-	private World3D createWorld3D(MazeColoring mazeColoring) {
-		var world = level.world();
+	private World3D createWorld3D(World world, MazeColoring mazeColoring) {
 		var w3D = new World3D(world, mazeColoring);
-		var foodMaterial = new PhongMaterial(mazeColoring.foodColor());
+		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
 		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
 			var eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, foodMaterial)
 					: createNormalPellet3D(tile, foodMaterial);
