@@ -26,40 +26,48 @@
 		<log4j.maven.shade.plugin.extensions.version>2.18.0</log4j.maven.shade.plugin.extensions.version>
 		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
 		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
-		<maven.compiler.source>18</maven.compiler.source>
-		<maven.compiler.target>18</maven.compiler.target>
+		<source.version>18</source.version>
 		<maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
 		<maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>de.amr.games.pacman</groupId>
 			<artifactId>pacman-core</artifactId>
 			<version>1.0</version>
 		</dependency>
+
 		<dependency>
 			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
+
 		<dependency>
 			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.plugin.version}</version>
+				<configuration>
+					<release>${source.version}</release>
+				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -73,6 +81,7 @@
 					</archive>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
@@ -81,6 +90,7 @@
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
