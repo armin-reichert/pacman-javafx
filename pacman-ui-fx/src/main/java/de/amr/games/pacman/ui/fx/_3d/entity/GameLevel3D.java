@@ -116,17 +116,16 @@ public class GameLevel3D {
 
 	private World3D createWorld3D(MazeColoring mazeColoring) {
 		var world = level.world();
-		var newWorld3D = new World3D(world, mazeColoring);
-		newWorld3D.drawModePy.bind(drawModePy);
-		// add food
-		var material = new PhongMaterial(mazeColoring.foodColor());
+		var w3D = new World3D(world, mazeColoring);
+		var foodMaterial = new PhongMaterial(mazeColoring.foodColor());
 		world.tiles().filter(world::isFoodTile).filter(not(world::containsEatenFood)).forEach(tile -> {
-			var eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, material)
-					: createNormalPellet3D(tile, material);
+			var eatable3D = world.isEnergizerTile(tile) ? createEnergizer3D(world, tile, foodMaterial)
+					: createNormalPellet3D(tile, foodMaterial);
 			eatables.add(eatable3D);
-			newWorld3D.addFood(eatable3D);
+			w3D.addFood(eatable3D);
 		});
-		return newWorld3D;
+		w3D.drawModePy.bind(drawModePy);
+		return w3D;
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial pelletMaterial) {
