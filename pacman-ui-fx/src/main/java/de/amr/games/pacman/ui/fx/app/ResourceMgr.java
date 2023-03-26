@@ -70,7 +70,16 @@ public class ResourceMgr {
 	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
+	public static final String KEY_NO_TEXTURE = "No Texture";
+
 	private static final Map<String, PhongMaterial> FLOOR_TEXTURES = new LinkedHashMap<>();
+
+	static {
+		addFloorTexture(KEY_NO_TEXTURE, null);
+		addFloorTexture("Chrome", "chrome");
+		addFloorTexture("Knobs & Bumps", "knobs");
+		addFloorTexture("Wood", "wood");
+	}
 
 	private static void addFloorTexture(String key, String textureName) {
 		if (textureName != null) {
@@ -92,15 +101,6 @@ public class ResourceMgr {
 
 	public static String[] floorTextureKeys() {
 		return FLOOR_TEXTURES.keySet().toArray(String[]::new);
-	}
-
-	public static final String KEY_NO_TEXTURE = "No Texture";
-
-	static {
-		addFloorTexture(KEY_NO_TEXTURE, null);
-		addFloorTexture("Chrome", "chrome");
-		addFloorTexture("Knobs & Bumps", "knobs");
-		addFloorTexture("Wood", "wood");
 	}
 
 	/**
