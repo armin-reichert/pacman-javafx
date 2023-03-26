@@ -38,8 +38,8 @@ If Java runtime 18+ is installed, you can run the executable jar by double-click
 ## How to use
 
 Starting the game and switching game variant:
-- <kbd>V</kbd> Switch between the game variants (Pac-Man, Ms. Pac-Man)
-- <kbd>5</kbd> Add credit (insert coin)
+- <kbd>V</kbd> Switch between Pac-Man and Ms. Pac-Man (only possible on intro screen)
+- <kbd>5</kbd> Add credit ("insert coin")
 - <kbd>1</kbd> Start game
 
 Player movement:
