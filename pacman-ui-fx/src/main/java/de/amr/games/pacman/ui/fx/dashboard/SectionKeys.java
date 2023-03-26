@@ -47,8 +47,8 @@ public class SectionKeys extends Section {
 		addInfo("Alt+N", "Next Level").available(() -> gc.game().isPlaying());
 		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().isPlaying());
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
-		addInfo("Alt+LEFT", () -> Env.ThreeD.perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
-		addInfo("Alt+RIGHT", () -> Env.ThreeD.perspectivePy.get().next().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+LEFT", () -> Env.d3perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+RIGHT", () -> Env.d3perspectivePy.get().next().name()).available(() -> gameScene().is3D());
 		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
 		addInfo("SHIFT+P/SPACE", "Single Step");

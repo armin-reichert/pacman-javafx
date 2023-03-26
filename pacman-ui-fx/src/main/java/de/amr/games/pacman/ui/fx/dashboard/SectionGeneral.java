@@ -77,17 +77,17 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.simulation().executeSteps(Env.Simulation.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.simulation().executeSteps(Env.simulationStepsPy.get(), true));
 
-		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.Simulation.simulationStepsPy.get());
+		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.simulationStepsPy.get());
 		spinnerSimulationSteps.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env.Simulation.simulationStepsPy.set(newVal.intValue()));
+				.addListener((obs, oldVal, newVal) -> Env.simulationStepsPy.set(newVal.intValue()));
 
 		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.Simulation.targetFrameratePy.set(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> Env.simumlationSpeedPy.set(newValue.intValue()));
 
 		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.simulation().targetFrameratePy.get(),
 				ui.simulation().getFPS()));
@@ -100,31 +100,31 @@ public class SectionGeneral extends Section {
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 
 		sliderPiPSceneHeight = addSlider("PiP Size", GameUI.PIP_MIN_HEIGHT, GameUI.PIP_MAX_HEIGHT,
-				Env.PiP.sceneHeightPy.get());
+				Env.pipSceneHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.PiP.sceneHeightPy.set(newValue.doubleValue()));
+				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
 
-		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.PiP.opacityPy.get());
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
 		sliderPiPOpacity.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.PiP.opacityPy.set(newValue.doubleValue()));
+				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
 
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Ufx.toggle(Env.showDebugInfoPy));
-		cbTimeMeasured = addCheckBox("Measure time", () -> Ufx.toggle(Env.Simulation.timeMeasuredPy));
+		cbTimeMeasured = addCheckBox("Measure time", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setGraphic(Env.Simulation.pausedPy.get() ? iconPlay : iconStop);
-		btnsSimulation[0].setTooltip(Env.Simulation.pausedPy.get() ? tooltipPlay : tooltipStop);
-		btnsSimulation[1].setDisable(!Env.Simulation.pausedPy.get());
-		spinnerSimulationSteps.getValueFactory().setValue(Env.Simulation.simulationStepsPy.get());
-		sliderTargetFPS.setValue(Env.Simulation.targetFrameratePy.get());
-		sliderPiPSceneHeight.setValue(Env.PiP.sceneHeightPy.get());
-		sliderPiPOpacity.setValue(Env.PiP.opacityPy.get());
-		cbUsePlayScene3D.setSelected(Env.ThreeD.enabledPy.get());
-		cbTimeMeasured.setSelected(Env.Simulation.timeMeasuredPy.get());
+		btnsSimulation[0].setGraphic(Env.simulationPausedPy.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(Env.simulationPausedPy.get() ? tooltipPlay : tooltipStop);
+		btnsSimulation[1].setDisable(!Env.simulationPausedPy.get());
+		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
+		sliderTargetFPS.setValue(Env.simumlationSpeedPy.get());
+		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
+		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
+		cbUsePlayScene3D.setSelected(Env.d3enabledPy.get());
+		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}
 }

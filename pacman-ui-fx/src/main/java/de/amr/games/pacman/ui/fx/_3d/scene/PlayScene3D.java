@@ -106,14 +106,14 @@ public class PlayScene3D implements GameScene {
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
 		perspectivePy.addListener((property, oldVal, newVal) -> changeCameraPerspective(newVal));
-		coordSystem().visibleProperty().bind(Env.ThreeD.axesVisiblePy);
-		ambientLight().colorProperty().bind(Env.ThreeD.lightColorPy);
+		coordSystem().visibleProperty().bind(Env.d3axesVisiblePy);
+		ambientLight().colorProperty().bind(Env.d3lightColorPy);
 	}
 
 	@Override
 	public void init() {
 		context.level().ifPresent(this::replaceGameLevel3D);
-		perspectivePy.bind(Env.ThreeD.perspectivePy);
+		perspectivePy.bind(Env.d3perspectivePy);
 	}
 
 	@Override
@@ -281,7 +281,7 @@ public class PlayScene3D implements GameScene {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
-				if (Env.ThreeD.foodOscillationEnabledPy.get()) {
+				if (Env.d3foodOscillationEnabledPy.get()) {
 					level3D.foodOscillation().play();
 				}
 			});

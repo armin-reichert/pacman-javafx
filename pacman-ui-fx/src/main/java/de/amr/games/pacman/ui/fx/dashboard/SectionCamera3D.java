@@ -58,8 +58,8 @@ public class SectionCamera3D extends Section {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
-		comboPerspective.setOnAction(e -> Env.ThreeD.perspectivePy.set(comboPerspective.getValue()));
-		Env.ThreeD.perspectivePy.addListener((obs, oldVal, newVal) -> onPerspectiveChanged(newVal));
+		comboPerspective.setOnAction(e -> Env.d3perspectivePy.set(comboPerspective.getValue()));
+		Env.d3perspectivePy.addListener((obs, oldVal, newVal) -> onPerspectiveChanged(newVal));
 
 		sliderTransformX = addSlider("Translate X", -500, 500, 0);
 		sliderTransformY = addSlider("Translate Y", -500, 500, 0);
@@ -79,18 +79,17 @@ public class SectionCamera3D extends Section {
 		addInfo("Camera",
 				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.currentCamera().transformInfo() : "")
 						.available(() -> gameScene().is3D());
-		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.ThreeD.perspectivePy.get() == Perspective.TOTAL);
-		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.ThreeD.perspectivePy.get() == Perspective.TOTAL);
-		addInfo("Shift+UP/DOWN", "Camera -Z / +Z").available(() -> Env.ThreeD.perspectivePy.get() == Perspective.TOTAL
-				|| Env.ThreeD.perspectivePy.get() == Perspective.DRONE);
-		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X")
-				.available(() -> Env.ThreeD.perspectivePy.get() == Perspective.TOTAL);
+		addInfo("Shift+LEFT/RIGHT", "Camera -X / +X").available(() -> Env.d3perspectivePy.get() == Perspective.TOTAL);
+		addInfo("Shift+PLUS/MINUS", "Camera -Y / +Y").available(() -> Env.d3perspectivePy.get() == Perspective.TOTAL);
+		addInfo("Shift+UP/DOWN", "Camera -Z / +Z").available(
+				() -> Env.d3perspectivePy.get() == Perspective.TOTAL || Env.d3perspectivePy.get() == Perspective.DRONE);
+		addInfo("Ctrl+Shift+UP/DOWN", "Camera Rotate X").available(() -> Env.d3perspectivePy.get() == Perspective.TOTAL);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		comboPerspective.setValue(Env.ThreeD.perspectivePy.get());
+		comboPerspective.setValue(Env.d3perspectivePy.get());
 		comboPerspective.setDisable(!gameScene().is3D());
 	}
 

@@ -53,22 +53,21 @@ public class Section3D extends Section {
 
 	public Section3D(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		pickerLightColor = addColorPicker("Light color", Env.ThreeD.lightColorPy.get());
-		pickerLightColor.setOnAction(e -> Env.ThreeD.lightColorPy.set(pickerLightColor.getValue()));
-		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.ThreeD.mazeWallHeightPy.get());
+		pickerLightColor = addColorPicker("Light color", Env.d3lightColorPy.get());
+		pickerLightColor.setOnAction(e -> Env.d3lightColorPy.set(pickerLightColor.getValue()));
+		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.d3mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env.ThreeD.mazeWallHeightPy.set(newVal.doubleValue()));
-		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.ThreeD.mazeWallThicknessPy.get());
+				.addListener((obs, oldVal, newVal) -> Env.d3mazeWallHeightPy.set(newVal.doubleValue()));
+		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.d3mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env.ThreeD.mazeWallThicknessPy.set(newVal.doubleValue()));
+				.addListener((obs, oldVal, newVal) -> Env.d3mazeWallThicknessPy.set(newVal.doubleValue()));
 		comboFloorTexture = addComboBox("Floor texture", ResourceMgr.floorTextureKeys());
-		comboFloorTexture.setOnAction(e -> Env.ThreeD.floorTexturePy.set(comboFloorTexture.getValue()));
-		pickerFloorColor = addColorPicker("Floor color", Env.ThreeD.floorColorPy.get());
-		pickerFloorColor.setOnAction(e -> Env.ThreeD.floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Energizer Eaten Animation",
-				() -> Ufx.toggle(Env.ThreeD.energizerEatenAnimationEnabledPy));
-		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.ThreeD.pacLightedPy));
-		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.ThreeD.axesVisiblePy));
+		comboFloorTexture.setOnAction(e -> Env.d3floorTexturePy.set(comboFloorTexture.getValue()));
+		pickerFloorColor = addColorPicker("Floor color", Env.d3floorColorPy.get());
+		pickerFloorColor.setOnAction(e -> Env.d3floorColorPy.set(pickerFloorColor.getValue()));
+		cbSquirting = addCheckBox("Energizer Eaten Animation", () -> Ufx.toggle(Env.d3energizerEatenAnimationEnabledPy));
+		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.d3pacLightedPy));
+		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.d3axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 	}
 
@@ -78,18 +77,18 @@ public class Section3D extends Section {
 		var no3D = !gameScene().is3D();
 		pickerLightColor.setDisable(no3D);
 		sliderWallHeight.setDisable(no3D);
-		sliderWallHeight.setValue(Env.ThreeD.mazeWallHeightPy.get());
+		sliderWallHeight.setValue(Env.d3mazeWallHeightPy.get());
 		sliderWallThickness.setDisable(no3D);
 		comboFloorTexture.setDisable(no3D);
-		comboFloorTexture.setValue(Env.ThreeD.floorTexturePy.get());
+		comboFloorTexture.setValue(Env.d3floorTexturePy.get());
 		pickerFloorColor.setDisable(no3D);
 		cbSquirting.setDisable(no3D);
-		cbSquirting.setSelected(Env.ThreeD.energizerEatenAnimationEnabledPy.get());
+		cbSquirting.setSelected(Env.d3energizerEatenAnimationEnabledPy.get());
 		cbPacLighted.setDisable(no3D);
-		cbPacLighted.setSelected(Env.ThreeD.pacLightedPy.get());
+		cbPacLighted.setSelected(Env.d3pacLightedPy.get());
 		cbAxesVisible.setDisable(no3D);
-		cbAxesVisible.setSelected(Env.ThreeD.axesVisiblePy.get());
+		cbAxesVisible.setSelected(Env.d3axesVisiblePy.get());
 		cbWireframeMode.setDisable(no3D);
-		cbWireframeMode.setSelected(Env.ThreeD.drawModePy.get() == DrawMode.LINE);
+		cbWireframeMode.setSelected(Env.d3drawModePy.get() == DrawMode.LINE);
 	}
 }

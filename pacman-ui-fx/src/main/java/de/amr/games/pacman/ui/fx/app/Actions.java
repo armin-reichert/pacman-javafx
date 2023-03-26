@@ -153,8 +153,8 @@ public class Actions {
 	}
 
 	public static void togglePipViewVisible() {
-		Ufx.toggle(Env.PiP.visiblePy);
-		if (Env.PiP.visiblePy.get()) {
+		Ufx.toggle(Env.pipVisiblePy);
+		if (Env.pipVisiblePy.get()) {
 			showFlashMessage("Picture in Picture ON");
 		} else {
 			showFlashMessage("Picture in Picture OFF");
@@ -166,21 +166,21 @@ public class Actions {
 	}
 
 	public static void togglePaused() {
-		Ufx.toggle(Env.Simulation.pausedPy);
+		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?
-		if (Env.Simulation.pausedPy.get()) {
+		if (Env.simulationPausedPy.get()) {
 			SoundHandler.sounds(game()).stopAll();
 		}
 	}
 
 	public static void oneSimulationStep() {
-		if (Env.Simulation.pausedPy.get()) {
+		if (Env.simulationPausedPy.get()) {
 			ui.simulation().executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
-		if (Env.Simulation.pausedPy.get()) {
+		if (Env.simulationPausedPy.get()) {
 			ui.simulation().executeSteps(10, true);
 		}
 	}
@@ -193,8 +193,8 @@ public class Actions {
 
 	public static void selectNextPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			var nextPerspective = Env.ThreeD.perspectivePy.get().next();
-			Env.ThreeD.perspectivePy.set(nextPerspective);
+			var nextPerspective = Env.d3perspectivePy.get().next();
+			Env.d3perspectivePy.set(nextPerspective);
 			String perspectiveName = ResourceMgr.message(nextPerspective.name());
 			showFlashMessage(ResourceMgr.message("camera_perspective", perspectiveName));
 		}
@@ -202,8 +202,8 @@ public class Actions {
 
 	public static void selectPrevPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			var prevPerspective = Env.ThreeD.perspectivePy.get().prev();
-			Env.ThreeD.perspectivePy.set(prevPerspective);
+			var prevPerspective = Env.d3perspectivePy.get().prev();
+			Env.d3perspectivePy.set(prevPerspective);
 			String perspectiveName = ResourceMgr.message(prevPerspective.name());
 			showFlashMessage(ResourceMgr.message("camera_perspective", perspectiveName));
 		}
@@ -233,17 +233,17 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Ufx.toggle(Env.ThreeD.enabledPy);
+		Ufx.toggle(Env.d3enabledPy);
 		if (ui.findGameScene(3).isPresent()) {
 			ui.updateGameScene(true);
 			ui.currentGameScene().onSceneVariantSwitch();
 		} else {
-			showFlashMessage(ResourceMgr.message(Env.ThreeD.enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(ResourceMgr.message(Env.d3enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	public static void toggleDrawMode() {
-		Env.ThreeD.drawModePy.set(Env.ThreeD.drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env.d3drawModePy.set(Env.d3drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void cheatAddLives(int numLives) {

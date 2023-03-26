@@ -94,7 +94,7 @@ public class GameLevel3D {
 		world3D = createWorld3D(r2D.mazeColoring(mazeNumber));
 		pac3D = createPac3D();
 		light = createPacLight();
-		pacLightOnPy.bind(Env.ThreeD.pacLightedPy);
+		pacLightOnPy.bind(Env.d3pacLightedPy);
 
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
@@ -106,12 +106,12 @@ public class GameLevel3D {
 				levelCounter3D.getRoot(), livesCounter3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
 
-		drawModePy.bind(Env.ThreeD.drawModePy);
-		eatenAnimationEnabledPy.bind(Env.ThreeD.energizerEatenAnimationEnabledPy);
-		world3D.floorColorPy.bind(Env.ThreeD.floorColorPy);
-		world3D.floorTexturePy.bind(Env.ThreeD.floorTexturePy);
-		world3D.wallHeightPy.bind(Env.ThreeD.mazeWallHeightPy);
-		world3D.wallThicknessPy.bind(Env.ThreeD.mazeWallThicknessPy);
+		drawModePy.bind(Env.d3drawModePy);
+		eatenAnimationEnabledPy.bind(Env.d3energizerEatenAnimationEnabledPy);
+		world3D.floorColorPy.bind(Env.d3floorColorPy);
+		world3D.floorTexturePy.bind(Env.d3floorTexturePy);
+		world3D.wallHeightPy.bind(Env.d3mazeWallHeightPy);
+		world3D.wallThicknessPy.bind(Env.d3mazeWallThicknessPy);
 	}
 
 	private World3D createWorld3D(MazeColoring mazeColoring) {
@@ -150,7 +150,7 @@ public class GameLevel3D {
 	private Pac3D createPac3D() {
 		var newPac3D = new Pac3D(level.pac());
 		newPac3D.init();
-		newPac3D.drawModePy.bind(Env.ThreeD.drawModePy);
+		newPac3D.drawModePy.bind(Env.d3drawModePy);
 		return newPac3D;
 	}
 

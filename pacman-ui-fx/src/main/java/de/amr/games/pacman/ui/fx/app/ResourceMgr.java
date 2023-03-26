@@ -86,9 +86,9 @@ public class ResourceMgr {
 			var material = new PhongMaterial();
 			material.setBumpMap(image("graphics/textures/%s-bump.jpg".formatted(textureName)));
 			material.setDiffuseMap(image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
-			material.diffuseColorProperty().bind(Env.ThreeD.floorColorPy);
+			material.diffuseColorProperty().bind(Env.d3floorColorPy);
 			material.specularColorProperty()
-					.bind(Bindings.createObjectBinding(Env.ThreeD.floorColorPy.get()::brighter, Env.ThreeD.floorColorPy));
+					.bind(Bindings.createObjectBinding(Env.d3floorColorPy.get()::brighter, Env.d3floorColorPy));
 			FLOOR_TEXTURES.put(key, material);
 		} else {
 			FLOOR_TEXTURES.put(key, null);

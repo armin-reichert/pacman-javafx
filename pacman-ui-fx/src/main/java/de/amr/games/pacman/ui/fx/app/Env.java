@@ -48,31 +48,25 @@ public class Env {
 	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
 
-	public static class Simulation {
-		public static final BooleanProperty pausedPy = new SimpleBooleanProperty(false);
-		public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
-		public static final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(60);
-		public static final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(false);
-	}
+	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
+	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
+	public static final IntegerProperty simumlationSpeedPy = new SimpleIntegerProperty(60);
+	public static final BooleanProperty simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
 
-	public static class PiP {
-		public static final BooleanProperty visiblePy = new SimpleBooleanProperty(false);
-		public static final DoubleProperty opacityPy = new SimpleDoubleProperty(0.66);
-		public static final DoubleProperty sceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.SIZE_PX.y());
-	}
+	public static final BooleanProperty pipVisiblePy = new SimpleBooleanProperty(false);
+	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
+	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.SIZE_PX.y());
 
-	public static class ThreeD {
-		public static final BooleanProperty axesVisiblePy = new SimpleBooleanProperty(false);
-		public static final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
-		public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
-		public static final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(Color.rgb(77, 77, 77));
-		public static final StringProperty floorTexturePy = new SimpleStringProperty("Knobs & Bumps");
-		public static final ObjectProperty<Color> lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-		public static final DoubleProperty mazeWallHeightPy = new SimpleDoubleProperty(1.75);
-		public static final DoubleProperty mazeWallThicknessPy = new SimpleDoubleProperty(1.25);
-		public static final BooleanProperty pacLightedPy = new SimpleBooleanProperty(true);
-		public static final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-		public static final BooleanProperty energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
-		public static final BooleanProperty foodOscillationEnabledPy = new SimpleBooleanProperty(false);
-	}
+	public static final BooleanProperty d3axesVisiblePy = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<DrawMode> d3drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty d3enabledPy = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Color> d3floorColorPy = new SimpleObjectProperty<>(Color.rgb(77, 77, 77));
+	public static final StringProperty d3floorTexturePy = new SimpleStringProperty("Knobs & Bumps");
+	public static final ObjectProperty<Color> d3lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+	public static final DoubleProperty d3mazeWallHeightPy = new SimpleDoubleProperty(1.75);
+	public static final DoubleProperty d3mazeWallThicknessPy = new SimpleDoubleProperty(1.25);
+	public static final BooleanProperty d3pacLightedPy = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Perspective> d3perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty d3energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
+	public static final BooleanProperty d3foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 }
