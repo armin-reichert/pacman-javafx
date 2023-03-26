@@ -133,7 +133,7 @@ public class Pac3D {
 		moveAnimation = new MoveAnimation(root, pac);
 	}
 
-	public Group getRoot() {
+	public Node getRoot() {
 		return root;
 	}
 

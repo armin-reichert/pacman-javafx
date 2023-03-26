@@ -34,6 +34,7 @@ import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -81,7 +82,7 @@ public class Ghost3D {
 		moveAnimation = new MoveAnimation(root, ghost);
 	}
 
-	public Group getRoot() {
+	public Node getRoot() {
 		return root;
 	}
 

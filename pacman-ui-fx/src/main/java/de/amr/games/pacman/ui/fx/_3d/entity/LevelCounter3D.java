@@ -32,6 +32,7 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -58,7 +59,7 @@ public class LevelCounter3D {
 		}
 	}
 
-	public Group getRoot() {
+	public Node getRoot() {
 		return root;
 	}
 

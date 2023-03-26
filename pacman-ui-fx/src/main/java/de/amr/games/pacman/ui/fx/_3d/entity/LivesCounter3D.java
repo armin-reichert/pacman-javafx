@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
@@ -60,7 +61,7 @@ public class LivesCounter3D {
 		}
 	}
 
-	public Group getRoot() {
+	public Node getRoot() {
 		return root;
 	}
 

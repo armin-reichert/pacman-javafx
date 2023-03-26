@@ -43,6 +43,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -86,6 +87,7 @@ public class World3D {
 	private final List<DoorWing3D> doorWings3D = new ArrayList<>();
 	private final Group doorWingsGroup = new Group();
 	private final PointLight houseLighting;
+	private final Group foodGroup = new Group();
 	private Box floor;
 
 	public World3D(World world, MazeColoring mazeColors) {
@@ -112,15 +114,19 @@ public class World3D {
 
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
-		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting);
+		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting, foodGroup);
 	}
 
-	public Group getRoot() {
+	public Node getRoot() {
 		return root;
 	}
 
 	public PointLight houseLighting() {
 		return houseLighting;
+	}
+
+	public void addFood(Eatable3D food) {
+		foodGroup.getChildren().add(food.getRoot());
 	}
 
 	private void buildFloor() {

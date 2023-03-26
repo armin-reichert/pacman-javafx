@@ -27,6 +27,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.GameLevel;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -67,7 +68,7 @@ public class Scores3D {
 		root.getChildren().add(grid);
 	}
 
-	public Group getRoot() {
+	public Node getRoot() {
 		return root;
 	}
 
