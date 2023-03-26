@@ -42,9 +42,9 @@ Starting the game and switching game variant:
 - <kbd>5</kbd> Add credit ("insert coin")
 - <kbd>1</kbd> Start game
 
-Player movement:
-- The player is moved using the cursor keys. When the dashboard is open, these keys are taken away by the JavaFX widgets. 
-In that case, you can move the player using the default key combination <kbd>CTRL</kbd>+cursor key.
+Pac-Man steering:
+- Pac-Man is steered using the cursor keys. When the dashboard is open, these keys are taken away by the JavaFX widgets. 
+In that case, you can steer Pac-Man using key combination <kbd>CTRL</kbd>+cursor key.
 
 General shortcuts:
 - <kbd>F11</kbd> Enter fullscreen mode
