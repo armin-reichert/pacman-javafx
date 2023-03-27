@@ -248,8 +248,9 @@ public class GameLevel3D {
 	}
 
 	private void updatePacLightingState() {
-		light.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
-		var range = !level.pac().powerTimer().isRunning() ? 1.5 : level.pac().isPowerFading(level) ? 4 : 8;
+		boolean hasPower = level.pac().powerTimer().isRunning();
+		light.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead() && hasPower);
+		var range = !hasPower ? 0 : level.pac().isPowerFading(level) ? 4 : 8;
 		light.setMaxRange(range * TS);
 	}
 
