@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -119,6 +120,10 @@ public class GameLevel3D {
 		world3D.floorTexturePy.bind(Env.d3floorTexturePy);
 		world3D.wallHeightPy.bind(Env.d3mazeWallHeightPy);
 		world3D.wallThicknessPy.bind(Env.d3mazeWallThicknessPy);
+
+		var keys = ResourceMgr.floorTextureKeys();
+		var key = keys[U.randomInt(1, keys.length)]; // index 0 = No Texture
+		Env.d3floorTexturePy.set(key);
 	}
 
 	private World3D createWorld3D(World world, MazeColoring mazeColoring) {
