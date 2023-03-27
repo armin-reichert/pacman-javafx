@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
@@ -60,9 +59,9 @@ public abstract class GameScene2D extends GameScene {
 
 	protected GameScene2D(GameController gameController) {
 		super(gameController);
-		fxSubScene = new SubScene(new StackPane(canvas), ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+		fxSubScene = new SubScene(new StackPane(canvas), ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 	}
 
 	@Override
@@ -137,15 +136,5 @@ public abstract class GameScene2D extends GameScene {
 	@Override
 	public boolean is3D() {
 		return false;
-	}
-
-	@Override
-	public GameSceneContext context() {
-		return context;
-	}
-
-	@Override
-	public SubScene fxSubScene() {
-		return fxSubScene;
 	}
 }

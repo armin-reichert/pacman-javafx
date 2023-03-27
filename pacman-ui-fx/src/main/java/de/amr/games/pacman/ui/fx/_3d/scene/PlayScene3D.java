@@ -61,7 +61,6 @@ import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -95,9 +94,6 @@ public class PlayScene3D extends GameScene {
 	public PlayScene3D(GameController gameController) {
 		super(gameController);
 
-		// initial scene size is irrelevant
-		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-
 		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
@@ -111,6 +107,9 @@ public class PlayScene3D extends GameScene {
 		ambientLight.colorProperty().bind(Env.d3lightColorPy);
 
 		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight);
+
+		// initial scene size is irrelevant
+		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 	}
 
 	@Override
@@ -182,16 +181,6 @@ public class PlayScene3D extends GameScene {
 	@Override
 	public boolean is3D() {
 		return true;
-	}
-
-	@Override
-	public GameSceneContext context() {
-		return context;
-	}
-
-	@Override
-	public SubScene fxSubScene() {
-		return fxSubScene;
 	}
 
 	public GameSceneCamera getCamera(Perspective perspective) {
