@@ -81,33 +81,36 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene {
+public class PlayScene3D extends GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
 			Perspective.TOTAL);
 
-	private final SubScene fxSubScene;
-	private final Group root;
-	private final CoordSystem coordSystem = new CoordSystem();
-	private final AmbientLight ambientLight = new AmbientLight();
+	private final Group root = new Group();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
-	private final GameSceneContext context;
 	private GameLevel3D level3D;
 
 	public PlayScene3D(GameController gameController) {
-		root = new Group(new Group() /* placeholder for level3D */, coordSystem, ambientLight);
+		super(gameController);
+
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-		context = new GameSceneContext(gameController);
+
 		cameraMap.put(Perspective.DRONE, new CamDrone());
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
 		perspectivePy.addListener((property, oldVal, newVal) -> changeCameraPerspective(newVal));
-		coordSystem().visibleProperty().bind(Env.d3axesVisiblePy);
-		ambientLight().colorProperty().bind(Env.d3lightColorPy);
+
+		var coordSystem = new CoordSystem();
+		coordSystem.visibleProperty().bind(Env.d3axesVisiblePy);
+
+		var ambientLight = new AmbientLight();
+		ambientLight.colorProperty().bind(Env.d3lightColorPy);
+
+		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight);
 	}
 
 	@Override
@@ -189,14 +192,6 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public SubScene fxSubScene() {
 		return fxSubScene;
-	}
-
-	public CoordSystem coordSystem() {
-		return coordSystem;
-	}
-
-	public AmbientLight ambientLight() {
-		return ambientLight;
 	}
 
 	public GameSceneCamera getCamera(Perspective perspective) {

@@ -41,7 +41,7 @@ import javafx.scene.image.WritableImage;
  */
 public class BootScene extends GameScene2D {
 
-	private final GraphicsContext pen = new Canvas(SIZE_PX.x(), SIZE_PX.y()).getGraphicsContext2D();
+	private final GraphicsContext ctx = new Canvas(SIZE_PX.x(), SIZE_PX.y()).getGraphicsContext2D();
 	private final WritableImage image = new WritableImage(SIZE_PX.x(), SIZE_PX.y());
 
 	public BootScene(GameController gameController) {
@@ -56,12 +56,12 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void clearImage() {
-		pen.setFill(ArcadeTheme.BLACK);
-		pen.fillRect(0, 0, image.getWidth(), image.getHeight());
+		ctx.setFill(ArcadeTheme.BLACK);
+		ctx.fillRect(0, 0, image.getWidth(), image.getHeight());
 	}
 
 	private void saveImage() {
-		pen.getCanvas().snapshot(null, image);
+		ctx.getCanvas().snapshot(null, image);
 	}
 
 	@Override
@@ -85,12 +85,12 @@ public class BootScene extends GameScene2D {
 
 	private void produceRandomHexCodesImage() {
 		clearImage();
-		pen.setFill(ArcadeTheme.PALE);
-		pen.setFont(context.rendering2D().screenFont(TS));
+		ctx.setFill(ArcadeTheme.PALE);
+		ctx.setFont(context.rendering2D().screenFont(TS));
 		for (int row = 0; row < SIZE_TILES.y(); ++row) {
 			for (int col = 0; col < SIZE_TILES.x(); ++col) {
 				var hexCode = Integer.toHexString(U.RND.nextInt(16));
-				pen.fillText(hexCode, col * 8, row * 8 + 8);
+				ctx.fillText(hexCode, col * 8, row * 8 + 8);
 			}
 		}
 		saveImage();
@@ -106,7 +106,7 @@ public class BootScene extends GameScene2D {
 					var splitX = SIZE_TILES.x() / 8 + U.RND.nextInt(SIZE_TILES.x() / 4);
 					for (int col = 0; col < SIZE_TILES.x() / 2; ++col) {
 						var region = col < splitX ? region1 : region2;
-						ssr.drawSprite(pen, region, region.getWidth() * col, region.getHeight() * row);
+						ssr.drawSprite(ctx, region, region.getWidth() * col, region.getHeight() * row);
 					}
 				}
 			}
@@ -119,13 +119,13 @@ public class BootScene extends GameScene2D {
 		var cellSize = 16;
 		var numRows = SIZE_TILES.y() / 2;
 		var numCols = SIZE_TILES.x() / 2;
-		pen.setStroke(ArcadeTheme.PALE);
-		pen.setLineWidth(2.0);
+		ctx.setStroke(ArcadeTheme.PALE);
+		ctx.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			pen.strokeLine(0, row * cellSize, SIZE_PX.x(), row * cellSize);
+			ctx.strokeLine(0, row * cellSize, SIZE_PX.x(), row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			pen.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PX.y());
+			ctx.strokeLine(col * cellSize, 0, col * cellSize, SIZE_PX.y());
 		}
 		saveImage();
 	}

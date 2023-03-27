@@ -50,18 +50,16 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene2D implements GameScene {
+public abstract class GameScene2D extends GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static final double ASPECT_RATIO = (double) ArcadeWorld.SIZE_PX.x() / ArcadeWorld.SIZE_PX.y();
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
-	protected final GameSceneContext context;
-	protected final SubScene fxSubScene;
 	protected final Canvas canvas = new Canvas();
 
 	protected GameScene2D(GameController gameController) {
-		context = new GameSceneContext(gameController);
+		super(gameController);
 		fxSubScene = new SubScene(new StackPane(canvas), ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
