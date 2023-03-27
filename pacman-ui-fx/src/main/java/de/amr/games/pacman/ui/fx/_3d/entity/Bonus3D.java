@@ -28,9 +28,11 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -51,6 +53,7 @@ public class Bonus3D {
 	private final Bonus bonus;
 	private final Image symbolImage;
 	private final Image pointsImage;
+	private Animation animation;
 
 	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
 		shape = new Box(TS, TS, TS);
@@ -84,7 +87,7 @@ public class Bonus3D {
 		imageView.setFitWidth(TS);
 		setTexture(imageView.getImage());
 		shape.setWidth(TS);
-		rotate(1, Animation.INDEFINITE, 1);
+		rotate(1.0, 1.0, Animation.INDEFINITE, 1);
 	}
 
 	public void showPoints() {
@@ -92,8 +95,12 @@ public class Bonus3D {
 		imageView.setPreserveRatio(true);
 		imageView.setFitWidth(1.8 * TS);
 		setTexture(imageView.getImage());
+		if (animation != null) {
+			animation.stop();
+		}
+		shape.setRotationAxis(Rotate.X_AXIS);
+		shape.setRotate(0);
 		shape.setWidth(1.8 * TS);
-		rotate(1, 3, 2);
 	}
 
 	private void setTexture(Image texture) {
@@ -103,14 +110,18 @@ public class Bonus3D {
 		shape.setMaterial(skin);
 	}
 
-	private void rotate(double seconds, int cycleCount, int rate) {
-		var rot = new RotateTransition(Duration.seconds(seconds), shape);
-		rot.setAxis(Rotate.X_AXIS);
-		rot.setFromAngle(0);
-		rot.setToAngle(360);
-		rot.setInterpolator(Interpolator.LINEAR);
-		rot.setCycleCount(cycleCount);
-		rot.setRate(rate);
-		rot.play();
+	private void rotate(double delaySeconds, double oneRotationSeconds, int cycleCount, int rate) {
+		var rotation = new RotateTransition(Duration.seconds(oneRotationSeconds), shape);
+		rotation.setAxis(Rotate.X_AXIS);
+		rotation.setFromAngle(0);
+		rotation.setToAngle(360);
+		rotation.setInterpolator(Interpolator.LINEAR);
+		rotation.setCycleCount(cycleCount);
+		rotation.setRate(rate);
+		if (animation != null) {
+			animation.stop();
+		}
+		animation = new SequentialTransition(Ufx.pause(delaySeconds), rotation);
+		animation.play();
 	}
 }
