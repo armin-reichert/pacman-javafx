@@ -208,7 +208,8 @@ public class World3D {
 
 	private DoorWing3D createDoorWing3D(Vector2i tile, Color color) {
 		var door = new DoorWing3D(tile, color);
-		door.doorHeightPy.bind(wallHeightPy);
+//		door.doorHeightPy.bind(wallHeightPy);
+		door.doorHeightPy.set(3);
 		door.getRoot().drawModeProperty().bind(drawModePy);
 		return door;
 	}
@@ -227,12 +228,12 @@ public class World3D {
 					}
 					wallData.numBricksX++;
 				} else if (wallData.numBricksX > 0) {
-					addCompositeWall(wallData);
+					addCompositeWall(floorPlan, wallData);
 					wallData.numBricksX = 0;
 				}
 			}
 			if (wallData.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
-				addCompositeWall(wallData);
+				addCompositeWall(floorPlan, wallData);
 			}
 		}
 	}
@@ -251,12 +252,12 @@ public class World3D {
 					}
 					wallData.numBricksY++;
 				} else if (wallData.numBricksY > 0) {
-					addCompositeWall(wallData);
+					addCompositeWall(floorPlan, wallData);
 					wallData.numBricksY = 0;
 				}
 			}
 			if (wallData.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
-				addCompositeWall(wallData);
+				addCompositeWall(floorPlan, wallData);
 			}
 		}
 	}
@@ -270,22 +271,32 @@ public class World3D {
 				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
 					wallData.x = x;
 					wallData.y = y;
-					addCompositeWall(wallData);
+					addCompositeWall(floorPlan, wallData);
 				}
 			}
 		}
 	}
 
-	private void addCompositeWall(WallData wallData) {
+	private void addCompositeWall(FloorPlan floorPlan, WallData wallData) {
+		final double topHeight = 0.5;
+		final double ghostHouseHeight = 9.0;
+		final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
+		final boolean ghostHouseWall = world.ghostHouse().contains(tile);
+
 		var base = switch (wallData.type) {
 		case FloorPlan.HWALL -> horizontalWall(wallData);
 		case FloorPlan.VWALL -> verticalWall(wallData);
 		case FloorPlan.CORNER -> corner();
 		default -> throw new IllegalStateException();
 		};
-		base.depthProperty().bind(wallHeightPy);
-		base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 		base.setMaterial(wallData.baseMaterial);
+		if (ghostHouseWall) {
+			base.setDepth(ghostHouseHeight);
+			base.setTranslateZ(-ghostHouseHeight / 2);
+		} else {
+			base.depthProperty().bind(wallHeightPy);
+			base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+		}
 
 		var top = switch (wallData.type) {
 		case FloorPlan.HWALL -> horizontalWall(wallData);
@@ -293,10 +304,15 @@ public class World3D {
 		case FloorPlan.CORNER -> corner();
 		default -> throw new IllegalStateException();
 		};
-		double topHeight = 0.1;
-		top.setDepth(topHeight);
-		top.translateZProperty().bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
 		top.setMaterial(wallData.topMaterial);
+		if (ghostHouseWall) {
+			top.setDepth(topHeight);
+			top.setTranslateZ(-ghostHouseHeight - 0.2);
+		} else {
+			top.setDepth(topHeight);
+			top.translateZProperty()
+					.bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
+		}
 
 		var wall = new Group(base, top);
 		wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
