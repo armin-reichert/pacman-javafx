@@ -204,7 +204,7 @@ public class GameLevel3D {
 	public void update() {
 		pac3D.update(level);
 		light.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
-		int range = !level.pac().powerTimer().isRunning() ? 2 : level.pac().isPowerFading(level) ? 4 : 8;
+		var range = !level.pac().powerTimer().isRunning() ? 1.5 : level.pac().isPowerFading(level) ? 4 : 8;
 		light.setMaxRange(range * TS);
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update();
