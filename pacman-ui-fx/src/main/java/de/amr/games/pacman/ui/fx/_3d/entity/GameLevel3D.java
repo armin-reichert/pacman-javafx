@@ -201,24 +201,6 @@ public class GameLevel3D {
 		return root;
 	}
 
-	public void update() {
-		pac3D.update(level);
-		light.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
-		var range = !level.pac().powerTimer().isRunning() ? 1.5 : level.pac().isPowerFading(level) ? 4 : 8;
-		light.setMaxRange(range * TS);
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
-		bonus3D.update();
-		updateHouseLightingState();
-		updateDoorState();
-		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
-		scores3D.update(level);
-		if (level.game().hasCredit()) {
-			scores3D.setShowPoints(true);
-		} else {
-			scores3D.setShowText(Color.RED, "GAME OVER!");
-		}
-	}
-
 	public World3D world3D() {
 		return world3D;
 	}
@@ -241,6 +223,28 @@ public class GameLevel3D {
 
 	public Scores3D scores3D() {
 		return scores3D;
+	}
+
+	public void update() {
+		pac3D.update(level);
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
+		bonus3D.update();
+		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
+		scores3D.update(level);
+		if (level.game().hasCredit()) {
+			scores3D.setShowPoints(true);
+		} else {
+			scores3D.setShowText(Color.RED, "GAME OVER!");
+		}
+		updatePacLightingState();
+		updateHouseLightingState();
+		updateDoorState();
+	}
+
+	private void updatePacLightingState() {
+		light.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead());
+		var range = !level.pac().powerTimer().isRunning() ? 1.5 : level.pac().isPowerFading(level) ? 4 : 8;
+		light.setMaxRange(range * TS);
 	}
 
 	public void eat(Eatable3D eatable3D) {
