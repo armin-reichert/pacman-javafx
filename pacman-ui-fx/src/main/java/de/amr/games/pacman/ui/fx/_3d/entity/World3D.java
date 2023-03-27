@@ -289,13 +289,14 @@ public class World3D {
 		case FloorPlan.CORNER -> corner();
 		default -> throw new IllegalStateException();
 		};
-		base.setMaterial(wallData.baseMaterial);
 		if (ghostHouseWall) {
 			base.setDepth(ghostHouseHeight);
 			base.setTranslateZ(-ghostHouseHeight / 2);
+			base.setMaterial(wallData.baseMaterial);
 		} else {
 			base.depthProperty().bind(wallHeightPy);
 			base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+			base.setMaterial(wallData.baseMaterial);
 		}
 
 		var top = switch (wallData.type) {

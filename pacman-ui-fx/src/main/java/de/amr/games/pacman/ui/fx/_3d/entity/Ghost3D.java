@@ -101,9 +101,9 @@ public class Ghost3D {
 		}
 		// brake effect
 		if (level.world().isTunnel(ghost.tile())) {
-			brakeEffect = new RotateTransition(Duration.seconds(0.15), coloredGhost3D.getRoot());
+			brakeEffect = new RotateTransition(Duration.seconds(0.2), coloredGhost3D.getRoot());
 			brakeEffect.setAxis(Rotate.Y_AXIS);
-			brakeEffect.setToAngle(-30);
+			brakeEffect.setToAngle(-25);
 			brakeEffect.play();
 		} else {
 			if (brakeEffect != null) {
