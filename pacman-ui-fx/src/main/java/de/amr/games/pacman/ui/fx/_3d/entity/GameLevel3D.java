@@ -103,9 +103,15 @@ public class GameLevel3D {
 		livesCounter3D = createLivesCounter3D();
 		scores3D = new Scores3D(r2D.screenFont(TS));
 
-		root.getChildren().addAll(world3D.getRoot(), particlesGroup, pac3D.getRoot(), light, bonus3D.getRoot(),
-				scores3D.getRoot(), levelCounter3D.getRoot(), livesCounter3D.getRoot());
+		root.getChildren().add(scores3D.getRoot());
+		root.getChildren().add(levelCounter3D.getRoot());
+		root.getChildren().add(livesCounter3D.getRoot());
+		root.getChildren().add(bonus3D.getRoot());
+		root.getChildren().add(pac3D.getRoot());
 		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
+		// Note: world/ghosthouse must be added after the guys if ghosthouse uses transparent material!
+		root.getChildren().add(world3D.getRoot());
+		root.getChildren().addAll(particlesGroup, light);
 
 		drawModePy.bind(Env.d3drawModePy);
 		eatenAnimationEnabledPy.bind(Env.d3energizerEatenAnimationEnabledPy);

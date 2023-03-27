@@ -66,6 +66,7 @@ public class World3D {
 		float brickSize;
 		PhongMaterial baseMaterial;
 		PhongMaterial topMaterial;
+		PhongMaterial houseMaterial;
 	}
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
@@ -155,6 +156,8 @@ public class World3D {
 		wallData.brickSize = (float) TS / resolution;
 		wallData.baseMaterial = ResourceMgr.coloredMaterial(mazeColors.sideColor());
 		wallData.topMaterial = ResourceMgr.coloredMaterial(mazeColors.topColor());
+		wallData.houseMaterial = ResourceMgr.coloredMaterial(Color.color(mazeColors.sideColor().getRed(),
+				mazeColors.sideColor().getGreen(), mazeColors.sideColor().getBlue(), 0.33));
 		return wallData;
 	}
 
@@ -292,7 +295,7 @@ public class World3D {
 		if (ghostHouseWall) {
 			base.setDepth(ghostHouseHeight);
 			base.setTranslateZ(-ghostHouseHeight / 2);
-			base.setMaterial(wallData.baseMaterial);
+			base.setMaterial(wallData.houseMaterial);
 		} else {
 			base.depthProperty().bind(wallHeightPy);
 			base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
