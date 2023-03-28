@@ -210,8 +210,7 @@ public class World3D {
 
 	private DoorWing3D createDoorWing3D(Vector2i tile, Color color) {
 		var door = new DoorWing3D(tile, color);
-//		door.doorHeightPy.bind(wallHeightPy);
-		door.doorHeightPy.set(3);
+		door.doorHeightPy.set(6.0);
 		door.getRoot().drawModeProperty().bind(drawModePy);
 		return door;
 	}

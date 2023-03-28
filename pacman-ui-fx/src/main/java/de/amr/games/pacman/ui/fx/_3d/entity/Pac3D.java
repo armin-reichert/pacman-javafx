@@ -132,7 +132,12 @@ public class Pac3D {
 			pearlRight.getTransforms().addAll(new Translate(2, -0.5, -PAC_SIZE * 0.58));
 			pearlRight.setMaterial(pearlMaterial);
 
-			return new Group(headGroup, bowLeft, bowRight, pearlLeft, pearlRight);
+			var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
+			var beautySpot = new Sphere(0.25);
+			beautySpot.setMaterial(beautySpotMaterial);
+			beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -PAC_SIZE * 0.3));
+
+			return new Group(headGroup, bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
 		} else {
 			return new Group(headGroup);
 		}
