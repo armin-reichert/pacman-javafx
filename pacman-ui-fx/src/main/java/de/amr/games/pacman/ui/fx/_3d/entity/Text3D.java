@@ -28,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -78,6 +79,17 @@ public class Text3D {
 
 	public Node getRoot() {
 		return box;
+	}
+
+	public void setTranslate(double x, double y, double z) {
+		box.setTranslateX(x);
+		box.setTranslateY(y);
+		box.setTranslateZ(z);
+	}
+
+	public void setRotate(Point3D axis, double angle) {
+		box.setRotationAxis(axis);
+		box.setRotate(angle);
 	}
 
 	public void beginBatch() {

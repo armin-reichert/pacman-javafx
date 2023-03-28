@@ -142,12 +142,8 @@ public class PlayScene3D extends GameScene {
 		infoText3D.setFont(context.rendering2D().screenFont(8));
 		infoText3D.setText("Hello!");
 		infoText3D.endBatch();
-
-		infoText3D.getRoot().setTranslateX(0);
-		infoText3D.getRoot().setTranslateY(20);
-		infoText3D.getRoot().setTranslateZ(-6);
-		infoText3D.getRoot().setRotationAxis(Rotate.X_AXIS);
-		infoText3D.getRoot().setRotate(90);
+		infoText3D.setTranslate(0, 20, -6);
+		infoText3D.setRotate(Rotate.X_AXIS, 90);
 	}
 
 	@Override
