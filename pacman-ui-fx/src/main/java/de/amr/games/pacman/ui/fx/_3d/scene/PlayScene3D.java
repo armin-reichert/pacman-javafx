@@ -49,6 +49,7 @@ import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Text3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
@@ -73,6 +74,8 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 /**
@@ -90,6 +93,7 @@ public class PlayScene3D extends GameScene {
 	private final Group root = new Group();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
 	private GameLevel3D level3D;
+	private Text3D infoText3D;
 
 	public PlayScene3D(GameController gameController) {
 		super(gameController);
@@ -106,7 +110,9 @@ public class PlayScene3D extends GameScene {
 		var ambientLight = new AmbientLight();
 		ambientLight.colorProperty().bind(Env.d3lightColorPy);
 
-		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight);
+		infoText3D = new Text3D(72, 8);
+
+		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight, infoText3D);
 
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
@@ -115,6 +121,8 @@ public class PlayScene3D extends GameScene {
 	@Override
 	public void init() {
 		context.level().ifPresent(this::replaceGameLevel3D);
+		initInfoText();
+		infoText3D.setVisible(false);
 		perspectivePy.bind(Env.d3perspectivePy);
 	}
 
@@ -125,6 +133,17 @@ public class PlayScene3D extends GameScene {
 			currentCamera().update(level3D.pac3D().getRoot());
 			updateSound(level);
 		});
+	}
+
+	private void initInfoText() {
+		infoText3D.setBgColor(Color.BLACK);
+		infoText3D.setColor(Color.WHITE);
+		infoText3D.setFont(context.rendering2D().screenFont(8));
+		infoText3D.setTranslateX(0);
+		infoText3D.setTranslateY(20);
+		infoText3D.setTranslateZ(-6);
+		infoText3D.setRotationAxis(Rotate.X_AXIS);
+		infoText3D.setRotate(90);
 	}
 
 	@Override
