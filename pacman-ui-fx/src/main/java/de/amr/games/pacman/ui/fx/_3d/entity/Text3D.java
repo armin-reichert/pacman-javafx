@@ -64,13 +64,13 @@ public class Text3D {
 		canvas = new Canvas(box.getWidth() * quality, box.getHeight() * quality);
 		var g = canvas.getGraphicsContext2D();
 		var canvasFontSize = font.getSize() * quality;
-		g.setFill(Color.BLACK);
+		g.setFill(bgColor);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setFont(Font.font(font.getFamily(), canvasFontSize));
 		g.setFill(textColor);
 		g.fillText(text, 0, canvasFontSize);
 
-		var material = ResourceMgr.coloredMaterial(bgColor);
+		var material = ResourceMgr.coloredMaterial(Color.WHITE);
 		material.setDiffuseMap(canvas.snapshot(null, null));
 		box.setMaterial(material);
 		LOG.info("New image produced");

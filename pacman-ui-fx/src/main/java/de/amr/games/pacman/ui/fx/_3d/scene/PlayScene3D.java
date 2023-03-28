@@ -138,7 +138,7 @@ public class PlayScene3D extends GameScene {
 	private void initInfoText() {
 		infoText3D.beginBatch();
 		infoText3D.setBgColor(Color.BLACK);
-		infoText3D.setTextColor(Color.WHITE);
+		infoText3D.setTextColor(Color.YELLOW);
 		infoText3D.setFont(context.rendering2D().screenFont(8));
 		infoText3D.setText("Hello!");
 		infoText3D.endBatch();
@@ -292,12 +292,7 @@ public class PlayScene3D extends GameScene {
 					level3D.foodOscillation().play();
 				}
 				infoText3D.setVisible(true);
-				infoText3D.beginBatch();
 				infoText3D.setText("READY!");
-				// TODO synchronize color with wall creation code
-				infoText3D.setBgColor(ResourceMgr.color(Color.WHITE, 0.33));
-				infoText3D.setTextColor(Color.YELLOW);
-				infoText3D.endBatch();
 			});
 		}
 
