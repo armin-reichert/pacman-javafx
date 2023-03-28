@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import de.amr.games.pacman.model.common.GameVariant;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -40,19 +41,19 @@ import javafx.scene.transform.Rotate;
  */
 public class LivesCounter3D {
 
-	private static final Color EYES_COLOR = Color.rgb(60, 60, 60);
-	private static final Color PALATE_COLOR = Color.rgb(60, 60, 60);
+	private static final Color PALATE_COLOR = Color.rgb(120, 120, 120);
 	private static final Color HEAD_COLOR = Color.rgb(255, 255, 0);
 	private static final int MAX_LIVES_DISPLAYED = 5;
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	private final Group root = new Group();
 
-	public LivesCounter3D(boolean facingRight) {
+	public LivesCounter3D(GameVariant variant) {
 		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			var pacRoot = Pac3D.createTG(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+			var pacRoot = Pac3D.createTG(HEAD_COLOR, PALATE_COLOR, variant);
 			pacRoot.setTranslateX(2.0 * i * TS);
-			if (facingRight) {
+			if (variant == GameVariant.MS_PACMAN) {
+				// look to the right
 				pacRoot.setRotationAxis(Rotate.Z_AXIS);
 				pacRoot.setRotate(180);
 			}

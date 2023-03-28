@@ -40,7 +40,6 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -156,7 +155,11 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPac3D() {
-		var newPac3D = new Pac3D(level.pac());
+		var newPac3D = switch (level.game().variant()) {
+		case MS_PACMAN -> Pac3D.msPacMan(level.pac());
+		case PACMAN -> Pac3D.pacMan(level.pac());
+		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(level.game().variant()));
+		};
 		newPac3D.init();
 		newPac3D.drawModePy.bind(Env.d3drawModePy);
 		return newPac3D;
@@ -189,8 +192,7 @@ public class GameLevel3D {
 	}
 
 	private LivesCounter3D createLivesCounter3D() {
-		var facingRight = level.game().variant() == GameVariant.MS_PACMAN;
-		var counter3D = new LivesCounter3D(facingRight);
+		var counter3D = new LivesCounter3D(level.game().variant());
 		counter3D.setPosition(2 * TS, TS, -HTS);
 		counter3D.getRoot().setVisible(level.game().hasCredit());
 		counter3D.drawModePy.bind(drawModePy);
