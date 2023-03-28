@@ -179,10 +179,14 @@ public class ResourceMgr {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 
-	public static PhongMaterial coloredMaterial(Color diffuseColor) {
-		var material = new PhongMaterial(diffuseColor);
-		material.setSpecularColor(diffuseColor.brighter());
+	public static PhongMaterial coloredMaterial(Color color) {
+		var material = new PhongMaterial(color);
+		material.setSpecularColor(color.brighter());
 		return material;
+	}
+
+	public static Color color(Color color, double opacity) {
+		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
 	/**

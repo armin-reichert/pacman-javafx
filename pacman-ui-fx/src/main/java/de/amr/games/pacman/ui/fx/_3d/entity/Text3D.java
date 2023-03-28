@@ -27,31 +27,57 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
-public class Text3D extends Box {
+public class Text3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private final Canvas canvas;
+	private Box box;
+	private Canvas canvas;
 	private double quality = 3;
 	private Font font = Font.font(8);
 	private Color bgColor = Color.WHITE;
-	private Color color = Color.RED;
+	private Color textColor = Color.RED;
 	private String text = "";
 	private boolean batchUpdate;
 
-	public Text3D(double width, double height) {
-		super(width, height, 0.1);
-		setCache(true); // TODO needed?
-		canvas = new Canvas(width * quality, height * quality);
+	public Text3D() {
+		box = new Box(100, 10, 0.1);
+		box.setCache(true); // TODO needed?
+	}
+
+	private void updateImage() {
+		if (batchUpdate) {
+			return;
+		}
+		box.setWidth(text.length() * font.getSize());
+		box.setHeight(font.getSize());
+		canvas = new Canvas(box.getWidth() * quality, box.getHeight() * quality);
+		var g = canvas.getGraphicsContext2D();
+		var canvasFontSize = font.getSize() * quality;
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		g.setFont(Font.font(font.getFamily(), canvasFontSize));
+		g.setFill(textColor);
+		g.fillText(text, 0, canvasFontSize);
+
+		var material = ResourceMgr.coloredMaterial(bgColor);
+		material.setDiffuseMap(canvas.snapshot(null, null));
+		box.setMaterial(material);
+		LOG.info("New image produced");
+	}
+
+	public Node getRoot() {
+		return box;
 	}
 
 	public void beginBatch() {
@@ -87,11 +113,11 @@ public class Text3D extends Box {
 		updateImage();
 	}
 
-	public void setColor(Color color) {
-		if (color.equals(this.color)) {
+	public void setTextColor(Color color) {
+		if (color.equals(this.textColor)) {
 			return;
 		}
-		this.color = color;
+		this.textColor = color;
 		updateImage();
 	}
 
@@ -103,20 +129,7 @@ public class Text3D extends Box {
 		updateImage();
 	}
 
-	private void updateImage() {
-		if (batchUpdate) {
-			return;
-		}
-		var g = canvas.getGraphicsContext2D();
-		var fontSize = font.getSize() * quality;
-		g.setFill(bgColor);
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		g.setFont(Font.font(font.getFamily(), fontSize));
-		g.setFill(color);
-		g.fillText(text, 0, fontSize);
-		var material = new PhongMaterial();
-		material.setDiffuseMap(canvas.snapshot(null, null));
-		setMaterial(material);
-		LOG.info("New image produced");
+	public void setVisible(boolean visible) {
+		box.setVisible(visible);
 	}
 }

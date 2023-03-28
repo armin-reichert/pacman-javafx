@@ -92,8 +92,8 @@ public class PlayScene3D extends GameScene {
 
 	private final Group root = new Group();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
+	private final Text3D infoText3D;
 	private GameLevel3D level3D;
-	private Text3D infoText3D;
 
 	public PlayScene3D(GameController gameController) {
 		super(gameController);
@@ -110,9 +110,10 @@ public class PlayScene3D extends GameScene {
 		var ambientLight = new AmbientLight();
 		ambientLight.colorProperty().bind(Env.d3lightColorPy);
 
-		infoText3D = new Text3D(72, 8);
+		infoText3D = new Text3D();
 
-		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight, infoText3D);
+		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight,
+				infoText3D.getRoot());
 
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
@@ -122,7 +123,6 @@ public class PlayScene3D extends GameScene {
 	public void init() {
 		context.level().ifPresent(this::replaceGameLevel3D);
 		initInfoText();
-//		infoText3D.setVisible(false);
 		perspectivePy.bind(Env.d3perspectivePy);
 	}
 
@@ -138,16 +138,16 @@ public class PlayScene3D extends GameScene {
 	private void initInfoText() {
 		infoText3D.beginBatch();
 		infoText3D.setBgColor(Color.BLACK);
-		infoText3D.setColor(Color.WHITE);
+		infoText3D.setTextColor(Color.WHITE);
 		infoText3D.setFont(context.rendering2D().screenFont(8));
 		infoText3D.setText("Hello!");
 		infoText3D.endBatch();
 
-		infoText3D.setTranslateX(0);
-		infoText3D.setTranslateY(20);
-		infoText3D.setTranslateZ(-6);
-		infoText3D.setRotationAxis(Rotate.X_AXIS);
-		infoText3D.setRotate(90);
+		infoText3D.getRoot().setTranslateX(0);
+		infoText3D.getRoot().setTranslateY(20);
+		infoText3D.getRoot().setTranslateZ(-6);
+		infoText3D.getRoot().setRotationAxis(Rotate.X_AXIS);
+		infoText3D.getRoot().setRotate(90);
 	}
 
 	@Override
@@ -291,6 +291,13 @@ public class PlayScene3D extends GameScene {
 				if (Env.d3foodOscillationEnabledPy.get()) {
 					level3D.foodOscillation().play();
 				}
+				infoText3D.setVisible(true);
+				infoText3D.beginBatch();
+				infoText3D.setText("READY!");
+				// TODO synchronize color with wall creation code
+				infoText3D.setBgColor(ResourceMgr.color(Color.WHITE, 0.33));
+				infoText3D.setTextColor(Color.YELLOW);
+				infoText3D.endBatch();
 			});
 		}
 
@@ -362,6 +369,10 @@ public class PlayScene3D extends GameScene {
 		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
 			level3D.energizers3D().forEach(Energizer3D::stopPumping);
 			level3D.bonus3D().hide();
+		}
+
+		if (e.oldGameState == GameState.READY) {
+			infoText3D.setVisible(false);
 		}
 	}
 

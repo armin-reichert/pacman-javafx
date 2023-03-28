@@ -156,8 +156,7 @@ public class World3D {
 		wallData.brickSize = (float) TS / resolution;
 		wallData.baseMaterial = ResourceMgr.coloredMaterial(mazeColors.sideColor());
 		wallData.topMaterial = ResourceMgr.coloredMaterial(mazeColors.topColor());
-		wallData.houseMaterial = ResourceMgr.coloredMaterial(Color.color(mazeColors.sideColor().getRed(),
-				mazeColors.sideColor().getGreen(), mazeColors.sideColor().getBlue(), 0.33));
+		wallData.houseMaterial = ResourceMgr.coloredMaterial(ResourceMgr.color(mazeColors.sideColor(), 0.33));
 		return wallData;
 	}
 
