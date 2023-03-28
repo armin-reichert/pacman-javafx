@@ -122,7 +122,7 @@ public class PlayScene3D extends GameScene {
 	public void init() {
 		context.level().ifPresent(this::replaceGameLevel3D);
 		initInfoText();
-		infoText3D.setVisible(false);
+//		infoText3D.setVisible(false);
 		perspectivePy.bind(Env.d3perspectivePy);
 	}
 
@@ -136,9 +136,13 @@ public class PlayScene3D extends GameScene {
 	}
 
 	private void initInfoText() {
+		infoText3D.beginBatch();
 		infoText3D.setBgColor(Color.BLACK);
 		infoText3D.setColor(Color.WHITE);
 		infoText3D.setFont(context.rendering2D().screenFont(8));
+		infoText3D.setText("Hello!");
+		infoText3D.endBatch();
+
 		infoText3D.setTranslateX(0);
 		infoText3D.setTranslateY(20);
 		infoText3D.setTranslateZ(-6);

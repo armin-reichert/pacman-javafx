@@ -46,11 +46,21 @@ public class Text3D extends Box {
 	private Color bgColor = Color.WHITE;
 	private Color color = Color.RED;
 	private String text = "";
+	private boolean batchUpdate;
 
 	public Text3D(double width, double height) {
 		super(width, height, 0.1);
 		setCache(true); // TODO needed?
 		canvas = new Canvas(width * quality, height * quality);
+	}
+
+	public void beginBatch() {
+		batchUpdate = true;
+	}
+
+	public void endBatch() {
+		batchUpdate = false;
+		updateImage();
 	}
 
 	public void setQuality(double quality) {
@@ -94,6 +104,9 @@ public class Text3D extends Box {
 	}
 
 	private void updateImage() {
+		if (batchUpdate) {
+			return;
+		}
 		var g = canvas.getGraphicsContext2D();
 		var fontSize = font.getSize() * quality;
 		g.setFill(bgColor);
