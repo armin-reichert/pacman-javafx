@@ -34,6 +34,7 @@ import javafx.animation.RotateTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -64,7 +65,7 @@ public class LevelCounter3D {
 	}
 
 	private Box createSpinningCube(double size, Image texture, boolean forward) {
-		var material = new PhongMaterial();
+		var material = new PhongMaterial(Color.WHITE);
 		material.setDiffuseMap(texture);
 		Box cube = new Box(size, size, size);
 		cube.setMaterial(material);

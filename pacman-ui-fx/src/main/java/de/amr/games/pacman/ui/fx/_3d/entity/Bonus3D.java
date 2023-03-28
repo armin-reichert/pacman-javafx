@@ -105,7 +105,6 @@ public class Bonus3D {
 
 	private void setTexture(Image texture) {
 		var skin = new PhongMaterial(Color.WHITE);
-		skin.setBumpMap(texture);
 		skin.setDiffuseMap(texture);
 		shape.setMaterial(skin);
 	}
