@@ -78,6 +78,7 @@ public class ResourceMgr {
 		addFloorTexture("Chrome", "chrome");
 		addFloorTexture("Knobs & Bumps", "knobs");
 		addFloorTexture("Pavement", "pavement");
+		addFloorTexture("Plastic", "plastic");
 		addFloorTexture("Wood", "wood");
 	}
 
