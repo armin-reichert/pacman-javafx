@@ -137,15 +137,13 @@ public class PlayScene3D extends GameScene {
 
 	private void initInfoText() {
 		context.level().ifPresent(level -> {
-			int mazeNumber = context.game().mazeNumber(level.number());
 			infoText3D.beginBatch();
-//			infoText3D.setBgColor(context.rendering2D().mazeColoring(mazeNumber).sideColor());
 			infoText3D.setBgColor(Env.mainSceneBgColorPy.get());
 			infoText3D.setTextColor(Color.YELLOW);
 			infoText3D.setFont(context.rendering2D().screenFont(8));
 			infoText3D.endBatch();
-			infoText3D.setTranslate(0, 20, -5.2);
-			infoText3D.setRotate(Rotate.X_AXIS, 90);
+			infoText3D.translate(0, 20, -5.2);
+			infoText3D.rotate(Rotate.X_AXIS, 90);
 		});
 	}
 

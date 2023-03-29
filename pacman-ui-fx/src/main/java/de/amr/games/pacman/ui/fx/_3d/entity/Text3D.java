@@ -80,13 +80,13 @@ public class Text3D {
 		return box;
 	}
 
-	public void setTranslate(double x, double y, double z) {
+	public void translate(double x, double y, double z) {
 		box.setTranslateX(x);
 		box.setTranslateY(y);
 		box.setTranslateZ(z);
 	}
 
-	public void setRotate(Point3D axis, double angle) {
+	public void rotate(Point3D axis, double angle) {
 		box.setRotationAxis(axis);
 		box.setRotate(angle);
 	}
