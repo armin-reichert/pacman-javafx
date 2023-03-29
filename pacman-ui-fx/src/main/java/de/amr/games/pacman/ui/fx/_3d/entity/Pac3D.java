@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
@@ -111,34 +110,49 @@ public class Pac3D {
 		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
 
 		var headGroup = new Group(head, eyes, palate);
-		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, size), new Rotate(90, Rotate.X_AXIS));
+		headGroup.getTransforms().addAll(//
+				new Translate(0, 0, -1), // lift a bit to be aligned with floor
+				scale(headGroup, size), // scale to Pac size
+				new Rotate(90, Rotate.X_AXIS), //
+				new Rotate(180, Rotate.Y_AXIS), //
+				new Rotate(180, Rotate.Z_AXIS)//
+		);
 
-		// TODO new obj importer has all meshes upside-down and backwards. Why?
-		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-		headGroup.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+		var accessories = createBeautyAccessories(size, Color.RED, Color.BLUE);
+		return new Group(headGroup, accessories);
+	}
 
-		var bowMaterial = ResourceMgr.coloredMaterial(Color.RED);
+	private static Group createBeautyAccessories(double pacSize, Color bowColor, Color pearlColor) {
+		var root = new Group();
+
+		var bowMaterial = ResourceMgr.coloredMaterial(bowColor);
+
 		var bowLeft = new Sphere(1.2);
-		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -size * 0.55));
+		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
 		bowLeft.setMaterial(bowMaterial);
+
 		var bowRight = new Sphere(1.2);
-		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -size * 0.55));
+		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
 		bowRight.setMaterial(bowMaterial);
 
-		var pearlMaterial = ResourceMgr.coloredMaterial(ArcadeTheme.BLUE);
+		var pearlMaterial = ResourceMgr.coloredMaterial(pearlColor);
+
 		var pearlLeft = new Sphere(0.6);
-		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -size * 0.58));
+		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
 		pearlLeft.setMaterial(pearlMaterial);
+
 		var pearlRight = new Sphere(0.6);
-		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -size * 0.58));
+		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
 		pearlRight.setMaterial(pearlMaterial);
 
 		var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
 		var beautySpot = new Sphere(0.25);
 		beautySpot.setMaterial(beautySpotMaterial);
-		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -size * 0.3));
+		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -pacSize * 0.3));
 
-		return new Group(headGroup, bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
+		root.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
+
+		return root;
 	}
 
 	public static Shape3D head(Group root) {
