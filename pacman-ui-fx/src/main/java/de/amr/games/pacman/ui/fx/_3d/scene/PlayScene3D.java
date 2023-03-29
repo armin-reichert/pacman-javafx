@@ -87,11 +87,10 @@ public class PlayScene3D extends GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
-			Perspective.TOTAL) {
+	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
 		@Override
 		protected void invalidated() {
-			changeCameraPerspective(get());
+			changeCameraPerspective();
 		}
 	};
 
@@ -179,7 +178,7 @@ public class PlayScene3D extends GameScene {
 		level3D = new GameLevel3D(level, context.rendering2D());
 		level3D.getRoot().getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 		root.getChildren().set(0, level3D.getRoot());
-		changeCameraPerspective(perspectivePy.get());
+		changeCameraPerspective();
 		LOG.trace("3D game level created.");
 	}
 
@@ -215,24 +214,28 @@ public class PlayScene3D extends GameScene {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
-	private void changeCameraPerspective(Perspective newPerspective) {
-		var newCamera = getCamera(newPerspective);
-		if (newCamera == null) {
-			LOG.error("No camera found for perspective %s", newPerspective);
+	private void changeCameraPerspective() {
+		var perspective = perspectivePy.get();
+		if (perspective == null) {
 			return;
 		}
-		if (newCamera != fxSubScene.getCamera()) {
-			fxSubScene.setCamera(newCamera);
-			fxSubScene.setOnKeyPressed(newCamera::onKeyPressed);
+		var camera = getCamera(perspective);
+		if (camera == null) {
+			LOG.error("No camera found for perspective %s", perspective);
+			return;
+		}
+		if (camera != fxSubScene.getCamera()) {
+			fxSubScene.setCamera(camera);
+			fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 			fxSubScene.requestFocus();
-			newCamera.reset();
+			camera.reset();
 		}
-		// this rotates the scores such that the viewer always sees them frontally
+		// rotate the scores such that the viewer sees them frontally
 		if (level3D != null && level3D.scores3D() != null) {
-			level3D.scores3D().getRoot().rotationAxisProperty().bind(newCamera.rotationAxisProperty());
-			level3D.scores3D().getRoot().rotateProperty().bind(newCamera.rotateProperty());
+			level3D.scores3D().getRoot().rotationAxisProperty().bind(camera.rotationAxisProperty());
+			level3D.scores3D().getRoot().rotateProperty().bind(camera.rotateProperty());
 		}
-		LOG.trace("Perspective changed to %s (%s)", newPerspective, this);
+		LOG.info("Perspective changed to %s (%s)", perspective, this);
 	}
 
 	@Override
