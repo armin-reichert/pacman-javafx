@@ -57,6 +57,11 @@ import javafx.scene.shape.DrawMode;
  */
 public class World3D {
 
+	private static final Logger LOG = LogManager.getFormatterLogger();
+
+	private static final int MAZE_RESOLUTION = 4; // 1, 2, 4, 8 are allowed values
+	private static final double FLOOR_THICKNESS = 0.1;
+
 	private static class WallData {
 		byte type;
 		int x;
@@ -69,16 +74,25 @@ public class World3D {
 		PhongMaterial houseMaterial;
 	}
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
-	private static final int MAZE_RESOLUTION = 4; // 1, 2, 4, 8 are allowed values
-	private static final double FLOOR_THICKNESS = 0.1;
-
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
+
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
+
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			ResourceMgr.KEY_NO_TEXTURE);
-	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+			ResourceMgr.KEY_NO_TEXTURE) {
+		protected void invalidated() {
+			LOG.trace("Floor texture change detected");
+			updateFloorMaterial();
+		};
+	};
+
+	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
+		protected void invalidated() {
+			LOG.trace("Floor color change detected");
+			updateFloorMaterial();
+		};
+	};
+
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final World world;
@@ -103,15 +117,6 @@ public class World3D {
 		houseLighting.setTranslateX(topLeft.x() * TS + size.x() * HTS);
 		houseLighting.setTranslateY(topLeft.y() * TS + size.y() * HTS - TS);
 		houseLighting.setTranslateZ(-TS);
-
-		floorColorPy.addListener(py -> {
-			LOG.trace("Floor color change detected");
-			updateFloorMaterial();
-		});
-		floorTexturePy.addListener(py -> {
-			LOG.trace("Floor texture change detected");
-			updateFloorMaterial();
-		});
 
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
