@@ -45,8 +45,16 @@ public abstract class GameLoop {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60);
+	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
+		@Override
+		protected void invalidated() {
+			createFrameGenerator(get());
+			LOG.info("Target framerate changed to %d Hz", get());
+		};
+	};
+
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
+
 	public final BooleanProperty measuredPy = new SimpleBooleanProperty(this, "measured", false);
 
 	private Timeline frameGenerator;
@@ -58,8 +66,6 @@ public abstract class GameLoop {
 
 	protected GameLoop(int targetFramerate) {
 		targetFrameratePy.set(targetFramerate);
-		targetFrameratePy.addListener((py, oldValue, newValue) -> createFrameGenerator(newValue.intValue()));
-		createFrameGenerator(targetFramerate);
 	}
 
 	private void createFrameGenerator(int fps) {
