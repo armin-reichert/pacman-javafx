@@ -109,13 +109,13 @@ public class World3D {
 		this.world = world;
 		this.mazeColors = mazeColors;
 
-		var topLeft = world.ghostHouse().topLeftTile();
-		var size = world.ghostHouse().sizeInTiles();
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
 		houseLighting.setMaxRange(3 * TS);
-		houseLighting.setTranslateX(topLeft.x() * TS + size.x() * HTS);
-		houseLighting.setTranslateY(topLeft.y() * TS + size.y() * HTS - TS);
+		var houseTopLeft = world.ghostHouse().topLeftTile();
+		var houseSize = world.ghostHouse().sizeInTiles();
+		houseLighting.setTranslateX(houseTopLeft.x() * TS + houseSize.x() * HTS);
+		houseLighting.setTranslateY(houseTopLeft.y() * TS + houseSize.y() * HTS - TS);
 		houseLighting.setTranslateZ(-TS);
 
 		buildFloor();
