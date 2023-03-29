@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
@@ -66,13 +65,6 @@ public class Pac3D {
 	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
-	private static final Color HEAD_COLOR = Color.YELLOW;
-	private static final Color PACMAN_EYES_COLOR = Color.rgb(66, 66, 99);
-	private static final Color MS_PACMAN_EYES_COLOR = Color.GREEN;
-	private static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
-
-	private static final Model3D BOW = new Model3D("model3D/nui-harime-bow.obj");
-
 	private static final double PAC_SIZE = 9.0;
 
 	private static Translate centerOverOrigin(Node node) {
@@ -85,16 +77,33 @@ public class Pac3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	/**
-	 * @param eyesColor   Pac-Man eyes color
-	 * @param palateColor Pac-Man palate color
-	 * @return transformation group representing a 3D Pac-Man.
-	 */
-	static Group createTG(Color headColor, Color palateColor, GameVariant variant) {
+	static Group createPacMan(Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
-		var eyesColor = variant == GameVariant.MS_PACMAN ? MS_PACMAN_EYES_COLOR : PACMAN_EYES_COLOR;
+		var eyes = new MeshView(HEAD_3D.mesh(MESH_ID_EYES));
+		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
+
+		var palate = new MeshView(HEAD_3D.mesh(MESH_ID_PALATE));
+		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
+
+		var centerTransform = centerOverOrigin(head);
+		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
+
+		var headGroup = new Group(head, eyes, palate);
+		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, PAC_SIZE),
+				new Rotate(90, Rotate.X_AXIS));
+
+		// TODO new obj importer has all meshes upside-down and backwards. Why?
+		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+		headGroup.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+		return new Group(headGroup);
+	}
+
+	static Group createMsPacMan(Color headColor, Color eyesColor, Color palateColor) {
+		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
+		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
+
 		var eyes = new MeshView(HEAD_3D.mesh(MESH_ID_EYES));
 		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
 
@@ -112,36 +121,28 @@ public class Pac3D {
 		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		headGroup.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 
-		if (variant == GameVariant.MS_PACMAN) {
-			// TODO make this work with bow mesh
-//		var bow = new MeshView(BOW.mesh("default"));
+		var bowMaterial = ResourceMgr.coloredMaterial(Color.RED);
+		var bowLeft = new Sphere(1.2);
+		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -PAC_SIZE * 0.55));
+		bowLeft.setMaterial(bowMaterial);
+		var bowRight = new Sphere(1.2);
+		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -PAC_SIZE * 0.55));
+		bowRight.setMaterial(bowMaterial);
 
-			var bowMaterial = ResourceMgr.coloredMaterial(Color.RED);
-			var bowLeft = new Sphere(1.2);
-			bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -PAC_SIZE * 0.55));
-			bowLeft.setMaterial(bowMaterial);
-			var bowRight = new Sphere(1.2);
-			bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -PAC_SIZE * 0.55));
-			bowRight.setMaterial(bowMaterial);
+		var pearlMaterial = ResourceMgr.coloredMaterial(ArcadeTheme.BLUE);
+		var pearlLeft = new Sphere(0.6);
+		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -PAC_SIZE * 0.58));
+		pearlLeft.setMaterial(pearlMaterial);
+		var pearlRight = new Sphere(0.6);
+		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -PAC_SIZE * 0.58));
+		pearlRight.setMaterial(pearlMaterial);
 
-			var pearlMaterial = ResourceMgr.coloredMaterial(ArcadeTheme.BLUE);
-			var pearlLeft = new Sphere(0.6);
-			pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -PAC_SIZE * 0.58));
-			pearlLeft.setMaterial(pearlMaterial);
-			var pearlRight = new Sphere(0.6);
-			pearlRight.getTransforms().addAll(new Translate(2, -0.5, -PAC_SIZE * 0.58));
-			pearlRight.setMaterial(pearlMaterial);
+		var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
+		var beautySpot = new Sphere(0.25);
+		beautySpot.setMaterial(beautySpotMaterial);
+		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -PAC_SIZE * 0.3));
 
-			var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
-			var beautySpot = new Sphere(0.25);
-			beautySpot.setMaterial(beautySpotMaterial);
-			beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -PAC_SIZE * 0.3));
-
-			return new Group(headGroup, bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
-		} else {
-			return new Group(headGroup);
-		}
-
+		return new Group(headGroup, bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
 	}
 
 	public static Shape3D head(Group root) {
@@ -160,25 +161,29 @@ public class Pac3D {
 	}
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", HEAD_COLOR);
+	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 
 	private final Pac pac;
 	private final MoveAnimation moveAnimation;
 	private final Group root;
+	private Color headColor;
 
-	public static Pac3D pacMan(Pac pac) {
-		return new Pac3D(pac, GameVariant.PACMAN);
+	public static Pac3D createPacMan3D(Pac pac) {
+		var root = createPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR);
+		return new Pac3D(pac, root, ArcadeTheme.HEAD_COLOR);
 	}
 
-	public static Pac3D msPacMan(Pac pac) {
-		return new Pac3D(pac, GameVariant.MS_PACMAN);
+	public static Pac3D createMsPacMan3D(Pac pac) {
+		var root = createMsPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR);
+		return new Pac3D(pac, root, ArcadeTheme.HEAD_COLOR);
 	}
 
-	private Pac3D(Pac pac, GameVariant variant) {
+	private Pac3D(Pac pac, Group root, Color headColor) {
 		this.pac = pac;
-		root = Pac3D.createTG(HEAD_COLOR, PALATE_COLOR, variant);
+		this.root = root;
+		this.moveAnimation = new MoveAnimation(root, pac);
+		this.headColor = headColor;
 		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
-		moveAnimation = new MoveAnimation(root, pac);
 	}
 
 	public Node getRoot() {
@@ -191,7 +196,7 @@ public class Pac3D {
 		root.setScaleZ(1.0);
 		moveAnimation.init();
 		moveAnimation.update();
-		headColorPy.set(HEAD_COLOR);
+		headColorPy.set(headColor);
 	}
 
 	public void update(GameLevel level) {

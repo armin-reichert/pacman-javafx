@@ -41,25 +41,36 @@ import javafx.scene.transform.Rotate;
  */
 public class LivesCounter3D {
 
-	private static final Color PALATE_COLOR = Color.rgb(120, 120, 120);
 	private static final Color HEAD_COLOR = Color.rgb(255, 255, 0);
-	private static final int MAX_LIVES_DISPLAYED = 5;
+	private static final Color EYES_COLOR = Color.rgb(120, 120, 120);
+	private static final Color PALATE_COLOR = Color.rgb(120, 120, 120);
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	private final Group root = new Group();
+	private final int maxLives;
 
-	public LivesCounter3D(GameVariant variant) {
-		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
-			var pacRoot = Pac3D.createTG(HEAD_COLOR, PALATE_COLOR, variant);
-			pacRoot.setTranslateX(2.0 * i * TS);
-			if (variant == GameVariant.MS_PACMAN) {
-				// look to the right
+	public LivesCounter3D(GameVariant variant, int maxLives) {
+		this.maxLives = maxLives;
+		switch (variant) {
+		case MS_PACMAN -> {
+			for (int i = 0; i < maxLives; ++i) {
+				var pacRoot = Pac3D.createMsPacMan(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+				pacRoot.setTranslateX(2.0 * i * TS);
 				pacRoot.setRotationAxis(Rotate.Z_AXIS);
 				pacRoot.setRotate(180);
+				root.getChildren().add(pacRoot);
 			}
-			Pac3D.head(pacRoot).drawModeProperty().bind(drawModePy);
-			root.getChildren().add(pacRoot);
 		}
+		case PACMAN -> {
+			for (int i = 0; i < maxLives; ++i) {
+				var pacRoot = Pac3D.createPacMan(HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+				pacRoot.setTranslateX(2.0 * i * TS);
+				root.getChildren().add(pacRoot);
+			}
+		}
+		default -> throw new IllegalArgumentException();
+		}
+
 	}
 
 	public Node getRoot() {
@@ -73,7 +84,7 @@ public class LivesCounter3D {
 	}
 
 	public void update(int numLives) {
-		for (int i = 0; i < MAX_LIVES_DISPLAYED; ++i) {
+		for (int i = 0; i < maxLives; ++i) {
 			root.getChildren().get(i).setVisible(i < numLives);
 		}
 	}
