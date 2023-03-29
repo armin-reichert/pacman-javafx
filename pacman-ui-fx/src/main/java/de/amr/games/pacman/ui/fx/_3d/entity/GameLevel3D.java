@@ -95,7 +95,7 @@ public class GameLevel3D {
 		int mazeNumber = level.game().mazeNumber(level.number());
 
 		world3D = createWorld3D(level.world(), r2D.mazeColoring(mazeNumber));
-		pac3D = level.game().variant() == GameVariant.MS_PACMAN ? createPacMan3D() : createMsPacMan3D();
+		pac3D = level.game().variant() == GameVariant.MS_PACMAN ? createMsPacMan3D() : createPacMan3D();
 		light = createPacLight();
 
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
@@ -158,7 +158,7 @@ public class GameLevel3D {
 
 	private Pac3D createPacMan3D() {
 		var p3D = new Pac3D(level.pac(),
-				Pac3D.createPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR),
+				Pac3D.createPacMan(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR),
 				ArcadeTheme.HEAD_COLOR);
 		p3D.init();
 		p3D.drawModePy.bind(Env.d3drawModePy);
@@ -167,7 +167,7 @@ public class GameLevel3D {
 
 	private Pac3D createMsPacMan3D() {
 		var p3D = new Pac3D(level.pac(),
-				Pac3D.createMsPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR),
+				Pac3D.createMsPacMan(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR),
 				ArcadeTheme.HEAD_COLOR);
 		p3D.init();
 		p3D.drawModePy.bind(Env.d3drawModePy);

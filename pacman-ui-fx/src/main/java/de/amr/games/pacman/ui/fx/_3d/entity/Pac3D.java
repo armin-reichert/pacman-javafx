@@ -65,8 +65,6 @@ public class Pac3D {
 	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
-	private static final double PAC_SIZE = 9.0;
-
 	private static Translate centerOverOrigin(Node node) {
 		var bounds = node.getBoundsInLocal();
 		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
@@ -77,7 +75,7 @@ public class Pac3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	public static Group createPacMan(Color headColor, Color eyesColor, Color palateColor) {
+	public static Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
@@ -91,8 +89,7 @@ public class Pac3D {
 		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
 
 		var headGroup = new Group(head, eyes, palate);
-		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, PAC_SIZE),
-				new Rotate(90, Rotate.X_AXIS));
+		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, size), new Rotate(90, Rotate.X_AXIS));
 
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
@@ -100,7 +97,7 @@ public class Pac3D {
 		return new Group(headGroup);
 	}
 
-	public static Group createMsPacMan(Color headColor, Color eyesColor, Color palateColor) {
+	public static Group createMsPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
@@ -114,8 +111,7 @@ public class Pac3D {
 		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
 
 		var headGroup = new Group(head, eyes, palate);
-		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, PAC_SIZE),
-				new Rotate(90, Rotate.X_AXIS));
+		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, size), new Rotate(90, Rotate.X_AXIS));
 
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
@@ -123,24 +119,24 @@ public class Pac3D {
 
 		var bowMaterial = ResourceMgr.coloredMaterial(Color.RED);
 		var bowLeft = new Sphere(1.2);
-		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -PAC_SIZE * 0.55));
+		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -size * 0.55));
 		bowLeft.setMaterial(bowMaterial);
 		var bowRight = new Sphere(1.2);
-		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -PAC_SIZE * 0.55));
+		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -size * 0.55));
 		bowRight.setMaterial(bowMaterial);
 
 		var pearlMaterial = ResourceMgr.coloredMaterial(ArcadeTheme.BLUE);
 		var pearlLeft = new Sphere(0.6);
-		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -PAC_SIZE * 0.58));
+		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -size * 0.58));
 		pearlLeft.setMaterial(pearlMaterial);
 		var pearlRight = new Sphere(0.6);
-		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -PAC_SIZE * 0.58));
+		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -size * 0.58));
 		pearlRight.setMaterial(pearlMaterial);
 
 		var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
 		var beautySpot = new Sphere(0.25);
 		beautySpot.setMaterial(beautySpotMaterial);
-		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -PAC_SIZE * 0.3));
+		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -size * 0.3));
 
 		return new Group(headGroup, bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
 	}
