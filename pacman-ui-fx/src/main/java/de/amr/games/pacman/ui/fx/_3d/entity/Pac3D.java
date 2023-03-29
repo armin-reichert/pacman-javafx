@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.PacDyingAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
@@ -214,9 +214,11 @@ public class Pac3D {
 	}
 
 	/**
+	 * TODO Provide different animation for Ms. Pac-Man (rotation like in 2D scene)
+	 * 
 	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
 	 */
 	public Animation createDyingAnimation() {
-		return new PacDyingAnimation(root).getAnimation();
+		return new CollapseAnimation(root).getAnimation();
 	}
 }

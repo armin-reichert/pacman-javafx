@@ -38,11 +38,11 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class PacDyingAnimation {
+public class CollapseAnimation {
 
 	private final Animation animation;
 
-	public PacDyingAnimation(Node root3D) {
+	public CollapseAnimation(Node root3D) {
 		var collapsingTime = Duration.seconds(2.0);
 		var numSpins = 10;
 
