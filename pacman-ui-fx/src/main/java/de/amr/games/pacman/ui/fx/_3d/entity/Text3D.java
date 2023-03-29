@@ -27,11 +27,11 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
 
@@ -45,7 +45,7 @@ public class Text3D {
 	private Box box;
 	private double quality = 3;
 	private Font font = Font.font(8);
-	private Color bgColor = Color.WHITE;
+	private Color bgColor = Color.TRANSPARENT;
 	private Color textColor = Color.RED;
 	private String text = "";
 	private boolean batchUpdate;
@@ -69,9 +69,10 @@ public class Text3D {
 		g.setFont(Font.font(font.getFamily(), canvasFontSize));
 		g.setFill(textColor);
 		g.fillText(text, 0, canvasFontSize);
-
-		var material = ResourceMgr.coloredMaterial(Color.WHITE);
-		material.setDiffuseMap(canvas.snapshot(null, null));
+		var image = canvas.snapshot(null, null);
+		var material = new PhongMaterial();
+		material.setDiffuseMap(image);
+		material.setBumpMap(image);
 		box.setMaterial(material);
 		LOG.info("New image produced");
 	}
