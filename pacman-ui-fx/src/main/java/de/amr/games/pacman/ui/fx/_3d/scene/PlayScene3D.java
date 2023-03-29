@@ -88,11 +88,16 @@ public class PlayScene3D extends GameScene {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
-			Perspective.TOTAL);
+			Perspective.TOTAL) {
+		@Override
+		protected void invalidated() {
+			changeCameraPerspective(get());
+		}
+	};
 
 	private final Group root = new Group();
 	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
-	private final Text3D infoText3D;
+	private final Text3D infoText3D = new Text3D();
 	private GameLevel3D level3D;
 
 	public PlayScene3D(GameController gameController) {
@@ -102,15 +107,12 @@ public class PlayScene3D extends GameScene {
 		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraMap.put(Perspective.TOTAL, new CamTotal());
-		perspectivePy.addListener((property, oldVal, newVal) -> changeCameraPerspective(newVal));
 
 		var coordSystem = new CoordSystem();
 		coordSystem.visibleProperty().bind(Env.d3_axesVisiblePy);
 
 		var ambientLight = new AmbientLight();
 		ambientLight.colorProperty().bind(Env.d3_lightColorPy);
-
-		infoText3D = new Text3D();
 
 		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight,
 				infoText3D.getRoot());
