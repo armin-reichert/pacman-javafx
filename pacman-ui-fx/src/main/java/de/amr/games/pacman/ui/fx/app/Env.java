@@ -67,6 +67,6 @@ public class Env {
 	public static final DoubleProperty d3mazeWallThicknessPy = new SimpleDoubleProperty(1.25);
 	public static final BooleanProperty d3pacLightedPy = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Perspective> d3perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty d3energizerEatenAnimationEnabledPy = new SimpleBooleanProperty(true);
+	public static final BooleanProperty d3EatingEnergizerAnimatedPy = new SimpleBooleanProperty(true);
 	public static final BooleanProperty d3foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 }

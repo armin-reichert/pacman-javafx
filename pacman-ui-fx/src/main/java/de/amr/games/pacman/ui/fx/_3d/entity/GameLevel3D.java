@@ -40,6 +40,7 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -71,8 +72,9 @@ import javafx.scene.shape.DrawMode;
 public class GameLevel3D {
 
 	private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-	private final BooleanProperty eatenAnimationEnabledPy = new SimpleBooleanProperty(this, "eatenAnimationEnabled");
-	private final BooleanProperty pacLightOnPy = new SimpleBooleanProperty(this, "pacLightOn", true);
+	private final BooleanProperty eatingEnergizerAnimatedPy = new SimpleBooleanProperty(this, "eatingEnergizerAnimated",
+			true);
+	private final BooleanProperty pacLightedPy = new SimpleBooleanProperty(this, "pacLighted", true);
 
 	private final GameLevel level;
 	private final Group root = new Group();
@@ -93,9 +95,8 @@ public class GameLevel3D {
 		int mazeNumber = level.game().mazeNumber(level.number());
 
 		world3D = createWorld3D(level.world(), r2D.mazeColoring(mazeNumber));
-		pac3D = createPac3D();
+		pac3D = level.game().variant() == GameVariant.MS_PACMAN ? createPacMan3D() : createMsPacMan3D();
 		light = createPacLight();
-		pacLightOnPy.bind(Env.d3pacLightedPy);
 
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
@@ -114,11 +115,12 @@ public class GameLevel3D {
 		root.getChildren().addAll(particlesGroup, light);
 
 		drawModePy.bind(Env.d3drawModePy);
-		eatenAnimationEnabledPy.bind(Env.d3energizerEatenAnimationEnabledPy);
+		eatingEnergizerAnimatedPy.bind(Env.d3EatingEnergizerAnimatedPy);
 		world3D.floorColorPy.bind(Env.d3floorColorPy);
 		world3D.floorTexturePy.bind(Env.d3floorTexturePy);
 		world3D.wallHeightPy.bind(Env.d3mazeWallHeightPy);
 		world3D.wallThicknessPy.bind(Env.d3mazeWallThicknessPy);
+		pacLightedPy.bind(Env.d3pacLightedPy);
 
 		var keys = ResourceMgr.floorTextureKeys();
 		var key = keys[U.randomInt(1, keys.length)]; // index 0 = No Texture
@@ -154,16 +156,19 @@ public class GameLevel3D {
 		return energizer3D;
 	}
 
-	private Pac3D createPac3D() {
-		var p3D = switch (level.game().variant()) {
-		case MS_PACMAN -> new Pac3D(level.pac(),
-				Pac3D.createMsPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR),
-				ArcadeTheme.HEAD_COLOR);
-		case PACMAN -> new Pac3D(level.pac(),
+	private Pac3D createPacMan3D() {
+		var p3D = new Pac3D(level.pac(),
 				Pac3D.createPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR),
 				ArcadeTheme.HEAD_COLOR);
-		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(level.game().variant()));
-		};
+		p3D.init();
+		p3D.drawModePy.bind(Env.d3drawModePy);
+		return p3D;
+	}
+
+	private Pac3D createMsPacMan3D() {
+		var p3D = new Pac3D(level.pac(),
+				Pac3D.createMsPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR),
+				ArcadeTheme.HEAD_COLOR);
 		p3D.init();
 		p3D.drawModePy.bind(Env.d3drawModePy);
 		return p3D;
@@ -260,7 +265,7 @@ public class GameLevel3D {
 
 	private void updatePacLightingState() {
 		boolean hasPower = level.pac().powerTimer().isRunning();
-		light.setLightOn(pacLightOnPy.get() && level.pac().isVisible() && !level.pac().isDead() && hasPower);
+		light.setLightOn(pacLightedPy.get() && level.pac().isVisible() && !level.pac().isDead() && hasPower);
 		var range = !hasPower ? 0 : level.pac().isPowerFading(level) ? 4 : 8;
 		light.setMaxRange(range * TS);
 	}
@@ -273,7 +278,7 @@ public class GameLevel3D {
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
 		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
 		var eatenAnimation = eatable3D.getEatenAnimation();
-		if (eatenAnimation.isPresent() && eatenAnimationEnabledPy.get()) {
+		if (eatenAnimation.isPresent() && eatingEnergizerAnimatedPy.get()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
 			delayHiding.play();
