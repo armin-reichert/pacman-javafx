@@ -193,8 +193,8 @@ public class Actions {
 
 	public static void selectNextPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			var nextPerspective = Env.d3perspectivePy.get().next();
-			Env.d3perspectivePy.set(nextPerspective);
+			var nextPerspective = Env.d3_perspectivePy.get().next();
+			Env.d3_perspectivePy.set(nextPerspective);
 			String perspectiveName = ResourceMgr.message(nextPerspective.name());
 			showFlashMessage(ResourceMgr.message("camera_perspective", perspectiveName));
 		}
@@ -202,8 +202,8 @@ public class Actions {
 
 	public static void selectPrevPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			var prevPerspective = Env.d3perspectivePy.get().prev();
-			Env.d3perspectivePy.set(prevPerspective);
+			var prevPerspective = Env.d3_perspectivePy.get().prev();
+			Env.d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = ResourceMgr.message(prevPerspective.name());
 			showFlashMessage(ResourceMgr.message("camera_perspective", perspectiveName));
 		}
@@ -233,17 +233,17 @@ public class Actions {
 	}
 
 	public static void toggleUse3DScene() {
-		Ufx.toggle(Env.d3enabledPy);
+		Ufx.toggle(Env.d3_enabledPy);
 		if (ui.findGameScene(3).isPresent()) {
 			ui.updateGameScene(true);
 			ui.currentGameScene().onSceneVariantSwitch();
 		} else {
-			showFlashMessage(ResourceMgr.message(Env.d3enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(ResourceMgr.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	public static void toggleDrawMode() {
-		Env.d3drawModePy.set(Env.d3drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env.d3_drawModePy.set(Env.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void cheatAddLives(int numLives) {

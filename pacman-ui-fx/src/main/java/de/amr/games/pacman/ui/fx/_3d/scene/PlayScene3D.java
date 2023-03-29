@@ -105,10 +105,10 @@ public class PlayScene3D extends GameScene {
 		perspectivePy.addListener((property, oldVal, newVal) -> changeCameraPerspective(newVal));
 
 		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(Env.d3axesVisiblePy);
+		coordSystem.visibleProperty().bind(Env.d3_axesVisiblePy);
 
 		var ambientLight = new AmbientLight();
-		ambientLight.colorProperty().bind(Env.d3lightColorPy);
+		ambientLight.colorProperty().bind(Env.d3_lightColorPy);
 
 		infoText3D = new Text3D();
 
@@ -123,7 +123,7 @@ public class PlayScene3D extends GameScene {
 	public void init() {
 		context.level().ifPresent(this::replaceGameLevel3D);
 		initInfoText();
-		perspectivePy.bind(Env.d3perspectivePy);
+		perspectivePy.bind(Env.d3_perspectivePy);
 	}
 
 	@Override
@@ -285,7 +285,7 @@ public class PlayScene3D extends GameScene {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
-				if (Env.d3foodOscillationEnabledPy.get()) {
+				if (Env.d3_foodOscillationEnabledPy.get()) {
 					level3D.foodOscillation().play();
 				}
 				infoText3D.setVisible(true);

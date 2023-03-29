@@ -45,8 +45,8 @@ public class SwingingWallsAnimation extends Transition {
 	@Override
 	protected void interpolate(double t) {
 		if (t == 0) {
-			wallStartHeight = Env.d3mazeWallHeightPy.get();
+			wallStartHeight = Env.d3_mazeWallHeightPy.get();
 		}
-		Env.d3mazeWallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
+		Env.d3_mazeWallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
 	}
 }

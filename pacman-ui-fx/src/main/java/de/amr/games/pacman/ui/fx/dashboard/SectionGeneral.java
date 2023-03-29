@@ -123,7 +123,7 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setValue(Env.simumlationSpeedPy.get());
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
 		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
-		cbUsePlayScene3D.setSelected(Env.d3enabledPy.get());
+		cbUsePlayScene3D.setSelected(Env.d3_enabledPy.get());
 		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}

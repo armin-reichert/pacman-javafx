@@ -31,7 +31,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static java.util.function.Predicate.not;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -56,22 +55,18 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
 
 /**
  * @author Armin Reichert
  */
 public class GameLevel3D {
 
-	private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	private final BooleanProperty eatingEnergizerAnimatedPy = new SimpleBooleanProperty(this, "eatingEnergizerAnimated",
 			true);
 	private final BooleanProperty pacLightedPy = new SimpleBooleanProperty(this, "pacLighted", true);
@@ -97,34 +92,43 @@ public class GameLevel3D {
 		world3D = createWorld3D(level.world(), r2D.mazeColoring(mazeNumber));
 		pac3D = level.game().variant() == GameVariant.MS_PACMAN ? createMsPacMan3D() : createPacMan3D();
 		light = createPacLight();
-
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = createLivesCounter3D();
-		scores3D = new Scores3D(r2D.screenFont(TS));
+		scores3D = new Scores3D(r2D.screenFont(8));
 
 		root.getChildren().add(scores3D.getRoot());
 		root.getChildren().add(levelCounter3D.getRoot());
 		root.getChildren().add(livesCounter3D.getRoot());
 		root.getChildren().add(bonus3D.getRoot());
 		root.getChildren().add(pac3D.getRoot());
-		Arrays.stream(ghosts3D).map(Ghost3D::getRoot).forEach(root.getChildren()::add);
+		root.getChildren().add(ghosts3D[0].getRoot());
+		root.getChildren().add(ghosts3D[1].getRoot());
+		root.getChildren().add(ghosts3D[2].getRoot());
+		root.getChildren().add(ghosts3D[3].getRoot());
 		// Note: world/ghosthouse must be added after the guys if ghosthouse uses transparent material!
 		root.getChildren().add(world3D.getRoot());
 		root.getChildren().addAll(particlesGroup, light);
 
-		drawModePy.bind(Env.d3drawModePy);
-		eatingEnergizerAnimatedPy.bind(Env.d3EatingEnergizerAnimatedPy);
-		world3D.floorColorPy.bind(Env.d3floorColorPy);
-		world3D.floorTexturePy.bind(Env.d3floorTexturePy);
-		world3D.wallHeightPy.bind(Env.d3mazeWallHeightPy);
-		world3D.wallThicknessPy.bind(Env.d3mazeWallThicknessPy);
-		pacLightedPy.bind(Env.d3pacLightedPy);
+		pac3D.drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[0].drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[1].drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[2].drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[3].drawModePy.bind(Env.d3_drawModePy);
+		eatingEnergizerAnimatedPy.bind(Env.d3_eatingEnergizerAnimatedPy);
+		world3D.drawModePy.bind(Env.d3_drawModePy);
+		world3D.floorColorPy.bind(Env.d3_floorColorPy);
+		world3D.floorTexturePy.bind(Env.d3_floorTexturePy);
+		world3D.wallHeightPy.bind(Env.d3_mazeWallHeightPy);
+		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
+		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
+		pacLightedPy.bind(Env.d3_pacLightedPy);
 
+		// set random floor texture
 		var keys = ResourceMgr.floorTextureKeys();
 		var key = keys[U.randomInt(1, keys.length)]; // index 0 = No Texture
-		Env.d3floorTexturePy.set(key);
+		Env.d3_floorTexturePy.set(key);
 	}
 
 	private World3D createWorld3D(World world, MazeColoring mazeColoring) {
@@ -136,7 +140,6 @@ public class GameLevel3D {
 			eatables.add(eatable3D);
 			w3D.addFood(eatable3D);
 		});
-		w3D.drawModePy.bind(drawModePy);
 		return w3D;
 	}
 
@@ -161,7 +164,6 @@ public class GameLevel3D {
 				Pac3D.createPacMan(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR),
 				ArcadeTheme.HEAD_COLOR);
 		p3D.init();
-		p3D.drawModePy.bind(Env.d3drawModePy);
 		return p3D;
 	}
 
@@ -170,7 +172,6 @@ public class GameLevel3D {
 				Pac3D.createMsPacMan(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR),
 				ArcadeTheme.HEAD_COLOR);
 		p3D.init();
-		p3D.drawModePy.bind(Env.d3drawModePy);
 		return p3D;
 	}
 
@@ -187,7 +188,6 @@ public class GameLevel3D {
 	private Ghost3D createGhost3D(Ghost ghost) {
 		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
 		ghost3D.init(level);
-		ghost3D.drawModePy.bind(drawModePy);
 		return ghost3D;
 	}
 
@@ -204,7 +204,6 @@ public class GameLevel3D {
 		var counter3D = new LivesCounter3D(level.game().variant(), 5);
 		counter3D.setPosition(2 * TS, TS, -HTS);
 		counter3D.getRoot().setVisible(level.game().hasCredit());
-		counter3D.drawModePy.bind(drawModePy);
 		return counter3D;
 	}
 

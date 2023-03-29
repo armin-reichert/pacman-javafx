@@ -225,7 +225,7 @@ public class GameUI implements GameEventListener {
 	private void updateView() {
 		var variant = gameController.game().variant();
 		var paused = Env.simulationPausedPy.get();
-		var dimension = ResourceMgr.message(Env.d3enabledPy.get() ? "threeD" : "twoD");
+		var dimension = ResourceMgr.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
 		switch (variant) {
 		case MS_PACMAN -> {
 			var title = ResourceMgr.message(paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman", dimension);
@@ -239,7 +239,7 @@ public class GameUI implements GameEventListener {
 		}
 		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
 		}
-		var bgColor = Env.d3drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
+		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) mainScene.getRoot();
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
 	}
@@ -277,10 +277,10 @@ public class GameUI implements GameEventListener {
 		simulation.targetFrameratePy.bind(Env.simumlationSpeedPy);
 		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
 
-		Env.d3drawModePy.addListener((py, oldVal, newVal) -> updateView());
-		Env.d3enabledPy.addListener((py, oldVal, newVal) -> updateView());
-		Env.d3enabledPy.set(settings.use3D);
-		Env.d3perspectivePy.set(settings.perspective);
+		Env.d3_drawModePy.addListener((py, oldVal, newVal) -> updateView());
+		Env.d3_enabledPy.addListener((py, oldVal, newVal) -> updateView());
+		Env.d3_enabledPy.set(settings.use3D);
+		Env.d3_perspectivePy.set(settings.perspective);
 	}
 
 	public void start() {
@@ -295,7 +295,7 @@ public class GameUI implements GameEventListener {
 		stage.show();
 		LOG.info("Game started. Target frame rate: %d", simulation.targetFrameratePy.get());
 		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s", stage.getWidth(), stage.getHeight(),
-				Env.d3enabledPy.get(), Env.d3perspectivePy.get());
+				Env.d3_enabledPy.get(), Env.d3_perspectivePy.get());
 	}
 
 	public void stop() {
@@ -355,7 +355,7 @@ public class GameUI implements GameEventListener {
 
 	public void updateGameScene(boolean reload) {
 		var matching = sceneSelectionMatchingCurrentGameState();
-		var use3D = Env.d3enabledPy.get();
+		var use3D = Env.d3_enabledPy.get();
 		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
