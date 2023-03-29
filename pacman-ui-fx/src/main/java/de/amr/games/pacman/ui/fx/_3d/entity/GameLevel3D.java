@@ -125,7 +125,10 @@ public class GameLevel3D {
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
 		pacLightedPy.bind(Env.d3_pacLightedPy);
 
-		// set random floor texture
+		selectRandomFloorTexture();
+	}
+
+	private void selectRandomFloorTexture() {
 		var keys = ResourceMgr.floorTextureKeys();
 		var key = keys[U.randomInt(1, keys.length)]; // index 0 = No Texture
 		Env.d3_floorTexturePy.set(key);
