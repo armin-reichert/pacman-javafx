@@ -77,7 +77,7 @@ public class Pac3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	static Group createPacMan(Color headColor, Color eyesColor, Color palateColor) {
+	public static Group createPacMan(Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
@@ -100,7 +100,7 @@ public class Pac3D {
 		return new Group(headGroup);
 	}
 
-	static Group createMsPacMan(Color headColor, Color eyesColor, Color palateColor) {
+	public static Group createMsPacMan(Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
@@ -168,17 +168,7 @@ public class Pac3D {
 	private final Group root;
 	private Color headColor;
 
-	public static Pac3D createPacMan3D(Pac pac) {
-		var root = createPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR);
-		return new Pac3D(pac, root, ArcadeTheme.HEAD_COLOR);
-	}
-
-	public static Pac3D createMsPacMan3D(Pac pac) {
-		var root = createMsPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR);
-		return new Pac3D(pac, root, ArcadeTheme.HEAD_COLOR);
-	}
-
-	private Pac3D(Pac pac, Group root, Color headColor) {
+	public Pac3D(Pac pac, Group root, Color headColor) {
 		this.pac = pac;
 		this.root = root;
 		this.moveAnimation = new MoveAnimation(root, pac);

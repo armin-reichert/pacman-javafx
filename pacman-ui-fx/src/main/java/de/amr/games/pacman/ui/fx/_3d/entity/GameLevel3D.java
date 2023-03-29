@@ -155,14 +155,18 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPac3D() {
-		var newPac3D = switch (level.game().variant()) {
-		case MS_PACMAN -> Pac3D.createMsPacMan3D(level.pac());
-		case PACMAN -> Pac3D.createPacMan3D(level.pac());
+		var p3D = switch (level.game().variant()) {
+		case MS_PACMAN -> new Pac3D(level.pac(),
+				Pac3D.createMsPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR),
+				ArcadeTheme.HEAD_COLOR);
+		case PACMAN -> new Pac3D(level.pac(),
+				Pac3D.createPacMan(ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR),
+				ArcadeTheme.HEAD_COLOR);
 		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(level.game().variant()));
 		};
-		newPac3D.init();
-		newPac3D.drawModePy.bind(Env.d3drawModePy);
-		return newPac3D;
+		p3D.init();
+		p3D.drawModePy.bind(Env.d3drawModePy);
+		return p3D;
 	}
 
 	private PointLight createPacLight() {
