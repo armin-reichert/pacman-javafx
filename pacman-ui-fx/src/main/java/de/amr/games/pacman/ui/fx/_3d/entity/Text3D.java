@@ -43,7 +43,6 @@ public class Text3D {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private Box box;
-	private Canvas canvas;
 	private double quality = 3;
 	private Font font = Font.font(8);
 	private Color bgColor = Color.WHITE;
@@ -62,7 +61,7 @@ public class Text3D {
 		}
 		box.setWidth(text.length() * font.getSize());
 		box.setHeight(font.getSize());
-		canvas = new Canvas(box.getWidth() * quality, box.getHeight() * quality);
+		var canvas = new Canvas(box.getWidth() * quality, box.getHeight() * quality);
 		var g = canvas.getGraphicsContext2D();
 		var canvasFontSize = font.getSize() * quality;
 		g.setFill(bgColor);
