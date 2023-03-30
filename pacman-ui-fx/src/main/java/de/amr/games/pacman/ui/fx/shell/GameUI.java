@@ -37,6 +37,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
+import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -141,12 +142,17 @@ public class GameUI implements GameEventListener {
 	public GameUI(Stage primaryStage, Settings settings) {
 		gameController = new GameController(settings.variant);
 
+		dashboard = new Dashboard();
+		flashMessageView = new FlashMessageView();
+		pipGameScene = new PlayScene2D(gameController);
+
 		stage = primaryStage;
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 
-		stage.setScene(createMainScene(settings));
+		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(settings.zoom);
+		stage.setScene(createMainScene(size));
 
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
@@ -189,34 +195,30 @@ public class GameUI implements GameEventListener {
 		LOG.info("Created game UI, Locale: %s, Application settings: %s", Locale.getDefault(), settings);
 	}
 
-	private Scene createMainScene(Settings settings) {
-		dashboard = new Dashboard();
-		flashMessageView = new FlashMessageView();
-		pipGameScene = new PlayScene2D(gameController);
-
-		var overlayPane = new BorderPane();
-		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(pipGameScene.fxSubScene());
-		var gameScenePlaceholder = new Pane();
-		var root = new StackPane(gameScenePlaceholder, flashMessageView, overlayPane);
-
-		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(settings.zoom);
+	private Scene createMainScene(Vector2f size) {
+		var root = new StackPane();
 		var scene = new Scene(root, size.x(), size.y());
-		scene.heightProperty().addListener((heightPy, oldHeight, newHeight) -> currentGameScene.onParentSceneResize(scene));
-
+		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToOptimalSize();
 			}
 		});
+		var topLayer = new BorderPane();
+		topLayer.setLeft(dashboard);
+		topLayer.setRight(pipGameScene.fxSubScene());
+
+		root.getChildren().add(new Pane() /* game scene placeholder */);
+		root.getChildren().add(flashMessageView);
+		root.getChildren().add(topLayer);
 
 		return scene;
 	}
 
 	private void resizeStageToOptimalSize() {
 		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16);
+			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
 		}
 	}
 
