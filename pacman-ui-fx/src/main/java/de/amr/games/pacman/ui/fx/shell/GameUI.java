@@ -95,7 +95,7 @@ public class GameUI implements GameEventListener {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static final float PIP_MIN_HEIGHT = World.t(36);
-	public static final float PIP_MAX_HEIGHT = 2 * PIP_MIN_HEIGHT;
+	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
 
 	private static final byte INDEX_BOOT_SCENE = 0;
 	private static final byte INDEX_INTRO_SCENE = 1;
