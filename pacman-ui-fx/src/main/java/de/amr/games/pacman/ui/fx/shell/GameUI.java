@@ -126,7 +126,6 @@ public class GameUI implements GameEventListener {
 	}
 
 	private final Stage stage;
-	private final Scene mainScene;
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
@@ -147,8 +146,7 @@ public class GameUI implements GameEventListener {
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 
-		mainScene = createMainScene(settings);
-		stage.setScene(mainScene);
+		stage.setScene(createMainScene(settings));
 
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
@@ -240,7 +238,7 @@ public class GameUI implements GameEventListener {
 		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
 		}
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
-		var sceneRoot = (Region) mainScene.getRoot();
+		var sceneRoot = (Region) stage.getScene().getRoot();
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
 	}
 
@@ -372,18 +370,18 @@ public class GameUI implements GameEventListener {
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
 		updateManualPacManSteering(nextGameScene);
-		var root = (StackPane) mainScene.getRoot();
+		var root = (StackPane) stage.getScene().getRoot();
 		root.getChildren().set(0, nextGameScene.fxSubScene());
-		nextGameScene.onEmbedIntoParentScene(mainScene);
+		nextGameScene.onEmbedIntoParentScene(stage.getScene());
 		currentGameScene = nextGameScene;
 		LOG.trace("Game scene changed to %s", nextGameScene);
 	}
 
 	private void updateManualPacManSteering(GameScene gameScene) {
 		boolean enabled = false;
-		mainScene.removeEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+		stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
 		if (gameScene instanceof PlayScene2D || gameScene instanceof PlayScene3D) {
-			mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+			stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
 			enabled = true;
 		}
 		LOG.trace("Manual Pac-Man steering is %s", enabled ? "enabled" : "disabled");
@@ -462,7 +460,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	public Scene mainScene() {
-		return mainScene;
+		return stage.getScene();
 	}
 
 	public Simulation simulation() {
