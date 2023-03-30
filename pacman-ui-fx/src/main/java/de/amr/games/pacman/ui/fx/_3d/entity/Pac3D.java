@@ -32,8 +32,8 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
-import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
@@ -74,7 +74,7 @@ public class Pac3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	public static Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
+	private static Group createHeadGroup(double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
@@ -93,33 +93,16 @@ public class Pac3D {
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		headGroup.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-		return new Group(headGroup);
+		return headGroup;
+	}
+
+	public static Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
+		return new Group(createHeadGroup(size, headColor, eyesColor, palateColor));
 	}
 
 	public static Group createMsPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
-		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
-
-		var eyes = new MeshView(HEAD_3D.mesh(MESH_ID_EYES));
-		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
-
-		var palate = new MeshView(HEAD_3D.mesh(MESH_ID_PALATE));
-		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
-
-		var centerTransform = centerOverOrigin(head);
-		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
-
-		var headGroup = new Group(head, eyes, palate);
-		headGroup.getTransforms().addAll(//
-				new Translate(0, 0, -1), // lift a bit to be aligned with floor
-				scale(headGroup, size), // scale to Pac size
-				new Rotate(90, Rotate.X_AXIS), //
-				new Rotate(180, Rotate.Y_AXIS), //
-				new Rotate(180, Rotate.Z_AXIS)//
-		);
-
-		var accessories = createBeautyAccessories(size, Color.RED, Color.BLUE);
-		return new Group(headGroup, accessories);
+		return new Group(createHeadGroup(size, headColor, eyesColor, palateColor),
+				createBeautyAccessories(size, Color.RED, Color.BLUE));
 	}
 
 	private static Group createBeautyAccessories(double pacSize, Color bowColor, Color pearlColor) {
