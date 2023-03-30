@@ -94,13 +94,13 @@ public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static final double PIP_MIN_HEIGHT = World.t(36);
-	public static final double PIP_MAX_HEIGHT = 2 * PIP_MIN_HEIGHT;
+	public static final float PIP_MIN_HEIGHT = World.t(36);
+	public static final float PIP_MAX_HEIGHT = 2 * PIP_MIN_HEIGHT;
 
-	private static final int BOOT_SCENE_INDEX = 0;
-	private static final int INTRO_SCENE_INDEX = 1;
-	private static final int CREDIT_SCENE_INDEX = 2;
-	private static final int PLAY_SCENE_INDEX = 3;
+	private static final byte INDEX_BOOT_SCENE = 0;
+	private static final byte INDEX_INTRO_SCENE = 1;
+	private static final byte INDEX_CREDIT_SCENE = 2;
+	private static final byte INDEX_PLAY_SCENE = 3;
 
 	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
 	}
@@ -325,23 +325,23 @@ public class GameUI implements GameEventListener {
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {
-		return gameScene == scenesPacMan[PLAY_SCENE_INDEX].scene2D()
-				|| gameScene == scenesPacMan[PLAY_SCENE_INDEX].scene3D()
-				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene2D()
-				|| gameScene == scenesMsPacMan[PLAY_SCENE_INDEX].scene3D();
+		return gameScene == scenesPacMan[INDEX_PLAY_SCENE].scene2D()
+				|| gameScene == scenesPacMan[INDEX_PLAY_SCENE].scene3D()
+				|| gameScene == scenesMsPacMan[INDEX_PLAY_SCENE].scene2D()
+				|| gameScene == scenesMsPacMan[INDEX_PLAY_SCENE].scene3D();
 	}
 
 	private GameSceneSelection sceneSelectionMatchingCurrentGameState() {
 		int index = switch (gameController.state()) {
-		case BOOT -> BOOT_SCENE_INDEX;
-		case CREDIT -> CREDIT_SCENE_INDEX;
-		case INTRO -> INTRO_SCENE_INDEX;
-		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> PLAY_SCENE_INDEX;
+		case BOOT -> INDEX_BOOT_SCENE;
+		case CREDIT -> INDEX_CREDIT_SCENE;
+		case INTRO -> INDEX_INTRO_SCENE;
+		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> INDEX_PLAY_SCENE;
 		case INTERMISSION -> {
 			var level = gameController.game().level().orElseThrow(IllegalStateException::new);
-			yield PLAY_SCENE_INDEX + level.intermissionNumber;
+			yield INDEX_PLAY_SCENE + level.intermissionNumber;
 		}
-		case INTERMISSION_TEST -> PLAY_SCENE_INDEX + gameController.game().intermissionTestNumber;
+		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + gameController.game().intermissionTestNumber;
 		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameController.state()));
 		};
 		return switch (gameController.game().variant()) {
