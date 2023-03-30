@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.dashboard;
 
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -41,6 +43,7 @@ import javafx.scene.shape.DrawMode;
  */
 public class Section3D extends Section {
 
+	private final ComboBox<Perspective> comboPerspective;
 	private final CheckBox cbSquirting;
 	private final Slider sliderWallHeight;
 	private final Slider sliderWallThickness;
@@ -53,6 +56,11 @@ public class Section3D extends Section {
 
 	public Section3D(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		comboPerspective = addComboBox("Perspective", Perspective.values());
+		comboPerspective.setOnAction(e -> Env.d3_perspectivePy.set(comboPerspective.getValue()));
+		addInfo("Camera",
+				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.currentCamera().transformInfo() : "")
+						.available(() -> gameScene().is3D());
 		pickerLightColor = addColorPicker("Light color", Env.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
 		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.d3_mazeWallHeightPy.get());
@@ -75,6 +83,8 @@ public class Section3D extends Section {
 	public void update() {
 		super.update();
 		var no3D = !gameScene().is3D();
+		comboPerspective.setValue(Env.d3_perspectivePy.get());
+		comboPerspective.setDisable(no3D);
 		pickerLightColor.setDisable(no3D);
 		sliderWallHeight.setDisable(no3D);
 		sliderWallHeight.setValue(Env.d3_mazeWallHeightPy.get());
