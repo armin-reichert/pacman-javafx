@@ -225,16 +225,16 @@ public class GameUI implements GameEventListener {
 	private void updateView() {
 		var variant = gameController.game().variant();
 		var paused = Env.simulationPausedPy.get();
-		var dimension = ResourceMgr.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
+		var dimensionMsg = ResourceMgr.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
 		switch (variant) {
 		case MS_PACMAN -> {
-			var title = ResourceMgr.message(paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman", dimension);
-			stage.setTitle(title);
+			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
+			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
 			stage.getIcons().setAll(ResourceMgr.APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
-			var title = ResourceMgr.message(paused ? "app.title.pacman.paused" : "app.title.pacman", dimension);
-			stage.setTitle(title);
+			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
+			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
 			stage.getIcons().setAll(ResourceMgr.APP_ICON_PACMAN);
 		}
 		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
