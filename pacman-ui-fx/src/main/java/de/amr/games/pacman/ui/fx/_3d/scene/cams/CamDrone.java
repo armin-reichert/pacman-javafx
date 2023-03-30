@@ -63,9 +63,9 @@ public class CamDrone extends GameSceneCamera {
 	public void onKeyPressed(KeyEvent e) {
 		boolean modifierOk = e.isShiftDown() && !e.isControlDown();
 		if (e.getCode() == KeyCode.UP && modifierOk) {
-			changeBy(translateZProperty(), -10);
+			changeValue(translateZProperty(), -10);
 		} else if (e.getCode() == KeyCode.DOWN && modifierOk) {
-			changeBy(translateZProperty(), 10);
+			changeValue(translateZProperty(), 10);
 		}
 	}
 }

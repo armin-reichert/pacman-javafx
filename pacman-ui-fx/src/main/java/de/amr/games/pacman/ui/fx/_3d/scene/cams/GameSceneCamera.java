@@ -35,10 +35,6 @@ import javafx.scene.input.KeyEvent;
  */
 public abstract class GameSceneCamera extends PerspectiveCamera {
 
-	public static void changeBy(DoubleProperty property, double delta) {
-		property.set(property.get() + delta);
-	}
-
 	protected GameSceneCamera() {
 		super(true);
 	}
@@ -46,6 +42,10 @@ public abstract class GameSceneCamera extends PerspectiveCamera {
 	public String transformInfo() {
 		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
 				getRotate());
+	}
+
+	public void changeValue(DoubleProperty property, double delta) {
+		property.set(property.get() + delta);
 	}
 
 	public boolean isConfigurable() {

@@ -75,12 +75,12 @@ public class CamTotal extends GameSceneCamera {
 				|| translateZProperty().isBound();
 		if (!translateBound) {
 			switch (key) {
-			case LEFT -> changeBy(translateXProperty(), -10);
-			case RIGHT -> changeBy(translateXProperty(), +10);
-			case MINUS -> changeBy(translateYProperty(), -10);
-			case PLUS -> changeBy(translateYProperty(), +10);
-			case UP -> changeBy(translateZProperty(), -10);
-			case DOWN -> changeBy(translateZProperty(), 10);
+			case LEFT -> changeValue(translateXProperty(), -10);
+			case RIGHT -> changeValue(translateXProperty(), +10);
+			case MINUS -> changeValue(translateYProperty(), -10);
+			case PLUS -> changeValue(translateYProperty(), +10);
+			case UP -> changeValue(translateZProperty(), -10);
+			case DOWN -> changeValue(translateZProperty(), 10);
 			default -> { // ignore
 			}
 			}
