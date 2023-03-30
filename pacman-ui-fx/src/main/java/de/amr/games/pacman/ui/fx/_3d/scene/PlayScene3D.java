@@ -179,7 +179,7 @@ public class PlayScene3D extends GameScene {
 		level3D = new GameLevel3D(level, context.rendering2D());
 		level3D.getRoot().getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
 		root.getChildren().set(0, level3D.getRoot());
-		LOG.trace("3D game level created.");
+		LOG.info("3D game level created.");
 	}
 
 	@Override
@@ -330,7 +330,7 @@ public class PlayScene3D extends GameScene {
 		case CHANGING_TO_NEXT_LEVEL -> {
 			lockGameState();
 			context.level().ifPresent(level -> {
-				LOG.trace("Starting level %d", level.number());
+				LOG.info("Starting level %d", level.number());
 				replaceGameLevel3D(level);
 				changeCameraPerspective();
 				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
