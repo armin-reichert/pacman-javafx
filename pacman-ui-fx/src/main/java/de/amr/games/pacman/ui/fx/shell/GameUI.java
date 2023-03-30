@@ -120,7 +120,7 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			flashMessageView.update();
 			dashboard.update();
-			pipViewScene.render();
+			pipGameScene.render();
 			currentGameScene.render();
 		}
 	}
@@ -131,7 +131,7 @@ public class GameUI implements GameEventListener {
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
-	private PlayScene2D pipViewScene;
+	private PlayScene2D pipGameScene;
 	private KeyboardSteering manualSteering;
 	private final GameSceneSelection[] scenesMsPacMan;
 	private final GameSceneSelection[] scenesPacMan;
@@ -194,11 +194,11 @@ public class GameUI implements GameEventListener {
 	private Scene createMainScene(Settings settings) {
 		dashboard = new Dashboard();
 		flashMessageView = new FlashMessageView();
-		pipViewScene = new PlayScene2D(gameController);
+		pipGameScene = new PlayScene2D(gameController);
 
 		var overlayPane = new BorderPane();
 		overlayPane.setLeft(dashboard);
-		overlayPane.setRight(pipViewScene.fxSubScene());
+		overlayPane.setRight(pipGameScene.fxSubScene());
 		var gameScenePlaceholder = new Pane();
 		var root = new StackPane(gameScenePlaceholder, flashMessageView, overlayPane);
 
@@ -245,15 +245,15 @@ public class GameUI implements GameEventListener {
 	}
 
 	/**
-	 * Embedded 2D-view of the current play scene. Activated/deactivated by pressing key F2. Size and transparency can be
-	 * controlled using the dashboard.
+	 * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
+	 * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
 	 */
-	private void updatePiPView() {
+	private void updatePictureInPictureView() {
 		boolean visible = Env.pipVisiblePy.get() && isPlayScene(currentGameScene);
-		pipViewScene.fxSubScene().setVisible(visible);
-		pipViewScene.context().setCreditVisible(false);
-		pipViewScene.context().setScoreVisible(true);
-		pipViewScene.context().setRendering2D(currentGameScene.context().rendering2D());
+		pipGameScene.fxSubScene().setVisible(visible);
+		pipGameScene.context().setCreditVisible(false);
+		pipGameScene.context().setScoreVisible(true);
+		pipGameScene.context().setRendering2D(currentGameScene.context().rendering2D());
 	}
 
 	private void handleKeyPressed(KeyEvent keyEvent) {
@@ -265,9 +265,9 @@ public class GameUI implements GameEventListener {
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
-		Env.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePiPView());
-		Env.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipViewScene.resize(newVal.doubleValue()));
-		pipViewScene.fxSubScene().opacityProperty().bind(Env.pipOpacityPy);
+		Env.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
+		Env.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
+		pipGameScene.fxSubScene().opacityProperty().bind(Env.pipOpacityPy);
 
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
 		simulation.pausedPy.bind(Env.simulationPausedPy);
@@ -360,7 +360,7 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updatePiPView();
+		updatePictureInPictureView();
 		updateMainView();
 	}
 
