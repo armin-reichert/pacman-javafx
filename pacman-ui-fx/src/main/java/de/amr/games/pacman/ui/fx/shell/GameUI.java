@@ -120,7 +120,7 @@ public class GameUI implements GameEventListener {
 		public void doRender() {
 			flashMessageView.update();
 			dashboard.update();
-			updatePiPView();
+			pipViewScene.render();
 			currentGameScene.render();
 		}
 	}
@@ -222,7 +222,7 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private void updateView() {
+	private void updateMainView() {
 		var variant = gameController.game().variant();
 		var paused = Env.simulationPausedPy.get();
 		var dimensionMsg = ResourceMgr.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
@@ -249,15 +249,11 @@ public class GameUI implements GameEventListener {
 	 * controlled using the dashboard.
 	 */
 	private void updatePiPView() {
-		if (Env.pipVisiblePy.get() && isPlayScene(currentGameScene)) {
-			pipViewScene.fxSubScene().setVisible(true);
-			pipViewScene.context().setCreditVisible(false);
-			pipViewScene.context().setScoreVisible(true);
-			pipViewScene.context().setRendering2D(currentGameScene.context().rendering2D());
-			pipViewScene.render();
-		} else {
-			pipViewScene.fxSubScene().setVisible(false);
-		}
+		boolean visible = Env.pipVisiblePy.get() && isPlayScene(currentGameScene);
+		pipViewScene.fxSubScene().setVisible(visible);
+		pipViewScene.context().setCreditVisible(false);
+		pipViewScene.context().setScoreVisible(true);
+		pipViewScene.context().setRendering2D(currentGameScene.context().rendering2D());
 	}
 
 	private void handleKeyPressed(KeyEvent keyEvent) {
@@ -267,18 +263,19 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateView());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
+		Env.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePiPView());
 		Env.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipViewScene.resize(newVal.doubleValue()));
 		pipViewScene.fxSubScene().opacityProperty().bind(Env.pipOpacityPy);
 
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateView());
+		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
 		simulation.pausedPy.bind(Env.simulationPausedPy);
 		simulation.targetFrameratePy.bind(Env.simumlationSpeedPy);
 		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
 
-		Env.d3_drawModePy.addListener((py, oldVal, newVal) -> updateView());
-		Env.d3_enabledPy.addListener((py, oldVal, newVal) -> updateView());
+		Env.d3_drawModePy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env.d3_enabledPy.addListener((py, oldVal, newVal) -> updateMainView());
 		Env.d3_enabledPy.set(settings.use3D);
 		Env.d3_perspectivePy.set(settings.perspective);
 	}
@@ -363,7 +360,8 @@ public class GameUI implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateView();
+		updatePiPView();
+		updateMainView();
 	}
 
 	private void changeGameScene(GameScene nextGameScene) {
