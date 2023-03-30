@@ -252,7 +252,7 @@ public class GameLevel3D {
 	public void update() {
 		pac3D.update(level);
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
-		bonus3D.update();
+		bonus3D.update(level);
 		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
 		scores3D.update(level);
 		if (level.game().hasCredit()) {

@@ -27,7 +27,9 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.math.Vector2f;
+import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -76,9 +78,15 @@ public class Bonus3D {
 		shape.setTranslateZ(-HTS);
 	}
 
-	public void update() {
+	public void update(GameLevel level) {
 		setPosition(bonus.entity().position());
-		shape.setVisible(bonus.state() != Bonus.STATE_INACTIVE);
+		boolean invisible = bonus.state() == Bonus.STATE_INACTIVE || outsideWorld(level.world());
+		shape.setVisible(!invisible);
+	}
+
+	private boolean outsideWorld(World world) {
+		double centerX = bonus.entity().position().x() + HTS;
+		return centerX < HTS || centerX > world.numCols() * TS - HTS;
 	}
 
 	public void showSymbol() {
