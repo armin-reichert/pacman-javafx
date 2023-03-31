@@ -54,7 +54,7 @@ public class LivesCounter3D {
 		switch (variant) {
 		case MS_PACMAN -> {
 			for (int i = 0; i < maxLives; ++i) {
-				var pacRoot = Pac3D.createMsPacMan(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+				var pacRoot = PacShape3D.createMsPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
 				pacRoot.setTranslateX(2.0 * i * TS);
 				pacRoot.setRotationAxis(Rotate.Z_AXIS);
 				pacRoot.setRotate(180);
@@ -63,7 +63,7 @@ public class LivesCounter3D {
 		}
 		case PACMAN -> {
 			for (int i = 0; i < maxLives; ++i) {
-				var pacRoot = Pac3D.createPacMan(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+				var pacRoot = PacShape3D.createPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
 				pacRoot.setTranslateX(2.0 * i * TS);
 				root.getChildren().add(pacRoot);
 			}

@@ -112,10 +112,10 @@ public class GameLevel3D {
 		root.getChildren().addAll(particlesGroup, light);
 
 		pac3D.drawModePy.bind(Env.d3_drawModePy);
-		ghosts3D[0].drawModePy.bind(Env.d3_drawModePy);
-		ghosts3D[1].drawModePy.bind(Env.d3_drawModePy);
-		ghosts3D[2].drawModePy.bind(Env.d3_drawModePy);
-		ghosts3D[3].drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[Ghost.ID_RED_GHOST].drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[Ghost.ID_PINK_GHOST].drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[Ghost.ID_CYAN_GHOST].drawModePy.bind(Env.d3_drawModePy);
+		ghosts3D[Ghost.ID_ORANGE_GHOST].drawModePy.bind(Env.d3_drawModePy);
 		eatingEnergizerAnimatedPy.bind(Env.d3_eatingEnergizerAnimatedPy);
 		world3D.drawModePy.bind(Env.d3_drawModePy);
 		world3D.floorColorPy.bind(Env.d3_floorColorPy);
@@ -163,19 +163,13 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D() {
-		var p3D = new Pac3D(level.pac(),
-				Pac3D.createPacMan(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR),
-				ArcadeTheme.HEAD_COLOR);
-		p3D.init();
-		return p3D;
+		return new Pac3D(level.pac(), PacShape3D.createPacManShape(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
+				ArcadeTheme.PALATE_COLOR), ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Pac3D createMsPacMan3D() {
-		var p3D = new Pac3D(level.pac(),
-				Pac3D.createMsPacMan(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR),
-				ArcadeTheme.HEAD_COLOR);
-		p3D.init();
-		return p3D;
+		return new Pac3D(level.pac(), PacShape3D.createMsPacManShape(9, ArcadeTheme.HEAD_COLOR,
+				ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR), ArcadeTheme.HEAD_COLOR);
 	}
 
 	private PointLight createPacLight() {

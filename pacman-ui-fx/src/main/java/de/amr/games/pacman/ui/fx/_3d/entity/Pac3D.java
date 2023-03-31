@@ -31,10 +31,8 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -42,12 +40,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 
 /**
  * 3D-representation of Pac-Man or Ms. Pac-Man.
@@ -58,100 +50,6 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 public class Pac3D {
-
-	private static final Model3D HEAD_3D = new Model3D("model3D/pacman.obj");
-	private static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
-	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
-	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
-
-	private static Translate centerOverOrigin(Node node) {
-		var bounds = node.getBoundsInLocal();
-		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-	}
-
-	private static Scale scale(Node node, double size) {
-		var bounds = node.getBoundsInLocal();
-		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
-	}
-
-	private static Group createHeadGroup(double size, Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
-		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
-
-		var eyes = new MeshView(HEAD_3D.mesh(MESH_ID_EYES));
-		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
-
-		var palate = new MeshView(HEAD_3D.mesh(MESH_ID_PALATE));
-		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
-
-		var centerTransform = centerOverOrigin(head);
-		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
-
-		var headGroup = new Group(head, eyes, palate);
-		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, size), new Rotate(90, Rotate.X_AXIS));
-
-		// TODO new obj importer has all meshes upside-down and backwards. Why?
-		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-		headGroup.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-		return headGroup;
-	}
-
-	public static Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
-		return new Group(createHeadGroup(size, headColor, eyesColor, palateColor));
-	}
-
-	public static Group createMsPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
-		return new Group(createHeadGroup(size, headColor, eyesColor, palateColor),
-				createBeautyAccessories(size, Color.RED, Color.BLUE));
-	}
-
-	private static Group createBeautyAccessories(double pacSize, Color bowColor, Color pearlColor) {
-		var root = new Group();
-
-		var bowMaterial = ResourceMgr.coloredMaterial(bowColor);
-
-		var bowLeft = new Sphere(1.2);
-		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
-		bowLeft.setMaterial(bowMaterial);
-
-		var bowRight = new Sphere(1.2);
-		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
-		bowRight.setMaterial(bowMaterial);
-
-		var pearlMaterial = ResourceMgr.coloredMaterial(pearlColor);
-
-		var pearlLeft = new Sphere(0.6);
-		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
-		pearlLeft.setMaterial(pearlMaterial);
-
-		var pearlRight = new Sphere(0.6);
-		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
-		pearlRight.setMaterial(pearlMaterial);
-
-		var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
-		var beautySpot = new Sphere(0.25);
-		beautySpot.setMaterial(beautySpotMaterial);
-		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -pacSize * 0.3));
-
-		root.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
-
-		return root;
-	}
-
-	public static Shape3D head(Group root) {
-		var headGroup = (Group) root.getChildren().get(0);
-		return (Shape3D) headGroup.getChildren().get(0);
-	}
-
-	public static Shape3D eyes(Group root) {
-		var headGroup = (Group) root.getChildren().get(0);
-		return (Shape3D) headGroup.getChildren().get(1);
-	}
-
-	public static Shape3D palate(Group root) {
-		var headGroup = (Group) root.getChildren().get(0);
-		return (Shape3D) headGroup.getChildren().get(2);
-	}
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
@@ -166,7 +64,9 @@ public class Pac3D {
 		this.root = root;
 		this.turningAnimation = new TurningAnimation(root, pac::moveDir);
 		this.headColor = headColor;
-		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
+		Stream.of(PacShape3D.head(root), PacShape3D.eyes(root), PacShape3D.palate(root))
+				.forEach(part -> part.drawModeProperty().bind(drawModePy));
+		init();
 	}
 
 	public Node getRoot() {
