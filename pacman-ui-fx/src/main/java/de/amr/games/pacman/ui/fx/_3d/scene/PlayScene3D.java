@@ -66,6 +66,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -290,28 +291,21 @@ public class PlayScene3D extends GameScene {
 		switch (e.newGameState) {
 
 		case READY -> {
-			context.level().ifPresent(level -> {
-				level3D.pac3D().init();
-				Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
-				if (Env.d3_foodOscillationEnabledPy.get()) {
-					level3D.foodOscillation().play();
-				}
-				infoText3D.setVisible(true);
-				infoText3D.setText("READY!");
-			});
+			level3D.pac3D().init();
+			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+			if (Env.d3_foodOscillationEnabledPy.get()) {
+				level3D.foodOscillation().play();
+			}
+			infoText3D.setVisible(true);
+			infoText3D.setText("READY!");
 		}
 
 		case HUNTING -> level3D.energizers3D().forEach(Energizer3D::startPumping);
 
 		case PACMAN_DYING -> {
 			context.game().level().ifPresent(level -> {
-				level.ghosts().filter(level.pac()::sameTile).findAny().ifPresent(killer -> {
-					lockGameState();
-					level3D.foodOscillation().stop();
-					var animation = new SequentialTransition(Ufx.pause(1.3), level3D.pac3D().createDyingAnimation());
-					animation.setOnFinished(evt -> unlockGameState());
-					animation.play();
-				});
+				level3D.foodOscillation().stop();
+				lockStateAndPlayAnimations(Ufx.pause(1.3), level3D.pac3D().createDyingAnimation());
 			});
 		}
 
@@ -375,6 +369,13 @@ public class PlayScene3D extends GameScene {
 		if (e.oldGameState == GameState.READY) {
 			infoText3D.setVisible(false);
 		}
+	}
+
+	private void lockStateAndPlayAnimations(Animation... animations) {
+		lockGameState();
+		var animation = new SequentialTransition(animations);
+		animation.setOnFinished(e -> unlockGameState());
+		animation.play();
 	}
 
 	// TODO this is copy-pasta from 2D play scene
