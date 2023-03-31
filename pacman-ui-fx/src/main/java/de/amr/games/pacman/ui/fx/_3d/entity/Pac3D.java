@@ -72,7 +72,6 @@ public class Pac3D {
 		Stream.of(PacShape3D.head(root), PacShape3D.eyes(root), PacShape3D.palate(root))
 				.forEach(part -> part.drawModeProperty().bind(drawModePy));
 		light = createLight();
-//		root.getChildren().add(light);
 		init();
 	}
 
