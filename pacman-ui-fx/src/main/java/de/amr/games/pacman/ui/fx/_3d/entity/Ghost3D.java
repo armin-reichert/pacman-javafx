@@ -31,7 +31,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
-import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -67,7 +67,7 @@ public class Ghost3D {
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final Ghost ghost;
-	private final MoveAnimation moveAnimation;
+	private final TurningAnimation moveAnimation;
 	private RotateTransition brakeEffect;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
@@ -81,7 +81,7 @@ public class Ghost3D {
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
-		moveAnimation = new MoveAnimation(root, ghost);
+		moveAnimation = new TurningAnimation(root, ghost);
 	}
 
 	public Node getRoot() {

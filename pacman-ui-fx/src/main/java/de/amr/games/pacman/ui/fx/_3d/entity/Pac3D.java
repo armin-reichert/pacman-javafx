@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.MoveAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.beans.property.ObjectProperty;
@@ -157,14 +157,14 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 
 	private final Pac pac;
-	private final MoveAnimation moveAnimation;
+	private final TurningAnimation moveAnimation;
 	private final Group root;
 	private Color headColor;
 
 	public Pac3D(Pac pac, Group root, Color headColor) {
 		this.pac = pac;
 		this.root = root;
-		this.moveAnimation = new MoveAnimation(root, pac);
+		this.moveAnimation = new TurningAnimation(root, pac);
 		this.headColor = headColor;
 		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
 	}
