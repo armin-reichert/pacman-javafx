@@ -254,7 +254,7 @@ public class Actions {
 	public static void cheatEatAllPellets() {
 		gameController().cheatEatAllPellets();
 		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(ResourceMgr.getCheatingMessage());
+			showFlashMessage(ResourceMgr.pickCheatingMessage());
 		}
 	}
 
@@ -265,7 +265,7 @@ public class Actions {
 	public static void cheatKillAllEatableGhosts() {
 		gameController().cheatKillAllEatableGhosts();
 		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(ResourceMgr.getCheatingMessage());
+			showFlashMessage(ResourceMgr.pickCheatingMessage());
 		}
 	}
 }

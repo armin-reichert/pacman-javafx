@@ -303,10 +303,8 @@ public class PlayScene3D extends GameScene {
 		case HUNTING -> level3D.energizers3D().forEach(Energizer3D::startPumping);
 
 		case PACMAN_DYING -> {
-			context.game().level().ifPresent(level -> {
-				level3D.foodOscillation().stop();
-				lockStateAndPlayAnimations(Ufx.pause(1.3), level3D.pac3D().createDyingAnimation());
-			});
+			level3D.foodOscillation().stop();
+			lockAndPlay(1.3, level3D.pac3D().createDyingAnimation());
 		}
 
 		case GHOST_DYING -> {
@@ -335,25 +333,20 @@ public class PlayScene3D extends GameScene {
 
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
-				lockGameState();
 				level3D.foodOscillation().stop();
-				var message = "%s%n%n%s".formatted(ResourceMgr.getLevelCompleteMessage(),
-						ResourceMgr.message("level_complete", level.number()));
-				var animation = new SequentialTransition( //
-						Ufx.pause(1.0), //
+				var message = ResourceMgr.pickLevelCompleteMessage(level.number());
+				lockAndPlay(1.0, //
 						level.numFlashes > 0 ? new SwingingWallsAnimation(level.numFlashes) : Ufx.pause(1.0), //
 						afterSeconds(1.0, level.pac()::hide), //
 						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
 						Ufx.pause(2.0) //
 				);
-				animation.setOnFinished(evt -> unlockGameState());
-				animation.play();
 			});
 		}
 
 		case GAME_OVER -> {
 			level3D.foodOscillation().stop();
-			Actions.showFlashMessageSeconds(3, ResourceMgr.getGameOverMessage());
+			Actions.showFlashMessageSeconds(3, ResourceMgr.pickGameOverMessage());
 		}
 
 		default -> { // ignore
@@ -371,9 +364,13 @@ public class PlayScene3D extends GameScene {
 		}
 	}
 
-	private void lockStateAndPlayAnimations(Animation... animations) {
+	private void lockAndPlay(double afterSeconds, Animation... animations) {
 		lockGameState();
-		var animation = new SequentialTransition(animations);
+		var animation = new SequentialTransition();
+		if (afterSeconds > 0) {
+			animation.getChildren().add(Ufx.pause(afterSeconds));
+		}
+		animation.getChildren().addAll(animations);
 		animation.setOnFinished(e -> unlockGameState());
 		animation.play();
 	}

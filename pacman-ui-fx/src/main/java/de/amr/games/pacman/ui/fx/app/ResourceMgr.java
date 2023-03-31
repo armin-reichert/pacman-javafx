@@ -217,15 +217,15 @@ public class ResourceMgr {
 				.toArray(String[]::new));
 	}
 
-	public static String getCheatingMessage() {
+	public static String pickCheatingMessage() {
 		return PICKER_MSG_CHEATING.next();
 	}
 
-	public static String getGameOverMessage() {
+	public static String pickGameOverMessage() {
 		return PICKER_MSG_GAME_OVER.next();
 	}
 
-	public static String getLevelCompleteMessage() {
-		return PICKER_MSG_LEVEL_COMPLETE.next();
+	public static String pickLevelCompleteMessage(int levelNumber) {
+		return "%s%n%n%s".formatted(PICKER_MSG_LEVEL_COMPLETE.next(), message("level_complete", levelNumber));
 	}
 }
