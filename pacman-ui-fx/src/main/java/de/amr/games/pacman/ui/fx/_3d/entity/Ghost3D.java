@@ -72,6 +72,7 @@ public class Ghost3D {
 	private final RotateTransition brakeAnimation;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
+	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
 	private Image numberImage;
 	private Look look;
 
@@ -141,9 +142,8 @@ public class Ghost3D {
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FLASHING -> {
-			int numFlashes = level.numFlashes;
-			if (numFlashes > 0) {
-				coloredGhost3D.appearFlashing(numFlashes, 1.0);
+			if (level.numFlashes > 0) {
+				coloredGhost3D.appearFlashing(level.numFlashes, 1.0);
 			} else {
 				coloredGhost3D.appearFrightened();
 			}
@@ -158,7 +158,6 @@ public class Ghost3D {
 			var material = new PhongMaterial();
 			material.setBumpMap(numberImage);
 			material.setDiffuseMap(numberImage);
-			var numberCube = new Box(World.TS, World.TS, World.TS);
 			numberCube.setMaterial(material);
 			root.getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
