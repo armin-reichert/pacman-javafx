@@ -60,6 +60,16 @@ import javafx.util.Duration;
  */
 public class Ghost3D {
 
+	private static RotateTransition createBrakeAnimation(Node node) {
+		var animation = new RotateTransition(Duration.seconds(0.4), node);
+		animation.setAxis(Rotate.Y_AXIS);
+		animation.setFromAngle(0);
+		animation.setToAngle(-35);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(2);
+		return animation;
+	}
+
 	private enum Look {
 		NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER;
 	}
@@ -74,7 +84,7 @@ public class Ghost3D {
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
 	private Image numberImage;
-	private Look look;
+	private Look currentLook;
 
 	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors) {
 		this.level = Objects.requireNonNull(level, "Game level must not be null");
@@ -89,16 +99,6 @@ public class Ghost3D {
 		init();
 	}
 
-	private static RotateTransition createBrakeAnimation(Node node) {
-		var animation = new RotateTransition(Duration.seconds(0.4), node);
-		animation.setAxis(Rotate.Y_AXIS);
-		animation.setFromAngle(0);
-		animation.setToAngle(-35);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(2);
-		return animation;
-	}
-
 	public Node getRoot() {
 		return root;
 	}
@@ -109,11 +109,17 @@ public class Ghost3D {
 	}
 
 	public void update() {
-		var newLook = updateLookByGhostState();
-		if (look != newLook) {
-			changeLook(newLook);
+		var newLook = switch (ghost.state()) {
+		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
+		case FRIGHTENED -> frightenedOrFlashingLook();
+		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
+		case EATEN -> Look.NUMBER;
+		default -> Look.NORMAL;
+		};
+		if (currentLook != newLook) {
+			setLook(newLook);
 		}
-		if (look != Look.NUMBER) {
+		if (currentLook != Look.NUMBER) {
 			turningAnimation.update();
 			if (ghost.isTunnelEntered()) {
 				brakeAnimation.play();
@@ -129,12 +135,11 @@ public class Ghost3D {
 		this.numberImage = numberImage;
 	}
 
-	private void changeLook(Look look) {
-		this.look = look;
+	private void setLook(Look look) {
+		this.currentLook = look;
 		switch (look) {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
-			turningAnimation.init();
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED -> {
@@ -151,7 +156,6 @@ public class Ghost3D {
 		}
 		case EYES -> {
 			coloredGhost3D.appearEyesOnly();
-			turningAnimation.init();
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
@@ -171,16 +175,6 @@ public class Ghost3D {
 	private boolean outsideWorld() {
 		double centerX = ghost.position().x() + World.HTS;
 		return centerX < 0 || centerX > level.world().numCols() * World.TS;
-	}
-
-	private Look updateLookByGhostState() {
-		return switch (ghost.state()) {
-		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
-		case FRIGHTENED -> frightenedOrFlashingLook();
-		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
-		case EATEN -> Look.NUMBER;
-		default -> Look.NORMAL;
-		};
 	}
 
 	private Look normalOrFrightenedOrFlashingLook() {
