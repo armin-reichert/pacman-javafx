@@ -334,8 +334,10 @@ public class PlayScene3D extends GameScene {
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
 				level3D.foodOscillation().stop();
+				// if cheat has been used to complete level, 3D food might still exist
+				level3D.eatables3D().forEach(level3D::eat);
 				var message = ResourceMgr.pickLevelCompleteMessage(level.number());
-				lockAndPlay(1.0, //
+				lockAndPlay(2.0, //
 						level.numFlashes > 0 ? new SwingingWallsAnimation(level.numFlashes) : Ufx.pause(1.0), //
 						afterSeconds(1.0, level.pac()::hide), //
 						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
