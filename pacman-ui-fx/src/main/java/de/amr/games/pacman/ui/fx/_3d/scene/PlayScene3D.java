@@ -321,14 +321,13 @@ public class PlayScene3D extends GameScene {
 		}
 
 		case CHANGING_TO_NEXT_LEVEL -> {
-			lockGameState();
 			context.level().ifPresent(level -> {
-				LOG.info("Starting level %d", level.number());
+				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
+				lockGameState();
 				replaceGameLevel3D(level);
 				changeCameraPerspective();
-				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
+				afterSeconds(3, this::unlockGameState).play();
 			});
-			afterSeconds(3, this::unlockGameState).play();
 		}
 
 		case LEVEL_COMPLETE -> {
