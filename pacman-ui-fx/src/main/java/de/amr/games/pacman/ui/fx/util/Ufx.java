@@ -38,7 +38,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
 /**
- * Useful methods.
+ * Useful JavaFX helper methods.
  * 
  * @author Armin Reichert
  */
@@ -51,15 +51,16 @@ public class Ufx {
 		booleanProperty.set(!booleanProperty.get());
 	}
 
-	public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> pyColor) {
-		var mat = new PhongMaterial();
-		bindMaterialColor(mat, pyColor);
-		return mat;
+	public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> colorProperty) {
+		var material = new PhongMaterial();
+		bindMaterialColorProperties(material, colorProperty);
+		return material;
 	}
 
-	public static void bindMaterialColor(PhongMaterial mat, ObjectProperty<Color> pyColor) {
-		mat.diffuseColorProperty().bind(pyColor);
-		mat.specularColorProperty().bind(Bindings.createObjectBinding(() -> pyColor.get().brighter(), pyColor));
+	public static void bindMaterialColorProperties(PhongMaterial material, ObjectProperty<Color> colorProperty) {
+		material.diffuseColorProperty().bind(colorProperty);
+		material.specularColorProperty()
+				.bind(Bindings.createObjectBinding(() -> material.getDiffuseColor().brighter(), colorProperty));
 	}
 
 	/**
