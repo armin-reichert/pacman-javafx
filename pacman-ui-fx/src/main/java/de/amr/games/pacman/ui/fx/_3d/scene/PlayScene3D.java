@@ -49,6 +49,7 @@ import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
+import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Text3D;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
@@ -291,7 +292,7 @@ public class PlayScene3D extends GameScene {
 		case READY -> {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init();
-				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
+				Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
 				if (Env.d3_foodOscillationEnabledPy.get()) {
 					level3D.foodOscillation().play();
 				}

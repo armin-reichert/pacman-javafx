@@ -66,6 +66,7 @@ public class Ghost3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
+	private final GameLevel level;
 	private final Ghost ghost;
 	private final TurningAnimation turningAnimation;
 	private final RotateTransition brakeAnimation;
@@ -74,7 +75,8 @@ public class Ghost3D {
 	private Image numberImage;
 	private Look look;
 
-	public Ghost3D(Ghost ghost, GhostColoring colors) {
+	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors) {
+		this.level = Objects.requireNonNull(level, "Game level must not be null");
 		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
 		Objects.requireNonNull(colors, "Ghost colors must not be null");
 		coloredGhost3D = new ColoredGhost3D(colors);
@@ -83,6 +85,7 @@ public class Ghost3D {
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
 		turningAnimation = new TurningAnimation(root, ghost::moveDir);
 		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
+		init();
 	}
 
 	private static RotateTransition createBrakeAnimation(Node node) {
@@ -99,26 +102,23 @@ public class Ghost3D {
 		return root;
 	}
 
-	public void init(GameLevel level) {
+	public void init() {
 		turningAnimation.init();
-		update(level);
+		update();
 	}
 
-	public void update(GameLevel level) {
-		var newLook = computeLookForCurrentState(level);
+	public void update() {
+		var newLook = updateLookByGhostState();
 		if (look != newLook) {
-			changeLook(level, newLook);
+			changeLook(newLook);
 		}
 		if (look != Look.NUMBER) {
 			turningAnimation.update();
 			if (ghost.isTunnelEntered()) {
 				brakeAnimation.play();
-			} else {
-//				coloredGhost3D.getRoot().setRotationAxis(Rotate.Y_AXIS);
-//				coloredGhost3D.getRoot().setRotate(0);
 			}
 		}
-		root.setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
+		root.setVisible(ghost.isVisible() && !outsideWorld()); // ???
 		root.setTranslateX(ghost.center().x());
 		root.setTranslateY(ghost.center().y());
 		root.setTranslateZ(-HTS);
@@ -128,9 +128,9 @@ public class Ghost3D {
 		this.numberImage = numberImage;
 	}
 
-	private void changeLook(GameLevel level, Look newLook) {
-		look = newLook;
-		switch (newLook) {
+	private void changeLook(Look look) {
+		this.look = look;
+		switch (look) {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
 			turningAnimation.init();
@@ -165,33 +165,33 @@ public class Ghost3D {
 			root.setRotationAxis(Rotate.X_AXIS);
 			root.setRotate(0);
 		}
-		default -> throw new IllegalArgumentException("Unexpected value: " + newLook);
+		default -> throw new IllegalArgumentException("Unexpected value: " + look);
 		}
 	}
 
-	private boolean outsideWorld(GameLevel level) {
+	private boolean outsideWorld() {
 		double centerX = ghost.position().x() + World.HTS;
 		return centerX < 0 || centerX > level.world().numCols() * World.TS;
 	}
 
-	private Look computeLookForCurrentState(GameLevel level) {
+	private Look updateLookByGhostState() {
 		return switch (ghost.state()) {
-		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(level);
-		case FRIGHTENED -> frightenedOrFlashingLook(level);
+		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
+		case FRIGHTENED -> frightenedOrFlashingLook();
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
 		case EATEN -> Look.NUMBER;
 		default -> Look.NORMAL;
 		};
 	}
 
-	private Look normalOrFrightenedOrFlashingLook(GameLevel level) {
+	private Look normalOrFrightenedOrFlashingLook() {
 		if (level.pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
-			return frightenedOrFlashingLook(level);
+			return frightenedOrFlashingLook();
 		}
 		return Look.NORMAL;
 	}
 
-	private Look frightenedOrFlashingLook(GameLevel level) {
+	private Look frightenedOrFlashingLook() {
 		return level.pac().isPowerFading(level) ? Look.FLASHING : Look.FRIGHTENED;
 	}
 }

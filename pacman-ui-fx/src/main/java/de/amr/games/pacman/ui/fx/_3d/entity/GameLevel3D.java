@@ -189,9 +189,7 @@ public class GameLevel3D {
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
-		var ghost3D = new Ghost3D(ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
-		ghost3D.init(level);
-		return ghost3D;
+		return new Ghost3D(level, ghost, ArcadeTheme.GHOST_COLORS[ghost.id()]);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
@@ -251,7 +249,7 @@ public class GameLevel3D {
 
 	public void update() {
 		pac3D.update(level);
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update());
 		bonus3D.update(level);
 		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
 		scores3D.update(level);
