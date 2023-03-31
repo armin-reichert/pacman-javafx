@@ -82,9 +82,17 @@ public class Ghost3D {
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
 		turningAnimation = new TurningAnimation(root, ghost::moveDir);
-		brakeAnimation = new RotateTransition(Duration.seconds(0.2), coloredGhost3D.getRoot());
-		brakeAnimation.setAxis(Rotate.Y_AXIS);
-		brakeAnimation.setToAngle(-25);
+		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
+	}
+
+	private static RotateTransition createBrakeAnimation(Node node) {
+		var animation = new RotateTransition(Duration.seconds(0.25), node);
+		animation.setAxis(Rotate.Y_AXIS);
+		animation.setFromAngle(0);
+		animation.setToAngle(-35);
+		animation.setAutoReverse(true);
+		animation.setCycleCount(2);
+		return animation;
 	}
 
 	public Node getRoot() {
@@ -103,13 +111,12 @@ public class Ghost3D {
 		}
 		if (look != Look.NUMBER) {
 			turningAnimation.update();
-		}
-		if (level.world().isTunnel(ghost.tile())) {
-			brakeAnimation.play();
-		} else {
-			brakeAnimation.stop();
-			coloredGhost3D.getRoot().setRotationAxis(Rotate.Y_AXIS);
-			coloredGhost3D.getRoot().setRotate(0);
+			if (ghost.isTunnelEntered()) {
+				brakeAnimation.play();
+			} else {
+//				coloredGhost3D.getRoot().setRotationAxis(Rotate.Y_AXIS);
+//				coloredGhost3D.getRoot().setRotate(0);
+			}
 		}
 		root.setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
 		root.setTranslateX(ghost.center().x());
