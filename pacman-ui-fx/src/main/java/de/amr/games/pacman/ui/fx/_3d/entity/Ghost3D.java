@@ -122,7 +122,7 @@ public class Ghost3D {
 		if (currentLook != Look.NUMBER) {
 			turningAnimation.update();
 			if (ghost.isTunnelEntered()) {
-				brakeAnimation.play();
+				brakeAnimation.playFromStart();
 			}
 		}
 		root.setVisible(ghost.isVisible() && !outsideWorld()); // ???
@@ -168,7 +168,7 @@ public class Ghost3D {
 			root.setRotationAxis(Rotate.X_AXIS);
 			root.setRotate(0);
 		}
-		default -> throw new IllegalArgumentException("Unexpected value: " + look);
+		default -> throw new IllegalArgumentException("Unknown Ghost3D look: %s ".formatted(look));
 		}
 	}
 
