@@ -80,17 +80,19 @@ public class World3D {
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
 			ResourceMgr.KEY_NO_TEXTURE) {
+		@Override
 		protected void invalidated() {
 			LOG.trace("Floor texture change detected");
 			updateFloorMaterial();
-		};
+		}
 	};
 
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
+		@Override
 		protected void invalidated() {
 			LOG.trace("Floor color change detected");
 			updateFloorMaterial();
-		};
+		}
 	};
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);

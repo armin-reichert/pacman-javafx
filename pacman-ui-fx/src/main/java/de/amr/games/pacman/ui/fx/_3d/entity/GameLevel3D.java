@@ -249,7 +249,7 @@ public class GameLevel3D {
 
 	public void update() {
 		pac3D.update(level);
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update());
+		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		bonus3D.update(level);
 		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
 		scores3D.update(level);
@@ -264,10 +264,12 @@ public class GameLevel3D {
 	}
 
 	private void updatePacLightingState() {
+		boolean isVisible = level.pac().isVisible();
+		boolean isAlive = !level.pac().isDead();
 		boolean hasPower = level.pac().powerTimer().isRunning();
-		light.setLightOn(pacLightedPy.get() && level.pac().isVisible() && !level.pac().isDead() && hasPower);
-		var range = !hasPower ? 0 : level.pac().isPowerFading(level) ? 4 : 8;
-		light.setMaxRange(range * TS);
+		var maxRange = level.pac().isPowerFading(level) ? 4 : 8;
+		light.setLightOn(pacLightedPy.get() && isVisible && isAlive && hasPower);
+		light.setMaxRange(hasPower ? maxRange * TS : 0);
 	}
 
 	public void eat(Eatable3D eatable3D) {
