@@ -68,7 +68,7 @@ public class Ghost3D {
 
 	private final Ghost ghost;
 	private final TurningAnimation turningAnimation;
-	private RotateTransition brakeEffect;
+	private final RotateTransition brakeAnimation;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private Image numberImage;
@@ -81,7 +81,10 @@ public class Ghost3D {
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
-		turningAnimation = new TurningAnimation(coloredGhost3D.getRoot(), ghost::moveDir);
+		turningAnimation = new TurningAnimation(root, ghost::moveDir);
+		brakeAnimation = new RotateTransition(Duration.seconds(0.2), coloredGhost3D.getRoot());
+		brakeAnimation.setAxis(Rotate.Y_AXIS);
+		brakeAnimation.setToAngle(-25);
 	}
 
 	public Node getRoot() {
@@ -101,18 +104,12 @@ public class Ghost3D {
 		if (look != Look.NUMBER) {
 			turningAnimation.update();
 		}
-		// brake effect
 		if (level.world().isTunnel(ghost.tile())) {
-			brakeEffect = new RotateTransition(Duration.seconds(0.2), coloredGhost3D.getRoot());
-			brakeEffect.setAxis(Rotate.Y_AXIS);
-			brakeEffect.setToAngle(-25);
-			brakeEffect.play();
+			brakeAnimation.play();
 		} else {
-			if (brakeEffect != null) {
-				brakeEffect.stop();
-				coloredGhost3D.getRoot().setRotationAxis(Rotate.Y_AXIS);
-				coloredGhost3D.getRoot().setRotate(0);
-			}
+			brakeAnimation.stop();
+			coloredGhost3D.getRoot().setRotationAxis(Rotate.Y_AXIS);
+			coloredGhost3D.getRoot().setRotate(0);
 		}
 		root.setVisible(ghost.isVisible() && !outsideWorld(level)); // ???
 		root.setTranslateX(ghost.center().x());
