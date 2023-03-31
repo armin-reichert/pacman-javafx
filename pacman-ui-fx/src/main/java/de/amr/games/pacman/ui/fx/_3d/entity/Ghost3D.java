@@ -81,7 +81,7 @@ public class Ghost3D {
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
-		turningAnimation = new TurningAnimation(root, ghost);
+		turningAnimation = new TurningAnimation(root, ghost::moveDir);
 	}
 
 	public Node getRoot() {

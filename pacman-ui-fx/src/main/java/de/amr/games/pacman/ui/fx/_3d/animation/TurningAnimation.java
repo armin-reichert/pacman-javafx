@@ -23,8 +23,9 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import java.util.function.Supplier;
+
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
@@ -70,13 +71,13 @@ public class TurningAnimation {
 	}
 
 	private final Node shape;
-	private final Creature guy;
 	private Direction animationTargetDir;
 	private RotateTransition rotation;
+	private Supplier<Direction> fnTargetDir;
 
-	public TurningAnimation(Node shape, Creature guy) {
+	public TurningAnimation(Node shape, Supplier<Direction> fnTargetDir) {
 		this.shape = shape;
-		this.guy = guy;
+		this.fnTargetDir = fnTargetDir;
 		rotation = new RotateTransition(Duration.seconds(0.1), shape);
 		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
@@ -86,18 +87,18 @@ public class TurningAnimation {
 	public void init() {
 		rotation.stop();
 		shape.setRotationAxis(Rotate.Z_AXIS);
-		shape.setRotate(getAngle(guy.moveDir()));
-		animationTargetDir = guy.moveDir();
+		shape.setRotate(getAngle(fnTargetDir.get()));
+		animationTargetDir = fnTargetDir.get();
 	}
 
 	public void update() {
-		if (animationTargetDir != guy.moveDir()) {
-			var turn = TURNS[index(animationTargetDir)][index(guy.moveDir())];
+		if (animationTargetDir != fnTargetDir.get()) {
+			var turn = TURNS[index(animationTargetDir)][index(fnTargetDir.get())];
 			rotation.stop();
 			rotation.setFromAngle(turn.fromAngle);
 			rotation.setToAngle(turn.toAngle);
 			rotation.playFromStart();
-			animationTargetDir = guy.moveDir();
+			animationTargetDir = fnTargetDir.get();
 		}
 	}
 }

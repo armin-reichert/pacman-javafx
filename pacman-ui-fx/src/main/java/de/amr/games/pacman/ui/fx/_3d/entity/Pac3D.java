@@ -164,7 +164,7 @@ public class Pac3D {
 	public Pac3D(Pac pac, Group root, Color headColor) {
 		this.pac = pac;
 		this.root = root;
-		this.turningAnimation = new TurningAnimation(root, pac);
+		this.turningAnimation = new TurningAnimation(root, pac::moveDir);
 		this.headColor = headColor;
 		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
 	}
