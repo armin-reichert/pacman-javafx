@@ -350,18 +350,26 @@ public class PlayScene3D extends GameScene {
 			Actions.showFlashMessageSeconds(3, ResourceMgr.pickGameOverMessage());
 		}
 
-		default -> { // ignore
-		}
-		}
-
-		// exit HUNTING
-		if (e.oldGameState == GameState.HUNTING && e.newGameState != GameState.GHOST_DYING) {
-			level3D.energizers3D().forEach(Energizer3D::stopPumping);
-			level3D.bonus3D().hide();
+		default -> {
+			// ignore
 		}
 
-		if (e.oldGameState == GameState.READY) {
+		}
+
+		// on state exit
+		switch (e.oldGameState) {
+		case READY -> {
 			infoText3D.setVisible(false);
+		}
+		case HUNTING -> {
+			if (e.newGameState != GameState.GHOST_DYING) {
+				level3D.energizers3D().forEach(Energizer3D::stopPumping);
+				level3D.bonus3D().hide();
+			}
+		}
+		default -> {
+			// ignore
+		}
 		}
 	}
 
