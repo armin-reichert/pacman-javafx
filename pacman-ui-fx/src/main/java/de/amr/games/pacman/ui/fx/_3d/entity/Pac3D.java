@@ -189,6 +189,9 @@ public class Pac3D {
 		} else {
 			root.setVisible(pac.isVisible());
 		}
+		root.setTranslateX(pac.center().x());
+		root.setTranslateY(pac.center().y());
+		root.setTranslateZ(-HTS);
 	}
 
 	private boolean outsideWorld(World world) {

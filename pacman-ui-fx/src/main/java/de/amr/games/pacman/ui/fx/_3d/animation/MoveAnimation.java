@@ -23,8 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
 import javafx.animation.Interpolator;
@@ -87,14 +85,12 @@ public class MoveAnimation {
 
 	public void init() {
 		rotation.stop();
-		updatePosition();
 		guy3D.setRotationAxis(Rotate.Z_AXIS);
 		guy3D.setRotate(getAngle(guy.moveDir()));
 		animationTargetDir = guy.moveDir();
 	}
 
 	public void update() {
-		updatePosition();
 		if (animationTargetDir != guy.moveDir()) {
 			var turn = TURNS[index(animationTargetDir)][index(guy.moveDir())];
 			rotation.stop();
@@ -103,11 +99,5 @@ public class MoveAnimation {
 			rotation.playFromStart();
 			animationTargetDir = guy.moveDir();
 		}
-	}
-
-	private void updatePosition() {
-		guy3D.setTranslateX(guy.center().x());
-		guy3D.setTranslateY(guy.center().y());
-		guy3D.setTranslateZ(-HTS);
 	}
 }
