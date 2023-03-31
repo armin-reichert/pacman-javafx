@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.steering.Direction;
@@ -42,12 +43,12 @@ public class TurningAnimation {
 	public record Turn(int fromAngle, int toAngle) {
 	}
 
-	private static final int L = 0;
-	private static final int U = 90;
-	private static final int R = 180;
-	private static final int D = 270;
+	private static final short L = 0;
+	private static final short U = 90;
+	private static final short R = 180;
+	private static final short D = 270;
 
-	private static double getAngle(Direction dir) {
+	private static double angle(Direction dir) {
 		return switch (dir) {
 		case LEFT -> L;
 		case RIGHT -> R;
@@ -71,13 +72,13 @@ public class TurningAnimation {
 	}
 
 	private final Node shape;
+	private final RotateTransition rotation;
+	private final Supplier<Direction> fnTargetDir;
 	private Direction animationTargetDir;
-	private RotateTransition rotation;
-	private Supplier<Direction> fnTargetDir;
 
 	public TurningAnimation(Node shape, Supplier<Direction> fnTargetDir) {
-		this.shape = shape;
-		this.fnTargetDir = fnTargetDir;
+		this.shape = Objects.requireNonNull(shape);
+		this.fnTargetDir = Objects.requireNonNull(fnTargetDir);
 		rotation = new RotateTransition(Duration.seconds(0.1), shape);
 		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
@@ -85,20 +86,22 @@ public class TurningAnimation {
 	}
 
 	public void init() {
+		var targetDir = fnTargetDir.get();
 		rotation.stop();
 		shape.setRotationAxis(Rotate.Z_AXIS);
-		shape.setRotate(getAngle(fnTargetDir.get()));
-		animationTargetDir = fnTargetDir.get();
+		shape.setRotate(angle(targetDir));
+		animationTargetDir = targetDir;
 	}
 
 	public void update() {
-		if (animationTargetDir != fnTargetDir.get()) {
-			var turn = TURNS[index(animationTargetDir)][index(fnTargetDir.get())];
+		var targetDir = fnTargetDir.get();
+		if (animationTargetDir != targetDir) {
+			var turn = TURNS[index(animationTargetDir)][index(targetDir)];
 			rotation.stop();
 			rotation.setFromAngle(turn.fromAngle);
 			rotation.setToAngle(turn.toAngle);
 			rotation.playFromStart();
-			animationTargetDir = fnTargetDir.get();
+			animationTargetDir = targetDir;
 		}
 	}
 }
