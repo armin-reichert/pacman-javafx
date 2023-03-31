@@ -34,10 +34,13 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
 import javafx.animation.Animation;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
@@ -53,11 +56,13 @@ public class Pac3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
+	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
 	private final Pac pac;
 	private final TurningAnimation turningAnimation;
 	private final Group root;
-	private Color headColor;
+	private final Color headColor;
+	private final PointLight light;
 
 	public Pac3D(Pac pac, Group root, Color headColor) {
 		this.pac = pac;
@@ -66,11 +71,17 @@ public class Pac3D {
 		this.headColor = headColor;
 		Stream.of(PacShape3D.head(root), PacShape3D.eyes(root), PacShape3D.palate(root))
 				.forEach(part -> part.drawModeProperty().bind(drawModePy));
+		light = createLight();
+//		root.getChildren().add(light);
 		init();
 	}
 
 	public Node getRoot() {
 		return root;
+	}
+
+	public PointLight getLight() {
+		return light;
 	}
 
 	public void init() {
@@ -92,6 +103,26 @@ public class Pac3D {
 		root.setTranslateX(pac.center().x());
 		root.setTranslateY(pac.center().y());
 		root.setTranslateZ(-HTS);
+		updateLight(level);
+	}
+
+	private PointLight createLight() {
+		var pointLight = new PointLight();
+		pointLight.setColor(Color.rgb(255, 255, 0, 0.25));
+		pointLight.setMaxRange(2 * TS);
+		pointLight.translateXProperty().bind(root.translateXProperty());
+		pointLight.translateYProperty().bind(root.translateYProperty());
+		pointLight.setTranslateZ(-TS);
+		return pointLight;
+	}
+
+	private void updateLight(GameLevel level) {
+		boolean isVisible = pac.isVisible();
+		boolean isAlive = !pac.isDead();
+		boolean hasPower = pac.powerTimer().isRunning();
+		var maxRange = pac.isPowerFading(level) ? 4 : 8;
+		light.setLightOn(lightedPy.get() && isVisible && isAlive && hasPower);
+		light.setMaxRange(hasPower ? maxRange * TS : 0);
 	}
 
 	private boolean outsideWorld(World world) {
