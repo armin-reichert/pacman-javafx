@@ -67,7 +67,7 @@ public class Ghost3D {
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final Ghost ghost;
-	private final TurningAnimation moveAnimation;
+	private final TurningAnimation turningAnimation;
 	private RotateTransition brakeEffect;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
@@ -81,7 +81,7 @@ public class Ghost3D {
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
-		moveAnimation = new TurningAnimation(root, ghost);
+		turningAnimation = new TurningAnimation(root, ghost);
 	}
 
 	public Node getRoot() {
@@ -89,7 +89,7 @@ public class Ghost3D {
 	}
 
 	public void init(GameLevel level) {
-		moveAnimation.init();
+		turningAnimation.init();
 		update(level);
 	}
 
@@ -99,7 +99,7 @@ public class Ghost3D {
 			changeLook(level, newLook);
 		}
 		if (look != Look.NUMBER) {
-			moveAnimation.update();
+			turningAnimation.update();
 		}
 		// brake effect
 		if (level.world().isTunnel(ghost.tile())) {
@@ -129,7 +129,7 @@ public class Ghost3D {
 		switch (newLook) {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
-			moveAnimation.init();
+			turningAnimation.init();
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED -> {
@@ -147,7 +147,7 @@ public class Ghost3D {
 		}
 		case EYES -> {
 			coloredGhost3D.appearEyesOnly();
-			moveAnimation.init();
+			turningAnimation.init();
 			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {

@@ -157,14 +157,14 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 
 	private final Pac pac;
-	private final TurningAnimation moveAnimation;
+	private final TurningAnimation turningAnimation;
 	private final Group root;
 	private Color headColor;
 
 	public Pac3D(Pac pac, Group root, Color headColor) {
 		this.pac = pac;
 		this.root = root;
-		this.moveAnimation = new TurningAnimation(root, pac);
+		this.turningAnimation = new TurningAnimation(root, pac);
 		this.headColor = headColor;
 		Stream.of(head(root), eyes(root), palate(root)).forEach(part -> part.drawModeProperty().bind(drawModePy));
 	}
@@ -177,13 +177,13 @@ public class Pac3D {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		moveAnimation.init();
-		moveAnimation.update();
+		turningAnimation.init();
+		turningAnimation.update();
 		headColorPy.set(headColor);
 	}
 
 	public void update(GameLevel level) {
-		moveAnimation.update();
+		turningAnimation.update();
 		if (outsideWorld(level.world())) {
 			root.setVisible(false);
 		} else {
