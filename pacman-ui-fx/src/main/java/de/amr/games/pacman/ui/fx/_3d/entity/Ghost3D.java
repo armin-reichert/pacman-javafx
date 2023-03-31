@@ -89,7 +89,7 @@ public class Ghost3D {
 	}
 
 	private static RotateTransition createBrakeAnimation(Node node) {
-		var animation = new RotateTransition(Duration.seconds(0.25), node);
+		var animation = new RotateTransition(Duration.seconds(0.4), node);
 		animation.setAxis(Rotate.Y_AXIS);
 		animation.setFromAngle(0);
 		animation.setToAngle(-35);
