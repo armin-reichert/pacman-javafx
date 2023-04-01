@@ -91,7 +91,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	private static Image emptyMazeFlashing(int i) {
 		return Ufx.colorsExchanged(emptyMaze(i),
-				Map.of(MAZE_COLORS[i].sideColor(), Color.WHITE, MAZE_COLORS[i].topColor(), Color.BLACK));
+				Map.of(MAZE_COLORS[i].wallBaseColor(), Color.WHITE, MAZE_COLORS[i].wallTopColor(), Color.BLACK));
 	}
 
 	// tile from third column

@@ -126,7 +126,7 @@ public class PlayScene3D extends GameScene {
 	public void init() {
 		context.level().ifPresent(level -> {
 			replaceGameLevel3D(level);
-			initInfoText(level);
+			initInfoText();
 			changeCameraPerspective();
 		});
 		perspectivePy.bind(Env.d3_perspectivePy);
@@ -141,11 +141,9 @@ public class PlayScene3D extends GameScene {
 		});
 	}
 
-	private void initInfoText(GameLevel level) {
-		int mazeNumber = context.game().mazeNumber(level.number());
-		var houseColor = context.rendering2D().mazeColoring(mazeNumber).sideColor();
+	private void initInfoText() {
 		infoText3D.beginBatch();
-		infoText3D.setBgColor(ResourceMgr.color(houseColor, 0.9));
+		infoText3D.setBgColor(Color.CORNFLOWERBLUE);
 		infoText3D.setTextColor(Color.YELLOW);
 		infoText3D.setFont(context.rendering2D().screenFont(6));
 		infoText3D.endBatch();

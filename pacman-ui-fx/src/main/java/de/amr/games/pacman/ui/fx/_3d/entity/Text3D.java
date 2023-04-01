@@ -59,16 +59,20 @@ public class Text3D {
 		if (batchUpdate) {
 			return;
 		}
-		box.setWidth(text.length() * font.getSize());
-		box.setHeight(font.getSize());
-		var canvas = new Canvas(box.getWidth() * quality, box.getHeight() * quality);
+		int padding = 3;
+		double width = text.length() * font.getSize() + padding;
+		double height = font.getSize() + padding;
+		box.setWidth(width);
+		box.setHeight(height);
+		var canvas = new Canvas(width * quality, height * quality);
 		var g = canvas.getGraphicsContext2D();
 		var canvasFontSize = font.getSize() * quality;
 		g.setFill(bgColor);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setFont(Font.font(font.getFamily(), canvasFontSize));
 		g.setFill(textColor);
-		g.fillText(text, 0, canvasFontSize);
+		// TODO how to center inside available space?
+		g.fillText(text, 0.5 * quality * padding, 0.8 * quality * height);
 		var image = canvas.snapshot(null, null);
 		var material = new PhongMaterial();
 		material.setDiffuseMap(image);
