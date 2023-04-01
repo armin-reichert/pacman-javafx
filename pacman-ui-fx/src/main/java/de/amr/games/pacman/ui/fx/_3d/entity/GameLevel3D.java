@@ -28,7 +28,6 @@ import static de.amr.games.pacman.model.common.actors.GhostState.LEAVING_HOUSE;
 import static de.amr.games.pacman.model.common.actors.GhostState.RETURNING_TO_HOUSE;
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static java.util.function.Predicate.not;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,14 +134,13 @@ public class GameLevel3D {
 	private World3D createWorld3D(MazeColoring mazeColoring) {
 		var w3D = new World3D(level.world(), mazeColoring);
 		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
-		level.world().tiles().filter(level.world()::isFoodTile).filter(not(level.world()::containsEatenFood))
-				.forEach(tile -> {
-					var eatable3D = level.world().isEnergizerTile(tile)//
-							? createEnergizer3D(level.world(), tile, foodMaterial)//
-							: createNormalPellet3D(tile, foodMaterial);
-					eatables.add(eatable3D);
-					w3D.addFood(eatable3D);
-				});
+		level.world().tilesContainingFood().forEach(tile -> {
+			var eatable3D = level.world().isEnergizerTile(tile)//
+					? createEnergizer3D(level.world(), tile, foodMaterial)//
+					: createNormalPellet3D(tile, foodMaterial);
+			eatables.add(eatable3D);
+			w3D.addFood(eatable3D);
+		});
 		return w3D;
 	}
 
