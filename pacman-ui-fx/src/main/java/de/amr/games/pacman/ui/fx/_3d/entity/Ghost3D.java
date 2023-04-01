@@ -78,25 +78,35 @@ public class Ghost3D {
 
 	private final GameLevel level;
 	private final Ghost ghost;
-	private final TurningAnimation turningAnimation;
-	private final RotateTransition brakeAnimation;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
+	private final TurningAnimation turningAnimation;
+	private final RotateTransition brakeAnimation;
 	private Image numberImage;
 	private Look currentLook;
 
 	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors) {
 		this.level = Objects.requireNonNull(level, "Game level must not be null");
 		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
-		Objects.requireNonNull(colors, "Ghost colors must not be null");
+
 		coloredGhost3D = new ColoredGhost3D(colors);
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
+
+		root.getChildren().add(coloredGhost3D.getRoot());
+		root.getChildren().add(numberCube);
+
 		turningAnimation = new TurningAnimation(root, ghost::moveDir);
 		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
+
 		init();
+	}
+
+	private void showAsColoredGhost(boolean visible) {
+		coloredGhost3D.getRoot().setVisible(visible);
+		numberCube.setVisible(!visible);
 	}
 
 	public Node getRoot() {
@@ -104,6 +114,7 @@ public class Ghost3D {
 	}
 
 	public void init() {
+		showAsColoredGhost(true);
 		turningAnimation.init();
 		update();
 	}
@@ -125,7 +136,7 @@ public class Ghost3D {
 				brakeAnimation.playFromStart();
 			}
 		}
-		root.setVisible(ghost.isVisible() && !outsideWorld()); // ???
+		root.setVisible(ghost.isVisible() && !outsideWorld());
 		root.setTranslateX(ghost.center().x());
 		root.setTranslateY(ghost.center().y());
 		root.setTranslateZ(-HTS);
@@ -140,11 +151,9 @@ public class Ghost3D {
 		switch (look) {
 		case NORMAL -> {
 			coloredGhost3D.appearNormal();
-			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FRIGHTENED -> {
 			coloredGhost3D.appearFrightened();
-			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case FLASHING -> {
 			if (level.numFlashes > 0) {
@@ -152,24 +161,22 @@ public class Ghost3D {
 			} else {
 				coloredGhost3D.appearFrightened();
 			}
-			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case EYES -> {
 			coloredGhost3D.appearEyesOnly();
-			root.getChildren().setAll(coloredGhost3D.getRoot());
 		}
 		case NUMBER -> {
 			var material = new PhongMaterial();
 			material.setBumpMap(numberImage);
 			material.setDiffuseMap(numberImage);
 			numberCube.setMaterial(material);
-			root.getChildren().setAll(numberCube);
 			// rotate node such that number can be read from left to right
 			root.setRotationAxis(Rotate.X_AXIS);
 			root.setRotate(0);
 		}
 		default -> throw new IllegalArgumentException("Unknown Ghost3D look: %s ".formatted(look));
 		}
+		showAsColoredGhost(look != Look.NUMBER);
 	}
 
 	private boolean outsideWorld() {
