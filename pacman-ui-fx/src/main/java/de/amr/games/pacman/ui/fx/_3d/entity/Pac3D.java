@@ -34,6 +34,7 @@ import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
@@ -130,6 +131,7 @@ public class Pac3D {
 		spin.setAxis(Rotate.Y_AXIS);
 		spin.setByAngle(-360);
 		spin.setCycleCount(4);
+		spin.setInterpolator(Interpolator.LINEAR);
 		spin.setDelay(Duration.seconds(0.35));
 
 		return new SequentialTransition(layOnBack, spin, Ufx.pause(2.0));
