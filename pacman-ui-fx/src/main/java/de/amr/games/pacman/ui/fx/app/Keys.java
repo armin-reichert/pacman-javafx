@@ -51,6 +51,7 @@ public class Keys {
 	public static final KeyCodeCombination CHEAT_KILL_GHOSTS = alt(KeyCode.X);
 
 	public static final KeyCodeCombination AUTOPILOT = alt(KeyCode.A);
+	public static final KeyCodeCombination DASHBOARD2 = alt(KeyCode.B);
 	public static final KeyCodeCombination DEBUG_INFO = alt(KeyCode.D);
 	public static final KeyCodeCombination IMMUNITIY = alt(KeyCode.I);
 	public static final KeyCodeCombination MUTE = alt(KeyCode.M);
@@ -70,12 +71,10 @@ public class Keys {
 	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
 
 	public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);
-	public static final KeyCodeCombination DASHBOARD2 = alt(KeyCode.B);
 	public static final KeyCodeCombination PIP_VIEW = just(KeyCode.F2);
 	public static final KeyCodeCombination BOOT = just(KeyCode.F3);
 	public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 
 	public static final KeyCodeCombination PREV_CAMERA = alt(KeyCode.LEFT);
 	public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
-
 }
