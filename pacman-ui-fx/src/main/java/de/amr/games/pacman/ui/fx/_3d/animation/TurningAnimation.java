@@ -71,37 +71,36 @@ public class TurningAnimation {
 		return dir == null ? 0 : dir.ordinal();
 	}
 
-	private final Node shape;
+	private final Node turnedObject;
 	private final RotateTransition rotation;
 	private final Supplier<Direction> fnTargetDir;
-	private Direction animationTargetDir;
+	private Direction currentTargetDir;
 
-	public TurningAnimation(Node shape, Supplier<Direction> fnTargetDir) {
-		this.shape = Objects.requireNonNull(shape);
+	public TurningAnimation(Node turnedObject, Supplier<Direction> fnTargetDir) {
+		this.turnedObject = Objects.requireNonNull(turnedObject);
 		this.fnTargetDir = Objects.requireNonNull(fnTargetDir);
-		rotation = new RotateTransition(Duration.seconds(0.2), shape);
+		rotation = new RotateTransition(Duration.seconds(0.2), turnedObject);
 		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
 		init();
 	}
 
 	public void init() {
-		var targetDir = fnTargetDir.get();
 		rotation.stop();
-		shape.setRotationAxis(Rotate.Z_AXIS);
-		shape.setRotate(angle(targetDir));
-		animationTargetDir = targetDir;
+		currentTargetDir = fnTargetDir.get();
+		turnedObject.setRotationAxis(Rotate.Z_AXIS);
+		turnedObject.setRotate(angle(currentTargetDir));
 	}
 
 	public void update() {
 		var targetDir = fnTargetDir.get();
-		if (animationTargetDir != targetDir) {
-			var turn = TURNS[index(animationTargetDir)][index(targetDir)];
+		if (currentTargetDir != targetDir) {
+			var turn = TURNS[index(currentTargetDir)][index(targetDir)];
 			rotation.stop();
 			rotation.setFromAngle(turn.fromAngle);
 			rotation.setToAngle(turn.toAngle);
 			rotation.playFromStart();
-			animationTargetDir = targetDir;
+			currentTargetDir = targetDir;
 		}
 	}
 }
