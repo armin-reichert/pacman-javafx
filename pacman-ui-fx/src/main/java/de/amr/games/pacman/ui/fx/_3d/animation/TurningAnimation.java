@@ -79,7 +79,7 @@ public class TurningAnimation {
 	public TurningAnimation(Node shape, Supplier<Direction> fnTargetDir) {
 		this.shape = Objects.requireNonNull(shape);
 		this.fnTargetDir = Objects.requireNonNull(fnTargetDir);
-		rotation = new RotateTransition(Duration.seconds(0.1), shape);
+		rotation = new RotateTransition(Duration.seconds(0.2), shape);
 		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
 		init();
