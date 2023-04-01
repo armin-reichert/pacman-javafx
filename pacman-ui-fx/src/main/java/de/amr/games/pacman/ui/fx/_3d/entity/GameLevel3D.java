@@ -277,7 +277,7 @@ public class GameLevel3D {
 
 	private void updateHouseState() {
 		boolean isGhostNearHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-				.filter(Ghost::isVisible).count() > 0;
+				.anyMatch(Ghost::isVisible);
 		boolean accessGranted = isAccessGranted(level.ghosts(), level.world().ghostHouse().door().entryPosition());
 		world3D.houseLighting().setLightOn(isGhostNearHouse);
 		world3D.doorWings3D().forEach(door3D -> door3D.setOpen(accessGranted));
