@@ -32,7 +32,10 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -42,6 +45,8 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * 3D-representation of Pac-Man or Ms. Pac-Man.
@@ -106,6 +111,30 @@ public class Pac3D {
 		updateLight();
 	}
 
+	public Animation createDyingAnimation() {
+		var variant = level.game().variant();
+		return switch (variant) {
+		case MS_PACMAN -> createRotatingHeadAnimation();
+		case PACMAN -> new SequentialTransition(Ufx.pause(0.25), new CollapseAnimation(root).getAnimation());
+		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
+		};
+	}
+
+	private Animation createRotatingHeadAnimation() {
+		var layOnBack = new RotateTransition(Duration.seconds(0.1), root);
+		layOnBack.setAxis(Rotate.Y_AXIS);
+		layOnBack.setFromAngle(0);
+		layOnBack.setToAngle(-90);
+
+		var spin = new RotateTransition(Duration.seconds(0.25), root);
+		spin.setAxis(Rotate.Y_AXIS);
+		spin.setByAngle(-360);
+		spin.setCycleCount(4);
+		spin.setDelay(Duration.seconds(0.35));
+
+		return new SequentialTransition(layOnBack, spin, Ufx.pause(2.0));
+	}
+
 	private PointLight createLight() {
 		var pointLight = new PointLight();
 		pointLight.setColor(Color.rgb(255, 255, 0, 0.25));
@@ -128,14 +157,5 @@ public class Pac3D {
 	private boolean outsideWorld() {
 		double centerX = pac.position().x() + HTS;
 		return centerX < HTS || centerX > level.world().numCols() * TS - HTS;
-	}
-
-	/**
-	 * TODO Provide different animation for Ms. Pac-Man (rotation like in 2D scene)
-	 * 
-	 * @return dying animation (must not be longer than time reserved by game controller which is 5 seconds!)
-	 */
-	public Animation createDyingAnimation() {
-		return new CollapseAnimation(root).getAnimation();
 	}
 }
