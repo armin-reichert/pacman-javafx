@@ -147,7 +147,7 @@ public class PlayScene3D extends GameScene {
 		infoText3D.setTextColor(Color.YELLOW);
 		infoText3D.setFont(context.rendering2D().screenFont(6));
 		infoText3D.endBatch();
-		infoText3D.translate(0, 20, -5.2);
+		infoText3D.translate(0, 16, -4.5);
 		infoText3D.rotate(Rotate.X_AXIS, 90);
 	}
 
