@@ -29,7 +29,6 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -51,13 +50,15 @@ import javafx.util.Duration;
  */
 public class Bonus3D {
 
+	private final GameLevel level;
 	private final Box shape;
 	private final Bonus bonus;
 	private final Image symbolImage;
 	private final Image pointsImage;
 	private Animation animation;
 
-	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
+	public Bonus3D(GameLevel level, Bonus bonus, Image symbolImage, Image pointsImage) {
+		this.level = level;
 		shape = new Box(TS, TS, TS);
 		this.bonus = bonus;
 		this.symbolImage = symbolImage;
@@ -78,15 +79,15 @@ public class Bonus3D {
 		shape.setTranslateZ(-HTS);
 	}
 
-	public void update(GameLevel level) {
+	public void update() {
 		setPosition(bonus.entity().position());
-		boolean invisible = bonus.state() == Bonus.STATE_INACTIVE || outsideWorld(level.world());
+		boolean invisible = bonus.state() == Bonus.STATE_INACTIVE || outsideWorld();
 		shape.setVisible(!invisible);
 	}
 
-	private boolean outsideWorld(World world) {
+	private boolean outsideWorld() {
 		double centerX = bonus.entity().position().x() + HTS;
-		return centerX < HTS || centerX > world.numCols() * TS - HTS;
+		return centerX < HTS || centerX > level.world().numCols() * TS - HTS;
 	}
 
 	public void showSymbol() {

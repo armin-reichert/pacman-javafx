@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
 import javafx.animation.Animation;
@@ -58,13 +57,15 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
+	private final GameLevel level;
 	private final Pac pac;
 	private final TurningAnimation turningAnimation;
 	private final Group root;
 	private final Color headColor;
 	private final PointLight light;
 
-	public Pac3D(Pac pac, Group root, Color headColor) {
+	public Pac3D(GameLevel level, Pac pac, Group root, Color headColor) {
+		this.level = level;
 		this.pac = pac;
 		this.root = root;
 		this.turningAnimation = new TurningAnimation(root, pac::moveDir);
@@ -92,9 +93,9 @@ public class Pac3D {
 		headColorPy.set(headColor);
 	}
 
-	public void update(GameLevel level) {
+	public void update() {
 		turningAnimation.update();
-		if (outsideWorld(level.world())) {
+		if (outsideWorld()) {
 			root.setVisible(false);
 		} else {
 			root.setVisible(pac.isVisible());
@@ -102,7 +103,7 @@ public class Pac3D {
 		root.setTranslateX(pac.center().x());
 		root.setTranslateY(pac.center().y());
 		root.setTranslateZ(-HTS);
-		updateLight(level);
+		updateLight();
 	}
 
 	private PointLight createLight() {
@@ -115,7 +116,7 @@ public class Pac3D {
 		return pointLight;
 	}
 
-	private void updateLight(GameLevel level) {
+	private void updateLight() {
 		boolean isVisible = pac.isVisible();
 		boolean isAlive = !pac.isDead();
 		boolean hasPower = pac.powerTimer().isRunning();
@@ -124,9 +125,9 @@ public class Pac3D {
 		light.setMaxRange(hasPower ? maxRange * TS : 0);
 	}
 
-	private boolean outsideWorld(World world) {
+	private boolean outsideWorld() {
 		double centerX = pac.position().x() + HTS;
-		return centerX < HTS || centerX > world.numCols() * TS - HTS;
+		return centerX < HTS || centerX > level.world().numCols() * TS - HTS;
 	}
 
 	/**

@@ -161,12 +161,12 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D() {
-		return new Pac3D(level.pac(), PacShape3D.createPacManShape(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
-				ArcadeTheme.PALATE_COLOR), ArcadeTheme.HEAD_COLOR);
+		return new Pac3D(level, level.pac(), PacShape3D.createPacManShape(9, ArcadeTheme.HEAD_COLOR,
+				ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR), ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Pac3D createMsPacMan3D() {
-		return new Pac3D(level.pac(), PacShape3D.createMsPacManShape(9, ArcadeTheme.HEAD_COLOR,
+		return new Pac3D(level, level.pac(), PacShape3D.createMsPacManShape(9, ArcadeTheme.HEAD_COLOR,
 				ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR), ArcadeTheme.HEAD_COLOR);
 	}
 
@@ -178,7 +178,7 @@ public class GameLevel3D {
 		if (r2D instanceof SpritesheetRenderer sgr) {
 			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
 			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
-			return new Bonus3D(bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
+			return new Bonus3D(level, bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
 		}
 		throw new UnsupportedOperationException(); // TODO make this work for other renderers too
 	}
@@ -230,18 +230,19 @@ public class GameLevel3D {
 	}
 
 	public void update() {
-		pac3D.update(level);
+		pac3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
-		bonus3D.update(level);
-		livesCounter3D.update(level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives());
+		bonus3D.update();
+		// TODO get rid of this
+		int numLivesShown = level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives();
+		livesCounter3D.update(numLivesShown);
 		scores3D.update(level);
 		if (level.game().hasCredit()) {
 			scores3D.setShowPoints(true);
 		} else {
 			scores3D.setShowText(Color.RED, "GAME OVER!");
 		}
-		updateHouseLightingState();
-		updateDoorState();
+		updateHouseState();
 	}
 
 	public void eat(Eatable3D eatable3D) {
@@ -274,28 +275,16 @@ public class GameLevel3D {
 		return eatables.stream().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 
-	private void updateHouseLightingState() {
-		boolean anyGhostInHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+	private void updateHouseState() {
+		boolean isGhostNearHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0;
-		world3D.houseLighting().setLightOn(anyGhostInHouse);
-	}
-
-	private void updateDoorState() {
-		var door = level.world().ghostHouse().door();
-		var accessGranted = isAccessGranted(level.ghosts(), door.entryPosition());
+		boolean accessGranted = isAccessGranted(level.ghosts(), level.world().ghostHouse().door().entryPosition());
+		world3D.houseLighting().setLightOn(isGhostNearHouse);
 		world3D.doorWings3D().forEach(door3D -> door3D.setOpen(accessGranted));
 	}
 
 	private boolean isAccessGranted(Stream<Ghost> ghosts, Vector2f doorPosition) {
-		return ghosts.anyMatch(ghost -> isAccessGranted(ghost, doorPosition));
-	}
-
-	private boolean isAccessGranted(Ghost ghost, Vector2f doorPosition) {
-		return ghost.isVisible() && ghost.is(RETURNING_TO_HOUSE, ENTERING_HOUSE, LEAVING_HOUSE)
-				&& inDoorDistance(ghost, doorPosition);
-	}
-
-	private boolean inDoorDistance(Ghost ghost, Vector2f doorPosition) {
-		return ghost.position().euclideanDistance(doorPosition) <= 1.5 * TS;
+		return ghosts.anyMatch(ghost -> ghost.isVisible() && ghost.is(RETURNING_TO_HOUSE, ENTERING_HOUSE, LEAVING_HOUSE)
+				&& ghost.position().euclideanDistance(doorPosition) <= 1.5 * TS);
 	}
 }
