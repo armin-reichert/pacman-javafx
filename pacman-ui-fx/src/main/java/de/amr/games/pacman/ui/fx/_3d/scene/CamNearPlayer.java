@@ -21,21 +21,38 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene.cams;
+package de.amr.games.pacman.ui.fx._3d.scene;
+
+import static de.amr.games.pacman.lib.U.lerp;
 
 import javafx.scene.Camera;
 import javafx.scene.Node;
+import javafx.scene.transform.Rotate;
 
 /**
- * Cameras for the 3D play scene.
- * 
  * @author Armin Reichert
  */
-public abstract class GameSceneCameraController {
+public class CamNearPlayer extends GameSceneCameraController {
 
-	public void reset(Camera cam) {
+	private double speed = 0.02;
+
+	@Override
+	public String toString() {
+		return "Near Player";
 	}
 
+	@Override
+	public void reset(Camera cam) {
+		cam.setNearClip(0.1);
+		cam.setFarClip(10000.0);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(80);
+		cam.setTranslateZ(-40);
+	}
+
+	@Override
 	public void update(Camera cam, Node target) {
+		cam.setTranslateX(lerp(cam.getTranslateX(), target.getTranslateX() - 110, speed));
+		cam.setTranslateY(lerp(cam.getTranslateY(), target.getTranslateY(), speed));
 	}
 }

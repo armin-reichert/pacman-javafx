@@ -1,0 +1,27 @@
+{
+  "bin": {"pacman-ui-fx-1-0-shaded": "jdeploy-bundle/jdeploy.js"},
+  "author": "",
+  "description": "",
+  "main": "index.js",
+  "preferGlobal": true,
+  "repository": "",
+  "version": "1.0.0",
+  "jdeploy": {
+    "jdk": false,
+    "javaVersion": "18",
+    "jar": "target/pacman-ui-fx-1.0-shaded.jar",
+    "javafx": false,
+    "title": "Pacman Ui Fx 1 0 Shaded"
+  },
+  "dependencies": {
+    "command-exists-promise": "^2.0.2",
+    "node-fetch": "2.6.7",
+    "tar": "^4.4.8",
+    "yauzl": "^2.10.0",
+    "shelljs": "^0.8.4"
+  },
+  "license": "ISC",
+  "name": "pacman-ui-fx-1-0-shaded",
+  "files": ["jdeploy-bundle"],
+  "scripts": {"test": "echo \"Error: no test specified\" && exit 1"}
+}

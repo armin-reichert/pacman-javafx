@@ -39,5 +39,4 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx._3d.animation;
 	exports de.amr.games.pacman.ui.fx._3d.entity;
 	exports de.amr.games.pacman.ui.fx._3d.scene;
-	exports de.amr.games.pacman.ui.fx._3d.scene.cams;
 }

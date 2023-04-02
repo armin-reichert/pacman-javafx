@@ -21,36 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene.cams;
+package de.amr.games.pacman.ui.fx._3d.scene;
 
-import javafx.geometry.Point3D;
+import static de.amr.games.pacman.lib.U.lerp;
+
 import javafx.scene.Camera;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
  * @author Armin Reichert
  */
-public class CamTotal extends GameSceneCameraController {
+public class CamDrone extends GameSceneCameraController {
 
-	public static final Point3D INITIAL_ROTATION_AXIS = Rotate.X_AXIS;
-	public static final double INITIAL_ROTATE = 60;
-	public static final double INITIAL_TRANSLATE_X = 0;
-	public static final double INITIAL_TRANSLATE_Y = 310;
-	public static final double INITIAL_TRANSLATE_Z = -160;
+	private double speed = 0.005;
+
+	@Override
+	public String toString() {
+		return "Drone";
+	}
 
 	@Override
 	public void reset(Camera cam) {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
-		cam.setTranslateX(INITIAL_TRANSLATE_X);
-		cam.setTranslateY(INITIAL_TRANSLATE_Y);
-		cam.setTranslateZ(INITIAL_TRANSLATE_Z);
-		cam.setRotationAxis(INITIAL_ROTATION_AXIS);
-		cam.setRotate(INITIAL_ROTATE);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(0);
+		cam.setTranslateX(0);
+		cam.setTranslateY(0);
+		cam.setTranslateZ(-400);
 	}
 
 	@Override
-	public String toString() {
-		return "Total";
+	public void update(Camera cam, Node target) {
+		cam.setTranslateX(lerp(cam.getTranslateX(), target.getTranslateX() - 100, speed));
+		cam.setTranslateY(lerp(cam.getTranslateY(), target.getTranslateY() - 150, speed));
 	}
 }

@@ -21,40 +21,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._3d.scene.cams;
+package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.lib.U.lerp;
-
-import javafx.scene.Camera;
-import javafx.scene.Node;
-import javafx.scene.transform.Rotate;
+import de.amr.games.pacman.lib.EnumMethods;
 
 /**
+ * Play scene perspectives.
+ * 
  * @author Armin Reichert
  */
-public class CamDrone extends GameSceneCameraController {
-
-	private double speed = 0.005;
-
-	@Override
-	public String toString() {
-		return "Drone";
-	}
-
-	@Override
-	public void reset(Camera cam) {
-		cam.setNearClip(0.1);
-		cam.setFarClip(10000.0);
-		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(0);
-		cam.setTranslateX(0);
-		cam.setTranslateY(0);
-		cam.setTranslateZ(-400);
-	}
-
-	@Override
-	public void update(Camera cam, Node target) {
-		cam.setTranslateX(lerp(cam.getTranslateX(), target.getTranslateX() - 100, speed));
-		cam.setTranslateY(lerp(cam.getTranslateY(), target.getTranslateY() - 150, speed));
-	}
+public enum Perspective implements EnumMethods<Perspective> {
+	DRONE, TOTAL, FOLLOWING_PLAYER, NEAR_PLAYER;
 }
