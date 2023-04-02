@@ -77,7 +77,6 @@ public class PlayScene2D extends GameScene2D {
 	public void init() {
 		context.setCreditVisible(!context.hasCredit());
 		context.setScoreVisible(true);
-		context.gameController().getManualPacSteering().setEnabled(true);
 	}
 
 	@Override
@@ -92,7 +91,6 @@ public class PlayScene2D extends GameScene2D {
 	public void end() {
 		// TODO check if this is needed
 		context.sounds().stopAll();
-		context.gameController().getManualPacSteering().setEnabled(false);
 	}
 
 	@Override

@@ -104,6 +104,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		LOG.info("Steering %sabled", enabled ? "en" : "dis");
 	}
 
 	private Optional<Direction> computeDirection(KeyEvent event) {
