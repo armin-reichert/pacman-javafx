@@ -122,7 +122,7 @@ public class Pac3D {
 	}
 
 	private Animation createRotatingHeadAnimation() {
-		var layOnBack = new RotateTransition(Duration.seconds(0.1), root);
+		var layOnBack = new RotateTransition(Duration.seconds(0.2), root);
 		layOnBack.setAxis(Rotate.Y_AXIS);
 		layOnBack.setFromAngle(0);
 		layOnBack.setToAngle(-90);
