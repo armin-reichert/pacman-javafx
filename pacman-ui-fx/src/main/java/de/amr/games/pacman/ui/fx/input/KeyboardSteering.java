@@ -52,6 +52,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
 	private final EnumMap<Direction, KeyCodeCombination> keyCombinations = new EnumMap<>(Direction.class);
 	private Direction dir;
+	private boolean enabled = true;
 
 	public KeyboardSteering(KeyCodeCombination kccUp, KeyCodeCombination kccDown, KeyCodeCombination kccLeft,
 			KeyCodeCombination kccRight) {
@@ -78,10 +79,23 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
 	@Override
 	public void handle(KeyEvent event) {
+		if (!enabled) {
+			event.consume();
+		}
 		dir = computeDirection(event).or(() -> DEFAULT_STEERING.computeDirection(event)).orElse(null);
 		if (dir != null) {
 			event.consume();
 		}
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	private Optional<Direction> computeDirection(KeyEvent event) {
