@@ -87,7 +87,7 @@ public class Settings {
 
 	@Override
 	public String toString() {
-		return "{fullScreen=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f, keys=%s}".formatted(fullScreen,
+		return "{fullScreen=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f, keyMap=%s}".formatted(fullScreen,
 				perspective, use3D, variant, zoom, keyMap);
 	}
 }
