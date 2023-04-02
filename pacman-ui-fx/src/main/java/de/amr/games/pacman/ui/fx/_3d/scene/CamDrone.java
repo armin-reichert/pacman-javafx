@@ -32,7 +32,7 @@ import javafx.scene.transform.Rotate;
 /**
  * @author Armin Reichert
  */
-public class CamDrone extends CameraController {
+public class CamDrone implements CameraController {
 
 	private double speed = 0.005;
 

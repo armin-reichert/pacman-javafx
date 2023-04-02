@@ -32,7 +32,7 @@ import javafx.scene.transform.Rotate;
 /**
  * @author Armin Reichert
  */
-public class CamFollowingPlayer extends CameraController {
+public class CamFollowingPlayer implements CameraController {
 
 	private double speedX = 0.005;
 	private double speedY = 0.030;

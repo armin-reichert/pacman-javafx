@@ -32,7 +32,7 @@ import javafx.scene.transform.Rotate;
 /**
  * @author Armin Reichert
  */
-public class CamNearPlayer extends CameraController {
+public class CamNearPlayer implements CameraController {
 
 	private double speed = 0.02;
 

@@ -31,11 +31,11 @@ import javafx.scene.Node;
  * 
  * @author Armin Reichert
  */
-public abstract class CameraController {
+public interface CameraController {
 
-	public void reset(Camera cam) {
+	default void reset(Camera cam) {
 	}
 
-	public void update(Camera cam, Node target) {
+	default void update(Camera cam, Node target) {
 	}
 }

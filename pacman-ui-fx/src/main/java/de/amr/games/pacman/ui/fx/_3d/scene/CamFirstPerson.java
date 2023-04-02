@@ -33,7 +33,7 @@ import javafx.scene.transform.Rotate;
 /**
  * @author Armin Reichert
  */
-public class CamFirstPerson extends CameraController {
+public class CamFirstPerson implements CameraController {
 
 	private Pac pac;
 
