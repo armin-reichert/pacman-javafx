@@ -93,10 +93,10 @@ public class PlayScene3D extends GameScene {
 	};
 
 	private final Group root = new Group();
-	private final Map<Perspective, GameSceneCameraController> cameraControllerMap = new EnumMap<>(Perspective.class);
+	private final Map<Perspective, CameraController> cameraControllerMap = new EnumMap<>(Perspective.class);
 	private final Text3D infoText3D = new Text3D();
 	private GameLevel3D level3D;
-	private GameSceneCameraController currentCamController;
+	private CameraController currentCamController;
 
 	public PlayScene3D(GameController gameController) {
 		super(gameController);
@@ -201,7 +201,7 @@ public class PlayScene3D extends GameScene {
 		return true;
 	}
 
-	public GameSceneCameraController currentCamController() {
+	public CameraController currentCamController() {
 		return currentCamController;
 	}
 

@@ -31,7 +31,7 @@ import javafx.scene.Node;
  * 
  * @author Armin Reichert
  */
-public abstract class GameSceneCameraController {
+public abstract class CameraController {
 
 	public void reset(Camera cam) {
 	}

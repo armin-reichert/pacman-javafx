@@ -30,7 +30,7 @@ import javafx.scene.transform.Rotate;
 /**
  * @author Armin Reichert
  */
-public class CamTotal extends GameSceneCameraController {
+public class CamTotal extends CameraController {
 
 	public static final Point3D INITIAL_ROTATION_AXIS = Rotate.X_AXIS;
 	public static final double INITIAL_ROTATE = 60;
