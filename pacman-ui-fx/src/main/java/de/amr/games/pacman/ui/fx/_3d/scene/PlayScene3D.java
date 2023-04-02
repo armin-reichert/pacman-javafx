@@ -293,16 +293,13 @@ public class PlayScene3D extends GameScene {
 			}
 			infoText3D.setVisible(true);
 			infoText3D.setText("READY!");
-			context.gameController().getManualPacSteering().setEnabled(false);
 		}
 
 		case HUNTING -> {
 			level3D.energizers3D().forEach(Energizer3D::startPumping);
-			context.gameController().getManualPacSteering().setEnabled(true);
 		}
 
 		case PACMAN_DYING -> {
-			context.gameController().getManualPacSteering().setEnabled(false);
 			level3D.foodOscillation().stop();
 			lockAndPlay(1.0, level3D.pac3D().createDyingAnimation());
 		}
@@ -322,7 +319,6 @@ public class PlayScene3D extends GameScene {
 
 		case CHANGING_TO_NEXT_LEVEL -> {
 			context.level().ifPresent(level -> {
-				context.gameController().getManualPacSteering().setEnabled(false);
 				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
 				lockGameState();
 				replaceGameLevel3D(level);
@@ -333,7 +329,6 @@ public class PlayScene3D extends GameScene {
 
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
-				context.gameController().getManualPacSteering().setEnabled(false);
 				level3D.foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.eatables3D().forEach(level3D::eat);
@@ -348,7 +343,6 @@ public class PlayScene3D extends GameScene {
 		}
 
 		case GAME_OVER -> {
-			context.gameController().getManualPacSteering().setEnabled(false);
 			level3D.foodOscillation().stop();
 			Actions.showFlashMessageSeconds(3, ResourceMgr.pickGameOverMessage());
 		}
