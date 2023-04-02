@@ -93,7 +93,7 @@ public class PlayScene3D extends GameScene {
 			Perspective.TOTAL) {
 		@Override
 		protected void invalidated() {
-			changeCameraPerspective();
+			updateCameraToPerspective(get());
 		}
 	};
 
@@ -128,7 +128,7 @@ public class PlayScene3D extends GameScene {
 		context.level().ifPresent(level -> {
 			replaceGameLevel3D(level);
 			resetInfoText();
-			changeCameraPerspective();
+			updateCameraToPerspective(perspectivePy.get());
 		});
 		perspectivePy.bind(Env.d3_perspectivePy);
 	}
@@ -203,25 +203,21 @@ public class PlayScene3D extends GameScene {
 		return true;
 	}
 
-	public GameSceneCamera getCamera(Perspective perspective) {
-		return cameraMap.get(perspective);
-	}
-
 	public GameSceneCamera currentCamera() {
 		return (GameSceneCamera) fxSubScene.getCamera();
 	}
 
-	private void changeCameraPerspective() {
-		var perspective = perspectivePy.get();
+	private void updateCameraToPerspective(Perspective perspective) {
 		if (perspective == null) {
+			LOG.error("No camera perspective specified");
 			return;
 		}
-		var camera = getCamera(perspective);
+		var camera = cameraMap.get(perspective);
 		if (camera == null) {
 			LOG.error("No camera found for perspective %s", perspective);
 			return;
 		}
-		if (camera != fxSubScene.getCamera()) {
+		if (camera != currentCamera()) {
 			fxSubScene.setCamera(camera);
 			fxSubScene.setOnKeyPressed(camera::onKeyPressed);
 			fxSubScene.requestFocus();
@@ -322,7 +318,7 @@ public class PlayScene3D extends GameScene {
 				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
 				lockGameState();
 				replaceGameLevel3D(level);
-				changeCameraPerspective();
+				updateCameraToPerspective(perspectivePy.get());
 				afterSeconds(3, this::unlockGameState).play();
 			});
 		}
