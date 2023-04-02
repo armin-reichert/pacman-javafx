@@ -27,6 +27,9 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -44,6 +47,8 @@ import javafx.scene.input.KeyEvent;
  */
 public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
+	private static final Logger LOG = LogManager.getFormatterLogger();
+
 	private static final KeyboardSteering DEFAULT_STEERING = new KeyboardSteering(//
 			new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN),
 			new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN),
@@ -52,7 +57,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 
 	private final EnumMap<Direction, KeyCodeCombination> keyCombinations = new EnumMap<>(Direction.class);
 	private Direction dir;
-	private boolean enabled = true;
+	private boolean enabled = false;
 
 	public KeyboardSteering(KeyCodeCombination kccUp, KeyCodeCombination kccDown, KeyCodeCombination kccLeft,
 			KeyCodeCombination kccRight) {
@@ -80,6 +85,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 	@Override
 	public void handle(KeyEvent event) {
 		if (!enabled) {
+			LOG.info("Steering disabled, key event ignored: %s", event.getCode());
 			event.consume();
 		}
 		dir = computeDirection(event).or(() -> DEFAULT_STEERING.computeDirection(event)).orElse(null);
