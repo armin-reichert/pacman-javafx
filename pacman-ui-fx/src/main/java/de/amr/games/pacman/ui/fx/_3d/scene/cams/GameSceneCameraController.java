@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
 
@@ -33,10 +32,6 @@ import javafx.scene.Node;
  * @author Armin Reichert
  */
 public abstract class GameSceneCameraController {
-
-	public void changeValue(DoubleProperty property, double delta) {
-		property.set(property.get() + delta);
-	}
 
 	public void reset(Camera cam) {
 	}
