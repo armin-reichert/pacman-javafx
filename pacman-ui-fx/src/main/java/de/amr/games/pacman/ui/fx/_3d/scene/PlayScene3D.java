@@ -89,7 +89,8 @@ public class PlayScene3D extends GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
+	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
+			Perspective.TOTAL) {
 		@Override
 		protected void invalidated() {
 			changeCameraPerspective();
@@ -126,7 +127,7 @@ public class PlayScene3D extends GameScene {
 	public void init() {
 		context.level().ifPresent(level -> {
 			replaceGameLevel3D(level);
-			initInfoText();
+			resetInfoText();
 			changeCameraPerspective();
 		});
 		perspectivePy.bind(Env.d3_perspectivePy);
@@ -141,25 +142,10 @@ public class PlayScene3D extends GameScene {
 		});
 	}
 
-	private void initInfoText() {
-		infoText3D.beginBatch();
-		infoText3D.setBgColor(Color.CORNFLOWERBLUE);
-		infoText3D.setTextColor(Color.YELLOW);
-		infoText3D.setFont(context.rendering2D().screenFont(6));
-		infoText3D.endBatch();
-		infoText3D.translate(0, 16, -4.5);
-		infoText3D.rotate(Rotate.X_AXIS, 90);
-	}
-
 	@Override
 	public void end() {
 		context.sounds().stopAll();
 		perspectivePy.unbind();
-	}
-
-	@Override
-	public void render() {
-		// nothing to do
 	}
 
 	@Override
@@ -174,12 +160,23 @@ public class PlayScene3D extends GameScene {
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
-		var width = level.world().numCols() * World.TS;
-		var height = level.world().numRows() * World.TS;
+		var centerX = level.world().numCols() * World.HTS;
+		var centerY = level.world().numRows() * World.HTS;
 		level3D = new GameLevel3D(level, context.rendering2D());
-		level3D.getRoot().getTransforms().setAll(new Translate(-0.5 * width, -0.5 * height));
+		level3D.getRoot().getTransforms().setAll(new Translate(-centerX, -centerY));
 		root.getChildren().set(0, level3D.getRoot());
 		LOG.info("3D game level created.");
+	}
+
+	private void resetInfoText() {
+		infoText3D.beginBatch();
+		infoText3D.setBgColor(Color.CORNFLOWERBLUE);
+		infoText3D.setTextColor(Color.YELLOW);
+		infoText3D.setFont(context.rendering2D().screenFont(6));
+		infoText3D.setText("");
+		infoText3D.endBatch();
+		infoText3D.translate(0, 16, -4.5);
+		infoText3D.rotate(Rotate.X_AXIS, 90);
 	}
 
 	@Override
