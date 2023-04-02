@@ -26,13 +26,14 @@ package de.amr.games.pacman.ui.fx._3d.scene.cams;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
  * @author Armin Reichert
  */
-public class CamFirstPerson extends GameSceneCamera {
+public class CamFirstPerson extends GameSceneCameraController {
 
 	private Pac pac;
 
@@ -46,22 +47,22 @@ public class CamFirstPerson extends GameSceneCamera {
 	}
 
 	@Override
-	public void reset() {
-		setNearClip(0.1);
-		setFarClip(1000.0);
-		getTransforms().clear();
-		getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		getTransforms().add(new Rotate(90, Rotate.Y_AXIS));
+	public void reset(Camera cam) {
+		cam.setNearClip(0.1);
+		cam.setFarClip(1000.0);
+		cam.getTransforms().clear();
+		cam.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+		cam.getTransforms().add(new Rotate(90, Rotate.Y_AXIS));
 	}
 
 	@Override
-	public void update(Node target) {
+	public void update(Camera cam, Node target) {
 		var ref = pac.position().plus(pac.moveDir().vector().toFloatVec().scaled(6));
-		setTranslateX(ref.x() - ArcadeWorld.SIZE_PX.x() / 2);
-		setTranslateY(ref.y() - ArcadeWorld.SIZE_PX.y() / 2);
-		setTranslateZ(-6);
-		setRotationAxis(Rotate.Z_AXIS);
-		setRotate(rotate(pac.moveDir()));
+		cam.setTranslateX(ref.x() - ArcadeWorld.SIZE_PX.x() / 2);
+		cam.setTranslateY(ref.y() - ArcadeWorld.SIZE_PX.y() / 2);
+		cam.setTranslateZ(-6);
+		cam.setRotationAxis(Rotate.Z_AXIS);
+		cam.setRotate(rotate(pac.moveDir()));
 	}
 
 	private double rotate(Direction dir) {

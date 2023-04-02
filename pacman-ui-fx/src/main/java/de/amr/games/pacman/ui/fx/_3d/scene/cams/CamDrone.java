@@ -25,15 +25,14 @@ package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
 import static de.amr.games.pacman.lib.U.lerp;
 
+import javafx.scene.Camera;
 import javafx.scene.Node;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.transform.Rotate;
 
 /**
  * @author Armin Reichert
  */
-public class CamDrone extends GameSceneCamera {
+public class CamDrone extends GameSceneCameraController {
 
 	private double speed = 0.005;
 
@@ -43,29 +42,19 @@ public class CamDrone extends GameSceneCamera {
 	}
 
 	@Override
-	public void reset() {
-		setNearClip(0.1);
-		setFarClip(10000.0);
-		setRotationAxis(Rotate.X_AXIS);
-		setRotate(0);
-		setTranslateX(0);
-		setTranslateY(0);
-		setTranslateZ(-400);
+	public void reset(Camera cam) {
+		cam.setNearClip(0.1);
+		cam.setFarClip(10000.0);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(0);
+		cam.setTranslateX(0);
+		cam.setTranslateY(0);
+		cam.setTranslateZ(-400);
 	}
 
 	@Override
-	public void update(Node target) {
-		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speed));
-		setTranslateY(lerp(getTranslateY(), target.getTranslateY() - 150, speed));
-	}
-
-	@Override
-	public void onKeyPressed(KeyEvent e) {
-		boolean modifierOk = e.isShiftDown() && !e.isControlDown();
-		if (e.getCode() == KeyCode.UP && modifierOk) {
-			changeValue(translateZProperty(), -10);
-		} else if (e.getCode() == KeyCode.DOWN && modifierOk) {
-			changeValue(translateZProperty(), 10);
-		}
+	public void update(Camera cam, Node target) {
+		cam.setTranslateX(lerp(cam.getTranslateX(), target.getTranslateX() - 100, speed));
+		cam.setTranslateY(lerp(cam.getTranslateY(), target.getTranslateY() - 150, speed));
 	}
 }

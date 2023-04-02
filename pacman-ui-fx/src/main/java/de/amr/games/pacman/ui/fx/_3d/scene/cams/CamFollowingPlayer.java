@@ -25,13 +25,14 @@ package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
 import static de.amr.games.pacman.lib.U.lerp;
 
+import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
  * @author Armin Reichert
  */
-public class CamFollowingPlayer extends GameSceneCamera {
+public class CamFollowingPlayer extends GameSceneCameraController {
 
 	private double speedX = 0.005;
 	private double speedY = 0.030;
@@ -42,17 +43,17 @@ public class CamFollowingPlayer extends GameSceneCamera {
 	}
 
 	@Override
-	public void reset() {
-		setNearClip(0.1);
-		setFarClip(10000.0);
-		setRotationAxis(Rotate.X_AXIS);
-		setRotate(60);
-		setTranslateZ(-160);
+	public void reset(Camera cam) {
+		cam.setNearClip(0.1);
+		cam.setFarClip(10000.0);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(60);
+		cam.setTranslateZ(-160);
 	}
 
 	@Override
-	public void update(Node target) {
-		setTranslateX(lerp(getTranslateX(), target.getTranslateX() - 100, speedX));
-		setTranslateY(lerp(getTranslateY(), target.getTranslateY() + 100, speedY));
+	public void update(Camera cam, Node target) {
+		cam.setTranslateX(lerp(cam.getTranslateX(), target.getTranslateX() - 100, speedX));
+		cam.setTranslateY(lerp(cam.getTranslateY(), target.getTranslateY() + 100, speedY));
 	}
 }

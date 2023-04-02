@@ -55,7 +55,7 @@ import de.amr.games.pacman.ui.fx._3d.scene.cams.CamDrone;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamFollowingPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamNearPlayer;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.CamTotal;
-import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCamera;
+import de.amr.games.pacman.ui.fx._3d.scene.cams.GameSceneCameraController;
 import de.amr.games.pacman.ui.fx._3d.scene.cams.Perspective;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -72,6 +72,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -98,17 +99,19 @@ public class PlayScene3D extends GameScene {
 	};
 
 	private final Group root = new Group();
-	private final Map<Perspective, GameSceneCamera> cameraMap = new EnumMap<>(Perspective.class);
+	private final Map<Perspective, GameSceneCameraController> cameraControllerMap = new EnumMap<>(Perspective.class);
 	private final Text3D infoText3D = new Text3D();
 	private GameLevel3D level3D;
+	private GameSceneCameraController currentCamController;
 
 	public PlayScene3D(GameController gameController) {
 		super(gameController);
 
-		cameraMap.put(Perspective.DRONE, new CamDrone());
-		cameraMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
-		cameraMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
-		cameraMap.put(Perspective.TOTAL, new CamTotal());
+		cameraControllerMap.put(Perspective.DRONE, new CamDrone());
+		cameraControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
+		cameraControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
+		cameraControllerMap.put(Perspective.TOTAL, new CamTotal());
+		currentCamController = cameraControllerMap.get(Env.d3_perspectivePy.get());
 
 		var coordSystem = new CoordSystem();
 		coordSystem.visibleProperty().bind(Env.d3_axesVisiblePy);
@@ -121,6 +124,7 @@ public class PlayScene3D extends GameScene {
 
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+		fxSubScene.setCamera(new PerspectiveCamera(true));
 	}
 
 	@Override
@@ -137,7 +141,7 @@ public class PlayScene3D extends GameScene {
 	public void update() {
 		context.level().ifPresent(level -> {
 			level3D.update();
-			currentCamera().update(level3D.pac3D().getRoot());
+			currentCamController.update(fxSubScene.getCamera(), level3D.pac3D().getRoot());
 			updateSound(level);
 		});
 	}
@@ -203,8 +207,12 @@ public class PlayScene3D extends GameScene {
 		return true;
 	}
 
-	public GameSceneCamera currentCamera() {
-		return (GameSceneCamera) fxSubScene.getCamera();
+	public GameSceneCameraController currentCamController() {
+		return currentCamController;
+	}
+
+	public String camInfo() {
+		return currentCamController.transformInfo(fxSubScene.getCamera());
 	}
 
 	private void updateCameraToPerspective(Perspective perspective) {
@@ -212,21 +220,20 @@ public class PlayScene3D extends GameScene {
 			LOG.error("No camera perspective specified");
 			return;
 		}
-		var camera = cameraMap.get(perspective);
-		if (camera == null) {
+		var camController = cameraControllerMap.get(perspective);
+		if (camController == null) {
 			LOG.error("No camera found for perspective %s", perspective);
 			return;
 		}
-		if (camera != currentCamera()) {
-			fxSubScene.setCamera(camera);
-			fxSubScene.setOnKeyPressed(camera::onKeyPressed);
+		if (camController != currentCamController) {
+			currentCamController = camController;
 			fxSubScene.requestFocus();
-			camera.reset();
+			camController.reset(fxSubScene.getCamera());
 		}
 		// rotate the scores such that the viewer sees them frontally
 		if (level3D != null && level3D.scores3D() != null) {
-			level3D.scores3D().getRoot().rotationAxisProperty().bind(camera.rotationAxisProperty());
-			level3D.scores3D().getRoot().rotateProperty().bind(camera.rotateProperty());
+			level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+			level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 		}
 		LOG.info("Perspective changed to %s (%s)", perspective, this);
 	}

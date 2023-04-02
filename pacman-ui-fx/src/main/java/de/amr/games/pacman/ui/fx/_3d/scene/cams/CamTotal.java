@@ -24,14 +24,13 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
 import javafx.geometry.Point3D;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
 /**
  * @author Armin Reichert
  */
-public class CamTotal extends GameSceneCamera {
+public class CamTotal extends GameSceneCameraController {
 
 	public static final Point3D INITIAL_ROTATION_AXIS = Rotate.X_AXIS;
 	public static final double INITIAL_ROTATE = 60;
@@ -39,69 +38,19 @@ public class CamTotal extends GameSceneCamera {
 	public static final double INITIAL_TRANSLATE_Y = 310;
 	public static final double INITIAL_TRANSLATE_Z = -160;
 
-	public CamTotal() {
-		setNearClip(0.1);
-		setFarClip(10000.0);
-		setTranslateX(INITIAL_TRANSLATE_X);
-		setTranslateY(INITIAL_TRANSLATE_Y);
-		setTranslateZ(INITIAL_TRANSLATE_Z);
-		setRotationAxis(INITIAL_ROTATION_AXIS);
-		setRotate(INITIAL_ROTATE);
+	@Override
+	public void reset(Camera cam) {
+		cam.setNearClip(0.1);
+		cam.setFarClip(10000.0);
+		cam.setTranslateX(INITIAL_TRANSLATE_X);
+		cam.setTranslateY(INITIAL_TRANSLATE_Y);
+		cam.setTranslateZ(INITIAL_TRANSLATE_Z);
+		cam.setRotationAxis(INITIAL_ROTATION_AXIS);
+		cam.setRotate(INITIAL_ROTATE);
 	}
 
 	@Override
 	public String toString() {
 		return "Total";
-	}
-
-	@Override
-	public boolean isConfigurable() {
-		return true;
-	}
-
-	@Override
-	public void onKeyPressed(KeyEvent e) {
-		boolean control = e.isControlDown();
-		boolean shift = e.isShiftDown();
-		if (!control && shift) {
-			changeTranslation(e.getCode());
-		} else if (control && shift) {
-			changeRotation(e.getCode());
-		}
-	}
-
-	private void changeTranslation(KeyCode key) {
-		boolean translateBound = translateXProperty().isBound() || translateYProperty().isBound()
-				|| translateZProperty().isBound();
-		if (!translateBound) {
-			switch (key) {
-			case LEFT -> changeValue(translateXProperty(), -10);
-			case RIGHT -> changeValue(translateXProperty(), +10);
-			case MINUS -> changeValue(translateYProperty(), -10);
-			case PLUS -> changeValue(translateYProperty(), +10);
-			case UP -> changeValue(translateZProperty(), -10);
-			case DOWN -> changeValue(translateZProperty(), 10);
-			default -> { // ignore
-			}
-			}
-		}
-	}
-
-	private void changeRotation(KeyCode key) {
-		boolean rotateBound = rotateProperty().isBound() || rotationAxisProperty().isBound();
-		if (!rotateBound) {
-			switch (key) {
-			case UP -> {
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate((getRotate() - 1 + 360) % 360);
-			}
-			case DOWN -> {
-				setRotationAxis(Rotate.X_AXIS);
-				setRotate((getRotate() + 1 + 360) % 360);
-			}
-			default -> { // ignore
-			}
-			}
-		}
 	}
 }

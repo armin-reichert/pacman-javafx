@@ -58,9 +58,8 @@ public class Section3D extends Section {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Env.d3_perspectivePy.set(comboPerspective.getValue()));
-		addInfo("Camera",
-				() -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.currentCamera().transformInfo() : "")
-						.available(() -> gameScene().is3D());
+		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
+				.available(() -> gameScene().is3D());
 		pickerLightColor = addColorPicker("Light color", Env.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
 		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.d3_mazeWallHeightPy.get());

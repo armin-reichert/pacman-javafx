@@ -24,40 +24,28 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene.cams;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.scene.Camera;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.input.KeyEvent;
 
 /**
  * Cameras for the 3D play scene.
  * 
  * @author Armin Reichert
  */
-public abstract class GameSceneCamera extends PerspectiveCamera {
+public abstract class GameSceneCameraController {
 
-	protected GameSceneCamera() {
-		super(true);
-	}
-
-	public String transformInfo() {
-		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", getTranslateX(), getTranslateY(), getTranslateZ(),
-				getRotate());
+	public String transformInfo(Camera cam) {
+		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),
+				cam.getRotate());
 	}
 
 	public void changeValue(DoubleProperty property, double delta) {
 		property.set(property.get() + delta);
 	}
 
-	public boolean isConfigurable() {
-		return false;
+	public void reset(Camera cam) {
 	}
 
-	public void reset() {
-	}
-
-	public void update(Node target) {
-	}
-
-	public void onKeyPressed(KeyEvent e) {
+	public void update(Camera cam, Node target) {
 	}
 }
