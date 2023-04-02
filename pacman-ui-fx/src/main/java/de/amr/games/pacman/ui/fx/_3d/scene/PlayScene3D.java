@@ -212,7 +212,9 @@ public class PlayScene3D extends GameScene {
 	}
 
 	public String camInfo() {
-		return currentCamController.transformInfo(fxSubScene.getCamera());
+		var cam = fxSubScene.getCamera();
+		return "x=%.0f y=%.0f z=%.0f rot=%.0f".formatted(cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),
+				cam.getRotate());
 	}
 
 	private void updateCameraToPerspective(Perspective perspective) {

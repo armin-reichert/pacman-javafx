@@ -34,11 +34,6 @@ import javafx.scene.Node;
  */
 public abstract class GameSceneCameraController {
 
-	public String transformInfo(Camera cam) {
-		return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f", cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),
-				cam.getRotate());
-	}
-
 	public void changeValue(DoubleProperty property, double delta) {
 		property.set(property.get() + delta);
 	}
