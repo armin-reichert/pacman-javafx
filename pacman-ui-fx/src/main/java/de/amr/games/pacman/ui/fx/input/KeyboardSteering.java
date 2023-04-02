@@ -86,7 +86,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 	public void handle(KeyEvent event) {
 		boolean isSteeringEvent = keyCombinations.entrySet().stream().anyMatch(e -> e.getValue().match(event));
 		if (!enabled && isSteeringEvent) {
-			LOG.info("Steering disabled, key event ignored: %s", event.getCode());
+			LOG.info("Steering disabled, key event '%s' ignored", event.getCode());
 			event.consume();
 			return;
 		}
