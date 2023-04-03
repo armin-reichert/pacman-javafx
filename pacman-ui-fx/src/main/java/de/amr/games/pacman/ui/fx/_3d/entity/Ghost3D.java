@@ -132,7 +132,7 @@ public class Ghost3D {
 		}
 		if (currentLook != Look.NUMBER) {
 			turningAnimation.update();
-			if (ghost.isTunnelEntered()) {
+			if (ghost.moveResult.tunnelEntered) {
 				brakeAnimation.playFromStart();
 			}
 		}

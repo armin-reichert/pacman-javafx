@@ -19,7 +19,7 @@
 			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="info"
+		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="trace"
 			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
