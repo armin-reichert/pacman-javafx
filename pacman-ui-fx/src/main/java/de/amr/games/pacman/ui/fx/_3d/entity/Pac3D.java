@@ -125,14 +125,14 @@ public class Pac3D {
 		var layOnBack = new RotateTransition(Duration.seconds(0.2), root);
 		layOnBack.setAxis(Rotate.Y_AXIS);
 		layOnBack.setFromAngle(0);
-		layOnBack.setToAngle(-90);
+		layOnBack.setToAngle(90);
 
-		var spin = new RotateTransition(Duration.seconds(0.25), root);
+		var spin = new RotateTransition(Duration.seconds(0.2), root);
 		spin.setAxis(Rotate.Y_AXIS);
-		spin.setByAngle(-360);
+		spin.setByAngle(-180);
 		spin.setCycleCount(4);
 		spin.setInterpolator(Interpolator.LINEAR);
-		spin.setDelay(Duration.seconds(0.35));
+		spin.setDelay(Duration.seconds(0.3));
 
 		return new SequentialTransition(layOnBack, spin, Ufx.pause(2.0));
 	}
