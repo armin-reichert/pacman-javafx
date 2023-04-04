@@ -27,12 +27,12 @@ package de.amr.games.pacman.ui.fx._2d.rendering.common;
 /**
  * @author Armin Reichert
  */
-public class Reordering<T extends Enum<T>> {
+public class Order<T extends Enum<T>> {
 
 	private final int[] reorderdIndex;
 
 	@SuppressWarnings("unchecked")
-	public Reordering(T... values) {
+	public Order(T... values) {
 		reorderdIndex = new int[values.length];
 		for (int i = 0; i < values.length; ++i) {
 			reorderdIndex[values[i].ordinal()] = i;

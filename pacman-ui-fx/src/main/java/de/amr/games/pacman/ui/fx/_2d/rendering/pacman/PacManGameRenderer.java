@@ -35,7 +35,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Reordering;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Order;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -54,7 +54,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	private static final Spritesheet SHEET = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
 
 	// Order of direction-related images inside spritesheet
-	private static final Reordering<Direction> DIR_ORDER = new Reordering<>(Direction.RIGHT, Direction.LEFT,
+	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT,
 			Direction.UP, Direction.DOWN);
 
 	private static final Color WALL_COLOR = Color.rgb(33, 33, 255);

@@ -45,7 +45,7 @@ import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Reordering;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Order;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -64,7 +64,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final Spritesheet SHEET = new Spritesheet(ResourceMgr.image("graphics/mspacman/sprites.png"), 16);
 
 	// Order of direction-related images inside spritesheet
-	private static final Reordering<Direction> DIR_ORDER = new Reordering<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
+	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
 			Direction.DOWN);
 
 	//@formatter:off
