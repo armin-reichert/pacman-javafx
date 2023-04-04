@@ -28,12 +28,14 @@ import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.TITLE_TI
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawTileStructure;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
@@ -121,6 +123,11 @@ public class MsPacManIntroScene extends GameScene2D {
 		r.drawPac(g, ic.msPacMan);
 		r.drawCopyright(g, 29);
 		drawLevelCounter(g);
+	}
+
+	@Override
+	protected void drawInfo(GraphicsContext g) {
+		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 	}
 
 	// TODO this is not exactly as in the original game, but looks quite ok

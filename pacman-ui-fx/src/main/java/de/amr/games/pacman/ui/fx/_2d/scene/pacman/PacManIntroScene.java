@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawTileStructure;
 
 import java.util.stream.Stream;
 
@@ -33,6 +34,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.pacman.PacManIntroController;
 import de.amr.games.pacman.controller.pacman.PacManIntroData;
 import de.amr.games.pacman.controller.pacman.PacManIntroState;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -128,6 +130,11 @@ public class PacManIntroScene extends GameScene2D {
 		}
 		}
 		drawLevelCounter(g);
+	}
+
+	@Override
+	protected void drawInfo(GraphicsContext g) {
+		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 	}
 
 	private void drawCopyright(GraphicsContext g) {
