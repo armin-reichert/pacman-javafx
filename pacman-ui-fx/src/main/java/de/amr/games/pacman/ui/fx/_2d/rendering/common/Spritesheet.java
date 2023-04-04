@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.steering.Direction;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -76,12 +75,6 @@ public class Spritesheet {
 	 */
 	public Image subImage(Rectangle2D r) {
 		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
-	}
-
-	public Rectangle2D randomRasterCell() {
-		double x = U.RND.nextDouble(source.getWidth() - raster);
-		double y = U.RND.nextDouble(source.getHeight() - raster);
-		return new Rectangle2D(x, y, raster, raster);
 	}
 
 	/**

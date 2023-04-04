@@ -31,7 +31,9 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -101,8 +103,8 @@ public class BootScene extends GameScene2D {
 		if (context.rendering2D() instanceof SpritesheetRenderer ssr) {
 			for (int row = 0; row < SIZE_TILES.y() / 2; ++row) {
 				if (U.RND.nextInt(100) > 10) {
-					var region1 = ssr.spritesheet().randomRasterCell();
-					var region2 = ssr.spritesheet().randomRasterCell();
+					var region1 = randomSquare(ssr.spritesheet());
+					var region2 = randomSquare(ssr.spritesheet());
 					var splitX = SIZE_TILES.x() / 8 + U.RND.nextInt(SIZE_TILES.x() / 4);
 					for (int col = 0; col < SIZE_TILES.x() / 2; ++col) {
 						var region = col < splitX ? region1 : region2;
@@ -112,6 +114,14 @@ public class BootScene extends GameScene2D {
 			}
 		}
 		saveImage();
+	}
+
+	private Rectangle2D randomSquare(Spritesheet ss) {
+		var source = ss.source();
+		var raster = ss.raster();
+		double x = U.RND.nextDouble(source.getWidth() - raster);
+		double y = U.RND.nextDouble(source.getHeight() - raster);
+		return new Rectangle2D(x, y, raster, raster);
 	}
 
 	private void produceGridImage() {
