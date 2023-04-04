@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Reordering;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
@@ -50,9 +51,11 @@ import javafx.scene.paint.Color;
  */
 public class PacManGameRenderer extends SpritesheetRenderer {
 
-	private static final Spritesheet PACMAN_SPRITESHEET = new Spritesheet(//
-			ResourceMgr.image("graphics/pacman/sprites.png"), 16, //
-			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+	private static final Spritesheet SHEET = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
+
+	// Order of direction-related images inside spritesheet
+	private static final Reordering<Direction> DIR_ORDER = new Reordering<>(Direction.RIGHT, Direction.LEFT,
+			Direction.UP, Direction.DOWN);
 
 	private static final Color WALL_COLOR = Color.rgb(33, 33, 255);
 
@@ -68,7 +71,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	private static final Image MAZE_EMPTY_FLASHING = ResourceMgr.image("graphics/pacman/maze_empty_flashing.png");
 
 	public PacManGameRenderer() {
-		super(PACMAN_SPRITESHEET);
+		super(SHEET);
 	}
 
 	@Override
@@ -113,7 +116,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
-		var region = spritesheet.tile(2 * spritesheet.dirIndex(Direction.RIGHT), 4 + ghostID);
+		var region = spritesheet.tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
 		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
@@ -151,7 +154,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	private AnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
+			int d = DIR_ORDER.index(dir);
 			var wide = spritesheet.tile(0, d);
 			var middle = spritesheet.tile(1, d);
 			var closed = spritesheet.tile(2, 0);
@@ -184,7 +187,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	private AnimationByDirection createGhostColorAnimation(Ghost ghost) {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
+			int d = DIR_ORDER.index(dir);
 			var animation = new SimpleAnimation<>(spritesheet.tilesRightOf(2 * d, 4 + ghost.id(), 2));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
@@ -209,7 +212,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	private AnimationByDirection createGhostEyesAnimation(Ghost ghost) {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
+			int d = DIR_ORDER.index(dir);
 			animationByDir.put(dir, new SimpleAnimation<>(spritesheet.tile(8 + d, 5)));
 		}
 		return animationByDir;

@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
-import de.amr.games.pacman.lib.steering.Direction;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -37,7 +36,6 @@ public class Spritesheet {
 
 	protected final Image source;
 	protected final int raster;
-	protected final int[] dirIndex;
 
 	/**
 	 * @param image  image containing the sprites
@@ -47,18 +45,9 @@ public class Spritesheet {
 	 * @param d2     third direction
 	 * @param d3     fourth direction
 	 */
-	public Spritesheet(Image image, int raster, Direction d0, Direction d1, Direction d2, Direction d3) {
+	public Spritesheet(Image image, int raster) {
 		this.source = image;
 		this.raster = raster;
-		dirIndex = new int[4];
-		dirIndex[d0.ordinal()] = 0;
-		dirIndex[d1.ordinal()] = 1;
-		dirIndex[d2.ordinal()] = 2;
-		dirIndex[d3.ordinal()] = 3;
-	}
-
-	public int dirIndex(Direction dir) {
-		return dirIndex[dir.ordinal()];
 	}
 
 	public int raster() {

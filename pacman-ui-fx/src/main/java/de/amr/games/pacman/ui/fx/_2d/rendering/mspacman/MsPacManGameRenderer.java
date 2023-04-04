@@ -45,6 +45,7 @@ import de.amr.games.pacman.model.mspacman.MovingBonus;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.common.Reordering;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -60,11 +61,13 @@ import javafx.scene.text.Font;
  */
 public class MsPacManGameRenderer extends SpritesheetRenderer {
 
-	//@formatter:off
-	private static final Spritesheet MS_PACMAN_SPRITESHEET = new Spritesheet(
-		ResourceMgr.image("graphics/mspacman/sprites.png"), 16,
-		Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+	private static final Spritesheet SHEET = new Spritesheet(ResourceMgr.image("graphics/mspacman/sprites.png"), 16);
 
+	// Order of direction-related images inside spritesheet
+	private static final Reordering<Direction> DIR_ORDER = new Reordering<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
+			Direction.DOWN);
+
+	//@formatter:off
 	private static final MazeColoring[] MAZE_COLORS = {
 		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 		new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
@@ -86,7 +89,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 			.mapToObj(MsPacManGameRenderer::emptyMazeFlashing).toArray(Image[]::new);
 
 	private static Image emptyMaze(int i) {
-		return MS_PACMAN_SPRITESHEET.subImage(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
+		return SHEET.subImage(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
 	}
 
 	private static Image emptyMazeFlashing(int i) {
@@ -96,11 +99,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	// tile from third column
 	private static Rectangle2D col3(int col, int row) {
-		return MS_PACMAN_SPRITESHEET.tilesFrom(THIRD_COLUMN, 0, col, row, 1, 1);
+		return SHEET.tilesFrom(THIRD_COLUMN, 0, col, row, 1, 1);
 	}
 
 	public MsPacManGameRenderer() {
-		super(MS_PACMAN_SPRITESHEET);
+		super(SHEET);
 	}
 
 	@Override
@@ -148,7 +151,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
-		var region = col3(2 * spritesheet.dirIndex(Direction.RIGHT) + 1, 4 + ghostID);
+		var region = col3(2 * DIR_ORDER.index(Direction.RIGHT) + 1, 4 + ghostID);
 		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
@@ -214,7 +217,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private AnimationByDirection createPacMunchingAnimation(Pac pac) {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
+			int d = DIR_ORDER.index(dir);
 			var wide = col3(0, d);
 			var middle = col3(1, d);
 			var closed = col3(2, d);
@@ -252,7 +255,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private AnimationByDirection createGhostColorAnimation(Ghost ghost) {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
+			int d = DIR_ORDER.index(dir);
 			var animation = new SimpleAnimation<>(col3(2 * d, 4 + ghost.id()), col3(2 * d + 1, 4 + ghost.id()));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
@@ -277,7 +280,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private AnimationByDirection createGhostEyesAnimation(Ghost ghost) {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
+			int d = DIR_ORDER.index(dir);
 			animationByDir.put(dir, new SimpleAnimation<>(col3(8 + d, 5)));
 		}
 		return animationByDir;
@@ -320,7 +323,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public AnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
-			int d = spritesheet.dirIndex(dir);
+			int d = DIR_ORDER.index(dir);
 			var animation = new SimpleAnimation<>(col3(0, 9 + d), col3(1, 9 + d), col3(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();
