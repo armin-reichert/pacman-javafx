@@ -37,6 +37,7 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -115,13 +116,17 @@ public class Pac3D {
 	public Animation createDyingAnimation() {
 		var variant = level.game().variant();
 		return switch (variant) {
-		case MS_PACMAN -> createRotatingHeadAnimation();
-		case PACMAN -> new SequentialTransition(Ufx.pause(0.25), new CollapseAnimation(root).getAnimation());
+		case MS_PACMAN -> createMsPacManDyingAnimation();
+		case PACMAN -> createPacManDyingAnimation();
 		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
 		};
 	}
 
-	private Animation createRotatingHeadAnimation() {
+	private Transition createPacManDyingAnimation() {
+		return new SequentialTransition(Ufx.pause(0.25), new CollapseAnimation(root).getAnimation());
+	}
+
+	private Transition createMsPacManDyingAnimation() {
 		var layOnBack = new RotateTransition(Duration.seconds(0.2), root);
 		layOnBack.setAxis(Rotate.Y_AXIS);
 		layOnBack.setFromAngle(0);
