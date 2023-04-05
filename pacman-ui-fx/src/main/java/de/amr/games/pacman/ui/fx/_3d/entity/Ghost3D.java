@@ -98,8 +98,7 @@ public class Ghost3D {
 		root.getChildren().add(coloredGhost3D.getRoot());
 		root.getChildren().add(numberCube);
 
-		movementAnimation = new MovementAnimator(ghost, root);
-		movementAnimation.setNoddingEnabled(false);
+		movementAnimation = new MovementAnimator(ghost, root, false);
 		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
 
 		init();

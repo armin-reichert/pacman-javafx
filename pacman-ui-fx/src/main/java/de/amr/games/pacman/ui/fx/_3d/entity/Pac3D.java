@@ -75,8 +75,7 @@ public class Pac3D {
 		this.level = level;
 		this.pac = pac;
 		this.root = root;
-		this.movementAnimation = new MovementAnimator(pac, root);
-		movementAnimation.setNoddingEnabled(true);
+		this.movementAnimation = new MovementAnimator(pac, root, true);
 		this.headColor = headColor;
 		Stream.of(PacShape3D.head(root), PacShape3D.eyes(root), PacShape3D.palate(root))
 				.forEach(part -> part.drawModeProperty().bind(drawModePy));
