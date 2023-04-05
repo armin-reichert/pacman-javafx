@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.MovementAnimator;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -65,7 +65,7 @@ public class Pac3D {
 
 	private final GameLevel level;
 	private final Pac pac;
-	private final TurningAnimation turningAnimation;
+	private final MovementAnimator turningAnimation;
 	private final Group root;
 	private final Color headColor;
 	private final PointLight light;
@@ -74,7 +74,7 @@ public class Pac3D {
 		this.level = level;
 		this.pac = pac;
 		this.root = root;
-		this.turningAnimation = new TurningAnimation(root, pac::moveDir);
+		this.turningAnimation = new MovementAnimator(root, pac::moveDir);
 		this.headColor = headColor;
 		Stream.of(PacShape3D.head(root), PacShape3D.eyes(root), PacShape3D.palate(root))
 				.forEach(part -> part.drawModeProperty().bind(drawModePy));

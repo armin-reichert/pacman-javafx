@@ -34,11 +34,11 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * Animated turns of creature when changing direction.
+ * Animates the movement of a guy through the maze.
  * 
  * @author Armin Reichert
  */
-public class TurningAnimation {
+public class MovementAnimator {
 
 	public record Turn(int fromAngle, int toAngle) {
 	}
@@ -71,25 +71,24 @@ public class TurningAnimation {
 		return dir == null ? 0 : dir.ordinal();
 	}
 
-	private final Node turnedObject;
+	private final Node guy;
 	private final RotateTransition rotation;
 	private final Supplier<Direction> fnTargetDir;
 	private Direction currentTargetDir;
 
-	public TurningAnimation(Node turnedObject, Supplier<Direction> fnTargetDir) {
-		this.turnedObject = Objects.requireNonNull(turnedObject);
+	public MovementAnimator(Node guy, Supplier<Direction> fnTargetDir) {
+		this.guy = Objects.requireNonNull(guy);
 		this.fnTargetDir = Objects.requireNonNull(fnTargetDir);
-		rotation = new RotateTransition(Duration.seconds(0.2), turnedObject);
+		rotation = new RotateTransition(Duration.seconds(0.2), guy);
 		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
-		init();
 	}
 
 	public void init() {
 		rotation.stop();
 		currentTargetDir = fnTargetDir.get();
-		turnedObject.setRotationAxis(Rotate.Z_AXIS);
-		turnedObject.setRotate(angle(currentTargetDir));
+		guy.setRotationAxis(Rotate.Z_AXIS);
+		guy.setRotate(angle(currentTargetDir));
 	}
 
 	public void update() {

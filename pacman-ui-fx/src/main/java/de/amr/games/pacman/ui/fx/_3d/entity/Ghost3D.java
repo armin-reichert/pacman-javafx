@@ -31,7 +31,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
-import de.amr.games.pacman.ui.fx._3d.animation.TurningAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.MovementAnimator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -81,7 +81,7 @@ public class Ghost3D {
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
-	private final TurningAnimation turningAnimation;
+	private final MovementAnimator turningAnimation;
 	private final RotateTransition brakeAnimation;
 	private Image numberImage;
 	private Look currentLook;
@@ -98,7 +98,7 @@ public class Ghost3D {
 		root.getChildren().add(coloredGhost3D.getRoot());
 		root.getChildren().add(numberCube);
 
-		turningAnimation = new TurningAnimation(root, ghost::moveDir);
+		turningAnimation = new MovementAnimator(root, ghost::moveDir);
 		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
 
 		init();
