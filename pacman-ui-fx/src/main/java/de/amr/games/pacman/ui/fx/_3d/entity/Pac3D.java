@@ -66,7 +66,7 @@ public class Pac3D {
 
 	private final GameLevel level;
 	private final Pac pac;
-	private final MovementAnimator turningAnimation;
+	private final MovementAnimator movementAnimation;
 	private final Group root;
 	private final Color headColor;
 	private final PointLight light;
@@ -75,7 +75,8 @@ public class Pac3D {
 		this.level = level;
 		this.pac = pac;
 		this.root = root;
-		this.turningAnimation = new MovementAnimator(root, pac::moveDir);
+		this.movementAnimation = new MovementAnimator(pac, root);
+		movementAnimation.setNoddingEnabled(true);
 		this.headColor = headColor;
 		Stream.of(PacShape3D.head(root), PacShape3D.eyes(root), PacShape3D.palate(root))
 				.forEach(part -> part.drawModeProperty().bind(drawModePy));
@@ -95,21 +96,21 @@ public class Pac3D {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		turningAnimation.init();
-		turningAnimation.update();
+		movementAnimation.init();
+		movementAnimation.update();
 		headColorPy.set(headColor);
 	}
 
 	public void update() {
-		turningAnimation.update();
+		root.setTranslateX(pac.center().x());
+		root.setTranslateY(pac.center().y());
+		root.setTranslateZ(-HTS);
 		if (outsideWorld()) {
 			root.setVisible(false);
 		} else {
 			root.setVisible(pac.isVisible());
 		}
-		root.setTranslateX(pac.center().x());
-		root.setTranslateY(pac.center().y());
-		root.setTranslateZ(-HTS);
+		movementAnimation.update();
 		updateLight();
 	}
 

@@ -24,9 +24,14 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.animation;
 
 import java.util.Objects;
-import java.util.function.Supplier;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.common.actors.Creature;
+import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
@@ -34,11 +39,11 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 /**
- * Animates the movement of a guy through the maze.
- * 
  * @author Armin Reichert
  */
 public class MovementAnimator {
+
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public record Turn(int fromAngle, int toAngle) {
 	}
@@ -59,7 +64,7 @@ public class MovementAnimator {
 	}
 
 	//@formatter:off
-	private static final Turn[][] TURNS = {
+	private static final Turn[][] TURN_ANGLES = {
 		{ null,            new Turn(L, R), new Turn(L, U),  new Turn(L, -U) }, // LEFT  -> *
 		{ new Turn(R, L),  null,           new Turn(R, U),  new Turn(R, D)  }, // RIGHT -> *
 		{ new Turn(U, L),  new Turn(U, R), null,            new Turn(U, D)  }, // UP    -> *
@@ -71,41 +76,81 @@ public class MovementAnimator {
 		return dir == null ? 0 : dir.ordinal();
 	}
 
-	private final Node guy;
-	private final RotateTransition turnRotation;
-	private final Supplier<Direction> fnTargetDir;
-	private Direction currentTargetDir;
+	private final Creature guy;
+	private final Node guyNode;
+	private RotateTransition turnRotation;
+	private RotateTransition nodRotation;
+	private Direction turnTargetDir;
+	private boolean noddingEnabled = false;
 
-	public MovementAnimator(Node guy, Supplier<Direction> fnTargetDir) {
+	public MovementAnimator(Creature guy, Node guyNode) {
 		this.guy = Objects.requireNonNull(guy);
-		this.fnTargetDir = Objects.requireNonNull(fnTargetDir);
+		this.guyNode = Objects.requireNonNull(guyNode);
+	}
 
-		turnRotation = new RotateTransition(Duration.seconds(0.2), guy);
-		turnRotation.setAxis(Rotate.Z_AXIS);
-		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
+	public void setNoddingEnabled(boolean noddingEnabled) {
+		this.noddingEnabled = noddingEnabled;
 	}
 
 	public void init() {
-		currentTargetDir = fnTargetDir.get();
-		turnRotation.stop();
-		guy.setRotationAxis(Rotate.Z_AXIS);
-		guy.setRotate(angle(currentTargetDir));
+		turnRotation = null;
+		nodRotation = null;
+		turnTargetDir = guy.moveDir();
+		rotateGuyToMoveDirection();
 	}
 
 	public void update() {
-		var targetDir = fnTargetDir.get();
-		if (currentTargetDir != targetDir) {
-			startTurnRotation(currentTargetDir, targetDir);
-			currentTargetDir = targetDir;
+		// turn to new move dir?
+		if (turnTargetDir != guy.moveDir()) {
+			nodRotation = null;
+			startTurning(turnTargetDir, guy.moveDir());
+			turnTargetDir = guy.moveDir();
+			return;
 		}
+		// turn animation running?
+		if (turnRotation != null && turnRotation.getStatus() == Status.RUNNING) {
+			return;
+		}
+		// start/play nodding?
+		if (!noddingEnabled) {
+			return;
+		}
+		if (nodRotation == null) {
+			startNodding();
+		}
+		rotateGuyToMoveDirection();
 	}
 
-	private void startTurnRotation(Direction fromDir, Direction toDir) {
-		var turn = TURNS[index(fromDir)][index(toDir)];
-		turnRotation.stop();
+	private void rotateGuyToMoveDirection() {
+		guyNode.getTransforms().setAll(new Rotate(angle(guy.moveDir()), Rotate.Z_AXIS));
+	}
+
+	private void startTurning(Direction fromDir, Direction toDir) {
+		var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
+		turnRotation = new RotateTransition(Duration.seconds(0.3), guyNode);
+		turnRotation.setAxis(Rotate.Z_AXIS);
+		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
+		turnRotation.setOnFinished(e -> LOG.trace("%s: Turn rotation finished", guy.name()));
+		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setFromAngle(turn.fromAngle);
 		turnRotation.setToAngle(turn.toAngle);
 		turnRotation.playFromStart();
+		LOG.info("%s: Turn rotation started", guy.name());
 	}
 
+	private void startNodding() {
+		nodRotation = new RotateTransition(Duration.seconds(0.5), guyNode);
+		var axis = switch (guy.moveDir()) {
+		case UP, DOWN -> Rotate.X_AXIS;
+		case LEFT, RIGHT -> Rotate.Y_AXIS;
+		default -> throw new IllegalArgumentException();
+		};
+		nodRotation.setAxis(axis);
+		nodRotation.setFromAngle(-20);
+		nodRotation.setToAngle(20);
+		nodRotation.setCycleCount(Animation.INDEFINITE);
+		nodRotation.setAutoReverse(true);
+		nodRotation.setInterpolator(Interpolator.EASE_BOTH);
+		nodRotation.playFromStart();
+	}
 }
