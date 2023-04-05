@@ -103,4 +103,8 @@ public class TurningAnimation {
 			currentTargetDir = targetDir;
 		}
 	}
+
+	public RotateTransition getRotation() {
+		return rotation;
+	}
 }
