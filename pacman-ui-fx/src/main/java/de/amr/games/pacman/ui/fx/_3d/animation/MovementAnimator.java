@@ -27,7 +27,6 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.steering.Direction;
-import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
@@ -73,20 +72,22 @@ public class MovementAnimator {
 	}
 
 	private final Node guy;
-	private final RotateTransition rotation;
+	private final RotateTransition turnRotation;
 	private final Supplier<Direction> fnTargetDir;
 	private Direction currentTargetDir;
 
 	public MovementAnimator(Node guy, Supplier<Direction> fnTargetDir) {
 		this.guy = Objects.requireNonNull(guy);
 		this.fnTargetDir = Objects.requireNonNull(fnTargetDir);
-		rotation = new RotateTransition(Duration.seconds(0.2), guy);
-		rotation.setInterpolator(Interpolator.EASE_BOTH);
+
+		turnRotation = new RotateTransition(Duration.seconds(0.2), guy);
+		turnRotation.setAxis(Rotate.Z_AXIS);
+		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void init() {
-		rotation.stop();
 		currentTargetDir = fnTargetDir.get();
+		turnRotation.stop();
 		guy.setRotationAxis(Rotate.Z_AXIS);
 		guy.setRotate(angle(currentTargetDir));
 	}
@@ -94,29 +95,17 @@ public class MovementAnimator {
 	public void update() {
 		var targetDir = fnTargetDir.get();
 		if (currentTargetDir != targetDir) {
-			turnTowards(targetDir);
+			startTurnRotation(currentTargetDir, targetDir);
 			currentTargetDir = targetDir;
-		} else {
-			if (rotation.getStatus() != Status.RUNNING) {
-				nod();
-			}
 		}
 	}
 
-	private void turnTowards(Direction targetDir) {
-		var turn = TURNS[index(currentTargetDir)][index(targetDir)];
-		rotation.stop();
-		rotation.setAxis(Rotate.Z_AXIS);
-		rotation.setFromAngle(turn.fromAngle);
-		rotation.setToAngle(turn.toAngle);
-		rotation.playFromStart();
+	private void startTurnRotation(Direction fromDir, Direction toDir) {
+		var turn = TURNS[index(fromDir)][index(toDir)];
+		turnRotation.stop();
+		turnRotation.setFromAngle(turn.fromAngle);
+		turnRotation.setToAngle(turn.toAngle);
+		turnRotation.playFromStart();
 	}
 
-	private void nod() {
-
-	}
-
-	public RotateTransition getRotation() {
-		return rotation;
-	}
 }
