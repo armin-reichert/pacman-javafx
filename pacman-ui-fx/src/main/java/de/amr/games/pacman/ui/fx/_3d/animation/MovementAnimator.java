@@ -27,6 +27,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.lib.steering.Direction;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
@@ -80,7 +81,6 @@ public class MovementAnimator {
 		this.guy = Objects.requireNonNull(guy);
 		this.fnTargetDir = Objects.requireNonNull(fnTargetDir);
 		rotation = new RotateTransition(Duration.seconds(0.2), guy);
-		rotation.setAxis(Rotate.Z_AXIS);
 		rotation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
@@ -94,13 +94,26 @@ public class MovementAnimator {
 	public void update() {
 		var targetDir = fnTargetDir.get();
 		if (currentTargetDir != targetDir) {
-			var turn = TURNS[index(currentTargetDir)][index(targetDir)];
-			rotation.stop();
-			rotation.setFromAngle(turn.fromAngle);
-			rotation.setToAngle(turn.toAngle);
-			rotation.playFromStart();
+			turnTowards(targetDir);
 			currentTargetDir = targetDir;
+		} else {
+			if (rotation.getStatus() != Status.RUNNING) {
+				nod();
+			}
 		}
+	}
+
+	private void turnTowards(Direction targetDir) {
+		var turn = TURNS[index(currentTargetDir)][index(targetDir)];
+		rotation.stop();
+		rotation.setAxis(Rotate.Z_AXIS);
+		rotation.setFromAngle(turn.fromAngle);
+		rotation.setToAngle(turn.toAngle);
+		rotation.playFromStart();
+	}
+
+	private void nod() {
+
 	}
 
 	public RotateTransition getRotation() {
