@@ -146,7 +146,7 @@ public class MovementAnimator {
 		turnRotation.setToAngle(toAngle);
 		turnRotation.playFromStart();
 		if (guy instanceof Pac) {
-			LOG.info("%s: Turn rotation %s -> %s (%d -> %d) started", guy.name(), fromDir, toDir, fromAngle, toAngle);
+			LOG.info("%s: Turn rotation %s -> %s (%.2f -> %.2f) started", guy.name(), fromDir, toDir, fromAngle, toAngle);
 		}
 	}
 
