@@ -50,9 +50,6 @@ public class MovementAnimator {
 	private static final Duration TURN_DURATION = Duration.seconds(0.15);
 	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
 
-	public record Turn(int fromAngle, int toAngle) {
-	}
-
 	private static final short L = 0;
 	private static final short U = 90;
 	private static final short R = 180;
@@ -69,11 +66,11 @@ public class MovementAnimator {
 	}
 
 	//@formatter:off
-	private static final Turn[][] TURN_ANGLES = {
-		{ null,            new Turn(L, R), new Turn(L, U),  new Turn(L, -U) }, // LEFT  -> *
-		{ new Turn(R, L),  null,           new Turn(R, U),  new Turn(R, D)  }, // RIGHT -> *
-		{ new Turn(U, L),  new Turn(U, R), null,            new Turn(U, D)  }, // UP    -> *
-		{ new Turn(-U, L), new Turn(D, R), new Turn(-U, U), null            }, // DOWN  -> *
+	private static final double[][][] TURN_ANGLES = {
+		{ null,    {L, R}, {L, U},  {L, -U} }, // LEFT  -> *
+		{ {R, L},  null,   {R, U},  {R, D}  }, // RIGHT -> *
+		{ {U, L},  {U, R}, null,    {U, D}  }, // UP    -> *
+		{ {-U, L}, {D, R}, {-U, U}, null    }, // DOWN  -> *
 	};
 	//@formatter:on
 
@@ -149,12 +146,11 @@ public class MovementAnimator {
 		var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
 		turnRotation.stop();
 		turnRotation.setAxis(Rotate.Z_AXIS);
-		turnRotation.setFromAngle(turn.fromAngle);
-		turnRotation.setToAngle(turn.toAngle);
+		turnRotation.setFromAngle(turn[0]);
+		turnRotation.setToAngle(turn[1]);
 		turnRotation.playFromStart();
 		if (guy instanceof Pac) {
-			LOG.info("%s: Turn rotation %s -> %s (%d -> %d) started", guy.name(), fromDir, toDir, turn.fromAngle,
-					turn.toAngle);
+			LOG.info("%s: Turn rotation %s -> %s (%d -> %d) started", guy.name(), fromDir, toDir, turn[0], turn[1]);
 		}
 	}
 
