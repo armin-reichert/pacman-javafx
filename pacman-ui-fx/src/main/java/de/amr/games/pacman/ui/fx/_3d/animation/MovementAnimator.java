@@ -147,7 +147,6 @@ public class MovementAnimator {
 
 	private void playTurnAnimation(Direction fromDir, Direction toDir) {
 		var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
-		setGuyRotation(turn.fromAngle % 360);
 		turnRotation.stop();
 		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setFromAngle(turn.fromAngle);
