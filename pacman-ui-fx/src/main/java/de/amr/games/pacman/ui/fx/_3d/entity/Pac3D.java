@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.MovementAnimator;
+import de.amr.games.pacman.ui.fx._3d.animation.PacMovementAnimator;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
@@ -67,7 +67,7 @@ public class Pac3D {
 
 	private final GameLevel level;
 	private final Pac pac;
-	private final MovementAnimator movementAnimation;
+	private final PacMovementAnimator movementAnimation;
 	private final Group root;
 	private final Color headColor;
 	private final PointLight light;
@@ -77,7 +77,7 @@ public class Pac3D {
 		this.pac = pac;
 		this.headColor = headColor;
 		root = new Group(pacNode);
-		movementAnimation = new MovementAnimator(pac, root);
+		movementAnimation = new PacMovementAnimator(pac, root);
 		movementAnimation.noddingPy.bind(Env.d3_pacNoddingPy);
 		Stream.of(PacShape3D.head(pacNode), PacShape3D.eyes(pacNode), PacShape3D.palate(pacNode))
 				.forEach(part -> part.drawModeProperty().bind(drawModePy));
