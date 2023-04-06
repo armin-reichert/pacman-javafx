@@ -66,7 +66,7 @@ public class MovementAnimator {
 	}
 
 	//@formatter:off
-	private static final double[][][] TURN_ANGLES = {
+	private static final short[][][] TURN_ANGLES = {
 		{ null,    {L, R}, {L, U},  {L, -U} }, // LEFT  -> *
 		{ {R, L},  null,   {R, U},  {R, D}  }, // RIGHT -> *
 		{ {U, L},  {U, R}, null,    {U, D}  }, // UP    -> *
