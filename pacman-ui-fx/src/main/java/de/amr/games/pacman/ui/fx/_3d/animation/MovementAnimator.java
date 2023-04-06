@@ -84,31 +84,33 @@ public class MovementAnimator {
 	private Direction turnTargetDir;
 	private final RotateTransition turnRotation;
 
-	private final RotateTransition nodRotation;
-	private boolean noddingEnabled = false;
+	private RotateTransition noddingRotation;
 
 	public MovementAnimator(Creature guy, Node guyNode, boolean noddingEnabled) {
 		this.guy = Objects.requireNonNull(guy);
 		this.guyNode = Objects.requireNonNull(guyNode);
-		this.noddingEnabled = noddingEnabled;
+
 		turnRotation = new RotateTransition(Duration.seconds(0.2), guyNode);
 		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
 		turnRotation.setOnFinished(e -> {
 			LOG.trace("%s: Turn rotation finished", guy.name());
 		});
-		nodRotation = new RotateTransition(Duration.seconds(0.25), guyNode);
-		nodRotation.setFromAngle(-30);
-		nodRotation.setToAngle(30);
-		nodRotation.setCycleCount(Animation.INDEFINITE);
-		nodRotation.setAutoReverse(true);
-		nodRotation.setInterpolator(Interpolator.EASE_BOTH);
+
+		if (noddingEnabled) {
+			noddingRotation = new RotateTransition(Duration.seconds(0.2), guyNode);
+			noddingRotation.setFromAngle(-30);
+			noddingRotation.setToAngle(30);
+			noddingRotation.setCycleCount(Animation.INDEFINITE);
+			noddingRotation.setAutoReverse(true);
+			noddingRotation.setInterpolator(Interpolator.EASE_BOTH);
+		}
 	}
 
 	public void init() {
 		turnTargetDir = guy.moveDir();
 		turnRotation.stop();
-		endNodding();
+		endNoddingAnimation();
 	}
 
 	public void update() {
@@ -119,17 +121,17 @@ public class MovementAnimator {
 		// guy move direction changed?
 		// TODO: store info in guy.moveResult?
 		if (turnTargetDir != guy.moveDir()) {
-			startTurnAnimation(turnTargetDir, guy.moveDir());
+			playTurnAnimation(turnTargetDir, guy.moveDir());
 			turnTargetDir = guy.moveDir();
-			endNodding();
+			endNoddingAnimation();
 			return;
 		}
-		if (!noddingEnabled) {
+		if (noddingRotation == null) {
 			return;
 		}
 		rotateNodeToGuyMoveDirection();
 		if (guy.velocity().length() == 0 || !guy.moveResult.moved) {
-			endNodding();
+			endNoddingAnimation();
 			guyNode.setRotationAxis(nodRotationAxis());
 			guyNode.setRotate(0);
 		} else {
@@ -141,7 +143,7 @@ public class MovementAnimator {
 		guyNode.getTransforms().setAll(new Rotate(angle(guy.moveDir()), Rotate.Z_AXIS));
 	}
 
-	private void startTurnAnimation(Direction fromDir, Direction toDir) {
+	private void playTurnAnimation(Direction fromDir, Direction toDir) {
 		var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
 		turnRotation.stop();
 		turnRotation.setAxis(Rotate.Z_AXIS);
@@ -159,16 +161,16 @@ public class MovementAnimator {
 	}
 
 	private void playNoddingAnimation() {
-		if (nodRotation.getStatus() != Status.RUNNING) {
-			nodRotation.setAxis(nodRotationAxis());
-			nodRotation.playFromStart();
+		if (noddingRotation.getStatus() != Status.RUNNING) {
+			noddingRotation.setAxis(nodRotationAxis());
+			noddingRotation.playFromStart();
 			LOG.info("%s: Nodding created and started", guy.name());
 		}
 	}
 
-	private void endNodding() {
-		if (nodRotation.getStatus() == Status.RUNNING) {
-			nodRotation.stop();
+	private void endNoddingAnimation() {
+		if (noddingRotation != null && noddingRotation.getStatus() == Status.RUNNING) {
+			noddingRotation.stop();
 			LOG.info("%s: Nodding stopped", guy.name());
 		}
 	}
