@@ -102,17 +102,12 @@ public class MovementAnimator {
 		// is turn animation still running?
 		if (turnRotation != null && turnRotation.getStatus() == Status.RUNNING) {
 			LOG.trace("%s: Turn animation is running", guy.name());
-			if (nodRotation != null) {
-				nodRotation.stop();
-			}
+			endNodding();
 			return;
 		}
 		// has guy new move dir?
 		if (turnTargetDir != guy.moveDir()) {
-			if (nodRotation != null) {
-				nodRotation.stop();
-			}
-			nodRotation = null;
+			endNodding();
 			startNewTurnAnimation(turnTargetDir, guy.moveDir());
 			turnTargetDir = guy.moveDir();
 			return;
@@ -126,11 +121,18 @@ public class MovementAnimator {
 		}
 		rotateNodeToGuyMoveDirection();
 		if (guy.velocity().length() == 0 || !guy.moveResult.moved) {
-			nodRotation.stop();
+			endNodding();
 			guyNode.setRotationAxis(nodRotationAxis());
 			guyNode.setRotate(0);
-			LOG.info("%s: Nodding stopped", guy.name());
 		}
+	}
+
+	private void endNodding() {
+		if (nodRotation != null) {
+			nodRotation.stop();
+		}
+		nodRotation = null;
+		LOG.info("%s: Nodding stopped", guy.name());
 	}
 
 	private void rotateNodeToGuyMoveDirection() {
