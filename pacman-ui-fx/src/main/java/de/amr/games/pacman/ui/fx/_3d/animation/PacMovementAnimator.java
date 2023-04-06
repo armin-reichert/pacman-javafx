@@ -101,6 +101,7 @@ public class PacMovementAnimator {
 
 	public void update() {
 		setGuyRotation(angle(dirIndex(guy.moveDir())));
+		guyNode.setRotationAxis(noddingRotationAxis());
 		if (noddingRotation == null) {
 			return;
 		}
