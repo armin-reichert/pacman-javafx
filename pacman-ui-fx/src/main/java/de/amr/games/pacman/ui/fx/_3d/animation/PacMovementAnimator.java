@@ -100,7 +100,7 @@ public class PacMovementAnimator {
 	}
 
 	public void update() {
-		setGuyRotation(angle(dirIndex(guy.moveDir())));
+		guyNode.getTransforms().setAll(new Rotate(angle(dirIndex(guy.moveDir())), Rotate.Z_AXIS));
 		guyNode.setRotationAxis(noddingRotationAxis());
 		if (noddingRotation == null) {
 			return;
@@ -114,10 +114,6 @@ public class PacMovementAnimator {
 			noddingRotation.playFromStart();
 			LOG.info("%s: Nodding created and started", guy.name());
 		}
-	}
-
-	private void setGuyRotation(double angle) {
-		guyNode.getTransforms().setAll(new Rotate(angle, Rotate.Z_AXIS));
 	}
 
 	private Point3D noddingRotationAxis() {
