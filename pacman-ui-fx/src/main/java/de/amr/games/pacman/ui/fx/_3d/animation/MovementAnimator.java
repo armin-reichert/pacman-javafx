@@ -50,32 +50,26 @@ public class MovementAnimator {
 	private static final Duration TURN_DURATION = Duration.seconds(0.15);
 	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
 
-	private static final short L = 0;
-	private static final short U = 90;
-	private static final short R = 180;
-	private static final short D = 270;
-
-	private static double angle(Direction dir) {
-		return switch (dir) {
-		case LEFT -> L;
-		case RIGHT -> R;
-		case UP -> U;
-		case DOWN -> D;
-		default -> L;
-		};
-	}
+	private static final byte L = 0;
+	private static final byte U = 1;
+	private static final byte R = 2;
+	private static final byte D = 3;
 
 	//@formatter:off
-	private static final short[][][] TURN_ANGLES = {
+	private static final byte[][][] TURNS = {
 		{ null,    {L, R}, {L, U},  {L, -U} }, // LEFT  -> *
 		{ {R, L},  null,   {R, U},  {R, D}  }, // RIGHT -> *
 		{ {U, L},  {U, R}, null,    {U, D}  }, // UP    -> *
 		{ {-U, L}, {D, R}, {-U, U}, null    }, // DOWN  -> *
 	};
+
+	private static byte dirIndex(Direction dir) {
+		return switch (dir) {	case LEFT -> L;	case RIGHT -> R; case UP -> U; case DOWN -> D; default -> L; };
+	}
 	//@formatter:on
 
-	private static int index(Direction dir) {
-		return dir == null ? 0 : dir.ordinal();
+	private static double angle(byte dirIndex) {
+		return dirIndex * 90.0;
 	}
 
 	private final Creature guy;
@@ -143,14 +137,16 @@ public class MovementAnimator {
 	}
 
 	private void playTurnAnimation(Direction fromDir, Direction toDir) {
-		var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
+		var turn = TURNS[fromDir.ordinal()][toDir.ordinal()];
+		double fromAngle = angle(turn[0]);
+		double toAngle = angle(turn[1]);
 		turnRotation.stop();
 		turnRotation.setAxis(Rotate.Z_AXIS);
-		turnRotation.setFromAngle(turn[0]);
-		turnRotation.setToAngle(turn[1]);
+		turnRotation.setFromAngle(fromAngle);
+		turnRotation.setToAngle(toAngle);
 		turnRotation.playFromStart();
 		if (guy instanceof Pac) {
-			LOG.info("%s: Turn rotation %s -> %s (%d -> %d) started", guy.name(), fromDir, toDir, turn[0], turn[1]);
+			LOG.info("%s: Turn rotation %s -> %s (%d -> %d) started", guy.name(), fromDir, toDir, fromAngle, toAngle);
 		}
 	}
 
@@ -160,7 +156,7 @@ public class MovementAnimator {
 
 	private void playNoddingAnimation() {
 		if (noddingRotation.getStatus() != Status.RUNNING) {
-			setGuyRotation(angle(guy.moveDir()));
+			setGuyRotation(angle(dirIndex(guy.moveDir())));
 			noddingRotation.setAxis(noddingRotationAxis());
 			noddingRotation.playFromStart();
 			LOG.info("%s: Nodding created and started", guy.name());
