@@ -29,14 +29,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.actors.Creature;
+import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -72,27 +71,27 @@ public class PacMovementAnimator {
 				createNoddingAnimation();
 			} else {
 				endNoddingAnimation();
-				noddingRotation = null;
+				nodding = null;
 			}
 		};
 	};
 
-	private final Creature guy;
-	private final Node guyNode;
-	private RotateTransition noddingRotation;
+	private final Pac pac;
+	private final Node pacNode;
+	private RotateTransition nodding;
 
-	public PacMovementAnimator(Creature guy, Node guyNode) {
-		this.guy = Objects.requireNonNull(guy);
-		this.guyNode = Objects.requireNonNull(guyNode);
+	public PacMovementAnimator(Pac pac, Node guyNode) {
+		this.pac = Objects.requireNonNull(pac);
+		this.pacNode = Objects.requireNonNull(guyNode);
 	}
 
 	private void createNoddingAnimation() {
-		noddingRotation = new RotateTransition(NODDING_DURATION, guyNode);
-		noddingRotation.setFromAngle(-30);
-		noddingRotation.setToAngle(30);
-		noddingRotation.setCycleCount(Animation.INDEFINITE);
-		noddingRotation.setAutoReverse(true);
-		noddingRotation.setInterpolator(Interpolator.EASE_BOTH);
+		nodding = new RotateTransition(NODDING_DURATION, pacNode);
+		nodding.setFromAngle(-30);
+		nodding.setToAngle(30);
+		nodding.setCycleCount(Animation.INDEFINITE);
+		nodding.setAutoReverse(true);
+		nodding.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void init() {
@@ -100,30 +99,26 @@ public class PacMovementAnimator {
 	}
 
 	public void update() {
-		guyNode.getTransforms().setAll(new Rotate(angle(dirIndex(guy.moveDir())), Rotate.Z_AXIS));
-		guyNode.setRotationAxis(noddingRotationAxis());
-		if (noddingRotation == null) {
+		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+		pacNode.getTransforms().setAll(new Rotate(angle(dirIndex(pac.moveDir())), Rotate.Z_AXIS));
+		pacNode.setRotationAxis(axis);
+		if (nodding == null) {
 			return;
 		}
-		if (guy.velocity().length() == 0 || !guy.moveResult.moved) {
+		if (pac.velocity().length() == 0 || !pac.moveResult.moved) {
 			endNoddingAnimation();
-			guyNode.setRotationAxis(noddingRotationAxis());
-			guyNode.setRotate(0);
-		} else if (noddingRotation.getStatus() != Status.RUNNING) {
-			noddingRotation.setAxis(noddingRotationAxis());
-			noddingRotation.playFromStart();
-			LOG.info("%s: Nodding created and started", guy.name());
+			pacNode.setRotate(0);
+		} else if (nodding.getStatus() != Status.RUNNING) {
+			nodding.setAxis(axis);
+			nodding.playFromStart();
+			LOG.info("%s: Nodding created and started", pac.name());
 		}
-	}
-
-	private Point3D noddingRotationAxis() {
-		return guy.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
 	private void endNoddingAnimation() {
-		if (noddingRotation != null && noddingRotation.getStatus() == Status.RUNNING) {
-			noddingRotation.stop();
-			LOG.info("%s: Nodding stopped", guy.name());
+		if (nodding != null && nodding.getStatus() == Status.RUNNING) {
+			nodding.stop();
+			LOG.info("%s: Nodding stopped", pac.name());
 		}
 	}
 }
