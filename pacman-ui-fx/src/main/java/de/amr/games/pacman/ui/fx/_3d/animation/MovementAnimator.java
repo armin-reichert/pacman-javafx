@@ -34,6 +34,7 @@ import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -100,15 +101,17 @@ public class MovementAnimator {
 	public void update() {
 		// is turn animation still running?
 		if (turnRotation != null && turnRotation.getStatus() == Status.RUNNING) {
-			LOG.info("%s: Turn animation is running", guy.name());
+			LOG.trace("%s: Turn animation is running", guy.name());
 			if (nodRotation != null) {
 				nodRotation.stop();
-				nodRotation = null;
 			}
 			return;
 		}
 		// has guy new move dir?
 		if (turnTargetDir != guy.moveDir()) {
+			if (nodRotation != null) {
+				nodRotation.stop();
+			}
 			nodRotation = null;
 			startNewTurnAnimation(turnTargetDir, guy.moveDir());
 			turnTargetDir = guy.moveDir();
@@ -124,6 +127,9 @@ public class MovementAnimator {
 		rotateNodeToGuyMoveDirection();
 		if (guy.velocity().length() == 0 || !guy.moveResult.moved) {
 			nodRotation.stop();
+			guyNode.setRotationAxis(nodRotationAxis());
+			guyNode.setRotate(0);
+			LOG.info("%s: Nodding stopped", guy.name());
 		}
 	}
 
@@ -146,14 +152,17 @@ public class MovementAnimator {
 		LOG.info("%s: Turn rotation started", guy.name());
 	}
 
-	private void startNewNoddingAnimation() {
-		nodRotation = new RotateTransition(Duration.seconds(0.3), guyNode);
-		var axis = switch (guy.moveDir()) {
+	private Point3D nodRotationAxis() {
+		return switch (guy.moveDir()) {
 		case UP, DOWN -> Rotate.X_AXIS;
 		case LEFT, RIGHT -> Rotate.Y_AXIS;
 		default -> throw new IllegalArgumentException();
 		};
-		nodRotation.setAxis(axis);
+	}
+
+	private void startNewNoddingAnimation() {
+		nodRotation = new RotateTransition(Duration.seconds(0.3), guyNode);
+		nodRotation.setAxis(nodRotationAxis());
 		nodRotation.setFromAngle(-20);
 		nodRotation.setToAngle(30);
 		nodRotation.setCycleCount(Animation.INDEFINITE);
