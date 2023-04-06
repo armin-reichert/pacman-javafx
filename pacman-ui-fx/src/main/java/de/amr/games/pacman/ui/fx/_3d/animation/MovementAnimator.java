@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Creature;
+import de.amr.games.pacman.model.common.actors.Pac;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -90,29 +91,33 @@ public class MovementAnimator {
 		this.guy = Objects.requireNonNull(guy);
 		this.guyNode = Objects.requireNonNull(guyNode);
 		this.noddingEnabled = noddingEnabled;
+		turnRotation = new RotateTransition(Duration.seconds(0.2), guyNode);
+		turnRotation.setAxis(Rotate.Z_AXIS);
+		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
+		turnRotation.setOnFinished(e -> {
+			LOG.trace("%s: Turn rotation finished", guy.name());
+		});
 	}
 
 	public void init() {
-		turnRotation = null;
-		nodRotation = null;
 		turnTargetDir = guy.moveDir();
+		turnRotation.stop();
+		endNodding();
 	}
 
 	public void update() {
-		// is turn animation still running?
-		if (turnRotation != null && turnRotation.getStatus() == Status.RUNNING) {
+		if (turnRotation.getStatus() == Status.RUNNING) {
 			LOG.trace("%s: Turn animation is running", guy.name());
-			endNodding();
 			return;
 		}
-		// has guy new move dir?
+		// guy move direction changed?
+		// TODO: store info in guy.moveResult?
 		if (turnTargetDir != guy.moveDir()) {
-			endNodding();
-			startNewTurnAnimation(turnTargetDir, guy.moveDir());
+			startTurnAnimation(turnTargetDir, guy.moveDir());
 			turnTargetDir = guy.moveDir();
+			endNodding();
 			return;
 		}
-		// start/play nodding?
 		if (!noddingEnabled) {
 			return;
 		}
@@ -132,19 +137,17 @@ public class MovementAnimator {
 		guyNode.getTransforms().setAll(new Rotate(angle(guy.moveDir()), Rotate.Z_AXIS));
 	}
 
-	private void startNewTurnAnimation(Direction fromDir, Direction toDir) {
+	private void startTurnAnimation(Direction fromDir, Direction toDir) {
 		var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
-		turnRotation = new RotateTransition(Duration.seconds(0.2), guyNode);
-		turnRotation.setAxis(Rotate.Z_AXIS);
-		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
-		turnRotation.setOnFinished(e -> {
-			LOG.trace("%s: Turn rotation finished", guy.name());
-		});
+		turnRotation.stop();
 		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setFromAngle(turn.fromAngle);
 		turnRotation.setToAngle(turn.toAngle);
 		turnRotation.playFromStart();
-		LOG.trace("%s: Turn rotation started", guy.name());
+		if (guy instanceof Pac) {
+			LOG.info("%s: Turn rotation %s -> %s (%d -> %d) started", guy.name(), fromDir, toDir, turn.fromAngle,
+					turn.toAngle);
+		}
 	}
 
 	private Point3D nodRotationAxis() {
