@@ -109,8 +109,10 @@ public class PacMovementAnimator {
 			endNoddingAnimation();
 			guyNode.setRotationAxis(noddingRotationAxis());
 			guyNode.setRotate(0);
-		} else {
-			playNoddingAnimation();
+		} else if (noddingRotation.getStatus() != Status.RUNNING) {
+			noddingRotation.setAxis(noddingRotationAxis());
+			noddingRotation.playFromStart();
+			LOG.info("%s: Nodding created and started", guy.name());
 		}
 	}
 
@@ -120,15 +122,6 @@ public class PacMovementAnimator {
 
 	private Point3D noddingRotationAxis() {
 		return guy.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-	}
-
-	private void playNoddingAnimation() {
-		if (noddingRotation.getStatus() != Status.RUNNING) {
-			setGuyRotation(angle(dirIndex(guy.moveDir())));
-			noddingRotation.setAxis(noddingRotationAxis());
-			noddingRotation.playFromStart();
-			LOG.info("%s: Nodding created and started", guy.name());
-		}
 	}
 
 	private void endNoddingAnimation() {
