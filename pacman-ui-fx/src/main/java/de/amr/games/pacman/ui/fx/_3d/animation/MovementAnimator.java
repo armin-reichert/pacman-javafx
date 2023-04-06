@@ -80,6 +80,7 @@ public class MovementAnimator {
 			if (get()) {
 				createNoddingAnimation();
 			} else {
+				endNoddingAnimation();
 				noddingRotation = null;
 			}
 		};

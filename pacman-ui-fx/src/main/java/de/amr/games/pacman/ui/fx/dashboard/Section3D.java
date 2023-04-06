@@ -50,9 +50,10 @@ public class Section3D extends Section {
 	private final ColorPicker pickerLightColor;
 	private final ComboBox<String> comboFloorTexture;
 	private final ColorPicker pickerFloorColor;
+	private final CheckBox cbPacLighted;
+	private final CheckBox cbPacNodding;
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
-	private final CheckBox cbPacLighted;
 
 	public Section3D(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
@@ -74,6 +75,7 @@ public class Section3D extends Section {
 		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
 		cbSquirting = addCheckBox("Energizer Eaten Animation", () -> Ufx.toggle(Env.d3_eatingEnergizerAnimatedPy));
 		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.d3_pacLightedPy));
+		cbPacNodding = addCheckBox("Pac-Man nodding", () -> Ufx.toggle(Env.d3_pacNoddingPy));
 		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.d3_axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
 	}
@@ -95,6 +97,8 @@ public class Section3D extends Section {
 		cbSquirting.setSelected(Env.d3_eatingEnergizerAnimatedPy.get());
 		cbPacLighted.setDisable(no3D);
 		cbPacLighted.setSelected(Env.d3_pacLightedPy.get());
+		cbPacNodding.setDisable(no3D);
+		cbPacNodding.setSelected(Env.d3_pacNoddingPy.get());
 		cbAxesVisible.setDisable(no3D);
 		cbAxesVisible.setSelected(Env.d3_axesVisiblePy.get());
 		cbWireframeMode.setDisable(no3D);
