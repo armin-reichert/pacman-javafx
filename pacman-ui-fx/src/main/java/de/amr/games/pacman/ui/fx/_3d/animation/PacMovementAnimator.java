@@ -111,14 +111,14 @@ public class PacMovementAnimator {
 		} else if (nodding.getStatus() != Status.RUNNING) {
 			nodding.setAxis(axis);
 			nodding.playFromStart();
-			LOG.info("%s: Nodding created and started", pac.name());
+			LOG.trace("%s: Nodding created and started", pac.name());
 		}
 	}
 
 	private void endNoddingAnimation() {
 		if (nodding != null && nodding.getStatus() == Status.RUNNING) {
 			nodding.stop();
-			LOG.info("%s: Nodding stopped", pac.name());
+			LOG.trace("%s: Nodding stopped", pac.name());
 		}
 	}
 }
