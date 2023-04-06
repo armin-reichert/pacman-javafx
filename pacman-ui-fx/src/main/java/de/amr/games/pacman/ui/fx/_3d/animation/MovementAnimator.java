@@ -47,6 +47,9 @@ public class MovementAnimator {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
+	private static final Duration TURN_DURATION = Duration.seconds(0.15);
+	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
+
 	public record Turn(int fromAngle, int toAngle) {
 	}
 
@@ -90,7 +93,7 @@ public class MovementAnimator {
 		this.guy = Objects.requireNonNull(guy);
 		this.guyNode = Objects.requireNonNull(guyNode);
 
-		turnRotation = new RotateTransition(Duration.seconds(0.2), guyNode);
+		turnRotation = new RotateTransition(TURN_DURATION, guyNode);
 		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
 		turnRotation.setOnFinished(e -> {
@@ -98,7 +101,7 @@ public class MovementAnimator {
 		});
 
 		if (noddingEnabled) {
-			noddingRotation = new RotateTransition(Duration.seconds(0.2), guyNode);
+			noddingRotation = new RotateTransition(NODDING_DURATION, guyNode);
 			noddingRotation.setFromAngle(-30);
 			noddingRotation.setToAngle(30);
 			noddingRotation.setCycleCount(Animation.INDEFINITE);
@@ -129,22 +132,22 @@ public class MovementAnimator {
 		if (noddingRotation == null) {
 			return;
 		}
-		rotateNodeToGuyMoveDirection();
 		if (guy.velocity().length() == 0 || !guy.moveResult.moved) {
 			endNoddingAnimation();
-			guyNode.setRotationAxis(nodRotationAxis());
+			guyNode.setRotationAxis(noddingRotationAxis());
 			guyNode.setRotate(0);
 		} else {
 			playNoddingAnimation();
 		}
 	}
 
-	private void rotateNodeToGuyMoveDirection() {
-		guyNode.getTransforms().setAll(new Rotate(angle(guy.moveDir()), Rotate.Z_AXIS));
+	private void setGuyRotation(double angle) {
+		guyNode.getTransforms().setAll(new Rotate(angle, Rotate.Z_AXIS));
 	}
 
 	private void playTurnAnimation(Direction fromDir, Direction toDir) {
 		var turn = TURN_ANGLES[index(fromDir)][index(toDir)];
+		setGuyRotation(turn.fromAngle % 360);
 		turnRotation.stop();
 		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setFromAngle(turn.fromAngle);
@@ -156,13 +159,14 @@ public class MovementAnimator {
 		}
 	}
 
-	private Point3D nodRotationAxis() {
+	private Point3D noddingRotationAxis() {
 		return guy.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
 	private void playNoddingAnimation() {
 		if (noddingRotation.getStatus() != Status.RUNNING) {
-			noddingRotation.setAxis(nodRotationAxis());
+			setGuyRotation(angle(guy.moveDir()));
+			noddingRotation.setAxis(noddingRotationAxis());
 			noddingRotation.playFromStart();
 			LOG.info("%s: Nodding created and started", guy.name());
 		}
