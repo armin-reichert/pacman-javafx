@@ -116,23 +116,16 @@ public class MovementAnimator {
 		if (!noddingEnabled) {
 			return;
 		}
-		if (nodRotation == null) {
-			startNewNoddingAnimation();
-		}
 		rotateNodeToGuyMoveDirection();
 		if (guy.velocity().length() == 0 || !guy.moveResult.moved) {
 			endNodding();
 			guyNode.setRotationAxis(nodRotationAxis());
 			guyNode.setRotate(0);
+		} else {
+			if (nodRotation == null) {
+				beginNodding();
+			}
 		}
-	}
-
-	private void endNodding() {
-		if (nodRotation != null) {
-			nodRotation.stop();
-		}
-		nodRotation = null;
-		LOG.info("%s: Nodding stopped", guy.name());
 	}
 
 	private void rotateNodeToGuyMoveDirection() {
@@ -151,25 +144,30 @@ public class MovementAnimator {
 		turnRotation.setFromAngle(turn.fromAngle);
 		turnRotation.setToAngle(turn.toAngle);
 		turnRotation.playFromStart();
-		LOG.info("%s: Turn rotation started", guy.name());
+		LOG.trace("%s: Turn rotation started", guy.name());
 	}
 
 	private Point3D nodRotationAxis() {
-		return switch (guy.moveDir()) {
-		case UP, DOWN -> Rotate.X_AXIS;
-		case LEFT, RIGHT -> Rotate.Y_AXIS;
-		default -> throw new IllegalArgumentException();
-		};
+		return guy.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
-	private void startNewNoddingAnimation() {
-		nodRotation = new RotateTransition(Duration.seconds(0.3), guyNode);
+	private void beginNodding() {
+		nodRotation = new RotateTransition(Duration.seconds(0.25), guyNode);
 		nodRotation.setAxis(nodRotationAxis());
-		nodRotation.setFromAngle(-20);
+		nodRotation.setFromAngle(-30);
 		nodRotation.setToAngle(30);
 		nodRotation.setCycleCount(Animation.INDEFINITE);
 		nodRotation.setAutoReverse(true);
-		nodRotation.setInterpolator(Interpolator.EASE_IN);
+		nodRotation.setInterpolator(Interpolator.EASE_BOTH);
 		nodRotation.playFromStart();
+		LOG.info("%s: Nodding created and started", guy.name());
+	}
+
+	private void endNodding() {
+		if (nodRotation != null) {
+			nodRotation.stop();
+			nodRotation = null;
+			LOG.info("%s: Nodding stopped", guy.name());
+		}
 	}
 }
