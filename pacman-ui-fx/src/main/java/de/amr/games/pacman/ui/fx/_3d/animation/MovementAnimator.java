@@ -82,9 +82,9 @@ public class MovementAnimator {
 	private final Node guyNode;
 
 	private Direction turnTargetDir;
-	private RotateTransition turnRotation;
+	private final RotateTransition turnRotation;
 
-	private RotateTransition nodRotation;
+	private final RotateTransition nodRotation;
 	private boolean noddingEnabled = false;
 
 	public MovementAnimator(Creature guy, Node guyNode, boolean noddingEnabled) {
@@ -97,6 +97,12 @@ public class MovementAnimator {
 		turnRotation.setOnFinished(e -> {
 			LOG.trace("%s: Turn rotation finished", guy.name());
 		});
+		nodRotation = new RotateTransition(Duration.seconds(0.25), guyNode);
+		nodRotation.setFromAngle(-30);
+		nodRotation.setToAngle(30);
+		nodRotation.setCycleCount(Animation.INDEFINITE);
+		nodRotation.setAutoReverse(true);
+		nodRotation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void init() {
@@ -127,9 +133,7 @@ public class MovementAnimator {
 			guyNode.setRotationAxis(nodRotationAxis());
 			guyNode.setRotate(0);
 		} else {
-			if (nodRotation == null) {
-				beginNodding();
-			}
+			playNoddingAnimation();
 		}
 	}
 
@@ -154,22 +158,17 @@ public class MovementAnimator {
 		return guy.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
-	private void beginNodding() {
-		nodRotation = new RotateTransition(Duration.seconds(0.25), guyNode);
-		nodRotation.setAxis(nodRotationAxis());
-		nodRotation.setFromAngle(-30);
-		nodRotation.setToAngle(30);
-		nodRotation.setCycleCount(Animation.INDEFINITE);
-		nodRotation.setAutoReverse(true);
-		nodRotation.setInterpolator(Interpolator.EASE_BOTH);
-		nodRotation.playFromStart();
-		LOG.info("%s: Nodding created and started", guy.name());
+	private void playNoddingAnimation() {
+		if (nodRotation.getStatus() != Status.RUNNING) {
+			nodRotation.setAxis(nodRotationAxis());
+			nodRotation.playFromStart();
+			LOG.info("%s: Nodding created and started", guy.name());
+		}
 	}
 
 	private void endNodding() {
-		if (nodRotation != null) {
+		if (nodRotation.getStatus() == Status.RUNNING) {
 			nodRotation.stop();
-			nodRotation = null;
 			LOG.info("%s: Nodding stopped", guy.name());
 		}
 	}
