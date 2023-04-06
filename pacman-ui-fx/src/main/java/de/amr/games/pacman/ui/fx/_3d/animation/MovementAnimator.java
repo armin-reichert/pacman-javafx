@@ -35,6 +35,8 @@ import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
@@ -72,6 +74,17 @@ public class MovementAnimator {
 		return dirIndex * 90.0;
 	}
 
+	public final BooleanProperty noddingPy = new SimpleBooleanProperty(this, "nodding", false) {
+		@Override
+		protected void invalidated() {
+			if (get()) {
+				createNoddingAnimation();
+			} else {
+				noddingRotation = null;
+			}
+		};
+	};
+
 	private final Creature guy;
 	private final Node guyNode;
 
@@ -80,25 +93,24 @@ public class MovementAnimator {
 
 	private RotateTransition noddingRotation;
 
-	public MovementAnimator(Creature guy, Node guyNode, boolean noddingEnabled) {
+	public MovementAnimator(Creature guy, Node guyNode) {
 		this.guy = Objects.requireNonNull(guy);
 		this.guyNode = Objects.requireNonNull(guyNode);
-
 		turnRotation = new RotateTransition(TURN_DURATION, guyNode);
 		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
 		turnRotation.setOnFinished(e -> {
 			LOG.trace("%s: Turn rotation finished", guy.name());
 		});
+	}
 
-		if (noddingEnabled) {
-			noddingRotation = new RotateTransition(NODDING_DURATION, guyNode);
-			noddingRotation.setFromAngle(-30);
-			noddingRotation.setToAngle(30);
-			noddingRotation.setCycleCount(Animation.INDEFINITE);
-			noddingRotation.setAutoReverse(true);
-			noddingRotation.setInterpolator(Interpolator.EASE_BOTH);
-		}
+	private void createNoddingAnimation() {
+		noddingRotation = new RotateTransition(NODDING_DURATION, guyNode);
+		noddingRotation.setFromAngle(-30);
+		noddingRotation.setToAngle(30);
+		noddingRotation.setCycleCount(Animation.INDEFINITE);
+		noddingRotation.setAutoReverse(true);
+		noddingRotation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void init() {
