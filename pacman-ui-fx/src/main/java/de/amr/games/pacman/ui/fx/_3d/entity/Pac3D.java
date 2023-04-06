@@ -71,13 +71,13 @@ public class Pac3D {
 	private final Color headColor;
 	private final PointLight light;
 
-	public Pac3D(GameLevel level, Pac pac, Group root, Color headColor) {
+	public Pac3D(GameLevel level, Pac pac, Group pacNode, Color headColor) {
 		this.level = level;
 		this.pac = pac;
-		this.root = root;
+		this.root = new Group(pacNode);
 		this.movementAnimation = new MovementAnimator(pac, root, true);
 		this.headColor = headColor;
-		Stream.of(PacShape3D.head(root), PacShape3D.eyes(root), PacShape3D.palate(root))
+		Stream.of(PacShape3D.head(pacNode), PacShape3D.eyes(pacNode), PacShape3D.palate(pacNode))
 				.forEach(part -> part.drawModeProperty().bind(drawModePy));
 		light = createLight();
 		init();
