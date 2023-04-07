@@ -82,9 +82,9 @@ public class PacMovementAnimator {
 	private final Node pacNode;
 	private RotateTransition nodding;
 
-	public PacMovementAnimator(Pac pac, Node guyNode) {
+	public PacMovementAnimator(Pac pac, Node pacNode) {
 		this.pac = Objects.requireNonNull(pac);
-		this.pacNode = Objects.requireNonNull(guyNode);
+		this.pacNode = Objects.requireNonNull(pacNode);
 	}
 
 	private void createNoddingAnimation() {
