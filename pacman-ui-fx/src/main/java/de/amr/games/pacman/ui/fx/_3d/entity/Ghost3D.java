@@ -96,7 +96,7 @@ public class Ghost3D {
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
 
-		numberCube = new Box(8, 8, 12);
+		numberCube = new Box(14, 8, 8);
 
 		root.getChildren().add(coloredGhost3D.getRoot());
 		root.getChildren().add(numberCube);
