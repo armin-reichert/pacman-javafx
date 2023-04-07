@@ -45,7 +45,6 @@ import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -79,7 +78,7 @@ public class Pac3D {
 			if (get()) {
 				createNoddingAnimation();
 			} else {
-				endNoddingAnimation();
+				endNodding();
 				nodding = null;
 			}
 		}
@@ -124,7 +123,7 @@ public class Pac3D {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		endNoddingAnimation();
+		endNodding();
 		update();
 	}
 
@@ -134,12 +133,11 @@ public class Pac3D {
 		} else {
 			root.setVisible(pac.isVisible());
 		}
+		moveDirRotate.setAngle(Turn.angle(pac.moveDir()));
 		root.setTranslateX(pac.center().x());
 		root.setTranslateY(pac.center().y());
 		root.setTranslateZ(-HTS);
-		moveDirRotate.setAngle(Turn.angle(pac.moveDir()));
-		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-		root.setRotationAxis(axis);
+		root.setRotationAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
 		if (nodding != null) {
 			updateNodding();
 		}
@@ -157,7 +155,7 @@ public class Pac3D {
 
 	private void updateNodding() {
 		if (pac.velocity().length() == 0 || !pac.moveResult.moved || pac.restingTicks() == Pac.REST_FOREVER) {
-			endNoddingAnimation();
+			endNodding();
 			root.setRotate(0);
 		} else if (nodding.getStatus() != Status.RUNNING) {
 			var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
@@ -167,7 +165,7 @@ public class Pac3D {
 		}
 	}
 
-	private void endNoddingAnimation() {
+	private void endNodding() {
 		if (nodding != null && nodding.getStatus() == Status.RUNNING) {
 			nodding.stop();
 			LOG.trace("%s: Nodding stopped", pac.name());
@@ -183,11 +181,11 @@ public class Pac3D {
 		};
 	}
 
-	private Transition createPacManDyingAnimation() {
+	private Animation createPacManDyingAnimation() {
 		return new SequentialTransition(Ufx.pause(0.25), new CollapseAnimation(root).getAnimation());
 	}
 
-	private Transition createMsPacManDyingAnimation() {
+	private Animation createMsPacManDyingAnimation() {
 		var layOnBack = new RotateTransition(Duration.seconds(0.2), root);
 		layOnBack.setAxis(Rotate.Y_AXIS);
 		layOnBack.setFromAngle(0);
