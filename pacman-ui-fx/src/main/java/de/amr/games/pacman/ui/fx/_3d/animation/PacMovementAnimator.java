@@ -121,7 +121,7 @@ public class PacMovementAnimator {
 	}
 
 	private void updateNodding() {
-		if (pac.velocity().length() == 0 || !pac.moveResult.moved) {
+		if (pac.velocity().length() == 0 || !pac.moveResult.moved || pac.restingTicks() == Pac.REST_FOREVER) {
 			endNoddingAnimation();
 			pacNode.setRotate(0);
 		} else if (nodding.getStatus() != Status.RUNNING) {
