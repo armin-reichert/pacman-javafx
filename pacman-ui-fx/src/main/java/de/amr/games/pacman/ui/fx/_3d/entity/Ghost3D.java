@@ -80,7 +80,7 @@ public class Ghost3D {
 	private final Ghost ghost;
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
-	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
+	private Box numberCube;
 	private Direction turnTargetDir;
 	private final RotateTransition turnAnimation;
 	private final RotateTransition brakeAnimation;
@@ -95,6 +95,8 @@ public class Ghost3D {
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
+
+		numberCube = new Box(8, 8, 12);
 
 		root.getChildren().add(coloredGhost3D.getRoot());
 		root.getChildren().add(numberCube);
