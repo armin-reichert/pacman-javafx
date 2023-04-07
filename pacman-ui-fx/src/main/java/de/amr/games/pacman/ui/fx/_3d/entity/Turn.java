@@ -44,7 +44,7 @@ public class Turn {
 		{ {-U, L}, {D, R}, {-U, U}, null    }, // DOWN  -> *
 	};
 
-	public static byte dirIndex(Direction dir) {
+	private static byte dirIndex(Direction dir) {
 		return switch (dir) {	case LEFT -> L;	case RIGHT -> R; case UP -> U; case DOWN -> D; default -> L; };
 	}
 	//@formatter:on

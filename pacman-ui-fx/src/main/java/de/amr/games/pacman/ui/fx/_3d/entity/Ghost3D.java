@@ -122,7 +122,7 @@ public class Ghost3D {
 		turnTargetDir = ghost.moveDir();
 		turnRotation.stop();
 		root.setRotationAxis(Rotate.Z_AXIS);
-		root.setRotate(Turn.angle(Turn.dirIndex(ghost.moveDir())));
+		root.setRotate(Turn.angle(ghost.moveDir()));
 		update();
 	}
 
