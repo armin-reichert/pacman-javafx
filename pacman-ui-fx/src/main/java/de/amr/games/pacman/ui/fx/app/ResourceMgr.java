@@ -77,6 +77,7 @@ public class ResourceMgr {
 		addFloorTexture(KEY_NO_TEXTURE, null);
 		addFloorTexture("Chrome", "chrome");
 		addFloorTexture("Grass", "grass");
+		addFloorTexture("Hexagon", "hexagon");
 		addFloorTexture("Knobs & Bumps", "knobs");
 		addFloorTexture("Pavement", "pavement");
 		addFloorTexture("Plastic", "plastic");
