@@ -90,11 +90,11 @@ public class Pac3D {
 
 	private final GameLevel level;
 	private final Pac pac;
-	private final Rotate moveDirRotate;
-	private RotateTransition nodding;
 	private final Group root;
 	private final Color headColor;
 	private final PointLight light;
+	private final Rotate orientation;
+	private RotateTransition nodding;
 
 	public Pac3D(GameLevel level, Pac pac, Group pacNode, Color headColor) {
 		this.level = Objects.requireNonNull(level);
@@ -103,8 +103,8 @@ public class Pac3D {
 		root = new Group(Objects.requireNonNull(pacNode));
 		Stream.of(head(pacNode), eyes(pacNode), palate(pacNode)).map(Shape3D::drawModeProperty)
 				.forEach(py -> py.bind(drawModePy));
-		moveDirRotate = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
-		pacNode.getTransforms().setAll(moveDirRotate);
+		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
+		pacNode.getTransforms().setAll(orientation);
 		noddingPy.bind(Env.d3_pacNoddingPy);
 		light = createLight();
 		init();
@@ -133,7 +133,7 @@ public class Pac3D {
 		} else {
 			root.setVisible(pac.isVisible());
 		}
-		moveDirRotate.setAngle(Turn.angle(pac.moveDir()));
+		orientation.setAngle(Turn.angle(pac.moveDir()));
 		root.setTranslateX(pac.center().x());
 		root.setTranslateY(pac.center().y());
 		root.setTranslateZ(-HTS);
