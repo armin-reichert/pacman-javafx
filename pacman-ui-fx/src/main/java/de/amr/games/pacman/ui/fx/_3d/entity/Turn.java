@@ -54,6 +54,6 @@ public class Turn {
 	}
 
 	public static double angle(Direction dir) {
-		return angle(dirIndex(dir)) * 90.0;
+		return angle(dirIndex(dir));
 	}
 }

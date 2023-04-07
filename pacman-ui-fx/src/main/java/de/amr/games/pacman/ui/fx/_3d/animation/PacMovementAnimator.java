@@ -30,8 +30,8 @@ import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.ui.fx._3d.entity.Turn;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -50,21 +50,6 @@ public class PacMovementAnimator {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
-
-	private static final byte L = 0;
-	private static final byte U = 1;
-	private static final byte R = 2;
-	private static final byte D = 3;
-
-	//@formatter:off
-	private static byte dirIndex(Direction dir) {
-		return switch (dir) {	case LEFT -> L;	case RIGHT -> R; case UP -> U; case DOWN -> D; default -> L; };
-	}
-	//@formatter:on
-
-	private static double angle(byte dirIndex) {
-		return dirIndex * 90.0;
-	}
 
 	public final BooleanProperty noddingPy = new SimpleBooleanProperty(this, "nodding", false) {
 		@Override
@@ -117,7 +102,7 @@ public class PacMovementAnimator {
 	}
 
 	private double moveDirAngle() {
-		return angle(dirIndex(pac.moveDir()));
+		return Turn.angle(pac.moveDir());
 	}
 
 	private void updateNodding() {
