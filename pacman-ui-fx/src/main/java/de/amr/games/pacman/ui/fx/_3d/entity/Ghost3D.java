@@ -169,13 +169,11 @@ public class Ghost3D {
 	}
 
 	private void playTurnAnimation(Direction fromDir, Direction toDir) {
-		var turn = Turn.TURNS[fromDir.ordinal()][toDir.ordinal()];
-		double fromAngle = Turn.angle(turn[0]);
-		double toAngle = Turn.angle(turn[1]);
+		var turnAngles = Turn.angles(fromDir, toDir);
 		turnRotation.stop();
 		turnRotation.setAxis(Rotate.Z_AXIS);
-		turnRotation.setFromAngle(fromAngle);
-		turnRotation.setToAngle(toAngle);
+		turnRotation.setFromAngle(turnAngles.from());
+		turnRotation.setToAngle(turnAngles.to());
 		turnRotation.playFromStart();
 	}
 
