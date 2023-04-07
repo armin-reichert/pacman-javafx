@@ -79,7 +79,7 @@ public class Ghost3D {
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
-	private final GhostMovementAnimator movementAnimator;
+	private final GhostMovementAnimator movement;
 	private final RotateTransition brakeAnimation;
 	private Image numberImage;
 	private Look currentLook;
@@ -96,7 +96,7 @@ public class Ghost3D {
 		root.getChildren().add(coloredGhost3D.getRoot());
 		root.getChildren().add(numberCube);
 
-		movementAnimator = new GhostMovementAnimator(ghost, root);
+		movement = new GhostMovementAnimator(ghost, root);
 		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
 
 		init();
@@ -112,8 +112,7 @@ public class Ghost3D {
 	}
 
 	public void init() {
-		showAsColoredGhost(true);
-		movementAnimator.init();
+		movement.init();
 		update();
 	}
 
@@ -129,7 +128,7 @@ public class Ghost3D {
 			setLook(newLook);
 		}
 		if (currentLook != Look.NUMBER) {
-			movementAnimator.update();
+			movement.update();
 			if (ghost.moveResult.tunnelEntered) {
 				brakeAnimation.playFromStart();
 			}
