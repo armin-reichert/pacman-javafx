@@ -23,13 +23,20 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
+
 import java.util.Objects;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
-import de.amr.games.pacman.ui.fx._3d.animation.GhostMovementAnimator;
+import javafx.animation.Animation.Status;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -58,6 +65,34 @@ import javafx.util.Duration;
  */
 public class Ghost3D {
 
+	private static final Logger LOG = LogManager.getFormatterLogger();
+
+	private static final Duration TURN_DURATION = Duration.seconds(0.15);
+
+	private static final byte L = 0;
+	private static final byte U = 1;
+	private static final byte R = 2;
+	private static final byte D = 3;
+
+	//@formatter:off
+	private static byte dirIndex(Direction dir) {
+		return switch (dir) {	case LEFT -> L;	case RIGHT -> R; case UP -> U; case DOWN -> D; default -> L; };
+	}
+	//@formatter:on
+
+	//@formatter:off
+	private static final byte[][][] TURNS = {
+		{ null,    {L, R}, {L, U},  {L, -U} }, // LEFT  -> *
+		{ {R, L},  null,   {R, U},  {R, D}  }, // RIGHT -> *
+		{ {U, L},  {U, R}, null,    {U, D}  }, // UP    -> *
+		{ {-U, L}, {D, R}, {-U, U}, null    }, // DOWN  -> *
+	};
+	//@formatter:on
+
+	private static double angle(byte dirIndex) {
+		return dirIndex * 90.0;
+	}
+
 	private static RotateTransition createBrakeAnimation(Node node) {
 		var animation = new RotateTransition(Duration.seconds(0.4), node);
 		animation.setAxis(Rotate.Y_AXIS);
@@ -79,7 +114,8 @@ public class Ghost3D {
 	private final Group root = new Group();
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
-	private final GhostMovementAnimator movement;
+	private Direction turnTargetDir;
+	private final RotateTransition turnRotation;
 	private final RotateTransition brakeAnimation;
 	private Image numberImage;
 	private Look currentLook;
@@ -96,7 +132,12 @@ public class Ghost3D {
 		root.getChildren().add(coloredGhost3D.getRoot());
 		root.getChildren().add(numberCube);
 
-		movement = new GhostMovementAnimator(ghost, root);
+		turnRotation = new RotateTransition(TURN_DURATION, root);
+		turnRotation.setAxis(Rotate.Z_AXIS);
+		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
+		turnRotation.setOnFinished(e -> {
+			LOG.trace("%s: Turn rotation finished", ghost.name());
+		});
 		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
 
 		init();
@@ -112,7 +153,10 @@ public class Ghost3D {
 	}
 
 	public void init() {
-		movement.init();
+		turnTargetDir = ghost.moveDir();
+		turnRotation.stop();
+		root.setRotationAxis(Rotate.Z_AXIS);
+		root.setRotate(angle(dirIndex(ghost.moveDir())));
 		update();
 	}
 
@@ -128,12 +172,35 @@ public class Ghost3D {
 			setLook(newLook);
 		}
 		if (currentLook != Look.NUMBER) {
-			movement.update();
+			root.setTranslateX(ghost.center().x());
+			root.setTranslateY(ghost.center().y());
+			root.setTranslateZ(-HTS);
+			if (turnRotation.getStatus() == Status.RUNNING) {
+				LOG.trace("%s: Turn animation is running", ghost.name());
+				return;
+			}
+			// guy move direction changed?
+			// TODO: store info in guy.moveResult?
+			if (turnTargetDir != ghost.moveDir()) {
+				playTurnAnimation(turnTargetDir, ghost.moveDir());
+				turnTargetDir = ghost.moveDir();
+			}
 			if (ghost.moveResult.tunnelEntered) {
 				brakeAnimation.playFromStart();
 			}
 		}
 		root.setVisible(ghost.isVisible() && !outsideWorld());
+	}
+
+	private void playTurnAnimation(Direction fromDir, Direction toDir) {
+		var turn = TURNS[fromDir.ordinal()][toDir.ordinal()];
+		double fromAngle = angle(turn[0]);
+		double toAngle = angle(turn[1]);
+		turnRotation.stop();
+		turnRotation.setAxis(Rotate.Z_AXIS);
+		turnRotation.setFromAngle(fromAngle);
+		turnRotation.setToAngle(toAngle);
+		turnRotation.playFromStart();
 	}
 
 	public void setNumberImage(Image numberImage) {
