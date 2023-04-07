@@ -67,6 +67,7 @@ public class Ghost3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
+	private static final Duration BRAKE_DURATION = Duration.seconds(0.4);
 	private static final Duration TURN_DURATION = Duration.seconds(0.15);
 
 	private enum Look {
@@ -81,7 +82,7 @@ public class Ghost3D {
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(World.TS, World.TS, World.TS);
 	private Direction turnTargetDir;
-	private final RotateTransition turnRotation;
+	private final RotateTransition turnAnimation;
 	private final RotateTransition brakeAnimation;
 	private Image numberImage;
 	private Look currentLook;
@@ -98,20 +99,21 @@ public class Ghost3D {
 		root.getChildren().add(coloredGhost3D.getRoot());
 		root.getChildren().add(numberCube);
 
-		turnRotation = new RotateTransition(TURN_DURATION, root);
-		turnRotation.setAxis(Rotate.Z_AXIS);
-		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
-		turnRotation.setOnFinished(e -> {
+		turnAnimation = new RotateTransition(TURN_DURATION, root);
+		turnAnimation.setAxis(Rotate.Z_AXIS);
+		turnAnimation.setInterpolator(Interpolator.EASE_BOTH);
+		turnAnimation.setOnFinished(e -> {
 			LOG.trace("%s: Turn rotation finished", ghost.name());
 		});
-		brakeAnimation = createBrakeAnimation(coloredGhost3D.getRoot());
+
+		brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.getRoot());
+		brakeAnimation.setAxis(Rotate.Y_AXIS);
+		brakeAnimation.setFromAngle(0);
+		brakeAnimation.setToAngle(-35);
+		brakeAnimation.setAutoReverse(true);
+		brakeAnimation.setCycleCount(2);
 
 		init();
-	}
-
-	private void showAsColoredGhost(boolean visible) {
-		coloredGhost3D.getRoot().setVisible(visible);
-		numberCube.setVisible(!visible);
 	}
 
 	public Node getRoot() {
@@ -120,7 +122,7 @@ public class Ghost3D {
 
 	public void init() {
 		turnTargetDir = ghost.moveDir();
-		turnRotation.stop();
+		turnAnimation.stop();
 		root.setRotationAxis(Rotate.Z_AXIS);
 		root.setRotate(Turn.angle(ghost.moveDir()));
 		update();
@@ -135,19 +137,30 @@ public class Ghost3D {
 		root.setVisible(ghost.isVisible() && !outsideWorld());
 
 		if (currentLook != Look.NUMBER) {
-			if (turnRotation.getStatus() == Status.RUNNING) {
-				LOG.trace("%s: Turn animation is running", ghost.name());
-				return;
-			}
-			// guy move direction changed? TODO: store info in guy.moveResult?
-			if (turnTargetDir != ghost.moveDir()) {
-				playTurnAnimation(turnTargetDir, ghost.moveDir());
-				turnTargetDir = ghost.moveDir();
-			}
 			if (ghost.moveResult.tunnelEntered) {
 				brakeAnimation.playFromStart();
 			}
+			if (turnAnimation.getStatus() == Status.RUNNING) {
+				LOG.trace("%s: Turn animation is running", ghost.name());
+			} else if (turnTargetDir != ghost.moveDir()) { // move direction changed? TODO: store info in ghost.moveResult?
+				playTurnAnimation(turnTargetDir, ghost.moveDir());
+				turnTargetDir = ghost.moveDir();
+			}
 		}
+	}
+
+	private void playTurnAnimation(Direction fromDir, Direction toDir) {
+		var turnAngles = Turn.angles(fromDir, toDir);
+		turnAnimation.stop();
+		turnAnimation.setAxis(Rotate.Z_AXIS);
+		turnAnimation.setFromAngle(turnAngles.from());
+		turnAnimation.setToAngle(turnAngles.to());
+		turnAnimation.playFromStart();
+	}
+
+	private void showAsColoredGhost(boolean visible) {
+		coloredGhost3D.getRoot().setVisible(visible);
+		numberCube.setVisible(!visible);
 	}
 
 	private void updateLook() {
@@ -161,34 +174,6 @@ public class Ghost3D {
 		if (currentLook != newLook) {
 			setLook(newLook);
 		}
-	}
-
-	private boolean outsideWorld() {
-		double centerX = ghost.position().x() + World.HTS;
-		return centerX < 0 || centerX > level.world().numCols() * World.TS;
-	}
-
-	private RotateTransition createBrakeAnimation(Node node) {
-		var animation = new RotateTransition(Duration.seconds(0.4), node);
-		animation.setAxis(Rotate.Y_AXIS);
-		animation.setFromAngle(0);
-		animation.setToAngle(-35);
-		animation.setAutoReverse(true);
-		animation.setCycleCount(2);
-		return animation;
-	}
-
-	private void playTurnAnimation(Direction fromDir, Direction toDir) {
-		var turnAngles = Turn.angles(fromDir, toDir);
-		turnRotation.stop();
-		turnRotation.setAxis(Rotate.Z_AXIS);
-		turnRotation.setFromAngle(turnAngles.from());
-		turnRotation.setToAngle(turnAngles.to());
-		turnRotation.playFromStart();
-	}
-
-	public void setNumberImage(Image numberImage) {
-		this.numberImage = numberImage;
 	}
 
 	private void setLook(Look look) {
@@ -233,5 +218,14 @@ public class Ghost3D {
 
 	private Look frightenedOrFlashingLook() {
 		return level.pac().isPowerFading(level) ? Look.FLASHING : Look.FRIGHTENED;
+	}
+
+	private boolean outsideWorld() {
+		double centerX = ghost.position().x() + World.HTS;
+		return centerX < 0 || centerX > level.world().numCols() * World.TS;
+	}
+
+	public void setNumberImage(Image numberImage) {
+		this.numberImage = numberImage;
 	}
 }
