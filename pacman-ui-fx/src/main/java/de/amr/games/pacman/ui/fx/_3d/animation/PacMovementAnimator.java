@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
+
 import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
@@ -96,19 +98,27 @@ public class PacMovementAnimator {
 
 	public void init() {
 		endNoddingAnimation();
+		update();
 	}
 
 	public void update() {
+		pacNode.setTranslateX(pac.center().x());
+		pacNode.setTranslateY(pac.center().y());
+		pacNode.setTranslateZ(-HTS);
 		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 		pacNode.getTransforms().setAll(new Rotate(angle(dirIndex(pac.moveDir())), Rotate.Z_AXIS));
 		pacNode.setRotationAxis(axis);
-		if (nodding == null) {
-			return;
+		if (nodding != null) {
+			updateNodding();
 		}
+	}
+
+	private void updateNodding() {
 		if (pac.velocity().length() == 0 || !pac.moveResult.moved) {
 			endNoddingAnimation();
 			pacNode.setRotate(0);
 		} else if (nodding.getStatus() != Status.RUNNING) {
+			var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 			nodding.setAxis(axis);
 			nodding.playFromStart();
 			LOG.trace("%s: Nodding created and started", pac.name());

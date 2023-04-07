@@ -25,7 +25,11 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx._3d.entity.PacShape3D.eyes;
+import static de.amr.games.pacman.ui.fx._3d.entity.PacShape3D.head;
+import static de.amr.games.pacman.ui.fx._3d.entity.PacShape3D.palate;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.model.common.GameLevel;
@@ -48,6 +52,7 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -67,20 +72,20 @@ public class Pac3D {
 
 	private final GameLevel level;
 	private final Pac pac;
-	private final PacMovementAnimator movementAnimation;
+	private final PacMovementAnimator movement;
 	private final Group root;
 	private final Color headColor;
 	private final PointLight light;
 
 	public Pac3D(GameLevel level, Pac pac, Group pacNode, Color headColor) {
-		this.level = level;
-		this.pac = pac;
-		this.headColor = headColor;
-		root = new Group(pacNode);
-		movementAnimation = new PacMovementAnimator(pac, root);
-		movementAnimation.noddingPy.bind(Env.d3_pacNoddingPy);
-		Stream.of(PacShape3D.head(pacNode), PacShape3D.eyes(pacNode), PacShape3D.palate(pacNode))
-				.forEach(part -> part.drawModeProperty().bind(drawModePy));
+		this.level = Objects.requireNonNull(level);
+		this.pac = Objects.requireNonNull(pac);
+		this.headColor = Objects.requireNonNull(headColor);
+		root = new Group(Objects.requireNonNull(pacNode));
+		Stream.of(head(pacNode), eyes(pacNode), palate(pacNode)).map(Shape3D::drawModeProperty)
+				.forEach(py -> py.bind(drawModePy));
+		movement = new PacMovementAnimator(pac, root);
+		movement.noddingPy.bind(Env.d3_pacNoddingPy);
 		light = createLight();
 		init();
 	}
@@ -97,21 +102,17 @@ public class Pac3D {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		movementAnimation.init();
-		movementAnimation.update();
+		movement.init();
 		headColorPy.set(headColor);
 	}
 
 	public void update() {
-		root.setTranslateX(pac.center().x());
-		root.setTranslateY(pac.center().y());
-		root.setTranslateZ(-HTS);
 		if (outsideWorld()) {
 			root.setVisible(false);
 		} else {
 			root.setVisible(pac.isVisible());
 		}
-		movementAnimation.update();
+		movement.update();
 		updateLight();
 	}
 
