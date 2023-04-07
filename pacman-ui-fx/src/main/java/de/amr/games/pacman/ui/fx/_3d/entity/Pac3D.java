@@ -32,13 +32,16 @@ import static de.amr.games.pacman.ui.fx._3d.entity.PacShape3D.palate;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.PacMovementAnimator;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
@@ -66,13 +69,30 @@ import javafx.util.Duration;
  */
 public class Pac3D {
 
+	private static final Logger LOG = LogManager.getFormatterLogger();
+
+	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
+
+	public final BooleanProperty noddingPy = new SimpleBooleanProperty(this, "nodding", false) {
+		@Override
+		protected void invalidated() {
+			if (get()) {
+				createNoddingAnimation();
+			} else {
+				endNoddingAnimation();
+				nodding = null;
+			}
+		}
+	};
+
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
 	private final GameLevel level;
 	private final Pac pac;
-	private final PacMovementAnimator movement;
+	private final Rotate moveDirRotate;
+	private RotateTransition nodding;
 	private final Group root;
 	private final Color headColor;
 	private final PointLight light;
@@ -84,8 +104,9 @@ public class Pac3D {
 		root = new Group(Objects.requireNonNull(pacNode));
 		Stream.of(head(pacNode), eyes(pacNode), palate(pacNode)).map(Shape3D::drawModeProperty)
 				.forEach(py -> py.bind(drawModePy));
-		movement = new PacMovementAnimator(pac, root);
-		movement.noddingPy.bind(Env.d3_pacNoddingPy);
+		moveDirRotate = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
+		pacNode.getTransforms().setAll(moveDirRotate);
+		noddingPy.bind(Env.d3_pacNoddingPy);
 		light = createLight();
 		init();
 	}
@@ -99,11 +120,12 @@ public class Pac3D {
 	}
 
 	public void init() {
+		headColorPy.set(headColor);
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		movement.init();
-		headColorPy.set(headColor);
+		endNoddingAnimation();
+		update();
 	}
 
 	public void update() {
@@ -112,8 +134,44 @@ public class Pac3D {
 		} else {
 			root.setVisible(pac.isVisible());
 		}
-		movement.update();
+		root.setTranslateX(pac.center().x());
+		root.setTranslateY(pac.center().y());
+		root.setTranslateZ(-HTS);
+		moveDirRotate.setAngle(Turn.angle(pac.moveDir()));
+		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+		root.setRotationAxis(axis);
+		if (nodding != null) {
+			updateNodding();
+		}
 		updateLight();
+	}
+
+	private void createNoddingAnimation() {
+		nodding = new RotateTransition(NODDING_DURATION, root);
+		nodding.setFromAngle(-30);
+		nodding.setToAngle(30);
+		nodding.setCycleCount(Animation.INDEFINITE);
+		nodding.setAutoReverse(true);
+		nodding.setInterpolator(Interpolator.EASE_BOTH);
+	}
+
+	private void updateNodding() {
+		if (pac.velocity().length() == 0 || !pac.moveResult.moved || pac.restingTicks() == Pac.REST_FOREVER) {
+			endNoddingAnimation();
+			root.setRotate(0);
+		} else if (nodding.getStatus() != Status.RUNNING) {
+			var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+			nodding.setAxis(axis);
+			nodding.playFromStart();
+			LOG.trace("%s: Nodding created and started", pac.name());
+		}
+	}
+
+	private void endNoddingAnimation() {
+		if (nodding != null && nodding.getStatus() == Status.RUNNING) {
+			nodding.stop();
+			LOG.trace("%s: Nodding stopped", pac.name());
+		}
 	}
 
 	public Animation createDyingAnimation() {
