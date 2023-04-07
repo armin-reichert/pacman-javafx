@@ -127,6 +127,30 @@ public class Ghost3D {
 	}
 
 	public void update() {
+		updateLook();
+
+		root.setTranslateX(ghost.center().x());
+		root.setTranslateY(ghost.center().y());
+		root.setTranslateZ(-HTS);
+		root.setVisible(ghost.isVisible() && !outsideWorld());
+
+		if (currentLook != Look.NUMBER) {
+			if (turnRotation.getStatus() == Status.RUNNING) {
+				LOG.trace("%s: Turn animation is running", ghost.name());
+				return;
+			}
+			// guy move direction changed? TODO: store info in guy.moveResult?
+			if (turnTargetDir != ghost.moveDir()) {
+				playTurnAnimation(turnTargetDir, ghost.moveDir());
+				turnTargetDir = ghost.moveDir();
+			}
+			if (ghost.moveResult.tunnelEntered) {
+				brakeAnimation.playFromStart();
+			}
+		}
+	}
+
+	private void updateLook() {
 		var newLook = switch (ghost.state()) {
 		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
 		case FRIGHTENED -> frightenedOrFlashingLook();
@@ -137,25 +161,11 @@ public class Ghost3D {
 		if (currentLook != newLook) {
 			setLook(newLook);
 		}
-		if (currentLook != Look.NUMBER) {
-			root.setTranslateX(ghost.center().x());
-			root.setTranslateY(ghost.center().y());
-			root.setTranslateZ(-HTS);
-			if (turnRotation.getStatus() == Status.RUNNING) {
-				LOG.trace("%s: Turn animation is running", ghost.name());
-				return;
-			}
-			// guy move direction changed?
-			// TODO: store info in guy.moveResult?
-			if (turnTargetDir != ghost.moveDir()) {
-				playTurnAnimation(turnTargetDir, ghost.moveDir());
-				turnTargetDir = ghost.moveDir();
-			}
-			if (ghost.moveResult.tunnelEntered) {
-				brakeAnimation.playFromStart();
-			}
-		}
-		root.setVisible(ghost.isVisible() && !outsideWorld());
+	}
+
+	private boolean outsideWorld() {
+		double centerX = ghost.position().x() + World.HTS;
+		return centerX < 0 || centerX > level.world().numCols() * World.TS;
 	}
 
 	private RotateTransition createBrakeAnimation(Node node) {
@@ -212,11 +222,6 @@ public class Ghost3D {
 		default -> throw new IllegalArgumentException("Unknown Ghost3D look: %s ".formatted(look));
 		}
 		showAsColoredGhost(look != Look.NUMBER);
-	}
-
-	private boolean outsideWorld() {
-		double centerX = ghost.position().x() + World.HTS;
-		return centerX < 0 || centerX > level.world().numCols() * World.TS;
 	}
 
 	private Look normalOrFrightenedOrFlashingLook() {
