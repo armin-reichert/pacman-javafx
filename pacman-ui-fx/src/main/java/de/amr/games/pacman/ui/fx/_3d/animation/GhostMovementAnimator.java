@@ -23,6 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
+
 import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
@@ -96,6 +98,9 @@ public class GhostMovementAnimator {
 	}
 
 	public void update() {
+		ghostNode.setTranslateX(ghost.center().x());
+		ghostNode.setTranslateY(ghost.center().y());
+		ghostNode.setTranslateZ(-HTS);
 		if (turnRotation.getStatus() == Status.RUNNING) {
 			LOG.trace("%s: Turn animation is running", ghost.name());
 			return;
@@ -105,7 +110,6 @@ public class GhostMovementAnimator {
 		if (turnTargetDir != ghost.moveDir()) {
 			playTurnAnimation(turnTargetDir, ghost.moveDir());
 			turnTargetDir = ghost.moveDir();
-			return;
 		}
 	}
 

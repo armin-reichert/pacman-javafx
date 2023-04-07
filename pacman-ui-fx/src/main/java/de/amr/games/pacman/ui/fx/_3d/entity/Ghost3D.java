@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-
 import java.util.Objects;
 
 import de.amr.games.pacman.model.common.GameLevel;
@@ -137,9 +135,6 @@ public class Ghost3D {
 			}
 		}
 		root.setVisible(ghost.isVisible() && !outsideWorld());
-		root.setTranslateX(ghost.center().x());
-		root.setTranslateY(ghost.center().y());
-		root.setTranslateZ(-HTS);
 	}
 
 	public void setNumberImage(Image numberImage) {
