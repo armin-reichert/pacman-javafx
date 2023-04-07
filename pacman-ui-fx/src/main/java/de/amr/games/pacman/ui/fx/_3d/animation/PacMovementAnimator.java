@@ -75,16 +75,19 @@ public class PacMovementAnimator {
 				endNoddingAnimation();
 				nodding = null;
 			}
-		};
+		}
 	};
 
 	private final Pac pac;
 	private final Node pacNode;
+	private final Rotate moveDirRotate;
 	private RotateTransition nodding;
 
 	public PacMovementAnimator(Pac pac, Node pacNode) {
 		this.pac = Objects.requireNonNull(pac);
 		this.pacNode = Objects.requireNonNull(pacNode);
+		moveDirRotate = new Rotate(moveDirAngle(), Rotate.Z_AXIS);
+		pacNode.getTransforms().setAll(moveDirRotate);
 	}
 
 	private void createNoddingAnimation() {
@@ -105,12 +108,16 @@ public class PacMovementAnimator {
 		pacNode.setTranslateX(pac.center().x());
 		pacNode.setTranslateY(pac.center().y());
 		pacNode.setTranslateZ(-HTS);
+		moveDirRotate.setAngle(moveDirAngle());
 		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-		pacNode.getTransforms().setAll(new Rotate(angle(dirIndex(pac.moveDir())), Rotate.Z_AXIS));
 		pacNode.setRotationAxis(axis);
 		if (nodding != null) {
 			updateNodding();
 		}
+	}
+
+	private double moveDirAngle() {
+		return angle(dirIndex(pac.moveDir()));
 	}
 
 	private void updateNodding() {
