@@ -52,6 +52,12 @@ public class GhostMovementAnimator {
 	private static final byte D = 3;
 
 	//@formatter:off
+	private static byte dirIndex(Direction dir) {
+		return switch (dir) {	case LEFT -> L;	case RIGHT -> R; case UP -> U; case DOWN -> D; default -> L; };
+	}
+	//@formatter:on
+
+	//@formatter:off
 	private static final byte[][][] TURNS = {
 		{ null,    {L, R}, {L, U},  {L, -U} }, // LEFT  -> *
 		{ {R, L},  null,   {R, U},  {R, D}  }, // RIGHT -> *
@@ -65,12 +71,16 @@ public class GhostMovementAnimator {
 	}
 
 	private final Ghost ghost;
+	private final Node ghostNode;
+
 	private Direction turnTargetDir;
 	private final RotateTransition turnRotation;
 
-	public GhostMovementAnimator(Ghost ghost, Node guyNode) {
+	public GhostMovementAnimator(Ghost ghost, Node ghostNode) {
 		this.ghost = Objects.requireNonNull(ghost);
-		turnRotation = new RotateTransition(TURN_DURATION, guyNode);
+		this.ghostNode = Objects.requireNonNull(ghostNode);
+
+		turnRotation = new RotateTransition(TURN_DURATION, ghostNode);
 		turnRotation.setAxis(Rotate.Z_AXIS);
 		turnRotation.setInterpolator(Interpolator.EASE_BOTH);
 		turnRotation.setOnFinished(e -> {
@@ -81,6 +91,8 @@ public class GhostMovementAnimator {
 	public void init() {
 		turnTargetDir = ghost.moveDir();
 		turnRotation.stop();
+		ghostNode.setRotationAxis(Rotate.Z_AXIS);
+		ghostNode.setRotate(angle(dirIndex(ghost.moveDir())));
 	}
 
 	public void update() {
