@@ -122,8 +122,10 @@ public class GameLevel3D {
 		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
 
-		// lift Pac-Man a bit over floor
-		pac3D.getRoot().getTransforms().add(new Translate(0, 0, -1));
+		// lift guys a bit over floor
+		var liftOverFloor = new Translate(0, 0, -1);
+		pac3D.getRoot().getTransforms().add(liftOverFloor);
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(liftOverFloor));
 
 		selectRandomFloorTexture();
 	}

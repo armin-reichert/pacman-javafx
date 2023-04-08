@@ -47,7 +47,7 @@ import javafx.scene.transform.Translate;
  */
 public class ColoredGhost3D {
 
-	private static final Model3D MODEL3D = new Model3D("model3D/ghost.obj");
+	private static final Model3D GHOST_MODEL_3D = new Model3D("model3D/ghost.obj");
 	private static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	private static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
@@ -82,15 +82,15 @@ public class ColoredGhost3D {
 	public ColoredGhost3D(GhostColoring coloring) {
 		this.coloring = Objects.requireNonNull(coloring, "Ghost colors must not be null");
 
-		dress = new MeshView(MODEL3D.mesh(MESH_ID_GHOST_DRESS));
+		dress = new MeshView(GHOST_MODEL_3D.mesh(MESH_ID_GHOST_DRESS));
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
 		dressColorPy.set(coloring.normalDress());
 
-		eyeBalls = new MeshView(MODEL3D.mesh(MESH_ID_GHOST_EYE_BALLS));
+		eyeBalls = new MeshView(GHOST_MODEL_3D.mesh(MESH_ID_GHOST_EYE_BALLS));
 		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallsColorPy));
 		eyeBallsColorPy.set(coloring.normalEyeBalls());
 
-		pupils = new MeshView(MODEL3D.mesh(MESH_ID_GHOST_PUPILS));
+		pupils = new MeshView(GHOST_MODEL_3D.mesh(MESH_ID_GHOST_PUPILS));
 		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 		pupilsColorPy.set(coloring.normalPupils());
 
@@ -101,12 +101,9 @@ public class ColoredGhost3D {
 		eyesGroup.getTransforms().add(centerTransform);
 
 		root = new Group(dress, eyesGroup);
-		root.getTransforms().add(new Translate(0, 0, -1.5));
-
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		root.getTransforms().add(scale(root, SIZE));
 	}
