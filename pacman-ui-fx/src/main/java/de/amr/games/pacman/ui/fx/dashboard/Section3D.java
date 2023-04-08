@@ -83,25 +83,13 @@ public class Section3D extends Section {
 	@Override
 	public void update() {
 		super.update();
-		var no3D = !gameScene().is3D();
 		comboPerspective.setValue(Env.d3_perspectivePy.get());
-		comboPerspective.setDisable(no3D);
-		pickerLightColor.setDisable(no3D);
-		sliderWallHeight.setDisable(no3D);
 		sliderWallHeight.setValue(Env.d3_mazeWallHeightPy.get());
-		sliderWallThickness.setDisable(no3D);
-		comboFloorTexture.setDisable(no3D);
 		comboFloorTexture.setValue(Env.d3_floorTexturePy.get());
-		pickerFloorColor.setDisable(no3D);
-		cbEnergizerExplodes.setDisable(no3D);
 		cbEnergizerExplodes.setSelected(Env.d3_energizerExplodesPy.get());
-		cbPacLighted.setDisable(no3D);
 		cbPacLighted.setSelected(Env.d3_pacLightedPy.get());
-		cbPacNodding.setDisable(no3D);
 		cbPacNodding.setSelected(Env.d3_pacNoddingPy.get());
-		cbAxesVisible.setDisable(no3D);
 		cbAxesVisible.setSelected(Env.d3_axesVisiblePy.get());
-		cbWireframeMode.setDisable(no3D);
 		cbWireframeMode.setSelected(Env.d3_drawModePy.get() == DrawMode.LINE);
 	}
 }
