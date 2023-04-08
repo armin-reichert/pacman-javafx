@@ -166,13 +166,13 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D() {
-		var shape = PacShape3D.createPacManShape(8.5, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
+		var shape = PacShape3D.createPacManShape(9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
 				ArcadeTheme.PALATE_COLOR);
 		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Pac3D createMsPacMan3D() {
-		var shape = PacShape3D.createMsPacManShape(8.5, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
+		var shape = PacShape3D.createMsPacManShape(9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
 				ArcadeTheme.PALATE_COLOR, ArcadeTheme.HAIRBOW_COLOR, ArcadeTheme.HAIRBOW_PEARLS_COLOR);
 		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
