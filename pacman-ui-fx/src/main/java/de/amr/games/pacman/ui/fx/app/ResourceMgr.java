@@ -60,9 +60,6 @@ public class ResourceMgr {
 	private static final Picker<String> PICKER_MSG_LEVEL_COMPLETE = createPicker(MESSAGES_BUNDLE, "level.complete");
 	private static final Picker<String> PICKER_MSG_GAME_OVER = createPicker(MESSAGES_BUNDLE, "game.over");
 
-	public static final Image APP_ICON_PACMAN = image("icons/pacman.png");
-	public static final Image APP_ICON_MSPACMAN = image("icons/mspacman.png");
-
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
 	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";

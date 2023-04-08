@@ -74,6 +74,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -93,6 +94,9 @@ import javafx.stage.Stage;
 public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+
+	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
+	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 
 	public static final float PIP_MIN_HEIGHT = World.t(36);
 	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
@@ -231,12 +235,12 @@ public class GameUI implements GameEventListener {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
-			stage.getIcons().setAll(ResourceMgr.APP_ICON_MSPACMAN);
+			stage.getIcons().setAll(APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
-			stage.getIcons().setAll(ResourceMgr.APP_ICON_PACMAN);
+			stage.getIcons().setAll(APP_ICON_PACMAN);
 		}
 		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
 		}
