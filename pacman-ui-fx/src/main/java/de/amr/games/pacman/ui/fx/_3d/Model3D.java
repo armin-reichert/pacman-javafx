@@ -59,11 +59,13 @@ public class Model3D {
 
 	public void dump(Logger log) {
 		log.info("Model content:");
+		log.info("\tMeshes:");
 		for (var entry : meshes.entrySet()) {
-			log.trace("\t'%s': %s", entry.getKey(), entry.getValue());
+			log.trace("\t\t'%s': %s", entry.getKey(), entry.getValue());
 		}
+		log.info("\tMaterials:");
 		for (var entry : materials.entrySet()) {
-			log.trace("\t'%s': %s", entry.getKey(), entry.getValue());
+			log.trace("\t\t'%s': %s", entry.getKey(), entry.getValue());
 		}
 	}
 
