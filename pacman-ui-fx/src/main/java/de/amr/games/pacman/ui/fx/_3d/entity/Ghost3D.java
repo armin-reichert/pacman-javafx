@@ -88,11 +88,11 @@ public class Ghost3D {
 	private Image numberImage;
 	private Look currentLook;
 
-	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors) {
+	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors, double size) {
 		this.level = Objects.requireNonNull(level, "Game level must not be null");
 		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
 
-		coloredGhost3D = new ColoredGhost3D(colors);
+		coloredGhost3D = new ColoredGhost3D(colors, size);
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);

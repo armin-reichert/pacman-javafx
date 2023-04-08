@@ -52,8 +52,6 @@ public class ColoredGhost3D {
 	private static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	private static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-	private static final double SIZE = 8.5;
-
 	private static Translate centerOverOrigin(Node node) {
 		var bounds = node.getBoundsInLocal();
 		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
@@ -79,7 +77,7 @@ public class ColoredGhost3D {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(GhostColoring coloring) {
+	public ColoredGhost3D(GhostColoring coloring, double size) {
 		this.coloring = Objects.requireNonNull(coloring, "Ghost colors must not be null");
 
 		dress = new MeshView(GHOST_MODEL_3D.mesh(MESH_ID_GHOST_DRESS));
@@ -105,7 +103,7 @@ public class ColoredGhost3D {
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		root.getTransforms().add(scale(root, SIZE));
+		root.getTransforms().add(scale(root, size));
 	}
 
 	public Node getRoot() {
