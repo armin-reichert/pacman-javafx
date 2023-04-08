@@ -59,6 +59,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.transform.Translate;
 
 /**
  * @author Armin Reichert
@@ -121,6 +122,9 @@ public class GameLevel3D {
 		world3D.wallHeightPy.bind(Env.d3_mazeWallHeightPy);
 		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
+
+		// lift Pac-Man a bit over floor
+		pac3D.getRoot().getTransforms().add(new Translate(0, 0, -1));
 
 		selectRandomFloorTexture();
 	}
