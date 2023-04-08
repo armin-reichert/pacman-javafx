@@ -31,17 +31,24 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 /**
+ * Tree representing the complete Pac-Man 3D shape.
+ * 
  * @author Armin Reichert
  */
 public class PacShape3D {
+
+	public static final String ID_HEAD = "head";
+	public static final String ID_EYES = "eyes";
+	public static final String ID_PALATE = "palate";
+
 	private static final Model3D HEAD_3D = new Model3D("model3D/pacman.obj");
+
 	private static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
@@ -58,24 +65,28 @@ public class PacShape3D {
 
 	private static Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(HEAD_3D.mesh(MESH_ID_HEAD));
+		head.setId(ID_HEAD);
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
 		var eyes = new MeshView(HEAD_3D.mesh(MESH_ID_EYES));
+		eyes.setId(ID_EYES);
 		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
 
 		var palate = new MeshView(HEAD_3D.mesh(MESH_ID_PALATE));
+		palate.setId(ID_PALATE);
 		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
 
 		var centerTransform = centerOverOrigin(head);
 		Stream.of(head, eyes, palate).forEach(meshView -> meshView.getTransforms().add(centerTransform));
 
-		var headGroup = new Group(head, eyes, palate);
-		headGroup.getTransforms().addAll(new Translate(0, 0, -1), scale(headGroup, size), new Rotate(90, Rotate.X_AXIS));
+		var root = new Group(head, eyes, palate);
+		root.getTransforms().addAll(new Translate(0, 0, -1), scale(root, size), new Rotate(90, Rotate.X_AXIS));
 
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
-		headGroup.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-		headGroup.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-		return headGroup;
+		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+
+		return root;
 	}
 
 	public static Group createPacManShape(double size, Color headColor, Color eyesColor, Color palateColor) {
@@ -120,18 +131,18 @@ public class PacShape3D {
 		return root;
 	}
 
-	public static Shape3D head(Group root) {
-		var headGroup = (Group) root.getChildren().get(0);
-		return (Shape3D) headGroup.getChildren().get(0);
-	}
-
-	public static Shape3D eyes(Group root) {
-		var headGroup = (Group) root.getChildren().get(0);
-		return (Shape3D) headGroup.getChildren().get(1);
-	}
-
-	public static Shape3D palate(Group root) {
-		var headGroup = (Group) root.getChildren().get(0);
-		return (Shape3D) headGroup.getChildren().get(2);
-	}
+//	public static Shape3D head(Group root) {
+//		var headGroup = (Group) root.getChildren().get(0);
+//		return (Shape3D) headGroup.getChildren().get(0);
+//	}
+//
+//	public static Shape3D eyes(Group root) {
+//		var headGroup = (Group) root.getChildren().get(0);
+//		return (Shape3D) headGroup.getChildren().get(1);
+//	}
+//
+//	public static Shape3D palate(Group root) {
+//		var headGroup = (Group) root.getChildren().get(0);
+//		return (Shape3D) headGroup.getChildren().get(2);
+//	}
 }

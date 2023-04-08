@@ -25,12 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.ui.fx._3d.entity.PacShape3D.eyes;
-import static de.amr.games.pacman.ui.fx._3d.entity.PacShape3D.head;
-import static de.amr.games.pacman.ui.fx._3d.entity.PacShape3D.palate;
 
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -97,18 +93,28 @@ public class Pac3D {
 	private final Rotate orientation;
 	private RotateTransition nodding;
 
-	public Pac3D(GameLevel level, Pac pac, Group pacNode, Color headColor) {
+	public Pac3D(GameLevel level, Pac pac, Group pacShapeRoot, Color headColor) {
 		this.level = Objects.requireNonNull(level);
 		this.pac = Objects.requireNonNull(pac);
 		this.headColor = Objects.requireNonNull(headColor);
-		root = new Group(Objects.requireNonNull(pacNode));
-		Stream.of(head(pacNode), eyes(pacNode), palate(pacNode)).map(Shape3D::drawModeProperty)
-				.forEach(py -> py.bind(drawModePy));
+
+		root = new Group(Objects.requireNonNull(pacShapeRoot));
+
+		shape(PacShape3D.ID_HEAD).drawModeProperty().bind(drawModePy);
+		shape(PacShape3D.ID_EYES).drawModeProperty().bind(drawModePy);
+		shape(PacShape3D.ID_PALATE).drawModeProperty().bind(drawModePy);
+
 		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
-		pacNode.getTransforms().setAll(orientation);
+		pacShapeRoot.getTransforms().setAll(orientation);
+
 		noddingPy.bind(Env.d3_pacNoddingPy);
 		light = createLight();
+
 		init();
+	}
+
+	private Shape3D shape(String id) {
+		return (Shape3D) root.lookup("#" + id);
 	}
 
 	public Node getRoot() {
