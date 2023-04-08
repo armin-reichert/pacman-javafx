@@ -70,18 +70,7 @@ public class ResourceMgr {
 
 	private static final Map<String, PhongMaterial> FLOOR_TEXTURES = new LinkedHashMap<>();
 
-	static {
-		addFloorTexture(KEY_NO_TEXTURE, null);
-		addFloorTexture("Chrome", "chrome");
-		addFloorTexture("Grass", "grass");
-		addFloorTexture("Hexagon", "hexagon");
-		addFloorTexture("Knobs & Bumps", "knobs");
-		addFloorTexture("Pavement", "pavement");
-		addFloorTexture("Plastic", "plastic");
-		addFloorTexture("Wood", "wood");
-	}
-
-	private static void addFloorTexture(String key, String textureName) {
+	public static void addFloorTexture(String key, String textureName) {
 		if (textureName != null) {
 			var material = new PhongMaterial();
 			material.setBumpMap(image("graphics/textures/%s-bump.jpg".formatted(textureName)));

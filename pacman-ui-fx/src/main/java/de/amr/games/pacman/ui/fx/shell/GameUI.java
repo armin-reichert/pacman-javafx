@@ -109,6 +109,17 @@ public class GameUI implements GameEventListener {
 	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
 	}
 
+	static {
+		ResourceMgr.addFloorTexture(ResourceMgr.KEY_NO_TEXTURE, null);
+		ResourceMgr.addFloorTexture("Chrome", "chrome");
+		ResourceMgr.addFloorTexture("Grass", "grass");
+		ResourceMgr.addFloorTexture("Hexagon", "hexagon");
+		ResourceMgr.addFloorTexture("Knobs & Bumps", "knobs");
+		ResourceMgr.addFloorTexture("Pavement", "pavement");
+		ResourceMgr.addFloorTexture("Plastic", "plastic");
+		ResourceMgr.addFloorTexture("Wood", "wood");
+	}
+
 	public class Simulation extends GameLoop {
 
 		public Simulation() {
