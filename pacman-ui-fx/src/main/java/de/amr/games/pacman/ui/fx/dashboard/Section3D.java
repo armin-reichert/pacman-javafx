@@ -44,7 +44,7 @@ import javafx.scene.shape.DrawMode;
 public class Section3D extends Section {
 
 	private final ComboBox<Perspective> comboPerspective;
-	private final CheckBox cbSquirting;
+	private final CheckBox cbEnergizerExplodes;
 	private final Slider sliderWallHeight;
 	private final Slider sliderWallThickness;
 	private final ColorPicker pickerLightColor;
@@ -73,7 +73,7 @@ public class Section3D extends Section {
 		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.d3_floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
-		cbSquirting = addCheckBox("Energizer Eaten Animation", () -> Ufx.toggle(Env.d3_eatingEnergizerAnimatedPy));
+		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(Env.d3_energizerExplodesPy));
 		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.d3_pacLightedPy));
 		cbPacNodding = addCheckBox("Pac-Man nodding", () -> Ufx.toggle(Env.d3_pacNoddingPy));
 		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.d3_axesVisiblePy));
@@ -93,8 +93,8 @@ public class Section3D extends Section {
 		comboFloorTexture.setDisable(no3D);
 		comboFloorTexture.setValue(Env.d3_floorTexturePy.get());
 		pickerFloorColor.setDisable(no3D);
-		cbSquirting.setDisable(no3D);
-		cbSquirting.setSelected(Env.d3_eatingEnergizerAnimatedPy.get());
+		cbEnergizerExplodes.setDisable(no3D);
+		cbEnergizerExplodes.setSelected(Env.d3_energizerExplodesPy.get());
 		cbPacLighted.setDisable(no3D);
 		cbPacLighted.setSelected(Env.d3_pacLightedPy.get());
 		cbPacNodding.setDisable(no3D);
