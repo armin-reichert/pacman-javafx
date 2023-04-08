@@ -70,5 +70,6 @@ public class Env {
 	public static final ObjectProperty<Perspective> d3_perspectivePy = new SimpleObjectProperty<>(
 			Perspective.NEAR_PLAYER);
 	public static final BooleanProperty d3_eatingEnergizerAnimatedPy = new SimpleBooleanProperty(true);
+	// experimental, not used yet
 	public static final BooleanProperty d3_foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 }

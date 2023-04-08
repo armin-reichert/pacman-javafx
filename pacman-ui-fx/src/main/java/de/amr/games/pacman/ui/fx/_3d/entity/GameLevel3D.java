@@ -80,7 +80,7 @@ public class GameLevel3D {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 	private final List<Eatable3D> eatables = new ArrayList<>();
-	private FoodOscillation foodOscillation = new FoodOscillation(eatables);
+	private final FoodOscillation foodOscillation = new FoodOscillation(eatables);
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -165,15 +165,15 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D() {
-		return new Pac3D(level, level.pac(), PacShape3D.createPacManShape(9, ArcadeTheme.HEAD_COLOR,
-				ArcadeTheme.EYES_COLOR_PACMAN, ArcadeTheme.PALATE_COLOR), ArcadeTheme.HEAD_COLOR);
+		var shape = PacShape3D.createPacManShape(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
+				ArcadeTheme.PALATE_COLOR);
+		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Pac3D createMsPacMan3D() {
-		return new Pac3D(level, level.pac(),
-				PacShape3D.createMsPacManShape(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
-						ArcadeTheme.PALATE_COLOR, ArcadeTheme.HAIRBOW_COLOR, ArcadeTheme.HAIRBOW_PEARLS_COLOR),
-				ArcadeTheme.HEAD_COLOR);
+		var shape = PacShape3D.createMsPacManShape(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
+				ArcadeTheme.PALATE_COLOR, ArcadeTheme.HAIRBOW_COLOR, ArcadeTheme.HAIRBOW_PEARLS_COLOR);
+		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
