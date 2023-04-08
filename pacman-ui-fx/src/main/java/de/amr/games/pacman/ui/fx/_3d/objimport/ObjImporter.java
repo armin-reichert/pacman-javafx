@@ -173,22 +173,57 @@ public class ObjImporter {
 		String key = "default";
 		while ((line = br.readLine()) != null) {
 			try {
-				if (line.startsWith("g ") || line.equals("g")) {
+
+				/*
+				 * o <objectname>
+				 */
+				if (line.startsWith("o ")) {
+					addMesh(key);
+					key = line.substring(2);
+					LOG.trace("Object name: %s", key);
+				}
+
+				/*
+				 * g <groupname>
+				 */
+				else if (line.startsWith("g ") || line.equals("g")) {
 					addMesh(key);
 					key = line.length() > 2 ? line.substring(2) : "default";
-					LOG.trace("Mesh key = %s", key);
-				} else if (line.startsWith("v ")) {
+					LOG.trace("Group name: %s", key);
+				}
+
+				/*
+				 * v <x> <y> <z> (<w>)
+				 * 
+				 * List of geometric vertices, with (x, y, z, [w]) coordinates, w is optional and defaults to 1.0.
+				 */
+				else if (line.startsWith("v ")) {
 					String[] split = line.substring(2).trim().split("\\s+");
 					float x = Float.parseFloat(split[0]);
 					float y = Float.parseFloat(split[1]);
 					float z = Float.parseFloat(split[2]);
 					vertexes.addAll(x, y, z);
-				} else if (line.startsWith("vt ")) {
+				}
+
+				/*
+				 * vt
+				 * 
+				 * List of texture coordinates, in (u, [v, w]) coordinates, these will vary between 0 and 1. v, w are optional
+				 * and default to 0.
+				 */
+				else if (line.startsWith("vt ")) {
 					String[] split = line.substring(3).trim().split("\\s+");
 					float u = Float.parseFloat(split[0]);
 					float v = Float.parseFloat(split[1]);
 					uvs.addAll(u, 1 - v);
-				} else if (line.startsWith("f ")) {
+				}
+
+				/*
+				 * f v1 v2 v3 ....
+				 * 
+				 * Face.
+				 */
+				else if (line.startsWith("f ")) {
 					String[] split = line.substring(2).trim().split("\\s+");
 					int[][] data = new int[split.length][];
 					boolean uvProvided = true;
@@ -257,20 +292,35 @@ public class ObjImporter {
 						faceNormals.add(n3);
 						smoothingGroups.add(currentSmoothGroup);
 					}
-				} else if (line.startsWith("s ")) {
+				}
+
+				/*
+				 * Smoothing group s <integer>
+				 */
+				else if (line.startsWith("s ")) {
 					if (line.substring(2).equals("off")) {
 						currentSmoothGroup = 0;
 					} else {
 						currentSmoothGroup = Integer.parseInt(line.substring(2));
 					}
-				} else if (line.startsWith("mtllib ")) {
+				}
+
+				/*
+				 * Material lib.
+				 */
+				else if (line.startsWith("mtllib ")) {
 					// setting materials lib
 					String[] split = line.substring("mtllib ".length()).trim().split("\\s+");
 					for (String filename : split) {
 						MtlReader mtlReader = new MtlReader(filename, objFileUrl);
 						materialLibrary.add(mtlReader.getMaterials());
 					}
-				} else if (line.startsWith("usemtl ")) {
+				}
+
+				/*
+				 * Use material.
+				 */
+				else if (line.startsWith("usemtl ")) {
 					addMesh(key);
 					// setting new material for next mesh
 //					String materialName = line.substring("usemtl ".length());
@@ -281,15 +331,30 @@ public class ObjImporter {
 //							break;
 //						}
 //					}
-				} else if (line.isEmpty() || line.startsWith("#")) {
+				}
+
+				/*
+				 * Comment.
+				 */
+				else if (line.isEmpty() || line.startsWith("#")) {
 					// comments and empty lines are ignored
-				} else if (line.startsWith("vn ")) {
+				}
+
+				/*
+				 * Vertex normal.
+				 */
+				else if (line.startsWith("vn ")) {
 					String[] split = line.substring(2).trim().split("\\s+");
 					float x = Float.parseFloat(split[0]);
 					float y = Float.parseFloat(split[1]);
 					float z = Float.parseFloat(split[2]);
 					normals.addAll(x, y, z);
-				} else {
+				}
+
+				/*
+				 * Not implemented or not recognized.
+				 */
+				else {
 					LOG.trace("Line skipped: %s", line);
 				}
 			} catch (Exception ex) {
@@ -298,7 +363,8 @@ public class ObjImporter {
 		}
 
 		addMesh(key);
-		LOG.info("Loaded %d vertices, %d uvs, %d faces, %d smoothing groups", vertexes.size() / 3, uvs.size() / 2,
+
+		LOG.info("Model loaded: %d vertices, %d uvs, %d faces, %d smoothing groups", vertexes.size() / 3, uvs.size() / 2,
 				faces.size() / 6, smoothingGroups.size());
 	}
 

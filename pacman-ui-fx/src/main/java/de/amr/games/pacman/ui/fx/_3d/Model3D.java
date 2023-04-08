@@ -31,7 +31,10 @@ public class Model3D {
 		if (url == null) {
 			throw new Model3DException("3D model cannot be created: URL is null");
 		}
-		LOG.info("Load 3D model from URL %s", url);
+		var urlString = url.toExternalForm();
+		int lastSlash = urlString.lastIndexOf('/');
+		var fileName = urlString.substring(lastSlash + 1);
+		LOG.info("*** Load 3D model from file '%s'. URL: %s", fileName, url);
 		try {
 			var importer = new ObjImporter(url.toExternalForm());
 			for (var meshName : importer.getMeshNames()) {
@@ -44,13 +47,7 @@ public class Model3D {
 					materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
 				}
 			}
-			LOG.info("Model content:");
-			for (var entry : meshes.entrySet()) {
-				LOG.trace("\t'%s': %s", entry.getKey(), entry.getValue());
-			}
-			for (var entry : materials.entrySet()) {
-				LOG.trace("\t'%s': %s", entry.getKey(), entry.getValue());
-			}
+			dump(LOG);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -58,6 +55,16 @@ public class Model3D {
 
 	public Model3D(String relPath) {
 		this(ResourceMgr.urlFromRelPath(relPath));
+	}
+
+	public void dump(Logger log) {
+		log.info("Model content:");
+		for (var entry : meshes.entrySet()) {
+			log.trace("\t'%s': %s", entry.getKey(), entry.getValue());
+		}
+		for (var entry : materials.entrySet()) {
+			log.trace("\t'%s': %s", entry.getKey(), entry.getValue());
+		}
 	}
 
 	public Mesh mesh(String name) {

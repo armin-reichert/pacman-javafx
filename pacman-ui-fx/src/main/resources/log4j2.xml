@@ -7,6 +7,12 @@
 		</Console>
 	</Appenders>
 	<Loggers>
+		
+		<Logger name="de.amr.games.pacman.ui.fx._3d.objimport.ObjImporter" level="trace"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		
 		<Logger name="de.amr.games.pacman.ui.fx._3d.Model3D" level="trace"
 			additivity="false">
 			<AppenderRef ref="Console" />
