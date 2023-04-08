@@ -166,8 +166,10 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createMsPacMan3D() {
-		return new Pac3D(level, level.pac(), PacShape3D.createMsPacManShape(9, ArcadeTheme.HEAD_COLOR,
-				ArcadeTheme.EYES_COLOR_MS_PACMAN, ArcadeTheme.PALATE_COLOR), ArcadeTheme.HEAD_COLOR);
+		return new Pac3D(level, level.pac(),
+				PacShape3D.createMsPacManShape(9, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
+						ArcadeTheme.PALATE_COLOR, ArcadeTheme.HAIRBOW_COLOR, ArcadeTheme.HAIRBOW_PEARLS_COLOR),
+				ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {

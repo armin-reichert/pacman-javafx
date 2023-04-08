@@ -53,6 +53,32 @@ public class PacShape3D {
 	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
+	/**
+	 * @param size        Pac-Man size in pixels
+	 * @param headColor   color of head shape
+	 * @param eyesColor   color of eyes
+	 * @param palateColor color of palate
+	 * @return tree of Pac-Man parts
+	 */
+	public static Group createPacManShape(double size, Color headColor, Color eyesColor, Color palateColor) {
+		return new Group(createShape(size, headColor, eyesColor, palateColor));
+	}
+
+	/**
+	 * @param size        Ms. Pac-Man size in pixels
+	 * @param headColor   color of head shape
+	 * @param eyesColor   color of eyes
+	 * @param palateColor color of palate
+	 * @param bowColor    color of hair bows
+	 * @param pearlsColor color of "pearls" connecting hair bows
+	 * @return tree of Ms. Pac-Man parts
+	 */
+	public static Group createMsPacManShape(double size, Color headColor, Color eyesColor, Color palateColor,
+			Color bowColor, Color pearlsColor) {
+		return new Group(createShape(size, headColor, eyesColor, palateColor),
+				createBeautyAccessories(size, bowColor, pearlsColor));
+	}
+
 	private static Translate centerOverOrigin(Node node) {
 		var bounds = node.getBoundsInLocal();
 		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
@@ -89,15 +115,6 @@ public class PacShape3D {
 		return root;
 	}
 
-	public static Group createPacManShape(double size, Color headColor, Color eyesColor, Color palateColor) {
-		return new Group(createShape(size, headColor, eyesColor, palateColor));
-	}
-
-	public static Group createMsPacManShape(double size, Color headColor, Color eyesColor, Color palateColor) {
-		return new Group(createShape(size, headColor, eyesColor, palateColor),
-				createBeautyAccessories(size, Color.RED, Color.BLUE));
-	}
-
 	private static Group createBeautyAccessories(double pacSize, Color bowColor, Color pearlColor) {
 		var root = new Group();
 
@@ -130,19 +147,4 @@ public class PacShape3D {
 
 		return root;
 	}
-
-//	public static Shape3D head(Group root) {
-//		var headGroup = (Group) root.getChildren().get(0);
-//		return (Shape3D) headGroup.getChildren().get(0);
-//	}
-//
-//	public static Shape3D eyes(Group root) {
-//		var headGroup = (Group) root.getChildren().get(0);
-//		return (Shape3D) headGroup.getChildren().get(1);
-//	}
-//
-//	public static Shape3D palate(Group root) {
-//		var headGroup = (Group) root.getChildren().get(0);
-//		return (Shape3D) headGroup.getChildren().get(2);
-//	}
 }

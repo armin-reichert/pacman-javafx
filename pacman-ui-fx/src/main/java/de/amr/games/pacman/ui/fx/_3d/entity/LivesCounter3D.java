@@ -41,6 +41,8 @@ import javafx.scene.transform.Rotate;
  */
 public class LivesCounter3D {
 
+	private static final Color HAIRBOW_COLOR = Color.rgb(255, 0, 0);
+	private static final Color HAIRBOW_PEARLS_COLOR = Color.rgb(0, 0, 255);
 	private static final Color HEAD_COLOR = Color.rgb(255, 255, 0);
 	private static final Color EYES_COLOR = Color.rgb(120, 120, 120);
 	private static final Color PALATE_COLOR = Color.rgb(120, 120, 120);
@@ -54,18 +56,19 @@ public class LivesCounter3D {
 		switch (variant) {
 		case MS_PACMAN -> {
 			for (int i = 0; i < maxLives; ++i) {
-				var pacRoot = PacShape3D.createMsPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
-				pacRoot.setTranslateX(2.0 * i * TS);
-				pacRoot.setRotationAxis(Rotate.Z_AXIS);
-				pacRoot.setRotate(180);
-				root.getChildren().add(pacRoot);
+				var msPac = PacShape3D.createMsPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR, HAIRBOW_COLOR,
+						HAIRBOW_PEARLS_COLOR);
+				msPac.setTranslateX(2.0 * i * TS);
+				msPac.setRotationAxis(Rotate.Z_AXIS);
+				msPac.setRotate(180);
+				root.getChildren().add(msPac);
 			}
 		}
 		case PACMAN -> {
 			for (int i = 0; i < maxLives; ++i) {
-				var pacRoot = PacShape3D.createPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
-				pacRoot.setTranslateX(2.0 * i * TS);
-				root.getChildren().add(pacRoot);
+				var pac = PacShape3D.createPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+				pac.setTranslateX(2.0 * i * TS);
+				root.getChildren().add(pac);
 			}
 		}
 		default -> throw new IllegalArgumentException();
