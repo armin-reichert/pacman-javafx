@@ -55,9 +55,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
- * Simplified version of Oracle's OBJ importer from the 3DViewer sample project.
- * <p>
- * TODO: materials
+ * Stripped-down version of Oracle's OBJ importer from the 3DViewer sample project.
  * 
  * @author Armin Reichert
  * @see <a href=
@@ -123,11 +121,11 @@ public class ObjImporter {
 
 	public ObjImporter(String objFileUrl) throws IOException {
 		this.objFileUrl = objFileUrl;
-		read(new URL(objFileUrl).openStream());
+		parse(new URL(objFileUrl).openStream());
 	}
 
 	public ObjImporter(InputStream inputStream) throws IOException {
-		read(inputStream);
+		parse(inputStream);
 	}
 
 	public Set<String> getMeshNames() {
@@ -166,11 +164,12 @@ public class ObjImporter {
 		}
 	}
 
-	private void read(InputStream inputStream) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+	private void parse(InputStream inputStream) throws IOException {
+		var br = new BufferedReader(new InputStreamReader(inputStream));
 		String line;
 		int currentSmoothGroup = 0;
 		String key = "default";
+
 		while ((line = br.readLine()) != null) {
 			try {
 
