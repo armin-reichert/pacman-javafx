@@ -84,13 +84,17 @@ public class AppResources {
 			var material = new PhongMaterial();
 			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
 			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
-			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
-			material.specularColorProperty()
-					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
 			textures.put(key, material);
 		} else {
 			textures.put(key, null);
 		}
+	}
+
+	private static void useAsFloorTexture(String textureKey) {
+		var texture = texture(textureKey);
+		texture.diffuseColorProperty().bind(Env.d3_floorColorPy);
+		texture.specularColorProperty()
+				.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
 	}
 
 	public static PhongMaterial texture(String key) {
@@ -126,7 +130,6 @@ public class AppResources {
 		models3D.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
 		models3D.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
 
-		loadTexture(KEY_NO_TEXTURE, null);
 		loadTexture("Chrome", "chrome");
 		loadTexture("Grass", "grass");
 		loadTexture("Hexagon", "hexagon");
@@ -134,6 +137,10 @@ public class AppResources {
 		loadTexture("Pavement", "pavement");
 		loadTexture("Plastic", "plastic");
 		loadTexture("Wood", "wood");
+
+		for (var textureKey : textureKeys()) {
+			useAsFloorTexture(textureKey);
+		}
 
 		iconPacManGame = ResourceMgr.image("icons/pacman.png");
 		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
