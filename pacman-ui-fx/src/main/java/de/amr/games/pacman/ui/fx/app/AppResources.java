@@ -79,7 +79,7 @@ public class AppResources {
 	private static Map<String, Model3D> models3D = new HashMap<>();
 	private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
 
-	public static void loadTexture(String key, String textureName) {
+	private static void loadTexture(String key, String textureName) {
 		if (textureName != null) {
 			var material = new PhongMaterial();
 			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
@@ -101,10 +101,9 @@ public class AppResources {
 		return textures.keySet().toArray(String[]::new);
 	}
 
-	public static PhongMaterial randomTexture() {
+	public static String randomTextureKey() {
 		var keys = AppResources.textureKeys();
-		var randomKey = textureKeys()[U.randomInt(1, keys.length)]; // index 0 = No Texture
-		return texture(randomKey);
+		return textureKeys()[U.randomInt(1, keys.length)]; // index 0 = No Texture
 	}
 
 	public static Model3D model3D(String id) {
