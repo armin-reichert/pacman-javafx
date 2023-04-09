@@ -42,9 +42,6 @@ public class AppResources {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static Image ICON_PACMAN;
-	private static Image ICON_MSPACMAN;
-
 	public static final String MODEL_ID_PAC = "Pac";
 	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
@@ -58,6 +55,8 @@ public class AppResources {
 	public static final String MODEL_ID_PELLET = "Pellet";
 	public static final String MESH_ID_PELLET = "Fruit";
 
+	private static Image iconPacManGame;
+	private static Image iconMsPacManGame;
 	private static final Map<String, Model3D> MODELS = new HashMap<>();
 
 	public static Model3D model(String id) {
@@ -69,16 +68,11 @@ public class AppResources {
 
 	public static void load() {
 		LOG.info("Loading application resources...");
-
 		var start = System.nanoTime();
-		LOG.info("Loading 3D models...");
 
 		MODELS.put(MODEL_ID_PAC, new Model3D("model3D/pacman.obj"));
 		MODELS.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
 		MODELS.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
-
-		var duration = System.nanoTime() - start;
-		LOG.info("Loading 3D models done (%.2f milliseconds).", duration / 1_000_000f);
 
 		ResourceMgr.addFloorTexture(ResourceMgr.KEY_NO_TEXTURE, null);
 		ResourceMgr.addFloorTexture("Chrome", "chrome");
@@ -89,16 +83,17 @@ public class AppResources {
 		ResourceMgr.addFloorTexture("Plastic", "plastic");
 		ResourceMgr.addFloorTexture("Wood", "wood");
 
-		ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
-		ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
+		iconPacManGame = ResourceMgr.image("icons/pacman.png");
+		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
 
-		LOG.info("Loading application resources done.");
+		var duration = System.nanoTime() - start;
+		LOG.info("Loading application resources done (%.2f seconds).", duration / 1_000_000_000f);
 	}
 
 	public static Image appIcon(GameVariant variant) {
 		return switch (variant) {
-		case MS_PACMAN -> ICON_MSPACMAN;
-		case PACMAN -> ICON_PACMAN;
+		case MS_PACMAN -> iconMsPacManGame;
+		case PACMAN -> iconPacManGame;
 		default -> throw new IllegalArgumentException("Unknown game variant '%s'".formatted(variant));
 		};
 	}
