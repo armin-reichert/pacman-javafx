@@ -141,11 +141,8 @@ public class Actions {
 
 	public static void togglePipViewVisible() {
 		Ufx.toggle(Env.pipVisiblePy);
-		if (Env.pipVisiblePy.get()) {
-			showFlashMessage("Picture in Picture ON");
-		} else {
-			showFlashMessage("Picture in Picture OFF");
-		}
+		var msgKey = Env.pipVisiblePy.get() ? "pipOn" : "pipOff";
+		showFlashMessage(AppResources.message(msgKey));
 	}
 
 	public static void toggleDashboardVisible() {
