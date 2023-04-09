@@ -27,8 +27,8 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -42,19 +42,17 @@ public class Pellet3D implements Eatable3D {
 
 	private final Shape3D shape;
 
-	public Pellet3D(double radius) {
-		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_PELLET);
-
-		shape = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_PELLET));
+	public Pellet3D(Model3D model3D, double radius) {
+		shape = model3D.meshView(PacManModel3D.MESH_ID_PELLET);
 		shape.setRotationAxis(Rotate.Z_AXIS);
 		shape.setRotate(90);
 		var bounds = shape.getBoundsInLocal();
 		var max = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
 		var scaling = new Scale(2 * radius / max, 2 * radius / max, 2 * radius / max);
-		shape.getTransforms().setAll(scaling);
+		shape.getTransforms().add(scaling);
 	}
 
-	public void setTile(Vector2i tile) {
+	public void placeAtTile(Vector2i tile) {
 		shape.setUserData(tile);
 		shape.setTranslateX(tile.x() * TS + HTS);
 		shape.setTranslateY(tile.y() * TS + HTS);

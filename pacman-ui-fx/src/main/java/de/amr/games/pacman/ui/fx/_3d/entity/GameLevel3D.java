@@ -150,9 +150,10 @@ public class GameLevel3D {
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
-		var pellet3D = new Pellet3D(1.0);
+		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_PELLET);
+		var pellet3D = new Pellet3D(model3D, 1.0);
 		pellet3D.getRoot().setMaterial(material);
-		pellet3D.setTile(tile);
+		pellet3D.placeAtTile(tile);
 		return pellet3D;
 	}
 

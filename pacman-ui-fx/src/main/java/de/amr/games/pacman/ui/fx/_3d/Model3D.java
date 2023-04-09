@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui.fx._3d.objimport.ObjImporter;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
 
 /**
  * A 3D-model imported from a Wavefront .obj file.
@@ -74,6 +75,10 @@ public class Model3D {
 			return meshes.get(name);
 		}
 		throw new Model3DException("No mesh with name %s found", name);
+	}
+
+	public MeshView meshView(String name) {
+		return new MeshView(mesh(name));
 	}
 
 	public PhongMaterial material(String name) {
