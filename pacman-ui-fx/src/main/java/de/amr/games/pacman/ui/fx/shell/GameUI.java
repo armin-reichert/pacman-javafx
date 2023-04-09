@@ -94,8 +94,8 @@ public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final int TILES_X = 28;
-	private static final int TILES_Y = 36;
+	private static final byte TILES_X = 28;
+	private static final byte TILES_Y = 36;
 
 	public static final float PIP_MIN_HEIGHT = TILES_Y * 8;
 	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
@@ -231,18 +231,13 @@ public class GameUI implements GameEventListener {
 		var variant = gameController.game().variant();
 		var paused = Env.simulationPausedPy.get();
 		var dimensionMsg = ResourceMgr.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
-		switch (variant) {
-		case MS_PACMAN -> {
-			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
-		}
-		case PACMAN -> {
-			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
-		}
-		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
-		}
+		var messageKey = switch (variant) {
+		case MS_PACMAN -> paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
+		case PACMAN -> paused ? "app.title.pacman.paused" : "app.title.pacman";
+		default -> throw new IllegalArgumentException("Unknown game variant: '%s'".formatted(variant));
+		};
 		stage.getIcons().setAll(AppResources.appIcon(variant));
+		stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) stage.getScene().getRoot();
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
