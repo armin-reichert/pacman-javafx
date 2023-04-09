@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx.dashboard;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
+import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.CheckBox;
@@ -69,7 +69,7 @@ public class Section3D extends Section {
 		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.d3_mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor texture", ResourceMgr.floorTextureKeys());
+		comboFloorTexture = addComboBox("Floor texture", AppResources.floorTextureKeys());
 		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.d3_floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));

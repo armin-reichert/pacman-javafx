@@ -52,9 +52,9 @@ import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Text3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
+import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Keys;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
@@ -324,7 +324,7 @@ public class PlayScene3D extends GameScene {
 
 		case CHANGING_TO_NEXT_LEVEL -> {
 			context.level().ifPresent(level -> {
-				Actions.showFlashMessage(ResourceMgr.message("level_starting", level.number()));
+				Actions.showFlashMessage(AppResources.message("level_starting", level.number()));
 				lockGameState();
 				replaceGameLevel3D(level);
 				updateCameraToPerspective(perspectivePy.get());
@@ -337,7 +337,7 @@ public class PlayScene3D extends GameScene {
 				level3D.foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.eatables3D().forEach(level3D::eat);
-				var message = ResourceMgr.pickLevelCompleteMessage(level.number());
+				var message = AppResources.pickLevelCompleteMessage(level.number());
 				lockAndPlay(2.0, //
 						level.numFlashes > 0 ? new SwingingWallsAnimation(level.numFlashes) : Ufx.pause(1.0), //
 						afterSeconds(1.0, level.pac()::hide), //
@@ -349,7 +349,7 @@ public class PlayScene3D extends GameScene {
 
 		case GAME_OVER -> {
 			level3D.foodOscillation().stop();
-			Actions.showFlashMessageSeconds(3, ResourceMgr.pickGameOverMessage());
+			Actions.showFlashMessageSeconds(3, AppResources.pickGameOverMessage());
 		}
 
 		default -> {

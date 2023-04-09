@@ -24,8 +24,11 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +36,10 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.Model3DException;
+import de.amr.games.pacman.ui.fx.util.Picker;
+import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
+import javafx.scene.paint.PhongMaterial;
 
 /**
  * @author Armin Reichert
@@ -55,9 +61,47 @@ public class AppResources {
 	public static final String MODEL_ID_PELLET = "Pellet";
 	public static final String MESH_ID_PELLET = "Fruit";
 
+	public static final String KEY_NO_TEXTURE = "No Texture";
+
+	private static final ResourceBundle MESSAGES_BUNDLE = ResourceBundle.getBundle("assets.texts.messages");
+
+	private static final Picker<String> PICKER_MSG_CHEATING = ResourceMgr.createPicker(MESSAGES_BUNDLE, "cheating");
+	private static final Picker<String> PICKER_MSG_LEVEL_COMPLETE = ResourceMgr.createPicker(MESSAGES_BUNDLE,
+			"level.complete");
+	private static final Picker<String> PICKER_MSG_GAME_OVER = ResourceMgr.createPicker(MESSAGES_BUNDLE, "game.over");
+
+	public static final String VOICE_HELP = "sound/common/press-key.mp3";
+	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
+	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
+	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
+	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
+
 	private static Image iconPacManGame;
 	private static Image iconMsPacManGame;
 	private static final Map<String, Model3D> MODELS = new HashMap<>();
+	private static final Map<String, PhongMaterial> FLOOR_TEXTURES = new LinkedHashMap<>();
+
+	public static void addFloorTexture(String key, String textureName) {
+		if (textureName != null) {
+			var material = new PhongMaterial();
+			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
+			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
+			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
+			material.specularColorProperty()
+					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
+			FLOOR_TEXTURES.put(key, material);
+		} else {
+			FLOOR_TEXTURES.put(key, null);
+		}
+	}
+
+	public static PhongMaterial floorTexture(String key) {
+		return FLOOR_TEXTURES.get(key);
+	}
+
+	public static String[] floorTextureKeys() {
+		return FLOOR_TEXTURES.keySet().toArray(String[]::new);
+	}
 
 	public static Model3D model3D(String id) {
 		if (!MODELS.containsKey(id)) {
@@ -74,14 +118,14 @@ public class AppResources {
 		MODELS.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
 		MODELS.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
 
-		ResourceMgr.addFloorTexture(ResourceMgr.KEY_NO_TEXTURE, null);
-		ResourceMgr.addFloorTexture("Chrome", "chrome");
-		ResourceMgr.addFloorTexture("Grass", "grass");
-		ResourceMgr.addFloorTexture("Hexagon", "hexagon");
-		ResourceMgr.addFloorTexture("Knobs & Bumps", "knobs");
-		ResourceMgr.addFloorTexture("Pavement", "pavement");
-		ResourceMgr.addFloorTexture("Plastic", "plastic");
-		ResourceMgr.addFloorTexture("Wood", "wood");
+		addFloorTexture(KEY_NO_TEXTURE, null);
+		addFloorTexture("Chrome", "chrome");
+		addFloorTexture("Grass", "grass");
+		addFloorTexture("Hexagon", "hexagon");
+		addFloorTexture("Knobs & Bumps", "knobs");
+		addFloorTexture("Pavement", "pavement");
+		addFloorTexture("Plastic", "plastic");
+		addFloorTexture("Wood", "wood");
 
 		iconPacManGame = ResourceMgr.image("icons/pacman.png");
 		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
@@ -96,5 +140,35 @@ public class AppResources {
 		case PACMAN -> iconPacManGame;
 		default -> throw new IllegalArgumentException("Unknown game variant '%s'".formatted(variant));
 		};
+	}
+
+	/**
+	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
+	 * messages resource bundle.
+	 * 
+	 * @param keyPattern message key pattern
+	 * @param args       arguments merged into key pattern
+	 * @return message text for composed key or string indicating missing text
+	 */
+	public static String message(String keyPattern, Object... args) {
+		try {
+			var pattern = MESSAGES_BUNDLE.getString(keyPattern);
+			return MessageFormat.format(pattern, args);
+		} catch (Exception x) {
+			LOG.error("No text resource found for key '%s'", keyPattern);
+			return "missing{%s}".formatted(keyPattern);
+		}
+	}
+
+	public static String pickCheatingMessage() {
+		return PICKER_MSG_CHEATING.next();
+	}
+
+	public static String pickGameOverMessage() {
+		return PICKER_MSG_GAME_OVER.next();
+	}
+
+	public static String pickLevelCompleteMessage(int levelNumber) {
+		return "%s%n%n%s".formatted(PICKER_MSG_LEVEL_COMPLETE.next(), message("level_complete", levelNumber));
 	}
 }

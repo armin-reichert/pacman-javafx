@@ -25,9 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.net.URL;
-import java.text.MessageFormat;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -36,7 +33,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.util.Picker;
-import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -54,43 +50,6 @@ public class ResourceMgr {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final String ROOT = "/assets/";
-	private static final ResourceBundle MESSAGES_BUNDLE = ResourceBundle.getBundle("assets.texts.messages");
-
-	private static final Picker<String> PICKER_MSG_CHEATING = createPicker(MESSAGES_BUNDLE, "cheating");
-	private static final Picker<String> PICKER_MSG_LEVEL_COMPLETE = createPicker(MESSAGES_BUNDLE, "level.complete");
-	private static final Picker<String> PICKER_MSG_GAME_OVER = createPicker(MESSAGES_BUNDLE, "game.over");
-
-	public static final String VOICE_HELP = "sound/common/press-key.mp3";
-	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
-	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
-	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
-	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
-
-	public static final String KEY_NO_TEXTURE = "No Texture";
-
-	private static final Map<String, PhongMaterial> FLOOR_TEXTURES = new LinkedHashMap<>();
-
-	public static void addFloorTexture(String key, String textureName) {
-		if (textureName != null) {
-			var material = new PhongMaterial();
-			material.setBumpMap(image("graphics/textures/%s-bump.jpg".formatted(textureName)));
-			material.setDiffuseMap(image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
-			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
-			material.specularColorProperty()
-					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
-			FLOOR_TEXTURES.put(key, material);
-		} else {
-			FLOOR_TEXTURES.put(key, null);
-		}
-	}
-
-	public static PhongMaterial floorTexture(String key) {
-		return FLOOR_TEXTURES.get(key);
-	}
-
-	public static String[] floorTextureKeys() {
-		return FLOOR_TEXTURES.keySet().toArray(String[]::new);
-	}
 
 	/**
 	 * @param relativePath relative path (without leading slash) starting from resource root directory
@@ -178,41 +137,11 @@ public class ResourceMgr {
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
-	/**
-	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
-	 * messages resource bundle.
-	 * 
-	 * @param keyPattern message key pattern
-	 * @param args       arguments merged into key pattern
-	 * @return message text for composed key or string indicating missing text
-	 */
-	public static String message(String keyPattern, Object... args) {
-		try {
-			var pattern = MESSAGES_BUNDLE.getString(keyPattern);
-			return MessageFormat.format(pattern, args);
-		} catch (Exception x) {
-			LOG.error("No text resource found for key '%s'", keyPattern);
-			return "missing{%s}".formatted(keyPattern);
-		}
-	}
-
-	private static Picker<String> createPicker(ResourceBundle bundle, String prefix) {
+	public static Picker<String> createPicker(ResourceBundle bundle, String prefix) {
 		return new Picker<>(bundle.keySet().stream()//
 				.filter(key -> key.startsWith(prefix))//
 				.sorted()//
 				.map(bundle::getString)//
 				.toArray(String[]::new));
-	}
-
-	public static String pickCheatingMessage() {
-		return PICKER_MSG_CHEATING.next();
-	}
-
-	public static String pickGameOverMessage() {
-		return PICKER_MSG_GAME_OVER.next();
-	}
-
-	public static String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(PICKER_MSG_LEVEL_COMPLETE.next(), message("level_complete", levelNumber));
 	}
 }

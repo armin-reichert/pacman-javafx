@@ -37,6 +37,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -79,7 +80,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			ResourceMgr.KEY_NO_TEXTURE) {
+			AppResources.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			LOG.trace("Floor texture change detected");
@@ -151,7 +152,7 @@ public class World3D {
 
 	private void updateFloorMaterial() {
 		String key = floorTexturePy.get();
-		var texture = ResourceMgr.floorTexture(key);
+		var texture = AppResources.floorTexture(key);
 		if (texture == null) {
 			texture = ResourceMgr.coloredMaterial(floorColorPy.get());
 		}
