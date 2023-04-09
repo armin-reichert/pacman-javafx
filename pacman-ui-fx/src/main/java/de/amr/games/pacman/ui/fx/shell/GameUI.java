@@ -96,9 +96,6 @@ public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final Image APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
-	private static final Image APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
-
 	public static final float PIP_MIN_HEIGHT = World.t(36);
 	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
 
@@ -107,8 +104,8 @@ public class GameUI implements GameEventListener {
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
 
-	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
-	}
+	private static final Image APP_ICON_PACMAN;
+	private static final Image APP_ICON_MSPACMAN;
 
 	static {
 		PacManModel3D.load();
@@ -120,7 +117,14 @@ public class GameUI implements GameEventListener {
 		ResourceMgr.addFloorTexture("Pavement", "pavement");
 		ResourceMgr.addFloorTexture("Plastic", "plastic");
 		ResourceMgr.addFloorTexture("Wood", "wood");
+		APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
+		APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
 	}
+
+	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
+	}
+
+	// end static part
 
 	public class Simulation extends GameLoop {
 
