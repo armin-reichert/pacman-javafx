@@ -28,6 +28,7 @@ import java.util.Objects;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
@@ -75,15 +76,15 @@ public class ColoredGhost3D {
 	public ColoredGhost3D(Model3D model3D, GhostColoring coloring, double size) {
 		this.coloring = Objects.requireNonNull(coloring, "Ghost colors must not be null");
 
-		dress = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_GHOST_DRESS));
+		dress = new MeshView(model3D.mesh(GameUI.MESH_ID_GHOST_DRESS));
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
 		dressColorPy.set(coloring.normalDress());
 
-		eyeBalls = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_GHOST_EYE_BALLS));
+		eyeBalls = new MeshView(model3D.mesh(GameUI.MESH_ID_GHOST_EYE_BALLS));
 		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallsColorPy));
 		eyeBallsColorPy.set(coloring.normalEyeBalls());
 
-		pupils = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_GHOST_PUPILS));
+		pupils = new MeshView(model3D.mesh(GameUI.MESH_ID_GHOST_PUPILS));
 		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 		pupilsColorPy.set(coloring.normalPupils());
 
