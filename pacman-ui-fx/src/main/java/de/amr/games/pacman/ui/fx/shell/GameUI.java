@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.shell;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -41,8 +42,6 @@ import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.pacman.PacManGameRenderer;
@@ -95,7 +94,10 @@ public class GameUI implements GameEventListener {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static final float PIP_MIN_HEIGHT = World.t(36);
+	private static final int TILES_X = 28;
+	private static final int TILES_Y = 36;
+
+	public static final float PIP_MIN_HEIGHT = TILES_Y * 8;
 	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
 
 	private static final byte INDEX_BOOT_SCENE = 0;
@@ -105,8 +107,6 @@ public class GameUI implements GameEventListener {
 
 	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
 	}
-
-	// end static part
 
 	public class Simulation extends GameLoop {
 
@@ -129,33 +129,33 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private final Stage stage;
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
-	private PlayScene2D pipGameScene;
-	private KeyboardSteering manualSteering;
+	private final Stage stage;
 	private final GameSceneSelection[] scenesMsPacMan;
 	private final GameSceneSelection[] scenesPacMan;
+	private PlayScene2D pipGameScene;
+	private KeyboardSteering manualSteering;
 	private GameScene currentGameScene;
 	private Dashboard dashboard;
 	private FlashMessageView flashMessageView;
 
-	public GameUI(Stage primaryStage, Settings settings) {
+	public GameUI(Stage stage, Settings settings) {
+		Objects.requireNonNull(settings);
 		gameController = new GameController(settings.variant);
 
-		dashboard = new Dashboard();
-		flashMessageView = new FlashMessageView();
-		pipGameScene = new PlayScene2D(gameController);
-
-		stage = primaryStage;
+		this.stage = Objects.requireNonNull(stage);
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 
-		var size = ArcadeWorld.SIZE_PX.toFloatVec().scaled(settings.zoom);
-		stage.setScene(createMainScene(size));
+		dashboard = new Dashboard();
+		flashMessageView = new FlashMessageView();
+		pipGameScene = new PlayScene2D(gameController);
+		var mainScene = createMainScene(new Vector2f(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom));
+		stage.setScene(mainScene);
 
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
