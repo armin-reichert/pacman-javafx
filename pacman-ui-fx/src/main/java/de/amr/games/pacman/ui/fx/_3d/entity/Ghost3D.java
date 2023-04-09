@@ -119,7 +119,7 @@ public class Ghost3D {
 		brakeAnimation.setAutoReverse(true);
 		brakeAnimation.setCycleCount(2);
 
-		// TODO this doen't work as expected (maybe my expectations are wrong)
+		// TODO this doesn't work as expected (maybe my expectations are wrong)
 		dressAnimation = new RotateTransition(Duration.seconds(0.2), coloredGhost3D.getDressGroup());
 		dressAnimation.setAxis(Rotate.Z_AXIS);
 		dressAnimation.setCycleCount(Animation.INDEFINITE);
