@@ -60,6 +60,7 @@ public class ColoredGhost3D {
 
 	private final Group root;
 	private final Group eyesGroup;
+	private final Group dressGroup;
 	private final Shape3D dress;
 	private final Shape3D eyeBalls;
 	private final Shape3D pupils;
@@ -91,10 +92,12 @@ public class ColoredGhost3D {
 		var centerTransform = centerOverOrigin(dress);
 		dress.getTransforms().add(centerTransform);
 
+		dressGroup = new Group(dress);
+
 		eyesGroup = new Group(pupils, eyeBalls);
 		eyesGroup.getTransforms().add(centerTransform);
 
-		root = new Group(dress, eyesGroup);
+		root = new Group(dressGroup, eyesGroup);
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
@@ -108,6 +111,10 @@ public class ColoredGhost3D {
 
 	public Group getEyesGroup() {
 		return eyesGroup;
+	}
+
+	public Group getDressGroup() {
+		return dressGroup;
 	}
 
 	public Shape3D dress() {
