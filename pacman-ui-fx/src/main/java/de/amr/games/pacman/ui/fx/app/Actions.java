@@ -141,7 +141,7 @@ public class Actions {
 
 	public static void togglePipViewVisible() {
 		Ufx.toggle(Env.pipVisiblePy);
-		var msgKey = Env.pipVisiblePy.get() ? "pipOn" : "pipOff";
+		var msgKey = Env.pipVisiblePy.get() ? "pip_on" : "pip_off";
 		showFlashMessage(AppResources.message(msgKey));
 	}
 
