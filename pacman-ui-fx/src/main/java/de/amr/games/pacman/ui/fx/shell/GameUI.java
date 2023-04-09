@@ -111,9 +111,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	static {
-		LOG.info("Loading 3D models");
 		PacManModel3D.load();
-
 		ResourceMgr.addFloorTexture(ResourceMgr.KEY_NO_TEXTURE, null);
 		ResourceMgr.addFloorTexture("Chrome", "chrome");
 		ResourceMgr.addFloorTexture("Grass", "grass");

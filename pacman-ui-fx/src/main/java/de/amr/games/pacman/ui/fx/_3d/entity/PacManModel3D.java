@@ -27,6 +27,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.Model3DException;
 
@@ -34,6 +37,8 @@ import de.amr.games.pacman.ui.fx._3d.Model3DException;
  * @author Armin Reichert
  */
 public class PacManModel3D {
+
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static final String MODEL_ID_PAC = "Pac";
 	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
@@ -54,9 +59,13 @@ public class PacManModel3D {
 	 * Called on start to load all 3D models at once.
 	 */
 	public static void load() {
+		var start = System.nanoTime();
+		LOG.info("Loading 3D models...");
 		MODELS.put(MODEL_ID_PAC, new Model3D("model3D/pacman.obj"));
 		MODELS.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
 		MODELS.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
+		var duration = System.nanoTime() - start;
+		LOG.info("Loading 3D models done (%.2f milliseconds).", duration / 1_000_000f);
 	}
 
 	public static Model3D model(String id) {
