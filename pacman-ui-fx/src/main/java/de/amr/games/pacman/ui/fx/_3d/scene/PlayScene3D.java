@@ -84,8 +84,6 @@ public class PlayScene3D extends GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final String[] READY_TEXTS = { "LET'S GO BRANDON!", "GHOST LIVES MATTER!", "YELLOW MAN BAD!" };
-
 	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
 			Perspective.TOTAL) {
 		@Override
@@ -293,11 +291,8 @@ public class PlayScene3D extends GameScene {
 				level3D.foodOscillation().play();
 			}
 			infoText3D.setVisible(true);
-			if (U.RND.nextInt(100) % 5 == 0) {
-				infoText3D.setText(READY_TEXTS[U.randomInt(0, READY_TEXTS.length)]);
-			} else {
-				infoText3D.setText("READY!");
-			}
+			var readyText = U.RND.nextInt(100) % 5 == 0 ? AppResources.randomReadyText() : "READY!";
+			infoText3D.setText(readyText);
 		}
 
 		case HUNTING -> {
