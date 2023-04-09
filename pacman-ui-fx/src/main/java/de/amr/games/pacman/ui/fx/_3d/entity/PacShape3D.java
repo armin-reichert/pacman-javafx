@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -46,11 +45,6 @@ public class PacShape3D {
 	public static final String ID_HEAD = "head";
 	public static final String ID_EYES = "eyes";
 	public static final String ID_PALATE = "palate";
-
-	private static final Model3D PAC_MODEL_3D = new Model3D("model3D/pacman.obj");
-	private static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
-	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
-	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
 	/**
 	 * @param size        Pac-Man size in pixels
@@ -89,15 +83,17 @@ public class PacShape3D {
 	}
 
 	private static Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(PAC_MODEL_3D.mesh(MESH_ID_HEAD));
+		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_PAC);
+
+		var head = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_HEAD));
 		head.setId(ID_HEAD);
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
-		var eyes = new MeshView(PAC_MODEL_3D.mesh(MESH_ID_EYES));
+		var eyes = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_EYES));
 		eyes.setId(ID_EYES);
 		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
 
-		var palate = new MeshView(PAC_MODEL_3D.mesh(MESH_ID_PALATE));
+		var palate = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_PALATE));
 		palate.setId(ID_PALATE);
 		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
 

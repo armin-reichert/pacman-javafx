@@ -60,6 +60,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
+import de.amr.games.pacman.ui.fx._3d.entity.PacManModel3D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -110,6 +111,9 @@ public class GameUI implements GameEventListener {
 	}
 
 	static {
+		LOG.info("Loading 3D models");
+		PacManModel3D.load();
+
 		ResourceMgr.addFloorTexture(ResourceMgr.KEY_NO_TEXTURE, null);
 		ResourceMgr.addFloorTexture("Chrome", "chrome");
 		ResourceMgr.addFloorTexture("Grass", "grass");
