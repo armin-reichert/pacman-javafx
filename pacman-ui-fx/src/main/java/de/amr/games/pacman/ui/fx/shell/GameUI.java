@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -133,9 +134,8 @@ public class GameUI implements GameEventListener {
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
+	private final Map<GameVariant, List<GameSceneSelection>> scenes = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
-	private final GameSceneSelection[] scenesMsPacMan;
-	private final GameSceneSelection[] scenesPacMan;
 	private PlayScene2D pipGameScene;
 	private KeyboardSteering manualSteering;
 	private GameScene currentGameScene;
@@ -156,25 +156,25 @@ public class GameUI implements GameEventListener {
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
 
 		//@formatter:off
-		scenesMsPacMan = new GameSceneSelection[] {
+		scenes.put(GameVariant.PACMAN, List.of(
 			new GameSceneSelection(createScene2D(BootScene.class), null),
 			new GameSceneSelection(createScene2D(PacManIntroScene.class), null),
 			new GameSceneSelection(createScene2D(PacManCreditScene.class), null),
 			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
 			new GameSceneSelection(createScene2D(PacManCutscene1.class), null),
 			new GameSceneSelection(createScene2D(PacManCutscene2.class), null),
-			new GameSceneSelection(createScene2D(PacManCutscene3.class), null),
-		};
+			new GameSceneSelection(createScene2D(PacManCutscene3.class), null)
+		));
 
-		scenesPacMan = new GameSceneSelection[] { 
+		scenes.put(GameVariant.MS_PACMAN, List.of(
 			new GameSceneSelection(createScene2D(BootScene.class), null),
 			new GameSceneSelection(createScene2D(MsPacManIntroScene.class), null),
 			new GameSceneSelection(createScene2D(MsPacManCreditScene.class), null),
 			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
 			new GameSceneSelection(createScene2D(MsPacManIntermissionScene1.class), null),
 			new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
-			new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null),
-		};
+			new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null)
+		));
 
 		manualSteering = new KeyboardSteering(
 			settings.keyMap.get(Direction.UP),
@@ -196,6 +196,7 @@ public class GameUI implements GameEventListener {
 		Actions.setUI(this);
 		GameEvents.addListener(this);
 		dashboard.init(this);
+
 		initEnv(settings);
 
 		LOG.info("Game UI created. Locale: %s. Application settings: %s", Locale.getDefault(), settings);
@@ -330,29 +331,25 @@ public class GameUI implements GameEventListener {
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {
-		return gameScene == scenesPacMan[INDEX_PLAY_SCENE].scene2D()
-				|| gameScene == scenesPacMan[INDEX_PLAY_SCENE].scene3D()
-				|| gameScene == scenesMsPacMan[INDEX_PLAY_SCENE].scene2D()
-				|| gameScene == scenesMsPacMan[INDEX_PLAY_SCENE].scene3D();
+		return gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene2D()
+				|| gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene3D()
+				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene2D()
+				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene3D();
 	}
 
 	private GameSceneSelection sceneSelectionMatchingCurrentGameState() {
-		int index = switch (gameController.state()) {
+		var game = gameController.game();
+		var gameState = gameController.state();
+		int index = switch (gameState) {
 		case BOOT -> INDEX_BOOT_SCENE;
 		case CREDIT -> INDEX_CREDIT_SCENE;
 		case INTRO -> INDEX_INTRO_SCENE;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> INDEX_PLAY_SCENE;
-		case INTERMISSION -> {
-			var level = gameController.game().level().orElseThrow(IllegalStateException::new);
-			yield INDEX_PLAY_SCENE + level.intermissionNumber;
-		}
-		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + gameController.game().intermissionTestNumber;
-		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameController.state()));
+		case INTERMISSION -> INDEX_PLAY_SCENE + game.level().orElseThrow(IllegalStateException::new).intermissionNumber;
+		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + game.intermissionTestNumber;
+		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameState));
 		};
-		return switch (gameController.game().variant()) {
-		case MS_PACMAN -> scenesPacMan[index];
-		case PACMAN -> scenesMsPacMan[index];
-		};
+		return scenes.get(game.variant()).get(index);
 	}
 
 	public void updateGameScene(boolean reload) {

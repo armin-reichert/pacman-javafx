@@ -227,12 +227,12 @@ public class PlayScene3D extends GameScene {
 			currentCamController = camController;
 			fxSubScene.requestFocus();
 			camController.reset(fxSubScene.getCamera());
-			// rotate the scores such that the viewer sees them frontally
-			if (level3D != null && level3D.scores3D() != null) {
-				level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-				level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
-			}
 			LOG.info("Perspective changed to %s (%s)", perspective, this);
+		}
+		// rotate the scores such that the viewer sees them frontally
+		if (level3D != null && level3D.scores3D() != null) {
+			level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+			level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 		}
 	}
 
