@@ -39,7 +39,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
-import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -136,25 +135,48 @@ public class GameUI implements GameEventListener {
 	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
 	private final Map<GameVariant, List<GameSceneSelection>> scenes = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
-	private PlayScene2D pipGameScene;
-	private KeyboardSteering manualSteering;
-	private GameScene currentGameScene;
-	private Dashboard dashboard;
-	private FlashMessageView flashMessageView;
+	private final PlayScene2D pipGameScene;
+	private final Dashboard dashboard = new Dashboard();
+	private final FlashMessageView flashMessageView = new FlashMessageView();
 
-	public GameUI(Stage stage, Settings settings) {
+	private GameScene currentGameScene;
+
+	public GameUI(final Stage stage, final Settings settings) {
 		this.stage = Objects.requireNonNull(stage);
 		Objects.requireNonNull(settings);
 
+		// init game controller
 		gameController = new GameController(settings.variant);
+		var keyboardSteering = new KeyboardSteering(//
+				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
+				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+		gameController.setManualPacSteering(keyboardSteering);
 
-		dashboard = new Dashboard();
-		flashMessageView = new FlashMessageView();
-		pipGameScene = new PlayScene2D(gameController);
-
+		// renderer map must be initialized before game scenes are created
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+		createGameScenes();
+		pipGameScene = new PlayScene2D(gameController);
 
+		// create main scene
+		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+		stage.setScene(mainScene);
+
+		stage.setFullScreen(settings.fullScreen);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+
+		// init eventing
+		Actions.setUI(this);
+		GameEvents.addListener(this);
+		dashboard.init(this);
+		initEnv(settings);
+
+		LOG.info("Game UI created. Locale: %s. Application settings: %s", Locale.getDefault(), settings);
+	}
+
+	private void createGameScenes() {
 		//@formatter:off
 		scenes.put(GameVariant.PACMAN, List.of(
 			new GameSceneSelection(createScene2D(BootScene.class), null),
@@ -175,36 +197,12 @@ public class GameUI implements GameEventListener {
 			new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
 			new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null)
 		));
-
-		manualSteering = new KeyboardSteering(
-			settings.keyMap.get(Direction.UP),
-			settings.keyMap.get(Direction.DOWN),
-			settings.keyMap.get(Direction.LEFT),
-			settings.keyMap.get(Direction.RIGHT)
-		);
 		//@formatter:on
-		gameController.setManualPacSteering(manualSteering);
-
-		var mainScene = createMainScene(new Vector2f(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom));
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
-
-		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-		stage.setScene(mainScene);
-
-		Actions.setUI(this);
-		GameEvents.addListener(this);
-		dashboard.init(this);
-
-		initEnv(settings);
-
-		LOG.info("Game UI created. Locale: %s. Application settings: %s", Locale.getDefault(), settings);
 	}
 
-	private Scene createMainScene(Vector2f size) {
+	private Scene createMainScene(float sizeX, float sizeY) {
 		var root = new StackPane();
-		var scene = new Scene(root, size.x(), size.y());
+		var scene = new Scene(root, sizeX, sizeY);
 		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.setOnMouseClicked(e -> {
