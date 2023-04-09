@@ -40,6 +40,7 @@ import de.amr.games.pacman.ui.fx._3d.Model3DException;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.PhongMaterial;
 
 /**
@@ -79,6 +80,38 @@ public class AppResources {
 	private static Map<String, Model3D> models3D = new HashMap<>();
 	private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
 
+	public static void load() {
+		LOG.info("Loading application resources...");
+		var start = System.nanoTime();
+
+		messageBundle = ResourceBundle.getBundle("assets.texts.messages");
+		messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
+		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
+		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
+
+		models3D.put(MODEL_ID_PAC, new Model3D("model3D/pacman.obj"));
+		models3D.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
+		models3D.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
+
+		loadTexture("Chrome", "chrome");
+		loadTexture("Grass", "grass");
+		loadTexture("Hexagon", "hexagon");
+		loadTexture("Knobs & Bumps", "knobs");
+		loadTexture("Pavement", "pavement");
+		loadTexture("Plastic", "plastic");
+		loadTexture("Wood", "wood");
+
+		for (var textureKey : textureKeys()) {
+			useAsFloorTexture(textureKey);
+		}
+
+		iconPacManGame = ResourceMgr.image("icons/pacman.png");
+		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
+
+		var duration = System.nanoTime() - start;
+		LOG.info("Loading application resources done (%.2f seconds).", duration / 1_000_000_000f);
+	}
+
 	private static void loadTexture(String key, String textureName) {
 		if (textureName != null) {
 			var material = new PhongMaterial();
@@ -117,38 +150,6 @@ public class AppResources {
 		return models3D.get(id);
 	}
 
-	public static void load() {
-		LOG.info("Loading application resources...");
-		var start = System.nanoTime();
-
-		messageBundle = ResourceBundle.getBundle("assets.texts.messages");
-		messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
-		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
-		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
-
-		models3D.put(MODEL_ID_PAC, new Model3D("model3D/pacman.obj"));
-		models3D.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
-		models3D.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
-
-		loadTexture("Chrome", "chrome");
-		loadTexture("Grass", "grass");
-		loadTexture("Hexagon", "hexagon");
-		loadTexture("Knobs & Bumps", "knobs");
-		loadTexture("Pavement", "pavement");
-		loadTexture("Plastic", "plastic");
-		loadTexture("Wood", "wood");
-
-		for (var textureKey : textureKeys()) {
-			useAsFloorTexture(textureKey);
-		}
-
-		iconPacManGame = ResourceMgr.image("icons/pacman.png");
-		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
-
-		var duration = System.nanoTime() - start;
-		LOG.info("Loading application resources done (%.2f seconds).", duration / 1_000_000_000f);
-	}
-
 	public static Image appIcon(GameVariant variant) {
 		return switch (variant) {
 		case MS_PACMAN -> iconMsPacManGame;
@@ -185,5 +186,13 @@ public class AppResources {
 
 	public static String pickLevelCompleteMessage(int levelNumber) {
 		return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber));
+	}
+
+	public static AudioClip voiceMessage(String voiceMessageKey) {
+		var url = ResourceMgr.urlFromRelPath(voiceMessageKey);
+		if (url != null) {
+			return new AudioClip(url.toExternalForm());
+		}
+		throw new IllegalArgumentException("Unknown voice message key '%s'".formatted(voiceMessageKey));
 	}
 }

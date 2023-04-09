@@ -27,14 +27,11 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.controller.common.GameState.INTRO;
 
 import java.util.Objects;
-import java.util.Random;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
@@ -46,9 +43,6 @@ import javafx.scene.shape.DrawMode;
  * @author Armin Reichert
  */
 public class Actions {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
-	private static final Random RND = new Random();
 
 	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
@@ -69,19 +63,12 @@ public class Actions {
 		return gameController().state();
 	}
 
-	public static void playVoiceMessage(String messageFileRelPath) {
+	public static void playVoiceMessage(String voiceMessageKey) {
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
-		var url = ResourceMgr.urlFromRelPath(messageFileRelPath);
-		if (url != null) {
-			try {
-				currentVoiceMessage = new AudioClip(url.toExternalForm());
-				currentVoiceMessage.play();
-			} catch (Exception e) {
-				LOG.error("Could not play voice message '%s'", messageFileRelPath);
-			}
-		}
+		var voiceMessage = AppResources.voiceMessage(voiceMessageKey);
+		voiceMessage.play();
 	}
 
 	public static void stopVoiceMessage() {
@@ -253,7 +240,7 @@ public class Actions {
 
 	public static void cheatEatAllPellets() {
 		gameController().cheatEatAllPellets();
-		if (RND.nextDouble() < 0.1) {
+		if (U.RND.nextDouble() < 0.1) {
 			showFlashMessage(AppResources.pickCheatingMessage());
 		}
 	}
@@ -264,7 +251,7 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		gameController().cheatKillAllEatableGhosts();
-		if (RND.nextDouble() < 0.1) {
+		if (U.RND.nextDouble() < 0.1) {
 			showFlashMessage(AppResources.pickCheatingMessage());
 		}
 	}
