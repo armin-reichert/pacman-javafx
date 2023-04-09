@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -51,12 +52,12 @@ public class LivesCounter3D {
 	private final Group root = new Group();
 	private final int maxLives;
 
-	public LivesCounter3D(GameVariant variant, int maxLives) {
+	public LivesCounter3D(GameVariant variant, int maxLives, Model3D model3D) {
 		this.maxLives = maxLives;
 		switch (variant) {
 		case MS_PACMAN -> {
 			for (int i = 0; i < maxLives; ++i) {
-				var msPac = PacShape3D.createMsPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR, HAIRBOW_COLOR,
+				var msPac = PacShape3D.createMsPacManShape(model3D, 9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR, HAIRBOW_COLOR,
 						HAIRBOW_PEARLS_COLOR);
 				msPac.setTranslateX(2.0 * i * TS);
 				msPac.setRotationAxis(Rotate.Z_AXIS);
@@ -66,7 +67,7 @@ public class LivesCounter3D {
 		}
 		case PACMAN -> {
 			for (int i = 0; i < maxLives; ++i) {
-				var pac = PacShape3D.createPacManShape(9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
+				var pac = PacShape3D.createPacManShape(model3D, 9, HEAD_COLOR, EYES_COLOR, PALATE_COLOR);
 				pac.setTranslateX(2.0 * i * TS);
 				root.getChildren().add(pac);
 			}

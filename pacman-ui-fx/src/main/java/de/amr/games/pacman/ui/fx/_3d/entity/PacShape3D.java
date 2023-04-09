@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -47,17 +48,20 @@ public class PacShape3D {
 	public static final String ID_PALATE = "palate";
 
 	/**
+	 * @param model3D     the 3D-model
 	 * @param size        Pac-Man size in pixels
 	 * @param headColor   color of head shape
 	 * @param eyesColor   color of eyes
 	 * @param palateColor color of palate
 	 * @return tree of Pac-Man parts
 	 */
-	public static Group createPacManShape(double size, Color headColor, Color eyesColor, Color palateColor) {
-		return new Group(createShape(size, headColor, eyesColor, palateColor));
+	public static Group createPacManShape(Model3D model3D, double size, Color headColor, Color eyesColor,
+			Color palateColor) {
+		return new Group(createShape(model3D, size, headColor, eyesColor, palateColor));
 	}
 
 	/**
+	 * @param model3D     the 3D-model
 	 * @param size        Ms. Pac-Man size in pixels
 	 * @param headColor   color of head shape
 	 * @param eyesColor   color of eyes
@@ -66,9 +70,9 @@ public class PacShape3D {
 	 * @param pearlsColor color of "pearls" connecting hair bows
 	 * @return tree of Ms. Pac-Man parts
 	 */
-	public static Group createMsPacManShape(double size, Color headColor, Color eyesColor, Color palateColor,
-			Color bowColor, Color pearlsColor) {
-		return new Group(createShape(size, headColor, eyesColor, palateColor),
+	public static Group createMsPacManShape(Model3D model3D, double size, Color headColor, Color eyesColor,
+			Color palateColor, Color bowColor, Color pearlsColor) {
+		return new Group(createShape(model3D, size, headColor, eyesColor, palateColor),
 				createBeautyAccessories(size, bowColor, pearlsColor));
 	}
 
@@ -82,9 +86,7 @@ public class PacShape3D {
 		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 
-	private static Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {
-		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_PAC);
-
+	private static Group createShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_HEAD));
 		head.setId(ID_HEAD);
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));

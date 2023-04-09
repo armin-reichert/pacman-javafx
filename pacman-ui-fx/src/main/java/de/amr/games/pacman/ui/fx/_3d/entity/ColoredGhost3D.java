@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import java.util.Objects;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.ColorFlashing;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation.Status;
@@ -71,10 +72,8 @@ public class ColoredGhost3D {
 	private ColorFlashing dressFlashing;
 	private ColorFlashing pupilsFlashing;
 
-	public ColoredGhost3D(GhostColoring coloring, double size) {
+	public ColoredGhost3D(Model3D model3D, GhostColoring coloring, double size) {
 		this.coloring = Objects.requireNonNull(coloring, "Ghost colors must not be null");
-
-		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_GHOST);
 
 		dress = new MeshView(model3D.mesh(PacManModel3D.MESH_ID_GHOST_DRESS));
 		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));

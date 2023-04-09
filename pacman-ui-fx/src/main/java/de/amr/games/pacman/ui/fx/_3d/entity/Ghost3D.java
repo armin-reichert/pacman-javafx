@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -88,11 +89,11 @@ public class Ghost3D {
 	private Image numberImage;
 	private Look currentLook;
 
-	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors, double size) {
+	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors, Model3D model3D, double size) {
 		this.level = Objects.requireNonNull(level, "Game level must not be null");
 		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
 
-		coloredGhost3D = new ColoredGhost3D(colors, size);
+		coloredGhost3D = new ColoredGhost3D(model3D, colors, size);
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);

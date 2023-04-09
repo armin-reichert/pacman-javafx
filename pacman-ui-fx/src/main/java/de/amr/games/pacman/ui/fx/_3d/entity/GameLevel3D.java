@@ -167,19 +167,22 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D() {
-		var shape = PacShape3D.createPacManShape(9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
+		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_PAC);
+		var shape = PacShape3D.createPacManShape(model3D, 9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
 				ArcadeTheme.PALATE_COLOR);
 		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Pac3D createMsPacMan3D() {
-		var shape = PacShape3D.createMsPacManShape(9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
+		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_PAC);
+		var shape = PacShape3D.createMsPacManShape(model3D, 9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
 				ArcadeTheme.PALATE_COLOR, ArcadeTheme.HAIRBOW_COLOR, ArcadeTheme.HAIRBOW_PEARLS_COLOR);
 		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
-		return new Ghost3D(level, ghost, ArcadeTheme.GHOST_COLORS[ghost.id()], 8.5);
+		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_GHOST);
+		return new Ghost3D(level, ghost, ArcadeTheme.GHOST_COLORS[ghost.id()], model3D, 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
@@ -192,7 +195,8 @@ public class GameLevel3D {
 	}
 
 	private LivesCounter3D createLivesCounter3D() {
-		var counter3D = new LivesCounter3D(level.game().variant(), 5);
+		var model3D = PacManModel3D.model(PacManModel3D.MODEL_ID_PAC);
+		var counter3D = new LivesCounter3D(level.game().variant(), 5, model3D);
 		counter3D.setPosition(2 * TS, TS, -HTS);
 		counter3D.getRoot().setVisible(level.game().hasCredit());
 		return counter3D;
