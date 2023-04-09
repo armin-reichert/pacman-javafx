@@ -143,19 +143,14 @@ public class GameUI implements GameEventListener {
 	private FlashMessageView flashMessageView;
 
 	public GameUI(Stage stage, Settings settings) {
-		Objects.requireNonNull(settings);
-		gameController = new GameController(settings.variant);
-
 		this.stage = Objects.requireNonNull(stage);
-		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
+		Objects.requireNonNull(settings);
+
+		gameController = new GameController(settings.variant);
 
 		dashboard = new Dashboard();
 		flashMessageView = new FlashMessageView();
 		pipGameScene = new PlayScene2D(gameController);
-		var mainScene = createMainScene(new Vector2f(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom));
-		stage.setScene(mainScene);
 
 		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
@@ -189,14 +184,21 @@ public class GameUI implements GameEventListener {
 		);
 		//@formatter:on
 		gameController.setManualPacSteering(manualSteering);
-		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
 
+		var mainScene = createMainScene(new Vector2f(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom));
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, manualSteering);
+
+		stage.setFullScreen(settings.fullScreen);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+		stage.setScene(mainScene);
+
+		Actions.setUI(this);
+		GameEvents.addListener(this);
 		dashboard.init(this);
 		initEnv(settings);
-		GameEvents.addListener(this);
-		Actions.setUI(this);
 
-		LOG.info("Created game UI, Locale: %s, Application settings: %s", Locale.getDefault(), settings);
+		LOG.info("Game UI created. Locale: %s. Application settings: %s", Locale.getDefault(), settings);
 	}
 
 	private Scene createMainScene(Vector2f size) {
