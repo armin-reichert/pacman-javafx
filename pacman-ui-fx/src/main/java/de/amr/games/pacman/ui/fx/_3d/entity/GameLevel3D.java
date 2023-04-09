@@ -132,7 +132,7 @@ public class GameLevel3D {
 	}
 
 	private void selectRandomFloorTexture() {
-		var keys = AppResources.floorTextureKeys();
+		var keys = AppResources.textureKeys();
 		var key = keys[U.randomInt(1, keys.length)]; // index 0 = No Texture
 		Env.d3_floorTexturePy.set(key);
 	}

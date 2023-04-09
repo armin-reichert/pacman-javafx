@@ -152,7 +152,7 @@ public class World3D {
 
 	private void updateFloorMaterial() {
 		String key = floorTexturePy.get();
-		var texture = AppResources.floorTexture(key);
+		var texture = AppResources.texture(key);
 		if (texture == null) {
 			texture = ResourceMgr.coloredMaterial(floorColorPy.get());
 		}
