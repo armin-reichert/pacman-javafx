@@ -37,6 +37,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
+import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -86,6 +87,7 @@ public class Ghost3D {
 	private Direction turnTargetDir;
 	private final RotateTransition turnAnimation;
 	private final RotateTransition brakeAnimation;
+	private final RotateTransition dressAnimation;
 	private Image numberImage;
 	private Look currentLook;
 
@@ -117,6 +119,13 @@ public class Ghost3D {
 		brakeAnimation.setAutoReverse(true);
 		brakeAnimation.setCycleCount(2);
 
+		// TODO this doen't work as expected (maybe my expectations are wrong)
+		dressAnimation = new RotateTransition(Duration.seconds(0.2), coloredGhost3D.getDressGroup());
+		dressAnimation.setAxis(Rotate.Z_AXIS);
+		dressAnimation.setCycleCount(Animation.INDEFINITE);
+		dressAnimation.setAutoReverse(true);
+		dressAnimation.setByAngle(20);
+
 		init();
 	}
 
@@ -127,6 +136,7 @@ public class Ghost3D {
 	public void init() {
 		turnTargetDir = ghost.moveDir();
 		turnAnimation.stop();
+		dressAnimation.stop();
 		root.setRotationAxis(Rotate.Z_AXIS);
 		root.setRotate(Turn.angle(ghost.moveDir()));
 		update();
@@ -150,6 +160,11 @@ public class Ghost3D {
 				playTurnAnimation(turnTargetDir, ghost.moveDir());
 				turnTargetDir = ghost.moveDir();
 			}
+//			if (dressAnimation.getStatus() != Status.RUNNING) {
+//				dressAnimation.play();
+//			}
+		} else {
+//			dressAnimation.stop();
 		}
 	}
 
