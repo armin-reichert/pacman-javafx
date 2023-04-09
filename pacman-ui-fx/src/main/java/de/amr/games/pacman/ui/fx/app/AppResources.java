@@ -59,7 +59,7 @@ public class AppResources {
 	private static Image iconMsPacManGame;
 	private static final Map<String, Model3D> MODELS = new HashMap<>();
 
-	public static Model3D model(String id) {
+	public static Model3D model3D(String id) {
 		if (!MODELS.containsKey(id)) {
 			throw new Model3DException("Did not find 3D model '%s'", id);
 		}
