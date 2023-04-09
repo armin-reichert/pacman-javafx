@@ -54,6 +54,11 @@ public class PacManGameAppFX extends Application {
 	private GameUI gameUI;
 
 	@Override
+	public void init() throws Exception {
+		AppResources.load();
+	}
+
+	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters().getNamed());
 		gameUI = new GameUI(primaryStage, settings);

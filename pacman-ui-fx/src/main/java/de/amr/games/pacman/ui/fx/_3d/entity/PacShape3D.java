@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx._3d.Model3D;
+import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -88,15 +88,15 @@ public class PacShape3D {
 	}
 
 	private static Group createShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(model3D.mesh(GameUI.MESH_ID_HEAD));
+		var head = new MeshView(model3D.mesh(AppResources.MESH_ID_HEAD));
 		head.setId(ID_HEAD);
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
-		var eyes = new MeshView(model3D.mesh(GameUI.MESH_ID_EYES));
+		var eyes = new MeshView(model3D.mesh(AppResources.MESH_ID_EYES));
 		eyes.setId(ID_EYES);
 		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
 
-		var palate = new MeshView(model3D.mesh(GameUI.MESH_ID_PALATE));
+		var palate = new MeshView(model3D.mesh(AppResources.MESH_ID_PALATE));
 		palate.setId(ID_PALATE);
 		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
 

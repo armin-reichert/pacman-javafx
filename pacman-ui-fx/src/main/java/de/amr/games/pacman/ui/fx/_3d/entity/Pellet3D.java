@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -44,7 +44,7 @@ public class Pellet3D implements Eatable3D {
 	private final Shape3D shape;
 
 	public Pellet3D(Model3D model3D, double radius) {
-		shape = model3D.meshView(GameUI.MESH_ID_PELLET);
+		shape = model3D.meshView(AppResources.MESH_ID_PELLET);
 		shape.setRotationAxis(Rotate.Z_AXIS);
 		shape.setRotate(90);
 		var bounds = shape.getBoundsInLocal();

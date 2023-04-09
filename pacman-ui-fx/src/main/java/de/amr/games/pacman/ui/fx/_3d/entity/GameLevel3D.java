@@ -49,9 +49,9 @@ import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
+import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.BooleanProperty;
@@ -151,7 +151,7 @@ public class GameLevel3D {
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
-		var model3D = GameUI.model(GameUI.MODEL_ID_PELLET);
+		var model3D = AppResources.model(AppResources.MODEL_ID_PELLET);
 		var pellet3D = new Pellet3D(model3D, 1.0);
 		pellet3D.getRoot().setMaterial(material);
 		pellet3D.placeAtTile(tile);
@@ -168,21 +168,21 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D() {
-		var model3D = GameUI.model(GameUI.MODEL_ID_PAC);
+		var model3D = AppResources.model(AppResources.MODEL_ID_PAC);
 		var shape = PacShape3D.createPacManShape(model3D, 9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
 				ArcadeTheme.PALATE_COLOR);
 		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Pac3D createMsPacMan3D() {
-		var model3D = GameUI.model(GameUI.MODEL_ID_PAC);
+		var model3D = AppResources.model(AppResources.MODEL_ID_PAC);
 		var shape = PacShape3D.createMsPacManShape(model3D, 9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
 				ArcadeTheme.PALATE_COLOR, ArcadeTheme.HAIRBOW_COLOR, ArcadeTheme.HAIRBOW_PEARLS_COLOR);
 		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
-		var model3D = GameUI.model(GameUI.MODEL_ID_GHOST);
+		var model3D = AppResources.model(AppResources.MODEL_ID_GHOST);
 		return new Ghost3D(level, ghost, ArcadeTheme.GHOST_COLORS[ghost.id()], model3D, 8.5);
 	}
 
@@ -196,7 +196,7 @@ public class GameLevel3D {
 	}
 
 	private LivesCounter3D createLivesCounter3D() {
-		var model3D = GameUI.model(GameUI.MODEL_ID_PAC);
+		var model3D = AppResources.model(AppResources.MODEL_ID_PAC);
 		var counter3D = new LivesCounter3D(level.game().variant(), 5, model3D);
 		counter3D.setPosition(2 * TS, TS, -HTS);
 		counter3D.getRoot().setVisible(level.game().hasCredit());

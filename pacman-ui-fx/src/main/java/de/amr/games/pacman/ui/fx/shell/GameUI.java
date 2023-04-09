@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.shell;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -61,10 +60,9 @@ import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.pacman.PacManIntroScene;
-import de.amr.games.pacman.ui.fx._3d.Model3D;
-import de.amr.games.pacman.ui.fx._3d.Model3DException;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
+import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -77,7 +75,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -105,51 +102,6 @@ public class GameUI implements GameEventListener {
 	private static final byte INDEX_INTRO_SCENE = 1;
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
-
-	private static final Image APP_ICON_PACMAN;
-	private static final Image APP_ICON_MSPACMAN;
-	public static final String MODEL_ID_PAC = "Pac";
-	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
-	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
-	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
-
-	public static final String MODEL_ID_GHOST = "Ghost";
-	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-	public static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
-	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-
-	public static final String MODEL_ID_PELLET = "Pellet";
-	public static final String MESH_ID_PELLET = "Fruit";
-
-	private static final Map<String, Model3D> MODELS = new HashMap<>();
-
-	public static Model3D model(String id) {
-		if (!MODELS.containsKey(id)) {
-			throw new Model3DException("Did not find 3D model '%s'", id);
-		}
-		return MODELS.get(id);
-	}
-
-	static {
-		var start = System.nanoTime();
-		LOG.info("Loading 3D models...");
-		MODELS.put(MODEL_ID_PAC, new Model3D("model3D/pacman.obj"));
-		MODELS.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
-		MODELS.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
-		var duration = System.nanoTime() - start;
-		LOG.info("Loading 3D models done (%.2f milliseconds).", duration / 1_000_000f);
-
-		ResourceMgr.addFloorTexture(ResourceMgr.KEY_NO_TEXTURE, null);
-		ResourceMgr.addFloorTexture("Chrome", "chrome");
-		ResourceMgr.addFloorTexture("Grass", "grass");
-		ResourceMgr.addFloorTexture("Hexagon", "hexagon");
-		ResourceMgr.addFloorTexture("Knobs & Bumps", "knobs");
-		ResourceMgr.addFloorTexture("Pavement", "pavement");
-		ResourceMgr.addFloorTexture("Plastic", "plastic");
-		ResourceMgr.addFloorTexture("Wood", "wood");
-		APP_ICON_PACMAN = ResourceMgr.image("icons/pacman.png");
-		APP_ICON_MSPACMAN = ResourceMgr.image("icons/mspacman.png");
-	}
 
 	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
 	}
@@ -282,15 +234,14 @@ public class GameUI implements GameEventListener {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
-			stage.getIcons().setAll(APP_ICON_MSPACMAN);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(ResourceMgr.message(messageKey, dimensionMsg));
-			stage.getIcons().setAll(APP_ICON_PACMAN);
 		}
 		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
 		}
+		stage.getIcons().setAll(AppResources.appIcon(variant));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		var sceneRoot = (Region) stage.getScene().getRoot();
 		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
