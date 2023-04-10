@@ -139,7 +139,7 @@ public class PacShape3D {
 		var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
 		var beautySpot = new Sphere(0.25);
 		beautySpot.setMaterial(beautySpotMaterial);
-		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -pacSize * 0.3));
+		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
 		var silicone = ResourceMgr.coloredMaterial(headColor);
 
