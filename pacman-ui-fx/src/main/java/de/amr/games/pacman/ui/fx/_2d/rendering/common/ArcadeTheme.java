@@ -76,7 +76,7 @@ public class ArcadeTheme {
 	// 3D colors
 	public static final Color HEAD_COLOR = Color.rgb(255, 255, 0);
 	public static final Color EYES_COLOR_PACMAN = Color.rgb(100, 100, 100);
-	public static final Color EYES_COLOR_MS_PACMAN = Color.CORNFLOWERBLUE;
+	public static final Color EYES_COLOR_MS_PACMAN = Color.rgb(33, 33, 33); // sunglasses look
 	public static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
 	public static final Color HAIRBOW_COLOR = Color.rgb(255, 0, 0);
 	public static final Color HAIRBOW_PEARLS_COLOR = Color.rgb(0, 0, 255);
