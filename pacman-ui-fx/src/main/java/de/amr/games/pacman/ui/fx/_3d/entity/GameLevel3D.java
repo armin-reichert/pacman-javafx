@@ -37,7 +37,6 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
-import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -61,7 +60,6 @@ public class GameLevel3D {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
-	private FoodOscillation foodOscillation; // = new FoodOscillation(eatables);
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -167,10 +165,6 @@ public class GameLevel3D {
 
 	public World3D world3D() {
 		return world3D;
-	}
-
-	public FoodOscillation foodOscillation() {
-		return foodOscillation;
 	}
 
 	public Pac3D pac3D() {

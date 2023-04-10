@@ -288,7 +288,7 @@ public class PlayScene3D extends GameScene {
 			level3D.pac3D().init();
 			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
 			if (Env.d3_foodOscillationEnabledPy.get()) {
-				level3D.foodOscillation().play();
+				level3D.world3D().foodOscillation().play();
 			}
 			infoText3D.setVisible(true);
 			var readyText = U.RND.nextInt(100) % 5 == 0 ? AppResources.randomReadyText() : "READY!";
@@ -300,7 +300,7 @@ public class PlayScene3D extends GameScene {
 		}
 
 		case PACMAN_DYING -> {
-			level3D.foodOscillation().stop();
+			level3D.world3D().foodOscillation().stop();
 			lockAndPlay(1.0, level3D.pac3D().createDyingAnimation());
 		}
 
@@ -329,7 +329,7 @@ public class PlayScene3D extends GameScene {
 
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
-				level3D.foodOscillation().stop();
+				level3D.world3D().foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.pickLevelCompleteMessage(level.number());
@@ -343,7 +343,7 @@ public class PlayScene3D extends GameScene {
 		}
 
 		case GAME_OVER -> {
-			level3D.foodOscillation().stop();
+			level3D.world3D().foodOscillation().stop();
 			Actions.showFlashMessageSeconds(3, AppResources.pickGameOverMessage());
 		}
 

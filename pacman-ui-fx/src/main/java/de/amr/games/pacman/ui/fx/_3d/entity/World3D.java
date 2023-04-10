@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -110,6 +111,7 @@ public class World3D {
 	private final Group foodGroup = new Group();
 	private final Group particlesGroup = new Group();
 	private Box floor;
+	private FoodOscillation foodOscillation;
 
 	public World3D(World world, MazeColoring mazeColoring) {
 		this.world = world;
@@ -129,6 +131,7 @@ public class World3D {
 
 		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
 		world.tilesContainingFood().forEach(tile -> foodGroup.getChildren().add(createFood(tile, foodMaterial).getRoot()));
+		foodOscillation = new FoodOscillation(foodGroup);
 
 		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting, foodGroup, particlesGroup);
 	}
@@ -139,6 +142,10 @@ public class World3D {
 
 	public PointLight houseLighting() {
 		return houseLighting;
+	}
+
+	public FoodOscillation foodOscillation() {
+		return foodOscillation;
 	}
 
 	public void addFood(Eatable3D food) {

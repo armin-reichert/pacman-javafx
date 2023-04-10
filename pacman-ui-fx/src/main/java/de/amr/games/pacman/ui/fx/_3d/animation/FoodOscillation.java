@@ -24,14 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import java.util.List;
-
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
+import javafx.scene.Group;
 import javafx.util.Duration;
 
 /**
@@ -39,10 +37,10 @@ import javafx.util.Duration;
  */
 public class FoodOscillation extends Transition {
 
-	private List<Eatable3D> eatables;
+	private final Group foodGroup;
 
-	public FoodOscillation(List<Eatable3D> eatables) {
-		this.eatables = eatables;
+	public FoodOscillation(Group foodGroup) {
+		this.foodGroup = foodGroup;
 		setCycleDuration(Duration.seconds(0.6));
 		setCycleCount(INDEFINITE);
 		setAutoReverse(true);
@@ -51,14 +49,14 @@ public class FoodOscillation extends Transition {
 
 	@Override
 	protected void interpolate(double t) {
-		for (var eatable : eatables) {
-			if (eatable instanceof Pellet3D) {
-				var tile = eatable.tile();
+		for (var node : foodGroup.getChildren()) {
+			if (node.getUserData() instanceof Pellet3D pellet3D) {
+				var tile = pellet3D.tile();
 				var cx = 0.5f * ArcadeWorld.SIZE_TILES.x();
 				var cy = 0.5f * ArcadeWorld.SIZE_TILES.y();
 				var centerDistance = tile.toFloatVec().euclideanDistance(new Vector2f(cx, cy));
 				double dz = 2 * Math.sin(2 * centerDistance) * t;
-				eatable.getRoot().setTranslateZ(-4 + dz);
+				node.setTranslateZ(-4 + dz);
 			}
 		}
 	}
