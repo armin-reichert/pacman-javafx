@@ -376,4 +376,8 @@ public class World3D {
 		return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 
+	public void logFood() {
+		eatables3D().forEach(LOG::info);
+	}
+
 }

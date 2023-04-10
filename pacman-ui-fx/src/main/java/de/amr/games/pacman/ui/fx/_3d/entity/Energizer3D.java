@@ -108,7 +108,7 @@ public class Energizer3D implements Eatable3D {
 
 	@Override
 	public String toString() {
-		return String.format("[Energizer, pumping: %s, tile: %s, %s]", pumping.getStatus() == Status.RUNNING, tile(),
-				shape);
+		return String.format("[Energizer%s, tile: %s, %s]", pumping.getStatus() == Status.RUNNING ? ", pumping" : "",
+				tile(), shape);
 	}
 }
