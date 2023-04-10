@@ -74,7 +74,7 @@ public class PacShape3D {
 	public static Group createMsPacManShape(Model3D model3D, double size, Color headColor, Color eyesColor,
 			Color palateColor, Color bowColor, Color pearlsColor) {
 		return new Group(createShape(model3D, size, headColor, eyesColor, palateColor),
-				createBeautyAccessories(size, bowColor, pearlsColor));
+				createBeautyAccessories(size, headColor, bowColor, pearlsColor));
 	}
 
 	private static Translate centerOverOrigin(Node node) {
@@ -113,7 +113,7 @@ public class PacShape3D {
 		return root;
 	}
 
-	private static Group createBeautyAccessories(double pacSize, Color bowColor, Color pearlColor) {
+	private static Group createBeautyAccessories(double pacSize, Color headColor, Color bowColor, Color pearlColor) {
 		var root = new Group();
 
 		var bowMaterial = ResourceMgr.coloredMaterial(bowColor);
@@ -141,7 +141,17 @@ public class PacShape3D {
 		beautySpot.setMaterial(beautySpotMaterial);
 		beautySpot.getTransforms().addAll(new Translate(-2.0, -3.7, -pacSize * 0.3));
 
-		root.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, beautySpot);
+		var silicone = ResourceMgr.coloredMaterial(headColor);
+
+		var boobLeft = new Sphere(1);
+		boobLeft.setMaterial(silicone);
+		boobLeft.getTransforms().addAll(new Translate(-2.0, -1.5, pacSize * 0.4));
+
+		var boobRight = new Sphere(1);
+		boobRight.setMaterial(silicone);
+		boobRight.getTransforms().addAll(new Translate(-2.0, 1.5, pacSize * 0.4));
+
+		root.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
 
 		return root;
 	}
