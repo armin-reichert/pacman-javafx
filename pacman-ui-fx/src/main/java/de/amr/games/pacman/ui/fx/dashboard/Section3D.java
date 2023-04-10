@@ -69,11 +69,7 @@ public class Section3D extends Section {
 		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.d3_mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
-		var textureKeys = AppResources.textureKeys();
-		var textureItems = new String[textureKeys.length + 1];
-		textureItems[0] = AppResources.KEY_NO_TEXTURE;
-		System.arraycopy(textureKeys, 0, textureItems, 1, textureKeys.length);
-		comboFloorTexture = addComboBox("Floor texture", textureItems);
+		comboFloorTexture = addComboBox("Floor texture", textureItems());
 		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
 		pickerFloorColor = addColorPicker("Floor color", Env.d3_floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
@@ -95,5 +91,13 @@ public class Section3D extends Section {
 		cbPacNodding.setSelected(Env.d3_pacNoddingPy.get());
 		cbAxesVisible.setSelected(Env.d3_axesVisiblePy.get());
 		cbWireframeMode.setSelected(Env.d3_drawModePy.get() == DrawMode.LINE);
+	}
+
+	private String[] textureItems() {
+		var textureKeys = AppResources.textureKeys();
+		var items = new String[textureKeys.length + 1];
+		items[0] = AppResources.KEY_NO_TEXTURE;
+		System.arraycopy(textureKeys, 0, items, 1, textureKeys.length);
+		return items;
 	}
 }
