@@ -95,17 +95,13 @@ public class AppResources {
 		models3D.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
 		models3D.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
 
-		loadTexture("Chrome", "chrome");
-		loadTexture("Grass", "grass");
-		loadTexture("Hexagon", "hexagon");
-		loadTexture("Knobs & Bumps", "knobs");
-		loadTexture("Pavement", "pavement");
-		loadTexture("Plastic", "plastic");
-		loadTexture("Wood", "wood");
-
-		for (var textureKey : textureKeys()) {
-			useAsFloorTexture(textureKey);
-		}
+		loadFloorTexture("Chrome", "chrome");
+		loadFloorTexture("Grass", "grass");
+		loadFloorTexture("Hexagon", "hexagon");
+		loadFloorTexture("Knobs & Bumps", "knobs");
+		loadFloorTexture("Pavement", "pavement");
+		loadFloorTexture("Plastic", "plastic");
+		loadFloorTexture("Wood", "wood");
 
 		iconPacManGame = ResourceMgr.image("icons/pacman.png");
 		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
@@ -114,17 +110,13 @@ public class AppResources {
 		LOG.info("Loading application resources done (%.2f seconds).", duration / 1_000_000_000f);
 	}
 
-	private static void loadTexture(String key, String textureName) {
+	private static void loadFloorTexture(String key, String textureName) {
 		var material = new PhongMaterial();
+		textures.put(key, material);
 		material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
 		material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
-		textures.put(key, material);
-	}
-
-	private static void useAsFloorTexture(String textureKey) {
-		var texture = texture(textureKey);
-		texture.diffuseColorProperty().bind(Env.d3_floorColorPy);
-		texture.specularColorProperty()
+		material.diffuseColorProperty().bind(Env.d3_floorColorPy);
+		material.specularColorProperty()
 				.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
 	}
 
