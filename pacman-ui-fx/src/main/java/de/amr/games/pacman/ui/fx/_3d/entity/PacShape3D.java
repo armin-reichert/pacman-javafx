@@ -143,13 +143,13 @@ public class PacShape3D {
 
 		var silicone = ResourceMgr.coloredMaterial(headColor);
 
-		var boobLeft = new Sphere(1.25);
+		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);
-		boobLeft.getTransforms().addAll(new Translate(-2.0, -1.5, pacSize * 0.4));
+		boobLeft.getTransforms().addAll(new Translate(-1.0, -1.2, pacSize * 0.45));
 
-		var boobRight = new Sphere(1.25);
+		var boobRight = new Sphere(1.5);
 		boobRight.setMaterial(silicone);
-		boobRight.getTransforms().addAll(new Translate(-2.0, 1.5, pacSize * 0.4));
+		boobRight.getTransforms().addAll(new Translate(-1.0, 1.2, pacSize * 0.45));
 
 		root.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
 
