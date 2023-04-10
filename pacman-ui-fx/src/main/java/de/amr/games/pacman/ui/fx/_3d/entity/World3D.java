@@ -38,6 +38,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.beans.property.DoubleProperty;
@@ -100,18 +101,19 @@ public class World3D {
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final World world;
-	private final MazeColoring mazeColors;
+	private final MazeColoring mazeColoring;
 	private final Group root = new Group();
 	private final Group wallsGroup = new Group();
 	private final List<DoorWing3D> doorWings3D = new ArrayList<>();
 	private final Group doorWingsGroup = new Group();
 	private final PointLight houseLighting;
 	private final Group foodGroup = new Group();
+	private final Group particlesGroup = new Group();
 	private Box floor;
 
-	public World3D(World world, MazeColoring mazeColors) {
+	public World3D(World world, MazeColoring mazeColoring) {
 		this.world = world;
-		this.mazeColors = mazeColors;
+		this.mazeColoring = mazeColoring;
 
 		houseLighting = new PointLight();
 		houseLighting.setColor(Color.GHOSTWHITE);
@@ -124,7 +126,11 @@ public class World3D {
 
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
-		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting, foodGroup);
+
+		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
+		world.tilesContainingFood().forEach(tile -> foodGroup.getChildren().add(createFood(tile, foodMaterial).getRoot()));
+
+		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting, foodGroup, particlesGroup);
 	}
 
 	public Node getRoot() {
@@ -163,9 +169,9 @@ public class World3D {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = ResourceMgr.coloredMaterial(mazeColors.wallBaseColor());
-		wallData.topMaterial = ResourceMgr.coloredMaterial(mazeColors.wallTopColor());
-		wallData.houseMaterial = ResourceMgr.coloredMaterial(ResourceMgr.color(mazeColors.wallBaseColor(), 0.25));
+		wallData.baseMaterial = ResourceMgr.coloredMaterial(mazeColoring.wallBaseColor());
+		wallData.topMaterial = ResourceMgr.coloredMaterial(mazeColoring.wallTopColor());
+		wallData.houseMaterial = ResourceMgr.coloredMaterial(ResourceMgr.color(mazeColoring.wallBaseColor(), 0.25));
 		return wallData;
 	}
 
@@ -176,7 +182,7 @@ public class World3D {
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 		world.ghostHouse().door().tiles().forEach(tile -> {
-			var doorWing3D = createDoorWing3D(tile, mazeColors.houseDoorColor());
+			var doorWing3D = createDoorWing3D(tile, mazeColoring.houseDoorColor());
 			doorWings3D.add(doorWing3D);
 			doorWingsGroup.getChildren().add(doorWing3D.getRoot());
 		});
@@ -361,6 +367,29 @@ public class World3D {
 
 	// Food
 
+	public Eatable3D createFood(Vector2i tile, PhongMaterial foodMaterial) {
+		return world.isEnergizerTile(tile)//
+				? createEnergizer3D(tile, foodMaterial)//
+				: createNormalPellet3D(tile, foodMaterial);
+	}
+
+	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
+		var model3D = AppResources.model3D(AppResources.MODEL_ID_PELLET);
+		var pellet3D = new Pellet3D(model3D, 1.0);
+		pellet3D.getRoot().setMaterial(material);
+		pellet3D.placeAtTile(tile);
+		return pellet3D;
+	}
+
+	private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
+		var energizer3D = new Energizer3D(3.5);
+		energizer3D.getRoot().setMaterial(material);
+		energizer3D.placeAtTile(tile);
+		var eatenAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
+		energizer3D.setEatenAnimation(eatenAnimation);
+		return energizer3D;
+	}
+
 	/**
 	 * @return all 3D pellets, including energizers
 	 */
@@ -377,7 +406,7 @@ public class World3D {
 	}
 
 	public void logFood() {
+		LOG.info("Food: %d energizers, %d pellets total", energizers3D().count(), eatables3D().count());
 		eatables3D().forEach(LOG::info);
 	}
-
 }
