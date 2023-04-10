@@ -237,10 +237,10 @@ public class PlayScene3D extends GameScene {
 	@Override
 	public void onSceneVariantSwitch() {
 		context.level().ifPresent(level -> {
-			level3D.eatables3D()
+			level3D.world3D().eatables3D()
 					.forEach(eatable3D -> eatable3D.getRoot().setVisible(!level.world().containsEatenFood(eatable3D.tile())));
 			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
-				level3D.energizers3D().forEach(Energizer3D::startPumping);
+				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 			var sounds = SoundHandler.sounds(context.game());
 			sounds.ensureSirenStarted(level.huntingPhase() / 2);
@@ -255,12 +255,12 @@ public class PlayScene3D extends GameScene {
 			context.world().ifPresent(world -> {
 				world.tiles() //
 						.filter(world::containsEatenFood) //
-						.map(level3D::eatableAt) //
+						.map(level3D.world3D()::eatableAt) //
 						.flatMap(Optional::stream) //
 						.forEach(Eatable3D::eat);
 			});
 		} else {
-			var eatable = level3D.eatableAt(e.tile.get());
+			var eatable = level3D.world3D().eatableAt(e.tile.get());
 			eatable.ifPresent(level3D::eat);
 		}
 	}
@@ -296,7 +296,7 @@ public class PlayScene3D extends GameScene {
 		}
 
 		case HUNTING -> {
-			level3D.energizers3D().forEach(Energizer3D::startPumping);
+			level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 		}
 
 		case PACMAN_DYING -> {
@@ -331,7 +331,7 @@ public class PlayScene3D extends GameScene {
 			context.level().ifPresent(level -> {
 				level3D.foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
-				level3D.eatables3D().forEach(level3D::eat);
+				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.pickLevelCompleteMessage(level.number());
 				lockAndPlay(2.0, //
 						level.numFlashes > 0 ? new SwingingWallsAnimation(level.numFlashes) : Ufx.pause(1.0), //
@@ -360,7 +360,7 @@ public class PlayScene3D extends GameScene {
 		}
 		case HUNTING -> {
 			if (e.newGameState != GameState.GHOST_DYING) {
-				level3D.energizers3D().forEach(Energizer3D::stopPumping);
+				level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
 				level3D.bonus3D().hide();
 			}
 		}

@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
@@ -357,4 +358,22 @@ public class World3D {
 		corner.drawModeProperty().bind(drawModePy);
 		return corner;
 	}
+
+	// Food
+
+	/**
+	 * @return all 3D pellets, including energizers
+	 */
+	public Stream<Eatable3D> eatables3D() {
+		return foodGroup.getChildren().stream().map(Node::getUserData).map(Eatable3D.class::cast);
+	}
+
+	public Stream<Energizer3D> energizers3D() {
+		return eatables3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+	}
+
+	public Optional<Eatable3D> eatableAt(Vector2i tile) {
+		return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
+	}
+
 }

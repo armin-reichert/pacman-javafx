@@ -54,6 +54,7 @@ public class Energizer3D implements Eatable3D {
 
 	public Energizer3D(double radius) {
 		shape = new Sphere(radius);
+		shape.setUserData(this);
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 4), shape);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);
@@ -66,8 +67,7 @@ public class Energizer3D implements Eatable3D {
 		pumping.setToZ(MIN_SCALE);
 	}
 
-	public void setTile(Vector2i tile) {
-		shape.setUserData(tile);
+	public void placeAtTile(Vector2i tile) {
 		shape.setTranslateX(tile.x() * TS + HTS);
 		shape.setTranslateY(tile.y() * TS + HTS);
 		shape.setTranslateZ(-HTS);
@@ -108,6 +108,7 @@ public class Energizer3D implements Eatable3D {
 
 	@Override
 	public String toString() {
-		return String.format("[Energizer, tile: %s, pumping: %s]", tile(), pumping.getStatus() == Status.RUNNING);
+		return String.format("[Energizer, pumping: %s, tile: %s, %s]", pumping.getStatus() == Status.RUNNING, tile(),
+				shape);
 	}
 }

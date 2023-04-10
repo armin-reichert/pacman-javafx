@@ -25,7 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import java.util.Optional;
 
+import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.model.common.world.World;
 import javafx.animation.Animation;
 import javafx.scene.Node;
 
@@ -36,13 +38,14 @@ public interface Eatable3D {
 
 	Node getRoot();
 
-	default Vector2i tile() {
-		return (Vector2i) getRoot().getUserData();
-	}
-
 	void eat();
 
 	default Optional<Animation> getEatenAnimation() {
 		return Optional.empty();
+	}
+
+	default Vector2i tile() {
+		var position = new Vector2f((float) getRoot().getTranslateX(), (float) getRoot().getTranslateY());
+		return World.tileAt(position);
 	}
 }

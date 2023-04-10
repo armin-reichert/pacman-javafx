@@ -29,9 +29,6 @@ import static de.amr.games.pacman.model.common.actors.GhostState.RETURNING_TO_HO
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
@@ -73,8 +70,8 @@ public class GameLevel3D {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
-	private final List<Eatable3D> eatables = new ArrayList<>();
-	private final FoodOscillation foodOscillation = new FoodOscillation(eatables);
+//	private final List<Eatable3D> eatables = new ArrayList<>();
+	private FoodOscillation foodOscillation; // = new FoodOscillation(eatables);
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
@@ -133,7 +130,7 @@ public class GameLevel3D {
 		var food = level.world().isEnergizerTile(tile)//
 				? createEnergizer3D(level.world(), tile, foodMaterial)//
 				: createNormalPellet3D(tile, foodMaterial);
-		eatables.add(food);
+//		eatables.add(food);
 		world3D.addFood(food);
 		return food;
 	}
@@ -149,7 +146,7 @@ public class GameLevel3D {
 	private Energizer3D createEnergizer3D(World world, Vector2i tile, PhongMaterial material) {
 		var energizer3D = new Energizer3D(3.5);
 		energizer3D.getRoot().setMaterial(material);
-		energizer3D.setTile(tile);
+		energizer3D.placeAtTile(tile);
 		var eatenAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
 		energizer3D.setEatenAnimation(eatenAnimation);
 		return energizer3D;
@@ -259,21 +256,6 @@ public class GameLevel3D {
 		} else {
 			delayHiding.play();
 		}
-	}
-
-	/**
-	 * @return all 3D pellets, including energizers
-	 */
-	public Stream<Eatable3D> eatables3D() {
-		return eatables.stream();
-	}
-
-	public Stream<Energizer3D> energizers3D() {
-		return eatables.stream().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
-	}
-
-	public Optional<Eatable3D> eatableAt(Vector2i tile) {
-		return eatables.stream().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 
 	private void updateHouseState() {
