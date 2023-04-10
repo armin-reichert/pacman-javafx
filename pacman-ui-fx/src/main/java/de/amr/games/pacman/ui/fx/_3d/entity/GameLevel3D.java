@@ -52,8 +52,6 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -64,8 +62,6 @@ import javafx.scene.transform.Translate;
  * @author Armin Reichert
  */
 public class GameLevel3D {
-
-	private final BooleanProperty energizerExplodesPy = new SimpleBooleanProperty(this, "energizerExplodes", true);
 
 	private final GameLevel level;
 	private final Group root = new Group();
@@ -114,7 +110,6 @@ public class GameLevel3D {
 		ghosts3D[Ghost.ID_PINK_GHOST].drawModePy.bind(Env.d3_drawModePy);
 		ghosts3D[Ghost.ID_CYAN_GHOST].drawModePy.bind(Env.d3_drawModePy);
 		ghosts3D[Ghost.ID_ORANGE_GHOST].drawModePy.bind(Env.d3_drawModePy);
-		energizerExplodesPy.bind(Env.d3_energizerExplodesPy);
 		world3D.drawModePy.bind(Env.d3_drawModePy);
 		world3D.floorColorPy.bind(Env.d3_floorColorPy);
 		world3D.floorTexturePy.bind(Env.d3_floorTexturePy);
@@ -259,7 +254,7 @@ public class GameLevel3D {
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
 		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
 		var eatenAnimation = eatable3D.getEatenAnimation();
-		if (eatenAnimation.isPresent() && energizerExplodesPy.get()) {
+		if (eatenAnimation.isPresent() && Env.d3_energizerExplodesPy.get()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
 			delayHiding.play();
