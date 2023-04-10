@@ -71,7 +71,8 @@ public class AppResources {
 	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
-	private static final String[] READY_TEXTS = { "LET'S GO BRANDON!", "GHOST LIVES MATTER!", "YELLOW MAN BAD!" };
+	private static final String[] READY_TEXTS = { "LET'S GO BRANDON!", "GHOST LIVES MATTER!", "YELLOW MAN BAD!",
+			"KILL ME TOO!" };
 
 	private static ResourceBundle messageBundle;
 	private static Picker<String> messagePickerCheating;
