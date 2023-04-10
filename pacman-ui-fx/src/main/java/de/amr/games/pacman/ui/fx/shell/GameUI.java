@@ -74,10 +74,9 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -132,9 +131,10 @@ public class GameUI implements GameEventListener {
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
 	private final SoundHandler soundHandler = new SoundHandler();
-	private final Map<GameVariant, Rendering2D> rendererMap = new EnumMap<>(GameVariant.class);
+	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
 	private final Map<GameVariant, List<GameSceneSelection>> scenes = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
+	private final StackPane root = new StackPane();
 	private final PlayScene2D pipGameScene;
 	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
@@ -145,29 +145,30 @@ public class GameUI implements GameEventListener {
 		this.stage = Objects.requireNonNull(stage);
 		Objects.requireNonNull(settings);
 
-		// init game controller
+		// game controller
 		gameController = new GameController(settings.variant);
 		var keyboardSteering = new KeyboardSteering(//
 				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(keyboardSteering);
 
-		// renderer map must be initialized before game scenes are created
-		rendererMap.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		rendererMap.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+		// renderers must be created before game scenes
+		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
+		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+
+		// game scenes
 		createGameScenes();
 		pipGameScene = new PlayScene2D(gameController);
 
-		// create main scene
+		// main scene + stage
 		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
-
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 
-		// init eventing
+		// init other stuff
 		Actions.setUI(this);
 		GameEvents.addListener(this);
 		dashboard.init(this);
@@ -201,7 +202,6 @@ public class GameUI implements GameEventListener {
 	}
 
 	private Scene createMainScene(float sizeX, float sizeY) {
-		var root = new StackPane();
 		var scene = new Scene(root, sizeX, sizeY);
 		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
 		scene.setOnKeyPressed(this::handleKeyPressed);
@@ -214,7 +214,7 @@ public class GameUI implements GameEventListener {
 		topLayer.setLeft(dashboard);
 		topLayer.setRight(pipGameScene.fxSubScene());
 
-		root.getChildren().add(new Pane() /* game scene placeholder */);
+		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(flashMessageView);
 		root.getChildren().add(topLayer);
 
@@ -239,8 +239,7 @@ public class GameUI implements GameEventListener {
 		stage.getIcons().setAll(AppResources.appIcon(variant));
 		stage.setTitle(AppResources.message(messageKey, dimensionMsg));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
-		var sceneRoot = (Region) stage.getScene().getRoot();
-		sceneRoot.setBackground(ResourceMgr.colorBackground(bgColor));
+		root.setBackground(ResourceMgr.colorBackground(bgColor));
 	}
 
 	/**
@@ -363,12 +362,11 @@ public class GameUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		var renderer = rendererMap.get(gameController.game().variant());
+		var renderer = renderers.get(gameController.game().variant());
 		nextGameScene.context().setRendering2D(renderer);
 		nextGameScene.init();
-		var root = (StackPane) stage.getScene().getRoot();
 		root.getChildren().set(0, nextGameScene.fxSubScene());
-		nextGameScene.onEmbedIntoParentScene(stage.getScene());
+		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
 		LOG.trace("Game scene changed to %s", nextGameScene);
 	}
@@ -449,6 +447,10 @@ public class GameUI implements GameEventListener {
 		return stage.getScene();
 	}
 
+	public GameScene currentGameScene() {
+		return currentGameScene;
+	}
+
 	public Simulation simulation() {
 		return simulation;
 	}
@@ -459,9 +461,5 @@ public class GameUI implements GameEventListener {
 
 	public FlashMessageView flashMessageView() {
 		return flashMessageView;
-	}
-
-	public GameScene currentGameScene() {
-		return currentGameScene;
 	}
 }
