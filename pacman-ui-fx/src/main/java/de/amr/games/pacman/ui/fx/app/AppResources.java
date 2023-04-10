@@ -115,14 +115,10 @@ public class AppResources {
 	}
 
 	private static void loadTexture(String key, String textureName) {
-		if (textureName != null) {
-			var material = new PhongMaterial();
-			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
-			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
-			textures.put(key, material);
-		} else {
-			textures.put(key, null);
-		}
+		var material = new PhongMaterial();
+		material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
+		material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
+		textures.put(key, material);
 	}
 
 	private static void useAsFloorTexture(String textureKey) {
