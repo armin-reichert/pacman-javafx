@@ -43,7 +43,6 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
@@ -85,8 +84,9 @@ public class GameLevel3D {
 		this.level = level;
 
 		int mazeNumber = level.game().mazeNumber(level.number());
-
-		world3D = createWorld3D(r2D.mazeColoring(mazeNumber));
+		var foodMaterial = ResourceMgr.coloredMaterial(r2D.mazeColoring(mazeNumber).foodColor());
+		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber));
+		level.world().tilesContainingFood().forEach(tile -> addFood(tile, foodMaterial));
 		pac3D = level.game().variant() == GameVariant.MS_PACMAN ? createMsPacMan3D() : createPacMan3D();
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
@@ -134,17 +134,13 @@ public class GameLevel3D {
 		Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
 	}
 
-	private World3D createWorld3D(MazeColoring mazeColoring) {
-		var w3D = new World3D(level.world(), mazeColoring);
-		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
-		level.world().tilesContainingFood().forEach(tile -> {
-			var eatable3D = level.world().isEnergizerTile(tile)//
-					? createEnergizer3D(level.world(), tile, foodMaterial)//
-					: createNormalPellet3D(tile, foodMaterial);
-			eatables.add(eatable3D);
-			w3D.addFood(eatable3D);
-		});
-		return w3D;
+	private Eatable3D addFood(Vector2i tile, PhongMaterial foodMaterial) {
+		var food = level.world().isEnergizerTile(tile)//
+				? createEnergizer3D(level.world(), tile, foodMaterial)//
+				: createNormalPellet3D(tile, foodMaterial);
+		eatables.add(food);
+		world3D.addFood(food);
+		return food;
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
