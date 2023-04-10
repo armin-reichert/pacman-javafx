@@ -145,11 +145,11 @@ public class PacShape3D {
 
 		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);
-		boobLeft.getTransforms().addAll(new Translate(-1.0, -1.2, pacSize * 0.45));
+		boobLeft.getTransforms().addAll(new Translate(-1.5, -1.2, pacSize * 0.35));
 
 		var boobRight = new Sphere(1.5);
 		boobRight.setMaterial(silicone);
-		boobRight.getTransforms().addAll(new Translate(-1.0, 1.2, pacSize * 0.45));
+		boobRight.getTransforms().addAll(new Translate(-1.5, 1.2, pacSize * 0.35));
 
 		root.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
 

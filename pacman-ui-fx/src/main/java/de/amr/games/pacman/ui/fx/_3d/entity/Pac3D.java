@@ -143,7 +143,7 @@ public class Pac3D {
 		orientation.setAngle(Turn.angle(pac.moveDir()));
 		root.setTranslateX(pac.center().x());
 		root.setTranslateY(pac.center().y());
-		root.setTranslateZ(-HTS);
+		root.setTranslateZ(-4.25);
 		root.setRotationAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
 		if (nodding != null) {
 			updateNodding();
@@ -153,8 +153,8 @@ public class Pac3D {
 
 	private void createNoddingAnimation() {
 		nodding = new RotateTransition(NODDING_DURATION, root);
-		nodding.setFromAngle(-30);
-		nodding.setToAngle(30);
+		nodding.setFromAngle(-40);
+		nodding.setToAngle(20);
 		nodding.setCycleCount(Animation.INDEFINITE);
 		nodding.setAutoReverse(true);
 		nodding.setInterpolator(Interpolator.EASE_BOTH);

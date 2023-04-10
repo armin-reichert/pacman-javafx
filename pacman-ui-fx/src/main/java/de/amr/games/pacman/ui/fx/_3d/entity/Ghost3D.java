@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-
 import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
@@ -147,7 +145,7 @@ public class Ghost3D {
 
 		root.setTranslateX(ghost.center().x());
 		root.setTranslateY(ghost.center().y());
-		root.setTranslateZ(-HTS);
+		root.setTranslateZ(-4.25);
 		root.setVisible(ghost.isVisible() && !outsideWorld());
 
 		if (currentLook != Look.NUMBER) {
