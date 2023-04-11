@@ -28,13 +28,13 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 /**
@@ -77,16 +77,6 @@ public class PacShape3D {
 				createBeautyAccessories(size, headColor, bowColor, pearlsColor));
 	}
 
-	private static Translate centerOverOrigin(Node node) {
-		var bounds = node.getBoundsInLocal();
-		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-	}
-
-	private static Scale scale(Node node, double size) {
-		var bounds = node.getBoundsInLocal();
-		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
-	}
-
 	private static Group createShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(model3D.mesh(AppResources.MESH_ID_HEAD));
 		head.setId(ID_HEAD);
@@ -100,11 +90,11 @@ public class PacShape3D {
 		palate.setId(ID_PALATE);
 		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
 
-		var centerTransform = centerOverOrigin(head);
+		var centerTransform = Ufx.centerOverOrigin(head);
 		Stream.of(head, eyes, palate).map(Node::getTransforms).forEach(tf -> tf.add(centerTransform));
 
 		var root = new Group(head, eyes, palate);
-		root.getTransforms().add(scale(root, size));
+		root.getTransforms().add(Ufx.scale(root, size));
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));

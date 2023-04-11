@@ -40,23 +40,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 
 /**
  * @author Armin Reichert
  */
 public class ColoredGhost3D {
-
-	private static Translate centerOverOrigin(Node node) {
-		var bounds = node.getBoundsInLocal();
-		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-	}
-
-	private static Scale scale(Node node, double size) {
-		var bounds = node.getBoundsInLocal();
-		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
-	}
 
 	private final Group root;
 	private final Group eyesGroup;
@@ -89,7 +77,7 @@ public class ColoredGhost3D {
 		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 		pupilsColorPy.set(coloring.normalPupils());
 
-		var centerTransform = centerOverOrigin(dress);
+		var centerTransform = Ufx.centerOverOrigin(dress);
 		dress.getTransforms().add(centerTransform);
 
 		dressGroup = new Group(dress);
@@ -102,7 +90,7 @@ public class ColoredGhost3D {
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		root.getTransforms().add(scale(root, size));
+		root.getTransforms().add(Ufx.scale(root, size));
 	}
 
 	public Node getRoot() {

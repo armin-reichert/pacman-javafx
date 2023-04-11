@@ -30,11 +30,14 @@ import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
@@ -106,5 +109,15 @@ public class Ufx {
 			}
 		}
 		return result;
+	}
+
+	public static Translate centerOverOrigin(Node node) {
+		var bounds = node.getBoundsInLocal();
+		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+	}
+
+	public static Scale scale(Node node, double size) {
+		var bounds = node.getBoundsInLocal();
+		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
 	}
 }
