@@ -131,7 +131,7 @@ public class PacModel3D extends Model3D {
 		beautySpot.setMaterial(beautySpotMaterial);
 		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
-		var silicone = ResourceMgr.coloredMaterial(headColor);
+		var silicone = ResourceMgr.coloredMaterial(headColor.deriveColor(0, 1.0, 0.96, 1.0));
 
 		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);
