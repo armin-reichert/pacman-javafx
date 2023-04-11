@@ -28,6 +28,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -39,6 +40,7 @@ import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.GhostHouse;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
 import de.amr.games.pacman.ui.fx.app.AppResources;
@@ -103,6 +105,7 @@ public class World3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
+	private final Model3D pelletModel3D;
 	private final World world;
 	private final MazeColoring mazeColoring;
 	private final Group root = new Group();
@@ -115,9 +118,10 @@ public class World3D {
 	private final Group particlesGroup = new Group();
 	private final FoodOscillation foodOscillation;
 
-	public World3D(World world, MazeColoring mazeColoring) {
-		this.world = world;
-		this.mazeColoring = mazeColoring;
+	public World3D(World world, MazeColoring mazeColoring, Model3D pelletModel3D) {
+		this.world = Objects.requireNonNull(world);
+		this.mazeColoring = Objects.requireNonNull(mazeColoring);
+		this.pelletModel3D = Objects.requireNonNull(pelletModel3D);
 		this.houseLight = createGhostHouseLight(world.ghostHouse());
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
@@ -383,8 +387,7 @@ public class World3D {
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
-		var model3D = AppResources.model3D(AppResources.MODEL_ID_PELLET);
-		var pellet3D = new Pellet3D(model3D, 1.0);
+		var pellet3D = new Pellet3D(pelletModel3D, 1.0);
 		pellet3D.getRoot().setMaterial(material);
 		pellet3D.placeAtTile(tile);
 		return pellet3D;
