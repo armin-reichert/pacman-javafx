@@ -131,7 +131,7 @@ public class AppResources {
 
 	public static String randomTextureKey() {
 		var keys = AppResources.textureKeys();
-		return textureKeys()[U.randomInt(1, keys.length)]; // index 0 = No Texture
+		return textureKeys()[U.randomInt(0, keys.length)];
 	}
 
 	public static Model3D model3D(String id) {
