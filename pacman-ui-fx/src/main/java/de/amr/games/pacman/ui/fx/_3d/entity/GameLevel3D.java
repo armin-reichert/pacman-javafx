@@ -33,7 +33,6 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
@@ -149,7 +148,7 @@ public class GameLevel3D {
 				false);
 		default -> throw new IllegalArgumentException();
 		};
-		counter3D.setPosition(2 * TS, TS, -World.HTS);
+		counter3D.setPosition(2 * TS, 1 * TS, 0);
 		counter3D.getRoot().setVisible(level.game().hasCredit());
 		return counter3D;
 	}

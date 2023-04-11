@@ -33,6 +33,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -51,43 +52,54 @@ public class LivesCounter3D {
 	private final Group root = new Group();
 	private final Group pacGroup = new Group();
 	private final Group socketGroup = new Group();
-	private final PhongMaterial socketMaterial;
+	private final PointLight light;
+
+	private final PhongMaterial plateauMaterial = ResourceMgr.coloredMaterial(Color.rgb(180, 180, 180));
+	private final PhongMaterial pillarMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
+	private double socketHeight = 6.0;
+	private double plateauRadius = 6.0;
+	private double plateauHeight = 1.0;
 
 	public LivesCounter3D(int maxLives, Supplier<Group> fnPacShape, boolean lookRight) {
-		socketGroup.setTranslateZ(0);
-		pacGroup.setTranslateZ(-2);
-		root.getChildren().addAll(socketGroup, pacGroup);
-		socketMaterial = ResourceMgr.coloredMaterial(Color.rgb(180, 180, 180));
 		for (int i = 0; i < maxLives; ++i) {
-			addSocket(2 * i * TS);
+			addSocket(2 * i * TS, socketHeight);
 			var pac = fnPacShape.get();
 			pac.setTranslateX(2.0 * i * TS);
-			pac.setTranslateZ(-3.2);
+			pac.setTranslateZ(-socketHeight - 5.0);
 			if (lookRight) {
 				pac.setRotationAxis(Rotate.Z_AXIS);
 				pac.setRotate(180);
 			}
 			pacGroup.getChildren().add(pac);
 		}
+
+		light = new PointLight(Color.YELLOW);
+		light.setTranslateX(TS * (maxLives - 1));
+		light.setTranslateY(-TS);
+		light.setTranslateZ(-socketHeight - 10);
+		light.setMaxRange(5 * TS);
+
+		root.getChildren().addAll(socketGroup, pacGroup, light);
 	}
 
-	private void addSocket(double x) {
-		var socket = new Cylinder(4, 1);
-		socket.setMaterial(socketMaterial);
-		socket.setTranslateX(x);
-		socket.setRotationAxis(Rotate.X_AXIS);
-		socket.setRotate(90);
-		socket.drawModeProperty().bind(Env.d3_drawModePy);
-		socketGroup.getChildren().add(socket);
+	private void addSocket(double x, double pillarHeight) {
+		var plateau = new Cylinder(plateauRadius, plateauHeight);
+		plateau.setMaterial(plateauMaterial);
+		plateau.setTranslateX(x);
+		plateau.setTranslateZ(-pillarHeight - plateauHeight);
+		plateau.setRotationAxis(Rotate.X_AXIS);
+		plateau.setRotate(90);
+		plateau.drawModeProperty().bind(Env.d3_drawModePy);
 
-		var pillar = new Cylinder(1, 5);
-		pillar.setMaterial(socketMaterial);
+		var pillar = new Cylinder(1, pillarHeight);
+		pillar.setMaterial(pillarMaterial);
 		pillar.setTranslateX(x);
-		pillar.setTranslateZ(3);
+		pillar.setTranslateZ(-0.5 * pillarHeight);
 		pillar.setRotationAxis(Rotate.X_AXIS);
 		pillar.setRotate(90);
 		pillar.drawModeProperty().bind(Env.d3_drawModePy);
-		socketGroup.getChildren().add(pillar);
+
+		socketGroup.getChildren().addAll(plateau, pillar);
 	}
 
 	public Node getRoot() {
