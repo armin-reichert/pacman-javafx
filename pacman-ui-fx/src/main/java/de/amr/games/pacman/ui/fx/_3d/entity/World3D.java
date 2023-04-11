@@ -54,6 +54,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.transform.Translate;
 
 /**
  * 3D-model for the world in a game level. Creates walls/doors using information from the floor plan.
@@ -88,7 +89,7 @@ public class World3D {
 		@Override
 		protected void invalidated() {
 			LOG.trace("Floor texture change detected");
-			updateFloorMaterial();
+			updateFloorMaterial(floor());
 		}
 	};
 
@@ -96,7 +97,7 @@ public class World3D {
 		@Override
 		protected void invalidated() {
 			LOG.trace("Floor color change detected");
-			updateFloorMaterial();
+			updateFloorMaterial(floor());
 		}
 	};
 
@@ -150,30 +151,27 @@ public class World3D {
 		return foodOscillation;
 	}
 
-	public void addFood(Eatable3D food) {
-		foodGroup.getChildren().add(food.getRoot());
-	}
-
 	private void buildFloor() {
-		double width = (double) world.numCols() * TS - 1;
-		double height = (double) world.numRows() * TS - 1;
-		double depth = FLOOR_THICKNESS;
-		var floor = new Box(width, height, depth);
+		var sizeX = world.numCols() * TS - 1;
+		var sizeY = world.numRows() * TS - 1;
+		var sizeZ = FLOOR_THICKNESS;
+		var floor = new Box(sizeX, sizeY, sizeZ);
 		floor.drawModeProperty().bind(drawModePy);
-		floorGroup.setTranslateX(0.5 * width);
-		floorGroup.setTranslateY(0.5 * height);
-		floorGroup.setTranslateZ(0.5 * depth);
 		floorGroup.getChildren().add(floor);
-		updateFloorMaterial();
+		floorGroup.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, 0.5 * sizeZ));
+		updateFloorMaterial(floor);
 	}
 
-	private void updateFloorMaterial() {
+	private Box floor() {
+		return (Box) floorGroup.getChildren().get(0);
+	}
+
+	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
 		var texture = AppResources.texture(key);
 		if (texture == null) {
 			texture = ResourceMgr.coloredMaterial(floorColorPy.get());
 		}
-		var floor = (Box) floorGroup.getChildren().get(0);
 		floor.setMaterial(texture);
 	}
 
