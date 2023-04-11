@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -64,6 +66,8 @@ public class LivesCounter3D {
 	private double plateauRadius = 6.0;
 	private double plateauHeight = 1.0;
 
+	private final List<Animation> animations = new ArrayList<>();
+
 	public LivesCounter3D(int maxLives, Supplier<Group> fnPacShape, boolean lookRight) {
 		for (int i = 0; i < maxLives; ++i) {
 			addSocket(2 * i * TS, socketHeight);
@@ -81,7 +85,7 @@ public class LivesCounter3D {
 			animation.setByAngle(360);
 			animation.setInterpolator(Interpolator.LINEAR);
 			animation.setCycleCount(Animation.INDEFINITE);
-			animation.play();
+			animations.add(animation);
 		}
 
 		light = new PointLight(Color.YELLOW);
@@ -91,6 +95,14 @@ public class LivesCounter3D {
 		light.setMaxRange(5 * TS);
 
 		root.getChildren().addAll(socketGroup, pacGroup, light);
+	}
+
+	public void startAnimation() {
+		animations.forEach(Animation::play);
+	}
+
+	public void stopAnimation() {
+		animations.forEach(Animation::stop);
 	}
 
 	private void addSocket(double x, double pillarHeight) {

@@ -212,6 +212,10 @@ public class GameLevel3D {
 		return root;
 	}
 
+	public LivesCounter3D getLivesCounter3D() {
+		return livesCounter3D;
+	}
+
 	public World3D world3D() {
 		return world3D;
 	}

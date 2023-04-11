@@ -296,6 +296,7 @@ public class PlayScene3D extends GameScene {
 		}
 
 		case HUNTING -> {
+			level3D.getLivesCounter3D().startAnimation();
 			level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 		}
 
@@ -329,6 +330,7 @@ public class PlayScene3D extends GameScene {
 
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
+				level3D.getLivesCounter3D().stopAnimation();
 				level3D.world3D().foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
@@ -342,6 +344,7 @@ public class PlayScene3D extends GameScene {
 
 		case GAME_OVER -> {
 			level3D.world3D().foodOscillation().stop();
+			level3D.getLivesCounter3D().stopAnimation();
 			Actions.showFlashMessageSeconds(3, AppResources.pickGameOverMessage());
 		}
 
