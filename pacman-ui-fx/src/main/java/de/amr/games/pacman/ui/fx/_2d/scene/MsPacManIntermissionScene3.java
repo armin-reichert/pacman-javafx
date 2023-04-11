@@ -21,30 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.scene.mspacman;
+package de.amr.games.pacman.ui.fx._2d.scene;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.mspacman.MsPacManIntermission1;
-import de.amr.games.pacman.lib.anim.AnimationMap;
+import de.amr.games.pacman.controller.mspacman.MsPacManIntermission3;
+import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Intermission scene 1: "They meet".
+ * Intermission scene 3: "Junior".
+ * 
  * <p>
- * Pac-Man leads Inky and Ms. Pac-Man leads Pinky. Soon, the two Pac-Men are about to collide, they quickly move
- * upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the top of
- * the screen and a big pink heart appears above them. (Played after round 2)
+ * Pac-Man and Ms. Pac-Man gradually wait for a stork, who flies overhead with a little blue bundle. The stork drops the
+ * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny Pac-Man.
+ * (Played after rounds 9, 13, and 17)
  * 
  * @author Armin Reichert
  */
-public class MsPacManIntermissionScene1 extends GameScene2D {
+public class MsPacManIntermissionScene3 extends GameScene2D {
 
-	private MsPacManIntermission1 im;
+	private MsPacManIntermission3 im;
+	private SimpleAnimation<Rectangle2D> flyingStork;
 
-	public MsPacManIntermissionScene1(GameController gameController) {
+	public MsPacManIntermissionScene3(GameController gameController) {
 		super(gameController);
 	}
 
@@ -53,23 +55,17 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		im = new MsPacManIntermission1(context.gameController());
-		im.changeState(MsPacManIntermission1.IntermissionState.FLAP);
+		im = new MsPacManIntermission3(context.gameController());
+		im.changeState(MsPacManIntermission3.IntermissionState.FLAP);
 
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		im.context().clapperboard.setAnimation(r.createClapperboardAnimation());
-		im.context().msPac.setAnimations(r.createPacAnimations(im.context().msPac));
-		im.context().msPac.animations().ifPresent(AnimationMap::ensureRunning);
+		im.context().msPacMan.setAnimations(r.createPacAnimations(im.context().msPacMan));
 		im.context().pacMan.setAnimations(r.createPacAnimations(im.context().pacMan));
-		im.context().pacMan.animations().ifPresent(animations -> {
-			var munching = r.createPacManMunchingAnimationMap(im.context().pacMan);
-			animations.put(GameModel.AK_PAC_MUNCHING, munching);
-			animations.ensureRunning();
-		});
-		im.context().inky.setAnimations(r.createGhostAnimations(im.context().inky));
-		im.context().inky.animations().ifPresent(AnimationMap::ensureRunning);
-		im.context().pinky.setAnimations(r.createGhostAnimations(im.context().pinky));
-		im.context().pinky.animations().ifPresent(AnimationMap::ensureRunning);
+		im.context().pacMan.animations().ifPresent(
+				anims -> anims.put(GameModel.AK_PAC_MUNCHING, r.createPacManMunchingAnimationMap(im.context().pacMan)));
+		flyingStork = r.createStorkFlyingAnimation();
+		flyingStork.start();
 	}
 
 	@Override
@@ -81,11 +77,10 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	public void drawScene(GraphicsContext g) {
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawClap(g, im.context().clapperboard);
-		r.drawPac(g, im.context().msPac);
+		r.drawPac(g, im.context().msPacMan);
 		r.drawPac(g, im.context().pacMan);
-		r.drawGhost(g, im.context().inky);
-		r.drawGhost(g, im.context().pinky);
-		r.drawEntitySprite(g, im.context().heart, r.heartSprite());
+		r.drawEntitySprite(g, im.context().stork, flyingStork.animate());
+		r.drawEntitySprite(g, im.context().bag, im.context().bagOpen ? r.juniorPacSprite() : r.blueBagSprite());
 		drawLevelCounter(g);
 	}
 }
