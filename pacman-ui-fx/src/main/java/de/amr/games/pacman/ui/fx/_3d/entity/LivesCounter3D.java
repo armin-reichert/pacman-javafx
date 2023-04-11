@@ -62,7 +62,7 @@ public class LivesCounter3D {
 
 	private final PhongMaterial plateauMaterial = ResourceMgr.coloredMaterial(Color.rgb(180, 180, 180));
 	private final PhongMaterial pillarMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
-	private double socketHeight = 6.0;
+	private double socketHeight = 4.0;
 	private double plateauRadius = 6.0;
 	private double plateauHeight = 1.0;
 

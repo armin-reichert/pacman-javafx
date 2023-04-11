@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -70,7 +69,11 @@ public class GameLevel3D {
 		int mazeNumber = level.game().mazeNumber(level.number());
 
 		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), pelletModel3D);
-		pac3D = level.game().variant() == GameVariant.MS_PACMAN ? createMsPacMan3D() : createPacMan3D();
+		pac3D = switch (level.game().variant()) {
+		case MS_PACMAN -> createMsPacMan3D(ArcadeTheme.MS_PACMAN_COLORING);
+		case PACMAN -> createPacMan3D(ArcadeTheme.PACMAN_COLORING);
+		default -> throw new IllegalArgumentException();
+		};
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
@@ -111,14 +114,12 @@ public class GameLevel3D {
 		selectRandomFloorTexture();
 	}
 
-	private Pac3D createPacMan3D() {
-		var coloring = ArcadeTheme.PACMAN_COLORING;
+	private Pac3D createPacMan3D(PacManColoring coloring) {
 		var shape = pacModel3D.createPacManShape(9.0, coloring);
 		return new Pac3D(level, level.pac(), shape, coloring.headColor());
 	}
 
-	private Pac3D createMsPacMan3D() {
-		var coloring = ArcadeTheme.MS_PACMAN_COLORING;
+	private Pac3D createMsPacMan3D(MsPacManColoring coloring) {
 		var shape = pacModel3D.createMsPacManShape(9.0, coloring);
 		return new Pac3D(level, level.pac(), shape, coloring.headColor());
 	}
