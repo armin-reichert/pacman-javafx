@@ -62,8 +62,8 @@ public class GameLevel3D {
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
-
 		int mazeNumber = level.game().mazeNumber(level.number());
+
 		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber));
 		pac3D = level.game().variant() == GameVariant.MS_PACMAN ? createMsPacMan3D() : createPacMan3D();
 		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
@@ -82,7 +82,7 @@ public class GameLevel3D {
 		root.getChildren().add(ghosts3D[1].getRoot());
 		root.getChildren().add(ghosts3D[2].getRoot());
 		root.getChildren().add(ghosts3D[3].getRoot());
-		// Note: world/ghosthouse must be added after the guys if ghosthouse uses transparent material!
+		// Note: world/ghosthouse must be added after the guys if transparent ghosthouse shall be rendered correctly!
 		root.getChildren().add(world3D.getRoot());
 
 		pac3D.drawModePy.bind(Env.d3_drawModePy);
@@ -98,17 +98,12 @@ public class GameLevel3D {
 		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
 
-		// lift guys a bit over floor
+		// lift guys a bit over floor (especially Ms. Pac-Man will thank you for that!)
 		var liftOverFloor = new Translate(0, 0, -1);
 		pac3D.getRoot().getTransforms().add(liftOverFloor);
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(liftOverFloor));
 
 		selectRandomFloorTexture();
-		world3D.logFood();
-	}
-
-	private void selectRandomFloorTexture() {
-		Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
 	}
 
 	private Pac3D createPacMan3D() {
@@ -164,30 +159,6 @@ public class GameLevel3D {
 		}
 	}
 
-	public Group getRoot() {
-		return root;
-	}
-
-	public World3D world3D() {
-		return world3D;
-	}
-
-	public Pac3D pac3D() {
-		return pac3D;
-	}
-
-	public Ghost3D[] ghosts3D() {
-		return ghosts3D;
-	}
-
-	public Bonus3D bonus3D() {
-		return bonus3D;
-	}
-
-	public Scores3D scores3D() {
-		return scores3D;
-	}
-
 	public void update() {
 		pac3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
@@ -219,6 +190,10 @@ public class GameLevel3D {
 		}
 	}
 
+	private void selectRandomFloorTexture() {
+		Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
+	}
+
 	private void updateHouseState() {
 		boolean isGhostNearHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
 				.anyMatch(Ghost::isVisible);
@@ -231,5 +206,29 @@ public class GameLevel3D {
 		return ghosts.anyMatch(ghost -> ghost.isVisible()
 				&& ghost.is(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
 				&& ghost.position().euclideanDistance(doorPosition) <= 1.5 * TS);
+	}
+
+	public Group getRoot() {
+		return root;
+	}
+
+	public World3D world3D() {
+		return world3D;
+	}
+
+	public Pac3D pac3D() {
+		return pac3D;
+	}
+
+	public Ghost3D[] ghosts3D() {
+		return ghosts3D;
+	}
+
+	public Bonus3D bonus3D() {
+		return bonus3D;
+	}
+
+	public Scores3D scores3D() {
+		return scores3D;
 	}
 }
