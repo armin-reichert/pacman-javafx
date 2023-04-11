@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
+import de.amr.games.pacman.model.common.world.GhostHouse;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
@@ -104,36 +105,37 @@ public class World3D {
 	private final World world;
 	private final MazeColoring mazeColoring;
 	private final Group root = new Group();
+	private final Group floorGroup = new Group();
 	private final Group wallsGroup = new Group();
 	private final List<DoorWing3D> doorWings3D = new ArrayList<>();
 	private final Group doorWingsGroup = new Group();
-	private final PointLight houseLighting;
+	private final PointLight houseLight;
 	private final Group foodGroup = new Group();
 	private final Group particlesGroup = new Group();
-	private Box floor;
-	private FoodOscillation foodOscillation;
+	private final FoodOscillation foodOscillation;
 
 	public World3D(World world, MazeColoring mazeColoring) {
 		this.world = world;
 		this.mazeColoring = mazeColoring;
-
-		houseLighting = new PointLight();
-		houseLighting.setColor(Color.GHOSTWHITE);
-		houseLighting.setMaxRange(3 * TS);
-		var houseTopLeft = world.ghostHouse().topLeftTile();
-		var houseSize = world.ghostHouse().sizeInTiles();
-		houseLighting.setTranslateX(houseTopLeft.x() * TS + houseSize.x() * HTS);
-		houseLighting.setTranslateY(houseTopLeft.y() * TS + houseSize.y() * HTS - TS);
-		houseLighting.setTranslateZ(-TS);
-
+		this.houseLight = createGhostHouseLight(world.ghostHouse());
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
-
 		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
 		world.tilesContainingFood().forEach(tile -> foodGroup.getChildren().add(createFood(tile, foodMaterial).getRoot()));
 		foodOscillation = new FoodOscillation(foodGroup);
+		root.getChildren().addAll(floorGroup, wallsGroup, doorWingsGroup, houseLight, foodGroup, particlesGroup);
+	}
 
-		root.getChildren().addAll(floor, wallsGroup, doorWingsGroup, houseLighting, foodGroup, particlesGroup);
+	private static PointLight createGhostHouseLight(GhostHouse house) {
+		var light = new PointLight();
+		light.setColor(Color.GHOSTWHITE);
+		light.setMaxRange(3 * TS);
+		var topLeft = house.topLeftTile();
+		var tiles = house.sizeInTiles();
+		light.setTranslateX(topLeft.x() * TS + tiles.x() * HTS);
+		light.setTranslateY(topLeft.y() * TS + tiles.y() * HTS - TS);
+		light.setTranslateZ(-TS);
+		return light;
 	}
 
 	public Node getRoot() {
@@ -141,7 +143,7 @@ public class World3D {
 	}
 
 	public PointLight houseLighting() {
-		return houseLighting;
+		return houseLight;
 	}
 
 	public FoodOscillation foodOscillation() {
@@ -156,11 +158,12 @@ public class World3D {
 		double width = (double) world.numCols() * TS - 1;
 		double height = (double) world.numRows() * TS - 1;
 		double depth = FLOOR_THICKNESS;
-		floor = new Box(width, height, depth);
-		floor.setTranslateX(0.5 * width);
-		floor.setTranslateY(0.5 * height);
-		floor.setTranslateZ(0.5 * depth);
+		var floor = new Box(width, height, depth);
 		floor.drawModeProperty().bind(drawModePy);
+		floorGroup.setTranslateX(0.5 * width);
+		floorGroup.setTranslateY(0.5 * height);
+		floorGroup.setTranslateZ(0.5 * depth);
+		floorGroup.getChildren().add(floor);
 		updateFloorMaterial();
 	}
 
@@ -170,6 +173,7 @@ public class World3D {
 		if (texture == null) {
 			texture = ResourceMgr.coloredMaterial(floorColorPy.get());
 		}
+		var floor = (Box) floorGroup.getChildren().get(0);
 		floor.setMaterial(texture);
 	}
 
