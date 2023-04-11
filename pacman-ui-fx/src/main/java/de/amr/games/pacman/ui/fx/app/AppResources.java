@@ -37,6 +37,7 @@ import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.Model3DException;
+import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
@@ -92,7 +93,7 @@ public class AppResources {
 		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
 		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
 
-		models3D.put(MODEL_ID_PAC, new Model3D("model3D/pacman.obj"));
+		models3D.put(MODEL_ID_PAC, new PacModel3D("model3D/pacman.obj"));
 		models3D.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
 		models3D.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
 

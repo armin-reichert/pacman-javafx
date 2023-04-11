@@ -100,9 +100,9 @@ public class Pac3D {
 
 		root = new Group(Objects.requireNonNull(pacShapeRoot));
 
-		shape(PacShape3D.ID_HEAD).drawModeProperty().bind(drawModePy);
-		shape(PacShape3D.ID_EYES).drawModeProperty().bind(drawModePy);
-		shape(PacShape3D.ID_PALATE).drawModeProperty().bind(drawModePy);
+		shape(PacModel3D.ID_HEAD).drawModeProperty().bind(drawModePy);
+		shape(PacModel3D.ID_EYES).drawModeProperty().bind(drawModePy);
+		shape(PacModel3D.ID_PALATE).drawModeProperty().bind(drawModePy);
 
 		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
 		pacShapeRoot.getTransforms().setAll(orientation);
