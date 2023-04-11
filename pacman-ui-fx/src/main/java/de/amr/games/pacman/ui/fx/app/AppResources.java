@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -36,7 +35,6 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
-import de.amr.games.pacman.ui.fx._3d.Model3DException;
 import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
@@ -51,17 +49,17 @@ public class AppResources {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static final String MODEL_ID_PAC = "Pac";
+	public static PacModel3D MODEL3D_PAC;
 	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
-	public static final String MODEL_ID_GHOST = "Ghost";
+	public static Model3D MODEL3D_GHOST;
 	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	public static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-	public static final String MODEL_ID_PELLET = "Pellet";
+	public static Model3D MODEL3D_PELLET;
 	public static final String MESH_ID_PELLET = "Fruit";
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
@@ -81,7 +79,6 @@ public class AppResources {
 	private static Picker<String> messagePickerGameOver;
 	private static Image iconPacManGame;
 	private static Image iconMsPacManGame;
-	private static Map<String, Model3D> models3D = new HashMap<>();
 	private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
 
 	public static void load() {
@@ -93,9 +90,9 @@ public class AppResources {
 		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
 		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
 
-		models3D.put(MODEL_ID_PAC, new PacModel3D("model3D/pacman.obj"));
-		models3D.put(MODEL_ID_GHOST, new Model3D("model3D/ghost.obj"));
-		models3D.put(MODEL_ID_PELLET, new Model3D("model3D/12206_Fruit_v1_L3.obj"));
+		MODEL3D_PAC = new PacModel3D("model3D/pacman.obj");
+		MODEL3D_GHOST = new Model3D("model3D/ghost.obj");
+		MODEL3D_PELLET = new Model3D("model3D/12206_Fruit_v1_L3.obj");
 
 		loadFloorTexture("Chrome", "chrome");
 		loadFloorTexture("Grass", "grass");
@@ -133,13 +130,6 @@ public class AppResources {
 	public static String randomTextureKey() {
 		var keys = AppResources.textureKeys();
 		return textureKeys()[U.randomInt(0, keys.length)];
-	}
-
-	public static Model3D model3D(String id) {
-		if (!models3D.containsKey(id)) {
-			throw new Model3DException("Did not find 3D model '%s'", id);
-		}
-		return models3D.get(id);
 	}
 
 	public static Image appIcon(GameVariant variant) {

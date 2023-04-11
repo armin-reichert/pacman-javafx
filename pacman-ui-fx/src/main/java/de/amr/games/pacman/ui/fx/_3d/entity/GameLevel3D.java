@@ -51,9 +51,9 @@ import javafx.scene.transform.Translate;
  */
 public class GameLevel3D {
 
-	private final PacModel3D pacModel3D = (PacModel3D) AppResources.model3D(AppResources.MODEL_ID_PAC);
-	private final Model3D ghostModel3D = AppResources.model3D(AppResources.MODEL_ID_GHOST);
-	private final Model3D pelletModel3D = AppResources.model3D(AppResources.MODEL_ID_PELLET);
+	private final PacModel3D pacModel3D = AppResources.MODEL3D_PAC;
+	private final Model3D ghostModel3D = AppResources.MODEL3D_GHOST;
+	private final Model3D pelletModel3D = AppResources.MODEL3D_PELLET;
 
 	private final GameLevel level;
 	private final Group root = new Group();
