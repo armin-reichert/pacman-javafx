@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx._2d.rendering.pacman;
+package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
@@ -34,12 +34,6 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Order;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.GhostColoring;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;

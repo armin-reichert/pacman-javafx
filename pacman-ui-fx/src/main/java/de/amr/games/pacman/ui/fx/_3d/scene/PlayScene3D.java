@@ -44,7 +44,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;

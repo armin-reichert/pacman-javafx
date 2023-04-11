@@ -39,7 +39,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
 import de.amr.games.pacman.model.common.world.GhostHouse;
 import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.MazeColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.MazeColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;

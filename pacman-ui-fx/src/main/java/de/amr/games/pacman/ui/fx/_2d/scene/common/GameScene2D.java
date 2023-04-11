@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

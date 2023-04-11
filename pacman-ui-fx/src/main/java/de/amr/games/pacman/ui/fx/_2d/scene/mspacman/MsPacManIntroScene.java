@@ -27,8 +27,8 @@ import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.BLINKY_E
 import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.TITLE_TILE;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawTileStructure;
+import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawTileStructure;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntroController;
@@ -36,8 +36,8 @@ import de.amr.games.pacman.controller.mspacman.MsPacManIntroState;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.mspacman.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;

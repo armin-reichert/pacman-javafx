@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx._2d.scene.common;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawTileStructure;
+import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawTileStructure;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
@@ -37,7 +37,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;

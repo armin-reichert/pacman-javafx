@@ -26,10 +26,10 @@ package de.amr.games.pacman.ui.fx._2d.scene.pacman;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
-import static de.amr.games.pacman.ui.fx._2d.rendering.common.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;

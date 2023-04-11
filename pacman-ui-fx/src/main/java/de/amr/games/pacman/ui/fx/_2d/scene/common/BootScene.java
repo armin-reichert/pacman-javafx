@@ -30,9 +30,9 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.ArcadeTheme;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.Spritesheet;
-import de.amr.games.pacman.ui.fx._2d.rendering.common.SpritesheetRenderer;
+import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
+import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
