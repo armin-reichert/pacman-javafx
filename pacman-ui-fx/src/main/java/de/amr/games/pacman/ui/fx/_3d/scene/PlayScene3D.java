@@ -333,12 +333,10 @@ public class PlayScene3D extends GameScene {
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.pickLevelCompleteMessage(level.number());
-				lockAndPlay(2.0, //
+				lockAndPlay(1.0, //
 						level.numFlashes > 0 ? new SwingingWallsAnimation(level.numFlashes) : Ufx.pause(1.0), //
-						afterSeconds(1.0, level.pac()::hide), //
-						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)), //
-						Ufx.pause(2.0) //
-				);
+						afterSeconds(0.5, level.pac()::hide), //
+						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)));
 			});
 		}
 
