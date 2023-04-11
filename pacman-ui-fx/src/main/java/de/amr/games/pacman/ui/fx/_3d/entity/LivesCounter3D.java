@@ -29,6 +29,9 @@ import java.util.function.Supplier;
 
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -39,6 +42,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * Displays a Pac-Man shape for each live remaining.
@@ -71,6 +75,13 @@ public class LivesCounter3D {
 				pac.setRotate(180);
 			}
 			pacGroup.getChildren().add(pac);
+
+			var animation = new RotateTransition(Duration.seconds(20.0), pac);
+			animation.setAxis(Rotate.Z_AXIS);
+			animation.setByAngle(360);
+			animation.setInterpolator(Interpolator.LINEAR);
+			animation.setCycleCount(Animation.INDEFINITE);
+			animation.play();
 		}
 
 		light = new PointLight(Color.YELLOW);
