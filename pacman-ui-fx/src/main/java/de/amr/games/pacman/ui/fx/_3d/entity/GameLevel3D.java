@@ -51,7 +51,7 @@ import javafx.scene.transform.Translate;
  */
 public class GameLevel3D {
 
-	private final Model3D pacManModel3D = AppResources.model3D(AppResources.MODEL_ID_PAC);
+	private final PacModel3D pacModel3D = (PacModel3D) AppResources.model3D(AppResources.MODEL_ID_PAC);
 	private final Model3D ghostModel3D = AppResources.model3D(AppResources.MODEL_ID_GHOST);
 	private final Model3D pelletModel3D = AppResources.model3D(AppResources.MODEL_ID_PELLET);
 
@@ -113,13 +113,13 @@ public class GameLevel3D {
 
 	private Pac3D createPacMan3D() {
 		var coloring = ArcadeTheme.PACMAN_COLORING;
-		var shape = PacShape3D.createPacManShape(pacManModel3D, 9.0, coloring);
+		var shape = pacModel3D.createPacManShape(9.0, coloring);
 		return new Pac3D(level, level.pac(), shape, coloring.headColor());
 	}
 
 	private Pac3D createMsPacMan3D() {
 		var coloring = ArcadeTheme.MS_PACMAN_COLORING;
-		var shape = PacShape3D.createMsPacManShape(pacManModel3D, 9.0, coloring);
+		var shape = pacModel3D.createMsPacManShape(9.0, coloring);
 		return new Pac3D(level, level.pac(), shape, coloring.headColor());
 	}
 
@@ -138,10 +138,9 @@ public class GameLevel3D {
 
 	private LivesCounter3D createLivesCounter3D() {
 		var counter3D = switch (level.game().variant()) {
-		case MS_PACMAN -> new LivesCounter3D(5,
-				() -> PacShape3D.createMsPacManShape(pacManModel3D, 9, ArcadeTheme.MS_PACMAN_COLORING), true);
-		case PACMAN -> new LivesCounter3D(5,
-				() -> PacShape3D.createPacManShape(pacManModel3D, 9, ArcadeTheme.PACMAN_COLORING), false);
+		case MS_PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createMsPacManShape(9, ArcadeTheme.MS_PACMAN_COLORING),
+				true);
+		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createPacManShape(9, ArcadeTheme.PACMAN_COLORING), false);
 		default -> throw new IllegalArgumentException();
 		};
 		counter3D.setPosition(2 * TS, 1 * TS, 0);

@@ -38,30 +38,32 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 /**
- * Tree representing the complete Pac-Man 3D shape.
+ * Pac-Man 3D model.
  * 
  * @author Armin Reichert
  */
-public class PacShape3D {
+public class PacModel3D extends Model3D {
+
+	public PacModel3D(String objPath) {
+		super(objPath);
+	}
 
 	public static final String ID_HEAD = "head";
 	public static final String ID_EYES = "eyes";
 	public static final String ID_PALATE = "palate";
 
 	/**
-	 * @param model3D     the 3D-model
 	 * @param size        Pac-Man size in pixels
 	 * @param headColor   color of head shape
 	 * @param eyesColor   color of eyes
 	 * @param palateColor color of palate
 	 * @return tree of Pac-Man parts
 	 */
-	public static Group createPacManShape(Model3D model3D, double size, PacManColoring coloring) {
-		return new Group(createShape(model3D, size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()));
+	public Group createPacManShape(double size, PacManColoring coloring) {
+		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()));
 	}
 
 	/**
-	 * @param model3D     the 3D-model
 	 * @param size        Ms. Pac-Man size in pixels
 	 * @param headColor   color of head shape
 	 * @param eyesColor   color of eyes
@@ -70,21 +72,21 @@ public class PacShape3D {
 	 * @param pearlsColor color of "pearls" connecting hair bows
 	 * @return tree of Ms. Pac-Man parts
 	 */
-	public static Group createMsPacManShape(Model3D model3D, double size, MsPacManColoring coloring) {
-		return new Group(createShape(model3D, size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()),
+	public Group createMsPacManShape(double size, MsPacManColoring coloring) {
+		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()),
 				createBeautyAccessories(size, coloring.headColor(), coloring.hairBowColor(), coloring.hairBowPearlsColor()));
 	}
 
-	private static Group createShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(model3D.mesh(AppResources.MESH_ID_HEAD));
+	private Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {
+		var head = new MeshView(mesh(AppResources.MESH_ID_HEAD));
 		head.setId(ID_HEAD);
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
-		var eyes = new MeshView(model3D.mesh(AppResources.MESH_ID_EYES));
+		var eyes = new MeshView(mesh(AppResources.MESH_ID_EYES));
 		eyes.setId(ID_EYES);
 		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
 
-		var palate = new MeshView(model3D.mesh(AppResources.MESH_ID_PALATE));
+		var palate = new MeshView(mesh(AppResources.MESH_ID_PALATE));
 		palate.setId(ID_PALATE);
 		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
 
@@ -101,7 +103,7 @@ public class PacShape3D {
 		return root;
 	}
 
-	private static Group createBeautyAccessories(double pacSize, Color headColor, Color bowColor, Color pearlColor) {
+	private Group createBeautyAccessories(double pacSize, Color headColor, Color bowColor, Color pearlColor) {
 		var root = new Group();
 
 		var bowMaterial = ResourceMgr.coloredMaterial(bowColor);
