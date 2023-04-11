@@ -56,9 +56,8 @@ public class PacShape3D {
 	 * @param palateColor color of palate
 	 * @return tree of Pac-Man parts
 	 */
-	public static Group createPacManShape(Model3D model3D, double size, Color headColor, Color eyesColor,
-			Color palateColor) {
-		return new Group(createShape(model3D, size, headColor, eyesColor, palateColor));
+	public static Group createPacManShape(Model3D model3D, double size, PacManColoring coloring) {
+		return new Group(createShape(model3D, size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()));
 	}
 
 	/**
@@ -71,10 +70,9 @@ public class PacShape3D {
 	 * @param pearlsColor color of "pearls" connecting hair bows
 	 * @return tree of Ms. Pac-Man parts
 	 */
-	public static Group createMsPacManShape(Model3D model3D, double size, Color headColor, Color eyesColor,
-			Color palateColor, Color bowColor, Color pearlsColor) {
-		return new Group(createShape(model3D, size, headColor, eyesColor, palateColor),
-				createBeautyAccessories(size, headColor, bowColor, pearlsColor));
+	public static Group createMsPacManShape(Model3D model3D, double size, MsPacManColoring coloring) {
+		return new Group(createShape(model3D, size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()),
+				createBeautyAccessories(size, coloring.headColor(), coloring.hairBowColor(), coloring.hairBowPearlsColor()));
 	}
 
 	private static Group createShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {

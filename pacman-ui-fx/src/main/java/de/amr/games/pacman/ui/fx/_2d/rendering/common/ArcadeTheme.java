@@ -24,6 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering.common;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
+import de.amr.games.pacman.ui.fx._3d.entity.MsPacManColoring;
+import de.amr.games.pacman.ui.fx._3d.entity.PacManColoring;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -74,12 +76,11 @@ public class ArcadeTheme {
 	}
 
 	// 3D colors
-	public static final Color HEAD_COLOR = Color.rgb(255, 255, 0);
-	public static final Color EYES_COLOR_PACMAN = Color.rgb(100, 100, 100);
-	public static final Color EYES_COLOR_MS_PACMAN = Color.rgb(33, 33, 33); // sunglasses look
-	public static final Color PALATE_COLOR = Color.rgb(191, 79, 61);
-	public static final Color HAIRBOW_COLOR = Color.rgb(255, 0, 0);
-	public static final Color HAIRBOW_PEARLS_COLOR = Color.rgb(0, 0, 255);
+	public static final PacManColoring PACMAN_COLORING = new PacManColoring(Color.rgb(255, 255, 0),
+			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33));
+
+	public static final MsPacManColoring MS_PACMAN_COLORING = new MsPacManColoring(Color.rgb(255, 255, 0),
+			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33), Color.rgb(255, 0, 0), Color.rgb(0, 0, 255));
 
 	public static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", 8);
 }

@@ -114,16 +114,16 @@ public class GameLevel3D {
 
 	private Pac3D createPacMan3D() {
 		var model3D = AppResources.model3D(AppResources.MODEL_ID_PAC);
-		var shape = PacShape3D.createPacManShape(model3D, 9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_PACMAN,
-				ArcadeTheme.PALATE_COLOR);
-		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
+		var coloring = ArcadeTheme.PACMAN_COLORING;
+		var shape = PacShape3D.createPacManShape(model3D, 9.0, coloring);
+		return new Pac3D(level, level.pac(), shape, coloring.headColor());
 	}
 
 	private Pac3D createMsPacMan3D() {
 		var model3D = AppResources.model3D(AppResources.MODEL_ID_PAC);
-		var shape = PacShape3D.createMsPacManShape(model3D, 9.0, ArcadeTheme.HEAD_COLOR, ArcadeTheme.EYES_COLOR_MS_PACMAN,
-				ArcadeTheme.PALATE_COLOR, ArcadeTheme.HAIRBOW_COLOR, ArcadeTheme.HAIRBOW_PEARLS_COLOR);
-		return new Pac3D(level, level.pac(), shape, ArcadeTheme.HEAD_COLOR);
+		var coloring = ArcadeTheme.MS_PACMAN_COLORING;
+		var shape = PacShape3D.createMsPacManShape(model3D, 9.0, coloring);
+		return new Pac3D(level, level.pac(), shape, coloring.headColor());
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost) {
@@ -142,7 +142,13 @@ public class GameLevel3D {
 
 	private LivesCounter3D createLivesCounter3D() {
 		var model3D = AppResources.model3D(AppResources.MODEL_ID_PAC);
-		var counter3D = new LivesCounter3D(level.game().variant(), 5, model3D);
+		var counter3D = switch (level.game().variant()) {
+		case MS_PACMAN -> new LivesCounter3D(5,
+				() -> PacShape3D.createMsPacManShape(model3D, 9, ArcadeTheme.MS_PACMAN_COLORING), true);
+		case PACMAN -> new LivesCounter3D(5, () -> PacShape3D.createPacManShape(model3D, 9, ArcadeTheme.PACMAN_COLORING),
+				false);
+		default -> throw new IllegalArgumentException();
+		};
 		counter3D.setPosition(2 * TS, TS, -World.HTS);
 		counter3D.getRoot().setVisible(level.game().hasCredit());
 		return counter3D;
