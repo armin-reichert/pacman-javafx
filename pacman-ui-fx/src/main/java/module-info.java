@@ -18,11 +18,10 @@
  */
 module de.amr.games.pacman.ui.fx {
 
+	requires transitive de.amr.games.pacman;
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
-	requires javafx.graphics;
 	requires org.apache.logging.log4j;
-	requires transitive de.amr.games.pacman;
 
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.dashboard;
