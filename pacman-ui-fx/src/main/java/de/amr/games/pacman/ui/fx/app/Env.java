@@ -62,6 +62,7 @@ public class Env {
 	public static final BooleanProperty d3_enabledPy = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Color> d3_floorColorPy = new SimpleObjectProperty<>(Color.rgb(77, 77, 77));
 	public static final StringProperty d3_floorTexturePy = new SimpleStringProperty("Knobs & Bumps");
+	public static final BooleanProperty d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> d3_lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
 	public static final DoubleProperty d3_mazeWallHeightPy = new SimpleDoubleProperty(1.75);
 	public static final DoubleProperty d3_mazeWallThicknessPy = new SimpleDoubleProperty(1.25);

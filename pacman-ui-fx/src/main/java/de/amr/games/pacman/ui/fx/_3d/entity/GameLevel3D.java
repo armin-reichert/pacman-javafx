@@ -111,7 +111,9 @@ public class GameLevel3D {
 		pac3D.getRoot().getTransforms().add(liftOverFloor);
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(liftOverFloor));
 
-		selectRandomFloorTexture();
+		if (Env.d3_floorTextureRandomPy.get()) {
+			selectRandomFloorTexture();
+		}
 	}
 
 	private Pac3D createPacMan3D(PacManColoring coloring) {

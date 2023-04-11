@@ -49,6 +49,7 @@ public class Section3D extends Section {
 	private final Slider sliderWallThickness;
 	private final ColorPicker pickerLightColor;
 	private final ComboBox<String> comboFloorTexture;
+	private final CheckBox cbFloorTextureRandom;
 	private final ColorPicker pickerFloorColor;
 	private final CheckBox cbPacLighted;
 	private final CheckBox cbPacNodding;
@@ -71,6 +72,7 @@ public class Section3D extends Section {
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
 		comboFloorTexture = addComboBox("Floor texture", textureItems());
 		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
+		cbFloorTextureRandom = addCheckBox("Random floor texture", () -> Ufx.toggle(Env.d3_floorTextureRandomPy));
 		pickerFloorColor = addColorPicker("Floor color", Env.d3_floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(Env.d3_energizerExplodesPy));
@@ -86,6 +88,7 @@ public class Section3D extends Section {
 		comboPerspective.setValue(Env.d3_perspectivePy.get());
 		sliderWallHeight.setValue(Env.d3_mazeWallHeightPy.get());
 		comboFloorTexture.setValue(Env.d3_floorTexturePy.get());
+		cbFloorTextureRandom.setSelected(Env.d3_floorTextureRandomPy.get());
 		cbEnergizerExplodes.setSelected(Env.d3_energizerExplodesPy.get());
 		cbPacLighted.setSelected(Env.d3_pacLightedPy.get());
 		cbPacNodding.setSelected(Env.d3_pacNoddingPy.get());
