@@ -44,6 +44,7 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
+import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
@@ -160,7 +161,8 @@ public class PlayScene3D extends GameScene {
 	private void replaceGameLevel3D(GameLevel level) {
 		var centerX = level.world().numCols() * World.HTS;
 		var centerY = level.world().numRows() * World.HTS;
-		level3D = new GameLevel3D(level, context.rendering2D());
+		level3D = new GameLevel3D(level, context.rendering2D(), ArcadeTheme.PACMAN_COLORING, ArcadeTheme.MS_PACMAN_COLORING,
+				ArcadeTheme.GHOST_COLORING);
 		level3D.getRoot().getTransforms().setAll(new Translate(-centerX, -centerY));
 		root.getChildren().set(0, level3D.getRoot());
 		LOG.info("3D game level created.");

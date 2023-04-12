@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.app.AppResources;
@@ -61,16 +61,13 @@ public class GameLevel3D {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 
-	public GameLevel3D(GameLevel level, Rendering2D r2D) {
+	public GameLevel3D(GameLevel level, Rendering2D r2D, PacManColoring pacManColoring, MsPacManColoring msPacManColoring,
+			GhostColoring[] ghostColorings) {
 		this.level = Objects.requireNonNull(level);
 		Objects.requireNonNull(r2D);
 
 		var gameVariant = level.game().variant();
 		int mazeNumber = level.game().mazeNumber(level.number());
-
-		var pacManColoring = ArcadeTheme.PACMAN_COLORING;
-		var msPacManColoring = ArcadeTheme.MS_PACMAN_COLORING;
-		var ghostColoring = ArcadeTheme.GHOST_COLORING;
 
 		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), AppResources.pelletModel3D);
 
@@ -83,7 +80,7 @@ public class GameLevel3D {
 		};
 
 		ghosts3D = level.ghosts()
-				.map(ghost -> new Ghost3D(level, ghost, ghostColoring[ghost.id()], AppResources.ghostModel3D, 8.5))
+				.map(ghost -> new Ghost3D(level, ghost, ghostColorings[ghost.id()], AppResources.ghostModel3D, 8.5))
 				.toArray(Ghost3D[]::new);
 
 		bonus3D = createBonus3D(level.bonus(), r2D);
