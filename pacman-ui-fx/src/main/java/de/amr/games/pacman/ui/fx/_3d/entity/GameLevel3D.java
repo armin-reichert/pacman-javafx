@@ -62,6 +62,7 @@ public class GameLevel3D {
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = Objects.requireNonNull(level);
+		Objects.requireNonNull(r2D);
 
 		var gameVariant = level.game().variant();
 		int mazeNumber = level.game().mazeNumber(level.number());
@@ -98,14 +99,12 @@ public class GameLevel3D {
 		scores3D = new Scores3D(r2D.screenFont(8));
 
 		// layout stuff
-		scores3D.getRoot().setTranslateX(TS);
-		scores3D.getRoot().setTranslateY(-3 * TS);
-		scores3D.getRoot().setTranslateZ(-3 * TS);
+		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
 		// lift guys a bit over floor (especially Ms. Pac-Man will thank you for that!)
-		var liftOverFloor = new Translate(0, 0, -1);
-		pac3D.getRoot().getTransforms().add(liftOverFloor);
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(liftOverFloor));
+		var lift = new Translate(0, 0, -1);
+		pac3D.getRoot().getTransforms().add(lift);
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(lift));
 
 		// populate level
 		root.getChildren().add(scores3D.getRoot());

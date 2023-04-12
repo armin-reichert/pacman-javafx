@@ -69,6 +69,12 @@ public class Scores3D {
 		return root;
 	}
 
+	public void setPosition(double x, double y, double z) {
+		root.setTranslateX(x);
+		root.setTranslateY(y);
+		root.setTranslateZ(z);
+	}
+
 	public void setShowText(Color color, String text) {
 		txtScore.setFill(color);
 		txtScore.setText(text);
