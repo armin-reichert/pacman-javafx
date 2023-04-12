@@ -69,27 +69,27 @@ public class GameLevel3D {
 		var gameVariant = level.game().variant();
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), AppResources.pelletModel3D);
+		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), AppResources.pelletModel3D());
 
 		pac3D = switch (gameVariant) {
-		case MS_PACMAN -> new Pac3D(level, level.pac(), AppResources.pacModel3D.createMsPacManShape(9.0, msPacManColoring),
-				msPacManColoring.headColor());
-		case PACMAN -> new Pac3D(level, level.pac(), AppResources.pacModel3D.createPacManShape(9.0, pacManColoring),
+		case MS_PACMAN -> new Pac3D(level, level.pac(),
+				AppResources.pacModel3D().createMsPacManShape(9.0, msPacManColoring), msPacManColoring.headColor());
+		case PACMAN -> new Pac3D(level, level.pac(), AppResources.pacModel3D().createPacManShape(9.0, pacManColoring),
 				pacManColoring.headColor());
 		default -> throw new IllegalArgumentException();
 		};
 
 		ghosts3D = level.ghosts()
-				.map(ghost -> new Ghost3D(level, ghost, ghostColorings[ghost.id()], AppResources.ghostModel3D, 8.5))
+				.map(ghost -> new Ghost3D(level, ghost, ghostColorings[ghost.id()], AppResources.ghostModel3D(), 8.5))
 				.toArray(Ghost3D[]::new);
 
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D.createMsPacManShape(9, msPacManColoring),
+		case MS_PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D().createMsPacManShape(9, msPacManColoring),
 				true);
-		case PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D.createPacManShape(9, pacManColoring), false);
+		case PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D().createPacManShape(9, pacManColoring), false);
 		default -> throw new IllegalArgumentException();
 		};
 

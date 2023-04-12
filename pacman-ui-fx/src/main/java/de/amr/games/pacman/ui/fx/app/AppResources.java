@@ -49,17 +49,41 @@ public class AppResources {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static PacModel3D pacModel3D;
+	private static PacModel3D pacModel3D;
+
+	public static PacModel3D pacModel3D() {
+		if (pacModel3D != null) {
+			return pacModel3D;
+		}
+		throw new IllegalStateException("App resources not loaded");
+	}
+
 	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
-	public static Model3D ghostModel3D;
+	private static Model3D ghostModel3D;
+
+	public static Model3D ghostModel3D() {
+		if (ghostModel3D != null) {
+			return ghostModel3D;
+		}
+		throw new IllegalStateException("App resources not loaded");
+	}
+
 	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	public static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-	public static Model3D pelletModel3D;
+	private static Model3D pelletModel3D;
+
+	public static Model3D pelletModel3D() {
+		if (pelletModel3D != null) {
+			return pelletModel3D;
+		}
+		throw new IllegalStateException("App resources not loaded");
+	}
+
 	public static final String MESH_ID_PELLET = "Fruit";
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
