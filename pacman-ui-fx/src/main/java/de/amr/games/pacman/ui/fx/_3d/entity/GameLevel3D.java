@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import java.util.Objects;
@@ -67,9 +68,9 @@ public class GameLevel3D {
 		var gameVariant = level.game().variant();
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		var pacModel3D = AppResources.MODEL3D_PAC;
-		var ghostModel3D = AppResources.MODEL3D_GHOST;
-		var pelletModel3D = AppResources.MODEL3D_PELLET;
+		var pacModel3D = AppResources.pacModel3D;
+		var ghostModel3D = AppResources.ghostModel3D;
+		var pelletModel3D = AppResources.pelletModel3D;
 		var pacManColoring = ArcadeTheme.PACMAN_COLORING;
 		var msPacManColoring = ArcadeTheme.MS_PACMAN_COLORING;
 		var ghostColoring = ArcadeTheme.GHOST_COLORING;
@@ -101,6 +102,7 @@ public class GameLevel3D {
 		// layout stuff
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
+		levelCounter3D.setRightPosition((level.world().numCols() - 2) * TS, 2 * TS, -HTS);
 		// lift guys a bit over floor (especially Ms. Pac-Man will thank you for that!)
 		var lift = new Translate(0, 0, -1);
 		pac3D.getRoot().getTransforms().add(lift);
@@ -152,8 +154,7 @@ public class GameLevel3D {
 		if (r2D instanceof SpritesheetRenderer sr) {
 			var symbolImages = level.game().levelCounter().stream().map(sr::bonusSymbolRegion).map(sr::image)
 					.toArray(Image[]::new);
-			var rightPosition = new Vector2f((level.world().numCols() - 2) * TS, 2 * TS);
-			return new LevelCounter3D(symbolImages, rightPosition);
+			return new LevelCounter3D(symbolImages);
 		}
 		throw new UnsupportedOperationException();
 	}

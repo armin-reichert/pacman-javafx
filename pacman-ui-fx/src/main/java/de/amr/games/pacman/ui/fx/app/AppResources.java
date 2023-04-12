@@ -49,17 +49,17 @@ public class AppResources {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static PacModel3D MODEL3D_PAC;
+	public static PacModel3D pacModel3D;
 	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
-	public static Model3D MODEL3D_GHOST;
+	public static Model3D ghostModel3D;
 	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
 	public static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
 	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-	public static Model3D MODEL3D_PELLET;
+	public static Model3D pelletModel3D;
 	public static final String MESH_ID_PELLET = "Fruit";
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
@@ -90,9 +90,9 @@ public class AppResources {
 		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
 		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
 
-		MODEL3D_PAC = new PacModel3D("model3D/pacman.obj");
-		MODEL3D_GHOST = new Model3D("model3D/ghost.obj");
-		MODEL3D_PELLET = new Model3D("model3D/12206_Fruit_v1_L3.obj");
+		pacModel3D = new PacModel3D("model3D/pacman.obj");
+		ghostModel3D = new Model3D("model3D/ghost.obj");
+		pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
 
 		loadFloorTexture("Chrome", "chrome");
 		loadFloorTexture("Grass", "grass");

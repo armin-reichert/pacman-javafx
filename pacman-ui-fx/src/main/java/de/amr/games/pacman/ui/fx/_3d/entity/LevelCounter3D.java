@@ -27,7 +27,6 @@ import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.lib.U;
-import de.amr.games.pacman.lib.math.Vector2f;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -49,12 +48,12 @@ public class LevelCounter3D {
 
 	private final Group root = new Group();
 
-	public LevelCounter3D(Image[] symbolImages, Vector2f rightPosition) {
+	public LevelCounter3D(Image[] symbolImages) {
 		for (int i = 0; i < symbolImages.length; ++i) {
 			var symbolImage = symbolImages[i];
 			Box cube = createSpinningCube(TS, symbolImage, U.isEven(i));
-			cube.setTranslateX(rightPosition.x() - 2 * i * TS);
-			cube.setTranslateY(rightPosition.y());
+			cube.setTranslateX(-2 * i * TS);
+			cube.setTranslateY(0);
 			cube.setTranslateZ(-HTS);
 			root.getChildren().add(cube);
 		}
@@ -62,6 +61,12 @@ public class LevelCounter3D {
 
 	public Node getRoot() {
 		return root;
+	}
+
+	public void setRightPosition(double x, double y, double z) {
+		root.setTranslateX(x);
+		root.setTranslateY(y);
+		root.setTranslateZ(z);
 	}
 
 	private Box createSpinningCube(double size, Image texture, boolean forward) {
