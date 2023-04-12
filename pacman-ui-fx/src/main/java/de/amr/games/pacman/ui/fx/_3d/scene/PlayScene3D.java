@@ -336,7 +336,7 @@ public class PlayScene3D extends GameScene {
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.pickLevelCompleteMessage(level.number());
 				lockAndPlay(1.0, //
-						level.numFlashes > 0 ? new SwingingWallsAnimation(level.numFlashes) : Ufx.pause(1.0), //
+						createLevelCompleteAnimation(level), //
 						afterSeconds(0.5, level.pac()::hide), //
 						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)));
 			});
@@ -369,6 +369,16 @@ public class PlayScene3D extends GameScene {
 			// ignore
 		}
 		}
+	}
+
+	private Animation createLevelCompleteAnimation(GameLevel level) {
+		if (level.numFlashes == 0) {
+			return Ufx.pause(1.0);
+		}
+		double wallHeight = Env.d3_mazeWallHeightPy.get();
+		var animation = new SwingingWallsAnimation(level.numFlashes);
+		animation.setOnFinished(e -> Env.d3_mazeWallHeightPy.set(wallHeight));
+		return animation;
 	}
 
 	private void lockAndPlay(double afterSeconds, Animation... animations) {
