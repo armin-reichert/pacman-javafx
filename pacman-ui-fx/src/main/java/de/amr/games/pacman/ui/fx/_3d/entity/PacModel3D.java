@@ -77,6 +77,10 @@ public class PacModel3D extends Model3D {
 				createBeautyAccessories(size, coloring.headColor(), coloring.hairBowColor(), coloring.hairBowPearlsColor()));
 	}
 
+	public static MeshView meshView(Group pacShape, String id) {
+		return (MeshView) pacShape.lookup("#" + id);
+	}
+
 	private Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(mesh(AppResources.MESH_ID_HEAD));
 		head.setId(ID_HEAD);

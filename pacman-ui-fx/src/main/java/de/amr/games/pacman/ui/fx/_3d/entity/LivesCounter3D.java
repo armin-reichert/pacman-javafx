@@ -71,16 +71,19 @@ public class LivesCounter3D {
 	public LivesCounter3D(int maxLives, Supplier<Group> fnPacShape, boolean lookRight) {
 		for (int i = 0; i < maxLives; ++i) {
 			addSocket(2 * i * TS, socketHeight);
-			var pac = fnPacShape.get();
-			pac.setTranslateX(2.0 * i * TS);
-			pac.setTranslateZ(-socketHeight - 5.0);
+			var pacShape = fnPacShape.get();
+			PacModel3D.meshView(pacShape, PacModel3D.ID_HEAD).drawModeProperty().bind(Env.d3_drawModePy);
+			PacModel3D.meshView(pacShape, PacModel3D.ID_PALATE).drawModeProperty().bind(Env.d3_drawModePy);
+			PacModel3D.meshView(pacShape, PacModel3D.ID_EYES).drawModeProperty().bind(Env.d3_drawModePy);
+			pacShape.setTranslateX(2.0 * i * TS);
+			pacShape.setTranslateZ(-socketHeight - 5.0);
 			if (lookRight) {
-				pac.setRotationAxis(Rotate.Z_AXIS);
-				pac.setRotate(180);
+				pacShape.setRotationAxis(Rotate.Z_AXIS);
+				pacShape.setRotate(180);
 			}
-			pacGroup.getChildren().add(pac);
+			pacGroup.getChildren().add(pacShape);
 
-			var animation = new RotateTransition(Duration.seconds(20.0), pac);
+			var animation = new RotateTransition(Duration.seconds(20.0), pacShape);
 			animation.setAxis(Rotate.Z_AXIS);
 			animation.setByAngle(360);
 			animation.setInterpolator(Interpolator.LINEAR);

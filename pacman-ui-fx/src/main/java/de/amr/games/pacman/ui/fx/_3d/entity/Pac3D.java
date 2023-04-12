@@ -51,7 +51,6 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -100,9 +99,9 @@ public class Pac3D {
 
 		root = new Group(Objects.requireNonNull(pacShapeRoot));
 
-		shape(PacModel3D.ID_HEAD).drawModeProperty().bind(drawModePy);
-		shape(PacModel3D.ID_EYES).drawModeProperty().bind(drawModePy);
-		shape(PacModel3D.ID_PALATE).drawModeProperty().bind(drawModePy);
+		PacModel3D.meshView(pacShapeRoot, PacModel3D.ID_HEAD).drawModeProperty().bind(drawModePy);
+		PacModel3D.meshView(pacShapeRoot, PacModel3D.ID_EYES).drawModeProperty().bind(drawModePy);
+		PacModel3D.meshView(pacShapeRoot, PacModel3D.ID_PALATE).drawModeProperty().bind(drawModePy);
 
 		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
 		pacShapeRoot.getTransforms().setAll(orientation);
@@ -111,10 +110,6 @@ public class Pac3D {
 		light = createLight();
 
 		init();
-	}
-
-	private Shape3D shape(String id) {
-		return (Shape3D) root.lookup("#" + id);
 	}
 
 	public Node getRoot() {
