@@ -170,6 +170,9 @@ public class Pac3D {
 	private void endNodding() {
 		if (nodding != null && nodding.getStatus() == Status.RUNNING) {
 			nodding.stop();
+			var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+			root.setRotationAxis(axis);
+			root.setRotate(0);
 			LOG.trace("%s: Nodding stopped", pac.name());
 		}
 	}
