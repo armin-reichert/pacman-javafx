@@ -50,10 +50,6 @@ import javafx.scene.transform.Translate;
  */
 public class GameLevel3D {
 
-	private final PacModel3D pacModel3D = AppResources.MODEL3D_PAC;
-	private final Model3D ghostModel3D = AppResources.MODEL3D_GHOST;
-	private final Model3D pelletModel3D = AppResources.MODEL3D_PELLET;
-
 	private final GameLevel level;
 	private final Group root = new Group();
 	private final World3D world3D;
@@ -64,9 +60,17 @@ public class GameLevel3D {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 
+	private PacModel3D pacModel3D;
+	private Model3D ghostModel3D;
+	private Model3D pelletModel3D;
+
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
 		this.level = level;
 		int mazeNumber = level.game().mazeNumber(level.number());
+
+		pacModel3D = AppResources.MODEL3D_PAC;
+		ghostModel3D = AppResources.MODEL3D_GHOST;
+		pelletModel3D = AppResources.MODEL3D_PELLET;
 
 		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), pelletModel3D);
 		pac3D = switch (level.game().variant()) {
