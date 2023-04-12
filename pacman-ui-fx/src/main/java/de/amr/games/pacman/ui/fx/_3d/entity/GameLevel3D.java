@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx.app.AppResources.ghostModel3D;
+import static de.amr.games.pacman.ui.fx.app.AppResources.pacModel3D;
+import static de.amr.games.pacman.ui.fx.app.AppResources.pelletModel3D;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -63,33 +66,35 @@ public class GameLevel3D {
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D, PacManColoring pacManColors, MsPacManColoring msPacManColors,
 			GhostColoring[] ghostColors) {
+
 		this.level = Objects.requireNonNull(level);
 		Objects.requireNonNull(r2D);
+		Objects.requireNonNull(pacManColors);
+		Objects.requireNonNull(msPacManColors);
+		Objects.requireNonNull(ghostColors);
 
 		var gameVariant = level.game().variant();
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), AppResources.pelletModel3D());
+		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), pelletModel3D());
 
 		pac3D = switch (gameVariant) {
-		case MS_PACMAN -> new Pac3D(level, level.pac(), AppResources.pacModel3D().createMsPacManNode(9.0, msPacManColors),
+		case MS_PACMAN -> new Pac3D(level, level.pac(), pacModel3D().createMsPacManNode(9.0, msPacManColors),
 				msPacManColors.headColor());
-		case PACMAN -> new Pac3D(level, level.pac(), AppResources.pacModel3D().createPacManNode(9.0, pacManColors),
+		case PACMAN -> new Pac3D(level, level.pac(), pacModel3D().createPacManNode(9.0, pacManColors),
 				pacManColors.headColor());
 		default -> throw new IllegalArgumentException();
 		};
 
-		ghosts3D = level.ghosts()
-				.map(ghost -> new Ghost3D(level, ghost, ghostColors[ghost.id()], AppResources.ghostModel3D(), 8.5))
+		ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostColors[ghost.id()], ghostModel3D(), 8.5))
 				.toArray(Ghost3D[]::new);
 
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D().createMsPacManNode(9, msPacManColors),
-				true);
-		case PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D().createPacManNode(9, pacManColors), false);
+		case MS_PACMAN -> new LivesCounter3D(5, () -> pacModel3D().createMsPacManNode(9, msPacManColors), true);
+		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D().createPacManNode(9, pacManColors), false);
 		default -> throw new IllegalArgumentException();
 		};
 
