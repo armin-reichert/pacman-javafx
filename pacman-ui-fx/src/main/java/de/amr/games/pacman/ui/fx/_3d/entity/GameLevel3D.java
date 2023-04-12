@@ -68,32 +68,31 @@ public class GameLevel3D {
 		var gameVariant = level.game().variant();
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		var pacModel3D = AppResources.pacModel3D;
-		var ghostModel3D = AppResources.ghostModel3D;
-		var pelletModel3D = AppResources.pelletModel3D;
 		var pacManColoring = ArcadeTheme.PACMAN_COLORING;
 		var msPacManColoring = ArcadeTheme.MS_PACMAN_COLORING;
 		var ghostColoring = ArcadeTheme.GHOST_COLORING;
 
-		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), pelletModel3D);
+		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), AppResources.pelletModel3D);
 
 		pac3D = switch (gameVariant) {
-		case MS_PACMAN -> new Pac3D(level, level.pac(), pacModel3D.createMsPacManShape(9.0, msPacManColoring),
+		case MS_PACMAN -> new Pac3D(level, level.pac(), AppResources.pacModel3D.createMsPacManShape(9.0, msPacManColoring),
 				msPacManColoring.headColor());
-		case PACMAN -> new Pac3D(level, level.pac(), pacModel3D.createPacManShape(9.0, pacManColoring),
+		case PACMAN -> new Pac3D(level, level.pac(), AppResources.pacModel3D.createPacManShape(9.0, pacManColoring),
 				pacManColoring.headColor());
 		default -> throw new IllegalArgumentException();
 		};
 
-		ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostColoring[ghost.id()], ghostModel3D, 8.5))
+		ghosts3D = level.ghosts()
+				.map(ghost -> new Ghost3D(level, ghost, ghostColoring[ghost.id()], AppResources.ghostModel3D, 8.5))
 				.toArray(Ghost3D[]::new);
 
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createMsPacManShape(9, msPacManColoring), true);
-		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createPacManShape(9, pacManColoring), false);
+		case MS_PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D.createMsPacManShape(9, msPacManColoring),
+				true);
+		case PACMAN -> new LivesCounter3D(5, () -> AppResources.pacModel3D.createPacManShape(9, pacManColoring), false);
 		default -> throw new IllegalArgumentException();
 		};
 
