@@ -141,9 +141,9 @@ public class GameLevel3D {
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
 		if (r2D instanceof SpritesheetRenderer sr) {
-			var symbolSprite = sr.bonusSymbolRegion(bonus.symbol());
-			var pointsSprite = sr.bonusValueRegion(bonus.symbol());
-			return new Bonus3D(level, bonus, sr.image(symbolSprite), sr.image(pointsSprite));
+			var symbolImage = sr.image(sr.bonusSymbolRegion(bonus.symbol()));
+			var pointsImage = sr.image(sr.bonusValueRegion(bonus.symbol()));
+			return new Bonus3D(level, bonus, symbolImage, pointsImage);
 		}
 		throw new UnsupportedOperationException();
 	}
