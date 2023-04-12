@@ -89,7 +89,7 @@ public class PlayScene3D extends GameScene {
 			Perspective.TOTAL) {
 		@Override
 		protected void invalidated() {
-			updateCamera(get());
+			updateCamera();
 		}
 	};
 
@@ -126,7 +126,6 @@ public class PlayScene3D extends GameScene {
 		context.level().ifPresent(level -> {
 			replaceGameLevel3D(level);
 			resetInfoText();
-			updateCamera(perspectivePy.get());
 			perspectivePy.bind(Env.d3_perspectivePy);
 		});
 	}
@@ -159,7 +158,8 @@ public class PlayScene3D extends GameScene {
 		// nothing to do
 	}
 
-	private void updateCamera(Perspective perspective) {
+	private void updateCamera() {
+		var perspective = perspectivePy.get();
 		if (perspective == null) {
 			LOG.error("No camera perspective specified");
 			return;
@@ -326,7 +326,7 @@ public class PlayScene3D extends GameScene {
 				Actions.showFlashMessage(AppResources.message("level_starting", level.number()));
 				lockGameState();
 				replaceGameLevel3D(level);
-				updateCamera(perspectivePy.get());
+				updateCamera();
 				afterSeconds(3, this::unlockGameState).play();
 			});
 		}
