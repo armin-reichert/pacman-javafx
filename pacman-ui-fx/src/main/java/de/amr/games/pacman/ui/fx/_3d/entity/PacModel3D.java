@@ -53,32 +53,26 @@ public class PacModel3D extends Model3D {
 	public static final String ID_PALATE = "palate";
 
 	/**
-	 * @param size        Pac-Man size in pixels
-	 * @param headColor   color of head shape
-	 * @param eyesColor   color of eyes
-	 * @param palateColor color of palate
-	 * @return tree of Pac-Man parts
+	 * @param size     Pac-Man size in pixels
+	 * @param coloring colors
+	 * @return group of Pac-Man parts
 	 */
-	public Group createPacManShape(double size, PacManColoring coloring) {
+	public Node createPacManNode(double size, PacManColoring coloring) {
 		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()));
 	}
 
 	/**
-	 * @param size        Ms. Pac-Man size in pixels
-	 * @param headColor   color of head shape
-	 * @param eyesColor   color of eyes
-	 * @param palateColor color of palate
-	 * @param bowColor    color of hair bows
-	 * @param pearlsColor color of "pearls" connecting hair bows
-	 * @return tree of Ms. Pac-Man parts
+	 * @param size     Ms. Pac-Man size in pixels
+	 * @param coloring colors
+	 * @return group of Ms. Pac-Man parts
 	 */
-	public Group createMsPacManShape(double size, MsPacManColoring coloring) {
+	public Node createMsPacManNode(double size, MsPacManColoring coloring) {
 		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()),
 				createBeautyAccessories(size, coloring.headColor(), coloring.hairBowColor(), coloring.hairBowPearlsColor()));
 	}
 
-	public static MeshView meshView(Group pacShape, String id) {
-		return (MeshView) pacShape.lookup("#" + id);
+	public static MeshView meshView(Node pacNode, String id) {
+		return (MeshView) pacNode.lookup("#" + id);
 	}
 
 	private Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {

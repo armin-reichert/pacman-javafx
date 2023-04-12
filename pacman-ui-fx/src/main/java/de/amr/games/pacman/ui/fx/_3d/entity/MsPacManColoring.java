@@ -31,5 +31,4 @@ import javafx.scene.paint.Color;
  */
 public record MsPacManColoring(Color headColor, Color palateColor, Color eyesColor, Color hairBowColor,
 		Color hairBowPearlsColor) {
-
 }

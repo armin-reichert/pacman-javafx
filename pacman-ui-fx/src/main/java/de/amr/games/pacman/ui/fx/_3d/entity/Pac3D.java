@@ -92,19 +92,19 @@ public class Pac3D {
 	private final Rotate orientation;
 	private RotateTransition nodding;
 
-	public Pac3D(GameLevel level, Pac pac, Group pacShapeRoot, Color headColor) {
+	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor) {
 		this.level = Objects.requireNonNull(level);
 		this.pac = Objects.requireNonNull(pac);
 		this.headColor = Objects.requireNonNull(headColor);
 
-		root = new Group(Objects.requireNonNull(pacShapeRoot));
+		root = new Group(Objects.requireNonNull(pacNode));
 
-		PacModel3D.meshView(pacShapeRoot, PacModel3D.ID_HEAD).drawModeProperty().bind(drawModePy);
-		PacModel3D.meshView(pacShapeRoot, PacModel3D.ID_EYES).drawModeProperty().bind(drawModePy);
-		PacModel3D.meshView(pacShapeRoot, PacModel3D.ID_PALATE).drawModeProperty().bind(drawModePy);
+		PacModel3D.meshView(pacNode, PacModel3D.ID_HEAD).drawModeProperty().bind(drawModePy);
+		PacModel3D.meshView(pacNode, PacModel3D.ID_EYES).drawModeProperty().bind(drawModePy);
+		PacModel3D.meshView(pacNode, PacModel3D.ID_PALATE).drawModeProperty().bind(drawModePy);
 
 		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
-		pacShapeRoot.getTransforms().setAll(orientation);
+		pacNode.getTransforms().setAll(orientation);
 
 		noddingPy.bind(Env.d3_pacNoddingPy);
 		light = createLight();

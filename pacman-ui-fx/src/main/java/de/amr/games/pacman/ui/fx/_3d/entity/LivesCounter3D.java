@@ -68,10 +68,10 @@ public class LivesCounter3D {
 
 	private final List<Animation> animations = new ArrayList<>();
 
-	public LivesCounter3D(int maxLives, Supplier<Group> fnPacShape, boolean lookRight) {
+	public LivesCounter3D(int maxLives, Supplier<Node> fnPacNode, boolean lookRight) {
 		for (int i = 0; i < maxLives; ++i) {
 			addSocket(2 * i * TS, socketHeight);
-			var pacShape = fnPacShape.get();
+			var pacShape = fnPacNode.get();
 			PacModel3D.meshView(pacShape, PacModel3D.ID_HEAD).drawModeProperty().bind(Env.d3_drawModePy);
 			PacModel3D.meshView(pacShape, PacModel3D.ID_PALATE).drawModeProperty().bind(Env.d3_drawModePy);
 			PacModel3D.meshView(pacShape, PacModel3D.ID_EYES).drawModeProperty().bind(Env.d3_drawModePy);

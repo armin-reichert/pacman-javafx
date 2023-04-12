@@ -30,5 +30,4 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public record PacManColoring(Color headColor, Color palateColor, Color eyesColor) {
-
 }
