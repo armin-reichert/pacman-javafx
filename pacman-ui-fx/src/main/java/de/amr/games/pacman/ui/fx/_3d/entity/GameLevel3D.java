@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
@@ -35,7 +36,6 @@ import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
-import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -60,30 +60,54 @@ public class GameLevel3D {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 
-	private PacModel3D pacModel3D;
-	private Model3D ghostModel3D;
-	private Model3D pelletModel3D;
-
 	public GameLevel3D(GameLevel level, Rendering2D r2D) {
-		this.level = level;
+		this.level = Objects.requireNonNull(level);
+
+		var gameVariant = level.game().variant();
 		int mazeNumber = level.game().mazeNumber(level.number());
 
-		pacModel3D = AppResources.MODEL3D_PAC;
-		ghostModel3D = AppResources.MODEL3D_GHOST;
-		pelletModel3D = AppResources.MODEL3D_PELLET;
+		var pacModel3D = AppResources.MODEL3D_PAC;
+		var ghostModel3D = AppResources.MODEL3D_GHOST;
+		var pelletModel3D = AppResources.MODEL3D_PELLET;
+		var pacManColoring = ArcadeTheme.PACMAN_COLORING;
+		var msPacManColoring = ArcadeTheme.MS_PACMAN_COLORING;
+		var ghostColoring = ArcadeTheme.GHOST_COLORING;
 
 		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), pelletModel3D);
-		pac3D = switch (level.game().variant()) {
-		case MS_PACMAN -> createMsPacMan3D(ArcadeTheme.MS_PACMAN_COLORING);
-		case PACMAN -> createPacMan3D(ArcadeTheme.PACMAN_COLORING);
+
+		pac3D = switch (gameVariant) {
+		case MS_PACMAN -> new Pac3D(level, level.pac(), pacModel3D.createMsPacManShape(9.0, msPacManColoring),
+				msPacManColoring.headColor());
+		case PACMAN -> new Pac3D(level, level.pac(), pacModel3D.createPacManShape(9.0, pacManColoring),
+				pacManColoring.headColor());
 		default -> throw new IllegalArgumentException();
 		};
-		ghosts3D = level.ghosts().map(this::createGhost3D).toArray(Ghost3D[]::new);
+
+		ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostColoring[ghost.id()], ghostModel3D, 8.5))
+				.toArray(Ghost3D[]::new);
+
 		bonus3D = createBonus3D(level.bonus(), r2D);
 		levelCounter3D = createLevelCounter3D(r2D);
-		livesCounter3D = createLivesCounter3D();
+
+		livesCounter3D = switch (gameVariant) {
+		case MS_PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createMsPacManShape(9, msPacManColoring), true);
+		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createPacManShape(9, pacManColoring), false);
+		default -> throw new IllegalArgumentException();
+		};
+
 		scores3D = new Scores3D(r2D.screenFont(8));
 
+		// layout stuff
+		scores3D.getRoot().setTranslateX(TS);
+		scores3D.getRoot().setTranslateY(-3 * TS);
+		scores3D.getRoot().setTranslateZ(-3 * TS);
+		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
+		// lift guys a bit over floor (especially Ms. Pac-Man will thank you for that!)
+		var liftOverFloor = new Translate(0, 0, -1);
+		pac3D.getRoot().getTransforms().add(liftOverFloor);
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(liftOverFloor));
+
+		// populate level
 		root.getChildren().add(scores3D.getRoot());
 		root.getChildren().add(levelCounter3D.getRoot());
 		root.getChildren().add(livesCounter3D.getRoot());
@@ -97,6 +121,7 @@ public class GameLevel3D {
 		// Note: world/ghosthouse must be added after the guys if transparent ghosthouse shall be rendered correctly!
 		root.getChildren().add(world3D.getRoot());
 
+		// connect to environment
 		pac3D.drawModePy.bind(Env.d3_drawModePy);
 		pac3D.lightedPy.bind(Env.d3_pacLightedPy);
 		ghosts3D[Ghost.ID_RED_GHOST].drawModePy.bind(Env.d3_drawModePy);
@@ -110,64 +135,28 @@ public class GameLevel3D {
 		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
 
-		scores3D.getRoot().setTranslateX(TS);
-		scores3D.getRoot().setTranslateY(-3 * TS);
-		scores3D.getRoot().setTranslateZ(-3 * TS);
-
-		// lift guys a bit over floor (especially Ms. Pac-Man will thank you for that!)
-		var liftOverFloor = new Translate(0, 0, -1);
-		pac3D.getRoot().getTransforms().add(liftOverFloor);
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(liftOverFloor));
-
 		if (Env.d3_floorTextureRandomPy.get()) {
 			selectRandomFloorTexture();
 		}
 	}
 
-	private Pac3D createPacMan3D(PacManColoring coloring) {
-		var shape = pacModel3D.createPacManShape(9.0, coloring);
-		return new Pac3D(level, level.pac(), shape, coloring.headColor());
-	}
-
-	private Pac3D createMsPacMan3D(MsPacManColoring coloring) {
-		var shape = pacModel3D.createMsPacManShape(9.0, coloring);
-		return new Pac3D(level, level.pac(), shape, coloring.headColor());
-	}
-
-	private Ghost3D createGhost3D(Ghost ghost) {
-		return new Ghost3D(level, ghost, ArcadeTheme.GHOST_COLORS[ghost.id()], ghostModel3D, 8.5);
-	}
-
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
-		if (r2D instanceof SpritesheetRenderer sgr) {
-			var symbolSprite = sgr.bonusSymbolRegion(bonus.symbol());
-			var pointsSprite = sgr.bonusValueRegion(bonus.symbol());
-			return new Bonus3D(level, bonus, sgr.image(symbolSprite), sgr.image(pointsSprite));
+		if (r2D instanceof SpritesheetRenderer sr) {
+			var symbolSprite = sr.bonusSymbolRegion(bonus.symbol());
+			var pointsSprite = sr.bonusValueRegion(bonus.symbol());
+			return new Bonus3D(level, bonus, sr.image(symbolSprite), sr.image(pointsSprite));
 		}
-		throw new UnsupportedOperationException(); // TODO make this work for other renderers too
-	}
-
-	private LivesCounter3D createLivesCounter3D() {
-		var counter3D = switch (level.game().variant()) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createMsPacManShape(9, ArcadeTheme.MS_PACMAN_COLORING),
-				true);
-		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createPacManShape(9, ArcadeTheme.PACMAN_COLORING), false);
-		default -> throw new IllegalArgumentException();
-		};
-		counter3D.setPosition(2 * TS, 2 * TS, 0);
-		counter3D.getRoot().setVisible(level.game().hasCredit());
-		return counter3D;
+		throw new UnsupportedOperationException();
 	}
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
-		var rightPosition = new Vector2f((level.world().numCols() - 2) * TS, 2 * TS);
-		if (r2D instanceof SpritesheetRenderer sgr) {
-			var symbolImages = level.game().levelCounter().stream().map(sgr::bonusSymbolRegion).map(sgr::image)
+		if (r2D instanceof SpritesheetRenderer sr) {
+			var symbolImages = level.game().levelCounter().stream().map(sr::bonusSymbolRegion).map(sr::image)
 					.toArray(Image[]::new);
+			var rightPosition = new Vector2f((level.world().numCols() - 2) * TS, 2 * TS);
 			return new LevelCounter3D(symbolImages, rightPosition);
-		} else {
-			throw new UnsupportedOperationException(); // TODO implement fom non spritesheet-based renderer
 		}
+		throw new UnsupportedOperationException();
 	}
 
 	public void update() {
@@ -177,6 +166,7 @@ public class GameLevel3D {
 		// TODO get rid of this
 		int numLivesShown = level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives();
 		livesCounter3D.update(numLivesShown);
+		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
 		scores3D.update(level);
 		if (level.game().hasCredit()) {
 			scores3D.setShowPoints(true);

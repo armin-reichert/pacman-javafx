@@ -45,29 +45,29 @@ public class ArcadeTheme {
 	public static final Color PALE = Color.rgb(222, 222, 255);
 	public static final Color ROSE = Color.rgb(252, 187, 179);
 
-	public static final GhostColoring[] GHOST_COLORS = new GhostColoring[4];
+	public static final GhostColoring[] GHOST_COLORING = new GhostColoring[4];
 
 	static {
 		//@formatter:off
-		GHOST_COLORS[Ghost.ID_RED_GHOST] = new GhostColoring(
+		GHOST_COLORING[Ghost.ID_RED_GHOST] = new GhostColoring(
 			RED,  PALE, BLUE, // normal
 			BLUE, ROSE, ROSE, // frightened
 			PALE, ROSE, RED   // flashing
 		);
 
-		GHOST_COLORS[Ghost.ID_PINK_GHOST] = new GhostColoring(
+		GHOST_COLORING[Ghost.ID_PINK_GHOST] = new GhostColoring(
 			PINK, PALE, BLUE, // normal
 			BLUE, ROSE, ROSE, // frightened
 			PALE, ROSE, RED   // flashing
 		);
 
-		GHOST_COLORS[Ghost.ID_CYAN_GHOST] = new GhostColoring(
+		GHOST_COLORING[Ghost.ID_CYAN_GHOST] = new GhostColoring(
 			CYAN, PALE, BLUE, // normal
 			BLUE, ROSE, ROSE, // frightened
 			PALE, ROSE, RED   // flashing
 		);
 		
-		GHOST_COLORS[Ghost.ID_ORANGE_GHOST] = new GhostColoring(
+		GHOST_COLORING[Ghost.ID_ORANGE_GHOST] = new GhostColoring(
 			ORANGE, PALE, BLUE, // normal
 			BLUE,   ROSE, ROSE, // frightened
 			PALE,   ROSE, RED   // flashing

@@ -102,7 +102,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public GhostColoring ghostColoring(int ghostID) {
-		return ArcadeTheme.GHOST_COLORS[ghostID];
+		return ArcadeTheme.GHOST_COLORING[ghostID];
 	}
 
 	@Override

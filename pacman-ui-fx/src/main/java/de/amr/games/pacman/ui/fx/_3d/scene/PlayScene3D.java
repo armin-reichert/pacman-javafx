@@ -105,7 +105,6 @@ public class PlayScene3D extends GameScene {
 		cameraControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		cameraControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
 		cameraControllerMap.put(Perspective.TOTAL, new CamTotal());
-		currentCamController = cameraControllerMap.get(Env.d3_perspectivePy.get());
 
 		var coordSystem = new CoordSystem();
 		coordSystem.visibleProperty().bind(Env.d3_axesVisiblePy);
@@ -129,6 +128,7 @@ public class PlayScene3D extends GameScene {
 			updateCameraToPerspective(perspectivePy.get());
 		});
 		perspectivePy.bind(Env.d3_perspectivePy);
+		currentCamController = cameraControllerMap.get(Env.d3_perspectivePy.get());
 	}
 
 	@Override
