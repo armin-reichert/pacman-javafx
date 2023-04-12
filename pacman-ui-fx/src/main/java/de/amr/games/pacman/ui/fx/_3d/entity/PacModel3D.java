@@ -55,7 +55,7 @@ public class PacModel3D extends Model3D {
 	/**
 	 * @param size     Pac-Man size in pixels
 	 * @param coloring colors
-	 * @return group of Pac-Man parts
+	 * @return root node of Pac-Man parts
 	 */
 	public Node createPacManNode(double size, PacManColoring coloring) {
 		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()));
@@ -64,7 +64,7 @@ public class PacModel3D extends Model3D {
 	/**
 	 * @param size     Ms. Pac-Man size in pixels
 	 * @param coloring colors
-	 * @return group of Ms. Pac-Man parts
+	 * @return root node of Ms. Pac-Man parts
 	 */
 	public Node createMsPacManNode(double size, MsPacManColoring coloring) {
 		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()),
