@@ -80,7 +80,7 @@ public class ArcadeTheme {
 			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33));
 
 	public static final MsPacManColoring MS_PACMAN_COLORING = new MsPacManColoring(Color.rgb(255, 255, 0),
-			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33), Color.rgb(255, 0, 0), Color.rgb(0, 0, 255));
+			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33), Color.rgb(255, 0, 0), Color.rgb(33, 33, 255));
 
 	public static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", 8);
 }
