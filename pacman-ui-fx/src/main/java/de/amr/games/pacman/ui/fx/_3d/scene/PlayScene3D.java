@@ -89,12 +89,12 @@ public class PlayScene3D extends GameScene {
 			Perspective.TOTAL) {
 		@Override
 		protected void invalidated() {
-			updateCameraToPerspective(get());
+			updateCamera(get());
 		}
 	};
 
 	private final Group root = new Group();
-	private final Map<Perspective, CameraController> cameraControllerMap = new EnumMap<>(Perspective.class);
+	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
 	private final Text3D infoText3D = new Text3D();
 	private GameLevel3D level3D;
 	private CameraController currentCamController;
@@ -102,10 +102,10 @@ public class PlayScene3D extends GameScene {
 	public PlayScene3D(GameController gameController) {
 		super(gameController);
 
-		cameraControllerMap.put(Perspective.DRONE, new CamDrone());
-		cameraControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
-		cameraControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
-		cameraControllerMap.put(Perspective.TOTAL, new CamTotal());
+		camControllerMap.put(Perspective.DRONE, new CamDrone());
+		camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
+		camControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
+		camControllerMap.put(Perspective.TOTAL, new CamTotal());
 
 		var coordSystem = new CoordSystem();
 		coordSystem.visibleProperty().bind(Env.d3_axesVisiblePy);
@@ -126,10 +126,9 @@ public class PlayScene3D extends GameScene {
 		context.level().ifPresent(level -> {
 			replaceGameLevel3D(level);
 			resetInfoText();
-			updateCameraToPerspective(perspectivePy.get());
+			updateCamera(perspectivePy.get());
+			perspectivePy.bind(Env.d3_perspectivePy);
 		});
-		perspectivePy.bind(Env.d3_perspectivePy);
-		currentCamController = cameraControllerMap.get(Env.d3_perspectivePy.get());
 	}
 
 	@Override
@@ -143,8 +142,10 @@ public class PlayScene3D extends GameScene {
 
 	@Override
 	public void end() {
-		context.sounds().stopAll();
-		perspectivePy.unbind();
+		context.level().ifPresent(level -> {
+			context.sounds().stopAll();
+			perspectivePy.unbind();
+		});
 	}
 
 	@Override
@@ -156,6 +157,29 @@ public class PlayScene3D extends GameScene {
 	@Override
 	public void onParentSceneResize(Scene parentScene) {
 		// nothing to do
+	}
+
+	private void updateCamera(Perspective perspective) {
+		if (perspective == null) {
+			LOG.error("No camera perspective specified");
+			return;
+		}
+		var camController = camControllerMap.get(perspective);
+		if (camController == null) {
+			LOG.error("No camera found for perspective %s", perspective);
+			return;
+		}
+		if (camController != currentCamController) {
+			currentCamController = camController;
+			fxSubScene.requestFocus();
+			camController.reset(fxSubScene.getCamera());
+			LOG.info("Perspective changed to %s (%s)", perspective, this);
+		}
+		// rotate the scores such that the viewer sees them frontally
+		if (level3D != null && level3D.scores3D() != null) {
+			level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+			level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+		}
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
@@ -211,29 +235,6 @@ public class PlayScene3D extends GameScene {
 		var cam = fxSubScene.getCamera();
 		return "x=%.0f y=%.0f z=%.0f rot=%.0f".formatted(cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),
 				cam.getRotate());
-	}
-
-	private void updateCameraToPerspective(Perspective perspective) {
-		if (perspective == null) {
-			LOG.error("No camera perspective specified");
-			return;
-		}
-		var camController = cameraControllerMap.get(perspective);
-		if (camController == null) {
-			LOG.error("No camera found for perspective %s", perspective);
-			return;
-		}
-		if (camController != currentCamController) {
-			currentCamController = camController;
-			fxSubScene.requestFocus();
-			camController.reset(fxSubScene.getCamera());
-			LOG.info("Perspective changed to %s (%s)", perspective, this);
-		}
-		// rotate the scores such that the viewer sees them frontally
-		if (level3D != null && level3D.scores3D() != null) {
-			level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-			level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
-		}
 	}
 
 	@Override
@@ -325,7 +326,7 @@ public class PlayScene3D extends GameScene {
 				Actions.showFlashMessage(AppResources.message("level_starting", level.number()));
 				lockGameState();
 				replaceGameLevel3D(level);
-				updateCameraToPerspective(perspectivePy.get());
+				updateCamera(perspectivePy.get());
 				afterSeconds(3, this::unlockGameState).play();
 			});
 		}
