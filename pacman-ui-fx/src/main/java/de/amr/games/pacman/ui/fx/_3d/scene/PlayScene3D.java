@@ -292,7 +292,7 @@ public class PlayScene3D extends GameScene {
 				level3D.world3D().foodOscillation().play();
 			}
 			infoText3D.setVisible(true);
-			var readyText = U.RND.nextInt(100) % 5 == 0 ? AppResources.randomReadyText() : "READY!";
+			var readyText = U.RND.nextInt(100) % 5 == 0 ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
 			infoText3D.setText(readyText);
 		}
 
