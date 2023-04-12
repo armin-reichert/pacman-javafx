@@ -175,11 +175,6 @@ public class PlayScene3D extends GameScene {
 			camController.reset(fxSubScene.getCamera());
 			LOG.info("Perspective changed to %s (%s)", perspective, this);
 		}
-		// rotate the scores such that the viewer sees them frontally
-		if (level3D != null && level3D.scores3D() != null) {
-			level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-			level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
-		}
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
@@ -188,6 +183,9 @@ public class PlayScene3D extends GameScene {
 		level3D = new GameLevel3D(level, context.rendering2D(), ArcadeTheme.PACMAN_COLORING, ArcadeTheme.MS_PACMAN_COLORING,
 				ArcadeTheme.GHOST_COLORING);
 		level3D.getRoot().getTransforms().setAll(new Translate(-centerX, -centerY));
+		// keep the scores rotated such that the viewer always sees them frontally
+		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 		root.getChildren().set(0, level3D.getRoot());
 		LOG.info("3D game level created.");
 	}
