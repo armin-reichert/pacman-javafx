@@ -108,8 +108,6 @@ public class PacModel3D extends Model3D {
 	}
 
 	private Group createBeautyAccessories(double pacSize, Color headColor, Color bowColor, Color pearlColor) {
-		var root = new Group();
-
 		var bowMaterial = ResourceMgr.coloredMaterial(bowColor);
 
 		var bowLeft = new Sphere(1.2);
@@ -130,9 +128,8 @@ public class PacModel3D extends Model3D {
 		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
 		pearlRight.setMaterial(pearlMaterial);
 
-		var beautySpotMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
 		var beautySpot = new Sphere(0.25);
-		beautySpot.setMaterial(beautySpotMaterial);
+		beautySpot.setMaterial(ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100)));
 		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
 		var silicone = ResourceMgr.coloredMaterial(headColor.deriveColor(0, 1.0, 0.96, 1.0));
@@ -145,8 +142,6 @@ public class PacModel3D extends Model3D {
 		boobRight.setMaterial(silicone);
 		boobRight.getTransforms().addAll(new Translate(-1.5, 1.2, pacSize * 0.35));
 
-		root.getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
-
-		return root;
+		return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
 	}
 }
