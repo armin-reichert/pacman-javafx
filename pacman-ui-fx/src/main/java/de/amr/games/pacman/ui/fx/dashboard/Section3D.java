@@ -64,7 +64,7 @@ public class Section3D extends Section {
 				.available(() -> gameScene().is3D());
 		pickerLightColor = addColorPicker("Light color", Env.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
-		sliderWallHeight = addSlider("Wall height", 0.1, 10.0, Env.d3_mazeWallHeightPy.get());
+		sliderWallHeight = addSlider("Wall height", 0.1, 8.5, Env.d3_mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallHeightPy.set(newVal.doubleValue()));
 		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.d3_mazeWallThicknessPy.get());

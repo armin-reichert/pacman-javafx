@@ -58,9 +58,6 @@ public class Scores3D {
 		txtHiscore = new Text();
 		GridPane grid = new GridPane();
 		grid.setHgap(5 * TS);
-		grid.setTranslateX(TS);
-		grid.setTranslateY(-3 * TS);
-		grid.setTranslateZ(-2.5 * TS);
 		grid.add(txtScoreTitle, 0, 0);
 		grid.add(txtScore, 0, 1);
 		grid.add(txtHiscoreTitle, 1, 0);

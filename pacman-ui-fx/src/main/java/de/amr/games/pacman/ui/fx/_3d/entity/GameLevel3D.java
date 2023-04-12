@@ -106,6 +106,10 @@ public class GameLevel3D {
 		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
 
+		scores3D.getRoot().setTranslateX(TS);
+		scores3D.getRoot().setTranslateY(-3 * TS);
+		scores3D.getRoot().setTranslateZ(-3 * TS);
+
 		// lift guys a bit over floor (especially Ms. Pac-Man will thank you for that!)
 		var liftOverFloor = new Translate(0, 0, -1);
 		pac3D.getRoot().getTransforms().add(liftOverFloor);
@@ -146,13 +150,13 @@ public class GameLevel3D {
 		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D.createPacManShape(9, ArcadeTheme.PACMAN_COLORING), false);
 		default -> throw new IllegalArgumentException();
 		};
-		counter3D.setPosition(2 * TS, 1 * TS, 0);
+		counter3D.setPosition(2 * TS, 2 * TS, 0);
 		counter3D.getRoot().setVisible(level.game().hasCredit());
 		return counter3D;
 	}
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
-		var rightPosition = new Vector2f((level.world().numCols() - 2) * TS, TS);
+		var rightPosition = new Vector2f((level.world().numCols() - 2) * TS, 2 * TS);
 		if (r2D instanceof SpritesheetRenderer sgr) {
 			var symbolImages = level.game().levelCounter().stream().map(sgr::bonusSymbolRegion).map(sgr::image)
 					.toArray(Image[]::new);
