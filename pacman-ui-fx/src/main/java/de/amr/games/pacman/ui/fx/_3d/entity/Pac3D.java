@@ -131,14 +131,10 @@ public class Pac3D {
 	}
 
 	public void update() {
-		if (outsideWorld()) {
-			root.setVisible(false);
-		} else {
-			root.setVisible(pac.isVisible());
-		}
 		orientation.setAngle(Turn.angle(pac.moveDir()));
 		position.setX(pac.center().x());
 		position.setY(pac.center().y());
+		root.setVisible(pac.isVisible() && !outsideWorld());
 		root.setRotationAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
 		if (nodding != null) {
 			updateNodding();
