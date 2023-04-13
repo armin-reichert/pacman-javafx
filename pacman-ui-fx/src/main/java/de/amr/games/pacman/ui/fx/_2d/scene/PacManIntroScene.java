@@ -137,7 +137,8 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright(GraphicsContext g) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(32));
+		var r = context.rendering2D();
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), t(4), t(32));
 	}
 
 	// TODO inspect in MAME what's really going on here

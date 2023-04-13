@@ -59,6 +59,10 @@ public interface Rendering2D {
 		return ArcadeTheme.MS_PACMAN_COLORING;
 	}
 
+	default GhostColoring[] ghostColors() {
+		return ArcadeTheme.GHOST_COLORING;
+	}
+
 	default GhostColoring ghostColors(int ghostID) {
 		return ArcadeTheme.GHOST_COLORING[ghostID];
 	}

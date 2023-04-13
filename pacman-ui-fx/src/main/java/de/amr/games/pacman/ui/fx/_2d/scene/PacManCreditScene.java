@@ -73,7 +73,7 @@ public class PacManCreditScene extends GameScene2D {
 		drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, normalFont, t(8), t(21));
 		drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, normalFont, t(1), t(25));
 		drawText(g, "PTS", ArcadeTheme.ROSE, smallFont, t(25), t(25));
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, ArcadeTheme.SCREEN_FONT, t(4), t(29));
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), t(4), t(29));
 		drawLevelCounter(g);
 	}
 }
