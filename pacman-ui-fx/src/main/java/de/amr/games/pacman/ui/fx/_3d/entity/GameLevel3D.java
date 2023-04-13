@@ -82,13 +82,12 @@ public class GameLevel3D {
 		world3D = new World3D(level.world(), r2D.mazeColors(mazeNumber), pelletModel3D());
 
 		pac3D = switch (gameVariant) {
-		case MS_PACMAN -> Pac3D.createMsPacMan(level, pacModel3D(), msPacManColors, 9.0);
-		case PACMAN -> Pac3D.createPacMan(level, pacModel3D(), pacManColors, 9.0);
+		case MS_PACMAN -> createMsPacMan3D(msPacManColors);
+		case PACMAN -> createPacMan3D(pacManColors);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
-		ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostColors[ghost.id()], ghostModel3D(), 8.5))
-				.toArray(Ghost3D[]::new);
+		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
 
 		bonus3D = createBonus3D(level.bonus(), r2D);
 
@@ -142,6 +141,18 @@ public class GameLevel3D {
 		if (Env.d3_floorTextureRandomPy.get()) {
 			selectRandomFloorTexture();
 		}
+	}
+
+	private Pac3D createPacMan3D(PacManColoring colors) {
+		return new Pac3D(level, level.pac(), pacModel3D().createPacManNode(9.0, colors), colors.headColor());
+	}
+
+	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
+		return new Pac3D(level, level.pac(), pacModel3D().createMsPacManNode(9.0, colors), colors.headColor());
+	}
+
+	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
+		return new Ghost3D(level, ghost, colors, ghostModel3D(), 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
