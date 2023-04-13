@@ -51,7 +51,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -81,7 +80,6 @@ public class Pac3D {
 		}
 	};
 
-	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
@@ -104,10 +102,6 @@ public class Pac3D {
 		light = createLight();
 
 		root.getChildren().add(pacNode);
-
-		PacModel3D.meshView(pacNode, PacModel3D.ID_HEAD).drawModeProperty().bind(drawModePy);
-		PacModel3D.meshView(pacNode, PacModel3D.ID_EYES).drawModeProperty().bind(drawModePy);
-		PacModel3D.meshView(pacNode, PacModel3D.ID_PALATE).drawModeProperty().bind(drawModePy);
 		noddingPy.bind(Env.d3_pacNoddingPy);
 	}
 

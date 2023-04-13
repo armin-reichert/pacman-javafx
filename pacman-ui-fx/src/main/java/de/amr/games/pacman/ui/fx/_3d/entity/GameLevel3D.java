@@ -125,7 +125,6 @@ public class GameLevel3D {
 		root.getChildren().add(world3D.getRoot());
 
 		// connect to environment
-		pac3D.drawModePy.bind(Env.d3_drawModePy);
 		pac3D.lightedPy.bind(Env.d3_pacLightedPy);
 		ghosts3D[Ghost.ID_RED_GHOST].drawModePy.bind(Env.d3_drawModePy);
 		ghosts3D[Ghost.ID_PINK_GHOST].drawModePy.bind(Env.d3_drawModePy);
@@ -144,11 +143,21 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
-		return new Pac3D(level, level.pac(), pacModel3D().createPacManNode(9.0, colors), colors.headColor());
+		var pacNode = pacModel3D().createPacManNode(9.0, colors);
+		var pac3D = new Pac3D(level, level.pac(), pacNode, colors.headColor());
+		PacModel3D.meshView(pacNode, PacModel3D.ID_HEAD).drawModeProperty().bind(Env.d3_drawModePy);
+		PacModel3D.meshView(pacNode, PacModel3D.ID_EYES).drawModeProperty().bind(Env.d3_drawModePy);
+		PacModel3D.meshView(pacNode, PacModel3D.ID_PALATE).drawModeProperty().bind(Env.d3_drawModePy);
+		return pac3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
-		return new Pac3D(level, level.pac(), pacModel3D().createMsPacManNode(9.0, colors), colors.headColor());
+		var msPacNode = pacModel3D().createMsPacManNode(9.0, colors);
+		var msPac3D = new Pac3D(level, level.pac(), msPacNode, colors.headColor());
+		PacModel3D.meshView(msPacNode, PacModel3D.ID_HEAD).drawModeProperty().bind(Env.d3_drawModePy);
+		PacModel3D.meshView(msPacNode, PacModel3D.ID_EYES).drawModeProperty().bind(Env.d3_drawModePy);
+		PacModel3D.meshView(msPacNode, PacModel3D.ID_PALATE).drawModeProperty().bind(Env.d3_drawModePy);
+		return msPac3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
