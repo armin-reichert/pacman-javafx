@@ -50,7 +50,7 @@ public class Env {
 
 	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
-	public static final IntegerProperty simumlationSpeedPy = new SimpleIntegerProperty(60);
+	public static final IntegerProperty simulationSpeedPy = new SimpleIntegerProperty(60);
 	public static final BooleanProperty simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
 
 	public static final BooleanProperty pipVisiblePy = new SimpleBooleanProperty(false);

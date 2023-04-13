@@ -169,6 +169,14 @@ public class Actions {
 		}
 	}
 
+	public static void changeSimulationSpeed(int delta) {
+		int newFramerate = ui.simulation().targetFrameratePy.get() + delta;
+		if (newFramerate > 0 && newFramerate < 120) {
+			Env.simulationSpeedPy.set(newFramerate);
+			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
+		}
+	}
+
 	public static void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
 		gameController().selectGameVariant(gameVariant);

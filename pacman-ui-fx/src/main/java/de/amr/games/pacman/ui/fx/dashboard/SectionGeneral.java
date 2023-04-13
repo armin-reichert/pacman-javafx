@@ -87,7 +87,7 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.simumlationSpeedPy.set(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> Env.simulationSpeedPy.set(newValue.intValue()));
 
 		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.simulation().targetFrameratePy.get(),
 				ui.simulation().getFPS()));
@@ -120,7 +120,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setTooltip(Env.simulationPausedPy.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!Env.simulationPausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
-		sliderTargetFPS.setValue(Env.simumlationSpeedPy.get());
+		sliderTargetFPS.setValue(Env.simulationSpeedPy.get());
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
 		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
 		cbUsePlayScene3D.setSelected(Env.d3_enabledPy.get());

@@ -270,7 +270,7 @@ public class GameUI implements GameEventListener {
 
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
 		simulation.pausedPy.bind(Env.simulationPausedPy);
-		simulation.targetFrameratePy.bind(Env.simumlationSpeedPy);
+		simulation.targetFrameratePy.bind(Env.simulationSpeedPy);
 		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
 
 		Env.d3_drawModePy.addListener((py, oldVal, newVal) -> updateMainView());
@@ -387,6 +387,10 @@ public class GameUI implements GameEventListener {
 			Actions.oneSimulationStep();
 		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
 			Actions.tenSimulationSteps();
+		} else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
+			Actions.changeSimulationSpeed(5);
+		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
+			Actions.changeSimulationSpeed(-5);
 		} else if (Keyboard.pressed(Keys.QUIT)) {
 			Actions.restartIntro();
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
