@@ -34,6 +34,8 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -74,27 +76,28 @@ public class GameLevel3D {
 		Objects.requireNonNull(ghostColors);
 
 		this.level = level;
-		final var gameVariant = level.game().variant();
-		final var mazeNumber = level.game().mazeNumber(level.number());
+		final GameVariant gameVariant = level.game().variant();
+		final int mazeNumber = level.game().mazeNumber(level.number());
 
 		world3D = new World3D(level.world(), r2D.mazeColors(mazeNumber), pelletModel3D());
 
 		pac3D = switch (gameVariant) {
 		case MS_PACMAN -> Pac3D.createMsPacMan(level, pacModel3D(), msPacManColors, 9.0);
 		case PACMAN -> Pac3D.createPacMan(level, pacModel3D(), pacManColors, 9.0);
-		default -> throw new IllegalArgumentException();
+		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
 		ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostColors[ghost.id()], ghostModel3D(), 8.5))
 				.toArray(Ghost3D[]::new);
 
 		bonus3D = createBonus3D(level.bonus(), r2D);
+
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
 		case MS_PACMAN -> new LivesCounter3D(5, () -> pacModel3D().createMsPacManNode(9, msPacManColors), true);
 		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D().createPacManNode(9, pacManColors), false);
-		default -> throw new IllegalArgumentException();
+		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
 		scores3D = new Scores3D(r2D.screenFont(8));

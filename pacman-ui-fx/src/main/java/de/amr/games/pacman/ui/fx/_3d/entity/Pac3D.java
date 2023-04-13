@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
@@ -187,7 +188,7 @@ public class Pac3D {
 		return switch (variant) {
 		case MS_PACMAN -> createMsPacManDyingAnimation();
 		case PACMAN -> createPacManDyingAnimation();
-		default -> throw new IllegalArgumentException("Unknown game variant: %s".formatted(variant));
+		default -> throw new IllegalGameVariantException(variant);
 		};
 	}
 

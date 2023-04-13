@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -113,21 +114,21 @@ public class SoundHandler {
 			switch (event.game.variant()) {
 			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_1);
 			case PACMAN -> sounds.loop(SoundClipID.INTERMISSION_1, 2);
-			default -> throw new IllegalArgumentException();
+			default -> throw new IllegalGameVariantException(event.game.variant());
 			}
 		}
 		case GameModel.SE_START_INTERMISSION_2 -> {
 			switch (event.game.variant()) {
 			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_2);
 			case PACMAN -> sounds.play(SoundClipID.INTERMISSION_1);
-			default -> throw new IllegalArgumentException();
+			default -> throw new IllegalGameVariantException(event.game.variant());
 			}
 		}
 		case GameModel.SE_START_INTERMISSION_3 -> {
 			switch (event.game.variant()) {
 			case MS_PACMAN -> sounds.play(SoundClipID.INTERMISSION_3);
 			case PACMAN -> sounds.loop(SoundClipID.INTERMISSION_1, 2);
-			default -> throw new IllegalArgumentException();
+			default -> throw new IllegalGameVariantException(event.game.variant());
 			}
 		}
 		case GameModel.SE_STOP_ALL_SOUNDS -> sounds.stopAll();

@@ -42,6 +42,7 @@ import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManTestRenderer;
@@ -234,7 +235,7 @@ public class GameUI implements GameEventListener {
 		var messageKey = switch (variant) {
 		case MS_PACMAN -> paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 		case PACMAN -> paused ? "app.title.pacman.paused" : "app.title.pacman";
-		default -> throw new IllegalArgumentException("Unknown game variant: '%s'".formatted(variant));
+		default -> throw new IllegalGameVariantException(variant);
 		};
 		stage.getIcons().setAll(AppResources.appIcon(variant));
 		stage.setTitle(AppResources.message(messageKey, dimensionMsg));
