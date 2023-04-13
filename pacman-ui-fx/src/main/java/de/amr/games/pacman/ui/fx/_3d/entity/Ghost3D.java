@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -86,6 +87,7 @@ public class Ghost3D {
 	private final Rotate orientation = new Rotate();
 	private final RotateTransition brakeAnimation;
 	private final RotateTransition dressAnimation;
+	private final RotateTransition numberAnimation;
 	private Image numberImage;
 	private Look currentLook;
 
@@ -105,6 +107,12 @@ public class Ghost3D {
 		coloredGhostGroup.getTransforms().addAll(position, orientation);
 
 		numberGroup.getChildren().add(numberCube);
+
+		numberAnimation = new RotateTransition(Duration.seconds(3.0), numberCube);
+		numberAnimation.setAxis(Rotate.X_AXIS);
+		numberAnimation.setByAngle(360);
+		numberAnimation.setInterpolator(Interpolator.LINEAR);
+		numberAnimation.setCycleCount(Animation.INDEFINITE);
 
 		brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.getRoot());
 		brakeAnimation.setAxis(Rotate.Y_AXIS);
@@ -178,6 +186,11 @@ public class Ghost3D {
 	private void showAsGhost(boolean showAsGhost) {
 		coloredGhostGroup.setVisible(showAsGhost);
 		numberCube.setVisible(!showAsGhost);
+		if (showAsGhost) {
+			numberAnimation.stop();
+		} else {
+			numberAnimation.playFromStart();
+		}
 	}
 
 	private void updateLook() {
