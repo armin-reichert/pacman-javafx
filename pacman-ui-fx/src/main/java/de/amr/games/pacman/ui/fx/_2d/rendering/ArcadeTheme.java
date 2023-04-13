@@ -45,10 +45,11 @@ public class ArcadeTheme {
 	public static final Color PALE = Color.rgb(222, 222, 255);
 	public static final Color ROSE = Color.rgb(252, 187, 179);
 
+	public static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", 8);
+
 	public static final GhostColoring[] GHOST_COLORING = new GhostColoring[4];
 
 	//@formatter:off
-	
 	static {
 		GHOST_COLORING[Ghost.ID_RED_GHOST] = new GhostColoring(
 			RED,  PALE, BLUE, // normal
@@ -91,13 +92,18 @@ public class ArcadeTheme {
 		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 	};
 
+	public static final PacManColoring PACMAN_COLORING = new PacManColoring(
+		Color.rgb(255, 255, 0), // head
+		Color.rgb(191, 79, 61), // palate
+		Color.rgb(33, 33, 33)   // eyes
+	);
 
-	public static final PacManColoring PACMAN_COLORING = new PacManColoring(Color.rgb(255, 255, 0),
-			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33));
-
-	public static final MsPacManColoring MS_PACMAN_COLORING = new MsPacManColoring(Color.rgb(255, 255, 0),
-			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33), Color.rgb(255, 0, 0), Color.rgb(33, 33, 255));
-
+	public static final MsPacManColoring MS_PACMAN_COLORING = new MsPacManColoring(
+		Color.rgb(255, 255, 0), // head
+		Color.rgb(191, 79, 61), // palate
+		Color.rgb(33, 33, 33),  // eyes
+		Color.rgb(255, 0, 0),   // hair bow
+		Color.rgb(33, 33, 255)  // hair bow pearls
+	);
 	//@formatter:on
-	public static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", 8);
 }
