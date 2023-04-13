@@ -36,6 +36,8 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._3d.entity.MsPacManColoring;
+import de.amr.games.pacman.ui.fx._3d.entity.PacManColoring;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -49,9 +51,19 @@ public interface Rendering2D {
 
 	Font screenFont(double size);
 
-	GhostColoring ghostColoring(int ghostID);
+	default PacManColoring pacManColors() {
+		return ArcadeTheme.PACMAN_COLORING;
+	}
 
-	MazeColoring mazeColoring(int mazeNumber);
+	default MsPacManColoring msPacManColors() {
+		return ArcadeTheme.MS_PACMAN_COLORING;
+	}
+
+	default GhostColoring ghostColors(int ghostID) {
+		return ArcadeTheme.GHOST_COLORING[ghostID];
+	}
+
+	MazeColoring mazeColors(int mazeNumber);
 
 	// Animations
 

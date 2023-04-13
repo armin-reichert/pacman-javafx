@@ -47,8 +47,9 @@ public class ArcadeTheme {
 
 	public static final GhostColoring[] GHOST_COLORING = new GhostColoring[4];
 
+	//@formatter:off
+	
 	static {
-		//@formatter:off
 		GHOST_COLORING[Ghost.ID_RED_GHOST] = new GhostColoring(
 			RED,  PALE, BLUE, // normal
 			BLUE, ROSE, ROSE, // frightened
@@ -72,15 +73,31 @@ public class ArcadeTheme {
 			BLUE,   ROSE, ROSE, // frightened
 			PALE,   ROSE, RED   // flashing
 		);
-		//@formatter:on
 	}
 
-	// 3D colors
+	public static final MazeColoring PACMAN_MAZE_COLORS = new MazeColoring(//
+			Color.rgb(254, 189, 180), // food color
+			Color.rgb(33, 33, 255).darker(), // wall top color
+			Color.rgb(33, 33, 255).brighter(), // wall side color
+			Color.rgb(252, 181, 255) // ghosthouse door color
+	);
+
+	public static final MazeColoring[] MS_PACMAN_MAZE_COLORS = {
+		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
+		new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
+		new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
+		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb( 33,  33, 255),  Color.rgb(255, 183,  81), Color.rgb(255, 183, 255)),
+		new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
+		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
+	};
+
+
 	public static final PacManColoring PACMAN_COLORING = new PacManColoring(Color.rgb(255, 255, 0),
 			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33));
 
 	public static final MsPacManColoring MS_PACMAN_COLORING = new MsPacManColoring(Color.rgb(255, 255, 0),
 			Color.rgb(191, 79, 61), Color.rgb(33, 33, 33), Color.rgb(255, 0, 0), Color.rgb(33, 33, 255));
 
+	//@formatter:on
 	public static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", 8);
 }

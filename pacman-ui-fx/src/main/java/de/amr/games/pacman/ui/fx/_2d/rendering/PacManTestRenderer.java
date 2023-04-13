@@ -64,12 +64,12 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public MazeColoring mazeColoring(int mazeNumber) {
+	public MazeColoring mazeColors(int mazeNumber) {
 		return MAZE_COLORS;
 	}
 
 	@Override
-	public GhostColoring ghostColoring(int ghostID) {
+	public GhostColoring ghostColors(int ghostID) {
 		return ArcadeTheme.GHOST_COLORING[ghostID];
 	}
 
@@ -181,7 +181,7 @@ public class PacManTestRenderer implements Rendering2D {
 			drawGhostBody(g, ghost, color);
 		}
 		default -> {
-			drawGhostBody(g, ghost, ghostColoring(ghost.id()).normalDress());
+			drawGhostBody(g, ghost, ghostColors(ghost.id()).normalDress());
 		}
 		}
 	}
@@ -213,7 +213,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int id, int x, int y) {
-		var color = ghostColoring(id).normalDress();
+		var color = ghostColors(id).normalDress();
 		g.setFill(color);
 		g.fillRect(x - 2, y - 4, 12, 16);
 	}
@@ -285,7 +285,7 @@ public class PacManTestRenderer implements Rendering2D {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = new Vector2i(col, row);
 				if (world.containsFood(tile)) {
-					g.setFill(mazeColoring(mazeNumber).foodColor());
+					g.setFill(mazeColors(mazeNumber).foodColor());
 					if (world.isEnergizerTile(tile)) {
 						if (!energizersHidden) {
 							g.fillOval(tile.x() * TS, tile.y() * TS, TS, TS);

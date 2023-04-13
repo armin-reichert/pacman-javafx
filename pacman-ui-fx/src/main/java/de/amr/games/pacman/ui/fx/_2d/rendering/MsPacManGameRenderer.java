@@ -61,17 +61,6 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
 			Direction.DOWN);
 
-	//@formatter:off
-	private static final MazeColoring[] MAZE_COLORS = {
-		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb( 33,  33, 255),  Color.rgb(255, 183,  81), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
-	};
-	//@formatter:on
-
 	private static final int MAZE_WIDTH = 226;
 	private static final int MAZE_HEIGHT = 248;
 	private static final int SECOND_COLUMN = 228;
@@ -87,8 +76,9 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private static Image emptyMazeFlashing(int i) {
-		return Ufx.colorsExchanged(emptyMaze(i),
-				Map.of(MAZE_COLORS[i].wallBaseColor(), Color.WHITE, MAZE_COLORS[i].wallTopColor(), Color.BLACK));
+		return Ufx.colorsExchanged(emptyMaze(i), Map.of(//
+				ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor(), Color.WHITE, //
+				ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor(), Color.BLACK));
 	}
 
 	// tile from third column
@@ -101,13 +91,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	@Override
-	public GhostColoring ghostColoring(int ghostID) {
-		return ArcadeTheme.GHOST_COLORING[ghostID];
-	}
-
-	@Override
-	public MazeColoring mazeColoring(int mazeNumber) {
-		return MAZE_COLORS[mazeNumber - 1];
+	public MazeColoring mazeColors(int mazeNumber) {
+		return ArcadeTheme.MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
 	}
 
 	@Override

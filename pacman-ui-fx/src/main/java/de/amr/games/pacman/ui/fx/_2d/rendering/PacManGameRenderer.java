@@ -38,7 +38,6 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -48,17 +47,8 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	private static final Spritesheet SHEET = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
 
 	// Order of direction-related images inside spritesheet
-	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT,
-			Direction.UP, Direction.DOWN);
-
-	private static final Color WALL_COLOR = Color.rgb(33, 33, 255);
-
-	private static final MazeColoring MAZE_COLORS = new MazeColoring(//
-			Color.rgb(254, 189, 180), // food color
-			WALL_COLOR.darker(), // wall top color
-			WALL_COLOR.brighter(), // wall side color
-			Color.rgb(252, 181, 255) // ghosthouse door color
-	);
+	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
+			Direction.DOWN);
 
 	private static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
 	private static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
@@ -69,13 +59,8 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	@Override
-	public MazeColoring mazeColoring(int mazeNumber) {
-		return MAZE_COLORS;
-	}
-
-	@Override
-	public GhostColoring ghostColoring(int ghostID) {
-		return ArcadeTheme.GHOST_COLORING[ghostID];
+	public MazeColoring mazeColors(int mazeNumber) {
+		return ArcadeTheme.PACMAN_MAZE_COLORS;
 	}
 
 	@Override

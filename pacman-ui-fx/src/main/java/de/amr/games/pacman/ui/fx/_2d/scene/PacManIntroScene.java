@@ -159,7 +159,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int row = 7 + 3 * id;
-			var color = r.ghostColoring(id).normalDress();
+			var color = r.ghostColors(id).normalDress();
 			r.drawGhostFacingRight(g, id, t(col) + 4, t(row));
 			if (intro.context().characterVisible[id]) {
 				drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(row + 1));
@@ -172,7 +172,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
-			g.setFill(context.rendering2D().mazeColoring(1).foodColor());
+			g.setFill(context.rendering2D().mazeColors(1).foodColor());
 			g.fillOval(t(PacManIntroData.LEFT_TILE), t(20), TS, TS);
 		}
 	}
@@ -201,7 +201,7 @@ public class PacManIntroScene extends GameScene2D {
 		var r = context.rendering2D();
 		int col = PacManIntroData.LEFT_TILE + 6;
 		int row = 25;
-		g.setFill(r.mazeColoring(1).foodColor());
+		g.setFill(r.mazeColors(1).foodColor());
 		g.fillRect(t(col) + 4, t(row - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.fillOval(t(col), t(row + 1), TS, TS);

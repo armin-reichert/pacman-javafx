@@ -67,16 +67,17 @@ public class GameLevel3D {
 	public GameLevel3D(GameLevel level, Rendering2D r2D, PacManColoring pacManColors, MsPacManColoring msPacManColors,
 			GhostColoring[] ghostColors) {
 
-		this.level = Objects.requireNonNull(level);
+		Objects.requireNonNull(level);
 		Objects.requireNonNull(r2D);
 		Objects.requireNonNull(pacManColors);
 		Objects.requireNonNull(msPacManColors);
 		Objects.requireNonNull(ghostColors);
 
-		var gameVariant = level.game().variant();
-		int mazeNumber = level.game().mazeNumber(level.number());
+		this.level = level;
+		final var gameVariant = level.game().variant();
+		final var mazeNumber = level.game().mazeNumber(level.number());
 
-		world3D = new World3D(level.world(), r2D.mazeColoring(mazeNumber), pelletModel3D());
+		world3D = new World3D(level.world(), r2D.mazeColors(mazeNumber), pelletModel3D());
 
 		pac3D = switch (gameVariant) {
 		case MS_PACMAN -> new Pac3D(level, level.pac(), pacModel3D().createMsPacManNode(9.0, msPacManColors),
