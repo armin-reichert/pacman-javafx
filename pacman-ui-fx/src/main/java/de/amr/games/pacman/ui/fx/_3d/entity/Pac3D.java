@@ -33,15 +33,18 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.ui.fx._3d.animation.CollapseAnimation;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -67,6 +70,7 @@ public class Pac3D {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
+	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
 
 	public final BooleanProperty noddingPy = new SimpleBooleanProperty(this, "nodding", false) {
 		@Override
@@ -200,7 +204,24 @@ public class Pac3D {
 	}
 
 	private Animation createPacManDyingAnimation() {
-		return new SequentialTransition(Ufx.pause(0.25), new CollapseAnimation(root).getAnimation());
+		var numSpins = 10;
+
+		var spinning = new RotateTransition(COLLAPSING_DURATION.divide(numSpins), root);
+		spinning.setAxis(Rotate.Z_AXIS);
+		spinning.setByAngle(360);
+		spinning.setCycleCount(numSpins);
+		spinning.setInterpolator(Interpolator.EASE_OUT);
+
+		var shrinking = new ScaleTransition(COLLAPSING_DURATION, root);
+		shrinking.setToX(0.2);
+		shrinking.setToY(0.2);
+		shrinking.setToZ(0.0);
+
+		var sinking = new TranslateTransition(COLLAPSING_DURATION, root);
+		sinking.setFromZ(-World.HTS);
+		sinking.setToZ(0);
+
+		return new SequentialTransition(Ufx.pause(0.25), new ParallelTransition(spinning, shrinking, sinking));
 	}
 
 	private Animation createMsPacManDyingAnimation() {
