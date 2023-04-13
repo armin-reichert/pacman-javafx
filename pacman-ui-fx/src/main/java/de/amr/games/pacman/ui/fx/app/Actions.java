@@ -67,8 +67,8 @@ public class Actions {
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
-		var voiceMessage = AppResources.voiceMessage(voiceMessageKey);
-		voiceMessage.play();
+		currentVoiceMessage = AppResources.voiceMessage(voiceMessageKey);
+		currentVoiceMessage.play();
 	}
 
 	public static void stopVoiceMessage() {
