@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -111,12 +112,13 @@ public class Ghost3D {
 		brakeAnimation.setAutoReverse(true);
 		brakeAnimation.setCycleCount(2);
 
-		// TODO this doesn't work as expected (maybe my expectations are wrong)
-		dressAnimation = new RotateTransition(Duration.seconds(0.2), coloredGhost3D.getDressGroup());
-		dressAnimation.setAxis(Rotate.Z_AXIS);
+		dressAnimation = new RotateTransition(Duration.seconds(0.3), coloredGhost3D.getDressGroup());
+		// TODO I expected this should be the z-axis but... (maybe my expectations are wrong)
+		dressAnimation.setAxis(Rotate.Y_AXIS);
+		dressAnimation.setFromAngle(-15);
+		dressAnimation.setToAngle(15);
 		dressAnimation.setCycleCount(Animation.INDEFINITE);
 		dressAnimation.setAutoReverse(true);
-		dressAnimation.setByAngle(20);
 
 		init();
 	}
@@ -149,7 +151,10 @@ public class Ghost3D {
 	}
 
 	private void turnToMoveDirection() {
-		orientation.setAngle(Turn.angle(ghost.moveDir()));
+		var angle = Turn.angle(ghost.moveDir());
+		if (angle != orientation.getAngle()) {
+			orientation.setAngle(angle);
+		}
 	}
 
 	private void updateVisbility() {
@@ -161,11 +166,11 @@ public class Ghost3D {
 			if (ghost.moveResult.tunnelEntered) {
 				brakeAnimation.playFromStart();
 			}
-//			if (dressAnimation.getStatus() != Status.RUNNING) {
-//				dressAnimation.play();
-//			}
+			if (dressAnimation.getStatus() != Status.RUNNING) {
+				dressAnimation.play();
+			}
 		} else {
-//			dressAnimation.stop();
+			dressAnimation.stop();
 		}
 	}
 
