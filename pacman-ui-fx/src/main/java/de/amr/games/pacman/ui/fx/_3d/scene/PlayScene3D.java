@@ -302,7 +302,8 @@ public class PlayScene3D extends GameScene {
 
 		case PACMAN_DYING -> {
 			level3D.world3D().foodOscillation().stop();
-			lockAndPlay(1.0, level3D.pac3D().createDyingAnimation());
+			var animation = level3D.pac3D().createDyingAnimation();
+			lockAndPlay(1.0, animation);
 		}
 
 		case GHOST_DYING -> {

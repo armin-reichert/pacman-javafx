@@ -30,6 +30,7 @@ import static java.util.Objects.requireNonNull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Pac;
@@ -164,6 +165,13 @@ public class Pac3D {
 		}
 	}
 
+	public void turnTo(Direction dir) {
+		var angle = Turn.angle(dir);
+		if (angle != orientation.getAngle()) {
+			orientation.setAngle(angle);
+		}
+	}
+
 	private void updateVisbility() {
 		root.setVisible(pac.isVisible() && !outsideWorld());
 	}
@@ -222,7 +230,7 @@ public class Pac3D {
 		var falling = new TranslateTransition(COLLAPSING_DURATION, root);
 		falling.setToZ(4);
 
-		var animation = new SequentialTransition(Ufx.pause(0.25), new ParallelTransition(spinning, shrinking, falling),
+		var animation = new SequentialTransition(Ufx.pause(1), new ParallelTransition(spinning, shrinking, falling),
 				Ufx.pause(0.25));
 
 		animation.setOnFinished(e -> root.setTranslateZ(0));
@@ -230,19 +238,18 @@ public class Pac3D {
 	}
 
 	private Animation createMsPacManDyingAnimation() {
-		var layOnBack = new RotateTransition(Duration.seconds(0.2), root);
-		layOnBack.setAxis(Rotate.Y_AXIS);
-		layOnBack.setFromAngle(0);
-		layOnBack.setToAngle(90);
+		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 
-		var spin = new RotateTransition(Duration.seconds(0.2), root);
-		spin.setAxis(Rotate.Y_AXIS);
-		spin.setByAngle(-180);
+		var spin = new RotateTransition(Duration.seconds(0.25), root);
+		spin.setAxis(axis);
+		spin.setFromAngle(90);
+		spin.setToAngle(270);
 		spin.setCycleCount(4);
+		spin.setRate(1);
 		spin.setInterpolator(Interpolator.LINEAR);
 		spin.setDelay(Duration.seconds(0.3));
 
-		return new SequentialTransition(layOnBack, spin, Ufx.pause(2.0));
+		return new SequentialTransition(spin, Ufx.pause(1));
 	}
 
 	private PointLight createLight() {
