@@ -139,7 +139,7 @@ public class GameLevel3D {
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
 		var node = pacModel3D().createPacManNode(9.0, colors);
-		var pacMan3D = new Pac3D(level, level.pac(), node, colors.headColor());
+		var pacMan3D = new Pac3D(level, level.pac(), node, colors.headColor(), false);
 		PacModel3D.meshView(node, PacModel3D.ID_HEAD).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.meshView(node, PacModel3D.ID_EYES).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.meshView(node, PacModel3D.ID_PALATE).drawModeProperty().bind(Env.d3_drawModePy);
@@ -148,7 +148,7 @@ public class GameLevel3D {
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
 		var node = pacModel3D().createMsPacManNode(9.0, colors);
-		var msPacMan3D = new Pac3D(level, level.pac(), node, colors.headColor());
+		var msPacMan3D = new Pac3D(level, level.pac(), node, colors.headColor(), true);
 		PacModel3D.meshView(node, PacModel3D.ID_HEAD).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.meshView(node, PacModel3D.ID_EYES).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.meshView(node, PacModel3D.ID_PALATE).drawModeProperty().bind(Env.d3_drawModePy);

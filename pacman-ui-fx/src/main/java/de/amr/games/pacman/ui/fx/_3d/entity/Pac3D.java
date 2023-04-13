@@ -49,6 +49,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -95,8 +96,9 @@ public class Pac3D {
 	private final Translate position = new Translate();
 	private final Rotate orientation = new Rotate();
 	private RotateTransition noddingAnimation;
+	private boolean gayMovement;
 
-	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor) {
+	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor, boolean gayMovement) {
 		requireNonNull(level);
 		requireNonNull(pac);
 		requireNonNull(pacNode);
@@ -104,6 +106,7 @@ public class Pac3D {
 		this.level = level;
 		this.pac = pac;
 		this.headColor = headColor;
+		this.gayMovement = gayMovement;
 		this.light = createLight();
 		pacNode.getTransforms().setAll(position, orientation);
 		root.getChildren().add(pacNode);
@@ -112,9 +115,14 @@ public class Pac3D {
 
 	private void createNoddingAnimation() {
 		noddingAnimation = new RotateTransition(NODDING_DURATION, root);
-		noddingAnimation.setAxis(Rotate.X_AXIS);
-		noddingAnimation.setFromAngle(-40);
-		noddingAnimation.setToAngle(20);
+		noddingAnimation.setAxis(noddingAxis());
+		if (gayMovement) {
+			noddingAnimation.setFromAngle(-30);
+			noddingAnimation.setToAngle(30);
+		} else {
+			noddingAnimation.setFromAngle(-40);
+			noddingAnimation.setToAngle(20);
+		}
 		noddingAnimation.setCycleCount(Animation.INDEFINITE);
 		noddingAnimation.setAutoReverse(true);
 		noddingAnimation.setInterpolator(Interpolator.EASE_BOTH);
@@ -180,7 +188,7 @@ public class Pac3D {
 		if (noddingAnimation == null) {
 			return;
 		}
-		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+		var axis = noddingAxis();
 		if (pac.velocity().length() == 0 || !pac.moveResult.moved || pac.restingTicks() == Pac.REST_FOREVER) {
 			endNodding();
 			root.setRotate(0);
@@ -202,6 +210,10 @@ public class Pac3D {
 			root.setRotate(0);
 			LOG.trace("%s: Nodding stopped", pac.name());
 		}
+	}
+
+	private Point3D noddingAxis() {
+		return gayMovement ? Rotate.Z_AXIS : pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
 	public Animation createDyingAnimation() {
