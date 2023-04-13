@@ -33,7 +33,6 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -138,7 +137,10 @@ public class Pac3D {
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
 		endNodding();
-		update();
+		updatePosition();
+		turnToMoveDirection();
+		updateVisbility();
+		updateLight();
 	}
 
 	public void update() {
@@ -204,7 +206,7 @@ public class Pac3D {
 	}
 
 	private Animation createPacManDyingAnimation() {
-		var numSpins = 10;
+		var numSpins = 15;
 
 		var spinning = new RotateTransition(COLLAPSING_DURATION.divide(numSpins), root);
 		spinning.setAxis(Rotate.Z_AXIS);
@@ -213,15 +215,18 @@ public class Pac3D {
 		spinning.setInterpolator(Interpolator.EASE_OUT);
 
 		var shrinking = new ScaleTransition(COLLAPSING_DURATION, root);
-		shrinking.setToX(0.2);
-		shrinking.setToY(0.2);
+		shrinking.setToX(0.5);
+		shrinking.setToY(0.5);
 		shrinking.setToZ(0.0);
 
-		var sinking = new TranslateTransition(COLLAPSING_DURATION, root);
-		sinking.setFromZ(-World.HTS);
-		sinking.setToZ(0);
+		var falling = new TranslateTransition(COLLAPSING_DURATION, root);
+		falling.setToZ(4);
 
-		return new SequentialTransition(Ufx.pause(0.25), new ParallelTransition(spinning, shrinking, sinking));
+		var animation = new SequentialTransition(Ufx.pause(0.25), new ParallelTransition(spinning, shrinking, falling),
+				Ufx.pause(0.25));
+
+		animation.setOnFinished(e -> root.setTranslateZ(0));
+		return animation;
 	}
 
 	private Animation createMsPacManDyingAnimation() {
