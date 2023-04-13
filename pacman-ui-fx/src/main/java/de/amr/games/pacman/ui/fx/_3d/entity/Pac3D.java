@@ -56,10 +56,10 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
- * 3D-representation of Pac-Man or Ms. Pac-Man.
+ * 3D-representation of Pac-Man and Ms. Pac-Man.
  * 
  * <p>
- * Missing: Specific 3D-model for Ms. Pac-Man, mouth animation...
+ * Missing: Real 3D model for Ms. Pac-Man, Mouth animation...
  * 
  * @author Armin Reichert
  */
@@ -76,7 +76,7 @@ public class Pac3D {
 				createNoddingAnimation();
 			} else {
 				endNodding();
-				nodding = null;
+				noddingAnimation = null;
 			}
 		}
 	};
@@ -89,24 +89,29 @@ public class Pac3D {
 	private final Group root = new Group();
 	private final Color headColor;
 	private final PointLight light;
-	private final Translate position;
-	private final Rotate orientation;
-	private RotateTransition nodding;
+	private final Translate position = new Translate();
+	private final Rotate orientation = new Rotate();
+	private RotateTransition noddingAnimation;
 
 	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor) {
 		this.level = Objects.requireNonNull(level);
 		this.pac = Objects.requireNonNull(pac);
 		Objects.requireNonNull(pacNode);
 		this.headColor = Objects.requireNonNull(headColor);
-
-		position = new Translate(0, 0, -5);
-		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
+		this.light = createLight();
 		pacNode.getTransforms().setAll(position, orientation);
-
-		light = createLight();
-
 		root.getChildren().add(pacNode);
 		noddingPy.bind(Env.d3_pacNoddingPy);
+	}
+
+	private void createNoddingAnimation() {
+		noddingAnimation = new RotateTransition(NODDING_DURATION, root);
+		noddingAnimation.setAxis(Rotate.X_AXIS);
+		noddingAnimation.setFromAngle(-40);
+		noddingAnimation.setToAngle(20);
+		noddingAnimation.setCycleCount(Animation.INDEFINITE);
+		noddingAnimation.setAutoReverse(true);
+		noddingAnimation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public Node getRoot() {
@@ -131,41 +136,51 @@ public class Pac3D {
 	}
 
 	public void update() {
-		orientation.setAngle(Turn.angle(pac.moveDir()));
-		position.setX(pac.center().x());
-		position.setY(pac.center().y());
-		root.setVisible(pac.isVisible() && !outsideWorld());
-		root.setRotationAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
-		if (nodding != null) {
-			updateNodding();
-		}
+		updatePosition();
+		turnToMoveDirection();
+		updateVisbility();
+		updateAnimations();
 		updateLight();
 	}
 
-	private void createNoddingAnimation() {
-		nodding = new RotateTransition(NODDING_DURATION, root);
-		nodding.setFromAngle(-40);
-		nodding.setToAngle(20);
-		nodding.setCycleCount(Animation.INDEFINITE);
-		nodding.setAutoReverse(true);
-		nodding.setInterpolator(Interpolator.EASE_BOTH);
+	private void updatePosition() {
+		position.setX(pac.center().x());
+		position.setY(pac.center().y());
+		position.setZ(-5.0);
 	}
 
-	private void updateNodding() {
+	private void turnToMoveDirection() {
+		var angle = Turn.angle(pac.moveDir());
+		if (angle != orientation.getAngle()) {
+			orientation.setAngle(angle);
+		}
+	}
+
+	private void updateVisbility() {
+		root.setVisible(pac.isVisible() && !outsideWorld());
+	}
+
+	private void updateAnimations() {
+		if (noddingAnimation == null) {
+			return;
+		}
+		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 		if (pac.velocity().length() == 0 || !pac.moveResult.moved || pac.restingTicks() == Pac.REST_FOREVER) {
 			endNodding();
 			root.setRotate(0);
-		} else if (nodding.getStatus() != Status.RUNNING) {
-			var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-			nodding.setAxis(axis);
-			nodding.playFromStart();
-			LOG.trace("%s: Nodding created and started", pac.name());
+			return;
+		}
+		if (noddingAnimation.getStatus() != Status.RUNNING || !axis.equals(noddingAnimation.getAxis())) {
+			noddingAnimation.stop();
+			noddingAnimation.setAxis(axis);
+			noddingAnimation.playFromStart();
+			LOG.trace("%s: Nodding started", pac.name());
 		}
 	}
 
 	private void endNodding() {
-		if (nodding != null && nodding.getStatus() == Status.RUNNING) {
-			nodding.stop();
+		if (noddingAnimation != null && noddingAnimation.getStatus() == Status.RUNNING) {
+			noddingAnimation.stop();
 			var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 			root.setRotationAxis(axis);
 			root.setRotate(0);
