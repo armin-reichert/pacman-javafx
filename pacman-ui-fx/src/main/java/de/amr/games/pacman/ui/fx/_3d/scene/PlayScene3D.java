@@ -133,7 +133,7 @@ public class PlayScene3D extends GameScene {
 	public void update() {
 		context.level().ifPresent(level -> {
 			level3D.update();
-			currentCamController.update(fxSubScene.getCamera(), level3D.pac3D().getRoot());
+			currentCamController.update(fxSubScene.getCamera(), level3D.pac3D());
 			updateSound(level);
 		});
 	}

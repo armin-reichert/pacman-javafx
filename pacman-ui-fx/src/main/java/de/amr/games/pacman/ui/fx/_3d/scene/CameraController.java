@@ -23,8 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 
 /**
  * Cameras for the 3D play scene.
@@ -36,6 +36,6 @@ public interface CameraController {
 	default void reset(Camera cam) {
 	}
 
-	default void update(Camera cam, Node target) {
+	default void update(Camera cam, Pac3D pac3D) {
 	}
 }

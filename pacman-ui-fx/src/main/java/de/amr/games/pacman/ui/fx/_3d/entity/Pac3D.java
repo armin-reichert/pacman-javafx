@@ -52,6 +52,7 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
@@ -88,6 +89,7 @@ public class Pac3D {
 	private final Group root = new Group();
 	private final Color headColor;
 	private final PointLight light;
+	private final Translate position;
 	private final Rotate orientation;
 	private RotateTransition nodding;
 
@@ -97,8 +99,10 @@ public class Pac3D {
 		Objects.requireNonNull(pacNode);
 		this.headColor = Objects.requireNonNull(headColor);
 
+		position = new Translate(0, 0, -5);
 		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
-		pacNode.getTransforms().setAll(orientation);
+		pacNode.getTransforms().setAll(position, orientation);
+
 		light = createLight();
 
 		root.getChildren().add(pacNode);
@@ -107,6 +111,10 @@ public class Pac3D {
 
 	public Node getRoot() {
 		return root;
+	}
+
+	public Translate getPosition() {
+		return position;
 	}
 
 	public PointLight getLight() {
@@ -129,9 +137,8 @@ public class Pac3D {
 			root.setVisible(pac.isVisible());
 		}
 		orientation.setAngle(Turn.angle(pac.moveDir()));
-		root.setTranslateX(pac.center().x());
-		root.setTranslateY(pac.center().y());
-		root.setTranslateZ(-4.25);
+		position.setX(pac.center().x());
+		position.setY(pac.center().y());
 		root.setRotationAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
 		if (nodding != null) {
 			updateNodding();

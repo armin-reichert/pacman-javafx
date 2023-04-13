@@ -49,7 +49,6 @@ import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Translate;
 
 /**
  * @author Armin Reichert
@@ -105,10 +104,6 @@ public class GameLevel3D {
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
 		levelCounter3D.setRightPosition((level.world().numCols() - 2) * TS, 2 * TS, -HTS);
-		// lift guys a bit over floor (especially Ms. Pac-Man will thank you for that!)
-		var lift = new Translate(0, 0, -1);
-		pac3D.getRoot().getTransforms().add(lift);
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.getRoot().getTransforms().add(lift));
 
 		// populate level
 		root.getChildren().add(scores3D.getRoot());

@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.lib.U.lerp;
 
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 
 /**
@@ -52,8 +52,9 @@ public class CamFollowingPlayer implements CameraController {
 	}
 
 	@Override
-	public void update(Camera cam, Node target) {
-		cam.setTranslateX(lerp(cam.getTranslateX(), target.getTranslateX() - 100, speedX));
-		cam.setTranslateY(lerp(cam.getTranslateY(), target.getTranslateY() + 100, speedY));
+	public void update(Camera cam, Pac3D pac3D) {
+		var position = pac3D.getPosition();
+		cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speedX));
+		cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() + 100, speedY));
 	}
 }
