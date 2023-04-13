@@ -242,14 +242,12 @@ public class Pac3D {
 
 		var spin = new RotateTransition(Duration.seconds(0.25), root);
 		spin.setAxis(axis);
-		spin.setFromAngle(90);
-		spin.setToAngle(270);
-		spin.setCycleCount(4);
-		spin.setRate(1);
+		spin.setByAngle(pac.moveDir() == Direction.LEFT ? -90 : 90);
 		spin.setInterpolator(Interpolator.LINEAR);
-		spin.setDelay(Duration.seconds(0.3));
+		spin.setCycleCount(4);
+		spin.setDelay(Duration.seconds(0.25));
 
-		return new SequentialTransition(spin, Ufx.pause(1));
+		return new SequentialTransition(spin, Ufx.pause(2));
 	}
 
 	private PointLight createLight() {
