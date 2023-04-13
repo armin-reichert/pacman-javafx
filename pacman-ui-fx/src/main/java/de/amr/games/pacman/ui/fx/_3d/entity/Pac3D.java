@@ -206,8 +206,8 @@ public class Pac3D {
 		var pointLight = new PointLight();
 		pointLight.setColor(Color.rgb(255, 255, 0, 0.25));
 		pointLight.setMaxRange(2 * TS);
-		pointLight.translateXProperty().bind(root.translateXProperty());
-		pointLight.translateYProperty().bind(root.translateYProperty());
+		pointLight.translateXProperty().bind(position.xProperty());
+		pointLight.translateYProperty().bind(position.yProperty());
 		pointLight.setTranslateZ(-TS);
 		return pointLight;
 	}
