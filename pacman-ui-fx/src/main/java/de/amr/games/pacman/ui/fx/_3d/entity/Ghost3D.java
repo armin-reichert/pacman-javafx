@@ -78,10 +78,12 @@ public class Ghost3D {
 	private final GameLevel level;
 	private final Ghost ghost;
 	private final Group root = new Group();
+	private final Group numberGroup = new Group();
+	private final Group coloredGhostGroup = new Group();
 	private final ColoredGhost3D coloredGhost3D;
-	private Box numberCube;
-	private final Translate position;
-	private final Rotate orientation;
+	private final Box numberCube = new Box(14, 8, 8);
+	private final Translate position = new Translate();
+	private final Rotate orientation = new Rotate();
 	private final RotateTransition brakeAnimation;
 	private final RotateTransition dressAnimation;
 	private Image numberImage;
@@ -90,20 +92,19 @@ public class Ghost3D {
 	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors, Model3D model3D, double size) {
 		this.level = Objects.requireNonNull(level, "Game level must not be null");
 		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
+		Objects.requireNonNull(colors);
+		Objects.requireNonNull(model3D);
 
-		position = new Translate();
-		orientation = new Rotate();
-		root.getTransforms().addAll(position, orientation);
+		root.getChildren().addAll(coloredGhostGroup, numberGroup);
 
 		coloredGhost3D = new ColoredGhost3D(model3D, colors, size);
 		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
+		coloredGhostGroup.getChildren().add(coloredGhost3D.getRoot());
+		coloredGhostGroup.getTransforms().addAll(position, orientation);
 
-		numberCube = new Box(14, 8, 8);
-
-		root.getChildren().add(coloredGhost3D.getRoot());
-		root.getChildren().add(numberCube);
+		numberGroup.getChildren().add(numberCube);
 
 		brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.getRoot());
 		brakeAnimation.setAxis(Rotate.Y_AXIS);
@@ -174,9 +175,9 @@ public class Ghost3D {
 		}
 	}
 
-	private void showAsColoredGhost(boolean visible) {
-		coloredGhost3D.getRoot().setVisible(visible);
-		numberCube.setVisible(!visible);
+	private void showAsGhost(boolean showAsGhost) {
+		coloredGhostGroup.setVisible(showAsGhost);
+		numberCube.setVisible(!showAsGhost);
 	}
 
 	private void updateLook() {
@@ -216,13 +217,12 @@ public class Ghost3D {
 			material.setBumpMap(numberImage);
 			material.setDiffuseMap(numberImage);
 			numberCube.setMaterial(material);
-			// rotate node such that number can be read from left to right
-			root.setRotationAxis(Rotate.X_AXIS);
-			root.setRotate(0);
+			numberGroup.setTranslateX(ghost.center().x());
+			numberGroup.setTranslateY(ghost.center().y());
 		}
 		default -> throw new IllegalArgumentException("Unknown Ghost3D look: %s ".formatted(look));
 		}
-		showAsColoredGhost(look != Look.NUMBER);
+		showAsGhost(look != Look.NUMBER);
 	}
 
 	private Look normalOrFrightenedOrFlashingLook() {
