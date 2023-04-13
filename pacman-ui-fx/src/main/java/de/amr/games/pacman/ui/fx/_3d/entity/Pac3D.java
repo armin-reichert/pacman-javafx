@@ -25,8 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
-
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,10 +93,13 @@ public class Pac3D {
 	private RotateTransition noddingAnimation;
 
 	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor) {
-		this.level = Objects.requireNonNull(level);
-		this.pac = Objects.requireNonNull(pac);
-		Objects.requireNonNull(pacNode);
-		this.headColor = Objects.requireNonNull(headColor);
+		requireNonNull(level);
+		requireNonNull(pac);
+		requireNonNull(pacNode);
+		requireNonNull(headColor);
+		this.level = level;
+		this.pac = pac;
+		this.headColor = headColor;
 		this.light = createLight();
 		pacNode.getTransforms().setAll(position, orientation);
 		root.getChildren().add(pacNode);
