@@ -28,8 +28,8 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.ui.fx.app.AppResources.ghostModel3D;
 import static de.amr.games.pacman.ui.fx.app.AppResources.pacModel3D;
 import static de.amr.games.pacman.ui.fx.app.AppResources.pelletModel3D;
+import static java.util.Objects.requireNonNull;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.math.Vector2f;
@@ -68,11 +68,11 @@ public class GameLevel3D {
 	public GameLevel3D(GameLevel level, Rendering2D r2D, PacManColoring pacManColors, MsPacManColoring msPacManColors,
 			GhostColoring[] ghostColors) {
 
-		Objects.requireNonNull(level);
-		Objects.requireNonNull(r2D);
-		Objects.requireNonNull(pacManColors);
-		Objects.requireNonNull(msPacManColors);
-		Objects.requireNonNull(ghostColors);
+		requireNonNull(level);
+		requireNonNull(r2D);
+		requireNonNull(pacManColors);
+		requireNonNull(msPacManColors);
+		requireNonNull(ghostColors);
 
 		this.level = level;
 		final GameVariant gameVariant = level.game().variant();
