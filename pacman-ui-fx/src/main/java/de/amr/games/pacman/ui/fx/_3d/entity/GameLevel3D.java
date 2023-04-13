@@ -80,10 +80,8 @@ public class GameLevel3D {
 		world3D = new World3D(level.world(), r2D.mazeColors(mazeNumber), pelletModel3D());
 
 		pac3D = switch (gameVariant) {
-		case MS_PACMAN -> new Pac3D(level, level.pac(), pacModel3D().createMsPacManNode(9.0, msPacManColors),
-				msPacManColors.headColor());
-		case PACMAN -> new Pac3D(level, level.pac(), pacModel3D().createPacManNode(9.0, pacManColors),
-				pacManColors.headColor());
+		case MS_PACMAN -> Pac3D.createMsPacMan(level, pacModel3D(), msPacManColors, 9.0);
+		case PACMAN -> Pac3D.createPacMan(level, pacModel3D(), pacManColors, 9.0);
 		default -> throw new IllegalArgumentException();
 		};
 

@@ -68,6 +68,15 @@ public class Pac3D {
 
 	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
 
+	public static Pac3D createPacMan(GameLevel level, PacModel3D model3D, PacManColoring pacManColors, double size) {
+		return new Pac3D(level, level.pac(), model3D.createPacManNode(size, pacManColors), pacManColors.headColor());
+	}
+
+	public static Pac3D createMsPacMan(GameLevel level, PacModel3D model3D, MsPacManColoring msPacManColors,
+			double size) {
+		return new Pac3D(level, level.pac(), model3D.createMsPacManNode(size, msPacManColors), msPacManColors.headColor());
+	}
+
 	public final BooleanProperty noddingPy = new SimpleBooleanProperty(this, "nodding", false) {
 		@Override
 		protected void invalidated() {
@@ -92,24 +101,20 @@ public class Pac3D {
 	private final Rotate orientation;
 	private RotateTransition nodding;
 
-	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor) {
+	private Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor) {
 		this.level = Objects.requireNonNull(level);
 		this.pac = Objects.requireNonNull(pac);
 		this.headColor = Objects.requireNonNull(headColor);
 
 		root = new Group(Objects.requireNonNull(pacNode));
+		light = createLight();
+		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
+		pacNode.getTransforms().setAll(orientation);
 
 		PacModel3D.meshView(pacNode, PacModel3D.ID_HEAD).drawModeProperty().bind(drawModePy);
 		PacModel3D.meshView(pacNode, PacModel3D.ID_EYES).drawModeProperty().bind(drawModePy);
 		PacModel3D.meshView(pacNode, PacModel3D.ID_PALATE).drawModeProperty().bind(drawModePy);
-
-		orientation = new Rotate(Turn.angle(pac.moveDir()), Rotate.Z_AXIS);
-		pacNode.getTransforms().setAll(orientation);
-
 		noddingPy.bind(Env.d3_pacNoddingPy);
-		light = createLight();
-
-		init();
 	}
 
 	public Node getRoot() {
