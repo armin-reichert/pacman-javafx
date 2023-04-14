@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Optional;
 
@@ -53,8 +55,11 @@ public class Energizer3D implements Eatable3D {
 	private Animation eatenAnimation;
 
 	public Energizer3D(double radius) {
+		requirePositive(radius, "Energizer radius must be positive but is %f");
+
 		shape = new Sphere(radius);
 		shape.setUserData(this);
+
 		pumping = new ScaleTransition(Duration.seconds(1.0 / 4), shape);
 		pumping.setAutoReverse(true);
 		pumping.setCycleCount(Animation.INDEFINITE);
@@ -67,7 +72,15 @@ public class Energizer3D implements Eatable3D {
 		pumping.setToZ(MIN_SCALE);
 	}
 
+	@Override
+	public String toString() {
+		var pumpingText = pumping.getStatus() == Status.RUNNING ? ", pumping" : "";
+		return String.format("[Energizer%s, tile: %s, %s]", pumpingText, tile(), shape);
+	}
+
 	public void placeAtTile(Vector2i tile) {
+		requireNonNull(tile);
+
 		shape.setTranslateX(tile.x() * TS + HTS);
 		shape.setTranslateY(tile.y() * TS + HTS);
 		shape.setTranslateZ(-HTS);
@@ -90,6 +103,7 @@ public class Energizer3D implements Eatable3D {
 	@Override
 	public void eat() {
 		pumping.stop();
+		// TODO check this
 		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> shape.setVisible(false));
 		if (eatenAnimation != null) {
 			new SequentialTransition(hideAfterDelay, eatenAnimation).play();
@@ -104,11 +118,5 @@ public class Energizer3D implements Eatable3D {
 
 	public void stopPumping() {
 		pumping.stop();
-	}
-
-	@Override
-	public String toString() {
-		return String.format("[Energizer%s, tile: %s, %s]", pumping.getStatus() == Status.RUNNING ? ", pumping" : "",
-				tile(), shape);
 	}
 }
