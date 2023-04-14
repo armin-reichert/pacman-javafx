@@ -185,7 +185,7 @@ public class Pac3D {
 			return;
 		}
 		var axis = noddingAxis();
-		if (pac.velocity().length() == 0 || !pac.moveResult.moved || pac.restingTicks() == Pac.REST_FOREVER) {
+		if (pac.isStandingStill()) {
 			endNodding();
 			root.setRotate(0);
 			return;
