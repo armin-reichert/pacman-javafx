@@ -60,10 +60,6 @@ public class AppResources {
 		throw new IllegalStateException(MSG_NOT_LOADED);
 	}
 
-	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
-	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
-	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
-
 	private static Model3D ghostModel3D;
 
 	public static Model3D ghostModel3D() {

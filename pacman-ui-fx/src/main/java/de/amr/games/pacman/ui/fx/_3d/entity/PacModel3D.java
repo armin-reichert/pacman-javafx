@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
-import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Group;
@@ -46,13 +45,13 @@ import javafx.scene.transform.Translate;
  */
 public class PacModel3D extends Model3D {
 
+	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
+	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
+	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
+
 	public PacModel3D(String objPath) {
 		super(objPath);
 	}
-
-	public static final String ID_HEAD = "head";
-	public static final String ID_EYES = "eyes";
-	public static final String ID_PALATE = "palate";
 
 	/**
 	 * @param size     Pac-Man size in pixels
@@ -74,20 +73,34 @@ public class PacModel3D extends Model3D {
 	}
 
 	public static MeshView meshView(Node pacNode, String id) {
-		return (MeshView) pacNode.lookup("#" + id);
+		var cssID = cssID(id);
+		var node = pacNode.lookup("#" + cssID);
+		if (node == null) {
+			throw new IllegalArgumentException("No mesh view with ID '%s' found".formatted(cssID));
+		}
+		if (node instanceof MeshView meshView) {
+			return meshView;
+		}
+		throw new IllegalArgumentException(
+				"Node with CSS ID '%s' is not a MeshView but a %s".formatted(cssID, node.getClass()));
+	}
+
+	private static String cssID(String id) {
+		// TODO what else need to be escaped?
+		return id.replace('.', '-');
 	}
 
 	private Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {
-		var head = new MeshView(mesh(AppResources.MESH_ID_HEAD));
-		head.setId(ID_HEAD);
+		var head = new MeshView(mesh(MESH_ID_HEAD));
+		head.setId(cssID(MESH_ID_HEAD));
 		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
 
-		var eyes = new MeshView(mesh(AppResources.MESH_ID_EYES));
-		eyes.setId(ID_EYES);
+		var eyes = new MeshView(mesh(MESH_ID_EYES));
+		eyes.setId(cssID(MESH_ID_EYES));
 		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
 
-		var palate = new MeshView(mesh(AppResources.MESH_ID_PALATE));
-		palate.setId(ID_PALATE);
+		var palate = new MeshView(mesh(MESH_ID_PALATE));
+		palate.setId(cssID(MESH_ID_PALATE));
 		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
 
 		var centerTransform = Ufx.centerOverOrigin(head);
