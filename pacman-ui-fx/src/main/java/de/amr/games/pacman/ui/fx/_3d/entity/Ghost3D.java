@@ -83,7 +83,7 @@ public class Ghost3D {
 	private final Rotate orientation = new Rotate();
 	private final RotateTransition brakeAnimation;
 	private final RotateTransition dressAnimation;
-	private final RotateTransition numberAnimation;
+	private final RotateTransition eatenAnimation;
 	private Image numberImage;
 	private Look currentLook;
 
@@ -108,11 +108,12 @@ public class Ghost3D {
 
 		numberGroup.getChildren().add(numberCube);
 
-		numberAnimation = new RotateTransition(Duration.seconds(3.0), numberCube);
-		numberAnimation.setAxis(Rotate.X_AXIS);
-		numberAnimation.setByAngle(360);
-		numberAnimation.setInterpolator(Interpolator.LINEAR);
-		numberAnimation.setCycleCount(Animation.INDEFINITE);
+		eatenAnimation = new RotateTransition(Duration.seconds(1), numberCube);
+		eatenAnimation.setAxis(Rotate.X_AXIS);
+		eatenAnimation.setFromAngle(0);
+		eatenAnimation.setToAngle(360);
+		eatenAnimation.setInterpolator(Interpolator.LINEAR);
+		eatenAnimation.setRate(0.5);
 
 		brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.getRoot());
 		brakeAnimation.setAxis(Rotate.Y_AXIS);
@@ -187,9 +188,9 @@ public class Ghost3D {
 		coloredGhostGroup.setVisible(showAsGhost);
 		numberCube.setVisible(!showAsGhost);
 		if (showAsGhost) {
-			numberAnimation.stop();
-		} else {
-			numberAnimation.playFromStart();
+			eatenAnimation.stop();
+		} else if (eatenAnimation.getStatus() != Status.RUNNING) {
+			eatenAnimation.playFromStart();
 		}
 	}
 

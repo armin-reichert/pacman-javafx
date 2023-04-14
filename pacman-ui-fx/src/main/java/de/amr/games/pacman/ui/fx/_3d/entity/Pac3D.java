@@ -295,7 +295,7 @@ public class Pac3D {
 
 		var spin = new RotateTransition(Duration.seconds(0.25), root);
 		spin.setAxis(axis);
-		spin.setByAngle(pac.moveDir() == Direction.LEFT ? -90 : 90);
+		spin.setByAngle(pac.moveDir() == Direction.LEFT || pac.moveDir() == Direction.DOWN ? -90 : 90);
 		spin.setInterpolator(Interpolator.LINEAR);
 		spin.setCycleCount(4);
 		spin.setDelay(Duration.seconds(0.5));
