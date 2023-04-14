@@ -28,19 +28,11 @@ import javafx.scene.Scene;
 import javafx.scene.SubScene;
 
 /**
- * Base class of all game scenes (2D and 3D).
+ * Common interface of all game scenes (2D and 3D).
  * 
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener {
-
-//	protected final GameSceneContext context;
-//	protected SubScene fxSubScene;
-//
-//	protected GameScene(GameController gameController) {
-//		requireNonNull(gameController);
-//		context = new GameSceneContext(gameController);
-//	}
 
 	/**
 	 * @return the scene context (game controller, game model, game level, rendering, sounds).
