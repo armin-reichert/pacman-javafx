@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static java.util.Objects.requireNonNull;
 
@@ -167,10 +166,7 @@ public class Pac3D {
 	}
 
 	private void turnToMoveDirection() {
-		var angle = Turn.angle(pac.moveDir());
-		if (angle != orientation.getAngle()) {
-			orientation.setAngle(angle);
-		}
+		turnTo(pac.moveDir());
 	}
 
 	public void turnTo(Direction dir) {
@@ -205,8 +201,7 @@ public class Pac3D {
 	private void endNodding() {
 		if (noddingAnimation != null && noddingAnimation.getStatus() == Status.RUNNING) {
 			noddingAnimation.stop();
-			var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-			root.setRotationAxis(axis);
+			root.setRotationAxis(noddingAxis());
 			root.setRotate(0);
 			LOG.trace("%s: Nodding stopped", pac.name());
 		}
@@ -268,7 +263,7 @@ public class Pac3D {
 		pointLight.setMaxRange(2 * TS);
 		pointLight.translateXProperty().bind(position.xProperty());
 		pointLight.translateYProperty().bind(position.yProperty());
-		pointLight.setTranslateZ(-TS);
+		pointLight.setTranslateZ(-10);
 		return pointLight;
 	}
 
@@ -282,7 +277,7 @@ public class Pac3D {
 	}
 
 	private boolean outsideWorld() {
-		double centerX = pac.position().x() + HTS;
-		return centerX < HTS || centerX > level.world().numCols() * TS - HTS;
+		double worldWidth = level.world().numCols() * TS;
+		return position.getX() < 4 || position.getX() > worldWidth - 4;
 	}
 }
