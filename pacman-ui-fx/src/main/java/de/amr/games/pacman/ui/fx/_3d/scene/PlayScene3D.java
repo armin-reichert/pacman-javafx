@@ -298,6 +298,16 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public void onPlayerGetsPower(GameEvent e) {
+		level3D.pac3D().onGetsPower();
+	}
+
+	@Override
+	public void onPlayerLosesPower(GameEvent e) {
+		level3D.pac3D().onLosesPower();
+	}
+
+	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newGameState) {
 

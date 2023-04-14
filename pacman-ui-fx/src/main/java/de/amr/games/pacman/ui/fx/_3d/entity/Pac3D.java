@@ -70,6 +70,14 @@ public class Pac3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
+	private static final double NODDING_ANGLE_FROM = -30;
+	private static final double NODDING_ANGLE_TO = 15;
+
+	private static final double GAYNODDING_ANGLE_FROM = -20;
+	private static final double GAYNODDING_ANGLE_TO = 20;
+
+	private static final double EXCITEMENT = 1.5;
+
 	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
 
@@ -99,6 +107,7 @@ public class Pac3D {
 	private final Rotate orientation = new Rotate();
 	private RotateTransition noddingAnimation;
 	private boolean gayMovement;
+	private boolean excited;
 	private Animation dyingAnimation;
 
 	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor, boolean gayMovement) {
@@ -123,16 +132,40 @@ public class Pac3D {
 	private void createNoddingAnimation() {
 		noddingAnimation = new RotateTransition(NODDING_DURATION, root);
 		noddingAnimation.setAxis(noddingAxis());
+		double excitement = excited ? EXCITEMENT : 1;
 		if (gayMovement) {
-			noddingAnimation.setFromAngle(-30);
-			noddingAnimation.setToAngle(30);
+			noddingAnimation.setFromAngle(GAYNODDING_ANGLE_FROM * excitement);
+			noddingAnimation.setToAngle(GAYNODDING_ANGLE_TO * excitement);
 		} else {
-			noddingAnimation.setFromAngle(-40);
-			noddingAnimation.setToAngle(20);
+			noddingAnimation.setFromAngle(NODDING_ANGLE_FROM * excitement);
+			noddingAnimation.setToAngle(NODDING_ANGLE_TO * excitement);
 		}
 		noddingAnimation.setCycleCount(Animation.INDEFINITE);
 		noddingAnimation.setAutoReverse(true);
+		noddingAnimation.setRate(excitement);
 		noddingAnimation.setInterpolator(Interpolator.EASE_BOTH);
+	}
+
+	public void onGetsPower() {
+		excited = true;
+		if (noddingAnimation == null) {
+			return;
+		}
+		noddingAnimation.stop();
+		createNoddingAnimation();
+		noddingAnimation.play();
+		LOG.info("I'm so excited, I just can hide it!");
+	}
+
+	public void onLosesPower() {
+		excited = false;
+		if (noddingAnimation == null) {
+			return;
+		}
+		noddingAnimation.stop();
+		createNoddingAnimation();
+		noddingAnimation.play();
+		LOG.info("I lost my power");
 	}
 
 	public Node getRoot() {
