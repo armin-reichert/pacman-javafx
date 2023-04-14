@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static java.util.Objects.requireNonNull;
 
 import de.amr.games.pacman.lib.U;
 import javafx.animation.Animation;
@@ -49,6 +50,7 @@ public class LevelCounter3D {
 	private final Group root = new Group();
 
 	public LevelCounter3D(Image[] symbolImages) {
+		requireNonNull(symbolImages);
 		for (int i = 0; i < symbolImages.length; ++i) {
 			var symbolImage = symbolImages[i];
 			Box cube = createSpinningCube(TS, symbolImage, U.isEven(i));

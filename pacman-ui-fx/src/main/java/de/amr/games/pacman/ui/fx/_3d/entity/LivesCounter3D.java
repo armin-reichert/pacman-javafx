@@ -24,6 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,9 @@ public class LivesCounter3D {
 	private final List<Animation> animations = new ArrayList<>();
 
 	public LivesCounter3D(int maxLives, Supplier<Node> fnPacNode, boolean lookRight) {
+		requirePositive(maxLives);
+		requireNonNull(fnPacNode);
+
 		for (int i = 0; i < maxLives; ++i) {
 			addSocket(2 * i * TS, socketHeight);
 			var pacShape = fnPacNode.get();
