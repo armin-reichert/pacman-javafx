@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.scene.shape.TriangleMesh;
 
 /** Util for converting Normals to Smoothing Groups */

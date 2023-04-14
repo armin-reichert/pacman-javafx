@@ -37,6 +37,7 @@ import javafx.util.Duration;
  */
 public class FoodOscillation extends Transition {
 
+	private final Vector2f worldCenter = ArcadeWorld.SIZE_PX.toFloatVec().scaled(0.5f);
 	private final Group foodGroup;
 
 	public FoodOscillation(Group foodGroup) {
@@ -51,10 +52,7 @@ public class FoodOscillation extends Transition {
 	protected void interpolate(double t) {
 		for (var node : foodGroup.getChildren()) {
 			if (node.getUserData() instanceof Pellet3D pellet3D) {
-				var tile = pellet3D.tile();
-				var cx = 0.5f * ArcadeWorld.SIZE_TILES.x();
-				var cy = 0.5f * ArcadeWorld.SIZE_TILES.y();
-				var centerDistance = tile.toFloatVec().euclideanDistance(new Vector2f(cx, cy));
+				var centerDistance = pellet3D.position().toVector2f().euclideanDistance(worldCenter);
 				double dz = 2 * Math.sin(2 * centerDistance) * t;
 				node.setTranslateZ(-4 + dz);
 			}

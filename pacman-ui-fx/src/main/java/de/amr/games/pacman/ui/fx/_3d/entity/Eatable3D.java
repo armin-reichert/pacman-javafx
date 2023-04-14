@@ -28,6 +28,7 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Animation;
 import javafx.scene.Node;
 
@@ -48,4 +49,6 @@ public interface Eatable3D {
 		var position = new Vector2f((float) getRoot().getTranslateX(), (float) getRoot().getTranslateY());
 		return World.tileAt(position);
 	}
+
+	Vector3f position();
 }

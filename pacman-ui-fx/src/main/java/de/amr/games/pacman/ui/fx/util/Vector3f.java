@@ -22,11 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._3d.objimport;
+package de.amr.games.pacman.ui.fx.util;
+
+import de.amr.games.pacman.lib.math.Vector2f;
 
 /**
- * Immutable 3D vector with float precision. No full fledged implementation, just the methods used by the OBJ importer
- * classes.
+ * Immutable 3D vector with float precision. No full-fledged implementation, just the needed methods.
  * 
  * @author Armin Reichert
  */
@@ -34,6 +35,14 @@ public record Vector3f(float x, float y, float z) {
 
 	public Vector3f(Vector3f v) {
 		this(v.x, v.y, v.z);
+	}
+
+	public Vector3f(Vector2f v, float z) {
+		this(v.x(), v.y(), z);
+	}
+
+	public Vector2f toVector2f() {
+		return new Vector2f(x, y);
 	}
 
 	/**

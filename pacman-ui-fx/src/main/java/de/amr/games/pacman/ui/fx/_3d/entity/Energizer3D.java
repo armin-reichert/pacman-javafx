@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -84,6 +85,11 @@ public class Energizer3D implements Eatable3D {
 		shape.setTranslateX(tile.x() * TS + HTS);
 		shape.setTranslateY(tile.y() * TS + HTS);
 		shape.setTranslateZ(-HTS);
+	}
+
+	@Override
+	public Vector3f position() {
+		return new Vector3f((float) shape.getTranslateX(), (float) shape.getTranslateY(), (float) shape.getTranslateZ());
 	}
 
 	@Override

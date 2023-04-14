@@ -32,6 +32,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -65,6 +66,11 @@ public class Pellet3D implements Eatable3D {
 		shape.setTranslateX(tile.x() * TS + HTS);
 		shape.setTranslateY(tile.y() * TS + HTS);
 		shape.setTranslateZ(-HTS);
+	}
+
+	@Override
+	public Vector3f position() {
+		return new Vector3f((float) shape.getTranslateX(), (float) shape.getTranslateY(), (float) shape.getTranslateZ());
 	}
 
 	@Override
