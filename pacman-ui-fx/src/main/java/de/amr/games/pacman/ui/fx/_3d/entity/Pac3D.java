@@ -99,6 +99,7 @@ public class Pac3D {
 	private final Rotate orientation = new Rotate();
 	private RotateTransition noddingAnimation;
 	private boolean gayMovement;
+	private Animation dyingAnimation;
 
 	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor, boolean gayMovement) {
 		requireNonNull(level);
@@ -233,7 +234,7 @@ public class Pac3D {
 		return pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
-	public Animation createPacManDyingAnimation() {
+	public void createPacManDyingAnimation() {
 		var numSpins = 15;
 
 		var spinning = new RotateTransition(COLLAPSING_DURATION.divide(numSpins), root);
@@ -250,14 +251,13 @@ public class Pac3D {
 		var falling = new TranslateTransition(COLLAPSING_DURATION, root);
 		falling.setToZ(4);
 
-		var animation = new SequentialTransition(Ufx.pause(0.4), new ParallelTransition(spinning, shrinking, falling),
+		dyingAnimation = new SequentialTransition(Ufx.pause(0.4), new ParallelTransition(spinning, shrinking, falling),
 				Ufx.pause(0.25));
 
-		animation.setOnFinished(e -> root.setTranslateZ(0));
-		return animation;
+		dyingAnimation.setOnFinished(e -> root.setTranslateZ(0));
 	}
 
-	public Animation createMsPacManDyingAnimation() {
+	public void createMsPacManDyingAnimation() {
 		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 
 		var spin = new RotateTransition(Duration.seconds(0.25), root);
@@ -265,9 +265,14 @@ public class Pac3D {
 		spin.setByAngle(pac.moveDir() == Direction.LEFT ? -90 : 90);
 		spin.setInterpolator(Interpolator.LINEAR);
 		spin.setCycleCount(4);
-		spin.setDelay(Duration.seconds(0.25));
+		spin.setDelay(Duration.seconds(0.5));
+		spin.setOnFinished(e -> root.setRotate(90));
 
-		return new SequentialTransition(spin, Ufx.pause(2));
+		dyingAnimation = new SequentialTransition(spin, Ufx.pause(2));
+	}
+
+	public Animation dyingAnimation() {
+		return dyingAnimation;
 	}
 
 	private PointLight createLight() {

@@ -304,12 +304,12 @@ public class PlayScene3D extends GameScene {
 		case PACMAN_DYING -> {
 			context.level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
-				var animation = switch (level.game().variant()) {
+				switch (level.game().variant()) {
 				case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
 				case PACMAN -> level3D.pac3D().createPacManDyingAnimation();
 				default -> throw new IllegalGameVariantException(level.game().variant());
-				};
-				lockAndPlay(1.0, animation);
+				}
+				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation());
 			});
 		}
 
@@ -343,7 +343,7 @@ public class PlayScene3D extends GameScene {
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.pickLevelCompleteMessage(level.number());
-				lockAndPlay(1.0, //
+				lockStateAndPlayAfterSeconds(1.0, //
 						createLevelCompleteAnimation(level), //
 						afterSeconds(0.5, level.pac()::hide), //
 						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)));
@@ -389,7 +389,7 @@ public class PlayScene3D extends GameScene {
 		return animation;
 	}
 
-	private void lockAndPlay(double afterSeconds, Animation... animations) {
+	private void lockStateAndPlayAfterSeconds(double afterSeconds, Animation... animations) {
 		lockGameState();
 		var animation = new SequentialTransition();
 		if (afterSeconds > 0) {
