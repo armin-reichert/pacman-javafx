@@ -207,7 +207,10 @@ public class Pac3D {
 	}
 
 	private Point3D noddingAxis() {
-		return gayMovement ? Rotate.Z_AXIS : pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+		if (gayMovement) {
+			return Rotate.Z_AXIS;
+		}
+		return pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
 	public Animation createPacManDyingAnimation() {

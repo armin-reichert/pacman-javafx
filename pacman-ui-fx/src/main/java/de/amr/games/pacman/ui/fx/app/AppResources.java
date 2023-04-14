@@ -49,6 +49,7 @@ import javafx.scene.paint.PhongMaterial;
 public class AppResources {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+	private static final String MSG_NOT_LOADED = "App resources not loaded";
 
 	private static PacModel3D pacModel3D;
 
@@ -56,7 +57,7 @@ public class AppResources {
 		if (pacModel3D != null) {
 			return pacModel3D;
 		}
-		throw new IllegalStateException("App resources not loaded");
+		throw new IllegalStateException(MSG_NOT_LOADED);
 	}
 
 	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
@@ -69,7 +70,7 @@ public class AppResources {
 		if (ghostModel3D != null) {
 			return ghostModel3D;
 		}
-		throw new IllegalStateException("App resources not loaded");
+		throw new IllegalStateException(MSG_NOT_LOADED);
 	}
 
 	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
@@ -82,7 +83,7 @@ public class AppResources {
 		if (pelletModel3D != null) {
 			return pelletModel3D;
 		}
-		throw new IllegalStateException("App resources not loaded");
+		throw new IllegalStateException(MSG_NOT_LOADED);
 	}
 
 	public static final String MESH_ID_PELLET = "Fruit";

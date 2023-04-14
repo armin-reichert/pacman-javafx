@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static java.util.Objects.requireNonNull;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
@@ -51,18 +52,23 @@ import javafx.util.Duration;
 public class Bonus3D {
 
 	private final GameLevel level;
-	private final Box shape;
 	private final Bonus bonus;
 	private final Image symbolImage;
 	private final Image pointsImage;
+	private final Box shape;
 	private Animation animation;
 
 	public Bonus3D(GameLevel level, Bonus bonus, Image symbolImage, Image pointsImage) {
+		requireNonNull(level);
+		requireNonNull(bonus);
+		requireNonNull(symbolImage);
+		requireNonNull(pointsImage);
+
 		this.level = level;
-		shape = new Box(TS, TS, TS);
 		this.bonus = bonus;
 		this.symbolImage = symbolImage;
 		this.pointsImage = pointsImage;
+		this.shape = new Box(TS, TS, TS);
 	}
 
 	public Node getRoot() {
@@ -74,20 +80,9 @@ public class Bonus3D {
 	}
 
 	public void setPosition(Vector2f position) {
-		shape.setTranslateX(position.x() + HTS);
-		shape.setTranslateY(position.y() + HTS);
+		shape.setTranslateX(position.x());
+		shape.setTranslateY(position.y());
 		shape.setTranslateZ(-HTS);
-	}
-
-	public void update() {
-		setPosition(bonus.entity().position());
-		boolean invisible = bonus.state() == Bonus.STATE_INACTIVE || outsideWorld();
-		shape.setVisible(!invisible);
-	}
-
-	private boolean outsideWorld() {
-		double centerX = bonus.entity().position().x() + HTS;
-		return centerX < HTS || centerX > level.world().numCols() * TS - HTS;
 	}
 
 	public void showSymbol() {
@@ -110,6 +105,17 @@ public class Bonus3D {
 		shape.setRotationAxis(Rotate.X_AXIS);
 		shape.setRotate(0);
 		shape.setWidth(1.8 * TS);
+	}
+
+	public void update() {
+		setPosition(bonus.entity().position().plus(HTS, HTS));
+		boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld();
+		shape.setVisible(visible);
+	}
+
+	private boolean outsideWorld() {
+		double x = bonus.entity().center().x();
+		return x < HTS || x > level.world().numCols() * TS - HTS;
 	}
 
 	private void setTexture(Image texture) {

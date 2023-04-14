@@ -26,9 +26,6 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
 import static java.util.Objects.requireNonNull;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.world.World;
@@ -66,8 +63,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class Ghost3D {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final Duration BRAKE_DURATION = Duration.seconds(0.4);
 
