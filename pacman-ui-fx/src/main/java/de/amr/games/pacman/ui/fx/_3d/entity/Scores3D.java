@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static java.util.Objects.requireNonNull;
 
 import de.amr.games.pacman.model.common.GameLevel;
 import javafx.scene.Group;
@@ -51,6 +52,8 @@ public class Scores3D {
 	private boolean pointsDisplayed = true;
 
 	public Scores3D(Font font) {
+		requireNonNull(font);
+
 		this.font = font;
 		txtScoreTitle = new Text("SCORE");
 		txtScore = new Text();
@@ -76,6 +79,8 @@ public class Scores3D {
 	}
 
 	public void setShowText(Color color, String text) {
+		requireNonNull(color);
+
 		txtScore.setFill(color);
 		txtScore.setText(text);
 		pointsDisplayed = false;
@@ -86,6 +91,8 @@ public class Scores3D {
 	}
 
 	public void update(GameLevel level) {
+		requireNonNull(level);
+
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
 		if (pointsDisplayed) {
