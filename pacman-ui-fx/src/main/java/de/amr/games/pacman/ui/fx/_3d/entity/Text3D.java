@@ -24,9 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static java.util.Objects.requireNonNull;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -78,7 +81,7 @@ public class Text3D {
 		material.setDiffuseMap(image);
 		material.setBumpMap(image);
 		box.setMaterial(material);
-		LOG.info("New image produced");
+		LOG.trace("New image produced");
 	}
 
 	public Node getRoot() {
@@ -92,6 +95,8 @@ public class Text3D {
 	}
 
 	public void rotate(Point3D axis, double angle) {
+		requireNonNull(axis);
+
 		box.setRotationAxis(axis);
 		box.setRotate(angle);
 	}
@@ -106,6 +111,8 @@ public class Text3D {
 	}
 
 	public void setQuality(double quality) {
+		Ufx.requirePositive(quality, "Text3D quality must be positive but is %f");
+
 		if (quality == this.quality) {
 			return;
 		}
@@ -114,6 +121,8 @@ public class Text3D {
 	}
 
 	public void setFont(Font font) {
+		requireNonNull(font);
+
 		if (font.equals(this.font)) {
 			return;
 		}
@@ -121,15 +130,19 @@ public class Text3D {
 		updateImage();
 	}
 
-	public void setBgColor(Color bgColor) {
-		if (bgColor.equals(this.bgColor)) {
+	public void setBgColor(Color color) {
+		requireNonNull(color);
+
+		if (color.equals(this.bgColor)) {
 			return;
 		}
-		this.bgColor = bgColor;
+		this.bgColor = color;
 		updateImage();
 	}
 
 	public void setTextColor(Color color) {
+		requireNonNull(color);
+
 		if (color.equals(this.textColor)) {
 			return;
 		}
@@ -138,6 +151,9 @@ public class Text3D {
 	}
 
 	public void setText(String text) {
+		if (text == null) {
+			text = "";
+		}
 		if (text.equals(this.text)) {
 			return;
 		}
