@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
+import static java.util.Objects.requireNonNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
@@ -49,19 +51,33 @@ import javafx.scene.transform.Scale;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene2D extends GameScene {
+public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static final double ASPECT_RATIO = (double) ArcadeWorld.SIZE_PX.x() / ArcadeWorld.SIZE_PX.y();
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
+	protected final GameSceneContext context;
+	protected final SubScene fxSubScene;
 	protected final Canvas canvas = new Canvas();
 
 	protected GameScene2D(GameController gameController) {
-		super(gameController);
+		requireNonNull(gameController);
+
+		context = new GameSceneContext(gameController);
 		fxSubScene = new SubScene(new StackPane(canvas), ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+	}
+
+	@Override
+	public GameSceneContext context() {
+		return context;
+	}
+
+	@Override
+	public SubScene fxSubScene() {
+		return fxSubScene;
 	}
 
 	@Override

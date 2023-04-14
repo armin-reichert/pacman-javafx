@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene;
 
-import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEventListener;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -33,99 +32,96 @@ import javafx.scene.SubScene;
  * 
  * @author Armin Reichert
  */
-public abstract class GameScene implements GameEventListener {
+public interface GameScene extends GameEventListener {
 
-	protected final GameSceneContext context;
-	protected SubScene fxSubScene;
-
-	protected GameScene(GameController gameController) {
-		context = new GameSceneContext(gameController);
-	}
+//	protected final GameSceneContext context;
+//	protected SubScene fxSubScene;
+//
+//	protected GameScene(GameController gameController) {
+//		requireNonNull(gameController);
+//		context = new GameSceneContext(gameController);
+//	}
 
 	/**
 	 * @return the scene context (game controller, game model, game level, rendering, sounds).
 	 */
-	public GameSceneContext context() {
-		return context;
-	}
+	GameSceneContext context();
 
 	/**
 	 * Called when the scene becomes the current one.
 	 */
-	public void init() {
+	default void init() {
 		// empty default
 	}
 
 	/**
 	 * Called when the scene needs to be updated.
 	 */
-	public abstract void update();
+	void update();
 
 	/**
 	 * Called when the scene needs to be rendered.
 	 */
-	public void render() {
+	default void render() {
 		// empty default
 	}
 
 	/**
 	 * Called when the scene ends and gets replaced by another scene.
 	 */
-	public void end() {
+	default void end() {
 		// empty default
 	}
 
 	/**
 	 * @return the JavaFX subscene associated with this game scene
 	 */
-	public SubScene fxSubScene() {
-		return fxSubScene;
-	}
+	SubScene fxSubScene();
 
 	/**
 	 * @return if this is a scene with 3D content
 	 */
-	public abstract boolean is3D();
+	boolean is3D();
 
 	/**
 	 * Called when this game scene is embedded (displayed) inside its parent FX scene.
 	 * 
 	 * @param parentScene the JavaFX parent scene
 	 */
-	public abstract void onEmbedIntoParentScene(Scene parentScene);
+	void onEmbedIntoParentScene(Scene parentScene);
 
 	/**
 	 * Called when the size of the parent of this game scene changes.
 	 * 
 	 * @param parentScene the JavaFX parent scene
 	 */
-	public abstract void onParentSceneResize(Scene parentScene);
+	void onParentSceneResize(Scene parentScene);
 
 	/**
 	 * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
 	 */
-	public void onSceneVariantSwitch() {
+	default void onSceneVariantSwitch() {
 		// empty default
 	}
 
 	/**
 	 * Handles keyboard input.
 	 */
-	public void handleKeyboardInput() {
+	default void handleKeyboardInput() {
 		// empty default
 	}
 
 	/**
 	 * "Locks" the current game state by setting an indefinite timer duration.
 	 */
-	public void lockGameState() {
-		context.state().timer().resetIndefinitely();
+	default void lockGameState() {
+		context().state().timer().resetIndefinitely();
 	}
 
 	/**
 	 * "Unlocks" the current game state by forcing the timer to expire.
 	 */
-	public void unlockGameState() {
-		context.state().timer().expire();
+	default void unlockGameState() {
+		context().state().timer().expire();
 	}
 }

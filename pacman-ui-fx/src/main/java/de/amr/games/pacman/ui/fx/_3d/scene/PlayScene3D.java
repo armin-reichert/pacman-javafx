@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.ui.fx.util.Ufx.afterSeconds;
+import static java.util.Objects.requireNonNull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -58,6 +58,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -81,7 +82,7 @@ import javafx.scene.transform.Translate;
  * 
  * @author Armin Reichert
  */
-public class PlayScene3D extends GameScene {
+public class PlayScene3D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
@@ -93,6 +94,9 @@ public class PlayScene3D extends GameScene {
 		}
 	};
 
+	private final GameSceneContext context;
+	private final SubScene fxSubScene;
+
 	private final Group root = new Group();
 	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
 	private final Text3D infoText3D = new Text3D();
@@ -100,7 +104,9 @@ public class PlayScene3D extends GameScene {
 	private CameraController currentCamController;
 
 	public PlayScene3D(GameController gameController) {
-		super(gameController);
+		requireNonNull(gameController);
+
+		context = new GameSceneContext(gameController);
 
 		camControllerMap.put(Perspective.DRONE, new CamDrone());
 		camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
@@ -119,6 +125,16 @@ public class PlayScene3D extends GameScene {
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
+	}
+
+	@Override
+	public GameSceneContext context() {
+		return context;
+	}
+
+	@Override
+	public SubScene fxSubScene() {
+		return fxSubScene;
 	}
 
 	@Override
@@ -332,7 +348,7 @@ public class PlayScene3D extends GameScene {
 				lockGameState();
 				replaceGameLevel3D(level);
 				updateCamera();
-				afterSeconds(3, this::unlockGameState).play();
+				Ufx.afterSeconds(3, this::unlockGameState).play();
 			});
 		}
 
@@ -345,8 +361,8 @@ public class PlayScene3D extends GameScene {
 				var message = AppResources.pickLevelCompleteMessage(level.number());
 				lockStateAndPlayAfterSeconds(1.0, //
 						createLevelCompleteAnimation(level), //
-						afterSeconds(0.5, level.pac()::hide), //
-						afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)));
+						Ufx.afterSeconds(0.5, level.pac()::hide), //
+						Ufx.afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)));
 			});
 		}
 
