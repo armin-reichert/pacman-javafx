@@ -68,10 +68,10 @@ public class SoundHandler {
 			{ SoundClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
 			{ SoundClipID.PACMAN_MUNCH, "sound/pacman/doublemunch.wav", 1.0 }, //
 			{ SoundClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
-			{ SoundClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.5 }, //
-			{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.5 }, //
-			{ SoundClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.5 }, //
-			{ SoundClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.5 }, //
+			{ SoundClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.4 }, //
+			{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.4 }, //
+			{ SoundClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.4 }, //
+			{ SoundClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.4 }, //
 	};
 
 	private static final SoundPlayer SOUNDS_MS_PACMAN = new SoundPlayer(MS_PACMAN_SOUND_DATA);
