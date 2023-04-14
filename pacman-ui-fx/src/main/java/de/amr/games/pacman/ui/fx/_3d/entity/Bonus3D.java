@@ -28,13 +28,13 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import static java.util.Objects.requireNonNull;
 
 import de.amr.games.pacman.lib.math.Vector2f;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.model.mspacman.MovingBonus;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -56,9 +56,12 @@ public class Bonus3D {
 	private final Image symbolImage;
 	private final Image pointsImage;
 	private final Box shape;
-	private Animation animation;
 
-	public Bonus3D(GameLevel level, Bonus bonus, Image symbolImage, Image pointsImage) {
+	private RotateTransition eatenAnimation;
+	private RotateTransition edibleAnimation;
+	private boolean moving;
+
+	public Bonus3D(GameLevel level, Bonus bonus, Image symbolImage, Image pointsImage, boolean moving) {
 		requireNonNull(level);
 		requireNonNull(bonus);
 		requireNonNull(symbolImage);
@@ -69,6 +72,77 @@ public class Bonus3D {
 		this.symbolImage = symbolImage;
 		this.pointsImage = pointsImage;
 		this.shape = new Box(TS, TS, TS);
+		this.moving = moving;
+
+		edibleAnimation = new RotateTransition(Duration.seconds(1), shape);
+		edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
+		edibleAnimation.setFromAngle(0);
+		edibleAnimation.setToAngle(360);
+		edibleAnimation.setInterpolator(Interpolator.LINEAR);
+		edibleAnimation.setCycleCount(Animation.INDEFINITE);
+
+		eatenAnimation = new RotateTransition(Duration.seconds(1), shape);
+		eatenAnimation.setAxis(Rotate.X_AXIS);
+		eatenAnimation.setFromAngle(0);
+		eatenAnimation.setToAngle(360);
+		eatenAnimation.setInterpolator(Interpolator.LINEAR);
+		eatenAnimation.setRate(2);
+	}
+
+	public void update() {
+		setPosition(bonus.entity().center());
+		boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld();
+		shape.setVisible(visible);
+		updateEdibleAnimation();
+	}
+
+	private void updateEdibleAnimation() {
+		if (moving) {
+			var movingBonus = (MovingBonus) bonus;
+			var axis = movingBonus.entity().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+			if (!axis.equals(edibleAnimation.getAxis())) {
+				edibleAnimation.stop();
+				edibleAnimation.setAxis(axis);
+				if (movingBonus.entity().moveDir() == Direction.UP || movingBonus.entity().moveDir() == Direction.RIGHT) {
+					edibleAnimation.setRate(-1);
+				} else {
+					edibleAnimation.setRate(1);
+				}
+				edibleAnimation.play();
+			}
+		} else if (edibleAnimation.getAxis() != Rotate.X_AXIS) {
+			edibleAnimation.stop();
+			edibleAnimation.setAxis(Rotate.X_AXIS);
+			edibleAnimation.play();
+		}
+	}
+
+	public void showEdible() {
+		var imageView = new ImageView(symbolImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitWidth(TS);
+		showImage(imageView.getImage());
+		shape.setWidth(TS);
+		updateEdibleAnimation();
+		edibleAnimation.playFromStart();
+	}
+
+	public void showEaten() {
+		var imageView = new ImageView(pointsImage);
+		imageView.setPreserveRatio(true);
+		imageView.setFitWidth(1.8 * TS);
+		showImage(imageView.getImage());
+		edibleAnimation.stop();
+		eatenAnimation.playFromStart();
+		shape.setRotationAxis(Rotate.X_AXIS);
+		shape.setRotate(0);
+		shape.setWidth(1.8 * TS);
+	}
+
+	private void showImage(Image texture) {
+		var material = new PhongMaterial(Color.WHITE);
+		material.setDiffuseMap(texture);
+		shape.setMaterial(material);
 	}
 
 	public Node getRoot() {
@@ -85,57 +159,8 @@ public class Bonus3D {
 		shape.setTranslateZ(-HTS);
 	}
 
-	public void showSymbol() {
-		var imageView = new ImageView(symbolImage);
-		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(TS);
-		setTexture(imageView.getImage());
-		shape.setWidth(TS);
-		rotate(1.0, 1.0, Animation.INDEFINITE, 1);
-	}
-
-	public void showPoints() {
-		var imageView = new ImageView(pointsImage);
-		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(1.8 * TS);
-		setTexture(imageView.getImage());
-		if (animation != null) {
-			animation.stop();
-		}
-		shape.setRotationAxis(Rotate.X_AXIS);
-		shape.setRotate(0);
-		shape.setWidth(1.8 * TS);
-	}
-
-	public void update() {
-		setPosition(bonus.entity().position().plus(HTS, HTS));
-		boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld();
-		shape.setVisible(visible);
-	}
-
 	private boolean outsideWorld() {
 		double x = bonus.entity().center().x();
 		return x < HTS || x > level.world().numCols() * TS - HTS;
-	}
-
-	private void setTexture(Image texture) {
-		var skin = new PhongMaterial(Color.WHITE);
-		skin.setDiffuseMap(texture);
-		shape.setMaterial(skin);
-	}
-
-	private void rotate(double delaySeconds, double oneRotationSeconds, int cycleCount, int rate) {
-		var rotation = new RotateTransition(Duration.seconds(oneRotationSeconds), shape);
-		rotation.setAxis(Rotate.X_AXIS);
-		rotation.setFromAngle(0);
-		rotation.setToAngle(360);
-		rotation.setInterpolator(Interpolator.LINEAR);
-		rotation.setCycleCount(cycleCount);
-		rotation.setRate(rate);
-		if (animation != null) {
-			animation.stop();
-		}
-		animation = new SequentialTransition(Ufx.pause(delaySeconds), rotation);
-		animation.play();
 	}
 }

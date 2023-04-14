@@ -268,12 +268,12 @@ public class PlayScene3D extends GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		level3D.bonus3D().showSymbol();
+		level3D.bonus3D().showEdible();
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		level3D.bonus3D().showPoints();
+		level3D.bonus3D().showEaten();
 	}
 
 	@Override

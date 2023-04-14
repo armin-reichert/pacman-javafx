@@ -167,14 +167,14 @@ public class Pac3D {
 		endNodding();
 		updatePosition();
 		turnToMoveDirection();
-		updateVisbility();
+		updateVisibility();
 		updateLight();
 	}
 
 	public void update() {
 		updatePosition();
 		turnToMoveDirection();
-		updateVisbility();
+		updateVisibility();
 		updateAnimations();
 		updateLight();
 	}
@@ -196,7 +196,7 @@ public class Pac3D {
 		}
 	}
 
-	private void updateVisbility() {
+	private void updateVisibility() {
 		root.setVisible(pac.isVisible() && !outsideWorld());
 	}
 

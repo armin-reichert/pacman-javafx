@@ -90,7 +90,11 @@ public class GameLevel3D {
 
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
 
-		bonus3D = createBonus3D(level.bonus(), r2D);
+		bonus3D = switch (gameVariant) {
+		case MS_PACMAN -> createBonus3D(level.bonus(), r2D, true);
+		case PACMAN -> createBonus3D(level.bonus(), r2D, false);
+		default -> throw new IllegalGameVariantException(gameVariant);
+		};
 
 		levelCounter3D = createLevelCounter3D(r2D);
 
@@ -157,11 +161,11 @@ public class GameLevel3D {
 		return new Ghost3D(level, ghost, colors, ghostModel3D(), 8.5);
 	}
 
-	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D) {
+	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
 		if (r2D instanceof SpritesheetRenderer sr) {
 			var symbolImage = sr.image(sr.bonusSymbolRegion(bonus.symbol()));
 			var pointsImage = sr.image(sr.bonusValueRegion(bonus.symbol()));
-			return new Bonus3D(level, bonus, symbolImage, pointsImage);
+			return new Bonus3D(level, bonus, symbolImage, pointsImage, moving);
 		}
 		throw new UnsupportedOperationException();
 	}
