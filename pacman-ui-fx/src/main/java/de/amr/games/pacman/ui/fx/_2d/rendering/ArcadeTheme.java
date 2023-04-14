@@ -24,8 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.ui.fx._3d.entity.MsPacManColoring;
-import de.amr.games.pacman.ui.fx._3d.entity.PacManColoring;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

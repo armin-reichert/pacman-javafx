@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._3d.entity;
+package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
  */
-public record PacManColoring(Color headColor, Color palateColor, Color eyesColor) {
+public record MsPacManColoring(Color headColor, Color palateColor, Color eyesColor, Color hairBowColor,
+		Color hairBowPearlsColor) {
 }

@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
