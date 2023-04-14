@@ -25,10 +25,10 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -119,19 +119,25 @@ public class World3D {
 	private final FoodOscillation foodOscillation;
 
 	public World3D(World world, MazeColoring mazeColoring, Model3D pelletModel3D) {
-		this.world = Objects.requireNonNull(world);
-		this.mazeColoring = Objects.requireNonNull(mazeColoring);
-		this.pelletModel3D = Objects.requireNonNull(pelletModel3D);
+		requireNonNull(world);
+		requireNonNull(mazeColoring);
+		requireNonNull(pelletModel3D);
+
+		this.world = world;
+		this.mazeColoring = mazeColoring;
+		this.pelletModel3D = pelletModel3D;
 		this.houseLight = createGhostHouseLight(world.ghostHouse());
+
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
+
 		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
 		world.tilesContainingFood().forEach(tile -> foodGroup.getChildren().add(createFood(tile, foodMaterial).getRoot()));
 		foodOscillation = new FoodOscillation(foodGroup);
 		root.getChildren().addAll(floorGroup, wallsGroup, doorWingsGroup, houseLight, foodGroup, particlesGroup);
 	}
 
-	private static PointLight createGhostHouseLight(GhostHouse house) {
+	private PointLight createGhostHouseLight(GhostHouse house) {
 		var light = new PointLight();
 		light.setColor(Color.GHOSTWHITE);
 		light.setMaxRange(3 * TS);
@@ -380,10 +386,13 @@ public class World3D {
 
 	// Food
 
-	public Eatable3D createFood(Vector2i tile, PhongMaterial foodMaterial) {
+	public Eatable3D createFood(Vector2i tile, PhongMaterial material) {
+		requireNonNull(tile);
+		requireNonNull(material);
+
 		return world.isEnergizerTile(tile)//
-				? createEnergizer3D(tile, foodMaterial)//
-				: createNormalPellet3D(tile, foodMaterial);
+				? createEnergizer3D(tile, material)//
+				: createNormalPellet3D(tile, material);
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
@@ -414,6 +423,8 @@ public class World3D {
 	}
 
 	public Optional<Eatable3D> eatableAt(Vector2i tile) {
+		requireNonNull(tile);
+
 		return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 
