@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static java.util.Objects.requireNonNull;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import javafx.beans.property.DoubleProperty;
@@ -40,24 +41,28 @@ import javafx.scene.shape.Box;
  */
 public class DoorWing3D {
 
-	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(HTS);
-	private final Box root = new Box();
+	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(this, "doorHeight", HTS);
+
+	private final Box shape = new Box();
 
 	public DoorWing3D(Vector2i tile, Color color) {
-		root.setWidth(TS - 1.0);
-		root.setHeight(1.0); // thickness (y-direction)
-		root.depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)
-		root.setMaterial(new PhongMaterial(color));
-		root.setTranslateX((double) tile.x() * TS + HTS);
-		root.setTranslateY((double) tile.y() * TS + HTS);
-		root.translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
+		requireNonNull(tile);
+		requireNonNull(color);
+
+		shape.setWidth(TS - 1.0);
+		shape.setHeight(1.0); // thickness (y-direction)
+		shape.depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)
+		shape.setMaterial(new PhongMaterial(color));
+		shape.setTranslateX((double) tile.x() * TS + HTS);
+		shape.setTranslateY((double) tile.y() * TS + HTS);
+		shape.translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
 	}
 
 	public Box getRoot() {
-		return root;
+		return shape;
 	}
 
 	public void setOpen(boolean open) {
-		root.setVisible(!open);
+		shape.setVisible(!open); // TODO animate?
 	}
 }
