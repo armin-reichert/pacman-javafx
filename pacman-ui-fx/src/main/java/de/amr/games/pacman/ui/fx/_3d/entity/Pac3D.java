@@ -154,7 +154,7 @@ public class Pac3D {
 		noddingAnimation.stop();
 		createNoddingAnimation();
 		noddingAnimation.play();
-		LOG.info("I'm so excited, I just can hide it!");
+		LOG.info("I'm so excited, and I just can't hide it!");
 	}
 
 	public void onLosesPower() {
