@@ -23,7 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import java.util.Objects;
+import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
+import static java.util.Objects.requireNonNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -92,10 +93,14 @@ public class Ghost3D {
 	private Look currentLook;
 
 	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors, Model3D model3D, double size) {
-		this.level = Objects.requireNonNull(level, "Game level must not be null");
-		this.ghost = Objects.requireNonNull(ghost, "Ghost must not be null");
-		Objects.requireNonNull(colors);
-		Objects.requireNonNull(model3D);
+		requireNonNull(level);
+		requireNonNull(ghost);
+		requireNonNull(colors);
+		requireNonNull(model3D);
+		requirePositive(size, "Ghost3D size must be positive but is %f");
+
+		this.level = level;
+		this.ghost = ghost;
 
 		root.getChildren().addAll(coloredGhostGroup, numberGroup);
 

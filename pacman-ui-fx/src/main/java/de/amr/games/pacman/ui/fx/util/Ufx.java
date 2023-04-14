@@ -50,6 +50,17 @@ public class Ufx {
 	private Ufx() {
 	}
 
+	public static double requirePositive(double value, String messageFormat) {
+		if (value < 0) {
+			throw new IllegalArgumentException(messageFormat.formatted(value));
+		}
+		return value;
+	}
+
+	public static double requirePositive(double value) {
+		return requirePositive(value, "%f must be positive");
+	}
+
 	public static void toggle(BooleanProperty booleanProperty) {
 		booleanProperty.set(!booleanProperty.get());
 	}
