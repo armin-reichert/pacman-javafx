@@ -31,7 +31,6 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -211,16 +210,7 @@ public class Pac3D {
 		return gayMovement ? Rotate.Z_AXIS : pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 	}
 
-	public Animation createDyingAnimation() {
-		var variant = level.game().variant();
-		return switch (variant) {
-		case MS_PACMAN -> createMsPacManDyingAnimation();
-		case PACMAN -> createPacManDyingAnimation();
-		default -> throw new IllegalGameVariantException(variant);
-		};
-	}
-
-	private Animation createPacManDyingAnimation() {
+	public Animation createPacManDyingAnimation() {
 		var numSpins = 15;
 
 		var spinning = new RotateTransition(COLLAPSING_DURATION.divide(numSpins), root);
@@ -244,7 +234,7 @@ public class Pac3D {
 		return animation;
 	}
 
-	private Animation createMsPacManDyingAnimation() {
+	public Animation createMsPacManDyingAnimation() {
 		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
 
 		var spin = new RotateTransition(Duration.seconds(0.25), root);
