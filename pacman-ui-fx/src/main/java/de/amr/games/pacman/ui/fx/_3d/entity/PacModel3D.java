@@ -23,6 +23,9 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
+import static java.util.Objects.requireNonNull;
+
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
@@ -59,6 +62,9 @@ public class PacModel3D extends Model3D {
 	 * @return root node of Pac-Man parts
 	 */
 	public Node createPacManNode(double size, PacManColoring coloring) {
+		requirePositive(size, "Pac-Man 3D shape size must be positive but is %f");
+		requireNonNull(coloring);
+
 		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()));
 	}
 
@@ -68,11 +74,17 @@ public class PacModel3D extends Model3D {
 	 * @return root node of Ms. Pac-Man parts
 	 */
 	public Node createMsPacManNode(double size, MsPacManColoring coloring) {
+		requirePositive(size, "Ms. Pac-Man 3D shape size must be positive but is %f");
+		requireNonNull(coloring);
+
 		return new Group(createShape(size, coloring.headColor(), coloring.eyesColor(), coloring.palateColor()),
 				createBeautyAccessories(size, coloring.headColor(), coloring.hairBowColor(), coloring.hairBowPearlsColor()));
 	}
 
 	public static MeshView meshView(Node pacNode, String id) {
+		requireNonNull(pacNode);
+		requireNonNull(id);
+
 		var cssID = cssID(id);
 		var node = pacNode.lookup("#" + cssID);
 		if (node == null) {
