@@ -250,7 +250,7 @@ public class Pac3D {
 		var falling = new TranslateTransition(COLLAPSING_DURATION, root);
 		falling.setToZ(4);
 
-		var animation = new SequentialTransition(Ufx.pause(1), new ParallelTransition(spinning, shrinking, falling),
+		var animation = new SequentialTransition(Ufx.pause(0.4), new ParallelTransition(spinning, shrinking, falling),
 				Ufx.pause(0.25));
 
 		animation.setOnFinished(e -> root.setTranslateZ(0));
