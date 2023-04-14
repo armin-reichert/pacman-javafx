@@ -52,6 +52,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -83,11 +85,13 @@ public class Pac3D {
 		}
 	};
 
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
 	private final GameLevel level;
 	private final Pac pac;
+	private final Node pacNode;
 	private final Group root = new Group();
 	private final Color headColor;
 	private final PointLight light;
@@ -103,10 +107,14 @@ public class Pac3D {
 		requireNonNull(headColor);
 		this.level = level;
 		this.pac = pac;
+		this.pacNode = pacNode;
 		this.headColor = headColor;
 		this.gayMovement = gayMovement;
 		this.light = createLight();
 		pacNode.getTransforms().setAll(position, orientation);
+		head().drawModeProperty().bind(Env.d3_drawModePy);
+		eyes().drawModeProperty().bind(Env.d3_drawModePy);
+		palate().drawModeProperty().bind(Env.d3_drawModePy);
 		root.getChildren().add(pacNode);
 		noddingPy.bind(Env.d3_pacNoddingPy);
 	}
@@ -128,6 +136,18 @@ public class Pac3D {
 
 	public Node getRoot() {
 		return root;
+	}
+
+	public MeshView head() {
+		return PacModel3D.meshView(pacNode, PacModel3D.MESH_ID_HEAD);
+	}
+
+	public MeshView palate() {
+		return PacModel3D.meshView(pacNode, PacModel3D.MESH_ID_PALATE);
+	}
+
+	public MeshView eyes() {
+		return PacModel3D.meshView(pacNode, PacModel3D.MESH_ID_EYES);
 	}
 
 	public Translate getPosition() {
