@@ -181,7 +181,7 @@ public class PacManTestRenderer implements Rendering2D {
 			drawGhostBody(g, ghost, color);
 		}
 		default -> {
-			drawGhostBody(g, ghost, ghostColors(ghost.id()).normalDress());
+			drawGhostBody(g, ghost, ghostColors(ghost.id()).dress());
 		}
 		}
 	}
@@ -213,7 +213,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int id, int x, int y) {
-		var color = ghostColors(id).normalDress();
+		var color = ghostColors(id).dress();
 		g.setFill(color);
 		g.fillRect(x - 2, y - 4, 12, 16);
 	}

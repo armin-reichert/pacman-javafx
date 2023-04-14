@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public record GhostColoring(//
-		Color normalDress, Color normalEyeBalls, Color normalPupils, //
-		Color frightenedDress, Color frightenedEyeBalls, Color frightendPupils, //
-		Color flashingDress, Color flashingEyeBalls, Color flashingPupils) {
+		Color dress, Color eyeballs, Color pupils, //
+		Color dressFrightened, Color eyeballsFrightened, Color pupilsFrightened, //
+		Color dressFlashing, Color eyeballsFlashing, Color pupilsFlashing) {
 }

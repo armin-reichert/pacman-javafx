@@ -23,7 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import java.util.Objects;
+import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
+import static java.util.Objects.requireNonNull;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
@@ -49,44 +50,49 @@ public class ColoredGhost3D {
 	private final Group root;
 	private final Group eyesGroup;
 	private final Group dressGroup;
-	private final Shape3D dress;
-	private final Shape3D eyeBalls;
-	private final Shape3D pupils;
+	private final Shape3D dressShape;
+	private final Shape3D eyeballsShape;
+	private final Shape3D pupilsShape;
 
 	private final GhostColoring coloring;
 	private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
-	private final ObjectProperty<Color> eyeBallsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", Color.WHITE);
+	private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", Color.WHITE);
 	private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
-	private ParallelTransition flashing;
-	private ColorFlashing dressFlashing;
-	private ColorFlashing pupilsFlashing;
+	private ParallelTransition flashingAnimation;
+	private ColorFlashing dressFlashingAnimation;
+	private ColorFlashing pupilsFlashingAnimation;
 
 	public ColoredGhost3D(Model3D model3D, GhostColoring coloring, double size) {
-		this.coloring = Objects.requireNonNull(coloring, "Ghost colors must not be null");
+		requireNonNull(model3D);
+		requireNonNull(coloring);
+		requirePositive(size, "ColoredGhost3D size must be positive but is %f");
 
-		dress = new MeshView(model3D.mesh(AppResources.MESH_ID_GHOST_DRESS));
-		dress.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		dressColorPy.set(coloring.normalDress());
+		this.coloring = coloring;
 
-		eyeBalls = new MeshView(model3D.mesh(AppResources.MESH_ID_GHOST_EYE_BALLS));
-		eyeBalls.setMaterial(Ufx.createColorBoundMaterial(eyeBallsColorPy));
-		eyeBallsColorPy.set(coloring.normalEyeBalls());
+		dressShape = new MeshView(model3D.mesh(AppResources.MESH_ID_GHOST_DRESS));
+		dressShape.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
+		dressColorPy.set(coloring.dress());
 
-		pupils = new MeshView(model3D.mesh(AppResources.MESH_ID_GHOST_PUPILS));
-		pupils.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
-		pupilsColorPy.set(coloring.normalPupils());
+		eyeballsShape = new MeshView(model3D.mesh(AppResources.MESH_ID_GHOST_EYEBALLS));
+		eyeballsShape.setMaterial(Ufx.createColorBoundMaterial(eyeballsColorPy));
+		eyeballsColorPy.set(coloring.eyeballs());
 
-		var centerTransform = Ufx.centerOverOrigin(dress);
-		dress.getTransforms().add(centerTransform);
+		pupilsShape = new MeshView(model3D.mesh(AppResources.MESH_ID_GHOST_PUPILS));
+		pupilsShape.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
+		pupilsColorPy.set(coloring.pupils());
 
-		dressGroup = new Group(dress);
+		var centerTransform = Ufx.centerOverOrigin(dressShape);
+		dressShape.getTransforms().add(centerTransform);
 
-		eyesGroup = new Group(pupils, eyeBalls);
+		dressGroup = new Group(dressShape);
+
+		eyesGroup = new Group(pupilsShape, eyeballsShape);
 		eyesGroup.getTransforms().add(centerTransform);
 
 		root = new Group(dressGroup, eyesGroup);
-		// TODO new obj importer has all meshes upside-down and backwards. Why?
+
+		// TODO check this: new obj importer has all meshes upside-down and backwards. Why?
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
@@ -105,72 +111,72 @@ public class ColoredGhost3D {
 		return dressGroup;
 	}
 
-	public Shape3D dress() {
-		return dress;
+	public Shape3D dressShape() {
+		return dressShape;
 	}
 
-	public Shape3D eyeBalls() {
-		return eyeBalls;
+	public Shape3D eyeballsShape() {
+		return eyeballsShape;
 	}
 
-	public Shape3D pupils() {
-		return pupils;
+	public Shape3D pupilsShape() {
+		return pupilsShape;
 	}
 
 	public void appearFlashing(int numFlashes, double durationSeconds) {
-		ensureFlashingPlaying(numFlashes, durationSeconds);
-		dressColorPy.bind(dressFlashing.colorPy);
-		eyeBallsColorPy.set(coloring.frightenedEyeBalls());
-		pupilsColorPy.bind(pupilsFlashing.colorPy);
-		dress.setVisible(true);
+		ensureFlashingAnimationIsPlaying(numFlashes, durationSeconds);
+		dressColorPy.bind(dressFlashingAnimation.colorPy);
+		eyeballsColorPy.set(coloring.eyeballsFrightened());
+		pupilsColorPy.bind(pupilsFlashingAnimation.colorPy);
+		dressShape.setVisible(true);
 	}
 
 	public void appearFrightened() {
 		dressColorPy.unbind();
-		dressColorPy.set(coloring.frightenedDress());
-		eyeBallsColorPy.set(coloring.frightenedEyeBalls());
+		dressColorPy.set(coloring.dressFrightened());
+		eyeballsColorPy.set(coloring.eyeballsFrightened());
 		pupilsColorPy.unbind();
-		pupilsColorPy.set(coloring.frightendPupils());
-		dress.setVisible(true);
-		ensureFlashingStopped();
+		pupilsColorPy.set(coloring.pupilsFrightened());
+		dressShape.setVisible(true);
+		ensureFlashingAnimationIsStopped();
 	}
 
 	public void appearNormal() {
 		dressColorPy.unbind();
-		dressColorPy.set(coloring.normalDress());
-		eyeBallsColorPy.set(coloring.normalEyeBalls());
+		dressColorPy.set(coloring.dress());
+		eyeballsColorPy.set(coloring.eyeballs());
 		pupilsColorPy.unbind();
-		pupilsColorPy.set(coloring.normalPupils());
-		dress.setVisible(true);
-		ensureFlashingStopped();
+		pupilsColorPy.set(coloring.pupils());
+		dressShape.setVisible(true);
+		ensureFlashingAnimationIsStopped();
 	}
 
 	public void appearEyesOnly() {
 		appearNormal();
-		dress.setVisible(false);
+		dressShape.setVisible(false);
 	}
 
-	private void createFlashing(int numFlashes, double durationSeconds) {
-		dressFlashing = new ColorFlashing(coloring.frightenedDress(), coloring.flashingDress(), durationSeconds,
+	private void createFlashingAnimation(int numFlashes, double durationSeconds) {
+		dressFlashingAnimation = new ColorFlashing(coloring.dressFrightened(), coloring.dressFlashing(), durationSeconds,
 				numFlashes);
-		pupilsFlashing = new ColorFlashing(coloring.frightendPupils(), coloring.flashingPupils(), durationSeconds,
+		pupilsFlashingAnimation = new ColorFlashing(coloring.pupilsFrightened(), coloring.pupilsFlashing(), durationSeconds,
 				numFlashes);
-		flashing = new ParallelTransition(dressFlashing, pupilsFlashing);
+		flashingAnimation = new ParallelTransition(dressFlashingAnimation, pupilsFlashingAnimation);
 	}
 
-	private void ensureFlashingPlaying(int numFlashes, double durationSeconds) {
-		if (flashing == null) {
-			createFlashing(numFlashes, durationSeconds);
+	private void ensureFlashingAnimationIsPlaying(int numFlashes, double durationSeconds) {
+		if (flashingAnimation == null) {
+			createFlashingAnimation(numFlashes, durationSeconds);
 		}
-		if (flashing.getStatus() != Status.RUNNING) {
-			flashing.playFromStart();
+		if (flashingAnimation.getStatus() != Status.RUNNING) {
+			flashingAnimation.playFromStart();
 		}
 	}
 
-	private void ensureFlashingStopped() {
-		if (flashing != null && flashing.getStatus() == Status.RUNNING) {
-			flashing.stop();
-			flashing = null;
+	private void ensureFlashingAnimationIsStopped() {
+		if (flashingAnimation != null && flashingAnimation.getStatus() == Status.RUNNING) {
+			flashingAnimation.stop();
+			flashingAnimation = null;
 		}
 	}
 }

@@ -100,9 +100,9 @@ public class Ghost3D {
 		root.getChildren().addAll(coloredGhostGroup, numberGroup);
 
 		coloredGhost3D = new ColoredGhost3D(model3D, colors, size);
-		coloredGhost3D.dress().drawModeProperty().bind(drawModePy);
-		coloredGhost3D.eyeBalls().drawModeProperty().bind(drawModePy);
-		coloredGhost3D.pupils().drawModeProperty().bind(drawModePy);
+		coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
+		coloredGhost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
+		coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);
 		coloredGhostGroup.getChildren().add(coloredGhost3D.getRoot());
 		coloredGhostGroup.getTransforms().addAll(position, orientation);
 

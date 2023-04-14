@@ -74,7 +74,7 @@ public class AppResources {
 	}
 
 	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-	public static final String MESH_ID_GHOST_EYE_BALLS = "Sphere.009_Sphere.036_white";
+	public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
 	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
 	private static Model3D pelletModel3D;
