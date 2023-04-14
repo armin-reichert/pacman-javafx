@@ -53,7 +53,7 @@ public class CamFollowingPlayer implements CameraController {
 
 	@Override
 	public void update(Camera cam, Pac3D pac3D) {
-		var position = pac3D.getPosition();
+		var position = pac3D.position();
 		cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speedX));
 		cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() + 100, speedY));
 	}

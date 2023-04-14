@@ -117,7 +117,7 @@ public class GameLevel3D {
 		root.getChildren().add(livesCounter3D.getRoot());
 		root.getChildren().add(bonus3D.getRoot());
 		root.getChildren().add(pac3D.getRoot());
-		root.getChildren().add(pac3D.getLight());
+		root.getChildren().add(pac3D.light());
 		root.getChildren().add(ghosts3D[0].getRoot());
 		root.getChildren().add(ghosts3D[1].getRoot());
 		root.getChildren().add(ghosts3D[2].getRoot());

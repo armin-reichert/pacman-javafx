@@ -184,11 +184,11 @@ public class Pac3D {
 		return PacModel3D.meshView(pacNode, PacModel3D.MESH_ID_EYES);
 	}
 
-	public Translate getPosition() {
+	public Translate position() {
 		return position;
 	}
 
-	public PointLight getLight() {
+	public PointLight light() {
 		return light;
 	}
 

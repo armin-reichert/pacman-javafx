@@ -52,7 +52,7 @@ public class CamNearPlayer implements CameraController {
 
 	@Override
 	public void update(Camera cam, Pac3D pac3D) {
-		var position = pac3D.getPosition();
+		var position = pac3D.position();
 		cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 110, speed));
 		cam.setTranslateY(lerp(cam.getTranslateY(), position.getY(), speed));
 	}
