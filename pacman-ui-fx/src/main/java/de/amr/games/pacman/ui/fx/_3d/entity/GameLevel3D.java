@@ -197,6 +197,8 @@ public class GameLevel3D {
 	}
 
 	public void eat(Eatable3D eatable3D) {
+		requireNonNull(eatable3D);
+
 		if (eatable3D instanceof Energizer3D energizer3D) {
 			energizer3D.stopPumping();
 		}
