@@ -65,12 +65,11 @@ public abstract class Squirting extends Transition {
 	}
 
 	public static class Drop extends Sphere {
-
 		private float vx;
 		private float vy;
 		private float vz;
 
-		public Drop(double radius, PhongMaterial material, double x, double y, double z) {
+		private Drop(double radius, PhongMaterial material, double x, double y, double z) {
 			super(radius);
 			setMaterial(material);
 			setTranslateX(x);
@@ -79,13 +78,13 @@ public abstract class Squirting extends Transition {
 			setVisible(false);
 		}
 
-		public void setVelocity(float x, float y, float z) {
+		private void setVelocity(float x, float y, float z) {
 			vx = x;
 			vy = y;
 			vz = z;
 		}
 
-		public void move() {
+		private void move() {
 			setTranslateX(getTranslateX() + vx);
 			setTranslateY(getTranslateY() + vy);
 			setTranslateZ(getTranslateZ() + vz);
@@ -107,6 +106,8 @@ public abstract class Squirting extends Transition {
 		parent.getChildren().add(particleGroup);
 	}
 
+	protected abstract boolean reachesEndPosition(Drop drop);
+
 	private void createDrops() {
 		for (int i = 0; i < randomInt(MIN_DROP_COUNT, MAX_DROP_COUNT); ++i) {
 			var drop = new Drop(randomFloat(MIN_DROP_RADIUS, MAX_DROP_RADIUS), dropMaterial, origin.getX(), origin.getY(),
@@ -119,8 +120,6 @@ public abstract class Squirting extends Transition {
 		}
 		LOG.info("%d drops created", particleGroup.getChildren().size());
 	}
-
-	public abstract boolean reachesEndPosition(Drop drop);
 
 	@Override
 	protected void interpolate(double t) {

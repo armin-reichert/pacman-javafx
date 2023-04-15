@@ -411,7 +411,7 @@ public class World3D {
 				ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25))) {
 
 			@Override
-			public boolean reachesEndPosition(Drop drop) {
+			protected boolean reachesEndPosition(Drop drop) {
 				return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
 			}
 		};
