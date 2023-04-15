@@ -406,9 +406,10 @@ public class World3D {
 		energizer3D.getRoot().setMaterial(material);
 		energizer3D.placeAtTile(tile);
 		var origin = energizer3D.getRoot();
+		var dropColor = mazeColoring.foodColor().desaturate();
 		var squirting = new Squirting(root, //
 				origin.getTranslateX(), origin.getTranslateY(), origin.getTranslateZ(), //
-				ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25))) {
+				ResourceMgr.coloredMaterial(dropColor)) {
 
 			@Override
 			protected boolean reachesEndPosition(Drop drop) {
