@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import javafx.scene.media.AudioClip;
 
@@ -77,17 +78,17 @@ public class SoundHandler {
 	private static final SoundPlayer SOUNDS_MS_PACMAN = new SoundPlayer(MS_PACMAN_SOUND_DATA);
 	private static final SoundPlayer SOUNDS_PACMAN = new SoundPlayer(PACMAN_SOUND_DATA);
 
-	public static SoundPlayer sounds(GameModel game) {
-		return switch (game.variant()) {
+	public static SoundPlayer sounds(GameVariant variant) {
+		return switch (variant) {
 		case MS_PACMAN -> SOUNDS_MS_PACMAN;
 		case PACMAN -> SOUNDS_PACMAN;
-		default -> throw new IllegalStateException();
+		default -> throw new IllegalGameVariantException(variant);
 		};
 	}
 
 	public void onSoundEvent(SoundEvent event) {
 		LOG.trace("Handle sound event: %s", event);
-		var sounds = sounds(event.game);
+		var sounds = sounds(event.game.variant());
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN -> sounds.play(SoundClipID.BONUS_EATEN);
 		case GameModel.SE_CREDIT_ADDED -> sounds.play(SoundClipID.CREDIT);

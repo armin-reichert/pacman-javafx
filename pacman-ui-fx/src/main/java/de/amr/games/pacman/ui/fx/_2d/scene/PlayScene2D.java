@@ -42,7 +42,6 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -137,8 +136,7 @@ public class PlayScene2D extends GameScene2D {
 		context.level().ifPresent(level -> {
 			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
 			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
-			var sounds = SoundHandler.sounds(context.game());
-			sounds.ensureSirenStarted(level.huntingPhase() / 2);
+			context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
 		});
 	}
 

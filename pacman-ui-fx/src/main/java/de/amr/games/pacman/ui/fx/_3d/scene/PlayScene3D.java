@@ -60,7 +60,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -262,8 +261,7 @@ public class PlayScene3D implements GameScene {
 			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
-			var sounds = SoundHandler.sounds(context.game());
-			sounds.ensureSirenStarted(level.huntingPhase() / 2);
+			context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
 		});
 	}
 

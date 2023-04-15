@@ -153,7 +153,7 @@ public class Actions {
 		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?
 		if (Env.simulationPausedPy.get()) {
-			SoundHandler.sounds(game()).stopAll();
+			SoundHandler.sounds(game().variant()).stopAll();
 		}
 	}
 

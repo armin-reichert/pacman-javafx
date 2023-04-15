@@ -104,6 +104,6 @@ public class GameSceneContext {
 	}
 
 	public SoundPlayer sounds() {
-		return SoundHandler.sounds(game());
+		return SoundHandler.sounds(gameVariant());
 	}
 }
