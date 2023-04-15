@@ -27,7 +27,6 @@ import static de.amr.games.pacman.lib.U.randomInt;
 
 import java.util.Random;
 
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
@@ -40,7 +39,7 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class SquirtingAnimation extends Transition {
+public abstract class SquirtingAnimation extends Transition {
 
 	private static final Random RND = new Random();
 	private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
@@ -51,7 +50,7 @@ public class SquirtingAnimation extends Transition {
 		return l + RND.nextFloat() * (r - l);
 	}
 
-	private static class Drop extends Sphere {
+	public static class Drop extends Sphere {
 
 		private float vx;
 		private float vy;
@@ -82,15 +81,13 @@ public class SquirtingAnimation extends Transition {
 		}
 	}
 
-	private final World world;
 	private final Group particleGroup = new Group();
 
-	public SquirtingAnimation(World world, Group parent, double x, double y, double z) {
-		this.world = world;
+	protected SquirtingAnimation(Group parent, double x, double y, double z) {
 		var material = ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25));
-		for (int i = 0; i < randomInt(20, 30); ++i) {
+		for (int i = 0; i < randomInt(20, 40); ++i) {
 			var drop = new Drop(randomFloat(0.1, 1.0), material, x, y, z);
-			drop.setVelocity(randomFloat(0.05, 0.25), randomFloat(0.05, 0.25), -randomFloat(1.0, 4.0));
+			drop.setVelocity(randomFloat(-0.25, 0.25), randomFloat(-0.25, 0.25), -randomFloat(1.0, 4.0));
 			particleGroup.getChildren().add(drop);
 		}
 		setCycleDuration(Duration.seconds(2));
@@ -98,13 +95,15 @@ public class SquirtingAnimation extends Transition {
 		parent.getChildren().add(particleGroup);
 	}
 
+	public abstract boolean reachesEndPosition(Drop drop);
+
 	@Override
 	protected void interpolate(double t) {
 		for (var particle : particleGroup.getChildren()) {
 			var drop = (Drop) particle;
-			if (drop.getTranslateZ() >= -1.0 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY())) {
-				drop.setScaleZ(0.1);
+			if (reachesEndPosition(drop)) {
 				drop.setVelocity(0, 0, 0);
+				drop.setScaleZ(0.1);
 			} else {
 				drop.setVisible(true);
 				drop.move();
