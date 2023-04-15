@@ -406,8 +406,10 @@ public class World3D {
 		energizer3D.getRoot().setMaterial(material);
 		energizer3D.placeAtTile(tile);
 		var origin = energizer3D.getRoot();
-		var squirting = new Squirting(root, origin.getTranslateX(), origin.getTranslateY(),
-				origin.getTranslateZ()) {
+		var squirting = new Squirting(root, //
+				origin.getTranslateX(), origin.getTranslateY(), origin.getTranslateZ(), //
+				ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25))) {
+
 			@Override
 			public boolean reachesEndPosition(Drop drop) {
 				return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());

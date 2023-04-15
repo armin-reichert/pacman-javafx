@@ -27,11 +27,9 @@ import static de.amr.games.pacman.lib.U.randomInt;
 
 import java.util.Random;
 
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -42,6 +40,16 @@ import javafx.util.Duration;
 public abstract class Squirting extends Transition {
 
 	private static final Random RND = new Random();
+
+	private static final short MIN_DROP_COUNT = 20;
+	private static final short MAX_DROP_COUNT = 40;
+
+	private static final float MIN_DROP_RADIUS = 0.1f;
+	private static final float MAX_DROP_RADIUS = 1.0f;
+
+	private static final Vector3f MIN_VELOCITY = new Vector3f(-0.25f, -0.25f, -4.0f);
+	private static final Vector3f MAX_VELOCITY = new Vector3f(0.25f, 0.25f, -1.0f);
+
 	private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
 
 	private static float randomFloat(double left, double right) {
@@ -83,11 +91,13 @@ public abstract class Squirting extends Transition {
 
 	private final Group particleGroup = new Group();
 
-	protected Squirting(Group parent, double x, double y, double z) {
-		var material = ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25));
-		for (int i = 0; i < randomInt(20, 40); ++i) {
-			var drop = new Drop(randomFloat(0.1, 1.0), material, x, y, z);
-			drop.setVelocity(randomFloat(-0.25, 0.25), randomFloat(-0.25, 0.25), -randomFloat(1.0, 4.0));
+	protected Squirting(Group parent, double x, double y, double z, PhongMaterial dropMaterial) {
+		for (int i = 0; i < randomInt(MIN_DROP_COUNT, MAX_DROP_COUNT); ++i) {
+			var drop = new Drop(randomFloat(MIN_DROP_RADIUS, MAX_DROP_RADIUS), dropMaterial, x, y, z);
+			drop.setVelocity(//
+					randomFloat(MIN_VELOCITY.x(), MAX_VELOCITY.x()), //
+					randomFloat(MIN_VELOCITY.y(), MAX_VELOCITY.y()), //
+					randomFloat(MIN_VELOCITY.z(), MAX_VELOCITY.z()));
 			particleGroup.getChildren().add(drop);
 		}
 		setCycleDuration(Duration.seconds(2));
