@@ -52,7 +52,7 @@ public class Section3D extends Section {
 	private final CheckBox cbFloorTextureRandom;
 	private final ColorPicker pickerFloorColor;
 	private final CheckBox cbPacLighted;
-	private final CheckBox cbPacNodding;
+	private final CheckBox cbPacWalkingAnimated;
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
 
@@ -62,24 +62,24 @@ public class Section3D extends Section {
 		comboPerspective.setOnAction(e -> Env.d3_perspectivePy.set(comboPerspective.getValue()));
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
 				.available(() -> gameScene().is3D());
-		pickerLightColor = addColorPicker("Light color", Env.d3_lightColorPy.get());
+		pickerLightColor = addColorPicker("Light Color", Env.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
-		sliderWallHeight = addSlider("Wall height", 0.1, 8.5, Env.d3_mazeWallHeightPy.get());
+		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, Env.d3_mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallHeightPy.set(newVal.doubleValue()));
-		sliderWallThickness = addSlider("Wall thickness", 0.1, 2.0, Env.d3_mazeWallThicknessPy.get());
+		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, Env.d3_mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor texture", textureItems());
+		comboFloorTexture = addComboBox("Floor Texture", textureItems());
 		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
-		cbFloorTextureRandom = addCheckBox("Random floor texture", () -> Ufx.toggle(Env.d3_floorTextureRandomPy));
-		pickerFloorColor = addColorPicker("Floor color", Env.d3_floorColorPy.get());
+		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Env.d3_floorTextureRandomPy));
+		pickerFloorColor = addColorPicker("Floor Color", Env.d3_floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(Env.d3_energizerExplodesPy));
-		cbPacLighted = addCheckBox("Pac-Man lighted", () -> Ufx.toggle(Env.d3_pacLightedPy));
-		cbPacNodding = addCheckBox("Pac-Man nodding", () -> Ufx.toggle(Env.d3_pacNoddingPy));
-		cbAxesVisible = addCheckBox("Show axes", () -> Ufx.toggle(Env.d3_axesVisiblePy));
-		cbWireframeMode = addCheckBox("Wireframe mode", Actions::toggleDrawMode);
+		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(Env.d3_pacLightedPy));
+		cbPacWalkingAnimated = addCheckBox("Pac-Man Walking Animated", () -> Ufx.toggle(Env.d3_pacWalkingAnimatedPy));
+		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(Env.d3_axesVisiblePy));
+		cbWireframeMode = addCheckBox("Wireframe Mode", Actions::toggleDrawMode);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class Section3D extends Section {
 		cbFloorTextureRandom.setSelected(Env.d3_floorTextureRandomPy.get());
 		cbEnergizerExplodes.setSelected(Env.d3_energizerExplodesPy.get());
 		cbPacLighted.setSelected(Env.d3_pacLightedPy.get());
-		cbPacNodding.setSelected(Env.d3_pacNoddingPy.get());
+		cbPacWalkingAnimated.setSelected(Env.d3_pacWalkingAnimatedPy.get());
 		cbAxesVisible.setSelected(Env.d3_axesVisiblePy.get());
 		cbWireframeMode.setSelected(Env.d3_drawModePy.get() == DrawMode.LINE);
 	}

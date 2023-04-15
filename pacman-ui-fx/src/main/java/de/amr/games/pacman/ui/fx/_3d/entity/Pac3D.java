@@ -70,25 +70,27 @@ public class Pac3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final double NODDING_ANGLE_FROM = -25;
-	private static final double NODDING_ANGLE_TO = 15;
+	private static final double HEAD_BANGING_ANGLE_FROM = -25;
+	private static final double HEAD_BANGING_ANGLE_TO = 15;
 
-	private static final double GAYNODDING_ANGLE_FROM = -20;
-	private static final double GAYNODDING_ANGLE_TO = 20;
+	private static final double HIP_SWAY_ANGLE_FROM = -20;
+	private static final double HIP_SWAY_ANGLE_TO = 20;
 
 	private static final double EXCITEMENT = 1.5;
 
-	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
+	private static final Duration HEAD_BANGING__DURATION = Duration.seconds(0.2);
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
 
-	public final BooleanProperty noddingPy = new SimpleBooleanProperty(this, "nodding", false) {
+	private static final Color LIGHT_COLOR = Color.rgb(255, 255, 0, 0.25);
+
+	public final BooleanProperty walkingAnimatedPy = new SimpleBooleanProperty(this, "walkingAnimated", false) {
 		@Override
 		protected void invalidated() {
 			if (get()) {
-				createNoddingAnimation();
+				createWalkingAnimation();
 			} else {
-				endNodding();
-				noddingAnimation = null;
+				endWalkingAnimation();
+				walkingAnimation = null;
 			}
 		}
 	};
@@ -105,12 +107,12 @@ public class Pac3D {
 	private final PointLight light;
 	private final Translate position = new Translate();
 	private final Rotate orientation = new Rotate();
-	private RotateTransition noddingAnimation;
-	private boolean gayMovement;
+	private RotateTransition walkingAnimation;
+	private boolean swayingHips;
 	private boolean excited;
 	private Animation dyingAnimation;
 
-	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor, boolean gayMovement) {
+	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor, boolean swayingHips) {
 		requireNonNull(level);
 		requireNonNull(pac);
 		requireNonNull(pacNode);
@@ -119,52 +121,52 @@ public class Pac3D {
 		this.pac = pac;
 		this.pacNode = pacNode;
 		this.headColor = headColor;
-		this.gayMovement = gayMovement;
+		this.swayingHips = swayingHips;
 		this.light = createLight();
 		pacNode.getTransforms().setAll(position, orientation);
 		head().drawModeProperty().bind(Env.d3_drawModePy);
 		eyes().drawModeProperty().bind(Env.d3_drawModePy);
 		palate().drawModeProperty().bind(Env.d3_drawModePy);
 		root.getChildren().add(pacNode);
-		noddingPy.bind(Env.d3_pacNoddingPy);
+		walkingAnimatedPy.bind(Env.d3_pacWalkingAnimatedPy);
 	}
 
-	private void createNoddingAnimation() {
-		noddingAnimation = new RotateTransition(NODDING_DURATION, root);
-		noddingAnimation.setAxis(noddingAxis());
+	private void createWalkingAnimation() {
+		walkingAnimation = new RotateTransition(HEAD_BANGING__DURATION, root);
+		walkingAnimation.setAxis(noddingAxis());
 		double excitement = excited ? EXCITEMENT : 1;
-		if (gayMovement) {
-			noddingAnimation.setFromAngle(GAYNODDING_ANGLE_FROM * excitement);
-			noddingAnimation.setToAngle(GAYNODDING_ANGLE_TO * excitement);
+		if (swayingHips) {
+			walkingAnimation.setFromAngle(HIP_SWAY_ANGLE_FROM * excitement);
+			walkingAnimation.setToAngle(HIP_SWAY_ANGLE_TO * excitement);
 		} else {
-			noddingAnimation.setFromAngle(NODDING_ANGLE_FROM * excitement);
-			noddingAnimation.setToAngle(NODDING_ANGLE_TO * excitement);
+			walkingAnimation.setFromAngle(HEAD_BANGING_ANGLE_FROM * excitement);
+			walkingAnimation.setToAngle(HEAD_BANGING_ANGLE_TO * excitement);
 		}
-		noddingAnimation.setCycleCount(Animation.INDEFINITE);
-		noddingAnimation.setAutoReverse(true);
-		noddingAnimation.setRate(excitement);
-		noddingAnimation.setInterpolator(Interpolator.EASE_BOTH);
+		walkingAnimation.setCycleCount(Animation.INDEFINITE);
+		walkingAnimation.setAutoReverse(true);
+		walkingAnimation.setRate(excitement);
+		walkingAnimation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void onGetsPower() {
 		excited = true;
-		if (noddingAnimation == null) {
+		if (walkingAnimation == null) {
 			return;
 		}
-		noddingAnimation.stop();
-		createNoddingAnimation();
-		noddingAnimation.play();
+		walkingAnimation.stop();
+		createWalkingAnimation();
+		walkingAnimation.play();
 		LOG.info("I'm so excited, and I just can't hide it!");
 	}
 
 	public void onLosesPower() {
 		excited = false;
-		if (noddingAnimation == null) {
+		if (walkingAnimation == null) {
 			return;
 		}
-		noddingAnimation.stop();
-		createNoddingAnimation();
-		noddingAnimation.play();
+		walkingAnimation.stop();
+		createWalkingAnimation();
+		walkingAnimation.play();
 		LOG.info("I lost my power");
 	}
 
@@ -197,7 +199,7 @@ public class Pac3D {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		endNodding();
+		endWalkingAnimation();
 		updatePosition();
 		turnToMoveDirection();
 		updateVisibility();
@@ -234,26 +236,26 @@ public class Pac3D {
 	}
 
 	private void updateAnimations() {
-		if (noddingAnimation == null) {
+		if (walkingAnimation == null) {
 			return;
 		}
 		var axis = noddingAxis();
 		if (pac.isStandingStill()) {
-			endNodding();
+			endWalkingAnimation();
 			root.setRotate(0);
 			return;
 		}
-		if (noddingAnimation.getStatus() != Status.RUNNING || !axis.equals(noddingAnimation.getAxis())) {
-			noddingAnimation.stop();
-			noddingAnimation.setAxis(axis);
-			noddingAnimation.playFromStart();
+		if (walkingAnimation.getStatus() != Status.RUNNING || !axis.equals(walkingAnimation.getAxis())) {
+			walkingAnimation.stop();
+			walkingAnimation.setAxis(axis);
+			walkingAnimation.playFromStart();
 			LOG.trace("%s: Nodding started", pac.name());
 		}
 	}
 
-	private void endNodding() {
-		if (noddingAnimation != null && noddingAnimation.getStatus() == Status.RUNNING) {
-			noddingAnimation.stop();
+	private void endWalkingAnimation() {
+		if (walkingAnimation != null && walkingAnimation.getStatus() == Status.RUNNING) {
+			walkingAnimation.stop();
 			root.setRotationAxis(noddingAxis());
 			root.setRotate(0);
 			LOG.trace("%s: Nodding stopped", pac.name());
@@ -261,7 +263,7 @@ public class Pac3D {
 	}
 
 	private Point3D noddingAxis() {
-		if (gayMovement) {
+		if (swayingHips) {
 			return Rotate.Z_AXIS;
 		}
 		return pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
@@ -310,7 +312,7 @@ public class Pac3D {
 
 	private PointLight createLight() {
 		var pointLight = new PointLight();
-		pointLight.setColor(Color.rgb(255, 255, 0, 0.25));
+		pointLight.setColor(LIGHT_COLOR);
 		pointLight.setMaxRange(2 * TS);
 		pointLight.translateXProperty().bind(position.xProperty());
 		pointLight.translateYProperty().bind(position.yProperty());
