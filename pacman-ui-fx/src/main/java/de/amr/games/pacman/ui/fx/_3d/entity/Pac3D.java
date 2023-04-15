@@ -70,15 +70,15 @@ public class Pac3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final double NODDING_ANGLE_FROM = -20;
-	private static final double NODDING_ANGLE_TO = 10;
+	private static final double NODDING_ANGLE_FROM = -25;
+	private static final double NODDING_ANGLE_TO = 15;
 
 	private static final double GAYNODDING_ANGLE_FROM = -20;
 	private static final double GAYNODDING_ANGLE_TO = 20;
 
 	private static final double EXCITEMENT = 1.5;
 
-	private static final Duration NODDING_DURATION = Duration.seconds(0.25);
+	private static final Duration NODDING_DURATION = Duration.seconds(0.2);
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
 
 	public final BooleanProperty noddingPy = new SimpleBooleanProperty(this, "nodding", false) {
