@@ -39,7 +39,7 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public abstract class SquirtingAnimation extends Transition {
+public abstract class Squirting extends Transition {
 
 	private static final Random RND = new Random();
 	private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
@@ -83,7 +83,7 @@ public abstract class SquirtingAnimation extends Transition {
 
 	private final Group particleGroup = new Group();
 
-	protected SquirtingAnimation(Group parent, double x, double y, double z) {
+	protected Squirting(Group parent, double x, double y, double z) {
 		var material = ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25));
 		for (int i = 0; i < randomInt(20, 40); ++i) {
 			var drop = new Drop(randomFloat(0.1, 1.0), material, x, y, z);

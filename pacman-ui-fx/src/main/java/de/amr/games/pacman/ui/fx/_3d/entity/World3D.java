@@ -42,7 +42,7 @@ import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.MazeColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;
-import de.amr.games.pacman.ui.fx._3d.animation.SquirtingAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.Squirting;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.beans.property.DoubleProperty;
@@ -115,7 +115,6 @@ public class World3D {
 	private final Group doorWingsGroup = new Group();
 	private final PointLight houseLight;
 	private final Group foodGroup = new Group();
-	private final Group particlesGroup = new Group();
 	private final FoodOscillation foodOscillation;
 
 	public World3D(World world, MazeColoring mazeColoring, Model3D pelletModel3D) {
@@ -134,7 +133,7 @@ public class World3D {
 		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
 		world.tilesContainingFood().forEach(tile -> foodGroup.getChildren().add(createFood(tile, foodMaterial).getRoot()));
 		foodOscillation = new FoodOscillation(foodGroup);
-		root.getChildren().addAll(floorGroup, wallsGroup, doorWingsGroup, houseLight, foodGroup, particlesGroup);
+		root.getChildren().addAll(floorGroup, wallsGroup, doorWingsGroup, houseLight, foodGroup);
 	}
 
 	private PointLight createGhostHouseLight(GhostHouse house) {
@@ -406,14 +405,15 @@ public class World3D {
 		var energizer3D = new Energizer3D(3.5);
 		energizer3D.getRoot().setMaterial(material);
 		energizer3D.placeAtTile(tile);
-		var eatenAnimation = new SquirtingAnimation(particlesGroup, energizer3D.getRoot().getTranslateX(),
-				energizer3D.getRoot().getTranslateY(), energizer3D.getRoot().getTranslateZ()) {
+		var origin = energizer3D.getRoot();
+		var squirting = new Squirting(root, origin.getTranslateX(), origin.getTranslateY(),
+				origin.getTranslateZ()) {
 			@Override
 			public boolean reachesEndPosition(Drop drop) {
-				return drop.getTranslateZ() >= -1.0 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
+				return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
 			}
 		};
-		energizer3D.setEatenAnimation(eatenAnimation);
+		energizer3D.setEatenAnimation(squirting);
 		return energizer3D;
 	}
 
