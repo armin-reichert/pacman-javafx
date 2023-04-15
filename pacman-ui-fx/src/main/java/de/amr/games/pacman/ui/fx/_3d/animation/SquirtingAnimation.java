@@ -43,8 +43,20 @@ public class SquirtingAnimation extends Transition {
 
 	private static final Point3D GRAVITY = new Point3D(0, 0, 0.1);
 
+	private static class Drop extends Sphere {
+
+		public Drop(double radius, PhongMaterial material, double x, double y, double z) {
+			super(radius);
+			setMaterial(material);
+			setTranslateX(x);
+			setTranslateY(y);
+			setTranslateZ(z);
+			setVisible(false);
+		}
+	}
+
 	private final World world;
-	private Sphere[] drops;
+	private Drop[] drops;
 	private Point3D[] veloc;
 
 	public SquirtingAnimation(World world, Group parent, Node pellet) {
@@ -59,17 +71,11 @@ public class SquirtingAnimation extends Transition {
 		var numDrops = bigSquirt ? randomInt(20, 30) : randomInt(4, 8);
 		var color = Color.gray(0.4, 0.25);
 		var material = new PhongMaterial(color);
-		drops = new Sphere[numDrops];
+		drops = new Drop[numDrops];
 		veloc = new Point3D[numDrops];
 		for (int i = 0; i < numDrops; ++i) {
 			var r = bigSquirt ? randomDouble(0.1, 1.0) : randomDouble(0.1, 0.5);
-			var drop = new Sphere(r);
-			drop.setMaterial(material);
-			drop.setTranslateX(pellet.getTranslateX());
-			drop.setTranslateY(pellet.getTranslateY());
-			drop.setTranslateZ(-World.HTS);
-			drop.setVisible(false);
-			drops[i] = drop;
+			drops[i] = new Drop(r, material, pellet.getTranslateX(), pellet.getTranslateY(), -4);
 			veloc[i] = new Point3D(randomDouble(0.05, 0.25), randomDouble(0.05, 0.25), -randomDouble(1.0, 4.0));
 		}
 	}
