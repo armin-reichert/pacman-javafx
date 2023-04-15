@@ -406,7 +406,8 @@ public class World3D {
 		var energizer3D = new Energizer3D(3.5);
 		energizer3D.getRoot().setMaterial(material);
 		energizer3D.placeAtTile(tile);
-		var eatenAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot());
+		var eatenAnimation = new SquirtingAnimation(world, particlesGroup, energizer3D.getRoot().getTranslateX(),
+				energizer3D.getRoot().getTranslateY(), energizer3D.getRoot().getTranslateZ());
 		energizer3D.setEatenAnimation(eatenAnimation);
 		return energizer3D;
 	}

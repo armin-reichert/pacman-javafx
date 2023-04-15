@@ -32,7 +32,6 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
@@ -84,24 +83,25 @@ public class SquirtingAnimation extends Transition {
 	}
 
 	private final World world;
-	private final Drop[] drops;
+	private final Group particleGroup = new Group();
 
-	public SquirtingAnimation(World world, Group particleGroup, Node origin) {
+	public SquirtingAnimation(World world, Group parent, double x, double y, double z) {
 		this.world = world;
-		drops = new Drop[randomInt(20, 30)];
 		var material = ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25));
-		for (int i = 0; i < drops.length; ++i) {
-			drops[i] = new Drop(randomFloat(0.1, 1.0), material, origin.getTranslateX(), origin.getTranslateY(), -4);
-			drops[i].setVelocity(randomFloat(0.05, 0.25), randomFloat(0.05, 0.25), -randomFloat(1.0, 4.0));
-			particleGroup.getChildren().add(drops[i]);
+		for (int i = 0; i < randomInt(20, 30); ++i) {
+			var drop = new Drop(randomFloat(0.1, 1.0), material, x, y, z);
+			drop.setVelocity(randomFloat(0.05, 0.25), randomFloat(0.05, 0.25), -randomFloat(1.0, 4.0));
+			particleGroup.getChildren().add(drop);
 		}
 		setCycleDuration(Duration.seconds(2));
-		setOnFinished(e -> particleGroup.getChildren().removeAll(drops));
+		setOnFinished(e -> parent.getChildren().remove(particleGroup));
+		parent.getChildren().add(particleGroup);
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		for (var drop : drops) {
+		for (var particle : particleGroup.getChildren()) {
+			var drop = (Drop) particle;
 			if (drop.getTranslateZ() >= -1.0 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY())) {
 				drop.setScaleZ(0.1);
 				drop.setVelocity(0, 0, 0);
