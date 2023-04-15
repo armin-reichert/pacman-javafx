@@ -74,9 +74,9 @@ public class Ghost3D {
 
 	private final GameLevel level;
 	private final Ghost ghost;
-	private final Group root = new Group();
-	private final Group numberGroup = new Group();
-	private final Group coloredGhostGroup = new Group();
+	private final Group root;
+	private final Group numberGroup;
+	private final Group coloredGhostGroup;
 	private final ColoredGhost3D coloredGhost3D;
 	private final Box numberCube = new Box(14, 8, 8);
 	private final Translate position = new Translate();
@@ -97,16 +97,17 @@ public class Ghost3D {
 		this.level = level;
 		this.ghost = ghost;
 
-		root.getChildren().addAll(coloredGhostGroup, numberGroup);
-
 		coloredGhost3D = new ColoredGhost3D(model3D, colors, size);
 		coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);
-		coloredGhostGroup.getChildren().add(coloredGhost3D.getRoot());
+
+		coloredGhostGroup = new Group(coloredGhost3D.getRoot());
 		coloredGhostGroup.getTransforms().addAll(position, orientation);
 
-		numberGroup.getChildren().add(numberCube);
+		numberGroup = new Group(numberCube);
+
+		root = new Group(coloredGhostGroup, numberGroup);
 
 		eatenAnimation = new RotateTransition(Duration.seconds(1), numberCube);
 		eatenAnimation.setAxis(Rotate.X_AXIS);
@@ -140,34 +141,21 @@ public class Ghost3D {
 	public void init() {
 		brakeAnimation.stop();
 		dressAnimation.stop();
-		updatePosition();
-		turnToMoveDirection();
-		updateVisbility();
+		updateTransform();
 		updateLook();
 	}
 
 	public void update() {
-		updatePosition();
-		turnToMoveDirection();
-		updateVisbility();
+		updateTransform();
 		updateLook();
 		updateAnimations();
 	}
 
-	private void updatePosition() {
+	private void updateTransform() {
 		position.setX(ghost.center().x());
 		position.setY(ghost.center().y());
 		position.setZ(-5);
-	}
-
-	private void turnToMoveDirection() {
-		var angle = Turn.angle(ghost.moveDir());
-		if (angle != orientation.getAngle()) {
-			orientation.setAngle(angle);
-		}
-	}
-
-	private void updateVisbility() {
+		orientation.setAngle(Turn.angle(ghost.moveDir()));
 		root.setVisible(ghost.isVisible() && !outsideWorld());
 	}
 
