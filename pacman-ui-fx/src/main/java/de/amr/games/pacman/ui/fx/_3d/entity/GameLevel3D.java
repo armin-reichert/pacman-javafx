@@ -44,7 +44,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
-import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
@@ -137,10 +136,6 @@ public class GameLevel3D {
 		world3D.wallHeightPy.bind(Env.d3_mazeWallHeightPy);
 		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
-
-		if (Env.d3_floorTextureRandomPy.get()) {
-			selectRandomFloorTexture();
-		}
 	}
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
@@ -211,10 +206,6 @@ public class GameLevel3D {
 		} else {
 			delayHiding.play();
 		}
-	}
-
-	private void selectRandomFloorTexture() {
-		Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
 	}
 
 	private void updateHouseState() {

@@ -140,8 +140,8 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		context.level().ifPresent(level -> {
-			replaceGameLevel3D(level);
 			resetInfoText();
+			replaceGameLevel3D(level);
 			perspectivePy.bind(Env.d3_perspectivePy);
 		});
 	}
@@ -199,6 +199,9 @@ public class PlayScene3D implements GameScene {
 		level3D = new GameLevel3D(level, context.rendering2D(), context.rendering2D().pacManColors(),
 				context.rendering2D().msPacManColors(), context.rendering2D().ghostColors());
 		level3D.getRoot().getTransforms().setAll(new Translate(-centerX, -centerY));
+		if (Env.d3_floorTextureRandomPy.get()) {
+			Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
+		}
 		// keep the scores rotated such that the viewer always sees them frontally
 		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
 		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
