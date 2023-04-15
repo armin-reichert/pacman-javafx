@@ -27,8 +27,12 @@ import static de.amr.games.pacman.lib.U.randomInt;
 
 import java.util.Random;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
@@ -38,6 +42,8 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public abstract class Squirting extends Transition {
+
+	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final Random RND = new Random();
 
@@ -90,25 +96,37 @@ public abstract class Squirting extends Transition {
 	}
 
 	private final Group particleGroup = new Group();
+	private final PhongMaterial dropMaterial;
+	private final Point3D origin;
 
 	protected Squirting(Group parent, double x, double y, double z, PhongMaterial dropMaterial) {
+		this.origin = new Point3D(x, y, z);
+		this.dropMaterial = dropMaterial;
+		setCycleDuration(Duration.seconds(2));
+		setOnFinished(e -> parent.getChildren().remove(particleGroup));
+		parent.getChildren().add(particleGroup);
+	}
+
+	private void createDrops() {
 		for (int i = 0; i < randomInt(MIN_DROP_COUNT, MAX_DROP_COUNT); ++i) {
-			var drop = new Drop(randomFloat(MIN_DROP_RADIUS, MAX_DROP_RADIUS), dropMaterial, x, y, z);
+			var drop = new Drop(randomFloat(MIN_DROP_RADIUS, MAX_DROP_RADIUS), dropMaterial, origin.getX(), origin.getY(),
+					origin.getZ());
 			drop.setVelocity(//
 					randomFloat(MIN_VELOCITY.x(), MAX_VELOCITY.x()), //
 					randomFloat(MIN_VELOCITY.y(), MAX_VELOCITY.y()), //
 					randomFloat(MIN_VELOCITY.z(), MAX_VELOCITY.z()));
 			particleGroup.getChildren().add(drop);
 		}
-		setCycleDuration(Duration.seconds(2));
-		setOnFinished(e -> parent.getChildren().remove(particleGroup));
-		parent.getChildren().add(particleGroup);
+		LOG.info("%d drops created", particleGroup.getChildren().size());
 	}
 
 	public abstract boolean reachesEndPosition(Drop drop);
 
 	@Override
 	protected void interpolate(double t) {
+		if (t == 0) {
+			createDrops();
+		}
 		for (var particle : particleGroup.getChildren()) {
 			var drop = (Drop) particle;
 			if (reachesEndPosition(drop)) {
