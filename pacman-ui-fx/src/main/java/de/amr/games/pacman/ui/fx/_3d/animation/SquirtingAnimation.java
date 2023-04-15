@@ -23,12 +23,14 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import static de.amr.games.pacman.lib.U.randomDouble;
 import static de.amr.games.pacman.lib.U.randomInt;
 
+import java.util.Random;
+
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -41,9 +43,20 @@ import javafx.util.Duration;
  */
 public class SquirtingAnimation extends Transition {
 
-	private static final Point3D GRAVITY = new Point3D(0, 0, 0.1);
+	private static final Random RND = new Random();
+	private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
+
+	private static float randomFloat(double left, double right) {
+		float l = (float) left;
+		float r = (float) right;
+		return l + RND.nextFloat() * (r - l);
+	}
 
 	private static class Drop extends Sphere {
+
+		private float vx;
+		private float vy;
+		private float vz;
 
 		public Drop(double radius, PhongMaterial material, double x, double y, double z) {
 			super(radius);
@@ -53,46 +66,48 @@ public class SquirtingAnimation extends Transition {
 			setTranslateZ(z);
 			setVisible(false);
 		}
+
+		public void setVelocity(float x, float y, float z) {
+			vx = x;
+			vy = y;
+			vz = z;
+		}
+
+		public void move() {
+			setTranslateX(getTranslateX() + vx);
+			setTranslateY(getTranslateY() + vy);
+			setTranslateZ(getTranslateZ() + vz);
+			vx += GRAVITY.x();
+			vy += GRAVITY.y();
+			vz += GRAVITY.z();
+		}
 	}
 
 	private final World world;
-	private Drop[] drops;
-	private Point3D[] veloc;
+	private final Drop[] drops;
 
-	public SquirtingAnimation(World world, Group parent, Node pellet) {
+	public SquirtingAnimation(World world, Group particleGroup, Node origin) {
 		this.world = world;
-		createDrops(pellet, true);
-		parent.getChildren().addAll(drops);
-		setCycleDuration(Duration.seconds(2));
-		setOnFinished(e -> parent.getChildren().removeAll(drops));
-	}
-
-	private void createDrops(Node pellet, boolean bigSquirt) {
-		var numDrops = bigSquirt ? randomInt(20, 30) : randomInt(4, 8);
-		var color = Color.gray(0.4, 0.25);
-		var material = new PhongMaterial(color);
-		drops = new Drop[numDrops];
-		veloc = new Point3D[numDrops];
-		for (int i = 0; i < numDrops; ++i) {
-			var r = bigSquirt ? randomDouble(0.1, 1.0) : randomDouble(0.1, 0.5);
-			drops[i] = new Drop(r, material, pellet.getTranslateX(), pellet.getTranslateY(), -4);
-			veloc[i] = new Point3D(randomDouble(0.05, 0.25), randomDouble(0.05, 0.25), -randomDouble(1.0, 4.0));
+		drops = new Drop[randomInt(20, 30)];
+		var material = ResourceMgr.coloredMaterial(Color.gray(0.4, 0.25));
+		for (int i = 0; i < drops.length; ++i) {
+			drops[i] = new Drop(randomFloat(0.1, 1.0), material, origin.getTranslateX(), origin.getTranslateY(), -4);
+			drops[i].setVelocity(randomFloat(0.05, 0.25), randomFloat(0.05, 0.25), -randomFloat(1.0, 4.0));
+			particleGroup.getChildren().add(drops[i]);
 		}
+		setCycleDuration(Duration.seconds(2));
+		setOnFinished(e -> particleGroup.getChildren().removeAll(drops));
 	}
 
 	@Override
 	protected void interpolate(double t) {
-		for (int i = 0; i < drops.length; ++i) {
-			var drop = drops[i];
+		for (var drop : drops) {
 			if (drop.getTranslateZ() >= -1.0 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY())) {
 				drop.setScaleZ(0.1);
-				veloc[i] = Point3D.ZERO;
+				drop.setVelocity(0, 0, 0);
 			} else {
 				drop.setVisible(true);
-				drop.setTranslateX(drop.getTranslateX() + veloc[i].getX());
-				drop.setTranslateY(drop.getTranslateY() + veloc[i].getY());
-				drop.setTranslateZ(drop.getTranslateZ() + veloc[i].getZ());
-				veloc[i] = veloc[i].add(GRAVITY);
+				drop.move();
 			}
 		}
 	}
