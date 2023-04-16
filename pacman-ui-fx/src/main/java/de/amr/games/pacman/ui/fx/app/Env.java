@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -55,7 +56,7 @@ public class Env {
 
 	public static final BooleanProperty pipVisiblePy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.SIZE_PX.y());
+	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.SIZE_TILES.y() * World.TS);
 
 	public static final BooleanProperty d3_axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> d3_drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);

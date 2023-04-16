@@ -24,12 +24,14 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene;
 
-import static de.amr.games.pacman.model.common.world.ArcadeWorld.SIZE_PX;
 import static de.amr.games.pacman.model.common.world.ArcadeWorld.SIZE_TILES;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
+import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
@@ -43,11 +45,15 @@ import javafx.scene.image.WritableImage;
  */
 public class BootScene extends GameScene2D {
 
-	private final GraphicsContext ctx = new Canvas(SIZE_PX.x(), SIZE_PX.y()).getGraphicsContext2D();
-	private final WritableImage image = new WritableImage(SIZE_PX.x(), SIZE_PX.y());
+	private static final Vector2i SIZE_PX = ArcadeWorld.SIZE_TILES.scaled(World.TS);
+
+	private final GraphicsContext ctx;
+	private final WritableImage image;
 
 	public BootScene(GameController gameController) {
 		super(gameController);
+		ctx = new Canvas(SIZE_PX.x(), SIZE_PX.y()).getGraphicsContext2D();
+		image = new WritableImage(SIZE_PX.x(), SIZE_PX.y());
 	}
 
 	@Override

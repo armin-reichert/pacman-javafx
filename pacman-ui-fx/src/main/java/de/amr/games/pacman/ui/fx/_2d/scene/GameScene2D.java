@@ -54,7 +54,10 @@ import javafx.scene.transform.Scale;
 public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-	private static final double ASPECT_RATIO = (double) ArcadeWorld.SIZE_PX.x() / ArcadeWorld.SIZE_PX.y();
+
+	private static final float WIDTH = ArcadeWorld.SIZE_TILES.x() * TS;
+	private static final float HEIGHT = ArcadeWorld.SIZE_TILES.y() * TS;
+	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 	protected final GameSceneContext context;
@@ -65,7 +68,7 @@ public abstract class GameScene2D implements GameScene {
 		requireNonNull(gameController);
 
 		context = new GameSceneContext(gameController);
-		fxSubScene = new SubScene(new StackPane(canvas), ArcadeWorld.SIZE_PX.x(), ArcadeWorld.SIZE_PX.y());
+		fxSubScene = new SubScene(new StackPane(canvas), WIDTH, HEIGHT);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
@@ -101,7 +104,7 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		var scaling = height / ArcadeWorld.SIZE_PX.y();
+		var scaling = height / HEIGHT;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
