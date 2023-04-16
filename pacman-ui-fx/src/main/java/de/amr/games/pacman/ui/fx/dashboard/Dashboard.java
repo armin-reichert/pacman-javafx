@@ -49,6 +49,7 @@ public class Dashboard extends VBox {
 	private Section secGhostsInfo;
 	private Section sec3D;
 	private Section secKeys;
+	private Section secAbout;
 
 	public void init(GameUI ui) {
 		secGeneral = new SectionGeneral(ui, "General");
@@ -57,7 +58,8 @@ public class Dashboard extends VBox {
 		secGhostsInfo = new SectionGhostsInfo(ui, "Ghosts Info");
 		sec3D = new Section3D(ui, "3D Settings");
 		secKeys = new SectionKeys(ui, "Keyboard Shortcuts");
-		getChildren().addAll(secGeneral, secGameControl, secGameInfo, secGhostsInfo, sec3D, secKeys);
+		secAbout = new SectionAbout(ui, "About");
+		getChildren().addAll(secGeneral, secGameControl, secGameInfo, secGhostsInfo, sec3D, secKeys, secAbout);
 		setVisible(false);
 	}
 
