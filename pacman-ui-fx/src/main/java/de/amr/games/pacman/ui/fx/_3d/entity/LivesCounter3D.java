@@ -77,9 +77,9 @@ public class LivesCounter3D {
 		for (int i = 0; i < maxLives; ++i) {
 			addSocket(2 * i * TS, socketHeight);
 			var pacShape = fnPacNode.get();
-			PacModel3D.meshView(pacShape, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(Env.d3_drawModePy);
-			PacModel3D.meshView(pacShape, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(Env.d3_drawModePy);
-			PacModel3D.meshView(pacShape, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(Env.d3_drawModePy);
+			PacModel3D.headMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
+			PacModel3D.palateMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
+			PacModel3D.eyesMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
 			pacShape.setTranslateX(2.0 * i * TS);
 			pacShape.setTranslateZ(-socketHeight - 5.0);
 			if (lookRight) {
