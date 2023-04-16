@@ -140,10 +140,8 @@ public class World3D {
 		var light = new PointLight();
 		light.setColor(Color.GHOSTWHITE);
 		light.setMaxRange(3 * TS);
-		var topLeft = house.topLeftTile();
-		var tiles = house.sizeInTiles();
-		light.setTranslateX(topLeft.x() * TS + tiles.x() * HTS);
-		light.setTranslateY(topLeft.y() * TS + tiles.y() * HTS - TS);
+		light.setTranslateX(house.position().x() * TS + house.size().x() * HTS);
+		light.setTranslateY(house.position().y() * TS + house.size().y() * HTS - TS);
 		light.setTranslateZ(-TS);
 		return light;
 	}
