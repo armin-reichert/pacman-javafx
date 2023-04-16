@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import javafx.geometry.Point3D;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
@@ -32,21 +31,15 @@ import javafx.scene.transform.Rotate;
  */
 public class CamTotal implements CameraController {
 
-	public static final Point3D INITIAL_ROTATION_AXIS = Rotate.X_AXIS;
-	public static final double INITIAL_ROTATE = 60;
-	public static final double INITIAL_TRANSLATE_X = 0;
-	public static final double INITIAL_TRANSLATE_Y = 310;
-	public static final double INITIAL_TRANSLATE_Z = -160;
-
 	@Override
 	public void reset(Camera cam) {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
-		cam.setTranslateX(INITIAL_TRANSLATE_X);
-		cam.setTranslateY(INITIAL_TRANSLATE_Y);
-		cam.setTranslateZ(INITIAL_TRANSLATE_Z);
-		cam.setRotationAxis(INITIAL_ROTATION_AXIS);
-		cam.setRotate(INITIAL_ROTATE);
+		cam.setTranslateX(0);
+		cam.setTranslateY(340);
+		cam.setTranslateZ(-180);
+		cam.setRotationAxis(Rotate.X_AXIS);
+		cam.setRotate(60);
 	}
 
 	@Override
