@@ -95,9 +95,9 @@ public class SectionGeneral extends Section {
 		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 
-		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
-		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Ufx.toggle(Env.showDebugInfoPy));
-		cbTimeMeasured = addCheckBox("Measure time", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
+		cbUsePlayScene3D = addCheckBox("3D play scene", Actions::toggleUse3DScene);
+		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
+		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
 	}
 
 	@Override
