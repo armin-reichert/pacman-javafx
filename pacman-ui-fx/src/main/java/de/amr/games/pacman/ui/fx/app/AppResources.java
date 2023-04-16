@@ -92,9 +92,11 @@ public class AppResources {
 	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
 	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
 
-	private static final String[] READY_TEXTS_PACMAN = { "LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!" };
-	private static final String[] READY_TEXTS_MS_PACMAN = { "LET'S GO BRANDON!", "GHOST LIVES MATTER!",
-			"(KILL) ME TOO!" };
+	private static final Picker<String> READY_TEXT_PICKER_PACMAN = new Picker<>(//
+			"LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!", "Asufutimaehaehfutbw");
+
+	private static final Picker<String> READY_TEXT_PICKER_MS_PACMAN = new Picker<>(//
+			"LET'S GO BRANDON!", "GHOST LIVES MATTER!", "(EAT) ME TOO!");
 
 	private static ResourceBundle messageBundle;
 	private static Picker<String> messagePickerCheating;
@@ -202,7 +204,7 @@ public class AppResources {
 	}
 
 	public static String randomReadyText(GameVariant variant) {
-		var texts = variant == GameVariant.MS_PACMAN ? READY_TEXTS_MS_PACMAN : READY_TEXTS_PACMAN;
-		return texts[U.randomInt(0, texts.length)];
+		var picker = variant == GameVariant.MS_PACMAN ? READY_TEXT_PICKER_MS_PACMAN : READY_TEXT_PICKER_PACMAN;
+		return picker.next();
 	}
 }

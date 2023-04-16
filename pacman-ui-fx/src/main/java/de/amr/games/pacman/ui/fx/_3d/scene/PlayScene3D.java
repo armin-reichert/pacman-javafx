@@ -319,7 +319,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().foodOscillation().play();
 			}
 			readyMessageText3D.setVisible(true);
-			var readyMessage = U.RND.nextInt(100) % 5 == 0 ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
+			var readyMessage = U.inPercentOfCases(40) ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
 			readyMessageText3D.setText(readyMessage);
 		}
 
