@@ -35,17 +35,17 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 /**
- * Single wing of ghosthouse door.
+ * Single segment of a ghosthouse door.
  * 
  * @author Armin Reichert
  */
-public class DoorWing3D {
+public class DoorSegment3D {
 
 	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(this, "doorHeight", HTS);
 
 	private final Box shape = new Box();
 
-	public DoorWing3D(Vector2i tile, Color color) {
+	public DoorSegment3D(Vector2i tile, Color color) {
 		requireNonNull(tile);
 		requireNonNull(color);
 

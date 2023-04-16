@@ -111,8 +111,8 @@ public class World3D {
 	private final Group root = new Group();
 	private final Group floorGroup = new Group();
 	private final Group wallsGroup = new Group();
-	private final List<DoorWing3D> doorWings3D = new ArrayList<>();
-	private final Group doorWingsGroup = new Group();
+	private final List<DoorSegment3D> doorSegments3D = new ArrayList<>();
+	private final Group doorSegmentsGroup = new Group();
 	private final PointLight houseLight;
 	private final Group foodGroup = new Group();
 	private final FoodOscillation foodOscillation;
@@ -133,7 +133,7 @@ public class World3D {
 		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
 		world.tilesContainingFood().forEach(tile -> foodGroup.getChildren().add(createFood(tile, foodMaterial).getRoot()));
 		foodOscillation = new FoodOscillation(foodGroup);
-		root.getChildren().addAll(floorGroup, wallsGroup, doorWingsGroup, houseLight, foodGroup);
+		root.getChildren().addAll(floorGroup, wallsGroup, doorSegmentsGroup, houseLight, foodGroup);
 	}
 
 	private PointLight createGhostHouseLight(GhostHouse house) {
@@ -197,13 +197,7 @@ public class World3D {
 		addCorners(floorPlan, createWallData(resolution));
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
-		for (var door : world.ghostHouse().doors()) {
-			door.tiles().forEach(tile -> {
-				var doorWing3D = createDoorWing3D(tile, mazeColoring.houseDoorColor());
-				doorWings3D.add(doorWing3D);
-				doorWingsGroup.getChildren().add(doorWing3D.getRoot());
-			});
-		}
+		addDoors();
 		LOG.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
@@ -237,15 +231,25 @@ public class World3D {
 //		return new Vector2i(fx / MAZE_RESOLUTION, fy / MAZE_RESOLUTION);
 //	}
 
-	public Stream<DoorWing3D> doorWings3D() {
-		return doorWings3D.stream().map(DoorWing3D.class::cast);
+	public Stream<DoorSegment3D> doorWings3D() {
+		return doorSegments3D.stream().map(DoorSegment3D.class::cast);
 	}
 
-	private DoorWing3D createDoorWing3D(Vector2i tile, Color color) {
-		var door = new DoorWing3D(tile, color);
-		door.doorHeightPy.set(6.0);
-		door.getRoot().drawModeProperty().bind(drawModePy);
-		return door;
+	private void addDoors() {
+		for (var door : world.ghostHouse().doors()) {
+			door.tiles().forEach(tile -> {
+				var doorSegment3D = createDoorSegment3D(tile, mazeColoring.houseDoorColor());
+				doorSegments3D.add(doorSegment3D);
+				doorSegmentsGroup.getChildren().add(doorSegment3D.getRoot());
+			});
+		}
+	}
+
+	private DoorSegment3D createDoorSegment3D(Vector2i tile, Color color) {
+		var segment = new DoorSegment3D(tile, color);
+		segment.doorHeightPy.set(6.0);
+		segment.getRoot().drawModeProperty().bind(drawModePy);
+		return segment;
 	}
 
 	private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
