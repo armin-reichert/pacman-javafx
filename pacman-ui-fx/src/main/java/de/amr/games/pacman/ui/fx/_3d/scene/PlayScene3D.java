@@ -98,9 +98,9 @@ public class PlayScene3D implements GameScene {
 
 	private final Group root = new Group();
 	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
-	private final Text3D infoText3D = new Text3D();
+	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
-	private CameraController currentCamController;
+	private CameraController camController;
 
 	public PlayScene3D(GameController gameController) {
 		requireNonNull(gameController);
@@ -119,7 +119,7 @@ public class PlayScene3D implements GameScene {
 		ambientLight.colorProperty().bind(Env.d3_lightColorPy);
 
 		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight,
-				infoText3D.getRoot());
+				readyMessageText3D.getRoot());
 
 		// initial scene size is irrelevant
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
@@ -139,7 +139,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		context.level().ifPresent(level -> {
-			resetInfoText();
+			resetReadyMessageText3D();
 			replaceGameLevel3D(level);
 			perspectivePy.bind(Env.d3_perspectivePy);
 		});
@@ -149,7 +149,7 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		context.level().ifPresent(level -> {
 			level3D.update();
-			currentCamController.update(fxSubScene.getCamera(), level3D.pac3D());
+			camController.update(fxSubScene.getCamera(), level3D.pac3D());
 			updateSound(level);
 		});
 	}
@@ -179,15 +179,15 @@ public class PlayScene3D implements GameScene {
 			LOG.error("No camera perspective specified");
 			return;
 		}
-		var camController = camControllerMap.get(perspective);
-		if (camController == null) {
+		var perspectiveController = camControllerMap.get(perspective);
+		if (perspectiveController == null) {
 			LOG.error("No camera found for perspective %s", perspective);
 			return;
 		}
-		if (camController != currentCamController) {
-			currentCamController = camController;
+		if (perspectiveController != camController) {
+			camController = perspectiveController;
 			fxSubScene.requestFocus();
-			camController.reset(fxSubScene.getCamera());
+			perspectiveController.reset(fxSubScene.getCamera());
 			LOG.info("Perspective changed to %s (%s)", perspective, this);
 		}
 	}
@@ -208,15 +208,15 @@ public class PlayScene3D implements GameScene {
 		LOG.info("3D game level created.");
 	}
 
-	private void resetInfoText() {
-		infoText3D.beginBatch();
-		infoText3D.setBgColor(Color.CORNFLOWERBLUE);
-		infoText3D.setTextColor(Color.YELLOW);
-		infoText3D.setFont(context.rendering2D().screenFont(6));
-		infoText3D.setText("");
-		infoText3D.endBatch();
-		infoText3D.translate(0, 16, -4.5);
-		infoText3D.rotate(Rotate.X_AXIS, 90);
+	private void resetReadyMessageText3D() {
+		readyMessageText3D.beginBatch();
+		readyMessageText3D.setBgColor(Color.CORNFLOWERBLUE);
+		readyMessageText3D.setTextColor(Color.YELLOW);
+		readyMessageText3D.setFont(context.rendering2D().screenFont(6));
+		readyMessageText3D.setText("");
+		readyMessageText3D.endBatch();
+		readyMessageText3D.translate(0, 16, -4.5);
+		readyMessageText3D.rotate(Rotate.X_AXIS, 90);
 	}
 
 	@Override
@@ -244,7 +244,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public CameraController currentCamController() {
-		return currentCamController;
+		return camController;
 	}
 
 	public String camInfo() {
@@ -318,9 +318,9 @@ public class PlayScene3D implements GameScene {
 			if (Env.d3_foodOscillationEnabledPy.get()) {
 				level3D.world3D().foodOscillation().play();
 			}
-			infoText3D.setVisible(true);
-			var readyText = U.RND.nextInt(100) % 5 == 0 ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
-			infoText3D.setText(readyText);
+			readyMessageText3D.setVisible(true);
+			var readyMessage = U.RND.nextInt(100) % 5 == 0 ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
+			readyMessageText3D.setText(readyMessage);
 		}
 
 		case HUNTING -> {
@@ -392,7 +392,7 @@ public class PlayScene3D implements GameScene {
 		// on state exit
 		switch (e.oldGameState) {
 		case READY -> {
-			infoText3D.setVisible(false);
+			readyMessageText3D.setVisible(false);
 		}
 		case HUNTING -> {
 			if (e.newGameState != GameState.GHOST_DYING) {
