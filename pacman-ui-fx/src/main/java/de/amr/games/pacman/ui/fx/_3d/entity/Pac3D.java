@@ -32,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -98,7 +99,6 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
-	private final GameLevel level;
 	private final Pac pac;
 	private final Group root = new Group();
 	private final Color headColor;
@@ -110,12 +110,10 @@ public class Pac3D {
 	private boolean excited;
 	private Animation dyingAnimation;
 
-	public Pac3D(GameLevel level, Pac pac, Node pacNode, Color headColor, boolean swayingHips) {
-		requireNonNull(level);
+	public Pac3D(Pac pac, Node pacNode, Color headColor, boolean swayingHips) {
 		requireNonNull(pac);
 		requireNonNull(pacNode);
 		requireNonNull(headColor);
-		this.level = level;
 		this.pac = pac;
 		this.headColor = headColor;
 		this.swayingHips = swayingHips;
@@ -179,7 +177,7 @@ public class Pac3D {
 		return light;
 	}
 
-	public void init() {
+	public void init(GameLevel level) {
 		headColorPy.set(headColor);
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
@@ -187,16 +185,16 @@ public class Pac3D {
 		endWalkingAnimation();
 		updatePosition();
 		turnToMoveDirection();
-		updateVisibility();
-		updateLight();
+		updateVisibility(level);
+		updateLight(level);
 	}
 
-	public void update() {
+	public void update(GameLevel level) {
 		updatePosition();
 		turnToMoveDirection();
-		updateVisibility();
+		updateVisibility(level);
 		updateAnimations();
-		updateLight();
+		updateLight(level);
 	}
 
 	private void updatePosition() {
@@ -216,8 +214,8 @@ public class Pac3D {
 		}
 	}
 
-	private void updateVisibility() {
-		root.setVisible(pac.isVisible() && !outsideWorld());
+	private void updateVisibility(GameLevel level) {
+		root.setVisible(pac.isVisible() && !outsideWorld(level.world()));
 	}
 
 	private void updateAnimations() {
@@ -305,7 +303,7 @@ public class Pac3D {
 		return pointLight;
 	}
 
-	private void updateLight() {
+	private void updateLight(GameLevel level) {
 		boolean isVisible = pac.isVisible();
 		boolean isAlive = !pac.isDead();
 		boolean hasPower = pac.powerTimer().isRunning();
@@ -314,8 +312,8 @@ public class Pac3D {
 		light.setMaxRange(hasPower ? maxRange * TS : 0);
 	}
 
-	private boolean outsideWorld() {
-		double worldWidth = level.world().numCols() * TS;
+	private boolean outsideWorld(World world) {
+		double worldWidth = world.numCols() * TS;
 		return position.getX() < 4 || position.getX() > worldWidth - 4;
 	}
 }

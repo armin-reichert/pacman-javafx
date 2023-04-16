@@ -31,6 +31,7 @@ import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Bonus;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -51,7 +52,6 @@ import javafx.util.Duration;
  */
 public class Bonus3D {
 
-	private final GameLevel level;
 	private final Bonus bonus;
 	private final Image symbolImage;
 	private final Image pointsImage;
@@ -61,13 +61,11 @@ public class Bonus3D {
 	private RotateTransition edibleAnimation;
 	private boolean moving;
 
-	public Bonus3D(GameLevel level, Bonus bonus, Image symbolImage, Image pointsImage, boolean moving) {
-		requireNonNull(level);
+	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage, boolean moving) {
 		requireNonNull(bonus);
 		requireNonNull(symbolImage);
 		requireNonNull(pointsImage);
 
-		this.level = level;
 		this.bonus = bonus;
 		this.symbolImage = symbolImage;
 		this.pointsImage = pointsImage;
@@ -89,9 +87,9 @@ public class Bonus3D {
 		eatenAnimation.setRate(2);
 	}
 
-	public void update() {
+	public void update(GameLevel level) {
 		setPosition(bonus.entity().center());
-		boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld();
+		boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld(level.world());
 		shape.setVisible(visible);
 		updateEdibleAnimation();
 	}
@@ -159,8 +157,8 @@ public class Bonus3D {
 		shape.setTranslateZ(-HTS);
 	}
 
-	private boolean outsideWorld() {
+	private boolean outsideWorld(World world) {
 		double x = bonus.entity().center().x();
-		return x < HTS || x > level.world().numCols() * TS - HTS;
+		return x < HTS || x > world.numCols() * TS - HTS;
 	}
 }

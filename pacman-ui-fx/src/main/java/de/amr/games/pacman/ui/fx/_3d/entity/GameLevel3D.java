@@ -140,27 +140,27 @@ public class GameLevel3D {
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
 		var node = pacModel3D().createPacManNode(9.0, colors);
-		var pacMan3D = new Pac3D(level, level.pac(), node, colors.headColor(), false);
+		var pacMan3D = new Pac3D(level.pac(), node, colors.headColor(), false);
 		pacMan3D.drawModePy.bind(Env.d3_drawModePy);
 		return pacMan3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
 		var node = pacModel3D().createMsPacManNode(9.0, colors);
-		var msPacMan3D = new Pac3D(level, level.pac(), node, colors.headColor(), true);
+		var msPacMan3D = new Pac3D(level.pac(), node, colors.headColor(), true);
 		msPacMan3D.drawModePy.bind(Env.d3_drawModePy);
 		return msPacMan3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
-		return new Ghost3D(level, ghost, colors, ghostModel3D(), 8.5);
+		return new Ghost3D(ghost, colors, ghostModel3D(), 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
 		if (r2D instanceof SpritesheetRenderer sr) {
 			var symbolImage = sr.image(sr.bonusSymbolRegion(bonus.symbol()));
 			var pointsImage = sr.image(sr.bonusValueRegion(bonus.symbol()));
-			return new Bonus3D(level, bonus, symbolImage, pointsImage, moving);
+			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
 		}
 		throw new UnsupportedOperationException();
 	}
@@ -175,9 +175,9 @@ public class GameLevel3D {
 	}
 
 	public void update() {
-		pac3D.update();
-		Stream.of(ghosts3D).forEach(Ghost3D::update);
-		bonus3D.update();
+		pac3D.update(level);
+		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
+		bonus3D.update(level);
 		// TODO get rid of this
 		int numLivesShown = level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives();
 		livesCounter3D.update(numLivesShown);

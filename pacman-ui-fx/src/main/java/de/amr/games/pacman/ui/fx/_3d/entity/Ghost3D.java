@@ -72,7 +72,6 @@ public class Ghost3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-	private final GameLevel level;
 	private final Ghost ghost;
 	private final Group root;
 	private final Group numberGroup;
@@ -87,14 +86,12 @@ public class Ghost3D {
 	private Image numberImage;
 	private Look currentLook;
 
-	public Ghost3D(GameLevel level, Ghost ghost, GhostColoring colors, Model3D model3D, double size) {
-		requireNonNull(level);
+	public Ghost3D(Ghost ghost, GhostColoring colors, Model3D model3D, double size) {
 		requireNonNull(ghost);
 		requireNonNull(colors);
 		requireNonNull(model3D);
 		requirePositive(size, "Ghost3D size must be positive but is %f");
 
-		this.level = level;
 		this.ghost = ghost;
 
 		coloredGhost3D = new ColoredGhost3D(model3D, colors, size);
@@ -130,33 +127,31 @@ public class Ghost3D {
 		dressAnimation.setToAngle(15);
 		dressAnimation.setCycleCount(Animation.INDEFINITE);
 		dressAnimation.setAutoReverse(true);
-
-		init();
 	}
 
 	public Node getRoot() {
 		return root;
 	}
 
-	public void init() {
+	public void init(GameLevel level) {
 		brakeAnimation.stop();
 		dressAnimation.stop();
-		updateTransform();
-		updateLook();
+		updateTransform(level.world());
+		updateLook(level);
 	}
 
-	public void update() {
-		updateTransform();
-		updateLook();
+	public void update(GameLevel level) {
+		updateTransform(level.world());
+		updateLook(level);
 		updateAnimations();
 	}
 
-	private void updateTransform() {
+	private void updateTransform(World world) {
 		position.setX(ghost.center().x());
 		position.setY(ghost.center().y());
 		position.setZ(-5);
 		orientation.setAngle(Turn.angle(ghost.moveDir()));
-		root.setVisible(ghost.isVisible() && !outsideWorld());
+		root.setVisible(ghost.isVisible() && !outsideWorld(world));
 	}
 
 	private void updateAnimations() {
@@ -182,20 +177,20 @@ public class Ghost3D {
 		}
 	}
 
-	private void updateLook() {
+	private void updateLook(GameLevel level) {
 		var newLook = switch (ghost.state()) {
-		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
-		case FRIGHTENED -> frightenedOrFlashingLook();
+		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(level);
+		case FRIGHTENED -> frightenedOrFlashingLook(level);
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
 		case EATEN -> Look.NUMBER;
 		default -> Look.NORMAL;
 		};
 		if (currentLook != newLook) {
-			setLook(newLook);
+			setLook(newLook, level.numFlashes);
 		}
 	}
 
-	private void setLook(Look look) {
+	private void setLook(Look look, int numFlashes) {
 		this.currentLook = look;
 		switch (look) {
 		case NORMAL -> {
@@ -205,8 +200,8 @@ public class Ghost3D {
 			coloredGhost3D.appearFrightened();
 		}
 		case FLASHING -> {
-			if (level.numFlashes > 0) {
-				coloredGhost3D.appearFlashing(level.numFlashes, 1.0);
+			if (numFlashes > 0) {
+				coloredGhost3D.appearFlashing(numFlashes, 1.0);
 			} else {
 				coloredGhost3D.appearFrightened();
 			}
@@ -227,20 +222,20 @@ public class Ghost3D {
 		showAsGhost(look != Look.NUMBER);
 	}
 
-	private Look normalOrFrightenedOrFlashingLook() {
+	private Look normalOrFrightenedOrFlashingLook(GameLevel level) {
 		if (level.pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
-			return frightenedOrFlashingLook();
+			return frightenedOrFlashingLook(level);
 		}
 		return Look.NORMAL;
 	}
 
-	private Look frightenedOrFlashingLook() {
+	private Look frightenedOrFlashingLook(GameLevel level) {
 		return level.pac().isPowerFading(level) ? Look.FLASHING : Look.FRIGHTENED;
 	}
 
-	private boolean outsideWorld() {
+	private boolean outsideWorld(World world) {
 		double centerX = ghost.position().x() + World.HTS;
-		return centerX < 0 || centerX > level.world().numCols() * World.TS;
+		return centerX < 0 || centerX > world.numCols() * World.TS;
 	}
 
 	public void setNumberImage(Image numberImage) {

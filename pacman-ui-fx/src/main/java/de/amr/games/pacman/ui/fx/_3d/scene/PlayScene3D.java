@@ -50,7 +50,6 @@ import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx._3d.entity.GameLevel3D;
-import de.amr.games.pacman.ui.fx._3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx._3d.entity.Text3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppResources;
@@ -313,14 +312,16 @@ public class PlayScene3D implements GameScene {
 		switch (e.newGameState) {
 
 		case READY -> {
-			level3D.pac3D().init();
-			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
-			if (Env.d3_foodOscillationEnabledPy.get()) {
-				level3D.world3D().foodOscillation().play();
-			}
-			readyMessageText3D.setVisible(true);
-			var readyMessage = U.inPercentOfCases(40) ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
-			readyMessageText3D.setText(readyMessage);
+			context.level().ifPresent(level -> {
+				level3D.pac3D().init(level);
+				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
+				if (Env.d3_foodOscillationEnabledPy.get()) {
+					level3D.world3D().foodOscillation().play();
+				}
+				readyMessageText3D.setVisible(true);
+				var readyMessage = U.inPercentOfCases(40) ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
+				readyMessageText3D.setText(readyMessage);
+			});
 		}
 
 		case HUNTING -> {
