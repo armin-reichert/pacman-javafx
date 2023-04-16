@@ -126,13 +126,12 @@ public class World3D {
 		this.mazeColoring = mazeColoring;
 		this.pelletModel3D = pelletModel3D;
 		this.houseLight = createGhostHouseLight(world.ghostHouse());
+		this.foodOscillation = new FoodOscillation(foodGroup);
 
 		buildFloor();
 		buildMaze(MAZE_RESOLUTION);
+		addFood();
 
-		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
-		world.tilesContainingFood().forEach(tile -> foodGroup.getChildren().add(createFood(tile, foodMaterial).getRoot()));
-		foodOscillation = new FoodOscillation(foodGroup);
 		root.getChildren().addAll(floorGroup, wallsGroup, doorSegmentsGroup, houseLight, foodGroup);
 	}
 
@@ -389,13 +388,14 @@ public class World3D {
 
 	// Food
 
-	public Eatable3D createFood(Vector2i tile, PhongMaterial material) {
-		requireNonNull(tile);
-		requireNonNull(material);
-
-		return world.isEnergizerTile(tile)//
-				? createEnergizer3D(tile, material)//
-				: createNormalPellet3D(tile, material);
+	private void addFood() {
+		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
+		world.tilesContainingFood().forEach(tile -> {
+			var food3D = world.isEnergizerTile(tile)//
+					? createEnergizer3D(tile, foodMaterial)//
+					: createNormalPellet3D(tile, foodMaterial);
+			foodGroup.getChildren().add(food3D.getRoot());
+		});
 	}
 
 	private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
@@ -436,7 +436,6 @@ public class World3D {
 
 	public Optional<Eatable3D> eatableAt(Vector2i tile) {
 		requireNonNull(tile);
-
 		return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 
