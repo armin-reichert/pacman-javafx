@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx._3d;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx._3d.objimport.ObjImporter;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
@@ -24,6 +27,27 @@ import javafx.scene.shape.MeshView;
 public class Model3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+
+	public static MeshView meshView(Node tree, String id) {
+		requireNonNull(tree);
+		requireNonNull(id);
+
+		var cssID = cssID(id);
+		var node = tree.lookup("#" + cssID);
+		if (node == null) {
+			throw new IllegalArgumentException("No mesh view with ID '%s' found".formatted(cssID));
+		}
+		if (node instanceof MeshView meshView) {
+			return meshView;
+		}
+		throw new IllegalArgumentException(
+				"Node with CSS ID '%s' is not a MeshView but a %s".formatted(cssID, node.getClass()));
+	}
+
+	protected static String cssID(String id) {
+		// TODO what else need to be escaped?
+		return id.replace('.', '-');
+	}
 
 	private Map<String, Mesh> meshes = new HashMap<>();
 	private Map<String, PhongMaterial> materials = new HashMap<>();

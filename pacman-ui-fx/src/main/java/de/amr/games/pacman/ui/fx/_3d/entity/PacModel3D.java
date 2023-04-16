@@ -64,27 +64,6 @@ public class PacModel3D extends Model3D {
 		return meshView(pacShape, MESH_ID_PALATE);
 	}
 
-	private static MeshView meshView(Node pacNode, String id) {
-		requireNonNull(pacNode);
-		requireNonNull(id);
-
-		var cssID = cssID(id);
-		var node = pacNode.lookup("#" + cssID);
-		if (node == null) {
-			throw new IllegalArgumentException("No mesh view with ID '%s' found".formatted(cssID));
-		}
-		if (node instanceof MeshView meshView) {
-			return meshView;
-		}
-		throw new IllegalArgumentException(
-				"Node with CSS ID '%s' is not a MeshView but a %s".formatted(cssID, node.getClass()));
-	}
-
-	private static String cssID(String id) {
-		// TODO what else need to be escaped?
-		return id.replace('.', '-');
-	}
-
 	public PacModel3D(String objPath) {
 		super(objPath);
 	}
