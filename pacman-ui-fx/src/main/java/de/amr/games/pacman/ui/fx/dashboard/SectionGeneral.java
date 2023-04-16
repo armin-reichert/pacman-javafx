@@ -46,20 +46,18 @@ public class SectionGeneral extends Section {
 	public static final int MIN_FRAMERATE = 5;
 	public static final int MAX_FRAMERATE = 120;
 
-	private Button[] btnsSimulation;
-	private Spinner<Integer> spinnerSimulationSteps;
-	private Slider sliderTargetFPS;
-	private CheckBox cbUsePlayScene3D;
-	private CheckBox cbDebugUI;
-	private CheckBox cbTimeMeasured;
-	private ImageView iconPlay = new ImageView(ResourceMgr.image("icons/play.png"));
-	private ImageView iconStop = new ImageView(ResourceMgr.image("icons/stop.png"));
-	private ImageView iconStep = new ImageView(ResourceMgr.image("icons/step.png"));
-	private Tooltip tooltipPlay = new Tooltip("Play");
-	private Tooltip tooltipStop = new Tooltip("Stop");
-	private Tooltip tooltipStep = new Tooltip("Single Step Mode");
-	private Slider sliderPiPSceneHeight;
-	private Slider sliderPiPOpacity;
+	private final Button[] btnsSimulation;
+	private final Spinner<Integer> spinnerSimulationSteps;
+	private final Slider sliderTargetFPS;
+	private final CheckBox cbUsePlayScene3D;
+	private final CheckBox cbDebugUI;
+	private final CheckBox cbTimeMeasured;
+	private final ImageView iconPlay = new ImageView(ResourceMgr.image("icons/play.png"));
+	private final ImageView iconStop = new ImageView(ResourceMgr.image("icons/stop.png"));
+	private final ImageView iconStep = new ImageView(ResourceMgr.image("icons/step.png"));
+	private final Tooltip tooltipPlay = new Tooltip("Play");
+	private final Tooltip tooltipStop = new Tooltip("Stop");
+	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
 	private final ColorPicker pickerBgColor;
 
 	public SectionGeneral(GameUI ui, String title) {
@@ -94,19 +92,8 @@ public class SectionGeneral extends Section {
 
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
-		addInfo("Main scene", () -> String.format("w=%.0f h=%.0f", ui.mainScene().getWidth(), ui.mainScene().getHeight()));
-
 		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
-
-		sliderPiPSceneHeight = addSlider("PiP Size", GameUI.PIP_MIN_HEIGHT, GameUI.PIP_MAX_HEIGHT,
-				Env.pipSceneHeightPy.get());
-		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
-
-		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
-		sliderPiPOpacity.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
 
 		cbUsePlayScene3D = addCheckBox("Use 3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show UI Debug Stuff", () -> Ufx.toggle(Env.showDebugInfoPy));
@@ -121,8 +108,6 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!Env.simulationPausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
 		sliderTargetFPS.setValue(Env.simulationSpeedPy.get());
-		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
-		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
 		cbUsePlayScene3D.setSelected(Env.d3_enabledPy.get());
 		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());

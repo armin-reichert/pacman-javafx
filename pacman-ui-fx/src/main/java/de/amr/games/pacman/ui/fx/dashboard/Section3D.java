@@ -44,6 +44,8 @@ import javafx.scene.shape.DrawMode;
 public class Section3D extends Section {
 
 	private final ComboBox<Perspective> comboPerspective;
+	private final Slider sliderPiPSceneHeight;
+	private final Slider sliderPiPOpacity;
 	private final CheckBox cbEnergizerExplodes;
 	private final Slider sliderWallHeight;
 	private final Slider sliderWallThickness;
@@ -62,6 +64,13 @@ public class Section3D extends Section {
 		comboPerspective.setOnAction(e -> Env.d3_perspectivePy.set(comboPerspective.getValue()));
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
 				.available(() -> gameScene().is3D());
+		sliderPiPSceneHeight = addSlider("PiP Size", GameUI.PIP_MIN_HEIGHT, GameUI.PIP_MAX_HEIGHT,
+				Env.pipSceneHeightPy.get());
+		sliderPiPSceneHeight.valueProperty()
+				.addListener((obs, oldValue, newValue) -> Env.pipSceneHeightPy.set(newValue.doubleValue()));
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
+		sliderPiPOpacity.valueProperty()
+				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
 		pickerLightColor = addColorPicker("Light Color", Env.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
 		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, Env.d3_mazeWallHeightPy.get());
@@ -86,6 +95,8 @@ public class Section3D extends Section {
 	public void update() {
 		super.update();
 		comboPerspective.setValue(Env.d3_perspectivePy.get());
+		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
+		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
 		sliderWallHeight.setValue(Env.d3_mazeWallHeightPy.get());
 		comboFloorTexture.setValue(Env.d3_floorTexturePy.get());
 		cbFloorTextureRandom.setSelected(Env.d3_floorTextureRandomPy.get());
