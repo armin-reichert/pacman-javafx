@@ -32,13 +32,13 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.common.world.Door;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
@@ -211,15 +211,15 @@ public class GameLevel3D {
 	private void updateHouseState() {
 		boolean isGhostNearHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
 				.anyMatch(Ghost::isVisible);
-		boolean accessGranted = isAccessGranted(level.ghosts(), level.world().ghostHouse().door().entryPosition());
+		boolean accessGranted = isAccessGranted(level.ghosts(), level.world().ghostHouse().doors().get(0)); // TODO
 		world3D.houseLighting().setLightOn(isGhostNearHouse);
 		world3D.doorWings3D().forEach(door3D -> door3D.setOpen(accessGranted));
 	}
 
-	private boolean isAccessGranted(Stream<Ghost> ghosts, Vector2f doorPosition) {
+	private boolean isAccessGranted(Stream<Ghost> ghosts, Door door) {
 		return ghosts.anyMatch(ghost -> ghost.isVisible()
 				&& ghost.is(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-				&& ghost.position().euclideanDistance(doorPosition) <= 1.5 * TS);
+				&& ghost.position().euclideanDistance(door.entryPosition()) <= 1.5 * TS);
 	}
 
 	public Group getRoot() {

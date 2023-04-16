@@ -197,11 +197,13 @@ public class World3D {
 		addCorners(floorPlan, createWallData(resolution));
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
-		world.ghostHouse().door().tiles().forEach(tile -> {
-			var doorWing3D = createDoorWing3D(tile, mazeColoring.houseDoorColor());
-			doorWings3D.add(doorWing3D);
-			doorWingsGroup.getChildren().add(doorWing3D.getRoot());
-		});
+		for (var door : world.ghostHouse().doors()) {
+			door.tiles().forEach(tile -> {
+				var doorWing3D = createDoorWing3D(tile, mazeColoring.houseDoorColor());
+				doorWings3D.add(doorWing3D);
+				doorWingsGroup.getChildren().add(doorWing3D.getRoot());
+			});
+		}
 		LOG.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
