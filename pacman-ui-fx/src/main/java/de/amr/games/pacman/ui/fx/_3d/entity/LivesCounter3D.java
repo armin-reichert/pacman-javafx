@@ -59,14 +59,15 @@ public class LivesCounter3D {
 
 	private final Group root = new Group();
 	private final Group pacGroup = new Group();
-	private final Group socketGroup = new Group();
+	private final Group pillarAndPlateGroup = new Group();
 	private final PointLight light;
 
-	private final PhongMaterial plateauMaterial = ResourceMgr.coloredMaterial(Color.rgb(180, 180, 180));
+	private double pillarHeight = 5.0;
 	private final PhongMaterial pillarMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
-	private double socketHeight = 5.0;
-	private double plateauRadius = 6.0;
-	private double plateauHeight = 1.0;
+
+	private double plateRadius = 6.0;
+	private double plateThickness = 1.0;
+	private final PhongMaterial plateMaterial = ResourceMgr.coloredMaterial(Color.rgb(180, 180, 180));
 
 	private final List<Animation> animations = new ArrayList<>();
 
@@ -75,34 +76,34 @@ public class LivesCounter3D {
 		requireNonNull(fnPacNode);
 
 		for (int i = 0; i < maxLives; ++i) {
-			addSocket(2 * i * TS, socketHeight);
+			addPillarAndPlate(2 * i * TS);
 			var pacShape = fnPacNode.get();
 			PacModel3D.headMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
 			PacModel3D.palateMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
 			PacModel3D.eyesMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
 			pacShape.setTranslateX(2.0 * i * TS);
-			pacShape.setTranslateZ(-socketHeight - 5.0);
+			pacShape.setTranslateZ(-(pillarHeight + 5.5));
 			if (lookRight) {
 				pacShape.setRotationAxis(Rotate.Z_AXIS);
 				pacShape.setRotate(180);
 			}
 			pacGroup.getChildren().add(pacShape);
 
-			var animation = new RotateTransition(Duration.seconds(20.0), pacShape);
-			animation.setAxis(Rotate.Z_AXIS);
-			animation.setByAngle(360);
-			animation.setInterpolator(Interpolator.LINEAR);
-			animation.setCycleCount(Animation.INDEFINITE);
-			animations.add(animation);
+			var plateRotation = new RotateTransition(Duration.seconds(20.0), pacShape);
+			plateRotation.setAxis(Rotate.Z_AXIS);
+			plateRotation.setByAngle(360);
+			plateRotation.setInterpolator(Interpolator.LINEAR);
+			plateRotation.setCycleCount(Animation.INDEFINITE);
+			animations.add(plateRotation);
 		}
 
 		light = new PointLight(Color.grayRgb(200));
 		light.setTranslateX(TS * (maxLives - 1));
 		light.setTranslateY(-2 * TS);
-		light.setTranslateZ(-socketHeight - 10);
+		light.setTranslateZ(-pillarHeight - 10);
 		light.setMaxRange(5 * TS);
 
-		root.getChildren().addAll(socketGroup, pacGroup, light);
+		root.getChildren().addAll(pillarAndPlateGroup, pacGroup, light);
 	}
 
 	public void startAnimation() {
@@ -113,14 +114,14 @@ public class LivesCounter3D {
 		animations.forEach(Animation::stop);
 	}
 
-	private void addSocket(double x, double pillarHeight) {
-		var plateau = new Cylinder(plateauRadius, plateauHeight);
-		plateau.setMaterial(plateauMaterial);
-		plateau.setTranslateX(x);
-		plateau.setTranslateZ(-pillarHeight - plateauHeight);
-		plateau.setRotationAxis(Rotate.X_AXIS);
-		plateau.setRotate(90);
-		plateau.drawModeProperty().bind(Env.d3_drawModePy);
+	private void addPillarAndPlate(double x) {
+		var plate = new Cylinder(plateRadius, plateThickness);
+		plate.setMaterial(plateMaterial);
+		plate.setTranslateX(x);
+		plate.setTranslateZ(-pillarHeight - plateThickness);
+		plate.setRotationAxis(Rotate.X_AXIS);
+		plate.setRotate(90);
+		plate.drawModeProperty().bind(Env.d3_drawModePy);
 
 		var pillar = new Cylinder(1, pillarHeight);
 		pillar.setMaterial(pillarMaterial);
@@ -130,7 +131,7 @@ public class LivesCounter3D {
 		pillar.setRotate(90);
 		pillar.drawModeProperty().bind(Env.d3_drawModePy);
 
-		socketGroup.getChildren().addAll(plateau, pillar);
+		pillarAndPlateGroup.getChildren().addAll(plate, pillar);
 	}
 
 	public Node getRoot() {
