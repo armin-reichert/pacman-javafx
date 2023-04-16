@@ -34,7 +34,7 @@ import javafx.scene.transform.Rotate;
  */
 public class CamDrone implements CameraController {
 
-	private double speed = 0.005;
+	private double speed = 0.01;
 
 	@Override
 	public String toString() {
