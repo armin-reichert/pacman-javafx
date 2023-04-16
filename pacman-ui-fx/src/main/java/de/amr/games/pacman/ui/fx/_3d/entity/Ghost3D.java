@@ -114,7 +114,7 @@ public class Ghost3D {
 		eatenAnimation.setFromAngle(0);
 		eatenAnimation.setToAngle(360);
 		eatenAnimation.setInterpolator(Interpolator.LINEAR);
-		eatenAnimation.setRate(0.5);
+		eatenAnimation.setRate(0.75);
 
 		brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.getRoot());
 		brakeAnimation.setAxis(Rotate.Y_AXIS);
