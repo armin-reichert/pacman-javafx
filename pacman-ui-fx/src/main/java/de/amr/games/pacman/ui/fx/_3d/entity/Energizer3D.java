@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.tileAt;
 import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
 import static java.util.Objects.requireNonNull;
 
@@ -90,6 +91,11 @@ public class Energizer3D implements Eatable3D {
 	@Override
 	public Vector3f position() {
 		return new Vector3f((float) shape.getTranslateX(), (float) shape.getTranslateY(), (float) shape.getTranslateZ());
+	}
+
+	@Override
+	public Vector2i tile() {
+		return tileAt((float) shape.getTranslateX(), (float) shape.getTranslateY());
 	}
 
 	@Override

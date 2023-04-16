@@ -25,14 +25,18 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.model.common.world.World.tileAt;
 import static de.amr.games.pacman.ui.fx.util.Ufx.requirePositive;
 import static java.util.Objects.requireNonNull;
+
+import java.util.Optional;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.util.Vector3f;
+import javafx.animation.Animation;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -74,6 +78,11 @@ public class Pellet3D implements Eatable3D {
 	}
 
 	@Override
+	public Vector2i tile() {
+		return tileAt((float) shape.getTranslateX(), (float) shape.getTranslateY());
+	}
+
+	@Override
 	public Shape3D getRoot() {
 		return shape;
 	}
@@ -82,6 +91,11 @@ public class Pellet3D implements Eatable3D {
 	public void eat() {
 		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> shape.setVisible(false));
 		hideAfterDelay.play();
+	}
+
+	@Override
+	public Optional<Animation> getEatenAnimation() {
+		return Optional.empty();
 	}
 
 	@Override
