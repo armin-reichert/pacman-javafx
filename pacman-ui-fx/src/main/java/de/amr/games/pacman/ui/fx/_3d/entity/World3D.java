@@ -405,17 +405,16 @@ public class World3D {
 		var energizer3D = new Energizer3D(3.5);
 		energizer3D.getRoot().setMaterial(material);
 		energizer3D.placeAtTile(tile);
-		var origin = energizer3D.getRoot();
-		var dropColor = mazeColoring.foodColor().desaturate();
-		var squirting = new Squirting(root, //
-				origin.getTranslateX(), origin.getTranslateY(), origin.getTranslateZ(), //
-				ResourceMgr.coloredMaterial(dropColor)) {
-
+		var squirting = new Squirting(root) {
 			@Override
 			protected boolean reachesEndPosition(Drop drop) {
 				return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
 			}
 		};
+		squirting.setOrigin(energizer3D.getRoot());
+		squirting.setDropCountMin(15);
+		squirting.setDropCountMax(45);
+		squirting.setDropMaterial(ResourceMgr.coloredMaterial(mazeColoring.foodColor().desaturate()));
 		energizer3D.setEatenAnimation(squirting);
 		return energizer3D;
 	}

@@ -23,17 +23,16 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
+import static de.amr.games.pacman.lib.U.randomFloat;
 import static de.amr.games.pacman.lib.U.randomInt;
-
-import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -45,36 +44,17 @@ public abstract class Squirting extends Transition {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final Random RND = new Random();
-
-	private static final short MIN_DROP_COUNT = 20;
-	private static final short MAX_DROP_COUNT = 40;
-
-	private static final float MIN_DROP_RADIUS = 0.1f;
-	private static final float MAX_DROP_RADIUS = 1.0f;
-
-	private static final Vector3f MIN_VELOCITY = new Vector3f(-0.25f, -0.25f, -4.0f);
-	private static final Vector3f MAX_VELOCITY = new Vector3f(0.25f, 0.25f, -1.0f);
-
-	private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
-
-	private static float randomFloat(double left, double right) {
-		float l = (float) left;
-		float r = (float) right;
-		return l + RND.nextFloat() * (r - l);
-	}
-
 	public static class Drop extends Sphere {
 		private float vx;
 		private float vy;
 		private float vz;
 
-		private Drop(double radius, PhongMaterial material, double x, double y, double z) {
+		private Drop(Squirting squirting, double radius) {
 			super(radius);
-			setMaterial(material);
-			setTranslateX(x);
-			setTranslateY(y);
-			setTranslateZ(z);
+			setMaterial(squirting.dropMaterial);
+			setTranslateX(squirting.origin.x());
+			setTranslateY(squirting.origin.y());
+			setTranslateZ(squirting.origin.z());
 			setVisible(false);
 		}
 
@@ -84,38 +64,115 @@ public abstract class Squirting extends Transition {
 			vz = z;
 		}
 
-		private void move() {
+		private void move(Vector3f gravity) {
 			setTranslateX(getTranslateX() + vx);
 			setTranslateY(getTranslateY() + vy);
 			setTranslateZ(getTranslateZ() + vz);
-			vx += GRAVITY.x();
-			vy += GRAVITY.y();
-			vz += GRAVITY.z();
+			vx += gravity.x();
+			vy += gravity.y();
+			vz += gravity.z();
 		}
 	}
 
 	private final Group particleGroup = new Group();
-	private final PhongMaterial dropMaterial;
-	private final Point3D origin;
+	private PhongMaterial dropMaterial = new PhongMaterial();
+	private Vector3f origin = new Vector3f(0, 0, 0);
+	private Vector3f gravity = new Vector3f(0, 0, 0.1f);
+	private int dropCountMin = 20;
+	private int dropCountMax = 40;
+	private float dropRadiusMin = 0.1f;
+	private float dropRadiusMax = 1.0f;
+	private Vector3f dropVelocityMin = new Vector3f(-0.25f, -0.25f, -4.0f);
+	private Vector3f dropVelocityMax = new Vector3f(0.25f, 0.25f, -1.0f);
 
-	protected Squirting(Group parent, double x, double y, double z, PhongMaterial dropMaterial) {
-		this.origin = new Point3D(x, y, z);
-		this.dropMaterial = dropMaterial;
+	protected Squirting(Group parent) {
 		setCycleDuration(Duration.seconds(2));
 		setOnFinished(e -> parent.getChildren().remove(particleGroup));
 		parent.getChildren().add(particleGroup);
 	}
 
+	public void setDropMaterial(PhongMaterial dropMaterial) {
+		this.dropMaterial = dropMaterial;
+	}
+
+	public void setOrigin(float x, float y, float z) {
+		origin = new Vector3f(x, y, z);
+	}
+
+	public void setOrigin(Node node) {
+		setOrigin((float) node.getTranslateX(), (float) node.getTranslateY(), (float) node.getTranslateZ());
+	}
+
+	public Vector3f getGravity() {
+		return gravity;
+	}
+
+	public void setGravity(Vector3f gravity) {
+		this.gravity = gravity;
+	}
+
+	public int getDropCountMin() {
+		return dropCountMin;
+	}
+
+	public void setDropCountMin(int dropCountMin) {
+		this.dropCountMin = dropCountMin;
+	}
+
+	public int getDropCountMax() {
+		return dropCountMax;
+	}
+
+	public void setDropCountMax(int dropCountMax) {
+		this.dropCountMax = dropCountMax;
+	}
+
+	public float getDropRadiusMin() {
+		return dropRadiusMin;
+	}
+
+	public void setDropRadiusMin(float dropRadiusMin) {
+		this.dropRadiusMin = dropRadiusMin;
+	}
+
+	public float getDropRadiusMax() {
+		return dropRadiusMax;
+	}
+
+	public void setDropRadiusMax(float dropRadiusMax) {
+		this.dropRadiusMax = dropRadiusMax;
+	}
+
+	public Vector3f getDropVelocityMin() {
+		return dropVelocityMin;
+	}
+
+	public void setDropVelocityMin(Vector3f dropVelocityMin) {
+		this.dropVelocityMin = dropVelocityMin;
+	}
+
+	public Vector3f getDropVelocityMax() {
+		return dropVelocityMax;
+	}
+
+	public void setDropVelocityMax(Vector3f dropVelocityMax) {
+		this.dropVelocityMax = dropVelocityMax;
+	}
+
+	public PhongMaterial getDropMaterial() {
+		return dropMaterial;
+	}
+
 	protected abstract boolean reachesEndPosition(Drop drop);
 
 	private void createDrops() {
-		for (int i = 0; i < randomInt(MIN_DROP_COUNT, MAX_DROP_COUNT); ++i) {
-			var drop = new Drop(randomFloat(MIN_DROP_RADIUS, MAX_DROP_RADIUS), dropMaterial, origin.getX(), origin.getY(),
-					origin.getZ());
+		for (int i = 0; i < randomInt(dropCountMin, dropCountMax); ++i) {
+			var drop = new Drop(this, randomFloat(dropRadiusMin, dropRadiusMax));
+			drop.setVisible(true);
 			drop.setVelocity(//
-					randomFloat(MIN_VELOCITY.x(), MAX_VELOCITY.x()), //
-					randomFloat(MIN_VELOCITY.y(), MAX_VELOCITY.y()), //
-					randomFloat(MIN_VELOCITY.z(), MAX_VELOCITY.z()));
+					randomFloat(dropVelocityMin.x(), dropVelocityMax.x()), //
+					randomFloat(dropVelocityMin.y(), dropVelocityMax.y()), //
+					randomFloat(dropVelocityMin.z(), dropVelocityMax.z()));
 			particleGroup.getChildren().add(drop);
 		}
 		LOG.info("%d drops created", particleGroup.getChildren().size());
@@ -132,8 +189,7 @@ public abstract class Squirting extends Transition {
 				drop.setVelocity(0, 0, 0);
 				drop.setScaleZ(0.1);
 			} else {
-				drop.setVisible(true);
-				drop.move();
+				drop.move(gravity);
 			}
 		}
 	}
