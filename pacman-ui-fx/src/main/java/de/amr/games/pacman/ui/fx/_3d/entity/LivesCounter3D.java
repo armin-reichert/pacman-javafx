@@ -96,9 +96,9 @@ public class LivesCounter3D {
 			animations.add(animation);
 		}
 
-		light = new PointLight(Color.CORNFLOWERBLUE);
+		light = new PointLight(Color.grayRgb(200));
 		light.setTranslateX(TS * (maxLives - 1));
-		light.setTranslateY(-TS);
+		light.setTranslateY(-2 * TS);
 		light.setTranslateZ(-socketHeight - 10);
 		light.setMaxRange(5 * TS);
 
