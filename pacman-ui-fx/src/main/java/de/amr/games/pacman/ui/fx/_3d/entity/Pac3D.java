@@ -151,7 +151,6 @@ public class Pac3D {
 		walkingAnimation.stop();
 		createWalkingAnimation();
 		walkingAnimation.play();
-		LOG.info("I'm so excited, and I just can't hide it!");
 	}
 
 	public void onLosesPower() {
@@ -162,7 +161,6 @@ public class Pac3D {
 		walkingAnimation.stop();
 		createWalkingAnimation();
 		walkingAnimation.play();
-		LOG.info("I lost my power");
 	}
 
 	public Node getRoot() {

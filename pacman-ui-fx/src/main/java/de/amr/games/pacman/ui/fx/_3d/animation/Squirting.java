@@ -175,7 +175,7 @@ public abstract class Squirting extends Transition {
 					randomFloat(dropVelocityMin.z(), dropVelocityMax.z()));
 			particleGroup.getChildren().add(drop);
 		}
-		LOG.info("%d drops created", particleGroup.getChildren().size());
+		LOG.trace("%d drops created", particleGroup.getChildren().size());
 	}
 
 	@Override
