@@ -37,6 +37,8 @@ public class SectionAbout extends Section {
 	public SectionAbout(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		ImageView armin = new ImageView(ResourceMgr.image("graphics/armin.jpg"));
+		armin.setFitWidth(310);
+		armin.setPreserveRatio(true);
 		Text signature = new Text("Armin Reichert 2021-23");
 		var font = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 20);
 		signature.setFont(font);
