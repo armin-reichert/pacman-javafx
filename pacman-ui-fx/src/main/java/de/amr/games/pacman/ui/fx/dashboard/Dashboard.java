@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.dashboard;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -43,30 +45,23 @@ public class Dashboard extends VBox {
 	public static final Font LABEL_FONT = Font.font("Tahoma", 12);
 	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
-	private Section secGeneral;
-	private Section secGameControl;
-	private Section secGameInfo;
-	private Section secGhostsInfo;
-	private Section secAppearance;
-	private Section sec3D;
-	private Section secKeys;
-	private Section secAbout;
+	private final List<Section> sections = new ArrayList<>();
 
 	public void init(GameUI ui) {
-		secGeneral = new SectionGeneral(ui, "General");
-		secGameControl = new SectionGameControl(ui, "Game Control");
-		secGameInfo = new SectionGameInfo(ui, "Game Info");
-		secGhostsInfo = new SectionGhostsInfo(ui, "Ghosts");
-		secAppearance = new SectionAppearance(ui, "Appearance");
-		sec3D = new Section3D(ui, "3D Settings");
-		secKeys = new SectionKeys(ui, "Keyboard Shortcuts");
-		secAbout = new SectionAbout(ui, "About");
-		sections().forEach(getChildren()::add);
 		setVisible(false);
+		sections.add(new SectionGeneral(ui, "General"));
+		sections.add(new SectionGameControl(ui, "Game Control"));
+		sections.add(new SectionGameInfo(ui, "Game Info"));
+		sections.add(new SectionGhostsInfo(ui, "Ghosts"));
+		sections.add(new SectionAppearance(ui, "Appearance"));
+		sections.add(new Section3D(ui, "3D Settings"));
+		sections.add(new SectionKeys(ui, "Keyboard Shortcuts"));
+		sections.add(new SectionAbout(ui, "About"));
+		sections().forEach(getChildren()::add);
 	}
 
 	public Stream<Section> sections() {
-		return Stream.of(secGeneral, secGameControl, secGameInfo, secGhostsInfo, secAppearance, sec3D, secKeys, secAbout);
+		return sections.stream();
 	}
 
 	public void update() {
