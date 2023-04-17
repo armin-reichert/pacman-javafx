@@ -65,6 +65,6 @@ public class Dashboard extends VBox {
 	}
 
 	public void update() {
-		sections().forEach(Section::update);
+		sections.forEach(Section::update);
 	}
 }
