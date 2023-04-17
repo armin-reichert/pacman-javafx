@@ -390,7 +390,7 @@ public class World3D {
 
 	private void addFood() {
 		var foodMaterial = ResourceMgr.coloredMaterial(mazeColoring.foodColor());
-		world.tilesContainingFood().forEach(tile -> {
+		world.tiles().filter(world::containsFood).forEach(tile -> {
 			var food3D = world.isEnergizerTile(tile)//
 					? createEnergizer3D(tile, foodMaterial)//
 					: createNormalPellet3D(tile, foodMaterial);
