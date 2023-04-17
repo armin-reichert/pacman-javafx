@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene;
 
+import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static de.amr.games.pacman.model.common.world.World.t;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
@@ -124,10 +125,12 @@ public class PlayScene2D extends GameScene2D {
 	protected void drawInfo(GraphicsContext g) {
 		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
 		context.level().ifPresent(level -> {
-			if (level.world() instanceof ArcadeWorld arcadeWorld) {
+			level.upwardsBlockedTiles().forEach(tile -> {
 				g.setFill(Color.RED);
-				arcadeWorld.upwardBlockedTiles().forEach(tile -> g.fillRect(tile.x() * TS, tile.y() * TS, TS, 1));
-			}
+				g.fillOval(tile.x() * TS, (tile.y() - 1) * TS, TS, TS);
+				g.setFill(Color.WHITE);
+				g.fillRect(tile.x() * TS + 1, tile.y() * TS - HTS - 1, TS - 2, 2);
+			});
 		});
 	}
 
