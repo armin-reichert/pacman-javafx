@@ -132,11 +132,11 @@ public class PacModel3D extends Model3D {
 
 		var pearlMaterial = ResourceMgr.coloredMaterial(pearlColor);
 
-		var pearlLeft = new Sphere(0.6);
+		var pearlLeft = new Sphere(0.4);
 		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
 		pearlLeft.setMaterial(pearlMaterial);
 
-		var pearlRight = new Sphere(0.6);
+		var pearlRight = new Sphere(0.4);
 		pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
 		pearlRight.setMaterial(pearlMaterial);
 
