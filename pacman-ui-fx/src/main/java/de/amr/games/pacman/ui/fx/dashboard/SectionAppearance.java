@@ -38,9 +38,9 @@ public class SectionAppearance extends Section {
 
 	private final ColorPicker pickerBgColor;
 	private final ColorPicker pickerLightColor;
+	private final ColorPicker pickerFloorColor;
 	private final ComboBox<String> comboFloorTexture;
 	private final CheckBox cbFloorTextureRandom;
-	private final ColorPicker pickerFloorColor;
 
 	public SectionAppearance(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
@@ -48,11 +48,11 @@ public class SectionAppearance extends Section {
 		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 		pickerLightColor = addColorPicker("Light Color", Env.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
+		pickerFloorColor = addColorPicker("Floor Color", Env.d3_floorColorPy.get());
+		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
 		comboFloorTexture = addComboBox("Floor Texture", textureItems());
 		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
 		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Env.d3_floorTextureRandomPy));
-		pickerFloorColor = addColorPicker("Floor Color", Env.d3_floorColorPy.get());
-		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
 	}
 
 	@Override
