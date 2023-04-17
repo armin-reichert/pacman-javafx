@@ -156,7 +156,7 @@ public class Ghost3D {
 
 	private void updateAnimations() {
 		if (currentLook != Look.NUMBER) {
-			if (ghost.moveResult.tunnelEntered) {
+			if (ghost.enteredTunnel()) {
 				brakeAnimation.playFromStart();
 			}
 			if (dressAnimation.getStatus() != Status.RUNNING) {
