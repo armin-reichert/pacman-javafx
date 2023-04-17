@@ -47,6 +47,7 @@ public class Dashboard extends VBox {
 	private Section secGameControl;
 	private Section secGameInfo;
 	private Section secGhostsInfo;
+	private Section secAppearance;
 	private Section sec3D;
 	private Section secKeys;
 	private Section secAbout;
@@ -55,16 +56,17 @@ public class Dashboard extends VBox {
 		secGeneral = new SectionGeneral(ui, "General");
 		secGameControl = new SectionGameControl(ui, "Game Control");
 		secGameInfo = new SectionGameInfo(ui, "Game Info");
-		secGhostsInfo = new SectionGhostsInfo(ui, "Ghosts Info");
+		secGhostsInfo = new SectionGhostsInfo(ui, "Ghosts");
+		secAppearance = new SectionAppearance(ui, "Appearance");
 		sec3D = new Section3D(ui, "3D Settings");
 		secKeys = new SectionKeys(ui, "Keyboard Shortcuts");
 		secAbout = new SectionAbout(ui, "About");
-		getChildren().addAll(secGeneral, secGameControl, secGameInfo, secGhostsInfo, sec3D, secKeys, secAbout);
+		sections().forEach(getChildren()::add);
 		setVisible(false);
 	}
 
 	public Stream<Section> sections() {
-		return Stream.of(secGeneral, secGameControl, secGameInfo, secGhostsInfo, sec3D, secKeys);
+		return Stream.of(secGeneral, secGameControl, secGameInfo, secGhostsInfo, secAppearance, sec3D, secKeys, secAbout);
 	}
 
 	public void update() {

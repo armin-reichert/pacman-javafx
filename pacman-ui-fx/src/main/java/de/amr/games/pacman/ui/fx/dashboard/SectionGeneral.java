@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tooltip;
@@ -58,7 +57,6 @@ public class SectionGeneral extends Section {
 	private final Tooltip tooltipPlay = new Tooltip("Play");
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
-	private final ColorPicker pickerBgColor;
 
 	public SectionGeneral(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
@@ -91,9 +89,6 @@ public class SectionGeneral extends Section {
 				ui.simulation().getFPS()));
 
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
-
-		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
-		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 
 		cbUsePlayScene3D = addCheckBox("3D play scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));

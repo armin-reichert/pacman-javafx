@@ -123,7 +123,6 @@ public class AppResources {
 		loadFloorTexture("Grass", "grass");
 		loadFloorTexture("Hexagon", "hexagon");
 		loadFloorTexture("Knobs & Bumps", "knobs");
-		loadFloorTexture("Pavement", "pavement");
 		loadFloorTexture("Plastic", "plastic");
 		loadFloorTexture("Wood", "wood");
 

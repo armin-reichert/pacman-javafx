@@ -26,12 +26,10 @@ package de.amr.games.pacman.ui.fx.dashboard;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
@@ -49,10 +47,6 @@ public class Section3D extends Section {
 	private final CheckBox cbEnergizerExplodes;
 	private final Slider sliderWallHeight;
 	private final Slider sliderWallThickness;
-	private final ColorPicker pickerLightColor;
-	private final ComboBox<String> comboFloorTexture;
-	private final CheckBox cbFloorTextureRandom;
-	private final ColorPicker pickerFloorColor;
 	private final CheckBox cbPacLighted;
 	private final CheckBox cbPacWalkingAnimated;
 	private final CheckBox cbAxesVisible;
@@ -71,19 +65,12 @@ public class Section3D extends Section {
 		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Env.pipOpacityPy.get());
 		sliderPiPOpacity.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.pipOpacityPy.set(newValue.doubleValue()));
-		pickerLightColor = addColorPicker("Light Color", Env.d3_lightColorPy.get());
-		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
 		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, Env.d3_mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallHeightPy.set(newVal.doubleValue()));
 		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, Env.d3_mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
-		comboFloorTexture = addComboBox("Floor Texture", textureItems());
-		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
-		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Env.d3_floorTextureRandomPy));
-		pickerFloorColor = addColorPicker("Floor Color", Env.d3_floorColorPy.get());
-		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(Env.d3_energizerExplodesPy));
 		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(Env.d3_pacLightedPy));
 		cbPacWalkingAnimated = addCheckBox("Pac-Man Walking Animated", () -> Ufx.toggle(Env.d3_pacWalkingAnimatedPy));
@@ -98,20 +85,10 @@ public class Section3D extends Section {
 		sliderPiPSceneHeight.setValue(Env.pipSceneHeightPy.get());
 		sliderPiPOpacity.setValue(Env.pipOpacityPy.get());
 		sliderWallHeight.setValue(Env.d3_mazeWallHeightPy.get());
-		comboFloorTexture.setValue(Env.d3_floorTexturePy.get());
-		cbFloorTextureRandom.setSelected(Env.d3_floorTextureRandomPy.get());
 		cbEnergizerExplodes.setSelected(Env.d3_energizerExplodesPy.get());
 		cbPacLighted.setSelected(Env.d3_pacLightedPy.get());
 		cbPacWalkingAnimated.setSelected(Env.d3_pacWalkingAnimatedPy.get());
 		cbAxesVisible.setSelected(Env.d3_axesVisiblePy.get());
 		cbWireframeMode.setSelected(Env.d3_drawModePy.get() == DrawMode.LINE);
-	}
-
-	private String[] textureItems() {
-		var textureKeys = AppResources.textureKeys();
-		var items = new String[textureKeys.length + 1];
-		items[0] = AppResources.KEY_NO_TEXTURE;
-		System.arraycopy(textureKeys, 0, items, 1, textureKeys.length);
-		return items;
 	}
 }
