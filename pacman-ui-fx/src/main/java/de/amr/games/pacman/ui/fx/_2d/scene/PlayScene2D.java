@@ -123,7 +123,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
+		drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
 				g.setFill(Color.RED);

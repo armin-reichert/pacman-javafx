@@ -244,7 +244,7 @@ public class PacManTestRenderer implements Rendering2D {
 			return;
 		}
 		int x = t(2);
-		int y = t(ArcadeWorld.SIZE_TILES.y() - 1);
+		int y = t(ArcadeWorld.TILES_Y - 1);
 		int maxLives = 5;
 		int size = 14;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {

@@ -55,8 +55,8 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final float WIDTH = ArcadeWorld.SIZE_TILES.x() * TS;
-	private static final float HEIGHT = ArcadeWorld.SIZE_TILES.y() * TS;
+	private static final float WIDTH = ArcadeWorld.TILES_X * TS;
+	private static final float HEIGHT = ArcadeWorld.TILES_Y * TS;
 	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);

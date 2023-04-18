@@ -56,7 +56,7 @@ public class Env {
 
 	public static final BooleanProperty pipVisiblePy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty pipOpacityPy = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.SIZE_TILES.y() * World.TS);
+	public static final DoubleProperty pipSceneHeightPy = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * World.TS);
 
 	public static final BooleanProperty d3_axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> d3_drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);

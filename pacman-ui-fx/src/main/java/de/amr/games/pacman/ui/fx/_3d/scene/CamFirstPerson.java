@@ -60,8 +60,8 @@ public class CamFirstPerson implements CameraController {
 	@Override
 	public void update(Camera cam, Pac3D pac3D) {
 		var ref = pac.position().plus(pac.moveDir().vector().toFloatVec().scaled(6));
-		cam.setTranslateX(ref.x() - ArcadeWorld.SIZE_TILES.x() * HTS);
-		cam.setTranslateY(ref.y() - ArcadeWorld.SIZE_TILES.y() * HTS);
+		cam.setTranslateX(ref.x() - ArcadeWorld.TILES_X * HTS);
+		cam.setTranslateY(ref.y() - ArcadeWorld.TILES_Y * HTS);
 		cam.setTranslateZ(-6);
 		cam.setRotationAxis(Rotate.Z_AXIS);
 		cam.setRotate(rotate(pac.moveDir()));

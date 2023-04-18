@@ -126,7 +126,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		drawTileStructure(g, ArcadeWorld.SIZE_TILES.x(), ArcadeWorld.SIZE_TILES.y());
+		drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 	}
 
 	// TODO this is not exactly as in the original game, but looks quite ok

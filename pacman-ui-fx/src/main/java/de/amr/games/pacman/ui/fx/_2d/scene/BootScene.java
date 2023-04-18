@@ -24,14 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene;
 
-import static de.amr.games.pacman.model.common.world.ArcadeWorld.SIZE_TILES;
 import static de.amr.games.pacman.model.common.world.World.TS;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
@@ -45,7 +43,9 @@ import javafx.scene.image.WritableImage;
  */
 public class BootScene extends GameScene2D {
 
-	private static final Vector2i SIZE_PX = ArcadeWorld.SIZE_TILES.scaled(World.TS);
+	private static final int TILES_X = ArcadeWorld.TILES_X;
+	private static final int TILES_Y = ArcadeWorld.TILES_Y;
+	private static final Vector2i SIZE_PX = new Vector2i(TILES_X * TS, TILES_Y * TS);
 
 	private final GraphicsContext ctx;
 	private final WritableImage image;
@@ -95,8 +95,8 @@ public class BootScene extends GameScene2D {
 		clearImage();
 		ctx.setFill(ArcadeTheme.PALE);
 		ctx.setFont(context.rendering2D().screenFont(TS));
-		for (int row = 0; row < SIZE_TILES.y(); ++row) {
-			for (int col = 0; col < SIZE_TILES.x(); ++col) {
+		for (int row = 0; row < TILES_Y; ++row) {
+			for (int col = 0; col < TILES_X; ++col) {
 				var hexCode = Integer.toHexString(U.RND.nextInt(16));
 				ctx.fillText(hexCode, col * 8, row * 8 + 8);
 			}
@@ -107,12 +107,12 @@ public class BootScene extends GameScene2D {
 	private void produceRandomSpriteImage() {
 		clearImage();
 		if (context.rendering2D() instanceof SpritesheetRenderer ssr) {
-			for (int row = 0; row < SIZE_TILES.y() / 2; ++row) {
+			for (int row = 0; row < TILES_Y / 2; ++row) {
 				if (U.RND.nextInt(100) > 10) {
 					var region1 = randomSquare(ssr.spritesheet());
 					var region2 = randomSquare(ssr.spritesheet());
-					var splitX = SIZE_TILES.x() / 8 + U.RND.nextInt(SIZE_TILES.x() / 4);
-					for (int col = 0; col < SIZE_TILES.x() / 2; ++col) {
+					var splitX = TILES_X / 8 + U.RND.nextInt(TILES_X / 4);
+					for (int col = 0; col < TILES_X / 2; ++col) {
 						var region = col < splitX ? region1 : region2;
 						ssr.drawSprite(ctx, region, region.getWidth() * col, region.getHeight() * row);
 					}
@@ -133,8 +133,8 @@ public class BootScene extends GameScene2D {
 	private void produceGridImage() {
 		clearImage();
 		var cellSize = 16;
-		var numRows = SIZE_TILES.y() / 2;
-		var numCols = SIZE_TILES.x() / 2;
+		var numRows = TILES_Y / 2;
+		var numCols = TILES_X / 2;
 		ctx.setStroke(ArcadeTheme.PALE);
 		ctx.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
