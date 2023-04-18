@@ -195,7 +195,7 @@ public class World3D {
 		addCorners(floorPlan, createWallData(resolution));
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
-		addDoors();
+		addHouseDoor();
 		LOG.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
@@ -233,17 +233,15 @@ public class World3D {
 		return doorSegments3D.stream().map(DoorSegment3D.class::cast);
 	}
 
-	private void addDoors() {
-		for (var door : world.houseDoors()) {
-			door.tiles().forEach(tile -> {
-				var doorSegment3D = createDoorSegment3D(tile, mazeColoring.houseDoorColor());
-				doorSegments3D.add(doorSegment3D);
-				doorSegmentsGroup.getChildren().add(doorSegment3D.getRoot());
-			});
-		}
+	private void addHouseDoor() {
+		world.houseDoor().tiles().forEach(tile -> {
+			var doorSegment3D = createHouseDoorSegment3D(tile, mazeColoring.houseDoorColor());
+			doorSegments3D.add(doorSegment3D);
+			doorSegmentsGroup.getChildren().add(doorSegment3D.getRoot());
+		});
 	}
 
-	private DoorSegment3D createDoorSegment3D(Vector2i tile, Color color) {
+	private DoorSegment3D createHouseDoorSegment3D(Vector2i tile, Color color) {
 		var segment = new DoorSegment3D(tile, color);
 		segment.doorHeightPy.set(6.0);
 		segment.getRoot().drawModeProperty().bind(drawModePy);
