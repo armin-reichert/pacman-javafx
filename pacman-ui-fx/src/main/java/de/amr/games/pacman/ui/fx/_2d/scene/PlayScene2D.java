@@ -36,8 +36,8 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.ArcadeWorld;
-import de.amr.games.pacman.model.mspacman.MsPacManGameDemoLevel;
-import de.amr.games.pacman.model.pacman.PacManGameDemoLevel;
+import de.amr.games.pacman.model.mspacman.MsPacManDemoLevel;
+import de.amr.games.pacman.model.pacman.PacManDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
 
 	private void updateSound(GameLevel level) {
 		// TODO don't check for specific level, maybe mark level as silent
-		if (level instanceof PacManGameDemoLevel || level instanceof MsPacManGameDemoLevel) {
+		if (level instanceof PacManDemoLevel || level instanceof MsPacManDemoLevel) {
 			return;
 		}
 		if (level.pac().starvingTicks() > 10) {
