@@ -35,7 +35,7 @@ import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
@@ -123,7 +123,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		drawTileStructure(g, ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
+		drawTileStructure(g, World.TILES_X, World.TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
 				g.setFill(Color.RED);

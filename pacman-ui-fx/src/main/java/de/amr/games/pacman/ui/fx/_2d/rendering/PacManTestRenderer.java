@@ -41,7 +41,6 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
 import de.amr.games.pacman.model.common.world.World;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -244,7 +243,7 @@ public class PacManTestRenderer implements Rendering2D {
 			return;
 		}
 		int x = t(2);
-		int y = t(ArcadeWorld.TILES_Y - 1);
+		int y = t(World.TILES_Y - 1);
 		int maxLives = 5;
 		int size = 14;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {

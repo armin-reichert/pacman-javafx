@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.actors.Entity;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -132,7 +132,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 			return;
 		}
 		int x = t(2);
-		int y = t(ArcadeWorld.TILES_Y - 2);
+		int y = t(World.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			drawSprite(g, lifeSymbolRegion(), x + t(2 * i), y);

@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.common.world.World.TS;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
@@ -43,8 +43,8 @@ import javafx.scene.image.WritableImage;
  */
 public class BootScene extends GameScene2D {
 
-	private static final int TILES_X = ArcadeWorld.TILES_X;
-	private static final int TILES_Y = ArcadeWorld.TILES_Y;
+	private static final int TILES_X = World.TILES_X;
+	private static final int TILES_Y = World.TILES_Y;
 	private static final Vector2i SIZE_PX = new Vector2i(TILES_X * TS, TILES_Y * TS);
 
 	private final GraphicsContext ctx;

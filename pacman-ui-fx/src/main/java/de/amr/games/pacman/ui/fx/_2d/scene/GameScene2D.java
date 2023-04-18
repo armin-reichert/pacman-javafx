@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.world.ArcadeWorld;
+import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -55,8 +55,8 @@ public abstract class GameScene2D implements GameScene {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final float WIDTH = ArcadeWorld.TILES_X * TS;
-	private static final float HEIGHT = ArcadeWorld.TILES_Y * TS;
+	private static final float WIDTH = World.TILES_X * TS;
+	private static final float HEIGHT = World.TILES_Y * TS;
 	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
