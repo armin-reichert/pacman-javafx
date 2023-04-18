@@ -37,7 +37,6 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.common.world.FloorPlan;
-import de.amr.games.pacman.model.common.world.GhostHouse;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.MazeColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
@@ -125,7 +124,7 @@ public class World3D {
 		this.world = world;
 		this.mazeColoring = mazeColoring;
 		this.pelletModel3D = pelletModel3D;
-		this.houseLight = createGhostHouseLight(world.ghostHouse());
+		this.houseLight = createGhostHouseLight();
 		this.foodOscillation = new FoodOscillation(foodGroup);
 
 		buildFloor();
@@ -135,12 +134,12 @@ public class World3D {
 		root.getChildren().addAll(floorGroup, wallsGroup, doorSegmentsGroup, houseLight, foodGroup);
 	}
 
-	private PointLight createGhostHouseLight(GhostHouse house) {
+	private PointLight createGhostHouseLight() {
 		var light = new PointLight();
 		light.setColor(Color.GHOSTWHITE);
 		light.setMaxRange(3 * TS);
-		light.setTranslateX(house.position().x() * TS + house.size().x() * HTS);
-		light.setTranslateY(house.position().y() * TS + house.size().y() * HTS - TS);
+		light.setTranslateX(world.housePosition().x() * TS + world.houseSize().x() * HTS);
+		light.setTranslateY(world.housePosition().y() * TS + world.houseSize().y() * HTS - TS);
 		light.setTranslateZ(-TS);
 		return light;
 	}
@@ -235,7 +234,7 @@ public class World3D {
 	}
 
 	private void addDoors() {
-		for (var door : world.ghostHouse().doors()) {
+		for (var door : world.doors()) {
 			door.tiles().forEach(tile -> {
 				var doorSegment3D = createDoorSegment3D(tile, mazeColoring.houseDoorColor());
 				doorSegments3D.add(doorSegment3D);
@@ -318,7 +317,7 @@ public class World3D {
 		final double topHeight = 0.5;
 		final double ghostHouseHeight = 9.0;
 		final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
-		final boolean ghostHouseWall = world.ghostHouse().contains(tile);
+		final boolean ghostHouseWall = world.houseContains(tile);
 
 		var base = switch (wallData.type) {
 		case FloorPlan.HWALL -> horizontalWall(wallData);
