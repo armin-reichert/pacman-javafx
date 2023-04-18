@@ -90,7 +90,7 @@ public class SectionGeneral extends Section {
 
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
-		cbUsePlayScene3D = addCheckBox("3D play scene", Actions::toggleUse3DScene);
+		cbUsePlayScene3D = addCheckBox("3D Play Scene", Actions::toggleUse3DScene);
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
 	}
