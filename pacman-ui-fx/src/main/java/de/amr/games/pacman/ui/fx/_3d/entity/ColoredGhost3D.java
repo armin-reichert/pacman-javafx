@@ -56,7 +56,7 @@ public class ColoredGhost3D {
 
 	private final GhostColoring coloring;
 	private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
-	private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeBallsColor", Color.WHITE);
+	private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
 	private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
 	private ParallelTransition flashingAnimation;
