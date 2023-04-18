@@ -24,12 +24,12 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.model.common.Validator.requirePositive;
 import static java.util.Objects.requireNonNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -111,7 +111,7 @@ public class Text3D {
 	}
 
 	public void setQuality(double quality) {
-		Ufx.requirePositive(quality, "Text3D quality must be positive but is %f");
+		requirePositive(quality, "Text3D quality must be positive but is %f");
 
 		if (quality == this.quality) {
 			return;
