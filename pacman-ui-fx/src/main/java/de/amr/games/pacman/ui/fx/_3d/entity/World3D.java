@@ -234,7 +234,7 @@ public class World3D {
 	}
 
 	private void addDoors() {
-		for (var door : world.doors()) {
+		for (var door : world.houseDoors()) {
 			door.tiles().forEach(tile -> {
 				var doorSegment3D = createDoorSegment3D(tile, mazeColoring.houseDoorColor());
 				doorSegments3D.add(doorSegment3D);
