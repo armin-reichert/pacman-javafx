@@ -50,10 +50,6 @@ public class ColorFlashing extends Transition {
 		setInterpolator(Interpolator.EASE_OUT);
 	}
 
-	public Color getColor() {
-		return colorPy.get();
-	}
-
 	@Override
 	protected void interpolate(double t) {
 		colorPy.set(startColor.interpolate(endColor, t));
