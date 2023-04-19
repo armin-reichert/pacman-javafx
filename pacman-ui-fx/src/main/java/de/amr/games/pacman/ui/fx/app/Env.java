@@ -45,7 +45,7 @@ import javafx.scene.shape.DrawMode;
  */
 public class Env {
 
-	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.CORNFLOWERBLUE);
+	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.grayRgb(30));
 	public static final BooleanProperty showDebugInfoPy = new SimpleBooleanProperty(false);
 
 	public static final BooleanProperty simulationPausedPy = new SimpleBooleanProperty(false);
@@ -60,7 +60,7 @@ public class Env {
 	public static final BooleanProperty d3_axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> d3_drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final BooleanProperty d3_enabledPy = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Color> d3_floorColorPy = new SimpleObjectProperty<>(Color.grayRgb(100));
+	public static final ObjectProperty<Color> d3_floorColorPy = new SimpleObjectProperty<>(Color.grayRgb(150));
 	public static final StringProperty d3_floorTexturePy = new SimpleStringProperty("Knobs & Bumps");
 	public static final BooleanProperty d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> d3_lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
