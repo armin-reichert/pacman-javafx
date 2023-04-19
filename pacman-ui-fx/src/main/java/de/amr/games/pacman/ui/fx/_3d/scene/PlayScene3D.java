@@ -415,19 +415,24 @@ public class PlayScene3D implements GameScene {
 		if (level.intermissionNumber != 0) {
 			return Ufx.pause(0); // no level change animation if intermission scene follows
 		}
+		var perspectiveToRestore = Env.d3_perspectivePy.get();
+		return new SequentialTransition(//
+				Ufx.afterSeconds(1.0, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
+				Ufx.afterSeconds(0.1, () -> ResourceMgr.audioClip("sound/common/sweep.wav").play()), //
+				createLevelRotateAnimation(), //
+				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
+		);
+	}
+
+	private Animation createLevelRotateAnimation() {
 		var rotateAnimation = new RotateTransition();
 		rotateAnimation.setNode(level3D.getRoot());
 		rotateAnimation.setDuration(Duration.seconds(1.5));
+		// TODO rotation does not work as expected
 		rotateAnimation.setAxis(U.RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotateAnimation.setFromAngle(0);
 		rotateAnimation.setToAngle(360);
-		var perspectiveToRestore = Env.d3_perspectivePy.get();
-		return new SequentialTransition(//
-				Ufx.afterSeconds(1, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
-				Ufx.afterSeconds(0.1, () -> ResourceMgr.audioClip("sound/common/sweep.wav").play()), //
-				rotateAnimation, //
-				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
-		);
+		return rotateAnimation;
 	}
 
 	private Animation createLevelCompleteAnimation(GameLevel level) {
