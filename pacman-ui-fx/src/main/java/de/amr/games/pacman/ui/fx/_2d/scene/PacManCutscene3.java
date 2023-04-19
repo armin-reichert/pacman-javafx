@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene;
 
 import static de.amr.games.pacman.lib.math.Vector2i.v2i;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.model.common.world.World.toPx;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.event.GameEvents;
@@ -129,9 +129,9 @@ public class PacManCutscene3 extends GameScene2D {
 			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), t(1), t(5));
+				g.fillText("Wait %d".formatted(initialDelay), toPx(1), toPx(5));
 			} else {
-				g.fillText("Frame %d".formatted(frame), t(1), t(5));
+				g.fillText("Frame %d".formatted(frame), toPx(1), toPx(5));
 			}
 		}
 	}

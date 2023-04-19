@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene;
 import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.BLINKY_END_TILE;
 import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.TITLE_TILE;
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.model.common.world.World.toPx;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.common.GameController;
@@ -110,13 +110,13 @@ public class MsPacManIntroScene extends GameScene2D {
 			var ghost = ic.ghosts.get(ic.ghostIndex());
 			var ghostColor = r.ghostColors(ghost.id()).dress();
 			if (ghost.id() == Ghost.ID_RED_GHOST) {
-				drawText(g, "WITH", ArcadeTheme.PALE, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
+				drawText(g, "WITH", ArcadeTheme.PALE, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + toPx(3));
 			}
-			drawText(g, ghost.name().toUpperCase(), ghostColor, font, t(14 - ghost.name().length() / 2),
-					BLINKY_END_TILE.y() + t(6));
+			drawText(g, ghost.name().toUpperCase(), ghostColor, font, toPx(14 - ghost.name().length() / 2),
+					BLINKY_END_TILE.y() + toPx(6));
 		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
-			drawText(g, "STARRING", ArcadeTheme.PALE, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + t(3));
-			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + t(6));
+			drawText(g, "STARRING", ArcadeTheme.PALE, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + toPx(3));
+			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, TITLE_TILE.x(), BLINKY_END_TILE.y() + toPx(6));
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);

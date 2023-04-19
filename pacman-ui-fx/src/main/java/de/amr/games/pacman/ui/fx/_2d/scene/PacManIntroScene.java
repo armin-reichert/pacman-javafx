@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.model.common.world.World.toPx;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawTileStructure;
 
@@ -138,7 +138,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawCopyright(GraphicsContext g) {
 		var r = context.rendering2D();
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), t(4), t(32));
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), toPx(4), toPx(32));
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -151,9 +151,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = PacManIntroData.LEFT_TILE;
 		var font = r.screenFont(TS);
 		if (intro.context().titleVisible) {
-			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, t(col + 3), t(6));
-			drawText(g, "/", ArcadeTheme.PALE, font, t(col + 13), t(6));
-			drawText(g, "NICKNAME", ArcadeTheme.PALE, font, t(col + 15), t(6));
+			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, toPx(col + 3), toPx(6));
+			drawText(g, "/", ArcadeTheme.PALE, font, toPx(col + 13), toPx(6));
+			drawText(g, "NICKNAME", ArcadeTheme.PALE, font, toPx(col + 15), toPx(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().pictureVisible[id]) {
@@ -161,12 +161,12 @@ public class PacManIntroScene extends GameScene2D {
 			}
 			int row = 7 + 3 * id;
 			var color = r.ghostColors(id).dress();
-			r.drawGhostFacingRight(g, id, t(col) + 4, t(row));
+			r.drawGhostFacingRight(g, id, toPx(col) + 4, toPx(row));
 			if (intro.context().characterVisible[id]) {
-				drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, t(col + 3), t(row + 1));
+				drawText(g, "-" + PacManIntroData.CHARACTERS[id], color, font, toPx(col + 3), toPx(row + 1));
 			}
 			if (intro.context().nicknameVisible[id]) {
-				drawText(g, QUOTE + intro.context().ghosts[id].name() + QUOTE, color, font, t(col + 14), t(row + 1));
+				drawText(g, QUOTE + intro.context().ghosts[id].name() + QUOTE, color, font, toPx(col + 14), toPx(row + 1));
 			}
 		}
 	}
@@ -174,7 +174,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.setFill(context.rendering2D().mazeColors(1).foodColor());
-			g.fillOval(t(PacManIntroData.LEFT_TILE), t(20), TS, TS);
+			g.fillOval(toPx(PacManIntroData.LEFT_TILE), toPx(20), TS, TS);
 		}
 	}
 
@@ -203,16 +203,16 @@ public class PacManIntroScene extends GameScene2D {
 		int col = PacManIntroData.LEFT_TILE + 6;
 		int row = 25;
 		g.setFill(r.mazeColors(1).foodColor());
-		g.fillRect(t(col) + 4, t(row - 1) + 4, 2, 2);
+		g.fillRect(toPx(col) + 4, toPx(row - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
-			g.fillOval(t(col), t(row + 1), TS, TS);
+			g.fillOval(toPx(col), toPx(row + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);
 		g.setFont(r.screenFont(TS));
-		g.fillText("10", t(col + 2), t(row));
-		g.fillText("50", t(col + 2), t(row + 2));
+		g.fillText("10", toPx(col + 2), toPx(row));
+		g.fillText("50", toPx(col + 2), toPx(row + 2));
 		g.setFont(r.screenFont(6));
-		g.fillText("PTS", t(col + 5), t(row));
-		g.fillText("PTS", t(col + 5), t(row + 2));
+		g.fillText("PTS", toPx(col + 5), toPx(row));
+		g.fillText("PTS", toPx(col + 5), toPx(row + 2));
 	}
 }

@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.model.common.world.World.toPx;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 import static java.util.Objects.requireNonNull;
 
@@ -119,13 +119,13 @@ public abstract class GameScene2D implements GameScene {
 		r.fillCanvas(g, ArcadeTheme.BLACK);
 		if (context.isScoreVisible()) {
 			context.game().score()
-					.ifPresent(score -> r.drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, t(1), t(1)));
+					.ifPresent(score -> r.drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, toPx(1), toPx(1)));
 			context.game().highScore()
-					.ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, t(16), t(1)));
+					.ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, toPx(16), toPx(1)));
 		}
 		drawScene(g);
 		if (context.isCreditVisible()) {
-			drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), t(2), t(36) - 1);
+			drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), toPx(2), toPx(36) - 1);
 		}
 		if (infoVisiblePy.get()) {
 			drawInfo(g);

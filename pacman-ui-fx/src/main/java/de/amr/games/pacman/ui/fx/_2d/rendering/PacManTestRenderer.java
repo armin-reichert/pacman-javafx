@@ -25,7 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.model.common.world.World.t;
+import static de.amr.games.pacman.model.common.world.World.toPx;
 
 import java.util.List;
 import java.util.Optional;
@@ -242,13 +242,13 @@ public class PacManTestRenderer implements Rendering2D {
 		if (numLivesDisplayed <= 0) {
 			return;
 		}
-		int x = t(2);
-		int y = t(World.TILES_Y - 1);
+		int x = toPx(2);
+		int y = toPx(World.TILES_Y - 1);
 		int maxLives = 5;
 		int size = 14;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			g.setFill(Color.YELLOW);
-			g.fillOval(x + t(2 * i) - 7, y - 7, size, size);
+			g.fillOval(x + toPx(2 * i) - 7, y - 7, size, size);
 		}
 	}
 
