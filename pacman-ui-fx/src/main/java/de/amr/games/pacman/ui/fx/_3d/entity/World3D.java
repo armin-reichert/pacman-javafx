@@ -23,7 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
 import static de.amr.games.pacman.model.common.world.World.TS;
 import static java.util.Objects.requireNonNull;
 
@@ -138,8 +137,9 @@ public class World3D {
 		var light = new PointLight();
 		light.setColor(Color.GHOSTWHITE);
 		light.setMaxRange(3 * TS);
-		light.setTranslateX(world.housePosition().x() * TS + world.houseSize().x() * HTS);
-		light.setTranslateY(world.housePosition().y() * TS + world.houseSize().y() * HTS - TS);
+		var center = world.houseSeatPositions().get(1);
+		light.setTranslateX(center.x() + World.HTS);
+		light.setTranslateY(center.y());
 		light.setTranslateZ(-TS);
 		return light;
 	}
