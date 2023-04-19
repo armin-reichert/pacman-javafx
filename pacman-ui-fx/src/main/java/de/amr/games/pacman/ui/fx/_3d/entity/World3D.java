@@ -127,7 +127,7 @@ public class World3D {
 		this.foodOscillation = new FoodOscillation(foodGroup);
 
 		buildFloor();
-		buildMaze(MAZE_RESOLUTION);
+		buildWorld(MAZE_RESOLUTION);
 		addFood();
 
 		root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, houseLight, foodGroup);
@@ -189,14 +189,15 @@ public class World3D {
 		return wallData;
 	}
 
-	private void buildMaze(int resolution) {
+	private void buildWorld(int resolution) {
+		LOG.info("Build 3D world...");
 		var floorPlan = new FloorPlan(world, resolution);
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, createWallData(resolution));
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 		addHouseDoor();
-		LOG.info("3D maze rebuilt (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
+		LOG.info("Done building 3D world (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
 //	private void transformMaze() {
