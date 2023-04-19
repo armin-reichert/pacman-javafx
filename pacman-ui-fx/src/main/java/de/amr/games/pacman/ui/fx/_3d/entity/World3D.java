@@ -135,7 +135,7 @@ public class World3D {
 
 	private PointLight createGhostHouseLight() {
 		var light = new PointLight();
-		light.setColor(Color.GHOSTWHITE);
+		light.setColor(mazeColoring.wallBaseColor());
 		light.setMaxRange(3 * TS);
 		var center = world.house().seatPositions().get(1);
 		light.setTranslateX(center.x() + World.HTS);
