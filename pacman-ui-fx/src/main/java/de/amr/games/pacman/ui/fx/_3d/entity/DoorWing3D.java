@@ -39,13 +39,13 @@ import javafx.scene.shape.Box;
  * 
  * @author Armin Reichert
  */
-public class DoorSegment3D {
+public class DoorWing3D {
 
 	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(this, "doorHeight", HTS);
 
 	private final Box shape = new Box();
 
-	public DoorSegment3D(Vector2i tile, Color color) {
+	public DoorWing3D(Vector2i tile, Color color) {
 		requireNonNull(tile);
 		requireNonNull(color);
 

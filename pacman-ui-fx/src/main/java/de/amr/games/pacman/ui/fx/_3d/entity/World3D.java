@@ -110,8 +110,8 @@ public class World3D {
 	private final Group root = new Group();
 	private final Group floorGroup = new Group();
 	private final Group wallsGroup = new Group();
-	private final List<DoorSegment3D> doorSegments3D = new ArrayList<>();
-	private final Group doorSegmentsGroup = new Group();
+	private final List<DoorWing3D> doorWings3D = new ArrayList<>();
+	private final Group doorGroup = new Group();
 	private final PointLight houseLight;
 	private final Group foodGroup = new Group();
 	private final FoodOscillation foodOscillation;
@@ -131,7 +131,7 @@ public class World3D {
 		buildMaze(MAZE_RESOLUTION);
 		addFood();
 
-		root.getChildren().addAll(floorGroup, wallsGroup, doorSegmentsGroup, houseLight, foodGroup);
+		root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, houseLight, foodGroup);
 	}
 
 	private PointLight createGhostHouseLight() {
@@ -229,23 +229,21 @@ public class World3D {
 //		return new Vector2i(fx / MAZE_RESOLUTION, fy / MAZE_RESOLUTION);
 //	}
 
-	public Stream<DoorSegment3D> doorWings3D() {
-		return doorSegments3D.stream().map(DoorSegment3D.class::cast);
+	public Stream<DoorWing3D> doorWings3D() {
+		return doorWings3D.stream().map(DoorWing3D.class::cast);
 	}
 
 	private void addHouseDoor() {
-		world.houseDoor().tiles().forEach(tile -> {
-			var doorSegment3D = createHouseDoorSegment3D(tile, mazeColoring.houseDoorColor());
-			doorSegments3D.add(doorSegment3D);
-			doorSegmentsGroup.getChildren().add(doorSegment3D.getRoot());
-		});
+		addDoorWing(world.houseDoor().leftWing());
+		addDoorWing(world.houseDoor().rightWing());
 	}
 
-	private DoorSegment3D createHouseDoorSegment3D(Vector2i tile, Color color) {
-		var segment = new DoorSegment3D(tile, color);
-		segment.doorHeightPy.set(6.0);
-		segment.getRoot().drawModeProperty().bind(drawModePy);
-		return segment;
+	private void addDoorWing(Vector2i tile) {
+		var wing3D = new DoorWing3D(tile, mazeColoring.houseDoorColor());
+		wing3D.doorHeightPy.set(6.0);
+		wing3D.getRoot().drawModeProperty().bind(drawModePy);
+		doorWings3D.add(wing3D);
+		doorGroup.getChildren().add(wing3D.getRoot());
 	}
 
 	private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
