@@ -61,6 +61,7 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -74,6 +75,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 /**
  * 3D play scene with sound and animations.
@@ -356,11 +358,11 @@ public class PlayScene3D implements GameScene {
 
 		case CHANGING_TO_NEXT_LEVEL -> {
 			context.level().ifPresent(level -> {
-				Actions.showFlashMessage(AppResources.message("level_starting", level.number()));
+//				Actions.showFlashMessage(AppResources.message("level_starting", level.number()));
 				lockGameState();
 				replaceGameLevel3D(level);
 				updateCamera();
-				Ufx.afterSeconds(3, this::unlockGameState).play();
+				waitSeconds(3.0);
 			});
 		}
 
@@ -371,10 +373,11 @@ public class PlayScene3D implements GameScene {
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.pickLevelCompleteMessage(level.number());
-				lockStateAndPlayAfterSeconds(1.0, //
-						createLevelCompleteAnimation(level), //
-						Ufx.afterSeconds(0.5, level.pac()::hide), //
-						Ufx.afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)));
+				lockStateAndPlayAfterSeconds(1.0 //
+						, createLevelCompleteAnimation(level) //
+						, Ufx.afterSeconds(0.5, level.pac()::hide) //
+						, Ufx.afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)) //
+						, createLevelChangeAnimation(level));
 			});
 		}
 
@@ -407,6 +410,24 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
+	private Animation createLevelChangeAnimation(GameLevel level) {
+		if (level.intermissionNumber != 0) {
+			return Ufx.pause(0); // no level change animation if intermission scene follows
+		}
+		var rotateAnimation = new RotateTransition();
+		rotateAnimation.setNode(level3D.getRoot());
+		rotateAnimation.setDuration(Duration.seconds(3));
+		rotateAnimation.setAxis(U.RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+		rotateAnimation.setFromAngle(0);
+		rotateAnimation.setToAngle(360);
+		var perspectiveToRestore = Env.d3_perspectivePy.get();
+		return new SequentialTransition(//
+				Ufx.afterSeconds(1, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
+				rotateAnimation, //
+				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
+		);
+	}
+
 	private Animation createLevelCompleteAnimation(GameLevel level) {
 		if (level.numFlashes == 0) {
 			return Ufx.pause(1.0);
@@ -426,6 +447,13 @@ public class PlayScene3D implements GameScene {
 		animation.getChildren().addAll(animations);
 		animation.setOnFinished(e -> unlockGameState());
 		animation.play();
+	}
+
+	private void waitSeconds(double seconds) {
+		lockGameState();
+		var pause = Ufx.pause(seconds);
+		pause.setOnFinished(e -> unlockGameState());
+		pause.play();
 	}
 
 	// TODO this is copy-pasta from 2D play scene
