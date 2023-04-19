@@ -55,6 +55,7 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppResources;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.Keys;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -416,13 +417,14 @@ public class PlayScene3D implements GameScene {
 		}
 		var rotateAnimation = new RotateTransition();
 		rotateAnimation.setNode(level3D.getRoot());
-		rotateAnimation.setDuration(Duration.seconds(3));
+		rotateAnimation.setDuration(Duration.seconds(1.5));
 		rotateAnimation.setAxis(U.RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotateAnimation.setFromAngle(0);
 		rotateAnimation.setToAngle(360);
 		var perspectiveToRestore = Env.d3_perspectivePy.get();
 		return new SequentialTransition(//
 				Ufx.afterSeconds(1, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
+				Ufx.afterSeconds(0.1, () -> ResourceMgr.audioClip("sound/common/sweep.wav").play()), //
 				rotateAnimation, //
 				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
 		);
