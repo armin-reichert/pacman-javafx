@@ -137,7 +137,7 @@ public class World3D {
 		var light = new PointLight();
 		light.setColor(Color.GHOSTWHITE);
 		light.setMaxRange(3 * TS);
-		var center = world.houseSeatPositions().get(1);
+		var center = world.house().seatPositions().get(1);
 		light.setTranslateX(center.x() + World.HTS);
 		light.setTranslateY(center.y());
 		light.setTranslateZ(-TS);
@@ -235,8 +235,8 @@ public class World3D {
 	}
 
 	private void addHouseDoor() {
-		addDoorWing(world.houseDoor().leftWing());
-		addDoorWing(world.houseDoor().rightWing());
+		addDoorWing(world.house().door().leftWing());
+		addDoorWing(world.house().door().rightWing());
 	}
 
 	private void addDoorWing(Vector2i tile) {
@@ -314,7 +314,7 @@ public class World3D {
 		final double topHeight = 0.5;
 		final double ghostHouseHeight = 9.0;
 		final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
-		final boolean ghostHouseWall = world.houseContains(tile);
+		final boolean ghostHouseWall = world.house().contains(tile);
 
 		var base = switch (wallData.type) {
 		case FloorPlan.HWALL -> horizontalWall(wallData);
