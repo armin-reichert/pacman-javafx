@@ -41,6 +41,8 @@ import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.PhongMaterial;
 
@@ -105,6 +107,7 @@ public class AppResources {
 	private static Picker<String> messagePickerGameOver;
 	private static Image iconPacManGame;
 	private static Image iconMsPacManGame;
+	private static Image skyImage;
 	private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
 
 	public static void load() {
@@ -129,6 +132,7 @@ public class AppResources {
 
 		iconPacManGame = ResourceMgr.image("icons/pacman.png");
 		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
+		skyImage = ResourceMgr.image("graphics/sky.png");
 
 		var duration = System.nanoTime() - start;
 		LOG.info("Loading application resources done (%.2f seconds).", duration / 1_000_000_000f);
@@ -163,6 +167,10 @@ public class AppResources {
 		case PACMAN -> iconPacManGame;
 		default -> throw new IllegalGameVariantException(variant);
 		};
+	}
+
+	public static BackgroundImage backgroundImage3D() {
+		return new BackgroundImage(skyImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null);
 	}
 
 	/**

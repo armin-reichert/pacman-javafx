@@ -77,6 +77,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -241,6 +242,9 @@ public class GameUI implements GameEventListener {
 		stage.setTitle(AppResources.message(messageKey, dimensionMsg));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		root.setBackground(ResourceMgr.colorBackground(bgColor));
+		if (currentGameScene.is3D()) {
+			root.setBackground(new Background(AppResources.backgroundImage3D()));
+		}
 	}
 
 	/**
