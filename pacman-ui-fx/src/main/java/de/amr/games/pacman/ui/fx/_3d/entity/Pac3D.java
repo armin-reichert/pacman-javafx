@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.model.common.Validator.checkNotNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -111,9 +111,9 @@ public class Pac3D {
 	private Animation dyingAnimation;
 
 	public Pac3D(Pac pac, Node pacNode, Color headColor, boolean swayingHips) {
-		requireNonNull(pac);
-		requireNonNull(pacNode);
-		requireNonNull(headColor);
+		checkNotNull(pac);
+		checkNotNull(pacNode);
+		checkNotNull(headColor);
 		this.pac = pac;
 		this.headColor = headColor;
 		this.swayingHips = swayingHips;
