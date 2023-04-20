@@ -34,7 +34,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.DrawMode;
@@ -63,11 +62,15 @@ public class Actions {
 		return gameController().state();
 	}
 
-	public static void playVoiceMessage(String voiceMessageKey) {
+	public static void playAudioClip(String relPath) {
+		ResourceMgr.audioClip(relPath).play();
+	}
+
+	public static void playVoiceMessage(String messageKey) {
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
 		}
-		currentVoiceMessage = AppResources.voiceMessage(voiceMessageKey);
+		currentVoiceMessage = ResourceMgr.audioClip(messageKey);
 		currentVoiceMessage.play();
 	}
 
@@ -153,7 +156,7 @@ public class Actions {
 		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?
 		if (Env.simulationPausedPy.get()) {
-			SoundHandler.sounds(game().variant()).stopAll();
+			AppResources.sounds(game().variant()).stopAll();
 		}
 	}
 

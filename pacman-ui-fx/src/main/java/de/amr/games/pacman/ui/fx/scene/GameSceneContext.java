@@ -34,8 +34,8 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
-import de.amr.games.pacman.ui.fx.sound.SoundPlayer;
+import de.amr.games.pacman.ui.fx.app.AppResources;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**
  * @author Armin Reichert
@@ -103,7 +103,7 @@ public class GameSceneContext {
 		return level().map(GameLevel::world);
 	}
 
-	public SoundPlayer sounds() {
-		return SoundHandler.sounds(gameVariant());
+	public GameSounds sounds() {
+		return AppResources.sounds(gameVariant());
 	}
 }

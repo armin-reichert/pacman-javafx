@@ -39,13 +39,13 @@ import javafx.scene.media.AudioClip;
 /**
  * @author Armin Reichert
  */
-public class SoundPlayer {
+public class GameSounds {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private final Map<SoundClipID, AudioClip> clips = new EnumMap<>(SoundClipID.class);
 
-	public SoundPlayer(Object[][] data) {
+	public GameSounds(Object[][] data) {
 		for (var row : data) {
 			SoundClipID id = (SoundClipID) row[0];
 			String path = (String) row[1];

@@ -38,12 +38,13 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
+import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.PhongMaterial;
 
 /**
@@ -89,12 +90,6 @@ public class AppResources {
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
-	public static final String VOICE_HELP = "sound/common/press-key.mp3";
-	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
-	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
-	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
-	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
-
 	private static final Picker<String> READY_TEXT_PICKER_PACMAN = new Picker<>(//
 			"LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!", "Asufutimaehaehfutbw");
 
@@ -110,19 +105,73 @@ public class AppResources {
 	private static Image skyImage;
 	private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
 
+	public static final String VOICE_HELP = "sound/common/press-key.mp3";
+	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
+	public static final String VOICE_AUTOPILOT_ON = "sound/common/autopilot-on.mp3";
+	public static final String VOICE_IMMUNITY_OFF = "sound/common/immunity-off.mp3";
+	public static final String VOICE_IMMUNITY_ON = "sound/common/immunity-on.mp3";
+
+	public static final String SOUND_SWEEP = "sound/common/sweep.mp3";
+	public static final String SOUND_LEVEL_COMPLETE = "sound/common/level-complete.mp3";
+	public static final String SOUND_GAME_OVER = "sound/common/game-over.mp3";
+
+	private static final Object[][] MS_PACMAN_SOUND_DATA = { //
+			{ SoundClipID.BONUS_EATEN, "sound/mspacman/Fruit.mp3", 1.0 }, //
+			{ SoundClipID.CREDIT, "sound/mspacman/Credit.mp3", 1.0 }, //
+			{ SoundClipID.EXTRA_LIFE, "sound/mspacman/ExtraLife.mp3", 1.0 }, //
+			{ SoundClipID.GAME_READY, "sound/mspacman/Start.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_EATEN, "sound/mspacman/Ghost.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_RETURNING, "sound/mspacman/GhostEyes.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_1, "sound/mspacman/Act1TheyMeet.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_2, "sound/mspacman/Act2TheChase.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_3, "sound/mspacman/Act3Junior.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_DEATH, "sound/mspacman/Died.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_MUNCH, "sound/mspacman/Pill.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_POWER, "sound/mspacman/ScaredGhost.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_1, "sound/mspacman/GhostNoise1.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_2, "sound/mspacman/GhostNoise2.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_3, "sound/mspacman/GhostNoise3.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
+	};
+
+	private static final Object[][] PACMAN_SOUND_DATA = { //
+			{ SoundClipID.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
+			{ SoundClipID.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
+			{ SoundClipID.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
+			{ SoundClipID.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
+			{ SoundClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
+			{ SoundClipID.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
+			{ SoundClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
+			{ SoundClipID.PACMAN_MUNCH, "sound/pacman/doublemunch.wav", 1.0 }, //
+			{ SoundClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
+			{ SoundClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.4 }, //
+			{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.4 }, //
+			{ SoundClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.4 }, //
+			{ SoundClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.4 }, //
+	};
+
+	private static GameSounds soundsMsPacMan;
+	private static GameSounds soundsPacMan;
+
+	public static GameSounds sounds(GameVariant variant) {
+		return switch (variant) {
+		case MS_PACMAN -> soundsMsPacMan;
+		case PACMAN -> soundsPacMan;
+		default -> throw new IllegalGameVariantException(variant);
+		};
+	}
+
 	public static void load() {
 		LOG.info("Loading application resources...");
 		var start = System.nanoTime();
 
-		messageBundle = ResourceBundle.getBundle("assets.texts.messages");
-		messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
-		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
-		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
-
+		// 3D models
 		pacModel3D = new PacModel3D("model3D/pacman.obj");
 		ghostModel3D = new Model3D("model3D/ghost.obj");
 		pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
 
+		// graphics
 		loadFloorTexture("Chrome", "chrome");
 		loadFloorTexture("Grass", "grass");
 		loadFloorTexture("Hexagon", "hexagon");
@@ -134,8 +183,17 @@ public class AppResources {
 		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
 		skyImage = ResourceMgr.image("graphics/sky.png");
 
-		var duration = System.nanoTime() - start;
-		LOG.info("Loading application resources done (%.2f seconds).", duration / 1_000_000_000f);
+		// sounds
+		soundsMsPacMan = new GameSounds(MS_PACMAN_SOUND_DATA);
+		soundsPacMan = new GameSounds(PACMAN_SOUND_DATA);
+
+		// texts
+		messageBundle = ResourceBundle.getBundle("assets.texts.messages");
+		messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
+		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
+		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
+
+		LOG.info("Loading application resources done (%.2f seconds).", (System.nanoTime() - start) / 1_000_000_000f);
 	}
 
 	private static void loadFloorTexture(String key, String textureName) {
@@ -201,14 +259,6 @@ public class AppResources {
 
 	public static String pickLevelCompleteMessage(int levelNumber) {
 		return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber));
-	}
-
-	public static AudioClip voiceMessage(String voiceMessageKey) {
-		var url = ResourceMgr.urlFromRelPath(voiceMessageKey);
-		if (url != null) {
-			return new AudioClip(url.toExternalForm());
-		}
-		throw new IllegalArgumentException("Unknown voice message key '%s'".formatted(voiceMessageKey));
 	}
 
 	public static String randomReadyText(GameVariant variant) {
