@@ -427,22 +427,18 @@ public class PlayScene3D implements GameScene {
 			return Ufx.pause(0); // no level change animation if intermission scene follows
 		}
 		var perspectiveToRestore = Env.d3_perspectivePy.get();
-		return new SequentialTransition(//
-				Ufx.afterSeconds(1.0, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
-				Ufx.afterSeconds(0.1, () -> ResourceMgr.audioClip("sound/common/sweep.wav").play()), //
-				createLevelRotateAnimation(), //
-				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
-		);
-	}
-
-	private Animation createLevelRotateAnimation() {
 		var rotateAnimation = new RotateTransition();
 		rotateAnimation.setNode(level3D.getRoot());
-		rotateAnimation.setDuration(Duration.seconds(1.5));
+		rotateAnimation.setDuration(Duration.seconds(1.0));
 		rotateAnimation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotateAnimation.setFromAngle(0);
 		rotateAnimation.setToAngle(360);
-		return rotateAnimation;
+		return new SequentialTransition(//
+				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
+				Ufx.afterSeconds(0.5, () -> ResourceMgr.audioClip("sound/common/sweep.wav").play()), //
+				rotateAnimation, //
+				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
+		);
 	}
 
 	private Animation createLevelCompleteAnimation(GameLevel level) {
@@ -453,24 +449,6 @@ public class PlayScene3D implements GameScene {
 		var animation = new SwingingWallsAnimation(level.numFlashes);
 		animation.setOnFinished(e -> Env.d3_mazeWallHeightPy.set(wallHeight));
 		return animation;
-	}
-
-	private void lockStateAndPlayAfterSeconds(double afterSeconds, Animation... animations) {
-		lockGameState();
-		var animation = new SequentialTransition();
-		if (afterSeconds > 0) {
-			animation.getChildren().add(Ufx.pause(afterSeconds));
-		}
-		animation.getChildren().addAll(animations);
-		animation.setOnFinished(e -> unlockGameState());
-		animation.play();
-	}
-
-	private void waitSeconds(double seconds) {
-		lockGameState();
-		var pause = Ufx.pause(seconds);
-		pause.setOnFinished(e -> unlockGameState());
-		pause.play();
 	}
 
 	// TODO this is copy-pasta from 2D play scene

@@ -24,8 +24,12 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.util.Duration;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -104,16 +108,42 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-	 * "Locks" the current game state by setting an indefinite timer duration.
+	 * Locks the current game state by setting an indefinite timer duration.
 	 */
 	default void lockGameState() {
 		context().state().timer().resetIndefinitely();
 	}
 
 	/**
-	 * "Unlocks" the current game state by forcing the timer to expire.
+	 * Unlocks the current game state by forcing the timer to expire.
 	 */
 	default void unlockGameState() {
 		context().state().timer().expire();
+	}
+
+	/**
+	 * Locks the current game state, waits given seconds, plays given animations and unlocks the state when the animations
+	 * have finished.
+	 */
+	default void lockStateAndPlayAfterSeconds(double afterSeconds, Animation... animations) {
+		lockGameState();
+		var animationSequence = new SequentialTransition(animations);
+		if (afterSeconds > 0) {
+			animationSequence.setDelay(Duration.seconds(afterSeconds));
+		}
+		animationSequence.setOnFinished(e -> unlockGameState());
+		animationSequence.play();
+	}
+
+	/**
+	 * Locks the current game states, waits given number of seconds and unlocks the state.
+	 * 
+	 * @param seconds seconds to wait before unlock
+	 */
+	default void waitSeconds(double seconds) {
+		lockGameState();
+		var pause = Ufx.pause(seconds);
+		pause.setOnFinished(e -> unlockGameState());
+		pause.play();
 	}
 }
