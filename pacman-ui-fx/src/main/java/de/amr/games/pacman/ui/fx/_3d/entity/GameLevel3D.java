@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.common.world.Door;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
+import de.amr.games.pacman.ui.fx._2d.rendering.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
@@ -66,20 +67,20 @@ public class GameLevel3D {
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 
-	public GameLevel3D(GameLevel level, Rendering2D r2D, PacManColoring pacManColors, MsPacManColoring msPacManColors,
-			GhostColoring[] ghostColors) {
+	public GameLevel3D(GameLevel level, Rendering2D r2D, MazeColoring mazeColors, PacManColoring pacManColors,
+			MsPacManColoring msPacManColors, GhostColoring[] ghostColors) {
 
 		requireNonNull(level);
 		requireNonNull(r2D);
+		requireNonNull(mazeColors);
 		requireNonNull(pacManColors);
 		requireNonNull(msPacManColors);
 		requireNonNull(ghostColors);
 
 		this.level = level;
 		final GameVariant gameVariant = level.game().variant();
-		final int mazeNumber = level.game().mazeNumber(level.number());
 
-		world3D = new World3D(level.world(), r2D.mazeColors(mazeNumber), pelletModel3D());
+		world3D = new World3D(level.world(), mazeColors, pelletModel3D());
 
 		pac3D = switch (gameVariant) {
 		case MS_PACMAN -> createMsPacMan3D(msPacManColors);

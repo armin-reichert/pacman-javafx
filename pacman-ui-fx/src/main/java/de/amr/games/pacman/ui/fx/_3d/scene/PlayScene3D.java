@@ -149,8 +149,13 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
-		level3D = new GameLevel3D(level, context.rendering2D(), context.rendering2D().pacManColors(),
-				context.rendering2D().msPacManColors(), context.rendering2D().ghostColors());
+		int mazeNumber = level.game().mazeNumber(level.number());
+		level3D = new GameLevel3D(level, //
+				context.rendering2D(), //
+				context.rendering2D().mazeColors(mazeNumber), //
+				context.rendering2D().pacManColors(), //
+				context.rendering2D().msPacManColors(), //
+				context.rendering2D().ghostColors());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;

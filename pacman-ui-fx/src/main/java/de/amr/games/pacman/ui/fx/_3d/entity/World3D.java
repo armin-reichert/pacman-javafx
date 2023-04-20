@@ -67,7 +67,7 @@ public class World3D {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final int MAZE_RESOLUTION = 4; // 1, 2, 4, 8 are allowed values
-	private static final double FLOOR_THICKNESS = 0.1;
+	private static final double FLOOR_THICKNESS = 0.25;
 
 	private static class WallData {
 		byte type;
