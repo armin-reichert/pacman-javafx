@@ -77,7 +77,6 @@ import javafx.scene.SubScene;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 /**
@@ -149,6 +148,27 @@ public class PlayScene3D implements GameScene {
 		});
 	}
 
+	private void replaceGameLevel3D(GameLevel level) {
+		level3D = new GameLevel3D(level, context.rendering2D(), context.rendering2D().pacManColors(),
+				context.rendering2D().msPacManColors(), context.rendering2D().ghostColors());
+
+		// center over origin
+		var centerX = level.world().numCols() * HTS;
+		var centerY = level.world().numRows() * HTS;
+		level3D.getRoot().setTranslateX(-centerX);
+		level3D.getRoot().setTranslateY(-centerY);
+
+		// keep the scores rotated such that the viewer always sees them frontally
+		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+		root.getChildren().set(0, level3D.getRoot());
+
+		if (Env.d3_floorTextureRandomPy.get()) {
+			Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
+		}
+		LOG.info("3D game level created.");
+	}
+
 	@Override
 	public void update() {
 		context.level().ifPresent(level -> {
@@ -194,22 +214,6 @@ public class PlayScene3D implements GameScene {
 			perspectiveController.reset(fxSubScene.getCamera());
 			LOG.info("Perspective changed to %s (%s)", perspective, this);
 		}
-	}
-
-	private void replaceGameLevel3D(GameLevel level) {
-		var centerX = level.world().numCols() * HTS;
-		var centerY = level.world().numRows() * HTS;
-		level3D = new GameLevel3D(level, context.rendering2D(), context.rendering2D().pacManColors(),
-				context.rendering2D().msPacManColors(), context.rendering2D().ghostColors());
-		level3D.getRoot().getTransforms().setAll(new Translate(-centerX, -centerY));
-		if (Env.d3_floorTextureRandomPy.get()) {
-			Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
-		}
-		// keep the scores rotated such that the viewer always sees them frontally
-		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
-		root.getChildren().set(0, level3D.getRoot());
-		LOG.info("3D game level created.");
 	}
 
 	private void resetReadyMessageText3D() {
@@ -430,7 +434,6 @@ public class PlayScene3D implements GameScene {
 		var rotateAnimation = new RotateTransition();
 		rotateAnimation.setNode(level3D.getRoot());
 		rotateAnimation.setDuration(Duration.seconds(1.5));
-		// TODO rotation does not work as expected
 		rotateAnimation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotateAnimation.setFromAngle(0);
 		rotateAnimation.setToAngle(360);
