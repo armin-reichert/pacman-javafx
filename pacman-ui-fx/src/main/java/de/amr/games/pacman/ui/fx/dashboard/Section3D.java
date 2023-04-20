@@ -73,7 +73,7 @@ public class Section3D extends Section {
 				.addListener((obs, oldVal, newVal) -> Env.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(Env.d3_energizerExplodesPy));
 		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(Env.d3_pacLightedPy));
-		cbPacWalkingAnimated = addCheckBox("Pac-Man Walking Animated", () -> Ufx.toggle(Env.d3_pacWalkingAnimatedPy));
+		cbPacWalkingAnimated = addCheckBox("Pac-Man Animated", () -> Ufx.toggle(Env.d3_pacWalkingAnimatedPy));
 		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(Env.d3_axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe Mode", Actions::toggleDrawMode);
 	}

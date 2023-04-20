@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.dashboard;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -37,12 +38,13 @@ public class SectionAbout extends Section {
 	public SectionAbout(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		ImageView armin = new ImageView(ResourceMgr.image("graphics/armin.jpg"));
-		armin.setFitWidth(310);
+		armin.setFitWidth(286);
 		armin.setPreserveRatio(true);
-		Text signature = new Text("Armin Reichert 2021-23");
-		var font = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 20);
+		Text signature = new Text("Made by: Armin Reichert");
+		var font = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 18);
 		signature.setFont(font);
 		signature.setTextAlignment(TextAlignment.CENTER);
+		signature.setFill(Color.YELLOW);
 		content.add(armin, 0, 0);
 		content.add(signature, 0, 1);
 	}
