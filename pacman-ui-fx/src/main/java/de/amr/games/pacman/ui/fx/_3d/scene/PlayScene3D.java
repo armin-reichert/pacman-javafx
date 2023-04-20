@@ -386,7 +386,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.pickLevelCompleteMessage(level.number());
 				if (level.intermissionNumber == 0) {
-					ResourceMgr.audioClip("sound/common/level-complete.wav").play();
+					ResourceMgr.audioClip("sound/common/level-complete.mp3").play();
 				}
 				lockStateAndPlayAfterSeconds(1.0 //
 						, createLevelCompleteAnimation(level) //
@@ -400,7 +400,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.getLivesCounter3D().stopAnimation();
 			Actions.showFlashMessageSeconds(3, AppResources.pickGameOverMessage());
-			ResourceMgr.audioClip("sound/common/game-over.wav").play();
+			ResourceMgr.audioClip("sound/common/game-over.mp3").play();
 			waitSeconds(3);
 		}
 
@@ -440,7 +440,7 @@ public class PlayScene3D implements GameScene {
 		rotateAnimation.setToAngle(360);
 		return new SequentialTransition(//
 				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
-				Ufx.afterSeconds(0.5, () -> ResourceMgr.audioClip("sound/common/sweep.wav").play()), //
+				Ufx.afterSeconds(0.5, () -> ResourceMgr.audioClip("sound/common/sweep.mp3").play()), //
 				rotateAnimation, //
 				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
 		);
