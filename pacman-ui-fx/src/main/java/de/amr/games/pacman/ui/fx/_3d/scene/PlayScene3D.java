@@ -398,6 +398,8 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.getLivesCounter3D().stopAnimation();
 			Actions.showFlashMessageSeconds(3, AppResources.pickGameOverMessage());
+			ResourceMgr.audioClip("sound/common/game-over.wav").play();
+			waitSeconds(3);
 		}
 
 		default -> {
