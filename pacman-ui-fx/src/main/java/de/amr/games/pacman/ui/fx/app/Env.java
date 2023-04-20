@@ -45,32 +45,32 @@ import javafx.scene.shape.DrawMode;
  */
 public class Env {
 	//@formatter:off
-	public static final ObjectProperty<Color> 			mainSceneBgColorPy = new SimpleObjectProperty<>(Color.grayRgb(0x33));
-	public static final BooleanProperty 						showDebugInfoPy = new SimpleBooleanProperty(false);
+ public static final ObjectProperty<Color>       mainSceneBgColorPy = new SimpleObjectProperty<>(Color.grayRgb(0x33));
+ public static final BooleanProperty             showDebugInfoPy = new SimpleBooleanProperty(false);
 
-	public static final BooleanProperty 						simulationPausedPy = new SimpleBooleanProperty(false);
-	public static final IntegerProperty 						simulationStepsPy = new SimpleIntegerProperty(1);
-	public static final IntegerProperty 						simulationSpeedPy = new SimpleIntegerProperty(60);
-	public static final BooleanProperty 						simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
+ public static final BooleanProperty             simulationPausedPy = new SimpleBooleanProperty(false);
+ public static final IntegerProperty             simulationStepsPy = new SimpleIntegerProperty(1);
+ public static final IntegerProperty             simulationSpeedPy = new SimpleIntegerProperty(60);
+ public static final BooleanProperty             simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
 
-	public static final BooleanProperty 						pipVisiblePy = new SimpleBooleanProperty(false);
-	public static final DoubleProperty 							pipOpacityPy = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty 							pipSceneHeightPy = new SimpleDoubleProperty(World.TILES_Y * World.TS);
+ public static final BooleanProperty             pipVisiblePy = new SimpleBooleanProperty(false);
+ public static final DoubleProperty              pipOpacityPy = new SimpleDoubleProperty(0.66);
+ public static final DoubleProperty              pipSceneHeightPy = new SimpleDoubleProperty(World.TILES_Y * World.TS);
 
-	public static final BooleanProperty 						d3_axesVisiblePy = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<DrawMode> 		d3_drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final BooleanProperty 						d3_enabledPy = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Color> 			d3_floorColorPy = new SimpleObjectProperty<>(Color.grayRgb(0x96));
-	public static final StringProperty 							d3_floorTexturePy = new SimpleStringProperty("Knobs & Bumps");
-	public static final BooleanProperty 						d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Color> 			d3_lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-	public static final DoubleProperty 							d3_mazeWallHeightPy = new SimpleDoubleProperty(1.75);
-	public static final DoubleProperty 							d3_mazeWallThicknessPy = new SimpleDoubleProperty(1.25);
-	public static final BooleanProperty 						d3_pacLightedPy = new SimpleBooleanProperty(true);
-	public static final BooleanProperty 						d3_pacWalkingAnimatedPy = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Perspective> d3_perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty 						d3_energizerExplodesPy = new SimpleBooleanProperty(true);
-	// experimental, not used yet
-	public static final BooleanProperty 						d3_foodOscillationEnabledPy = new SimpleBooleanProperty(false);
+ public static final BooleanProperty             d3_axesVisiblePy = new SimpleBooleanProperty(false);
+ public static final ObjectProperty<DrawMode>    d3_drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
+ public static final BooleanProperty             d3_enabledPy = new SimpleBooleanProperty(true);
+ public static final ObjectProperty<Color>       d3_floorColorPy = new SimpleObjectProperty<>(Color.grayRgb(0x96));
+ public static final StringProperty              d3_floorTexturePy = new SimpleStringProperty("Knobs & Bumps");
+ public static final BooleanProperty             d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
+ public static final ObjectProperty<Color>       d3_lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+ public static final DoubleProperty              d3_mazeWallHeightPy = new SimpleDoubleProperty(1.75);
+ public static final DoubleProperty              d3_mazeWallThicknessPy = new SimpleDoubleProperty(1.25);
+ public static final BooleanProperty             d3_pacLightedPy = new SimpleBooleanProperty(true);
+ public static final BooleanProperty             d3_pacWalkingAnimatedPy = new SimpleBooleanProperty(true);
+ public static final ObjectProperty<Perspective> d3_perspectivePy = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+ public static final BooleanProperty             d3_energizerExplodesPy = new SimpleBooleanProperty(true);
+ // experimental, not used yet
+ public static final BooleanProperty             d3_foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 	//@formatter:on
 }
