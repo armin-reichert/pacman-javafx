@@ -388,6 +388,7 @@ public class PlayScene3D implements GameScene {
 				lockStateAndPlayAfterSeconds(1.0 //
 						, createLevelCompleteAnimation(level) //
 						, Ufx.afterSeconds(0.5, level.pac()::hide) //
+						, Ufx.afterSeconds(0, () -> ResourceMgr.audioClip("sound/common/level-complete.wav").play()) //
 						, Ufx.afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)) //
 						, createLevelChangeAnimation(level));
 			});
