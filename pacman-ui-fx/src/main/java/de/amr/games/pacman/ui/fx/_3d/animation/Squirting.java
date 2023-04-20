@@ -23,8 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import static de.amr.games.pacman.lib.U.randomFloat;
-import static de.amr.games.pacman.lib.U.randomInt;
+import static de.amr.games.pacman.lib.Globals.randomFloat;
+import static de.amr.games.pacman.lib.Globals.randomInt;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

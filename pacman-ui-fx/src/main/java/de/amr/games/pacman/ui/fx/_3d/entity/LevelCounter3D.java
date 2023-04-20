@@ -25,9 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.isEven;
 import static java.util.Objects.requireNonNull;
 
-import de.amr.games.pacman.lib.U;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -53,7 +53,7 @@ public class LevelCounter3D {
 		requireNonNull(symbolImages);
 		for (int i = 0; i < symbolImages.length; ++i) {
 			var symbolImage = symbolImages[i];
-			Box cube = createSpinningCube(TS, symbolImage, U.isEven(i));
+			Box cube = createSpinningCube(TS, symbolImage, isEven(i));
 			cube.setTranslateX(-2 * i * TS);
 			cube.setTranslateY(0);
 			cube.setTranslateZ(-HTS);

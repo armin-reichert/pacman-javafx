@@ -24,6 +24,8 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
+import static de.amr.games.pacman.lib.Globals.randomInt;
+
 import java.text.MessageFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +34,6 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
@@ -153,7 +154,7 @@ public class AppResources {
 
 	public static String randomTextureKey() {
 		var keys = AppResources.textureKeys();
-		return textureKeys()[U.randomInt(0, keys.length)];
+		return textureKeys()[randomInt(0, keys.length)];
 	}
 
 	public static Image appIcon(GameVariant variant) {

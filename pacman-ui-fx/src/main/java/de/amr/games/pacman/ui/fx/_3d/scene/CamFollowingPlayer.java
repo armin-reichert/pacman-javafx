@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static de.amr.games.pacman.lib.U.lerp;
+import static de.amr.games.pacman.lib.Globals.lerp;
 
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.Camera;

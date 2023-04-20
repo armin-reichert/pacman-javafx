@@ -24,6 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.RND;
+import static de.amr.games.pacman.lib.Globals.inPercentOfCases;
+import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -37,7 +40,6 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.Validator;
@@ -260,7 +262,7 @@ public class PlayScene3D implements GameScene {
 		context.level().ifPresent(level -> {
 			level3D.world3D().eatables3D()
 					.forEach(eatable3D -> eatable3D.getRoot().setVisible(!level.world().containsEatenFood(eatable3D.tile())));
-			if (U.oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
+			if (oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 			context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
@@ -322,7 +324,7 @@ public class PlayScene3D implements GameScene {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);
-				var readyMessage = U.inPercentOfCases(40) ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
+				var readyMessage = inPercentOfCases(40) ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -429,7 +431,7 @@ public class PlayScene3D implements GameScene {
 		rotateAnimation.setNode(level3D.getRoot());
 		rotateAnimation.setDuration(Duration.seconds(1.5));
 		// TODO rotation does not work as expected
-		rotateAnimation.setAxis(U.RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+		rotateAnimation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotateAnimation.setFromAngle(0);
 		rotateAnimation.setToAngle(360);
 		return rotateAnimation;

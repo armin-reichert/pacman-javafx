@@ -25,13 +25,13 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.controller.common.GameState.INTRO;
+import static de.amr.games.pacman.lib.Globals.RND;
 
 import java.util.Objects;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
@@ -245,7 +245,7 @@ public class Actions {
 
 	public static void cheatEatAllPellets() {
 		gameController().cheatEatAllPellets();
-		if (U.RND.nextDouble() < 0.1) {
+		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(AppResources.pickCheatingMessage());
 		}
 	}
@@ -256,7 +256,7 @@ public class Actions {
 
 	public static void cheatKillAllEatableGhosts() {
 		gameController().cheatKillAllEatableGhosts();
-		if (U.RND.nextDouble() < 0.1) {
+		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(AppResources.pickCheatingMessage());
 		}
 	}
