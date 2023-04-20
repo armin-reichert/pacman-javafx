@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.scene;
 
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.lib.Globals.HTS;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -40,9 +40,9 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.U;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
+import de.amr.games.pacman.model.common.Validator;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MsPacManDemoLevel;
 import de.amr.games.pacman.model.pacman.PacManDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
@@ -105,7 +105,7 @@ public class PlayScene3D implements GameScene {
 	private CameraController camController;
 
 	public PlayScene3D(GameController gameController) {
-		requireNonNull(gameController);
+		Validator.checkNotNull(gameController);
 
 		context = new GameSceneContext(gameController);
 
@@ -195,8 +195,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
-		var centerX = level.world().numCols() * World.HTS;
-		var centerY = level.world().numRows() * World.HTS;
+		var centerX = level.world().numCols() * HTS;
+		var centerY = level.world().numRows() * HTS;
 		level3D = new GameLevel3D(level, context.rendering2D(), context.rendering2D().pacManColors(),
 				context.rendering2D().msPacManColors(), context.rendering2D().ghostColors());
 		level3D.getRoot().getTransforms().setAll(new Translate(-centerX, -centerY));

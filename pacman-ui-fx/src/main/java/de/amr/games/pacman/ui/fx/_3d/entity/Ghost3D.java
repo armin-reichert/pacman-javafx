@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.common.Validator.requirePositive;
 import static java.util.Objects.requireNonNull;
 
@@ -234,8 +236,8 @@ public class Ghost3D {
 	}
 
 	private boolean outsideWorld(World world) {
-		double centerX = ghost.position().x() + World.HTS;
-		return centerX < 0 || centerX > world.numCols() * World.TS;
+		double centerX = ghost.position().x() + HTS;
+		return centerX < 0 || centerX > world.numCols() * TS;
 	}
 
 	public void setNumberImage(Image numberImage) {

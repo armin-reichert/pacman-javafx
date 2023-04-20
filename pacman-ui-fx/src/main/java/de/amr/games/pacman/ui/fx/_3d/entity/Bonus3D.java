@@ -23,13 +23,13 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.TS;
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.Validator;
 import de.amr.games.pacman.model.common.actors.Bonus;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.model.mspacman.MovingBonus;
@@ -62,9 +62,9 @@ public class Bonus3D {
 	private boolean moving;
 
 	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage, boolean moving) {
-		requireNonNull(bonus);
-		requireNonNull(symbolImage);
-		requireNonNull(pointsImage);
+		Validator.checkNotNull(bonus);
+		Validator.checkNotNull(symbolImage);
+		Validator.checkNotNull(pointsImage);
 
 		this.bonus = bonus;
 		this.symbolImage = symbolImage;

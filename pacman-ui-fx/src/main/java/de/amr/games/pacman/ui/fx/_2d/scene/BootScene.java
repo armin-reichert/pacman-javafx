@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._2d.scene;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;

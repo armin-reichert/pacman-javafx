@@ -23,8 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.toPx;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 import java.util.List;
 import java.util.Optional;
@@ -119,10 +119,10 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
-		double x = toPx(24);
+		double x = TS * (24);
 		for (var symbol : levelCounter) {
-			drawSprite(g, bonusSymbolRegion(symbol), x, toPx(34));
-			x -= toPx(2);
+			drawSprite(g, bonusSymbolRegion(symbol), x, TS * (34));
+			x -= TS * (2);
 		}
 	}
 
@@ -131,17 +131,17 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		if (numLivesDisplayed <= 0) {
 			return;
 		}
-		int x = toPx(2);
-		int y = toPx(World.TILES_Y - 2);
+		int x = TS * (2);
+		int y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(g, lifeSymbolRegion(), x + toPx(2 * i), y);
+			drawSprite(g, lifeSymbolRegion(), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + toPx(10),
-					y + toPx(1));
+			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
+					x + TS * (10), y + TS * (1));
 		}
 	}
 }

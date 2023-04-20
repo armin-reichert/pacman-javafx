@@ -23,7 +23,8 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ public class World3D {
 		light.setColor(mazeColoring.wallBaseColor());
 		light.setMaxRange(3 * TS);
 		var center = world.house().seatPositions().get(1);
-		light.setTranslateX(center.x() + World.HTS);
+		light.setTranslateX(center.x() + HTS);
 		light.setTranslateY(center.y());
 		light.setTranslateZ(-TS);
 		return light;

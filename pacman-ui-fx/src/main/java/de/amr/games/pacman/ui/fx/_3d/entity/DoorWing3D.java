@@ -23,11 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.common.world.World.HTS;
-import static de.amr.games.pacman.model.common.world.World.TS;
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.model.common.Validator;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;
@@ -46,8 +46,8 @@ public class DoorWing3D {
 	private final Box shape = new Box();
 
 	public DoorWing3D(Vector2i tile, Color color) {
-		requireNonNull(tile);
-		requireNonNull(color);
+		Validator.checkTileNotNull(tile);
+		Validator.checkNotNull(color);
 
 		shape.setWidth(TS - 1.0);
 		shape.setHeight(1.0); // thickness (y-direction)

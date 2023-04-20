@@ -23,8 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
-import static de.amr.games.pacman.model.common.world.World.TS;
-import static de.amr.games.pacman.model.common.world.World.toPx;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 import java.util.List;
 import java.util.Optional;
@@ -83,10 +82,10 @@ public interface Rendering2D {
 		g.setStroke(ArcadeTheme.PALE);
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
-			g.strokeLine(0, toPx(row), tilesX * TS, toPx(row));
+			g.strokeLine(0, TS * (row), tilesX * TS, TS * (row));
 		}
 		for (int col = 0; col <= tilesY; ++col) {
-			g.strokeLine(toPx(col), 0, toPx(col), tilesY * TS);
+			g.strokeLine(TS * (col), 0, TS * (col), tilesY * TS);
 		}
 		g.restore();
 	}
@@ -104,7 +103,7 @@ public interface Rendering2D {
 
 	default void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
-		g.fillRect(toPx(tile.x()), toPx(tile.y()), TS, TS);
+		g.fillRect(TS * (tile.x()), TS * (tile.y()), TS, TS);
 	}
 
 	default void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
@@ -112,7 +111,7 @@ public interface Rendering2D {
 		var pointsText = "%02d".formatted(score.points());
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + toPx(8), y + TS + 1);
+			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + TS * (8), y + TS + 1);
 		}
 	}
 

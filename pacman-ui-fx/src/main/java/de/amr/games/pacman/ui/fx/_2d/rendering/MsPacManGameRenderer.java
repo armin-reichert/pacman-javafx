@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
-import static de.amr.games.pacman.model.common.world.World.toPx;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -163,15 +163,15 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	public void drawCopyright(GraphicsContext g, int tileY) {
-		int x = toPx(6);
-		int y = toPx(tileY - 1);
-		g.drawImage(MIDWAY_LOGO, x, y + 2, toPx(4) - 2, toPx(4));
+		int x = TS * (6);
+		int y = TS * (tileY - 1);
+		g.drawImage(MIDWAY_LOGO, x, y + 2, TS * (4) - 2, TS * (4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
-		g.fillText("\u00a9", x + toPx(5), y + toPx(2) + 2); // (c) symbol
+		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol
 		g.setFont(ArcadeTheme.SCREEN_FONT);
-		g.fillText("MIDWAY MFG CO", x + toPx(7), y + toPx(2));
-		g.fillText("1980/1981", x + toPx(8), y + toPx(4));
+		g.fillText("MIDWAY MFG CO", x + TS * (7), y + TS * (2));
+		g.fillText("1980/1981", x + TS * (8), y + TS * (4));
 	}
 
 	// Animations
