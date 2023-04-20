@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2i;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.U;
@@ -45,7 +46,7 @@ public class BootScene extends GameScene2D {
 
 	private static final int TILES_X = World.TILES_X;
 	private static final int TILES_Y = World.TILES_Y;
-	private static final Vector2i SIZE_PX = new Vector2i(TILES_X * TS, TILES_Y * TS);
+	private static final Vector2i SIZE_PX = v2i(TS * TILES_X, TS * TILES_Y);
 
 	private final GraphicsContext ctx;
 	private final WritableImage image;

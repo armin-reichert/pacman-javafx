@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2i;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,6 @@ import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.actors.Bonus;
@@ -269,7 +269,7 @@ public class PacManTestRenderer implements Rendering2D {
 	private void drawWalls(GraphicsContext g, World world, boolean flash) {
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
-				var tile = new Vector2i(col, row);
+				var tile = v2i(col, row);
 				if (world.isWall(tile)) {
 					g.setFill(flash ? Color.WHITE : Color.SADDLEBROWN);
 					g.fillRect(tile.x() * TS, tile.y() * TS, TS, TS);
@@ -281,7 +281,7 @@ public class PacManTestRenderer implements Rendering2D {
 	private void drawFood(GraphicsContext g, int mazeNumber, World world, boolean energizersHidden) {
 		for (int row = 0; row < world.numRows(); ++row) {
 			for (int col = 0; col < world.numCols(); ++col) {
-				var tile = new Vector2i(col, row);
+				var tile = v2i(col, row);
 				if (world.containsFood(tile)) {
 					g.setFill(mazeColors(mazeNumber).foodColor());
 					if (world.isEnergizerTile(tile)) {

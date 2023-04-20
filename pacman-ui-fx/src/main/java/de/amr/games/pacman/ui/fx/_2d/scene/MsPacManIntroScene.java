@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene;
 import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.BLINKY_END_TILE;
 import static de.amr.games.pacman.controller.mspacman.MsPacManIntroData.TITLE_TILE;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.common.GameController;
@@ -141,13 +142,13 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	private Vector2i xy(int i, int width, int height) {
 		if (i <= width) {
-			return new Vector2i(i, 0);
+			return v2i(i, 0);
 		} else if (i < width + height) {
-			return new Vector2i(width, i - width);
+			return v2i(width, i - width);
 		} else if (i < 2 * width + height + 1) {
-			return new Vector2i(2 * width + height - i, height);
+			return v2i(2 * width + height - i, height);
 		} else {
-			return new Vector2i(0, 2 * (width + height) - i);
+			return v2i(0, 2 * (width + height) - i);
 		}
 	}
 }
