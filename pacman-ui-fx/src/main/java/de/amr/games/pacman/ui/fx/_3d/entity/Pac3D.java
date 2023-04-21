@@ -116,8 +116,8 @@ public class Pac3D {
 		root.getChildren().add(pacNode);
 
 		walkingAnimation = switch (gameVariant) {
-		case MS_PACMAN -> new HipSwaying(pac, root);
-		case PACMAN -> new HeadBanging(pac, root);
+		case MS_PACMAN -> new HipSwaying(root);
+		case PACMAN -> new HeadBanging(root);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 	}

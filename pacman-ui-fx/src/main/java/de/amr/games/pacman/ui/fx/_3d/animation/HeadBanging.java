@@ -44,17 +44,13 @@ public class HeadBanging implements Pac3D.WalkingAnimation {
 
 	private final RotateTransition animation;
 
-	public HeadBanging(Pac pac, Node root) {
-		animation = new RotateTransition();
-		animation.setNode(root);
-		animation.setDuration(DEFAULT_DURATION);
-		animation.setAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
-		animation.setFromAngle(DEFAULT_ANGLE_FROM);
-		animation.setToAngle(DEFAULT_ANGLE_TO);
-		animation.setRate(1);
+	public HeadBanging(Node node) {
+		animation = new RotateTransition(DEFAULT_DURATION, node);
+		animation.setAxis(Rotate.X_AXIS);
 		animation.setCycleCount(Animation.INDEFINITE);
 		animation.setAutoReverse(true);
 		animation.setInterpolator(Interpolator.EASE_BOTH);
+		setPowerMode(false);
 	}
 
 	@Override
@@ -65,7 +61,6 @@ public class HeadBanging implements Pac3D.WalkingAnimation {
 		animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
 		animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
 		animation.setRate(rate);
-		animation.play();
 	}
 
 	public RotateTransition animation() {

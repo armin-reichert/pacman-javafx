@@ -44,17 +44,13 @@ public class HipSwaying implements Pac3D.WalkingAnimation {
 
 	private final RotateTransition animation;
 
-	public HipSwaying(Pac pac, Node root) {
-		animation = new RotateTransition();
-		animation.setNode(root);
-		animation.setDuration(DEFAULT_DURATION);
+	public HipSwaying(Node node) {
+		animation = new RotateTransition(DEFAULT_DURATION, node);
 		animation.setAxis(Rotate.Z_AXIS);
-		animation.setFromAngle(DEFAULT_ANGLE_FROM);
-		animation.setToAngle(DEFAULT_ANGLE_TO);
-		animation.setRate(1);
 		animation.setCycleCount(Animation.INDEFINITE);
 		animation.setAutoReverse(true);
 		animation.setInterpolator(Interpolator.EASE_BOTH);
+		setPowerMode(false);
 	}
 
 	public RotateTransition animation() {
@@ -69,7 +65,6 @@ public class HipSwaying implements Pac3D.WalkingAnimation {
 		animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
 		animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
 		animation.setRate(rate);
-		animation.play();
 	}
 
 	@Override
@@ -77,9 +72,9 @@ public class HipSwaying implements Pac3D.WalkingAnimation {
 		if (pac.isStandingStill()) {
 			end(pac);
 			animation.getNode().setRotate(0);
-		} else {
-			animation.play();
+			return;
 		}
+		animation.play();
 	}
 
 	@Override
