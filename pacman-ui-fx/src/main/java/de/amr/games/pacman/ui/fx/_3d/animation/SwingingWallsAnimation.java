@@ -37,7 +37,7 @@ public class SwingingWallsAnimation extends Transition {
 	private double wallStartHeight;
 
 	public SwingingWallsAnimation(int times) {
-		setCycleDuration(Duration.seconds(0.25));
+		setCycleDuration(Duration.seconds(0.2));
 		setCycleCount(2 * times);
 		setAutoReverse(true);
 	}

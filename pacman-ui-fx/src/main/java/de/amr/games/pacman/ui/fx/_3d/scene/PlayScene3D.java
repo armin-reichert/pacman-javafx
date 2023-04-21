@@ -380,17 +380,21 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
-				var message = AppRes.Texts.pickLevelCompleteMessage(level.number());
-				lockStateAndPlayAfterSeconds(1.0 //
-						, createLevelCompleteAnimation(level) //
-						, Ufx.afterSeconds(0.5, () -> {
-							level.pac().hide();
-							if (level.intermissionNumber == 0) {
-								context.sounds().play(SoundClipID.LEVEL_COMPLETE);
-							}
-						}) //
-						, Ufx.afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)) //
-						, createLevelChangeAnimation(level));
+				//@formatter:off
+				lockStateAndPlayAfterSeconds(1.0, 
+					createLevelCompleteAnimation(level), 
+					Ufx.afterSeconds(1.0, () -> {
+						level.pac().hide();
+						if (level.intermissionNumber == 0) {
+							// play sound only if no intermission scene follows
+							context.sounds().play(SoundClipID.LEVEL_COMPLETE);
+						} else {
+							var message = AppRes.Texts.pickLevelCompleteMessage(level.number());
+							Actions.showFlashMessageSeconds(4, message);
+						}
+					}),
+					createLevelChangeAnimation(level));
+				//@formatter:on
 			});
 		}
 
@@ -431,20 +435,21 @@ public class PlayScene3D implements GameScene {
 		}
 		var levelRotation = new RotateTransition();
 		levelRotation.setNode(level3D.getRoot());
-		levelRotation.setDuration(Duration.seconds(1.0));
+		levelRotation.setDuration(Duration.seconds(2.0));
 		levelRotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		levelRotation.setFromAngle(0);
 		levelRotation.setToAngle(360);
-		levelRotation.setOnFinished(e -> perspectivePy.bind(Env.d3_perspectivePy));
-
-		return new SequentialTransition(//
-				Ufx.afterSeconds(1, () -> {
+		//@formatter:off
+		return new SequentialTransition(
+				Ufx.afterSeconds(1.0, () -> {
 					perspectivePy.unbind();
 					perspectivePy.set(Perspective.TOTAL);
 					context.sounds().play(SoundClipID.SWEEP);
-				}), //
-				levelRotation //
+				}),
+				levelRotation,
+				Ufx.afterSeconds(1.0, ()-> perspectivePy.bind(Env.d3_perspectivePy))
 		);
+		//@formatter:on
 	}
 
 	private Animation createLevelCompleteAnimation(GameLevel level) {
