@@ -64,10 +64,10 @@ public class MtlReader {
 		String fileUrl = baseUrl + filename;
 		try {
 			URL mtlUrl = new URL(fileUrl);
-			LOG.info("Reading material from URL %s", mtlUrl);
+			LOG.trace("Reading material from URL %s", mtlUrl);
 			read(mtlUrl.openStream());
 		} catch (FileNotFoundException ex) {
-			LOG.info("No material file found for obj. [%s]", fileUrl);
+			LOG.trace("No material file found for obj. [%s]", fileUrl);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -128,7 +128,7 @@ public class MtlReader {
 			if (!materials.containsKey(name)) {
 				materials.put(name, material);
 			} else {
-				LOG.info("Material already added. Ignoring %s", name);
+				LOG.trace("Material already added. Ignoring %s", name);
 			}
 			material = new PhongMaterial(Color.WHITE);
 		}
@@ -144,7 +144,7 @@ public class MtlReader {
 
 	private Image loadImage(String filename) {
 		filename = baseUrl + filename;
-		LOG.info("Loading image from %s", filename);
+		LOG.trace("Loading image from %s", filename);
 		return new Image(filename);
 	}
 }

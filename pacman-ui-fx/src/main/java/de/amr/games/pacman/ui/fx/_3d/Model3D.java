@@ -59,7 +59,7 @@ public class Model3D {
 		var urlString = url.toExternalForm();
 		int lastSlash = urlString.lastIndexOf('/');
 		var fileName = urlString.substring(lastSlash + 1);
-		LOG.info("*** Load 3D model from file '%s'. URL: %s", fileName, url);
+		LOG.trace("*** Load 3D model from file '%s'. URL: %s", fileName, url);
 		try {
 			var importer = new ObjImporter(url.toExternalForm());
 			for (var meshName : importer.getMeshNames()) {
@@ -72,7 +72,7 @@ public class Model3D {
 					materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
 				}
 			}
-			dump(LOG);
+			LOG.trace(contentReport());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -82,16 +82,18 @@ public class Model3D {
 		this(ResourceMgr.urlFromRelPath(relPath));
 	}
 
-	public void dump(Logger log) {
-		log.info("Model content:");
-		log.info("\tMeshes:");
+	public String contentReport() {
+		var sb = new StringBuilder();
+		sb.append("Model content:\n");
+		sb.append("\tMeshes:\n");
 		for (var entry : meshes.entrySet()) {
-			log.trace("\t\t'%s': %s", entry.getKey(), entry.getValue());
+			sb.append("\t\t'%s': %s\n".formatted(entry.getKey(), entry.getValue()));
 		}
-		log.info("\tMaterials:");
+		sb.append("\tMaterials:\n");
 		for (var entry : materials.entrySet()) {
-			log.trace("\t\t'%s': %s", entry.getKey(), entry.getValue());
+			sb.append("\t\t'%s': %s\n".formatted(entry.getKey(), entry.getValue()));
 		}
+		return sb.toString();
 	}
 
 	public Mesh mesh(String name) {

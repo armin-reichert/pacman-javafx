@@ -44,6 +44,6 @@ public class ObjModelLoaderTest {
 		var relPath = args[0];
 		var url = ResourceMgr.urlFromRelPath(relPath);
 		var model = new Model3D(url);
-		model.dump(LOG);
+		LOG.info(model.contentReport());
 	}
 }

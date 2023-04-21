@@ -363,7 +363,7 @@ public class ObjImporter {
 
 		addMesh(key);
 
-		LOG.info("Model loaded: %d vertices, %d uvs, %d faces, %d smoothing groups", vertexes.size() / 3, uvs.size() / 2,
+		LOG.trace("Model loaded: %d vertices, %d uvs, %d faces, %d smoothing groups", vertexes.size() / 3, uvs.size() / 2,
 				faces.size() / 6, smoothingGroups.size());
 	}
 
