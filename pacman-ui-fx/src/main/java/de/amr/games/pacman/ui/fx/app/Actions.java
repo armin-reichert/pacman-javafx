@@ -66,6 +66,10 @@ public class Actions {
 		ResourceMgr.audioClip(relPath).play();
 	}
 
+	public static void playHelpVoiceMessageAfterSeconds(int seconds) {
+		Ufx.afterSeconds(seconds, () -> playVoiceMessage(AppRes.Sounds.VOICE_HELP)).play();
+	}
+
 	public static void playVoiceMessage(String messageKey) {
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
 			return;
@@ -113,12 +117,8 @@ public class Actions {
 		if (ui.currentGameScene() != null) {
 			ui.currentGameScene().end();
 		}
-		playHelpVoiceMessage(4);
+		playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
-	}
-
-	public static void playHelpVoiceMessage(int delaySeconds) {
-		Ufx.afterSeconds(delaySeconds, () -> playVoiceMessage(AppRes.Sounds.VOICE_HELP)).play();
 	}
 
 	public static void addCredit() {
@@ -183,7 +183,7 @@ public class Actions {
 	public static void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
 		gameController().selectGameVariant(gameVariant);
-		playHelpVoiceMessage(4);
+		playHelpVoiceMessageAfterSeconds(4);
 	}
 
 	public static void selectNextPerspective() {
