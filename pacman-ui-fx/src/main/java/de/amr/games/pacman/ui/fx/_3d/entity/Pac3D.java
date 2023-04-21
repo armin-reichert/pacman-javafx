@@ -108,7 +108,7 @@ public class Pac3D {
 
 		dyingAnimation = switch (gameVariant) {
 		case MS_PACMAN -> new MsPacManDyingAnimation(pac, root);
-		case PACMAN -> new PacManDyingAnimation(pac, root);
+		case PACMAN -> new PacManDyingAnimation(root);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 	}
@@ -141,10 +141,14 @@ public class Pac3D {
 	}
 
 	public void update(GameLevel level) {
-		updatePosition();
-		turnToMoveDirection();
-		updateVisibility(level);
-		walkingAnimation.update(pac);
+		if (pac.isDead()) {
+			walkingAnimation.end(pac);
+		} else {
+			updatePosition();
+			updateVisibility(level);
+			turnToMoveDirection();
+			walkingAnimation.update(pac);
+		}
 	}
 
 	private void updatePosition() {

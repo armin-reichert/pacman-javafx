@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
@@ -43,12 +42,9 @@ import javafx.util.Duration;
  */
 public class PacManDyingAnimation implements Pac3D.DyingAnimation {
 
-	private final Pac pac;
 	private final Animation animation;
 
-	public PacManDyingAnimation(Pac pac, Node root) {
-		this.pac = pac;
-
+	public PacManDyingAnimation(Node root) {
 		var totalDuration = Duration.seconds(2);
 		var numSpins = 15;
 
@@ -71,12 +67,14 @@ public class PacManDyingAnimation implements Pac3D.DyingAnimation {
 				new ParallelTransition(spinning, shrinking, falling), //
 				Ufx.pause(0.25));
 
-		animation.setOnFinished(e -> root.setTranslateZ(0));
+		animation.setOnFinished(e -> {
+			root.setVisible(false);
+			root.setTranslateZ(0);
+		});
 	}
 
 	@Override
 	public Animation animation() {
-		// TODO set orientation correctly
 		return animation;
 	}
 }
