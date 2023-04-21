@@ -27,9 +27,6 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.common.Validator.checkNotNull;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -79,14 +76,16 @@ public class Pac3D {
 		void setPowerMode(boolean power);
 	}
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
 
 	public final BooleanProperty walkingAnimatedPy = new SimpleBooleanProperty(this, "walkingAnimated", false) {
 		@Override
 		protected void invalidated() {
-			// TODO
+			if (get()) {
+				walkingAnimation.update(pac);
+			} else {
+				walkingAnimation.end(pac);
+			}
 		}
 	};
 
@@ -121,9 +120,6 @@ public class Pac3D {
 		case PACMAN -> new HeadBanging(pac, root);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
-
-		// TODO
-		walkingAnimatedPy.bind(Env.d3_pacWalkingAnimatedPy);
 	}
 
 	public Node getRoot() {
