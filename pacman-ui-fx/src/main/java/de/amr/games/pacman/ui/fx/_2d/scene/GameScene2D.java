@@ -34,6 +34,7 @@ import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
@@ -43,6 +44,7 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
@@ -67,7 +69,10 @@ public abstract class GameScene2D implements GameScene {
 		requireNonNull(gameController);
 
 		context = new GameSceneContext(gameController);
-		fxSubScene = new SubScene(new StackPane(canvas), WIDTH, HEIGHT);
+		var container = new StackPane(canvas);
+		// This avoids the white vertical line left of the embedded 2D game scene
+		container.setBackground(ResourceMgr.colorBackground(Color.BLACK));
+		fxSubScene = new SubScene(container, WIDTH, HEIGHT);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
