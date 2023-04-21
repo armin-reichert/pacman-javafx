@@ -25,7 +25,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._3d.animation;
 
 import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
@@ -35,29 +37,65 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class HipSwaying {
+public class HipSwaying implements Pac3D.WalkingAnimation {
 
 	private static final short DEFAULT_ANGLE_FROM = -20;
 	private static final short DEFAULT_ANGLE_TO = 20;
 	private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
 
+	private double amplification = 1;
 	private final RotateTransition animation;
 
-	public HipSwaying(Pac pac, Node root, boolean excited) {
+	public HipSwaying(Pac pac, Node root) {
 		animation = new RotateTransition();
 		animation.setNode(root);
-		double amplification = excited ? 1.5 : 1;
 		animation.setDuration(DEFAULT_DURATION);
 		animation.setAxis(Rotate.Z_AXIS);
 		animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
 		animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
+		animation.setRate(amplification);
 		animation.setCycleCount(Animation.INDEFINITE);
 		animation.setAutoReverse(true);
-		animation.setRate(amplification);
 		animation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public RotateTransition animation() {
 		return animation;
+	}
+
+	@Override
+	public void setPowerMode(boolean power) {
+		double newAmplification = power ? 1.5 : 1;
+		if (amplification != newAmplification) {
+			amplification = newAmplification;
+			animation.stop();
+			animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+			animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
+			animation.setRate(amplification);
+			animation.play();
+		}
+	}
+
+	@Override
+	public void begin(Pac pac) {
+	}
+
+	@Override
+	public void update(Pac pac) {
+		if (pac.isStandingStill()) {
+			end(pac);
+			animation.getNode().setRotate(0);
+		} else {
+			animation.play();
+		}
+	}
+
+	@Override
+	public void end(Pac pac) {
+		if (animation.getStatus() == Status.RUNNING) {
+			animation.stop();
+			animation.getNode().setRotationAxis(animation.getAxis());
+			animation.getNode().setRotate(0);
+		}
 	}
 }

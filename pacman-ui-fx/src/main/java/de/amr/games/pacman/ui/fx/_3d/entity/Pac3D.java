@@ -42,7 +42,6 @@ import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
@@ -53,7 +52,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -72,6 +70,17 @@ import javafx.util.Duration;
  */
 public class Pac3D {
 
+	public interface WalkingAnimation {
+
+		void begin(Pac pac);
+
+		void update(Pac pac);
+
+		void end(Pac pac);
+
+		void setPowerMode(boolean power);
+	}
+
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
@@ -79,12 +88,7 @@ public class Pac3D {
 	public final BooleanProperty walkingAnimatedPy = new SimpleBooleanProperty(this, "walkingAnimated", false) {
 		@Override
 		protected void invalidated() {
-			if (get()) {
-				createWalkingAnimation(false); // TODO
-			} else {
-				endWalkingAnimation();
-				walkingAnimation = null;
-			}
+			// TODO
 		}
 	};
 
@@ -92,14 +96,12 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
-	private final GameVariant gameVariant;
 	private final Pac pac;
 	private final Group root = new Group();
 	private final Color headColor;
 	private final Translate position = new Translate();
 	private final Rotate orientation = new Rotate();
-
-	private RotateTransition walkingAnimation;
+	private final WalkingAnimation walkingAnimation;
 	private Animation dyingAnimation;
 
 	public Pac3D(GameVariant gameVariant, Pac pac, Node pacNode, Color headColor) {
@@ -108,7 +110,6 @@ public class Pac3D {
 		checkNotNull(pacNode);
 		checkNotNull(headColor);
 
-		this.gameVariant = gameVariant;
 		this.pac = pac;
 		this.headColor = headColor;
 		pacNode.getTransforms().setAll(position, orientation);
@@ -116,16 +117,15 @@ public class Pac3D {
 		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		root.getChildren().add(pacNode);
-		walkingAnimatedPy.bind(Env.d3_pacWalkingAnimatedPy);
-	}
 
-	public void setPower(boolean power) {
-		if (walkingAnimation == null) {
-			return;
-		}
-		walkingAnimation.stop();
-		createWalkingAnimation(power);
-		walkingAnimation.play();
+		walkingAnimation = switch (gameVariant) {
+		case MS_PACMAN -> new HipSwaying(pac, root);
+		case PACMAN -> new HeadBanging(pac, root);
+		default -> throw new IllegalGameVariantException(gameVariant);
+		};
+
+		// TODO
+		walkingAnimatedPy.bind(Env.d3_pacWalkingAnimatedPy);
 	}
 
 	public Node getRoot() {
@@ -136,22 +136,30 @@ public class Pac3D {
 		return position;
 	}
 
+	public Animation dyingAnimation() {
+		return dyingAnimation;
+	}
+
+	public WalkingAnimation walkingAnimation() {
+		return walkingAnimation;
+	}
+
 	public void init(GameLevel level) {
 		headColorPy.set(headColor);
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		endWalkingAnimation();
 		updatePosition();
 		turnToMoveDirection();
 		updateVisibility(level);
+		walkingAnimation.end(pac);
 	}
 
 	public void update(GameLevel level) {
 		updatePosition();
 		turnToMoveDirection();
 		updateVisibility(level);
-		updateWalkingAnimation();
+		walkingAnimation.update(pac);
 	}
 
 	private void updatePosition() {
@@ -173,48 +181,6 @@ public class Pac3D {
 
 	private void updateVisibility(GameLevel level) {
 		root.setVisible(pac.isVisible() && !outsideWorld(level.world()));
-	}
-
-	private void updateWalkingAnimation() {
-		if (walkingAnimation == null) {
-			return;
-		}
-		if (pac.isStandingStill()) {
-			endWalkingAnimation();
-			root.setRotate(0);
-			return;
-		}
-		var axis = walkingAnimationAxis();
-		if (walkingAnimation.getStatus() != Status.RUNNING || !axis.equals(walkingAnimation.getAxis())) {
-			walkingAnimation.stop();
-			walkingAnimation.setAxis(axis);
-			walkingAnimation.playFromStart();
-			LOG.trace("%s: Nodding started", pac.name());
-		}
-	}
-
-	private Point3D walkingAnimationAxis() {
-		if (gameVariant == GameVariant.MS_PACMAN) { // TODO
-			return Rotate.Z_AXIS;
-		}
-		return pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-	}
-
-	private void endWalkingAnimation() {
-		if (walkingAnimation != null && walkingAnimation.getStatus() == Status.RUNNING) {
-			walkingAnimation.stop();
-			root.setRotationAxis(walkingAnimationAxis());
-			root.setRotate(0);
-			LOG.trace("%s: Walking animation stopped", pac.name());
-		}
-	}
-
-	private void createWalkingAnimation(boolean power) {
-		walkingAnimation = switch (gameVariant) {
-		case MS_PACMAN -> new HipSwaying(pac, root, power).animation();
-		case PACMAN -> new HeadBanging(pac, root, power).animation();
-		default -> throw new IllegalGameVariantException(gameVariant);
-		};
 	}
 
 	public void createPacManDyingAnimation() {
@@ -252,10 +218,6 @@ public class Pac3D {
 		spin.setOnFinished(e -> root.setRotate(90));
 
 		dyingAnimation = new SequentialTransition(spin, Ufx.pause(2));
-	}
-
-	public Animation dyingAnimation() {
-		return dyingAnimation;
 	}
 
 	private boolean outsideWorld(World world) {
