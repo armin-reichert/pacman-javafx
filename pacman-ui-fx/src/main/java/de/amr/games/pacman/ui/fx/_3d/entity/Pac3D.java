@@ -132,7 +132,7 @@ public class Pac3D {
 			falling.setToZ(4);
 
 			animation = new SequentialTransition( //
-					Ufx.pause(0.25), //
+					Ufx.pause(0.5), //
 					new ParallelTransition(spinning, shrinking, falling), //
 					Ufx.pause(0.5));
 
