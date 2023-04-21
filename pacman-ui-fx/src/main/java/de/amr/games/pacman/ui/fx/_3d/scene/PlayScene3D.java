@@ -381,12 +381,14 @@ public class PlayScene3D implements GameScene {
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppRes.Texts.pickLevelCompleteMessage(level.number());
-				if (level.intermissionNumber == 0) {
-					Actions.playAudioClip(AppRes.Sounds.SOUND_LEVEL_COMPLETE);
-				}
 				lockStateAndPlayAfterSeconds(1.0 //
 						, createLevelCompleteAnimation(level) //
-						, Ufx.afterSeconds(0.5, level.pac()::hide) //
+						, Ufx.afterSeconds(0.5, () -> {
+							level.pac().hide();
+							if (level.intermissionNumber == 0) {
+								Actions.playAudioClip(AppRes.Sounds.SOUND_LEVEL_COMPLETE);
+							}
+						}) //
 						, Ufx.afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)) //
 						, createLevelChangeAnimation(level));
 			});
