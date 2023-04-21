@@ -86,7 +86,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			AppRes.KEY_NO_TEXTURE) {
+			AppRes.Graphics.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			LOG.trace("Floor texture change detected");

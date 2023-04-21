@@ -52,8 +52,6 @@ public class AppRes {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	public static final String KEY_NO_TEXTURE = "No Texture";
-
 	public static class Models3D {
 
 		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
@@ -129,6 +127,8 @@ public class AppRes {
 	}
 
 	public static class Graphics {
+
+		public static final String KEY_NO_TEXTURE = "No Texture";
 
 		public static Image iconPacManGame;
 		public static Image iconMsPacManGame;
