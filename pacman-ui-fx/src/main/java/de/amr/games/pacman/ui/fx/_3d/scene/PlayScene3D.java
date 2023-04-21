@@ -386,7 +386,7 @@ public class PlayScene3D implements GameScene {
 						, Ufx.afterSeconds(0.5, () -> {
 							level.pac().hide();
 							if (level.intermissionNumber == 0) {
-								Actions.playAudioClip(AppRes.Sounds.SOUND_LEVEL_COMPLETE);
+								context.sounds().play(SoundClipID.LEVEL_COMPLETE);
 							}
 						}) //
 						, Ufx.afterSeconds(0.5, () -> Actions.showFlashMessageSeconds(2, message)) //
@@ -398,7 +398,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.getLivesCounter3D().stopAnimation();
 			Actions.showFlashMessageSeconds(3, AppRes.Texts.pickGameOverMessage());
-			Actions.playAudioClip("sound/common/game-over.mp3");
+			context.sounds().play(SoundClipID.GAME_OVER);
 			waitSeconds(3);
 		}
 
@@ -438,7 +438,7 @@ public class PlayScene3D implements GameScene {
 		rotateAnimation.setToAngle(360);
 		return new SequentialTransition(//
 				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
-				Ufx.afterSeconds(0.5, () -> Actions.playAudioClip(AppRes.Sounds.SOUND_SWEEP)), //
+				Ufx.afterSeconds(0.5, () -> context.sounds().play(SoundClipID.SWEEP)), //
 				rotateAnimation, //
 				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
 		);

@@ -62,10 +62,6 @@ public class Actions {
 		return gameController().state();
 	}
 
-	public static void playAudioClip(String relPath) {
-		ResourceMgr.audioClip(relPath).play();
-	}
-
 	public static void playHelpVoiceMessageAfterSeconds(int seconds) {
 		Ufx.afterSeconds(seconds, () -> playVoiceMessage(AppRes.Sounds.VOICE_HELP)).play();
 	}

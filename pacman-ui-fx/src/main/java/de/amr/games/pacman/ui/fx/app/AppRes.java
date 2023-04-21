@@ -179,20 +179,18 @@ public class AppRes {
 		public static final String VOICE_IMMUNITY_OFF = "sound/voice/immunity-off.mp3";
 		public static final String VOICE_IMMUNITY_ON = "sound/voice/immunity-on.mp3";
 
-		public static final String SOUND_SWEEP = "sound/common/sweep.mp3";
-		public static final String SOUND_LEVEL_COMPLETE = "sound/common/level-complete.mp3";
-		public static final String SOUND_GAME_OVER = "sound/common/game-over.mp3";
-
-		private static final Object[][] MS_PACMAN_SOUND_DATA = { //
+		private static final Object[][] MS_PACMAN_CACHED_CLIPS = { //
 				{ SoundClipID.BONUS_EATEN, "sound/mspacman/Fruit.mp3", 1.0 }, //
 				{ SoundClipID.CREDIT, "sound/mspacman/Credit.mp3", 1.0 }, //
 				{ SoundClipID.EXTRA_LIFE, "sound/mspacman/ExtraLife.mp3", 1.0 }, //
 				{ SoundClipID.GAME_READY, "sound/mspacman/Start.mp3", 1.0 }, //
+				{ SoundClipID.GAME_OVER, "sound/common/game-over.mp3", 1.0 }, //
 				{ SoundClipID.GHOST_EATEN, "sound/mspacman/Ghost.mp3", 1.0 }, //
 				{ SoundClipID.GHOST_RETURNING, "sound/mspacman/GhostEyes.mp3", 1.0 }, //
 				{ SoundClipID.INTERMISSION_1, "sound/mspacman/Act1TheyMeet.mp3", 1.0 }, //
 				{ SoundClipID.INTERMISSION_2, "sound/mspacman/Act2TheChase.mp3", 1.0 }, //
 				{ SoundClipID.INTERMISSION_3, "sound/mspacman/Act3Junior.mp3", 1.0 }, //
+				{ SoundClipID.LEVEL_COMPLETE, "sound/common/level-complete.mp3", 1.0 }, //
 				{ SoundClipID.PACMAN_DEATH, "sound/mspacman/Died.mp3", 1.0 }, //
 				{ SoundClipID.PACMAN_MUNCH, "sound/mspacman/Pill.mp3", 1.0 }, //
 				{ SoundClipID.PACMAN_POWER, "sound/mspacman/ScaredGhost.mp3", 1.0 }, //
@@ -200,16 +198,20 @@ public class AppRes {
 				{ SoundClipID.SIREN_2, "sound/mspacman/GhostNoise2.mp3", 1.0 }, //
 				{ SoundClipID.SIREN_3, "sound/mspacman/GhostNoise3.mp3", 1.0 }, //
 				{ SoundClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
+				{ SoundClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
+				{ SoundClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
 		};
 
-		private static final Object[][] PACMAN_SOUND_DATA = { //
+		private static final Object[][] PACMAN_CACHED_CLIPS = { //
 				{ SoundClipID.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
 				{ SoundClipID.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
 				{ SoundClipID.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
 				{ SoundClipID.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
+				{ SoundClipID.GAME_OVER, "sound/common/game-over.mp3", 1.0 }, //
 				{ SoundClipID.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
 				{ SoundClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
 				{ SoundClipID.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
+				{ SoundClipID.LEVEL_COMPLETE, "sound/common/level-complete.mp3", 1.0 }, //
 				{ SoundClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
 				{ SoundClipID.PACMAN_MUNCH, "sound/pacman/doublemunch.wav", 1.0 }, //
 				{ SoundClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
@@ -217,14 +219,15 @@ public class AppRes {
 				{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.4 }, //
 				{ SoundClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.4 }, //
 				{ SoundClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.4 }, //
+				{ SoundClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
 		};
 
 		private static GameSounds soundsMsPacMan;
 		private static GameSounds soundsPacMan;
 
 		static void load() {
-			soundsMsPacMan = new GameSounds(MS_PACMAN_SOUND_DATA);
-			soundsPacMan = new GameSounds(PACMAN_SOUND_DATA);
+			soundsMsPacMan = new GameSounds(MS_PACMAN_CACHED_CLIPS);
+			soundsPacMan = new GameSounds(PACMAN_CACHED_CLIPS);
 		}
 
 		public static GameSounds sounds(GameVariant variant) {
