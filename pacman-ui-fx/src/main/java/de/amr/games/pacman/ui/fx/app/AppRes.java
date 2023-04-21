@@ -132,7 +132,7 @@ public class AppRes {
 		public static Image iconMsPacManGame;
 		public static Image skyImage;
 
-		private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
+		private static Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
 
 		static void load() {
 			loadFloorTexture("Chrome", "chrome");
@@ -147,27 +147,27 @@ public class AppRes {
 			skyImage = ResourceMgr.image("graphics/sky.png");
 		}
 
-		private static void loadFloorTexture(String key, String textureName) {
+		private static void loadFloorTexture(String name, String textureFileBasename) {
 			var material = new PhongMaterial();
-			textures.put(key, material);
-			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
-			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
+			texturesByName.put(name, material);
+			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureFileBasename)));
+			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureFileBasename)));
 			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
 			material.specularColorProperty()
 					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
 		}
 
-		public static PhongMaterial texture(String key) {
-			return textures.get(key);
+		public static PhongMaterial texture(String name) {
+			return texturesByName.get(name);
 		}
 
-		public static String[] textureKeys() {
-			return textures.keySet().toArray(String[]::new);
+		public static String[] textureNames() {
+			return texturesByName.keySet().toArray(String[]::new);
 		}
 
-		public static String randomTextureKey() {
-			var keys = textureKeys();
-			return textureKeys()[randomInt(0, keys.length)];
+		public static String randomTextureName() {
+			var keys = textureNames();
+			return textureNames()[randomInt(0, keys.length)];
 		}
 	}
 
