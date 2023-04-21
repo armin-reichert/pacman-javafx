@@ -80,7 +80,7 @@ public class Pac3D {
 		@Override
 		protected void invalidated() {
 			if (get()) {
-				createWalkingAnimation();
+				createWalkingAnimation(false); // TODO
 			} else {
 				endWalkingAnimation();
 				walkingAnimation = null;
@@ -100,7 +100,6 @@ public class Pac3D {
 	private final Rotate orientation = new Rotate();
 
 	private RotateTransition walkingAnimation;
-	private boolean excited;
 	private Animation dyingAnimation;
 
 	public Pac3D(GameVariant gameVariant, Pac pac, Node pacNode, Color headColor) {
@@ -120,23 +119,12 @@ public class Pac3D {
 		walkingAnimatedPy.bind(Env.d3_pacWalkingAnimatedPy);
 	}
 
-	public void onGetsPower() {
-		excited = true;
+	public void setPower(boolean power) {
 		if (walkingAnimation == null) {
 			return;
 		}
 		walkingAnimation.stop();
-		createWalkingAnimation();
-		walkingAnimation.play();
-	}
-
-	public void onLosesPower() {
-		excited = false;
-		if (walkingAnimation == null) {
-			return;
-		}
-		walkingAnimation.stop();
-		createWalkingAnimation();
+		createWalkingAnimation(power);
 		walkingAnimation.play();
 	}
 
@@ -163,7 +151,7 @@ public class Pac3D {
 		updatePosition();
 		turnToMoveDirection();
 		updateVisibility(level);
-		updateAnimations();
+		updateWalkingAnimation();
 	}
 
 	private void updatePosition() {
@@ -187,7 +175,7 @@ public class Pac3D {
 		root.setVisible(pac.isVisible() && !outsideWorld(level.world()));
 	}
 
-	private void updateAnimations() {
+	private void updateWalkingAnimation() {
 		if (walkingAnimation == null) {
 			return;
 		}
@@ -217,14 +205,14 @@ public class Pac3D {
 			walkingAnimation.stop();
 			root.setRotationAxis(walkingAnimationAxis());
 			root.setRotate(0);
-			LOG.trace("%s: Nodding stopped", pac.name());
+			LOG.trace("%s: Walking animation stopped", pac.name());
 		}
 	}
 
-	private void createWalkingAnimation() {
+	private void createWalkingAnimation(boolean power) {
 		walkingAnimation = switch (gameVariant) {
-		case MS_PACMAN -> new HipSwaying(pac, root, excited).animation();
-		case PACMAN -> new HeadBanging(pac, root, excited).animation();
+		case MS_PACMAN -> new HipSwaying(pac, root, power).animation();
+		case PACMAN -> new HeadBanging(pac, root, power).animation();
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 	}
