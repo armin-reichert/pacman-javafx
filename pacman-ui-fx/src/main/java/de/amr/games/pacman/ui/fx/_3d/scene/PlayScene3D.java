@@ -390,7 +390,7 @@ public class PlayScene3D implements GameScene {
 							context.sounds().play(SoundClipID.LEVEL_COMPLETE);
 						} else {
 							var message = AppRes.Texts.pickLevelCompleteMessage(level.number());
-							Actions.showFlashMessageSeconds(4, message);
+							Actions.showFlashMessageSeconds(2, message);
 						}
 					}),
 					createLevelChangeAnimation(level));

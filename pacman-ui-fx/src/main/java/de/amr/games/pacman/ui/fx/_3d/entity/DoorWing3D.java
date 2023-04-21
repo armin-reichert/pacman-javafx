@@ -55,7 +55,7 @@ public class DoorWing3D {
 		shape.setMaterial(new PhongMaterial(color));
 		shape.setTranslateX((double) tile.x() * TS + HTS);
 		shape.setTranslateY((double) tile.y() * TS + HTS);
-		shape.translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(0.5));
+		shape.translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(1.5));
 	}
 
 	public Box getRoot() {
