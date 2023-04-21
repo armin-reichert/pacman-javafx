@@ -34,6 +34,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.ui.fx._3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -69,10 +70,6 @@ import javafx.util.Duration;
 public class Pac3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
-	private static final short HEAD_BANGING_ANGLE_FROM = -25;
-	private static final short HEAD_BANGING_ANGLE_TO = 15;
-	private static final Duration HEAD_BANGING__DURATION = Duration.seconds(0.25);
 
 	private static final short HIP_SWAY_ANGLE_FROM = -20;
 	private static final short HIP_SWAY_ANGLE_TO = 20;
@@ -223,24 +220,21 @@ public class Pac3D {
 	}
 
 	private void createWalkingAnimation() {
-		walkingAnimation = new RotateTransition();
-		walkingAnimation.setNode(root);
-		double amplification = excited ? 1.5 : 1;
 		if (swayingHips) {
+			double amplification = excited ? 1.5 : 1;
+			walkingAnimation = new RotateTransition();
+			walkingAnimation.setNode(root);
 			walkingAnimation.setDuration(HIP_SWAY_DURATION);
 			walkingAnimation.setAxis(Rotate.Z_AXIS);
 			walkingAnimation.setFromAngle(HIP_SWAY_ANGLE_FROM * amplification);
 			walkingAnimation.setToAngle(HIP_SWAY_ANGLE_TO * amplification);
+			walkingAnimation.setCycleCount(Animation.INDEFINITE);
+			walkingAnimation.setAutoReverse(true);
+			walkingAnimation.setRate(amplification);
+			walkingAnimation.setInterpolator(Interpolator.EASE_BOTH);
 		} else {
-			walkingAnimation.setDuration(HEAD_BANGING__DURATION);
-			walkingAnimation.setAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
-			walkingAnimation.setFromAngle(HEAD_BANGING_ANGLE_FROM * amplification);
-			walkingAnimation.setToAngle(HEAD_BANGING_ANGLE_TO * amplification);
+			walkingAnimation = new HeadBanging(pac, root, excited).animation();
 		}
-		walkingAnimation.setCycleCount(Animation.INDEFINITE);
-		walkingAnimation.setAutoReverse(true);
-		walkingAnimation.setRate(amplification);
-		walkingAnimation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void createPacManDyingAnimation() {
