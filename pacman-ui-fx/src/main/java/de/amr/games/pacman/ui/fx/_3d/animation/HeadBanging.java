@@ -43,7 +43,6 @@ public class HeadBanging implements Pac3D.WalkingAnimation {
 	private static final short DEFAULT_ANGLE_TO = 15;
 	private static final Duration DEFAULT_DURATION = Duration.seconds(0.25);
 
-	private double amplification = 1;
 	private final RotateTransition animation;
 
 	public HeadBanging(Pac pac, Node root) {
@@ -51,9 +50,9 @@ public class HeadBanging implements Pac3D.WalkingAnimation {
 		animation.setNode(root);
 		animation.setDuration(DEFAULT_DURATION);
 		animation.setAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
-		animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-		animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-		animation.setRate(amplification);
+		animation.setFromAngle(DEFAULT_ANGLE_FROM);
+		animation.setToAngle(DEFAULT_ANGLE_TO);
+		animation.setRate(1);
 		animation.setCycleCount(Animation.INDEFINITE);
 		animation.setAutoReverse(true);
 		animation.setInterpolator(Interpolator.EASE_BOTH);
@@ -61,23 +60,17 @@ public class HeadBanging implements Pac3D.WalkingAnimation {
 
 	@Override
 	public void setPowerMode(boolean power) {
-		double newAmplification = power ? 1.5 : 1;
-		if (amplification != newAmplification) {
-			amplification = newAmplification;
-			animation.stop();
-			animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-			animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-			animation.setRate(amplification);
-			animation.play();
-		}
+		double amplification = power ? 1.5 : 1;
+		double rate = power ? 2 : 1;
+		animation.stop();
+		animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+		animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
+		animation.setRate(rate);
+		animation.play();
 	}
 
 	public RotateTransition animation() {
 		return animation;
-	}
-
-	@Override
-	public void begin(Pac pac) {
 	}
 
 	@Override

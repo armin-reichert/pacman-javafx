@@ -72,8 +72,6 @@ public class Pac3D {
 
 	public interface WalkingAnimation {
 
-		void begin(Pac pac);
-
 		void update(Pac pac);
 
 		void end(Pac pac);
