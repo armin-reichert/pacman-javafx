@@ -41,7 +41,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.Validator;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
@@ -345,12 +344,9 @@ public class PlayScene3D implements GameScene {
 		case PACMAN_DYING -> {
 			context.level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
-				switch (level.game().variant()) {
-				case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-				case PACMAN -> level3D.pac3D().createPacManDyingAnimation();
-				default -> throw new IllegalGameVariantException(level.game().variant());
-				}
-				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation());
+				lockStateAndPlayAfterSeconds(1.0, //
+						level3D.pac3D().dyingAnimation() //
+				);
 			});
 		}
 

@@ -35,16 +35,11 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx._3d.animation.HipSwaying;
+import de.amr.games.pacman.ui.fx._3d.animation.MsPacManDyingAnimation;
+import de.amr.games.pacman.ui.fx._3d.animation.PacManDyingAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -55,7 +50,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 
 /**
  * 3D-representation of Pac-Man and Ms. Pac-Man.
@@ -68,7 +62,6 @@ import javafx.util.Duration;
 public class Pac3D {
 
 	public interface WalkingAnimation {
-
 		void update(Pac pac);
 
 		void end(Pac pac);
@@ -76,7 +69,10 @@ public class Pac3D {
 		void setPowerMode(boolean power);
 	}
 
-	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
+	public interface DyingAnimation {
+
+		Animation animation();
+	}
 
 	public final BooleanProperty walkingAnimatedPy = new SimpleBooleanProperty(this, "walkingAnimated", false) {
 		@Override
@@ -99,7 +95,7 @@ public class Pac3D {
 	private final Translate position = new Translate();
 	private final Rotate orientation = new Rotate();
 	private final WalkingAnimation walkingAnimation;
-	private Animation dyingAnimation;
+	private final DyingAnimation dyingAnimation;
 
 	public Pac3D(GameVariant gameVariant, Pac pac, Node pacNode, Color headColor) {
 		checkNotNull(gameVariant);
@@ -120,6 +116,12 @@ public class Pac3D {
 		case PACMAN -> new HeadBanging(root);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
+
+		dyingAnimation = switch (gameVariant) {
+		case MS_PACMAN -> new MsPacManDyingAnimation(pac, root);
+		case PACMAN -> new PacManDyingAnimation(pac, root);
+		default -> throw new IllegalGameVariantException(gameVariant);
+		};
 	}
 
 	public Node getRoot() {
@@ -131,7 +133,7 @@ public class Pac3D {
 	}
 
 	public Animation dyingAnimation() {
-		return dyingAnimation;
+		return dyingAnimation.animation();
 	}
 
 	public WalkingAnimation walkingAnimation() {
@@ -177,45 +179,7 @@ public class Pac3D {
 		root.setVisible(pac.isVisible() && !outsideWorld(level.world()));
 	}
 
-	public void createPacManDyingAnimation() {
-		var numSpins = 15;
-
-		var spinning = new RotateTransition(COLLAPSING_DURATION.divide(numSpins), root);
-		spinning.setAxis(Rotate.Z_AXIS);
-		spinning.setByAngle(360);
-		spinning.setCycleCount(numSpins);
-		spinning.setInterpolator(Interpolator.EASE_OUT);
-
-		var shrinking = new ScaleTransition(COLLAPSING_DURATION, root);
-		shrinking.setToX(0.5);
-		shrinking.setToY(0.5);
-		shrinking.setToZ(0.0);
-
-		var falling = new TranslateTransition(COLLAPSING_DURATION, root);
-		falling.setToZ(4);
-
-		dyingAnimation = new SequentialTransition(Ufx.pause(0.4), new ParallelTransition(spinning, shrinking, falling),
-				Ufx.pause(0.25));
-
-		dyingAnimation.setOnFinished(e -> root.setTranslateZ(0));
-	}
-
-	public void createMsPacManDyingAnimation() {
-		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-
-		var spin = new RotateTransition(Duration.seconds(0.25), root);
-		spin.setAxis(axis);
-		spin.setByAngle(pac.moveDir() == Direction.LEFT || pac.moveDir() == Direction.DOWN ? -90 : 90);
-		spin.setInterpolator(Interpolator.LINEAR);
-		spin.setCycleCount(4);
-		spin.setDelay(Duration.seconds(0.5));
-		spin.setOnFinished(e -> root.setRotate(90));
-
-		dyingAnimation = new SequentialTransition(spin, Ufx.pause(2));
-	}
-
 	private boolean outsideWorld(World world) {
-		double worldWidth = TS * world.numCols();
-		return position.getX() < HTS || position.getX() > worldWidth - 4;
+		return position.getX() < HTS || position.getX() > TS * world.numCols() - HTS;
 	}
 }
