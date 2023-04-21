@@ -429,18 +429,20 @@ public class PlayScene3D implements GameScene {
 		if (level.intermissionNumber != 0) {
 			return Ufx.pause(0); // no level change animation if intermission scene follows
 		}
-		var perspectiveToRestore = Env.d3_perspectivePy.get();
 		var rotateAnimation = new RotateTransition();
 		rotateAnimation.setNode(level3D.getRoot());
 		rotateAnimation.setDuration(Duration.seconds(1.0));
 		rotateAnimation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotateAnimation.setFromAngle(0);
 		rotateAnimation.setToAngle(360);
+		perspectivePy.unbind();
 		return new SequentialTransition(//
-				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
+				Ufx.afterSeconds(0.5, () -> perspectivePy.set(Perspective.TOTAL)), //
 				Ufx.afterSeconds(0.5, () -> context.sounds().play(SoundClipID.SWEEP)), //
 				rotateAnimation, //
-				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
+				Ufx.afterSeconds(0.5, () -> {
+					perspectivePy.bind(Env.d3_perspectivePy);
+				}) //
 		);
 	}
 
