@@ -162,14 +162,14 @@ public class AppRes {
 			skyImage = ResourceMgr.image("graphics/sky.png");
 		}
 
-		private static void loadFloorTexture(String name, String textureFileBasename) {
+		private static void loadFloorTexture(String name, String textureBase) {
 			var material = new PhongMaterial();
-			texturesByName.put(name, material);
-			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureFileBasename)));
-			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureFileBasename)));
+			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureBase)));
+			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureBase)));
 			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
 			material.specularColorProperty()
 					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
+			texturesByName.put(name, material);
 		}
 
 		public static PhongMaterial texture(String name) {
