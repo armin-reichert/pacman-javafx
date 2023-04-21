@@ -49,6 +49,7 @@ import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
+import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -57,10 +58,21 @@ import javafx.scene.paint.Color;
  */
 public class GameLevel3D {
 
+	private static PointLight createPacLight(Pac3D pac3D) {
+		var light = new PointLight();
+		light.setColor(Color.rgb(255, 255, 0, 0.25));
+		light.setMaxRange(2 * TS);
+		light.translateXProperty().bind(pac3D.position().xProperty());
+		light.translateYProperty().bind(pac3D.position().yProperty());
+		light.setTranslateZ(-10);
+		return light;
+	}
+
 	private final GameLevel level;
 	private final Group root = new Group();
 	private final World3D world3D;
 	private final Pac3D pac3D;
+	private final PointLight pacLight;
 	private final Ghost3D[] ghosts3D;
 	private final Bonus3D bonus3D;
 	private final LevelCounter3D levelCounter3D;
@@ -87,6 +99,7 @@ public class GameLevel3D {
 		case PACMAN -> createPacMan3D(pacManColors);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
+		pacLight = createPacLight(pac3D);
 
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
 
@@ -117,7 +130,7 @@ public class GameLevel3D {
 		root.getChildren().add(livesCounter3D.getRoot());
 		root.getChildren().add(bonus3D.getRoot());
 		root.getChildren().add(pac3D.getRoot());
-		root.getChildren().add(pac3D.light());
+		root.getChildren().add(pacLight);
 		root.getChildren().add(ghosts3D[0].getRoot());
 		root.getChildren().add(ghosts3D[1].getRoot());
 		root.getChildren().add(ghosts3D[2].getRoot());
@@ -175,8 +188,19 @@ public class GameLevel3D {
 		throw new UnsupportedOperationException();
 	}
 
+	private void updatePacLight() {
+		var pac = level.pac();
+		boolean isVisible = pac.isVisible();
+		boolean isAlive = !pac.isDead();
+		boolean hasPower = pac.powerTimer().isRunning();
+		var maxRange = pac.isPowerFading(level) ? 4 : 8;
+		pacLight.setLightOn(pac3D.lightedPy.get() && isVisible && isAlive && hasPower);
+		pacLight.setMaxRange(hasPower ? maxRange * TS : 0);
+	}
+
 	public void update() {
 		pac3D.update(level);
+		updatePacLight();
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
 		bonus3D.update(level);
 		// TODO get rid of this

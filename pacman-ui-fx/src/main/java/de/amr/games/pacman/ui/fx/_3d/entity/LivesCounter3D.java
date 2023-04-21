@@ -98,10 +98,10 @@ public class LivesCounter3D {
 		}
 
 		light = new PointLight(Color.grayRgb(200));
+		light.setMaxRange(TS * maxLives);
 		light.setTranslateX(TS * (maxLives - 1));
-		light.setTranslateY(-2 * TS);
-		light.setTranslateZ(-pillarHeight - 10);
-		light.setMaxRange(5 * TS);
+		light.setTranslateY(TS * (-1));
+		light.setTranslateZ(-pillarHeight - 20);
 
 		root.getChildren().addAll(pillarAndPlateGroup, pacGroup, light);
 	}

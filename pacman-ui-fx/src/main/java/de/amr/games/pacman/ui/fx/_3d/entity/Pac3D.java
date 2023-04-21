@@ -51,7 +51,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
@@ -78,10 +77,8 @@ public class Pac3D {
 
 	private static final double EXCITEMENT = 1.5;
 
-	private static final Duration HEAD_BANGING__DURATION = Duration.seconds(0.2);
+	private static final Duration HEAD_BANGING__DURATION = Duration.seconds(0.25);
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
-
-	private static final Color LIGHT_COLOR = Color.rgb(255, 255, 0, 0.25);
 
 	public final BooleanProperty walkingAnimatedPy = new SimpleBooleanProperty(this, "walkingAnimated", false) {
 		@Override
@@ -102,7 +99,6 @@ public class Pac3D {
 	private final Pac pac;
 	private final Group root = new Group();
 	private final Color headColor;
-	private final PointLight light;
 	private final Translate position = new Translate();
 	private final Rotate orientation = new Rotate();
 	private RotateTransition walkingAnimation;
@@ -117,7 +113,6 @@ public class Pac3D {
 		this.pac = pac;
 		this.headColor = headColor;
 		this.swayingHips = swayingHips;
-		this.light = createLight();
 		pacNode.getTransforms().setAll(position, orientation);
 		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
@@ -171,10 +166,6 @@ public class Pac3D {
 		return position;
 	}
 
-	public PointLight light() {
-		return light;
-	}
-
 	public void init(GameLevel level) {
 		headColorPy.set(headColor);
 		root.setScaleX(1.0);
@@ -184,7 +175,6 @@ public class Pac3D {
 		updatePosition();
 		turnToMoveDirection();
 		updateVisibility(level);
-		updateLight(level);
 	}
 
 	public void update(GameLevel level) {
@@ -192,7 +182,6 @@ public class Pac3D {
 		turnToMoveDirection();
 		updateVisibility(level);
 		updateAnimations();
-		updateLight(level);
 	}
 
 	private void updatePosition() {
@@ -289,25 +278,6 @@ public class Pac3D {
 
 	public Animation dyingAnimation() {
 		return dyingAnimation;
-	}
-
-	private PointLight createLight() {
-		var pointLight = new PointLight();
-		pointLight.setColor(LIGHT_COLOR);
-		pointLight.setMaxRange(2 * TS);
-		pointLight.translateXProperty().bind(position.xProperty());
-		pointLight.translateYProperty().bind(position.yProperty());
-		pointLight.setTranslateZ(-10);
-		return pointLight;
-	}
-
-	private void updateLight(GameLevel level) {
-		boolean isVisible = pac.isVisible();
-		boolean isAlive = !pac.isDead();
-		boolean hasPower = pac.powerTimer().isRunning();
-		var maxRange = pac.isPowerFading(level) ? 4 : 8;
-		light.setLightOn(lightedPy.get() && isVisible && isAlive && hasPower);
-		light.setMaxRange(hasPower ? maxRange * TS : 0);
 	}
 
 	private boolean outsideWorld(World world) {
