@@ -152,10 +152,49 @@ public class AppResources {
 		}
 	}
 
-	private static Image iconPacManGame;
-	private static Image iconMsPacManGame;
-	private static Image skyImage;
-	private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
+	public static class Graphics {
+
+		private static Image iconPacManGame;
+		private static Image iconMsPacManGame;
+		private static Image skyImage;
+		private static Map<String, PhongMaterial> textures = new LinkedHashMap<>();
+
+		static void load() {
+			loadFloorTexture("Chrome", "chrome");
+			loadFloorTexture("Grass", "grass");
+			loadFloorTexture("Hexagon", "hexagon");
+			loadFloorTexture("Knobs & Bumps", "knobs");
+			loadFloorTexture("Plastic", "plastic");
+			loadFloorTexture("Wood", "wood");
+
+			iconPacManGame = ResourceMgr.image("icons/pacman.png");
+			iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
+			skyImage = ResourceMgr.image("graphics/sky.png");
+		}
+
+		private static void loadFloorTexture(String key, String textureName) {
+			var material = new PhongMaterial();
+			textures.put(key, material);
+			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
+			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
+			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
+			material.specularColorProperty()
+					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
+		}
+
+		public static PhongMaterial texture(String key) {
+			return textures.get(key);
+		}
+
+		public static String[] textureKeys() {
+			return textures.keySet().toArray(String[]::new);
+		}
+
+		public static String randomTextureKey() {
+			var keys = textureKeys();
+			return textureKeys()[randomInt(0, keys.length)];
+		}
+	}
 
 	public static final String VOICE_HELP = "sound/common/press-key.mp3";
 	public static final String VOICE_AUTOPILOT_OFF = "sound/common/autopilot-off.mp3";
@@ -219,62 +258,24 @@ public class AppResources {
 		var start = System.nanoTime();
 
 		Models3D.load();
-
-		// graphics
-		loadFloorTexture("Chrome", "chrome");
-		loadFloorTexture("Grass", "grass");
-		loadFloorTexture("Hexagon", "hexagon");
-		loadFloorTexture("Knobs & Bumps", "knobs");
-		loadFloorTexture("Plastic", "plastic");
-		loadFloorTexture("Wood", "wood");
-
-		iconPacManGame = ResourceMgr.image("icons/pacman.png");
-		iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
-		skyImage = ResourceMgr.image("graphics/sky.png");
-
+		Graphics.load();
 		// sounds
 		soundsMsPacMan = new GameSounds(MS_PACMAN_SOUND_DATA);
 		soundsPacMan = new GameSounds(PACMAN_SOUND_DATA);
-
-		// texts
 		Texts.load();
 
 		LOG.info("Loading application resources done (%.2f seconds).", (System.nanoTime() - start) / 1_000_000_000f);
 	}
 
-	private static void loadFloorTexture(String key, String textureName) {
-		var material = new PhongMaterial();
-		textures.put(key, material);
-		material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureName)));
-		material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureName)));
-		material.diffuseColorProperty().bind(Env.d3_floorColorPy);
-		material.specularColorProperty()
-				.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
-	}
-
-	public static PhongMaterial texture(String key) {
-		return textures.get(key);
-	}
-
-	public static String[] textureKeys() {
-		return textures.keySet().toArray(String[]::new);
-	}
-
-	public static String randomTextureKey() {
-		var keys = AppResources.textureKeys();
-		return textureKeys()[randomInt(0, keys.length)];
-	}
-
 	public static Image appIcon(GameVariant variant) {
 		return switch (variant) {
-		case MS_PACMAN -> iconMsPacManGame;
-		case PACMAN -> iconPacManGame;
+		case MS_PACMAN -> Graphics.iconMsPacManGame;
+		case PACMAN -> Graphics.iconPacManGame;
 		default -> throw new IllegalGameVariantException(variant);
 		};
 	}
 
 	public static BackgroundImage backgroundImage3D() {
-		return new BackgroundImage(skyImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null);
+		return new BackgroundImage(Graphics.skyImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null);
 	}
-
 }
