@@ -27,7 +27,6 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.Node;
@@ -81,19 +80,17 @@ public class HeadBanging implements Pac3D.WalkingAnimation {
 			return;
 		}
 		var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-		if (animation.getStatus() != Status.RUNNING || !axis.equals(animation.getAxis())) {
+		if (!axis.equals(animation.getAxis())) {
 			animation.stop();
 			animation.setAxis(axis);
-			animation.playFromStart();
 		}
+		animation.play();
 	}
 
 	@Override
 	public void end(Pac pac) {
-		if (animation.getStatus() == Status.RUNNING) {
-			animation.stop();
-			animation.getNode().setRotationAxis(animation.getAxis());
-			animation.getNode().setRotate(0);
-		}
+		animation.stop();
+		animation.getNode().setRotationAxis(animation.getAxis());
+		animation.getNode().setRotate(0);
 	}
 }
