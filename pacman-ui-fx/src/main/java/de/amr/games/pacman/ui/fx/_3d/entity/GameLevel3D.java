@@ -25,10 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.app.AppRes.Models3D.ghostModel3D;
-import static de.amr.games.pacman.ui.fx.app.AppRes.Models3D.pacModel3D;
-import static de.amr.games.pacman.ui.fx.app.AppRes.Models3D.pelletModel3D;
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.model.common.Validator.checkLevelNotNull;
+import static de.amr.games.pacman.model.common.Validator.checkNotNull;
 
 import java.util.stream.Stream;
 
@@ -45,6 +43,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.SequentialTransition;
@@ -82,17 +81,17 @@ public class GameLevel3D {
 	public GameLevel3D(GameLevel level, Rendering2D r2D, MazeColoring mazeColors, PacManColoring pacManColors,
 			MsPacManColoring msPacManColors, GhostColoring[] ghostColors) {
 
-		requireNonNull(level);
-		requireNonNull(r2D);
-		requireNonNull(mazeColors);
-		requireNonNull(pacManColors);
-		requireNonNull(msPacManColors);
-		requireNonNull(ghostColors);
+		checkLevelNotNull(level);
+		checkNotNull(r2D);
+		checkNotNull(mazeColors);
+		checkNotNull(pacManColors);
+		checkNotNull(msPacManColors);
+		checkNotNull(ghostColors);
 
 		this.level = level;
 		final GameVariant gameVariant = level.game().variant();
 
-		world3D = new World3D(level.world(), mazeColors, pelletModel3D());
+		world3D = new World3D(level.world(), mazeColors, AppRes.Models3D.pelletModel3D);
 
 		pac3D = switch (gameVariant) {
 		case MS_PACMAN -> createMsPacMan3D(msPacManColors);
@@ -112,8 +111,9 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> pacModel3D().createMsPacManNode(9, msPacManColors), true);
-		case PACMAN -> new LivesCounter3D(5, () -> pacModel3D().createPacManNode(9, pacManColors), false);
+		case MS_PACMAN -> new LivesCounter3D(5, () -> AppRes.Models3D.pacModel3D.createMsPacManNode(9, msPacManColors),
+				true);
+		case PACMAN -> new LivesCounter3D(5, () -> AppRes.Models3D.pacModel3D.createPacManNode(9, pacManColors), false);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
@@ -153,21 +153,21 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
-		var node = pacModel3D().createPacManNode(9.0, colors);
+		var node = AppRes.Models3D.pacModel3D.createPacManNode(9.0, colors);
 		var pacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
 		pacMan3D.drawModePy.bind(Env.d3_drawModePy);
 		return pacMan3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
-		var node = pacModel3D().createMsPacManNode(9.0, colors);
+		var node = AppRes.Models3D.pacModel3D.createMsPacManNode(9.0, colors);
 		var msPacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
 		msPacMan3D.drawModePy.bind(Env.d3_drawModePy);
 		return msPacMan3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
-		return new Ghost3D(ghost, colors, ghostModel3D(), 8.5);
+		return new Ghost3D(ghost, colors, AppRes.Models3D.ghostModel3D, 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
@@ -217,7 +217,7 @@ public class GameLevel3D {
 	}
 
 	public void eat(Eatable3D eatable3D) {
-		requireNonNull(eatable3D);
+		checkNotNull(eatable3D);
 
 		if (eatable3D instanceof Energizer3D energizer3D) {
 			energizer3D.stopPumping();
