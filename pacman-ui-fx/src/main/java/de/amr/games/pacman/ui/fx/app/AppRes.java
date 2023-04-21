@@ -48,7 +48,7 @@ import javafx.scene.paint.PhongMaterial;
 /**
  * @author Armin Reichert
  */
-public class AppResources {
+public class AppRes {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static final String MSG_NOT_LOADED = "App resources not loaded";

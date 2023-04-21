@@ -55,7 +55,7 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void init() throws Exception {
-		AppResources.load();
+		AppRes.load();
 	}
 
 	@Override

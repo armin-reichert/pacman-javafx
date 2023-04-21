@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.dashboard;
 
-import de.amr.games.pacman.ui.fx.app.AppResources;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -62,9 +62,9 @@ public class SectionAppearance extends Section {
 	}
 
 	private String[] textureItems() {
-		var textureKeys = AppResources.Graphics.textureKeys();
+		var textureKeys = AppRes.Graphics.textureKeys();
 		var items = new String[textureKeys.length + 1];
-		items[0] = AppResources.KEY_NO_TEXTURE;
+		items[0] = AppRes.KEY_NO_TEXTURE;
 		System.arraycopy(textureKeys, 0, items, 1, textureKeys.length);
 		return items;
 	}

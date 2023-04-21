@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.common.GameModel;
 import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.app.AppResources;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**
@@ -104,6 +104,6 @@ public class GameSceneContext {
 	}
 
 	public GameSounds sounds() {
-		return AppResources.Sounds.sounds(gameVariant());
+		return AppRes.Sounds.sounds(gameVariant());
 	}
 }

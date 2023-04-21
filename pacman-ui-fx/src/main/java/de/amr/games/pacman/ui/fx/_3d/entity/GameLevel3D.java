@@ -25,9 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.app.AppResources.Models3D.ghostModel3D;
-import static de.amr.games.pacman.ui.fx.app.AppResources.Models3D.pacModel3D;
-import static de.amr.games.pacman.ui.fx.app.AppResources.Models3D.pelletModel3D;
+import static de.amr.games.pacman.ui.fx.app.AppRes.Models3D.ghostModel3D;
+import static de.amr.games.pacman.ui.fx.app.AppRes.Models3D.pacModel3D;
+import static de.amr.games.pacman.ui.fx.app.AppRes.Models3D.pelletModel3D;
 import static java.util.Objects.requireNonNull;
 
 import java.util.stream.Stream;

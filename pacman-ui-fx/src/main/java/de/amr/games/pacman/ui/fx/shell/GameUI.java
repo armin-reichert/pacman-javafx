@@ -62,8 +62,8 @@ import de.amr.games.pacman.ui.fx._2d.scene.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppResources;
-import de.amr.games.pacman.ui.fx.app.AppResources.Graphics;
+import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.AppRes.Graphics;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -140,8 +140,8 @@ public class GameUI implements GameEventListener {
 
 	private static Image appIcon(GameVariant variant) {
 		return switch (variant) {
-		case MS_PACMAN -> AppResources.Graphics.iconMsPacManGame;
-		case PACMAN -> AppResources.Graphics.iconPacManGame;
+		case MS_PACMAN -> AppRes.Graphics.iconMsPacManGame;
+		case PACMAN -> AppRes.Graphics.iconPacManGame;
 		default -> throw new IllegalGameVariantException(variant);
 		};
 	}
@@ -247,14 +247,14 @@ public class GameUI implements GameEventListener {
 	private void updateMainView() {
 		var variant = gameController.game().variant();
 		var paused = Env.simulationPausedPy.get();
-		var dimensionMsg = AppResources.Texts.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
+		var dimensionMsg = AppRes.Texts.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
 		var messageKey = switch (variant) {
 		case MS_PACMAN -> paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 		case PACMAN -> paused ? "app.title.pacman.paused" : "app.title.pacman";
 		default -> throw new IllegalGameVariantException(variant);
 		};
 		stage.getIcons().setAll(appIcon(variant));
-		stage.setTitle(AppResources.Texts.message(messageKey, dimensionMsg));
+		stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		root.setBackground(ResourceMgr.colorBackground(bgColor));
 		if (currentGameScene.is3D()) {
@@ -460,7 +460,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = AppResources.Sounds.sounds(event.game.variant());
+		var sounds = AppRes.Sounds.sounds(event.game.variant());
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN -> sounds.play(SoundClipID.BONUS_EATEN);
 		case GameModel.SE_CREDIT_ADDED -> sounds.play(SoundClipID.CREDIT);
