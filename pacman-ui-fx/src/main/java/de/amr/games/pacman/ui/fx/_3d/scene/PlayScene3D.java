@@ -331,7 +331,7 @@ public class PlayScene3D implements GameScene {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);
-				var readyMessage = inPercentOfCases(40) ? AppResources.randomReadyText(context.gameVariant()) : "READY!";
+				var readyMessage = inPercentOfCases(40) ? AppResources.Texts.randomReadyText(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -380,7 +380,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
-				var message = AppResources.pickLevelCompleteMessage(level.number());
+				var message = AppResources.Texts.pickLevelCompleteMessage(level.number());
 				if (level.intermissionNumber == 0) {
 					Actions.playAudioClip(AppResources.SOUND_LEVEL_COMPLETE);
 				}
@@ -395,7 +395,7 @@ public class PlayScene3D implements GameScene {
 		case GAME_OVER -> {
 			level3D.world3D().foodOscillation().stop();
 			level3D.getLivesCounter3D().stopAnimation();
-			Actions.showFlashMessageSeconds(3, AppResources.pickGameOverMessage());
+			Actions.showFlashMessageSeconds(3, AppResources.Texts.pickGameOverMessage());
 			Actions.playAudioClip("sound/common/game-over.mp3");
 			waitSeconds(3);
 		}

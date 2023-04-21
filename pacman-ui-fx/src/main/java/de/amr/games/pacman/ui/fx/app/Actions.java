@@ -145,7 +145,7 @@ public class Actions {
 	public static void togglePipViewVisible() {
 		Ufx.toggle(Env.pipVisiblePy);
 		var msgKey = Env.pipVisiblePy.get() ? "pip_on" : "pip_off";
-		showFlashMessage(AppResources.message(msgKey));
+		showFlashMessage(AppResources.Texts.message(msgKey));
 	}
 
 	public static void toggleDashboardVisible() {
@@ -190,8 +190,8 @@ public class Actions {
 		if (ui.currentGameScene().is3D()) {
 			var nextPerspective = Env.d3_perspectivePy.get().next();
 			Env.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = AppResources.message(nextPerspective.name());
-			showFlashMessage(AppResources.message("camera_perspective", perspectiveName));
+			String perspectiveName = AppResources.Texts.message(nextPerspective.name());
+			showFlashMessage(AppResources.Texts.message("camera_perspective", perspectiveName));
 		}
 	}
 
@@ -199,15 +199,15 @@ public class Actions {
 		if (ui.currentGameScene().is3D()) {
 			var prevPerspective = Env.d3_perspectivePy.get().prev();
 			Env.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = AppResources.message(prevPerspective.name());
-			showFlashMessage(AppResources.message("camera_perspective", perspectiveName));
+			String perspectiveName = AppResources.Texts.message(prevPerspective.name());
+			showFlashMessage(AppResources.Texts.message("camera_perspective", perspectiveName));
 		}
 	}
 
 	public static void toggleAutopilot() {
 		gameController().toggleAutoControlled();
 		var auto = gameController().isAutoControlled();
-		String message = AppResources.message(auto ? "autopilot_on" : "autopilot_off");
+		String message = AppResources.Texts.message(auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoiceMessage(auto ? AppResources.VOICE_AUTOPILOT_ON : AppResources.VOICE_AUTOPILOT_OFF);
 	}
@@ -215,7 +215,7 @@ public class Actions {
 	public static void toggleImmunity() {
 		game().setImmune(!game().isImmune());
 		var immune = game().isImmune();
-		String message = AppResources.message(immune ? "player_immunity_on" : "player_immunity_off");
+		String message = AppResources.Texts.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoiceMessage(immune ? AppResources.VOICE_IMMUNITY_ON : AppResources.VOICE_IMMUNITY_OFF);
 	}
@@ -233,7 +233,7 @@ public class Actions {
 			ui.updateGameScene(true);
 			ui.currentGameScene().onSceneVariantSwitch();
 		} else {
-			showFlashMessage(AppResources.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(AppResources.Texts.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
@@ -243,13 +243,13 @@ public class Actions {
 
 	public static void cheatAddLives(int numLives) {
 		game().setLives(numLives + game().lives());
-		showFlashMessage(AppResources.message("cheat_add_lives", numLives));
+		showFlashMessage(AppResources.Texts.message("cheat_add_lives", numLives));
 	}
 
 	public static void cheatEatAllPellets() {
 		gameController().cheatEatAllPellets();
 		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(AppResources.pickCheatingMessage());
+			showFlashMessage(AppResources.Texts.pickCheatingMessage());
 		}
 	}
 
@@ -260,7 +260,7 @@ public class Actions {
 	public static void cheatKillAllEatableGhosts() {
 		gameController().cheatKillAllEatableGhosts();
 		if (RND.nextDouble() < 0.1) {
-			showFlashMessage(AppResources.pickCheatingMessage());
+			showFlashMessage(AppResources.Texts.pickCheatingMessage());
 		}
 	}
 }

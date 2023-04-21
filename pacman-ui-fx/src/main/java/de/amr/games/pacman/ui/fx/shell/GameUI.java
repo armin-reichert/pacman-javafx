@@ -232,14 +232,14 @@ public class GameUI implements GameEventListener {
 	private void updateMainView() {
 		var variant = gameController.game().variant();
 		var paused = Env.simulationPausedPy.get();
-		var dimensionMsg = AppResources.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
+		var dimensionMsg = AppResources.Texts.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
 		var messageKey = switch (variant) {
 		case MS_PACMAN -> paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 		case PACMAN -> paused ? "app.title.pacman.paused" : "app.title.pacman";
 		default -> throw new IllegalGameVariantException(variant);
 		};
 		stage.getIcons().setAll(AppResources.appIcon(variant));
-		stage.setTitle(AppResources.message(messageKey, dimensionMsg));
+		stage.setTitle(AppResources.Texts.message(messageKey, dimensionMsg));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		root.setBackground(ResourceMgr.colorBackground(bgColor));
 		if (currentGameScene.is3D()) {

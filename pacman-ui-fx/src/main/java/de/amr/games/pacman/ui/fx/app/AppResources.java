@@ -53,8 +53,9 @@ import javafx.scene.paint.PhongMaterial;
 public class AppResources {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	private static final String MSG_NOT_LOADED = "App resources not loaded";
+
+	public static final String KEY_NO_TEXTURE = "No Texture";
 
 	public static class Models3D {
 
@@ -66,6 +67,12 @@ public class AppResources {
 		private static PacModel3D pacModel3D;
 		private static Model3D ghostModel3D;
 		private static Model3D pelletModel3D;
+
+		static void load() {
+			pacModel3D = new PacModel3D("model3D/pacman.obj");
+			ghostModel3D = new Model3D("model3D/ghost.obj");
+			pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
+		}
 
 		public static PacModel3D pacModel3D() {
 			if (pacModel3D != null) {
@@ -89,18 +96,62 @@ public class AppResources {
 		}
 	}
 
-	public static final String KEY_NO_TEXTURE = "No Texture";
+	public static class Texts {
 
-	private static final Picker<String> READY_TEXT_PICKER_PACMAN = new Picker<>(//
-			"LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!", "Asufutimaehaehfutbw");
+		private static final Picker<String> READY_TEXT_PICKER_PACMAN = new Picker<>(//
+				"LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!", "Asufutimaehaehfutbw");
 
-	private static final Picker<String> READY_TEXT_PICKER_MS_PACMAN = new Picker<>(//
-			"LET'S GO BRANDON!", "GHOST LIVES MATTER!", "(EAT) ME TOO!");
+		private static final Picker<String> READY_TEXT_PICKER_MS_PACMAN = new Picker<>(//
+				"LET'S GO BRANDON!", "GHOST LIVES MATTER!", "(EAT) ME TOO!");
 
-	private static ResourceBundle messageBundle;
-	private static Picker<String> messagePickerCheating;
-	private static Picker<String> messagePickerLevelComplete;
-	private static Picker<String> messagePickerGameOver;
+		private static ResourceBundle messageBundle;
+		private static Picker<String> messagePickerCheating;
+		private static Picker<String> messagePickerLevelComplete;
+		private static Picker<String> messagePickerGameOver;
+
+		static void load() {
+			messageBundle = ResourceBundle.getBundle("assets.texts.messages");
+			messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
+			messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
+			messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
+		}
+
+		/**
+		 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
+		 * messages resource bundle.
+		 * 
+		 * @param keyPattern message key pattern
+		 * @param args       arguments merged into key pattern
+		 * @return message text for composed key or string indicating missing text
+		 */
+		public static String message(String keyPattern, Object... args) {
+			try {
+				var pattern = messageBundle.getString(keyPattern);
+				return MessageFormat.format(pattern, args);
+			} catch (Exception x) {
+				LOG.error("No text resource found for key '%s'", keyPattern);
+				return "missing{%s}".formatted(keyPattern);
+			}
+		}
+
+		public static String pickCheatingMessage() {
+			return messagePickerCheating.next();
+		}
+
+		public static String pickGameOverMessage() {
+			return messagePickerGameOver.next();
+		}
+
+		public static String pickLevelCompleteMessage(int levelNumber) {
+			return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber));
+		}
+
+		public static String randomReadyText(GameVariant variant) {
+			var picker = variant == GameVariant.MS_PACMAN ? READY_TEXT_PICKER_MS_PACMAN : READY_TEXT_PICKER_PACMAN;
+			return picker.next();
+		}
+	}
+
 	private static Image iconPacManGame;
 	private static Image iconMsPacManGame;
 	private static Image skyImage;
@@ -167,9 +218,7 @@ public class AppResources {
 		LOG.info("Loading application resources...");
 		var start = System.nanoTime();
 
-		Models3D.pacModel3D = new PacModel3D("model3D/pacman.obj");
-		Models3D.ghostModel3D = new Model3D("model3D/ghost.obj");
-		Models3D.pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
+		Models3D.load();
 
 		// graphics
 		loadFloorTexture("Chrome", "chrome");
@@ -188,10 +237,7 @@ public class AppResources {
 		soundsPacMan = new GameSounds(PACMAN_SOUND_DATA);
 
 		// texts
-		messageBundle = ResourceBundle.getBundle("assets.texts.messages");
-		messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
-		messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
-		messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
+		Texts.load();
 
 		LOG.info("Loading application resources done (%.2f seconds).", (System.nanoTime() - start) / 1_000_000_000f);
 	}
@@ -231,38 +277,4 @@ public class AppResources {
 		return new BackgroundImage(skyImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null);
 	}
 
-	/**
-	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
-	 * messages resource bundle.
-	 * 
-	 * @param keyPattern message key pattern
-	 * @param args       arguments merged into key pattern
-	 * @return message text for composed key or string indicating missing text
-	 */
-	public static String message(String keyPattern, Object... args) {
-		try {
-			var pattern = messageBundle.getString(keyPattern);
-			return MessageFormat.format(pattern, args);
-		} catch (Exception x) {
-			LOG.error("No text resource found for key '%s'", keyPattern);
-			return "missing{%s}".formatted(keyPattern);
-		}
-	}
-
-	public static String pickCheatingMessage() {
-		return messagePickerCheating.next();
-	}
-
-	public static String pickGameOverMessage() {
-		return messagePickerGameOver.next();
-	}
-
-	public static String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber));
-	}
-
-	public static String randomReadyText(GameVariant variant) {
-		var picker = variant == GameVariant.MS_PACMAN ? READY_TEXT_PICKER_MS_PACMAN : READY_TEXT_PICKER_PACMAN;
-		return picker.next();
-	}
 }
