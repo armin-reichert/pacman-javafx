@@ -63,6 +63,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppResources;
+import de.amr.games.pacman.ui.fx.app.AppResources.Graphics;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -76,8 +77,11 @@ import de.amr.games.pacman.ui.fx.sound.SoundClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -107,6 +111,9 @@ public class GameUI implements GameEventListener {
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
 
+	private static final Background BACKGROUND_3D = new Background(
+			new BackgroundImage(Graphics.skyImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null));
+
 	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
 	}
 
@@ -129,6 +136,14 @@ public class GameUI implements GameEventListener {
 			pipGameScene.render();
 			currentGameScene.render();
 		}
+	}
+
+	private static Image appIcon(GameVariant variant) {
+		return switch (variant) {
+		case MS_PACMAN -> AppResources.Graphics.iconMsPacManGame;
+		case PACMAN -> AppResources.Graphics.iconPacManGame;
+		default -> throw new IllegalGameVariantException(variant);
+		};
 	}
 
 	private final GameController gameController;
@@ -238,12 +253,12 @@ public class GameUI implements GameEventListener {
 		case PACMAN -> paused ? "app.title.pacman.paused" : "app.title.pacman";
 		default -> throw new IllegalGameVariantException(variant);
 		};
-		stage.getIcons().setAll(AppResources.appIcon(variant));
+		stage.getIcons().setAll(appIcon(variant));
 		stage.setTitle(AppResources.Texts.message(messageKey, dimensionMsg));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		root.setBackground(ResourceMgr.colorBackground(bgColor));
 		if (currentGameScene.is3D()) {
-			root.setBackground(new Background(AppResources.backgroundImage3D()));
+			root.setBackground(BACKGROUND_3D);
 		}
 	}
 
