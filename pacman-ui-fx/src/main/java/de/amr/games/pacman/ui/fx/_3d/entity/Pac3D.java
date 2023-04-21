@@ -74,17 +74,6 @@ public class Pac3D {
 		Animation animation();
 	}
 
-	public final BooleanProperty walkingAnimatedPy = new SimpleBooleanProperty(this, "walkingAnimated", false) {
-		@Override
-		protected void invalidated() {
-			if (get()) {
-				walkingAnimation.update(pac);
-			} else {
-				walkingAnimation.end(pac);
-			}
-		}
-	};
-
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
