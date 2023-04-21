@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.HeadBanging;
+import de.amr.games.pacman.ui.fx._3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -70,10 +71,6 @@ import javafx.util.Duration;
 public class Pac3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
-
-	private static final short HIP_SWAY_ANGLE_FROM = -20;
-	private static final short HIP_SWAY_ANGLE_TO = 20;
-	private static final Duration HIP_SWAY_DURATION = Duration.seconds(0.4);
 
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
 
@@ -221,17 +218,7 @@ public class Pac3D {
 
 	private void createWalkingAnimation() {
 		if (swayingHips) {
-			double amplification = excited ? 1.5 : 1;
-			walkingAnimation = new RotateTransition();
-			walkingAnimation.setNode(root);
-			walkingAnimation.setDuration(HIP_SWAY_DURATION);
-			walkingAnimation.setAxis(Rotate.Z_AXIS);
-			walkingAnimation.setFromAngle(HIP_SWAY_ANGLE_FROM * amplification);
-			walkingAnimation.setToAngle(HIP_SWAY_ANGLE_TO * amplification);
-			walkingAnimation.setCycleCount(Animation.INDEFINITE);
-			walkingAnimation.setAutoReverse(true);
-			walkingAnimation.setRate(amplification);
-			walkingAnimation.setInterpolator(Interpolator.EASE_BOTH);
+			walkingAnimation = new HipSwaying(pac, root, excited).animation();
 		} else {
 			walkingAnimation = new HeadBanging(pac, root, excited).animation();
 		}
