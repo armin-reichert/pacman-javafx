@@ -50,12 +50,12 @@ public class Dashboard extends VBox {
 	public void init(GameUI ui) {
 		setVisible(false);
 		sections.add(new SectionGeneral(ui, "General"));
-		sections.add(new SectionGameControl(ui, "Game Control"));
-		sections.add(new SectionGameInfo(ui, "Game Info"));
-		sections.add(new SectionGhostsInfo(ui, "Ghosts"));
+		sections.add(new SectionKeys(ui, "Keyboard Shortcuts"));
 		sections.add(new SectionAppearance(ui, "Appearance"));
 		sections.add(new Section3D(ui, "3D Settings"));
-		sections.add(new SectionKeys(ui, "Keyboard Shortcuts"));
+		sections.add(new SectionGameControl(ui, "Game Control"));
+		sections.add(new SectionGameInfo(ui, "Game Info"));
+		sections.add(new SectionGhostsInfo(ui, "Ghosts Info"));
 		sections.add(new SectionAbout(ui, "About"));
 		sections().forEach(getChildren()::add);
 	}

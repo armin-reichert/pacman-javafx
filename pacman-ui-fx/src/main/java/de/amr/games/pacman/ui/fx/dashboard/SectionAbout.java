@@ -25,10 +25,12 @@ package de.amr.games.pacman.ui.fx.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
+import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 
 /**
  * @author Armin Reichert
@@ -37,15 +39,22 @@ public class SectionAbout extends Section {
 
 	public SectionAbout(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		ImageView armin = new ImageView(ResourceMgr.image("graphics/armin.jpg"));
-		armin.setFitWidth(286);
-		armin.setPreserveRatio(true);
-		Text signature = new Text("Made by: Armin Reichert");
-		var font = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 18);
-		signature.setFont(font);
-		signature.setTextAlignment(TextAlignment.CENTER);
+
+		var arminPicture = new ImageView(ResourceMgr.image("graphics/armin.jpg"));
+		arminPicture.setFitWidth(286);
+		arminPicture.setPreserveRatio(true);
+
+		var madeBy = new Text("Made by:     ");
+		madeBy.setFont(Font.font("Helvetica", 18));
+		madeBy.setFill(Color.grayRgb(150));
+
+		var signature = new Text("Armin Reichert");
+		signature.setFont(ResourceMgr.font("fonts/RockSalt-Regular.ttf", 18));
 		signature.setFill(Color.YELLOW);
-		content.add(armin, 0, 0);
-		content.add(signature, 0, 1);
+
+		var tf = new TextFlow(madeBy, signature);
+		tf.setPadding(new Insets(5, 5, 5, 5));
+		content.add(arminPicture, 0, 0);
+		content.add(tf, 0, 1);
 	}
 }
