@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.common.Validator.checkNotNull;
 
@@ -69,15 +70,14 @@ public class Pac3D {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
-	private static final double HEAD_BANGING_ANGLE_FROM = -25;
-	private static final double HEAD_BANGING_ANGLE_TO = 15;
-
-	private static final double HIP_SWAY_ANGLE_FROM = -20;
-	private static final double HIP_SWAY_ANGLE_TO = 20;
-
-	private static final double EXCITEMENT = 1.5;
-
+	private static final short HEAD_BANGING_ANGLE_FROM = -25;
+	private static final short HEAD_BANGING_ANGLE_TO = 15;
 	private static final Duration HEAD_BANGING__DURATION = Duration.seconds(0.25);
+
+	private static final short HIP_SWAY_ANGLE_FROM = -20;
+	private static final short HIP_SWAY_ANGLE_TO = 20;
+	private static final Duration HIP_SWAY_DURATION = Duration.seconds(0.4);
+
 	private static final Duration COLLAPSING_DURATION = Duration.seconds(2);
 
 	public final BooleanProperty walkingAnimatedPy = new SimpleBooleanProperty(this, "walkingAnimated", false) {
@@ -119,23 +119,6 @@ public class Pac3D {
 		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		root.getChildren().add(pacNode);
 		walkingAnimatedPy.bind(Env.d3_pacWalkingAnimatedPy);
-	}
-
-	private void createWalkingAnimation() {
-		walkingAnimation = new RotateTransition(HEAD_BANGING__DURATION, root);
-		walkingAnimation.setAxis(noddingAxis());
-		double excitement = excited ? EXCITEMENT : 1;
-		if (swayingHips) {
-			walkingAnimation.setFromAngle(HIP_SWAY_ANGLE_FROM * excitement);
-			walkingAnimation.setToAngle(HIP_SWAY_ANGLE_TO * excitement);
-		} else {
-			walkingAnimation.setFromAngle(HEAD_BANGING_ANGLE_FROM * excitement);
-			walkingAnimation.setToAngle(HEAD_BANGING_ANGLE_TO * excitement);
-		}
-		walkingAnimation.setCycleCount(Animation.INDEFINITE);
-		walkingAnimation.setAutoReverse(true);
-		walkingAnimation.setRate(excitement);
-		walkingAnimation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void onGetsPower() {
@@ -209,12 +192,12 @@ public class Pac3D {
 		if (walkingAnimation == null) {
 			return;
 		}
-		var axis = noddingAxis();
 		if (pac.isStandingStill()) {
 			endWalkingAnimation();
 			root.setRotate(0);
 			return;
 		}
+		var axis = walkingAnimationAxis();
 		if (walkingAnimation.getStatus() != Status.RUNNING || !axis.equals(walkingAnimation.getAxis())) {
 			walkingAnimation.stop();
 			walkingAnimation.setAxis(axis);
@@ -223,20 +206,41 @@ public class Pac3D {
 		}
 	}
 
+	private Point3D walkingAnimationAxis() {
+		if (swayingHips) {
+			return Rotate.Z_AXIS;
+		}
+		return pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+	}
+
 	private void endWalkingAnimation() {
 		if (walkingAnimation != null && walkingAnimation.getStatus() == Status.RUNNING) {
 			walkingAnimation.stop();
-			root.setRotationAxis(noddingAxis());
+			root.setRotationAxis(walkingAnimationAxis());
 			root.setRotate(0);
 			LOG.trace("%s: Nodding stopped", pac.name());
 		}
 	}
 
-	private Point3D noddingAxis() {
+	private void createWalkingAnimation() {
+		walkingAnimation = new RotateTransition();
+		walkingAnimation.setNode(root);
+		double amplification = excited ? 1.5 : 1;
 		if (swayingHips) {
-			return Rotate.Z_AXIS;
+			walkingAnimation.setDuration(HIP_SWAY_DURATION);
+			walkingAnimation.setAxis(Rotate.Z_AXIS);
+			walkingAnimation.setFromAngle(HIP_SWAY_ANGLE_FROM * amplification);
+			walkingAnimation.setToAngle(HIP_SWAY_ANGLE_TO * amplification);
+		} else {
+			walkingAnimation.setDuration(HEAD_BANGING__DURATION);
+			walkingAnimation.setAxis(pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS);
+			walkingAnimation.setFromAngle(HEAD_BANGING_ANGLE_FROM * amplification);
+			walkingAnimation.setToAngle(HEAD_BANGING_ANGLE_TO * amplification);
 		}
-		return pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+		walkingAnimation.setCycleCount(Animation.INDEFINITE);
+		walkingAnimation.setAutoReverse(true);
+		walkingAnimation.setRate(amplification);
+		walkingAnimation.setInterpolator(Interpolator.EASE_BOTH);
 	}
 
 	public void createPacManDyingAnimation() {
@@ -281,7 +285,7 @@ public class Pac3D {
 	}
 
 	private boolean outsideWorld(World world) {
-		double worldWidth = world.numCols() * TS;
-		return position.getX() < 4 || position.getX() > worldWidth - 4;
+		double worldWidth = TS * world.numCols();
+		return position.getX() < HTS || position.getX() > worldWidth - 4;
 	}
 }
