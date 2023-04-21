@@ -53,19 +53,18 @@ public class AppRes {
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static void load() {
-		LOG.info("Loading application resources...");
 		long start = System.nanoTime();
 		load("3D models", Models3D::load);
 		load("graphics", Graphics::load);
 		load("sounds", Sounds::load);
 		load("texts", Texts::load);
-		LOG.info("Loading application resources done (%.2f seconds).", (System.nanoTime() - start) / 1_000_000_000f);
+		LOG.info("Loading application resources took %.3f seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
 	private static void load(String section, Runnable loadingCode) {
 		long startTime = System.nanoTime();
 		loadingCode.run();
-		LOG.info("Loading %s done (%.2f seconds).", section, (System.nanoTime() - startTime) / 1_000_000_000f);
+		LOG.info("Loading %s done (%.3f seconds).", section, (System.nanoTime() - startTime) / 1e9f);
 	}
 
 	public static class Models3D {
