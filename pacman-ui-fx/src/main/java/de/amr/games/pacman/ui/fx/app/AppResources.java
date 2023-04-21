@@ -53,40 +53,41 @@ import javafx.scene.paint.PhongMaterial;
 public class AppResources {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
+
 	private static final String MSG_NOT_LOADED = "App resources not loaded";
 
-	private static PacModel3D pacModel3D;
+	public static class Models3D {
 
-	public static PacModel3D pacModel3D() {
-		if (pacModel3D != null) {
-			return pacModel3D;
+		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+		public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+		public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+		public static final String MESH_ID_PELLET = "Fruit";
+
+		private static PacModel3D pacModel3D;
+		private static Model3D ghostModel3D;
+		private static Model3D pelletModel3D;
+
+		public static PacModel3D pacModel3D() {
+			if (pacModel3D != null) {
+				return pacModel3D;
+			}
+			throw new IllegalStateException(MSG_NOT_LOADED);
 		}
-		throw new IllegalStateException(MSG_NOT_LOADED);
-	}
 
-	private static Model3D ghostModel3D;
-
-	public static Model3D ghostModel3D() {
-		if (ghostModel3D != null) {
-			return ghostModel3D;
+		public static Model3D ghostModel3D() {
+			if (ghostModel3D != null) {
+				return ghostModel3D;
+			}
+			throw new IllegalStateException(MSG_NOT_LOADED);
 		}
-		throw new IllegalStateException(MSG_NOT_LOADED);
-	}
 
-	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-	public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-
-	private static Model3D pelletModel3D;
-
-	public static Model3D pelletModel3D() {
-		if (pelletModel3D != null) {
-			return pelletModel3D;
+		public static Model3D pelletModel3D() {
+			if (pelletModel3D != null) {
+				return pelletModel3D;
+			}
+			throw new IllegalStateException(MSG_NOT_LOADED);
 		}
-		throw new IllegalStateException(MSG_NOT_LOADED);
 	}
-
-	public static final String MESH_ID_PELLET = "Fruit";
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
@@ -166,10 +167,9 @@ public class AppResources {
 		LOG.info("Loading application resources...");
 		var start = System.nanoTime();
 
-		// 3D models
-		pacModel3D = new PacModel3D("model3D/pacman.obj");
-		ghostModel3D = new Model3D("model3D/ghost.obj");
-		pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
+		Models3D.pacModel3D = new PacModel3D("model3D/pacman.obj");
+		Models3D.ghostModel3D = new Model3D("model3D/ghost.obj");
+		Models3D.pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
 
 		// graphics
 		loadFloorTexture("Chrome", "chrome");
