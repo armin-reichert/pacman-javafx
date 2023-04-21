@@ -154,14 +154,14 @@ public class GameLevel3D {
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
 		var node = pacModel3D().createPacManNode(9.0, colors);
-		var pacMan3D = new Pac3D(level.pac(), node, colors.headColor(), false);
+		var pacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
 		pacMan3D.drawModePy.bind(Env.d3_drawModePy);
 		return pacMan3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
 		var node = pacModel3D().createMsPacManNode(9.0, colors);
-		var msPacMan3D = new Pac3D(level.pac(), node, colors.headColor(), true);
+		var msPacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
 		msPacMan3D.drawModePy.bind(Env.d3_drawModePy);
 		return msPacMan3D;
 	}

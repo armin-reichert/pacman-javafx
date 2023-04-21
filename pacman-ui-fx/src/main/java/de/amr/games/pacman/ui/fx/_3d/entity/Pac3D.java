@@ -32,6 +32,8 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.HeadBanging;
@@ -90,23 +92,26 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
+	private final GameVariant gameVariant;
 	private final Pac pac;
 	private final Group root = new Group();
 	private final Color headColor;
 	private final Translate position = new Translate();
 	private final Rotate orientation = new Rotate();
+
 	private RotateTransition walkingAnimation;
-	private boolean swayingHips;
 	private boolean excited;
 	private Animation dyingAnimation;
 
-	public Pac3D(Pac pac, Node pacNode, Color headColor, boolean swayingHips) {
+	public Pac3D(GameVariant gameVariant, Pac pac, Node pacNode, Color headColor) {
+		checkNotNull(gameVariant);
 		checkNotNull(pac);
 		checkNotNull(pacNode);
 		checkNotNull(headColor);
+
+		this.gameVariant = gameVariant;
 		this.pac = pac;
 		this.headColor = headColor;
-		this.swayingHips = swayingHips;
 		pacNode.getTransforms().setAll(position, orientation);
 		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
@@ -201,7 +206,7 @@ public class Pac3D {
 	}
 
 	private Point3D walkingAnimationAxis() {
-		if (swayingHips) {
+		if (gameVariant == GameVariant.MS_PACMAN) { // TODO
 			return Rotate.Z_AXIS;
 		}
 		return pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
@@ -217,11 +222,11 @@ public class Pac3D {
 	}
 
 	private void createWalkingAnimation() {
-		if (swayingHips) {
-			walkingAnimation = new HipSwaying(pac, root, excited).animation();
-		} else {
-			walkingAnimation = new HeadBanging(pac, root, excited).animation();
-		}
+		walkingAnimation = switch (gameVariant) {
+		case MS_PACMAN -> new HipSwaying(pac, root, excited).animation();
+		case PACMAN -> new HeadBanging(pac, root, excited).animation();
+		default -> throw new IllegalGameVariantException(gameVariant);
+		};
 	}
 
 	public void createPacManDyingAnimation() {
