@@ -114,8 +114,8 @@ public class Pac3D {
 		private final Animation animation;
 
 		public PacManDyingAnimation() {
-			var totalDuration = Duration.seconds(2);
-			var numSpins = 15;
+			var totalDuration = Duration.seconds(1.5);
+			var numSpins = 12;
 
 			var spinning = new RotateTransition(totalDuration.divide(numSpins), root);
 			spinning.setAxis(Rotate.Z_AXIS);
@@ -124,17 +124,17 @@ public class Pac3D {
 			spinning.setInterpolator(Interpolator.LINEAR);
 
 			var shrinking = new ScaleTransition(totalDuration, root);
-			shrinking.setToX(0.5);
-			shrinking.setToY(0.5);
+			shrinking.setToX(0.75);
+			shrinking.setToY(0.75);
 			shrinking.setToZ(0.0);
 
 			var falling = new TranslateTransition(totalDuration, root);
 			falling.setToZ(4);
 
-			animation = new SequentialTransition(//
-					Ufx.pause(0.4), //
+			animation = new SequentialTransition( //
+					Ufx.pause(0.25), //
 					new ParallelTransition(spinning, shrinking, falling), //
-					Ufx.pause(0.25));
+					Ufx.pause(0.5));
 
 			animation.setOnFinished(e -> {
 				root.setVisible(false);
