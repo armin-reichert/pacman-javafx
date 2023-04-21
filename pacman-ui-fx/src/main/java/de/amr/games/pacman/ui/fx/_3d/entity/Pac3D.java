@@ -27,6 +27,9 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.common.Validator.checkNotNull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.GameVariant;
@@ -35,11 +38,16 @@ import de.amr.games.pacman.model.common.actors.Pac;
 import de.amr.games.pacman.model.common.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx._3d.animation.HipSwaying;
-import de.amr.games.pacman.ui.fx._3d.animation.MsPacManDyingAnimation;
-import de.amr.games.pacman.ui.fx._3d.animation.PacManDyingAnimation;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -50,6 +58,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 /**
  * 3D-representation of Pac-Man and Ms. Pac-Man.
@@ -67,11 +76,76 @@ public class Pac3D {
 		void end(Pac pac);
 
 		void setPowerMode(boolean power);
+
+		Animation animation();
 	}
 
 	public interface DyingAnimation {
 
 		Animation animation();
+	}
+
+	private class MsPacManDyingAnimation implements Pac3D.DyingAnimation {
+
+		private static final Logger LOG = LogManager.getFormatterLogger();
+
+		private final Animation animation;
+
+		public MsPacManDyingAnimation() {
+			var spin = new RotateTransition(Duration.seconds(0.5), root);
+			spin.setAxis(Rotate.X_AXIS);
+			spin.setFromAngle(0);
+			spin.setToAngle(360);
+			spin.setInterpolator(Interpolator.LINEAR);
+			spin.setCycleCount(2);
+			animation = new SequentialTransition(Ufx.afterSeconds(0, () -> {
+				LOG.info("Before dying animation: %s", Pac3D.this);
+			}), Ufx.pause(1), spin, Ufx.pause(2));
+		}
+
+		@Override
+		public Animation animation() {
+			return animation;
+		}
+	}
+
+	private class PacManDyingAnimation implements Pac3D.DyingAnimation {
+
+		private final Animation animation;
+
+		public PacManDyingAnimation() {
+			var totalDuration = Duration.seconds(2);
+			var numSpins = 15;
+
+			var spinning = new RotateTransition(totalDuration.divide(numSpins), root);
+			spinning.setAxis(Rotate.Z_AXIS);
+			spinning.setByAngle(360);
+			spinning.setCycleCount(numSpins);
+			spinning.setInterpolator(Interpolator.LINEAR);
+
+			var shrinking = new ScaleTransition(totalDuration, root);
+			shrinking.setToX(0.5);
+			shrinking.setToY(0.5);
+			shrinking.setToZ(0.0);
+
+			var falling = new TranslateTransition(totalDuration, root);
+			falling.setToZ(4);
+
+			animation = new SequentialTransition(//
+					Ufx.pause(0.4), //
+					new ParallelTransition(spinning, shrinking, falling), //
+					Ufx.pause(0.25));
+
+			animation.setOnFinished(e -> {
+				root.setVisible(false);
+				root.setTranslateZ(0);
+			});
+		}
+
+		@Override
+		public Animation animation() {
+			return animation;
+		}
 	}
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
@@ -94,7 +168,9 @@ public class Pac3D {
 
 		this.pac = pac;
 		this.headColor = headColor;
+
 		pacNode.getTransforms().setAll(position, orientation);
+
 		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
@@ -107,27 +183,32 @@ public class Pac3D {
 		};
 
 		dyingAnimation = switch (gameVariant) {
-		case MS_PACMAN -> new MsPacManDyingAnimation(pac, root);
-		case PACMAN -> new PacManDyingAnimation(root);
+		case MS_PACMAN -> new MsPacManDyingAnimation();
+		case PACMAN -> new PacManDyingAnimation();
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 	}
 
 	@Override
 	public String toString() {
-		return "Pac3D[position=%s, orientation=%s]".formatted(position, orientation);
+		return "Pac3D[position=%s, orientation=%s, walking: %s]".formatted(position, orientation,
+				walkingAnimation.animation().getStatus());
 	}
 
 	public Node getRoot() {
 		return root;
 	}
 
+	public Rotate orientation() {
+		return orientation;
+	}
+
 	public Translate position() {
 		return position;
 	}
 
-	public Animation dyingAnimation() {
-		return dyingAnimation.animation();
+	public DyingAnimation dyingAnimation() {
+		return dyingAnimation;
 	}
 
 	public WalkingAnimation walkingAnimation() {
@@ -169,6 +250,7 @@ public class Pac3D {
 	public void turnTo(Direction dir) {
 		var angle = Turn.angle(dir);
 		if (angle != orientation.getAngle()) {
+			orientation.setAxis(Rotate.Z_AXIS);
 			orientation.setAngle(angle);
 		}
 	}

@@ -53,6 +53,7 @@ public class HipSwaying implements Pac3D.WalkingAnimation {
 		setPowerMode(false);
 	}
 
+	@Override
 	public RotateTransition animation() {
 		return animation;
 	}

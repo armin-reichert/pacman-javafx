@@ -63,6 +63,7 @@ public class HeadBanging implements Pac3D.WalkingAnimation {
 		animation.setRate(rate);
 	}
 
+	@Override
 	public RotateTransition animation() {
 		return animation;
 	}
