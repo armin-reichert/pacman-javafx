@@ -382,7 +382,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().eatables3D().forEach(level3D::eat);
 				var message = AppResources.Texts.pickLevelCompleteMessage(level.number());
 				if (level.intermissionNumber == 0) {
-					Actions.playAudioClip(AppResources.SOUND_LEVEL_COMPLETE);
+					Actions.playAudioClip(AppResources.Sounds.SOUND_LEVEL_COMPLETE);
 				}
 				lockStateAndPlayAfterSeconds(1.0 //
 						, createLevelCompleteAnimation(level) //
@@ -436,7 +436,7 @@ public class PlayScene3D implements GameScene {
 		rotateAnimation.setToAngle(360);
 		return new SequentialTransition(//
 				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(Perspective.TOTAL)), //
-				Ufx.afterSeconds(0.5, () -> Actions.playAudioClip(AppResources.SOUND_SWEEP)), //
+				Ufx.afterSeconds(0.5, () -> Actions.playAudioClip(AppResources.Sounds.SOUND_SWEEP)), //
 				rotateAnimation, //
 				Ufx.afterSeconds(0.5, () -> Env.d3_perspectivePy.set(perspectiveToRestore)) //
 		);

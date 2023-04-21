@@ -104,6 +104,6 @@ public class GameSceneContext {
 	}
 
 	public GameSounds sounds() {
-		return AppResources.sounds(gameVariant());
+		return AppResources.Sounds.sounds(gameVariant());
 	}
 }

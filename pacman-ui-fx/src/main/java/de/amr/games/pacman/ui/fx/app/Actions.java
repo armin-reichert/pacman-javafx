@@ -118,7 +118,7 @@ public class Actions {
 	}
 
 	public static void playHelpVoiceMessage(int delaySeconds) {
-		Ufx.afterSeconds(delaySeconds, () -> playVoiceMessage(AppResources.VOICE_HELP)).play();
+		Ufx.afterSeconds(delaySeconds, () -> playVoiceMessage(AppResources.Sounds.VOICE_HELP)).play();
 	}
 
 	public static void addCredit() {
@@ -156,7 +156,7 @@ public class Actions {
 		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?
 		if (Env.simulationPausedPy.get()) {
-			AppResources.sounds(game().variant()).stopAll();
+			AppResources.Sounds.sounds(game().variant()).stopAll();
 		}
 	}
 
@@ -209,7 +209,7 @@ public class Actions {
 		var auto = gameController().isAutoControlled();
 		String message = AppResources.Texts.message(auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoiceMessage(auto ? AppResources.VOICE_AUTOPILOT_ON : AppResources.VOICE_AUTOPILOT_OFF);
+		playVoiceMessage(auto ? AppResources.Sounds.VOICE_AUTOPILOT_ON : AppResources.Sounds.VOICE_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
@@ -217,7 +217,7 @@ public class Actions {
 		var immune = game().isImmune();
 		String message = AppResources.Texts.message(immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoiceMessage(immune ? AppResources.VOICE_IMMUNITY_ON : AppResources.VOICE_IMMUNITY_OFF);
+		playVoiceMessage(immune ? AppResources.Sounds.VOICE_IMMUNITY_ON : AppResources.Sounds.VOICE_IMMUNITY_OFF);
 	}
 
 	public static void startLevelTestMode() {
