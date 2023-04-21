@@ -113,6 +113,11 @@ public class Pac3D {
 		};
 	}
 
+	@Override
+	public String toString() {
+		return "Pac3D[position=%s, orientation=%s]".formatted(position, orientation);
+	}
+
 	public Node getRoot() {
 		return root;
 	}

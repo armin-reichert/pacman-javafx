@@ -344,6 +344,7 @@ public class PlayScene3D implements GameScene {
 		case PACMAN_DYING -> {
 			context.level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
+				LOG.info("Pac-Man dying: %s", level3D.pac3D());
 				lockStateAndPlayAfterSeconds(1.0, //
 						level3D.pac3D().dyingAnimation() //
 				);
