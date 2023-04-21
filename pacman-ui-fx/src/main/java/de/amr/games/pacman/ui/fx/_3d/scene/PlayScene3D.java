@@ -167,7 +167,7 @@ public class PlayScene3D implements GameScene {
 		root.getChildren().set(0, level3D.getRoot());
 
 		if (Env.d3_floorTextureRandomPy.get()) {
-			Env.d3_floorTexturePy.set(AppResources.randomTextureKey());
+			Env.d3_floorTexturePy.set(AppResources.Graphics.randomTextureKey());
 		}
 		LOG.info("3D game level created.");
 	}

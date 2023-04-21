@@ -62,7 +62,7 @@ public class SectionAppearance extends Section {
 	}
 
 	private String[] textureItems() {
-		var textureKeys = AppResources.textureKeys();
+		var textureKeys = AppResources.Graphics.textureKeys();
 		var items = new String[textureKeys.length + 1];
 		items[0] = AppResources.KEY_NO_TEXTURE;
 		System.arraycopy(textureKeys, 0, items, 1, textureKeys.length);
