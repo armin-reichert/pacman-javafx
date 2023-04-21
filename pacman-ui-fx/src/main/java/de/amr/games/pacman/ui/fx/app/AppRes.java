@@ -52,6 +52,22 @@ public class AppRes {
 
 	private static final Logger LOG = LogManager.getFormatterLogger();
 
+	public static void load() {
+		LOG.info("Loading application resources...");
+		long start = System.nanoTime();
+		load("3D models", Models3D::load);
+		load("graphics", Graphics::load);
+		load("sounds", Sounds::load);
+		load("texts", Texts::load);
+		LOG.info("Loading application resources done (%.2f seconds).", (System.nanoTime() - start) / 1_000_000_000f);
+	}
+
+	private static void load(String section, Runnable loadingCode) {
+		long startTime = System.nanoTime();
+		loadingCode.run();
+		LOG.info("Loading %s done (%.2f seconds).", section, (System.nanoTime() - startTime) / 1_000_000_000f);
+	}
+
 	public static class Models3D {
 
 		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
@@ -239,19 +255,4 @@ public class AppRes {
 		}
 	}
 
-	public static void load() {
-		LOG.info("Loading application resources...");
-		long start = System.nanoTime();
-		load("3D models", Models3D::load);
-		load("graphics", Graphics::load);
-		load("sounds", Sounds::load);
-		load("texts", Texts::load);
-		LOG.info("Loading application resources done (%.2f seconds).", (System.nanoTime() - start) / 1_000_000_000f);
-	}
-
-	private static void load(String section, Runnable loadingCode) {
-		long startTime = System.nanoTime();
-		loadingCode.run();
-		LOG.info("Loading %s done (%.2f seconds).", section, (System.nanoTime() - startTime) / 1_000_000_000f);
-	}
 }
