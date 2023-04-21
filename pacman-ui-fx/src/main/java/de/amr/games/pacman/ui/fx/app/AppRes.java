@@ -72,22 +72,20 @@ public class AppRes {
 
 	public static class Texts {
 
-		private static final Picker<String> READY_TEXT_PICKER_PACMAN = new Picker<>(//
-				"LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!", "Asufutimaehaehfutbw");
-
-		private static final Picker<String> READY_TEXT_PICKER_MS_PACMAN = new Picker<>(//
-				"LET'S GO BRANDON!", "GHOST LIVES MATTER!", "(EAT) ME TOO!");
-
 		private static ResourceBundle messageBundle;
 		private static Picker<String> messagePickerCheating;
 		private static Picker<String> messagePickerLevelComplete;
 		private static Picker<String> messagePickerGameOver;
+		private static Picker<String> readTextPickerPacMan;
+		private static Picker<String> readyTextPickerMsPacman;
 
 		static void load() {
 			messageBundle = ResourceBundle.getBundle("assets.texts.messages");
 			messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
 			messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
 			messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
+			readTextPickerPacMan = new Picker<>("LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!", "Asufutimaehaehfutbw");
+			readyTextPickerMsPacman = new Picker<>("LET'S GO BRANDON!", "GHOST LIVES MATTER!", "(EAT) ME TOO!");
 		}
 
 		/**
@@ -121,7 +119,7 @@ public class AppRes {
 		}
 
 		public static String randomReadyText(GameVariant variant) {
-			var picker = variant == GameVariant.MS_PACMAN ? READY_TEXT_PICKER_MS_PACMAN : READY_TEXT_PICKER_PACMAN;
+			var picker = variant == GameVariant.MS_PACMAN ? readyTextPickerMsPacman : readTextPickerPacMan;
 			return picker.next();
 		}
 	}
