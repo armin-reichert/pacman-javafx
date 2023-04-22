@@ -383,6 +383,7 @@ public class PlayScene3D implements GameScene {
 					createLevelCompleteAnimation(level), 
 					Ufx.afterSeconds(1.0, () -> {
 						level.pac().hide();
+						level3D.getLivesCounter3D().lightOnPy.set(false);
 						if (level.intermissionNumber == 0) {
 							// play sound only if no intermission scene follows
 							context.sounds().play(SoundClipID.LEVEL_COMPLETE);
@@ -391,7 +392,9 @@ public class PlayScene3D implements GameScene {
 							Actions.showFlashMessageSeconds(2, message);
 						}
 					}),
-					createLevelChangeAnimation(level));
+					createLevelChangeAnimation(level),
+					Ufx.afterSeconds(0, () -> level3D.getLivesCounter3D().lightOnPy.set(true))
+				);
 				//@formatter:on
 			});
 		}

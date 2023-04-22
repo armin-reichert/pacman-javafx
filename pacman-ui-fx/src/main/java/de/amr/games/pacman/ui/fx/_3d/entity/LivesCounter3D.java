@@ -36,7 +36,9 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -55,6 +57,7 @@ import javafx.util.Duration;
  */
 public class LivesCounter3D {
 
+	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final Group root = new Group();
@@ -102,6 +105,7 @@ public class LivesCounter3D {
 		light.setTranslateX(TS * (maxLives - 1));
 		light.setTranslateY(TS * (-1));
 		light.setTranslateZ(-pillarHeight - 20);
+		light.lightOnProperty().bind(lightOnPy);
 
 		root.getChildren().addAll(pillarAndPlateGroup, pacGroup, light);
 	}
