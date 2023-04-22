@@ -112,16 +112,18 @@ public class Pac3D {
 	private class PacManDyingAnimation implements Pac3D.DyingAnimation {
 
 		private final Animation animation;
+		private final RotateTransition spinning;
 
 		public PacManDyingAnimation() {
-			var totalDuration = Duration.seconds(1.5);
+			var totalDuration = Duration.seconds(2.0);
 			var numSpins = 12;
 
-			var spinning = new RotateTransition(totalDuration.divide(numSpins), root);
+			spinning = new RotateTransition(totalDuration.divide(numSpins), root);
 			spinning.setAxis(Rotate.Z_AXIS);
 			spinning.setByAngle(360);
 			spinning.setCycleCount(numSpins);
 			spinning.setInterpolator(Interpolator.LINEAR);
+			spinning.setRate(1.0); // TODO
 
 			var shrinking = new ScaleTransition(totalDuration, root);
 			shrinking.setToX(0.75);
@@ -132,14 +134,25 @@ public class Pac3D {
 			falling.setToZ(4);
 
 			animation = new SequentialTransition( //
+					Ufx.afterSeconds(0, this::clearOrientation), //
 					Ufx.pause(0.5), //
 					new ParallelTransition(spinning, shrinking, falling), //
-					Ufx.pause(0.5));
+					Ufx.afterSeconds(0.5, this::restoreOrientation) //
+			);
 
 			animation.setOnFinished(e -> {
 				root.setVisible(false);
 				root.setTranslateZ(0);
 			});
+		}
+
+		private void clearOrientation() {
+			var pacNode = root.getChildren().get(0);
+			pacNode.getTransforms().remove(orientation);
+		}
+
+		private void restoreOrientation() {
+			root.getChildren().get(0).getTransforms().add(orientation);
 		}
 
 		@Override
@@ -153,7 +166,7 @@ public class Pac3D {
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
 	private final Pac pac;
-	private final Group root = new Group();
+	private final Group root;
 	private final Color headColor;
 	private final Translate position = new Translate();
 	private final Rotate orientation = new Rotate();
@@ -169,12 +182,13 @@ public class Pac3D {
 		this.pac = pac;
 		this.headColor = headColor;
 
+		// TODO I am not really sure what I am doing here but it works
+		root = new Group(pacNode);
 		pacNode.getTransforms().setAll(position, orientation);
 
 		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
 		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(Env.d3_drawModePy);
-		root.getChildren().add(pacNode);
 
 		walkingAnimation = switch (gameVariant) {
 		case MS_PACMAN -> new HipSwaying(root);
