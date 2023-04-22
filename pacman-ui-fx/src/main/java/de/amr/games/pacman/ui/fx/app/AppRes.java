@@ -38,8 +38,8 @@ import de.amr.games.pacman.model.common.GameVariant;
 import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
-import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
@@ -192,7 +192,7 @@ public class AppRes {
 		public static final String VOICE_IMMUNITY_OFF = "sound/voice/immunity-off.mp3";
 		public static final String VOICE_IMMUNITY_ON = "sound/voice/immunity-on.mp3";
 
-		private static final Object[][] MS_PACMAN_CACHED_CLIPS = { //
+		private static final Object[][] MS_PACMAN_AUDIO_CLIPS = { //
 				{ AudioClipID.BONUS_EATEN, "sound/mspacman/Fruit.mp3", 1.0 }, //
 				{ AudioClipID.CREDIT, "sound/mspacman/Credit.mp3", 1.0 }, //
 				{ AudioClipID.EXTRA_LIFE, "sound/mspacman/ExtraLife.mp3", 1.0 }, //
@@ -215,7 +215,7 @@ public class AppRes {
 				{ AudioClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
 		};
 
-		private static final Object[][] PACMAN_CACHED_CLIPS = { //
+		private static final Object[][] PACMAN_AUDIO_CLIPS = { //
 				{ AudioClipID.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
 				{ AudioClipID.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
 				{ AudioClipID.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
@@ -235,21 +235,20 @@ public class AppRes {
 				{ AudioClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
 		};
 
-		private static GameSounds soundsMsPacMan;
-		private static GameSounds soundsPacMan;
+		private static GameSounds soundClipsMsPacMan;
+		private static GameSounds soundClipsPacMan;
 
 		static void load() {
-			soundsMsPacMan = new GameSounds(MS_PACMAN_CACHED_CLIPS);
-			soundsPacMan = new GameSounds(PACMAN_CACHED_CLIPS);
+			soundClipsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIPS);
+			soundClipsPacMan = new GameSounds(PACMAN_AUDIO_CLIPS);
 		}
 
-		public static GameSounds sounds(GameVariant variant) {
+		public static GameSounds soundClips(GameVariant variant) {
 			return switch (variant) {
-			case MS_PACMAN -> soundsMsPacMan;
-			case PACMAN -> soundsPacMan;
+			case MS_PACMAN -> soundClipsMsPacMan;
+			case PACMAN -> soundClipsPacMan;
 			default -> throw new IllegalGameVariantException(variant);
 			};
 		}
 	}
-
 }

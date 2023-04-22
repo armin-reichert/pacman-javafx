@@ -460,7 +460,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = AppRes.Sounds.sounds(event.game.variant());
+		var sounds = AppRes.Sounds.soundClips(event.game.variant());
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN -> sounds.play(AudioClipID.BONUS_EATEN);
 		case GameModel.SE_CREDIT_ADDED -> sounds.play(AudioClipID.CREDIT);
