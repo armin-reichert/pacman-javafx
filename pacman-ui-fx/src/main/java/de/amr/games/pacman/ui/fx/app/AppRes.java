@@ -62,9 +62,9 @@ public class AppRes {
 	}
 
 	private static void load(String section, Runnable loadingCode) {
-		long startTime = System.nanoTime();
+		long start = System.nanoTime();
 		loadingCode.run();
-		LOG.info("Loading %s done (%.3f seconds).", section, (System.nanoTime() - startTime) / 1e9f);
+		LOG.info("Loading %s done (%.3f seconds).", section, (System.nanoTime() - start) / 1e9f);
 	}
 
 	public static class Models3D {
