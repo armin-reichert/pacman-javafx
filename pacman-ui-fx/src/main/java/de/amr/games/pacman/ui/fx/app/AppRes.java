@@ -150,8 +150,6 @@ public class AppRes {
 		private static Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
 
 		static void load() {
-			loadFloorTexture("Chrome", "chrome");
-			loadFloorTexture("Grass", "grass");
 			loadFloorTexture("Hexagon", "hexagon");
 			loadFloorTexture("Knobs & Bumps", "knobs");
 			loadFloorTexture("Plastic", "plastic");
