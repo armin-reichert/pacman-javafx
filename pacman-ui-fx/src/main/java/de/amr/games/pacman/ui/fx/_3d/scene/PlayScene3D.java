@@ -337,7 +337,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case HUNTING -> {
-			level3D.getLivesCounter3D().startAnimation();
+			level3D.livesCounter3D().startAnimation();
 			level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 		}
 
@@ -374,7 +374,7 @@ public class PlayScene3D implements GameScene {
 
 		case LEVEL_COMPLETE -> {
 			context.level().ifPresent(level -> {
-				level3D.getLivesCounter3D().stopAnimation();
+				level3D.livesCounter3D().stopAnimation();
 				level3D.world3D().foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
@@ -383,7 +383,7 @@ public class PlayScene3D implements GameScene {
 					createLevelCompleteAnimation(level), 
 					Ufx.afterSeconds(1.0, () -> {
 						level.pac().hide();
-						level3D.getLivesCounter3D().lightOnPy.set(false);
+						level3D.livesCounter3D().lightOnPy.set(false);
 						if (level.intermissionNumber == 0) {
 							// play sound only if no intermission scene follows
 							context.sounds().play(SoundClipID.LEVEL_COMPLETE);
@@ -393,7 +393,7 @@ public class PlayScene3D implements GameScene {
 						}
 					}),
 					createLevelChangeAnimation(level),
-					Ufx.afterSeconds(0, () -> level3D.getLivesCounter3D().lightOnPy.set(true))
+					Ufx.afterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
 				);
 				//@formatter:on
 			});
@@ -401,7 +401,7 @@ public class PlayScene3D implements GameScene {
 
 		case GAME_OVER -> {
 			level3D.world3D().foodOscillation().stop();
-			level3D.getLivesCounter3D().stopAnimation();
+			level3D.livesCounter3D().stopAnimation();
 			Actions.showFlashMessageSeconds(3, AppRes.Texts.pickGameOverMessage());
 			context.sounds().play(SoundClipID.GAME_OVER);
 			waitSeconds(3);
