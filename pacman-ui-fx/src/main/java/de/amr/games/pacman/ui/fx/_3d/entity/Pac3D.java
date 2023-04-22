@@ -221,7 +221,7 @@ public class Pac3D {
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
 		updatePosition();
-		turnToMoveDirection();
+		turnTo(pac.moveDir());
 		updateVisibility(level);
 		walkingAnimation.end(pac);
 	}
@@ -232,7 +232,7 @@ public class Pac3D {
 		} else {
 			updatePosition();
 			updateVisibility(level);
-			turnToMoveDirection();
+			turnTo(pac.moveDir());
 			walkingAnimation.update(pac);
 		}
 	}
@@ -241,10 +241,6 @@ public class Pac3D {
 		position.setX(pac.center().x());
 		position.setY(pac.center().y());
 		position.setZ(-5.0);
-	}
-
-	private void turnToMoveDirection() {
-		turnTo(pac.moveDir());
 	}
 
 	public void turnTo(Direction dir) {
