@@ -384,15 +384,13 @@ public class PlayScene3D implements GameScene {
 					Ufx.afterSeconds(1.0, () -> {
 						level.pac().hide();
 						level3D.livesCounter3D().lightOnPy.set(false);
-						if (level.intermissionNumber == 0) {
-							// play sound only if no intermission scene follows
+						if (level.intermissionNumber == 0) { // play sound if no intermission scene follows
 							context.sounds().play(SoundClipID.LEVEL_COMPLETE);
-						} else {
-							var message = AppRes.Texts.pickLevelCompleteMessage(level.number());
-							Actions.showFlashMessageSeconds(2, message);
+							Actions.showFlashMessageSeconds(2, AppRes.Texts.pickLevelCompleteMessage(level.number()));
 						}
 					}),
-					createLevelChangeAnimation(level),
+					// no level change animation if intermission scene follows
+					level.intermissionNumber != 0 ? Ufx.pause(0) : createLevelChangeAnimation(level),
 					Ufx.afterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
 				);
 				//@formatter:on
@@ -431,24 +429,21 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Animation createLevelChangeAnimation(GameLevel level) {
-		if (level.intermissionNumber != 0) {
-			return Ufx.pause(0); // no level change animation if intermission scene follows
-		}
-		var levelRotation = new RotateTransition();
-		levelRotation.setNode(level3D.getRoot());
-		levelRotation.setDuration(Duration.seconds(2.0));
-		levelRotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
-		levelRotation.setFromAngle(0);
-		levelRotation.setToAngle(360);
+		var rotation = new RotateTransition(Duration.seconds(2.5), level3D.getRoot());
+		rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+		rotation.setFromAngle(0);
+		rotation.setToAngle(360);
 		//@formatter:off
 		return new SequentialTransition(
-				Ufx.afterSeconds(1.0, () -> {
-					perspectivePy.unbind();
-					perspectivePy.set(Perspective.TOTAL);
-					context.sounds().play(SoundClipID.SWEEP);
-				}),
-				levelRotation,
-				Ufx.afterSeconds(1.0, ()-> perspectivePy.bind(Env.d3_perspectivePy))
+			Ufx.afterSeconds(1.0, () -> {
+				perspectivePy.unbind();
+				perspectivePy.set(Perspective.TOTAL);
+			}),
+			rotation,
+			Ufx.afterSeconds(1.0, ()-> {
+				perspectivePy.bind(Env.d3_perspectivePy);
+				context.sounds().play(SoundClipID.SWEEP);
+			})
 		);
 		//@formatter:on
 	}
