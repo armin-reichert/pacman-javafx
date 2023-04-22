@@ -39,7 +39,7 @@ import de.amr.games.pacman.model.common.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
-import de.amr.games.pacman.ui.fx.sound.SoundClipID;
+import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
@@ -193,46 +193,46 @@ public class AppRes {
 		public static final String VOICE_IMMUNITY_ON = "sound/voice/immunity-on.mp3";
 
 		private static final Object[][] MS_PACMAN_CACHED_CLIPS = { //
-				{ SoundClipID.BONUS_EATEN, "sound/mspacman/Fruit.mp3", 1.0 }, //
-				{ SoundClipID.CREDIT, "sound/mspacman/Credit.mp3", 1.0 }, //
-				{ SoundClipID.EXTRA_LIFE, "sound/mspacman/ExtraLife.mp3", 1.0 }, //
-				{ SoundClipID.GAME_READY, "sound/mspacman/Start.mp3", 1.0 }, //
-				{ SoundClipID.GAME_OVER, "sound/common/game-over.mp3", 1.0 }, //
-				{ SoundClipID.GHOST_EATEN, "sound/mspacman/Ghost.mp3", 1.0 }, //
-				{ SoundClipID.GHOST_RETURNING, "sound/mspacman/GhostEyes.mp3", 1.0 }, //
-				{ SoundClipID.INTERMISSION_1, "sound/mspacman/Act1TheyMeet.mp3", 1.0 }, //
-				{ SoundClipID.INTERMISSION_2, "sound/mspacman/Act2TheChase.mp3", 1.0 }, //
-				{ SoundClipID.INTERMISSION_3, "sound/mspacman/Act3Junior.mp3", 1.0 }, //
-				{ SoundClipID.LEVEL_COMPLETE, "sound/common/level-complete.mp3", 1.0 }, //
-				{ SoundClipID.PACMAN_DEATH, "sound/mspacman/Died.mp3", 1.0 }, //
-				{ SoundClipID.PACMAN_MUNCH, "sound/mspacman/Pill.mp3", 1.0 }, //
-				{ SoundClipID.PACMAN_POWER, "sound/mspacman/ScaredGhost.mp3", 1.0 }, //
-				{ SoundClipID.SIREN_1, "sound/mspacman/GhostNoise1.mp3", 1.0 }, //
-				{ SoundClipID.SIREN_2, "sound/mspacman/GhostNoise2.mp3", 1.0 }, //
-				{ SoundClipID.SIREN_3, "sound/mspacman/GhostNoise3.mp3", 1.0 }, //
-				{ SoundClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
-				{ SoundClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
-				{ SoundClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
+				{ AudioClipID.BONUS_EATEN, "sound/mspacman/Fruit.mp3", 1.0 }, //
+				{ AudioClipID.CREDIT, "sound/mspacman/Credit.mp3", 1.0 }, //
+				{ AudioClipID.EXTRA_LIFE, "sound/mspacman/ExtraLife.mp3", 1.0 }, //
+				{ AudioClipID.GAME_READY, "sound/mspacman/Start.mp3", 1.0 }, //
+				{ AudioClipID.GAME_OVER, "sound/common/game-over.mp3", 1.0 }, //
+				{ AudioClipID.GHOST_EATEN, "sound/mspacman/Ghost.mp3", 1.0 }, //
+				{ AudioClipID.GHOST_RETURNING, "sound/mspacman/GhostEyes.mp3", 1.0 }, //
+				{ AudioClipID.INTERMISSION_1, "sound/mspacman/Act1TheyMeet.mp3", 1.0 }, //
+				{ AudioClipID.INTERMISSION_2, "sound/mspacman/Act2TheChase.mp3", 1.0 }, //
+				{ AudioClipID.INTERMISSION_3, "sound/mspacman/Act3Junior.mp3", 1.0 }, //
+				{ AudioClipID.LEVEL_COMPLETE, "sound/common/level-complete.mp3", 1.0 }, //
+				{ AudioClipID.PACMAN_DEATH, "sound/mspacman/Died.mp3", 1.0 }, //
+				{ AudioClipID.PACMAN_MUNCH, "sound/mspacman/Pill.mp3", 1.0 }, //
+				{ AudioClipID.PACMAN_POWER, "sound/mspacman/ScaredGhost.mp3", 1.0 }, //
+				{ AudioClipID.SIREN_1, "sound/mspacman/GhostNoise1.mp3", 1.0 }, //
+				{ AudioClipID.SIREN_2, "sound/mspacman/GhostNoise2.mp3", 1.0 }, //
+				{ AudioClipID.SIREN_3, "sound/mspacman/GhostNoise3.mp3", 1.0 }, //
+				{ AudioClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
+				{ AudioClipID.SIREN_4, "sound/mspacman/GhostNoise4.mp3", 1.0 }, //
+				{ AudioClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
 		};
 
 		private static final Object[][] PACMAN_CACHED_CLIPS = { //
-				{ SoundClipID.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
-				{ SoundClipID.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
-				{ SoundClipID.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
-				{ SoundClipID.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
-				{ SoundClipID.GAME_OVER, "sound/common/game-over.mp3", 1.0 }, //
-				{ SoundClipID.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
-				{ SoundClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
-				{ SoundClipID.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
-				{ SoundClipID.LEVEL_COMPLETE, "sound/common/level-complete.mp3", 1.0 }, //
-				{ SoundClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
-				{ SoundClipID.PACMAN_MUNCH, "sound/pacman/doublemunch.wav", 1.0 }, //
-				{ SoundClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
-				{ SoundClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.4 }, //
-				{ SoundClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.4 }, //
-				{ SoundClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.4 }, //
-				{ SoundClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.4 }, //
-				{ SoundClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
+				{ AudioClipID.BONUS_EATEN, "sound/pacman/eat_fruit.mp3", 1.0 }, //
+				{ AudioClipID.CREDIT, "sound/pacman/credit.wav", 1.0 }, //
+				{ AudioClipID.EXTRA_LIFE, "sound/pacman/extend.mp3", 1.0 }, //
+				{ AudioClipID.GAME_READY, "sound/pacman/game_start.mp3", 1.0 }, //
+				{ AudioClipID.GAME_OVER, "sound/common/game-over.mp3", 1.0 }, //
+				{ AudioClipID.GHOST_EATEN, "sound/pacman/eat_ghost.mp3", 1.0 }, //
+				{ AudioClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, //
+				{ AudioClipID.INTERMISSION_1, "sound/pacman/intermission.mp3", 1.0 }, //
+				{ AudioClipID.LEVEL_COMPLETE, "sound/common/level-complete.mp3", 1.0 }, //
+				{ AudioClipID.PACMAN_DEATH, "sound/pacman/pacman_death.wav", 0.5 }, //
+				{ AudioClipID.PACMAN_MUNCH, "sound/pacman/doublemunch.wav", 1.0 }, //
+				{ AudioClipID.PACMAN_POWER, "sound/pacman/power_pellet.mp3", 1.0 }, //
+				{ AudioClipID.SIREN_1, "sound/pacman/siren_1.mp3", 0.4 }, //
+				{ AudioClipID.SIREN_2, "sound/pacman/siren_2.mp3", 0.4 }, //
+				{ AudioClipID.SIREN_3, "sound/pacman/siren_3.mp3", 0.4 }, //
+				{ AudioClipID.SIREN_4, "sound/pacman/siren_4.mp3", 0.4 }, //
+				{ AudioClipID.SWEEP, "sound/common/sweep.mp3", 1.0 }, //
 		};
 
 		private static GameSounds soundsMsPacMan;

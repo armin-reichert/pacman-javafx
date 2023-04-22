@@ -59,7 +59,7 @@ import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.sound.SoundClipID;
+import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
@@ -385,7 +385,7 @@ public class PlayScene3D implements GameScene {
 						level.pac().hide();
 						level3D.livesCounter3D().lightOnPy.set(false);
 						if (level.intermissionNumber == 0) { // play sound if no intermission scene follows
-							context.sounds().play(SoundClipID.LEVEL_COMPLETE);
+							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							Actions.showFlashMessageSeconds(2, AppRes.Texts.pickLevelCompleteMessage(level.number()));
 						}
 					}),
@@ -401,7 +401,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			Actions.showFlashMessageSeconds(3, AppRes.Texts.pickGameOverMessage());
-			context.sounds().play(SoundClipID.GAME_OVER);
+			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}
 
@@ -440,7 +440,7 @@ public class PlayScene3D implements GameScene {
 				perspectivePy.set(Perspective.TOTAL);
 			}),
 			rotation,
-			Ufx.afterSeconds(0.5, () -> context.sounds().play(SoundClipID.SWEEP)),
+			Ufx.afterSeconds(0.5, () -> context.sounds().play(AudioClipID.SWEEP)),
 			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Env.d3_perspectivePy))
 		);
 		//@formatter:on
@@ -462,13 +462,13 @@ public class PlayScene3D implements GameScene {
 			return; // TODO maybe mark level as silent?
 		}
 		if (level.pac().starvingTicks() > 10) {
-			context.sounds().stop(SoundClipID.PACMAN_MUNCH);
+			context.sounds().stop(AudioClipID.PACMAN_MUNCH);
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			context.sounds().ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
+			context.sounds().ensureLoop(AudioClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			context.sounds().stop(SoundClipID.GHOST_RETURNING);
+			context.sounds().stop(AudioClipID.GHOST_RETURNING);
 		}
 	}
 }

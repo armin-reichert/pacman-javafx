@@ -28,7 +28,7 @@ package de.amr.games.pacman.ui.fx.sound;
  * 
  * @author Armin Reichert
  */
-public enum SoundClipID {
+public enum AudioClipID {
 //@formatter:off
 	BONUS_EATEN, 
 	CREDIT, 

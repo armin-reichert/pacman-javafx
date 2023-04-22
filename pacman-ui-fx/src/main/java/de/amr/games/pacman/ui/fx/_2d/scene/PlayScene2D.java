@@ -41,7 +41,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.sound.SoundClipID;
+import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -149,13 +149,13 @@ public class PlayScene2D extends GameScene2D {
 			return;
 		}
 		if (level.pac().starvingTicks() > 10) {
-			context.sounds().stop(SoundClipID.PACMAN_MUNCH);
+			context.sounds().stop(AudioClipID.PACMAN_MUNCH);
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			context.sounds().ensureLoop(SoundClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
+			context.sounds().ensureLoop(AudioClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			context.sounds().stop(SoundClipID.GHOST_RETURNING);
+			context.sounds().stop(AudioClipID.GHOST_RETURNING);
 		}
 	}
 }
