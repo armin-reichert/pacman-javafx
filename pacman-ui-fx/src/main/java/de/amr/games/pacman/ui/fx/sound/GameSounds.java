@@ -71,6 +71,8 @@ public class GameSounds {
 				clip.setCycleCount(1); // might have been looped at previous call
 				clip.play();
 			});
+		} else {
+			LOG.info("Sound clip %s already playing", sound);
 		}
 	}
 

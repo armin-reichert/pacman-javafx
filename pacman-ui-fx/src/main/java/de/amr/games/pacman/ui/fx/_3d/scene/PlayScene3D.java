@@ -429,7 +429,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Animation createLevelChangeAnimation(GameLevel level) {
-		var rotation = new RotateTransition(Duration.seconds(2.5), level3D.getRoot());
+		var rotation = new RotateTransition(Duration.seconds(1.5), level3D.getRoot());
 		rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotation.setFromAngle(0);
 		rotation.setToAngle(360);
@@ -440,10 +440,8 @@ public class PlayScene3D implements GameScene {
 				perspectivePy.set(Perspective.TOTAL);
 			}),
 			rotation,
-			Ufx.afterSeconds(1.0, ()-> {
-				perspectivePy.bind(Env.d3_perspectivePy);
-				context.sounds().play(SoundClipID.SWEEP);
-			})
+			Ufx.afterSeconds(0.5, () -> context.sounds().play(SoundClipID.SWEEP)),
+			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Env.d3_perspectivePy))
 		);
 		//@formatter:on
 	}
