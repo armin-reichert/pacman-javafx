@@ -40,21 +40,21 @@ public class SectionAbout extends Section {
 	public SectionAbout(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
-		var arminPicture = new ImageView(ResourceMgr.image("graphics/armin.jpg"));
-		arminPicture.setFitWidth(286);
-		arminPicture.setPreserveRatio(true);
+		var myPicture = new ImageView(ResourceMgr.image("graphics/armin.jpg"));
+		myPicture.setFitWidth(286);
+		myPicture.setPreserveRatio(true);
 
-		var madeBy = new Text("Made by:     ");
-		madeBy.setFont(Font.font("Helvetica", 18));
+		var madeBy = new Text("Made by     ");
+		madeBy.setFont(Font.font("Helvetica", 16));
 		madeBy.setFill(Color.grayRgb(150));
 
 		var signature = new Text("Armin Reichert");
 		signature.setFont(ResourceMgr.font("fonts/RockSalt-Regular.ttf", 18));
-		signature.setFill(Color.YELLOW);
+		signature.setFill(Color.grayRgb(225));
 
 		var tf = new TextFlow(madeBy, signature);
 		tf.setPadding(new Insets(5, 5, 5, 5));
-		content.add(arminPicture, 0, 0);
+		content.add(myPicture, 0, 0);
 		content.add(tf, 0, 1);
 	}
 }
