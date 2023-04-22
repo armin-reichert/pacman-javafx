@@ -61,7 +61,7 @@ public class Env {
 	public static final BooleanProperty             d3_axesVisiblePy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode>    d3_drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final BooleanProperty             d3_enabledPy = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Color>       d3_floorColorPy = new SimpleObjectProperty<>(Color.grayRgb(0x96));
+	public static final ObjectProperty<Color>       d3_floorColorPy = new SimpleObjectProperty<>(Color.grayRgb(0x60));
 	public static final StringProperty              d3_floorTexturePy = new SimpleStringProperty("Knobs & Bumps");
 	public static final BooleanProperty             d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color>       d3_lightColorPy = new SimpleObjectProperty<>(Color.GHOSTWHITE);
