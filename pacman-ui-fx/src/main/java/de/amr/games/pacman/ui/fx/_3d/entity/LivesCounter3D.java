@@ -100,8 +100,8 @@ public class LivesCounter3D {
 			animations.add(plateRotation);
 		}
 
-		light = new PointLight(Color.grayRgb(200));
-		light.setMaxRange(TS * maxLives);
+		light = new PointLight(Color.CORNFLOWERBLUE);
+		light.setMaxRange(TS * (maxLives + 1));
 		light.setTranslateX(TS * (maxLives - 1));
 		light.setTranslateY(TS * (-1));
 		light.setTranslateZ(-pillarHeight - 20);

@@ -98,9 +98,14 @@ public class Pac3D {
 			spin.setToAngle(360);
 			spin.setInterpolator(Interpolator.LINEAR);
 			spin.setCycleCount(2);
-			animation = new SequentialTransition(Ufx.afterSeconds(0, () -> {
-				LOG.info("Before dying animation: %s", Pac3D.this);
-			}), Ufx.pause(1), spin, Ufx.pause(2));
+			//@formatter:off
+			animation = new SequentialTransition(
+				Ufx.afterSeconds(0, () -> LOG.info("Before dying animation: %s", Pac3D.this)),
+				Ufx.pause(0.5),
+				spin,
+				Ufx.pause(2)
+			);
+			//@formatter:on
 		}
 
 		@Override
