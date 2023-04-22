@@ -62,6 +62,7 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
@@ -433,6 +434,7 @@ public class PlayScene3D implements GameScene {
 		rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotation.setFromAngle(0);
 		rotation.setToAngle(360);
+		rotation.setInterpolator(Interpolator.LINEAR);
 		//@formatter:off
 		return new SequentialTransition(
 			Ufx.afterSeconds(1.0, () -> {
