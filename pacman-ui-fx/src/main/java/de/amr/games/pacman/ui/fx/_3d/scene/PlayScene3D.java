@@ -44,8 +44,6 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameLevel;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.mspacman.MsPacManDemoLevel;
-import de.amr.games.pacman.model.pacman.PacManDemoLevel;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx._3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx._3d.entity.Eatable3D;
@@ -472,8 +470,8 @@ public class PlayScene3D implements GameScene {
 
 	// TODO this is copy-pasta from 2D play scene
 	private void updateSound(GameLevel level) {
-		if (level instanceof PacManDemoLevel || level instanceof MsPacManDemoLevel) {
-			return; // TODO maybe mark level as silent?
+		if (level.isAttractMode()) {
+			return;
 		}
 		if (level.pac().starvingTicks() > 10) {
 			context.sounds().stop(AudioClipID.PACMAN_MUNCH);
