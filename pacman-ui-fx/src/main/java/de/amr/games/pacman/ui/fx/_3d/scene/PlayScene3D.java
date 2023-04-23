@@ -379,19 +379,23 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
 				level3D.world3D().eatables3D().forEach(level3D::eat);
+				// level complete animation is always played
+				var levelCompleteAnimation = createLevelCompleteAnimation(level);
+				// level change animation is played only if no intermission scene follows
+				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation() : Ufx.pause(0);
 				//@formatter:off
 				lockStateAndPlayAfterSeconds(1.0, 
-					createLevelCompleteAnimation(level), 
+					levelCompleteAnimation, 
 					Ufx.afterSeconds(1.0, () -> {
 						level.pac().hide();
 						level3D.livesCounter3D().lightOnPy.set(false);
-						if (level.intermissionNumber == 0) { // play sound if no intermission scene follows
+						// play sound / flash msg only if no intermission scene follows
+						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							Actions.showFlashMessageSeconds(2, AppRes.Texts.pickLevelCompleteMessage(level.number()));
 						}
 					}),
-					// no level change animation if intermission scene follows
-					level.intermissionNumber != 0 ? Ufx.pause(0) : createLevelChangeAnimation(),
+					levelChangeAnimation,
 					Ufx.afterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
 				);
 				//@formatter:on
