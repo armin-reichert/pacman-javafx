@@ -391,7 +391,7 @@ public class PlayScene3D implements GameScene {
 						}
 					}),
 					// no level change animation if intermission scene follows
-					level.intermissionNumber != 0 ? Ufx.pause(0) : createLevelChangeAnimation(level),
+					level.intermissionNumber != 0 ? Ufx.pause(0) : createLevelChangeAnimation(),
 					Ufx.afterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
 				);
 				//@formatter:on
@@ -429,7 +429,7 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private Animation createLevelChangeAnimation(GameLevel level) {
+	private Animation createLevelChangeAnimation() {
 		var rotation = new RotateTransition(Duration.seconds(1.5), level3D.getRoot());
 		rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotation.setFromAngle(0);
