@@ -193,8 +193,8 @@ public class PlayScene3D implements GameScene {
 
 	private void replaceGameLevel3D(GameLevel level) {
 
-		if (level3D != null && level3D.level().number() == level.number()) {
-			LOG.info("3D game level already up-to-date");
+		if (level.number() > 1 && level3D != null && level3D.level().number() == level.number()) {
+			LOG.info("3D game level up-to-date");
 			return;
 		}
 
