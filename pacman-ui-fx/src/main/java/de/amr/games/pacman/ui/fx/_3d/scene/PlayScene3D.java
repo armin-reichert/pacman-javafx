@@ -422,6 +422,9 @@ public class PlayScene3D implements GameScene {
 		}
 
 		// on state exit
+		if (e.oldGameState == null) {
+			return;
+		}
 		switch (e.oldGameState) {
 		case READY -> {
 			readyMessageText3D.setVisible(false);
