@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.model.Validator.requirePositive;
+import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
 import org.apache.logging.log4j.LogManager;

@@ -25,11 +25,11 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.Validator;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.world.World;
@@ -62,9 +62,9 @@ public class Bonus3D {
 	private boolean moving;
 
 	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage, boolean moving) {
-		Validator.checkNotNull(bonus);
-		Validator.checkNotNull(symbolImage);
-		Validator.checkNotNull(pointsImage);
+		checkNotNull(bonus);
+		checkNotNull(symbolImage);
+		checkNotNull(pointsImage);
 
 		this.bonus = bonus;
 		this.symbolImage = symbolImage;

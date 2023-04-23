@@ -25,9 +25,9 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.RND;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.inPercentOfCases;
 import static de.amr.games.pacman.lib.Globals.oneOf;
-import static de.amr.games.pacman.model.Validator.checkNotNull;
 
 import java.util.EnumMap;
 import java.util.Map;
