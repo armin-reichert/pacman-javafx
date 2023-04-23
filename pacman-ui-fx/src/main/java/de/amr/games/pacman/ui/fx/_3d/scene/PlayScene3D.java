@@ -198,7 +198,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		int mazeNumber = level.game().mazeNumber(level.number());
+		int mazeNumber = level.mazeNumber();
 		level3D = new GameLevel3D(level, //
 				context.rendering2D(), //
 				context.rendering2D().mazeColors(mazeNumber), //
