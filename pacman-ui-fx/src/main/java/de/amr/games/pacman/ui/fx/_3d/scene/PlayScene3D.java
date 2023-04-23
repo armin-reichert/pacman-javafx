@@ -27,6 +27,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.RND;
 import static de.amr.games.pacman.lib.Globals.inPercentOfCases;
 import static de.amr.games.pacman.lib.Globals.oneOf;
+import static de.amr.games.pacman.model.common.Validator.checkNotNull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -41,7 +42,6 @@ import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.Validator;
 import de.amr.games.pacman.model.common.actors.Ghost;
 import de.amr.games.pacman.model.common.actors.GhostState;
 import de.amr.games.pacman.model.mspacman.MsPacManDemoLevel;
@@ -75,6 +75,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -97,15 +98,15 @@ public class PlayScene3D implements GameScene {
 
 	private final GameSceneContext context;
 	private final SubScene fxSubScene;
-
-	private final Group root = new Group();
-	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
+	private final Group root;
 	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
+
+	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
 	private CameraController camController;
 
 	public PlayScene3D(GameController gameController) {
-		Validator.checkNotNull(gameController);
+		checkNotNull(gameController);
 
 		context = new GameSceneContext(gameController);
 
@@ -120,10 +121,9 @@ public class PlayScene3D implements GameScene {
 		var ambientLight = new AmbientLight();
 		ambientLight.colorProperty().bind(Env.d3_lightColorPy);
 
-		root.getChildren().addAll(new Group() /* placeholder for 3D level */, coordSystem, ambientLight,
-				readyMessageText3D.getRoot());
+		root = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 
-		// initial scene size is irrelevant
+		// initial scene size is irrelevant, will be bound to main scene size
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 	}
@@ -140,37 +140,9 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		context.level().ifPresent(level -> {
-			resetReadyMessageText3D();
-			replaceGameLevel3D(level);
-			perspectivePy.bind(Env.d3_perspectivePy);
-		});
-	}
-
-	private void replaceGameLevel3D(GameLevel level) {
-		int mazeNumber = level.game().mazeNumber(level.number());
-		level3D = new GameLevel3D(level, //
-				context.rendering2D(), //
-				context.rendering2D().mazeColors(mazeNumber), //
-				context.rendering2D().pacManColors(), //
-				context.rendering2D().msPacManColors(), //
-				context.rendering2D().ghostColors());
-
-		// center over origin
-		var centerX = level.world().numCols() * HTS;
-		var centerY = level.world().numRows() * HTS;
-		level3D.getRoot().setTranslateX(-centerX);
-		level3D.getRoot().setTranslateY(-centerY);
-
-		// keep the scores rotated such that the viewer always sees them frontally
-		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
-		root.getChildren().set(0, level3D.getRoot());
-
-		if (Env.d3_floorTextureRandomPy.get()) {
-			Env.d3_floorTexturePy.set(AppRes.Graphics.randomTextureName());
-		}
-		LOG.info("3D game level created.");
+		resetReadyMessageText3D();
+		perspectivePy.bind(Env.d3_perspectivePy);
+		context.level().ifPresent(this::replaceGameLevel3D);
 	}
 
 	@Override
@@ -184,10 +156,8 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void end() {
-		context.level().ifPresent(level -> {
-			context.sounds().stopAll();
-			perspectivePy.unbind();
-		});
+		context.sounds().stopAll();
+		perspectivePy.unbind();
 	}
 
 	@Override
@@ -218,6 +188,32 @@ public class PlayScene3D implements GameScene {
 			perspectiveController.reset(fxSubScene.getCamera());
 			LOG.info("Perspective changed to %s (%s)", perspective, this);
 		}
+	}
+
+	private void replaceGameLevel3D(GameLevel level) {
+		int mazeNumber = level.game().mazeNumber(level.number());
+		level3D = new GameLevel3D(level, //
+				context.rendering2D(), //
+				context.rendering2D().mazeColors(mazeNumber), //
+				context.rendering2D().pacManColors(), //
+				context.rendering2D().msPacManColors(), //
+				context.rendering2D().ghostColors());
+
+		// center over origin
+		var centerX = level.world().numCols() * HTS;
+		var centerY = level.world().numRows() * HTS;
+		level3D.getRoot().setTranslateX(-centerX);
+		level3D.getRoot().setTranslateY(-centerY);
+
+		// keep the scores rotated such that the viewer always sees them frontally
+		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+		root.getChildren().set(0, level3D.getRoot());
+
+		if (Env.d3_floorTextureRandomPy.get()) {
+			Env.d3_floorTexturePy.set(AppRes.Graphics.randomTextureName());
+		}
+		LOG.info("3D game level created.");
 	}
 
 	private void resetReadyMessageText3D() {
