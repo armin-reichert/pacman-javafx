@@ -25,12 +25,12 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.model.common.Validator.requirePositive;
+import static de.amr.games.pacman.model.Validator.requirePositive;
 import static java.util.Objects.requireNonNull;
 
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;

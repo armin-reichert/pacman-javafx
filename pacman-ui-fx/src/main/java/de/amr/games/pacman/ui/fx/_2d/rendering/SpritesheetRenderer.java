@@ -29,11 +29,11 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import java.util.List;
 import java.util.Optional;
 
-import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.Entity;
-import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

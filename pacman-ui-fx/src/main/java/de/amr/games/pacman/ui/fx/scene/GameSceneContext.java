@@ -29,10 +29,10 @@ import java.util.Optional;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameModel;
-import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;

@@ -25,18 +25,18 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.model.common.Validator.checkLevelNotNull;
-import static de.amr.games.pacman.model.common.Validator.checkNotNull;
+import static de.amr.games.pacman.model.Validator.checkLevelNotNull;
+import static de.amr.games.pacman.model.Validator.checkNotNull;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.IllegalGameVariantException;
-import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostState;
-import de.amr.games.pacman.model.common.world.Door;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.world.Door;
 import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.MazeColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;

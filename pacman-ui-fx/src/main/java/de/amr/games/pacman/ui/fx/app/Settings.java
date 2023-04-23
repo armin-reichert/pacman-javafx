@@ -30,7 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameVariant;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import javafx.scene.input.KeyCode;
 

@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.GameLevel;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;

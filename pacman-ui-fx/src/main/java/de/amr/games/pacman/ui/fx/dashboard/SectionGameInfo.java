@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.dashboard;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
-import de.amr.games.pacman.model.common.GameLevel;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 
 /**

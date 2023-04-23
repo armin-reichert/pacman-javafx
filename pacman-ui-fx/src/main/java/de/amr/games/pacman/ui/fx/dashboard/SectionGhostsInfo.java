@@ -26,9 +26,9 @@ package de.amr.games.pacman.ui.fx.dashboard;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.GhostState;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 
 /**

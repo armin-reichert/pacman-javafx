@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx._3d.scene;
 import static de.amr.games.pacman.lib.Globals.HTS;
 
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;

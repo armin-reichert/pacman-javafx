@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx._3d.animation;
 
-import de.amr.games.pacman.model.common.actors.Pac;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx._3d.entity.Pac3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;

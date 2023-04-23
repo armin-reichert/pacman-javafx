@@ -25,17 +25,17 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.model.common.Validator.checkNotNull;
+import static de.amr.games.pacman.model.Validator.checkNotNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.IllegalGameVariantException;
-import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx._3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx._3d.animation.Turn;

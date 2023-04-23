@@ -32,7 +32,7 @@ import java.util.Objects;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.common.GameState;
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;

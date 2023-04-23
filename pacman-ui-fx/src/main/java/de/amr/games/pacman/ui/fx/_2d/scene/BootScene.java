@@ -30,7 +30,7 @@ import static de.amr.games.pacman.lib.Globals.v2i;
 
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;

@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.model.common.Validator.requirePositive;
-import static de.amr.games.pacman.model.common.world.World.tileAt;
+import static de.amr.games.pacman.model.Validator.requirePositive;
+import static de.amr.games.pacman.model.world.World.tileAt;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Optional;

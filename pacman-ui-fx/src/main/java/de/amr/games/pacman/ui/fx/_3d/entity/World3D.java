@@ -36,8 +36,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.world.FloorPlan;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.world.FloorPlan;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.MazeColoring;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.animation.FoodOscillation;

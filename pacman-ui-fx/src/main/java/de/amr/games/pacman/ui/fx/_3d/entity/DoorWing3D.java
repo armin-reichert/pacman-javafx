@@ -27,7 +27,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.Validator;
+import de.amr.games.pacman.model.Validator;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.paint.Color;

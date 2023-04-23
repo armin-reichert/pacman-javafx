@@ -29,8 +29,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.shell.GameUI;

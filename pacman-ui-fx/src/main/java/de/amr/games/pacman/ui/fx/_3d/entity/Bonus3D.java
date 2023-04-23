@@ -28,11 +28,11 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.Validator;
-import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.world.World;
-import de.amr.games.pacman.model.mspacman.MovingBonus;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.Validator;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.world.World;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

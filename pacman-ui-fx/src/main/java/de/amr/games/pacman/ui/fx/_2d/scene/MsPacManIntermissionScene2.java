@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx._2d.scene;
 import de.amr.games.pacman.controller.common.GameController;
 import de.amr.games.pacman.controller.mspacman.MsPacManIntermission2;
 import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.model.common.GameModel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 

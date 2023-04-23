@@ -34,8 +34,8 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.model.common.GameVariant;
-import de.amr.games.pacman.model.common.IllegalGameVariantException;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;

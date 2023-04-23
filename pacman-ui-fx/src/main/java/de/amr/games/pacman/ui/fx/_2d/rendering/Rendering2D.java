@@ -30,11 +30,11 @@ import java.util.Optional;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.common.Score;
-import de.amr.games.pacman.model.common.actors.Bonus;
-import de.amr.games.pacman.model.common.actors.Ghost;
-import de.amr.games.pacman.model.common.actors.Pac;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.World;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

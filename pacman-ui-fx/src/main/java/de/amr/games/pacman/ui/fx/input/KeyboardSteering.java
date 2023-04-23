@@ -31,8 +31,8 @@ import org.apache.logging.log4j.Logger;
 
 import de.amr.games.pacman.controller.common.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.common.GameLevel;
-import de.amr.games.pacman.model.common.actors.Creature;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.actors.Creature;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;

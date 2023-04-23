@@ -28,7 +28,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.v2f;
 
 import de.amr.games.pacman.lib.math.Vector2f;
-import de.amr.games.pacman.model.common.world.World;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._3d.entity.Pellet3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
