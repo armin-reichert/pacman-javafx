@@ -55,8 +55,8 @@ General shortcuts:
 - <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
 
 Play screen shortcuts:
-- <kbd>Alt+LEFT</kbd> Select next camera perspective
-- <kbd>Alt+RIGHT</kbd> Select previous camera perspective
+- <kbd>Alt+LEFT</kbd> Select previous camera perspective
+- <kbd>Alt+RIGHT</kbd> Select next camera perspective
 - <kbd>Q</kbd>Quit play scene and show intro screen
 
 Cheats:
