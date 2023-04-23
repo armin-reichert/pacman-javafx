@@ -247,6 +247,10 @@ public class GameLevel3D {
 				&& ghost.position().euclideanDistance(door.entryPosition()) <= 1.5 * TS);
 	}
 
+	public GameLevel level() {
+		return level;
+	}
+
 	public Group getRoot() {
 		return root;
 	}

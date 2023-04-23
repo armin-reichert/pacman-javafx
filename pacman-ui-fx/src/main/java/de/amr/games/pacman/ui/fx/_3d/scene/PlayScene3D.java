@@ -143,6 +143,7 @@ public class PlayScene3D implements GameScene {
 		resetReadyMessageText3D();
 		perspectivePy.bind(Env.d3_perspectivePy);
 		context.level().ifPresent(this::replaceGameLevel3D);
+		LOG.info("Initialized 3D play scene");
 	}
 
 	@Override
@@ -191,6 +192,12 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
+
+		if (level3D != null && level3D.level().number() == level.number()) {
+			LOG.info("3D game level already up-to-date");
+			return;
+		}
+
 		int mazeNumber = level.game().mazeNumber(level.number());
 		level3D = new GameLevel3D(level, //
 				context.rendering2D(), //
@@ -208,12 +215,14 @@ public class PlayScene3D implements GameScene {
 		// keep the scores rotated such that the viewer always sees them frontally
 		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
 		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+
+		// replace initial placeholder or previous 3D level
 		root.getChildren().set(0, level3D.getRoot());
 
 		if (Env.d3_floorTextureRandomPy.get()) {
 			Env.d3_floorTexturePy.set(AppRes.Graphics.randomTextureName());
 		}
-		LOG.info("3D game level created.");
+		LOG.info("3D game level %d created.", level.number());
 	}
 
 	private void resetReadyMessageText3D() {
