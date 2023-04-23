@@ -179,8 +179,8 @@ public class AppRes {
 		}
 
 		public static String randomTextureName() {
-			var keys = textureNames();
-			return textureNames()[randomInt(0, keys.length)];
+			var names = textureNames();
+			return names[randomInt(0, names.length)];
 		}
 	}
 
