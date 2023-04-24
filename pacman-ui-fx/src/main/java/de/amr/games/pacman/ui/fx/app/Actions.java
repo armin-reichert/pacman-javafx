@@ -24,13 +24,13 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.controller.common.GameState.INTRO;
+import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.RND;
 
 import java.util.Objects;
 
-import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.shell.GameUI;

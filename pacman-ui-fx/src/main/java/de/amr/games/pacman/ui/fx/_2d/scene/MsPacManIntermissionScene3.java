@@ -23,8 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._2d.scene;
 
-import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.mspacman.MsPacManIntermission3;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;

@@ -29,7 +29,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.amr.games.pacman.controller.common.Steering;
+import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Creature;

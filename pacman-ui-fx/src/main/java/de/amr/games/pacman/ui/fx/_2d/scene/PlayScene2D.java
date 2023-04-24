@@ -28,8 +28,8 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawTileStructure;
 
-import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;

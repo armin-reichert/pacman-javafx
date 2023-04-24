@@ -27,8 +27,8 @@ package de.amr.games.pacman.ui.fx.scene;
 import java.util.Objects;
 import java.util.Optional;
 
-import de.amr.games.pacman.controller.common.GameController;
-import de.amr.games.pacman.controller.common.GameState;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
