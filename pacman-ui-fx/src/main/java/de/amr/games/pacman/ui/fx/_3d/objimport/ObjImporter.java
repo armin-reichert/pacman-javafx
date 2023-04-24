@@ -42,8 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
@@ -63,8 +62,6 @@ import javafx.scene.shape.TriangleMesh;
  *      Sample</a>
  */
 public class ObjImporter {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static void validateTree(Node node) {
 		if (node instanceof MeshView meshView) {
@@ -179,7 +176,7 @@ public class ObjImporter {
 				if (line.startsWith("o ")) {
 					addMesh(key);
 					key = line.substring(2);
-					LOG.trace("Object name: %s", key);
+					Logger.trace("Object name: {}", key);
 				}
 
 				/*
@@ -188,7 +185,7 @@ public class ObjImporter {
 				else if (line.startsWith("g ") || line.equals("g")) {
 					addMesh(key);
 					key = line.length() > 2 ? line.substring(2) : "default";
-					LOG.trace("Group name: %s", key);
+					Logger.trace("Group name: {}", key);
 				}
 
 				/*
@@ -354,17 +351,17 @@ public class ObjImporter {
 				 * Not implemented or not recognized.
 				 */
 				else {
-					LOG.trace("Line skipped: %s", line);
+					Logger.trace("Line skipped: {}", line);
 				}
 			} catch (Exception ex) {
-				LOG.error("Failed to parse line: %s", line);
+				Logger.error("Failed to parse line: {}", line);
 			}
 		}
 
 		addMesh(key);
 
-		LOG.trace("Model loaded: %d vertices, %d uvs, %d faces, %d smoothing groups", vertexes.size() / 3, uvs.size() / 2,
-				faces.size() / 6, smoothingGroups.size());
+		Logger.trace("Model loaded: {} vertices, {} uvs, {} faces, {} smoothing groups", vertexes.size() / 3,
+				uvs.size() / 2, faces.size() / 6, smoothingGroups.size());
 	}
 
 	private void addMesh(String key) {
@@ -446,7 +443,7 @@ public class ObjImporter {
 		}
 		meshes.put(key, mesh);
 
-		LOG.trace("Mesh '%s' added, vertices: %d, uvs: %d, faces: %d, smoothing groups: %d", key,
+		Logger.trace("Mesh '{}' added, vertices: {}, uvs: {}, faces: {}, smoothing groups: {}", key,
 				mesh.getPoints().size() / mesh.getPointElementSize(),
 				mesh.getTexCoords().size() / mesh.getTexCoordElementSize(), mesh.getFaces().size() / mesh.getFaceElementSize(),
 				mesh.getFaceSmoothingGroups().size());

@@ -23,8 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -43,13 +42,11 @@ import javafx.util.Duration;
  */
 public abstract class GameLoop {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
 		@Override
 		protected void invalidated() {
 			createFrameGenerator(get());
-			LOG.info("Target framerate changed to %d Hz", get());
+			Logger.info("Target framerate changed to {} Hz", get());
 		};
 	};
 
@@ -128,20 +125,20 @@ public abstract class GameLoop {
 	public void executeSingleStep(boolean updateEnabled) {
 		long tickTime = System.nanoTime();
 		if (updateEnabled) {
-			runPhase(this::doUpdate, "Update phase: %f milliseconds");
+			runPhase(this::doUpdate, "Update phase: {} milliseconds");
 			updateCount++;
 		}
-		runPhase(this::doRender, "Render phase: %f milliseconds");
+		runPhase(this::doRender, "Render phase: {} milliseconds");
 		++frames;
 		computeFrameRate(tickTime);
 	}
 
-	private void runPhase(Runnable phase, String message) {
+	private void runPhase(Runnable phase, String logMessage) {
 		if (measuredPy.get()) {
 			double startNanos = System.nanoTime();
 			phase.run();
 			double durationNanos = System.nanoTime() - startNanos;
-			LOG.info(message, durationNanos / 1e6);
+			Logger.info(logMessage, durationNanos / 1e6);
 		} else {
 			phase.run();
 		}

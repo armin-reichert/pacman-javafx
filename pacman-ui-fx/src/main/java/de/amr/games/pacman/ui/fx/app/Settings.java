@@ -26,8 +26,7 @@ package de.amr.games.pacman.ui.fx.app;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
@@ -39,14 +38,12 @@ import javafx.scene.input.KeyCode;
  */
 public class Settings {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	private static <T> T parse(Map<String, String> parameters, String key, T defaultValue, Function<String, T> parser) {
 		try {
 			String valueAsString = parameters.getOrDefault(key, String.valueOf(defaultValue));
 			return parser.apply(valueAsString);
 		} catch (Exception e) {
-			LOG.error("Error parsing parameter '%s': %s", key, e.getMessage());
+			Logger.error("Error parsing parameter '{}': {}", key, e.getMessage());
 			return defaultValue;
 		}
 	}

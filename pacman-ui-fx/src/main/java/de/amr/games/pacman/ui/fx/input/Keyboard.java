@@ -24,8 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.input;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -35,7 +34,6 @@ import javafx.scene.input.KeyEvent;
  */
 public class Keyboard {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
 	private static KeyEvent currentKeyEvent;
 
 	/**
@@ -46,11 +44,11 @@ public class Keyboard {
 	public static void accept(KeyEvent e) {
 		if (e.isConsumed()) {
 			currentKeyEvent = null;
-			LOG.trace("Ignored key event (%s): %s", e.getCode(), e);
+			Logger.trace("Ignored key event ({}): {}", e.getCode(), e);
 		} else {
 			currentKeyEvent = e;
 			e.consume();
-			LOG.trace("Consumed key event (%s): %s", e.getCode(), e);
+			Logger.trace("Consumed key event ({}): {}", e.getCode(), e);
 		}
 	}
 
@@ -60,7 +58,7 @@ public class Keyboard {
 		}
 		var match = combination.match(currentKeyEvent);
 		if (match) {
-			LOG.trace("Key event matches combination %s", combination.getName());
+			Logger.trace("Key event matches combination {}", combination.getName());
 		}
 		return match;
 	}

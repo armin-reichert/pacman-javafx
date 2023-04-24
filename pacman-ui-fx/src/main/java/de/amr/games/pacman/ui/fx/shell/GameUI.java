@@ -30,8 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEvent;
@@ -97,8 +96,6 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class GameUI implements GameEventListener {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final byte TILES_X = 28;
 	private static final byte TILES_Y = 36;
@@ -191,7 +188,7 @@ public class GameUI implements GameEventListener {
 		dashboard.init(this);
 		initEnv(settings);
 
-		LOG.info("Game UI created. Locale: %s. Application settings: %s", Locale.getDefault(), settings);
+		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
 	}
 
 	private void createGameScenes() {
@@ -300,7 +297,7 @@ public class GameUI implements GameEventListener {
 
 	public void start() {
 		if (simulation.isRunning()) {
-			LOG.info("Game has already been started");
+			Logger.info("Game has already been started");
 			return;
 		}
 		Actions.reboot();
@@ -308,14 +305,14 @@ public class GameUI implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		LOG.info("Game started. Target frame rate: %d", simulation.targetFrameratePy.get());
-		LOG.info("Window size: %.0f x %.0f, 3D: %s, perspective: %s", stage.getWidth(), stage.getHeight(),
+		Logger.info("Game started. Target frame rate: {}", simulation.targetFrameratePy.get());
+		Logger.info("Window size: {} x {}, 3D: {}, perspective: {}", stage.getWidth(), stage.getHeight(),
 				Env.d3_enabledPy.get(), Env.d3_perspectivePy.get());
 	}
 
 	public void stop() {
 		simulation.stop();
-		LOG.info("Game stopped");
+		Logger.info("Game stopped");
 	}
 
 	/**
@@ -334,10 +331,10 @@ public class GameUI implements GameEventListener {
 		try {
 			GameScene2D scene2D = clazz.getDeclaredConstructor(GameController.class).newInstance(gameController);
 			scene2D.infoVisiblePy.bind(Env.showDebugInfoPy);
-			LOG.trace("2D game scene created: '%s'", scene2D.getClass().getName());
+			Logger.trace("2D game scene created: '{}'", scene2D.getClass().getName());
 			return scene2D;
 		} catch (Exception e) {
-			LOG.error("Could not create 2D game scene of class '%s'", clazz.getName());
+			Logger.error("Could not create 2D game scene of class '{}'", clazz.getName());
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -388,7 +385,7 @@ public class GameUI implements GameEventListener {
 		root.getChildren().set(0, nextGameScene.fxSubScene());
 		nextGameScene.onEmbedIntoParentScene(mainScene());
 		currentGameScene = nextGameScene;
-		LOG.trace("Game scene changed to %s", nextGameScene);
+		Logger.trace("Game scene changed to {}", nextGameScene);
 	}
 
 	private void handleKeyboardInput() {
@@ -428,7 +425,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onGameEvent(GameEvent e) {
-		LOG.trace("Event received: %s", e);
+		Logger.trace("Event received: {}", e);
 		// call event specific handler
 		GameEventListener.super.onGameEvent(e);
 		if (currentGameScene != null) {
@@ -453,7 +450,7 @@ public class GameUI implements GameEventListener {
 			level.pac().setAnimations(r.createPacAnimations(level.pac()));
 			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
 			level.world().setAnimations(r.createWorldAnimations(level.world()));
-			LOG.trace("Created creature and world animations for level #%d", level.number());
+			Logger.trace("Created creature and world animations for level #{}", level.number());
 		});
 		updateGameScene(true);
 	}

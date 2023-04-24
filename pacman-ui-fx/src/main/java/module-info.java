@@ -22,7 +22,7 @@ module de.amr.games.pacman.ui.fx {
 	requires javafx.graphics;
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
-	requires org.apache.logging.log4j;
+	requires org.tinylog.api;
 
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.dashboard;

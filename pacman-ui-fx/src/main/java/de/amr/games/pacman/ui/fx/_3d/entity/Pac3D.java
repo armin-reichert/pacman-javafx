@@ -27,8 +27,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
@@ -87,8 +86,6 @@ public class Pac3D {
 
 	private class MsPacManDyingAnimation implements Pac3D.DyingAnimation {
 
-		private static final Logger LOG = LogManager.getFormatterLogger();
-
 		private final Animation animation;
 
 		public MsPacManDyingAnimation() {
@@ -100,7 +97,7 @@ public class Pac3D {
 			spin.setCycleCount(2);
 			//@formatter:off
 			animation = new SequentialTransition(
-				Ufx.afterSeconds(0, () -> LOG.info("Before dying animation: %s", Pac3D.this)),
+				Ufx.afterSeconds(0, () -> Logger.info("Before dying animation: {}", Pac3D.this)),
 				Ufx.pause(0.5),
 				spin,
 				Ufx.pause(2)

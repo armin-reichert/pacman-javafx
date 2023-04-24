@@ -29,8 +29,7 @@ import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.scene.image.Image;
@@ -46,8 +45,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class ResourceMgr {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final String ROOT = "/assets/";
 
@@ -101,7 +98,7 @@ public class ResourceMgr {
 		var url = urlFromRelPath(relPath);
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
-			LOG.error(() -> "Font with URL '%s' could not be loaded".formatted(url));
+			Logger.error(() -> "Font with URL '{}' could not be loaded".formatted(url));
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		return font;

@@ -27,8 +27,7 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
@@ -42,8 +41,6 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class Text3D {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private Box box;
 	private double quality = 3;
@@ -81,7 +78,7 @@ public class Text3D {
 		material.setDiffuseMap(image);
 		material.setBumpMap(image);
 		box.setMaterial(material);
-		LOG.trace("New image produced");
+		Logger.trace("New image produced");
 	}
 
 	public Node getRoot() {

@@ -25,15 +25,15 @@ package de.amr.games.pacman.ui.fx._3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
@@ -64,8 +64,6 @@ import javafx.scene.transform.Translate;
  */
 public class World3D {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	private static final int MAZE_RESOLUTION = 4; // 1, 2, 4, 8 are allowed values
 	private static final double FLOOR_THICKNESS = 0.25;
 
@@ -89,7 +87,7 @@ public class World3D {
 			AppRes.Graphics.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
-			LOG.trace("Floor texture change detected");
+			Logger.trace("Floor texture change detected");
 			updateFloorMaterial(floor());
 		}
 	};
@@ -97,7 +95,7 @@ public class World3D {
 	public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
 		@Override
 		protected void invalidated() {
-			LOG.trace("Floor color change detected");
+			Logger.trace("Floor color change detected");
 			updateFloorMaterial(floor());
 		}
 	};
@@ -117,9 +115,9 @@ public class World3D {
 	private final FoodOscillation foodOscillation;
 
 	public World3D(World world, MazeColoring mazeColoring, Model3D pelletModel3D) {
-		requireNonNull(world);
-		requireNonNull(mazeColoring);
-		requireNonNull(pelletModel3D);
+		checkNotNull(world);
+		checkNotNull(mazeColoring);
+		checkNotNull(pelletModel3D);
 
 		this.world = world;
 		this.mazeColoring = mazeColoring;
@@ -191,21 +189,22 @@ public class World3D {
 	}
 
 	private void buildWorld(int resolution) {
-		LOG.info("Build 3D world...");
+		Logger.info("Build 3D world...");
 		var floorPlan = new FloorPlan(world, resolution);
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, createWallData(resolution));
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
 		addHouseDoor();
-		LOG.info("Done building 3D world (resolution=%d, wall height=%.2f)", floorPlan.getResolution(), wallHeightPy.get());
+		Logger.info("Done building 3D world (resolution={}, wall height={})", floorPlan.getResolution(),
+				wallHeightPy.get());
 	}
 
 //	private void transformMaze() {
 //		if (world instanceof MapBasedWorld mapWorld) {
 //			wallsGroup.getChildren().forEach(wall -> {
 //				WallData data = (WallData) wall.getUserData();
-//				LOG.info("Wall data type is %d", data.type);
+//				Logger.info("Wall data type is %d", data.type);
 //				var tile = tileFromFloorPlanCoord(data.x, data.y);
 //				switch (data.type) {
 //				case FloorPlan.HWALL -> {
@@ -432,12 +431,12 @@ public class World3D {
 	}
 
 	public Optional<Eatable3D> eatableAt(Vector2i tile) {
-		requireNonNull(tile);
+		checkTileNotNull(tile);
 		return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
 	}
 
 	public void logFood() {
-		LOG.info("Food: %d energizers, %d pellets total", energizers3D().count(), eatables3D().count());
-		eatables3D().forEach(LOG::info);
+		Logger.info("Food: {} energizers, {} pellets total", energizers3D().count(), eatables3D().count());
+		eatables3D().forEach(Logger::info);
 	}
 }

@@ -24,16 +24,15 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
-import static java.util.Objects.requireNonNull;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -54,8 +53,6 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D implements GameScene {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	private static final float WIDTH = World.TILES_X * TS;
 	private static final float HEIGHT = World.TILES_Y * TS;
 	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
@@ -66,7 +63,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final Canvas canvas = new Canvas();
 
 	protected GameScene2D(GameController gameController) {
-		requireNonNull(gameController);
+		checkNotNull(gameController);
 
 		context = new GameSceneContext(gameController);
 		var container = new StackPane(canvas);
@@ -112,7 +109,7 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		canvas.getTransforms().setAll(new Scale(scaling, scaling));
-		LOG.trace("2D game scene resized: %.0f x %.0f, canvas scaling: %.2f (%s)", width, height, scaling,
+		Logger.trace("2D game scene resized: {} x {}, canvas scaling: {} ({})", width, height, scaling,
 				getClass().getSimpleName());
 	}
 
@@ -129,8 +126,8 @@ public abstract class GameScene2D implements GameScene {
 		}
 		drawScene(g);
 		if (context.isCreditVisible()) {
-			drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS), TS * (2),
-					TS * (36) - 1);
+			Rendering2D.drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS),
+					TS * (2), TS * (36) - 1);
 		}
 		if (infoVisiblePy.get()) {
 			drawInfo(g);

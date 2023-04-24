@@ -41,8 +41,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -51,8 +50,6 @@ import javafx.scene.paint.PhongMaterial;
 
 /** Reader for OBJ file MTL material files. */
 public class MtlReader {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private String baseUrl;
 	private Map<String, Material> materials = new HashMap<>();
@@ -64,10 +61,10 @@ public class MtlReader {
 		String fileUrl = baseUrl + filename;
 		try {
 			URL mtlUrl = new URL(fileUrl);
-			LOG.trace("Reading material from URL %s", mtlUrl);
+			Logger.trace("Reading material from URL {}", mtlUrl);
 			read(mtlUrl.openStream());
 		} catch (FileNotFoundException ex) {
-			LOG.trace("No material file found for obj. [%s]", fileUrl);
+			Logger.trace("No material file found for obj. [{}]", fileUrl);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -113,11 +110,11 @@ public class MtlReader {
 					 * Casts shadows onto invisible surfaces
 					 */
 				} else {
-					LOG.trace("Material file line ignored for name %s: %s", name, line);
+					Logger.trace("Material file line ignored for name {}: {}", name, line);
 				}
 			} catch (Exception x) {
 				x.printStackTrace();
-				LOG.error("Failed to parse line: %s", line);
+				Logger.error("Failed to parse line: {}", line);
 			}
 		}
 		addMaterial(name);
@@ -128,7 +125,7 @@ public class MtlReader {
 			if (!materials.containsKey(name)) {
 				materials.put(name, material);
 			} else {
-				LOG.trace("Material already added. Ignoring %s", name);
+				Logger.trace("Material already added. Ignoring {}", name);
 			}
 			material = new PhongMaterial(Color.WHITE);
 		}
@@ -144,7 +141,7 @@ public class MtlReader {
 
 	private Image loadImage(String filename) {
 		filename = baseUrl + filename;
-		LOG.trace("Loading image from %s", filename);
+		Logger.trace("Loading image from {}", filename);
 		return new Image(filename);
 	}
 }

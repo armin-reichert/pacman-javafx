@@ -31,8 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -50,21 +49,19 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class AppRes {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	public static void load() {
 		long start = System.nanoTime();
 		load("3D models", Models3D::load);
 		load("graphics", Graphics::load);
 		load("sounds", Sounds::load);
 		load("texts", Texts::load);
-		LOG.info("Loading application resources took %.3f seconds.", (System.nanoTime() - start) / 1e9f);
+		Logger.info("Loading application resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
 	private static void load(String section, Runnable loadingCode) {
 		long start = System.nanoTime();
 		loadingCode.run();
-		LOG.info("Loading %s done (%.3f seconds).", section, (System.nanoTime() - start) / 1e9f);
+		Logger.info("Loading {} done ({} seconds).", section, (System.nanoTime() - start) / 1e9f);
 	}
 
 	public static class Models3D {
@@ -116,7 +113,7 @@ public class AppRes {
 				var pattern = messageBundle.getString(keyPattern);
 				return MessageFormat.format(pattern, args);
 			} catch (Exception x) {
-				LOG.error("No text resource found for key '%s'", keyPattern);
+				Logger.error("No text resource found for key '{}'", keyPattern);
 				return "missing{%s}".formatted(keyPattern);
 			}
 		}

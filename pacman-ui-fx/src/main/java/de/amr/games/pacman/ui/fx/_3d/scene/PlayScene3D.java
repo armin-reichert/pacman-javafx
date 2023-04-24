@@ -34,8 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
@@ -83,8 +82,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PlayScene3D implements GameScene {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
 			Perspective.TOTAL) {
@@ -141,7 +138,7 @@ public class PlayScene3D implements GameScene {
 		resetReadyMessageText3D();
 		perspectivePy.bind(Env.d3_perspectivePy);
 		context.level().ifPresent(this::replaceGameLevel3D);
-		LOG.info("Initialized 3D play scene");
+		Logger.info("Initialized 3D play scene");
 	}
 
 	@Override
@@ -173,26 +170,26 @@ public class PlayScene3D implements GameScene {
 	private void updateCamera() {
 		var perspective = perspectivePy.get();
 		if (perspective == null) {
-			LOG.error("No camera perspective specified");
+			Logger.error("No camera perspective specified");
 			return;
 		}
 		var perspectiveController = camControllerMap.get(perspective);
 		if (perspectiveController == null) {
-			LOG.error("No camera found for perspective %s", perspective);
+			Logger.error("No camera found for perspective {}", perspective);
 			return;
 		}
 		if (perspectiveController != camController) {
 			camController = perspectiveController;
 			fxSubScene.requestFocus();
 			perspectiveController.reset(fxSubScene.getCamera());
-			LOG.info("Perspective changed to %s (%s)", perspective, this);
+			Logger.info("Perspective changed to {} ({})", perspective, this);
 		}
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
 
 		if (level.number() > 1 && level3D != null && level3D.level().number() == level.number()) {
-			LOG.info("3D game level up-to-date");
+			Logger.info("3D game level up-to-date");
 			return;
 		}
 
@@ -220,7 +217,7 @@ public class PlayScene3D implements GameScene {
 		if (Env.d3_floorTextureRandomPy.get()) {
 			Env.d3_floorTexturePy.set(AppRes.Graphics.randomTextureName());
 		}
-		LOG.info("3D game level %d created.", level.number());
+		Logger.info("3D game level {} created.", level.number());
 	}
 
 	private void resetReadyMessageText3D() {
@@ -348,7 +345,7 @@ public class PlayScene3D implements GameScene {
 		case PACMAN_DYING -> {
 			context.level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
-				LOG.info("Play dying animation for %s", level3D.pac3D());
+				Logger.info("Play dying animation for {}", level3D.pac3D());
 				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation().animation());
 			});
 		}

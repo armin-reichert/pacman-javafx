@@ -23,7 +23,6 @@
 		<classifier>win</classifier>
 		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
 		<javafx.version>18.0.1</javafx.version>
-		<log4j.maven.shade.plugin.extensions.version>2.18.0</log4j.maven.shade.plugin.extensions.version>
 		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
 		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
 		<source.version>18</source.version>
@@ -52,6 +51,17 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog-api</artifactId>
+			<version>2.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog-impl</artifactId>
+			<version>2.6.1</version>
 		</dependency>
 
 	</dependencies>
@@ -107,20 +117,10 @@
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>${mainClass}</mainClass>
 								</transformer>
-								<transformer
-									implementation="io.github.edwgiz.log4j.maven.plugins.shade.transformer.Log4j2PluginCacheFileTransformer"></transformer>
 							</transformers>
 						</configuration>
 					</execution>
 				</executions>
-				<dependencies>
-					<!-- to get log4j working with Maven shade. WTF! -->
-					<dependency>
-						<groupId>io.github.edwgiz</groupId>
-						<artifactId>log4j-maven-shade-plugin-extensions</artifactId>
-						<version>${log4j.maven.shade.plugin.extensions.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

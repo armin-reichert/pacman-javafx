@@ -7,8 +7,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx._3d.objimport.ObjImporter;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -25,8 +24,6 @@ import javafx.scene.shape.MeshView;
  * @author Armin Reichert
  */
 public class Model3D {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static MeshView meshView(Node tree, String id) {
 		requireNonNull(tree);
@@ -59,7 +56,7 @@ public class Model3D {
 		var urlString = url.toExternalForm();
 		int lastSlash = urlString.lastIndexOf('/');
 		var fileName = urlString.substring(lastSlash + 1);
-		LOG.trace("*** Load 3D model from file '%s'. URL: %s", fileName, url);
+		Logger.trace("*** Load 3D model from file '{}'. URL: {}", fileName, url);
 		try {
 			var importer = new ObjImporter(url.toExternalForm());
 			for (var meshName : importer.getMeshNames()) {
@@ -72,7 +69,7 @@ public class Model3D {
 					materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
 				}
 			}
-			LOG.trace(contentReport());
+			Logger.trace(contentReport());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

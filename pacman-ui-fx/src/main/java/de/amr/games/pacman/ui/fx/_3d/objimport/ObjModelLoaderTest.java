@@ -23,8 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._3d.objimport;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -34,16 +33,14 @@ import de.amr.games.pacman.ui.fx.app.ResourceMgr;
  */
 public class ObjModelLoaderTest {
 
-	private static final Logger LOG = LogManager.getFormatterLogger();
-
 	public static void main(String[] args) {
 		if (args.length == 0) {
-			LOG.error("Missing model file path (relative to asset folder)");
+			Logger.error("Missing model file path (relative to asset folder)");
 			return;
 		}
 		var relPath = args[0];
 		var url = ResourceMgr.urlFromRelPath(relPath);
 		var model = new Model3D(url);
-		LOG.info(model.contentReport());
+		Logger.info(model.contentReport());
 	}
 }

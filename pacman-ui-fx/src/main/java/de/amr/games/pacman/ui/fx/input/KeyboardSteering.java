@@ -26,8 +26,7 @@ package de.amr.games.pacman.ui.fx.input;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.lib.steering.Direction;
@@ -45,8 +44,6 @@ import javafx.scene.input.KeyEvent;
  * @author Armin Reichert
  */
 public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private static final KeyboardSteering DEFAULT_STEERING = new KeyboardSteering(//
 			new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN),
@@ -91,7 +88,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 			return;
 		}
 		if (!enabled) {
-			LOG.info("Steering disabled, ignore key event '%s'", e.getCode());
+			Logger.info("Steering disabled, ignore key event '{}'", e.getCode());
 			e.consume();
 			return;
 		}
@@ -109,7 +106,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-		LOG.info("Steering %sabled", enabled ? "en" : "dis");
+		Logger.info("Steering {}abled", enabled ? "en" : "dis");
 	}
 
 	private Optional<Direction> computeDirection(KeyEvent event) {

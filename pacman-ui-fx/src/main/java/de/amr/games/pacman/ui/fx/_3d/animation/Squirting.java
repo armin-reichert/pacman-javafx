@@ -26,8 +26,7 @@ package de.amr.games.pacman.ui.fx._3d.animation;
 import static de.amr.games.pacman.lib.Globals.randomFloat;
 import static de.amr.games.pacman.lib.Globals.randomInt;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
@@ -41,8 +40,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public abstract class Squirting extends Transition {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	public static class Drop extends Sphere {
 		private float vx;
@@ -175,7 +172,7 @@ public abstract class Squirting extends Transition {
 					randomFloat(dropVelocityMin.z(), dropVelocityMax.z()));
 			particleGroup.getChildren().add(drop);
 		}
-		LOG.trace("%d drops created", particleGroup.getChildren().size());
+		Logger.trace("{} drops created", particleGroup.getChildren().size());
 	}
 
 	@Override

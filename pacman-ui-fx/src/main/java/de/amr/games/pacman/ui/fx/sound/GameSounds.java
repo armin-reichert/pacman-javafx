@@ -29,8 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.animation.Animation;
@@ -40,8 +39,6 @@ import javafx.scene.media.AudioClip;
  * @author Armin Reichert
  */
 public class GameSounds {
-
-	private static final Logger LOG = LogManager.getFormatterLogger();
 
 	private final Map<AudioClipID, AudioClip> clips = new EnumMap<>(AudioClipID.class);
 
@@ -72,7 +69,7 @@ public class GameSounds {
 				clip.play();
 			});
 		} else {
-			LOG.info("Sound clip %s already playing", clipID);
+			Logger.info("Sound clip {} already playing", clipID);
 		}
 	}
 
@@ -107,7 +104,7 @@ public class GameSounds {
 		default -> throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
 		};
 		loop(siren, Animation.INDEFINITE);
-		LOG.trace("Siren %s started", siren);
+		Logger.trace("Siren {} started", siren);
 	}
 
 	public Stream<AudioClipID> sirens() {
@@ -127,7 +124,7 @@ public class GameSounds {
 		sirens().forEach(siren -> {
 			if (isPlaying(siren)) {
 				getClip(siren).ifPresent(AudioClip::stop);
-				LOG.trace("Siren %s stopped", siren);
+				Logger.trace("Siren {} stopped", siren);
 			}
 		});
 	}
