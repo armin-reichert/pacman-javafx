@@ -280,9 +280,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 				}
 				g.setFont(ArcadeTheme.SCREEN_FONT);
 				g.setFill(ArcadeTheme.PALE);
-				g.fillText(String.valueOf(clap.sceneNumber()), clap.position().x() + sprite.getWidth() - 25,
-						clap.position().y() + 18);
-				g.fillText(clap.sceneTitle(), clap.position().x() + sprite.getWidth(), clap.position().y());
+				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
+				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());
 			});
 		}
 	}
