@@ -120,7 +120,7 @@ public class Pac3D {
 		private final RotateTransition spinning;
 
 		public PacManDyingAnimation() {
-			var totalDuration = Duration.seconds(2.0);
+			var totalDuration = Duration.seconds(1.5);
 			var numSpins = 12;
 
 			spinning = new RotateTransition(totalDuration.divide(numSpins), root);
