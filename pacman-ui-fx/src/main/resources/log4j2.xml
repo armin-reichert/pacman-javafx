@@ -7,6 +7,22 @@
 		</Console>
 	</Appenders>
 	<Loggers>
+		<Logger name="de.amr.games.pacman.ui.fx.shell.GameUI" level="info"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="de.amr.games.pacman.ui.fx._2d.scene.GameScene2D"
+			level="info" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="de.amr.games.pacman.ui.fx.input.Keyboard" level="info"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="de.amr.games.pacman.ui.fx.sound.GameSounds" level="info"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
 		<Logger name="de.amr.games.pacman.ui.fx._3d.objimport.ObjImporter"
 			level="info"
 			additivity="false">
@@ -16,15 +32,15 @@
 			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.model.common.GameLevel" level="info"
+		<Logger name="de.amr.games.pacman.model.GameLevel" level="info"
 			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.model.common.GameModel" level="info"
+		<Logger name="de.amr.games.pacman.model.GameModel" level="info"
 			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.model.common.actors.Creature" level="info"
+		<Logger name="de.amr.games.pacman.model.actors.Creature" level="info"
 			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
@@ -36,33 +52,8 @@
 			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger name="de.amr.games.pacman.lib.FollowRoute" level="info"
-			additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
 		<Logger name="de.amr.games.pacman.lib.steering.RouteBasedSteering"
 			level="info" additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx.shell.GameUI" level="info"
-			additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx._2d.scene.common.GameScene2D"
-			level="info" additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
-		<Logger
-			name="de.amr.games.pacman.ui.fx._3d.animation.PortalTraversalAnimation"
-			level="info" additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx.input.Keyboard" level="info"
-			additivity="false">
-			<AppenderRef ref="Console" />
-		</Logger>
-		<Logger name="de.amr.games.pacman.ui.fx.sound.SoundHandler" level="info"
-			additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Root level="info">
