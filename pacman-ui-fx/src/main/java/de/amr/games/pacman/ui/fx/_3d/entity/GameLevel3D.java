@@ -102,9 +102,11 @@ public class GameLevel3D {
 
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
 
+		// TODO In Ms. Pac-Man after level 7 bonus changes during level!
+		var bonus = level.getBonus().get();
 		bonus3D = switch (gameVariant) {
-		case MS_PACMAN -> createBonus3D(level.bonus(), r2D, true);
-		case PACMAN -> createBonus3D(level.bonus(), r2D, false);
+		case MS_PACMAN -> createBonus3D(bonus, r2D, true);
+		case PACMAN -> createBonus3D(bonus, r2D, false);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 

@@ -104,7 +104,7 @@ public class PlayScene2D extends GameScene2D {
 			} else if (context.state() == GameState.READY) {
 				drawText(g, "READY!", ArcadeTheme.YELLOW, r.screenFont(TS), TS * (11), TS * (21));
 			}
-			r.drawBonus(g, level.bonus());
+			level.getBonus().ifPresent(bonus -> r.drawBonus(g, bonus));
 			r.drawPac(g, level.pac());
 			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
 			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
