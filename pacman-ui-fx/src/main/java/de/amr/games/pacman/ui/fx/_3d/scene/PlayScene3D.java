@@ -41,6 +41,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
@@ -297,12 +298,17 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		level3D.bonus3D().showEdible();
+		context.level().ifPresent(level -> {
+			boolean moving = context.gameVariant() == GameVariant.MS_PACMAN;
+			level3D.replaceBonus3D(level.getBonus().get(), context.rendering2D(), moving);
+			level3D.bonus3D().showEdible();
+		});
 	}
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
 		level3D.bonus3D().showEaten();
+		// TODO remove bonus3D from level after animation?
 	}
 
 	@Override

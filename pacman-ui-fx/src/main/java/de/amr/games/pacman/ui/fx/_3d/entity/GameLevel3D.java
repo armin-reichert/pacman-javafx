@@ -73,10 +73,10 @@ public class GameLevel3D {
 	private final Pac3D pac3D;
 	private final PointLight pacLight;
 	private final Ghost3D[] ghosts3D;
-	private final Bonus3D bonus3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
+	private Bonus3D bonus3D;
 
 	public GameLevel3D(GameLevel level, Rendering2D r2D, MazeColoring mazeColors, PacManColoring pacManColors,
 			MsPacManColoring msPacManColors, GhostColoring[] ghostColors) {
@@ -102,14 +102,6 @@ public class GameLevel3D {
 
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
 
-		// TODO In Ms. Pac-Man after level 7 bonus changes during level!
-		var bonus = level.getBonus().get();
-		bonus3D = switch (gameVariant) {
-		case MS_PACMAN -> createBonus3D(bonus, r2D, true);
-		case PACMAN -> createBonus3D(bonus, r2D, false);
-		default -> throw new IllegalGameVariantException(gameVariant);
-		};
-
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
@@ -130,7 +122,6 @@ public class GameLevel3D {
 		root.getChildren().add(scores3D.getRoot());
 		root.getChildren().add(levelCounter3D.getRoot());
 		root.getChildren().add(livesCounter3D.getRoot());
-		root.getChildren().add(bonus3D.getRoot());
 		root.getChildren().add(pac3D.getRoot());
 		root.getChildren().add(pacLight);
 		root.getChildren().add(ghosts3D[0].getRoot());
@@ -152,6 +143,14 @@ public class GameLevel3D {
 		world3D.wallHeightPy.bind(Env.d3_mazeWallHeightPy);
 		world3D.wallThicknessPy.bind(Env.d3_mazeWallThicknessPy);
 		livesCounter3D.drawModePy.bind(Env.d3_drawModePy);
+	}
+
+	public void replaceBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
+		if (bonus3D != null) {
+			root.getChildren().remove(bonus3D.getRoot());
+		}
+		bonus3D = createBonus3D(bonus, r2D, moving);
+		root.getChildren().add(bonus3D.getRoot());
 	}
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
@@ -204,7 +203,9 @@ public class GameLevel3D {
 		pac3D.update(level);
 		updatePacLight();
 		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
-		bonus3D.update(level);
+		if (bonus3D != null) {
+			bonus3D.update(level);
+		}
 		// TODO get rid of this
 		int numLivesShown = level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives();
 		livesCounter3D.update(numLivesShown);
