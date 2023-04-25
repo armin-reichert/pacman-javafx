@@ -88,7 +88,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 			return;
 		}
 		if (!enabled) {
-			Logger.info("Steering disabled, ignore key event '{}'", e.getCode());
+			Logger.trace("Steering disabled, ignore key event '{}'", e.getCode());
 			e.consume();
 			return;
 		}
@@ -106,7 +106,7 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-		Logger.info("Steering {}abled", enabled ? "en" : "dis");
+		Logger.trace("Steering {}abled", enabled ? "en" : "dis");
 	}
 
 	private Optional<Direction> computeDirection(KeyEvent event) {
