@@ -254,7 +254,7 @@ public class GameUI implements GameEventListener {
 		stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));
 		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
 		root.setBackground(ResourceMgr.colorBackground(bgColor));
-		if (currentGameScene.is3D()) {
+		if (currentGameScene != null && currentGameScene.is3D()) {
 			root.setBackground(BACKGROUND_3D);
 		}
 	}
