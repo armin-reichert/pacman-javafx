@@ -26,13 +26,14 @@ package de.amr.games.pacman.ui.fx._2d.scene;
 import static de.amr.games.pacman.controller.MsPacManIntroData.BLINKY_END_TILE;
 import static de.amr.games.pacman.controller.MsPacManIntroData.TITLE_TILE;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.v2i;
+import static de.amr.games.pacman.lib.Globals.isOdd;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
+
+import java.util.BitSet;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntroController;
 import de.amr.games.pacman.controller.MsPacManIntroState;
-import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
@@ -104,7 +105,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		var ic = intro.context();
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		var font = r.screenFont(TS);
-		drawLights(g, 32, 16);
+		drawLightChain(g, 15, 21);
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font, TITLE_TILE.x(), TITLE_TILE.y());
 		if (intro.state() == MsPacManIntroState.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex());
@@ -129,26 +130,35 @@ public class MsPacManIntroScene extends GameScene2D {
 		Rendering2D.drawTileStructure(g, World.TILES_X, World.TILES_Y);
 	}
 
-	// TODO this is not exactly as in the original game, but looks quite ok
-	private void drawLights(GraphicsContext g, int width, int height) {
-		long t = intro.context().lightsTimer.tick();
-		int on = (int) t % (width / 2);
-		for (int i = 0; i < 2 * (width + height); ++i) {
-			var p = xy(i, width, height);
-			g.setFill(p.x() > 0 && (i + on) % (width / 2) == 0 ? ArcadeTheme.PALE : ArcadeTheme.RED);
-			g.fillRect(BLINKY_END_TILE.x() + 4 * p.x(), BLINKY_END_TILE.y() + 4 * p.y(), 2, 2);
+	private void drawLightChain(GraphicsContext g, int x0, int y0) {
+		var t = intro.context().lightsTimer.tick();
+		var on = new BitSet(96);
+		// 6 bulbs with distance 16 are on each frame
+		for (int k = 0; k < 6; ++k) {
+			var i = (int) (t + k * 16) % 96;
+			on.set(i);
 		}
-	}
-
-	private Vector2i xy(int i, int width, int height) {
-		if (i <= width) {
-			return v2i(i, 0);
-		} else if (i < width + height) {
-			return v2i(width, i - width);
-		} else if (i < 2 * width + height + 1) {
-			return v2i(2 * width + height - i, height);
-		} else {
-			return v2i(0, 2 * (width + height) - i);
+		int x, y;
+		for (int i = 0; i < 96; ++i) {
+			// In the Arcade game, the bulbs in the leftmost column are all off every second frame. Maybe a bug?
+			if (i > 80 && isOdd(i)) {
+				on.set(i, false);
+			}
+			if (i <= 33) {
+				x = x0 + i;
+				y = y0 + 15;
+			} else if (i <= 48) {
+				x = x0 + 33;
+				y = y0 + 48 - i;
+			} else if (i <= 81) {
+				x = x0 + 81 - i;
+				y = y0;
+			} else {
+				x = x0;
+				y = y0 + i - 81;
+			}
+			g.setFill(on.get(i) ? ArcadeTheme.PALE : ArcadeTheme.RED);
+			g.fillRect(4 * x + 4, 4 * y + 4, 2, 2);
 		}
 	}
 }
