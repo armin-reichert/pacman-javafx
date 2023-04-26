@@ -131,25 +131,33 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawLevelCounter(g);
 	}
 
+	private int onIndex(long t, int i) {
+		return (int) (i * intro.context().bulbDistance + t) % intro.context().numBulbs;
+	}
+
 	private void drawMarquee(GraphicsContext g, long t) {
-		// 6 of the 96 bulbs are switched-on every frame
-		int numBulbs = 96;
-		int dist = 16;
+		var numBulbs = intro.context().numBulbs;
+
+		// 6 of the 96 bulbs are switched-on every frame, shifting every tick
 		var on = new BitSet(numBulbs);
-		for (int k = 0; k < 6; ++k) {
-			var i = (t + k * dist) % numBulbs;
-			on.set((int) i);
+		on.set(onIndex(t, 0));
+		on.set(onIndex(t, 1));
+		on.set(onIndex(t, 2));
+		on.set(onIndex(t, 3));
+		on.set(onIndex(t, 4));
+		on.set(onIndex(t, 5));
+		// In the Arcade game, the bulbs in the leftmost column are switched-off every second frame. Maybe a bug?
+		for (int i = 81; i < numBulbs; ++i) {
+			if (i >= 81 && isOdd(i)) {
+				on.clear(i);
+			}
 		}
 
 		int x0 = 14;
 		int y0 = 21;
-
-		for (int i = 0; i < 96; ++i) {
-			int x, y;
-			// In the Arcade game, the bulbs in the leftmost column are switched-off every second frame. Maybe a bug?
-			if (i >= 81 && isOdd(i)) {
-				on.clear(i);
-			}
+		for (int i = 0; i < numBulbs; ++i) {
+			int x;
+			int y;
 			if (i <= 33) {
 				x = x0 + i;
 				y = y0 + 15;
