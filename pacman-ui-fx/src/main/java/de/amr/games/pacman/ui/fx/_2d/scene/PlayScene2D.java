@@ -143,7 +143,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void updateSound(GameLevel level) {
-		if (level.isAttractMode()) {
+		if (level.isDemoLevel()) {
 			return;
 		}
 		if (level.pac().starvingTicks() > 10) {

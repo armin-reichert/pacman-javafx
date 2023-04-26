@@ -476,7 +476,7 @@ public class PlayScene3D implements GameScene {
 
 	// TODO this is copy-pasta from 2D play scene
 	private void updateSound(GameLevel level) {
-		if (level.isAttractMode()) {
+		if (level.isDemoLevel()) {
 			return;
 		}
 		if (level.pac().starvingTicks() > 10) {
