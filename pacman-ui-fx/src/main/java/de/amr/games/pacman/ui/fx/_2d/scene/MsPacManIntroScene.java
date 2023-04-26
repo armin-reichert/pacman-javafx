@@ -24,10 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.scene;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.isOdd;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
-
-import java.util.BitSet;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntroController;
@@ -112,7 +109,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		var font = r.screenFont(TS);
 
-		drawMarquee(g, ic.marqueeTimer.tick());
+		drawMarquee(g);
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font, tx, ty);
 		if (intro.state() == MsPacManIntroState.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
@@ -131,48 +128,19 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawLevelCounter(g);
 	}
 
-	private int onIndex(long t, int i) {
-		return (int) (i * intro.context().bulbDistance + t) % intro.context().numBulbs;
-	}
-
-	private void drawMarquee(GraphicsContext g, long t) {
-		var numBulbs = intro.context().numBulbs;
-
-		// 6 of the 96 bulbs are switched-on every frame, shifting every tick
-		var on = new BitSet(numBulbs);
-		on.set(onIndex(t, 0));
-		on.set(onIndex(t, 1));
-		on.set(onIndex(t, 2));
-		on.set(onIndex(t, 3));
-		on.set(onIndex(t, 4));
-		on.set(onIndex(t, 5));
-		// In the Arcade game, the bulbs in the leftmost column are switched-off every second frame. Maybe a bug?
-		for (int i = 81; i < numBulbs; ++i) {
-			if (i >= 81 && isOdd(i)) {
-				on.clear(i);
-			}
-		}
-
-		int x0 = 14;
-		int y0 = 21;
-		for (int i = 0; i < numBulbs; ++i) {
-			int x;
-			int y;
-			if (i <= 33) { // bottom
-				x = x0 + i;
-				y = y0 + 15;
-			} else if (i <= 48) { // right
-				x = x0 + 33;
-				y = y0 + 48 - i;
-			} else if (i <= 81) { // top
-				x = x0 + 81 - i;
-				y = y0;
-			} else { // left
-				x = x0;
-				y = y0 + i - 81;
-			}
+	private void drawMarquee(GraphicsContext g) {
+		var on = intro.context().marqueeState();
+		for (int i = 0; i < intro.context().numBulbs; ++i) {
 			g.setFill(on.get(i) ? ArcadeTheme.PALE : ArcadeTheme.RED);
-			g.fillRect(4 * (x + 1), 4 * (y + 1), 2, 2);
+			if (i <= 33) {
+				g.fillRect(60 + 4 * i, 148, 2, 2);
+			} else if (i <= 48) {
+				g.fillRect(192, 280 - 4 * i, 2, 2);
+			} else if (i <= 81) {
+				g.fillRect(384 - 4 * i, 88, 2, 2);
+			} else {
+				g.fillRect(60, 4 * i - 236, 2, 2);
+			}
 		}
 	}
 }
