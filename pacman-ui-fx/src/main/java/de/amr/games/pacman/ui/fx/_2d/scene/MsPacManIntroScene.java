@@ -105,7 +105,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();
-		var y0 = ic.blinkyEndPosition.y();
+		var y0 = ic.stopY;
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		var font = r.screenFont(TS);
 
