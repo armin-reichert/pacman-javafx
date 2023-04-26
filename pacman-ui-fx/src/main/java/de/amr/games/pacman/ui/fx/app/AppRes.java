@@ -42,6 +42,7 @@ import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
 /**
@@ -144,40 +145,49 @@ public class AppRes {
 		public static Image iconMsPacManGame;
 		public static Image skyImage;
 
-		private static Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
+		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
 		static void load() {
-			loadFloorTexture("Hexagon", "hexagon");
-			loadFloorTexture("Knobs & Bumps", "knobs");
-			loadFloorTexture("Plastic", "plastic");
-			loadFloorTexture("Wood", "wood");
+			loadFloorTexture("Hexagon", "hexagon", "jpg");
+			loadFloorTexture("Knobs & Bumps", "knobs", "jpg");
+			loadFloorTexture("Plastic", "plastic", "jpg");
+			loadFloorTexture("Wood", "wood", "jpg");
 
 			iconPacManGame = ResourceMgr.image("icons/pacman.png");
 			iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
 			skyImage = ResourceMgr.image("graphics/sky.png");
 		}
 
-		private static void loadFloorTexture(String name, String textureBase) {
+		private static void loadFloorTexture(String name, String textureBase, String ext) {
 			var material = new PhongMaterial();
-			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.jpg".formatted(textureBase)));
-			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.jpg".formatted(textureBase)));
+			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
 			material.specularColorProperty()
 					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
-			texturesByName.put(name, material);
+			floorTexturesByName.put(name, material);
 		}
 
-		public static PhongMaterial texture(String name) {
-			return texturesByName.get(name);
+		public static PhongMaterial floorTexture(String name) {
+			return floorTexturesByName.get(name);
 		}
 
-		public static String[] textureNames() {
-			return texturesByName.keySet().toArray(String[]::new);
+		public static String[] floorTextureNames() {
+			return floorTexturesByName.keySet().toArray(String[]::new);
 		}
 
-		public static String randomTextureName() {
-			var names = textureNames();
+		public static String randomFloorTextureName() {
+			var names = floorTextureNames();
 			return names[randomInt(0, names.length)];
+		}
+
+		public static PhongMaterial texture(String textureBase, String ext, Color diffuseColor, Color specularColor) {
+			var texture = new PhongMaterial();
+			texture.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setDiffuseColor(diffuseColor);
+			texture.setSpecularColor(specularColor);
+			return texture;
 		}
 	}
 
