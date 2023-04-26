@@ -99,25 +99,31 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
+	protected void drawInfo(GraphicsContext g) {
+		Rendering2D.drawTileStructure(g, World.TILES_X, World.TILES_Y);
+	}
+
+	@Override
 	public void drawScene(GraphicsContext g) {
 		var ic = intro.context();
-		var r = (MsPacManGameRenderer) context.rendering2D();
-		var font = r.screenFont(TS);
-		drawLightChain(g);
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();
 		var y0 = ic.blinkyEndPosition.y();
+		var r = (MsPacManGameRenderer) context.rendering2D();
+		var font = r.screenFont(TS);
+
+		drawMarquee(g, ic.marqueeTimer.tick());
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font, tx, ty);
 		if (intro.state() == MsPacManIntroState.GHOSTS) {
-			var ghost = ic.ghosts.get(ic.ghostIndex());
-			var ghostColor = r.ghostColors(ghost.id()).dress();
+			var ghost = ic.ghosts.get(ic.ghostIndex);
+			var color = r.ghostColors(ghost.id()).dress();
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText(g, "WITH", ArcadeTheme.PALE, font, tx, y0 + TS * (3));
+				drawText(g, "WITH", ArcadeTheme.PALE, font, tx, y0 + TS * 3);
 			}
-			drawText(g, ghost.name().toUpperCase(), ghostColor, font, TS * (14 - ghost.name().length() / 2), y0 + TS * (6));
+			drawText(g, ghost.name().toUpperCase(), color, font, TS * (14 - ghost.name().length() / 2), y0 + TS * 6);
 		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
-			drawText(g, "STARRING", ArcadeTheme.PALE, font, tx, y0 + TS * (3));
-			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, tx, y0 + TS * (6));
+			drawText(g, "STARRING", ArcadeTheme.PALE, font, tx, y0 + TS * 3);
+			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, tx, y0 + TS * 6);
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);
@@ -125,28 +131,24 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawLevelCounter(g);
 	}
 
-	@Override
-	protected void drawInfo(GraphicsContext g) {
-		Rendering2D.drawTileStructure(g, World.TILES_X, World.TILES_Y);
-	}
-
-	private void drawLightChain(GraphicsContext g) {
-		var t = intro.context().marqueeTimer.tick();
-
-		var on = new BitSet(96);
-		// 6 bulbs with distance 16 are on each frame
+	private void drawMarquee(GraphicsContext g, long t) {
+		// 6 of the 96 bulbs are switched-on every frame
+		int numBulbs = 96;
+		int dist = 16;
+		var on = new BitSet(numBulbs);
 		for (int k = 0; k < 6; ++k) {
-			var i = (int) (t + k * 16) % 96;
-			on.set(i);
+			var i = (t + k * dist) % numBulbs;
+			on.set((int) i);
 		}
 
 		int x0 = 14;
 		int y0 = 21;
-		int x, y;
+
 		for (int i = 0; i < 96; ++i) {
-			// In the Arcade game, the bulbs in the leftmost column are all off every second frame. Maybe a bug?
-			if (i > 80 && isOdd(i)) {
-				on.set(i, false);
+			int x, y;
+			// In the Arcade game, the bulbs in the leftmost column are switched-off every second frame. Maybe a bug?
+			if (i >= 81 && isOdd(i)) {
+				on.clear(i);
 			}
 			if (i <= 33) {
 				x = x0 + i;
@@ -162,7 +164,7 @@ public class MsPacManIntroScene extends GameScene2D {
 				y = y0 + i - 81;
 			}
 			g.setFill(on.get(i) ? ArcadeTheme.PALE : ArcadeTheme.RED);
-			g.fillRect(4 * x + 4, 4 * y + 4, 2, 2);
+			g.fillRect(4 * (x + 1), 4 * (y + 1), 2, 2);
 		}
 	}
 }
