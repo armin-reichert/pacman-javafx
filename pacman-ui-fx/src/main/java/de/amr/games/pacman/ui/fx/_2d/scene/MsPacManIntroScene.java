@@ -158,16 +158,16 @@ public class MsPacManIntroScene extends GameScene2D {
 		for (int i = 0; i < numBulbs; ++i) {
 			int x;
 			int y;
-			if (i <= 33) {
+			if (i <= 33) { // bottom
 				x = x0 + i;
 				y = y0 + 15;
-			} else if (i <= 48) {
+			} else if (i <= 48) { // right
 				x = x0 + 33;
 				y = y0 + 48 - i;
-			} else if (i <= 81) {
+			} else if (i <= 81) { // top
 				x = x0 + 81 - i;
 				y = y0;
-			} else {
+			} else { // left
 				x = x0;
 				y = y0 + i - 81;
 			}
