@@ -436,7 +436,9 @@ public class PlayScene3D implements GameScene {
 		case HUNTING -> {
 			if (e.newGameState != GameState.GHOST_DYING) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
-				level3D.bonus3D().hide();
+				if (level3D.bonus3D() != null) {
+					level3D.bonus3D().hide();
+				}
 			}
 		}
 		default -> {
