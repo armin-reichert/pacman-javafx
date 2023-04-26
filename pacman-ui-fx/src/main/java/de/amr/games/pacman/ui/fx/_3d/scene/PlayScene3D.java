@@ -307,13 +307,16 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsEaten(GameEvent e) {
-		level3D.bonus3D().showEaten();
-		// TODO remove bonus3D from level after animation?
+		if (level3D.bonus3D() != null) {
+			level3D.bonus3D().showEaten();
+		}
 	}
 
 	@Override
 	public void onBonusExpires(GameEvent e) {
-		level3D.bonus3D().hide();
+		if (level3D.bonus3D() != null) {
+			level3D.bonus3D().hide();
+		}
 	}
 
 	@Override
