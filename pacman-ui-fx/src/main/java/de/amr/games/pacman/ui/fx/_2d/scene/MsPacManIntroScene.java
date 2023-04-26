@@ -32,7 +32,7 @@ import java.util.BitSet;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntroController;
 import de.amr.games.pacman.controller.MsPacManIntroState;
-import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
@@ -111,7 +111,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		if (intro.state() == MsPacManIntroState.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex());
 			var ghostColor = r.ghostColors(ghost.id()).dress();
-			if (ghost.id() == Ghost.ID_RED_GHOST) {
+			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText(g, "WITH", ArcadeTheme.PALE, font, tx, y0 + TS * (3));
 			}
 			drawText(g, ghost.name().toUpperCase(), ghostColor, font, TS * (14 - ghost.name().length() / 2), y0 + TS * (6));

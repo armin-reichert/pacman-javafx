@@ -71,7 +71,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.setAnimations(renderer.createPacAnimations(pac));
 		pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
 
-		blinky = new Ghost(Ghost.ID_RED_GHOST, "Blinky");
+		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.placeAtTile(v2i(35, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(1.25f);

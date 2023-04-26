@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
-import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -49,25 +49,25 @@ public class ArcadeTheme {
 
 	//@formatter:off
 	static {
-		GHOST_COLORING[Ghost.ID_RED_GHOST] = new GhostColoring(
+		GHOST_COLORING[GameModel.RED_GHOST] = new GhostColoring(
 			RED,  PALE, BLUE, // normal
 			BLUE, ROSE, ROSE, // frightened
 			PALE, ROSE, RED   // flashing
 		);
 
-		GHOST_COLORING[Ghost.ID_PINK_GHOST] = new GhostColoring(
+		GHOST_COLORING[GameModel.PINK_GHOST] = new GhostColoring(
 			PINK, PALE, BLUE, // normal
 			BLUE, ROSE, ROSE, // frightened
 			PALE, ROSE, RED   // flashing
 		);
 
-		GHOST_COLORING[Ghost.ID_CYAN_GHOST] = new GhostColoring(
+		GHOST_COLORING[GameModel.CYAN_GHOST] = new GhostColoring(
 			CYAN, PALE, BLUE, // normal
 			BLUE, ROSE, ROSE, // frightened
 			PALE, ROSE, RED   // flashing
 		);
 		
-		GHOST_COLORING[Ghost.ID_ORANGE_GHOST] = new GhostColoring(
+		GHOST_COLORING[GameModel.ORANGE_GHOST] = new GhostColoring(
 			ORANGE, PALE, BLUE, // normal
 			BLUE,   ROSE, ROSE, // frightened
 			PALE,   ROSE, RED   // flashing

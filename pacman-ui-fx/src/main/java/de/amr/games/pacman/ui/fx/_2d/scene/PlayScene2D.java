@@ -32,6 +32,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
@@ -106,10 +107,10 @@ public class PlayScene2D extends GameScene2D {
 			}
 			level.getBonus().ifPresent(bonus -> r.drawBonus(g, bonus));
 			r.drawPac(g, level.pac());
-			r.drawGhost(g, level.ghost(Ghost.ID_ORANGE_GHOST));
-			r.drawGhost(g, level.ghost(Ghost.ID_CYAN_GHOST));
-			r.drawGhost(g, level.ghost(Ghost.ID_PINK_GHOST));
-			r.drawGhost(g, level.ghost(Ghost.ID_RED_GHOST));
+			r.drawGhost(g, level.ghost(GameModel.ORANGE_GHOST));
+			r.drawGhost(g, level.ghost(GameModel.CYAN_GHOST));
+			r.drawGhost(g, level.ghost(GameModel.PINK_GHOST));
+			r.drawGhost(g, level.ghost(GameModel.RED_GHOST));
 			if (!context.isCreditVisible()) {
 				// TODO get rid of this crap
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();

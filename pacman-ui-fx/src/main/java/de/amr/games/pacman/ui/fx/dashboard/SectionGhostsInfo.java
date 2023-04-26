@@ -27,6 +27,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
@@ -38,21 +39,21 @@ public class SectionGhostsInfo extends Section {
 
 	public SectionGhostsInfo(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		addGhostInfo(Ghost.ID_RED_GHOST);
+		addGhostInfo(GameModel.RED_GHOST);
 		addEmptyLine();
-		addGhostInfo(Ghost.ID_PINK_GHOST);
+		addGhostInfo(GameModel.PINK_GHOST);
 		addEmptyLine();
-		addGhostInfo(Ghost.ID_CYAN_GHOST);
+		addGhostInfo(GameModel.CYAN_GHOST);
 		addEmptyLine();
-		addGhostInfo(Ghost.ID_ORANGE_GHOST);
+		addGhostInfo(GameModel.ORANGE_GHOST);
 	}
 
 	private void addGhostInfo(byte ghostID) {
 		var color = switch (ghostID) {
-		case Ghost.ID_RED_GHOST -> "Red";
-		case Ghost.ID_PINK_GHOST -> "Pink";
-		case Ghost.ID_CYAN_GHOST -> "Cyan";
-		case Ghost.ID_ORANGE_GHOST -> "Orange";
+		case GameModel.RED_GHOST -> "Red";
+		case GameModel.PINK_GHOST -> "Pink";
+		case GameModel.CYAN_GHOST -> "Cyan";
+		case GameModel.ORANGE_GHOST -> "Orange";
 		default -> "";
 		};
 		addInfo(color + " Ghost", ifLevelExists(this::ghostName, ghostID));
