@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
-import javafx.beans.binding.Bindings;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -163,8 +162,8 @@ public class AppRes {
 			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
 			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
-			material.specularColorProperty()
-					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
+//			material.specularColorProperty()
+//					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
 			floorTexturesByName.put(name, material);
 		}
 
