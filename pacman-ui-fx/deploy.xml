@@ -7,13 +7,12 @@
 	<version>1.0</version>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
 		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>18</maven.compiler.source>
-		<maven.compiler.target>18</maven.compiler.target>
+		<version.javafx>18.0.2</version.javafx>
 		<version.tentackle>17.11.0.0</version.tentackle>
-		<javafx.version>18.0.1</javafx.version>
+		<version.tinylog>2.6.1</version.tinylog>
 	</properties>
 
 	<packaging>jlink</packaging>
@@ -47,22 +46,22 @@
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-api</artifactId>
-			<version>2.6.1</version>
+			<version>${version.tinylog}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-impl</artifactId>
-			<version>2.6.1</version>
+			<version>${version.tinylog}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
+			<version>${version.javafx}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
-			<version>${javafx.version}</version>
+			<version>${version.javafx}</version>
 		</dependency>
 	</dependencies>
 </project>

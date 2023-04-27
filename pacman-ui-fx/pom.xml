@@ -7,28 +7,30 @@
 	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
 
-	<name>Pac-Man and Ms. Pac-Man UI in JavaFX</name>
-	<description>This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games.
+	<name>Pac-Man / Ms. Pac-Man UI in JavaFX</name>
+	<description><![CDATA[
+This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games.
 
-		The game model and logic are implemented using the Model-View-Controller
-		architecture, see https://github.com/armin-reichert/pacman-basic.
+The game model and logic are implemented using the Model-View-Controller architecture, see https://github.com/armin-reichert/pacman-basic.
 
-		The user interface listens to game events and updates itself accordingly.
-		There are two excutables built:
-		1. An executable jar file (using Maven shade)
-		2. A zip file containing the Java/JavaFX runtime and the game</description>
+There are two executables built:
+1. An executable jar file (using Maven shade)
+2. A zip file containing the Java/JavaFX runtime and the game
+  ]]>
+	</description>
 	<url>https://github.com/armin-reichert/pacman-javafx</url>
 
 	<properties>
-		<classifier>win</classifier>
-		<javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
-		<javafx.version>18.0.1</javafx.version>
-		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
-		<maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
-		<source.version>18</source.version>
-		<maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
-		<maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<classifier>win</classifier>
+		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
+		<version.java>18</version.java>
+		<version.javafx>18.0.2</version.javafx>
+		<version.mvn.compiler>3.10.1</version.mvn.compiler>
+		<version.mvn.jar>3.2.0</version.mvn.jar>
+		<version.mvn.javafx>0.0.8</version.mvn.javafx>
+		<version.mvn.shade>3.4.1</version.mvn.shade>
+		<version.tinylog>2.6.1</version.tinylog>
 	</properties>
 
 	<dependencies>
@@ -43,68 +45,65 @@
 			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>${javafx.version}</version>
+			<version>${version.javafx}</version>
 		</dependency>
 
 		<dependency>
 			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
-			<version>${javafx.version}</version>
+			<version>${version.javafx}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-api</artifactId>
-			<version>2.6.1</version>
+			<version>${version.tinylog}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-impl</artifactId>
-			<version>2.6.1</version>
+			<version>${version.tinylog}</version>
 		</dependency>
 
 	</dependencies>
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven.compiler.plugin.version}</version>
+				<version>${version.mvn.compiler}</version>
 				<configuration>
-					<release>${source.version}</release>
+					<release>${version.java}</release>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven.jar.plugin.version}</version>
+				<version>${version.mvn.jar}</version>
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<!-- to get log4j working inside an executable jar -->
+							<!-- this was added for log4j, not sure if still needed -->
 							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>${javafx.maven.plugin.version}</version>
+				<version>${version.mvn.javafx}</version>
 				<configuration>
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>${maven.shade.plugin.version}</version>
+				<version>${version.mvn.shade}</version>
 				<executions>
 					<execution>
 						<goals>
