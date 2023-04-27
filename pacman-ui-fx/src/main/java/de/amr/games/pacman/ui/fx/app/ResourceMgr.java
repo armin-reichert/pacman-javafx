@@ -106,8 +106,7 @@ public class ResourceMgr {
 
 	/**
 	 * @param relPath relative path (without leading slash) starting from resource root directory
-	 * @return image loaded from resource addressed by this path. If no such font can be loaded, a default font is
-	 *         returned
+	 * @return image loaded from resource addressed by this path.
 	 */
 	public static Image image(String relPath) {
 		var url = urlFromRelPath(relPath);
