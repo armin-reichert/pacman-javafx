@@ -10,8 +10,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
 		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
+		<version.mvn.compiler>3.10.1</version.mvn.compiler>
+		<version.java>18</version.java>
 		<version.javafx>18.0.2</version.javafx>
-		<version.tentackle>17.11.0.0</version.tentackle>
+		<version.tentackle>17.12.0.0</version.tentackle>
 		<version.tinylog>2.6.1</version.tinylog>
 	</properties>
 
@@ -19,6 +21,14 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${version.mvn.compiler}</version>
+				<configuration>
+					<release>${version.java}</release>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.tentackle</groupId>
 				<artifactId>tentackle-jlink-maven-plugin</artifactId>
