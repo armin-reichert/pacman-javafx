@@ -407,6 +407,8 @@ public class GameUI implements GameEventListener {
 			Actions.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
 			Actions.changeSimulationSpeed(-5);
+		} else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
+			Actions.resetSimulationSpeed();
 		} else if (Keyboard.pressed(Keys.QUIT)) {
 			Actions.restartIntro();
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {

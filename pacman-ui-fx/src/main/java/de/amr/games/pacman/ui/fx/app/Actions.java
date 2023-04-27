@@ -176,6 +176,11 @@ public class Actions {
 		}
 	}
 
+	public static void resetSimulationSpeed() {
+		Env.simulationSpeedPy.set(GameModel.FPS);
+		showFlashMessageSeconds(0.75, "%dHz".formatted(Env.simulationSpeedPy.get()));
+	}
+
 	public static void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
 		gameController().selectGameVariant(gameVariant);

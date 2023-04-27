@@ -62,6 +62,7 @@ public class Keys {
 	public static final KeyCodeCombination TEN_STEPS = shift(KeyCode.SPACE);
 	public static final KeyCodeCombination SIMULATION_FASTER = alt(KeyCode.PLUS);
 	public static final KeyCodeCombination SIMULATION_SLOWER = alt(KeyCode.MINUS);
+	public static final KeyCodeCombination SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
 
 	public static final KeyCodeCombination QUIT = just(KeyCode.Q);
 	public static final KeyCodeCombination TEST_LEVELS = alt(KeyCode.T);

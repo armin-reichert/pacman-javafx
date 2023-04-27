@@ -100,6 +100,9 @@ public class SectionGhostsInfo extends Section {
 		if (ghost.state() == GhostState.HUNTING_PAC) {
 			stateText = level.currentHuntingPhaseName();
 		}
+		if (ghost.id() == GameModel.RED_GHOST && level.cruiseElroyState() > 0) {
+			stateText += " Elroy%d".formatted(level.cruiseElroyState());
+		}
 		return stateText;
 	}
 
