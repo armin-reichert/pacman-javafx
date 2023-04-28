@@ -56,7 +56,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		context.setScoreVisible(true);
 
 		im = new MsPacManIntermission3(context.gameController());
-		im.changeState(MsPacManIntermission3.IntermissionState.FLAP);
+		im.changeState(MsPacManIntermission3.State.FLAP);
 
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		im.context().clapperboard.setAnimation(r.createClapperboardAnimation());
