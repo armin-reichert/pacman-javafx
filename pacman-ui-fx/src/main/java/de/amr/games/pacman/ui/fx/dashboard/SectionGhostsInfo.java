@@ -81,7 +81,7 @@ public class SectionGhostsInfo extends Section {
 			return InfoText.NO_INFO;
 		}
 		var key = anims.get().selectedKey();
-		var animKeyName = key != null ? key : "n/a";
+		var animKeyName = animationKeyName(key);
 		var selectedAnim = anims.get().selectedAnimation();
 		if (selectedAnim.isPresent()) {
 			var running = selectedAnim.get().isRunning();
@@ -89,6 +89,25 @@ public class SectionGhostsInfo extends Section {
 		} else {
 			return InfoText.NO_INFO;
 		}
+	}
+
+	private String animationKeyName(byte key) {
+		return switch (key) {
+		case GameModel.AK_GHOST_BLUE -> "AK_GHOST_BLUE";
+		case GameModel.AK_GHOST_COLOR -> "AK_GHOST_COLOR";
+		case GameModel.AK_GHOST_EYES -> "AK_GHOST_EYES";
+		case GameModel.AK_GHOST_FLASHING -> "AK_GHOST_FLASHING";
+		case GameModel.AK_GHOST_VALUE -> "AK_GHOST_VALUE";
+		case GameModel.AK_MAZE_ENERGIZER_BLINKING -> "AK_MAZE_ENERGIZER_BLINKING";
+		case GameModel.AK_MAZE_FLASHING -> "AK_MAZE_FLASHING";
+		case GameModel.AK_PAC_DYING -> "AK_PAC_DYING";
+		case GameModel.AK_PAC_MUNCHING -> "AK_PAC_MUNCHING";
+		case GameModel.AK_PAC_BIG -> "AK_PAC_BIG";
+		case GameModel.AK_BLINKY_DAMAGED -> "AK_BLINKY_DAMAGED";
+		case GameModel.AK_BLINKY_PATCHED -> "AK_BLINKY_PATCHED";
+		case GameModel.AK_BLINKY_NAKED -> "AK_BLINKY_NAKED";
+		default -> "unknown key";
+		};
 	}
 
 	private String ghostTile(GameLevel level, Ghost ghost) {
