@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PacManIntro;
-import de.amr.games.pacman.controller.PacManIntro.Context;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
@@ -147,7 +146,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGallery(GraphicsContext g) {
 		var r = context.rendering2D();
-		var col = Context.LEFT_TILE;
+		var col = intro.context().leftTileX;
 		var font = r.screenFont(TS);
 		if (intro.context().titleVisible) {
 			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
@@ -162,7 +161,7 @@ public class PacManIntroScene extends GameScene2D {
 			var color = r.ghostColors(id).dress();
 			r.drawGhostFacingRight(g, id, TS * (col) + 4, TS * (row));
 			if (intro.context().characterVisible[id]) {
-				drawText(g, "-" + Context.CHARACTERS[id], color, font, TS * (col + 3), TS * (row + 1));
+				drawText(g, "-" + intro.context().ghostCharacters[id], color, font, TS * (col + 3), TS * (row + 1));
 			}
 			if (intro.context().nicknameVisible[id]) {
 				drawText(g, QUOTE + intro.context().ghosts[id].name() + QUOTE, color, font, TS * (col + 14), TS * (row + 1));
@@ -173,7 +172,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.setFill(context.rendering2D().mazeColors(1).foodColor());
-			g.fillOval(TS * (Context.LEFT_TILE), TS * (20), TS, TS);
+			g.fillOval(TS * (intro.context().leftTileX), TS * (20), TS, TS);
 		}
 	}
 
@@ -199,7 +198,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawPoints(GraphicsContext g) {
 		var r = context.rendering2D();
-		int col = Context.LEFT_TILE + 6;
+		int col = intro.context().leftTileX + 6;
 		int row = 25;
 		g.setFill(r.mazeColors(1).foodColor());
 		g.fillRect(TS * (col) + 4, TS * (row - 1) + 4, 2, 2);
