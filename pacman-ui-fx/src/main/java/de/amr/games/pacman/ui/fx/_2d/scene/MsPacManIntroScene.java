@@ -27,8 +27,8 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.MsPacManIntroController;
-import de.amr.games.pacman.controller.MsPacManIntroState;
+import de.amr.games.pacman.controller.MsPacManIntro;
+import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
@@ -48,7 +48,7 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class MsPacManIntroScene extends GameScene2D {
 
-	private MsPacManIntroController intro;
+	private MsPacManIntro intro;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
@@ -59,8 +59,8 @@ public class MsPacManIntroScene extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		intro = new MsPacManIntroController(context.gameController());
-		intro.changeState(MsPacManIntroState.START);
+		intro = new MsPacManIntro(context.gameController());
+		intro.changeState(MsPacManIntro.State.START);
 
 		var msPacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
 		intro.context().msPacMan.setAnimations(msPacAnimations);
@@ -111,7 +111,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 		drawMarquee(g);
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font, tx, ty);
-		if (intro.state() == MsPacManIntroState.GHOSTS) {
+		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 			var color = r.ghostColors(ghost.id()).dress();
 			if (ghost.id() == GameModel.RED_GHOST) {
@@ -120,7 +120,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			var text = ghost.name().toUpperCase();
 			int dx = text.length() < 4 ? TS : 0;
 			drawText(g, text, color, font, tx + TS * 3 + dx, y0 + TS * 6);
-		} else if (intro.state() == MsPacManIntroState.MSPACMAN || intro.state() == MsPacManIntroState.READY_TO_PLAY) {
+		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
 			drawText(g, "STARRING", ArcadeTheme.PALE, font, tx, y0 + TS * 3);
 			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, tx, y0 + TS * 6);
 		}
