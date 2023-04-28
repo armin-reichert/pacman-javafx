@@ -59,6 +59,12 @@ public class Text3D {
 		if (batchUpdate) {
 			return;
 		}
+		if (text.isBlank()) {
+			box.setWidth(0);
+			box.setHeight(0);
+			return;
+		}
+
 		int padding = 3;
 		double width = text.length() * font.getSize() + padding;
 		double height = font.getSize() + padding;
