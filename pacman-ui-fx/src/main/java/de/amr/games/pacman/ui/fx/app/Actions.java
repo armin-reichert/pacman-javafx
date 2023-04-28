@@ -244,7 +244,7 @@ public class Actions {
 
 	public static void cheatAddLives(int numLives) {
 		game().setLives(numLives + game().lives());
-		showFlashMessage(AppRes.Texts.message("cheat_add_lives", numLives));
+		showFlashMessage(AppRes.Texts.message("cheat_add_lives", game().lives()));
 	}
 
 	public static void cheatEatAllPellets() {
