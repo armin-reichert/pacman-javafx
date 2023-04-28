@@ -215,6 +215,10 @@ public class PlayScene3D implements GameScene {
 		// replace initial placeholder or previous 3D level
 		root.getChildren().set(0, level3D.getRoot());
 
+		if (context.state() == GameState.LEVEL_TEST) {
+			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
+		}
+
 		if (Env.d3_floorTextureRandomPy.get()) {
 			Env.d3_floorTexturePy.set(AppRes.Graphics.randomFloorTextureName());
 		}
