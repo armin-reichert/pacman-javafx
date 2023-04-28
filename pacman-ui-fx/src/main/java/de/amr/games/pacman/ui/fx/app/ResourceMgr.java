@@ -98,7 +98,7 @@ public class ResourceMgr {
 		var url = urlFromRelPath(relPath);
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
-			Logger.error(() -> "Font with URL '{}' could not be loaded".formatted(url));
+			Logger.error("Font with URL '{}' could not be loaded", url);
 			return Font.font(Font.getDefault().getFamily(), size);
 		}
 		return font;
