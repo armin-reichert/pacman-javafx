@@ -27,11 +27,10 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawTileStructure;
 
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Actions;
@@ -66,8 +65,7 @@ public class PacManIntroScene extends GameScene2D {
 		intro.changeState(State.START);
 
 		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
-		Stream.of(intro.context().ghosts)
-				.forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
+		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
 		intro.context().blinking.reset();
 	}
 
@@ -154,17 +152,18 @@ public class PacManIntroScene extends GameScene2D {
 			drawText(g, "NICKNAME", ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
 		}
 		for (int id = 0; id < 4; ++id) {
-			if (!intro.context().pictureVisible[id]) {
+			if (!intro.context().ghostInfo[id].pictureVisible) {
 				continue;
 			}
 			int row = 7 + 3 * id;
 			var color = r.ghostColors(id).dress();
 			r.drawGhostFacingRight(g, id, TS * (col) + 4, TS * (row));
-			if (intro.context().characterVisible[id]) {
-				drawText(g, "-" + intro.context().ghostCharacters[id], color, font, TS * (col + 3), TS * (row + 1));
+			if (intro.context().ghostInfo[id].characterVisible) {
+				drawText(g, "-" + intro.context().ghostInfo[id].character, color, font, TS * (col + 3), TS * (row + 1));
 			}
-			if (intro.context().nicknameVisible[id]) {
-				drawText(g, QUOTE + intro.context().ghosts[id].name() + QUOTE, color, font, TS * (col + 14), TS * (row + 1));
+			if (intro.context().ghostInfo[id].nicknameVisible) {
+				drawText(g, QUOTE + intro.context().ghostInfo[id].ghost.name() + QUOTE, color, font, TS * (col + 14),
+						TS * (row + 1));
 			}
 		}
 	}
@@ -179,7 +178,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGuys(GraphicsContext g, int offsetX) {
 		var r = context.rendering2D();
 		var pacMan = intro.context().pacMan;
-		var ghosts = intro.context().ghosts;
+		var ghosts = intro.context().ghosts().toArray(Ghost[]::new);
 		if (offsetX == 0) {
 			for (var ghost : ghosts) {
 				r.drawGhost(g, ghost);
