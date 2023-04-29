@@ -59,7 +59,7 @@ import javafx.scene.text.Font;
 public abstract class Section extends TitledPane {
 
 	public static String fmtSpeed(float fraction) {
-		return String.format("%.2f px/sec", GameModel.SPEED_100_PERCENT_PX * fraction);
+		return String.format("%.2f px/sec", GameModel.SPEED_PX_100_PERCENT * fraction);
 	}
 
 	protected final GameUI ui;
