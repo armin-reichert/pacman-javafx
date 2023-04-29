@@ -23,11 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.shell;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.tinylog.Logger;
@@ -156,10 +157,11 @@ public class GameUI implements GameEventListener {
 	private GameScene currentGameScene;
 
 	public GameUI(final Stage stage, final Settings settings) {
-		this.stage = Objects.requireNonNull(stage);
-		Objects.requireNonNull(settings);
+		checkNotNull(stage);
+		checkNotNull(settings);
 
-		// game controller
+		this.stage = stage;
+
 		gameController = new GameController(settings.variant);
 		var keyboardSteering = new KeyboardSteering(//
 				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
@@ -169,12 +171,9 @@ public class GameUI implements GameEventListener {
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
-
-		// game scenes
 		createGameScenes();
 		pipGameScene = new PlayScene2D(gameController);
 
-		// main scene
 		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
@@ -193,8 +192,7 @@ public class GameUI implements GameEventListener {
 		stage.show();
 
 		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
-		Logger.info("Window size: {} x {}, 3D: {}, perspective: {}", stage.getWidth(), stage.getHeight(),
-				Env.d3_enabledPy.get(), Env.d3_perspectivePy.get());
+		Logger.info("Window size: {} x {}", stage.getWidth(), stage.getHeight());
 	}
 
 	private void createGameScenes() {
