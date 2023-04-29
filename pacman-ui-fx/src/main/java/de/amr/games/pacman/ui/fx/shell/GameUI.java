@@ -77,7 +77,6 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -136,13 +135,13 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private static Image appIcon(GameVariant variant) {
-		return switch (variant) {
-		case MS_PACMAN -> AppRes.Graphics.iconMsPacManGame;
-		case PACMAN -> AppRes.Graphics.iconPacManGame;
-		default -> throw new IllegalGameVariantException(variant);
-		};
-	}
+//	private static Image appIcon(GameVariant variant) {
+//		return switch (variant) {
+//		case MS_PACMAN -> AppRes.Graphics.iconMsPacManGame;
+//		case PACMAN -> AppRes.Graphics.iconPacManGame;
+//		default -> throw new IllegalGameVariantException(variant);
+//		};
+//	}
 
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
@@ -246,20 +245,30 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateMainView() {
-		var variant = gameController.game().variant();
+		if (currentGameScene.is3D()) {
+			if (Env.d3_drawModePy.get() == DrawMode.LINE) {
+				root.setBackground(ResourceMgr.colorBackground(Color.BLACK));
+			} else {
+				root.setBackground(BACKGROUND_3D);
+			}
+		} else {
+			root.setBackground(ResourceMgr.colorBackground(Env.mainSceneBgColorPy.get()));
+		}
 		var paused = Env.simulationPausedPy.get();
 		var dimensionMsg = AppRes.Texts.message(Env.d3_enabledPy.get() ? "threeD" : "twoD");
-		var messageKey = switch (variant) {
-		case MS_PACMAN -> paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-		case PACMAN -> paused ? "app.title.pacman.paused" : "app.title.pacman";
-		default -> throw new IllegalGameVariantException(variant);
-		};
-		stage.getIcons().setAll(appIcon(variant));
-		stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));
-		var bgColor = Env.d3_drawModePy.get() == DrawMode.LINE ? Color.BLACK : Env.mainSceneBgColorPy.get();
-		root.setBackground(ResourceMgr.colorBackground(bgColor));
-		if (currentGameScene != null && currentGameScene.is3D()) {
-			root.setBackground(BACKGROUND_3D);
+		switch (gameController.game().variant()) {
+		case MS_PACMAN -> {
+			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
+			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));
+			stage.getIcons().setAll(AppRes.Graphics.iconMsPacManGame);
+		}
+		case PACMAN -> {
+			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
+			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));
+			stage.getIcons().setAll(AppRes.Graphics.iconPacManGame);
+
+		}
+		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
 	}
 
