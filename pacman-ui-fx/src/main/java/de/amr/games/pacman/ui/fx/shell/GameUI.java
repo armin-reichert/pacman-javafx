@@ -135,14 +135,6 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-//	private static Image appIcon(GameVariant variant) {
-//		return switch (variant) {
-//		case MS_PACMAN -> AppRes.Graphics.iconMsPacManGame;
-//		case PACMAN -> AppRes.Graphics.iconPacManGame;
-//		default -> throw new IllegalGameVariantException(variant);
-//		};
-//	}
-
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
 	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
