@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.amr.games.pacman.ui.fx</groupId>
-	<artifactId>pacman-javafx-tentackle</artifactId>
+	<groupId>de.amr.games.pacman</groupId>
+	<artifactId>pacman-ui-fx-jlink</artifactId>
 	<version>1.0</version>
 
 	<properties>
@@ -49,7 +49,7 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.amr.games.pacman.ui.fx</groupId>
+			<groupId>de.amr.games.pacman</groupId>
 			<artifactId>pacman-ui-fx</artifactId>
 			<version>1.0</version>
 		</dependency>
