@@ -25,6 +25,8 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.io.IOException;
 
+import org.tinylog.Logger;
+
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -60,13 +62,14 @@ public class PacManGameAppFX extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new Settings(getParameters().getNamed());
-		gameUI = new GameUI(primaryStage, settings);
-		gameUI.start();
+		gameUI = new GameUI(primaryStage, new Settings(getParameters().getNamed()));
+		gameUI.simulation().start();
+		Logger.info("Game started. Target frame rate: {}", gameUI.simulation().targetFrameratePy.get());
 	}
 
 	@Override
 	public void stop() throws Exception {
-		gameUI.stop();
+		gameUI.simulation().stop();
+		Logger.info("Game stopped");
 	}
 }

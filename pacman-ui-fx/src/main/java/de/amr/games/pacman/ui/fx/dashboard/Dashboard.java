@@ -47,7 +47,7 @@ public class Dashboard extends VBox {
 
 	private final List<Section> sections = new ArrayList<>();
 
-	public void init(GameUI ui) {
+	public void populate(GameUI ui) {
 		setVisible(false);
 		sections.add(new SectionGeneral(ui, "General"));
 		sections.add(new SectionKeys(ui, "Keyboard Shortcuts"));

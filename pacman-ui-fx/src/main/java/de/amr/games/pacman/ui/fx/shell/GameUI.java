@@ -174,21 +174,27 @@ public class GameUI implements GameEventListener {
 		createGameScenes();
 		pipGameScene = new PlayScene2D(gameController);
 
-		// main scene + stage
+		// main scene
 		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
+
+		GameEvents.addListener(this);
+		dashboard.populate(this);
+		initEnv(settings);
+		Actions.setUI(this);
+		Actions.reboot();
+
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
-
-		// init other stuff
-		Actions.setUI(this);
-		GameEvents.addListener(this);
-		dashboard.init(this);
-		initEnv(settings);
+		stage.centerOnScreen();
+		stage.requestFocus();
+		stage.show();
 
 		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
+		Logger.info("Window size: {} x {}, 3D: {}, perspective: {}", stage.getWidth(), stage.getHeight(),
+				Env.d3_enabledPy.get(), Env.d3_perspectivePy.get());
 	}
 
 	private void createGameScenes() {
@@ -293,26 +299,6 @@ public class GameUI implements GameEventListener {
 		Env.d3_enabledPy.addListener((py, oldVal, newVal) -> updateMainView());
 		Env.d3_enabledPy.set(settings.use3D);
 		Env.d3_perspectivePy.set(settings.perspective);
-	}
-
-	public void start() {
-		if (simulation.isRunning()) {
-			Logger.info("Game has already been started");
-			return;
-		}
-		Actions.reboot();
-		simulation.start();
-		stage.centerOnScreen();
-		stage.requestFocus();
-		stage.show();
-		Logger.info("Game started. Target frame rate: {}", simulation.targetFrameratePy.get());
-		Logger.info("Window size: {} x {}, 3D: {}, perspective: {}", stage.getWidth(), stage.getHeight(),
-				Env.d3_enabledPy.get(), Env.d3_perspectivePy.get());
-	}
-
-	public void stop() {
-		simulation.stop();
-		Logger.info("Game stopped");
 	}
 
 	/**

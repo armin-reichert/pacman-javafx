@@ -46,7 +46,6 @@ public abstract class GameLoop {
 		@Override
 		protected void invalidated() {
 			createFrameGenerator(get());
-			Logger.info("Target framerate changed to {} Hz", get());
 		};
 	};
 
