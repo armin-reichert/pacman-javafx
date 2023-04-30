@@ -41,6 +41,8 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
@@ -142,7 +144,7 @@ public class AppRes {
 
 		public static Image iconPacManGame;
 		public static Image iconMsPacManGame;
-		public static Image skyImage;
+		public static Background backgroundForScene3D;
 
 		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
@@ -154,7 +156,8 @@ public class AppRes {
 
 			iconPacManGame = ResourceMgr.image("icons/pacman.png");
 			iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
-			skyImage = ResourceMgr.image("graphics/sky.png");
+			backgroundForScene3D = new Background(
+					new BackgroundImage(ResourceMgr.image("graphics/sky.png"), null, null, null, null));
 		}
 
 		private static void loadFloorTexture(String name, String textureBase, String ext) {

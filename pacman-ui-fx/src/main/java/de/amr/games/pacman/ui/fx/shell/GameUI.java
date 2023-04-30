@@ -63,7 +63,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.AppRes.Graphics;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.app.Keys;
@@ -78,9 +77,6 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -107,9 +103,6 @@ public class GameUI implements GameEventListener {
 	private static final byte INDEX_INTRO_SCENE = 1;
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
-
-	private static final Background BACKGROUND_3D = new Background(
-			new BackgroundImage(Graphics.skyImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null));
 
 	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
 	}
@@ -241,7 +234,7 @@ public class GameUI implements GameEventListener {
 			if (Env.d3_drawModePy.get() == DrawMode.LINE) {
 				root.setBackground(ResourceMgr.colorBackground(Color.BLACK));
 			} else {
-				root.setBackground(BACKGROUND_3D);
+				root.setBackground(AppRes.Graphics.backgroundForScene3D);
 			}
 		} else {
 			root.setBackground(ResourceMgr.colorBackground(Env.mainSceneBgColorPy.get()));
