@@ -278,7 +278,9 @@ public class PlayScene3D implements GameScene {
 			if (oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
-			context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
+			if (!level.isDemoLevel()) {
+				context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
+			}
 		});
 	}
 
