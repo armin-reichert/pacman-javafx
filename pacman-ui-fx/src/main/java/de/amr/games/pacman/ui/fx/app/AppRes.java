@@ -237,13 +237,12 @@ public class AppRes {
 				{ AudioClipID.INTERMISSION_3,  "sound/mspacman/Act3Junior.mp3", 1.0 }, 
 				{ AudioClipID.LEVEL_COMPLETE,  "sound/common/level-complete.mp3", 1.0 }, 
 				{ AudioClipID.PACMAN_DEATH,    "sound/mspacman/Died.mp3", 1.0 }, 
-				{ AudioClipID.PACMAN_MUNCH,    "sound/mspacman/Pill.mp3", 1.0 }, 
+				{ AudioClipID.PACMAN_MUNCH,    "sound/mspacman/Pill.wav", 1.0 }, 
 				{ AudioClipID.PACMAN_POWER,    "sound/mspacman/ScaredGhost.mp3", 1.0 }, 
-				{ AudioClipID.SIREN_1,         "sound/mspacman/GhostNoise1.mp3", 1.0 }, 
-				{ AudioClipID.SIREN_2,         "sound/mspacman/GhostNoise2.mp3", 1.0 }, 
-				{ AudioClipID.SIREN_3,         "sound/mspacman/GhostNoise3.mp3", 1.0 }, 
-				{ AudioClipID.SIREN_4,         "sound/mspacman/GhostNoise4.mp3", 1.0 }, 
-				{ AudioClipID.SIREN_4,         "sound/mspacman/GhostNoise4.mp3", 1.0 }, 
+				{ AudioClipID.SIREN_1,         "sound/mspacman/GhostNoise1.wav", 1.0 }, 
+				{ AudioClipID.SIREN_2,         "sound/mspacman/GhostNoise1.wav", 1.0 }, 
+				{ AudioClipID.SIREN_3,         "sound/mspacman/GhostNoise1.wav", 1.0 }, 
+				{ AudioClipID.SIREN_4,         "sound/mspacman/GhostNoise1.wav", 1.0 }, 
 				{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
 		};
 
