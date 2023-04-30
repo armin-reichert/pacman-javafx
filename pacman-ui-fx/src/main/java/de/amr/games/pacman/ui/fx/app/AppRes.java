@@ -258,12 +258,12 @@ public class AppRes {
 				{ AudioClipID.INTERMISSION_1,  "sound/pacman/intermission.mp3", 1.0 }, 
 				{ AudioClipID.LEVEL_COMPLETE,  "sound/common/level-complete.mp3", 1.0 }, 
 				{ AudioClipID.PACMAN_DEATH,    "sound/pacman/pacman_death.wav", 0.5 }, 
-				{ AudioClipID.PACMAN_MUNCH,    "sound/pacman/doublemunch.mp3", 1.0 }, 
-				{ AudioClipID.PACMAN_POWER,    "sound/pacman/power_pellet.mp3", 1.0 }, 
-				{ AudioClipID.SIREN_1,         "sound/pacman/siren_1.mp3", 0.4 }, 
-				{ AudioClipID.SIREN_2,         "sound/pacman/siren_2.mp3", 0.4 }, 
-				{ AudioClipID.SIREN_3,         "sound/pacman/siren_3.mp3", 0.4 }, 
-				{ AudioClipID.SIREN_4,         "sound/pacman/siren_4.mp3", 0.4 }, 
+				{ AudioClipID.PACMAN_MUNCH,    "sound/pacman/doublemunch.wav", 0.8 }, 
+				{ AudioClipID.PACMAN_POWER,    "sound/pacman/ghost-turn-to-blue.mp3", 1.0 }, 
+				{ AudioClipID.SIREN_1,         "sound/pacman/siren_1.mp3", 0.7 }, 
+				{ AudioClipID.SIREN_2,         "sound/pacman/siren_2.mp3", 0.7 }, 
+				{ AudioClipID.SIREN_3,         "sound/pacman/siren_3.mp3", 0.7 }, 
+				{ AudioClipID.SIREN_4,         "sound/pacman/siren_4.mp3", 0.7 }, 
 				{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
 		};
 		//@formatter:on
