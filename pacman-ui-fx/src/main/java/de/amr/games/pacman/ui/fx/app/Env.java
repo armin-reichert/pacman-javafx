@@ -46,7 +46,7 @@ import javafx.scene.shape.DrawMode;
  */
 public class Env {
 //@formatter:off
-	public static final ObjectProperty<Color>       mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x0c0b2d"));
+	public static final ObjectProperty<Color>       mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
 	public static final BooleanProperty             showDebugInfoPy = new SimpleBooleanProperty(false);
 
 	public static final BooleanProperty             simulationPausedPy = new SimpleBooleanProperty(false);

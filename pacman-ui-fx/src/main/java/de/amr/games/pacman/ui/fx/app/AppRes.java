@@ -89,15 +89,15 @@ public class AppRes {
 	public static class Fonts {
 
 		public static Font arcadeFont;
-		public static Font manuscriptFont;
+		public static Font handwritingFont;
 
 		static void load() {
 			arcadeFont = ResourceMgr.font("fonts/emulogic.ttf", 8);
-			manuscriptFont = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 8);
+			handwritingFont = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 8);
 		}
 
-		public static Font manuscriptFontSized(double size) {
-			return Font.font(manuscriptFont.getFamily(), size);
+		public static Font handwriting(double size) {
+			return Font.font(handwritingFont.getFamily(), size);
 		}
 
 	}

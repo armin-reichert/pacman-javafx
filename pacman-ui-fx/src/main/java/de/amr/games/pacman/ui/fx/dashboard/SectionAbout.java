@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.dashboard;
 
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.geometry.Insets;
@@ -49,7 +50,7 @@ public class SectionAbout extends Section {
 		madeBy.setFill(Color.grayRgb(150));
 
 		var signature = new Text("Armin Reichert");
-		signature.setFont(ResourceMgr.font("fonts/RockSalt-Regular.ttf", 18));
+		signature.setFont(AppRes.Fonts.handwriting(18));
 		signature.setFill(Color.grayRgb(225));
 
 		var tf = new TextFlow(madeBy, signature);
