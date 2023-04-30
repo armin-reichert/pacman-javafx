@@ -237,7 +237,7 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateMainView() {
-		if (currentGameScene.is3D()) {
+		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Env.d3_drawModePy.get() == DrawMode.LINE) {
 				root.setBackground(ResourceMgr.colorBackground(Color.BLACK));
 			} else {
