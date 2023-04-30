@@ -45,6 +45,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -56,6 +57,7 @@ public class AppRes {
 		load("3D models", Models3D::load);
 		load("graphics", Graphics::load);
 		load("sounds", Sounds::load);
+		load("fonts", Fonts::load);
 		load("texts", Texts::load);
 		Logger.info("Loading application resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
@@ -82,6 +84,18 @@ public class AppRes {
 			ghostModel3D = new Model3D("model3D/ghost.obj");
 			pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
 		}
+	}
+
+	public static class Fonts {
+
+		public static Font arcadeFont;
+		public static Font manuscriptFont;
+
+		static void load() {
+			arcadeFont = ResourceMgr.font("fonts/emulogic.ttf", 8);
+			manuscriptFont = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 8);
+		}
+
 	}
 
 	public static class Texts {

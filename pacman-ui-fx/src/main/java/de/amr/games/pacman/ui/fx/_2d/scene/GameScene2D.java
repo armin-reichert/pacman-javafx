@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx._2d.scene;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
 
 import org.tinylog.Logger;
 
@@ -33,6 +34,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -152,6 +154,14 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawLevelCounter(GraphicsContext g) {
 		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
+	}
+
+	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
+		var r = context.rendering2D();
+		g.setFont(AppRes.Fonts.manuscriptFont);
+		g.setFill(Color.GRAY);
+		g.fillText("Original game by", TS * tileX, TS * (tileY - 2));
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
 	@Override

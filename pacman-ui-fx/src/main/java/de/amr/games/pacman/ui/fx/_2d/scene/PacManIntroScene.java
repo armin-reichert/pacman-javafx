@@ -102,24 +102,24 @@ public class PacManIntroScene extends GameScene2D {
 			drawPoints(g);
 			if (timer.tick() > timer.secToTicks(1)) {
 				drawBlinkingEnergizer(g);
-				drawCopyright(g);
+				drawMidwayCopyright(g, 4, 32);
 			}
 		}
 		case CHASING_PAC -> {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
-			drawCopyright(g);
+			drawMidwayCopyright(g, 4, 32);
 		}
 		case CHASING_GHOSTS -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			drawCopyright(g);
+			drawMidwayCopyright(g, 4, 32);
 		}
 		case READY_TO_PLAY -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			drawCopyright(g);
+			drawMidwayCopyright(g, 4, 32);
 		}
 		default -> { // nothing to do
 		}
@@ -130,11 +130,6 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	protected void drawInfo(GraphicsContext g) {
 		drawTileStructure(g, World.TILES_X, World.TILES_Y);
-	}
-
-	private void drawCopyright(GraphicsContext g) {
-		var r = context.rendering2D();
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * (4), TS * (32));
 	}
 
 	// TODO inspect in MAME what's really going on here
