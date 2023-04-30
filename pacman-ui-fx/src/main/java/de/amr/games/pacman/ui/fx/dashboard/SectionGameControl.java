@@ -48,6 +48,7 @@ public class SectionGameControl extends Section {
 	private static final int INTERMISSION_TEST_QUIT = 1;
 
 	private ComboBox<GameVariant> comboGameVariant;
+	private ComboBox<Integer> comboInitialLives;
 	private Button[] blGameLevel;
 	private Button[] blIntermissionTest;
 	private Spinner<Integer> spGameLevel;
@@ -64,6 +65,9 @@ public class SectionGameControl extends Section {
 				gc.selectGameVariant(comboGameVariant.getValue());
 			}
 		});
+
+		comboInitialLives = addComboBox("Initial Lives", 3, 5);
+		comboInitialLives.setOnAction(e -> GameModel.initialLives = comboInitialLives.getValue());
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.startPlaying());
@@ -90,6 +94,8 @@ public class SectionGameControl extends Section {
 
 		comboGameVariant.setValue(game().variant());
 		comboGameVariant.setDisable(gc.state() != GameState.INTRO);
+
+		comboInitialLives.setValue(GameModel.initialLives);
 
 		cbAutopilot.setSelected(gc.isAutoControlled());
 		cbImmunity.setSelected(game().isImmune());
