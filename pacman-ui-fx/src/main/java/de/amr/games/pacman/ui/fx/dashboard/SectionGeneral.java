@@ -49,6 +49,7 @@ public class SectionGeneral extends Section {
 	private final Spinner<Integer> spinnerSimulationSteps;
 	private final Slider sliderTargetFPS;
 	private final CheckBox cbUsePlayScene3D;
+	private final CheckBox cbPoliticallyCorrect;
 	private final CheckBox cbDebugUI;
 	private final CheckBox cbTimeMeasured;
 	private final ImageView iconPlay = new ImageView(ResourceMgr.image("icons/play.png"));
@@ -91,6 +92,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", Actions::toggleUse3DScene);
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Env.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
 	}
@@ -104,6 +106,7 @@ public class SectionGeneral extends Section {
 		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
 		sliderTargetFPS.setValue(Env.simulationSpeedPy.get());
 		cbUsePlayScene3D.setSelected(Env.d3_enabledPy.get());
+		cbPoliticallyCorrect.setSelected(Env.wokePussyMode.get());
 		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}

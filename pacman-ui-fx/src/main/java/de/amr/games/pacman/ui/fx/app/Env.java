@@ -53,6 +53,8 @@ public class Env {
 	public static final IntegerProperty             simulationStepsPy = new SimpleIntegerProperty(1);
 	public static final IntegerProperty             simulationSpeedPy = new SimpleIntegerProperty(60);
 	public static final BooleanProperty             simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
+	
+	public static final BooleanProperty             wokePussyMode = new SimpleBooleanProperty(false); 
 
 	public static final BooleanProperty             pipVisiblePy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty              pipOpacityPy = new SimpleDoubleProperty(0.66);

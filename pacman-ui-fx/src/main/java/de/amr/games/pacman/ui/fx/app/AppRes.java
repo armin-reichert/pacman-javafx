@@ -151,8 +151,12 @@ public class AppRes {
 		}
 
 		public static String randomReadyText(GameVariant variant) {
-			var picker = variant == GameVariant.MS_PACMAN ? readyTextPickerMsPacman : readTextPickerPacMan;
-			return picker.next();
+			if (Env.wokePussyMode.get()) {
+				return "READY!";
+			} else {
+				var picker = variant == GameVariant.MS_PACMAN ? readyTextPickerMsPacman : readTextPickerPacMan;
+				return picker.next();
+			}
 		}
 	}
 
