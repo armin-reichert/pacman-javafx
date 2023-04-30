@@ -39,6 +39,7 @@ import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * Intro scene of the PacMan game.
@@ -53,17 +54,20 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
+	private Text copyrightNote;
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
 
-		addPostItNote("Original game is", AppRes.Fonts.manuscriptFontSized(8), Color.LIGHTGRAY, 4 * TS, 30.5 * TS);
+		copyrightNote = addPostItNote("Tribute to the original game by", AppRes.Fonts.manuscriptFontSized(8),
+				Color.LIGHTGRAY, 4 * TS, 30.5 * TS);
 	}
 
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
+		copyrightNote.setVisible(false);
 
 		intro = new PacManIntro(context().gameController());
 		intro.changeState(State.START);
@@ -104,31 +108,32 @@ public class PacManIntroScene extends GameScene2D {
 		switch (intro.state()) {
 		case SHOWING_POINTS -> {
 			drawPoints(g);
-			if (timer.tick() > timer.secToTicks(1)) {
-				drawBlinkingEnergizer(g);
-				drawMidwayCopyright(g, 4, 32);
-			}
 		}
 		case CHASING_PAC -> {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
-			drawMidwayCopyright(g, 4, 32);
+			drawCopyright(g);
 		}
 		case CHASING_GHOSTS -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			drawMidwayCopyright(g, 4, 32);
+			drawCopyright(g);
 		}
 		case READY_TO_PLAY -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			drawMidwayCopyright(g, 4, 32);
+			drawCopyright(g);
 		}
 		default -> { // nothing to do
 		}
 		}
 		drawLevelCounter(g);
+	}
+
+	private void drawCopyright(GraphicsContext g) {
+		copyrightNote.setVisible(true);
+		drawMidwayCopyright(g, 4, 32);
 	}
 
 	@Override
