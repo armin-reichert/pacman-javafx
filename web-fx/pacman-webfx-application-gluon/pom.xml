@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- File managed by WebFX (DO NOT EDIT MANUALLY) -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.amr.games.pacman</groupId>
+        <artifactId>pacman-webfx</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>pacman-webfx-application-gluon</artifactId>
+
+    <name>PacmanWebFX</name>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>de.amr.games.pacman</groupId>
+            <artifactId>pacman-webfx-application</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-kit-openjfx</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-platform-boot-java</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-platform-console-java</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-platform-resource-gluon</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-platform-scheduler-java</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.webfx</groupId>
+            <artifactId>webfx-platform-shutdown-gluon</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.gluonhq</groupId>
+                <artifactId>gluonfx-maven-plugin</artifactId>
+                <configuration>
+                    <attachList>
+                        <list>lifecycle</list>
+                        <list>storage</list>
+                    </attachList>
+                    <resourcesList>
+                        <list>dev/webfx/platform/meta/exe/[^/]+$</list>
+                        <list>images/checkbox/[^/]+$</list>
+                    </resourcesList>
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- Redefining the gluon profiles here, so they can be activated when invoking this pom directly -->
+    <!-- Note: activating a profile locally here will trigger the properties defined in webfx-parent -->
+    <profiles>
+        <profile>
+            <id>gluon-desktop</id>            <!-- Will set the Gluon target to host -->
+        </profile>
+        <profile>
+            <id>gluon-android</id>            <!-- Will set the Gluon target to android -->
+        </profile>
+        <profile>
+            <id>gluon-ios</id>            <!-- Will set the Gluon target to ios -->
+        </profile>
+    </profiles>
+
+    <!-- The Gluon plugin is auto-injected here by the auto-plugin-gluon profile defined in webfx-parent -->
+    <!-- but it will be really executed only if Maven is invoked with a Gluon goal (ex: gluonfx:build) -->
+
+</project>

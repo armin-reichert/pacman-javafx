@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- File managed by WebFX (DO NOT EDIT MANUALLY) -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>de.amr.games.pacman</groupId>
+		<artifactId>pacman-webfx</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<artifactId>pacman-webfx-application</artifactId>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<version.java>18</version.java>
+		<version.javafx>18.0.2</version.javafx>
+		<version.mvn.compiler>3.10.1</version.mvn.compiler>
+		<version.mvn.jar>3.2.0</version.mvn.jar>
+		<version.mvn.javafx>0.0.8</version.mvn.javafx>
+		<version.mvn.shade>3.4.1</version.mvn.shade>
+		<version.tinylog>2.6.1</version.tinylog>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog-api</artifactId>
+			<version>${version.tinylog}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog-impl</artifactId>
+			<version>${version.tinylog}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-ui-fx</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+
+	</dependencies>
+
+</project>
