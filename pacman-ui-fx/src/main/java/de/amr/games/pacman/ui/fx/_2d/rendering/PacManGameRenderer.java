@@ -87,7 +87,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public AnimationMap createWorldAnimations(World world) {
-		var map = new AnimationMap();
+		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
 		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
 		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
 		return map;
@@ -123,7 +123,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public AnimationMap createPacAnimations(Pac pac) {
-		var map = new AnimationMap();
+		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
 		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
 		map.put(GameModel.AK_PAC_MUNCHING, createPacMunchingAnimation(pac));
 		map.select(GameModel.AK_PAC_MUNCHING);
@@ -153,7 +153,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public AnimationMap createGhostAnimations(Ghost ghost) {
-		var map = new AnimationMap();
+		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
 		map.put(GameModel.AK_GHOST_COLOR, createGhostColorAnimation(ghost));
 		map.put(GameModel.AK_GHOST_BLUE, createGhostBlueAnimation());
 		map.put(GameModel.AK_GHOST_EYES, createGhostEyesAnimation(ghost));
