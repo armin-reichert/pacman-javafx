@@ -96,6 +96,10 @@ public class AppRes {
 			manuscriptFont = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 8);
 		}
 
+		public static Font manuscriptFontSized(double size) {
+			return Font.font(manuscriptFont.getFamily(), size);
+		}
+
 	}
 
 	public static class Texts {

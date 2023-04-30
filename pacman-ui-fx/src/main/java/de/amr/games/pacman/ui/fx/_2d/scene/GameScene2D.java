@@ -34,18 +34,21 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 
 /**
@@ -60,20 +63,32 @@ public abstract class GameScene2D implements GameScene {
 	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
+
 	protected final GameSceneContext context;
+	private final StackPane container;
+	protected final Pane postItContainer;
 	protected final SubScene fxSubScene;
-	protected final Canvas canvas = new Canvas();
+	protected final Canvas canvas;
+	protected final Scale scale = new Scale();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
-
 		context = new GameSceneContext(gameController);
-		var container = new StackPane(canvas);
-		// This avoids the white vertical line left of the embedded 2D game scene
-		container.setBackground(ResourceMgr.colorBackground(Color.BLACK));
+
+		canvas = new Canvas();
+		canvas.getTransforms().add(scale);
+
+		postItContainer = new Pane();
+		container = new StackPane(canvas, postItContainer);
+
 		fxSubScene = new SubScene(container, WIDTH, HEIGHT);
+
+		// keep canvas always the same size as the subscene
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+
+		// This avoids the white vertical line left of the embedded 2D game scene
+		container.setBackground(ResourceMgr.colorBackground(Color.BLACK));
 	}
 
 	@Override
@@ -96,6 +111,11 @@ public abstract class GameScene2D implements GameScene {
 		resize(parentScene.getHeight());
 	}
 
+	@Override
+	public boolean is3D() {
+		return false;
+	}
+
 	/**
 	 * Resizes the game scene to the given height, keeping the aspect ratio. The scaling of the canvas is adapted such
 	 * that the canvas content is stretched to the new scene size.
@@ -110,7 +130,8 @@ public abstract class GameScene2D implements GameScene {
 		var scaling = height / HEIGHT;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		canvas.getTransforms().setAll(new Scale(scaling, scaling));
+		scale.setX(scaling);
+		scale.setY(scaling);
 		Logger.trace("2D game scene resized: {} x {}, canvas scaling: {} ({})", width, height, scaling,
 				getClass().getSimpleName());
 	}
@@ -158,14 +179,17 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
 		var r = context.rendering2D();
-		g.setFont(AppRes.Fonts.manuscriptFont);
-		g.setFill(Color.GRAY);
-		g.fillText("Original game by", TS * tileX, TS * (tileY - 2));
 		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
-	@Override
-	public boolean is3D() {
-		return false;
+	protected Text addPostItNote(String s, Font font, Color color, double x, double y) {
+		var text = new Text(s);
+		text.setFill(color);
+		text.fontProperty().bind(Bindings
+				.createObjectBinding(() -> Font.font(font.getFamily(), font.getSize() * scale.getY()), scale.yProperty()));
+		text.translateXProperty().bind(Bindings.createDoubleBinding(() -> x * scale.getX(), scale.xProperty()));
+		text.translateYProperty().bind(Bindings.createDoubleBinding(() -> y * scale.getY(), scale.yProperty()));
+		postItContainer.getChildren().add(text);
+		return text;
 	}
 }
