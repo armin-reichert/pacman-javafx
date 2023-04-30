@@ -74,6 +74,6 @@ public class MsPacManCreditScene extends GameScene2D {
 		drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, arcade8, TS * (2), TS * (25));
 		r.drawSprite(g, r.lifeSymbolRegion(), TS * (13), TS * (23) + 1);
 		drawText(g, "PTS", ArcadeTheme.ORANGE, arcade6, TS * (25), TS * (25));
-		r.drawCopyright(g, 29);
+		r.drawMsPacManCopyright(g, 29);
 	}
 }

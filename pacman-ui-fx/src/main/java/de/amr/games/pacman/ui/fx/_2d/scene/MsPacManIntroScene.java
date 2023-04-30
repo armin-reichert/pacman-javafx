@@ -35,9 +35,12 @@ import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -49,9 +52,13 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
+	private Text copyrightNote;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
+
+		copyrightNote = addNote("Tribute to the original game by", AppRes.Fonts.manuscriptFontSized(8), Color.LIGHTGRAY,
+				7 * TS, 27.5 * TS);
 	}
 
 	@Override
@@ -126,8 +133,14 @@ public class MsPacManIntroScene extends GameScene2D {
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);
-		r.drawCopyright(g, 29);
+		drawCopyright(g);
 		drawLevelCounter(g);
+	}
+
+	private void drawCopyright(GraphicsContext g) {
+		copyrightNote.setVisible(true);
+		var r = (MsPacManGameRenderer) context.rendering2D();
+		r.drawMsPacManCopyright(g, 29);
 	}
 
 	private void drawMarquee(GraphicsContext g) {

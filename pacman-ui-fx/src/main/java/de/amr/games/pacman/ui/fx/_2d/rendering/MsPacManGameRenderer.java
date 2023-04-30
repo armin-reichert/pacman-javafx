@@ -162,7 +162,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return col3(1, 0);
 	}
 
-	public void drawCopyright(GraphicsContext g, int tileY) {
+	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
 		g.drawImage(MIDWAY_LOGO, x, y + 2, TS * (4) - 2, TS * (4));

@@ -182,7 +182,7 @@ public abstract class GameScene2D implements GameScene {
 		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
-	protected Text addPostItNote(String s, Font font, Color color, double x, double y) {
+	protected Text addNote(String s, Font font, Color color, double x, double y) {
 		var text = new Text(s);
 		text.setFill(color);
 		text.fontProperty().bind(Bindings
