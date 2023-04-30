@@ -59,8 +59,8 @@ public class PacManIntroScene extends GameScene2D {
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
 
-		copyrightNote = addNote("Tribute to the original game by", AppRes.Fonts.manuscriptFontSized(8),
-				Color.LIGHTGRAY, 4 * TS, 30.5 * TS);
+		copyrightNote = addNote("Tribute to the original game by", AppRes.Fonts.manuscriptFontSized(8), Color.LIGHTGRAY,
+				5 * TS, 30.5 * TS);
 	}
 
 	@Override

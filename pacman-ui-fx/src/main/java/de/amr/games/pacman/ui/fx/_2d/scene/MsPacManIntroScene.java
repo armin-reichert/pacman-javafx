@@ -58,7 +58,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		super(gameController);
 
 		copyrightNote = addNote("Tribute to the original game by", AppRes.Fonts.manuscriptFontSized(8), Color.LIGHTGRAY,
-				7 * TS, 27.5 * TS);
+				6.5 * TS, 27.5 * TS);
 	}
 
 	@Override
