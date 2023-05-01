@@ -25,5 +25,5 @@ module de.amr.games.pacman.ui.fx3d {
 	requires transitive javafx.media;
 	requires org.tinylog.api;
 
-//	exports de.amr.games.pacman.ui.fx3d.app;
+	exports de.amr.games.pacman.ui.fx3d.app;
 }

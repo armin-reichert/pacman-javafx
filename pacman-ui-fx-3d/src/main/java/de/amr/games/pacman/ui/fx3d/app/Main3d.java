@@ -45,4 +45,8 @@ public class Main3d extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 	}
+
+	@Override
+	public void stop() throws Exception {
+	}
 }
