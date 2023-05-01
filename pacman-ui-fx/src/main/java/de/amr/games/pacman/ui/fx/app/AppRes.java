@@ -258,7 +258,7 @@ public class AppRes {
 		public static final AudioClip VOICE_IMMUNITY_ON = ResourceMgr.audioClip("sound/voice/immunity-on.mp3");
 
 		//@formatter:off
-		private static final Object[][] MS_PACMAN_AUDIO_CLIPS = { 
+		private static final Object[][] MS_PACMAN_AUDIO_CLIP_PATHS = { 
 				{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
 				{ AudioClipID.CREDIT,          "sound/mspacman/Credit.mp3", 1.0 }, 
 				{ AudioClipID.EXTRA_LIFE,      "sound/mspacman/ExtraLife.mp3", 1.0 }, 
@@ -280,7 +280,7 @@ public class AppRes {
 				{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
 		};
 
-		private static final Object[][] PACMAN_AUDIO_CLIPS = { 
+		private static final Object[][] PACMAN_AUDIO_CLIP_PATHS = { 
 				{ AudioClipID.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3", 1.0 }, 
 				{ AudioClipID.CREDIT,          "sound/pacman/credit.wav", 1.0 }, 
 				{ AudioClipID.EXTRA_LIFE,      "sound/pacman/extend.mp3", 1.0 }, 
@@ -305,8 +305,8 @@ public class AppRes {
 		private static GameSounds gameSoundsPacMan;
 
 		static void load() {
-			gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIPS);
-			gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIPS);
+			gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS);
+			gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS);
 		}
 
 		public static GameSounds gameSounds(GameVariant variant) {
