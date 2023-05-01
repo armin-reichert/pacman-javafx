@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.application.Application;
@@ -67,7 +66,7 @@ public class PacManGameAppFX extends Application {
 			new GameSceneChoice(new BootScene(gc), null),
 			new GameSceneChoice(new PacManIntroScene(gc), null),
 			new GameSceneChoice(new PacManCreditScene(gc), null),
-			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
+			new GameSceneChoice(new PlayScene2D(gc), null),
 			new GameSceneChoice(new PacManCutscene1(gc), null), 
 			new GameSceneChoice(new PacManCutscene2(gc), null),
 			new GameSceneChoice(new PacManCutscene3(gc), null)
@@ -81,7 +80,7 @@ public class PacManGameAppFX extends Application {
 			new GameSceneChoice(new BootScene(gc), null),
 			new GameSceneChoice(new PacManIntroScene(gc), null), 
 			new GameSceneChoice(new PacManCreditScene(gc), null),
-			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
+			new GameSceneChoice(new PlayScene2D(gc), null),
 			new GameSceneChoice(new PacManCutscene1(gc), null), 
 			new GameSceneChoice(new PacManCutscene2(gc), null),
 			new GameSceneChoice(new PacManCutscene3(gc), null)
