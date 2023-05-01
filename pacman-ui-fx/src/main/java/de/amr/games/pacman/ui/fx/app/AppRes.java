@@ -47,6 +47,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
@@ -250,11 +251,11 @@ public class AppRes {
 
 	public static class Sounds {
 
-		public static final String VOICE_HELP = "sound/voice/press-key.mp3";
-		public static final String VOICE_AUTOPILOT_OFF = "sound/voice/autopilot-off.mp3";
-		public static final String VOICE_AUTOPILOT_ON = "sound/voice/autopilot-on.mp3";
-		public static final String VOICE_IMMUNITY_OFF = "sound/voice/immunity-off.mp3";
-		public static final String VOICE_IMMUNITY_ON = "sound/voice/immunity-on.mp3";
+		public static final AudioClip VOICE_HELP = ResourceMgr.audioClip("sound/voice/press-key.mp3");
+		public static final AudioClip VOICE_AUTOPILOT_OFF = ResourceMgr.audioClip("sound/voice/autopilot-off.mp3");
+		public static final AudioClip VOICE_AUTOPILOT_ON = ResourceMgr.audioClip("sound/voice/autopilot-on.mp3");
+		public static final AudioClip VOICE_IMMUNITY_OFF = ResourceMgr.audioClip("sound/voice/immunity-off.mp3");
+		public static final AudioClip VOICE_IMMUNITY_ON = ResourceMgr.audioClip("sound/voice/immunity-on.mp3");
 
 		//@formatter:off
 		private static final Object[][] MS_PACMAN_AUDIO_CLIPS = { 

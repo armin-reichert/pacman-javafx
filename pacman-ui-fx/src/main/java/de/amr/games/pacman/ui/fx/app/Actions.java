@@ -66,11 +66,11 @@ public class Actions {
 		Ufx.afterSeconds(seconds, () -> playVoiceMessage(AppRes.Sounds.VOICE_HELP)).play();
 	}
 
-	public static void playVoiceMessage(String messageKey) {
+	public static void playVoiceMessage(AudioClip voiceMessage) {
 		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
-			return;
+			return; // don't interrupt voice message still playing, maybe enqueue?
 		}
-		currentVoiceMessage = ResourceMgr.audioClip(messageKey);
+		currentVoiceMessage = voiceMessage;
 		currentVoiceMessage.play();
 	}
 
