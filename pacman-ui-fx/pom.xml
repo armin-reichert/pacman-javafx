@@ -22,15 +22,14 @@ There are two executables built:
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<classifier>win</classifier>
 		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
-		<version.java>18</version.java>
-		<version.javafx>18.0.2</version.javafx>
-		<version.mvn.compiler>3.10.1</version.mvn.compiler>
-		<version.mvn.jar>3.2.0</version.mvn.jar>
-		<version.mvn.javafx>0.0.8</version.mvn.javafx>
-		<version.mvn.shade>3.4.1</version.mvn.shade>
-		<version.tinylog>2.6.1</version.tinylog>
+		<vs.java>18</vs.java>
+		<vs.javafx>18.0.2</vs.javafx>
+		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
+		<vs.maven-jar-plugin>3.2.0</vs.maven-jar-plugin>
+		<vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
+		<vs.maven-shade-plugin>3.4.1</vs.maven-shade-plugin>
+		<vs.tinylog>2.6.1</vs.tinylog>
 	</properties>
 
 	<dependencies>
@@ -42,47 +41,47 @@ There are two executables built:
 		</dependency>
 
 		<dependency>
-			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>${version.javafx}</version>
+			<version>${vs.javafx}</version>
 		</dependency>
 
 		<dependency>
-			<classifier>${classifier}</classifier>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
-			<version>${version.javafx}</version>
+			<version>${vs.javafx}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-api</artifactId>
-			<version>${version.tinylog}</version>
+			<version>${vs.tinylog}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-impl</artifactId>
-			<version>${version.tinylog}</version>
+			<version>${vs.tinylog}</version>
 		</dependency>
 
 	</dependencies>
 
 	<build>
 		<plugins>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${version.mvn.compiler}</version>
+				<version>${vs.maven-compiler-plugin}</version>
 				<configuration>
-					<release>${version.java}</release>
+					<release>${vs.java}</release>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>${version.mvn.jar}</version>
+				<version>${vs.maven-jar-plugin}</version>
 				<configuration>
 					<archive>
 						<manifestEntries>
@@ -92,18 +91,20 @@ There are two executables built:
 					</archive>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>${version.mvn.javafx}</version>
+				<version>${vs.javafx-maven-plugin}</version>
 				<configuration>
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>${version.mvn.shade}</version>
+				<version>${vs.maven-shade-plugin}</version>
 				<executions>
 					<execution>
 						<goals>
