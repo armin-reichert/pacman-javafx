@@ -5,10 +5,11 @@ rem Creates excutable jar file and deployable zip file
 pushd ..\pacman-basic\pacman-core
 call mvn clean install
 popd
-pushd ..\pacman-javafx\pacman-ui-fx
+pushd pacman-ui-fx
 call mvn clean install
 call mvn -f deploy.xml install
 popd
 pushd pacman-ui-fx-3d
 call mvn clean install
+call mvn -f deploy.xml install
 popd

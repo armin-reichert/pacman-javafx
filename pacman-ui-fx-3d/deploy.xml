@@ -60,6 +60,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-ui-fx-3d</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.tinylog</groupId>
 			<artifactId>tinylog-api</artifactId>
 			<version>${vs.tinylog}</version>
