@@ -43,9 +43,8 @@ import javafx.scene.canvas.GraphicsContext;
  */
 public class PacManGameRenderer extends SpritesheetRenderer {
 
-	// Order of direction-related images inside spritesheet
-	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
-			Direction.DOWN);
+	private static final Order<Direction> DIR_ORDER = new Order<>(//
+			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	public PacManGameRenderer() {
 		super(AppRes.Graphics.PacManGame.spritesheet);
