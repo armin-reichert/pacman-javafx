@@ -25,9 +25,6 @@ package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-import java.util.Map;
-import java.util.stream.IntStream;
-
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -42,20 +39,15 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
-import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
 public class MsPacManGameRenderer extends SpritesheetRenderer {
-
-	private static final Spritesheet SHEET = new Spritesheet(ResourceMgr.image("graphics/mspacman/sprites.png"), 16);
 
 	// Order of direction-related images inside spritesheet
 	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
@@ -66,28 +58,13 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
-	private static final Image MIDWAY_LOGO = ResourceMgr.image("graphics/mspacman/midway.png");
-
-	private static final Image[] MAZES_EMPTY_FLASHING = IntStream.range(0, 6)
-			.mapToObj(MsPacManGameRenderer::emptyMazeFlashing).toArray(Image[]::new);
-
-	private static Image emptyMaze(int i) {
-		return SHEET.subImage(SECOND_COLUMN, MAZE_HEIGHT * i, MAZE_WIDTH, MAZE_HEIGHT);
-	}
-
-	private static Image emptyMazeFlashing(int i) {
-		return Ufx.colorsExchanged(emptyMaze(i), Map.of(//
-				ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor(), Color.WHITE, //
-				ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor(), Color.BLACK));
-	}
-
 	// tile from third column
 	private static Rectangle2D col3(int col, int row) {
-		return SHEET.tilesFrom(THIRD_COLUMN, 0, col, row, 1, 1);
+		return AppRes.Graphics.spritesheetMsPacManGame.tilesFrom(THIRD_COLUMN, 0, col, row, 1, 1);
 	}
 
 	public MsPacManGameRenderer() {
-		super(SHEET);
+		super(AppRes.Graphics.spritesheetMsPacManGame);
 	}
 
 	@Override
@@ -142,7 +119,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				g.drawImage(MAZES_EMPTY_FLASHING[mazeNumber - 1], x, y);
+				g.drawImage(AppRes.Graphics.emptyFlashingMazeMsPacManGame[mazeNumber - 1], x, y);
 			} else {
 				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
@@ -165,7 +142,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
-		g.drawImage(MIDWAY_LOGO, x, y + 2, TS * (4) - 2, TS * (4));
+		g.drawImage(AppRes.Graphics.logoMsPacManGame, x, y + 2, TS * (4) - 2, TS * (4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol

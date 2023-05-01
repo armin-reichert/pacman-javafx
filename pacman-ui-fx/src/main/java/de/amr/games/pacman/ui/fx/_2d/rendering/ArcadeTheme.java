@@ -81,7 +81,7 @@ public class ArcadeTheme {
 			Color.rgb(252, 181, 255) // ghosthouse door color
 	);
 
-	static final MazeColoring[] MS_PACMAN_MAZE_COLORS = {
+	public static final MazeColoring[] MS_PACMAN_MAZE_COLORS = {
 		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 		new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
 		new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),

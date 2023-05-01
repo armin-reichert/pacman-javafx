@@ -30,16 +30,20 @@ import java.text.MessageFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.IntStream;
 
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
+import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx._3d.Model3D;
 import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -165,10 +169,29 @@ public class AppRes {
 		public static final String KEY_NO_TEXTURE = "No Texture";
 
 		public static Image iconPacManGame;
+		public static Spritesheet spritesheetPacManGame;
+		public static Image fullMazePacManGame;
+		public static Image emptyMazePacManGame;
+		public static Image flashingMazePacManGame;
+
 		public static Image iconMsPacManGame;
+		public static Spritesheet spritesheetMsPacManGame;
+		public static Image logoMsPacManGame;
+		public static Image[] emptyFlashingMazeMsPacManGame;
+
 		public static Background backgroundForScene3D;
 
 		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+
+		private static Image emptyMaze(int i) {
+			return AppRes.Graphics.spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
+		}
+
+		private static Image emptyMazeFlashing(int i) {
+			return Ufx.colorsExchanged(emptyMaze(i), Map.of(//
+					ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor(), Color.WHITE, //
+					ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor(), Color.BLACK));
+		}
 
 		static void load() {
 			loadFloorTexture("Hexagon", "hexagon", "jpg");
@@ -177,7 +200,17 @@ public class AppRes {
 			loadFloorTexture("Wood", "wood", "jpg");
 
 			iconPacManGame = ResourceMgr.image("icons/pacman.png");
+			spritesheetPacManGame = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
+			fullMazePacManGame = ResourceMgr.image("graphics/pacman/maze_full.png");
+			emptyMazePacManGame = ResourceMgr.image("graphics/pacman/maze_empty.png");
+			flashingMazePacManGame = ResourceMgr.image("graphics/pacman/maze_empty_flashing.png");
+
 			iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
+			spritesheetMsPacManGame = new Spritesheet(ResourceMgr.image("graphics/mspacman/sprites.png"), 16);
+			emptyFlashingMazeMsPacManGame = IntStream.range(0, 6).mapToObj(Graphics::emptyMazeFlashing).toArray(Image[]::new);
+
+			logoMsPacManGame = ResourceMgr.image("graphics/mspacman/midway.png");
+
 			backgroundForScene3D = new Background(
 					new BackgroundImage(ResourceMgr.image("graphics/sky.png"), null, null, null, null));
 		}

@@ -34,28 +34,21 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
  */
 public class PacManGameRenderer extends SpritesheetRenderer {
 
-	private static final Spritesheet SHEET = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
-
 	// Order of direction-related images inside spritesheet
 	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
 			Direction.DOWN);
 
-	private static final Image MAZE_FULL = ResourceMgr.image("graphics/pacman/maze_full.png");
-	private static final Image MAZE_EMPTY = ResourceMgr.image("graphics/pacman/maze_empty.png");
-	private static final Image MAZE_EMPTY_FLASHING = ResourceMgr.image("graphics/pacman/maze_empty_flashing.png");
-
 	public PacManGameRenderer() {
-		super(SHEET);
+		super(AppRes.Graphics.spritesheetPacManGame);
 	}
 
 	@Override
@@ -104,9 +97,9 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flashing ? MAZE_EMPTY_FLASHING : MAZE_EMPTY, x, y);
+			g.drawImage(flashing ? AppRes.Graphics.flashingMazePacManGame : AppRes.Graphics.emptyMazePacManGame, x, y);
 		} else {
-			g.drawImage(MAZE_FULL, x, y);
+			g.drawImage(AppRes.Graphics.fullMazePacManGame, x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
