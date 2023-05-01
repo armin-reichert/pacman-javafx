@@ -138,7 +138,9 @@ public class PlayScene2D extends GameScene2D {
 		context.level().ifPresent(level -> {
 			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
 			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
-			context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
+			if (!level.isDemoLevel()) {
+				context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
+			}
 		});
 	}
 
