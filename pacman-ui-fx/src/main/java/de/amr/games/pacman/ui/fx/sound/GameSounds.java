@@ -46,21 +46,31 @@ public class GameSounds {
 
 	private final Map<AudioClipID, ClipInfo> clipInfoMap = new EnumMap<>(AudioClipID.class);
 
-	public GameSounds(Object[][] data) {
+	public GameSounds(Object[][] data, boolean preload) {
 		for (var row : data) {
 			AudioClipID id = (AudioClipID) row[0];
 			String path = (String) row[1];
 			double volume = (double) row[2];
-			clipInfoMap.put(id, new ClipInfo(path, volume, null));
+			if (preload) {
+				clipInfoMap.put(id, new ClipInfo(path, volume, makeAudioClip(id, path, volume)));
+
+			} else {
+				clipInfoMap.put(id, new ClipInfo(path, volume, null));
+			}
 		}
+	}
+
+	private static AudioClip makeAudioClip(AudioClipID id, String path, double volume) {
+		var clip = ResourceMgr.audioClip(path);
+		clip.setVolume(volume);
+		Logger.info("Audio clip created, id={} volume={}, source={}", id, clip.getVolume(), clip.getSource());
+		return clip;
 	}
 
 	private AudioClip getOrCreateAudioClip(AudioClipID id) {
 		var info = clipInfoMap.get(id);
 		if (info.clip == null) {
-			var clip = ResourceMgr.audioClip(info.path());
-			clip.setVolume(info.volume);
-			Logger.info("Audio clip created, id={}, volume={}, source={}", id, clip.getVolume(), clip.getSource());
+			var clip = makeAudioClip(id, info.path, info.volume());
 			clipInfoMap.put(id, new ClipInfo(info.path, info.volume, clip));
 			return clip;
 		}

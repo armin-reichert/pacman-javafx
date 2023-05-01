@@ -305,8 +305,8 @@ public class AppRes {
 		private static GameSounds gameSoundsPacMan;
 
 		static void load() {
-			gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS);
-			gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS);
+			gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS, true);
+			gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS, true);
 		}
 
 		public static GameSounds gameSounds(GameVariant variant) {
