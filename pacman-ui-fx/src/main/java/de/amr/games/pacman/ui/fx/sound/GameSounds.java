@@ -26,6 +26,7 @@ package de.amr.games.pacman.ui.fx.sound;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -40,21 +41,35 @@ import javafx.scene.media.AudioClip;
  */
 public class GameSounds {
 
-	private final Map<AudioClipID, AudioClip> clips = new EnumMap<>(AudioClipID.class);
+	record ClipInfo(String path, double volume, AudioClip clip) {
+	}
+
+	private final Map<AudioClipID, ClipInfo> clipInfoMap = new EnumMap<>(AudioClipID.class);
 
 	public GameSounds(Object[][] data) {
 		for (var row : data) {
 			AudioClipID id = (AudioClipID) row[0];
 			String path = (String) row[1];
 			double volume = (double) row[2];
-			var clip = ResourceMgr.audioClip(path);
-			clip.setVolume(volume);
-			clips.put(id, clip);
+			clipInfoMap.put(id, new ClipInfo(path, volume, null));
 		}
 	}
 
+	private AudioClip getOrCreateAudioClip(AudioClipID id) {
+		var info = clipInfoMap.get(id);
+		if (info.clip == null) {
+			var clip = ResourceMgr.audioClip(info.path());
+			clip.setVolume(info.volume);
+			Logger.info("Audio clip created, id={}, volume={}, source={}", id, clip.getVolume(), clip.getSource());
+			clipInfoMap.put(id, new ClipInfo(info.path, info.volume, clip));
+			return clip;
+		}
+		return info.clip();
+	}
+
 	public Optional<AudioClip> getClip(AudioClipID clipID) {
-		return Optional.ofNullable(clips.get(clipID));
+		var clip = getOrCreateAudioClip(clipID);
+		return Optional.ofNullable(clip);
 	}
 
 	public boolean isPlaying(AudioClipID clipID) {
@@ -91,7 +106,7 @@ public class GameSounds {
 	}
 
 	public void stopAll() {
-		clips.values().forEach(AudioClip::stop);
+		clipInfoMap.values().stream().map(ClipInfo::clip).filter(Objects::nonNull).forEach(AudioClip::stop);
 	}
 
 	public void startSiren(int sirenIndex) {
