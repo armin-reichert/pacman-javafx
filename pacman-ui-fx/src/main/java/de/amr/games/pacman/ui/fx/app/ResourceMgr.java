@@ -24,9 +24,10 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 import java.net.URL;
 import java.util.MissingResourceException;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
@@ -49,11 +50,17 @@ public class ResourceMgr {
 	private static final String ROOT = "/assets/";
 
 	/**
-	 * @param relativePath relative path (without leading slash) starting from resource root directory
-	 * @return full path to resource including path to resource root directory
+	 * @param resourcePath full path to resource including path to resource root directory
+	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
+	 * @throws MissingResourceException if no resource with this path could be found
 	 */
-	private static String toFullPath(String relativePath) {
-		return ROOT + relativePath;
+	public static URL url(String resourcePath) {
+		checkNotNull(resourcePath);
+		var url = ResourceMgr.class.getResource(resourcePath);
+		if (url == null) {
+			throw new MissingResourceException("Missing resource, path=" + resourcePath, "", resourcePath);
+		}
+		return url;
 	}
 
 	/**
@@ -61,20 +68,7 @@ public class ResourceMgr {
 	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
 	 */
 	public static URL urlFromRelPath(String relPath) {
-		return url(toFullPath(relPath));
-	}
-
-	/**
-	 * @param fullPath full path to resource including path to resource root directory
-	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
-	 */
-	public static URL url(String fullPath) {
-		Objects.requireNonNull(fullPath);
-		var url = ResourceMgr.class.getResource(fullPath);
-		if (url == null) {
-			throw new MissingResourceException("Missing resource, path=" + fullPath, "", fullPath);
-		}
-		return url;
+		return url(ROOT + relPath);
 	}
 
 	/**
@@ -82,8 +76,7 @@ public class ResourceMgr {
 	 * @return audio clip from resource addressed by this path
 	 */
 	public static AudioClip audioClip(String relPath) {
-		var url = urlFromRelPath(relPath);
-		return new AudioClip(url.toExternalForm());
+		return new AudioClip(urlFromRelPath(relPath).toExternalForm());
 	}
 
 	/**
@@ -109,31 +102,32 @@ public class ResourceMgr {
 	 * @return image loaded from resource addressed by this path.
 	 */
 	public static Image image(String relPath) {
-		var url = urlFromRelPath(relPath);
-		return new Image(url.toExternalForm());
+		return new Image(urlFromRelPath(relPath).toExternalForm());
 	}
 
 	public static Background colorBackground(Color color) {
-		Objects.requireNonNull(color);
+		checkNotNull(color);
 		return new Background(new BackgroundFill(color, null, null));
 	}
 
 	public static Background imageBackground(String relPath) {
-		Objects.requireNonNull(relPath);
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 
 	public static PhongMaterial coloredMaterial(Color color) {
+		checkNotNull(color);
 		var material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
 		return material;
 	}
 
 	public static Color color(Color color, double opacity) {
+		checkNotNull(color);
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
 	public static Picker<String> createPicker(ResourceBundle bundle, String prefix) {
+		checkNotNull(bundle);
 		return new Picker<>(bundle.keySet().stream()//
 				.filter(key -> key.startsWith(prefix))//
 				.sorted()//
