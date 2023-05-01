@@ -24,6 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
@@ -49,22 +50,20 @@ import javafx.scene.text.Font;
  */
 public class MsPacManGameRenderer extends SpritesheetRenderer {
 
-	// Order of direction-related images inside spritesheet
-	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP,
-			Direction.DOWN);
+	private static final Order<Direction> DIR_ORDER = new Order<>(//
+			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	private static final int MAZE_WIDTH = 226;
-	private static final int MAZE_HEIGHT = 248;
+	private static final int MAZE_IMAGE_WIDTH = 226;
+	private static final int MAZE_IMAGE_HEIGHT = 248;
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
-	// tile from third column
-	private static Rectangle2D col3(int col, int row) {
-		return AppRes.Graphics.spritesheetMsPacManGame.tilesFrom(THIRD_COLUMN, 0, col, row, 1, 1);
+	public MsPacManGameRenderer() {
+		super(AppRes.Graphics.MsPacManGame.spritesheet);
 	}
 
-	public MsPacManGameRenderer() {
-		super(AppRes.Graphics.spritesheetMsPacManGame);
+	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
+		return spritesheet.tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
 	}
 
 	@Override
@@ -74,26 +73,27 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public Rectangle2D ghostValueRegion(int index) {
-		return col3(index, 8);
+		return tileFromThirdColumn(index, 8);
 	}
 
 	@Override
 	public Rectangle2D bonusSymbolRegion(int symbol) {
-		return col3(3 + symbol, 0);
+		return tileFromThirdColumn(3 + symbol, 0);
 	}
 
 	@Override
 	public Rectangle2D bonusValueRegion(int symbol) {
-		return col3(3 + symbol, 1);
+		return tileFromThirdColumn(3 + symbol, 1);
 	}
 
 	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
+		checkNotNull(bonus);
 		var sprite = switch (bonus.state()) {
 		case Bonus.STATE_INACTIVE -> null;
 		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
 		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
-		default -> throw new IllegalArgumentException();
+		default -> throw new IllegalArgumentException("Illegal bonus state: '%s'".formatted(bonus.state()));
 		};
 		if (bonus instanceof MovingBonus movingBonus) {
 			g.save();
@@ -107,19 +107,20 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
-		var region = col3(2 * DIR_ORDER.index(Direction.RIGHT) + 1, 4 + ghostID);
+		var region = tileFromThirdColumn(2 * DIR_ORDER.index(Direction.RIGHT) + 1, 4 + ghostID);
 		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
 	@Override
 	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
-		var w = MAZE_WIDTH;
-		var h = MAZE_HEIGHT;
+		checkNotNull(world);
+		var w = MAZE_IMAGE_WIDTH;
+		var h = MAZE_IMAGE_HEIGHT;
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				g.drawImage(AppRes.Graphics.emptyFlashingMazeMsPacManGame[mazeNumber - 1], x, y);
+				g.drawImage(AppRes.Graphics.MsPacManGame.emptyFlashingMaze[mazeNumber - 1], x, y);
 			} else {
 				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
@@ -136,13 +137,13 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public Rectangle2D lifeSymbolRegion() {
-		return col3(1, 0);
+		return tileFromThirdColumn(1, 0);
 	}
 
 	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
-		g.drawImage(AppRes.Graphics.logoMsPacManGame, x, y + 2, TS * (4) - 2, TS * (4));
+		g.drawImage(AppRes.Graphics.MsPacManGame.logo, x, y + 2, TS * (4) - 2, TS * (4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol
@@ -174,9 +175,9 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var wide = col3(0, d);
-			var middle = col3(1, d);
-			var closed = col3(2, d);
+			var wide = tileFromThirdColumn(0, d);
+			var middle = tileFromThirdColumn(1, d);
+			var closed = tileFromThirdColumn(2, d);
 			var munching = new SimpleAnimation<>(middle, middle, wide, wide, middle, middle, middle, closed, closed);
 			munching.setFrameDuration(1);
 			munching.repeatForever();
@@ -186,10 +187,10 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
-		var right = col3(1, 0);
-		var left = col3(1, 1);
-		var up = col3(1, 2);
-		var down = col3(1, 3);
+		var right = tileFromThirdColumn(1, 0);
+		var left = tileFromThirdColumn(1, 1);
+		var up = tileFromThirdColumn(1, 2);
+		var down = tileFromThirdColumn(1, 3);
 		// TODO not yet 100% accurate
 		var animation = new SimpleAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
 		animation.setFrameDuration(8);
@@ -212,7 +213,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var animation = new SimpleAnimation<>(col3(2 * d, 4 + ghost.id()), col3(2 * d + 1, 4 + ghost.id()));
+			var animation = new SimpleAnimation<>(tileFromThirdColumn(2 * d, 4 + ghost.id()),
+					tileFromThirdColumn(2 * d + 1, 4 + ghost.id()));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -221,14 +223,15 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	private SimpleAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SimpleAnimation<>(col3(8, 4), col3(9, 4));
+		var animation = new SimpleAnimation<>(tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
 	private SimpleAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SimpleAnimation<>(col3(8, 4), col3(9, 4), col3(10, 4), col3(11, 4));
+		var animation = new SimpleAnimation<>(tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4),
+				tileFromThirdColumn(10, 4), tileFromThirdColumn(11, 4));
 		animation.setFrameDuration(4);
 		return animation;
 	}
@@ -237,7 +240,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			animationByDir.put(dir, new SimpleAnimation<>(col3(8 + d, 5)));
+			animationByDir.put(dir, new SimpleAnimation<>(tileFromThirdColumn(8 + d, 5)));
 		}
 		return animationByDir;
 	}
@@ -264,7 +267,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	public Rectangle2D heartSprite() {
-		return col3(2, 10);
+		return tileFromThirdColumn(2, 10);
 	}
 
 	public Rectangle2D blueBagSprite() {
@@ -279,7 +282,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var animation = new SimpleAnimation<>(col3(0, 9 + d), col3(1, 9 + d), col3(2, 9));
+			var animation = new SimpleAnimation<>(tileFromThirdColumn(0, 9 + d), tileFromThirdColumn(1, 9 + d),
+					tileFromThirdColumn(2, 9));
 			animation.setFrameDuration(2);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);

@@ -75,6 +75,14 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	public abstract Rectangle2D bonusValueRegion(int symbol);
 
+	/**
+	 * Draws a region from the spritesheet, no need for separate image copy.
+	 * 
+	 * @param g graphics context
+	 * @param r rectangular spritesheet region
+	 * @param x x position
+	 * @param y y position
+	 */
 	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {
 			g.drawImage(spritesheet.source(), r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),

@@ -245,13 +245,12 @@ public class GameUI implements GameEventListener {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));
-			stage.getIcons().setAll(AppRes.Graphics.iconMsPacManGame);
+			stage.getIcons().setAll(AppRes.Graphics.MsPacManGame.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));
-			stage.getIcons().setAll(AppRes.Graphics.iconPacManGame);
-
+			stage.getIcons().setAll(AppRes.Graphics.PacManGame.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}

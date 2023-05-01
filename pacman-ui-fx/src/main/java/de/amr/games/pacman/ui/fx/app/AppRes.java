@@ -166,53 +166,55 @@ public class AppRes {
 
 	public static class Graphics {
 
+		public static class PacManGame {
+			public static Image icon;
+			public static Spritesheet spritesheet;
+			public static Image fullMaze;
+			public static Image emptyMaze;
+			public static Image flashingMaze;
+		}
+
+		public static class MsPacManGame {
+			public static Image icon;
+			public static Spritesheet spritesheet;
+			public static Image logo;
+			public static Image[] emptyFlashingMaze;
+
+			private static Image emptyMaze(int i) {
+				return spritesheet.subImage(228, 248 * i, 226, 248);
+			}
+
+			private static Image emptyMazeFlashing(int i) {
+				return Ufx.colorsExchanged(emptyMaze(i), Map.of(//
+						ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor(), Color.WHITE, //
+						ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor(), Color.BLACK));
+			}
+		}
+
 		public static final String KEY_NO_TEXTURE = "No Texture";
-
-		public static Image iconPacManGame;
-		public static Spritesheet spritesheetPacManGame;
-		public static Image fullMazePacManGame;
-		public static Image emptyMazePacManGame;
-		public static Image flashingMazePacManGame;
-
-		public static Image iconMsPacManGame;
-		public static Spritesheet spritesheetMsPacManGame;
-		public static Image logoMsPacManGame;
-		public static Image[] emptyFlashingMazeMsPacManGame;
-
 		public static Background backgroundForScene3D;
-
 		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
-		private static Image emptyMaze(int i) {
-			return AppRes.Graphics.spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
-		}
-
-		private static Image emptyMazeFlashing(int i) {
-			return Ufx.colorsExchanged(emptyMaze(i), Map.of(//
-					ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallBaseColor(), Color.WHITE, //
-					ArcadeTheme.MS_PACMAN_MAZE_COLORS[i].wallTopColor(), Color.BLACK));
-		}
-
 		static void load() {
+			backgroundForScene3D = new Background(
+					new BackgroundImage(ResourceMgr.image("graphics/sky.png"), null, null, null, null));
+
 			loadFloorTexture("Hexagon", "hexagon", "jpg");
 			loadFloorTexture("Knobs & Bumps", "knobs", "jpg");
 			loadFloorTexture("Plastic", "plastic", "jpg");
 			loadFloorTexture("Wood", "wood", "jpg");
 
-			iconPacManGame = ResourceMgr.image("icons/pacman.png");
-			spritesheetPacManGame = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
-			fullMazePacManGame = ResourceMgr.image("graphics/pacman/maze_full.png");
-			emptyMazePacManGame = ResourceMgr.image("graphics/pacman/maze_empty.png");
-			flashingMazePacManGame = ResourceMgr.image("graphics/pacman/maze_empty_flashing.png");
+			PacManGame.icon = ResourceMgr.image("icons/pacman.png");
+			PacManGame.spritesheet = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
+			PacManGame.fullMaze = ResourceMgr.image("graphics/pacman/maze_full.png");
+			PacManGame.emptyMaze = ResourceMgr.image("graphics/pacman/maze_empty.png");
+			PacManGame.flashingMaze = ResourceMgr.image("graphics/pacman/maze_empty_flashing.png");
 
-			iconMsPacManGame = ResourceMgr.image("icons/mspacman.png");
-			spritesheetMsPacManGame = new Spritesheet(ResourceMgr.image("graphics/mspacman/sprites.png"), 16);
-			emptyFlashingMazeMsPacManGame = IntStream.range(0, 6).mapToObj(Graphics::emptyMazeFlashing).toArray(Image[]::new);
-
-			logoMsPacManGame = ResourceMgr.image("graphics/mspacman/midway.png");
-
-			backgroundForScene3D = new Background(
-					new BackgroundImage(ResourceMgr.image("graphics/sky.png"), null, null, null, null));
+			MsPacManGame.icon = ResourceMgr.image("icons/mspacman.png");
+			MsPacManGame.spritesheet = new Spritesheet(ResourceMgr.image("graphics/mspacman/sprites.png"), 16);
+			MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
+					.toArray(Image[]::new);
+			MsPacManGame.logo = ResourceMgr.image("graphics/mspacman/midway.png");
 		}
 
 		private static void loadFloorTexture(String name, String textureBase, String ext) {
@@ -220,8 +222,6 @@ public class AppRes {
 			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
 			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
-//			material.specularColorProperty()
-//					.bind(Bindings.createObjectBinding(Env.d3_floorColorPy.get()::brighter, Env.d3_floorColorPy));
 			floorTexturesByName.put(name, material);
 		}
 
