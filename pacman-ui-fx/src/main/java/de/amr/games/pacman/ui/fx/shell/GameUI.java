@@ -47,14 +47,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx._2d.scene.BootScene;
-import de.amr.games.pacman.ui.fx._2d.scene.PacManCreditScene;
-import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene1;
-import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene2;
-import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene3;
-import de.amr.games.pacman.ui.fx._2d.scene.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Env;
@@ -66,6 +59,7 @@ import de.amr.games.pacman.ui.fx.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
@@ -119,37 +113,6 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private record GameSceneChoice(GameScene scene2D, GameScene scene3D) {
-	}
-
-	private static List<GameSceneChoice> createPacManScenes(GameController gc) {
-		return List.of(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc), null),
-			new GameSceneChoice(new PacManIntroScene(gc), null),
-			new GameSceneChoice(new PacManCreditScene(gc), null),
-			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
-			new GameSceneChoice(new PacManCutscene1(gc), null), 
-			new GameSceneChoice(new PacManCutscene2(gc), null),
-			new GameSceneChoice(new PacManCutscene3(gc), null)
-		//@formatter:on
-		);
-	}
-
-	private static List<GameSceneChoice> createMsPacManScenes(GameController gc) {
-		return List.of(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc), null),
-			new GameSceneChoice(new PacManIntroScene(gc), null), 
-			new GameSceneChoice(new PacManCreditScene(gc), null),
-			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
-			new GameSceneChoice(new PacManCutscene1(gc), null), 
-			new GameSceneChoice(new PacManCutscene2(gc), null),
-			new GameSceneChoice(new PacManCutscene3(gc), null)
-		//@formatter:on
-		);
-	}
-
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
 	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
@@ -162,13 +125,14 @@ public class GameUI implements GameEventListener {
 
 	private GameScene currentGameScene;
 
-	public GameUI(final Stage stage, final Settings settings) {
+	public GameUI(final Stage stage, final Settings settings, GameController gameController,
+			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
+
 		checkNotNull(stage);
 		checkNotNull(settings);
 
 		this.stage = stage;
-
-		gameController = new GameController(settings.variant);
+		this.gameController = gameController;
 		var keyboardSteering = new KeyboardSteering(//
 				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
@@ -176,10 +140,10 @@ public class GameUI implements GameEventListener {
 
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		scenes.put(GameVariant.MS_PACMAN, createMsPacManScenes(gameController));
+		scenes.put(GameVariant.MS_PACMAN, msPacManScenes);
 
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
-		scenes.put(GameVariant.PACMAN, createPacManScenes(gameController));
+		scenes.put(GameVariant.PACMAN, pacManScenes);
 
 		pipGameScene = new PlayScene2D(gameController);
 

@@ -23,8 +23,25 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx3d.app;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.ui.fx._2d.scene.BootScene;
+import de.amr.games.pacman.ui.fx._2d.scene.PacManCreditScene;
+import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene1;
+import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene2;
+import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene3;
+import de.amr.games.pacman.ui.fx._2d.scene.PacManIntroScene;
+import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
+import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.Settings;
+import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.shell.GameUI;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -33,20 +50,58 @@ import javafx.stage.Stage;
  */
 public class Main3d extends Application {
 
-	public static void main(String[] args) {
-		launch(Main3d.class);
+	private static List<GameSceneChoice> createPacManScenes(GameController gc) {
+		return List.of(
+		//@formatter:off
+			new GameSceneChoice(new BootScene(gc), null),
+			new GameSceneChoice(new PacManIntroScene(gc), null),
+			new GameSceneChoice(new PacManCreditScene(gc), null),
+			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
+			new GameSceneChoice(new PacManCutscene1(gc), null), 
+			new GameSceneChoice(new PacManCutscene2(gc), null),
+			new GameSceneChoice(new PacManCutscene3(gc), null)
+		//@formatter:on
+		);
 	}
+
+	private static List<GameSceneChoice> createMsPacManScenes(GameController gc) {
+		return List.of(
+		//@formatter:off
+			new GameSceneChoice(new BootScene(gc), null),
+			new GameSceneChoice(new PacManIntroScene(gc), null), 
+			new GameSceneChoice(new PacManCreditScene(gc), null),
+			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
+			new GameSceneChoice(new PacManCutscene1(gc), null), 
+			new GameSceneChoice(new PacManCutscene2(gc), null),
+			new GameSceneChoice(new PacManCutscene3(gc), null)
+		//@formatter:on
+		);
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	private GameUI gameUI;
 
 	@Override
 	public void init() throws Exception {
-		Logger.info("Hello, world!");
+		AppRes.load();
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) throws IOException {
+		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
+		var gameController = new GameController(settings.variant);
+		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
+				createPacManScenes(gameController));
+		gameUI.simulation().start();
+		Logger.info("Game started. Target frame rate: {}", gameUI.simulation().targetFrameratePy.get());
 	}
 
 	@Override
 	public void stop() throws Exception {
+		gameUI.simulation().stop();
+		Logger.info("Game stopped");
 	}
 }
