@@ -21,16 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx3d.app;
 
 import org.tinylog.Logger;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 /**
  * @author Armin Reichert
  */
-public class Main3d {
+public class Main3d extends Application {
 
 	public static void main(String[] args) {
+		launch(Main3d.class);
+	}
+
+	@Override
+	public void init() throws Exception {
 		Logger.info("Hello, world!");
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
 	}
 }
