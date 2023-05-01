@@ -34,6 +34,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -89,6 +90,8 @@ public abstract class GameScene2D implements GameScene {
 
 		// This avoids the white vertical line left of the embedded 2D game scene
 		container.setBackground(ResourceMgr.colorBackground(Color.BLACK));
+
+		infoVisiblePy.bind(Env.showDebugInfoPy);
 	}
 
 	@Override

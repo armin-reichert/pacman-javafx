@@ -48,12 +48,6 @@ import de.amr.games.pacman.ui.fx._2d.rendering.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx._2d.scene.BootScene;
-import de.amr.games.pacman.ui.fx._2d.scene.GameScene2D;
-import de.amr.games.pacman.ui.fx._2d.scene.MsPacManCreditScene;
-import de.amr.games.pacman.ui.fx._2d.scene.MsPacManIntermissionScene1;
-import de.amr.games.pacman.ui.fx._2d.scene.MsPacManIntermissionScene2;
-import de.amr.games.pacman.ui.fx._2d.scene.MsPacManIntermissionScene3;
-import de.amr.games.pacman.ui.fx._2d.scene.MsPacManIntroScene;
 import de.amr.games.pacman.ui.fx._2d.scene.PacManCreditScene;
 import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene1;
 import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene2;
@@ -104,9 +98,6 @@ public class GameUI implements GameEventListener {
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
 
-	private record GameSceneSelection(GameScene scene2D, GameScene scene3D) {
-	}
-
 	public class Simulation extends GameLoop {
 
 		public Simulation() {
@@ -128,10 +119,41 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
+	private record GameSceneChoice(GameScene scene2D, GameScene scene3D) {
+	}
+
+	private static List<GameSceneChoice> createPacManScenes(GameController gc) {
+		return List.of(
+		//@formatter:off
+			new GameSceneChoice(new BootScene(gc), null),
+			new GameSceneChoice(new PacManIntroScene(gc), null),
+			new GameSceneChoice(new PacManCreditScene(gc), null),
+			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
+			new GameSceneChoice(new PacManCutscene1(gc), null), 
+			new GameSceneChoice(new PacManCutscene2(gc), null),
+			new GameSceneChoice(new PacManCutscene3(gc), null)
+		//@formatter:on
+		);
+	}
+
+	private static List<GameSceneChoice> createMsPacManScenes(GameController gc) {
+		return List.of(
+		//@formatter:off
+			new GameSceneChoice(new BootScene(gc), null),
+			new GameSceneChoice(new PacManIntroScene(gc), null), 
+			new GameSceneChoice(new PacManCreditScene(gc), null),
+			new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)),
+			new GameSceneChoice(new PacManCutscene1(gc), null), 
+			new GameSceneChoice(new PacManCutscene2(gc), null),
+			new GameSceneChoice(new PacManCutscene3(gc), null)
+		//@formatter:on
+		);
+	}
+
 	private final GameController gameController;
 	private final Simulation simulation = new Simulation();
 	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-	private final Map<GameVariant, List<GameSceneSelection>> scenes = new EnumMap<>(GameVariant.class);
+	private final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
 	private final StackPane root = new StackPane();
 	private final PlayScene2D pipGameScene;
@@ -154,8 +176,11 @@ public class GameUI implements GameEventListener {
 
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
+		scenes.put(GameVariant.MS_PACMAN, createMsPacManScenes(gameController));
+
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
-		createGameScenes();
+		scenes.put(GameVariant.PACMAN, createPacManScenes(gameController));
+
 		pipGameScene = new PlayScene2D(gameController);
 
 		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
@@ -177,30 +202,6 @@ public class GameUI implements GameEventListener {
 
 		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
 		Logger.info("Window size: {} x {}", stage.getWidth(), stage.getHeight());
-	}
-
-	private void createGameScenes() {
-		//@formatter:off
-		scenes.put(GameVariant.PACMAN, List.of(
-			new GameSceneSelection(createScene2D(BootScene.class), null),
-			new GameSceneSelection(createScene2D(PacManIntroScene.class), null),
-			new GameSceneSelection(createScene2D(PacManCreditScene.class), null),
-			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
-			new GameSceneSelection(createScene2D(PacManCutscene1.class), null),
-			new GameSceneSelection(createScene2D(PacManCutscene2.class), null),
-			new GameSceneSelection(createScene2D(PacManCutscene3.class), null)
-		));
-
-		scenes.put(GameVariant.MS_PACMAN, List.of(
-			new GameSceneSelection(createScene2D(BootScene.class), null),
-			new GameSceneSelection(createScene2D(MsPacManIntroScene.class), null),
-			new GameSceneSelection(createScene2D(MsPacManCreditScene.class), null),
-			new GameSceneSelection(createScene2D(PlayScene2D.class), new PlayScene3D(gameController)),
-			new GameSceneSelection(createScene2D(MsPacManIntermissionScene1.class), null),
-			new GameSceneSelection(createScene2D(MsPacManIntermissionScene2.class), null),
-			new GameSceneSelection(createScene2D(MsPacManIntermissionScene3.class), null)
-		));
-		//@formatter:on
 	}
 
 	private Scene createMainScene(float sizeX, float sizeY) {
@@ -304,18 +305,6 @@ public class GameUI implements GameEventListener {
 		return Optional.ofNullable(dimension == 3 ? matching.scene3D() : matching.scene2D());
 	}
 
-	private GameScene2D createScene2D(Class<? extends GameScene2D> clazz) {
-		try {
-			GameScene2D scene2D = clazz.getDeclaredConstructor(GameController.class).newInstance(gameController);
-			scene2D.infoVisiblePy.bind(Env.showDebugInfoPy);
-			Logger.trace("2D game scene created: '{}'", scene2D.getClass().getName());
-			return scene2D;
-		} catch (Exception e) {
-			Logger.error("Could not create 2D game scene of class '{}'", clazz.getName());
-			throw new IllegalArgumentException(e);
-		}
-	}
-
 	private boolean isPlayScene(GameScene gameScene) {
 		return gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene2D()
 				|| gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene3D()
@@ -323,7 +312,7 @@ public class GameUI implements GameEventListener {
 				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene3D();
 	}
 
-	private GameSceneSelection sceneSelectionMatchingCurrentGameState() {
+	private GameSceneChoice sceneSelectionMatchingCurrentGameState() {
 		var game = gameController.game();
 		var gameState = gameController.state();
 		int index = switch (gameState) {
