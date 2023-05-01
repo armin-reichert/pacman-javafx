@@ -5,6 +5,8 @@
 
 dependency-reduced-pom.xml
 
+*.ini
+
 # Compiled class file
 *.class
 

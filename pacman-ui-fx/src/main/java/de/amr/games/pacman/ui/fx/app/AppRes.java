@@ -267,18 +267,18 @@ public class AppRes {
 		};
 		//@formatter:on
 
-		private static GameSounds soundClipsMsPacMan;
-		private static GameSounds soundClipsPacMan;
+		private static GameSounds gameSoundsMsPacMan;
+		private static GameSounds gameSoundsPacMan;
 
 		static void load() {
-			soundClipsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIPS);
-			soundClipsPacMan = new GameSounds(PACMAN_AUDIO_CLIPS);
+			gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIPS);
+			gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIPS);
 		}
 
-		public static GameSounds soundClips(GameVariant variant) {
+		public static GameSounds gameSounds(GameVariant variant) {
 			return switch (variant) {
-			case MS_PACMAN -> soundClipsMsPacMan;
-			case PACMAN -> soundClipsPacMan;
+			case MS_PACMAN -> gameSoundsMsPacMan;
+			case PACMAN -> gameSoundsPacMan;
 			default -> throw new IllegalGameVariantException(variant);
 			};
 		}
