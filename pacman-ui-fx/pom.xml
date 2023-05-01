@@ -27,8 +27,8 @@ There are two executables built:
 		<vs.javafx>18.0.2</vs.javafx>
 		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
 		<vs.maven-jar-plugin>3.2.0</vs.maven-jar-plugin>
-		<vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
 		<vs.maven-shade-plugin>3.4.1</vs.maven-shade-plugin>
+		<vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
 		<vs.tinylog>2.6.1</vs.tinylog>
 	</properties>
 
