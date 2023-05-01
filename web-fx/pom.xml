@@ -11,9 +11,9 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.amr.games.pacman</groupId>
+    <groupId>de.amr</groupId>
 
-    <artifactId>pacman-webfx</artifactId>
+    <artifactId>hello-webfx</artifactId>
 
     <version>1.0</version>
 
@@ -36,10 +36,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>pacman-webfx-application</module>
-        <module>pacman-webfx-application-gluon</module>
-        <module>pacman-webfx-application-gwt</module>
-        <module>pacman-webfx-application-openjfx</module>
+        <module>hello-webfx-application</module>
+        <module>hello-webfx-application-gluon</module>
+        <module>hello-webfx-application-gwt</module>
+        <module>hello-webfx-application-openjfx</module>
     </modules>
 
 </project>

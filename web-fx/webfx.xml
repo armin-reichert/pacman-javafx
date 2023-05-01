@@ -3,8 +3,8 @@
 
     <parent name="webfx-parent"/>
 
-    <groupId>de.amr.games.pacman</groupId>
-    <artifactId>pacman-webfx</artifactId>
+    <groupId>de.amr</groupId>
+    <artifactId>hello-webfx</artifactId>
     <version>1.0</version>
 
     <modules>
@@ -13,6 +13,7 @@
 
     <required-libraries>
         <webfx-library artifact="dev.webfx:webfx:0.1.0-SNAPSHOT"/>
+        <webfx-library artifact="de.amr.games.pacman:pacman-core:1.0"/>
     </required-libraries>
 
 </project>
