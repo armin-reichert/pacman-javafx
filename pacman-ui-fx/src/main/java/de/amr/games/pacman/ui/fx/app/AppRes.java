@@ -113,7 +113,7 @@ public class AppRes {
 		private static Picker<String> messagePickerCheating;
 		private static Picker<String> messagePickerLevelComplete;
 		private static Picker<String> messagePickerGameOver;
-		private static Picker<String> readTextPickerPacMan;
+		private static Picker<String> readyTextPickerPacMan;
 		private static Picker<String> readyTextPickerMsPacman;
 
 		static void load() {
@@ -121,8 +121,8 @@ public class AppRes {
 			messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
 			messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
 			messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
-			readTextPickerPacMan = new Picker<>("LET'S GO BRANDON!", "YELLOW MAN BAD!", "C'MON MAN!", "Asufutimaehaehfutbw");
-			readyTextPickerMsPacman = new Picker<>("LET'S GO BRANDON!", "GHOST LIVES MATTER!", "(EAT) ME TOO!");
+			readyTextPickerPacMan = ResourceMgr.createPicker(messageBundle, "pacman.ready");
+			readyTextPickerMsPacman = ResourceMgr.createPicker(messageBundle, "mspacman.ready");
 		}
 
 		/**
@@ -159,7 +159,7 @@ public class AppRes {
 			if (Env.wokePussyMode.get()) {
 				return "READY!";
 			} else {
-				var picker = variant == GameVariant.MS_PACMAN ? readyTextPickerMsPacman : readTextPickerPacMan;
+				var picker = variant == GameVariant.MS_PACMAN ? readyTextPickerMsPacman : readyTextPickerPacMan;
 				return picker.next();
 			}
 		}
