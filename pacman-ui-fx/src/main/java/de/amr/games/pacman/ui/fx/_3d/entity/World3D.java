@@ -241,8 +241,7 @@ public class World3D {
 
 	private void addDoorWing(Vector2i tile) {
 		var wing3D = new DoorWing3D(tile, mazeColoring.houseDoorColor());
-		wing3D.doorHeightPy.set(6.0);
-		wing3D.getRoot().drawModeProperty().bind(drawModePy);
+		wing3D.drawModePy.bind(drawModePy);
 		doorWings3D.add(wing3D);
 		doorGroup.getChildren().add(wing3D.getRoot());
 	}

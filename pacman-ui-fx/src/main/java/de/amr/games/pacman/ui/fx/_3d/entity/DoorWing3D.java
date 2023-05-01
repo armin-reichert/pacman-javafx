@@ -23,47 +23,72 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx._3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
+import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.transform.Rotate;
 
 /**
- * Single segment of a ghosthouse door.
+ * Part a ghosthouse door.
  * 
  * @author Armin Reichert
  */
 public class DoorWing3D {
 
-	public final DoubleProperty doorHeightPy = new SimpleDoubleProperty(this, "doorHeight", HTS);
+	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+	private final ObjectProperty<PhongMaterial> barMaterialPy = new SimpleObjectProperty<>(this, "barMaterial",
+			new PhongMaterial(Color.PINK));
 
-	private final Box shape = new Box();
+	private final Group root = new Group();
+
+	private PhongMaterial doorOpenMaterial;
+	private PhongMaterial doorClosedMaterial;
 
 	public DoorWing3D(Vector2i tile, Color color) {
 		checkTileNotNull(tile);
 		checkNotNull(color);
 
-		shape.setWidth(TS - 1.0);
-		shape.setHeight(1.0); // thickness (y-direction)
-		shape.depthProperty().bind(doorHeightPy.add(2.0)); // height (z-direction)
-		shape.setMaterial(new PhongMaterial(color));
-		shape.setTranslateX((double) tile.x() * TS + HTS);
-		shape.setTranslateY((double) tile.y() * TS + HTS);
-		shape.translateZProperty().bind(doorHeightPy.divide(-2.0).subtract(1.5));
+		doorClosedMaterial = ResourceMgr.coloredMaterial(color);
+		doorOpenMaterial = ResourceMgr.coloredMaterial(ResourceMgr.color(Color.gray(0.8), 0.1));
+
+		for (int i = 0; i < 2; ++i) {
+			var vbar = new Cylinder(1, 8);
+			vbar.materialProperty().bind(barMaterialPy);
+			double x = tile.x() * 8 + i * 4 + 2;
+			double y = tile.y() * 8 + 4;
+			vbar.setTranslateX(x);
+			vbar.setTranslateY(y);
+			vbar.setTranslateZ(-4);
+			vbar.setRotationAxis(Rotate.X_AXIS);
+			vbar.setRotate(90);
+			vbar.drawModeProperty().bind(drawModePy);
+			root.getChildren().add(vbar);
+		}
+		var hbar = new Cylinder(0.5, 9);
+		hbar.materialProperty().bind(barMaterialPy);
+		hbar.setTranslateX(tile.x() * 8 + 4);
+		hbar.setTranslateY(tile.y() * 8 + 4);
+		hbar.setTranslateZ(-4);
+		hbar.setRotationAxis(Rotate.Z_AXIS);
+		hbar.setRotate(90);
+		root.getChildren().add(hbar);
 	}
 
-	public Box getRoot() {
-		return shape;
+	public Node getRoot() {
+		return root;
 	}
 
 	public void setOpen(boolean open) {
-		shape.setVisible(!open); // TODO animate?
+		barMaterialPy.set(open ? doorOpenMaterial : doorClosedMaterial);
 	}
 }
