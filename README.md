@@ -9,10 +9,12 @@ Both games can be played in 2D and 3D, you can switch between 2D and 3D by press
 ## How to run the released version
 
 ### With Java runtime 18+ installed on your computer (Windows):
-- Download the executable jar file `pacman-ui-fx-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. Any help in creating executables for Mac-OS and Linux is appreciated.
+- Download the executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
+- 
+Any help in creating executables for Mac-OS and Linux is appreciated!
 
 ### Without locally installed Java runtime (Windows):
-- Download the zip file `pacman-javafx-tentackle-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
+- Download the zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
 To build the executable by yourself on non-Windows systems, run the steps in the build script manually or create a shell script or whatever.
 
