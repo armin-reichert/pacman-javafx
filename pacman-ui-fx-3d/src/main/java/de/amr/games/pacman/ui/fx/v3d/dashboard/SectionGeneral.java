@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.Actions3d;
 import de.amr.games.pacman.ui.fx.v3d.app.AppRes3d;
 import de.amr.games.pacman.ui.fx.v3d.app.Env;
 import de.amr.games.pacman.ui.fx.v3d.app.GameUI;
@@ -92,7 +91,7 @@ public class SectionGeneral extends Section {
 
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
-		cbUsePlayScene3D = addCheckBox("3D Play Scene", Actions3d::toggleUse3DScene);
+		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Env.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));

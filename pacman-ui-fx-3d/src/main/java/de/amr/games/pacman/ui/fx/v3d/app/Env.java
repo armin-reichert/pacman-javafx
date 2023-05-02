@@ -56,6 +56,8 @@ public class Env {
 	
 	public static final BooleanProperty             wokePussyMode = new SimpleBooleanProperty(false); 
 
+	public static final BooleanProperty             dashboardVisiblePy = new SimpleBooleanProperty(false);
+
 	public static final BooleanProperty             pipVisiblePy = new SimpleBooleanProperty(false);
 	public static final DoubleProperty              pipOpacityPy = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty              pipSceneHeightPy = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);

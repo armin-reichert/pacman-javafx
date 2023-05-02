@@ -246,6 +246,7 @@ public class GameUI implements GameEventListener {
 	private void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
+		dashboard.visibleProperty().bind(Env.dashboardVisiblePy);
 		Env.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
 		Env.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
 		pipGameScene.fxSubScene().opacityProperty().bind(Env.pipOpacityPy);
@@ -348,7 +349,7 @@ public class GameUI implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
 			Actions.startLevelTestMode();
 		} else if (Keyboard.pressed(Keys.USE_3D)) {
-			Actions3d.toggleUse3DScene();
+			toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
 			Actions3d.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
@@ -441,6 +442,16 @@ public class GameUI implements GameEventListener {
 		default -> {
 			// ignore
 		}
+		}
+	}
+
+	public void toggleUse3DScene() {
+		Ufx.toggle(Env.d3_enabledPy);
+		if (findGameScene(3).isPresent()) {
+			updateGameScene(true);
+			currentGameScene().onSceneVariantSwitch();
+		} else {
+			Actions.showFlashMessage(AppRes.Texts.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));// TODO
 		}
 	}
 

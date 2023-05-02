@@ -47,7 +47,7 @@ public class Actions3d {
 	}
 
 	public static void toggleDashboardVisible() {
-		Ufx.toggle(context.ui().dashboard().visibleProperty());
+		Ufx.toggle(Env.dashboardVisiblePy);
 	}
 
 	public static void selectNextPerspective() {
@@ -65,16 +65,6 @@ public class Actions3d {
 			Env.d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = AppRes.Texts.message(prevPerspective.name());
 			Actions.showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
-		}
-	}
-
-	public static void toggleUse3DScene() {
-		Ufx.toggle(Env.d3_enabledPy);
-		if (context.ui().findGameScene(3).isPresent()) {
-			context.ui().updateGameScene(true);
-			context.ui().currentGameScene().onSceneVariantSwitch();
-		} else {
-			Actions.showFlashMessage(AppRes.Texts.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));// TODO
 		}
 	}
 
