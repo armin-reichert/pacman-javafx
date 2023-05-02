@@ -75,17 +75,25 @@ Cheats:
 ## How it looks
 
 ### 3D Play Scene
+
 ![Play Scene](doc/pacman-maze.png)
 
 ### Dashboard
 
-![Dashboard](doc/dashboard-geberal.png)
+![Dashboard](doc/dashboard-general.png)
+
 ![Dashboard](doc/dashboard-shortcuts.png)
+
 ![Dashboard](doc/dashboard-appearance.png)
+
 ![Dashboard](doc/dashboard-3d-settings.png)
+
 ![Dashboard](doc/dashboard-game-control.png)
+
 ![Dashboard](doc/dashboard-game-info.png)
+
 ![Dashboard](doc/dashboard-ghost-info.png)
+
 ![Dashboard](doc/dashboard-about.png)
 
 YouTube:
