@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx3d.app;
 
 import static de.amr.games.pacman.lib.Globals.randomInt;
 
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,13 +44,8 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class AppRes3d {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/") {
-
-		@Override
-		public URL url(String resourcePath) {
-			return AppRes3d.class.getResource(resourcePath);
-		}
-	};
+	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/",
+			AppRes3d.class::getResource);
 
 	public static void load() {
 		long start = System.nanoTime();

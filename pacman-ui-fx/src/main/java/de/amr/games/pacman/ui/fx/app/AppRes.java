@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -51,13 +50,8 @@ import javafx.scene.text.Font;
  */
 public class AppRes {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/") {
-
-		@Override
-		public URL url(String resourcePath) {
-			return AppRes.class.getResource(resourcePath);
-		}
-	};
+	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/",
+			AppRes.class::getResource);
 
 	public static void load() {
 		long start = System.nanoTime();

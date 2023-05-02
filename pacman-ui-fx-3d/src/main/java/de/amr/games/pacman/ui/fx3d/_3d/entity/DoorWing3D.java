@@ -60,7 +60,7 @@ public class DoorWing3D {
 		checkNotNull(color);
 
 		doorClosedMaterial = AppRes3d.Manager.coloredMaterial(color); // TODO
-		doorOpenMaterial = AppRes3d.Manager.coloredMaterial(AppRes.Manager.color(Color.gray(0.8), 0.1)); // TODO
+		doorOpenMaterial = AppRes3d.Manager.coloredMaterial(AppRes3d.Manager.color(Color.gray(0.8), 0.1)); // TODO
 
 		for (int i = 0; i < 2; ++i) {
 			var vbar = new Cylinder(1, 8);

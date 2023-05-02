@@ -27,8 +27,8 @@ package de.amr.games.pacman.ui.fx.util;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.net.URL;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 import org.tinylog.Logger;
 
@@ -44,36 +44,25 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public abstract class ResourceMgr {
+public class ResourceMgr {
 
+	private final Function<String, URL> urlComputation;
 	private final String rootDir;
 
-	protected ResourceMgr(String rootDir) {
+	public ResourceMgr(String rootDir, Function<String, URL> urlComputation) {
+		checkNotNull(rootDir);
+		checkNotNull(urlComputation);
 		this.rootDir = rootDir;
+		this.urlComputation = urlComputation;
 	}
 
 	/**
-	 * @param resourcePath full path to resource including path to resource root directory
-	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
-	 * @throws MissingResourceException if no resource with this path could be found
-	 */
-	public abstract URL url(String resourcePath);
-
-//	public URL url(String resourcePath) {
-//		checkNotNull(resourcePath);
-//		var url = getClientClass().getResource(resourcePath);
-//		if (url == null) {
-//			throw new MissingResourceException("Missing resource, path=" + resourcePath, "", resourcePath);
-//		}
-//		return url;
-//	}
-
-	/**
 	 * @param relPath relative path (without leading slash) starting from resource root directory
-	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
+	 * @return URL of resource addressed by this path
 	 */
 	public URL urlFromRelPath(String relPath) {
-		return url(rootDir + relPath);
+		checkNotNull(relPath);
+		return urlComputation.apply(rootDir + relPath);
 	}
 
 	/**

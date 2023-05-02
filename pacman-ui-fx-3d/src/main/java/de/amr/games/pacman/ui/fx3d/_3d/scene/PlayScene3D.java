@@ -487,7 +487,6 @@ public class PlayScene3D implements GameScene {
 		return animation;
 	}
 
-	// TODO this is copy-pasta from 2D play scene
 	private void updateSound(GameLevel level) {
 		if (level.isDemoLevel()) {
 			return;
