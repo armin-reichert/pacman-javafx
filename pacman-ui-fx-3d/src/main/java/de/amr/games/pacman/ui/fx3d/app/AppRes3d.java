@@ -26,12 +26,13 @@ package de.amr.games.pacman.ui.fx3d.app;
 
 import static de.amr.games.pacman.lib.Globals.randomInt;
 
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.AbstractResourceMgr;
 import de.amr.games.pacman.ui.fx3d._3d.Model3D;
 import de.amr.games.pacman.ui.fx3d._3d.entity.PacModel3D;
 import javafx.scene.layout.Background;
@@ -44,12 +45,18 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class AppRes3d {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/assets3d/");
+	public static final AbstractResourceMgr Manager = new AbstractResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/") {
+
+		@Override
+		public URL url(String resourcePath) {
+			return AppRes3d.class.getResource(resourcePath);
+		}
+	};
 
 	public static void load() {
 		long start = System.nanoTime();
-		load("3D models", Models3D::load);
 		load("3D textures", Textures::load);
+		load("3D models", Models3D::load);
 		Logger.info("Loading resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 

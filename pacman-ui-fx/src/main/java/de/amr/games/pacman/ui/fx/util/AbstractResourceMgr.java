@@ -44,11 +44,11 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class ResourceMgr {
+public abstract class AbstractResourceMgr {
 
 	private final String rootDir;
 
-	public ResourceMgr(String rootDir) {
+	protected AbstractResourceMgr(String rootDir) {
 		this.rootDir = rootDir;
 	}
 
@@ -57,14 +57,16 @@ public class ResourceMgr {
 	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
 	 * @throws MissingResourceException if no resource with this path could be found
 	 */
-	public URL url(String resourcePath) {
-		checkNotNull(resourcePath);
-		var url = getClass().getResource(resourcePath);
-		if (url == null) {
-			throw new MissingResourceException("Missing resource, path=" + resourcePath, "", resourcePath);
-		}
-		return url;
-	}
+	public abstract URL url(String resourcePath);
+
+//	public URL url(String resourcePath) {
+//		checkNotNull(resourcePath);
+//		var url = getClientClass().getResource(resourcePath);
+//		if (url == null) {
+//			throw new MissingResourceException("Missing resource, path=" + resourcePath, "", resourcePath);
+//		}
+//		return url;
+//	}
 
 	/**
 	 * @param relPath relative path (without leading slash) starting from resource root directory

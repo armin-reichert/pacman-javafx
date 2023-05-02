@@ -24,6 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -37,8 +38,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
+import de.amr.games.pacman.ui.fx.util.AbstractResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Picker;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
@@ -50,7 +51,13 @@ import javafx.scene.text.Font;
  */
 public class AppRes {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/assets/");
+	public static final AbstractResourceMgr Manager = new AbstractResourceMgr("/assets/") {
+
+		@Override
+		public URL url(String resourcePath) {
+			return AppRes.class.getResource(resourcePath);
+		}
+	};
 
 	public static void load() {
 		long start = System.nanoTime();
