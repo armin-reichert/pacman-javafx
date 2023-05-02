@@ -27,9 +27,6 @@ package de.amr.games.pacman.ui.fx3d.app;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.RND;
 
-import java.util.Objects;
-
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
@@ -43,23 +40,11 @@ import javafx.scene.shape.DrawMode;
  */
 public class Actions3d {
 
-	private static GameUI ui;
+	private static ActionContext3d context;
 	private static AudioClip currentVoiceMessage;
 
-	public static void setUI(GameUI theUI) {
-		ui = Objects.requireNonNull(theUI, "User Interface for actions must not be null");
-	}
-
-	private static GameController gameController() {
-		return ui.gameController();
-	}
-
-	private static GameModel game() {
-		return gameController().game();
-	}
-
-	private static GameState gameState() {
-		return gameController().state();
+	public static void init(ActionContext3d context) {
+		Actions3d.context = context;
 	}
 
 	public static void playHelpVoiceMessageAfterSeconds(int seconds) {
@@ -85,53 +70,53 @@ public class Actions3d {
 	}
 
 	public static void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		ui.flashMessageView().showMessage(String.format(message, args), seconds);
+		context.ui().flashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
 	public static void startGame() {
-		if (game().hasCredit()) {
+		if (context.game().hasCredit()) {
 			stopVoiceMessage();
-			gameController().startPlaying();
+			context.gameController().startPlaying();
 		}
 	}
 
 	public static void startCutscenesTest() {
-		gameController().startCutscenesTest();
+		context.gameController().startCutscenesTest();
 		showFlashMessage("Cut scenes");
 	}
 
 	public static void restartIntro() {
-		ui.currentGameScene().end();
+		context.currentGameScene().end();
 		GameEvents.setSoundEventsEnabled(true);
-		if (game().isPlaying()) {
-			game().changeCredit(-1);
+		if (context.game().isPlaying()) {
+			context.game().changeCredit(-1);
 		}
-		gameController().restart(INTRO);
+		context.gameController().restart(INTRO);
 	}
 
 	public static void reboot() {
-		if (ui.currentGameScene() != null) {
-			ui.currentGameScene().end();
+		if (context.currentGameScene() != null) {
+			context.currentGameScene().end();
 		}
 		playHelpVoiceMessageAfterSeconds(4);
-		gameController().restart(GameState.BOOT);
+		context.gameController().restart(GameState.BOOT);
 	}
 
 	public static void addCredit() {
 		GameEvents.setSoundEventsEnabled(true);
-		gameController().addCredit();
+		context.gameController().addCredit();
 	}
 
 	public static void enterLevel(int newLevelNumber) {
-		if (gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (context.gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
-		game().level().ifPresent(level -> {
+		context.game().level().ifPresent(level -> {
 			if (newLevelNumber > level.number()) {
 				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-					game().nextLevel();
+					context.game().nextLevel();
 				}
-				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+				context.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			} else if (newLevelNumber < level.number()) {
 				// not implemented
 			}
@@ -145,31 +130,31 @@ public class Actions3d {
 	}
 
 	public static void toggleDashboardVisible() {
-		Ufx.toggle(ui.dashboard().visibleProperty());
+		Ufx.toggle(context.ui().dashboard().visibleProperty());
 	}
 
 	public static void togglePaused() {
 		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?
 		if (Env.simulationPausedPy.get()) {
-			AppRes.Sounds.gameSounds(game().variant()).stopAll();
+			AppRes.Sounds.gameSounds(context.game().variant()).stopAll();
 		}
 	}
 
 	public static void oneSimulationStep() {
 		if (Env.simulationPausedPy.get()) {
-			ui.simulation().executeSingleStep(true);
+			context.gameLoop().executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
 		if (Env.simulationPausedPy.get()) {
-			ui.simulation().executeSteps(10, true);
+			context.gameLoop().executeSteps(10, true);
 		}
 	}
 
 	public static void changeSimulationSpeed(int delta) {
-		int newFramerate = ui.simulation().targetFrameratePy.get() + delta;
+		int newFramerate = context.gameLoop().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
 			Env.simulationSpeedPy.set(newFramerate);
 			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
@@ -182,13 +167,13 @@ public class Actions3d {
 	}
 
 	public static void selectNextGameVariant() {
-		var gameVariant = game().variant().next();
-		gameController().selectGameVariant(gameVariant);
+		var gameVariant = context.game().variant().next();
+		context.gameController().selectGameVariant(gameVariant);
 		playHelpVoiceMessageAfterSeconds(4);
 	}
 
 	public static void selectNextPerspective() {
-		if (ui.currentGameScene().is3D()) {
+		if (context.currentGameScene().is3D()) {
 			var nextPerspective = Env.d3_perspectivePy.get().next();
 			Env.d3_perspectivePy.set(nextPerspective);
 			String perspectiveName = AppRes.Texts.message(nextPerspective.name());
@@ -197,7 +182,7 @@ public class Actions3d {
 	}
 
 	public static void selectPrevPerspective() {
-		if (ui.currentGameScene().is3D()) {
+		if (context.currentGameScene().is3D()) {
 			var prevPerspective = Env.d3_perspectivePy.get().prev();
 			Env.d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = AppRes.Texts.message(prevPerspective.name());
@@ -206,33 +191,33 @@ public class Actions3d {
 	}
 
 	public static void toggleAutopilot() {
-		gameController().toggleAutoControlled();
-		var auto = gameController().isAutoControlled();
+		context.gameController().toggleAutoControlled();
+		var auto = context.gameController().isAutoControlled();
 		String message = AppRes.Texts.message(auto ? "autopilot_on" : "autopilot_off");// TODO
 		showFlashMessage(message);
 		playVoiceMessage(auto ? AppRes.Sounds.VOICE_AUTOPILOT_ON : AppRes.Sounds.VOICE_AUTOPILOT_OFF);
 	}
 
 	public static void toggleImmunity() {
-		game().setImmune(!game().isImmune());
-		var immune = game().isImmune();
+		context.game().setImmune(!context.game().isImmune());
+		var immune = context.game().isImmune();
 		String message = AppRes.Texts.message(immune ? "player_immunity_on" : "player_immunity_off");// TODO
 		showFlashMessage(message);
 		playVoiceMessage(immune ? AppRes.Sounds.VOICE_IMMUNITY_ON : AppRes.Sounds.VOICE_IMMUNITY_OFF);
 	}
 
 	public static void startLevelTestMode() {
-		if (gameState() == GameState.INTRO) {
-			gameController().restart(GameState.LEVEL_TEST);
+		if (context.gameState() == GameState.INTRO) {
+			context.gameController().restart(GameState.LEVEL_TEST);
 			showFlashMessage("Level TEST MODE");
 		}
 	}
 
 	public static void toggleUse3DScene() {
 		Ufx.toggle(Env.d3_enabledPy);
-		if (ui.findGameScene(3).isPresent()) {
-			ui.updateGameScene(true);
-			ui.currentGameScene().onSceneVariantSwitch();
+		if (context.ui().findGameScene(3).isPresent()) {
+			context.ui().updateGameScene(true);
+			context.ui().currentGameScene().onSceneVariantSwitch();
 		} else {
 			showFlashMessage(AppRes.Texts.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));// TODO
 		}
@@ -243,23 +228,23 @@ public class Actions3d {
 	}
 
 	public static void cheatAddLives(int numLives) {
-		game().setLives(numLives + game().lives());
-		showFlashMessage(AppRes.Texts.message("cheat_add_lives", game().lives()));// TODO
+		context.game().setLives(numLives + context.game().lives());
+		showFlashMessage(AppRes.Texts.message("cheat_add_lives", context.game().lives()));// TODO
 	}
 
 	public static void cheatEatAllPellets() {
-		gameController().cheatEatAllPellets();
+		context.gameController().cheatEatAllPellets();
 		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(AppRes.Texts.pickCheatingMessage());// TODO
 		}
 	}
 
 	public static void cheatEnterNextLevel() {
-		gameController().cheatEnterNextLevel();
+		context.gameController().cheatEnterNextLevel();
 	}
 
 	public static void cheatKillAllEatableGhosts() {
-		gameController().cheatKillAllEatableGhosts();
+		context.gameController().cheatKillAllEatableGhosts();
 		if (RND.nextDouble() < 0.1) {
 			showFlashMessage(AppRes.Texts.pickCheatingMessage());// TODO
 		}
