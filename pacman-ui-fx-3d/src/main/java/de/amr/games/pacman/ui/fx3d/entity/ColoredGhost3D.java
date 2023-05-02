@@ -82,7 +82,7 @@ public class ColoredGhost3D {
 		pupilsShape.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 		pupilsColorPy.set(coloring.pupils());
 
-		var centerTransform = Ufx.centerOverOrigin(dressShape);
+		var centerTransform = Model3D.centerOverOrigin(dressShape);
 		dressShape.getTransforms().add(centerTransform);
 
 		dressGroup = new Group(dressShape);
@@ -96,7 +96,7 @@ public class ColoredGhost3D {
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		root.getTransforms().add(Ufx.scale(root, size));
+		root.getTransforms().add(Model3D.scale(root, size));
 	}
 
 	public Node getRoot() {

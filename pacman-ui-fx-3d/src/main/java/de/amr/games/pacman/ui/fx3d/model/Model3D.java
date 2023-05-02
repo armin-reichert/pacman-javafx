@@ -14,6 +14,8 @@ import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 /**
  * A 3D-model imported from a Wavefront .obj file.
@@ -23,6 +25,16 @@ import javafx.scene.shape.MeshView;
  * @author Armin Reichert
  */
 public class Model3D {
+
+	public static Translate centerOverOrigin(Node node) {
+		var bounds = node.getBoundsInLocal();
+		return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+	}
+
+	public static Scale scale(Node node, double size) {
+		var bounds = node.getBoundsInLocal();
+		return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
+	}
 
 	public static MeshView meshView(Node tree, String id) {
 		requireNonNull(tree);

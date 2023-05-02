@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import de.amr.games.pacman.ui.fx3d.model.Model3D;
 import javafx.scene.Group;
@@ -107,11 +106,11 @@ public class PacModel3D extends Model3D {
 		palate.setId(cssID(MESH_ID_PALATE));
 		palate.setMaterial(AppRes3d.Manager.coloredMaterial(palateColor));
 
-		var centerTransform = Ufx.centerOverOrigin(head);
+		var centerTransform = Model3D.centerOverOrigin(head);
 		Stream.of(head, eyes, palate).map(Node::getTransforms).forEach(tf -> tf.add(centerTransform));
 
 		var root = new Group(head, eyes, palate);
-		root.getTransforms().add(Ufx.scale(root, size));
+		root.getTransforms().add(Model3D.scale(root, size));
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
