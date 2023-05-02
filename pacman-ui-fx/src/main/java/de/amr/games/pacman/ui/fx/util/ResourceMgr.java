@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx.util;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -32,7 +32,6 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.util.Picker;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -47,7 +46,11 @@ import javafx.scene.text.Font;
  */
 public class ResourceMgr {
 
-	private static final String ROOT = "/assets/";
+	private final String rootDir;
+
+	public ResourceMgr(String rootDir) {
+		this.rootDir = rootDir;
+	}
 
 	/**
 	 * @param resourcePath full path to resource including path to resource root directory
@@ -67,15 +70,15 @@ public class ResourceMgr {
 	 * @param relPath relative path (without leading slash) starting from resource root directory
 	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
 	 */
-	public static URL urlFromRelPath(String relPath) {
-		return url(ROOT + relPath);
+	public URL urlFromRelPath(String relPath) {
+		return url(rootDir + relPath);
 	}
 
 	/**
 	 * @param relPath relative path (without leading slash) starting from resource root directory
 	 * @return audio clip from resource addressed by this path
 	 */
-	public static AudioClip audioClip(String relPath) {
+	public AudioClip audioClip(String relPath) {
 		return new AudioClip(urlFromRelPath(relPath).toExternalForm());
 	}
 
@@ -84,7 +87,7 @@ public class ResourceMgr {
 	 * @param size    font size (must be a positive number)
 	 * @return font loaded from resource addressed by this path. If no such font can be loaded, a default font is returned
 	 */
-	public static Font font(String relPath, double size) {
+	public Font font(String relPath, double size) {
 		if (size <= 0) {
 			throw new IllegalArgumentException("Font size must be positive but is %.2f".formatted(size));
 		}
@@ -101,32 +104,32 @@ public class ResourceMgr {
 	 * @param relPath relative path (without leading slash) starting from resource root directory
 	 * @return image loaded from resource addressed by this path.
 	 */
-	public static Image image(String relPath) {
+	public Image image(String relPath) {
 		return new Image(urlFromRelPath(relPath).toExternalForm());
 	}
 
-	public static Background colorBackground(Color color) {
+	public Background colorBackground(Color color) {
 		checkNotNull(color);
 		return new Background(new BackgroundFill(color, null, null));
 	}
 
-	public static Background imageBackground(String relPath) {
+	public Background imageBackground(String relPath) {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
 
-	public static PhongMaterial coloredMaterial(Color color) {
+	public PhongMaterial coloredMaterial(Color color) {
 		checkNotNull(color);
 		var material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
 		return material;
 	}
 
-	public static Color color(Color color, double opacity) {
+	public Color color(Color color, double opacity) {
 		checkNotNull(color);
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
-	public static Picker<String> createPicker(ResourceBundle bundle, String prefix) {
+	public Picker<String> createPicker(ResourceBundle bundle, String prefix) {
 		checkNotNull(bundle);
 		return new Picker<>(bundle.keySet().stream()//
 				.filter(key -> key.startsWith(prefix))//

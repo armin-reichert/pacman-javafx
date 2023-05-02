@@ -32,7 +32,7 @@ import java.util.Map;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx3d._3d.Model3D;
 import de.amr.games.pacman.ui.fx3d._3d.entity.PacModel3D;
 import javafx.scene.layout.Background;
@@ -44,6 +44,8 @@ import javafx.scene.paint.PhongMaterial;
  * @author Armin Reichert
  */
 public class AppRes3d {
+
+	public static final ResourceMgr Manager = new ResourceMgr("/assets/3d/");
 
 	public static void load() {
 		AppRes.load();
@@ -86,7 +88,7 @@ public class AppRes3d {
 
 		static void load() {
 			backgroundForScene3D = new Background(
-					new BackgroundImage(ResourceMgr.image("graphics/sky.png"), null, null, null, null));
+					new BackgroundImage(Manager.image("graphics/sky.png"), null, null, null, null));
 
 			loadFloorTexture("Hexagon", "hexagon", "jpg");
 			loadFloorTexture("Knobs & Bumps", "knobs", "jpg");
@@ -96,8 +98,8 @@ public class AppRes3d {
 
 		private static void loadFloorTexture(String name, String textureBase, String ext) {
 			var material = new PhongMaterial();
-			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			material.setBumpMap(Manager.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			material.setDiffuseMap(Manager.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			material.diffuseColorProperty().bind(Env3d.d3_floorColorPy);
 			floorTexturesByName.put(name, material);
 		}
@@ -117,8 +119,8 @@ public class AppRes3d {
 
 		public static PhongMaterial texture(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 			var texture = new PhongMaterial();
-			texture.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setBumpMap(Manager.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(Manager.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			texture.setDiffuseColor(diffuseColor);
 			texture.setSpecularColor(specularColor);
 			return texture;

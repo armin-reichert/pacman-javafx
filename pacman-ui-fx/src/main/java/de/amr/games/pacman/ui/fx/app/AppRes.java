@@ -38,6 +38,7 @@ import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
+import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
@@ -48,6 +49,8 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class AppRes {
+
+	public static final ResourceMgr Manager = new ResourceMgr("/assets/");
 
 	public static void load() {
 		long start = System.nanoTime();
@@ -70,8 +73,8 @@ public class AppRes {
 		public static Font handwritingFont;
 
 		static void load() {
-			arcadeFont = ResourceMgr.font("fonts/emulogic.ttf", 8);
-			handwritingFont = ResourceMgr.font("fonts/RockSalt-Regular.ttf", 8);
+			arcadeFont = Manager.font("fonts/emulogic.ttf", 8);
+			handwritingFont = Manager.font("fonts/RockSalt-Regular.ttf", 8);
 		}
 
 		public static Font handwriting(double size) {
@@ -89,9 +92,9 @@ public class AppRes {
 
 		static void load() {
 			messageBundle = ResourceBundle.getBundle("assets.texts.messages");
-			messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
-			messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
-			messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
+			messagePickerCheating = Manager.createPicker(messageBundle, "cheating");
+			messagePickerLevelComplete = Manager.createPicker(messageBundle, "level.complete");
+			messagePickerGameOver = Manager.createPicker(messageBundle, "game.over");
 		}
 
 		/**
@@ -157,27 +160,27 @@ public class AppRes {
 		}
 
 		static void load() {
-			PacManGame.icon = ResourceMgr.image("icons/pacman.png");
-			PacManGame.spritesheet = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
-			PacManGame.fullMaze = ResourceMgr.image("graphics/pacman/maze_full.png");
-			PacManGame.emptyMaze = ResourceMgr.image("graphics/pacman/maze_empty.png");
-			PacManGame.flashingMaze = ResourceMgr.image("graphics/pacman/maze_empty_flashing.png");
+			PacManGame.icon = Manager.image("icons/pacman.png");
+			PacManGame.spritesheet = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
+			PacManGame.fullMaze = Manager.image("graphics/pacman/maze_full.png");
+			PacManGame.emptyMaze = Manager.image("graphics/pacman/maze_empty.png");
+			PacManGame.flashingMaze = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
-			MsPacManGame.icon = ResourceMgr.image("icons/mspacman.png");
-			MsPacManGame.spritesheet = new Spritesheet(ResourceMgr.image("graphics/mspacman/sprites.png"), 16);
+			MsPacManGame.icon = Manager.image("icons/mspacman.png");
+			MsPacManGame.spritesheet = new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
 			MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
 					.toArray(Image[]::new);
-			MsPacManGame.logo = ResourceMgr.image("graphics/mspacman/midway.png");
+			MsPacManGame.logo = Manager.image("graphics/mspacman/midway.png");
 		}
 	}
 
 	public static class Sounds {
 
-		public static final AudioClip VOICE_HELP = ResourceMgr.audioClip("sound/voice/press-key.mp3");
-		public static final AudioClip VOICE_AUTOPILOT_OFF = ResourceMgr.audioClip("sound/voice/autopilot-off.mp3");
-		public static final AudioClip VOICE_AUTOPILOT_ON = ResourceMgr.audioClip("sound/voice/autopilot-on.mp3");
-		public static final AudioClip VOICE_IMMUNITY_OFF = ResourceMgr.audioClip("sound/voice/immunity-off.mp3");
-		public static final AudioClip VOICE_IMMUNITY_ON = ResourceMgr.audioClip("sound/voice/immunity-on.mp3");
+		public static final AudioClip VOICE_HELP = Manager.audioClip("sound/voice/press-key.mp3");
+		public static final AudioClip VOICE_AUTOPILOT_OFF = Manager.audioClip("sound/voice/autopilot-off.mp3");
+		public static final AudioClip VOICE_AUTOPILOT_ON = Manager.audioClip("sound/voice/autopilot-on.mp3");
+		public static final AudioClip VOICE_IMMUNITY_OFF = Manager.audioClip("sound/voice/immunity-off.mp3");
+		public static final AudioClip VOICE_IMMUNITY_ON = Manager.audioClip("sound/voice/immunity-on.mp3");
 
 		//@formatter:off
 		private static final Object[][] MS_PACMAN_AUDIO_CLIP_PATHS = { 

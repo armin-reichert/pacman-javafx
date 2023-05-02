@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;

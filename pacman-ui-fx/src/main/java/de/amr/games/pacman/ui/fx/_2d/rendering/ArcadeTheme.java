@@ -24,9 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx._2d.rendering;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -42,8 +40,6 @@ public class ArcadeTheme {
 	public static final Color BLUE = Color.rgb(33, 33, 255);
 	public static final Color PALE = Color.rgb(222, 222, 255);
 	public static final Color ROSE = Color.rgb(252, 187, 179);
-
-	static final Font SCREEN_FONT = ResourceMgr.font("fonts/emulogic.ttf", 8);
 
 	static final GhostColoring[] GHOST_COLORING = new GhostColoring[4];
 

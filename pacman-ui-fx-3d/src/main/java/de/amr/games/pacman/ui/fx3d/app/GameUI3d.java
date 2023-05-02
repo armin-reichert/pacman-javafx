@@ -52,7 +52,6 @@ import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.app.Keys;
-import de.amr.games.pacman.ui.fx.app.ResourceMgr;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -202,12 +201,12 @@ public class GameUI3d implements GameEventListener {
 	private void updateMainView() {
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Env3d.d3_drawModePy.get() == DrawMode.LINE) {
-				root.setBackground(ResourceMgr.colorBackground(Color.BLACK));
+				root.setBackground(AppRes.Manager.colorBackground(Color.BLACK));// TODO
 			} else {
 				root.setBackground(AppRes3d.Textures.backgroundForScene3D);
 			}
 		} else {
-			root.setBackground(ResourceMgr.colorBackground(Env3d.mainSceneBgColorPy.get()));
+			root.setBackground(AppRes.Manager.colorBackground(Env3d.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = Env3d.simulationPausedPy.get();
 		var dimensionMsg = AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO

@@ -41,6 +41,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -58,7 +59,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		return Font.font(ArcadeTheme.SCREEN_FONT.getFamily(), size);
+		return Font.font(AppRes.Fonts.arcadeFont.getFamily(), size);
 	}
 
 	@Override
@@ -221,8 +222,8 @@ public class PacManTestRenderer implements Rendering2D {
 		var x = bonus.entity().position().x();
 		var y = bonus.entity().position().y() + 8;
 		switch (bonus.state()) {
-		case Bonus.STATE_EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, ArcadeTheme.SCREEN_FONT, x - 20, y);
-		case Bonus.STATE_EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, ArcadeTheme.SCREEN_FONT, x - 8,
+		case Bonus.STATE_EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, AppRes.Fonts.arcadeFont, x - 20, y);
+		case Bonus.STATE_EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, AppRes.Fonts.arcadeFont, x - 8,
 				y);
 		default -> {
 		}
@@ -232,7 +233,7 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
 		levelNumber.ifPresent(number -> {
-			Rendering2D.drawText(g, "Level %s".formatted(number), Color.WHITE, ArcadeTheme.SCREEN_FONT, 18 * TS, 36 * TS - 2);
+			Rendering2D.drawText(g, "Level %s".formatted(number), Color.WHITE, AppRes.Fonts.arcadeFont, 18 * TS, 36 * TS - 2);
 		});
 	}
 
