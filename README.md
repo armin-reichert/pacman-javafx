@@ -78,9 +78,9 @@ Cheats:
 
 ![Info Panel](doc/left-info-panel.png)
 
-![Info Panel]doc/right-info-panel.png)
+![Info Panel](doc/right-info-panel.png)
 
-![Info Paneldoc/3D-info-panel.png)
+![Info Panel](doc/3D-info-panel.png)
 
 YouTube:
 
