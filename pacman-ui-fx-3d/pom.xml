@@ -8,7 +8,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainModule>de.amr.games.pacman.ui.fx3d</mainModule>
-		<mainClass>de.amr.games.pacman.ui.fx3d.app.Main</mainClass>
+		<mainClass>de.amr.games.pacman.ui.fx.v3d.app.Main</mainClass>
 		<vs.java>18</vs.java>
 		<vs.javafx>18.0.2</vs.javafx>
 		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
