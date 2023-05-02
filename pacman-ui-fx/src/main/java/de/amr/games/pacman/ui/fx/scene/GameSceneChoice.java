@@ -29,4 +29,7 @@ package de.amr.games.pacman.ui.fx.scene;
  */
 public record GameSceneChoice(GameScene scene2D, GameScene scene3D) {
 
+	public GameSceneChoice(GameScene scene2D) {
+		this(scene2D, null);
+	}
 }

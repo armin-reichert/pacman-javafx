@@ -67,13 +67,13 @@ public class PacManGameAppFX extends Application {
 	private static List<GameSceneChoice> createPacManScenes(GameController gc) {
 		return List.of(
 		//@formatter:off
-			new GameSceneChoice(new BootScene(gc), null),
-			new GameSceneChoice(new PacManIntroScene(gc), null),
-			new GameSceneChoice(new PacManCreditScene(gc), null),
-			new GameSceneChoice(new PlayScene2D(gc), null),
-			new GameSceneChoice(new PacManCutscene1(gc), null), 
-			new GameSceneChoice(new PacManCutscene2(gc), null),
-			new GameSceneChoice(new PacManCutscene3(gc), null)
+			new GameSceneChoice(new BootScene(gc)),
+			new GameSceneChoice(new PacManIntroScene(gc)),
+			new GameSceneChoice(new PacManCreditScene(gc)),
+			new GameSceneChoice(new PlayScene2D(gc)),
+			new GameSceneChoice(new PacManCutscene1(gc)), 
+			new GameSceneChoice(new PacManCutscene2(gc)),
+			new GameSceneChoice(new PacManCutscene3(gc))
 		//@formatter:on
 		);
 	}
@@ -81,13 +81,13 @@ public class PacManGameAppFX extends Application {
 	private static List<GameSceneChoice> createMsPacManScenes(GameController gc) {
 		return List.of(
 		//@formatter:off
-			new GameSceneChoice(new BootScene(gc), null),
-			new GameSceneChoice(new MsPacManIntroScene(gc), null), 
-			new GameSceneChoice(new MsPacManCreditScene(gc), null),
-			new GameSceneChoice(new PlayScene2D(gc), null),
-			new GameSceneChoice(new MsPacManIntermissionScene1(gc), null), 
-			new GameSceneChoice(new MsPacManIntermissionScene2(gc), null),
-			new GameSceneChoice(new MsPacManIntermissionScene3(gc), null)
+			new GameSceneChoice(new BootScene(gc)),
+			new GameSceneChoice(new MsPacManIntroScene(gc)), 
+			new GameSceneChoice(new MsPacManCreditScene(gc)),
+			new GameSceneChoice(new PlayScene2D(gc)),
+			new GameSceneChoice(new MsPacManIntermissionScene1(gc)), 
+			new GameSceneChoice(new MsPacManIntermissionScene2(gc)),
+			new GameSceneChoice(new MsPacManIntermissionScene3(gc))
 		//@formatter:on
 		);
 	}
