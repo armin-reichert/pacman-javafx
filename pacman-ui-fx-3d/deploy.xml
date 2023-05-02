@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.amr.games.pacman</groupId>
-	<artifactId>pacman-ui-fx3d-jlink</artifactId>
+	<artifactId>pacman-ui-fx-3d-jlink</artifactId>
 	<version>1.0</version>
 
 	<properties>
