@@ -44,6 +44,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -240,19 +241,19 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
-			Actions3d.addCredit(); // in demo mode, allow adding credit
+			Actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {
 			Actions3d.selectPrevPerspective();
 		} else if (Keyboard.pressed(Keys.NEXT_CAMERA)) {
 			Actions3d.selectNextPerspective();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
-			Actions3d.cheatEatAllPellets();
+			Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
-			Actions3d.cheatAddLives(3);
+			Actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
-			Actions3d.cheatEnterNextLevel();
+			Actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
-			Actions3d.cheatKillAllEatableGhosts();
+			Actions.cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -411,7 +412,7 @@ public class PlayScene3D implements GameScene {
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							//TODO use 3d-only resources
-							Actions3d.showFlashMessageSeconds(2, AppRes.Texts.pickLevelCompleteMessage(level.number()));
+							Actions.showFlashMessageSeconds(2, AppRes.Texts.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -425,7 +426,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			// TODO use 3d-only resources
-			Actions3d.showFlashMessageSeconds(3, AppRes.Texts.pickGameOverMessage());
+			Actions.showFlashMessageSeconds(3, AppRes.Texts.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}

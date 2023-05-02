@@ -158,7 +158,8 @@ public class GameUI implements GameEventListener {
 
 		Actions.init(new ActionContext(simulation, gameController, this::currentGameScene, flashMessageView));
 		Actions3d.init(new ActionContext3d(simulation, gameController, this));
-		Actions3d.reboot();
+
+		Actions.reboot();
 
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
@@ -323,29 +324,29 @@ public class GameUI implements GameEventListener {
 
 	private void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
-			Actions3d.toggleAutopilot();
+			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
-			Actions3d.reboot();
+			Actions.reboot();
 		} else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
 			Ufx.toggle(Env.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
-			Actions3d.toggleImmunity();
+			Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
-			Actions3d.togglePaused();
+			Actions.togglePaused();
 		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
-			Actions3d.oneSimulationStep();
+			Actions.oneSimulationStep();
 		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
-			Actions3d.tenSimulationSteps();
+			Actions.tenSimulationSteps();
 		} else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
-			Actions3d.changeSimulationSpeed(5);
+			Actions.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
-			Actions3d.changeSimulationSpeed(-5);
+			Actions.changeSimulationSpeed(-5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
-			Actions3d.resetSimulationSpeed();
+			Actions.resetSimulationSpeed();
 		} else if (Keyboard.pressed(Keys.QUIT)) {
-			Actions3d.restartIntro();
+			Actions.restartIntro();
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
-			Actions3d.startLevelTestMode();
+			Actions.startLevelTestMode();
 		} else if (Keyboard.pressed(Keys.USE_3D)) {
 			Actions3d.toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {

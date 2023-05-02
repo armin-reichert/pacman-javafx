@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx3d.dashboard;
 
+import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.app.Actions3d;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
@@ -68,7 +69,7 @@ public class SectionGeneral extends Section {
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
-		btnPlayPause.setOnAction(e -> Actions3d.togglePaused());
+		btnPlayPause.setOnAction(e -> Actions.togglePaused());
 
 		btnStep.setGraphic(iconStep);
 		btnStep.setStyle("-fx-background-color: transparent");
