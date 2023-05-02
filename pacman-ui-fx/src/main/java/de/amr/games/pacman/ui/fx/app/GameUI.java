@@ -63,80 +63,64 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
- * User interface for Pac-Man and Ms. Pac-Man games.
- * <p>
- * The play scene is available in 2D and 3D. All others scenes are 2D only.
+ * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No dashboard, no picture-in-picture view.
  * 
  * @author Armin Reichert
  */
-public class GameUI implements GameEventListener {
+public class GameUI extends GameLoop implements GameEventListener {
 
-	private static final byte TILES_X = 28;
-	private static final byte TILES_Y = 36;
+	public static final byte TILES_X = 28;
+	public static final byte TILES_Y = 36;
 
-	private static final byte INDEX_BOOT_SCENE = 0;
-	private static final byte INDEX_INTRO_SCENE = 1;
-	private static final byte INDEX_CREDIT_SCENE = 2;
-	private static final byte INDEX_PLAY_SCENE = 3;
+	public static final byte INDEX_BOOT_SCENE = 0;
+	public static final byte INDEX_INTRO_SCENE = 1;
+	public static final byte INDEX_CREDIT_SCENE = 2;
+	public static final byte INDEX_PLAY_SCENE = 3;
 
-	public class Simulation extends GameLoop {
-
-		public Simulation() {
-			super(GameModel.FPS);
-		}
-
-		@Override
-		public void doUpdate() {
-			gameController.update();
-			currentGameScene.update();
-		}
-
-		@Override
-		public void doRender() {
-			flashMessageView.update();
-			currentGameScene.render();
-		}
-	}
-
-	private final GameController gameController;
-	private final Simulation simulation = new Simulation();
-	private final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-	private final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
-	private final Stage stage;
-	private final StackPane root = new StackPane();
-	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final SoundHandler soundHandler = new SoundHandler();
-
-	private GameScene currentGameScene;
+	protected GameController gameController;
+	protected Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
+	protected Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
+	protected Stage stage;
+	protected StackPane root;
+	protected FlashMessageView flashMessageView;
+	protected SoundHandler soundHandler = new SoundHandler();
+	protected GameScene currentGameScene;
 
 	public GameUI(final Stage stage, final Settings settings, GameController gameController,
 			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
+
+		super(GameModel.FPS);
+		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
+		pausedPy.bind(Env.simulationPausedPy);
+		targetFrameratePy.bind(Env.simulationSpeedPy);
+		measuredPy.bind(Env.simulationTimeMeasuredPy);
 
 		checkNotNull(stage);
 		checkNotNull(settings);
 
 		this.stage = stage;
 		this.gameController = gameController;
+
 		var keyboardSteering = new KeyboardSteering(//
 				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+
 		gameController.setManualPacSteering(keyboardSteering);
 
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		scenes.put(GameVariant.MS_PACMAN, msPacManScenes);
-
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+
+		scenes.put(GameVariant.MS_PACMAN, msPacManScenes);
 		scenes.put(GameVariant.PACMAN, pacManScenes);
 
+		createComponents();
 		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
 
-		GameEvents.addListener(this);
 		initEnv(settings);
-		Actions.init(new ActionContext(simulation, gameController, this::currentGameScene, flashMessageView));
-		Actions.reboot();
+		Actions.init(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
 
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
@@ -145,11 +129,31 @@ public class GameUI implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 
+		GameEvents.addListener(this);
+		Actions.reboot();
+
 		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
 		Logger.info("Window size: {} x {}", stage.getWidth(), stage.getHeight());
 	}
 
-	private Scene createMainScene(float sizeX, float sizeY) {
+	@Override
+	public void doUpdate() {
+		gameController.update();
+		currentGameScene.update();
+	}
+
+	@Override
+	public void doRender() {
+		flashMessageView.update();
+		currentGameScene.render();
+	}
+
+	protected void createComponents() {
+		root = new StackPane();
+		flashMessageView = new FlashMessageView();
+	}
+
+	protected Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
 		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
 		scene.setOnKeyPressed(this::handleKeyPressed);
@@ -166,13 +170,13 @@ public class GameUI implements GameEventListener {
 		return scene;
 	}
 
-	private void resizeStageToOptimalSize() {
+	protected void resizeStageToOptimalSize() {
 		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
 			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
 		}
 	}
 
-	private void updateMainView() {
+	protected void updateMainView() {
 		root.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));
 		var paused = Env.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
@@ -190,19 +194,14 @@ public class GameUI implements GameEventListener {
 		}
 	}
 
-	private void handleKeyPressed(KeyEvent keyEvent) {
+	protected void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
 		Keyboard.clearState();
 	}
 
-	private void initEnv(Settings settings) {
+	protected void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
-
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		simulation.pausedPy.bind(Env.simulationPausedPy);
-		simulation.targetFrameratePy.bind(Env.simulationSpeedPy);
-		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
 	}
 
 	/**
@@ -217,7 +216,7 @@ public class GameUI implements GameEventListener {
 		return Optional.ofNullable(dimension == 3 ? matching.scene3D() : matching.scene2D());
 	}
 
-	private GameSceneChoice sceneSelectionMatchingCurrentGameState() {
+	protected GameSceneChoice sceneSelectionMatchingCurrentGameState() {
 		var game = gameController.game();
 		var gameState = gameController.state();
 		int index = switch (gameState) {
@@ -244,7 +243,7 @@ public class GameUI implements GameEventListener {
 		updateMainView();
 	}
 
-	private void changeGameScene(GameScene nextGameScene) {
+	protected void changeGameScene(GameScene nextGameScene) {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
@@ -257,7 +256,7 @@ public class GameUI implements GameEventListener {
 		Logger.trace("Game scene changed to {}", nextGameScene);
 	}
 
-	private void handleKeyboardInput() {
+	protected void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
@@ -337,8 +336,8 @@ public class GameUI implements GameEventListener {
 		return currentGameScene;
 	}
 
-	public Simulation simulation() {
-		return simulation;
+	public GameLoop simulation() {
+		return this;
 	}
 
 	public FlashMessageView flashMessageView() {

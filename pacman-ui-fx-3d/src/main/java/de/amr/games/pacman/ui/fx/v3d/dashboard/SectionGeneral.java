@@ -24,10 +24,11 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.Actions;
+import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.AppRes3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Env;
-import de.amr.games.pacman.ui.fx.v3d.app.GameUI;
+import de.amr.games.pacman.ui.fx.v3d.app.Env3d;
+import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -59,7 +60,7 @@ public class SectionGeneral extends Section {
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
-	public SectionGeneral(GameUI ui, String title) {
+	public SectionGeneral(GameUI3d ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
@@ -92,7 +93,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
-		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Env.wokePussyMode));
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Env3d.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
 	}
@@ -105,8 +106,8 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!Env.simulationPausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
 		sliderTargetFPS.setValue(Env.simulationSpeedPy.get());
-		cbUsePlayScene3D.setSelected(Env.d3_enabledPy.get());
-		cbPoliticallyCorrect.setSelected(Env.wokePussyMode.get());
+		cbUsePlayScene3D.setSelected(Env3d.d3_enabledPy.get());
+		cbPoliticallyCorrect.setSelected(Env3d.wokePussyMode.get());
 		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}

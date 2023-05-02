@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.ui.fx.v3d.app.GameUI;
+import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -47,7 +47,7 @@ public class Dashboard extends VBox {
 
 	private final List<Section> sections = new ArrayList<>();
 
-	public void populate(GameUI ui) {
+	public void populate(GameUI3d ui) {
 		setVisible(false);
 		sections.add(new SectionGeneral(ui, "General"));
 		sections.add(new SectionKeys(ui, "Keyboard Shortcuts"));

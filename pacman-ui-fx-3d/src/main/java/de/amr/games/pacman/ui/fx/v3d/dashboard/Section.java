@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.v3d.app.AppRes3d;
-import de.amr.games.pacman.ui.fx.v3d.app.GameUI;
+import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -62,7 +62,7 @@ public abstract class Section extends TitledPane {
 		return String.format("%.2f px/sec", GameModel.SPEED_PX_100_PERCENT * fraction);
 	}
 
-	protected final GameUI ui;
+	protected final GameUI3d ui;
 	protected final GameController gc;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final GridPane content = new GridPane();
@@ -74,7 +74,7 @@ public abstract class Section extends TitledPane {
 
 	private int row;
 
-	protected Section(GameUI ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+	protected Section(GameUI3d ui, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		this.ui = ui;
 		this.gc = ui.gameController();
 		this.minLabelWidth = minLabelWidth;

@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.ui.fx.v3d.app.AppRes3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Env;
+import de.amr.games.pacman.ui.fx.v3d.app.Env3d;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -81,9 +81,9 @@ public class LivesCounter3D {
 		for (int i = 0; i < maxLives; ++i) {
 			addPillarAndPlate(2 * i * TS);
 			var pacShape = fnPacNode.get();
-			PacModel3D.headMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
-			PacModel3D.palateMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
-			PacModel3D.eyesMeshView(pacShape).drawModeProperty().bind(Env.d3_drawModePy);
+			PacModel3D.headMeshView(pacShape).drawModeProperty().bind(Env3d.d3_drawModePy);
+			PacModel3D.palateMeshView(pacShape).drawModeProperty().bind(Env3d.d3_drawModePy);
+			PacModel3D.eyesMeshView(pacShape).drawModeProperty().bind(Env3d.d3_drawModePy);
 			pacShape.setTranslateX(2.0 * i * TS);
 			pacShape.setTranslateZ(-(pillarHeight + 5.5));
 			if (lookRight) {
@@ -125,7 +125,7 @@ public class LivesCounter3D {
 		plate.setTranslateZ(-pillarHeight - plateThickness);
 		plate.setRotationAxis(Rotate.X_AXIS);
 		plate.setRotate(90);
-		plate.drawModeProperty().bind(Env.d3_drawModePy);
+		plate.drawModeProperty().bind(Env3d.d3_drawModePy);
 
 		var pillar = new Cylinder(1, pillarHeight);
 		pillar.setMaterial(pillarMaterial);
@@ -133,7 +133,7 @@ public class LivesCounter3D {
 		pillar.setTranslateZ(-0.5 * pillarHeight);
 		pillar.setRotationAxis(Rotate.X_AXIS);
 		pillar.setRotate(90);
-		pillar.drawModeProperty().bind(Env.d3_drawModePy);
+		pillar.drawModeProperty().bind(Env3d.d3_drawModePy);
 
 		pillarAndPlateGroup.getChildren().addAll(plate, pillar);
 	}

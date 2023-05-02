@@ -99,7 +99,7 @@ public class AppRes3d {
 			var material = new PhongMaterial();
 			material.setBumpMap(Manager.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
 			material.setDiffuseMap(Manager.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
-			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
+			material.diffuseColorProperty().bind(Env3d.d3_floorColorPy);
 			floorTexturesByName.put(name, material);
 		}
 
