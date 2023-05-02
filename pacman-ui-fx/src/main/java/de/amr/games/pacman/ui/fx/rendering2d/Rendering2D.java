@@ -50,19 +50,19 @@ public interface Rendering2D {
 	Font screenFont(double size);
 
 	default PacManColoring pacManColors() {
-		return AppRes.ArcadeTheme.PACMAN_COLORING;
+		return AppRes.ArcadeTheme.PACMAN_COLORS;
 	}
 
 	default MsPacManColoring msPacManColors() {
-		return AppRes.ArcadeTheme.MS_PACMAN_COLORING;
+		return AppRes.ArcadeTheme.MS_PACMAN_COLORS;
 	}
 
 	default GhostColoring[] ghostColors() {
-		return AppRes.ArcadeTheme.GHOST_COLORING;
+		return AppRes.ArcadeTheme.GHOST_COLORS;
 	}
 
 	default GhostColoring ghostColors(int ghostID) {
-		return AppRes.ArcadeTheme.GHOST_COLORING[ghostID];
+		return AppRes.ArcadeTheme.GHOST_COLORS[ghostID];
 	}
 
 	MazeColoring mazeColors(int mazeNumber);

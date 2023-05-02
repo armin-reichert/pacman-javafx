@@ -69,7 +69,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public GhostColoring ghostColors(int ghostID) {
-		return AppRes.ArcadeTheme.GHOST_COLORING[ghostID];
+		return AppRes.ArcadeTheme.GHOST_COLORS[ghostID];
 	}
 
 	@Override
