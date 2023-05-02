@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx3d.app;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -47,9 +47,9 @@ import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
+import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.ResourceMgr;
@@ -58,14 +58,19 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.shell.FlashMessageView;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx3d._3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx3d.dashboard.Dashboard;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
@@ -75,10 +80,13 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI implements GameEventListener {
+public class GameUI3d implements GameEventListener {
 
 	private static final byte TILES_X = 28;
 	private static final byte TILES_Y = 36;
+
+	public static final float PIP_MIN_HEIGHT = TILES_Y * 8;
+	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
 
 	private static final byte INDEX_BOOT_SCENE = 0;
 	private static final byte INDEX_INTRO_SCENE = 1;
@@ -100,6 +108,8 @@ public class GameUI implements GameEventListener {
 		@Override
 		public void doRender() {
 			flashMessageView.update();
+			dashboard.update();
+			pipGameScene.render();
 			currentGameScene.render();
 		}
 	}
@@ -110,11 +120,13 @@ public class GameUI implements GameEventListener {
 	private final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
 	private final Stage stage;
 	private final StackPane root = new StackPane();
+	private final PlayScene2D pipGameScene;
+	private final Dashboard dashboard = new Dashboard();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
 
 	private GameScene currentGameScene;
 
-	public GameUI(final Stage stage, final Settings settings, GameController gameController,
+	public GameUI3d(final Stage stage, final Settings settings, GameController gameController,
 			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
 
 		checkNotNull(stage);
@@ -134,14 +146,21 @@ public class GameUI implements GameEventListener {
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
 		scenes.put(GameVariant.PACMAN, pacManScenes);
 
+		pipGameScene = new PlayScene2D(gameController);
+
 		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
 
 		GameEvents.addListener(this);
+		dashboard.populate(this);
 		initEnv(settings);
+
+		// TODO
 		Actions.init(simulation, gameController, this::currentGameScene, flashMessageView);
-		Actions.reboot();
+
+		Actions3d.setUI(this);
+		Actions3d.reboot();
 
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
@@ -164,6 +183,9 @@ public class GameUI implements GameEventListener {
 			}
 		});
 		var topLayer = new BorderPane();
+		topLayer.setLeft(dashboard);
+		topLayer.setRight(pipGameScene.fxSubScene());
+
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(flashMessageView);
 		root.getChildren().add(topLayer);
@@ -178,21 +200,42 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void updateMainView() {
-		root.setBackground(ResourceMgr.colorBackground(Env.mainSceneBgColorPy.get()));
-		var paused = Env.simulationPausedPy.get();
+		if (currentGameScene != null && currentGameScene.is3D()) {
+			if (Env3d.d3_drawModePy.get() == DrawMode.LINE) {
+				root.setBackground(ResourceMgr.colorBackground(Color.BLACK));
+			} else {
+				root.setBackground(AppRes3d.Textures.backgroundForScene3D);
+			}
+		} else {
+			root.setBackground(ResourceMgr.colorBackground(Env3d.mainSceneBgColorPy.get()));
+		}
+		var paused = Env3d.simulationPausedPy.get();
+		var dimensionMsg = AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
+			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));// TODO
 			stage.getIcons().setAll(AppRes.Graphics.MsPacManGame.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
+			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));// TOOD
 			stage.getIcons().setAll(AppRes.Graphics.PacManGame.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
+	}
+
+	/**
+	 * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
+	 * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
+	 */
+	private void updatePictureInPictureView() {
+		boolean visible = Env3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
+		pipGameScene.fxSubScene().setVisible(visible);
+		pipGameScene.context().setCreditVisible(false);
+		pipGameScene.context().setScoreVisible(true);
+		pipGameScene.context().setRendering2D(currentGameScene.context().rendering2D());
 	}
 
 	private void handleKeyPressed(KeyEvent keyEvent) {
@@ -202,12 +245,21 @@ public class GameUI implements GameEventListener {
 	}
 
 	private void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env3d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		simulation.pausedPy.bind(Env.simulationPausedPy);
-		simulation.targetFrameratePy.bind(Env.simulationSpeedPy);
-		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
+		Env3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
+		Env3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
+		pipGameScene.fxSubScene().opacityProperty().bind(Env3d.pipOpacityPy);
+
+		Env3d.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
+		simulation.pausedPy.bind(Env3d.simulationPausedPy);
+		simulation.targetFrameratePy.bind(Env3d.simulationSpeedPy);
+		simulation.measuredPy.bind(Env3d.simulationTimeMeasuredPy);
+
+		Env3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env3d.d3_enabledPy.set(true);
+		Env3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
 
 	/**
@@ -220,6 +272,13 @@ public class GameUI implements GameEventListener {
 		}
 		var matching = sceneSelectionMatchingCurrentGameState();
 		return Optional.ofNullable(dimension == 3 ? matching.scene3D() : matching.scene2D());
+	}
+
+	private boolean isPlayScene(GameScene gameScene) {
+		return gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene2D()
+				|| gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene3D()
+				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene2D()
+				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene3D();
 	}
 
 	private GameSceneChoice sceneSelectionMatchingCurrentGameState() {
@@ -239,13 +298,15 @@ public class GameUI implements GameEventListener {
 
 	public void updateGameScene(boolean reload) {
 		var matching = sceneSelectionMatchingCurrentGameState();
-		var nextGameScene = matching.scene2D();
+		var use3D = Env3d.d3_enabledPy.get();
+		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
+		updatePictureInPictureView();
 		updateMainView();
 	}
 
@@ -264,29 +325,35 @@ public class GameUI implements GameEventListener {
 
 	private void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
-			Actions.toggleAutopilot();
+			Actions3d.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
-			Actions.reboot();
+			Actions3d.reboot();
 		} else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
-			Ufx.toggle(Env.showDebugInfoPy);
+			Ufx.toggle(Env3d.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
-			Actions.toggleImmunity();
+			Actions3d.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
-			Actions.togglePaused();
+			Actions3d.togglePaused();
 		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
-			Actions.oneSimulationStep();
+			Actions3d.oneSimulationStep();
 		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
-			Actions.tenSimulationSteps();
+			Actions3d.tenSimulationSteps();
 		} else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
-			Actions.changeSimulationSpeed(5);
+			Actions3d.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
-			Actions.changeSimulationSpeed(-5);
+			Actions3d.changeSimulationSpeed(-5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
-			Actions.resetSimulationSpeed();
+			Actions3d.resetSimulationSpeed();
 		} else if (Keyboard.pressed(Keys.QUIT)) {
-			Actions.restartIntro();
+			Actions3d.restartIntro();
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
-			Actions.startLevelTestMode();
+			Actions3d.startLevelTestMode();
+		} else if (Keyboard.pressed(Keys.USE_3D)) {
+			Actions3d.toggleUse3DScene();
+		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
+			Actions3d.toggleDashboardVisible();
+		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
+			Actions3d.togglePipViewVisible();
 		} else if (Keyboard.pressed(Keys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
@@ -392,6 +459,10 @@ public class GameUI implements GameEventListener {
 
 	public Simulation simulation() {
 		return simulation;
+	}
+
+	public Dashboard dashboard() {
+		return dashboard;
 	}
 
 	public FlashMessageView flashMessageView() {

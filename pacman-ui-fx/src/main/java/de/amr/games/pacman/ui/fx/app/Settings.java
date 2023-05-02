@@ -30,7 +30,6 @@ import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx._3d.scene.Perspective;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -64,8 +63,8 @@ public class Settings {
 	}
 
 	public final boolean fullScreen;
-	public final Perspective perspective;
-	public final boolean use3D;
+//	public final Perspective perspective;
+//	public final boolean use3D;
 	public final GameVariant variant;
 	public final float zoom;
 	public final Map<Direction, KeyCode> keyMap;
@@ -74,8 +73,8 @@ public class Settings {
 	@SuppressWarnings("unchecked")
 	public Settings(Map<String, String> parameters) {
 		fullScreen = parse(parameters, "fullScreen", false, Boolean::valueOf);
-		perspective = parse(parameters, "perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
-		use3D = parse(parameters, "use3D", false, Boolean::valueOf);
+//		perspective = parse(parameters, "perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
+//		use3D = parse(parameters, "use3D", false, Boolean::valueOf);
 		variant = parse(parameters, "variant", GameVariant.PACMAN, GameVariant::valueOf);
 		zoom = parse(parameters, "zoom", 2.0f, Float::valueOf);
 		keyMap = (Map<Direction, KeyCode>) parse(parameters, "keys", "cursor", Settings::parseKeyMap);
@@ -84,7 +83,6 @@ public class Settings {
 
 	@Override
 	public String toString() {
-		return "{fullScreen=%s, perspective=%s, use3D=%s, variant=%s, zoom=%.2f, keyMap=%s}".formatted(fullScreen,
-				perspective, use3D, variant, zoom, keyMap);
+		return "{fullScreen=%s, variant=%s, zoom=%.2f, keyMap=%s}".formatted(fullScreen, variant, zoom, keyMap);
 	}
 }

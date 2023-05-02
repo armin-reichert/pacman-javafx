@@ -24,10 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Globals.randomInt;
-
 import java.text.MessageFormat;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
@@ -38,18 +35,13 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
-import de.amr.games.pacman.ui.fx._3d.Model3D;
-import de.amr.games.pacman.ui.fx._3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 
 /**
@@ -59,7 +51,6 @@ public class AppRes {
 
 	public static void load() {
 		long start = System.nanoTime();
-		load("3D models", Models3D::load);
 		load("graphics", Graphics::load);
 		load("sounds", Sounds::load);
 		load("fonts", Fonts::load);
@@ -71,24 +62,6 @@ public class AppRes {
 		long start = System.nanoTime();
 		loadingCode.run();
 		Logger.info("Loading {} done ({} seconds).", section, (System.nanoTime() - start) / 1e9f);
-	}
-
-	public static class Models3D {
-
-		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-		public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-		public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-		public static final String MESH_ID_PELLET = "Fruit";
-
-		public static PacModel3D pacModel3D;
-		public static Model3D ghostModel3D;
-		public static Model3D pelletModel3D;
-
-		static void load() {
-			pacModel3D = new PacModel3D("model3D/pacman.obj");
-			ghostModel3D = new Model3D("model3D/ghost.obj");
-			pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
-		}
 	}
 
 	public static class Fonts {
@@ -113,16 +86,12 @@ public class AppRes {
 		private static Picker<String> messagePickerCheating;
 		private static Picker<String> messagePickerLevelComplete;
 		private static Picker<String> messagePickerGameOver;
-		private static Picker<String> readyTextPickerPacMan;
-		private static Picker<String> readyTextPickerMsPacman;
 
 		static void load() {
 			messageBundle = ResourceBundle.getBundle("assets.texts.messages");
 			messagePickerCheating = ResourceMgr.createPicker(messageBundle, "cheating");
 			messagePickerLevelComplete = ResourceMgr.createPicker(messageBundle, "level.complete");
 			messagePickerGameOver = ResourceMgr.createPicker(messageBundle, "game.over");
-			readyTextPickerPacMan = ResourceMgr.createPicker(messageBundle, "pacman.ready");
-			readyTextPickerMsPacman = ResourceMgr.createPicker(messageBundle, "mspacman.ready");
 		}
 
 		/**
@@ -156,12 +125,7 @@ public class AppRes {
 		}
 
 		public static String randomReadyText(GameVariant variant) {
-			if (Env.wokePussyMode.get()) {
-				return "READY!";
-			} else {
-				var picker = variant == GameVariant.MS_PACMAN ? readyTextPickerMsPacman : readyTextPickerPacMan;
-				return picker.next();
-			}
+			return "READY!";
 		}
 	}
 
@@ -192,19 +156,7 @@ public class AppRes {
 			}
 		}
 
-		public static final String KEY_NO_TEXTURE = "No Texture";
-		public static Background backgroundForScene3D;
-		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
-
 		static void load() {
-			backgroundForScene3D = new Background(
-					new BackgroundImage(ResourceMgr.image("graphics/sky.png"), null, null, null, null));
-
-			loadFloorTexture("Hexagon", "hexagon", "jpg");
-			loadFloorTexture("Knobs & Bumps", "knobs", "jpg");
-			loadFloorTexture("Plastic", "plastic", "jpg");
-			loadFloorTexture("Wood", "wood", "jpg");
-
 			PacManGame.icon = ResourceMgr.image("icons/pacman.png");
 			PacManGame.spritesheet = new Spritesheet(ResourceMgr.image("graphics/pacman/sprites.png"), 16);
 			PacManGame.fullMaze = ResourceMgr.image("graphics/pacman/maze_full.png");
@@ -216,36 +168,6 @@ public class AppRes {
 			MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
 					.toArray(Image[]::new);
 			MsPacManGame.logo = ResourceMgr.image("graphics/mspacman/midway.png");
-		}
-
-		private static void loadFloorTexture(String name, String textureBase, String ext) {
-			var material = new PhongMaterial();
-			material.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			material.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
-			material.diffuseColorProperty().bind(Env.d3_floorColorPy);
-			floorTexturesByName.put(name, material);
-		}
-
-		public static PhongMaterial floorTexture(String name) {
-			return floorTexturesByName.get(name);
-		}
-
-		public static String[] floorTextureNames() {
-			return floorTexturesByName.keySet().toArray(String[]::new);
-		}
-
-		public static String randomFloorTextureName() {
-			var names = floorTextureNames();
-			return names[randomInt(0, names.length)];
-		}
-
-		public static PhongMaterial texture(String textureBase, String ext, Color diffuseColor, Color specularColor) {
-			var texture = new PhongMaterial();
-			texture.setBumpMap(ResourceMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(ResourceMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
-			texture.setDiffuseColor(diffuseColor);
-			texture.setSpecularColor(specularColor);
-			return texture;
 		}
 	}
 

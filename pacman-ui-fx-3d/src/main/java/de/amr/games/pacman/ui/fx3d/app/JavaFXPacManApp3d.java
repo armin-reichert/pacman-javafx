@@ -42,11 +42,9 @@ import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene2;
 import de.amr.games.pacman.ui.fx._2d.scene.PacManCutscene3;
 import de.amr.games.pacman.ui.fx._2d.scene.PacManIntroScene;
 import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
-import de.amr.games.pacman.ui.fx._3d.scene.PlayScene3D;
-import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx3d._3d.scene.PlayScene3D;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -87,18 +85,18 @@ public class JavaFXPacManApp3d extends Application {
 		launch(args);
 	}
 
-	private GameUI gameUI;
+	private GameUI3d gameUI;
 
 	@Override
 	public void init() throws Exception {
-		AppRes.load();
+		AppRes3d.load();
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
-		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
+		gameUI = new GameUI3d(primaryStage, settings, gameController, createMsPacManScenes(gameController),
 				createPacManScenes(gameController));
 		gameUI.simulation().start();
 		Logger.info("Game started. Target frame rate: {}", gameUI.simulation().targetFrameratePy.get());

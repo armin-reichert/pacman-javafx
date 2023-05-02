@@ -25,7 +25,6 @@ module de.amr.games.pacman.ui.fx {
 	requires org.tinylog.api;
 
 	exports de.amr.games.pacman.ui.fx.app;
-	exports de.amr.games.pacman.ui.fx.dashboard;
 	exports de.amr.games.pacman.ui.fx.input;
 	exports de.amr.games.pacman.ui.fx.scene;
 	exports de.amr.games.pacman.ui.fx.shell;
@@ -33,8 +32,4 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx.util;
 	exports de.amr.games.pacman.ui.fx._2d.rendering;
 	exports de.amr.games.pacman.ui.fx._2d.scene;
-	exports de.amr.games.pacman.ui.fx._3d;
-	exports de.amr.games.pacman.ui.fx._3d.animation;
-	exports de.amr.games.pacman.ui.fx._3d.entity;
-	exports de.amr.games.pacman.ui.fx._3d.scene;
 }

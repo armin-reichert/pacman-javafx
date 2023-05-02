@@ -27,39 +27,51 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.RND;
 
-import java.util.Objects;
+import java.util.function.Supplier;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.shell.GameUI;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.shell.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
-import javafx.scene.shape.DrawMode;
 
 /**
  * @author Armin Reichert
  */
 public class Actions {
 
-	private static GameUI ui;
+	private static GameLoop gameLoop;
+	private static GameController gameController;
+	private static Supplier<GameScene> currentGameSceneSupplier;
+	private static FlashMessageView flashMessageView;
+
 	private static AudioClip currentVoiceMessage;
 
-	public static void setUI(GameUI theUI) {
-		ui = Objects.requireNonNull(theUI, "User Interface for actions must not be null");
+	public static void init(GameLoop theGameLoop, GameController theGameController,
+			Supplier<GameScene> theCurrentSceneSupplier, FlashMessageView theFlashMessageView) {
+		gameLoop = theGameLoop;
+		gameController = theGameController;
+		currentGameSceneSupplier = theCurrentSceneSupplier;
+		flashMessageView = theFlashMessageView;
 	}
 
 	private static GameController gameController() {
-		return ui.gameController();
+		return gameController;
 	}
 
 	private static GameModel game() {
-		return gameController().game();
+		return gameController.game();
 	}
 
 	private static GameState gameState() {
-		return gameController().state();
+		return gameController.state();
+	}
+
+	private static GameScene currentGameScene() {
+		return currentGameSceneSupplier.get();
 	}
 
 	public static void playHelpVoiceMessageAfterSeconds(int seconds) {
@@ -85,7 +97,7 @@ public class Actions {
 	}
 
 	public static void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		ui.flashMessageView().showMessage(String.format(message, args), seconds);
+		flashMessageView.showMessage(String.format(message, args), seconds);
 	}
 
 	public static void startGame() {
@@ -101,7 +113,7 @@ public class Actions {
 	}
 
 	public static void restartIntro() {
-		ui.currentGameScene().end();
+		currentGameScene().end();
 		GameEvents.setSoundEventsEnabled(true);
 		if (game().isPlaying()) {
 			game().changeCredit(-1);
@@ -110,8 +122,8 @@ public class Actions {
 	}
 
 	public static void reboot() {
-		if (ui.currentGameScene() != null) {
-			ui.currentGameScene().end();
+		if (currentGameScene() != null) {
+			currentGameScene().end();
 		}
 		playHelpVoiceMessageAfterSeconds(4);
 		gameController().restart(GameState.BOOT);
@@ -138,16 +150,6 @@ public class Actions {
 		});
 	}
 
-	public static void togglePipViewVisible() {
-		Ufx.toggle(Env.pipVisiblePy);
-		var msgKey = Env.pipVisiblePy.get() ? "pip_on" : "pip_off";
-		showFlashMessage(AppRes.Texts.message(msgKey));
-	}
-
-	public static void toggleDashboardVisible() {
-		Ufx.toggle(ui.dashboard().visibleProperty());
-	}
-
 	public static void togglePaused() {
 		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?
@@ -158,18 +160,18 @@ public class Actions {
 
 	public static void oneSimulationStep() {
 		if (Env.simulationPausedPy.get()) {
-			ui.simulation().executeSingleStep(true);
+			gameLoop.executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
 		if (Env.simulationPausedPy.get()) {
-			ui.simulation().executeSteps(10, true);
+			gameLoop.executeSteps(10, true);
 		}
 	}
 
 	public static void changeSimulationSpeed(int delta) {
-		int newFramerate = ui.simulation().targetFrameratePy.get() + delta;
+		int newFramerate = gameLoop.targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
 			Env.simulationSpeedPy.set(newFramerate);
 			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
@@ -185,24 +187,6 @@ public class Actions {
 		var gameVariant = game().variant().next();
 		gameController().selectGameVariant(gameVariant);
 		playHelpVoiceMessageAfterSeconds(4);
-	}
-
-	public static void selectNextPerspective() {
-		if (ui.currentGameScene().is3D()) {
-			var nextPerspective = Env.d3_perspectivePy.get().next();
-			Env.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = AppRes.Texts.message(nextPerspective.name());
-			showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
-		}
-	}
-
-	public static void selectPrevPerspective() {
-		if (ui.currentGameScene().is3D()) {
-			var prevPerspective = Env.d3_perspectivePy.get().prev();
-			Env.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = AppRes.Texts.message(prevPerspective.name());
-			showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
-		}
 	}
 
 	public static void toggleAutopilot() {
@@ -226,20 +210,6 @@ public class Actions {
 			gameController().restart(GameState.LEVEL_TEST);
 			showFlashMessage("Level TEST MODE");
 		}
-	}
-
-	public static void toggleUse3DScene() {
-		Ufx.toggle(Env.d3_enabledPy);
-		if (ui.findGameScene(3).isPresent()) {
-			ui.updateGameScene(true);
-			ui.currentGameScene().onSceneVariantSwitch();
-		} else {
-			showFlashMessage(AppRes.Texts.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
-		}
-	}
-
-	public static void toggleDrawMode() {
-		Env.d3_drawModePy.set(Env.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void cheatAddLives(int numLives) {

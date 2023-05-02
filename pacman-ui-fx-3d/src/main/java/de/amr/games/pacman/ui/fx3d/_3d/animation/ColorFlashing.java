@@ -21,29 +21,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx3d._3d.animation;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
+import javafx.animation.Interpolator;
+import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
- * Global stuff.
- * 
  * @author Armin Reichert
  */
-public class Env {
-//@formatter:off
-	public static final ObjectProperty<Color>       mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
-	public static final BooleanProperty             showDebugInfoPy = new SimpleBooleanProperty(false);
+public class ColorFlashing extends Transition {
 
-	public static final BooleanProperty             simulationPausedPy = new SimpleBooleanProperty(false);
-	public static final IntegerProperty             simulationStepsPy = new SimpleIntegerProperty(1);
-	public static final IntegerProperty             simulationSpeedPy = new SimpleIntegerProperty(60);
-	public static final BooleanProperty             simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
-//@formatter:on
+	public final ObjectProperty<Color> colorPy = new SimpleObjectProperty<>();
+
+	private final Color startColor;
+	private final Color endColor;
+
+	public ColorFlashing(Color startColor, Color endColor, double seconds, int numFlashes) {
+		this.startColor = startColor;
+		this.endColor = endColor;
+		colorPy.set(startColor);
+		setCycleCount(INDEFINITE);
+		setCycleDuration(Duration.seconds(seconds / numFlashes));
+		setAutoReverse(true);
+		setInterpolator(Interpolator.EASE_OUT);
+	}
+
+	@Override
+	protected void interpolate(double t) {
+		colorPy.set(startColor.interpolate(endColor, t));
+	}
 }

@@ -18,12 +18,17 @@
  */
 module de.amr.games.pacman.ui.fx3d {
 
-	requires transitive de.amr.games.pacman;
-	requires transitive de.amr.games.pacman.ui.fx;
 	requires javafx.graphics;
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
 	requires org.tinylog.api;
+	requires transitive de.amr.games.pacman;
+	requires transitive de.amr.games.pacman.ui.fx;
 
 	exports de.amr.games.pacman.ui.fx3d.app;
+	exports de.amr.games.pacman.ui.fx3d.dashboard;
+	exports de.amr.games.pacman.ui.fx3d._3d;
+	exports de.amr.games.pacman.ui.fx3d._3d.animation;
+	exports de.amr.games.pacman.ui.fx3d._3d.entity;
+	exports de.amr.games.pacman.ui.fx3d._3d.scene;
 }

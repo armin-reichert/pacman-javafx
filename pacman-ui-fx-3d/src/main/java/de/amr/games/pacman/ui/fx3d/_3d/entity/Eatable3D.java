@@ -20,30 +20,28 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */
-package de.amr.games.pacman.ui.fx.app;
+*/
+package de.amr.games.pacman.ui.fx3d._3d.entity;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.paint.Color;
+import java.util.Optional;
+
+import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.ui.fx.util.Vector3f;
+import javafx.animation.Animation;
+import javafx.scene.Node;
 
 /**
- * Global stuff.
- * 
  * @author Armin Reichert
  */
-public class Env {
-//@formatter:off
-	public static final ObjectProperty<Color>       mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
-	public static final BooleanProperty             showDebugInfoPy = new SimpleBooleanProperty(false);
+public interface Eatable3D {
 
-	public static final BooleanProperty             simulationPausedPy = new SimpleBooleanProperty(false);
-	public static final IntegerProperty             simulationStepsPy = new SimpleIntegerProperty(1);
-	public static final IntegerProperty             simulationSpeedPy = new SimpleIntegerProperty(60);
-	public static final BooleanProperty             simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
-//@formatter:on
+	Node getRoot();
+
+	void eat();
+
+	Optional<Animation> getEatenAnimation();
+
+	Vector2i tile();
+
+	Vector3f position();
 }
