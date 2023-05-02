@@ -7,19 +7,6 @@
 	<artifactId>pacman-ui-fx</artifactId>
 	<version>1.0</version>
 
-	<name>Pac-Man / Ms. Pac-Man UI in JavaFX</name>
-	<description><![CDATA[
-This is a JavaFX UI for the Pac-Man and Ms. Pac-Man games.
-
-The game model and logic are implemented using the Model-View-Controller architecture, see https://github.com/armin-reichert/pacman-basic.
-
-There are two executables built:
-1. An executable jar file (using Maven shade)
-2. A zip file containing the Java/JavaFX runtime and the game
-  ]]>
-	</description>
-	<url>https://github.com/armin-reichert/pacman-javafx</url>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
@@ -78,6 +65,7 @@ There are two executables built:
 				</configuration>
 			</plugin>
 			
+			<!-- this was added for log4j, not sure if still needed 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -85,12 +73,12 @@ There are two executables built:
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<!-- this was added for log4j, not sure if still needed -->
 							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
+			-->
 			
 			<plugin>
 				<groupId>org.openjfx</groupId>
