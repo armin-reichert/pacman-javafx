@@ -32,18 +32,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
 /**
- * Global stuff.
- * 
  * @author Armin Reichert
  */
 public class Env {
 //@formatter:off
-	public static final ObjectProperty<Color>       mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
-	public static final BooleanProperty             showDebugInfoPy = new SimpleBooleanProperty(false);
-
-	public static final BooleanProperty             simulationPausedPy = new SimpleBooleanProperty(false);
-	public static final IntegerProperty             simulationStepsPy = new SimpleIntegerProperty(1);
-	public static final IntegerProperty             simulationSpeedPy = new SimpleIntegerProperty(60);
-	public static final BooleanProperty             simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Color> mainSceneBgColorPy       = new SimpleObjectProperty<>(Color.web("0x334bd3"));
+	public static final BooleanProperty       showDebugInfoPy          = new SimpleBooleanProperty(false);
+	public static final BooleanProperty       simulationPausedPy       = new SimpleBooleanProperty(false);
+	public static final IntegerProperty       simulationStepsPy        = new SimpleIntegerProperty(1);
+	public static final IntegerProperty       simulationSpeedPy        = new SimpleIntegerProperty(60);
+	public static final BooleanProperty       simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
 //@formatter:on
 }
