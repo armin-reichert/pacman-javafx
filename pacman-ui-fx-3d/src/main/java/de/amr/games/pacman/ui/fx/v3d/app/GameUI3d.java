@@ -53,6 +53,9 @@ import javafx.stage.Stage;
  * <p>
  * The play scene is available in 2D and 3D. All others scenes are 2D only.
  * 
+ * <p>
+ * TODO still more refactoring necessary
+ * 
  * @author Armin Reichert
  */
 public class GameUI3d extends GameUI {
