@@ -139,8 +139,8 @@ public class Actions3d {
 	}
 
 	public static void togglePipViewVisible() {
-		Ufx.toggle(Env3d.pipVisiblePy);
-		var msgKey = Env3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
+		Ufx.toggle(Env.pipVisiblePy);
+		var msgKey = Env.pipVisiblePy.get() ? "pip_on" : "pip_off";
 		showFlashMessage(AppRes.Texts.message(msgKey));// TODO
 	}
 
@@ -149,21 +149,21 @@ public class Actions3d {
 	}
 
 	public static void togglePaused() {
-		Ufx.toggle(Env3d.simulationPausedPy);
+		Ufx.toggle(Env.simulationPausedPy);
 		// TODO mute and unmute?
-		if (Env3d.simulationPausedPy.get()) {
+		if (Env.simulationPausedPy.get()) {
 			AppRes.Sounds.gameSounds(game().variant()).stopAll();
 		}
 	}
 
 	public static void oneSimulationStep() {
-		if (Env3d.simulationPausedPy.get()) {
+		if (Env.simulationPausedPy.get()) {
 			ui.simulation().executeSingleStep(true);
 		}
 	}
 
 	public static void tenSimulationSteps() {
-		if (Env3d.simulationPausedPy.get()) {
+		if (Env.simulationPausedPy.get()) {
 			ui.simulation().executeSteps(10, true);
 		}
 	}
@@ -171,14 +171,14 @@ public class Actions3d {
 	public static void changeSimulationSpeed(int delta) {
 		int newFramerate = ui.simulation().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
-			Env3d.simulationSpeedPy.set(newFramerate);
+			Env.simulationSpeedPy.set(newFramerate);
 			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 		}
 	}
 
 	public static void resetSimulationSpeed() {
-		Env3d.simulationSpeedPy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, "%dHz".formatted(Env3d.simulationSpeedPy.get()));
+		Env.simulationSpeedPy.set(GameModel.FPS);
+		showFlashMessageSeconds(0.75, "%dHz".formatted(Env.simulationSpeedPy.get()));
 	}
 
 	public static void selectNextGameVariant() {
@@ -189,8 +189,8 @@ public class Actions3d {
 
 	public static void selectNextPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			var nextPerspective = Env3d.d3_perspectivePy.get().next();
-			Env3d.d3_perspectivePy.set(nextPerspective);
+			var nextPerspective = Env.d3_perspectivePy.get().next();
+			Env.d3_perspectivePy.set(nextPerspective);
 			String perspectiveName = AppRes.Texts.message(nextPerspective.name());
 			showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
 		}
@@ -198,8 +198,8 @@ public class Actions3d {
 
 	public static void selectPrevPerspective() {
 		if (ui.currentGameScene().is3D()) {
-			var prevPerspective = Env3d.d3_perspectivePy.get().prev();
-			Env3d.d3_perspectivePy.set(prevPerspective);
+			var prevPerspective = Env.d3_perspectivePy.get().prev();
+			Env.d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = AppRes.Texts.message(prevPerspective.name());
 			showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
 		}
@@ -229,17 +229,17 @@ public class Actions3d {
 	}
 
 	public static void toggleUse3DScene() {
-		Ufx.toggle(Env3d.d3_enabledPy);
+		Ufx.toggle(Env.d3_enabledPy);
 		if (ui.findGameScene(3).isPresent()) {
 			ui.updateGameScene(true);
 			ui.currentGameScene().onSceneVariantSwitch();
 		} else {
-			showFlashMessage(AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));// TODO
+			showFlashMessage(AppRes.Texts.message(Env.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));// TODO
 		}
 	}
 
 	public static void toggleDrawMode() {
-		Env3d.d3_drawModePy.set(Env3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Env.d3_drawModePy.set(Env.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	public static void cheatAddLives(int numLives) {

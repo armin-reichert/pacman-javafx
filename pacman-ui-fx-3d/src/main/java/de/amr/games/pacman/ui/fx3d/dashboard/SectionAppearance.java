@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
-import de.amr.games.pacman.ui.fx3d.app.Env3d;
+import de.amr.games.pacman.ui.fx3d.app.Env;
 import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -44,21 +44,21 @@ public class SectionAppearance extends Section {
 
 	public SectionAppearance(GameUI3d ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		pickerBgColor = addColorPicker("Background color", Env3d.mainSceneBgColorPy.get());
-		pickerBgColor.setOnAction(e -> Env3d.mainSceneBgColorPy.set(pickerBgColor.getValue()));
-		pickerLightColor = addColorPicker("Light Color", Env3d.d3_lightColorPy.get());
-		pickerLightColor.setOnAction(e -> Env3d.d3_lightColorPy.set(pickerLightColor.getValue()));
-		pickerFloorColor = addColorPicker("Floor Color", Env3d.d3_floorColorPy.get());
-		pickerFloorColor.setOnAction(e -> Env3d.d3_floorColorPy.set(pickerFloorColor.getValue()));
+		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
+		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
+		pickerLightColor = addColorPicker("Light Color", Env.d3_lightColorPy.get());
+		pickerLightColor.setOnAction(e -> Env.d3_lightColorPy.set(pickerLightColor.getValue()));
+		pickerFloorColor = addColorPicker("Floor Color", Env.d3_floorColorPy.get());
+		pickerFloorColor.setOnAction(e -> Env.d3_floorColorPy.set(pickerFloorColor.getValue()));
 		comboFloorTexture = addComboBox("Floor Texture", textureItems());
-		comboFloorTexture.setOnAction(e -> Env3d.d3_floorTexturePy.set(comboFloorTexture.getValue()));
-		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Env3d.d3_floorTextureRandomPy));
+		comboFloorTexture.setOnAction(e -> Env.d3_floorTexturePy.set(comboFloorTexture.getValue()));
+		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Env.d3_floorTextureRandomPy));
 	}
 
 	@Override
 	public void update() {
-		comboFloorTexture.setValue(Env3d.d3_floorTexturePy.get());
-		cbFloorTextureRandom.setSelected(Env3d.d3_floorTextureRandomPy.get());
+		comboFloorTexture.setValue(Env.d3_floorTexturePy.get());
+		cbFloorTextureRandom.setSelected(Env.d3_floorTextureRandomPy.get());
 	}
 
 	private String[] textureItems() {

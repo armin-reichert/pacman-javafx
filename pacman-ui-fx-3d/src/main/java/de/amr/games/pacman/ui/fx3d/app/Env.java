@@ -44,7 +44,7 @@ import javafx.scene.shape.DrawMode;
  * 
  * @author Armin Reichert
  */
-public class Env3d {
+public class Env {
 //@formatter:off
 	public static final ObjectProperty<Color>       mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
 	public static final BooleanProperty             showDebugInfoPy = new SimpleBooleanProperty(false);

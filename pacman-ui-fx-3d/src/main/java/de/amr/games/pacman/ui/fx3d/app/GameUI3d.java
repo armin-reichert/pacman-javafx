@@ -200,16 +200,16 @@ public class GameUI3d implements GameEventListener {
 
 	private void updateMainView() {
 		if (currentGameScene != null && currentGameScene.is3D()) {
-			if (Env3d.d3_drawModePy.get() == DrawMode.LINE) {
+			if (Env.d3_drawModePy.get() == DrawMode.LINE) {
 				root.setBackground(AppRes.Manager.colorBackground(Color.BLACK));// TODO
 			} else {
 				root.setBackground(AppRes3d.Textures.backgroundForScene3D);
 			}
 		} else {
-			root.setBackground(AppRes.Manager.colorBackground(Env3d.mainSceneBgColorPy.get()));// TODO
+			root.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));// TODO
 		}
-		var paused = Env3d.simulationPausedPy.get();
-		var dimensionMsg = AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var paused = Env.simulationPausedPy.get();
+		var dimensionMsg = AppRes.Texts.message(Env.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
@@ -230,7 +230,7 @@ public class GameUI3d implements GameEventListener {
 	 * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
 	 */
 	private void updatePictureInPictureView() {
-		boolean visible = Env3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
+		boolean visible = Env.pipVisiblePy.get() && isPlayScene(currentGameScene);
 		pipGameScene.fxSubScene().setVisible(visible);
 		pipGameScene.context().setCreditVisible(false);
 		pipGameScene.context().setScoreVisible(true);
@@ -244,21 +244,21 @@ public class GameUI3d implements GameEventListener {
 	}
 
 	private void initEnv(Settings settings) {
-		Env3d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
 
-		Env3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
-		Env3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
-		pipGameScene.fxSubScene().opacityProperty().bind(Env3d.pipOpacityPy);
+		Env.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
+		Env.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
+		pipGameScene.fxSubScene().opacityProperty().bind(Env.pipOpacityPy);
 
-		Env3d.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		simulation.pausedPy.bind(Env3d.simulationPausedPy);
-		simulation.targetFrameratePy.bind(Env3d.simulationSpeedPy);
-		simulation.measuredPy.bind(Env3d.simulationTimeMeasuredPy);
+		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
+		simulation.pausedPy.bind(Env.simulationPausedPy);
+		simulation.targetFrameratePy.bind(Env.simulationSpeedPy);
+		simulation.measuredPy.bind(Env.simulationTimeMeasuredPy);
 
-		Env3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateMainView());
-		Env3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateMainView());
-		Env3d.d3_enabledPy.set(true);
-		Env3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
+		Env.d3_drawModePy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env.d3_enabledPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env.d3_enabledPy.set(true);
+		Env.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
 
 	/**
@@ -297,7 +297,7 @@ public class GameUI3d implements GameEventListener {
 
 	public void updateGameScene(boolean reload) {
 		var matching = sceneSelectionMatchingCurrentGameState();
-		var use3D = Env3d.d3_enabledPy.get();
+		var use3D = Env.d3_enabledPy.get();
 		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
@@ -328,7 +328,7 @@ public class GameUI3d implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.BOOT)) {
 			Actions3d.reboot();
 		} else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
-			Ufx.toggle(Env3d.showDebugInfoPy);
+			Ufx.toggle(Env.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
 			Actions3d.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {

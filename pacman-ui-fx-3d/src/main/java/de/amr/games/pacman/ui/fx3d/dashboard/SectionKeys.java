@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx3d.dashboard;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.ui.fx3d.app.Env3d;
+import de.amr.games.pacman.ui.fx3d.app.Env;
 import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
 
 /**
@@ -47,8 +47,8 @@ public class SectionKeys extends Section {
 		addInfo("Alt+N", "Next Level").available(() -> gc.game().isPlaying());
 		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().isPlaying());
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
-		addInfo("Alt+LEFT", () -> Env3d.d3_perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
-		addInfo("Alt+RIGHT", () -> Env3d.d3_perspectivePy.get().next().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+LEFT", () -> Env.d3_perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+RIGHT", () -> Env.d3_perspectivePy.get().next().name()).available(() -> gameScene().is3D());
 		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
 		addInfo("SHIFT+P/SPACE", "Single Step");

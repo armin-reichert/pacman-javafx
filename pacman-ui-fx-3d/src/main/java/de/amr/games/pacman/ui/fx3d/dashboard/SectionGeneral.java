@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx3d.dashboard;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.app.Actions3d;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
-import de.amr.games.pacman.ui.fx3d.app.Env3d;
+import de.amr.games.pacman.ui.fx3d.app.Env;
 import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -74,17 +74,17 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.simulation().executeSteps(Env3d.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.simulation().executeSteps(Env.simulationStepsPy.get(), true));
 
-		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env3d.simulationStepsPy.get());
+		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.simulationStepsPy.get());
 		spinnerSimulationSteps.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env3d.simulationStepsPy.set(newVal.intValue()));
+				.addListener((obs, oldVal, newVal) -> Env.simulationStepsPy.set(newVal.intValue()));
 
 		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env3d.simulationSpeedPy.set(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> Env.simulationSpeedPy.set(newValue.intValue()));
 
 		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.simulation().targetFrameratePy.get(),
 				ui.simulation().getFPS()));
@@ -92,22 +92,22 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui.simulation()::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", Actions3d::toggleUse3DScene);
-		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Env3d.wokePussyMode));
-		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env3d.showDebugInfoPy));
-		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env3d.simulationTimeMeasuredPy));
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Env.wokePussyMode));
+		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
+		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setGraphic(Env3d.simulationPausedPy.get() ? iconPlay : iconStop);
-		btnsSimulation[0].setTooltip(Env3d.simulationPausedPy.get() ? tooltipPlay : tooltipStop);
-		btnsSimulation[1].setDisable(!Env3d.simulationPausedPy.get());
-		spinnerSimulationSteps.getValueFactory().setValue(Env3d.simulationStepsPy.get());
-		sliderTargetFPS.setValue(Env3d.simulationSpeedPy.get());
-		cbUsePlayScene3D.setSelected(Env3d.d3_enabledPy.get());
-		cbPoliticallyCorrect.setSelected(Env3d.wokePussyMode.get());
-		cbTimeMeasured.setSelected(Env3d.simulationTimeMeasuredPy.get());
-		cbDebugUI.setSelected(Env3d.showDebugInfoPy.get());
+		btnsSimulation[0].setGraphic(Env.simulationPausedPy.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(Env.simulationPausedPy.get() ? tooltipPlay : tooltipStop);
+		btnsSimulation[1].setDisable(!Env.simulationPausedPy.get());
+		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
+		sliderTargetFPS.setValue(Env.simulationSpeedPy.get());
+		cbUsePlayScene3D.setSelected(Env.d3_enabledPy.get());
+		cbPoliticallyCorrect.setSelected(Env.wokePussyMode.get());
+		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
+		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}
 }
