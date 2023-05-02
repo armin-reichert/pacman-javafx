@@ -32,7 +32,7 @@ import java.util.Map;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.util.AbstractResourceMgr;
+import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx3d._3d.Model3D;
 import de.amr.games.pacman.ui.fx3d._3d.entity.PacModel3D;
 import javafx.scene.layout.Background;
@@ -45,7 +45,7 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class AppRes3d {
 
-	public static final AbstractResourceMgr Manager = new AbstractResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/") {
+	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/") {
 
 		@Override
 		public URL url(String resourcePath) {

@@ -44,11 +44,11 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public abstract class AbstractResourceMgr {
+public abstract class ResourceMgr {
 
 	private final String rootDir;
 
-	protected AbstractResourceMgr(String rootDir) {
+	protected ResourceMgr(String rootDir) {
 		this.rootDir = rootDir;
 	}
 
