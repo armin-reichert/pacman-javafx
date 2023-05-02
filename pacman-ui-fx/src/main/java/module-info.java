@@ -19,10 +19,9 @@
 module de.amr.games.pacman.ui.fx {
 
 	requires transitive de.amr.games.pacman;
-	requires javafx.graphics;
 	requires transitive javafx.controls;
 	requires transitive javafx.media;
-	requires org.tinylog.api;
+	requires transitive org.tinylog.api;
 
 	exports de.amr.games.pacman.ui.fx.app;
 	exports de.amr.games.pacman.ui.fx.input;
