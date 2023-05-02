@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx3d._3d.objimport.ObjImporter;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
@@ -73,10 +72,6 @@ public class Model3D {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public Model3D(String relPath) {
-		this(ResourceMgr.urlFromRelPath(relPath));
 	}
 
 	public String contentReport() {

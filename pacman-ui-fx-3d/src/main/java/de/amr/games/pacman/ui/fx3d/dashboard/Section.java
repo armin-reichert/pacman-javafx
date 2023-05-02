@@ -32,7 +32,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -85,7 +85,7 @@ public abstract class Section extends TitledPane {
 		setFocusTraversable(false);
 		setText(title);
 		setContent(content);
-		content.setBackground(ResourceMgr.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
+		content.setBackground(AppRes3d.Manager.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
 		content.setHgap(4);
 		content.setVgap(3);
 		content.setPadding(new Insets(5));

@@ -57,9 +57,9 @@ public class ResourceMgr {
 	 * @return URL of resource addressed by this path. Never returns <code>null</code>!
 	 * @throws MissingResourceException if no resource with this path could be found
 	 */
-	public static URL url(String resourcePath) {
+	public URL url(String resourcePath) {
 		checkNotNull(resourcePath);
-		var url = ResourceMgr.class.getResource(resourcePath);
+		var url = getClass().getResource(resourcePath);
 		if (url == null) {
 			throw new MissingResourceException("Missing resource, path=" + resourcePath, "", resourcePath);
 		}

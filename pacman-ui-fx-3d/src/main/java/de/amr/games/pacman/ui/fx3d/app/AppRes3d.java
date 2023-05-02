@@ -31,7 +31,6 @@ import java.util.Map;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx3d._3d.Model3D;
 import de.amr.games.pacman.ui.fx3d._3d.entity.PacModel3D;
@@ -45,14 +44,13 @@ import javafx.scene.paint.PhongMaterial;
  */
 public class AppRes3d {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/assets/3d/");
+	public static final ResourceMgr Manager = new ResourceMgr("/assets3d/");
 
 	public static void load() {
-		AppRes.load();
 		long start = System.nanoTime();
 		load("3D models", Models3D::load);
 		load("3D textures", Textures::load);
-		Logger.info("Loading application resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
+		Logger.info("Loading resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
 	private static void load(String section, Runnable loadingCode) {
@@ -73,9 +71,9 @@ public class AppRes3d {
 		public static Model3D pelletModel3D;
 
 		static void load() {
-			pacModel3D = new PacModel3D("model3D/pacman.obj");
-			ghostModel3D = new Model3D("model3D/ghost.obj");
-			pelletModel3D = new Model3D("model3D/12206_Fruit_v1_L3.obj");
+			pacModel3D = new PacModel3D(Manager.urlFromRelPath("model3D/pacman.obj"));
+			ghostModel3D = new Model3D(Manager.urlFromRelPath("model3D/ghost.obj"));
+			pelletModel3D = new Model3D(Manager.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 		}
 	}
 

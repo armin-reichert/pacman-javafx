@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import de.amr.games.pacman.ui.fx3d.app.Env3d;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -66,11 +66,11 @@ public class LivesCounter3D {
 	private final PointLight light;
 
 	private double pillarHeight = 5.0;
-	private final PhongMaterial pillarMaterial = ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100));
+	private final PhongMaterial pillarMaterial = AppRes3d.Manager.coloredMaterial(Color.rgb(100, 100, 100));
 
 	private double plateRadius = 6.0;
 	private double plateThickness = 1.0;
-	private final PhongMaterial plateMaterial = ResourceMgr.coloredMaterial(Color.rgb(180, 180, 180));
+	private final PhongMaterial plateMaterial = AppRes3d.Manager.coloredMaterial(Color.rgb(180, 180, 180));
 
 	private final List<Animation> animations = new ArrayList<>();
 

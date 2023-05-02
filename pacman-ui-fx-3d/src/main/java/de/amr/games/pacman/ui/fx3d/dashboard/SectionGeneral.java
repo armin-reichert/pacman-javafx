@@ -23,9 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.app.Actions3d;
+import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import de.amr.games.pacman.ui.fx3d.app.Env3d;
 import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
 import javafx.scene.control.Button;
@@ -52,9 +52,9 @@ public class SectionGeneral extends Section {
 	private final CheckBox cbPoliticallyCorrect;
 	private final CheckBox cbDebugUI;
 	private final CheckBox cbTimeMeasured;
-	private final ImageView iconPlay = new ImageView(ResourceMgr.image("icons/play.png"));
-	private final ImageView iconStop = new ImageView(ResourceMgr.image("icons/stop.png"));
-	private final ImageView iconStep = new ImageView(ResourceMgr.image("icons/step.png"));
+	private final ImageView iconPlay = new ImageView(AppRes3d.Manager.image("icons/play.png"));
+	private final ImageView iconStop = new ImageView(AppRes3d.Manager.image("icons/stop.png"));
+	private final ImageView iconStep = new ImageView(AppRes3d.Manager.image("icons/step.png"));
 	private final Tooltip tooltipPlay = new Tooltip("Play");
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");

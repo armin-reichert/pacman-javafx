@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx3d._3d.objimport;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx3d._3d.Model3D;
+import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 
 /**
  * @author Armin Reichert
@@ -39,7 +39,7 @@ public class ObjModelLoaderTest {
 			return;
 		}
 		var relPath = args[0];
-		var url = ResourceMgr.urlFromRelPath(relPath);
+		var url = AppRes3d.Manager.urlFromRelPath(relPath);
 		var model = new Model3D(url);
 		Logger.info(model.contentReport());
 	}

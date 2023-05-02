@@ -26,13 +26,14 @@ package de.amr.games.pacman.ui.fx3d._3d.entity;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
+import java.net.URL;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
 import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d._3d.Model3D;
+import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -64,8 +65,8 @@ public class PacModel3D extends Model3D {
 		return meshView(pacShape, MESH_ID_PALATE);
 	}
 
-	public PacModel3D(String objPath) {
-		super(objPath);
+	public PacModel3D(URL url) {
+		super(url);
 	}
 
 	/**
@@ -96,15 +97,15 @@ public class PacModel3D extends Model3D {
 	private Group createShape(double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(mesh(MESH_ID_HEAD));
 		head.setId(cssID(MESH_ID_HEAD));
-		head.setMaterial(ResourceMgr.coloredMaterial(headColor));
+		head.setMaterial(AppRes3d.Manager.coloredMaterial(headColor));
 
 		var eyes = new MeshView(mesh(MESH_ID_EYES));
 		eyes.setId(cssID(MESH_ID_EYES));
-		eyes.setMaterial(ResourceMgr.coloredMaterial(eyesColor));
+		eyes.setMaterial(AppRes3d.Manager.coloredMaterial(eyesColor));
 
 		var palate = new MeshView(mesh(MESH_ID_PALATE));
 		palate.setId(cssID(MESH_ID_PALATE));
-		palate.setMaterial(ResourceMgr.coloredMaterial(palateColor));
+		palate.setMaterial(AppRes3d.Manager.coloredMaterial(palateColor));
 
 		var centerTransform = Ufx.centerOverOrigin(head);
 		Stream.of(head, eyes, palate).map(Node::getTransforms).forEach(tf -> tf.add(centerTransform));
@@ -120,7 +121,7 @@ public class PacModel3D extends Model3D {
 	}
 
 	private Group createBeautyAccessories(double pacSize, Color headColor, Color bowColor, Color pearlColor) {
-		var bowMaterial = ResourceMgr.coloredMaterial(bowColor);
+		var bowMaterial = AppRes3d.Manager.coloredMaterial(bowColor);
 
 		var bowLeft = new Sphere(1.2);
 		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
@@ -130,7 +131,7 @@ public class PacModel3D extends Model3D {
 		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
 		bowRight.setMaterial(bowMaterial);
 
-		var pearlMaterial = ResourceMgr.coloredMaterial(pearlColor);
+		var pearlMaterial = AppRes3d.Manager.coloredMaterial(pearlColor);
 
 		var pearlLeft = new Sphere(0.4);
 		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
@@ -141,10 +142,10 @@ public class PacModel3D extends Model3D {
 		pearlRight.setMaterial(pearlMaterial);
 
 		var beautySpot = new Sphere(0.25);
-		beautySpot.setMaterial(ResourceMgr.coloredMaterial(Color.rgb(100, 100, 100)));
+		beautySpot.setMaterial(AppRes3d.Manager.coloredMaterial(Color.rgb(100, 100, 100)));
 		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
-		var silicone = ResourceMgr.coloredMaterial(headColor.deriveColor(0, 1.0, 0.96, 1.0));
+		var silicone = AppRes3d.Manager.coloredMaterial(headColor.deriveColor(0, 1.0, 0.96, 1.0));
 
 		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);
