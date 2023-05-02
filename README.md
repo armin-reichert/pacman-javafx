@@ -21,21 +21,24 @@ To build the executable by yourself on non-Windows systems, run the steps in the
 Clone also repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Then
 
 ```
-cd \path\to\git\pacman-javafx\pacman-ui-fx 
+cd \path\to\git\pacman-javafx 
 build.bat
 ```
 
-This script 
+This build script 
 - runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
-- runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (user interface),
+- runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (2D-only user interface),
+- runs a Maven build of the [pacman-ui-fx]-3d(pacman-ui-fx-3d) project (2D+3D user interface),
 - creates executable jar file `pacman-ui-fx-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx\target`),
-- creates zip file `pacman-javafx-tentackle-1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx\target`).
+- creates executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx-3d\target`),
+- creates zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx\target`).
+- creates zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-3d\target`).
 
 ## How to run the locally built version
 
-If Java runtime 18+ is installed, you can run the executable jar by double-click. Alternatively, extract the zip file and execute the `run.cmd`file as described above. Or just execute the `run.bat`file in folder `pacman-javafx`.
+If Java runtime 18+ is installed, you can run the executables jar files by double-clicking them. Alternatively, extract the zip file and execute the `run.cmd`file as described above. Or just execute the `run.bat`file or `run2d.bat` scripts.
 
-## How to use
+## How to use (full version)
 
 Starting the game and switching game variant:
 - <kbd>V</kbd> Switch between Pac-Man and Ms. Pac-Man (only possible on intro screen)
