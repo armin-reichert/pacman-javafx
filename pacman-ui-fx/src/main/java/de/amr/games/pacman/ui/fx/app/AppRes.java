@@ -167,13 +167,13 @@ public class AppRes {
 		}
 
 		static void load() {
-			PacManGame.icon = Manager.image("icons/pacman.png");
+			PacManGame.icon = Manager.image("graphics/icons/pacman.png");
 			PacManGame.spritesheet = new Spritesheet(Manager.image("graphics/pacman/sprites.png"), 16);
 			PacManGame.fullMaze = Manager.image("graphics/pacman/maze_full.png");
 			PacManGame.emptyMaze = Manager.image("graphics/pacman/maze_empty.png");
 			PacManGame.flashingMaze = Manager.image("graphics/pacman/maze_empty_flashing.png");
 
-			MsPacManGame.icon = Manager.image("icons/mspacman.png");
+			MsPacManGame.icon = Manager.image("graphics/icons/mspacman.png");
 			MsPacManGame.spritesheet = new Spritesheet(Manager.image("graphics/mspacman/sprites.png"), 16);
 			MsPacManGame.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGame::emptyMazeFlashing)
 					.toArray(Image[]::new);
