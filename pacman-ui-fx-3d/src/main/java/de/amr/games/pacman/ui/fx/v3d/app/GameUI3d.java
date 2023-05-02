@@ -41,7 +41,6 @@ import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -88,23 +87,13 @@ public class GameUI3d extends GameUI {
 	}
 
 	@Override
-	protected Scene createMainScene(float sizeX, float sizeY) {
-		var scene = new Scene(root, sizeX, sizeY);
-		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
-		scene.setOnKeyPressed(this::handleKeyPressed);
-		scene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
-				resizeStageToOptimalSize();
-			}
-		});
+	protected void createMainSceneLayout() {
 		var topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
 		topLayer.setRight(pipGameScene.fxSubScene());
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(flashMessageView);
 		root.getChildren().add(topLayer);
-
-		return scene;
 	}
 
 	@Override

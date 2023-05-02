@@ -156,6 +156,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	protected Scene createMainScene(float sizeX, float sizeY) {
 		var scene = new Scene(root, sizeX, sizeY);
+		createMainSceneLayout();
 		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
 		scene.setOnKeyPressed(this::handleKeyPressed);
 		scene.setOnMouseClicked(e -> {
@@ -163,12 +164,14 @@ public class GameUI extends GameLoop implements GameEventListener {
 				resizeStageToOptimalSize();
 			}
 		});
+		return scene;
+	}
+
+	protected void createMainSceneLayout() {
 		var topLayer = new BorderPane();
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(flashMessageView);
 		root.getChildren().add(topLayer);
-
-		return scene;
 	}
 
 	protected void resizeStageToOptimalSize() {
