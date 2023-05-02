@@ -38,8 +38,8 @@ import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Picker;
+import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
@@ -51,7 +51,7 @@ import javafx.scene.text.Font;
  */
 public class AppRes {
 
-	public static final ResourceMgr Manager = new ResourceMgr("/assets/") {
+	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/") {
 
 		@Override
 		public URL url(String resourcePath) {
@@ -98,7 +98,7 @@ public class AppRes {
 		private static Picker<String> messagePickerGameOver;
 
 		static void load() {
-			messageBundle = ResourceBundle.getBundle("assets.texts.messages");
+			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.assets.texts.messages");
 			messagePickerCheating = Manager.createPicker(messageBundle, "cheating");
 			messagePickerLevelComplete = Manager.createPicker(messageBundle, "level.complete");
 			messagePickerGameOver = Manager.createPicker(messageBundle, "game.over");
