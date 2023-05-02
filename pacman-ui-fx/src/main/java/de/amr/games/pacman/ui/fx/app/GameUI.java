@@ -88,16 +88,19 @@ public class GameUI extends GameLoop implements GameEventListener {
 	public GameUI(final Stage stage, final Settings settings, GameController gameController,
 			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
 
+		checkNotNull(stage);
+		checkNotNull(settings);
+		checkNotNull(gameController);
+		checkNotNull(msPacManScenes);
+		checkNotNull(pacManScenes);
+
+		this.stage = stage;
+		this.gameController = gameController;
+
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
 		targetFrameratePy.bind(Env.simulationSpeedPy);
 		measuredPy.bind(Env.simulationTimeMeasuredPy);
 		pausedPy.bind(Env.simulationPausedPy);
-
-		checkNotNull(stage);
-		checkNotNull(settings);
-
-		this.stage = stage;
-		this.gameController = gameController;
 
 		var keyboardSteering = new KeyboardSteering(//
 				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
