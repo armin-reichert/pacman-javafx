@@ -52,7 +52,7 @@ import javafx.stage.Stage;
 /**
  * @author Armin Reichert
  */
-public class JavaFXPacManApp3d extends Application {
+public class PacManGameAppFX3d extends Application {
 
 	private static List<GameSceneChoice> createPacManScenes(GameController gc) {
 		return List.of(

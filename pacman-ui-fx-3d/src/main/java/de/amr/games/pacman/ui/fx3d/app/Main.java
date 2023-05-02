@@ -30,6 +30,6 @@ package de.amr.games.pacman.ui.fx3d.app;
 public class Main {
 
 	public static void main(String[] args) {
-		JavaFXPacManApp3d.main(args);
+		PacManGameAppFX3d.main(args);
 	}
 }
