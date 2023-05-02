@@ -24,11 +24,11 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx3d._3d.scene.Perspective;
-import de.amr.games.pacman.ui.fx3d._3d.scene.PlayScene3D;
 import de.amr.games.pacman.ui.fx3d.app.Actions3d;
 import de.amr.games.pacman.ui.fx3d.app.Env;
 import de.amr.games.pacman.ui.fx3d.app.GameUI;
+import de.amr.games.pacman.ui.fx3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx3d.scene.PlayScene3D;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;

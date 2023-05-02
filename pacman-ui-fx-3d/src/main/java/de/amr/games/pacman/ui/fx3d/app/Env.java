@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx3d.app;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx3d._3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx3d.scene.Perspective;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;

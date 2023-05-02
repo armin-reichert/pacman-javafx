@@ -45,7 +45,7 @@ import de.amr.games.pacman.ui.fx._2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx3d._3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx3d.scene.PlayScene3D;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

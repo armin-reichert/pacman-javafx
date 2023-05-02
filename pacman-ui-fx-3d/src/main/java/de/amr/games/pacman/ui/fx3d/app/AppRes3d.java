@@ -32,8 +32,8 @@ import java.util.Map;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
-import de.amr.games.pacman.ui.fx3d._3d.Model3D;
-import de.amr.games.pacman.ui.fx3d._3d.entity.PacModel3D;
+import de.amr.games.pacman.ui.fx3d.entity.PacModel3D;
+import de.amr.games.pacman.ui.fx3d.model.Model3D;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
