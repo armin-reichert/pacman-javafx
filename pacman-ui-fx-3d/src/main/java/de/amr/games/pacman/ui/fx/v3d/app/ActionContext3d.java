@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.app.GameLoop;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.util.GameLoop;
 
 /**
  * @author Armin Reichert

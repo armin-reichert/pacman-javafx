@@ -30,6 +30,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
+import de.amr.games.pacman.ui.fx.util.GameLoop;
 
 /**
  * @author Armin Reichert
