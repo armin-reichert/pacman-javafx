@@ -40,7 +40,6 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -89,11 +88,10 @@ public class GameUI extends GameLoop implements GameEventListener {
 	public GameUI(final Stage stage, final Settings settings, GameController gameController,
 			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
 
-		super(GameModel.FPS);
 		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
-		pausedPy.bind(Env.simulationPausedPy);
 		targetFrameratePy.bind(Env.simulationSpeedPy);
 		measuredPy.bind(Env.simulationTimeMeasuredPy);
+		pausedPy.bind(Env.simulationPausedPy);
 
 		checkNotNull(stage);
 		checkNotNull(settings);

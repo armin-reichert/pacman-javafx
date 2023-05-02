@@ -50,18 +50,16 @@ public abstract class GameLoop {
 	};
 
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
-
 	public final BooleanProperty measuredPy = new SimpleBooleanProperty(this, "measured", false);
 
 	private Timeline frameGenerator;
-
 	private long updateCount;
 	private long fps;
 	private long fpsCountStartTime;
 	private long frames;
 
-	protected GameLoop(int targetFramerate) {
-		targetFrameratePy.set(targetFramerate);
+	protected GameLoop() {
+		targetFrameratePy.set(60);
 	}
 
 	private void createFrameGenerator(int fps) {

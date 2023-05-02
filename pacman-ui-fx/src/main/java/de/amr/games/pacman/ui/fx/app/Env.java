@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import de.amr.games.pacman.model.GameModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -40,7 +41,7 @@ public class Env {
 	public static final BooleanProperty       showDebugInfoPy          = new SimpleBooleanProperty(false);
 	public static final BooleanProperty       simulationPausedPy       = new SimpleBooleanProperty(false);
 	public static final IntegerProperty       simulationStepsPy        = new SimpleIntegerProperty(1);
-	public static final IntegerProperty       simulationSpeedPy        = new SimpleIntegerProperty(60);
+	public static final IntegerProperty       simulationSpeedPy        = new SimpleIntegerProperty(GameModel.FPS);
 	public static final BooleanProperty       simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
 //@formatter:on
 }
