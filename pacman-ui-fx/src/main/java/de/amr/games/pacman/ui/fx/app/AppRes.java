@@ -146,16 +146,16 @@ public class AppRes {
 
 	public static class Fonts {
 
-		public static Font arcadeFont;
-		public static Font handwritingFont;
+		public static Font arcade;
+		public static Font handwriting;
 
 		static void load() {
-			arcadeFont = Manager.font("fonts/emulogic.ttf", 8);
-			handwritingFont = Manager.font("fonts/RockSalt-Regular.ttf", 8);
+			arcade = Manager.font("fonts/emulogic.ttf", 8);
+			handwriting = Manager.font("fonts/RockSalt-Regular.ttf", 8);
 		}
 
-		public static Font handwriting(double size) {
-			return Font.font(handwritingFont.getFamily(), size);
+		public static Font pt(Font font, double size) {
+			return Font.font(font.getFamily(), size);
 		}
 
 	}
