@@ -52,6 +52,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
+import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -106,6 +107,7 @@ public class GameUI implements GameEventListener {
 	private final Stage stage;
 	private final StackPane root = new StackPane();
 	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final SoundHandler soundHandler = new SoundHandler();
 
 	private GameScene currentGameScene;
 
@@ -322,55 +324,7 @@ public class GameUI implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = AppRes.Sounds.gameSounds(event.game.variant());
-		switch (event.id) {
-		case GameModel.SE_BONUS_EATEN -> sounds.play(AudioClipID.BONUS_EATEN);
-		case GameModel.SE_CREDIT_ADDED -> sounds.play(AudioClipID.CREDIT);
-		case GameModel.SE_EXTRA_LIFE -> sounds.play(AudioClipID.EXTRA_LIFE);
-		case GameModel.SE_GHOST_EATEN -> sounds.play(AudioClipID.GHOST_EATEN);
-		case GameModel.SE_HUNTING_PHASE_STARTED_0 -> sounds.ensureSirenStarted(0);
-		case GameModel.SE_HUNTING_PHASE_STARTED_2 -> sounds.ensureSirenStarted(1);
-		case GameModel.SE_HUNTING_PHASE_STARTED_4 -> sounds.ensureSirenStarted(2);
-		case GameModel.SE_HUNTING_PHASE_STARTED_6 -> sounds.ensureSirenStarted(3);
-		case GameModel.SE_READY_TO_PLAY -> sounds.play(AudioClipID.GAME_READY);
-		case GameModel.SE_PACMAN_DEATH -> sounds.play(AudioClipID.PACMAN_DEATH);
-		// TODO this does not sound as in the original game
-		case GameModel.SE_PACMAN_FOUND_FOOD -> sounds.ensureLoop(AudioClipID.PACMAN_MUNCH, AudioClip.INDEFINITE);
-		case GameModel.SE_PACMAN_POWER_ENDS -> {
-			sounds.stop(AudioClipID.PACMAN_POWER);
-			event.game.level().ifPresent(level -> sounds.ensureSirenStarted(level.huntingPhase() / 2));
-		}
-		case GameModel.SE_PACMAN_POWER_STARTS -> {
-			sounds.stopSirens();
-			sounds.stop(AudioClipID.PACMAN_POWER);
-			sounds.loop(AudioClipID.PACMAN_POWER, AudioClip.INDEFINITE);
-		}
-		case GameModel.SE_START_INTERMISSION_1 -> {
-			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(AudioClipID.INTERMISSION_1);
-			case PACMAN -> sounds.loop(AudioClipID.INTERMISSION_1, 2);
-			default -> throw new IllegalGameVariantException(event.game.variant());
-			}
-		}
-		case GameModel.SE_START_INTERMISSION_2 -> {
-			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(AudioClipID.INTERMISSION_2);
-			case PACMAN -> sounds.play(AudioClipID.INTERMISSION_1);
-			default -> throw new IllegalGameVariantException(event.game.variant());
-			}
-		}
-		case GameModel.SE_START_INTERMISSION_3 -> {
-			switch (event.game.variant()) {
-			case MS_PACMAN -> sounds.play(AudioClipID.INTERMISSION_3);
-			case PACMAN -> sounds.loop(AudioClipID.INTERMISSION_1, 2);
-			default -> throw new IllegalGameVariantException(event.game.variant());
-			}
-		}
-		case GameModel.SE_STOP_ALL_SOUNDS -> sounds.stopAll();
-		default -> {
-			// ignore
-		}
-		}
+		soundHandler.onSoundEvent(event);
 	}
 
 	public GameController gameController() {
