@@ -34,12 +34,6 @@ import javafx.scene.shape.DrawMode;
  */
 public class Actions3d {
 
-	private static ActionContext3d context;
-
-	public static void init(ActionContext3d context) {
-		Actions3d.context = context;
-	}
-
 	public static void togglePipViewVisible() {
 		Ufx.toggle(Env.pipVisiblePy);
 		var msgKey = Env.pipVisiblePy.get() ? "pip_on" : "pip_off";
@@ -51,21 +45,17 @@ public class Actions3d {
 	}
 
 	public static void selectNextPerspective() {
-		if (context.currentGameScene().is3D()) {
-			var nextPerspective = Env.d3_perspectivePy.get().next();
-			Env.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = AppRes.Texts.message(nextPerspective.name());
-			Actions.showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
-		}
+		var nextPerspective = Env.d3_perspectivePy.get().next();
+		Env.d3_perspectivePy.set(nextPerspective);
+		String perspectiveName = AppRes.Texts.message(nextPerspective.name());
+		Actions.showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
 	}
 
 	public static void selectPrevPerspective() {
-		if (context.currentGameScene().is3D()) {
-			var prevPerspective = Env.d3_perspectivePy.get().prev();
-			Env.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = AppRes.Texts.message(prevPerspective.name());
-			Actions.showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
-		}
+		var prevPerspective = Env.d3_perspectivePy.get().prev();
+		Env.d3_perspectivePy.set(prevPerspective);
+		String perspectiveName = AppRes.Texts.message(prevPerspective.name());
+		Actions.showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
 	}
 
 	public static void toggleDrawMode() {
