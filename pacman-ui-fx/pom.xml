@@ -55,7 +55,7 @@
 
 	<build>
 		<plugins>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -64,22 +64,7 @@
 					<release>${vs.java}</release>
 				</configuration>
 			</plugin>
-			
-			<!-- this was added for log4j, not sure if still needed 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${vs.maven-jar-plugin}</version>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Multi-Release>true</Multi-Release>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			-->
-			
+
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
@@ -88,7 +73,7 @@
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
