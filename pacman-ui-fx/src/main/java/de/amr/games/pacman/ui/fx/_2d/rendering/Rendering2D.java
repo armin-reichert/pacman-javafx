@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.AppRes;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -49,19 +50,19 @@ public interface Rendering2D {
 	Font screenFont(double size);
 
 	default PacManColoring pacManColors() {
-		return ArcadeTheme.PACMAN_COLORING;
+		return AppRes.ArcadeTheme.PACMAN_COLORING;
 	}
 
 	default MsPacManColoring msPacManColors() {
-		return ArcadeTheme.MS_PACMAN_COLORING;
+		return AppRes.ArcadeTheme.MS_PACMAN_COLORING;
 	}
 
 	default GhostColoring[] ghostColors() {
-		return ArcadeTheme.GHOST_COLORING;
+		return AppRes.ArcadeTheme.GHOST_COLORING;
 	}
 
 	default GhostColoring ghostColors(int ghostID) {
-		return ArcadeTheme.GHOST_COLORING[ghostID];
+		return AppRes.ArcadeTheme.GHOST_COLORING[ghostID];
 	}
 
 	MazeColoring mazeColors(int mazeNumber);
@@ -79,7 +80,7 @@ public interface Rendering2D {
 	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
-		g.setStroke(ArcadeTheme.PALE);
+		g.setStroke(AppRes.ArcadeTheme.PALE);
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
 			g.strokeLine(0, TS * (row), tilesX * TS, TS * (row));
@@ -97,12 +98,12 @@ public interface Rendering2D {
 	}
 
 	default void fillCanvas(GraphicsContext g, Color color) {
-		g.setFill(ArcadeTheme.BLACK);
+		g.setFill(AppRes.ArcadeTheme.BLACK);
 		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
 	}
 
 	default void hideTileContent(GraphicsContext g, Vector2i tile) {
-		g.setFill(ArcadeTheme.BLACK);
+		g.setFill(AppRes.ArcadeTheme.BLACK);
 		g.fillRect(TS * (tile.x()), TS * (tile.y()), TS, TS);
 	}
 

@@ -52,7 +52,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public MazeColoring mazeColors(int mazeNumber) {
-		return ArcadeTheme.PACMAN_MAZE_COLORS;
+		return AppRes.ArcadeTheme.PACMAN_MAZE_COLORS;
 	}
 
 	@Override

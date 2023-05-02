@@ -32,9 +32,9 @@ import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -150,9 +150,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = intro.context().leftTileX;
 		var font = r.screenFont(TS);
 		if (intro.context().titleVisible) {
-			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
-			drawText(g, "/", ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
-			drawText(g, "NICKNAME", ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
+			drawText(g, "CHARACTER", AppRes.ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
+			drawText(g, "/", AppRes.ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
+			drawText(g, "NICKNAME", AppRes.ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().ghostInfo[id].pictureVisible) {

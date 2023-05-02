@@ -27,7 +27,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

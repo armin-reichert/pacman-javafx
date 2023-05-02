@@ -31,11 +31,11 @@ import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.ArcadeTheme;
 import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -116,19 +116,19 @@ public class MsPacManIntroScene extends GameScene2D {
 		var font = r.screenFont(TS);
 
 		drawMarquee(g);
-		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font, tx, ty);
+		drawText(g, "\"MS PAC-MAN\"", AppRes.ArcadeTheme.ORANGE, font, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 			var color = r.ghostColors(ghost.id()).dress();
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText(g, "WITH", ArcadeTheme.PALE, font, tx, y0 + TS * 3);
+				drawText(g, "WITH", AppRes.ArcadeTheme.PALE, font, tx, y0 + TS * 3);
 			}
 			var text = ghost.name().toUpperCase();
 			int dx = text.length() < 4 ? TS : 0;
 			drawText(g, text, color, font, tx + TS * 3 + dx, y0 + TS * 6);
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText(g, "STARRING", ArcadeTheme.PALE, font, tx, y0 + TS * 3);
-			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, tx, y0 + TS * 6);
+			drawText(g, "STARRING", AppRes.ArcadeTheme.PALE, font, tx, y0 + TS * 3);
+			drawText(g, "MS PAC-MAN", AppRes.ArcadeTheme.YELLOW, font, tx, y0 + TS * 6);
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);

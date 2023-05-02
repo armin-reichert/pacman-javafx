@@ -69,7 +69,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public GhostColoring ghostColors(int ghostID) {
-		return ArcadeTheme.GHOST_COLORING[ghostID];
+		return AppRes.ArcadeTheme.GHOST_COLORING[ghostID];
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	public void drawGhostBounty(GraphicsContext g, Ghost ghost) {
-		g.setStroke(ArcadeTheme.CYAN);
+		g.setStroke(AppRes.ArcadeTheme.CYAN);
 		g.setFont(Font.font("Sans", 10));
 		var text = switch (ghost.killedIndex()) {
 		case 0 -> "200";

@@ -68,7 +68,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public MazeColoring mazeColors(int mazeNumber) {
-		return ArcadeTheme.MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
+		return AppRes.ArcadeTheme.MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
 	}
 
 	@Override
@@ -144,7 +144,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
 		g.drawImage(AppRes.Graphics.MsPacManGame.logo, x, y + 2, TS * (4) - 2, TS * (4));
-		g.setFill(ArcadeTheme.RED);
+		g.setFill(AppRes.ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol
 		g.setFont(AppRes.Fonts.arcadeFont);
@@ -259,7 +259,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 					drawSpriteCenteredOverBox(g, sprite, clap.position().x(), clap.position().y());
 				}
 				g.setFont(AppRes.Fonts.arcadeFont);
-				g.setFill(ArcadeTheme.PALE);
+				g.setFill(AppRes.ArcadeTheme.PALE);
 				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
 				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());
 			});
