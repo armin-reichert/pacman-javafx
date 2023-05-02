@@ -85,8 +85,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 	protected SoundHandler soundHandler = new SoundHandler();
 	protected GameScene currentGameScene;
 
-	public GameUI(final Stage stage, final Settings settings, GameController gameController,
-			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
+	public GameUI(Stage stage, Settings settings, GameController gameController, List<GameSceneChoice> msPacManScenes,
+			List<GameSceneChoice> pacManScenes) {
 
 		checkNotNull(stage);
 		checkNotNull(settings);

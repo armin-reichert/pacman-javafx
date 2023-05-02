@@ -66,8 +66,8 @@ public class GameUI3d extends GameUI {
 	private PlayScene2D pipGameScene;
 	private Dashboard dashboard;
 
-	public GameUI3d(final Stage stage, final Settings settings, GameController gameController,
-			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
+	public GameUI3d(Stage stage, Settings settings, GameController gameController, List<GameSceneChoice> msPacManScenes,
+			List<GameSceneChoice> pacManScenes) {
 		super(stage, settings, gameController, msPacManScenes, pacManScenes);
 	}
 
