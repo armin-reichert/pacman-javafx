@@ -29,8 +29,8 @@ import static java.util.Objects.requireNonNull;
 import java.net.URL;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManColoring;
-import de.amr.games.pacman.ui.fx._2d.rendering.PacManColoring;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import de.amr.games.pacman.ui.fx3d.model.Model3D;

@@ -34,7 +34,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.shell.FlashMessageView;
+import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.media.AudioClip;
 

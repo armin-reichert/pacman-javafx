@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
 import de.amr.games.pacman.ui.fx3d.animation.Turn;
 import de.amr.games.pacman.ui.fx3d.model.Model3D;
 import javafx.animation.Animation;

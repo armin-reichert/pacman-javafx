@@ -22,12 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.rendering;
-
-import javafx.scene.paint.Color;
+package de.amr.games.pacman.ui.fx.rendering2d;
 
 /**
  * @author Armin Reichert
  */
-public record PacManColoring(Color headColor, Color palateColor, Color eyesColor) {
+public class Order<T extends Enum<T>> {
+
+	private final int[] reorderdIndex;
+
+	@SuppressWarnings("unchecked")
+	public Order(T... values) {
+		reorderdIndex = new int[values.length];
+		for (int i = 0; i < values.length; ++i) {
+			reorderdIndex[values[i].ordinal()] = i;
+		}
+	}
+
+	public int index(T enumValue) {
+		return reorderdIndex[enumValue.ordinal()];
+	}
 }

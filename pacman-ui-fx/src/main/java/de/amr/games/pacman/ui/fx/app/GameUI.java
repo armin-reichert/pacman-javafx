@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.shell;
+package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -43,21 +43,16 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx._2d.rendering.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx._2d.rendering.PacManTestRenderer;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
-import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.Env;
-import de.amr.games.pacman.ui.fx.app.GameLoop;
-import de.amr.games.pacman.ui.fx.app.Keys;
-import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManTestRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
+import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

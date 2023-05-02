@@ -22,17 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.scene;
+package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.ui.fx._2d.rendering.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**

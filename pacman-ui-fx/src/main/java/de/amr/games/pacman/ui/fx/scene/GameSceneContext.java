@@ -33,8 +33,8 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**

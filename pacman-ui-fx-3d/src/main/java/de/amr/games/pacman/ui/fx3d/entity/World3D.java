@@ -38,7 +38,7 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.MazeColoring;
+import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx3d.animation.Squirting;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;

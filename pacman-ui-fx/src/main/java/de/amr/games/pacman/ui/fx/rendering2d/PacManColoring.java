@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2021-2023 Armin Reichert
+Copyright (c) 2023 Armin Reichert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.rendering;
+package de.amr.games.pacman.ui.fx.rendering2d;
 
 import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
  */
-public record GhostColoring(//
-		Color dress, Color eyeballs, Color pupils, //
-		Color dressFrightened, Color eyeballsFrightened, Color pupilsFrightened, //
-		Color dressFlashing, Color eyeballsFlashing, Color pupilsFlashing) {
+public record PacManColoring(Color headColor, Color palateColor, Color eyesColor) {
 }

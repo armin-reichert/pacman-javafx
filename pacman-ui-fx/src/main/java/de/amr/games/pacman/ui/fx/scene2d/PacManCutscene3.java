@@ -22,33 +22,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.scene;
+package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx._2d.rendering.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
  */
-public class PacManCutscene1 extends GameScene2D {
+public class PacManCutscene3 extends GameScene2D {
+
+	public static final String SE_START_INTERMISSION_3 = "start_intermission_3";
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
 
-	public PacManCutscene1(GameController gameController) {
+	public PacManCutscene3(GameController gameController) {
 		super(gameController);
 	}
 
@@ -57,6 +58,7 @@ public class PacManCutscene1 extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
+		var renderer = (PacManGameRenderer) context.rendering2D();
 		frame = -1;
 		initialDelay = 120;
 
@@ -66,23 +68,20 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
-		// TODO make this work for all renderers
-		if (context.rendering2D() instanceof PacManGameRenderer r) {
-			var pacAnimations = r.createPacAnimations(pac);
-			pacAnimations.put(GameModel.AK_PAC_BIG, r.createBigPacManMunchingAnimation());
-			pac.setAnimations(pacAnimations);
-			pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
-		}
+		pac.setAnimations(renderer.createPacAnimations(pac));
+		pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
-		blinky.placeAtTile(v2i(32, 20), 0, 0);
+		blinky.placeAtTile(v2i(35, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
-		blinky.setPixelSpeed(1.3f);
+		blinky.setPixelSpeed(1.25f);
 		blinky.show();
 
-		var blinkyAnimations = context.rendering2D().createGhostAnimations(blinky);
+		var blinkyAnimations = renderer.createGhostAnimations(blinky);
+		blinkyAnimations.put(GameModel.AK_BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
+		blinkyAnimations.put(GameModel.AK_BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
 		blinky.setAnimations(blinkyAnimations);
-		blinkyAnimations.selectedAnimation().ifPresent(Animated::restart);
+		blinky.selectAndRunAnimation(GameModel.AK_BLINKY_PATCHED);
 	}
 
 	@Override
@@ -90,28 +89,20 @@ public class PacManCutscene1 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameEvents.publishSoundEvent("start_intermission_1");
+				GameEvents.publishSoundEvent(SE_START_INTERMISSION_3);
 			}
 			return;
 		}
-
 		if (context.state().timer().hasExpired()) {
 			return;
 		}
-
 		switch (++frame) {
-		case 260 -> {
-			blinky.placeAtTile(v2i(-2, 20), 4, 0);
-			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.setPixelSpeed(0.75f);
-			blinky.animations().ifPresent(animations -> animations.selectAndRestart(GameModel.AK_GHOST_BLUE));
-		}
 		case 400 -> {
-			pac.placeAtTile(v2i(-3, 19), 0, 0);
-			pac.setMoveDir(Direction.RIGHT);
-			pac.animations().ifPresent(animations -> animations.selectAndRestart(GameModel.AK_PAC_BIG));
+			blinky.placeAtTile(v2i(-1, 20), 0, 0);
+			blinky.setMoveAndWishDir(Direction.RIGHT);
+			blinky.selectAndRunAnimation(GameModel.AK_BLINKY_NAKED);
 		}
-		case 632 -> {
+		case 700 -> {
 			context.state().timer().expire();
 		}
 		default -> {

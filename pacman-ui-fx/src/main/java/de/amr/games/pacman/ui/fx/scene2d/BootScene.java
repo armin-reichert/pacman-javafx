@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx._2d.scene;
+package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.RND;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -31,9 +31,9 @@ import static de.amr.games.pacman.lib.Globals.v2i;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx._2d.rendering.Spritesheet;
-import de.amr.games.pacman.ui.fx._2d.rendering.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

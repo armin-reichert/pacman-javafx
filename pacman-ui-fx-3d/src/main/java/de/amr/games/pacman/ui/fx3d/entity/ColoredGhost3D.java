@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx3d.entity;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
-import de.amr.games.pacman.ui.fx._2d.rendering.GhostColoring;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.animation.ColorFlashing;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
