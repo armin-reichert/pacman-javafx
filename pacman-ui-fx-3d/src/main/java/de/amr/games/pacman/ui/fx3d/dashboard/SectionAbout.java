@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
-import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
+import de.amr.games.pacman.ui.fx3d.app.GameUI;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -38,7 +38,7 @@ import javafx.scene.text.TextFlow;
  */
 public class SectionAbout extends Section {
 
-	public SectionAbout(GameUI3d ui, String title) {
+	public SectionAbout(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		var myPicture = new ImageView(AppRes3d.Manager.image("graphics/armin.jpg"));

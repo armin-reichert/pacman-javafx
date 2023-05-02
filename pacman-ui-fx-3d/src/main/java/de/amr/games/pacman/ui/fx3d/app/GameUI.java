@@ -79,7 +79,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI3d implements GameEventListener {
+public class GameUI implements GameEventListener {
 
 	private static final byte TILES_X = 28;
 	private static final byte TILES_Y = 36;
@@ -125,7 +125,7 @@ public class GameUI3d implements GameEventListener {
 
 	private GameScene currentGameScene;
 
-	public GameUI3d(final Stage stage, final Settings settings, GameController gameController,
+	public GameUI(final Stage stage, final Settings settings, GameController gameController,
 			List<GameSceneChoice> msPacManScenes, List<GameSceneChoice> pacManScenes) {
 
 		checkNotNull(stage);

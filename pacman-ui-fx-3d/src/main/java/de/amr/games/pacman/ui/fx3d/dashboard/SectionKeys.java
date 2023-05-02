@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx3d.dashboard;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx3d.app.Env;
-import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
+import de.amr.games.pacman.ui.fx3d.app.GameUI;
 
 /**
  * Keyboard shortcuts.
@@ -34,7 +34,7 @@ import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
  */
 public class SectionKeys extends Section {
 
-	public SectionKeys(GameUI3d ui, String title) {
+	public SectionKeys(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		addInfo("F1", "Dashboard On/Off");
 		addInfo("F2", "PiP View On/Off");

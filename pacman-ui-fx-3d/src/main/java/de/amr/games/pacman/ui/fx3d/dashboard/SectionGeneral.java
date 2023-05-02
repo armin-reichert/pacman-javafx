@@ -27,7 +27,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx3d.app.Actions3d;
 import de.amr.games.pacman.ui.fx3d.app.AppRes3d;
 import de.amr.games.pacman.ui.fx3d.app.Env;
-import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
+import de.amr.games.pacman.ui.fx3d.app.GameUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -59,7 +59,7 @@ public class SectionGeneral extends Section {
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
-	public SectionGeneral(GameUI3d ui, String title) {
+	public SectionGeneral(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");

@@ -86,7 +86,7 @@ public class PacManGameAppFX3d extends Application {
 		launch(args);
 	}
 
-	private GameUI3d gameUI;
+	private GameUI gameUI;
 
 	@Override
 	public void init() throws Exception {
@@ -98,7 +98,7 @@ public class PacManGameAppFX3d extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
-		gameUI = new GameUI3d(primaryStage, settings, gameController, createMsPacManScenes(gameController),
+		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
 				createPacManScenes(gameController));
 		gameUI.simulation().start();
 		Logger.info("Game started. Target frame rate: {}", gameUI.simulation().targetFrameratePy.get());

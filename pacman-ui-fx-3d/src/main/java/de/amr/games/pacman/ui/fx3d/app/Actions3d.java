@@ -43,10 +43,10 @@ import javafx.scene.shape.DrawMode;
  */
 public class Actions3d {
 
-	private static GameUI3d ui;
+	private static GameUI ui;
 	private static AudioClip currentVoiceMessage;
 
-	public static void setUI(GameUI3d theUI) {
+	public static void setUI(GameUI theUI) {
 		ui = Objects.requireNonNull(theUI, "User Interface for actions must not be null");
 	}
 

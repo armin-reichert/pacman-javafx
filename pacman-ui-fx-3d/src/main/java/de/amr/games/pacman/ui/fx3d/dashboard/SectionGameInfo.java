@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx3d.dashboard;
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
+import de.amr.games.pacman.ui.fx3d.app.GameUI;
 
 /**
  * Game related settings.
@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx3d.app.GameUI3d;
  */
 public class SectionGameInfo extends Section {
 
-	public SectionGameInfo(GameUI3d ui, String title) {
+	public SectionGameInfo(GameUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
