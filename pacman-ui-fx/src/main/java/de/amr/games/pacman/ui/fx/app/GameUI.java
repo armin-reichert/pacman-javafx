@@ -134,7 +134,7 @@ public class GameUI implements GameEventListener {
 
 		GameEvents.addListener(this);
 		initEnv(settings);
-		Actions.init(simulation, gameController, this::currentGameScene, flashMessageView);
+		Actions.init(new ActionContext(simulation, gameController, this::currentGameScene, flashMessageView));
 		Actions.reboot();
 
 		stage.setFullScreen(settings.fullScreen);

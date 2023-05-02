@@ -43,6 +43,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.app.ActionContext;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.GameLoop;
@@ -155,9 +156,7 @@ public class GameUI implements GameEventListener {
 		dashboard.populate(this);
 		initEnv(settings);
 
-		// TODO
-		Actions.init(simulation, gameController, this::currentGameScene, flashMessageView);
-
+		Actions.init(new ActionContext(simulation, gameController, this::currentGameScene, flashMessageView));
 		Actions3d.setUI(this);
 		Actions3d.reboot();
 
