@@ -32,4 +32,8 @@ public record GameSceneChoice(GameScene scene2D, GameScene scene3D) {
 	public GameSceneChoice(GameScene scene2D) {
 		this(scene2D, null);
 	}
+
+	public boolean includes(GameScene gameScene) {
+		return gameScene == scene2D || gameScene == scene3D;
+	}
 }

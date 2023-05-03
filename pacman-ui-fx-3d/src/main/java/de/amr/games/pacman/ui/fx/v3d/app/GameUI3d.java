@@ -202,9 +202,7 @@ public class GameUI3d extends GameUI {
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {
-		return gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene2D()
-				|| gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene3D()
-				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene2D()
-				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene3D();
+		return scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene)
+				|| scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene);
 	}
 }
