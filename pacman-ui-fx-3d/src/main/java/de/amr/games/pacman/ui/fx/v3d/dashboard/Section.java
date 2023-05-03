@@ -56,7 +56,7 @@ import javafx.scene.text.Font;
  * 
  * @author Armin Reichert
  */
-public abstract class Section extends TitledPane {
+public abstract class Section {
 
 	public static String fmtSpeed(float fraction) {
 		return String.format("%.2f px/sec", GameModel.SPEED_PX_100_PERCENT * fraction);
@@ -65,6 +65,7 @@ public abstract class Section extends TitledPane {
 	protected final GameUI3d ui;
 	protected final GameController gc;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
+	protected final TitledPane root = new TitledPane();
 	protected final GridPane content = new GridPane();
 
 	private int minLabelWidth;
@@ -81,15 +82,19 @@ public abstract class Section extends TitledPane {
 		this.textColor = textColor;
 		this.textFont = textFont;
 		this.labelFont = labelFont;
-		setOpacity(0.7);
-		setFocusTraversable(false);
-		setText(title);
-		setContent(content);
 		content.setBackground(AppRes3d.Manager.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
 		content.setHgap(4);
 		content.setVgap(3);
 		content.setPadding(new Insets(5));
-		setExpanded(false);
+		root.setExpanded(false);
+		root.setOpacity(0.7);
+		root.setFocusTraversable(false);
+		root.setText(title);
+		root.setContent(content);
+	}
+
+	public TitledPane getRoot() {
+		return root;
 	}
 
 	public void update() {

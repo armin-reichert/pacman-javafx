@@ -57,7 +57,7 @@ public class Dashboard extends VBox {
 		sections.add(new SectionGameInfo(ui, "Game Info"));
 		sections.add(new SectionGhostsInfo(ui, "Ghosts Info"));
 		sections.add(new SectionAbout(ui, "About"));
-		sections().forEach(getChildren()::add);
+		sections().forEach(section -> getChildren().add(section.getRoot()));
 	}
 
 	public Stream<Section> sections() {
