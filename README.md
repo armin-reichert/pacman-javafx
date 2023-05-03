@@ -10,35 +10,34 @@ Both games can be played either in 2D-only or in 2D and 3D (full version). In th
 
 ### With Java runtime 18+ installed on your computer (Windows):
 - Download the executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
-- 
-Any help in creating executables for Mac-OS and Linux is appreciated!
+
 
 ### Without locally installed Java runtime (Windows):
 - Download the zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
-To build the executable by yourself on non-Windows systems, run the steps in the build script manually or create a shell script or whatever.
+To build the executable by yourself on non-Windows systems, run the steps in the build script manually or create a shell script or whatever. Any help in creating executables for Mac-OS and Linux is appreciated!
 
 ## How to build locally
 
-Clone also repository [pacman-basic](https://github.com/armin-reichert/pacman-basic). Then
+- Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
+- Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
+- `cd \path\to\git\pacman-javafx`
+- `build.bat`
 
-```
-cd \path\to\git\pacman-javafx 
-build.bat
-```
+This will 
+- run a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
+- run a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (2D-only),
+- run a Maven build of the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
+- create an executable jar-file `pacman-ui-fx-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx\target`),
+- create an executable jar-file `pacman-ui-fx-3d-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx-3d\target`),
+- create a zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx\target`).
+- create a zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-3d\target`).
 
-This build script 
-- runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
-- runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (2D-only),
-- runs a Maven build of the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
-- creates executable jar file `pacman-ui-fx-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx\target`),
-- creates executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx-3d\target`),
-- creates zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx\target`).
-- creates zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-3d\target`).
+## How to run the locally built versions
 
-## How to run the locally built version
-
-If Java runtime 18+ is installed, you can run the executables jar files by double-clicking them. Alternatively, extract the zip file and execute the `run.cmd`file as described above. Or just execute the `run.bat`file or `run2d.bat` scripts.
+- If Java runtime 18+ is installed, start the executables jar-files by double-click.
+- Alternatively, extract the zip-file and execute the `run.cmd` file as described above.
+- Or just execute the `run.bat` / `run2d.bat` scripts located in the repository root folder.
 
 ## How to use (full version)
 
