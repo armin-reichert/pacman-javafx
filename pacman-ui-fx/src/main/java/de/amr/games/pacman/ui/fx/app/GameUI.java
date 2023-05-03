@@ -385,8 +385,4 @@ public class GameUI extends GameLoop implements GameEventListener {
 	public GameScene currentGameScene() {
 		return currentGameScene;
 	}
-
-	public FlashMessageView flashMessageView() {
-		return flashMessageView;
-	}
 }
