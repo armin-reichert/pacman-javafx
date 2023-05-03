@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.v3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
@@ -86,9 +85,7 @@ public class AppRes3d {
 		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
 		static void load() {
-			backgroundForScene3D = new Background(
-					new BackgroundImage(Manager.image("graphics/sky.png"), null, null, null, null));
-
+			backgroundForScene3D = Manager.imageBackground("graphics/sky.png");
 			loadFloorTexture("Hexagon", "hexagon", "jpg");
 			loadFloorTexture("Knobs & Bumps", "knobs", "jpg");
 			loadFloorTexture("Plastic", "plastic", "jpg");
