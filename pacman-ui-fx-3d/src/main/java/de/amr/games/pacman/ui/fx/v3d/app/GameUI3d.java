@@ -148,7 +148,6 @@ public class GameUI3d extends GameUI {
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
-		updatePictureInPictureView();
 	}
 
 	@Override
