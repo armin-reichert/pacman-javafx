@@ -106,7 +106,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateUI());
 		targetFrameratePy.bind(Env.simulationSpeedPy);
 		measuredPy.bind(Env.simulationTimeMeasuredPy);
 		pausedPy.bind(Env.simulationPausedPy);
@@ -189,7 +189,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		}
 	}
 
-	protected void updateMainView() {
+	protected void updateUI() {
 		root.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));
 		var paused = Env.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
@@ -207,14 +207,14 @@ public class GameUI extends GameLoop implements GameEventListener {
 		}
 	}
 
-	protected void handleKeyPressed(KeyEvent keyEvent) {
+	private void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
 		Keyboard.clearState();
 	}
 
 	protected void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateUI());
 	}
 
 	protected List<GameSceneChoice> createPacManScenes(GameController gc) {
@@ -281,7 +281,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateMainView();
+		updateUI();
 	}
 
 	protected GameScene chooseGameScene(GameSceneChoice choice) {

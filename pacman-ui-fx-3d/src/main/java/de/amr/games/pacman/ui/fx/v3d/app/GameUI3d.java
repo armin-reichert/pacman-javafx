@@ -122,11 +122,11 @@ public class GameUI3d extends GameUI {
 	}
 
 	@Override
-	protected void updateMainView() {
-		updatePictureInPictureView(); // TODO
+	protected void updateUI() {
+		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Env3d.d3_drawModePy.get() == DrawMode.LINE) {
-				root.setBackground(AppRes.Manager.colorBackground(Color.BLACK));// TODO
+				root.setBackground(AppRes3d.Manager.colorBackground(Color.BLACK));
 			} else {
 				root.setBackground(AppRes3d.Textures.backgroundForScene3D);
 			}
@@ -153,15 +153,15 @@ public class GameUI3d extends GameUI {
 
 	@Override
 	protected void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateUI());
 
 		dashboard.visibleProperty().bind(Env3d.dashboardVisiblePy);
 		Env3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
 		Env3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
 		pipGameScene.fxSubScene().opacityProperty().bind(Env3d.pipOpacityPy);
 
-		Env3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateMainView());
-		Env3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateMainView());
+		Env3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateUI());
+		Env3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateUI());
 		Env3d.d3_enabledPy.set(true);
 		Env3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
@@ -177,7 +177,7 @@ public class GameUI3d extends GameUI {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateMainView();
+		updateUI();
 	}
 
 	@Override
