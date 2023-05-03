@@ -25,24 +25,10 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene2d.BootScene;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene1;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene2;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene3;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCreditScene;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
-import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -64,34 +50,6 @@ import javafx.stage.Stage;
  */
 public class PacManGameAppFX extends Application {
 
-	private static List<GameSceneChoice> createPacManScenes(GameController gc) {
-		return List.of(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new PacManIntroScene(gc)),
-			new GameSceneChoice(new PacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new PacManCutscene1(gc)), 
-			new GameSceneChoice(new PacManCutscene2(gc)),
-			new GameSceneChoice(new PacManCutscene3(gc))
-		//@formatter:on
-		);
-	}
-
-	private static List<GameSceneChoice> createMsPacManScenes(GameController gc) {
-		return List.of(
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new MsPacManIntroScene(gc)), 
-			new GameSceneChoice(new MsPacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene1(gc)), 
-			new GameSceneChoice(new MsPacManIntermissionScene2(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene3(gc))
-		//@formatter:on
-		);
-	}
-
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -107,8 +65,7 @@ public class PacManGameAppFX extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
-		gameUI = new GameUI(primaryStage, settings, gameController, createMsPacManScenes(gameController),
-				createPacManScenes(gameController));
+		gameUI = new GameUI(primaryStage, settings, gameController);
 		gameUI.simulation().start();
 		Logger.info("Game started. Target frame rate: {}", gameUI.simulation().targetFrameratePy.get());
 	}

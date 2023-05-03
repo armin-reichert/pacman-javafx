@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +51,18 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.scene2d.BootScene;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene1;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene2;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene3;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntroScene;
+import de.amr.games.pacman.ui.fx.scene2d.PacManCreditScene;
+import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
+import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
+import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
+import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
+import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameLoop;
@@ -85,14 +98,10 @@ public class GameUI extends GameLoop implements GameEventListener {
 	protected SoundHandler soundHandler = new SoundHandler();
 	protected GameScene currentGameScene;
 
-	public GameUI(Stage stage, Settings settings, GameController gameController, List<GameSceneChoice> msPacManScenes,
-			List<GameSceneChoice> pacManScenes) {
-
+	public GameUI(Stage stage, Settings settings, GameController gameController) {
 		checkNotNull(stage);
 		checkNotNull(settings);
 		checkNotNull(gameController);
-		checkNotNull(msPacManScenes);
-		checkNotNull(pacManScenes);
 
 		this.stage = stage;
 		this.gameController = gameController;
@@ -112,8 +121,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
 
-		scenes.put(GameVariant.MS_PACMAN, msPacManScenes);
-		scenes.put(GameVariant.PACMAN, pacManScenes);
+		scenes.put(GameVariant.MS_PACMAN, createMsPacManScenes(gameController));
+		scenes.put(GameVariant.PACMAN, createPacManScenes(gameController));
 
 		createComponents();
 		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
@@ -206,6 +215,34 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	protected void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateMainView());
+	}
+
+	protected List<GameSceneChoice> createPacManScenes(GameController gc) {
+		return Arrays.asList(
+		//@formatter:off
+			new GameSceneChoice(new BootScene(gc)),
+			new GameSceneChoice(new PacManIntroScene(gc)),
+			new GameSceneChoice(new PacManCreditScene(gc)),
+			new GameSceneChoice(new PlayScene2D(gc)),
+			new GameSceneChoice(new PacManCutscene1(gc)), 
+			new GameSceneChoice(new PacManCutscene2(gc)),
+			new GameSceneChoice(new PacManCutscene3(gc))
+		//@formatter:on
+		);
+	}
+
+	protected List<GameSceneChoice> createMsPacManScenes(GameController gc) {
+		return Arrays.asList(
+		//@formatter:off
+			new GameSceneChoice(new BootScene(gc)),
+			new GameSceneChoice(new MsPacManIntroScene(gc)), 
+			new GameSceneChoice(new MsPacManCreditScene(gc)),
+			new GameSceneChoice(new PlayScene2D(gc)),
+			new GameSceneChoice(new MsPacManIntermissionScene1(gc)), 
+			new GameSceneChoice(new MsPacManIntermissionScene2(gc)),
+			new GameSceneChoice(new MsPacManIntermissionScene3(gc))
+		//@formatter:on
+		);
 	}
 
 	/**

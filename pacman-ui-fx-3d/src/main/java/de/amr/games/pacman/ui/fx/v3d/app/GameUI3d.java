@@ -41,6 +41,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -65,9 +66,8 @@ public class GameUI3d extends GameUI {
 	private PlayScene2D pipGameScene;
 	private Dashboard dashboard;
 
-	public GameUI3d(Stage stage, Settings settings, GameController gameController, List<GameSceneChoice> msPacManScenes,
-			List<GameSceneChoice> pacManScenes) {
-		super(stage, settings, gameController, msPacManScenes, pacManScenes);
+	public GameUI3d(Stage stage, Settings settings, GameController gameController) {
+		super(stage, settings, gameController);
 	}
 
 	@Override
@@ -76,6 +76,20 @@ public class GameUI3d extends GameUI {
 		currentGameScene.render();
 		dashboard.update();
 		pipGameScene.render();
+	}
+
+	@Override
+	protected List<GameSceneChoice> createPacManScenes(GameController gc) {
+		var scenes = super.createPacManScenes(gc);
+		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)));
+		return scenes;
+	}
+
+	@Override
+	protected List<GameSceneChoice> createMsPacManScenes(GameController gc) {
+		var scenes = super.createMsPacManScenes(gc);
+		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)));
+		return scenes;
 	}
 
 	@Override
