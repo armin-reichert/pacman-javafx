@@ -109,17 +109,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		this.stage = stage;
 		this.gameController = gameController;
 
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateUI());
-		targetFrameratePy.bind(Env.simulationSpeedPy);
-		measuredPy.bind(Env.simulationTimeMeasuredPy);
-		pausedPy.bind(Env.simulationPausedPy);
-
-		keyboardSteering = new KeyboardSteering(//
-				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
-				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
-
-		gameController.setManualPacSteering(keyboardSteering);
-
 		// renderers must be created before game scenes
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
@@ -129,6 +118,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 		createLayout();
 
+		// main scene
 		mainScene = new Scene(root, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
@@ -137,12 +127,9 @@ public class GameUI extends GameLoop implements GameEventListener {
 				resizeStageToOptimalSize();
 			}
 		});
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+
+		// stage
 		stage.setScene(mainScene);
-
-		initEnv(settings);
-		Actions.init(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
-
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
@@ -150,7 +137,23 @@ public class GameUI extends GameLoop implements GameEventListener {
 		stage.requestFocus();
 		stage.show();
 
+		// game loop
+		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateUI());
+		targetFrameratePy.bind(Env.simulationSpeedPy);
+		measuredPy.bind(Env.simulationTimeMeasuredPy);
+		pausedPy.bind(Env.simulationPausedPy);
+
+		// keyboard
+		keyboardSteering = new KeyboardSteering(//
+				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
+				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+
+		gameController.setManualPacSteering(keyboardSteering);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+
+		initEnv(settings);
 		GameEvents.addListener(this);
+		Actions.init(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
 		Actions.reboot();
 
 		Logger.info("Game UI created. Locale: {}. Application settings: {}", Locale.getDefault(), settings);
