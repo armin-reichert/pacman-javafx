@@ -48,7 +48,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class PacManGameAppFX extends Application {
+public class GameApp extends Application {
 
 	public static void main(String[] args) {
 		launch(args);

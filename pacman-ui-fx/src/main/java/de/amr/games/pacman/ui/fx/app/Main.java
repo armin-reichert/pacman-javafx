@@ -29,6 +29,6 @@ package de.amr.games.pacman.ui.fx.app;
 public class Main {
 
 	public static void main(String[] args) {
-		PacManGameAppFX.main(args);
+		GameApp.main(args);
 	}
 }
