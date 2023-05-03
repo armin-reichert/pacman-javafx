@@ -80,24 +80,31 @@ public class AppRes3d {
 	public static class Textures {
 
 		public static final String KEY_NO_TEXTURE = "No Texture";
-
 		public static Background backgroundForScene3D;
 		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
 		static void load() {
 			backgroundForScene3D = Manager.imageBackground("graphics/sky.png");
-			loadFloorTexture("Hexagon", "hexagon", "jpg");
-			loadFloorTexture("Knobs & Bumps", "knobs", "jpg");
-			loadFloorTexture("Plastic", "plastic", "jpg");
-			loadFloorTexture("Wood", "wood", "jpg");
+			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
+			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
+			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
+			floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
 		}
 
-		private static void loadFloorTexture(String name, String textureBase, String ext) {
-			var material = new PhongMaterial();
-			material.setBumpMap(Manager.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			material.setDiffuseMap(Manager.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+		private static PhongMaterial createFloorTexture(String textureBase, String ext) {
+			var material = textureMaterial(textureBase, ext, null, null);
 			material.diffuseColorProperty().bind(Env3d.d3_floorColorPy);
-			floorTexturesByName.put(name, material);
+			return material;
+		}
+
+		public static PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor,
+				Color specularColor) {
+			var texture = new PhongMaterial();
+			texture.setBumpMap(Manager.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(Manager.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setDiffuseColor(diffuseColor);
+			texture.setSpecularColor(specularColor);
+			return texture;
 		}
 
 		public static PhongMaterial floorTexture(String name) {
@@ -111,15 +118,6 @@ public class AppRes3d {
 		public static String randomFloorTextureName() {
 			var names = floorTextureNames();
 			return names[randomInt(0, names.length)];
-		}
-
-		public static PhongMaterial texture(String textureBase, String ext, Color diffuseColor, Color specularColor) {
-			var texture = new PhongMaterial();
-			texture.setBumpMap(Manager.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(Manager.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
-			texture.setDiffuseColor(diffuseColor);
-			texture.setSpecularColor(specularColor);
-			return texture;
 		}
 	}
 }
