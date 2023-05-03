@@ -136,6 +136,8 @@ public class GameUI3d extends GameUI {
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
+
+		updatePictureInPictureView();
 	}
 
 	/**
@@ -185,6 +187,12 @@ public class GameUI3d extends GameUI {
 		}
 		updatePictureInPictureView(); // TODO
 		updateMainView();
+	}
+
+	@Override
+	protected GameScene chooseGameScene(GameSceneChoice choice) {
+		var use3D = Env3d.d3_enabledPy.get();
+		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
 	}
 
 	@Override
