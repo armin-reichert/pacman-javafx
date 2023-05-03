@@ -274,7 +274,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	public void updateGameScene(boolean reload) {
 		var matching = sceneSelectionMatchingCurrentGameState();
-		var nextGameScene = matching.scene2D();
+		var nextGameScene = chooseGameScene(matching);
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
 		}
@@ -282,6 +282,10 @@ public class GameUI extends GameLoop implements GameEventListener {
 			changeGameScene(nextGameScene);
 		}
 		updateMainView();
+	}
+
+	protected GameScene chooseGameScene(GameSceneChoice choice) {
+		return choice.scene2D();
 	}
 
 	protected void changeGameScene(GameScene nextGameScene) {
