@@ -166,6 +166,7 @@ public class GameUI3d extends GameUI {
 
 	@Override
 	protected void handleKeyboardInput() {
+		super.handleKeyboardInput();
 		if (Keyboard.pressed(Keys.USE_3D)) {
 			toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
@@ -173,7 +174,6 @@ public class GameUI3d extends GameUI {
 		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
 			Actions3d.togglePipViewVisible();
 		}
-		super.handleKeyboardInput();
 	}
 
 	public void toggleUse3DScene() {

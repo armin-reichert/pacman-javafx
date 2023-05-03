@@ -243,12 +243,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		}
 	}
 
-	private void handleKeyPressed(KeyEvent keyEvent) {
-		Keyboard.accept(keyEvent);
-		handleKeyboardInput();
-		Keyboard.clearState();
-	}
-
 	protected void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
@@ -310,6 +304,13 @@ public class GameUI extends GameLoop implements GameEventListener {
 		Logger.trace("Game scene changed to {}", currentGameScene);
 	}
 
+	private void handleKeyPressed(KeyEvent keyEvent) {
+		Keyboard.accept(keyEvent);
+		handleKeyboardInput();
+		currentGameScene.handleKeyboardInput();
+		Keyboard.clearState();
+	}
+
 	protected void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
 			Actions.toggleAutopilot();
@@ -338,7 +339,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 		} else if (Keyboard.pressed(Keys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
-		currentGameScene.handleKeyboardInput();
 	}
 
 	@Override
