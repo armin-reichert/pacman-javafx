@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-import java.util.List;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -88,45 +86,45 @@ public class GameUI3d extends GameUI {
 	}
 
 	@Override
-	protected List<GameSceneChoice> createPacManScenes(GameController gc) {
-		var scenes = super.createPacManScenes(gc);
-		var playScene2D = scenes.get(INDEX_PLAY_SCENE).scene2D();
-		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gc)));
-		return scenes;
+	protected void createPacManSceneChoices() {
+		super.createPacManSceneChoices();
+		var choices = sceneChoicesMap.get(GameVariant.PACMAN);
+		var playScene2D = choices.get(INDEX_PLAY_SCENE).scene2D();
+		choices.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gameController)));
 	}
 
 	@Override
-	protected List<GameSceneChoice> createMsPacManScenes(GameController gc) {
-		var scenes = super.createMsPacManScenes(gc);
-		var playScene2D = scenes.get(INDEX_PLAY_SCENE).scene2D();
-		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gc)));
-		return scenes;
+	protected void createMsPacManSceneChoices() {
+		super.createMsPacManSceneChoices();
+		var choices = sceneChoicesMap.get(GameVariant.MS_PACMAN);
+		var playScene2D = choices.get(INDEX_PLAY_SCENE).scene2D();
+		choices.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gameController)));
 	}
 
 	@Override
-	protected void createLayout() {
+	protected void createMainSceneLayout() {
 		pipGameScene = new PlayScene2D(gameController);
 		dashboard = new Dashboard();
 		dashboard.populate(this); // TODO check this
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pipGameScene.fxSubScene());
-		root.getChildren().add(new Label("Game scene comes here"));
-		root.getChildren().add(flashMessageView);
-		root.getChildren().add(dashboardLayer);
+		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
+		mainSceneRoot.getChildren().add(flashMessageView);
+		mainSceneRoot.getChildren().add(dashboardLayer);
 	}
 
 	@Override
-	protected void updateUI() {
+	protected void updateStage() {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Env3d.d3_drawModePy.get() == DrawMode.LINE) {
-				root.setBackground(AppRes3d.Manager.colorBackground(Color.BLACK));
+				mainSceneRoot.setBackground(AppRes3d.Manager.colorBackground(Color.BLACK));
 			} else {
-				root.setBackground(AppRes3d.Textures.backgroundForScene3D);
+				mainSceneRoot.setBackground(AppRes3d.Textures.backgroundForScene3D);
 			}
 		} else {
-			root.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));// TODO
+			mainSceneRoot.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = Env.simulationPausedPy.get();
 		var dimensionMsg = AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
@@ -147,15 +145,15 @@ public class GameUI3d extends GameUI {
 
 	@Override
 	protected void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateUI());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 
 		dashboard.visibleProperty().bind(Env3d.dashboardVisiblePy);
 		Env3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
 		Env3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
 		pipGameScene.fxSubScene().opacityProperty().bind(Env3d.pipOpacityPy);
 
-		Env3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateUI());
-		Env3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateUI());
+		Env3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
+		Env3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
 		Env3d.d3_enabledPy.set(true);
 		Env3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
@@ -198,7 +196,7 @@ public class GameUI3d extends GameUI {
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {
-		return scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene)
-				|| scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene);
+		return sceneChoicesMap.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene)
+				|| sceneChoicesMap.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene);
 	}
 }

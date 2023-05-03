@@ -47,7 +47,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManTestRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
@@ -89,14 +88,14 @@ public class GameUI extends GameLoop implements GameEventListener {
 	public static final byte INDEX_CREDIT_SCENE = 2;
 	public static final byte INDEX_PLAY_SCENE = 3;
 
-	protected final GameController gameController;
 	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-	protected final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
+	protected final Map<GameVariant, List<GameSceneChoice>> sceneChoicesMap = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
 	protected Scene mainScene;
-	protected final StackPane root = new StackPane();
+	protected final StackPane mainSceneRoot = new StackPane();
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final SoundHandler soundHandler = new SoundHandler();
+	protected final GameController gameController;
 
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
@@ -110,16 +109,17 @@ public class GameUI extends GameLoop implements GameEventListener {
 		this.gameController = gameController;
 
 		configureRenderers(settings);
-		configureGameScenes(gameController);
-		createLayout();
+		createMsPacManSceneChoices();
+		createPacManSceneChoices();
+		createMainSceneLayout();
 		createMainScene(settings);
-		configureState(stage, settings);
+		configureStage(settings);
 		configureGameLoop();
-		configureSteering(settings, gameController);
+		configurePacSteering(settings);
 		initEnv(settings);
 
-		GameEvents.addListener(this);
 		Actions.init(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
+		GameEvents.addListener(this);
 	}
 
 	@Override
@@ -131,79 +131,84 @@ public class GameUI extends GameLoop implements GameEventListener {
 		super.start();
 	}
 
-	protected void configureGameScenes(GameController gameController) {
-		scenes.put(GameVariant.MS_PACMAN, createMsPacManScenes(gameController));
-		scenes.put(GameVariant.PACMAN, createPacManScenes(gameController));
-	}
-
-	protected List<GameSceneChoice> createPacManScenes(GameController gc) {
-		return Arrays.asList(
+	/**
+	 * @return mutable list of Pac-Man game scene choices
+	 */
+	protected void createPacManSceneChoices() {
+		var scenes = Arrays.asList(
 		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new PacManIntroScene(gc)),
-			new GameSceneChoice(new PacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new PacManCutscene1(gc)), 
-			new GameSceneChoice(new PacManCutscene2(gc)),
-			new GameSceneChoice(new PacManCutscene3(gc))
+			new GameSceneChoice(new BootScene(gameController)),
+			new GameSceneChoice(new PacManIntroScene(gameController)),
+			new GameSceneChoice(new PacManCreditScene(gameController)),
+			new GameSceneChoice(new PlayScene2D(gameController)),
+			new GameSceneChoice(new PacManCutscene1(gameController)), 
+			new GameSceneChoice(new PacManCutscene2(gameController)),
+			new GameSceneChoice(new PacManCutscene3(gameController))
 		//@formatter:on
 		);
+		sceneChoicesMap.put(GameVariant.PACMAN, scenes);
 	}
 
-	protected List<GameSceneChoice> createMsPacManScenes(GameController gc) {
-		return Arrays.asList(
+	/**
+	 * @return mutable list of Ms. Pac-Man game scene choices
+	 */
+	protected void createMsPacManSceneChoices() {
+		var scenes = Arrays.asList(
 		//@formatter:off
-			new GameSceneChoice(new BootScene(gc)),
-			new GameSceneChoice(new MsPacManIntroScene(gc)), 
-			new GameSceneChoice(new MsPacManCreditScene(gc)),
-			new GameSceneChoice(new PlayScene2D(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene1(gc)), 
-			new GameSceneChoice(new MsPacManIntermissionScene2(gc)),
-			new GameSceneChoice(new MsPacManIntermissionScene3(gc))
+			new GameSceneChoice(new BootScene(gameController)),
+			new GameSceneChoice(new MsPacManIntroScene(gameController)), 
+			new GameSceneChoice(new MsPacManCreditScene(gameController)),
+			new GameSceneChoice(new PlayScene2D(gameController)),
+			new GameSceneChoice(new MsPacManIntermissionScene1(gameController)), 
+			new GameSceneChoice(new MsPacManIntermissionScene2(gameController)),
+			new GameSceneChoice(new MsPacManIntermissionScene3(gameController))
 		//@formatter:on
 		);
+		sceneChoicesMap.put(GameVariant.MS_PACMAN, scenes);
 	}
 
 	protected void configureRenderers(Settings settings) {
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		renderers.put(GameVariant.PACMAN, settings.useTestRenderer ? new PacManTestRenderer() : new PacManGameRenderer());
+		renderers.put(GameVariant.PACMAN, new PacManGameRenderer());
 	}
 
-	protected void configureSteering(Settings settings, GameController gameController) {
+	protected void configurePacSteering(Settings settings) {
 		keyboardSteering = new KeyboardSteering(settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
-
-		gameController.setManualPacSteering(keyboardSteering);
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+		gameController.setManualPacSteering(keyboardSteering);
 	}
 
 	protected void configureGameLoop() {
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateUI());
+		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateStage());
 		targetFrameratePy.bind(Env.simulationSpeedPy);
 		measuredPy.bind(Env.simulationTimeMeasuredPy);
 		pausedPy.bind(Env.simulationPausedPy);
 	}
 
-	protected void configureState(Stage stage, Settings settings) {
+	protected void configureStage(Settings settings) {
 		stage.setScene(mainScene);
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 	}
 
-	protected void createLayout() {
-		root.getChildren().add(new Label("Game scene comes here"));
-		root.getChildren().add(flashMessageView);
-		root.getChildren().add(new BorderPane());
+	protected void createMainSceneLayout() {
+		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
+		mainSceneRoot.getChildren().add(flashMessageView);
+		mainSceneRoot.getChildren().add(new BorderPane());
 	}
 
 	protected void createMainScene(Settings settings) {
-		mainScene = new Scene(root, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
+		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
-				resizeStageToOptimalSize();
+			if (e.getClickCount() == 2 && currentGameScene != null) {
+				// resize 2D scene to fit
+				if (!currentGameScene.is3D() && !stage.isFullScreen()) {
+					stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
+				}
 			}
 		});
 	}
@@ -220,14 +225,8 @@ public class GameUI extends GameLoop implements GameEventListener {
 		currentGameScene.render();
 	}
 
-	protected void resizeStageToOptimalSize() {
-		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
-		}
-	}
-
-	protected void updateUI() {
-		root.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));
+	protected void updateStage() {
+		mainSceneRoot.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));
 		var paused = Env.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
@@ -251,7 +250,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 	protected void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateUI());
+		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
 
 	/**
@@ -278,7 +277,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + game.intermissionTestNumber;
 		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameState));
 		};
-		return scenes.get(game.variant()).get(index);
+		return sceneChoicesMap.get(game.variant()).get(index);
 	}
 
 	public void updateGameScene(boolean reload) {
@@ -289,7 +288,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateUI();
+		updateStage();
 	}
 
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
@@ -300,11 +299,14 @@ public class GameUI extends GameLoop implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		newGameScene.context().setRendering2D(renderers.get(gameController.game().variant()));
-		newGameScene.init();
-		root.getChildren().set(0, newGameScene.fxSubScene());
-		newGameScene.onEmbedIntoParentScene(stage.getScene());
+		Logger.trace("Changing game scene from {} to {}", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
+		var renderer = renderers.get(gameController.game().variant());
+		Logger.trace("Using renderer {}", renderer);
+		currentGameScene.context().setRendering2D(renderer);
+		currentGameScene.init();
+		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
+		currentGameScene.onEmbedIntoParentScene(stage.getScene());
 		Logger.trace("Game scene changed to {}", currentGameScene);
 	}
 
