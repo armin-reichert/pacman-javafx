@@ -4,7 +4,7 @@
 
 A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. 
 
-Both games can be played in 2D and 3D, you can switch between 2D and 3D by pressing key combination <kbd>Alt+3</kbd>.
+Both games can be played either in 2D-only or in 2D and 3D (full version). In the full version, you can switch during the game between 2D and 3D view by pressing the key combination <kbd>Alt+3</kbd>.
 
 ## How to run the released version
 
@@ -29,8 +29,8 @@ build.bat
 
 This build script 
 - runs a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
-- runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (2D-only user interface),
-- runs a Maven build of the [pacman-ui-fx]-3d(pacman-ui-fx-3d) project (2D+3D user interface),
+- runs a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (2D-only),
+- runs a Maven build of the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
 - creates executable jar file `pacman-ui-fx-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx\target`),
 - creates executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx-3d\target`),
 - creates zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx\target`).
