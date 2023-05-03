@@ -167,20 +167,6 @@ public class GameUI3d extends GameUI {
 	}
 
 	@Override
-	public void updateGameScene(boolean reload) {
-		var matching = sceneSelectionMatchingCurrentGameState();
-		var use3D = Env3d.d3_enabledPy.get();
-		var nextGameScene = (use3D && matching.scene3D() != null) ? matching.scene3D() : matching.scene2D();
-		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
-		}
-		if (reload || nextGameScene != currentGameScene) {
-			changeGameScene(nextGameScene);
-		}
-		updateUI();
-	}
-
-	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
 		var use3D = Env3d.d3_enabledPy.get();
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
