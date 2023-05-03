@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 
 import org.tinylog.Logger;
 
@@ -54,7 +55,7 @@ public class GameApp extends Application {
 		launch(args);
 	}
 
-	private GameUI gameUI;
+	private GameUI ui;
 
 	@Override
 	public void init() throws Exception {
@@ -65,14 +66,15 @@ public class GameApp extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
-		gameUI = new GameUI(primaryStage, settings, gameController);
-		gameUI.start();
-		Logger.info("Game started. Target frame rate: {}", gameUI.targetFrameratePy.get());
+		ui = new GameUI(primaryStage, settings, gameController);
+		ui.start();
+		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),
+				ui.targetFrameratePy.get(), settings);
 	}
 
 	@Override
 	public void stop() throws Exception {
-		gameUI.stop();
+		ui.stop();
 		Logger.info("Game stopped");
 	}
 }
