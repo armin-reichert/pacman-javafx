@@ -56,13 +56,13 @@ public class GameApp3d extends Application {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
 		gameUI = new GameUI3d(primaryStage, settings, gameController);
-		gameUI.simulation().start();
-		Logger.info("Game started. Target frame rate: {}", gameUI.simulation().targetFrameratePy.get());
+		gameUI.start();
+		Logger.info("Game started. Target frame rate: {}", gameUI.targetFrameratePy.get());
 	}
 
 	@Override
 	public void stop() throws Exception {
-		gameUI.simulation().stop();
+		gameUI.stop();
 		Logger.info("Game stopped");
 	}
 }

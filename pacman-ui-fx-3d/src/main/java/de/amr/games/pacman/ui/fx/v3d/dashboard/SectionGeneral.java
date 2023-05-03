@@ -75,7 +75,7 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.simulation().executeSteps(Env.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.executeSteps(Env.simulationStepsPy.get(), true));
 
 		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.simulationStepsPy.get());
 		spinnerSimulationSteps.valueProperty()
@@ -87,10 +87,9 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Env.simulationSpeedPy.set(newValue.intValue()));
 
-		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.simulation().targetFrameratePy.get(),
-				ui.simulation().getFPS()));
+		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.targetFrameratePy.get(), ui.getFPS()));
 
-		addInfo("Total Updates", ui.simulation()::getUpdateCount);
+		addInfo("Total Updates", ui::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Env3d.wokePussyMode));
