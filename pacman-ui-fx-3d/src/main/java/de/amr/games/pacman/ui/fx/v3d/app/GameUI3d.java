@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+
 import java.util.List;
 
 import de.amr.games.pacman.controller.GameController;
@@ -63,7 +65,7 @@ import javafx.stage.Stage;
  */
 public class GameUI3d extends GameUI {
 
-	public static final float PIP_MIN_HEIGHT = TILES_Y * 8;
+	public static final float PIP_MIN_HEIGHT = TS * TILES_Y;
 	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
 
 	private PlayScene2D pipGameScene;
@@ -88,14 +90,16 @@ public class GameUI3d extends GameUI {
 	@Override
 	protected List<GameSceneChoice> createPacManScenes(GameController gc) {
 		var scenes = super.createPacManScenes(gc);
-		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)));
+		var playScene2D = scenes.get(INDEX_PLAY_SCENE).scene2D();
+		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gc)));
 		return scenes;
 	}
 
 	@Override
 	protected List<GameSceneChoice> createMsPacManScenes(GameController gc) {
 		var scenes = super.createMsPacManScenes(gc);
-		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(new PlayScene2D(gc), new PlayScene3D(gc)));
+		var playScene2D = scenes.get(INDEX_PLAY_SCENE).scene2D();
+		scenes.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gc)));
 		return scenes;
 	}
 
