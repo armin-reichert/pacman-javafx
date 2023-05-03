@@ -189,7 +189,8 @@ public class GameUI3d extends GameUI {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
-			Actions.showFlashMessage(AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));// TODO
+			// TODO: put text into 3D UI
+			Actions.showFlashMessage(AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 

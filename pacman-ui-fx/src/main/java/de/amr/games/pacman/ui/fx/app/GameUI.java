@@ -253,11 +253,11 @@ public class GameUI extends GameLoop implements GameEventListener {
 		if (dimension != 2 && dimension != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
 		}
-		var matching = sceneSelectionMatchingCurrentGameState();
-		return Optional.ofNullable(dimension == 3 ? matching.scene3D() : matching.scene2D());
+		var choice = sceneChoiceMatchingCurrentGameState();
+		return Optional.ofNullable(dimension == 3 ? choice.scene3D() : choice.scene2D());
 	}
 
-	protected GameSceneChoice sceneSelectionMatchingCurrentGameState() {
+	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
 		var game = gameController.game();
 		var gameState = gameController.state();
 		int index = switch (gameState) {
@@ -273,8 +273,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 	public void updateGameScene(boolean reload) {
-		var matching = sceneSelectionMatchingCurrentGameState();
-		var nextGameScene = chooseGameScene(matching);
+		var nextGameScene = chooseGameScene(sceneChoiceMatchingCurrentGameState());
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
 		}
@@ -288,17 +287,16 @@ public class GameUI extends GameLoop implements GameEventListener {
 		return choice.scene2D();
 	}
 
-	protected void changeGameScene(GameScene nextGameScene) {
+	protected final void changeGameScene(GameScene newGameScene) {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		var renderer = renderers.get(gameController.game().variant());
-		nextGameScene.context().setRendering2D(renderer);
-		nextGameScene.init();
-		root.getChildren().set(0, nextGameScene.fxSubScene());
-		nextGameScene.onEmbedIntoParentScene(mainScene());
-		currentGameScene = nextGameScene;
-		Logger.trace("Game scene changed to {}", nextGameScene);
+		newGameScene.context().setRendering2D(renderers.get(gameController.game().variant()));
+		newGameScene.init();
+		root.getChildren().set(0, newGameScene.fxSubScene());
+		newGameScene.onEmbedIntoParentScene(stage.getScene());
+		currentGameScene = newGameScene;
+		Logger.trace("Game scene changed to {}", currentGameScene);
 	}
 
 	protected void handleKeyboardInput() {
@@ -371,10 +369,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	public GameController gameController() {
 		return gameController;
-	}
-
-	public Scene mainScene() {
-		return stage.getScene();
 	}
 
 	public GameScene currentGameScene() {
