@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.util.Arrays;
@@ -89,13 +90,15 @@ public class GameUI extends GameLoop implements GameEventListener {
 	public static final byte INDEX_CREDIT_SCENE = 2;
 	public static final byte INDEX_PLAY_SCENE = 3;
 
-	protected GameController gameController;
-	protected Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-	protected Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
-	protected Stage stage;
-	protected StackPane root;
-	protected FlashMessageView flashMessageView;
-	protected SoundHandler soundHandler = new SoundHandler();
+	protected final GameController gameController;
+	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
+	protected final Map<GameVariant, List<GameSceneChoice>> scenes = new EnumMap<>(GameVariant.class);
+	protected final Stage stage;
+	protected final Scene mainScene;
+	protected final StackPane root = new StackPane();
+	protected final FlashMessageView flashMessageView = new FlashMessageView();
+	protected final SoundHandler soundHandler = new SoundHandler();
+	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
 
 	public GameUI(Stage stage, Settings settings, GameController gameController) {
@@ -111,7 +114,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		measuredPy.bind(Env.simulationTimeMeasuredPy);
 		pausedPy.bind(Env.simulationPausedPy);
 
-		var keyboardSteering = new KeyboardSteering(//
+		keyboardSteering = new KeyboardSteering(//
 				settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
 
@@ -124,8 +127,16 @@ public class GameUI extends GameLoop implements GameEventListener {
 		scenes.put(GameVariant.MS_PACMAN, createMsPacManScenes(gameController));
 		scenes.put(GameVariant.PACMAN, createPacManScenes(gameController));
 
-		createComponents();
-		var mainScene = createMainScene(TILES_X * 8 * settings.zoom, TILES_Y * 8 * settings.zoom);
+		createLayout();
+
+		mainScene = new Scene(root, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
+		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
+		mainScene.setOnKeyPressed(this::handleKeyPressed);
+		mainScene.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 2) {
+				resizeStageToOptimalSize();
+			}
+		});
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		stage.setScene(mainScene);
 
@@ -158,29 +169,10 @@ public class GameUI extends GameLoop implements GameEventListener {
 		currentGameScene.render();
 	}
 
-	protected void createComponents() {
-		root = new StackPane();
-		flashMessageView = new FlashMessageView();
-	}
-
-	protected Scene createMainScene(float sizeX, float sizeY) {
-		var scene = new Scene(root, sizeX, sizeY);
-		createMainSceneLayout();
-		scene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(scene));
-		scene.setOnKeyPressed(this::handleKeyPressed);
-		scene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
-				resizeStageToOptimalSize();
-			}
-		});
-		return scene;
-	}
-
-	protected void createMainSceneLayout() {
-		var topLayer = new BorderPane();
+	protected void createLayout() {
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(flashMessageView);
-		root.getChildren().add(topLayer);
+		root.getChildren().add(new BorderPane());
 	}
 
 	protected void resizeStageToOptimalSize() {

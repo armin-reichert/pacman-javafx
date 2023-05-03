@@ -104,21 +104,16 @@ public class GameUI3d extends GameUI {
 	}
 
 	@Override
-	protected void createComponents() {
-		super.createComponents();
+	protected void createLayout() {
 		pipGameScene = new PlayScene2D(gameController);
 		dashboard = new Dashboard();
-		dashboard.populate(this);
-	}
-
-	@Override
-	protected void createMainSceneLayout() {
-		var topLayer = new BorderPane();
-		topLayer.setLeft(dashboard);
-		topLayer.setRight(pipGameScene.fxSubScene());
+		dashboard.populate(this); // TODO check this
+		var dashboardLayer = new BorderPane();
+		dashboardLayer.setLeft(dashboard);
+		dashboardLayer.setRight(pipGameScene.fxSubScene());
 		root.getChildren().add(new Label("Game scene comes here"));
 		root.getChildren().add(flashMessageView);
-		root.getChildren().add(topLayer);
+		root.getChildren().add(dashboardLayer);
 	}
 
 	@Override
