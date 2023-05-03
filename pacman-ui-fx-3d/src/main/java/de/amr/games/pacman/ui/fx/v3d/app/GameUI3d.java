@@ -51,8 +51,11 @@ import javafx.stage.Stage;
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
  * <p>
- * The play scene is available in 2D and 3D. All others scenes are 2D only.
- * 
+ * The <strong>play scene</strong> is available in a {@link PlayScene2D 2D} and a {@link PlayScene3D 3D} version. All
+ * others scenes are 2D only.
+ * <p>
+ * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
+ * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
  * <p>
  * TODO still more refactoring necessary
  * 
@@ -68,6 +71,10 @@ public class GameUI3d extends GameUI {
 
 	public GameUI3d(Stage stage, Settings settings, GameController gameController) {
 		super(stage, settings, gameController);
+	}
+
+	public Dashboard dashboard() {
+		return dashboard;
 	}
 
 	@Override
@@ -112,6 +119,7 @@ public class GameUI3d extends GameUI {
 
 	@Override
 	protected void updateMainView() {
+		updatePictureInPictureView(); // TODO
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Env3d.d3_drawModePy.get() == DrawMode.LINE) {
 				root.setBackground(AppRes.Manager.colorBackground(Color.BLACK));// TODO
@@ -136,27 +144,7 @@ public class GameUI3d extends GameUI {
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
-
 		updatePictureInPictureView();
-	}
-
-	/**
-	 * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
-	 * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
-	 */
-	private void updatePictureInPictureView() {
-		boolean visible = Env3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
-		pipGameScene.fxSubScene().setVisible(visible);
-		pipGameScene.context().setCreditVisible(false);
-		pipGameScene.context().setScoreVisible(true);
-		pipGameScene.context().setRendering2D(currentGameScene.context().rendering2D());
-	}
-
-	private boolean isPlayScene(GameScene gameScene) {
-		return gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene2D()
-				|| gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene3D()
-				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene2D()
-				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene3D();
 	}
 
 	@Override
@@ -185,7 +173,6 @@ public class GameUI3d extends GameUI {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updatePictureInPictureView(); // TODO
 		updateMainView();
 	}
 
@@ -217,7 +204,18 @@ public class GameUI3d extends GameUI {
 		}
 	}
 
-	public Dashboard dashboard() {
-		return dashboard;
+	private void updatePictureInPictureView() {
+		boolean visible = Env3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
+		pipGameScene.fxSubScene().setVisible(visible);
+		pipGameScene.context().setCreditVisible(false);
+		pipGameScene.context().setScoreVisible(true);
+		pipGameScene.context().setRendering2D(currentGameScene.context().rendering2D());
+	}
+
+	private boolean isPlayScene(GameScene gameScene) {
+		return gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene2D()
+				|| gameScene == scenes.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).scene3D()
+				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene2D()
+				|| gameScene == scenes.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).scene3D();
 	}
 }
