@@ -43,7 +43,6 @@ import javafx.scene.paint.Color;
  */
 public class PacManCutscene3 extends GameScene2D {
 
-	public static final String SE_START_INTERMISSION_3 = "start_intermission_3";
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
@@ -89,7 +88,7 @@ public class PacManCutscene3 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameEvents.publishSoundEvent(SE_START_INTERMISSION_3);
+				GameEvents.publishSoundEvent(GameModel.SE_START_INTERMISSION_3);
 			}
 			return;
 		}

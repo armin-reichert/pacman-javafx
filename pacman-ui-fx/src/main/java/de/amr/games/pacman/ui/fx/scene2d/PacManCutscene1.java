@@ -43,6 +43,7 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class PacManCutscene1 extends GameScene2D {
+
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
@@ -90,7 +91,7 @@ public class PacManCutscene1 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameEvents.publishSoundEvent("start_intermission_1");
+				GameEvents.publishSoundEvent(GameModel.SE_START_INTERMISSION_1);
 			}
 			return;
 		}
