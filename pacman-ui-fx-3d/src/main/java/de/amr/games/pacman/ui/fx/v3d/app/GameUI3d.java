@@ -118,7 +118,7 @@ public class GameUI3d extends GameUI {
 	protected void updateStage() {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
-			if (Env3d.d3_drawModePy.get() == DrawMode.LINE) {
+			if (GameApp3d.d3_drawModePy.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(AppRes3d.Manager.colorBackground(Color.BLACK));
 			} else {
 				mainSceneRoot.setBackground(AppRes3d.Textures.backgroundForScene3D);
@@ -127,7 +127,7 @@ public class GameUI3d extends GameUI {
 			mainSceneRoot.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = Env.simulationPausedPy.get();
-		var dimensionMsg = AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = AppRes.Texts.message(GameApp3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
@@ -147,20 +147,20 @@ public class GameUI3d extends GameUI {
 	protected void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 
-		dashboard.visibleProperty().bind(Env3d.dashboardVisiblePy);
-		Env3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
-		Env3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
-		pipGameScene.fxSubScene().opacityProperty().bind(Env3d.pipOpacityPy);
+		dashboard.visibleProperty().bind(GameApp3d.dashboardVisiblePy);
+		GameApp3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
+		GameApp3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
+		pipGameScene.fxSubScene().opacityProperty().bind(GameApp3d.pipOpacityPy);
 
-		Env3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
-		Env3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
-		Env3d.d3_enabledPy.set(true);
-		Env3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
+		GameApp3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
+		GameApp3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
+		GameApp3d.d3_enabledPy.set(true);
+		GameApp3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
 
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		var use3D = Env3d.d3_enabledPy.get();
+		var use3D = GameApp3d.d3_enabledPy.get();
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
 	}
 
@@ -177,18 +177,18 @@ public class GameUI3d extends GameUI {
 	}
 
 	public void toggleUse3DScene() {
-		Ufx.toggle(Env3d.d3_enabledPy);
+		Ufx.toggle(GameApp3d.d3_enabledPy);
 		if (findGameScene(3).isPresent()) {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// TODO: put text into 3D UI
-			Actions.showFlashMessage(AppRes.Texts.message(Env3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			Actions.showFlashMessage(AppRes.Texts.message(GameApp3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	private void updatePictureInPictureView() {
-		boolean visible = Env3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
+		boolean visible = GameApp3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
 		pipGameScene.fxSubScene().setVisible(visible);
 		pipGameScene.context().setCreditVisible(false);
 		pipGameScene.context().setScoreVisible(true);

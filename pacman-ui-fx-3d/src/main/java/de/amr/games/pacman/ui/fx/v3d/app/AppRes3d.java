@@ -93,7 +93,7 @@ public class AppRes3d {
 
 		private static PhongMaterial createFloorTexture(String textureBase, String ext) {
 			var material = textureMaterial(textureBase, ext, null, null);
-			material.diffuseColorProperty().bind(Env3d.d3_floorColorPy);
+			material.diffuseColorProperty().bind(GameApp3d.d3_floorColorPy);
 			return material;
 		}
 
