@@ -24,16 +24,17 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.v3d.app;
 
+import de.amr.games.pacman.ui.fx.app.Actions2d;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.shape.DrawMode;
 
-public class Actions3d extends de.amr.games.pacman.ui.fx.app.Actions2d {
+public class Actions3d extends Actions2d {
 
 	public void togglePipViewVisible() {
 		Ufx.toggle(Game3d.pipVisiblePy);
 		var msgKey = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
-		Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message(msgKey));// TODO
+		showFlashMessage(Game2d.Texts.message(msgKey));// TODO
 	}
 
 	public void toggleDashboardVisible() {
@@ -44,14 +45,14 @@ public class Actions3d extends de.amr.games.pacman.ui.fx.app.Actions2d {
 		var nextPerspective = Game3d.d3_perspectivePy.get().next();
 		Game3d.d3_perspectivePy.set(nextPerspective);
 		String perspectiveName = Game2d.Texts.message(nextPerspective.name());
-		Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
+		showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
 	}
 
 	public void selectPrevPerspective() {
 		var prevPerspective = Game3d.d3_perspectivePy.get().prev();
 		Game3d.d3_perspectivePy.set(prevPerspective);
 		String perspectiveName = Game2d.Texts.message(prevPerspective.name());
-		Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
+		showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {

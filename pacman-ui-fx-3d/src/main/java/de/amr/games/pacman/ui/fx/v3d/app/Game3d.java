@@ -36,6 +36,7 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.ActionContext;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
@@ -175,6 +176,8 @@ public class Game3d extends Application {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI3d(primaryStage, settings, gameController);
+		Game2d.ACTIONS.setContext(new ActionContext(ui, gameController, ui::currentGameScene, ui.flashMessageView()));
+
 		ui.start();
 		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),
 				ui.targetFrameratePy.get(), settings);
