@@ -115,7 +115,7 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 		configureStage(settings);
 		configureGameLoop();
 		configurePacSteering(settings);
-		initEnv(settings);
+		initProperties(settings);
 
 		GameEvents.addListener(this);
 	}
@@ -236,7 +236,7 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 		}
 	}
 
-	protected void initEnv(Settings settings) {
+	protected void initProperties(Settings settings) {
 		Game2d.Properties.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
 
