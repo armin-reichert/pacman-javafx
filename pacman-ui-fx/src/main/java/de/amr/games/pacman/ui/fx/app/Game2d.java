@@ -571,13 +571,9 @@ public class Game2d extends Application {
 		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}
 
-	// main
-
 	public static void main(String[] args) {
 		launch(args);
 	}
-
-	// end of static stuff
 
 	private GameUI2d ui;
 
@@ -604,5 +600,4 @@ public class Game2d extends Application {
 		ui.stop();
 		Logger.info("Game stopped");
 	}
-
 }
