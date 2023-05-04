@@ -36,13 +36,18 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Duration;
 
 /**
- * Game loop with modifiable frame rate.
+ * Game clock with modifiable frame rate.
  * 
  * @author Armin Reichert
  */
-public abstract class GameLoop {
+public abstract class GameClock {
 
-	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60);
+	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
+		@Override
+		protected void invalidated() {
+			updateClock();
+		}
+	};
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
 	public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
@@ -52,17 +57,16 @@ public abstract class GameLoop {
 	private long countTicksStartTime;
 	private long ticks;
 
-	protected GameLoop() {
-		targetFrameratePy.addListener((obs, oldVal, newVal) -> updateClock());
+	protected GameClock() {
 		createClock();
 	}
 
 	private void createClock() {
 		int fps = targetFrameratePy.get();
-		Logger.info("Create clock with {} fps", fps);
 		var tickDuration = Duration.millis(1000.0 / fps);
 		clock = new Timeline(fps, new KeyFrame(tickDuration, e -> executeSingleStep(!isPaused())));
 		clock.setCycleCount(Animation.INDEFINITE);
+		Logger.info("Created clock with {} fps", fps);
 	}
 
 	private void updateClock() {

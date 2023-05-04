@@ -64,7 +64,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
-import de.amr.games.pacman.ui.fx.util.GameLoop;
+import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -77,7 +77,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI2d extends GameLoop implements GameEventListener {
+public class GameUI2d extends GameClock implements GameEventListener {
 
 	public static final byte TILES_X = 28;
 	public static final byte TILES_Y = 36;

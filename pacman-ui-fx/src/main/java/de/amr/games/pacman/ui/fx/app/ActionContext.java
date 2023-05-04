@@ -30,12 +30,12 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
-import de.amr.games.pacman.ui.fx.util.GameLoop;
+import de.amr.games.pacman.ui.fx.util.GameClock;
 
 /**
  * @author Armin Reichert
  */
-public record ActionContext(GameLoop gameLoop, GameController gameController,
+public record ActionContext(GameClock gameLoop, GameController gameController,
 		Supplier<GameScene> currentGameSceneSupplier, FlashMessageView flashMessageView) {
 
 	public GameModel game() {
