@@ -55,7 +55,6 @@ import javafx.stage.Stage;
  * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
  * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
  * <p>
- * TODO still more refactoring necessary
  * 
  * @author Armin Reichert
  */
