@@ -63,8 +63,6 @@ public class Settings {
 	}
 
 	public final boolean fullScreen;
-//	public final Perspective perspective;
-//	public final boolean use3D;
 	public final GameVariant variant;
 	public final float zoom;
 	public final Map<Direction, KeyCode> keyMap;
@@ -73,8 +71,6 @@ public class Settings {
 	@SuppressWarnings("unchecked")
 	public Settings(Map<String, String> parameters) {
 		fullScreen = parse(parameters, "fullScreen", false, Boolean::valueOf);
-//		perspective = parse(parameters, "perspective", Perspective.NEAR_PLAYER, Perspective::valueOf);
-//		use3D = parse(parameters, "use3D", false, Boolean::valueOf);
 		variant = parse(parameters, "variant", GameVariant.PACMAN, GameVariant::valueOf);
 		zoom = parse(parameters, "zoom", 2.0f, Float::valueOf);
 		keyMap = (Map<Direction, KeyCode>) parse(parameters, "keys", "cursor", Settings::parseKeyMap);
