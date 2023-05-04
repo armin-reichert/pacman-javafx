@@ -23,9 +23,13 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
+import static de.amr.games.pacman.lib.Globals.randomInt;
+
 import java.io.IOException;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.tinylog.Logger;
 
@@ -34,6 +38,9 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.Settings;
+import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.ui.fx.v3d.entity.PacModel3D;
+import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -44,14 +51,16 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
  * @author Armin Reichert
  */
-public class GameApp3d extends Application {
+public class GameApp extends Application {
 
 //@formatter:off
 	public static final BooleanProperty             wokePussyMode = new SimpleBooleanProperty(false); 
@@ -77,8 +86,82 @@ public class GameApp3d extends Application {
 	public static final BooleanProperty             d3_foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 //@formatter:on
 
-	public static void main(String[] args) {
-		launch(args);
+	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/",
+			GameApp.class::getResource);
+
+	public static void loadResources() {
+		long start = System.nanoTime();
+		load("3D textures", Textures::load);
+		load("3D models", Models3D::load);
+		Logger.info("Loading resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
+	}
+
+	private static void load(String section, Runnable loadingCode) {
+		long start = System.nanoTime();
+		loadingCode.run();
+		Logger.info("Loading {} done ({} seconds).", section, (System.nanoTime() - start) / 1e9f);
+	}
+
+	public static class Models3D {
+
+		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+		public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+		public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+		public static final String MESH_ID_PELLET = "Fruit";
+
+		public static PacModel3D pacModel3D;
+		public static Model3D ghostModel3D;
+		public static Model3D pelletModel3D;
+
+		static void load() {
+			pacModel3D = new PacModel3D(ResMgr.urlFromRelPath("model3D/pacman.obj"));
+			ghostModel3D = new Model3D(ResMgr.urlFromRelPath("model3D/ghost.obj"));
+			pelletModel3D = new Model3D(ResMgr.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
+		}
+	}
+
+	public static class Textures {
+
+		public static final String KEY_NO_TEXTURE = "No Texture";
+		public static Background backgroundForScene3D;
+		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+
+		static void load() {
+			backgroundForScene3D = ResMgr.imageBackground("graphics/sky.png");
+			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
+			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
+			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
+			floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
+		}
+
+		private static PhongMaterial createFloorTexture(String textureBase, String ext) {
+			var material = textureMaterial(textureBase, ext, null, null);
+			material.diffuseColorProperty().bind(GameApp.d3_floorColorPy);
+			return material;
+		}
+
+		public static PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor,
+				Color specularColor) {
+			var texture = new PhongMaterial();
+			texture.setBumpMap(ResMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(ResMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setDiffuseColor(diffuseColor);
+			texture.setSpecularColor(specularColor);
+			return texture;
+		}
+
+		public static PhongMaterial floorTexture(String name) {
+			return floorTexturesByName.get(name);
+		}
+
+		public static String[] floorTextureNames() {
+			return floorTexturesByName.keySet().toArray(String[]::new);
+		}
+
+		public static String randomFloorTextureName() {
+			var names = floorTextureNames();
+			return names[randomInt(0, names.length)];
+		}
 	}
 
 	private GameUI3d ui;
@@ -86,7 +169,7 @@ public class GameApp3d extends Application {
 	@Override
 	public void init() throws Exception {
 		AppRes.load();
-		AppRes3d.load();
+		loadResources();
 	}
 
 	@Override
@@ -103,5 +186,10 @@ public class GameApp3d extends Application {
 	public void stop() throws Exception {
 		ui.stop();
 		Logger.info("Game stopped");
+	}
+
+	// TODO not sure if we need this main method as we have the "launcher" class Main
+	public static void main(String[] args) {
+		launch(args);
 	}
 }

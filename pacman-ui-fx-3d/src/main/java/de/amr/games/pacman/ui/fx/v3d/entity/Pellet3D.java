@@ -34,7 +34,7 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.util.Vector3f;
-import de.amr.games.pacman.ui.fx.v3d.app.AppRes3d;
+import de.amr.games.pacman.ui.fx.v3d.app.GameApp;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.scene.shape.Shape3D;
@@ -54,7 +54,7 @@ public class Pellet3D implements Eatable3D {
 		requireNonNull(model3D);
 		requirePositive(radius, "Pellet3D radius must be positive but is %f");
 
-		shape = model3D.meshView(AppRes3d.Models3D.MESH_ID_PELLET);
+		shape = model3D.meshView(GameApp.Models3D.MESH_ID_PELLET);
 		shape.setRotationAxis(Rotate.Z_AXIS);
 		shape.setRotate(90);
 		shape.setUserData(this);

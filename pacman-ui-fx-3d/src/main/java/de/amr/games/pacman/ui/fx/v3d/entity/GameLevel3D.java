@@ -45,8 +45,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.AppRes3d.Models3D;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
+import de.amr.games.pacman.ui.fx.v3d.app.GameApp;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -92,7 +91,7 @@ public class GameLevel3D {
 		this.level = level;
 		final GameVariant gameVariant = level.game().variant();
 
-		world3D = new World3D(level.world(), mazeColors, Models3D.pelletModel3D);
+		world3D = new World3D(level.world(), mazeColors, GameApp.Models3D.pelletModel3D);
 
 		pac3D = switch (gameVariant) {
 		case MS_PACMAN -> createMsPacMan3D(msPacManColors);
@@ -106,8 +105,9 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> Models3D.pacModel3D.createMsPacManNode(9, msPacManColors), true);
-		case PACMAN -> new LivesCounter3D(5, () -> Models3D.pacModel3D.createPacManNode(9, pacManColors), false);
+		case MS_PACMAN -> new LivesCounter3D(5, () -> GameApp.Models3D.pacModel3D.createMsPacManNode(9, msPacManColors),
+				true);
+		case PACMAN -> new LivesCounter3D(5, () -> GameApp.Models3D.pacModel3D.createPacManNode(9, pacManColors), false);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
@@ -132,17 +132,17 @@ public class GameLevel3D {
 		root.getChildren().add(world3D.getRoot());
 
 		// connect to environment
-		pac3D.lightedPy.bind(GameApp3d.d3_pacLightedPy);
-		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(GameApp3d.d3_drawModePy);
-		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(GameApp3d.d3_drawModePy);
-		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(GameApp3d.d3_drawModePy);
-		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(GameApp3d.d3_drawModePy);
-		world3D.drawModePy.bind(GameApp3d.d3_drawModePy);
-		world3D.floorColorPy.bind(GameApp3d.d3_floorColorPy);
-		world3D.floorTexturePy.bind(GameApp3d.d3_floorTexturePy);
-		world3D.wallHeightPy.bind(GameApp3d.d3_mazeWallHeightPy);
-		world3D.wallThicknessPy.bind(GameApp3d.d3_mazeWallThicknessPy);
-		livesCounter3D.drawModePy.bind(GameApp3d.d3_drawModePy);
+		pac3D.lightedPy.bind(GameApp.d3_pacLightedPy);
+		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(GameApp.d3_drawModePy);
+		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(GameApp.d3_drawModePy);
+		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(GameApp.d3_drawModePy);
+		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(GameApp.d3_drawModePy);
+		world3D.drawModePy.bind(GameApp.d3_drawModePy);
+		world3D.floorColorPy.bind(GameApp.d3_floorColorPy);
+		world3D.floorTexturePy.bind(GameApp.d3_floorTexturePy);
+		world3D.wallHeightPy.bind(GameApp.d3_mazeWallHeightPy);
+		world3D.wallThicknessPy.bind(GameApp.d3_mazeWallThicknessPy);
+		livesCounter3D.drawModePy.bind(GameApp.d3_drawModePy);
 	}
 
 	public void replaceBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
@@ -154,21 +154,21 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
-		var node = Models3D.pacModel3D.createPacManNode(9.0, colors);
+		var node = GameApp.Models3D.pacModel3D.createPacManNode(9.0, colors);
 		var pacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
-		pacMan3D.drawModePy.bind(GameApp3d.d3_drawModePy);
+		pacMan3D.drawModePy.bind(GameApp.d3_drawModePy);
 		return pacMan3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
-		var node = Models3D.pacModel3D.createMsPacManNode(9.0, colors);
+		var node = GameApp.Models3D.pacModel3D.createMsPacManNode(9.0, colors);
 		var msPacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
-		msPacMan3D.drawModePy.bind(GameApp3d.d3_drawModePy);
+		msPacMan3D.drawModePy.bind(GameApp.d3_drawModePy);
 		return msPacMan3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
-		return new Ghost3D(ghost, colors, Models3D.ghostModel3D, 8.5);
+		return new Ghost3D(ghost, colors, GameApp.Models3D.ghostModel3D, 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
@@ -229,7 +229,7 @@ public class GameLevel3D {
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
 		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
 		var eatenAnimation = eatable3D.getEatenAnimation();
-		if (eatenAnimation.isPresent() && GameApp3d.d3_energizerExplodesPy.get()) {
+		if (eatenAnimation.isPresent() && GameApp.d3_energizerExplodesPy.get()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
 			delayHiding.play();
