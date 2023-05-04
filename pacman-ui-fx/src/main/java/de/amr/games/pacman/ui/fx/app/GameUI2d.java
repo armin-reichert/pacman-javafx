@@ -117,7 +117,6 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 		configurePacSteering(settings);
 		initEnv(settings);
 
-		Game2d.ACTIONS.setContext(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
 		GameEvents.addListener(this);
 	}
 
@@ -126,7 +125,6 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		Game2d.ACTIONS.reboot();
 		super.start();
 	}
 
@@ -221,7 +219,7 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.Manager.colorBackground(Game2d.mainSceneBgColorPy.get()));
+		mainSceneRoot.setBackground(Game2d.ResMgr.colorBackground(Game2d.mainSceneBgColorPy.get()));
 		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
@@ -308,29 +306,29 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 
 	protected void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
-			Game2d.ACTIONS.toggleAutopilot();
+			Game2d.Actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
-			Game2d.ACTIONS.reboot();
+			Game2d.Actions.reboot();
 		} else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
 			Ufx.toggle(Game2d.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
-			Game2d.ACTIONS.toggleImmunity();
+			Game2d.Actions.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
-			Game2d.ACTIONS.togglePaused();
+			Game2d.Actions.togglePaused();
 		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
-			Game2d.ACTIONS.oneSimulationStep();
+			Game2d.Actions.oneSimulationStep();
 		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
-			Game2d.ACTIONS.tenSimulationSteps();
+			Game2d.Actions.tenSimulationSteps();
 		} else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
-			Game2d.ACTIONS.changeSimulationSpeed(5);
+			Game2d.Actions.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
-			Game2d.ACTIONS.changeSimulationSpeed(-5);
+			Game2d.Actions.changeSimulationSpeed(-5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
-			Game2d.ACTIONS.resetSimulationSpeed();
+			Game2d.Actions.resetSimulationSpeed();
 		} else if (Keyboard.pressed(Keys.QUIT)) {
-			Game2d.ACTIONS.restartIntro();
+			Game2d.Actions.restartIntro();
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
-			Game2d.ACTIONS.startLevelTestMode();
+			Game2d.Actions.startLevelTestMode();
 		} else if (Keyboard.pressed(Keys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}

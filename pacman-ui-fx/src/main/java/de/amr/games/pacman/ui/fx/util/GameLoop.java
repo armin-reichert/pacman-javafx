@@ -42,35 +42,36 @@ import javafx.util.Duration;
  */
 public abstract class GameLoop {
 
-	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
-		@Override
-		protected void invalidated() {
-			createFrameGenerator(get());
-		};
-	};
-
+	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60);
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
 	public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
-	private Timeline frameGenerator;
+	private Timeline clock;
 	private long updateCount;
-	private long fps;
-	private long fpsCountStartTime;
-	private long frames;
+	private long ticksPerSec;
+	private long countTicksStartTime;
+	private long ticks;
 
 	protected GameLoop() {
-		targetFrameratePy.set(60);
+		targetFrameratePy.addListener((obs, oldVal, newVal) -> updateClock());
+		createClock();
 	}
 
-	private void createFrameGenerator(int fps) {
-		var frameDuration = Duration.millis(1000.0 / fps);
-		boolean wasRunning = frameGenerator != null && frameGenerator.getStatus() == Status.RUNNING;
-		if (wasRunning) {
-			frameGenerator.stop();
+	private void createClock() {
+		int fps = targetFrameratePy.get();
+		Logger.info("Create clock with {} fps", fps);
+		var tickDuration = Duration.millis(1000.0 / fps);
+		clock = new Timeline(fps, new KeyFrame(tickDuration, e -> executeSingleStep(!isPaused())));
+		clock.setCycleCount(Animation.INDEFINITE);
+	}
+
+	private void updateClock() {
+		boolean running = clock.getStatus() == Status.RUNNING;
+		if (running) {
+			clock.stop();
 		}
-		frameGenerator = new Timeline(fps, new KeyFrame(frameDuration, e -> executeSingleStep(!isPaused())));
-		frameGenerator.setCycleCount(Animation.INDEFINITE);
-		if (wasRunning) {
+		createClock();
+		if (running) {
 			start();
 		}
 	}
@@ -86,15 +87,15 @@ public abstract class GameLoop {
 	public abstract void doRender();
 
 	public void start() {
-		frameGenerator.play();
+		clock.play();
 	}
 
 	public void stop() {
-		frameGenerator.stop();
+		clock.stop();
 	}
 
 	public boolean isRunning() {
-		return frameGenerator.getStatus() == Status.RUNNING;
+		return clock.getStatus() == Status.RUNNING;
 	}
 
 	public boolean isPaused() {
@@ -106,7 +107,7 @@ public abstract class GameLoop {
 	}
 
 	public long getFPS() {
-		return fps;
+		return ticksPerSec;
 	}
 
 	public void setTimeMeasured(boolean measured) {
@@ -126,7 +127,7 @@ public abstract class GameLoop {
 			updateCount++;
 		}
 		runPhase(this::doRender, "Render phase: {} milliseconds");
-		++frames;
+		++ticks;
 		computeFrameRate(tickTime);
 	}
 
@@ -142,10 +143,10 @@ public abstract class GameLoop {
 	}
 
 	private void computeFrameRate(long time) {
-		if (time - fpsCountStartTime > 1e9) {
-			fps = frames;
-			frames = 0;
-			fpsCountStartTime = time;
+		if (time - countTicksStartTime > 1e9) {
+			ticksPerSec = ticks;
+			ticks = 0;
+			countTicksStartTime = time;
 		}
 	}
 }

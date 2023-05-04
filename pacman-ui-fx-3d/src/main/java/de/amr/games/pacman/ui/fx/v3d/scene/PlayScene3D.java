@@ -111,10 +111,10 @@ public class PlayScene3D implements GameScene {
 		camControllerMap.put(Perspective.TOTAL, new CamTotal());
 
 		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(Game3d.d3_axesVisiblePy);
+		coordSystem.visibleProperty().bind(Game3d.Properties.d3_axesVisiblePy);
 
 		var ambientLight = new AmbientLight();
-		ambientLight.colorProperty().bind(Game3d.d3_lightColorPy);
+		ambientLight.colorProperty().bind(Game3d.Properties.d3_lightColorPy);
 
 		root = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 
@@ -136,7 +136,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		resetReadyMessageText3D();
-		perspectivePy.bind(Game3d.d3_perspectivePy);
+		perspectivePy.bind(Game3d.Properties.d3_perspectivePy);
 		context.level().ifPresent(this::replaceGameLevel3D);
 		Logger.info("Initialized 3D play scene");
 	}
@@ -218,8 +218,8 @@ public class PlayScene3D implements GameScene {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
 		}
 
-		if (Game3d.d3_floorTextureRandomPy.get()) {
-			Game3d.d3_floorTexturePy.set(Game3d.Textures.randomFloorTextureName());
+		if (Game3d.Properties.d3_floorTextureRandomPy.get()) {
+			Game3d.Properties.d3_floorTexturePy.set(Game3d.Textures.randomFloorTextureName());
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}
@@ -238,19 +238,19 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
-			Game2d.ACTIONS.addCredit(); // in demo mode, allow adding credit
+			Game2d.Actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {
-			Game3d.ACTIONS.selectPrevPerspective();
+			Game3d.Actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Keys.NEXT_CAMERA)) {
-			Game3d.ACTIONS.selectNextPerspective();
+			Game3d.Actions.selectNextPerspective();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
-			Game2d.ACTIONS.cheatEatAllPellets();
+			Game2d.Actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
-			Game2d.ACTIONS.cheatAddLives(3);
+			Game2d.Actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
-			Game2d.ACTIONS.cheatEnterNextLevel();
+			Game2d.Actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
-			Game2d.ACTIONS.cheatKillAllEatableGhosts();
+			Game2d.Actions.cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -344,7 +344,7 @@ public class PlayScene3D implements GameScene {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init(level);
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
-				if (Game3d.d3_foodOscillationEnabledPy.get()) {
+				if (Game3d.Properties.d3_foodOscillationEnabledPy.get()) {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);
@@ -409,7 +409,7 @@ public class PlayScene3D implements GameScene {
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							//TODO use 3d-only resources
-							Game2d.ACTIONS.showFlashMessageSeconds(2, Game2d.Texts.pickLevelCompleteMessage(level.number()));
+							Game2d.Actions.showFlashMessageSeconds(2, Game2d.Texts.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -423,7 +423,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			// TODO use 3d-only resources
-			Game2d.ACTIONS.showFlashMessageSeconds(3, Game2d.Texts.pickGameOverMessage());
+			Game2d.Actions.showFlashMessageSeconds(3, Game2d.Texts.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}
@@ -470,7 +470,7 @@ public class PlayScene3D implements GameScene {
 			}),
 			rotation,
 			Ufx.afterSeconds(0.5, () -> context.sounds().play(AudioClipID.SWEEP)),
-			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Game3d.d3_perspectivePy))
+			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Game3d.Properties.d3_perspectivePy))
 		);
 		//@formatter:on
 	}
@@ -479,9 +479,10 @@ public class PlayScene3D implements GameScene {
 		if (level.numFlashes == 0) {
 			return Ufx.pause(1.0);
 		}
-		double wallHeight = Game3d.d3_mazeWallHeightPy.get();
+		double wallHeight = Game3d.Properties.d3_mazeWallHeightPy.get();
 		var animation = new SwingingWallsAnimation(level.numFlashes);
-		animation.setOnFinished(e -> Game3d.d3_mazeWallHeightPy.set(wallHeight));
+		animation.wallHeightPy.bind(Game3d.Properties.d3_mazeWallHeightPy);
+		animation.setOnFinished(e -> Game3d.Properties.d3_mazeWallHeightPy.set(wallHeight));
 		return animation;
 	}
 

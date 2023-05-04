@@ -189,9 +189,9 @@ public class Pac3D {
 		root = new Group(pacNode);
 		pacNode.getTransforms().setAll(position, orientation);
 
-		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
-		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
-		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
+		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(Game3d.Properties.d3_drawModePy);
+		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(Game3d.Properties.d3_drawModePy);
+		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(Game3d.Properties.d3_drawModePy);
 
 		walkingAnimation = switch (gameVariant) {
 		case MS_PACMAN -> new HipSwaying(root);

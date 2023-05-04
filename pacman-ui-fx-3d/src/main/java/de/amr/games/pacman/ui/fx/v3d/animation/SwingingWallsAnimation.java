@@ -23,8 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import javafx.animation.Transition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
 /**
@@ -33,6 +34,8 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class SwingingWallsAnimation extends Transition {
+
+	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight");
 
 	private double wallStartHeight;
 
@@ -45,8 +48,8 @@ public class SwingingWallsAnimation extends Transition {
 	@Override
 	protected void interpolate(double t) {
 		if (t == 0) {
-			wallStartHeight = Game3d.d3_mazeWallHeightPy.get();
+			wallStartHeight = wallHeightPy.get();
 		}
-		Game3d.d3_mazeWallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
+		wallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
 	}
 }

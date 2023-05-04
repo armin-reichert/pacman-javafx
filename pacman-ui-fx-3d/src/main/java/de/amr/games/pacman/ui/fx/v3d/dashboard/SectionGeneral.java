@@ -67,7 +67,7 @@ public class SectionGeneral extends Section {
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
-		btnPlayPause.setOnAction(e -> Game2d.ACTIONS.togglePaused());
+		btnPlayPause.setOnAction(e -> Game2d.Actions.togglePaused());
 
 		btnStep.setGraphic(iconStep);
 		btnStep.setStyle("-fx-background-color: transparent");
@@ -90,7 +90,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
-		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.wokePussyMode));
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.Properties.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Game2d.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.timeMeasuredPy));
 	}
@@ -103,8 +103,8 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!ui.pausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Game2d.simulationStepsPy.get());
 		sliderTargetFPS.setValue(ui.targetFrameratePy.get());
-		cbUsePlayScene3D.setSelected(Game3d.d3_enabledPy.get());
-		cbPoliticallyCorrect.setSelected(Game3d.wokePussyMode.get());
+		cbUsePlayScene3D.setSelected(Game3d.Properties.d3_enabledPy.get());
+		cbPoliticallyCorrect.setSelected(Game3d.Properties.wokePussyMode.get());
 		cbTimeMeasured.setSelected(ui.timeMeasuredPy.get());
 		cbDebugUI.setSelected(Game2d.showDebugInfoPy.get());
 	}
