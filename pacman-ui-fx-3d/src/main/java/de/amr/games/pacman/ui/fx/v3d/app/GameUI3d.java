@@ -143,7 +143,7 @@ public class GameUI3d extends GameUI2d {
 
 	@Override
 	protected void initProperties(Settings settings) {
-		Game2d.Properties.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
+		super.initProperties(settings);
 
 		dashboard.visibleProperty().bind(Game3d.Properties.dashboardVisiblePy);
 		Game3d.Properties.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
