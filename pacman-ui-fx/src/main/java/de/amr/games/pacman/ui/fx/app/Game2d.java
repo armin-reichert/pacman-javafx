@@ -583,7 +583,6 @@ public class Game2d extends Application {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI2d(primaryStage, settings, gameController);
-		ui.targetFrameratePy.set(60);
 		Actions.setContext(new ActionContext(ui, gameController, ui::currentGameScene, ui.flashMessageView()));
 		Actions.reboot();
 		ui.start();

@@ -204,10 +204,12 @@ public class Game3d extends Application {
 		public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 	}
 
+	private Settings settings;
 	private GameUI3d ui;
 
 	@Override
 	public void init() throws Exception {
+		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		long start = System.nanoTime();
 		Game2d.loadResources();
 		runAndMeasureTime("Loading textures", Textures::load);
@@ -217,7 +219,6 @@ public class Game3d extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI3d(primaryStage, settings, gameController);
 		Game2d.Actions.setContext(new ActionContext(ui, gameController, ui::currentGameScene, ui.flashMessageView()));
@@ -231,10 +232,5 @@ public class Game3d extends Application {
 	public void stop() throws Exception {
 		ui.stop();
 		Logger.info("Game stopped");
-	}
-
-	// TODO not sure if we need this main method when we have the "launcher" class Main
-	public static void main(String[] args) {
-		launch(args);
 	}
 }
