@@ -305,31 +305,31 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(Keys.AUTOPILOT)) {
+		if (Keyboard.pressed(Game2d.Keys.AUTOPILOT)) {
 			Game2d.Actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Keys.BOOT)) {
+		} else if (Keyboard.pressed(Game2d.Keys.BOOT)) {
 			Game2d.Actions.reboot();
-		} else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
+		} else if (Keyboard.pressed(Game2d.Keys.DEBUG_INFO)) {
 			Ufx.toggle(Game2d.Properties.showDebugInfoPy);
-		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
+		} else if (Keyboard.pressed(Game2d.Keys.IMMUNITIY)) {
 			Game2d.Actions.toggleImmunity();
-		} else if (Keyboard.pressed(Keys.PAUSE)) {
+		} else if (Keyboard.pressed(Game2d.Keys.PAUSE)) {
 			Game2d.Actions.togglePaused();
-		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
+		} else if (Keyboard.pressed(Game2d.Keys.PAUSE_STEP) || Keyboard.pressed(Game2d.Keys.SINGLE_STEP)) {
 			Game2d.Actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
+		} else if (Keyboard.pressed(Game2d.Keys.TEN_STEPS)) {
 			Game2d.Actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
+		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_FASTER)) {
 			Game2d.Actions.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
+		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_SLOWER)) {
 			Game2d.Actions.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
+		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_NORMAL)) {
 			Game2d.Actions.resetSimulationSpeed();
-		} else if (Keyboard.pressed(Keys.QUIT)) {
+		} else if (Keyboard.pressed(Game2d.Keys.QUIT)) {
 			Game2d.Actions.restartIntro();
-		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
+		} else if (Keyboard.pressed(Game2d.Keys.TEST_LEVELS)) {
 			Game2d.Actions.startLevelTestMode();
-		} else if (Keyboard.pressed(Keys.FULLSCREEN)) {
+		} else if (Keyboard.pressed(Game2d.Keys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
 	}

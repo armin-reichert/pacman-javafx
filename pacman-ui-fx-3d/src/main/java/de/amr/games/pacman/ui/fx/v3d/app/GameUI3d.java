@@ -30,7 +30,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.GameUI2d;
-import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -164,11 +163,11 @@ public class GameUI3d extends GameUI2d {
 	@Override
 	protected void handleKeyboardInput() {
 		super.handleKeyboardInput();
-		if (Keyboard.pressed(Keys.TOGGLE_2D_3D)) {
+		if (Keyboard.pressed(Game3d.Keys.TOGGLE_2D_3D)) {
 			toggleUse3DScene();
-		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
+		} else if (Keyboard.pressed(Game3d.Keys.DASHBOARD) || Keyboard.pressed(Game3d.Keys.DASHBOARD2)) {
 			Game3d.Actions.toggleDashboardVisible();
-		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
+		} else if (Keyboard.pressed(Game3d.Keys.PIP_VIEW)) {
 			Game3d.Actions.togglePipViewVisible();
 		}
 	}

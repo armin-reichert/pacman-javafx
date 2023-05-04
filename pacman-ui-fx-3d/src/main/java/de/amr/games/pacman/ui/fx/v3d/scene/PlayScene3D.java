@@ -45,7 +45,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -237,19 +236,19 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
+		if (Keyboard.pressed(Game2d.Keys.ADD_CREDIT) && !context.hasCredit()) {
 			Game2d.Actions.addCredit(); // in demo mode, allow adding credit
-		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {
+		} else if (Keyboard.pressed(Game3d.Keys.PREV_CAMERA)) {
 			Game3d.Actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Keys.NEXT_CAMERA)) {
+		} else if (Keyboard.pressed(Game3d.Keys.NEXT_CAMERA)) {
 			Game3d.Actions.selectNextPerspective();
-		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_EAT_ALL)) {
 			Game2d.Actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_ADD_LIVES)) {
 			Game2d.Actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_NEXT_LEVEL)) {
 			Game2d.Actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_KILL_GHOSTS)) {
 			Game2d.Actions.cheatKillAllEatableGhosts();
 		}
 	}

@@ -29,7 +29,6 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -55,9 +54,9 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
+		if (Keyboard.pressed(Game2d.Keys.ADD_CREDIT)) {
 			Game2d.Actions.addCredit();
-		} else if (Keyboard.pressed(Keys.START_GAME)) {
+		} else if (Keyboard.pressed(Game2d.Keys.START_GAME)) {
 			Game2d.Actions.startGame();
 		}
 	}

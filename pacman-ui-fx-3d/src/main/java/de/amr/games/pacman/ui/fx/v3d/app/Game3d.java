@@ -53,6 +53,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -191,6 +193,15 @@ public class Game3d extends Application {
 			Game3d.Properties.d3_drawModePy
 					.set(Game3d.Properties.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 		}
+	}
+
+	public static class Keys extends Game2d.Keys {
+		public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);
+		public static final KeyCodeCombination DASHBOARD2 = alt(KeyCode.B);
+		public static final KeyCodeCombination PIP_VIEW = just(KeyCode.F2);
+		public static final KeyCodeCombination TOGGLE_2D_3D = alt(KeyCode.DIGIT3);
+		public static final KeyCodeCombination PREV_CAMERA = alt(KeyCode.LEFT);
+		public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 	}
 
 	private GameUI3d ui;

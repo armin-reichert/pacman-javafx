@@ -60,6 +60,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -522,6 +525,50 @@ public class Game2d extends Application {
 				showFlashMessage(Game2d.Texts.pickCheatingMessage());
 			}
 		}
+	}
+
+	public static class Keys {
+
+		protected static KeyCodeCombination just(KeyCode code) {
+			return new KeyCodeCombination(code);
+		}
+
+		protected static KeyCodeCombination alt(KeyCode code) {
+			return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
+		}
+
+		protected static KeyCodeCombination shift(KeyCode code) {
+			return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
+		}
+
+		public static final KeyCodeCombination CHEAT_EAT_ALL = alt(KeyCode.E);
+		public static final KeyCodeCombination CHEAT_ADD_LIVES = alt(KeyCode.L);
+		public static final KeyCodeCombination CHEAT_NEXT_LEVEL = alt(KeyCode.N);
+		public static final KeyCodeCombination CHEAT_KILL_GHOSTS = alt(KeyCode.X);
+
+		public static final KeyCodeCombination AUTOPILOT = alt(KeyCode.A);
+		public static final KeyCodeCombination DEBUG_INFO = alt(KeyCode.D);
+		public static final KeyCodeCombination IMMUNITIY = alt(KeyCode.I);
+		public static final KeyCodeCombination MUTE = alt(KeyCode.M);
+
+		public static final KeyCodeCombination PAUSE = just(KeyCode.P);
+		public static final KeyCodeCombination PAUSE_STEP = shift(KeyCode.P);
+		public static final KeyCodeCombination SINGLE_STEP = just(KeyCode.SPACE);
+		public static final KeyCodeCombination TEN_STEPS = shift(KeyCode.SPACE);
+		public static final KeyCodeCombination SIMULATION_FASTER = alt(KeyCode.PLUS);
+		public static final KeyCodeCombination SIMULATION_SLOWER = alt(KeyCode.MINUS);
+		public static final KeyCodeCombination SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
+
+		public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
+		public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
+
+		public static final KeyCodeCombination QUIT = just(KeyCode.Q);
+		public static final KeyCodeCombination TEST_LEVELS = alt(KeyCode.T);
+		public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
+		public static final KeyCodeCombination PLAY_CUTSCENES = alt(KeyCode.Z);
+
+		public static final KeyCodeCombination BOOT = just(KeyCode.F3);
+		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}
 
 	// main
