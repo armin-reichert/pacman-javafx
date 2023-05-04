@@ -179,10 +179,7 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 	}
 
 	protected void configureGameLoop() {
-		Game2d.simulationPausedPy.addListener((py, oldVal, newVal) -> updateStage());
-		targetFrameratePy.bind(Game2d.simulationSpeedPy);
-		measuredPy.bind(Game2d.simulationTimeMeasuredPy);
-		pausedPy.bind(Game2d.simulationPausedPy);
+		pausedPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
 
 	protected void configureStage(Settings settings) {
@@ -225,7 +222,7 @@ public class GameUI2d extends GameLoop implements GameEventListener {
 
 	protected void updateStage() {
 		mainSceneRoot.setBackground(Game2d.Manager.colorBackground(Game2d.mainSceneBgColorPy.get()));
-		var paused = Game2d.simulationPausedPy.get();
+		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";

@@ -34,7 +34,6 @@ import java.util.stream.IntStream;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
@@ -81,10 +80,7 @@ public class Game2d extends Application {
 //@formatter:off
 	public static final ObjectProperty<Color> mainSceneBgColorPy       = new SimpleObjectProperty<>(Color.web("0x334bd3"));
 	public static final BooleanProperty       showDebugInfoPy          = new SimpleBooleanProperty(false);
-	public static final BooleanProperty       simulationPausedPy       = new SimpleBooleanProperty(false);
 	public static final IntegerProperty       simulationStepsPy        = new SimpleIntegerProperty(1);
-	public static final IntegerProperty       simulationSpeedPy        = new SimpleIntegerProperty(GameModel.FPS);
-	public static final BooleanProperty       simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
 //@formatter:on
 
 	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/",

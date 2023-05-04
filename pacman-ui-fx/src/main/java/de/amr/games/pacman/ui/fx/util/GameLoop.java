@@ -50,7 +50,7 @@ public abstract class GameLoop {
 	};
 
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
-	public final BooleanProperty measuredPy = new SimpleBooleanProperty(this, "measured", false);
+	public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
 	private Timeline frameGenerator;
 	private long updateCount;
@@ -110,7 +110,7 @@ public abstract class GameLoop {
 	}
 
 	public void setTimeMeasured(boolean measured) {
-		measuredPy.set(measured);
+		timeMeasuredPy.set(measured);
 	}
 
 	public void executeSteps(int n, boolean updateEnabled) {
@@ -131,7 +131,7 @@ public abstract class GameLoop {
 	}
 
 	private void runPhase(Runnable phase, String logMessage) {
-		if (measuredPy.get()) {
+		if (timeMeasuredPy.get()) {
 			double startNanos = System.nanoTime();
 			phase.run();
 			double durationNanos = System.nanoTime() - startNanos;

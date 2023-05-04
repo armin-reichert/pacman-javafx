@@ -124,7 +124,7 @@ public class GameUI3d extends GameUI2d {
 		} else {
 			mainSceneRoot.setBackground(Game2d.Manager.colorBackground(Game2d.mainSceneBgColorPy.get()));// TODO
 		}
-		var paused = Game2d.simulationPausedPy.get();
+		var paused = pausedPy.get();
 		var dimensionMsg = Game2d.Texts.message(Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {

@@ -83,7 +83,7 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Game2d.simulationSpeedPy.set(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> ui.targetFrameratePy.set(newValue.intValue()));
 
 		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.targetFrameratePy.get(), ui.getFPS()));
 
@@ -92,20 +92,20 @@ public class SectionGeneral extends Section {
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Game2d.showDebugInfoPy));
-		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Game2d.simulationTimeMeasuredPy));
+		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.timeMeasuredPy));
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setGraphic(Game2d.simulationPausedPy.get() ? iconPlay : iconStop);
-		btnsSimulation[0].setTooltip(Game2d.simulationPausedPy.get() ? tooltipPlay : tooltipStop);
-		btnsSimulation[1].setDisable(!Game2d.simulationPausedPy.get());
+		btnsSimulation[0].setGraphic(ui.pausedPy.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(ui.pausedPy.get() ? tooltipPlay : tooltipStop);
+		btnsSimulation[1].setDisable(!ui.pausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Game2d.simulationStepsPy.get());
-		sliderTargetFPS.setValue(Game2d.simulationSpeedPy.get());
+		sliderTargetFPS.setValue(ui.targetFrameratePy.get());
 		cbUsePlayScene3D.setSelected(Game3d.d3_enabledPy.get());
 		cbPoliticallyCorrect.setSelected(Game3d.wokePussyMode.get());
-		cbTimeMeasured.setSelected(Game2d.simulationTimeMeasuredPy.get());
+		cbTimeMeasured.setSelected(ui.timeMeasuredPy.get());
 		cbDebugUI.setSelected(Game2d.showDebugInfoPy.get());
 	}
 }
