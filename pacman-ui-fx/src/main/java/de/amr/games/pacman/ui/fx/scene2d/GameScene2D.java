@@ -34,8 +34,8 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.AppRes;
 import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.binding.Bindings;
@@ -67,26 +67,28 @@ public abstract class GameScene2D implements GameScene {
 
 	protected final GameSceneContext context;
 	private final StackPane container;
-	protected final Pane postItContainer;
+	protected final Pane overlay;
 	protected final SubScene fxSubScene;
 	protected final Canvas canvas;
-	protected final Scale scale = new Scale();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
 
 		canvas = new Canvas();
-		canvas.getTransforms().add(scale);
-
-		postItContainer = new Pane();
-		container = new StackPane(canvas, postItContainer);
+		overlay = new Pane();
+		container = new StackPane(canvas, overlay);
 
 		fxSubScene = new SubScene(container, WIDTH, HEIGHT);
 
 		// keep canvas always the same size as the subscene
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
+
+		var scaling = new Scale();
+		scaling.xProperty().bind(Bindings.createDoubleBinding(this::canvasScaling, fxSubScene.widthProperty()));
+		scaling.yProperty().bind(Bindings.createDoubleBinding(this::canvasScaling, fxSubScene.heightProperty()));
+		container.getTransforms().add(scaling);
 
 		// This avoids the white vertical line left of the embedded 2D game scene
 		container.setBackground(AppRes.Manager.colorBackground(Color.BLACK)); // TODO
@@ -133,10 +135,12 @@ public abstract class GameScene2D implements GameScene {
 		var scaling = height / HEIGHT;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		scale.setX(scaling);
-		scale.setY(scaling);
 		Logger.trace("2D game scene resized: {} x {}, canvas scaling: {} ({})", width, height, scaling,
 				getClass().getSimpleName());
+	}
+
+	private double canvasScaling() {
+		return fxSubScene.getHeight() / HEIGHT;
 	}
 
 	@Override
@@ -188,11 +192,11 @@ public abstract class GameScene2D implements GameScene {
 	protected Text addNote(String s, Font font, Color color, double x, double y) {
 		var text = new Text(s);
 		text.setFill(color);
-		text.fontProperty().bind(Bindings
-				.createObjectBinding(() -> Font.font(font.getFamily(), font.getSize() * scale.getY()), scale.yProperty()));
-		text.translateXProperty().bind(Bindings.createDoubleBinding(() -> x * scale.getX(), scale.xProperty()));
-		text.translateYProperty().bind(Bindings.createDoubleBinding(() -> y * scale.getY(), scale.yProperty()));
-		postItContainer.getChildren().add(text);
+		text.fontProperty().bind(Bindings.createObjectBinding(
+				() -> Font.font(font.getFamily(), font.getSize() * canvas.getScaleY()), canvas.scaleYProperty()));
+		text.translateXProperty().bind(Bindings.createDoubleBinding(() -> x * canvas.getScaleX(), canvas.scaleXProperty()));
+		text.translateYProperty().bind(Bindings.createDoubleBinding(() -> y * canvas.getScaleY(), canvas.scaleYProperty()));
+		overlay.getChildren().add(text);
 		return text;
 	}
 }
