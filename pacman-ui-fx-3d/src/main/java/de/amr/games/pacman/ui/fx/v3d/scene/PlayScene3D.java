@@ -53,8 +53,8 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SwingingWallsAnimation;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d.Actions;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3d.Actions;
 import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
@@ -112,10 +112,10 @@ public class PlayScene3D implements GameScene {
 		camControllerMap.put(Perspective.TOTAL, new CamTotal());
 
 		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(GameApp3d.d3_axesVisiblePy);
+		coordSystem.visibleProperty().bind(Game3d.d3_axesVisiblePy);
 
 		var ambientLight = new AmbientLight();
-		ambientLight.colorProperty().bind(GameApp3d.d3_lightColorPy);
+		ambientLight.colorProperty().bind(Game3d.d3_lightColorPy);
 
 		root = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 
@@ -137,7 +137,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		resetReadyMessageText3D();
-		perspectivePy.bind(GameApp3d.d3_perspectivePy);
+		perspectivePy.bind(Game3d.d3_perspectivePy);
 		context.level().ifPresent(this::replaceGameLevel3D);
 		Logger.info("Initialized 3D play scene");
 	}
@@ -219,8 +219,8 @@ public class PlayScene3D implements GameScene {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
 		}
 
-		if (GameApp3d.d3_floorTextureRandomPy.get()) {
-			GameApp3d.d3_floorTexturePy.set(GameApp3d.Textures.randomFloorTextureName());
+		if (Game3d.d3_floorTextureRandomPy.get()) {
+			Game3d.d3_floorTexturePy.set(Game3d.Textures.randomFloorTextureName());
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}
@@ -345,7 +345,7 @@ public class PlayScene3D implements GameScene {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init(level);
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
-				if (GameApp3d.d3_foodOscillationEnabledPy.get()) {
+				if (Game3d.d3_foodOscillationEnabledPy.get()) {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);
@@ -471,7 +471,7 @@ public class PlayScene3D implements GameScene {
 			}),
 			rotation,
 			Ufx.afterSeconds(0.5, () -> context.sounds().play(AudioClipID.SWEEP)),
-			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(GameApp3d.d3_perspectivePy))
+			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Game3d.d3_perspectivePy))
 		);
 		//@formatter:on
 	}
@@ -480,9 +480,9 @@ public class PlayScene3D implements GameScene {
 		if (level.numFlashes == 0) {
 			return Ufx.pause(1.0);
 		}
-		double wallHeight = GameApp3d.d3_mazeWallHeightPy.get();
+		double wallHeight = Game3d.d3_mazeWallHeightPy.get();
 		var animation = new SwingingWallsAnimation(level.numFlashes);
-		animation.setOnFinished(e -> GameApp3d.d3_mazeWallHeightPy.set(wallHeight));
+		animation.setOnFinished(e -> Game3d.d3_mazeWallHeightPy.set(wallHeight));
 		return animation;
 	}
 

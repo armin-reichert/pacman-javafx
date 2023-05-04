@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.v3d.objimport;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 
 /**
@@ -39,7 +39,7 @@ public class ObjModelLoaderTest {
 			return;
 		}
 		var relPath = args[0];
-		var url = GameApp3d.ResMgr.urlFromRelPath(relPath);
+		var url = Game3d.ResMgr.urlFromRelPath(relPath);
 		var model = new Model3D(url);
 		Logger.info(model.contentReport());
 	}

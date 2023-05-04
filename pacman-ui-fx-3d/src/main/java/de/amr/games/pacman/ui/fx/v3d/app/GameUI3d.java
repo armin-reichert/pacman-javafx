@@ -116,16 +116,16 @@ public class GameUI3d extends GameUI {
 	protected void updateStage() {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
-			if (GameApp3d.d3_drawModePy.get() == DrawMode.LINE) {
-				mainSceneRoot.setBackground(GameApp3d.ResMgr.colorBackground(Color.BLACK));
+			if (Game3d.d3_drawModePy.get() == DrawMode.LINE) {
+				mainSceneRoot.setBackground(Game3d.ResMgr.colorBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(GameApp3d.Textures.backgroundForScene3D);
+				mainSceneRoot.setBackground(Game3d.Textures.backgroundForScene3D);
 			}
 		} else {
 			mainSceneRoot.setBackground(Game2d.Manager.colorBackground(Game2d.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = Game2d.simulationPausedPy.get();
-		var dimensionMsg = Game2d.Texts.message(GameApp3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = Game2d.Texts.message(Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
@@ -145,20 +145,20 @@ public class GameUI3d extends GameUI {
 	protected void initEnv(Settings settings) {
 		Game2d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 
-		dashboard.visibleProperty().bind(GameApp3d.dashboardVisiblePy);
-		GameApp3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
-		GameApp3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
-		pipGameScene.fxSubScene().opacityProperty().bind(GameApp3d.pipOpacityPy);
+		dashboard.visibleProperty().bind(Game3d.dashboardVisiblePy);
+		Game3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
+		Game3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
+		pipGameScene.fxSubScene().opacityProperty().bind(Game3d.pipOpacityPy);
 
-		GameApp3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
-		GameApp3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
-		GameApp3d.d3_enabledPy.set(true);
-		GameApp3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
+		Game3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
+		Game3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
+		Game3d.d3_enabledPy.set(true);
+		Game3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
 
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		var use3D = GameApp3d.d3_enabledPy.get();
+		var use3D = Game3d.d3_enabledPy.get();
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
 	}
 
@@ -168,26 +168,26 @@ public class GameUI3d extends GameUI {
 		if (Keyboard.pressed(Keys.USE_3D)) {
 			toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
-			GameApp3d.Actions.toggleDashboardVisible();
+			Game3d.Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
-			GameApp3d.Actions.togglePipViewVisible();
+			Game3d.Actions.togglePipViewVisible();
 		}
 	}
 
 	public void toggleUse3DScene() {
-		Ufx.toggle(GameApp3d.d3_enabledPy);
+		Ufx.toggle(Game3d.d3_enabledPy);
 		if (findGameScene(3).isPresent()) {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// TODO: put text into 3D UI
 			Game2d.ACTIONS
-					.showFlashMessage(Game2d.Texts.message(GameApp3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+					.showFlashMessage(Game2d.Texts.message(Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	private void updatePictureInPictureView() {
-		boolean visible = GameApp3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
+		boolean visible = Game3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
 		pipGameScene.fxSubScene().setVisible(visible);
 		pipGameScene.context().setCreditVisible(false);
 		pipGameScene.context().setScoreVisible(true);

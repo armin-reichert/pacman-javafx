@@ -61,7 +61,7 @@ import javafx.stage.Stage;
 /**
  * @author Armin Reichert
  */
-public class GameApp3d extends Application {
+public class Game3d extends Application {
 
 //@formatter:off
 	public static final BooleanProperty             wokePussyMode = new SimpleBooleanProperty(false); 
@@ -90,36 +90,36 @@ public class GameApp3d extends Application {
 	public static class Actions extends de.amr.games.pacman.ui.fx.app.Actions {
 
 		public static void togglePipViewVisible() {
-			Ufx.toggle(GameApp3d.pipVisiblePy);
-			var msgKey = GameApp3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
+			Ufx.toggle(Game3d.pipVisiblePy);
+			var msgKey = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
 			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message(msgKey));// TODO
 		}
 
 		public static void toggleDashboardVisible() {
-			Ufx.toggle(GameApp3d.dashboardVisiblePy);
+			Ufx.toggle(Game3d.dashboardVisiblePy);
 		}
 
 		public static void selectNextPerspective() {
-			var nextPerspective = GameApp3d.d3_perspectivePy.get().next();
-			GameApp3d.d3_perspectivePy.set(nextPerspective);
+			var nextPerspective = Game3d.d3_perspectivePy.get().next();
+			Game3d.d3_perspectivePy.set(nextPerspective);
 			String perspectiveName = Game2d.Texts.message(nextPerspective.name());
 			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
 		}
 
 		public static void selectPrevPerspective() {
-			var prevPerspective = GameApp3d.d3_perspectivePy.get().prev();
-			GameApp3d.d3_perspectivePy.set(prevPerspective);
+			var prevPerspective = Game3d.d3_perspectivePy.get().prev();
+			Game3d.d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = Game2d.Texts.message(prevPerspective.name());
 			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
 		}
 
 		public static void toggleDrawMode() {
-			GameApp3d.d3_drawModePy.set(GameApp3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+			Game3d.d3_drawModePy.set(Game3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 		}
 	}
 
 	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/",
-			GameApp3d.class::getResource);
+			Game3d.class::getResource);
 
 	private static void runAndMeasureTime(String section, Runnable loadingCode) {
 		long start = System.nanoTime();
@@ -161,7 +161,7 @@ public class GameApp3d extends Application {
 
 		private static PhongMaterial createFloorTexture(String textureBase, String ext) {
 			var material = textureMaterial(textureBase, ext, null, null);
-			material.diffuseColorProperty().bind(GameApp3d.d3_floorColorPy);
+			material.diffuseColorProperty().bind(Game3d.d3_floorColorPy);
 			return material;
 		}
 
