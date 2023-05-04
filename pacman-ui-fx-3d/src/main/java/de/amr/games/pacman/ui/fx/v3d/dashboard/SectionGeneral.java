@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.ui.fx.app.Actions;
 import de.amr.games.pacman.ui.fx.app.Env;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp;
+import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
 import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -52,9 +52,9 @@ public class SectionGeneral extends Section {
 	private final CheckBox cbPoliticallyCorrect;
 	private final CheckBox cbDebugUI;
 	private final CheckBox cbTimeMeasured;
-	private final ImageView iconPlay = new ImageView(GameApp.ResMgr.image("graphics/icons/play.png"));
-	private final ImageView iconStop = new ImageView(GameApp.ResMgr.image("graphics/icons/stop.png"));
-	private final ImageView iconStep = new ImageView(GameApp.ResMgr.image("graphics/icons/step.png"));
+	private final ImageView iconPlay = new ImageView(GameApp3d.ResMgr.image("graphics/icons/play.png"));
+	private final ImageView iconStop = new ImageView(GameApp3d.ResMgr.image("graphics/icons/stop.png"));
+	private final ImageView iconStep = new ImageView(GameApp3d.ResMgr.image("graphics/icons/step.png"));
 	private final Tooltip tooltipPlay = new Tooltip("Play");
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
@@ -91,7 +91,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
-		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(GameApp.wokePussyMode));
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(GameApp3d.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
 	}
@@ -104,8 +104,8 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!Env.simulationPausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
 		sliderTargetFPS.setValue(Env.simulationSpeedPy.get());
-		cbUsePlayScene3D.setSelected(GameApp.d3_enabledPy.get());
-		cbPoliticallyCorrect.setSelected(GameApp.wokePussyMode.get());
+		cbUsePlayScene3D.setSelected(GameApp3d.d3_enabledPy.get());
+		cbPoliticallyCorrect.setSelected(GameApp3d.wokePussyMode.get());
 		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
 		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
 	}

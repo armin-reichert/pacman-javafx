@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp;
+import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
 import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
@@ -41,7 +41,7 @@ public class SectionAbout extends Section {
 	public SectionAbout(GameUI3d ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
-		var myPicture = new ImageView(GameApp.ResMgr.image("graphics/armin.jpg"));
+		var myPicture = new ImageView(GameApp3d.ResMgr.image("graphics/armin.jpg"));
 		myPicture.setFitWidth(286);
 		myPicture.setPreserveRatio(true);
 

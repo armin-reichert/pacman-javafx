@@ -39,7 +39,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp;
+import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -189,9 +189,9 @@ public class Pac3D {
 		root = new Group(pacNode);
 		pacNode.getTransforms().setAll(position, orientation);
 
-		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(GameApp.d3_drawModePy);
-		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(GameApp.d3_drawModePy);
-		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(GameApp.d3_drawModePy);
+		PacModel3D.eyesMeshView(pacNode).drawModeProperty().bind(GameApp3d.d3_drawModePy);
+		PacModel3D.headMeshView(pacNode).drawModeProperty().bind(GameApp3d.d3_drawModePy);
+		PacModel3D.palateMeshView(pacNode).drawModeProperty().bind(GameApp3d.d3_drawModePy);
 
 		walkingAnimation = switch (gameVariant) {
 		case MS_PACMAN -> new HipSwaying(root);

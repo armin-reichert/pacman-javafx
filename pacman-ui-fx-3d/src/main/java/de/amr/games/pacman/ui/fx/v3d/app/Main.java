@@ -30,6 +30,6 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 public class Main {
 
 	public static void main(String[] args) {
-		GameApp.main(args);
+		GameApp3d.main(args);
 	}
 }

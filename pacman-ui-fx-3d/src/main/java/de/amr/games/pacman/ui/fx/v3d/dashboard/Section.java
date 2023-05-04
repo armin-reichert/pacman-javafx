@@ -32,7 +32,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp;
+import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
 import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -82,7 +82,7 @@ public abstract class Section {
 		this.textColor = textColor;
 		this.textFont = textFont;
 		this.labelFont = labelFont;
-		content.setBackground(GameApp.ResMgr.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
+		content.setBackground(GameApp3d.ResMgr.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
 		content.setHgap(4);
 		content.setVgap(3);
 		content.setPadding(new Insets(5));

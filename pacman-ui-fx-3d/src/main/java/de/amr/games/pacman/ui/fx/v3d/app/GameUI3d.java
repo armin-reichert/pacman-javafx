@@ -118,16 +118,16 @@ public class GameUI3d extends GameUI {
 	protected void updateStage() {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
-			if (GameApp.d3_drawModePy.get() == DrawMode.LINE) {
-				mainSceneRoot.setBackground(GameApp.ResMgr.colorBackground(Color.BLACK));
+			if (GameApp3d.d3_drawModePy.get() == DrawMode.LINE) {
+				mainSceneRoot.setBackground(GameApp3d.ResMgr.colorBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(GameApp.Textures.backgroundForScene3D);
+				mainSceneRoot.setBackground(GameApp3d.Textures.backgroundForScene3D);
 			}
 		} else {
 			mainSceneRoot.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = Env.simulationPausedPy.get();
-		var dimensionMsg = AppRes.Texts.message(GameApp.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = AppRes.Texts.message(GameApp3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
@@ -147,20 +147,20 @@ public class GameUI3d extends GameUI {
 	protected void initEnv(Settings settings) {
 		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 
-		dashboard.visibleProperty().bind(GameApp.dashboardVisiblePy);
-		GameApp.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
-		GameApp.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
-		pipGameScene.fxSubScene().opacityProperty().bind(GameApp.pipOpacityPy);
+		dashboard.visibleProperty().bind(GameApp3d.dashboardVisiblePy);
+		GameApp3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
+		GameApp3d.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
+		pipGameScene.fxSubScene().opacityProperty().bind(GameApp3d.pipOpacityPy);
 
-		GameApp.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
-		GameApp.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
-		GameApp.d3_enabledPy.set(true);
-		GameApp.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
+		GameApp3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
+		GameApp3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
+		GameApp3d.d3_enabledPy.set(true);
+		GameApp3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
 
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		var use3D = GameApp.d3_enabledPy.get();
+		var use3D = GameApp3d.d3_enabledPy.get();
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
 	}
 
@@ -170,25 +170,25 @@ public class GameUI3d extends GameUI {
 		if (Keyboard.pressed(Keys.USE_3D)) {
 			toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
-			Actions3d.toggleDashboardVisible();
+			GameApp3d.Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Keys.PIP_VIEW)) {
-			Actions3d.togglePipViewVisible();
+			GameApp3d.Actions.togglePipViewVisible();
 		}
 	}
 
 	public void toggleUse3DScene() {
-		Ufx.toggle(GameApp.d3_enabledPy);
+		Ufx.toggle(GameApp3d.d3_enabledPy);
 		if (findGameScene(3).isPresent()) {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// TODO: put text into 3D UI
-			Actions.showFlashMessage(AppRes.Texts.message(GameApp.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			Actions.showFlashMessage(AppRes.Texts.message(GameApp3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 
 	private void updatePictureInPictureView() {
-		boolean visible = GameApp.pipVisiblePy.get() && isPlayScene(currentGameScene);
+		boolean visible = GameApp3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
 		pipGameScene.fxSubScene().setVisible(visible);
 		pipGameScene.context().setCreditVisible(false);
 		pipGameScene.context().setScoreVisible(true);

@@ -41,7 +41,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.v3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
-import de.amr.games.pacman.ui.fx.v3d.app.GameApp;
+import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -83,7 +83,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			GameApp.Textures.KEY_NO_TEXTURE) {
+			GameApp3d.Textures.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			Logger.trace("Floor texture change detected");
@@ -171,9 +171,9 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = GameApp.Textures.floorTexture(key);
+		var texture = GameApp3d.Textures.floorTexture(key);
 		if (texture == null) {
-			texture = GameApp.ResMgr.coloredMaterial(floorColorPy.get());
+			texture = GameApp3d.ResMgr.coloredMaterial(floorColorPy.get());
 		}
 		floor.setMaterial(texture);
 	}
@@ -181,10 +181,10 @@ public class World3D {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = GameApp.ResMgr.coloredMaterial(mazeColoring.wallBaseColor());
-		wallData.topMaterial = GameApp.ResMgr.coloredMaterial(mazeColoring.wallTopColor());
-		wallData.houseMaterial = GameApp.ResMgr
-				.coloredMaterial(GameApp.ResMgr.color(mazeColoring.wallBaseColor(), 0.25));
+		wallData.baseMaterial = GameApp3d.ResMgr.coloredMaterial(mazeColoring.wallBaseColor());
+		wallData.topMaterial = GameApp3d.ResMgr.coloredMaterial(mazeColoring.wallTopColor());
+		wallData.houseMaterial = GameApp3d.ResMgr
+				.coloredMaterial(GameApp3d.ResMgr.color(mazeColoring.wallBaseColor(), 0.25));
 		return wallData;
 	}
 
@@ -384,7 +384,7 @@ public class World3D {
 	// Food
 
 	private void addFood() {
-		var foodMaterial = GameApp.ResMgr.coloredMaterial(mazeColoring.foodColor());
+		var foodMaterial = GameApp3d.ResMgr.coloredMaterial(mazeColoring.foodColor());
 		world.tiles().filter(world::containsFood).forEach(tile -> {
 			var food3D = world.isEnergizerTile(tile)//
 					? createEnergizer3D(tile, foodMaterial)//
@@ -413,7 +413,7 @@ public class World3D {
 		squirting.setOrigin(energizer3D.getRoot());
 		squirting.setDropCountMin(15);
 		squirting.setDropCountMax(45);
-		squirting.setDropMaterial(GameApp.ResMgr.coloredMaterial(mazeColoring.foodColor().desaturate()));
+		squirting.setDropMaterial(GameApp3d.ResMgr.coloredMaterial(mazeColoring.foodColor().desaturate()));
 		energizer3D.setEatenAnimation(squirting);
 		return energizer3D;
 	}
