@@ -69,10 +69,10 @@ public class Game3d extends Application {
 	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/",
 			Game3d.class::getResource);
 
-	private static void runAndMeasureTime(String section, Runnable loadingCode) {
+	private static void runAndMeasureTime(String description, Runnable code) {
 		long start = System.nanoTime();
-		loadingCode.run();
-		Logger.info("{} done ({} seconds).", section, (System.nanoTime() - start) / 1e9f);
+		code.run();
+		Logger.info("{} done ({} seconds).", description, (System.nanoTime() - start) / 1e9f);
 	}
 
 	public static class Properties {
@@ -165,7 +165,7 @@ public class Game3d extends Application {
 
 	public static class Actions extends Game2d.Actions {
 
-		public static void togglePipViewVisible() {
+		public static void togglePipVisibility() {
 			Ufx.toggle(Game3d.Properties.pipVisiblePy);
 			var msgKey = Game3d.Properties.pipVisiblePy.get() ? "pip_on" : "pip_off";
 			showFlashMessage(Game2d.Texts.message(msgKey));// TODO

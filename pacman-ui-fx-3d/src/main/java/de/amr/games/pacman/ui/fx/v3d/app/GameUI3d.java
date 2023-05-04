@@ -168,7 +168,7 @@ public class GameUI3d extends GameUI2d {
 		} else if (Keyboard.pressed(Game3d.Keys.DASHBOARD) || Keyboard.pressed(Game3d.Keys.DASHBOARD2)) {
 			Game3d.Actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Game3d.Keys.PIP_VIEW)) {
-			Game3d.Actions.togglePipViewVisible();
+			Game3d.Actions.togglePipVisibility();
 		}
 	}
 
