@@ -122,8 +122,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	/**
-	 * Resizes the game scene to the given height, keeping the aspect ratio. The scaling of the canvas is adapted such
-	 * that the canvas content is stretched to the new scene size.
+	 * Resizes the game scene to the given height, keeping the aspect ratio.
 	 * 
 	 * @param height new game scene height
 	 */
@@ -132,10 +131,9 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
-		var scaling = height / HEIGHT;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		Logger.trace("2D game scene resized: {} x {}, canvas scaling: {} ({})", width, height, scaling,
+		Logger.trace("2D game scene resized to {0.00} x {0.00}, scaling: {0.00} ({})", width, height, canvasScaling(),
 				getClass().getSimpleName());
 	}
 
