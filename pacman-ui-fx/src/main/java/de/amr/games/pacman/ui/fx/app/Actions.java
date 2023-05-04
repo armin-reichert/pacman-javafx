@@ -41,9 +41,6 @@ public class Actions {
 	private ActionContext context;
 	private AudioClip currentVoiceMessage;
 
-	public Actions() {
-	}
-
 	public void setContext(ActionContext context) {
 		this.context = context;
 	}
