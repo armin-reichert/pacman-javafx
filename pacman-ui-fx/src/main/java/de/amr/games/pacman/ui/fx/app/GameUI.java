@@ -249,7 +249,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 	 * @param dimension scene dimension (2 or 3)
 	 * @return (optional) game scene matching current game state and specified dimension
 	 */
-	public Optional<GameScene> findGameScene(int dimension) {
+	protected Optional<GameScene> findGameScene(int dimension) {
 		if (dimension != 2 && dimension != 3) {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
 		}
