@@ -92,7 +92,7 @@ public abstract class GameScene2D implements GameScene {
 		// This avoids the white vertical line left of the embedded 2D game scene
 		container.setBackground(Game2d.ResMgr.colorBackground(Color.BLACK)); // TODO
 
-		infoVisiblePy.bind(Game2d.showDebugInfoPy);
+		infoVisiblePy.bind(Game2d.Properties.showDebugInfoPy);
 	}
 
 	@Override

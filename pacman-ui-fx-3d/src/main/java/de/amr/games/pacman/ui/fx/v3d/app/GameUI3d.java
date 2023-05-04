@@ -122,7 +122,7 @@ public class GameUI3d extends GameUI2d {
 				mainSceneRoot.setBackground(Game3d.Textures.backgroundForScene3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(Game2d.ResMgr.colorBackground(Game2d.mainSceneBgColorPy.get()));// TODO
+			mainSceneRoot.setBackground(Game2d.ResMgr.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = pausedPy.get();
 		var dimensionMsg = Game2d.Texts.message(Game3d.Properties.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
@@ -143,7 +143,7 @@ public class GameUI3d extends GameUI2d {
 
 	@Override
 	protected void initEnv(Settings settings) {
-		Game2d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
+		Game2d.Properties.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 
 		dashboard.visibleProperty().bind(Game3d.Properties.dashboardVisiblePy);
 		Game3d.Properties.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());

@@ -44,8 +44,8 @@ public class SectionAppearance extends Section {
 
 	public SectionAppearance(GameUI3d ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		pickerBgColor = addColorPicker("Background color", Game2d.mainSceneBgColorPy.get());
-		pickerBgColor.setOnAction(e -> Game2d.mainSceneBgColorPy.set(pickerBgColor.getValue()));
+		pickerBgColor = addColorPicker("Background color", Game2d.Properties.mainSceneBgColorPy.get());
+		pickerBgColor.setOnAction(e -> Game2d.Properties.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 		pickerLightColor = addColorPicker("Light Color", Game3d.Properties.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Game3d.Properties.d3_lightColorPy.set(pickerLightColor.getValue()));
 		pickerFloorColor = addColorPicker("Floor Color", Game3d.Properties.d3_floorColorPy.get());
