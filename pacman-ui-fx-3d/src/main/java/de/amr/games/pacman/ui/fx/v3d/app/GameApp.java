@@ -91,15 +91,15 @@ public class GameApp extends Application {
 
 	public static void loadResources() {
 		long start = System.nanoTime();
-		load("3D textures", Textures::load);
-		load("3D models", Models3D::load);
+		runAndMeasureTime("Loading textures", Textures::load);
+		runAndMeasureTime("Loading 3D models", Models3D::load);
 		Logger.info("Loading resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
-	private static void load(String section, Runnable loadingCode) {
+	private static void runAndMeasureTime(String section, Runnable loadingCode) {
 		long start = System.nanoTime();
 		loadingCode.run();
-		Logger.info("Loading {} done ({} seconds).", section, (System.nanoTime() - start) / 1e9f);
+		Logger.info("{} done ({} seconds).", section, (System.nanoTime() - start) / 1e9f);
 	}
 
 	public static class Models3D {
