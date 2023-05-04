@@ -34,7 +34,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
@@ -162,7 +162,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		if (Env.showDebugInfoPy.get()) {
+		if (Game2d.showDebugInfoPy.get()) {
 			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {

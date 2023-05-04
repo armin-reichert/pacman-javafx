@@ -36,8 +36,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
@@ -59,15 +58,15 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
-			Actions.addCredit();
+			Game2d.ACTIONS.addCredit();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
-			Actions.cheatEatAllPellets();
+			Game2d.ACTIONS.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
-			Actions.cheatAddLives(3);
+			Game2d.ACTIONS.cheatAddLives(3);
 		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
-			Actions.cheatEnterNextLevel();
+			Game2d.ACTIONS.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
-			Actions.cheatKillAllEatableGhosts();
+			Game2d.ACTIONS.cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -98,12 +97,12 @@ public class PlayScene2D extends GameScene2D {
 			var mazeNumber = level.game().mazeNumber(level.number());
 			r.drawMaze(g, 0, TS * (3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
-				drawText(g, "TEST    L%d".formatted(level.number()), AppRes.ArcadeTheme.YELLOW, r.screenFont(TS), TS * (8) + 4,
+				drawText(g, "TEST    L%d".formatted(level.number()), Game2d.ArcadeTheme.YELLOW, r.screenFont(TS), TS * (8) + 4,
 						TS * (21));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				drawText(g, "GAME  OVER", AppRes.ArcadeTheme.RED, r.screenFont(TS), TS * (9), TS * (21));
+				drawText(g, "GAME  OVER", Game2d.ArcadeTheme.RED, r.screenFont(TS), TS * (9), TS * (21));
 			} else if (context.state() == GameState.READY) {
-				drawText(g, "READY!", AppRes.ArcadeTheme.YELLOW, r.screenFont(TS), TS * (11), TS * (21));
+				drawText(g, "READY!", Game2d.ArcadeTheme.YELLOW, r.screenFont(TS), TS * (11), TS * (21));
 			}
 			level.bonusManagement().getBonus().ifPresent(bonus -> r.drawBonus(g, bonus));
 			r.drawPac(g, level.pac());

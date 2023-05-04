@@ -44,7 +44,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
@@ -239,19 +239,19 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
-			Actions.addCredit(); // in demo mode, allow adding credit
+			Game2d.ACTIONS.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {
 			Actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Keys.NEXT_CAMERA)) {
 			Actions.selectNextPerspective();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
-			Actions.cheatEatAllPellets();
+			Game2d.ACTIONS.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
-			Actions.cheatAddLives(3);
+			Game2d.ACTIONS.cheatAddLives(3);
 		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
-			Actions.cheatEnterNextLevel();
+			Game2d.ACTIONS.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
-			Actions.cheatKillAllEatableGhosts();
+			Game2d.ACTIONS.cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -350,7 +350,7 @@ public class PlayScene3D implements GameScene {
 				}
 				readyMessageText3D.setVisible(true);
 				// TODO take texts and picker from 3d-only resources
-				var readyMessage = inPercentOfCases(40) ? AppRes.Texts.randomReadyText(context.gameVariant()) : "READY!";
+				var readyMessage = inPercentOfCases(40) ? Game2d.Texts.randomReadyText(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -410,7 +410,7 @@ public class PlayScene3D implements GameScene {
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							//TODO use 3d-only resources
-							Actions.showFlashMessageSeconds(2, AppRes.Texts.pickLevelCompleteMessage(level.number()));
+							Game2d.ACTIONS.showFlashMessageSeconds(2, Game2d.Texts.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -424,7 +424,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			// TODO use 3d-only resources
-			Actions.showFlashMessageSeconds(3, AppRes.Texts.pickGameOverMessage());
+			Game2d.ACTIONS.showFlashMessageSeconds(3, Game2d.Texts.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}

@@ -32,9 +32,8 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -91,9 +90,9 @@ public abstract class GameScene2D implements GameScene {
 		container.getTransforms().add(scaling);
 
 		// This avoids the white vertical line left of the embedded 2D game scene
-		container.setBackground(AppRes.Manager.colorBackground(Color.BLACK)); // TODO
+		container.setBackground(Game2d.Manager.colorBackground(Color.BLACK)); // TODO
 
-		infoVisiblePy.bind(Env.showDebugInfoPy);
+		infoVisiblePy.bind(Game2d.showDebugInfoPy);
 	}
 
 	@Override
@@ -184,7 +183,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
 		var r = context.rendering2D();
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", AppRes.ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", Game2d.ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
 	protected Text addNote(String s, Font font, Color color, double x, double y) {

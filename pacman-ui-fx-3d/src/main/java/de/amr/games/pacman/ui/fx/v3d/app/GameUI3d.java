@@ -28,9 +28,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.GameUI;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.Settings;
@@ -124,20 +122,20 @@ public class GameUI3d extends GameUI {
 				mainSceneRoot.setBackground(GameApp3d.Textures.backgroundForScene3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));// TODO
+			mainSceneRoot.setBackground(Game2d.Manager.colorBackground(Game2d.mainSceneBgColorPy.get()));// TODO
 		}
-		var paused = Env.simulationPausedPy.get();
-		var dimensionMsg = AppRes.Texts.message(GameApp3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var paused = Game2d.simulationPausedPy.get();
+		var dimensionMsg = Game2d.Texts.message(GameApp3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));// TODO
-			stage.getIcons().setAll(AppRes.Graphics.MsPacManGame.icon);
+			stage.setTitle(Game2d.Texts.message(messageKey, dimensionMsg));// TODO
+			stage.getIcons().setAll(Game2d.Graphics.MsPacManGame.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, dimensionMsg));// TOOD
-			stage.getIcons().setAll(AppRes.Graphics.PacManGame.icon);
+			stage.setTitle(Game2d.Texts.message(messageKey, dimensionMsg));// TOOD
+			stage.getIcons().setAll(Game2d.Graphics.PacManGame.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -145,7 +143,7 @@ public class GameUI3d extends GameUI {
 
 	@Override
 	protected void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
+		Game2d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 
 		dashboard.visibleProperty().bind(GameApp3d.dashboardVisiblePy);
 		GameApp3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
@@ -183,7 +181,8 @@ public class GameUI3d extends GameUI {
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// TODO: put text into 3D UI
-			Actions.showFlashMessage(AppRes.Texts.message(GameApp3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
+			Game2d.ACTIONS
+					.showFlashMessage(Game2d.Texts.message(GameApp3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene"));
 		}
 	}
 

@@ -40,7 +40,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
@@ -59,7 +59,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final int THIRD_COLUMN = 456;
 
 	public MsPacManGameRenderer() {
-		super(AppRes.Graphics.MsPacManGame.spritesheet);
+		super(Game2d.Graphics.MsPacManGame.spritesheet);
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
@@ -68,7 +68,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 
 	@Override
 	public MazeColoring mazeColors(int mazeNumber) {
-		return AppRes.ArcadeTheme.MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
+		return Game2d.ArcadeTheme.MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				g.drawImage(AppRes.Graphics.MsPacManGame.emptyFlashingMaze[mazeNumber - 1], x, y);
+				g.drawImage(Game2d.Graphics.MsPacManGame.emptyFlashingMaze[mazeNumber - 1], x, y);
 			} else {
 				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
@@ -143,11 +143,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
-		g.drawImage(AppRes.Graphics.MsPacManGame.logo, x, y + 2, TS * (4) - 2, TS * (4));
-		g.setFill(AppRes.ArcadeTheme.RED);
+		g.drawImage(Game2d.Graphics.MsPacManGame.logo, x, y + 2, TS * (4) - 2, TS * (4));
+		g.setFill(Game2d.ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol
-		g.setFont(AppRes.Fonts.arcade);
+		g.setFont(Game2d.Fonts.arcade);
 		g.fillText("MIDWAY MFG CO", x + TS * (7), y + TS * (2));
 		g.fillText("1980/1981", x + TS * (8), y + TS * (4));
 	}
@@ -258,8 +258,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 				if (clap.isVisible()) {
 					drawSpriteCenteredOverBox(g, sprite, clap.position().x(), clap.position().y());
 				}
-				g.setFont(AppRes.Fonts.arcade);
-				g.setFill(AppRes.ArcadeTheme.PALE);
+				g.setFont(Game2d.Fonts.arcade);
+				g.setFill(Game2d.ArcadeTheme.PALE);
 				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
 				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());
 			});

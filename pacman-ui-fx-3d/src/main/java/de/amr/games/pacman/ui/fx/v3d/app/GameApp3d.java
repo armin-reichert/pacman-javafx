@@ -36,7 +36,7 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -92,7 +92,7 @@ public class GameApp3d extends Application {
 		public static void togglePipViewVisible() {
 			Ufx.toggle(GameApp3d.pipVisiblePy);
 			var msgKey = GameApp3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
-			showFlashMessage(AppRes.Texts.message(msgKey));// TODO
+			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message(msgKey));// TODO
 		}
 
 		public static void toggleDashboardVisible() {
@@ -102,15 +102,15 @@ public class GameApp3d extends Application {
 		public static void selectNextPerspective() {
 			var nextPerspective = GameApp3d.d3_perspectivePy.get().next();
 			GameApp3d.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = AppRes.Texts.message(nextPerspective.name());
-			showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
+			String perspectiveName = Game2d.Texts.message(nextPerspective.name());
+			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
 		}
 
 		public static void selectPrevPerspective() {
 			var prevPerspective = GameApp3d.d3_perspectivePy.get().prev();
 			GameApp3d.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = AppRes.Texts.message(prevPerspective.name());
-			showFlashMessage(AppRes.Texts.message("camera_perspective", perspectiveName));
+			String perspectiveName = Game2d.Texts.message(prevPerspective.name());
+			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
 		}
 
 		public static void toggleDrawMode() {
@@ -193,7 +193,7 @@ public class GameApp3d extends Application {
 
 	@Override
 	public void init() throws Exception {
-		AppRes.load();
+		Game2d.loadResources();
 		long start = System.nanoTime();
 		runAndMeasureTime("Loading textures", Textures::load);
 		runAndMeasureTime("Loading 3D models", Models3D::load);

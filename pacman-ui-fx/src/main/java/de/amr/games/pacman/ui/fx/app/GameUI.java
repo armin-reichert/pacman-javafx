@@ -117,7 +117,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		configurePacSteering(settings);
 		initEnv(settings);
 
-		Actions.init(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
+		Game2d.ACTIONS.setContext(new ActionContext(this, gameController, this::currentGameScene, flashMessageView));
 		GameEvents.addListener(this);
 	}
 
@@ -126,7 +126,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		Actions.reboot();
+		Game2d.ACTIONS.reboot();
 		super.start();
 	}
 
@@ -179,10 +179,10 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 	protected void configureGameLoop() {
-		Env.simulationPausedPy.addListener((py, oldVal, newVal) -> updateStage());
-		targetFrameratePy.bind(Env.simulationSpeedPy);
-		measuredPy.bind(Env.simulationTimeMeasuredPy);
-		pausedPy.bind(Env.simulationPausedPy);
+		Game2d.simulationPausedPy.addListener((py, oldVal, newVal) -> updateStage());
+		targetFrameratePy.bind(Game2d.simulationSpeedPy);
+		measuredPy.bind(Game2d.simulationTimeMeasuredPy);
+		pausedPy.bind(Game2d.simulationPausedPy);
 	}
 
 	protected void configureStage(Settings settings) {
@@ -224,25 +224,25 @@ public class GameUI extends GameLoop implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(AppRes.Manager.colorBackground(Env.mainSceneBgColorPy.get()));
-		var paused = Env.simulationPausedPy.get();
+		mainSceneRoot.setBackground(Game2d.Manager.colorBackground(Game2d.mainSceneBgColorPy.get()));
+		var paused = Game2d.simulationPausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(AppRes.Graphics.MsPacManGame.icon);
+			stage.setTitle(Game2d.Texts.message(messageKey, "")); // TODO
+			stage.getIcons().setAll(Game2d.Graphics.MsPacManGame.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(AppRes.Texts.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(AppRes.Graphics.PacManGame.icon);
+			stage.setTitle(Game2d.Texts.message(messageKey, "")); // TODO
+			stage.getIcons().setAll(Game2d.Graphics.PacManGame.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
 	}
 
 	protected void initEnv(Settings settings) {
-		Env.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
+		Game2d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
 
 	/**
@@ -311,29 +311,29 @@ public class GameUI extends GameLoop implements GameEventListener {
 
 	protected void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.AUTOPILOT)) {
-			Actions.toggleAutopilot();
+			Game2d.ACTIONS.toggleAutopilot();
 		} else if (Keyboard.pressed(Keys.BOOT)) {
-			Actions.reboot();
+			Game2d.ACTIONS.reboot();
 		} else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
-			Ufx.toggle(Env.showDebugInfoPy);
+			Ufx.toggle(Game2d.showDebugInfoPy);
 		} else if (Keyboard.pressed(Keys.IMMUNITIY)) {
-			Actions.toggleImmunity();
+			Game2d.ACTIONS.toggleImmunity();
 		} else if (Keyboard.pressed(Keys.PAUSE)) {
-			Actions.togglePaused();
+			Game2d.ACTIONS.togglePaused();
 		} else if (Keyboard.pressed(Keys.PAUSE_STEP) || Keyboard.pressed(Keys.SINGLE_STEP)) {
-			Actions.oneSimulationStep();
+			Game2d.ACTIONS.oneSimulationStep();
 		} else if (Keyboard.pressed(Keys.TEN_STEPS)) {
-			Actions.tenSimulationSteps();
+			Game2d.ACTIONS.tenSimulationSteps();
 		} else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
-			Actions.changeSimulationSpeed(5);
+			Game2d.ACTIONS.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
-			Actions.changeSimulationSpeed(-5);
+			Game2d.ACTIONS.changeSimulationSpeed(-5);
 		} else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
-			Actions.resetSimulationSpeed();
+			Game2d.ACTIONS.resetSimulationSpeed();
 		} else if (Keyboard.pressed(Keys.QUIT)) {
-			Actions.restartIntro();
+			Game2d.ACTIONS.restartIntro();
 		} else if (Keyboard.pressed(Keys.TEST_LEVELS)) {
-			Actions.startLevelTestMode();
+			Game2d.ACTIONS.startLevelTestMode();
 		} else if (Keyboard.pressed(Keys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}

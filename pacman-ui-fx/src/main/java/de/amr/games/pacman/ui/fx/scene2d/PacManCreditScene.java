@@ -28,8 +28,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -57,9 +56,9 @@ public class PacManCreditScene extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
-			Actions.addCredit();
+			Game2d.ACTIONS.addCredit();
 		} else if (Keyboard.pressed(Keys.START_GAME)) {
-			Actions.startGame();
+			Game2d.ACTIONS.startGame();
 		}
 	}
 
@@ -68,10 +67,10 @@ public class PacManCreditScene extends GameScene2D {
 		var r = context.rendering2D();
 		var normalFont = r.screenFont(TS);
 		var smallFont = r.screenFont(6); // TODO looks ugly
-		drawText(g, "PUSH START BUTTON", AppRes.ArcadeTheme.ORANGE, normalFont, TS * (6), TS * (17));
-		drawText(g, "1 PLAYER ONLY", AppRes.ArcadeTheme.CYAN, normalFont, TS * (8), TS * (21));
-		drawText(g, "BONUS PAC-MAN FOR 10000", AppRes.ArcadeTheme.ROSE, normalFont, TS * (1), TS * (25));
-		drawText(g, "PTS", AppRes.ArcadeTheme.ROSE, smallFont, TS * (25), TS * (25));
+		drawText(g, "PUSH START BUTTON", Game2d.ArcadeTheme.ORANGE, normalFont, TS * (6), TS * (17));
+		drawText(g, "1 PLAYER ONLY", Game2d.ArcadeTheme.CYAN, normalFont, TS * (8), TS * (21));
+		drawText(g, "BONUS PAC-MAN FOR 10000", Game2d.ArcadeTheme.ROSE, normalFont, TS * (1), TS * (25));
+		drawText(g, "PTS", Game2d.ArcadeTheme.ROSE, smallFont, TS * (25), TS * (25));
 		drawMidwayCopyright(g, 4, 29);
 		drawLevelCounter(g);
 	}

@@ -32,9 +32,8 @@ import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -58,7 +57,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		copyrightNote = addNote("A fan tribute to the original game", AppRes.Fonts.pt(AppRes.Fonts.handwriting, 10),
+		copyrightNote = addNote("A fan tribute to the original game", Game2d.Fonts.pt(Game2d.Fonts.handwriting, 10),
 				Color.gray(0.3), 1 * TS, 30 * TS);
 	}
 
@@ -84,19 +83,19 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		Actions.stopVoiceMessage();
+		Game2d.ACTIONS.stopVoiceMessage();
 	}
 
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
-			Actions.addCredit();
+			Game2d.ACTIONS.addCredit();
 		} else if (Keyboard.pressed(Keys.START_GAME)) {
-			Actions.startGame();
+			Game2d.ACTIONS.startGame();
 		} else if (Keyboard.pressed(Keys.SELECT_VARIANT)) {
-			Actions.selectNextGameVariant();
+			Game2d.ACTIONS.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keys.PLAY_CUTSCENES)) {
-			Actions.startCutscenesTest();
+			Game2d.ACTIONS.startCutscenesTest();
 		}
 	}
 
@@ -150,9 +149,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = intro.context().leftTileX;
 		var font = r.screenFont(TS);
 		if (intro.context().titleVisible) {
-			drawText(g, "CHARACTER", AppRes.ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
-			drawText(g, "/", AppRes.ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
-			drawText(g, "NICKNAME", AppRes.ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
+			drawText(g, "CHARACTER", Game2d.ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
+			drawText(g, "/", Game2d.ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
+			drawText(g, "NICKNAME", Game2d.ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().ghostInfo[id].pictureVisible) {

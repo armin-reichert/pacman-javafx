@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.AppRes;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -64,8 +64,8 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		var font = AppRes.Fonts.arcade;
-		return size == font.getSize() ? font : AppRes.Fonts.pt(font, size);
+		var font = Game2d.Fonts.arcade;
+		return size == font.getSize() ? font : Game2d.Fonts.pt(font, size);
 	}
 
 	public abstract Rectangle2D ghostValueRegion(int index);
@@ -149,7 +149,7 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			Rendering2D.drawText(g, "+" + excessLives, AppRes.ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
+			Rendering2D.drawText(g, "+" + excessLives, Game2d.ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
 					x + TS * (10), y + TS * (1));
 		}
 	}

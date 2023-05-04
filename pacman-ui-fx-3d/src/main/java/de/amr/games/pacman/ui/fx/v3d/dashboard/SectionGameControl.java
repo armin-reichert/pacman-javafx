@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.app.Actions;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -71,21 +71,21 @@ public class SectionGameControl extends Section {
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.startPlaying());
-		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> Actions.restartIntro());
+		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> Game2d.ACTIONS.restartIntro());
 		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.cheatEnterNextLevel());
 
 		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
-		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> Actions.startCutscenesTest());
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> Actions.restartIntro());
+		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> Game2d.ACTIONS.startCutscenesTest());
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> Game2d.ACTIONS.restartIntro());
 
 		spGameLevel = addSpinner("Level", 1, 100, 1);
-		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Actions.enterLevel(newVal.intValue()));
+		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Game2d.ACTIONS.enterLevel(newVal.intValue()));
 
 		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
 		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
-		cbAutopilot = addCheckBox("Autopilot", Actions::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", Actions::toggleImmunity);
+		cbAutopilot = addCheckBox("Autopilot", Game2d.ACTIONS::toggleAutopilot);
+		cbImmunity = addCheckBox("Player immune", Game2d.ACTIONS::toggleImmunity);
 	}
 
 	@Override

@@ -23,7 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
 import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
@@ -44,8 +44,8 @@ public class SectionAppearance extends Section {
 
 	public SectionAppearance(GameUI3d ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		pickerBgColor = addColorPicker("Background color", Env.mainSceneBgColorPy.get());
-		pickerBgColor.setOnAction(e -> Env.mainSceneBgColorPy.set(pickerBgColor.getValue()));
+		pickerBgColor = addColorPicker("Background color", Game2d.mainSceneBgColorPy.get());
+		pickerBgColor.setOnAction(e -> Game2d.mainSceneBgColorPy.set(pickerBgColor.getValue()));
 		pickerLightColor = addColorPicker("Light Color", GameApp3d.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> GameApp3d.d3_lightColorPy.set(pickerLightColor.getValue()));
 		pickerFloorColor = addColorPicker("Floor Color", GameApp3d.d3_floorColorPy.get());

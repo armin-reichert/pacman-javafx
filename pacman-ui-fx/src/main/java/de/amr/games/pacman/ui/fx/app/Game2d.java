@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2023 Armin Reichert
+Copyright (c) 2021-2023 Armin Reichert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,21 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
-
+ */
 package de.amr.games.pacman.ui.fx.app;
 
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
@@ -43,29 +47,61 @@ import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 /**
+ * This is the entry point of the Pac-Man and Ms. Pac-Man games.
+ * 
+ * <p>
+ * The application is structured according to the MVC (model-view-controller) design pattern. The model layer consists
+ * of the two game models <code> PacManGame</code> and <code> MsPacManGame</code>. The controller is a finite-state
+ * machine which is triggered 60 times per second by the game loop. The user interface listens to game events sent from
+ * the controller/model layer. The model and controller layers are decoupled from the user interface. This allow to
+ * attach different user interfaces without having to change the controller or model.
+ * 
+ * <p>
+ * As a proof of concept I implemented also a (simpler) Swing user interface, see repository
+ * <a href="https://github.com/armin-reichert/pacman-ui-swing">Pac-Man Swing UI</a>.
+ * 
  * @author Armin Reichert
  */
-public class AppRes {
+public class Game2d extends Application {
+
+//@formatter:off
+	public static final ObjectProperty<Color> mainSceneBgColorPy       = new SimpleObjectProperty<>(Color.web("0x334bd3"));
+	public static final BooleanProperty       showDebugInfoPy          = new SimpleBooleanProperty(false);
+	public static final BooleanProperty       simulationPausedPy       = new SimpleBooleanProperty(false);
+	public static final IntegerProperty       simulationStepsPy        = new SimpleIntegerProperty(1);
+	public static final IntegerProperty       simulationSpeedPy        = new SimpleIntegerProperty(GameModel.FPS);
+	public static final BooleanProperty       simulationTimeMeasuredPy = new SimpleBooleanProperty(false);
+//@formatter:on
 
 	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/",
-			AppRes.class::getResource);
+			Game2d.class::getResource);
 
-	public static void load() {
+	public static final Actions ACTIONS = new Actions();
+
+	public static void loadResources() {
 		long start = System.nanoTime();
-		load("graphics", Graphics::load);
-		load("sounds", Sounds::load);
-		load("fonts", Fonts::load);
-		load("texts", Texts::load);
+		runAndMeasureTime("graphics", Graphics::load);
+		runAndMeasureTime("sounds", Sounds::load);
+		runAndMeasureTime("fonts", Fonts::load);
+		runAndMeasureTime("texts", Texts::load);
 		Logger.info("Loading application resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
-	private static void load(String section, Runnable loadingCode) {
+	private static void runAndMeasureTime(String section, Runnable loadingCode) {
 		long start = System.nanoTime();
 		loadingCode.run();
 		Logger.info("Loading {} done ({} seconds).", section, (System.nanoTime() - start) / 1e9f);
@@ -313,5 +349,32 @@ public class AppRes {
 			default -> throw new IllegalGameVariantException(variant);
 			};
 		}
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	private GameUI ui;
+
+	@Override
+	public void init() throws Exception {
+		loadResources();
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws IOException {
+		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
+		var gameController = new GameController(settings.variant);
+		ui = new GameUI(primaryStage, settings, gameController);
+		ui.start();
+		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),
+				ui.targetFrameratePy.get(), settings);
+	}
+
+	@Override
+	public void stop() throws Exception {
+		ui.stop();
+		Logger.info("Game stopped");
 	}
 }

@@ -31,9 +31,8 @@ import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.AppRes;
-import de.amr.games.pacman.ui.fx.app.AppRes.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
@@ -56,7 +55,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		copyrightNote = addNote("A fan tribute to the original game", AppRes.Fonts.pt(AppRes.Fonts.handwriting, 10),
+		copyrightNote = addNote("A fan tribute to the original game", Game2d.Fonts.pt(Game2d.Fonts.handwriting, 10),
 				Color.gray(0.3), 1 * TS, 27.5 * TS);
 	}
 
@@ -85,19 +84,19 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		Actions.stopVoiceMessage();
+		Game2d.ACTIONS.stopVoiceMessage();
 	}
 
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
-			Actions.addCredit();
+			Game2d.ACTIONS.addCredit();
 		} else if (Keyboard.pressed(Keys.START_GAME)) {
-			Actions.startGame();
+			Game2d.ACTIONS.startGame();
 		} else if (Keyboard.pressed(Keys.SELECT_VARIANT)) {
-			Actions.selectNextGameVariant();
+			Game2d.ACTIONS.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keys.PLAY_CUTSCENES)) {
-			Actions.startCutscenesTest();
+			Game2d.ACTIONS.startCutscenesTest();
 		}
 	}
 
@@ -116,19 +115,19 @@ public class MsPacManIntroScene extends GameScene2D {
 		var font = r.screenFont(TS);
 
 		drawMarquee(g);
-		drawText(g, "\"MS PAC-MAN\"", AppRes.ArcadeTheme.ORANGE, font, tx, ty);
+		drawText(g, "\"MS PAC-MAN\"", Game2d.ArcadeTheme.ORANGE, font, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 			var color = r.ghostColors(ghost.id()).dress();
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText(g, "WITH", AppRes.ArcadeTheme.PALE, font, tx, y0 + TS * 3);
+				drawText(g, "WITH", Game2d.ArcadeTheme.PALE, font, tx, y0 + TS * 3);
 			}
 			var text = ghost.name().toUpperCase();
 			int dx = text.length() < 4 ? TS : 0;
 			drawText(g, text, color, font, tx + TS * 3 + dx, y0 + TS * 6);
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText(g, "STARRING", AppRes.ArcadeTheme.PALE, font, tx, y0 + TS * 3);
-			drawText(g, "MS PAC-MAN", AppRes.ArcadeTheme.YELLOW, font, tx, y0 + TS * 6);
+			drawText(g, "STARRING", Game2d.ArcadeTheme.PALE, font, tx, y0 + TS * 3);
+			drawText(g, "MS PAC-MAN", Game2d.ArcadeTheme.YELLOW, font, tx, y0 + TS * 6);
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);

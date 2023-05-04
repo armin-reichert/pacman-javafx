@@ -23,8 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.app.Actions;
-import de.amr.games.pacman.ui.fx.app.Env;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.GameApp3d;
 import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
@@ -68,23 +67,23 @@ public class SectionGeneral extends Section {
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
-		btnPlayPause.setOnAction(e -> Actions.togglePaused());
+		btnPlayPause.setOnAction(e -> Game2d.ACTIONS.togglePaused());
 
 		btnStep.setGraphic(iconStep);
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.executeSteps(Env.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.executeSteps(Game2d.simulationStepsPy.get(), true));
 
-		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Env.simulationStepsPy.get());
+		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Game2d.simulationStepsPy.get());
 		spinnerSimulationSteps.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Env.simulationStepsPy.set(newVal.intValue()));
+				.addListener((obs, oldVal, newVal) -> Game2d.simulationStepsPy.set(newVal.intValue()));
 
 		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Env.simulationSpeedPy.set(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> Game2d.simulationSpeedPy.set(newValue.intValue()));
 
 		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.targetFrameratePy.get(), ui.getFPS()));
 
@@ -92,21 +91,21 @@ public class SectionGeneral extends Section {
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(GameApp3d.wokePussyMode));
-		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Env.showDebugInfoPy));
-		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Env.simulationTimeMeasuredPy));
+		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Game2d.showDebugInfoPy));
+		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(Game2d.simulationTimeMeasuredPy));
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setGraphic(Env.simulationPausedPy.get() ? iconPlay : iconStop);
-		btnsSimulation[0].setTooltip(Env.simulationPausedPy.get() ? tooltipPlay : tooltipStop);
-		btnsSimulation[1].setDisable(!Env.simulationPausedPy.get());
-		spinnerSimulationSteps.getValueFactory().setValue(Env.simulationStepsPy.get());
-		sliderTargetFPS.setValue(Env.simulationSpeedPy.get());
+		btnsSimulation[0].setGraphic(Game2d.simulationPausedPy.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(Game2d.simulationPausedPy.get() ? tooltipPlay : tooltipStop);
+		btnsSimulation[1].setDisable(!Game2d.simulationPausedPy.get());
+		spinnerSimulationSteps.getValueFactory().setValue(Game2d.simulationStepsPy.get());
+		sliderTargetFPS.setValue(Game2d.simulationSpeedPy.get());
 		cbUsePlayScene3D.setSelected(GameApp3d.d3_enabledPy.get());
 		cbPoliticallyCorrect.setSelected(GameApp3d.wokePussyMode.get());
-		cbTimeMeasured.setSelected(Env.simulationTimeMeasuredPy.get());
-		cbDebugUI.setSelected(Env.showDebugInfoPy.get());
+		cbTimeMeasured.setSelected(Game2d.simulationTimeMeasuredPy.get());
+		cbDebugUI.setSelected(Game2d.showDebugInfoPy.get());
 	}
 }
