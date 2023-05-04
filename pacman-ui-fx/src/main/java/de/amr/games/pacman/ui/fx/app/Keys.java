@@ -70,7 +70,7 @@ public class Keys {
 	public static final KeyCodeCombination PLAY_CUTSCENES = alt(KeyCode.Z);
 
 	public static final KeyCodeCombination START_GAME = just(KeyCode.DIGIT1);
-	public static final KeyCodeCombination USE_3D = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination TOGGLE_2D_3D = alt(KeyCode.DIGIT3);
 	public static final KeyCodeCombination ADD_CREDIT = just(KeyCode.DIGIT5);
 
 	public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);

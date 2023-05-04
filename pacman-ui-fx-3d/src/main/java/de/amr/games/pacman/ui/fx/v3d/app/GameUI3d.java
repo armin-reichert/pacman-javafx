@@ -164,7 +164,7 @@ public class GameUI3d extends GameUI2d {
 	@Override
 	protected void handleKeyboardInput() {
 		super.handleKeyboardInput();
-		if (Keyboard.pressed(Keys.USE_3D)) {
+		if (Keyboard.pressed(Keys.TOGGLE_2D_3D)) {
 			toggleUse3DScene();
 		} else if (Keyboard.pressed(Keys.DASHBOARD) || Keyboard.pressed(Keys.DASHBOARD2)) {
 			Game3d.Actions.toggleDashboardVisible();
