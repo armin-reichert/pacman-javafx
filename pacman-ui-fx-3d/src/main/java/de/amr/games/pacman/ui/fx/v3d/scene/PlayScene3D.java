@@ -343,7 +343,7 @@ public class PlayScene3D implements GameScene {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init(level);
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
-				if (Game3d.Properties.d3_foodOscillationEnabledPy.get()) {
+				if (Game3d.Properties.d3_foodOscillationPy.get()) {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);

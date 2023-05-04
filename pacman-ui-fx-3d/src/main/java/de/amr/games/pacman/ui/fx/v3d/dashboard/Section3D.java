@@ -57,9 +57,9 @@ public class Section3D extends Section {
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
 				.available(() -> gameScene().is3D());
 		sliderPiPSceneHeight = addSlider("PiP Size", GameUI3d.PIP_MIN_HEIGHT, GameUI3d.PIP_MAX_HEIGHT,
-				Game3d.Properties.pipSceneHeightPy.get());
+				Game3d.Properties.pipHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Game3d.Properties.pipSceneHeightPy.set(newValue.doubleValue()));
+				.addListener((obs, oldValue, newValue) -> Game3d.Properties.pipHeightPy.set(newValue.doubleValue()));
 		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Game3d.Properties.pipOpacityPy.get());
 		sliderPiPOpacity.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Game3d.Properties.pipOpacityPy.set(newValue.doubleValue()));
@@ -80,7 +80,7 @@ public class Section3D extends Section {
 	public void update() {
 		super.update();
 		comboPerspective.setValue(Game3d.Properties.d3_perspectivePy.get());
-		sliderPiPSceneHeight.setValue(Game3d.Properties.pipSceneHeightPy.get());
+		sliderPiPSceneHeight.setValue(Game3d.Properties.pipHeightPy.get());
 		sliderPiPOpacity.setValue(Game3d.Properties.pipOpacityPy.get());
 		sliderWallHeight.setValue(Game3d.Properties.d3_mazeWallHeightPy.get());
 		cbEnergizerExplodes.setSelected(Game3d.Properties.d3_energizerExplodesPy.get());

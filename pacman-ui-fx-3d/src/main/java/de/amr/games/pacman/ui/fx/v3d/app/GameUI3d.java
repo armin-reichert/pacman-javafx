@@ -145,7 +145,7 @@ public class GameUI3d extends GameUI2d {
 
 		dashboard.visibleProperty().bind(Game3d.Properties.dashboardVisiblePy);
 		Game3d.Properties.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
-		Game3d.Properties.pipSceneHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
+		Game3d.Properties.pipHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
 		pipGameScene.fxSubScene().opacityProperty().bind(Game3d.Properties.pipOpacityPy);
 
 		Game3d.Properties.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
