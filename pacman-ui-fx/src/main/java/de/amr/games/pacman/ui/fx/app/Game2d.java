@@ -572,15 +572,16 @@ public class Game2d extends Application {
 	}
 
 	private GameUI2d ui;
+	private Settings settings;
 
 	@Override
 	public void init() throws Exception {
+		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		loadResources();
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI2d(primaryStage, settings, gameController);
 		Actions.setContext(new ActionContext(ui, gameController, ui::currentGameScene, ui.flashMessageView()));
