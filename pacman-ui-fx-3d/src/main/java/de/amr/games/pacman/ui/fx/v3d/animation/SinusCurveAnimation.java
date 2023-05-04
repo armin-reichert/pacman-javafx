@@ -29,27 +29,26 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
 /**
- * Animates the wall height of the maze. Used as maze flashing animation in 3D play scene.
- * 
  * @author Armin Reichert
  */
-public class SwingingWallsAnimation extends Transition {
+public class SinusCurveAnimation extends Transition {
 
-	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight");
+	public final DoubleProperty elongationPy = new SimpleDoubleProperty(this, "elongation");
 
-	private double wallStartHeight;
+	private double amplitude;
 
-	public SwingingWallsAnimation(int times) {
+	public SinusCurveAnimation(int times) {
 		setCycleDuration(Duration.seconds(0.2));
 		setCycleCount(2 * times);
 		setAutoReverse(true);
 	}
 
+	public void setAmplitude(double value) {
+		this.amplitude = value;
+	}
+
 	@Override
 	protected void interpolate(double t) {
-		if (t == 0) {
-			wallStartHeight = wallHeightPy.get();
-		}
-		wallHeightPy.set(Math.cos(t * Math.PI / 2) * wallStartHeight);
+		elongationPy.set(amplitude * Math.cos(t * Math.PI / 2));
 	}
 }

@@ -52,7 +52,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.animation.SwingingWallsAnimation;
+import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
@@ -480,9 +480,14 @@ public class PlayScene3D implements GameScene {
 			return Ufx.pause(1.0);
 		}
 		double wallHeight = Game3d.Properties.d3_mazeWallHeightPy.get();
-		var animation = new SwingingWallsAnimation(level.numFlashes);
-		animation.wallHeightPy.bind(Game3d.Properties.d3_mazeWallHeightPy);
-		animation.setOnFinished(e -> Game3d.Properties.d3_mazeWallHeightPy.set(wallHeight));
+		var animation = new SinusCurveAnimation(level.numFlashes);
+		animation.setAmplitude(wallHeight);
+		animation.elongationPy.set(level3D.world3D().wallHeightPy.get());
+		level3D.world3D().wallHeightPy.bind(animation.elongationPy);
+		animation.setOnFinished(e -> {
+			level3D.world3D().wallHeightPy.bind(Game3d.Properties.d3_mazeWallHeightPy);
+			Game3d.Properties.d3_mazeWallHeightPy.set(wallHeight);
+		});
 		return animation;
 	}
 
