@@ -76,7 +76,7 @@ public class Game3d extends Application {
 	}
 
 	public static class Properties {
-//@formatter:off
+	//@formatter:off
 		public static final BooleanProperty             wokePussyMode = new SimpleBooleanProperty(false); 
 		public static final BooleanProperty             dashboardVisiblePy = new SimpleBooleanProperty(false);
 	
@@ -98,7 +98,7 @@ public class Game3d extends Application {
 		public static final BooleanProperty             d3_energizerExplodesPy = new SimpleBooleanProperty(true);
 		// experimental, not used yet 
 		public static final BooleanProperty             d3_foodOscillationEnabledPy = new SimpleBooleanProperty(false);
-//@formatter:on
+  //@formatter:on
 	}
 
 	public static class Models3D {
@@ -233,7 +233,7 @@ public class Game3d extends Application {
 		Logger.info("Game stopped");
 	}
 
-	// TODO not sure if we need this main method as we have the "launcher" class Main
+	// TODO not sure if we need this main method when we have the "launcher" class Main
 	public static void main(String[] args) {
 		launch(args);
 	}

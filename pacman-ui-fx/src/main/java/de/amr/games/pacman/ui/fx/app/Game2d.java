@@ -571,10 +571,6 @@ public class Game2d extends Application {
 		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
 	private GameUI2d ui;
 
 	@Override

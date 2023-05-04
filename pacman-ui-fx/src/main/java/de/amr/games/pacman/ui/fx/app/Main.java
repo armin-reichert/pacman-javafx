@@ -23,12 +23,14 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.app;
 
+import javafx.application.Application;
+
 /**
  * @author Armin Reichert
  */
 public class Main {
 
 	public static void main(String[] args) {
-		Game2d.main(args);
+		Application.launch(Game2d.class, args);
 	}
 }
