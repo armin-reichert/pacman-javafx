@@ -54,7 +54,6 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SwingingWallsAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d.Actions;
 import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
@@ -241,9 +240,9 @@ public class PlayScene3D implements GameScene {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
 			Game2d.ACTIONS.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Keys.PREV_CAMERA)) {
-			Actions.selectPrevPerspective();
+			Game3d.ACTIONS.selectPrevPerspective();
 		} else if (Keyboard.pressed(Keys.NEXT_CAMERA)) {
-			Actions.selectNextPerspective();
+			Game3d.ACTIONS.selectNextPerspective();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
 			Game2d.ACTIONS.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {

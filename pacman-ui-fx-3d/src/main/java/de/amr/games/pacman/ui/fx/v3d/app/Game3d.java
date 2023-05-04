@@ -39,7 +39,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.entity.PacModel3D;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
@@ -87,39 +86,10 @@ public class Game3d extends Application {
 	public static final BooleanProperty             d3_foodOscillationEnabledPy = new SimpleBooleanProperty(false);
 //@formatter:on
 
-	public static class Actions extends de.amr.games.pacman.ui.fx.app.Actions {
-
-		public static void togglePipViewVisible() {
-			Ufx.toggle(Game3d.pipVisiblePy);
-			var msgKey = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
-			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message(msgKey));// TODO
-		}
-
-		public static void toggleDashboardVisible() {
-			Ufx.toggle(Game3d.dashboardVisiblePy);
-		}
-
-		public static void selectNextPerspective() {
-			var nextPerspective = Game3d.d3_perspectivePy.get().next();
-			Game3d.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = Game2d.Texts.message(nextPerspective.name());
-			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
-		}
-
-		public static void selectPrevPerspective() {
-			var prevPerspective = Game3d.d3_perspectivePy.get().prev();
-			Game3d.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = Game2d.Texts.message(prevPerspective.name());
-			Game2d.ACTIONS.showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
-		}
-
-		public static void toggleDrawMode() {
-			Game3d.d3_drawModePy.set(Game3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-		}
-	}
-
 	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx3d/assets/",
 			Game3d.class::getResource);
+
+	public static final Actions3d ACTIONS = new Actions3d();
 
 	private static void runAndMeasureTime(String section, Runnable loadingCode) {
 		long start = System.nanoTime();

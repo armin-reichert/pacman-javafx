@@ -72,7 +72,7 @@ public class Section3D extends Section {
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(Game3d.d3_energizerExplodesPy));
 		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(Game3d.d3_pacLightedPy));
 		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(Game3d.d3_axesVisiblePy));
-		cbWireframeMode = addCheckBox("Wireframe Mode", Game3d.Actions::toggleDrawMode);
+		cbWireframeMode = addCheckBox("Wireframe Mode", Game3d.ACTIONS::toggleDrawMode);
 	}
 
 	@Override
