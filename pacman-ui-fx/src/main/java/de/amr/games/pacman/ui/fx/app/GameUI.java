@@ -69,7 +69,6 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -196,7 +195,6 @@ public class GameUI extends GameLoop implements GameEventListener {
 	protected void createMainSceneLayout() {
 		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
 		mainSceneRoot.getChildren().add(flashMessageView);
-		mainSceneRoot.getChildren().add(new BorderPane());
 	}
 
 	protected void createMainScene(Settings settings) {
