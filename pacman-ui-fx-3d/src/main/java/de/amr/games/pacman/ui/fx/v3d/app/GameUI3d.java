@@ -29,7 +29,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.GameUI;
+import de.amr.games.pacman.ui.fx.app.GameUI2d;
 import de.amr.games.pacman.ui.fx.app.Keys;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -59,7 +59,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI3d extends GameUI {
+public class GameUI3d extends GameUI2d {
 
 	public static final float PIP_MIN_HEIGHT = TS * TILES_Y;
 	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;

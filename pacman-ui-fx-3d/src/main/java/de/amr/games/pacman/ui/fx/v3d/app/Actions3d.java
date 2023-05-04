@@ -28,7 +28,7 @@ import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.shape.DrawMode;
 
-public class Actions3d extends de.amr.games.pacman.ui.fx.app.Actions {
+public class Actions3d extends de.amr.games.pacman.ui.fx.app.Actions2d {
 
 	public void togglePipViewVisible() {
 		Ufx.toggle(Game3d.pipVisiblePy);

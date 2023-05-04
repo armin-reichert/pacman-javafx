@@ -90,7 +90,7 @@ public class Game2d extends Application {
 	public static final ResourceMgr Manager = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/",
 			Game2d.class::getResource);
 
-	public static final Actions ACTIONS = new Actions();
+	public static final Actions2d ACTIONS = new Actions2d();
 
 	public static void loadResources() {
 		long start = System.nanoTime();
@@ -355,7 +355,7 @@ public class Game2d extends Application {
 		launch(args);
 	}
 
-	private GameUI ui;
+	private GameUI2d ui;
 
 	@Override
 	public void init() throws Exception {
@@ -366,7 +366,7 @@ public class Game2d extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
-		ui = new GameUI(primaryStage, settings, gameController);
+		ui = new GameUI2d(primaryStage, settings, gameController);
 		ui.start();
 		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),
 				ui.targetFrameratePy.get(), settings);

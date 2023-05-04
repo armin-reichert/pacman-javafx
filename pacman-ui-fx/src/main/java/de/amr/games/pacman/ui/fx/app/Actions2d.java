@@ -36,7 +36,7 @@ import javafx.scene.media.AudioClip;
 /**
  * @author Armin Reichert
  */
-public class Actions {
+public class Actions2d {
 
 	private ActionContext context;
 	private AudioClip currentVoiceMessage;

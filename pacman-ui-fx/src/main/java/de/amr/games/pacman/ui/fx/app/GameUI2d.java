@@ -77,7 +77,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI extends GameLoop implements GameEventListener {
+public class GameUI2d extends GameLoop implements GameEventListener {
 
 	public static final byte TILES_X = 28;
 	public static final byte TILES_Y = 36;
@@ -99,7 +99,7 @@ public class GameUI extends GameLoop implements GameEventListener {
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
 
-	public GameUI(Stage stage, Settings settings, GameController gameController) {
+	public GameUI2d(Stage stage, Settings settings, GameController gameController) {
 		checkNotNull(stage);
 		checkNotNull(settings);
 		checkNotNull(gameController);
