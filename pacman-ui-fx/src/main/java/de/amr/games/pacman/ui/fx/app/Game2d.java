@@ -94,8 +94,7 @@ public class Game2d extends Application {
 	//@formatter:on
 	}
 
-	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/",
-			Game2d.class::getResource);
+	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/", Game2d.class);
 
 	public static void loadResources() {
 		long start = System.nanoTime();

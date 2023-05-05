@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 
 import org.tinylog.Logger;
 
@@ -46,14 +45,14 @@ import javafx.scene.text.Font;
  */
 public class ResourceMgr {
 
-	private final Function<String, URL> urlComputation;
+	private final Class<?> clientClass;
 	private final String rootDir;
 
-	public ResourceMgr(String rootDir, Function<String, URL> urlComputation) {
+	public ResourceMgr(String rootDir, Class<?> clientClass) {
 		checkNotNull(rootDir);
-		checkNotNull(urlComputation);
+		checkNotNull(clientClass);
 		this.rootDir = rootDir;
-		this.urlComputation = urlComputation;
+		this.clientClass = clientClass;
 	}
 
 	/**
@@ -62,7 +61,7 @@ public class ResourceMgr {
 	 */
 	public URL urlFromRelPath(String relPath) {
 		checkNotNull(relPath);
-		return urlComputation.apply(rootDir + relPath);
+		return clientClass.getResource(rootDir + relPath);
 	}
 
 	/**
