@@ -34,13 +34,12 @@ import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 public class ObjModelLoaderTest {
 
 	public static void main(String[] args) {
-		if (args.length == 0) {
+		if (args.length > 0) {
+			var url = Game3d.ResMgr.urlFromRelPath(args[0]);
+			var model = new Model3D(url);
+			System.out.println(model.contentReport());
+		} else {
 			Logger.error("Missing model file path (relative to asset folder)");
-			return;
 		}
-		var relPath = args[0];
-		var url = Game3d.ResMgr.urlFromRelPath(relPath);
-		var model = new Model3D(url);
-		Logger.info(model.contentReport());
 	}
 }
