@@ -189,10 +189,10 @@ public class Game3d extends Application {
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI3d(primaryStage, settings, gameController);
 		Game2d.Actions.setContext(new ActionContext(ui));
-		Actions.reboot();
+		Game2d.Actions.reboot();
 		ui.start();
-		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),
-				ui.targetFrameratePy.get(), settings);
+		Logger.info("Game started. Locale: {} FPS: {} Hz Settings: {}", Locale.getDefault(), ui.targetFrameratePy.get(),
+				settings);
 	}
 
 	@Override
