@@ -94,7 +94,7 @@ public class Game2d extends Application {
 	//@formatter:on
 	}
 
-	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/assets/", Game2d.class);
+	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 	public static void loadResources() {
 		long start = System.nanoTime();
@@ -203,7 +203,7 @@ public class Game2d extends Application {
 		private static Picker<String> messagePickerGameOver;
 
 		static void load() {
-			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.assets.texts.messages");
+			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 			messagePickerCheating = ResMgr.createPicker(messageBundle, "cheating");
 			messagePickerLevelComplete = ResMgr.createPicker(messageBundle, "level.complete");
 			messagePickerGameOver = ResMgr.createPicker(messageBundle, "game.over");
