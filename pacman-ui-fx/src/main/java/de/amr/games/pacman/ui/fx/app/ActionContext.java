@@ -35,7 +35,7 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 /**
  * @author Armin Reichert
  */
-public record ActionContext(GameClock gameLoop, GameController gameController,
+public record ActionContext(GameClock gameClock, GameController gameController,
 		Supplier<GameScene> currentGameSceneSupplier, FlashMessageView flashMessageView) {
 
 	public GameModel game() {

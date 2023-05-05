@@ -441,36 +441,36 @@ public class Game2d extends Application {
 		}
 
 		public static void togglePaused() {
-			Ufx.toggle(context.gameLoop().pausedPy);
+			Ufx.toggle(context.gameClock().pausedPy);
 			// TODO mute and unmute?
-			if (context.gameLoop().pausedPy.get()) {
+			if (context.gameClock().pausedPy.get()) {
 				Game2d.Sounds.gameSounds(context.game().variant()).stopAll();
 			}
 		}
 
 		public static void oneSimulationStep() {
-			if (context.gameLoop().pausedPy.get()) {
-				context.gameLoop().executeSingleStep(true);
+			if (context.gameClock().pausedPy.get()) {
+				context.gameClock().executeSingleStep(true);
 			}
 		}
 
 		public static void tenSimulationSteps() {
-			if (context.gameLoop().pausedPy.get()) {
-				context.gameLoop().executeSteps(10, true);
+			if (context.gameClock().pausedPy.get()) {
+				context.gameClock().executeSteps(10, true);
 			}
 		}
 
 		public static void changeSimulationSpeed(int delta) {
-			int newFramerate = context.gameLoop().targetFrameratePy.get() + delta;
+			int newFramerate = context.gameClock().targetFrameratePy.get() + delta;
 			if (newFramerate > 0 && newFramerate < 120) {
-				context.gameLoop().targetFrameratePy.set(newFramerate);
+				context.gameClock().targetFrameratePy.set(newFramerate);
 				showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 			}
 		}
 
 		public static void resetSimulationSpeed() {
-			context.gameLoop().targetFrameratePy.set(GameModel.FPS);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(context.gameLoop().targetFrameratePy.get()));
+			context.gameClock().targetFrameratePy.set(GameModel.FPS);
+			showFlashMessageSeconds(0.75, "%dHz".formatted(context.gameClock().targetFrameratePy.get()));
 		}
 
 		public static void selectNextGameVariant() {
