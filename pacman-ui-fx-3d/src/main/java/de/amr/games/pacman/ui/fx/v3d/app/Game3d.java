@@ -23,8 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import static de.amr.games.pacman.lib.Globals.randomInt;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -76,7 +74,7 @@ public class Game3d extends Application {
 		public static GhostModel3D ghostModel3D;
 		public static PelletModel3D pelletModel3D;
 		public static Background backgroundForScene3D;
-		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+		public static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
 		public static void load() {
 			backgroundForScene3D = Loader.imageBackground("graphics/sky.png");
@@ -104,19 +102,6 @@ public class Game3d extends Application {
 			texture.setDiffuseColor(diffuseColor);
 			texture.setSpecularColor(specularColor);
 			return texture;
-		}
-
-		public static PhongMaterial floorTexture(String name) {
-			return floorTexturesByName.get(name);
-		}
-
-		public static String[] floorTextureNames() {
-			return floorTexturesByName.keySet().toArray(String[]::new);
-		}
-
-		public static String randomFloorTextureName() {
-			var names = floorTextureNames();
-			return names[randomInt(0, names.length)];
 		}
 	}
 

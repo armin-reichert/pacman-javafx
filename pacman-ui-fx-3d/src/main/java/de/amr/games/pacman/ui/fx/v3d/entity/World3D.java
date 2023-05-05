@@ -171,7 +171,7 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = Game3d.Resources.floorTexture(key);
+		var texture = Game3d.Resources.floorTexturesByName.get(key);
 		if (texture == null) {
 			texture = Game3d.Resources.Loader.coloredMaterial(floorColorPy.get());
 		}

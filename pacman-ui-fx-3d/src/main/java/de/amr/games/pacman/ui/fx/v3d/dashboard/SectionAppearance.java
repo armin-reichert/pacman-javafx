@@ -50,7 +50,7 @@ public class SectionAppearance extends Section {
 		pickerLightColor.setOnAction(e -> Game3d.Properties.d3_lightColorPy.set(pickerLightColor.getValue()));
 		pickerFloorColor = addColorPicker("Floor Color", Game3d.Properties.d3_floorColorPy.get());
 		pickerFloorColor.setOnAction(e -> Game3d.Properties.d3_floorColorPy.set(pickerFloorColor.getValue()));
-		comboFloorTexture = addComboBox("Floor Texture", textureItems());
+		comboFloorTexture = addComboBox("Floor Texture", floorTextureComboBoxEntries());
 		comboFloorTexture.setOnAction(e -> Game3d.Properties.d3_floorTexturePy.set(comboFloorTexture.getValue()));
 		cbFloorTextureRandom = addCheckBox("Random Floor Texture",
 				() -> Ufx.toggle(Game3d.Properties.d3_floorTextureRandomPy));
@@ -62,11 +62,11 @@ public class SectionAppearance extends Section {
 		cbFloorTextureRandom.setSelected(Game3d.Properties.d3_floorTextureRandomPy.get());
 	}
 
-	private String[] textureItems() {
-		var textureKeys = Game3d.Resources.floorTextureNames();
-		var items = new String[textureKeys.length + 1];
-		items[0] = Game3d.Resources.KEY_NO_TEXTURE;
-		System.arraycopy(textureKeys, 0, items, 1, textureKeys.length);
-		return items;
+	private String[] floorTextureComboBoxEntries() {
+		var names = Game3d.Resources.floorTexturesByName.keySet().toArray(String[]::new);
+		var entries = new String[names.length + 1];
+		entries[0] = Game3d.Resources.KEY_NO_TEXTURE;
+		System.arraycopy(names, 0, entries, 1, names.length);
+		return entries;
 	}
 }

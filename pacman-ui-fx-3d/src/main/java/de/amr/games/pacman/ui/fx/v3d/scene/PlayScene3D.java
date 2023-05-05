@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Globals.RND;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.inPercentOfCases;
 import static de.amr.games.pacman.lib.Globals.oneOf;
+import static de.amr.games.pacman.lib.Globals.randomInt;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -218,7 +219,8 @@ public class PlayScene3D implements GameScene {
 		}
 
 		if (Game3d.Properties.d3_floorTextureRandomPy.get()) {
-			Game3d.Properties.d3_floorTexturePy.set(Game3d.Resources.randomFloorTextureName());
+			var names = Game3d.Resources.floorTexturesByName.keySet().toArray(String[]::new);
+			Game3d.Properties.d3_floorTexturePy.set(names[randomInt(0, names.length)]);
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}
