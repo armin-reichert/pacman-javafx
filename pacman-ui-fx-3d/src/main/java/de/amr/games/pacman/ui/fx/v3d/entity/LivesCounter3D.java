@@ -65,11 +65,11 @@ public class LivesCounter3D {
 	private final PointLight light;
 
 	private double pillarHeight = 5.0;
-	private final PhongMaterial pillarMaterial = Game3d.ResMgr.coloredMaterial(Color.rgb(100, 100, 100));
+	private final PhongMaterial pillarMaterial = Game3d.Resources.Loader.coloredMaterial(Color.rgb(100, 100, 100));
 
 	private double plateRadius = 6.0;
 	private double plateThickness = 1.0;
-	private final PhongMaterial plateMaterial = Game3d.ResMgr.coloredMaterial(Color.rgb(180, 180, 180));
+	private final PhongMaterial plateMaterial = Game3d.Resources.Loader.coloredMaterial(Color.rgb(180, 180, 180));
 
 	private final List<Animation> animations = new ArrayList<>();
 

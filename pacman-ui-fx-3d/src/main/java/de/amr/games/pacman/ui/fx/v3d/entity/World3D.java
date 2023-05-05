@@ -83,7 +83,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			Game3d.Textures.KEY_NO_TEXTURE) {
+			Game3d.Resources.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			Logger.trace("Floor texture change detected");
@@ -171,9 +171,9 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = Game3d.Textures.floorTexture(key);
+		var texture = Game3d.Resources.floorTexture(key);
 		if (texture == null) {
-			texture = Game3d.ResMgr.coloredMaterial(floorColorPy.get());
+			texture = Game3d.Resources.Loader.coloredMaterial(floorColorPy.get());
 		}
 		floor.setMaterial(texture);
 	}
@@ -181,10 +181,10 @@ public class World3D {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = Game3d.ResMgr.coloredMaterial(mazeColoring.wallBaseColor());
-		wallData.topMaterial = Game3d.ResMgr.coloredMaterial(mazeColoring.wallTopColor());
-		wallData.houseMaterial = Game3d.ResMgr
-				.coloredMaterial(Game3d.ResMgr.color(mazeColoring.wallBaseColor(), 0.25));
+		wallData.baseMaterial = Game3d.Resources.Loader.coloredMaterial(mazeColoring.wallBaseColor());
+		wallData.topMaterial = Game3d.Resources.Loader.coloredMaterial(mazeColoring.wallTopColor());
+		wallData.houseMaterial = Game3d.Resources.Loader
+				.coloredMaterial(Game3d.Resources.Loader.color(mazeColoring.wallBaseColor(), 0.25));
 		return wallData;
 	}
 
@@ -384,7 +384,7 @@ public class World3D {
 	// Food
 
 	private void addFood() {
-		var foodMaterial = Game3d.ResMgr.coloredMaterial(mazeColoring.foodColor());
+		var foodMaterial = Game3d.Resources.Loader.coloredMaterial(mazeColoring.foodColor());
 		world.tiles().filter(world::containsFood).forEach(tile -> {
 			var food3D = world.isEnergizerTile(tile)//
 					? createEnergizer3D(tile, foodMaterial)//
@@ -413,7 +413,7 @@ public class World3D {
 		squirting.setOrigin(energizer3D.getRoot());
 		squirting.setDropCountMin(15);
 		squirting.setDropCountMax(45);
-		squirting.setDropMaterial(Game3d.ResMgr.coloredMaterial(mazeColoring.foodColor().desaturate()));
+		squirting.setDropMaterial(Game3d.Resources.Loader.coloredMaterial(mazeColoring.foodColor().desaturate()));
 		energizer3D.setEatenAnimation(squirting);
 		return energizer3D;
 	}

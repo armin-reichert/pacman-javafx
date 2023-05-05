@@ -115,12 +115,12 @@ public class GameUI3d extends GameUI2d {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Game3d.Properties.d3_drawModePy.get() == DrawMode.LINE) {
-				mainSceneRoot.setBackground(Game3d.ResMgr.colorBackground(Color.BLACK));
+				mainSceneRoot.setBackground(Game3d.Resources.Loader.colorBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(Game3d.Textures.backgroundForScene3D);
+				mainSceneRoot.setBackground(Game3d.Resources.backgroundForScene3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(Game2d.ResMgr.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));// TODO
+			mainSceneRoot.setBackground(Game2d.Resources.Loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = pausedPy.get();
 		var dimensionMsg = Game2d.Resources.message(Game3d.Properties.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO

@@ -58,8 +58,8 @@ public class DoorWing3D {
 		checkTileNotNull(tile);
 		checkNotNull(color);
 
-		doorClosedMaterial = Game3d.ResMgr.coloredMaterial(color); // TODO
-		doorOpenMaterial = Game3d.ResMgr.coloredMaterial(Game3d.ResMgr.color(Color.gray(0.8), 0.1)); // TODO
+		doorClosedMaterial = Game3d.Resources.Loader.coloredMaterial(color); // TODO
+		doorOpenMaterial = Game3d.Resources.Loader.coloredMaterial(Game3d.Resources.Loader.color(Color.gray(0.8), 0.1)); // TODO
 
 		for (int i = 0; i < 2; ++i) {
 			var vbar = new Cylinder(1, 8);

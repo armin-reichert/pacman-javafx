@@ -70,15 +70,15 @@ public class ColoredGhost3D {
 
 		this.coloring = coloring;
 
-		dressShape = new MeshView(model3D.mesh(Game3d.Models3D.MESH_ID_GHOST_DRESS));
+		dressShape = new MeshView(model3D.mesh(Game3d.Resources.MESH_ID_GHOST_DRESS));
 		dressShape.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
 		dressColorPy.set(coloring.dress());
 
-		eyeballsShape = new MeshView(model3D.mesh(Game3d.Models3D.MESH_ID_GHOST_EYEBALLS));
+		eyeballsShape = new MeshView(model3D.mesh(Game3d.Resources.MESH_ID_GHOST_EYEBALLS));
 		eyeballsShape.setMaterial(Ufx.createColorBoundMaterial(eyeballsColorPy));
 		eyeballsColorPy.set(coloring.eyeballs());
 
-		pupilsShape = new MeshView(model3D.mesh(Game3d.Models3D.MESH_ID_GHOST_PUPILS));
+		pupilsShape = new MeshView(model3D.mesh(Game3d.Resources.MESH_ID_GHOST_PUPILS));
 		pupilsShape.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 		pupilsColorPy.set(coloring.pupils());
 

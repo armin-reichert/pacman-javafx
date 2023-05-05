@@ -222,7 +222,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.ResMgr.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));
+		mainSceneRoot.setBackground(Game2d.Resources.Loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));
 		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {

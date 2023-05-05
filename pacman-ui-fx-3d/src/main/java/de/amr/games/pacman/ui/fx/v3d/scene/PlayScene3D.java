@@ -218,7 +218,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		if (Game3d.Properties.d3_floorTextureRandomPy.get()) {
-			Game3d.Properties.d3_floorTexturePy.set(Game3d.Textures.randomFloorTextureName());
+			Game3d.Properties.d3_floorTexturePy.set(Game3d.Resources.randomFloorTextureName());
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}

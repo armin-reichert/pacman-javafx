@@ -82,9 +82,9 @@ import javafx.stage.Stage;
  */
 public class Game2d extends Application {
 
-	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/", Game2d.class);
+	public static class Resources {
 
-	public class Resources {
+		public static final ResourceMgr Loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 		public static Font arcadeFont;
 		public static Font handwritingFont;
@@ -94,11 +94,11 @@ public class Game2d extends Application {
 		private static Picker<String> messagePickerLevelComplete;
 		private static Picker<String> messagePickerGameOver;
 
-		public static final AudioClip VOICE_HELP = ResMgr.audioClip("sound/voice/press-key.mp3");
-		public static final AudioClip VOICE_AUTOPILOT_OFF = ResMgr.audioClip("sound/voice/autopilot-off.mp3");
-		public static final AudioClip VOICE_AUTOPILOT_ON = ResMgr.audioClip("sound/voice/autopilot-on.mp3");
-		public static final AudioClip VOICE_IMMUNITY_OFF = ResMgr.audioClip("sound/voice/immunity-off.mp3");
-		public static final AudioClip VOICE_IMMUNITY_ON = ResMgr.audioClip("sound/voice/immunity-on.mp3");
+		public static final AudioClip VOICE_HELP = Loader.audioClip("sound/voice/press-key.mp3");
+		public static final AudioClip VOICE_AUTOPILOT_OFF = Loader.audioClip("sound/voice/autopilot-off.mp3");
+		public static final AudioClip VOICE_AUTOPILOT_ON = Loader.audioClip("sound/voice/autopilot-on.mp3");
+		public static final AudioClip VOICE_IMMUNITY_OFF = Loader.audioClip("sound/voice/immunity-off.mp3");
+		public static final AudioClip VOICE_IMMUNITY_ON = Loader.audioClip("sound/voice/immunity-on.mp3");
 
 		//@formatter:off
 		private static final Object[][] MS_PACMAN_AUDIO_CLIP_PATHS = { 
@@ -147,36 +147,32 @@ public class Game2d extends Application {
 		private static GameSounds gameSoundsMsPacMan;
 		private static GameSounds gameSoundsPacMan;
 
-		public static void loadResources() {
-			long start = System.nanoTime();
-
+		public static void load() {
 			// Fonts
-			arcadeFont = ResMgr.font("fonts/emulogic.ttf", 8);
-			handwritingFont = ResMgr.font("fonts/RockSalt-Regular.ttf", 8);
+			arcadeFont = Loader.font("fonts/emulogic.ttf", 8);
+			handwritingFont = Loader.font("fonts/RockSalt-Regular.ttf", 8);
 
 			// Graphics
-			PacManGameGraphics.icon = ResMgr.image("graphics/icons/pacman.png");
-			PacManGameGraphics.spritesheet = new Spritesheet(ResMgr.image("graphics/pacman/sprites.png"), 16);
-			PacManGameGraphics.fullMaze = ResMgr.image("graphics/pacman/maze_full.png");
-			PacManGameGraphics.emptyMaze = ResMgr.image("graphics/pacman/maze_empty.png");
-			PacManGameGraphics.flashingMaze = ResMgr.image("graphics/pacman/maze_empty_flashing.png");
-			MsPacManGameGraphics.icon = ResMgr.image("graphics/icons/mspacman.png");
-			MsPacManGameGraphics.spritesheet = new Spritesheet(ResMgr.image("graphics/mspacman/sprites.png"), 16);
+			PacManGameGraphics.icon = Loader.image("graphics/icons/pacman.png");
+			PacManGameGraphics.spritesheet = new Spritesheet(Loader.image("graphics/pacman/sprites.png"), 16);
+			PacManGameGraphics.fullMaze = Loader.image("graphics/pacman/maze_full.png");
+			PacManGameGraphics.emptyMaze = Loader.image("graphics/pacman/maze_empty.png");
+			PacManGameGraphics.flashingMaze = Loader.image("graphics/pacman/maze_empty_flashing.png");
+			MsPacManGameGraphics.icon = Loader.image("graphics/icons/mspacman.png");
+			MsPacManGameGraphics.spritesheet = new Spritesheet(Loader.image("graphics/mspacman/sprites.png"), 16);
 			MsPacManGameGraphics.emptyFlashingMaze = IntStream.range(0, 6).mapToObj(MsPacManGameGraphics::emptyMazeFlashing)
 					.toArray(Image[]::new);
-			MsPacManGameGraphics.logo = ResMgr.image("graphics/mspacman/midway.png");
+			MsPacManGameGraphics.logo = Loader.image("graphics/mspacman/midway.png");
 
 			// Texts
 			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
-			messagePickerCheating = ResMgr.createPicker(messageBundle, "cheating");
-			messagePickerLevelComplete = ResMgr.createPicker(messageBundle, "level.complete");
-			messagePickerGameOver = ResMgr.createPicker(messageBundle, "game.over");
+			messagePickerCheating = Loader.createPicker(messageBundle, "cheating");
+			messagePickerLevelComplete = Loader.createPicker(messageBundle, "level.complete");
+			messagePickerGameOver = Loader.createPicker(messageBundle, "game.over");
 
 			// Sound
 			gameSoundsMsPacMan = new GameSounds(MS_PACMAN_AUDIO_CLIP_PATHS, true);
 			gameSoundsPacMan = new GameSounds(PACMAN_AUDIO_CLIP_PATHS, true);
-
-			Logger.info("Loading application resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 		}
 
 		public static Font font(Font font, double size) {
@@ -465,7 +461,7 @@ public class Game2d extends Application {
 	@Override
 	public void init() throws Exception {
 		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
-		Resources.loadResources();
+		Resources.load();
 	}
 
 	@Override

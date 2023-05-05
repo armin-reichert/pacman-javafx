@@ -54,7 +54,7 @@ public class Pellet3D implements Eatable3D {
 		requireNonNull(model3D);
 		requirePositive(radius, "Pellet3D radius must be positive but is %f");
 
-		shape = model3D.meshView(Game3d.Models3D.MESH_ID_PELLET);
+		shape = model3D.meshView(Game3d.Resources.MESH_ID_PELLET);
 		shape.setRotationAxis(Rotate.Z_AXIS);
 		shape.setRotate(90);
 		shape.setUserData(this);

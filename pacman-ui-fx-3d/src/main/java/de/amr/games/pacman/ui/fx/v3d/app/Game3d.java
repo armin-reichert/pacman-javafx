@@ -66,12 +66,60 @@ import javafx.stage.Stage;
  */
 public class Game3d extends Application {
 
-	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
+	public static class Resources {
+		public static final ResourceMgr Loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
 
-	private static void runAndMeasureTime(String description, Runnable code) {
-		long start = System.nanoTime();
-		code.run();
-		Logger.info("{} done ({} seconds).", description, (System.nanoTime() - start) / 1e9f);
+		public static final String KEY_NO_TEXTURE = "No Texture";
+		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+		public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+		public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+		public static final String MESH_ID_PELLET = "Fruit";
+		public static PacModel3D pacModel3D;
+		public static Model3D ghostModel3D;
+		public static Model3D pelletModel3D;
+		public static Background backgroundForScene3D;
+		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+
+		public static void load() {
+			backgroundForScene3D = Loader.imageBackground("graphics/sky.png");
+			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
+			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
+			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
+			floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
+
+			pacModel3D = new PacModel3D(Loader.urlFromRelPath("model3D/pacman.obj"));
+			ghostModel3D = new Model3D(Loader.urlFromRelPath("model3D/ghost.obj"));
+			pelletModel3D = new Model3D(Loader.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
+		}
+
+		private static PhongMaterial createFloorTexture(String textureBase, String ext) {
+			var material = textureMaterial(textureBase, ext, null, null);
+			material.diffuseColorProperty().bind(Game3d.Properties.d3_floorColorPy);
+			return material;
+		}
+
+		public static PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor,
+				Color specularColor) {
+			var texture = new PhongMaterial();
+			texture.setBumpMap(Loader.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(Loader.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setDiffuseColor(diffuseColor);
+			texture.setSpecularColor(specularColor);
+			return texture;
+		}
+
+		public static PhongMaterial floorTexture(String name) {
+			return floorTexturesByName.get(name);
+		}
+
+		public static String[] floorTextureNames() {
+			return floorTexturesByName.keySet().toArray(String[]::new);
+		}
+
+		public static String randomFloorTextureName() {
+			var names = floorTextureNames();
+			return names[randomInt(0, names.length)];
+		}
 	}
 
 	public static class Properties {
@@ -98,68 +146,6 @@ public class Game3d extends Application {
 		// experimental, not used yet 
 		public static final BooleanProperty             d3_foodOscillationPy    = new SimpleBooleanProperty(false);
   //@formatter:on
-	}
-
-	public static class Models3D {
-
-		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-		public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-		public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-		public static final String MESH_ID_PELLET = "Fruit";
-
-		public static PacModel3D pacModel3D;
-		public static Model3D ghostModel3D;
-		public static Model3D pelletModel3D;
-
-		static void load() {
-			pacModel3D = new PacModel3D(ResMgr.urlFromRelPath("model3D/pacman.obj"));
-			ghostModel3D = new Model3D(ResMgr.urlFromRelPath("model3D/ghost.obj"));
-			pelletModel3D = new Model3D(ResMgr.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
-		}
-	}
-
-	public static class Textures {
-
-		public static final String KEY_NO_TEXTURE = "No Texture";
-		public static Background backgroundForScene3D;
-		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
-
-		static void load() {
-			backgroundForScene3D = ResMgr.imageBackground("graphics/sky.png");
-			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
-			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
-			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
-			floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
-		}
-
-		private static PhongMaterial createFloorTexture(String textureBase, String ext) {
-			var material = textureMaterial(textureBase, ext, null, null);
-			material.diffuseColorProperty().bind(Game3d.Properties.d3_floorColorPy);
-			return material;
-		}
-
-		public static PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor,
-				Color specularColor) {
-			var texture = new PhongMaterial();
-			texture.setBumpMap(ResMgr.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(ResMgr.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
-			texture.setDiffuseColor(diffuseColor);
-			texture.setSpecularColor(specularColor);
-			return texture;
-		}
-
-		public static PhongMaterial floorTexture(String name) {
-			return floorTexturesByName.get(name);
-		}
-
-		public static String[] floorTextureNames() {
-			return floorTexturesByName.keySet().toArray(String[]::new);
-		}
-
-		public static String randomFloorTextureName() {
-			var names = floorTextureNames();
-			return names[randomInt(0, names.length)];
-		}
 	}
 
 	public static class Actions extends Game2d.Actions {
@@ -210,10 +196,9 @@ public class Game3d extends Application {
 	public void init() throws Exception {
 		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		long start = System.nanoTime();
-		Game2d.Resources.loadResources();
-		runAndMeasureTime("Loading textures", Textures::load);
-		runAndMeasureTime("Loading 3D models", Models3D::load);
-		Logger.info("Loading all resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
+		Game2d.Resources.load();
+		Resources.load();
+		Logger.info("Loading resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class ObjModelLoaderTest {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			var url = Game3d.ResMgr.urlFromRelPath(args[0]);
+			var url = Game3d.Resources.Loader.urlFromRelPath(args[0]);
 			var model = new Model3D(url);
 			System.out.println(model.contentReport());
 		} else {
