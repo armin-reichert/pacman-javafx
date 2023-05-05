@@ -66,7 +66,7 @@ import javafx.stage.Stage;
  */
 public class Game3d extends Application {
 
-	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/assets/", Game3d.class);
+	public static final ResourceMgr ResMgr = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
 
 	private static void runAndMeasureTime(String description, Runnable code) {
 		long start = System.nanoTime();

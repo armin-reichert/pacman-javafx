@@ -95,7 +95,8 @@ public class ResourceMgr {
 	 * @return image loaded from resource addressed by this path.
 	 */
 	public Image image(String relPath) {
-		return new Image(urlFromRelPath(relPath).toExternalForm());
+		var url = urlFromRelPath(relPath);
+		return new Image(url.toExternalForm());
 	}
 
 	public Background colorBackground(Color color) {
