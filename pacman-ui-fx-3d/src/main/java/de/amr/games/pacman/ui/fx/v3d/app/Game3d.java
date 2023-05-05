@@ -220,7 +220,7 @@ public class Game3d extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI3d(primaryStage, settings, gameController);
-		Game2d.Actions.setContext(new ActionContext(ui, gameController, ui::currentGameScene, ui.flashMessageView()));
+		Game2d.Actions.setContext(new ActionContext(ui));
 		Actions.reboot();
 		ui.start();
 		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),

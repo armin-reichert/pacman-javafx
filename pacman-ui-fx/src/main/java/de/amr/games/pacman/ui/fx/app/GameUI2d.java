@@ -70,6 +70,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 
 /**
@@ -86,6 +87,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public static final byte INDEX_INTRO_SCENE = 1;
 	public static final byte INDEX_CREDIT_SCENE = 2;
 	public static final byte INDEX_PLAY_SCENE = 3;
+
+	private AudioClip currentVoiceMessage;
 
 	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
 	protected final Map<GameVariant, List<GameSceneChoice>> sceneChoicesMap = new EnumMap<>(GameVariant.class);
@@ -382,4 +385,23 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public FlashMessageView flashMessageView() {
 		return flashMessageView;
 	}
+
+	public void playVoiceMessage(AudioClip voiceMessage) {
+		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
+			return; // don't interrupt voice message still playing, maybe enqueue?
+		}
+		currentVoiceMessage = voiceMessage;
+		currentVoiceMessage.play();
+	}
+
+	public void stopVoiceMessage() {
+		if (currentVoiceMessage != null) {
+			currentVoiceMessage.stop();
+		}
+	}
+
+	public void playHelpVoiceMessageAfterSeconds(int seconds) {
+		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.Sounds.VOICE_HELP)).play();
+	}
+
 }

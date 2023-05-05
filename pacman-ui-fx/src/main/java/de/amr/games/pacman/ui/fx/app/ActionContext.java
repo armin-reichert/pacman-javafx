@@ -23,30 +23,24 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.util.function.Supplier;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.util.FlashMessageView;
-import de.amr.games.pacman.ui.fx.util.GameClock;
 
 /**
  * @author Armin Reichert
  */
-public record ActionContext(GameClock gameClock, GameController gameController,
-		Supplier<GameScene> currentGameSceneSupplier, FlashMessageView flashMessageView) {
+public record ActionContext(GameUI2d ui) {
+
+	public GameController gameController() {
+		return ui.gameController;
+	}
 
 	public GameModel game() {
-		return gameController.game();
+		return gameController().game();
 	}
 
 	public GameState gameState() {
-		return gameController.state();
-	}
-
-	public GameScene currentGameScene() {
-		return currentGameSceneSupplier.get();
+		return gameController().state();
 	}
 }

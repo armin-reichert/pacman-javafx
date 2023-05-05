@@ -358,28 +358,13 @@ public class Game2d extends Application {
 	public static class Actions {
 
 		private static ActionContext context;
-		private static AudioClip currentVoiceMessage;
 
 		public static void setContext(ActionContext context) {
 			Actions.context = context;
 		}
 
-		public static void playHelpVoiceMessageAfterSeconds(int seconds) {
-			Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.Sounds.VOICE_HELP)).play();
-		}
-
-		public static void playVoiceMessage(AudioClip voiceMessage) {
-			if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
-				return; // don't interrupt voice message still playing, maybe enqueue?
-			}
-			currentVoiceMessage = voiceMessage;
-			currentVoiceMessage.play();
-		}
-
 		public static void stopVoiceMessage() {
-			if (currentVoiceMessage != null) {
-				currentVoiceMessage.stop();
-			}
+			context.ui().stopVoiceMessage();
 		}
 
 		public static void showFlashMessage(String message, Object... args) {
@@ -387,12 +372,12 @@ public class Game2d extends Application {
 		}
 
 		public static void showFlashMessageSeconds(double seconds, String message, Object... args) {
-			context.flashMessageView().showMessage(String.format(message, args), seconds);
+			context.ui().flashMessageView().showMessage(String.format(message, args), seconds);
 		}
 
 		public static void startGame() {
 			if (context.game().hasCredit()) {
-				stopVoiceMessage();
+				context.ui().stopVoiceMessage();
 				context.gameController().startPlaying();
 			}
 		}
@@ -403,7 +388,7 @@ public class Game2d extends Application {
 		}
 
 		public static void restartIntro() {
-			context.currentGameScene().end();
+			context.ui().currentGameScene().end();
 			GameEvents.setSoundEventsEnabled(true);
 			if (context.game().isPlaying()) {
 				context.game().changeCredit(-1);
@@ -412,10 +397,10 @@ public class Game2d extends Application {
 		}
 
 		public static void reboot() {
-			if (context.currentGameScene() != null) {
-				context.currentGameScene().end();
+			if (context.ui().currentGameScene() != null) {
+				context.ui().currentGameScene().end();
 			}
-			playHelpVoiceMessageAfterSeconds(4);
+			context.ui().playHelpVoiceMessageAfterSeconds(4);
 			context.gameController().restart(GameState.BOOT);
 		}
 
@@ -441,42 +426,42 @@ public class Game2d extends Application {
 		}
 
 		public static void togglePaused() {
-			Ufx.toggle(context.gameClock().pausedPy);
+			Ufx.toggle(context.ui().pausedPy);
 			// TODO mute and unmute?
-			if (context.gameClock().pausedPy.get()) {
+			if (context.ui().pausedPy.get()) {
 				Game2d.Sounds.gameSounds(context.game().variant()).stopAll();
 			}
 		}
 
 		public static void oneSimulationStep() {
-			if (context.gameClock().pausedPy.get()) {
-				context.gameClock().executeSingleStep(true);
+			if (context.ui().pausedPy.get()) {
+				context.ui().executeSingleStep(true);
 			}
 		}
 
 		public static void tenSimulationSteps() {
-			if (context.gameClock().pausedPy.get()) {
-				context.gameClock().executeSteps(10, true);
+			if (context.ui().pausedPy.get()) {
+				context.ui().executeSteps(10, true);
 			}
 		}
 
 		public static void changeSimulationSpeed(int delta) {
-			int newFramerate = context.gameClock().targetFrameratePy.get() + delta;
+			int newFramerate = context.ui().targetFrameratePy.get() + delta;
 			if (newFramerate > 0 && newFramerate < 120) {
-				context.gameClock().targetFrameratePy.set(newFramerate);
+				context.ui().targetFrameratePy.set(newFramerate);
 				showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 			}
 		}
 
 		public static void resetSimulationSpeed() {
-			context.gameClock().targetFrameratePy.set(GameModel.FPS);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(context.gameClock().targetFrameratePy.get()));
+			context.ui().targetFrameratePy.set(GameModel.FPS);
+			showFlashMessageSeconds(0.75, "%dHz".formatted(context.ui().targetFrameratePy.get()));
 		}
 
 		public static void selectNextGameVariant() {
 			var gameVariant = context.game().variant().next();
 			context.gameController().selectGameVariant(gameVariant);
-			playHelpVoiceMessageAfterSeconds(4);
+			context.ui().playHelpVoiceMessageAfterSeconds(4);
 		}
 
 		public static void toggleAutopilot() {
@@ -484,7 +469,7 @@ public class Game2d extends Application {
 			var auto = context.gameController().isAutoControlled();
 			String message = Game2d.Texts.message(auto ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(message);
-			playVoiceMessage(auto ? Game2d.Sounds.VOICE_AUTOPILOT_ON : Game2d.Sounds.VOICE_AUTOPILOT_OFF);
+			context.ui().playVoiceMessage(auto ? Game2d.Sounds.VOICE_AUTOPILOT_ON : Game2d.Sounds.VOICE_AUTOPILOT_OFF);
 		}
 
 		public static void toggleImmunity() {
@@ -492,7 +477,7 @@ public class Game2d extends Application {
 			var immune = context.game().isImmune();
 			String message = Game2d.Texts.message(immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
-			playVoiceMessage(immune ? Game2d.Sounds.VOICE_IMMUNITY_ON : Game2d.Sounds.VOICE_IMMUNITY_OFF);
+			context.ui().playVoiceMessage(immune ? Game2d.Sounds.VOICE_IMMUNITY_ON : Game2d.Sounds.VOICE_IMMUNITY_OFF);
 		}
 
 		public static void startLevelTestMode() {
@@ -583,7 +568,7 @@ public class Game2d extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI2d(primaryStage, settings, gameController);
-		Actions.setContext(new ActionContext(ui, gameController, ui::currentGameScene, ui.flashMessageView()));
+		Actions.setContext(new ActionContext(ui));
 		Actions.reboot();
 		ui.start();
 		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),
