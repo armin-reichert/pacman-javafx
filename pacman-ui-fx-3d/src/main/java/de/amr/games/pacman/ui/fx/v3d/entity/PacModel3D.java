@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
-import java.net.URL;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
@@ -64,8 +63,8 @@ public class PacModel3D extends Model3D {
 		return meshView(pacShape, MESH_ID_PALATE);
 	}
 
-	public PacModel3D(URL url) {
-		super(url);
+	public PacModel3D() {
+		super(Game3d.Resources.Loader.urlFromRelPath("model3D/pacman.obj"));
 	}
 
 	/**

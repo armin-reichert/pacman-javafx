@@ -41,8 +41,9 @@ import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.util.ResourceMgr;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.v3d.entity.GhostModel3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.PacModel3D;
-import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.PelletModel3D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -67,16 +68,13 @@ import javafx.stage.Stage;
 public class Game3d extends Application {
 
 	public static class Resources {
+
 		public static final ResourceMgr Loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
 
 		public static final String KEY_NO_TEXTURE = "No Texture";
-		public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-		public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-		public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
-		public static final String MESH_ID_PELLET = "Fruit";
 		public static PacModel3D pacModel3D;
-		public static Model3D ghostModel3D;
-		public static Model3D pelletModel3D;
+		public static GhostModel3D ghostModel3D;
+		public static PelletModel3D pelletModel3D;
 		public static Background backgroundForScene3D;
 		private static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
@@ -87,9 +85,9 @@ public class Game3d extends Application {
 			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
 			floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
 
-			pacModel3D = new PacModel3D(Loader.urlFromRelPath("model3D/pacman.obj"));
-			ghostModel3D = new Model3D(Loader.urlFromRelPath("model3D/ghost.obj"));
-			pelletModel3D = new Model3D(Loader.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
+			pacModel3D = new PacModel3D();
+			ghostModel3D = new GhostModel3D();
+			pelletModel3D = new PelletModel3D();
 		}
 
 		private static PhongMaterial createFloorTexture(String textureBase, String ext) {

@@ -91,11 +91,11 @@ public class Model3D {
 		sb.append("Model content:\n");
 		sb.append("\tMeshes:\n");
 		for (var entry : meshes.entrySet()) {
-			sb.append("\t\t'%s': %s\n".formatted(entry.getKey(), entry.getValue()));
+			sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
 		}
 		sb.append("\tMaterials:\n");
 		for (var entry : materials.entrySet()) {
-			sb.append("\t\t'%s': %s\n".formatted(entry.getKey(), entry.getValue()));
+			sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
 		}
 		return sb.toString();
 	}
