@@ -348,7 +348,7 @@ public class PlayScene3D implements GameScene {
 				}
 				readyMessageText3D.setVisible(true);
 				// TODO take texts and picker from 3d-only resources
-				var readyMessage = inPercentOfCases(40) ? Game2d.Texts.randomReadyText(context.gameVariant()) : "READY!";
+				var readyMessage = inPercentOfCases(40) ? Game2d.Resources.randomReadyText(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -408,7 +408,7 @@ public class PlayScene3D implements GameScene {
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							//TODO use 3d-only resources
-							Game2d.Actions.showFlashMessageSeconds(2, Game2d.Texts.pickLevelCompleteMessage(level.number()));
+							Game2d.Actions.showFlashMessageSeconds(2, Game2d.Resources.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -422,7 +422,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			// TODO use 3d-only resources
-			Game2d.Actions.showFlashMessageSeconds(3, Game2d.Texts.pickGameOverMessage());
+			Game2d.Actions.showFlashMessageSeconds(3, Game2d.Resources.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}

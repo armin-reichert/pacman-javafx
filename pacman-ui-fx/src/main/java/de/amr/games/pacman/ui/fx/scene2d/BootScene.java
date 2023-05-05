@@ -31,7 +31,7 @@ import static de.amr.games.pacman.lib.Globals.v2i;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
@@ -65,7 +65,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void clearImage() {
-		ctx.setFill(Game2d.ArcadeTheme.BLACK);
+		ctx.setFill(ArcadeTheme.BLACK);
 		ctx.fillRect(0, 0, image.getWidth(), image.getHeight());
 	}
 
@@ -94,7 +94,7 @@ public class BootScene extends GameScene2D {
 
 	private void produceRandomHexCodesImage() {
 		clearImage();
-		ctx.setFill(Game2d.ArcadeTheme.PALE);
+		ctx.setFill(ArcadeTheme.PALE);
 		ctx.setFont(context.rendering2D().screenFont(TS));
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
@@ -136,7 +136,7 @@ public class BootScene extends GameScene2D {
 		var cellSize = 16;
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
-		ctx.setStroke(Game2d.ArcadeTheme.PALE);
+		ctx.setStroke(ArcadeTheme.PALE);
 		ctx.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
 			ctx.strokeLine(0, row * cellSize, SIZE_PX.x(), row * cellSize);

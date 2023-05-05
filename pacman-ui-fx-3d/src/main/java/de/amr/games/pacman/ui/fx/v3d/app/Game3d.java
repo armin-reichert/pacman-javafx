@@ -167,7 +167,7 @@ public class Game3d extends Application {
 		public static void togglePipVisibility() {
 			Ufx.toggle(Game3d.Properties.pipVisiblePy);
 			var msgKey = Game3d.Properties.pipVisiblePy.get() ? "pip_on" : "pip_off";
-			showFlashMessage(Game2d.Texts.message(msgKey));// TODO
+			showFlashMessage(Game2d.Resources.message(msgKey));// TODO
 		}
 
 		public static void toggleDashboardVisible() {
@@ -177,15 +177,15 @@ public class Game3d extends Application {
 		public static void selectNextPerspective() {
 			var nextPerspective = Game3d.Properties.d3_perspectivePy.get().next();
 			Game3d.Properties.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = Game2d.Texts.message(nextPerspective.name());
-			showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
+			String perspectiveName = Game2d.Resources.message(nextPerspective.name());
+			showFlashMessage(Game2d.Resources.message("camera_perspective", perspectiveName));
 		}
 
 		public static void selectPrevPerspective() {
 			var prevPerspective = Game3d.Properties.d3_perspectivePy.get().prev();
 			Game3d.Properties.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = Game2d.Texts.message(prevPerspective.name());
-			showFlashMessage(Game2d.Texts.message("camera_perspective", perspectiveName));
+			String perspectiveName = Game2d.Resources.message(prevPerspective.name());
+			showFlashMessage(Game2d.Resources.message("camera_perspective", perspectiveName));
 		}
 
 		public static void toggleDrawMode() {
@@ -210,7 +210,7 @@ public class Game3d extends Application {
 	public void init() throws Exception {
 		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		long start = System.nanoTime();
-		Game2d.loadResources();
+		Game2d.Resources.loadResources();
 		runAndMeasureTime("Loading textures", Textures::load);
 		runAndMeasureTime("Loading 3D models", Models3D::load);
 		Logger.info("Loading all resources took {} seconds.", (System.nanoTime() - start) / 1e9f);

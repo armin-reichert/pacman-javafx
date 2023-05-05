@@ -50,7 +50,7 @@ public class SectionAbout extends Section {
 		madeBy.setFill(Color.grayRgb(150));
 
 		var signature = new Text("Armin Reichert");
-		signature.setFont(Game2d.Fonts.pt(Game2d.Fonts.handwriting, 18));
+		signature.setFont(Game2d.Resources.font(Game2d.Resources.handwritingFont, 18));
 		signature.setFill(Color.grayRgb(225));
 
 		var tf = new TextFlow(madeBy, signature);

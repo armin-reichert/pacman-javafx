@@ -123,17 +123,17 @@ public class GameUI3d extends GameUI2d {
 			mainSceneRoot.setBackground(Game2d.ResMgr.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = pausedPy.get();
-		var dimensionMsg = Game2d.Texts.message(Game3d.Properties.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = Game2d.Resources.message(Game3d.Properties.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(Game2d.Texts.message(messageKey, dimensionMsg));// TODO
-			stage.getIcons().setAll(Game2d.Graphics.MsPacManGame.icon);
+			stage.setTitle(Game2d.Resources.message(messageKey, dimensionMsg));// TODO
+			stage.getIcons().setAll(Game2d.Resources.MsPacManGameGraphics.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(Game2d.Texts.message(messageKey, dimensionMsg));// TOOD
-			stage.getIcons().setAll(Game2d.Graphics.PacManGame.icon);
+			stage.setTitle(Game2d.Resources.message(messageKey, dimensionMsg));// TOOD
+			stage.getIcons().setAll(Game2d.Resources.PacManGameGraphics.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -179,7 +179,7 @@ public class GameUI3d extends GameUI2d {
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// TODO: put text into 3D UI
-			var message = Game2d.Texts.message(Game3d.Properties.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
+			var message = Game2d.Resources.message(Game3d.Properties.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
 			Game2d.Actions.showFlashMessage(message);
 		}
 	}

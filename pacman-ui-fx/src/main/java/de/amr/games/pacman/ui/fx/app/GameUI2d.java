@@ -227,13 +227,13 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(Game2d.Texts.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(Game2d.Graphics.MsPacManGame.icon);
+			stage.setTitle(Game2d.Resources.message(messageKey, "")); // TODO
+			stage.getIcons().setAll(Game2d.Resources.MsPacManGameGraphics.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(Game2d.Texts.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(Game2d.Graphics.PacManGame.icon);
+			stage.setTitle(Game2d.Resources.message(messageKey, "")); // TODO
+			stage.getIcons().setAll(Game2d.Resources.PacManGameGraphics.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -401,7 +401,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	public void playHelpVoiceMessageAfterSeconds(int seconds) {
-		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.Sounds.VOICE_HELP)).play();
+		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.Resources.VOICE_HELP)).play();
 	}
 
 }

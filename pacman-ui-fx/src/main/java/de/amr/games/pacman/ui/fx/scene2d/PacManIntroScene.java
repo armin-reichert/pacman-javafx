@@ -32,8 +32,8 @@ import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.app.Game2d.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import javafx.scene.canvas.GraphicsContext;
@@ -57,8 +57,8 @@ public class PacManIntroScene extends GameScene2D {
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		copyrightNote = addNote("A fan tribute to the original game", Game2d.Fonts.pt(Game2d.Fonts.handwriting, 10),
-				Color.gray(0.3), 1 * TS, 30 * TS);
+		copyrightNote = addNote("A fan tribute to the original game",
+				Game2d.Resources.font(Game2d.Resources.handwritingFont, 10), Color.gray(0.3), 1 * TS, 30 * TS);
 	}
 
 	@Override
@@ -149,9 +149,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = intro.context().leftTileX;
 		var font = r.screenFont(TS);
 		if (intro.context().titleVisible) {
-			drawText(g, "CHARACTER", Game2d.ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
-			drawText(g, "/", Game2d.ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
-			drawText(g, "NICKNAME", Game2d.ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
+			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
+			drawText(g, "/", ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
+			drawText(g, "NICKNAME", ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().ghostInfo[id].pictureVisible) {
