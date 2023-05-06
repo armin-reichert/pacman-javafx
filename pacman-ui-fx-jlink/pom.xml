@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.amr.games.pacman</groupId>
+	<artifactId>pacman-ui-fx-jlink</artifactId>
+	<version>1.0</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
+		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
+		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
+		<vs.java>18</vs.java>
+		<vs.javafx>18.0.2</vs.javafx>
+		<vs.tentackle>17.12.0.0</vs.tentackle>
+		<vs.tinylog>2.6.1</vs.tinylog>
+	</properties>
+
+	<packaging>jlink</packaging>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${vs.maven-compiler-plugin}</version>
+				<configuration>
+					<release>${vs.java}</release>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.tentackle</groupId>
+				<artifactId>tentackle-jlink-maven-plugin</artifactId>
+				<version>${vs.tentackle}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<mainModule>${mainModule}</mainModule>
+					<mainClass>${mainClass}</mainClass>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-core</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.amr.games.pacman</groupId>
+			<artifactId>pacman-ui-fx</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog-api</artifactId>
+			<version>${vs.tinylog}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.tinylog</groupId>
+			<artifactId>tinylog-impl</artifactId>
+			<version>${vs.tinylog}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${vs.javafx}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+			<version>${vs.javafx}</version>
+		</dependency>
+
+	</dependencies>
+</project>
