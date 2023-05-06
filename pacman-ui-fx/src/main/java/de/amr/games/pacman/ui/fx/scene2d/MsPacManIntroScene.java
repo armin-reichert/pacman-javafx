@@ -50,12 +50,12 @@ import javafx.scene.text.Text;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private Text copyrightNote;
+	private Text tributeNote;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		copyrightNote = addNote("A fan tribute to the original game",
-				Game2d.resources.font(Game2d.resources.handwritingFont, 10), Color.gray(0.3), 1 * TS, 27.5 * TS);
+		tributeNote = addNote("Ms Pac-Man tribute by Armin Reichert",
+				Game2d.resources.font(Game2d.resources.handwritingFont, 9), Color.gray(0.5), 0.5 * TS, 27.5 * TS);
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright(GraphicsContext g) {
-		copyrightNote.setVisible(true);
+		tributeNote.setVisible(true);
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawMsPacManCopyright(g, 29);
 	}

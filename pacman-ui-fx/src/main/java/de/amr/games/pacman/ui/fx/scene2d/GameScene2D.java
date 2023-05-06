@@ -121,6 +121,10 @@ public abstract class GameScene2D implements GameScene {
 		return false;
 	}
 
+	public Canvas canvas() {
+		return canvas;
+	}
+
 	/**
 	 * Resizes the game scene to the given height, keeping the aspect ratio.
 	 * 

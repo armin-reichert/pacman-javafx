@@ -68,11 +68,19 @@ import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 /**
@@ -221,8 +229,22 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	@Override
 	public void doRender() {
+//		renderActiveBackground();
 		flashMessageView.update();
 		currentGameScene.render();
+	}
+
+	private void renderActiveBackground() {
+		if (getUpdateCount() % 15 == 0 && currentGameScene instanceof PlayScene2D gameScene2D) {
+			SnapshotParameters p = new SnapshotParameters();
+			p.setTransform(new Scale(1.5, 1.5));
+			p.setViewport(new Rectangle2D(40, 200, 100, 100));
+			var snapshot = new WritableImage(28 * 8, 36 * 8);
+			gameScene2D.canvas().snapshot(p, snapshot);
+			var bgImage = new BackgroundImage(snapshot, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null,
+					new BackgroundSize(1.0, 1.0, true, true, false, true));
+			mainSceneRoot.setBackground(new Background(bgImage));
+		}
 	}
 
 	protected void updateStage() {
@@ -304,6 +326,10 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
+		if (!currentGameScene.is3D()) {
+			currentGameScene.fxSubScene().setScaleX(0.95);
+			currentGameScene.fxSubScene().setScaleY(0.95);
+		}
 		Logger.trace("Game scene changed to {}", currentGameScene);
 	}
 
@@ -410,5 +436,4 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public void playHelpVoiceMessageAfterSeconds(int seconds) {
 		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.resources.voiceExplainKeys)).play();
 	}
-
 }

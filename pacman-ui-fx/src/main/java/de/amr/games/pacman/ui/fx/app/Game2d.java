@@ -83,7 +83,7 @@ public class Game2d extends Application {
 	public static final ResourceManager RES = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 	//@formatter:off
-	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
+	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.rgb(10,10,100));
 	public static final BooleanProperty       showDebugInfoPy    = new SimpleBooleanProperty(false);
 	public static final IntegerProperty       simulationStepsPy  = new SimpleIntegerProperty(1);
 	//@formatter:on

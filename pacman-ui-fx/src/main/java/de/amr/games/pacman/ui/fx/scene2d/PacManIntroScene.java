@@ -53,19 +53,19 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
-	private Text copyrightNote;
+	private Text tributeNote;
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		copyrightNote = addNote("A fan tribute to the original game",
-				Game2d.resources.font(Game2d.resources.handwritingFont, 10), Color.gray(0.3), 1 * TS, 30 * TS);
+		tributeNote = addNote("Pac-Man tribute by Armin Reichert",
+				Game2d.resources.font(Game2d.resources.handwritingFont, 9), Color.gray(0.5), 1.5 * TS, 30 * TS);
 	}
 
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
-		copyrightNote.setVisible(false);
+		tributeNote.setVisible(false);
 
 		intro = new PacManIntro(context().gameController());
 		intro.changeState(State.START);
@@ -130,7 +130,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright(GraphicsContext g) {
-		copyrightNote.setVisible(true);
+		tributeNote.setVisible(true);
 		drawMidwayCopyright(g, 4, 32);
 	}
 
