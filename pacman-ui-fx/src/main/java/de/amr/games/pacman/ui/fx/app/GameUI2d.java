@@ -222,7 +222,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.resources.Loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));
+		mainSceneRoot.setBackground(Game2d.resources.loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));
 		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
@@ -401,7 +401,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	public void playHelpVoiceMessageAfterSeconds(int seconds) {
-		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.resources.VOICE_HELP)).play();
+		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.resources.voiceExplainKeys)).play();
 	}
 
 }
