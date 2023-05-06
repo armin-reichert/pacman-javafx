@@ -23,7 +23,7 @@ a full version where the play scene can be switched between 2D and 3D, even duri
 ### Without locally installed Java runtime (Windows):
 - Download the zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
-To build the executable by yourself on non-Windows systems, run the steps in the build script manually or create a shell script or whatever. Any help in creating executables for Mac-OS and Linux is appreciated!
+Any help in creating executables for Mac-OS and Linux is appreciated!
 
 ## How to build locally
 
