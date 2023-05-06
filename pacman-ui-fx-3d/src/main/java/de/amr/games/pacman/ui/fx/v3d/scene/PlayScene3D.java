@@ -410,7 +410,7 @@ public class PlayScene3D implements GameScene {
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							//TODO use 3d-only resources
-							Game2d.actions.showFlashMessageSeconds(2, Game2d.resources.pickLevelCompleteMessage(level.number()));
+							Game2d.actions.showFlashMessageSeconds(2, Game3d.resources.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -424,7 +424,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			// TODO use 3d-only resources
-			Game2d.actions.showFlashMessageSeconds(3, Game2d.resources.pickGameOverMessage());
+			Game2d.actions.showFlashMessageSeconds(3, Game3d.resources.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}

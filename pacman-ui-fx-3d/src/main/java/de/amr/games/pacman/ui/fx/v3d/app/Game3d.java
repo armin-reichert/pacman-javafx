@@ -23,20 +23,23 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.ActionContext;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
+import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.entity.GhostModel3D;
@@ -100,8 +103,17 @@ public class Game3d extends Application {
 		public final PelletModel3D pelletModel3D;
 		public final Background backgroundForScene3D;
 		public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+		public final ResourceBundle messages;
+		private final Picker<String> messagePickerCheating;
+		private final Picker<String> messagePickerLevelComplete;
+		private final Picker<String> messagePickerGameOver;
 
 		private Resources() {
+			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
+			messagePickerCheating = ResourceManager.createPicker(messages, "cheating");
+			messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
+			messagePickerGameOver = ResourceManager.createPicker(messages, "game.over");
+
 			backgroundForScene3D = Game3d.RES.imageBackground("graphics/sky.png");
 			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
@@ -111,6 +123,19 @@ public class Game3d extends Application {
 			pacModel3D = new PacModel3D();
 			ghostModel3D = new GhostModel3D();
 			pelletModel3D = new PelletModel3D();
+		}
+
+		public String pickCheatingMessage() {
+			return messagePickerCheating.next();
+		}
+
+		public String pickGameOverMessage() {
+			return messagePickerGameOver.next();
+		}
+
+		public String pickLevelCompleteMessage(int levelNumber) {
+			return "%s%n%n%s".formatted(messagePickerLevelComplete.next(),
+					fmtMessage(messages, "level_complete", levelNumber));
 		}
 
 		private PhongMaterial createFloorTexture(String textureBase, String ext) {
@@ -133,8 +158,8 @@ public class Game3d extends Application {
 
 		public void togglePipVisibility() {
 			Ufx.toggle(Game3d.pipVisiblePy);
-			var msgKey = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
-			Game2d.actions.showFlashMessage(Game2d.resources.message(msgKey));// TODO
+			var key = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
+			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, key));
 		}
 
 		public void toggleDashboardVisible() {
@@ -144,15 +169,15 @@ public class Game3d extends Application {
 		public void selectNextPerspective() {
 			var nextPerspective = Game3d.d3_perspectivePy.get().next();
 			Game3d.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = Game2d.resources.message(nextPerspective.name());
-			Game2d.actions.showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
+			String perspectiveName = fmtMessage(resources.messages, nextPerspective.name());
+			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, "camera_perspective", perspectiveName));
 		}
 
 		public void selectPrevPerspective() {
 			var prevPerspective = Game3d.d3_perspectivePy.get().prev();
 			Game3d.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = Game2d.resources.message(prevPerspective.name());
-			Game2d.actions.showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
+			String perspectiveName = fmtMessage(resources.messages, prevPerspective.name());
+			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, "camera_perspective", perspectiveName));
 		}
 
 		public void toggleDrawMode() {
@@ -176,21 +201,20 @@ public class Game3d extends Application {
 	private GameUI3d ui;
 
 	@Override
-	public void init() throws Exception {
+	public void start(Stage primaryStage) throws IOException {
 		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
+
 		long start = System.nanoTime();
 		Game2d.resources = new Game2d.Resources();
 		Game3d.resources = new Game3d.Resources();
-		Logger.info("Game initialisation took {} seconds.", (System.nanoTime() - start) / 1e9f);
-	}
+		Logger.info("Loading resources: {} seconds.", (System.nanoTime() - start) / 1e9f);
 
-	@Override
-	public void start(Stage primaryStage) throws IOException {
-		var gameController = new GameController(settings.variant);
-		ui = new GameUI3d(primaryStage, settings, gameController);
+		ui = new GameUI3d(primaryStage, settings);
 
-		var actionContext = new ActionContext(ui);
-		Game2d.actions.init(actionContext);
+		Game3d.actions = new Game3d.Actions();
+		Game2d.actions = new Game2d.Actions(new ActionContext(ui));
+
+		ui.dashboard().init(); // must be initialized after actions
 
 		Game2d.actions.reboot();
 		ui.start();

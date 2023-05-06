@@ -24,10 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.lib.Globals.RND;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -36,7 +35,6 @@ import java.util.stream.IntStream;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
@@ -46,7 +44,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
-import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.application.Application;
@@ -121,10 +118,7 @@ public class Game2d extends Application {
 		public final Font arcadeFont;
 		public final Font handwritingFont;
 
-		private ResourceBundle messageBundle;
-		private Picker<String> messagePickerCheating;
-		private Picker<String> messagePickerLevelComplete;
-		private Picker<String> messagePickerGameOver;
+		public final ResourceBundle messages;
 
 		public final AudioClip voiceExplainKeys;
 		public final AudioClip voiceAutopilotOff;
@@ -139,12 +133,12 @@ public class Game2d extends Application {
 		public final GameSounds gameSoundsPacMan;
 
 		public Resources() {
+
 			// Fonts
 			arcadeFont = RES.font("fonts/emulogic.ttf", 8);
 			handwritingFont = RES.font("fonts/RockSalt-Regular.ttf", 8);
 
 			// Graphics
-
 			graphicsMsPacMan = new MsPacManGameGraphics();
 			graphicsMsPacMan.icon = RES.image("graphics/icons/mspacman.png");
 			graphicsMsPacMan.spritesheet = new Spritesheet(RES.image("graphics/mspacman/sprites.png"), 16);
@@ -162,10 +156,7 @@ public class Game2d extends Application {
 			graphicsPacMan.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
 
 			// Texts
-			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
-			messagePickerCheating = ResourceManager.createPicker(messageBundle, "cheating");
-			messagePickerLevelComplete = ResourceManager.createPicker(messageBundle, "level.complete");
-			messagePickerGameOver = ResourceManager.createPicker(messageBundle, "game.over");
+			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
 			// Sound
 			voiceExplainKeys = RES.audioClip("sound/voice/press-key.mp3");
@@ -227,35 +218,9 @@ public class Game2d extends Application {
 		}
 
 		/**
-		 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
-		 * messages resource bundle.
-		 * 
-		 * @param keyPattern message key pattern
-		 * @param args       arguments merged into key pattern
-		 * @return message text for composed key or string indicating missing text
+		 * @param variant game variant
+		 * @return text displayed in READY state
 		 */
-		public String message(String keyPattern, Object... args) {
-			try {
-				var pattern = messageBundle.getString(keyPattern);
-				return MessageFormat.format(pattern, args);
-			} catch (Exception x) {
-				Logger.error("No text resource found for key '{}'", keyPattern);
-				return "missing{%s}".formatted(keyPattern);
-			}
-		}
-
-		public String pickCheatingMessage() {
-			return messagePickerCheating.next();
-		}
-
-		public String pickGameOverMessage() {
-			return messagePickerGameOver.next();
-		}
-
-		public String pickLevelCompleteMessage(int levelNumber) {
-			return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), message("level_complete", levelNumber));
-		}
-
 		public String randomReadyText(GameVariant variant) {
 			return "READY!";
 		}
@@ -271,9 +236,9 @@ public class Game2d extends Application {
 
 	public static class Actions {
 
-		private ActionContext context;
+		private final ActionContext context;
 
-		public void init(ActionContext context) {
+		public Actions(ActionContext context) {
 			this.context = context;
 		}
 
@@ -381,7 +346,7 @@ public class Game2d extends Application {
 		public void toggleAutopilot() {
 			context.gameController().toggleAutoControlled();
 			var auto = context.gameController().isAutoControlled();
-			String message = resources.message(auto ? "autopilot_on" : "autopilot_off");
+			String message = fmtMessage(resources.messages, auto ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(message);
 			context.ui().playVoiceMessage(auto ? resources.voiceAutopilotOn : resources.voiceAutopilotOff);
 		}
@@ -389,7 +354,7 @@ public class Game2d extends Application {
 		public void toggleImmunity() {
 			context.game().setImmune(!context.game().isImmune());
 			var immune = context.game().isImmune();
-			String message = resources.message(immune ? "player_immunity_on" : "player_immunity_off");
+			String message = fmtMessage(resources.messages, immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
 			context.ui().playVoiceMessage(immune ? resources.voiceImmunityOn : resources.voiceImmunityOff);
 		}
@@ -403,14 +368,11 @@ public class Game2d extends Application {
 
 		public void cheatAddLives(int numLives) {
 			context.game().setLives(numLives + context.game().lives());
-			showFlashMessage(resources.message("cheat_add_lives", context.game().lives()));
+			showFlashMessage(fmtMessage(resources.messages, "cheat_add_lives", context.game().lives()));
 		}
 
 		public void cheatEatAllPellets() {
 			context.gameController().cheatEatAllPellets();
-			if (RND.nextDouble() < 0.1) {
-				showFlashMessage(resources.pickCheatingMessage());
-			}
 		}
 
 		public void cheatEnterNextLevel() {
@@ -419,9 +381,6 @@ public class Game2d extends Application {
 
 		public void cheatKillAllEatableGhosts() {
 			context.gameController().cheatKillAllEatableGhosts();
-			if (RND.nextDouble() < 0.1) {
-				showFlashMessage(resources.pickCheatingMessage());
-			}
 		}
 	}
 
@@ -475,17 +434,15 @@ public class Game2d extends Application {
 	private GameUI2d ui;
 
 	@Override
-	public void init() throws Exception {
-		actions = new Actions();
-		resources = new Resources();
-	}
-
-	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
-		var gameController = new GameController(settings.variant);
-		ui = new GameUI2d(primaryStage, settings, gameController);
-		actions.init(new ActionContext(ui));
+
+		resources = new Resources();
+		ui = new GameUI2d(primaryStage, settings);
+
+		// TODO this is crude
+		actions = new Actions(new ActionContext(ui));
+
 		actions.reboot();
 		ui.start();
 		Logger.info("Game started. Locale: {} Clock speed: {} Hz Settings: {}", Locale.getDefault(),

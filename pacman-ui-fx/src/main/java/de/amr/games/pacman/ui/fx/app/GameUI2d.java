@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -103,13 +104,12 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
 
-	public GameUI2d(Stage stage, Settings settings, GameController gameController) {
+	public GameUI2d(Stage stage, Settings settings) {
 		checkNotNull(stage);
 		checkNotNull(settings);
-		checkNotNull(gameController);
 
 		this.stage = stage;
-		this.gameController = gameController;
+		this.gameController = new GameController(settings.variant);
 
 		configureRenderers(settings);
 		createMsPacManSceneChoices();
@@ -168,6 +168,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		sceneChoicesMap.put(GameVariant.MS_PACMAN, scenes);
 	}
 
+	/**
+	 * @param settings application settings
+	 */
 	protected void configureRenderers(Settings settings) {
 		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
 		renderers.put(GameVariant.PACMAN, new PacManGameRenderer());
@@ -228,18 +231,21 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(Game2d.resources.message(messageKey, "")); // TODO
+			stage.setTitle(fmtMessage(Game2d.resources.messages, messageKey, ""));
 			stage.getIcons().setAll(Game2d.resources.graphicsMsPacMan.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(Game2d.resources.message(messageKey, "")); // TODO
+			stage.setTitle(fmtMessage(Game2d.resources.messages, messageKey, ""));
 			stage.getIcons().setAll(Game2d.resources.graphicsPacMan.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
 	}
 
+	/**
+	 * @param settings application settings
+	 */
 	protected void initProperties(Settings settings) {
 		Game2d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 	}

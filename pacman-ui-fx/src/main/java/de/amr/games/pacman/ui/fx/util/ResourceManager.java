@@ -27,6 +27,7 @@ package de.amr.games.pacman.ui.fx.util;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
@@ -44,6 +45,25 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class ResourceManager {
+
+	/**
+	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
+	 * messages resource bundle.
+	 * 
+	 * @param messageBundle message resource bundle
+	 * @param keyPattern    message key pattern
+	 * @param args          arguments merged into key pattern
+	 * @return message text for composed key or string indicating missing text
+	 */
+	public static String fmtMessage(ResourceBundle messageBundle, String keyPattern, Object... args) {
+		try {
+			var pattern = messageBundle.getString(keyPattern);
+			return MessageFormat.format(pattern, args);
+		} catch (Exception x) {
+			Logger.error("No text resource found for key '{}'", keyPattern);
+			return "missing{%s}".formatted(keyPattern);
+		}
+	}
 
 	public static Background colorBackground(Color color) {
 		checkNotNull(color);
@@ -125,6 +145,10 @@ public class ResourceManager {
 		return new Image(url.toExternalForm());
 	}
 
+	/**
+	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * @return background displaying image loaded from resource addressed by this path.
+	 */
 	public Background imageBackground(String relPath) {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
