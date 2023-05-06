@@ -132,17 +132,17 @@ public class GameLevel3D {
 		root.getChildren().add(world3D.getRoot());
 
 		// connect to environment
-		pac3D.lightedPy.bind(Game3d.Properties.d3_pacLightedPy);
-		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(Game3d.Properties.d3_drawModePy);
-		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(Game3d.Properties.d3_drawModePy);
-		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(Game3d.Properties.d3_drawModePy);
-		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(Game3d.Properties.d3_drawModePy);
-		world3D.drawModePy.bind(Game3d.Properties.d3_drawModePy);
-		world3D.floorColorPy.bind(Game3d.Properties.d3_floorColorPy);
-		world3D.floorTexturePy.bind(Game3d.Properties.d3_floorTexturePy);
-		world3D.wallHeightPy.bind(Game3d.Properties.d3_mazeWallHeightPy);
-		world3D.wallThicknessPy.bind(Game3d.Properties.d3_mazeWallThicknessPy);
-		livesCounter3D.drawModePy.bind(Game3d.Properties.d3_drawModePy);
+		pac3D.lightedPy.bind(Game3d.d3_pacLightedPy);
+		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(Game3d.d3_drawModePy);
+		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(Game3d.d3_drawModePy);
+		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(Game3d.d3_drawModePy);
+		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(Game3d.d3_drawModePy);
+		world3D.drawModePy.bind(Game3d.d3_drawModePy);
+		world3D.floorColorPy.bind(Game3d.d3_floorColorPy);
+		world3D.floorTexturePy.bind(Game3d.d3_floorTexturePy);
+		world3D.wallHeightPy.bind(Game3d.d3_mazeWallHeightPy);
+		world3D.wallThicknessPy.bind(Game3d.d3_mazeWallThicknessPy);
+		livesCounter3D.drawModePy.bind(Game3d.d3_drawModePy);
 	}
 
 	public void replaceBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
@@ -156,14 +156,14 @@ public class GameLevel3D {
 	private Pac3D createPacMan3D(PacManColoring colors) {
 		var node = Game3d.resources.pacModel3D.createPacManNode(9.0, colors);
 		var pacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
-		pacMan3D.drawModePy.bind(Game3d.Properties.d3_drawModePy);
+		pacMan3D.drawModePy.bind(Game3d.d3_drawModePy);
 		return pacMan3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
 		var node = Game3d.resources.pacModel3D.createMsPacManNode(9.0, colors);
 		var msPacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
-		msPacMan3D.drawModePy.bind(Game3d.Properties.d3_drawModePy);
+		msPacMan3D.drawModePy.bind(Game3d.d3_drawModePy);
 		return msPacMan3D;
 	}
 
@@ -229,7 +229,7 @@ public class GameLevel3D {
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
 		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
 		var eatenAnimation = eatable3D.getEatenAnimation();
-		if (eatenAnimation.isPresent() && Game3d.Properties.d3_energizerExplodesPy.get()) {
+		if (eatenAnimation.isPresent() && Game3d.d3_energizerExplodesPy.get()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
 			delayHiding.play();

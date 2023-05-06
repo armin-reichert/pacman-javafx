@@ -222,7 +222,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.resources.loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));
+		mainSceneRoot.setBackground(Game2d.resources.loader.colorBackground(Game2d.mainSceneBgColorPy.get()));
 		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
@@ -240,7 +240,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void initProperties(Settings settings) {
-		Game2d.Properties.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
+		Game2d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
 
 	/**
@@ -313,7 +313,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		} else if (Keyboard.pressed(Game2d.Keys.BOOT)) {
 			Game2d.actions.reboot();
 		} else if (Keyboard.pressed(Game2d.Keys.DEBUG_INFO)) {
-			Ufx.toggle(Game2d.Properties.showDebugInfoPy);
+			Ufx.toggle(Game2d.showDebugInfoPy);
 		} else if (Keyboard.pressed(Game2d.Keys.IMMUNITIY)) {
 			Game2d.actions.toggleImmunity();
 		} else if (Keyboard.pressed(Game2d.Keys.PAUSE)) {

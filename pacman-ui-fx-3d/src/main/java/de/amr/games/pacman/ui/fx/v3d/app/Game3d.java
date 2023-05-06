@@ -64,8 +64,32 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class Game3d extends Application {
+	//@formatter:off
+	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
+	public static final BooleanProperty             dashboardVisiblePy      = new SimpleBooleanProperty(false);
+
+	public static final BooleanProperty             pipVisiblePy            = new SimpleBooleanProperty(false);
+	public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
+	public static final DoubleProperty              pipHeightPy             = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
+
+	public static final BooleanProperty             d3_axesVisiblePy        = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<DrawMode>    d3_drawModePy           = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty             d3_enabledPy            = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Color>       d3_floorColorPy         = new SimpleObjectProperty<>(Color.grayRgb(0x60));
+	public static final StringProperty              d3_floorTexturePy       = new SimpleStringProperty("Knobs & Bumps");
+	public static final BooleanProperty             d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Color>       d3_lightColorPy         = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+	public static final DoubleProperty              d3_mazeWallHeightPy     = new SimpleDoubleProperty(1.75);
+	public static final DoubleProperty              d3_mazeWallThicknessPy  = new SimpleDoubleProperty(1.25);
+	public static final BooleanProperty             d3_pacLightedPy         = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Perspective> d3_perspectivePy        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty             d3_energizerExplodesPy  = new SimpleBooleanProperty(true);
+	// experimental, not used yet 
+	public static final BooleanProperty             d3_foodOscillationPy    = new SimpleBooleanProperty(false);
+	//@formatter:on
 
 	public static class Resources {
+
 		public static final String KEY_NO_TEXTURE = "No Texture";
 
 		public final ResourceMgr loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
@@ -90,7 +114,7 @@ public class Game3d extends Application {
 
 		private PhongMaterial createFloorTexture(String textureBase, String ext) {
 			var material = textureMaterial(textureBase, ext, null, null);
-			material.diffuseColorProperty().bind(Game3d.Properties.d3_floorColorPy);
+			material.diffuseColorProperty().bind(Game3d.d3_floorColorPy);
 			return material;
 		}
 
@@ -104,61 +128,34 @@ public class Game3d extends Application {
 		}
 	}
 
-	public static class Properties {
-	//@formatter:off
-		public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
-		public static final BooleanProperty             dashboardVisiblePy      = new SimpleBooleanProperty(false);
-	
-		public static final BooleanProperty             pipVisiblePy            = new SimpleBooleanProperty(false);
-		public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
-		public static final DoubleProperty              pipHeightPy             = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
-	
-		public static final BooleanProperty             d3_axesVisiblePy        = new SimpleBooleanProperty(false);
-		public static final ObjectProperty<DrawMode>    d3_drawModePy           = new SimpleObjectProperty<>(DrawMode.FILL);
-		public static final BooleanProperty             d3_enabledPy            = new SimpleBooleanProperty(true);
-		public static final ObjectProperty<Color>       d3_floorColorPy         = new SimpleObjectProperty<>(Color.grayRgb(0x60));
-		public static final StringProperty              d3_floorTexturePy       = new SimpleStringProperty("Knobs & Bumps");
-		public static final BooleanProperty             d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
-		public static final ObjectProperty<Color>       d3_lightColorPy         = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-		public static final DoubleProperty              d3_mazeWallHeightPy     = new SimpleDoubleProperty(1.75);
-		public static final DoubleProperty              d3_mazeWallThicknessPy  = new SimpleDoubleProperty(1.25);
-		public static final BooleanProperty             d3_pacLightedPy         = new SimpleBooleanProperty(true);
-		public static final ObjectProperty<Perspective> d3_perspectivePy        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-		public static final BooleanProperty             d3_energizerExplodesPy  = new SimpleBooleanProperty(true);
-		// experimental, not used yet 
-		public static final BooleanProperty             d3_foodOscillationPy    = new SimpleBooleanProperty(false);
-  //@formatter:on
-	}
-
 	public static class Actions extends Game2d.Actions {
 
 		public void togglePipVisibility() {
-			Ufx.toggle(Game3d.Properties.pipVisiblePy);
-			var msgKey = Game3d.Properties.pipVisiblePy.get() ? "pip_on" : "pip_off";
+			Ufx.toggle(Game3d.pipVisiblePy);
+			var msgKey = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
 			showFlashMessage(Game2d.resources.message(msgKey));// TODO
 		}
 
 		public void toggleDashboardVisible() {
-			Ufx.toggle(Game3d.Properties.dashboardVisiblePy);
+			Ufx.toggle(Game3d.dashboardVisiblePy);
 		}
 
 		public void selectNextPerspective() {
-			var nextPerspective = Game3d.Properties.d3_perspectivePy.get().next();
-			Game3d.Properties.d3_perspectivePy.set(nextPerspective);
+			var nextPerspective = Game3d.d3_perspectivePy.get().next();
+			Game3d.d3_perspectivePy.set(nextPerspective);
 			String perspectiveName = Game2d.resources.message(nextPerspective.name());
 			showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
 		}
 
 		public void selectPrevPerspective() {
-			var prevPerspective = Game3d.Properties.d3_perspectivePy.get().prev();
-			Game3d.Properties.d3_perspectivePy.set(prevPerspective);
+			var prevPerspective = Game3d.d3_perspectivePy.get().prev();
+			Game3d.d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = Game2d.resources.message(prevPerspective.name());
 			showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
 		}
 
 		public void toggleDrawMode() {
-			Game3d.Properties.d3_drawModePy
-					.set(Game3d.Properties.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+			Game3d.d3_drawModePy.set(Game3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 		}
 	}
 

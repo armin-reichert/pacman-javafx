@@ -111,10 +111,10 @@ public class PlayScene3D implements GameScene {
 		camControllerMap.put(Perspective.TOTAL, new CamTotal());
 
 		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(Game3d.Properties.d3_axesVisiblePy);
+		coordSystem.visibleProperty().bind(Game3d.d3_axesVisiblePy);
 
 		var ambientLight = new AmbientLight();
-		ambientLight.colorProperty().bind(Game3d.Properties.d3_lightColorPy);
+		ambientLight.colorProperty().bind(Game3d.d3_lightColorPy);
 
 		root = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 
@@ -136,7 +136,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void init() {
 		resetReadyMessageText3D();
-		perspectivePy.bind(Game3d.Properties.d3_perspectivePy);
+		perspectivePy.bind(Game3d.d3_perspectivePy);
 		context.level().ifPresent(this::replaceGameLevel3D);
 		Logger.info("Initialized 3D play scene");
 	}
@@ -218,9 +218,9 @@ public class PlayScene3D implements GameScene {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
 		}
 
-		if (Game3d.Properties.d3_floorTextureRandomPy.get()) {
+		if (Game3d.d3_floorTextureRandomPy.get()) {
 			var names = Game3d.resources.floorTexturesByName.keySet().toArray(String[]::new);
-			Game3d.Properties.d3_floorTexturePy.set(names[randomInt(0, names.length)]);
+			Game3d.d3_floorTexturePy.set(names[randomInt(0, names.length)]);
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}
@@ -345,7 +345,7 @@ public class PlayScene3D implements GameScene {
 			context.level().ifPresent(level -> {
 				level3D.pac3D().init(level);
 				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
-				if (Game3d.Properties.d3_foodOscillationPy.get()) {
+				if (Game3d.d3_foodOscillationPy.get()) {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);
@@ -471,7 +471,7 @@ public class PlayScene3D implements GameScene {
 			}),
 			rotation,
 			Ufx.afterSeconds(0.5, () -> context.sounds().play(AudioClipID.SWEEP)),
-			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Game3d.Properties.d3_perspectivePy))
+			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Game3d.d3_perspectivePy))
 		);
 		//@formatter:on
 	}
@@ -480,14 +480,14 @@ public class PlayScene3D implements GameScene {
 		if (level.numFlashes == 0) {
 			return Ufx.pause(1.0);
 		}
-		double wallHeight = Game3d.Properties.d3_mazeWallHeightPy.get();
+		double wallHeight = Game3d.d3_mazeWallHeightPy.get();
 		var animation = new SinusCurveAnimation(level.numFlashes);
 		animation.setAmplitude(wallHeight);
 		animation.elongationPy.set(level3D.world3D().wallHeightPy.get());
 		level3D.world3D().wallHeightPy.bind(animation.elongationPy);
 		animation.setOnFinished(e -> {
-			level3D.world3D().wallHeightPy.bind(Game3d.Properties.d3_mazeWallHeightPy);
-			Game3d.Properties.d3_mazeWallHeightPy.set(wallHeight);
+			level3D.world3D().wallHeightPy.bind(Game3d.d3_mazeWallHeightPy);
+			Game3d.d3_mazeWallHeightPy.set(wallHeight);
 		});
 		return animation;
 	}

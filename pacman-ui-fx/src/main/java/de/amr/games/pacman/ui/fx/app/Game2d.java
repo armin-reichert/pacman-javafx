@@ -83,6 +83,12 @@ import javafx.stage.Stage;
  */
 public class Game2d extends Application {
 
+	//@formatter:off
+	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
+	public static final BooleanProperty       showDebugInfoPy    = new SimpleBooleanProperty(false);
+	public static final IntegerProperty       simulationStepsPy  = new SimpleIntegerProperty(1);
+	//@formatter:on
+
 	public static class Resources {
 
 		public final ResourceMgr loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/", Game2d.class);
@@ -256,14 +262,6 @@ public class Game2d extends Application {
 			default -> throw new IllegalGameVariantException(variant);
 			};
 		}
-	}
-
-	public static class Properties {
-	//@formatter:off
-		public static final ObjectProperty<Color> mainSceneBgColorPy       = new SimpleObjectProperty<>(Color.web("0x334bd3"));
-		public static final BooleanProperty       showDebugInfoPy          = new SimpleBooleanProperty(false);
-		public static final IntegerProperty       simulationStepsPy        = new SimpleIntegerProperty(1);
-	//@formatter:on
 	}
 
 	public static class Actions {
