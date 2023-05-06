@@ -428,23 +428,38 @@ public class Game2d extends Application {
 		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}
 
+	/**
+	 * Static access to actions of 2D game.
+	 */
 	public static Actions actions;
+
+	/**
+	 * Static access to resources of 2D game.
+	 */
 	public static Resources resources;
 
 	private GameUI2d ui;
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+
+		// Convert command-line arguments (if any) into application settings
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 
+		// Load resources
+		long start = System.nanoTime();
 		resources = new Resources();
+		Logger.info("Loading resources: {} seconds.", (System.nanoTime() - start) / 1e9f);
+
 		ui = new GameUI2d(primaryStage, settings);
 
-		// TODO this is crude
+		// Some actions operate on on UI, thus must be created after UI
 		actions = new Actions(new ActionContext(ui));
 
+		// Initialize game state and start game clock
 		actions.reboot();
 		ui.start();
+
 		Logger.info("Game started. Locale: {} Clock speed: {} Hz Settings: {}", Locale.getDefault(),
 				ui.targetFrameratePy.get(), settings);
 	}

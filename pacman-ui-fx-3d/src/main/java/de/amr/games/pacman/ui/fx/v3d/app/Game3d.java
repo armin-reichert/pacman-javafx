@@ -194,16 +194,25 @@ public class Game3d extends Application {
 		public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 	}
 
+	/**
+	 * Static access to actions of 3D game.
+	 */
 	public static Actions actions;
+
+	/**
+	 * Static access to resources of 3D game.
+	 */
 	public static Resources resources;
 
-	private Settings settings; // TODO
 	private GameUI3d ui;
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 
+		// Convert command-line arguments (if any) into application settings
+		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
+
+		// Load 2D and 3D resources
 		long start = System.nanoTime();
 		Game2d.resources = new Game2d.Resources();
 		Game3d.resources = new Game3d.Resources();
@@ -211,13 +220,17 @@ public class Game3d extends Application {
 
 		ui = new GameUI3d(primaryStage, settings);
 
+		// Some actions operate on on UI, thus must be created after UI
 		Game3d.actions = new Game3d.Actions();
 		Game2d.actions = new Game2d.Actions(new ActionContext(ui));
 
-		ui.dashboard().init(); // must be initialized after actions
+		// Dashboard depends on actions
+		ui.dashboard().init();
 
+		// Initialize game state and start game clock
 		Game2d.actions.reboot();
 		ui.start();
+
 		Logger.info("Game started. Locale: {} Clock speed: {} Hz Settings: {}", Locale.getDefault(),
 				ui.targetFrameratePy.get(), settings);
 	}
