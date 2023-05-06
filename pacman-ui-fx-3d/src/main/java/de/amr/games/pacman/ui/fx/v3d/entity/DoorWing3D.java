@@ -27,7 +27,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -58,8 +58,8 @@ public class DoorWing3D {
 		checkTileNotNull(tile);
 		checkNotNull(color);
 
-		doorClosedMaterial = Game3d.resources.loader.coloredMaterial(color); // TODO
-		doorOpenMaterial = Game3d.resources.loader.coloredMaterial(Game3d.resources.loader.color(Color.gray(0.8), 0.1)); // TODO
+		doorClosedMaterial = ResourceManager.coloredMaterial(color); // TODO
+		doorOpenMaterial = ResourceManager.coloredMaterial(ResourceManager.color(Color.gray(0.8), 0.1)); // TODO
 
 		for (int i = 0; i < 2; ++i) {
 			var vbar = new Cylinder(1, 8);

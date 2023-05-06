@@ -38,6 +38,6 @@ public class GhostModel3D extends Model3D {
 	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
 	public GhostModel3D() {
-		super(Game3d.resources.loader.urlFromRelPath("model3D/ghost.obj"));
+		super(Game3d.RESOURCE_MANAGER.urlFromRelPath("model3D/ghost.obj"));
 	}
 }

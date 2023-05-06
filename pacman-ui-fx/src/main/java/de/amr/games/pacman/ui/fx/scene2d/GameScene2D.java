@@ -37,6 +37,7 @@ import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -90,7 +91,7 @@ public abstract class GameScene2D implements GameScene {
 		container.getTransforms().add(scaling);
 
 		// This avoids the white vertical line left of the embedded 2D game scene
-		container.setBackground(Game2d.resources.loader.colorBackground(Color.BLACK)); // TODO
+		container.setBackground(ResourceManager.colorBackground(Color.BLACK)); // TODO
 
 		infoVisiblePy.bind(Game2d.showDebugInfoPy);
 	}

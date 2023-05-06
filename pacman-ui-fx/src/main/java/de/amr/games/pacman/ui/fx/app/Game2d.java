@@ -47,7 +47,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.Picker;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -66,7 +66,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
- * This is the entry point of the Pac-Man and Ms. Pac-Man games.
+ * This is 2D-only version of the Pac-Man and Ms. Pac-Man games.
  * 
  * <p>
  * The application is structured according to the MVC (model-view-controller) design pattern. The model layer consists
@@ -83,6 +83,8 @@ import javafx.stage.Stage;
  */
 public class Game2d extends Application {
 
+	public static final ResourceManager RESOURCE_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
+
 	//@formatter:off
 	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
 	public static final BooleanProperty       showDebugInfoPy    = new SimpleBooleanProperty(false);
@@ -90,8 +92,6 @@ public class Game2d extends Application {
 	//@formatter:on
 
 	public static class Resources {
-
-		public final ResourceMgr loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 		public static class PacManGameGraphics {
 			public Image icon;
@@ -126,11 +126,11 @@ public class Game2d extends Application {
 		private Picker<String> messagePickerLevelComplete;
 		private Picker<String> messagePickerGameOver;
 
-		public final AudioClip voiceExplainKeys = loader.audioClip("sound/voice/press-key.mp3");
-		public final AudioClip voiceAutopilotOff = loader.audioClip("sound/voice/autopilot-off.mp3");
-		public final AudioClip voiceAutopilotOn = loader.audioClip("sound/voice/autopilot-on.mp3");
-		public final AudioClip voiceImmunityOff = loader.audioClip("sound/voice/immunity-off.mp3");
-		public final AudioClip voiceImmunityOn = loader.audioClip("sound/voice/immunity-on.mp3");
+		public final AudioClip voiceExplainKeys = RESOURCE_MANAGER.audioClip("sound/voice/press-key.mp3");
+		public final AudioClip voiceAutopilotOff = RESOURCE_MANAGER.audioClip("sound/voice/autopilot-off.mp3");
+		public final AudioClip voiceAutopilotOn = RESOURCE_MANAGER.audioClip("sound/voice/autopilot-on.mp3");
+		public final AudioClip voiceImmunityOff = RESOURCE_MANAGER.audioClip("sound/voice/immunity-off.mp3");
+		public final AudioClip voiceImmunityOn = RESOURCE_MANAGER.audioClip("sound/voice/immunity-on.mp3");
 
 		public PacManGameGraphics graphicsPacMan;
 		public GameSounds gameSoundsMsPacMan;
@@ -140,33 +140,33 @@ public class Game2d extends Application {
 
 		public void init() {
 			// Fonts
-			arcadeFont = loader.font("fonts/emulogic.ttf", 8);
-			handwritingFont = loader.font("fonts/RockSalt-Regular.ttf", 8);
+			arcadeFont = RESOURCE_MANAGER.font("fonts/emulogic.ttf", 8);
+			handwritingFont = RESOURCE_MANAGER.font("fonts/RockSalt-Regular.ttf", 8);
 
 			// Graphics
 			graphicsPacMan = new PacManGameGraphics();
-			graphicsPacMan.icon = loader.image("graphics/icons/pacman.png");
-			graphicsPacMan.spritesheet = new Spritesheet(loader.image("graphics/pacman/sprites.png"), 16);
-			graphicsPacMan.fullMaze = loader.image("graphics/pacman/maze_full.png");
-			graphicsPacMan.emptyMaze = loader.image("graphics/pacman/maze_empty.png");
-			graphicsPacMan.flashingMaze = loader.image("graphics/pacman/maze_empty_flashing.png");
+			graphicsPacMan.icon = RESOURCE_MANAGER.image("graphics/icons/pacman.png");
+			graphicsPacMan.spritesheet = new Spritesheet(RESOURCE_MANAGER.image("graphics/pacman/sprites.png"), 16);
+			graphicsPacMan.fullMaze = RESOURCE_MANAGER.image("graphics/pacman/maze_full.png");
+			graphicsPacMan.emptyMaze = RESOURCE_MANAGER.image("graphics/pacman/maze_empty.png");
+			graphicsPacMan.flashingMaze = RESOURCE_MANAGER.image("graphics/pacman/maze_empty_flashing.png");
 
 			graphicsMsPacMan = new MsPacManGameGraphics();
-			graphicsMsPacMan.icon = loader.image("graphics/icons/mspacman.png");
-			graphicsMsPacMan.spritesheet = new Spritesheet(loader.image("graphics/mspacman/sprites.png"), 16);
+			graphicsMsPacMan.icon = RESOURCE_MANAGER.image("graphics/icons/mspacman.png");
+			graphicsMsPacMan.spritesheet = new Spritesheet(RESOURCE_MANAGER.image("graphics/mspacman/sprites.png"), 16);
 
 			graphicsMsPacMan.emptyFlashingMaze = IntStream.range(0, 6)
 					.mapToObj(
 							i -> MsPacManGameGraphics.flashing(graphicsMsPacMan.emptyMaze(i), ArcadeTheme.MS_PACMAN_MAZE_COLORS[i]))
 					.toArray(Image[]::new);
 
-			graphicsMsPacMan.logo = loader.image("graphics/mspacman/midway.png");
+			graphicsMsPacMan.logo = RESOURCE_MANAGER.image("graphics/mspacman/midway.png");
 
 			// Texts
 			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
-			messagePickerCheating = loader.createPicker(messageBundle, "cheating");
-			messagePickerLevelComplete = loader.createPicker(messageBundle, "level.complete");
-			messagePickerGameOver = loader.createPicker(messageBundle, "game.over");
+			messagePickerCheating = ResourceManager.createPicker(messageBundle, "cheating");
+			messagePickerLevelComplete = ResourceManager.createPicker(messageBundle, "level.complete");
+			messagePickerGameOver = ResourceManager.createPicker(messageBundle, "game.over");
 
 			// Sound
 			//@formatter:off
@@ -468,22 +468,21 @@ public class Game2d extends Application {
 	public static final Resources resources = new Resources();
 
 	private GameUI2d ui;
-	private Settings settings;
 
 	@Override
 	public void init() throws Exception {
-		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		resources.init();
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI2d(primaryStage, settings, gameController);
 		actions.init(new ActionContext(ui));
 		actions.reboot();
 		ui.start();
-		Logger.info("Game started. Locale: {} Framerate: {} Hz Settings: {}", Locale.getDefault(),
+		Logger.info("Game started. Locale: {} Clock speed: {} Hz Settings: {}", Locale.getDefault(),
 				ui.targetFrameratePy.get(), settings);
 	}
 

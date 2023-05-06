@@ -37,7 +37,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.ActionContext;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
-import de.amr.games.pacman.ui.fx.util.ResourceMgr;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.entity.GhostModel3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.PacModel3D;
@@ -64,6 +64,9 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class Game3d extends Application {
+
+	public static final ResourceManager RESOURCE_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
+
 	//@formatter:off
 	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	public static final BooleanProperty             dashboardVisiblePy      = new SimpleBooleanProperty(false);
@@ -92,8 +95,6 @@ public class Game3d extends Application {
 
 		public static final String KEY_NO_TEXTURE = "No Texture";
 
-		public final ResourceMgr loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
-
 		public PacModel3D pacModel3D;
 		public GhostModel3D ghostModel3D;
 		public PelletModel3D pelletModel3D;
@@ -101,7 +102,7 @@ public class Game3d extends Application {
 		public Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
 		private void init() {
-			backgroundForScene3D = loader.imageBackground("graphics/sky.png");
+			backgroundForScene3D = Game3d.RESOURCE_MANAGER.imageBackground("graphics/sky.png");
 			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -120,8 +121,9 @@ public class Game3d extends Application {
 
 		public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 			var texture = new PhongMaterial();
-			texture.setBumpMap(loader.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(loader.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setBumpMap(Game3d.RESOURCE_MANAGER.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture
+					.setDiffuseMap(Game3d.RESOURCE_MANAGER.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			texture.setDiffuseColor(diffuseColor);
 			texture.setSpecularColor(specularColor);
 			return texture;
@@ -194,8 +196,8 @@ public class Game3d extends Application {
 
 		Game2d.actions.reboot();
 		ui.start();
-		Logger.info("Game started. Locale: {} FPS: {} Hz Settings: {}", Locale.getDefault(), ui.targetFrameratePy.get(),
-				settings);
+		Logger.info("Game started. Locale: {} Clock speed: {} Hz Settings: {}", Locale.getDefault(),
+				ui.targetFrameratePy.get(), settings);
 	}
 
 	@Override

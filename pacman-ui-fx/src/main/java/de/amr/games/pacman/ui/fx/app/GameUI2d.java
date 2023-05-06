@@ -65,6 +65,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -222,7 +223,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.resources.loader.colorBackground(Game2d.mainSceneBgColorPy.get()));
+		mainSceneRoot.setBackground(ResourceManager.colorBackground(Game2d.mainSceneBgColorPy.get()));
 		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {

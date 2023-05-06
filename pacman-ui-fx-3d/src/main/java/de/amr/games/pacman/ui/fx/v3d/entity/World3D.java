@@ -39,6 +39,7 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
@@ -173,7 +174,7 @@ public class World3D {
 		String key = floorTexturePy.get();
 		var texture = Game3d.resources.floorTexturesByName.get(key);
 		if (texture == null) {
-			texture = Game3d.resources.loader.coloredMaterial(floorColorPy.get());
+			texture = ResourceManager.coloredMaterial(floorColorPy.get());
 		}
 		floor.setMaterial(texture);
 	}
@@ -181,10 +182,9 @@ public class World3D {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = Game3d.resources.loader.coloredMaterial(mazeColoring.wallBaseColor());
-		wallData.topMaterial = Game3d.resources.loader.coloredMaterial(mazeColoring.wallTopColor());
-		wallData.houseMaterial = Game3d.resources.loader
-				.coloredMaterial(Game3d.resources.loader.color(mazeColoring.wallBaseColor(), 0.25));
+		wallData.baseMaterial = ResourceManager.coloredMaterial(mazeColoring.wallBaseColor());
+		wallData.topMaterial = ResourceManager.coloredMaterial(mazeColoring.wallTopColor());
+		wallData.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(mazeColoring.wallBaseColor(), 0.25));
 		return wallData;
 	}
 
@@ -384,7 +384,7 @@ public class World3D {
 	// Food
 
 	private void addFood() {
-		var foodMaterial = Game3d.resources.loader.coloredMaterial(mazeColoring.foodColor());
+		var foodMaterial = ResourceManager.coloredMaterial(mazeColoring.foodColor());
 		world.tiles().filter(world::containsFood).forEach(tile -> {
 			var food3D = world.isEnergizerTile(tile)//
 					? createEnergizer3D(tile, foodMaterial)//
@@ -413,7 +413,7 @@ public class World3D {
 		squirting.setOrigin(energizer3D.getRoot());
 		squirting.setDropCountMin(15);
 		squirting.setDropCountMax(45);
-		squirting.setDropMaterial(Game3d.resources.loader.coloredMaterial(mazeColoring.foodColor().desaturate()));
+		squirting.setDropMaterial(ResourceManager.coloredMaterial(mazeColoring.foodColor().desaturate()));
 		energizer3D.setEatenAnimation(squirting);
 		return energizer3D;
 	}

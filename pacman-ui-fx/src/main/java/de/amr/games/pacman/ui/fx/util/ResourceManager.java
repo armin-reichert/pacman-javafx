@@ -43,12 +43,38 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class ResourceMgr {
+public class ResourceManager {
+
+	public static Background colorBackground(Color color) {
+		checkNotNull(color);
+		return new Background(new BackgroundFill(color, null, null));
+	}
+
+	public static PhongMaterial coloredMaterial(Color color) {
+		checkNotNull(color);
+		var material = new PhongMaterial(color);
+		material.setSpecularColor(color.brighter());
+		return material;
+	}
+
+	public static Color color(Color color, double opacity) {
+		checkNotNull(color);
+		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+	}
+
+	public static Picker<String> createPicker(ResourceBundle bundle, String prefix) {
+		checkNotNull(bundle);
+		return new Picker<>(bundle.keySet().stream()//
+				.filter(key -> key.startsWith(prefix))//
+				.sorted()//
+				.map(bundle::getString)//
+				.toArray(String[]::new));
+	}
 
 	private final Class<?> clientClass;
 	private final String rootDir;
 
-	public ResourceMgr(String rootDir, Class<?> clientClass) {
+	public ResourceManager(String rootDir, Class<?> clientClass) {
 		checkNotNull(rootDir);
 		checkNotNull(clientClass);
 		this.rootDir = rootDir;
@@ -99,33 +125,7 @@ public class ResourceMgr {
 		return new Image(url.toExternalForm());
 	}
 
-	public Background colorBackground(Color color) {
-		checkNotNull(color);
-		return new Background(new BackgroundFill(color, null, null));
-	}
-
 	public Background imageBackground(String relPath) {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
-	}
-
-	public PhongMaterial coloredMaterial(Color color) {
-		checkNotNull(color);
-		var material = new PhongMaterial(color);
-		material.setSpecularColor(color.brighter());
-		return material;
-	}
-
-	public Color color(Color color, double opacity) {
-		checkNotNull(color);
-		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-	}
-
-	public Picker<String> createPicker(ResourceBundle bundle, String prefix) {
-		checkNotNull(bundle);
-		return new Picker<>(bundle.keySet().stream()//
-				.filter(key -> key.startsWith(prefix))//
-				.sorted()//
-				.map(bundle::getString)//
-				.toArray(String[]::new));
 	}
 }

@@ -35,6 +35,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
@@ -115,12 +116,12 @@ public class GameUI3d extends GameUI2d {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Game3d.d3_drawModePy.get() == DrawMode.LINE) {
-				mainSceneRoot.setBackground(Game3d.resources.loader.colorBackground(Color.BLACK));
+				mainSceneRoot.setBackground(ResourceManager.colorBackground(Color.BLACK));
 			} else {
 				mainSceneRoot.setBackground(Game3d.resources.backgroundForScene3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(Game2d.resources.loader.colorBackground(Game2d.mainSceneBgColorPy.get()));// TODO
+			mainSceneRoot.setBackground(ResourceManager.colorBackground(Game2d.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = pausedPy.get();
 		var dimensionMsg = Game2d.resources.message(Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
