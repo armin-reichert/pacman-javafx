@@ -33,6 +33,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
@@ -106,6 +109,18 @@ public class Ufx {
 			}
 		}
 		return result;
+	}
+
+	public static KeyCodeCombination just(KeyCode code) {
+		return new KeyCodeCombination(code);
+	}
+
+	public static KeyCodeCombination alt(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
+	}
+
+	public static KeyCodeCombination shift(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
 	}
 
 }

@@ -24,6 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.app;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
+import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -185,7 +187,7 @@ public class Game3d extends Application {
 		}
 	}
 
-	public static class Keys extends Game2d.Keys {
+	public static class Keys {
 		public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);
 		public static final KeyCodeCombination DASHBOARD2 = alt(KeyCode.B);
 		public static final KeyCodeCombination PIP_VIEW = just(KeyCode.F2);

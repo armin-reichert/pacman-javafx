@@ -25,6 +25,9 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
+import static de.amr.games.pacman.ui.fx.util.Ufx.just;
+import static de.amr.games.pacman.ui.fx.util.Ufx.shift;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -56,7 +59,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -385,18 +387,6 @@ public class Game2d extends Application {
 	}
 
 	public static class Keys {
-
-		protected static KeyCodeCombination just(KeyCode code) {
-			return new KeyCodeCombination(code);
-		}
-
-		protected static KeyCodeCombination alt(KeyCode code) {
-			return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
-		}
-
-		protected static KeyCodeCombination shift(KeyCode code) {
-			return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
-		}
 
 		public static final KeyCodeCombination CHEAT_EAT_ALL = alt(KeyCode.E);
 		public static final KeyCodeCombination CHEAT_ADD_LIVES = alt(KeyCode.L);
