@@ -171,9 +171,9 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = Game3d.Resources.floorTexturesByName.get(key);
+		var texture = Game3d.resources.floorTexturesByName.get(key);
 		if (texture == null) {
-			texture = Game3d.Resources.Loader.coloredMaterial(floorColorPy.get());
+			texture = Game3d.resources.loader.coloredMaterial(floorColorPy.get());
 		}
 		floor.setMaterial(texture);
 	}
@@ -181,10 +181,10 @@ public class World3D {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = Game3d.Resources.Loader.coloredMaterial(mazeColoring.wallBaseColor());
-		wallData.topMaterial = Game3d.Resources.Loader.coloredMaterial(mazeColoring.wallTopColor());
-		wallData.houseMaterial = Game3d.Resources.Loader
-				.coloredMaterial(Game3d.Resources.Loader.color(mazeColoring.wallBaseColor(), 0.25));
+		wallData.baseMaterial = Game3d.resources.loader.coloredMaterial(mazeColoring.wallBaseColor());
+		wallData.topMaterial = Game3d.resources.loader.coloredMaterial(mazeColoring.wallTopColor());
+		wallData.houseMaterial = Game3d.resources.loader
+				.coloredMaterial(Game3d.resources.loader.color(mazeColoring.wallBaseColor(), 0.25));
 		return wallData;
 	}
 
@@ -384,7 +384,7 @@ public class World3D {
 	// Food
 
 	private void addFood() {
-		var foodMaterial = Game3d.Resources.Loader.coloredMaterial(mazeColoring.foodColor());
+		var foodMaterial = Game3d.resources.loader.coloredMaterial(mazeColoring.foodColor());
 		world.tiles().filter(world::containsFood).forEach(tile -> {
 			var food3D = world.isEnergizerTile(tile)//
 					? createEnergizer3D(tile, foodMaterial)//
@@ -413,7 +413,7 @@ public class World3D {
 		squirting.setOrigin(energizer3D.getRoot());
 		squirting.setDropCountMin(15);
 		squirting.setDropCountMax(45);
-		squirting.setDropMaterial(Game3d.Resources.Loader.coloredMaterial(mazeColoring.foodColor().desaturate()));
+		squirting.setDropMaterial(Game3d.resources.loader.coloredMaterial(mazeColoring.foodColor().desaturate()));
 		energizer3D.setEatenAnimation(squirting);
 		return energizer3D;
 	}

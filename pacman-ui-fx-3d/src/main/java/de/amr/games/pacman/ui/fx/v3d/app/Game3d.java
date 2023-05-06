@@ -66,18 +66,18 @@ import javafx.stage.Stage;
 public class Game3d extends Application {
 
 	public static class Resources {
-
-		public static final ResourceMgr Loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
-
 		public static final String KEY_NO_TEXTURE = "No Texture";
-		public static PacModel3D pacModel3D;
-		public static GhostModel3D ghostModel3D;
-		public static PelletModel3D pelletModel3D;
-		public static Background backgroundForScene3D;
-		public static Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
-		public static void load() {
-			backgroundForScene3D = Loader.imageBackground("graphics/sky.png");
+		public final ResourceMgr loader = new ResourceMgr("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
+
+		public PacModel3D pacModel3D;
+		public GhostModel3D ghostModel3D;
+		public PelletModel3D pelletModel3D;
+		public Background backgroundForScene3D;
+		public Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+
+		private void init() {
+			backgroundForScene3D = loader.imageBackground("graphics/sky.png");
 			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -88,17 +88,16 @@ public class Game3d extends Application {
 			pelletModel3D = new PelletModel3D();
 		}
 
-		private static PhongMaterial createFloorTexture(String textureBase, String ext) {
+		private PhongMaterial createFloorTexture(String textureBase, String ext) {
 			var material = textureMaterial(textureBase, ext, null, null);
 			material.diffuseColorProperty().bind(Game3d.Properties.d3_floorColorPy);
 			return material;
 		}
 
-		public static PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor,
-				Color specularColor) {
+		public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 			var texture = new PhongMaterial();
-			texture.setBumpMap(Loader.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(Loader.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setBumpMap(loader.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(loader.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			texture.setDiffuseColor(diffuseColor);
 			texture.setSpecularColor(specularColor);
 			return texture;
@@ -133,31 +132,31 @@ public class Game3d extends Application {
 
 	public static class Actions extends Game2d.Actions {
 
-		public static void togglePipVisibility() {
+		public void togglePipVisibility() {
 			Ufx.toggle(Game3d.Properties.pipVisiblePy);
 			var msgKey = Game3d.Properties.pipVisiblePy.get() ? "pip_on" : "pip_off";
-			showFlashMessage(Game2d.Resources.message(msgKey));// TODO
+			showFlashMessage(Game2d.resources.message(msgKey));// TODO
 		}
 
-		public static void toggleDashboardVisible() {
+		public void toggleDashboardVisible() {
 			Ufx.toggle(Game3d.Properties.dashboardVisiblePy);
 		}
 
-		public static void selectNextPerspective() {
+		public void selectNextPerspective() {
 			var nextPerspective = Game3d.Properties.d3_perspectivePy.get().next();
 			Game3d.Properties.d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = Game2d.Resources.message(nextPerspective.name());
-			showFlashMessage(Game2d.Resources.message("camera_perspective", perspectiveName));
+			String perspectiveName = Game2d.resources.message(nextPerspective.name());
+			showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
 		}
 
-		public static void selectPrevPerspective() {
+		public void selectPrevPerspective() {
 			var prevPerspective = Game3d.Properties.d3_perspectivePy.get().prev();
 			Game3d.Properties.d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = Game2d.Resources.message(prevPerspective.name());
-			showFlashMessage(Game2d.Resources.message("camera_perspective", perspectiveName));
+			String perspectiveName = Game2d.resources.message(prevPerspective.name());
+			showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
 		}
 
-		public static void toggleDrawMode() {
+		public void toggleDrawMode() {
 			Game3d.Properties.d3_drawModePy
 					.set(Game3d.Properties.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 		}
@@ -172,24 +171,31 @@ public class Game3d extends Application {
 		public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 	}
 
-	private Settings settings;
+	public static final Actions actions = new Actions();
+	public static final Resources resources = new Resources();
+
+	private Settings settings; // TODO
 	private GameUI3d ui;
 
 	@Override
 	public void init() throws Exception {
 		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		long start = System.nanoTime();
-		Game2d.Resources.load();
-		Resources.load();
-		Logger.info("Loading resources took {} seconds.", (System.nanoTime() - start) / 1e9f);
+		Game2d.resources.init();
+		Game3d.resources.init();
+		Logger.info("Game initialisation took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI3d(primaryStage, settings, gameController);
-		Game2d.Actions.setContext(new ActionContext(ui));
-		Game2d.Actions.reboot();
+
+		var actionContext = new ActionContext(ui);
+		Game2d.actions.init(actionContext);
+		Game3d.actions.init(actionContext);
+
+		Game2d.actions.reboot();
 		ui.start();
 		Logger.info("Game started. Locale: {} FPS: {} Hz Settings: {}", Locale.getDefault(), ui.targetFrameratePy.get(),
 				settings);

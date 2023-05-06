@@ -91,7 +91,7 @@ public class GameLevel3D {
 		this.level = level;
 		final GameVariant gameVariant = level.game().variant();
 
-		world3D = new World3D(level.world(), mazeColors, Game3d.Resources.pelletModel3D);
+		world3D = new World3D(level.world(), mazeColors, Game3d.resources.pelletModel3D);
 
 		pac3D = switch (gameVariant) {
 		case MS_PACMAN -> createMsPacMan3D(msPacManColors);
@@ -105,9 +105,9 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> Game3d.Resources.pacModel3D.createMsPacManNode(9, msPacManColors),
+		case MS_PACMAN -> new LivesCounter3D(5, () -> Game3d.resources.pacModel3D.createMsPacManNode(9, msPacManColors),
 				true);
-		case PACMAN -> new LivesCounter3D(5, () -> Game3d.Resources.pacModel3D.createPacManNode(9, pacManColors), false);
+		case PACMAN -> new LivesCounter3D(5, () -> Game3d.resources.pacModel3D.createPacManNode(9, pacManColors), false);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
@@ -154,21 +154,21 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
-		var node = Game3d.Resources.pacModel3D.createPacManNode(9.0, colors);
+		var node = Game3d.resources.pacModel3D.createPacManNode(9.0, colors);
 		var pacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
 		pacMan3D.drawModePy.bind(Game3d.Properties.d3_drawModePy);
 		return pacMan3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
-		var node = Game3d.Resources.pacModel3D.createMsPacManNode(9.0, colors);
+		var node = Game3d.resources.pacModel3D.createMsPacManNode(9.0, colors);
 		var msPacMan3D = new Pac3D(level.game().variant(), level.pac(), node, colors.headColor());
 		msPacMan3D.drawModePy.bind(Game3d.Properties.d3_drawModePy);
 		return msPacMan3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
-		return new Ghost3D(ghost, colors, Game3d.Resources.ghostModel3D, 8.5);
+		return new Ghost3D(ghost, colors, Game3d.resources.ghostModel3D, 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {

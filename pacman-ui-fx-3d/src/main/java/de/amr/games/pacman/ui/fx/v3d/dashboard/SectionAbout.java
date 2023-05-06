@@ -41,7 +41,7 @@ public class SectionAbout extends Section {
 	public SectionAbout(GameUI3d ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
-		var myPicture = new ImageView(Game3d.Resources.Loader.image("graphics/armin.jpg"));
+		var myPicture = new ImageView(Game3d.resources.loader.image("graphics/armin.jpg"));
 		myPicture.setFitWidth(286);
 		myPicture.setPreserveRatio(true);
 
@@ -50,7 +50,7 @@ public class SectionAbout extends Section {
 		madeBy.setFill(Color.grayRgb(150));
 
 		var signature = new Text("Armin Reichert");
-		signature.setFont(Game2d.Resources.font(Game2d.Resources.handwritingFont, 18));
+		signature.setFont(Game2d.resources.font(Game2d.resources.handwritingFont, 18));
 		signature.setFill(Color.grayRgb(225));
 
 		var tf = new TextFlow(madeBy, signature);

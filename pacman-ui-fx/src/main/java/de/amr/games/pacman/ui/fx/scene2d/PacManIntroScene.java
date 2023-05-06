@@ -58,7 +58,7 @@ public class PacManIntroScene extends GameScene2D {
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
 		copyrightNote = addNote("A fan tribute to the original game",
-				Game2d.Resources.font(Game2d.Resources.handwritingFont, 10), Color.gray(0.3), 1 * TS, 30 * TS);
+				Game2d.resources.font(Game2d.resources.handwritingFont, 10), Color.gray(0.3), 1 * TS, 30 * TS);
 	}
 
 	@Override
@@ -83,19 +83,19 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		Game2d.Actions.stopVoiceMessage();
+		Game2d.actions.stopVoiceMessage();
 	}
 
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
-			Game2d.Actions.addCredit();
+			Game2d.actions.addCredit();
 		} else if (Keyboard.pressed(Keys.START_GAME)) {
-			Game2d.Actions.startGame();
+			Game2d.actions.startGame();
 		} else if (Keyboard.pressed(Keys.SELECT_VARIANT)) {
-			Game2d.Actions.selectNextGameVariant();
+			Game2d.actions.selectNextGameVariant();
 		} else if (Keyboard.pressed(Keys.PLAY_CUTSCENES)) {
-			Game2d.Actions.startCutscenesTest();
+			Game2d.actions.startCutscenesTest();
 		}
 	}
 

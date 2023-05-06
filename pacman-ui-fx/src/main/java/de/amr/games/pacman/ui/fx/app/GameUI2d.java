@@ -222,18 +222,18 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.Resources.Loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));
+		mainSceneRoot.setBackground(Game2d.resources.Loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));
 		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(Game2d.Resources.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(Game2d.Resources.MsPacManGameGraphics.icon);
+			stage.setTitle(Game2d.resources.message(messageKey, "")); // TODO
+			stage.getIcons().setAll(Game2d.resources.graphicsMsPacMan.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(Game2d.Resources.message(messageKey, "")); // TODO
-			stage.getIcons().setAll(Game2d.Resources.PacManGameGraphics.icon);
+			stage.setTitle(Game2d.resources.message(messageKey, "")); // TODO
+			stage.getIcons().setAll(Game2d.resources.graphicsPacMan.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -309,29 +309,29 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	protected void handleKeyboardInput() {
 		if (Keyboard.pressed(Game2d.Keys.AUTOPILOT)) {
-			Game2d.Actions.toggleAutopilot();
+			Game2d.actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Game2d.Keys.BOOT)) {
-			Game2d.Actions.reboot();
+			Game2d.actions.reboot();
 		} else if (Keyboard.pressed(Game2d.Keys.DEBUG_INFO)) {
 			Ufx.toggle(Game2d.Properties.showDebugInfoPy);
 		} else if (Keyboard.pressed(Game2d.Keys.IMMUNITIY)) {
-			Game2d.Actions.toggleImmunity();
+			Game2d.actions.toggleImmunity();
 		} else if (Keyboard.pressed(Game2d.Keys.PAUSE)) {
-			Game2d.Actions.togglePaused();
+			Game2d.actions.togglePaused();
 		} else if (Keyboard.pressed(Game2d.Keys.PAUSE_STEP) || Keyboard.pressed(Game2d.Keys.SINGLE_STEP)) {
-			Game2d.Actions.oneSimulationStep();
+			Game2d.actions.oneSimulationStep();
 		} else if (Keyboard.pressed(Game2d.Keys.TEN_STEPS)) {
-			Game2d.Actions.tenSimulationSteps();
+			Game2d.actions.tenSimulationSteps();
 		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_FASTER)) {
-			Game2d.Actions.changeSimulationSpeed(5);
+			Game2d.actions.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_SLOWER)) {
-			Game2d.Actions.changeSimulationSpeed(-5);
+			Game2d.actions.changeSimulationSpeed(-5);
 		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_NORMAL)) {
-			Game2d.Actions.resetSimulationSpeed();
+			Game2d.actions.resetSimulationSpeed();
 		} else if (Keyboard.pressed(Game2d.Keys.QUIT)) {
-			Game2d.Actions.restartIntro();
+			Game2d.actions.restartIntro();
 		} else if (Keyboard.pressed(Game2d.Keys.TEST_LEVELS)) {
-			Game2d.Actions.startLevelTestMode();
+			Game2d.actions.startLevelTestMode();
 		} else if (Keyboard.pressed(Game2d.Keys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
@@ -401,7 +401,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	public void playHelpVoiceMessageAfterSeconds(int seconds) {
-		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.Resources.VOICE_HELP)).play();
+		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.resources.VOICE_HELP)).play();
 	}
 
 }

@@ -51,9 +51,9 @@ public class SectionGeneral extends Section {
 	private final CheckBox cbPoliticallyCorrect;
 	private final CheckBox cbDebugUI;
 	private final CheckBox cbTimeMeasured;
-	private final ImageView iconPlay = new ImageView(Game3d.Resources.Loader.image("graphics/icons/play.png"));
-	private final ImageView iconStop = new ImageView(Game3d.Resources.Loader.image("graphics/icons/stop.png"));
-	private final ImageView iconStep = new ImageView(Game3d.Resources.Loader.image("graphics/icons/step.png"));
+	private final ImageView iconPlay = new ImageView(Game3d.resources.loader.image("graphics/icons/play.png"));
+	private final ImageView iconStop = new ImageView(Game3d.resources.loader.image("graphics/icons/stop.png"));
+	private final ImageView iconStep = new ImageView(Game3d.resources.loader.image("graphics/icons/step.png"));
 	private final Tooltip tooltipPlay = new Tooltip("Play");
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
@@ -67,7 +67,7 @@ public class SectionGeneral extends Section {
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
-		btnPlayPause.setOnAction(e -> Game2d.Actions.togglePaused());
+		btnPlayPause.setOnAction(e -> Game2d.actions.togglePaused());
 
 		btnStep.setGraphic(iconStep);
 		btnStep.setStyle("-fx-background-color: transparent");

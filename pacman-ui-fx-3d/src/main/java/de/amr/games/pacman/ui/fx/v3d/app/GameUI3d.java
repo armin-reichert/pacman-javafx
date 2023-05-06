@@ -115,25 +115,25 @@ public class GameUI3d extends GameUI2d {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Game3d.Properties.d3_drawModePy.get() == DrawMode.LINE) {
-				mainSceneRoot.setBackground(Game3d.Resources.Loader.colorBackground(Color.BLACK));
+				mainSceneRoot.setBackground(Game3d.resources.loader.colorBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(Game3d.Resources.backgroundForScene3D);
+				mainSceneRoot.setBackground(Game3d.resources.backgroundForScene3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(Game2d.Resources.Loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));// TODO
+			mainSceneRoot.setBackground(Game2d.resources.Loader.colorBackground(Game2d.Properties.mainSceneBgColorPy.get()));// TODO
 		}
 		var paused = pausedPy.get();
-		var dimensionMsg = Game2d.Resources.message(Game3d.Properties.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = Game2d.resources.message(Game3d.Properties.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(Game2d.Resources.message(messageKey, dimensionMsg));// TODO
-			stage.getIcons().setAll(Game2d.Resources.MsPacManGameGraphics.icon);
+			stage.setTitle(Game2d.resources.message(messageKey, dimensionMsg));// TODO
+			stage.getIcons().setAll(Game2d.resources.graphicsMsPacMan.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(Game2d.Resources.message(messageKey, dimensionMsg));// TOOD
-			stage.getIcons().setAll(Game2d.Resources.PacManGameGraphics.icon);
+			stage.setTitle(Game2d.resources.message(messageKey, dimensionMsg));// TOOD
+			stage.getIcons().setAll(Game2d.resources.graphicsPacMan.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -166,9 +166,9 @@ public class GameUI3d extends GameUI2d {
 		if (Keyboard.pressed(Game3d.Keys.TOGGLE_2D_3D)) {
 			toggleUse3DScene();
 		} else if (Keyboard.pressed(Game3d.Keys.DASHBOARD) || Keyboard.pressed(Game3d.Keys.DASHBOARD2)) {
-			Game3d.Actions.toggleDashboardVisible();
+			Game3d.actions.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Game3d.Keys.PIP_VIEW)) {
-			Game3d.Actions.togglePipVisibility();
+			Game3d.actions.togglePipVisibility();
 		}
 	}
 
@@ -179,8 +179,8 @@ public class GameUI3d extends GameUI2d {
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// TODO: put text into 3D UI
-			var message = Game2d.Resources.message(Game3d.Properties.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
-			Game2d.Actions.showFlashMessage(message);
+			var message = Game2d.resources.message(Game3d.Properties.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
+			Game2d.actions.showFlashMessage(message);
 		}
 	}
 

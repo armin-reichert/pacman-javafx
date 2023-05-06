@@ -35,7 +35,7 @@ import javafx.scene.media.AudioClip;
 public class SoundHandler {
 
 	public void onSoundEvent(SoundEvent event) {
-		var sounds = Game2d.Resources.gameSounds(event.game.variant());
+		var sounds = Game2d.resources.gameSounds(event.game.variant());
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN -> sounds.play(AudioClipID.BONUS_EATEN);
 		case GameModel.SE_CREDIT_ADDED -> sounds.play(AudioClipID.CREDIT);

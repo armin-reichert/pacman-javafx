@@ -59,15 +59,15 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Keys.ADD_CREDIT) && !context.hasCredit()) {
-			Game2d.Actions.addCredit();
+			Game2d.actions.addCredit();
 		} else if (Keyboard.pressed(Keys.CHEAT_EAT_ALL)) {
-			Game2d.Actions.cheatEatAllPellets();
+			Game2d.actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Keys.CHEAT_ADD_LIVES)) {
-			Game2d.Actions.cheatAddLives(3);
+			Game2d.actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Keys.CHEAT_NEXT_LEVEL)) {
-			Game2d.Actions.cheatEnterNextLevel();
+			Game2d.actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Keys.CHEAT_KILL_GHOSTS)) {
-			Game2d.Actions.cheatKillAllEatableGhosts();
+			Game2d.actions.cheatKillAllEatableGhosts();
 		}
 	}
 

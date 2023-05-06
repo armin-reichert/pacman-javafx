@@ -71,21 +71,21 @@ public class SectionGameControl extends Section {
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.startPlaying());
-		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> Game2d.Actions.restartIntro());
+		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> Game2d.actions.restartIntro());
 		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.cheatEnterNextLevel());
 
 		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
-		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> Game2d.Actions.startCutscenesTest());
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> Game2d.Actions.restartIntro());
+		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> Game2d.actions.startCutscenesTest());
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> Game2d.actions.restartIntro());
 
 		spGameLevel = addSpinner("Level", 1, 100, 1);
-		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Game2d.Actions.enterLevel(newVal.intValue()));
+		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> Game2d.actions.enterLevel(newVal.intValue()));
 
 		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
 		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
-		cbAutopilot = addCheckBox("Autopilot", Game2d.Actions::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", Game2d.Actions::toggleImmunity);
+		cbAutopilot = addCheckBox("Autopilot", Game2d.actions::toggleAutopilot);
+		cbImmunity = addCheckBox("Player immune", Game2d.actions::toggleImmunity);
 	}
 
 	@Override

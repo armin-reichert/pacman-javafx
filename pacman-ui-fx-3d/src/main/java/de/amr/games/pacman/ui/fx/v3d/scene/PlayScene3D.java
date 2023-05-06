@@ -219,7 +219,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		if (Game3d.Properties.d3_floorTextureRandomPy.get()) {
-			var names = Game3d.Resources.floorTexturesByName.keySet().toArray(String[]::new);
+			var names = Game3d.resources.floorTexturesByName.keySet().toArray(String[]::new);
 			Game3d.Properties.d3_floorTexturePy.set(names[randomInt(0, names.length)]);
 		}
 		Logger.info("3D game level {} created.", level.number());
@@ -239,19 +239,19 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Game2d.Keys.ADD_CREDIT) && !context.hasCredit()) {
-			Game2d.Actions.addCredit(); // in demo mode, allow adding credit
+			Game2d.actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Game3d.Keys.PREV_CAMERA)) {
-			Game3d.Actions.selectPrevPerspective();
+			Game3d.actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Game3d.Keys.NEXT_CAMERA)) {
-			Game3d.Actions.selectNextPerspective();
+			Game3d.actions.selectNextPerspective();
 		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_EAT_ALL)) {
-			Game2d.Actions.cheatEatAllPellets();
+			Game2d.actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_ADD_LIVES)) {
-			Game2d.Actions.cheatAddLives(3);
+			Game2d.actions.cheatAddLives(3);
 		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_NEXT_LEVEL)) {
-			Game2d.Actions.cheatEnterNextLevel();
+			Game2d.actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Game2d.Keys.CHEAT_KILL_GHOSTS)) {
-			Game2d.Actions.cheatKillAllEatableGhosts();
+			Game2d.actions.cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -350,7 +350,7 @@ public class PlayScene3D implements GameScene {
 				}
 				readyMessageText3D.setVisible(true);
 				// TODO take texts and picker from 3d-only resources
-				var readyMessage = inPercentOfCases(40) ? Game2d.Resources.randomReadyText(context.gameVariant()) : "READY!";
+				var readyMessage = inPercentOfCases(40) ? Game2d.resources.randomReadyText(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -410,7 +410,7 @@ public class PlayScene3D implements GameScene {
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
 							//TODO use 3d-only resources
-							Game2d.Actions.showFlashMessageSeconds(2, Game2d.Resources.pickLevelCompleteMessage(level.number()));
+							Game2d.actions.showFlashMessageSeconds(2, Game2d.resources.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -424,7 +424,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			// TODO use 3d-only resources
-			Game2d.Actions.showFlashMessageSeconds(3, Game2d.Resources.pickGameOverMessage());
+			Game2d.actions.showFlashMessageSeconds(3, Game2d.resources.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}
