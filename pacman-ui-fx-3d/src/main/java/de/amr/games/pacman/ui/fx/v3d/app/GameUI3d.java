@@ -120,7 +120,7 @@ public class GameUI3d extends GameUI2d {
 				mainSceneRoot.setBackground(Game3d.resources.backgroundForScene3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(ResourceManager.colorBackground(Game2d.mainSceneBgColorPy.get()));// TODO
+			mainSceneRoot.setBackground(Game2d.RES.imageBackground("graphics/pacman_wallpaper_gray.png"));
 		}
 		var paused = pausedPy.get();
 		var dimensionMsg = fmtMessage(Game3d.resources.messages, Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
