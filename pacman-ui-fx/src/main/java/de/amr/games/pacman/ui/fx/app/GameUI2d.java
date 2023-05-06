@@ -326,10 +326,10 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
-		if (!currentGameScene.is3D()) {
-			currentGameScene.fxSubScene().setScaleX(0.95);
-			currentGameScene.fxSubScene().setScaleY(0.95);
-		}
+//		if (!currentGameScene.is3D()) {
+//			currentGameScene.fxSubScene().setScaleX(0.98);
+//			currentGameScene.fxSubScene().setScaleY(0.98);
+//		}
 		Logger.trace("Game scene changed to {}", currentGameScene);
 	}
 
