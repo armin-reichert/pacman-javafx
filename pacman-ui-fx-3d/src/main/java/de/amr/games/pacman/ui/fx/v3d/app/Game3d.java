@@ -65,10 +65,10 @@ import javafx.stage.Stage;
  */
 public class Game3d extends Application {
 
-	public static final ResourceManager RESOURCE_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
+	public static final ResourceManager RESOURCE_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/",
+			Game3d.class);
 
 	//@formatter:off
-	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	public static final BooleanProperty             dashboardVisiblePy      = new SimpleBooleanProperty(false);
 
 	public static final BooleanProperty             pipVisiblePy            = new SimpleBooleanProperty(false);
@@ -81,14 +81,15 @@ public class Game3d extends Application {
 	public static final ObjectProperty<Color>       d3_floorColorPy         = new SimpleObjectProperty<>(Color.grayRgb(0x60));
 	public static final StringProperty              d3_floorTexturePy       = new SimpleStringProperty("Knobs & Bumps");
 	public static final BooleanProperty             d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
+	public static final BooleanProperty             d3_foodOscillationPy    = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color>       d3_lightColorPy         = new SimpleObjectProperty<>(Color.GHOSTWHITE);
 	public static final DoubleProperty              d3_mazeWallHeightPy     = new SimpleDoubleProperty(1.75);
 	public static final DoubleProperty              d3_mazeWallThicknessPy  = new SimpleDoubleProperty(1.25);
 	public static final BooleanProperty             d3_pacLightedPy         = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Perspective> d3_perspectivePy        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
 	public static final BooleanProperty             d3_energizerExplodesPy  = new SimpleBooleanProperty(true);
-	// experimental, not used yet 
-	public static final BooleanProperty             d3_foodOscillationPy    = new SimpleBooleanProperty(false);
+
+	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	//@formatter:on
 
 	public static class Resources {
@@ -130,12 +131,12 @@ public class Game3d extends Application {
 		}
 	}
 
-	public static class Actions extends Game2d.Actions {
+	public static class Actions {
 
 		public void togglePipVisibility() {
 			Ufx.toggle(Game3d.pipVisiblePy);
 			var msgKey = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
-			showFlashMessage(Game2d.resources.message(msgKey));// TODO
+			Game2d.actions.showFlashMessage(Game2d.resources.message(msgKey));// TODO
 		}
 
 		public void toggleDashboardVisible() {
@@ -146,14 +147,14 @@ public class Game3d extends Application {
 			var nextPerspective = Game3d.d3_perspectivePy.get().next();
 			Game3d.d3_perspectivePy.set(nextPerspective);
 			String perspectiveName = Game2d.resources.message(nextPerspective.name());
-			showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
+			Game2d.actions.showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
 		}
 
 		public void selectPrevPerspective() {
 			var prevPerspective = Game3d.d3_perspectivePy.get().prev();
 			Game3d.d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = Game2d.resources.message(prevPerspective.name());
-			showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
+			Game2d.actions.showFlashMessage(Game2d.resources.message("camera_perspective", perspectiveName));
 		}
 
 		public void toggleDrawMode() {
@@ -192,7 +193,6 @@ public class Game3d extends Application {
 
 		var actionContext = new ActionContext(ui);
 		Game2d.actions.init(actionContext);
-		Game3d.actions.init(actionContext);
 
 		Game2d.actions.reboot();
 		ui.start();
