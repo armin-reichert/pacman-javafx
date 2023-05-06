@@ -41,11 +41,7 @@ import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Game2d.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 
