@@ -83,7 +83,7 @@ import javafx.stage.Stage;
  */
 public class Game2d extends Application {
 
-	public static final ResourceManager RESOURCE_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
+	public static final ResourceManager RES = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 	//@formatter:off
 	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.web("0x334bd3"));
@@ -118,49 +118,48 @@ public class Game2d extends Application {
 			}
 		}
 
-		public Font arcadeFont;
-		public Font handwritingFont;
+		public final Font arcadeFont;
+		public final Font handwritingFont;
 
 		private ResourceBundle messageBundle;
 		private Picker<String> messagePickerCheating;
 		private Picker<String> messagePickerLevelComplete;
 		private Picker<String> messagePickerGameOver;
 
-		public final AudioClip voiceExplainKeys = RESOURCE_MANAGER.audioClip("sound/voice/press-key.mp3");
-		public final AudioClip voiceAutopilotOff = RESOURCE_MANAGER.audioClip("sound/voice/autopilot-off.mp3");
-		public final AudioClip voiceAutopilotOn = RESOURCE_MANAGER.audioClip("sound/voice/autopilot-on.mp3");
-		public final AudioClip voiceImmunityOff = RESOURCE_MANAGER.audioClip("sound/voice/immunity-off.mp3");
-		public final AudioClip voiceImmunityOn = RESOURCE_MANAGER.audioClip("sound/voice/immunity-on.mp3");
+		public final AudioClip voiceExplainKeys;
+		public final AudioClip voiceAutopilotOff;
+		public final AudioClip voiceAutopilotOn;
+		public final AudioClip voiceImmunityOff;
+		public final AudioClip voiceImmunityOn;
 
-		public PacManGameGraphics graphicsPacMan;
-		public GameSounds gameSoundsMsPacMan;
+		public final MsPacManGameGraphics graphicsMsPacMan;
+		public final PacManGameGraphics graphicsPacMan;
 
-		public MsPacManGameGraphics graphicsMsPacMan;
-		public GameSounds gameSoundsPacMan;
+		public final GameSounds gameSoundsMsPacMan;
+		public final GameSounds gameSoundsPacMan;
 
-		public void init() {
+		public Resources() {
 			// Fonts
-			arcadeFont = RESOURCE_MANAGER.font("fonts/emulogic.ttf", 8);
-			handwritingFont = RESOURCE_MANAGER.font("fonts/RockSalt-Regular.ttf", 8);
+			arcadeFont = RES.font("fonts/emulogic.ttf", 8);
+			handwritingFont = RES.font("fonts/RockSalt-Regular.ttf", 8);
 
 			// Graphics
-			graphicsPacMan = new PacManGameGraphics();
-			graphicsPacMan.icon = RESOURCE_MANAGER.image("graphics/icons/pacman.png");
-			graphicsPacMan.spritesheet = new Spritesheet(RESOURCE_MANAGER.image("graphics/pacman/sprites.png"), 16);
-			graphicsPacMan.fullMaze = RESOURCE_MANAGER.image("graphics/pacman/maze_full.png");
-			graphicsPacMan.emptyMaze = RESOURCE_MANAGER.image("graphics/pacman/maze_empty.png");
-			graphicsPacMan.flashingMaze = RESOURCE_MANAGER.image("graphics/pacman/maze_empty_flashing.png");
 
 			graphicsMsPacMan = new MsPacManGameGraphics();
-			graphicsMsPacMan.icon = RESOURCE_MANAGER.image("graphics/icons/mspacman.png");
-			graphicsMsPacMan.spritesheet = new Spritesheet(RESOURCE_MANAGER.image("graphics/mspacman/sprites.png"), 16);
-
+			graphicsMsPacMan.icon = RES.image("graphics/icons/mspacman.png");
+			graphicsMsPacMan.spritesheet = new Spritesheet(RES.image("graphics/mspacman/sprites.png"), 16);
 			graphicsMsPacMan.emptyFlashingMaze = IntStream.range(0, 6)
 					.mapToObj(
 							i -> MsPacManGameGraphics.flashing(graphicsMsPacMan.emptyMaze(i), ArcadeTheme.MS_PACMAN_MAZE_COLORS[i]))
 					.toArray(Image[]::new);
+			graphicsMsPacMan.logo = RES.image("graphics/mspacman/midway.png");
 
-			graphicsMsPacMan.logo = RESOURCE_MANAGER.image("graphics/mspacman/midway.png");
+			graphicsPacMan = new PacManGameGraphics();
+			graphicsPacMan.icon = RES.image("graphics/icons/pacman.png");
+			graphicsPacMan.spritesheet = new Spritesheet(RES.image("graphics/pacman/sprites.png"), 16);
+			graphicsPacMan.fullMaze = RES.image("graphics/pacman/maze_full.png");
+			graphicsPacMan.emptyMaze = RES.image("graphics/pacman/maze_empty.png");
+			graphicsPacMan.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
 
 			// Texts
 			messageBundle = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
@@ -169,6 +168,12 @@ public class Game2d extends Application {
 			messagePickerGameOver = ResourceManager.createPicker(messageBundle, "game.over");
 
 			// Sound
+			voiceExplainKeys = RES.audioClip("sound/voice/press-key.mp3");
+			voiceAutopilotOff = RES.audioClip("sound/voice/autopilot-off.mp3");
+			voiceAutopilotOn = RES.audioClip("sound/voice/autopilot-on.mp3");
+			voiceImmunityOff = RES.audioClip("sound/voice/immunity-off.mp3");
+			voiceImmunityOn = RES.audioClip("sound/voice/immunity-on.mp3");
+
 			//@formatter:off
 			Object[][] audioClipsMsPacman = { 
 				{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
@@ -464,14 +469,15 @@ public class Game2d extends Application {
 		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}
 
-	public static final Actions actions = new Actions();
-	public static final Resources resources = new Resources();
+	public static Actions actions;
+	public static Resources resources;
 
 	private GameUI2d ui;
 
 	@Override
 	public void init() throws Exception {
-		resources.init();
+		actions = new Actions();
+		resources = new Resources();
 	}
 
 	@Override

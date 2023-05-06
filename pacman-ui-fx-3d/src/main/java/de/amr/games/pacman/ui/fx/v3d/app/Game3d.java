@@ -65,8 +65,7 @@ import javafx.stage.Stage;
  */
 public class Game3d extends Application {
 
-	public static final ResourceManager RESOURCE_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/",
-			Game3d.class);
+	public static final ResourceManager RES = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
 
 	//@formatter:off
 	public static final BooleanProperty             dashboardVisiblePy      = new SimpleBooleanProperty(false);
@@ -96,14 +95,14 @@ public class Game3d extends Application {
 
 		public static final String KEY_NO_TEXTURE = "No Texture";
 
-		public PacModel3D pacModel3D;
-		public GhostModel3D ghostModel3D;
-		public PelletModel3D pelletModel3D;
-		public Background backgroundForScene3D;
-		public Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+		public final PacModel3D pacModel3D;
+		public final GhostModel3D ghostModel3D;
+		public final PelletModel3D pelletModel3D;
+		public final Background backgroundForScene3D;
+		public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 
-		private void init() {
-			backgroundForScene3D = Game3d.RESOURCE_MANAGER.imageBackground("graphics/sky.png");
+		private Resources() {
+			backgroundForScene3D = Game3d.RES.imageBackground("graphics/sky.png");
 			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -122,9 +121,8 @@ public class Game3d extends Application {
 
 		public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 			var texture = new PhongMaterial();
-			texture.setBumpMap(Game3d.RESOURCE_MANAGER.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture
-					.setDiffuseMap(Game3d.RESOURCE_MANAGER.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setBumpMap(Game3d.RES.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(Game3d.RES.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			texture.setDiffuseColor(diffuseColor);
 			texture.setSpecularColor(specularColor);
 			return texture;
@@ -171,8 +169,8 @@ public class Game3d extends Application {
 		public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 	}
 
-	public static final Actions actions = new Actions();
-	public static final Resources resources = new Resources();
+	public static Actions actions;
+	public static Resources resources;
 
 	private Settings settings; // TODO
 	private GameUI3d ui;
@@ -181,8 +179,8 @@ public class Game3d extends Application {
 	public void init() throws Exception {
 		settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 		long start = System.nanoTime();
-		Game2d.resources.init();
-		Game3d.resources.init();
+		Game2d.resources = new Game2d.Resources();
+		Game3d.resources = new Game3d.Resources();
 		Logger.info("Game initialisation took {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
