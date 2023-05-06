@@ -2,15 +2,23 @@
 
 ## About this project
 
-A JavaFX user interface for my UI-agnostic [Pac-Man / Ms. Pac-Man game](https://github.com/armin-reichert/pacman-basic) implementations. 
+JavaFX user interfaces for my UI-agnostic/faceless [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic). There is a 2D-only user interface and
+a full version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>Alt+3</kbd>).
 
-Both games can be played either in 2D-only or in 2D and 3D (full version). In the full version, you can switch during the game between 2D and 3D view by pressing the key combination <kbd>Alt+3</kbd>.
-
-## How to run the released version
+## How to run the 2D-only version
 
 ### With Java runtime 18+ installed on your computer (Windows):
-- Download the executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
 
+- Download the executable jar file `pacman-ui-fx-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
+
+### Without locally installed Java runtime (Windows):
+- Download the zip file `pacman-ui-fx-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
+
+## How to run the 2D+3D version
+
+### With Java runtime 18+ installed on your computer (Windows):
+
+- Download the executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
 
 ### Without locally installed Java runtime (Windows):
 - Download the zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
@@ -22,7 +30,8 @@ To build the executable by yourself on non-Windows systems, run the steps in the
 - Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
 - Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
 - `cd \path\to\git\pacman-javafx`
-- `build.bat`
+- `build2d.bat`
+- `build3d.bat`
 
 This will 
 - run a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
@@ -30,16 +39,10 @@ This will
 - run a Maven build of the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
 - create an executable jar-file `pacman-ui-fx-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx\target`),
 - create an executable jar-file `pacman-ui-fx-3d-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx-3d\target`),
-- create a zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx\target`).
-- create a zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-3d\target`).
+- create a zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-jlink\target`).
+- create a zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-3d-jlink\target`).
 
-## How to run the locally built versions
-
-- If Java runtime 18+ is installed, start the executables jar-files by double-click.
-- Alternatively, extract the zip-file and execute the `run.cmd` file as described above.
-- Or just execute the `run.bat` / `run2d.bat` scripts located in the repository root folder.
-
-## How to use (full version)
+## How to use
 
 Starting the game and switching game variant:
 - <kbd>V</kbd> Switch between Pac-Man and Ms. Pac-Man (only possible on intro screen)
