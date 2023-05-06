@@ -30,10 +30,11 @@ Any help in creating executables for Mac-OS and Linux is appreciated!
 - Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
 - Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
 - `cd \path\to\git\pacman-javafx`
-- `build2d.bat`
-- `build3d.bat`
+- `build_core.bat`
+- `build_2d.bat`
+- `build_3d.bat`
 
-This will 
+This will
 - run a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
 - run a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (2D-only),
 - run a Maven build of the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
