@@ -339,7 +339,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 			var w = mainScene.getWidth();
 			var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
 			help.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, fontSize));
-			var helpPanel = help.panel();
+			var helpPanel = help.currentPanel();
 			if (helpPanel.isEmpty()) {
 				mainSceneRoot.getChildren().get(2).setVisible(false);
 			} else {
