@@ -40,8 +40,10 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -107,11 +109,27 @@ public class GameUI3d extends GameUI2d {
 		dashboardLayer.setRight(pipGameScene.fxSubScene());
 		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
 		mainSceneRoot.getChildren().add(flashMessageView);
+		mainSceneRoot.getChildren().add(new Label("Help panel comes here"));
 		mainSceneRoot.getChildren().add(dashboardLayer);
 	}
 
 	@Override
 	public void updateContextSensitiveHelp() {
+		if (Game2d.showHelpPy.get()) {
+			var w = mainScene.getWidth();
+			var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
+			help.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, fontSize));
+			var helpPanel = help.currentPanel();
+			if (helpPanel.isEmpty()) {
+				mainSceneRoot.getChildren().get(2).setVisible(false);
+			} else {
+				var panel = helpPanel.get();
+				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
+				mainSceneRoot.getChildren().set(2, panel);
+			}
+		} else {
+			mainSceneRoot.getChildren().get(2).setVisible(false);
+		}
 	}
 
 	@Override

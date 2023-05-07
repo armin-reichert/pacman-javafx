@@ -210,6 +210,24 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		mainSceneRoot.getChildren().add(new Label("Help panel comes here"));
 	}
 
+	public void updateContextSensitiveHelp() {
+		if (Game2d.showHelpPy.get()) {
+			var w = mainScene.getWidth();
+			var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
+			help.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, fontSize));
+			var helpPanel = help.currentPanel();
+			if (helpPanel.isEmpty()) {
+				mainSceneRoot.getChildren().get(2).setVisible(false);
+			} else {
+				var panel = helpPanel.get();
+				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
+				mainSceneRoot.getChildren().set(2, panel);
+			}
+		} else {
+			mainSceneRoot.getChildren().get(2).setVisible(false);
+		}
+	}
+
 	protected void createMainScene(Settings settings) {
 		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
@@ -332,24 +350,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		Logger.trace("Game scene changed to {}", currentGameScene);
-	}
-
-	public void updateContextSensitiveHelp() {
-		if (Game2d.showHelpPy.get()) {
-			var w = mainScene.getWidth();
-			var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
-			help.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, fontSize));
-			var helpPanel = help.currentPanel();
-			if (helpPanel.isEmpty()) {
-				mainSceneRoot.getChildren().get(2).setVisible(false);
-			} else {
-				var panel = helpPanel.get();
-				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
-				mainSceneRoot.getChildren().set(2, panel);
-			}
-		} else {
-			mainSceneRoot.getChildren().get(2).setVisible(false);
-		}
 	}
 
 	private void handleKeyPressed(KeyEvent keyEvent) {
