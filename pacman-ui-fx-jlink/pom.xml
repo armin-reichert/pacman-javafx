@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +15,6 @@
 		<vs.java>18</vs.java>
 		<vs.javafx>18.0.2</vs.javafx>
 		<vs.tentackle>17.12.0.0</vs.tentackle>
-		<vs.tinylog>2.6.1</vs.tinylog>
 	</properties>
 
 	<packaging>jlink</packaging>
@@ -60,18 +60,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.tinylog</groupId>
-			<artifactId>tinylog-api</artifactId>
-			<version>${vs.tinylog}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.tinylog</groupId>
-			<artifactId>tinylog-impl</artifactId>
-			<version>${vs.tinylog}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>${vs.javafx}</version>
@@ -84,4 +72,5 @@
 		</dependency>
 
 	</dependencies>
+
 </project>
