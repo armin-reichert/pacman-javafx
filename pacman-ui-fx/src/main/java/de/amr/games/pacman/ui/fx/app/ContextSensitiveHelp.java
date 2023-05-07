@@ -143,7 +143,7 @@ public class ContextSensitiveHelp {
 			help.addRow("START GAME", "1");
 		}
 		help.addRow("ADD CREDIT", "5");
-		help.addRow(variant() == GameVariant.MS_PACMAN ? "PLAY PAC-MAN" : "PLAY MS. PAC-MAN", "V");
+		help.addRow(variant() == GameVariant.MS_PACMAN ? "PAC-MAN" : "MS.PAC-MAN", "V");
 		return help.makePanel(gameController);
 	}
 
