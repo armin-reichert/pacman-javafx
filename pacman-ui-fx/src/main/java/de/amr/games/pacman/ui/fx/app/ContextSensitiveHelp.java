@@ -30,7 +30,10 @@ import java.util.Optional;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -52,11 +55,14 @@ public class ContextSensitiveHelp {
 
 	public Optional<Pane> panel() {
 		var game = gameController.game();
+		if (game.isPlaying()) {
+			return Optional.of(helpPlaying());
+		}
 		var panel = switch (gameController.state()) {
 		case BOOT -> null;
 		case CREDIT -> helpCredit();
 		case INTRO -> helpIntro();
-		case HUNTING -> game.isPlaying() ? helpPlaying() : helpDemoLevel();
+		case HUNTING -> helpDemoLevel();
 		default -> helpGeneral();
 		};
 		return Optional.ofNullable(panel);
@@ -72,7 +78,7 @@ public class ContextSensitiveHelp {
 		}
 		table.add(new Row(text("ADD CREDIT"), text("5")));
 		table.add(new Row(text(other), text("V")));
-		return grid(table);
+		return helpPanel(table);
 	}
 
 	private Pane helpCredit() {
@@ -83,7 +89,7 @@ public class ContextSensitiveHelp {
 		}
 		table.add(new Row(text("ADD CREDIT"), text("5")));
 		table.add(new Row(text("QUIT"), text("Q")));
-		return grid(table);
+		return helpPanel(table);
 	}
 
 	private Pane helpPlaying() {
@@ -93,23 +99,23 @@ public class ContextSensitiveHelp {
 		table.add(new Row(text("RIGHT"), text("CURSOR RIGHT")));
 		table.add(new Row(text("UP"), text("CURSOR UP")));
 		table.add(new Row(text("DOWN"), text("CURSOR DOWN")));
-		return grid(table);
+		return helpPanel(table);
 	}
 
 	private Pane helpDemoLevel() {
 		List<Row> table = new ArrayList<>();
 		table.add(new Row(text("QUIT"), text("Q")));
 		table.add(new Row(text("ADD CREDIT"), text("5")));
-		return grid(table);
+		return helpPanel(table);
 	}
 
 	private Pane helpGeneral() {
 		List<Row> table = new ArrayList<>();
 		table.add(new Row(text("ALWAYS AT YOU SIDE!"), null));
-		return grid(table);
+		return helpPanel(table);
 	}
 
-	private GridPane grid(List<Row> table) {
+	private Pane helpPanel(List<Row> table) {
 		var grid = new GridPane();
 		grid.setHgap(40);
 		grid.setVgap(10);
@@ -123,7 +129,25 @@ public class ContextSensitiveHelp {
 				GridPane.setColumnSpan(row.leftColumn, 2);
 			}
 		}
-		return grid;
+		int rowIndex = table.size();
+		if (gameController.isAutoControlled()) {
+			var text = text("AUTOPILOT ON");
+			GridPane.setColumnSpan(text, 2);
+			grid.add(text, 0, rowIndex);
+			++rowIndex;
+		}
+		if (gameController.game().isImmune()) {
+			var text = text("IMMUNITY ON");
+			GridPane.setColumnSpan(text, 2);
+			grid.add(text, 0, rowIndex);
+			++rowIndex;
+		}
+
+		var pane = new BorderPane(grid);
+		pane.setMaxSize(100, 50);
+		pane.setPadding(new Insets(20));
+		pane.setBackground(ResourceManager.colorBackground(Color.rgb(200, 200, 200, 0.35)));
+		return pane;
 	}
 
 	private Text text(String s) {

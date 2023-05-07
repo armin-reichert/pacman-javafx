@@ -67,6 +67,7 @@ import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -340,8 +341,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 				mainSceneRoot.getChildren().get(2).setVisible(false);
 			} else {
 				var panel = helpPanel.get();
-				panel.setTranslateX(30);
-				panel.setTranslateY(30);
+				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
 				mainSceneRoot.getChildren().set(2, panel);
 			}
 		} else {
