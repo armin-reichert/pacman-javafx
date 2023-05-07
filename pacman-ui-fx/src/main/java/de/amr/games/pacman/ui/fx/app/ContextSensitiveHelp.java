@@ -50,15 +50,27 @@ public class ContextSensitiveHelp {
 	record Row(Node leftColumn, Node rightColumn) {
 	}
 
-	private class HelpPanel {
+	private static class Help {
 
+		private final Font font;
 		private final List<Row> table = new ArrayList<>();
+
+		public Help(Font font) {
+			this.font = font;
+		}
 
 		public void addRow(String left, String right) {
 			table.add(new Row(text(left), text(right)));
 		}
 
-		public Pane makePanel() {
+		private Text text(String s) {
+			var text = new Text(s);
+			text.setFill(Color.YELLOW);
+			text.setFont(font);
+			return text;
+		}
+
+		public Pane makePanel(GameController gameController) {
 			var grid = new GridPane();
 			grid.setHgap(20);
 			grid.setVgap(10);
@@ -125,48 +137,40 @@ public class ContextSensitiveHelp {
 		return Optional.ofNullable(panel);
 	}
 
-	private Text text(String s) {
-		var text = new Text(s);
-		text.setFill(Color.YELLOW);
-		text.setFont(font);
-		return text;
-	}
-
 	private Pane helpIntro() {
-		var other = variant() == GameVariant.MS_PACMAN ? "PLAY PAC-MAN" : "PLAY MS. PAC-MAN";
-		var helpPanel = new HelpPanel();
+		var help = new Help(font);
 		if (game().credit() > 0) {
-			helpPanel.addRow("START GAME", "1");
+			help.addRow("START GAME", "1");
 		}
-		helpPanel.addRow("ADD CREDIT", "5");
-		helpPanel.addRow(other, "V");
-		return helpPanel.makePanel();
+		help.addRow("ADD CREDIT", "5");
+		help.addRow(variant() == GameVariant.MS_PACMAN ? "PLAY PAC-MAN" : "PLAY MS. PAC-MAN", "V");
+		return help.makePanel(gameController);
 	}
 
 	private Pane helpCredit() {
-		var helpPanel = new HelpPanel();
-		helpPanel.addRow("ADD CREDIT", "5");
+		var help = new Help(font);
+		help.addRow("ADD CREDIT", "5");
 		if (game().credit() > 0) {
-			helpPanel.addRow("START GAME", "1");
+			help.addRow("START GAME", "1");
 		}
-		helpPanel.addRow("QUIT", "Q");
-		return helpPanel.makePanel();
+		help.addRow("QUIT", "Q");
+		return help.makePanel(gameController);
 	}
 
 	private Pane helpPlaying() {
-		var helpPanel = new HelpPanel();
-		helpPanel.addRow("LEFT", "CURSOR LEFT");
-		helpPanel.addRow("RIGHT", "CURSOR RIGHT");
-		helpPanel.addRow("UP", "CURSOR UP");
-		helpPanel.addRow("DOWN", "CURSOR DOWN");
-		helpPanel.addRow("QUIT", "Q");
-		return helpPanel.makePanel();
+		var help = new Help(font);
+		help.addRow("LEFT", "CURSOR LEFT");
+		help.addRow("RIGHT", "CURSOR RIGHT");
+		help.addRow("UP", "CURSOR UP");
+		help.addRow("DOWN", "CURSOR DOWN");
+		help.addRow("QUIT", "Q");
+		return help.makePanel(gameController);
 	}
 
 	private Pane helpDemoLevel() {
-		var helpPanel = new HelpPanel();
-		helpPanel.addRow("ADD CREDIT", "5");
-		helpPanel.addRow("QUIT", "Q");
-		return helpPanel.makePanel();
+		var help = new Help(font);
+		help.addRow("ADD CREDIT", "5");
+		help.addRow("QUIT", "Q");
+		return help.makePanel(gameController);
 	}
 }
