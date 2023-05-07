@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
+import java.util.Optional;
+
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.Game2d;
@@ -40,10 +42,8 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -155,6 +155,15 @@ public class GameUI3d extends GameUI2d {
 		Game3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
 		Game3d.d3_enabledPy.set(true);
 		Game3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
+	}
+
+	@Override
+	protected Optional<GameScene> findGameScene(int dimension) {
+		if (dimension != 2 && dimension != 3) {
+			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
+		}
+		var choice = sceneChoiceMatchingCurrentGameState();
+		return Optional.ofNullable(dimension == 3 ? choice.scene3D() : choice.scene2D());
 	}
 
 	@Override

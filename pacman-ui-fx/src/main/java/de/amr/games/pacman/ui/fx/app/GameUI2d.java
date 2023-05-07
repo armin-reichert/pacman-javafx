@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -66,21 +65,14 @@ import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 /**
@@ -256,31 +248,30 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		currentGameScene.render();
 	}
 
-	private void renderActiveBackground() {
-		if (getUpdateCount() % 15 == 0 && currentGameScene instanceof PlayScene2D gameScene2D) {
-			SnapshotParameters p = new SnapshotParameters();
-			p.setTransform(new Scale(1.5, 1.5));
-			p.setViewport(new Rectangle2D(40, 200, 100, 100));
-			var snapshot = new WritableImage(28 * 8, 36 * 8);
-			gameScene2D.canvas().snapshot(p, snapshot);
-			var bgImage = new BackgroundImage(snapshot, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null,
-					new BackgroundSize(1.0, 1.0, true, true, false, true));
-			mainSceneRoot.setBackground(new Background(bgImage));
-		}
-	}
+//	private void renderActiveBackground() {
+//		if (getUpdateCount() % 15 == 0 && currentGameScene instanceof PlayScene2D gameScene2D) {
+//			SnapshotParameters p = new SnapshotParameters();
+//			p.setTransform(new Scale(1.5, 1.5));
+//			p.setViewport(new Rectangle2D(40, 200, 100, 100));
+//			var snapshot = new WritableImage(28 * 8, 36 * 8);
+//			gameScene2D.canvas().snapshot(p, snapshot);
+//			var bgImage = new BackgroundImage(snapshot, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null,
+//					new BackgroundSize(1.0, 1.0, true, true, false, true));
+//			mainSceneRoot.setBackground(new Background(bgImage));
+//		}
+//	}
 
 	protected void updateStage() {
 		mainSceneRoot.setBackground(Game2d.resources.wallpaper2D);
-		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
-			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(fmtMessage(Game2d.resources.messages, messageKey, ""));
+			var messageKey = pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
+			stage.setTitle(ResourceManager.fmtMessage(Game2d.resources.messages, messageKey, ""));
 			stage.getIcons().setAll(Game2d.resources.graphics.msPacMan().icon);
 		}
 		case PACMAN -> {
-			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(fmtMessage(Game2d.resources.messages, messageKey, ""));
+			var messageKey = pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
+			stage.setTitle(ResourceManager.fmtMessage(Game2d.resources.messages, messageKey, ""));
 			stage.getIcons().setAll(Game2d.resources.graphics.pacMan().icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
@@ -303,7 +294,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
 		}
 		var choice = sceneChoiceMatchingCurrentGameState();
-		return Optional.ofNullable(dimension == 3 ? choice.scene3D() : choice.scene2D());
+		return Optional.of(choice.scene2D());
 	}
 
 	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
