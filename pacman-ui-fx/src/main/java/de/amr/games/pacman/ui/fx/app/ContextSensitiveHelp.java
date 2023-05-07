@@ -120,7 +120,6 @@ public class ContextSensitiveHelp {
 
 	public Optional<Help> current() {
 		var help = switch (gameController.state()) {
-		case BOOT -> null;
 		case CREDIT -> helpCredit();
 		case INTRO -> helpIntro();
 		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode() ? helpDemoLevel() : helpPlaying();
