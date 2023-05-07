@@ -422,7 +422,7 @@ public class Game2d extends Application {
 		public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
 		public static final KeyCodeCombination PLAY_CUTSCENES = alt(KeyCode.Z);
 
-		public static final KeyCodeCombination TOGGLE_HELP = alt(KeyCode.H);
+		public static final KeyCodeCombination TOGGLE_HELP = just(KeyCode.H);
 		public static final KeyCodeCombination BOOT = just(KeyCode.F3);
 		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}
