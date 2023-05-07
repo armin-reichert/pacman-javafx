@@ -213,6 +213,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected void createMainScene(Settings settings) {
 		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
+		mainScene.widthProperty().addListener((py, ov, nv) -> updateContextSensitiveHelp());
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2 && currentGameScene != null) {
@@ -328,14 +329,16 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		Logger.trace("Using renderer {}", renderer);
 		currentGameScene.context().setRendering2D(renderer);
 		currentGameScene.init();
-		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
-		updateContextSensitiveHelp();
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
+		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		Logger.trace("Game scene changed to {}", currentGameScene);
 	}
 
 	public void updateContextSensitiveHelp() {
 		if (Game2d.showHelpPy.get()) {
+			var w = mainScene.getWidth();
+			var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
+			help.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, fontSize));
 			var helpPanel = help.panel();
 			if (helpPanel.isEmpty()) {
 				mainSceneRoot.getChildren().get(2).setVisible(false);

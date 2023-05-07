@@ -37,6 +37,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -48,22 +50,25 @@ public class ContextSensitiveHelp {
 	}
 
 	private final GameController gameController;
+	private Font font = Font.font("Sans", FontWeight.EXTRA_BOLD, 20);
 
 	public ContextSensitiveHelp(GameController gameController) {
 		this.gameController = gameController;
 	}
 
+	public void setFont(Font font) {
+		this.font = font;
+	}
+
 	public Optional<Pane> panel() {
 		var game = gameController.game();
-		if (game.isPlaying()) {
-			return Optional.of(helpPlaying());
-		}
+		boolean attractMode = game.level().isPresent() && game.level().get().isDemoLevel();
 		var panel = switch (gameController.state()) {
 		case BOOT -> null;
 		case CREDIT -> helpCredit();
 		case INTRO -> helpIntro();
-		case HUNTING -> helpDemoLevel();
-		default -> helpGeneral();
+		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode ? helpPlaying() : helpDemoLevel();
+		default -> null;
 		};
 		return Optional.ofNullable(panel);
 	}
@@ -71,10 +76,10 @@ public class ContextSensitiveHelp {
 	private Pane helpIntro() {
 		var game = gameController.game();
 		var variant = game.variant();
-		var other = variant == GameVariant.MS_PACMAN ? "Pac-Man" : "Ms. Pac-Man";
+		var other = variant == GameVariant.MS_PACMAN ? "PLAY PAC-MAN" : "PLAY MS. PAC-MAN";
 		List<Row> table = new ArrayList<>();
 		if (game.credit() > 0) {
-			table.add(new Row(text("PLAY"), text("1")));
+			table.add(new Row(text("START GAME"), text("1")));
 		}
 		table.add(new Row(text("ADD CREDIT"), text("5")));
 		table.add(new Row(text(other), text("V")));
@@ -84,40 +89,34 @@ public class ContextSensitiveHelp {
 	private Pane helpCredit() {
 		var game = gameController.game();
 		List<Row> table = new ArrayList<>();
-		if (game.credit() > 0) {
-			table.add(new Row(text("PLAY"), text("1")));
-		}
 		table.add(new Row(text("ADD CREDIT"), text("5")));
+		if (game.credit() > 0) {
+			table.add(new Row(text("START GAME"), text("1")));
+		}
 		table.add(new Row(text("QUIT"), text("Q")));
 		return helpPanel(table);
 	}
 
 	private Pane helpPlaying() {
 		List<Row> table = new ArrayList<>();
-		table.add(new Row(text("QUIT"), text("Q")));
 		table.add(new Row(text("LEFT"), text("CURSOR LEFT")));
 		table.add(new Row(text("RIGHT"), text("CURSOR RIGHT")));
 		table.add(new Row(text("UP"), text("CURSOR UP")));
 		table.add(new Row(text("DOWN"), text("CURSOR DOWN")));
+		table.add(new Row(text("QUIT"), text("Q")));
 		return helpPanel(table);
 	}
 
 	private Pane helpDemoLevel() {
 		List<Row> table = new ArrayList<>();
-		table.add(new Row(text("QUIT"), text("Q")));
 		table.add(new Row(text("ADD CREDIT"), text("5")));
-		return helpPanel(table);
-	}
-
-	private Pane helpGeneral() {
-		List<Row> table = new ArrayList<>();
-		table.add(new Row(text("ALWAYS AT YOU SIDE!"), null));
+		table.add(new Row(text("QUIT"), text("Q")));
 		return helpPanel(table);
 	}
 
 	private Pane helpPanel(List<Row> table) {
 		var grid = new GridPane();
-		grid.setHgap(40);
+		grid.setHgap(20);
 		grid.setVgap(10);
 		for (int rowIndex = 0; rowIndex < table.size(); ++rowIndex) {
 			var row = table.get(rowIndex);
@@ -145,7 +144,7 @@ public class ContextSensitiveHelp {
 
 		var pane = new BorderPane(grid);
 		pane.setMaxSize(100, 50);
-		pane.setPadding(new Insets(20));
+		pane.setPadding(new Insets(10));
 		pane.setBackground(ResourceManager.colorBackground(Color.rgb(200, 200, 200, 0.35)));
 		return pane;
 	}
@@ -153,7 +152,7 @@ public class ContextSensitiveHelp {
 	private Text text(String s) {
 		var text = new Text(s);
 		text.setFill(Color.YELLOW);
-		text.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, 16));
+		text.setFont(font);
 		return text;
 	}
 }

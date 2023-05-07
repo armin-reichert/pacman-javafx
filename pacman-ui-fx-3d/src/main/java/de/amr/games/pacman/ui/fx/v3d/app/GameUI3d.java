@@ -111,6 +111,10 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
+	public void updateContextSensitiveHelp() {
+	}
+
+	@Override
 	protected void updateStage() {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
