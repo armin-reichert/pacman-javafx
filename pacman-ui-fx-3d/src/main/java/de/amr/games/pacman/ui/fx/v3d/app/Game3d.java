@@ -103,7 +103,7 @@ public class Game3d extends Application {
 		public final PacModel3D pacModel3D;
 		public final GhostModel3D ghostModel3D;
 		public final PelletModel3D pelletModel3D;
-		public final Background backgroundForScene3D;
+		public final Background wallpaper3D;
 		public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 		public final ResourceBundle messages;
 		private final Picker<String> messagePickerCheating;
@@ -116,7 +116,7 @@ public class Game3d extends Application {
 			messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
 			messagePickerGameOver = ResourceManager.createPicker(messages, "game.over");
 
-			backgroundForScene3D = Game3d.RES.imageBackground("graphics/sky.png");
+			wallpaper3D = RES.imageBackground("graphics/sky.png");
 			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -142,14 +142,14 @@ public class Game3d extends Application {
 
 		private PhongMaterial createFloorTexture(String textureBase, String ext) {
 			var material = textureMaterial(textureBase, ext, null, null);
-			material.diffuseColorProperty().bind(Game3d.d3_floorColorPy);
+			material.diffuseColorProperty().bind(d3_floorColorPy);
 			return material;
 		}
 
 		public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 			var texture = new PhongMaterial();
-			texture.setBumpMap(Game3d.RES.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(Game3d.RES.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setBumpMap(RES.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(RES.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			texture.setDiffuseColor(diffuseColor);
 			texture.setSpecularColor(specularColor);
 			return texture;
@@ -159,31 +159,31 @@ public class Game3d extends Application {
 	public static class Actions {
 
 		public void togglePipVisibility() {
-			Ufx.toggle(Game3d.pipVisiblePy);
-			var key = Game3d.pipVisiblePy.get() ? "pip_on" : "pip_off";
+			Ufx.toggle(pipVisiblePy);
+			var key = pipVisiblePy.get() ? "pip_on" : "pip_off";
 			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, key));
 		}
 
 		public void toggleDashboardVisible() {
-			Ufx.toggle(Game3d.dashboardVisiblePy);
+			Ufx.toggle(dashboardVisiblePy);
 		}
 
 		public void selectNextPerspective() {
-			var nextPerspective = Game3d.d3_perspectivePy.get().next();
-			Game3d.d3_perspectivePy.set(nextPerspective);
+			var nextPerspective = d3_perspectivePy.get().next();
+			d3_perspectivePy.set(nextPerspective);
 			String perspectiveName = fmtMessage(resources.messages, nextPerspective.name());
 			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, "camera_perspective", perspectiveName));
 		}
 
 		public void selectPrevPerspective() {
-			var prevPerspective = Game3d.d3_perspectivePy.get().prev();
-			Game3d.d3_perspectivePy.set(prevPerspective);
+			var prevPerspective = d3_perspectivePy.get().prev();
+			d3_perspectivePy.set(prevPerspective);
 			String perspectiveName = fmtMessage(resources.messages, prevPerspective.name());
 			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, "camera_perspective", perspectiveName));
 		}
 
 		public void toggleDrawMode() {
-			Game3d.d3_drawModePy.set(Game3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+			d3_drawModePy.set(d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 		}
 	}
 
@@ -223,8 +223,8 @@ public class Game3d extends Application {
 		ui = new GameUI3d(primaryStage, settings);
 
 		// Some actions operate on on UI, thus must be created after UI
-		Game3d.actions = new Game3d.Actions();
 		Game2d.actions = new Game2d.Actions(new ActionContext(ui));
+		Game3d.actions = new Game3d.Actions();
 
 		// Dashboard depends on actions
 		ui.dashboard().init();

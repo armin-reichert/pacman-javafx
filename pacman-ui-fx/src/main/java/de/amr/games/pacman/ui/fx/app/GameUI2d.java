@@ -270,7 +270,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.RES.imageBackground("graphics/pacman_wallpaper_gray.png"));
+		mainSceneRoot.setBackground(Game2d.resources.wallpaper2D);
 		var paused = pausedPy.get();
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {

@@ -58,6 +58,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -122,6 +123,7 @@ public class Game2d extends Application {
 		public final AudioClip voiceImmunityOn;
 
 		public final Graphics graphics;
+		public final Background wallpaper2D;
 
 		public final GameSounds gameSoundsMsPacMan;
 		public final GameSounds gameSoundsPacMan;
@@ -154,6 +156,7 @@ public class Game2d extends Application {
 			gpm.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
 
 			graphics = new Graphics(gpm, gmpm);
+			wallpaper2D = RES.imageBackground("graphics/pacman_wallpaper_gray.png");
 
 			// Texts
 			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
@@ -243,7 +246,7 @@ public class Game2d extends Application {
 		}
 
 		public void toggleHelp() {
-			Ufx.toggle(Game2d.showHelpPy);
+			Ufx.toggle(showHelpPy);
 			context.ui().updateContextSensitiveHelp();
 		}
 
