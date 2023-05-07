@@ -106,7 +106,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected Scene mainScene;
 	protected final StackPane mainSceneRoot = new StackPane();
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final ContextSensitiveHelp help;
+	protected final ContextSensitiveHelp contextSensitiveHelp;
 	protected final SoundHandler soundHandler = new SoundHandler();
 	protected final GameController gameController;
 
@@ -119,7 +119,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 		this.stage = stage;
 		this.gameController = new GameController(settings.variant);
-		this.help = new ContextSensitiveHelp(gameController);
+		this.contextSensitiveHelp = new ContextSensitiveHelp(gameController);
 
 		configureRenderers(settings);
 		createMsPacManSceneChoices();
@@ -212,14 +212,14 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	public void updateContextSensitiveHelp() {
 		if (Game2d.showHelpPy.get()) {
-			var w = mainScene.getWidth();
-			var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
-			help.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, fontSize));
-			var helpPanel = help.currentPanel();
-			if (helpPanel.isEmpty()) {
+			var help = contextSensitiveHelp.current();
+			if (help.isEmpty()) {
 				mainSceneRoot.getChildren().get(2).setVisible(false);
 			} else {
-				var panel = helpPanel.get();
+				var w = mainScene.getWidth();
+				var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
+				var font = Game2d.resources.font(Game2d.resources.arcadeFont, fontSize);
+				var panel = help.get().createPane(gameController, font);
 				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
 				mainSceneRoot.getChildren().set(2, panel);
 			}

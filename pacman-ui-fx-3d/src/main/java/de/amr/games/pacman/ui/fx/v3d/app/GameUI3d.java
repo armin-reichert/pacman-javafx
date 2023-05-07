@@ -114,25 +114,6 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
-	public void updateContextSensitiveHelp() {
-		if (Game2d.showHelpPy.get()) {
-			var w = mainScene.getWidth();
-			var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
-			help.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, fontSize));
-			var helpPanel = help.currentPanel();
-			if (helpPanel.isEmpty()) {
-				mainSceneRoot.getChildren().get(2).setVisible(false);
-			} else {
-				var panel = helpPanel.get();
-				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
-				mainSceneRoot.getChildren().set(2, panel);
-			}
-		} else {
-			mainSceneRoot.getChildren().get(2).setVisible(false);
-		}
-	}
-
-	@Override
 	protected void updateStage() {
 		updatePictureInPictureView();
 		if (currentGameScene != null && currentGameScene.is3D()) {
