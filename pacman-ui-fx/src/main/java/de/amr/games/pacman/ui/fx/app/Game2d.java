@@ -85,6 +85,7 @@ public class Game2d extends Application {
 
 	//@formatter:off
 	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.rgb(3,9,66));
+	public static final BooleanProperty       showHelpPy         = new SimpleBooleanProperty(false);
 	public static final BooleanProperty       showDebugInfoPy    = new SimpleBooleanProperty(false);
 	public static final IntegerProperty       simulationStepsPy  = new SimpleIntegerProperty(1);
 	//@formatter:on
@@ -239,6 +240,11 @@ public class Game2d extends Application {
 
 		public Actions(ActionContext context) {
 			this.context = context;
+		}
+
+		public void toggleHelp() {
+			Ufx.toggle(Game2d.showHelpPy);
+			context.ui().updateContextSensitiveHelp();
 		}
 
 		public void stopVoiceMessage() {
@@ -411,6 +417,7 @@ public class Game2d extends Application {
 		public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
 		public static final KeyCodeCombination PLAY_CUTSCENES = alt(KeyCode.Z);
 
+		public static final KeyCodeCombination TOGGLE_HELP = just(KeyCode.F1);
 		public static final KeyCodeCombination BOOT = just(KeyCode.F3);
 		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}

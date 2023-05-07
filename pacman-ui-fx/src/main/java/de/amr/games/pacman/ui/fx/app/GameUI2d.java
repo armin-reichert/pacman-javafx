@@ -105,6 +105,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected Scene mainScene;
 	protected final StackPane mainSceneRoot = new StackPane();
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
+	protected final ContextSensitiveHelp help;
 	protected final SoundHandler soundHandler = new SoundHandler();
 	protected final GameController gameController;
 
@@ -117,6 +118,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 		this.stage = stage;
 		this.gameController = new GameController(settings.variant);
+		this.help = new ContextSensitiveHelp(gameController);
 
 		configureRenderers(settings);
 		createMsPacManSceneChoices();
@@ -204,6 +206,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected void createMainSceneLayout() {
 		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
 		mainSceneRoot.getChildren().add(flashMessageView);
+		mainSceneRoot.getChildren().add(new Label("Help panel comes here"));
 	}
 
 	protected void createMainScene(Settings settings) {
@@ -285,15 +288,15 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
 		var game = gameController.game();
-		var gameState = gameController.state();
-		int index = switch (gameState) {
+		var state = gameController.state();
+		int index = switch (state) {
 		case BOOT -> INDEX_BOOT_SCENE;
 		case CREDIT -> INDEX_CREDIT_SCENE;
 		case INTRO -> INDEX_INTRO_SCENE;
 		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> INDEX_PLAY_SCENE;
 		case INTERMISSION -> INDEX_PLAY_SCENE + game.level().orElseThrow(IllegalStateException::new).intermissionNumber;
 		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + game.intermissionTestNumber;
-		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(gameState));
+		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
 		};
 		return sceneChoicesMap.get(game.variant()).get(index);
 	}
@@ -306,6 +309,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
+		updateContextSensitiveHelp();
 		updateStage();
 	}
 
@@ -324,12 +328,25 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		currentGameScene.context().setRendering2D(renderer);
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
+		updateContextSensitiveHelp();
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
-//		if (!currentGameScene.is3D()) {
-//			currentGameScene.fxSubScene().setScaleX(0.98);
-//			currentGameScene.fxSubScene().setScaleY(0.98);
-//		}
 		Logger.trace("Game scene changed to {}", currentGameScene);
+	}
+
+	public void updateContextSensitiveHelp() {
+		if (Game2d.showHelpPy.get()) {
+			var helpPanel = help.panel();
+			if (helpPanel.isEmpty()) {
+				mainSceneRoot.getChildren().get(2).setVisible(false);
+			} else {
+				var panel = helpPanel.get();
+				panel.setTranslateX(30);
+				panel.setTranslateY(30);
+				mainSceneRoot.getChildren().set(2, panel);
+			}
+		} else {
+			mainSceneRoot.getChildren().get(2).setVisible(false);
+		}
 	}
 
 	private void handleKeyPressed(KeyEvent keyEvent) {
@@ -340,7 +357,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2d.Keys.AUTOPILOT)) {
+		if (Keyboard.pressed(Game2d.Keys.TOGGLE_HELP)) {
+			Game2d.actions.toggleHelp();
+		} else if (Keyboard.pressed(Game2d.Keys.AUTOPILOT)) {
 			Game2d.actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Game2d.Keys.BOOT)) {
 			Game2d.actions.reboot();
