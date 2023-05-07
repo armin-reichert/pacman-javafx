@@ -22,12 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import javafx.scene.paint.Color;
 
 public class ArcadeTheme {

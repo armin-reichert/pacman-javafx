@@ -43,6 +43,7 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
