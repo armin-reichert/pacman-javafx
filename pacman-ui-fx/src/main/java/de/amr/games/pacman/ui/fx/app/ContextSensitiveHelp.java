@@ -67,7 +67,7 @@ public class ContextSensitiveHelp {
 		case BOOT -> null;
 		case CREDIT -> helpCredit();
 		case INTRO -> helpIntro();
-		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode ? helpPlaying() : helpDemoLevel();
+		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode ? helpDemoLevel() : helpPlaying();
 		default -> null;
 		};
 		return Optional.ofNullable(panel);
