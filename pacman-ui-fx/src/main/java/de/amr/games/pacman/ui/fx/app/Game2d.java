@@ -34,7 +34,6 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.IntStream;
 
 import org.tinylog.Logger;
 
@@ -44,7 +43,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
@@ -106,16 +104,9 @@ public class Game2d extends Application {
 			public Spritesheet spritesheet;
 			public Image logo;
 			public Image[] emptyFlashingMaze;
+		}
 
-			private Image emptyMaze(int i) {
-				return spritesheet.subImage(228, 248 * i, 226, 248);
-			}
-
-			private static Image flashing(Image maze, MazeColoring colors) {
-				return Ufx.colorsExchanged(maze, Map.of(//
-						colors.wallBaseColor(), Color.WHITE, //
-						colors.wallTopColor(), Color.BLACK));
-			}
+		public record Graphics(PacManGameGraphics pacMan, MsPacManGameGraphics msPacMan) {
 		}
 
 		public final Font arcadeFont;
@@ -129,8 +120,7 @@ public class Game2d extends Application {
 		public final AudioClip voiceImmunityOff;
 		public final AudioClip voiceImmunityOn;
 
-		public final MsPacManGameGraphics graphicsMsPacMan;
-		public final PacManGameGraphics graphicsPacMan;
+		public final Graphics graphics;
 
 		public final GameSounds gameSoundsMsPacMan;
 		public final GameSounds gameSoundsPacMan;
@@ -142,21 +132,27 @@ public class Game2d extends Application {
 			handwritingFont = RES.font("fonts/RockSalt-Regular.ttf", 8);
 
 			// Graphics
-			graphicsMsPacMan = new MsPacManGameGraphics();
-			graphicsMsPacMan.icon = RES.image("graphics/icons/mspacman.png");
-			graphicsMsPacMan.spritesheet = new Spritesheet(RES.image("graphics/mspacman/sprites.png"), 16);
-			graphicsMsPacMan.emptyFlashingMaze = IntStream.range(0, 6)
-					.mapToObj(
-							i -> MsPacManGameGraphics.flashing(graphicsMsPacMan.emptyMaze(i), ArcadeTheme.MS_PACMAN_MAZE_COLORS[i]))
-					.toArray(Image[]::new);
-			graphicsMsPacMan.logo = RES.image("graphics/mspacman/midway.png");
+			var gmpm = new MsPacManGameGraphics();
+			gmpm.icon = RES.image("graphics/icons/mspacman.png");
+			gmpm.spritesheet = new Spritesheet(RES.image("graphics/mspacman/sprites.png"), 16);
+			gmpm.emptyFlashingMaze = new Image[6];
+			for (int i = 0; i < 6; ++i) {
+				var maze = gmpm.spritesheet.subImage(228, 248 * i, 226, 248);
+				var mazeColors = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i];
+				gmpm.emptyFlashingMaze[i] = Ufx.colorsExchanged(maze, Map.of(//
+						mazeColors.wallBaseColor(), Color.WHITE, //
+						mazeColors.wallTopColor(), Color.BLACK));
+			}
+			gmpm.logo = RES.image("graphics/mspacman/midway.png");
 
-			graphicsPacMan = new PacManGameGraphics();
-			graphicsPacMan.icon = RES.image("graphics/icons/pacman.png");
-			graphicsPacMan.spritesheet = new Spritesheet(RES.image("graphics/pacman/sprites.png"), 16);
-			graphicsPacMan.fullMaze = RES.image("graphics/pacman/maze_full.png");
-			graphicsPacMan.emptyMaze = RES.image("graphics/pacman/maze_empty.png");
-			graphicsPacMan.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
+			var gpm = new PacManGameGraphics();
+			gpm.icon = RES.image("graphics/icons/pacman.png");
+			gpm.spritesheet = new Spritesheet(RES.image("graphics/pacman/sprites.png"), 16);
+			gpm.fullMaze = RES.image("graphics/pacman/maze_full.png");
+			gpm.emptyMaze = RES.image("graphics/pacman/maze_empty.png");
+			gpm.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
+
+			graphics = new Graphics(gpm, gmpm);
 
 			// Texts
 			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");

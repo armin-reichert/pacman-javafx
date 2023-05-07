@@ -47,7 +47,7 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	public PacManGameRenderer() {
-		super(Game2d.resources.graphicsPacMan.spritesheet);
+		super(Game2d.resources.graphics.pacMan().spritesheet);
 	}
 
 	@Override
@@ -96,10 +96,11 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flashing ? Game2d.resources.graphicsPacMan.flashingMaze : Game2d.resources.graphicsPacMan.emptyMaze,
-					x, y);
+			g.drawImage(
+					flashing ? Game2d.resources.graphics.pacMan().flashingMaze : Game2d.resources.graphics.pacMan().emptyMaze, x,
+					y);
 		} else {
-			g.drawImage(Game2d.resources.graphicsPacMan.fullMaze, x, y);
+			g.drawImage(Game2d.resources.graphics.pacMan().fullMaze, x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();

@@ -66,7 +66,6 @@ import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -254,12 +253,12 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(fmtMessage(Game2d.resources.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.resources.graphicsMsPacMan.icon);
+			stage.getIcons().setAll(Game2d.resources.graphics.msPacMan().icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(fmtMessage(Game2d.resources.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.resources.graphicsPacMan.icon);
+			stage.getIcons().setAll(Game2d.resources.graphics.pacMan().icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
