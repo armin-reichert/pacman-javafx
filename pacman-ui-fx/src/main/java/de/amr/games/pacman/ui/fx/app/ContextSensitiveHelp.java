@@ -114,13 +114,16 @@ public class ContextSensitiveHelp {
 		return game().variant();
 	}
 
+	private boolean attractMode() {
+		return game().level().isPresent() && game().level().get().isDemoLevel();
+	}
+
 	public Optional<Help> current() {
-		boolean attractMode = game().level().isPresent() && game().level().get().isDemoLevel();
 		var help = switch (gameController.state()) {
 		case BOOT -> null;
 		case CREDIT -> helpCredit();
 		case INTRO -> helpIntro();
-		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode ? helpDemoLevel() : helpPlaying();
+		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode() ? helpDemoLevel() : helpPlaying();
 		default -> null;
 		};
 		return Optional.ofNullable(help);
