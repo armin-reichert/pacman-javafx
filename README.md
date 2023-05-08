@@ -33,9 +33,9 @@ Any help in creating executables for Mac-OS and Linux is appreciated!
 - `build_2d.bat` or `build_3d.bat`
 
 This will
-- run a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
-- run a Maven build of the [pacman-ui-fx](pacman-ui-fx-2d) project (2D-only),
-- run a Maven build of the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
+- build the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) Maven project (game logic and model),
+- build the [pacman-ui-fx-2d](pacman-ui-fx-2d) Maven project (2D-only),
+- build the [pacman-ui-fx-3d](pacman-ui-fx-3d) Maven project (2D+3D),
 - create executable jar-file `pacman-ui-fx-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-2d\target`) and zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-2d-jlink\target`), or
 - executable jar-file `pacman-ui-fx-3d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-3d\target`) and zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-3d-jlink\target`).
 
