@@ -238,19 +238,19 @@ public class Game2d extends Application {
 
 	public static class Actions {
 
-		private final ActionContext context;
+		private final GameUI2d ui;
 
-		public Actions(ActionContext context) {
-			this.context = context;
+		public Actions(GameUI2d ui) {
+			this.ui = ui;
 		}
 
 		public void toggleHelp() {
 			Ufx.toggle(showHelpPy);
-			context.ui().updateContextSensitiveHelp();
+			ui.updateContextSensitiveHelp();
 		}
 
 		public void stopVoiceMessage() {
-			context.ui().stopVoiceMessage();
+			ui.stopVoiceMessage();
 		}
 
 		public void showFlashMessage(String message, Object... args) {
@@ -258,53 +258,53 @@ public class Game2d extends Application {
 		}
 
 		public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-			context.ui().flashMessageView().showMessage(String.format(message, args), seconds);
+			ui.flashMessageView().showMessage(String.format(message, args), seconds);
 		}
 
 		public void startGame() {
-			if (context.game().hasCredit()) {
-				context.ui().stopVoiceMessage();
-				context.gameController().startPlaying();
+			if (ui.gameController().game().hasCredit()) {
+				ui.stopVoiceMessage();
+				ui.gameController().startPlaying();
 			}
 		}
 
 		public void startCutscenesTest() {
-			context.gameController().startCutscenesTest();
+			ui.gameController().startCutscenesTest();
 			showFlashMessage("Cut scenes");
 		}
 
 		public void restartIntro() {
-			context.ui().currentGameScene().end();
+			ui.currentGameScene().end();
 			GameEvents.setSoundEventsEnabled(true);
-			if (context.game().isPlaying()) {
-				context.game().changeCredit(-1);
+			if (ui.gameController().game().isPlaying()) {
+				ui.gameController().game().changeCredit(-1);
 			}
-			context.gameController().restart(INTRO);
+			ui.gameController().restart(INTRO);
 		}
 
 		public void reboot() {
-			if (context.ui().currentGameScene() != null) {
-				context.ui().currentGameScene().end();
+			if (ui.currentGameScene() != null) {
+				ui.currentGameScene().end();
 			}
-			context.ui().playHelpVoiceMessageAfterSeconds(4);
-			context.gameController().restart(GameState.BOOT);
+			ui.playHelpVoiceMessageAfterSeconds(4);
+			ui.gameController().restart(GameState.BOOT);
 		}
 
 		public void addCredit() {
 			GameEvents.setSoundEventsEnabled(true);
-			context.gameController().addCredit();
+			ui.gameController().addCredit();
 		}
 
 		public void enterLevel(int newLevelNumber) {
-			if (context.gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
+			if (ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 				return;
 			}
-			context.game().level().ifPresent(level -> {
+			ui.gameController().game().level().ifPresent(level -> {
 				if (newLevelNumber > level.number()) {
 					for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-						context.game().nextLevel();
+						ui.gameController().game().nextLevel();
 					}
-					context.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+					ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 				} else if (newLevelNumber < level.number()) {
 					// not implemented
 				}
@@ -312,84 +312,84 @@ public class Game2d extends Application {
 		}
 
 		public void togglePaused() {
-			Ufx.toggle(context.ui().pausedPy);
+			Ufx.toggle(ui.pausedPy);
 			// TODO mute and unmute?
-			if (context.ui().pausedPy.get()) {
-				resources.gameSounds(context.game().variant()).stopAll();
+			if (ui.pausedPy.get()) {
+				resources.gameSounds(ui.gameController().game().variant()).stopAll();
 			}
 		}
 
 		public void oneSimulationStep() {
-			if (context.ui().pausedPy.get()) {
-				context.ui().executeSingleStep(true);
+			if (ui.pausedPy.get()) {
+				ui.executeSingleStep(true);
 			}
 		}
 
 		public void tenSimulationSteps() {
-			if (context.ui().pausedPy.get()) {
-				context.ui().executeSteps(10, true);
+			if (ui.pausedPy.get()) {
+				ui.executeSteps(10, true);
 			}
 		}
 
 		public void changeSimulationSpeed(int delta) {
-			int newFramerate = context.ui().targetFrameratePy.get() + delta;
+			int newFramerate = ui.targetFrameratePy.get() + delta;
 			if (newFramerate > 0 && newFramerate < 120) {
-				context.ui().targetFrameratePy.set(newFramerate);
+				ui.targetFrameratePy.set(newFramerate);
 				showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 			}
 		}
 
 		public void resetSimulationSpeed() {
-			context.ui().targetFrameratePy.set(GameModel.FPS);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(context.ui().targetFrameratePy.get()));
+			ui.targetFrameratePy.set(GameModel.FPS);
+			showFlashMessageSeconds(0.75, "%dHz".formatted(ui.targetFrameratePy.get()));
 		}
 
 		public void selectNextGameVariant() {
-			var gameVariant = context.game().variant().next();
-			context.gameController().selectGameVariant(gameVariant);
-			context.ui().playHelpVoiceMessageAfterSeconds(4);
+			var gameVariant = ui.gameController().game().variant().next();
+			ui.gameController().selectGameVariant(gameVariant);
+			ui.playHelpVoiceMessageAfterSeconds(4);
 		}
 
 		public void toggleAutopilot() {
-			context.gameController().toggleAutoControlled();
-			var auto = context.gameController().isAutoControlled();
+			ui.gameController().toggleAutoControlled();
+			var auto = ui.gameController().isAutoControlled();
 			String message = fmtMessage(resources.messages, auto ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(message);
-			context.ui().updateContextSensitiveHelp();
-			context.ui().playVoiceMessage(auto ? resources.voiceAutopilotOn : resources.voiceAutopilotOff);
+			ui.updateContextSensitiveHelp();
+			ui.playVoiceMessage(auto ? resources.voiceAutopilotOn : resources.voiceAutopilotOff);
 		}
 
 		public void toggleImmunity() {
-			context.game().setImmune(!context.game().isImmune());
-			var immune = context.game().isImmune();
+			ui.gameController().game().setImmune(!ui.gameController().game().isImmune());
+			var immune = ui.gameController().game().isImmune();
 			String message = fmtMessage(resources.messages, immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
-			context.ui().updateContextSensitiveHelp();
-			context.ui().playVoiceMessage(immune ? resources.voiceImmunityOn : resources.voiceImmunityOff);
+			ui.updateContextSensitiveHelp();
+			ui.playVoiceMessage(immune ? resources.voiceImmunityOn : resources.voiceImmunityOff);
 		}
 
 		public void startLevelTestMode() {
-			if (context.gameState() == GameState.INTRO) {
-				context.gameController().restart(GameState.LEVEL_TEST);
+			if (ui.gameController().state() == GameState.INTRO) {
+				ui.gameController().restart(GameState.LEVEL_TEST);
 				showFlashMessage("Level TEST MODE");
 			}
 		}
 
 		public void cheatAddLives(int numLives) {
-			context.game().setLives(numLives + context.game().lives());
-			showFlashMessage(fmtMessage(resources.messages, "cheat_add_lives", context.game().lives()));
+			ui.gameController().game().setLives(numLives + ui.gameController().game().lives());
+			showFlashMessage(fmtMessage(resources.messages, "cheat_add_lives", ui.gameController().game().lives()));
 		}
 
 		public void cheatEatAllPellets() {
-			context.gameController().cheatEatAllPellets();
+			ui.gameController().cheatEatAllPellets();
 		}
 
 		public void cheatEnterNextLevel() {
-			context.gameController().cheatEnterNextLevel();
+			ui.gameController().cheatEnterNextLevel();
 		}
 
 		public void cheatKillAllEatableGhosts() {
-			context.gameController().cheatKillAllEatableGhosts();
+			ui.gameController().cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -452,7 +452,7 @@ public class Game2d extends Application {
 		ui = new GameUI2d(primaryStage, settings);
 
 		// Some actions operate on on UI, thus must be created after UI
-		actions = new Actions(new ActionContext(ui));
+		actions = new Actions(ui);
 
 		// Initialize game state and start game clock
 		actions.reboot();

@@ -38,7 +38,6 @@ import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.ActionContext;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.util.Picker;
@@ -222,8 +221,8 @@ public class Game3d extends Application {
 
 		ui = new GameUI3d(primaryStage, settings);
 
-		// Some actions operate on on UI, thus must be created after UI
-		Game2d.actions = new Game2d.Actions(new ActionContext(ui));
+		// Actions operate on UI, so must be created after UI
+		Game2d.actions = new Game2d.Actions(ui);
 		Game3d.actions = new Game3d.Actions();
 
 		// Dashboard depends on actions
