@@ -30,7 +30,7 @@
 
 		<dependency>
 			<groupId>de.amr.games.pacman</groupId>
-			<artifactId>pacman-ui-fx</artifactId>
+			<artifactId>pacman-ui-fx-2d</artifactId>
 			<version>1.0</version>
 		</dependency>
 
