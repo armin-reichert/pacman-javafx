@@ -35,8 +35,8 @@ Any help in creating executables for Mac-OS and Linux is appreciated!
 This will
 - build the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) Maven project (game logic and model),
 - build the [pacman-ui-fx-2d](pacman-ui-fx-2d) Maven project (2D-only) or additionally the [pacman-ui-fx-3d](pacman-ui-fx-3d) Maven project (2D+3D),
-- create executable jar-file `pacman-ui-fx-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-2d\target`) and zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-2d-jlink\target`), or
-- executable jar-file `pacman-ui-fx-3d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-3d\target`) and zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-3d-jlink\target`).
+- create executable jar-file `pacman-ui-fx-2d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-2d\target`) and zip file `pacman-ui-fx-2d-jlink.1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-2d-jlink\target`), or
+- `pacman-ui-fx-3d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-3d\target`) and `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-3d-jlink\target`).
 
 ## How to use
 
