@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
+import org.tinylog.Logger;
+
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
@@ -36,9 +38,13 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -64,6 +70,12 @@ public class MsPacManIntroScene extends GameScene2D {
 		context.setScoreVisible(true);
 
 		intro = new MsPacManIntro(context.gameController());
+		intro.addStateChangeListener((oldState, newState) -> {
+			if (oldState == MsPacManIntro.State.START) {
+				showTribute();
+			}
+		});
+		tributeNote.setOpacity(0);
 		intro.changeState(MsPacManIntro.State.START);
 
 		var msPacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
@@ -134,8 +146,20 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawLevelCounter(g);
 	}
 
+	private void showTribute() {
+		Logger.info("Fade now");
+		var fadeIn = new FadeTransition(Duration.seconds(5), tributeNote);
+		fadeIn.setFromValue(0);
+		fadeIn.setToValue(1);
+		fadeIn.setInterpolator(Interpolator.EASE_IN);
+		var fadeOut = new FadeTransition(Duration.seconds(1), tributeNote);
+		fadeOut.setFromValue(1);
+		fadeOut.setToValue(0);
+		var fade = new SequentialTransition(fadeIn, fadeOut);
+		fade.play();
+	}
+
 	private void drawCopyright(GraphicsContext g) {
-		tributeNote.setVisible(true);
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawMsPacManCopyright(g, 29);
 	}

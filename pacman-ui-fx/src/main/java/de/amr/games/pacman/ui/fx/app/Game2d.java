@@ -30,7 +30,6 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 import static de.amr.games.pacman.ui.fx.util.Ufx.shift;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -443,7 +442,7 @@ public class Game2d extends Application {
 	public void start(Stage primaryStage) throws IOException {
 
 		// Convert command-line arguments (if any) into application settings
-		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
+		var settings = new Settings(getParameters().getNamed());
 
 		// Load resources
 		long start = System.nanoTime();
@@ -467,5 +466,9 @@ public class Game2d extends Application {
 	public void stop() throws Exception {
 		ui.stop();
 		Logger.info("Game stopped");
+	}
+
+	public static void main(String[] args) {
+		launch(args);
 	}
 }
