@@ -9,19 +9,19 @@ a full version where the play scene can be switched between 2D and 3D, even duri
 
 ### With Java runtime 18+ installed on your computer (Windows):
 
-- Download the executable jar file `pacman-ui-fx-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
+- Download `pacman-ui-fx-2d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
 
 ### Without locally installed Java runtime (Windows):
-- Download the zip file `pacman-ui-fx-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
+- Download `pacman-ui-fx-2d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
 ## How to run the 2D+3D version
 
 ### With Java runtime 18+ installed on your computer (Windows):
 
-- Download the executable jar file `pacman-ui-fx-3d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
+- Download `pacman-ui-fx-3d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
 
 ### Without locally installed Java runtime (Windows):
-- Download the zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
+- Download `pacman-ui-fx-3d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
 
 Any help in creating executables for Mac-OS and Linux is appreciated!
 
