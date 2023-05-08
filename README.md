@@ -30,18 +30,14 @@ Any help in creating executables for Mac-OS and Linux is appreciated!
 - Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
 - Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
 - `cd \path\to\git\pacman-javafx`
-- `build_core.bat`
-- `build_2d.bat`
-- `build_3d.bat`
+- `build_2d.bat` or `build_3d.bat`
 
 This will
 - run a Maven build of the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project (game logic and model),
-- run a Maven build of the [pacman-ui-fx](pacman-ui-fx) project (2D-only),
+- run a Maven build of the [pacman-ui-fx](pacman-ui-fx-2d) project (2D-only),
 - run a Maven build of the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
-- create an executable jar-file `pacman-ui-fx-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx\target`),
-- create an executable jar-file `pacman-ui-fx-3d-1.0-shaded.jar` (folder `pacman-javafx\pacman-ui-fx-3d\target`),
-- create a zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-jlink\target`).
-- create a zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (folder `pacman-javafx\pacman-ui-fx-3d-jlink\target`).
+- create executable jar-file `pacman-ui-fx-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-2d\target`) and zip file `pacman-ui-fx-jlink.1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-2d-jlink\target`), or
+- executable jar-file `pacman-ui-fx-3d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-3d\target`) and zip file `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-3d-jlink\target`).
 
 ## How to use
 
@@ -49,6 +45,7 @@ Starting the game and switching game variant:
 - <kbd>V</kbd> Switch between Pac-Man and Ms. Pac-Man (only possible on intro screen)
 - <kbd>5</kbd> Add credit ("insert coin")
 - <kbd>1</kbd> Start game
+- <kbd>H</kbd>Show/hide context-sensitive help
 
 Pac-Man steering:
 - Pac-Man is steered using the cursor keys. When the dashboard is open, these keys are taken away by the JavaFX widgets. 
