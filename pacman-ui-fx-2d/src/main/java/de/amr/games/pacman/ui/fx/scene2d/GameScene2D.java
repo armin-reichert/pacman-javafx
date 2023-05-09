@@ -187,7 +187,7 @@ public abstract class GameScene2D implements GameScene {
 		// empty by default
 	}
 
-	protected TextFlow createSignature(double x, double y) {
+	protected TextFlow addSignature(double x, double y) {
 		var t1 = new Text("Remake (2023) by ");
 		t1.setFill(Color.gray(0.75));
 		t1.setFont(Font.font("Helvetica", 9));
@@ -199,6 +199,8 @@ public abstract class GameScene2D implements GameScene {
 		var signature = new TextFlow(t1, t2);
 		signature.setTranslateX(x);
 		signature.setTranslateY(y);
+
+		overlay.getChildren().add(signature);
 		return signature;
 	}
 
