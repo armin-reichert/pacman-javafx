@@ -66,32 +66,27 @@ public abstract class GameScene2D implements GameScene {
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	protected final GameSceneContext context;
-	private final StackPane container;
-	protected final Pane overlay;
 	protected final SubScene fxSubScene;
-	protected final Canvas canvas;
+	protected final StackPane root = new StackPane();
+	protected final Canvas canvas = new Canvas();
+	protected final Pane overlay = new Pane();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
-
-		canvas = new Canvas();
-		overlay = new Pane();
-		container = new StackPane(canvas, overlay);
-
-		fxSubScene = new SubScene(container, WIDTH, HEIGHT);
-
-		// keep canvas always the same size as the subscene
+		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 
 		var scaling = new Scale();
 		scaling.xProperty().bind(Bindings.createDoubleBinding(this::canvasScaling, fxSubScene.widthProperty()));
 		scaling.yProperty().bind(Bindings.createDoubleBinding(this::canvasScaling, fxSubScene.heightProperty()));
-		container.getTransforms().add(scaling);
+		canvas.getTransforms().add(scaling);
+		overlay.getTransforms().add(scaling);
 
-		// This avoids the white vertical line left of the embedded 2D game scene
-		container.setBackground(ResourceManager.colorBackground(Color.BLACK)); // TODO
+		// This avoids a white vertical line left of the embedded 2D game scene
+		root.setBackground(ResourceManager.colorBackground(Color.BLACK));
+		root.getChildren().addAll(canvas, overlay);
 
 		infoVisiblePy.bind(Game2d.showDebugInfoPy);
 	}
@@ -149,18 +144,27 @@ public abstract class GameScene2D implements GameScene {
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
 		var r = context.rendering2D();
-		r.fillCanvas(g, ArcadeTheme.BLACK);
+		double w = Math.ceil(canvas.getWidth() / canvasScaling());
+		double h = Math.ceil(canvas.getHeight() / canvasScaling());
+//		Logger.info("{0.00} x {0.00}", w, h);
+
+		g.setFill(Color.GRAY);
+		g.fillRect(0, 0, w, h);
+		g.setFill(Color.BLACK);
+		g.fillRoundRect(0, 0, w, h, 20, 20);
+
+		var font = r.screenFont(8);
+		var color = ArcadeTheme.PALE;
 		if (context.isScoreVisible()) {
-			context.game().score()
-					.ifPresent(score -> r.drawScore(g, score, "SCORE", r.screenFont(8), ArcadeTheme.PALE, TS * (1), TS * (1)));
-			context.game().highScore().ifPresent(
-					score -> r.drawScore(g, score, "HIGH SCORE", r.screenFont(8), ArcadeTheme.PALE, TS * (16), TS * (1)));
+			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
+			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 16, TS));
 		}
-		drawScene(g);
 		if (context.isCreditVisible()) {
-			Rendering2D.drawText(g, "CREDIT %2d".formatted(context.game().credit()), ArcadeTheme.PALE, r.screenFont(TS),
-					TS * (2), TS * (36) - 1);
+			var creditText = "CREDIT %2d".formatted(context.game().credit());
+			Rendering2D.drawText(g, creditText, color, font, TS * 2, TS * 36 - 1);
 		}
+
+		drawScene(g);
 		if (infoVisiblePy.get()) {
 			drawInfo(g);
 		}
