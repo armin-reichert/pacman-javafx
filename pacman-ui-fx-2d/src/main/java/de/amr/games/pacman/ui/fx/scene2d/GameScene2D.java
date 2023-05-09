@@ -187,7 +187,7 @@ public abstract class GameScene2D implements GameScene {
 		// empty by default
 	}
 
-	protected TextFlow createSignature() {
+	protected TextFlow createSignature(double x, double y) {
 		var t1 = new Text("Remake (2023) by ");
 		t1.setFill(Color.gray(0.75));
 		t1.setFont(Font.font("Helvetica", 9));
@@ -196,7 +196,10 @@ public abstract class GameScene2D implements GameScene {
 		t2.setFill(Color.gray(0.75));
 		t2.setFont(Game2d.resources.font(Game2d.resources.handwritingFont, 9));
 
-		return new TextFlow(t1, t2);
+		var signature = new TextFlow(t1, t2);
+		signature.setTranslateX(x);
+		signature.setTranslateY(y);
+		return signature;
 	}
 
 	protected void drawLevelCounter(GraphicsContext g) {

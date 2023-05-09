@@ -58,9 +58,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
 
-		signature = createSignature();
-		signature.setTranslateX(5.5 * TS);
-		signature.setTranslateY(32.0 * TS);
+		signature = createSignature(5.5 * TS, 32.0 * TS);
 		overlay.getChildren().add(signature);
 	}
 
