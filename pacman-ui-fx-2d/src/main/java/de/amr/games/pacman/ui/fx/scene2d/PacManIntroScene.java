@@ -37,8 +37,7 @@ import de.amr.games.pacman.ui.fx.app.Game2d.Keys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * Intro scene of the PacMan game.
@@ -53,19 +52,22 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
-	private Text tributeNote;
+	private TextFlow signature;
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		tributeNote = addNote("Pac-Man tribute by Armin Reichert",
-				Game2d.resources.font(Game2d.resources.handwritingFont, 9), Color.gray(0.5), 1.5 * TS, 30 * TS);
+
+		signature = createSignature();
+		signature.setTranslateX(5.5 * TS);
+		signature.setTranslateY(32.0 * TS);
+		overlay.getChildren().add(signature);
 	}
 
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
-		tributeNote.setVisible(false);
+		signature.setVisible(false);
 
 		intro = new PacManIntro(context().gameController());
 		intro.changeState(State.START);
@@ -130,7 +132,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright(GraphicsContext g) {
-		tributeNote.setVisible(true);
+		signature.setVisible(true);
 		drawMidwayCopyright(g, 4, 32);
 	}
 

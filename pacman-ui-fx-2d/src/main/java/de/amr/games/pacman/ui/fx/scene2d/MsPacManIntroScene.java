@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
@@ -42,8 +40,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 /**
@@ -56,12 +53,15 @@ import javafx.util.Duration;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private Text tributeNote;
+	private TextFlow signature;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		tributeNote = addNote("Ms Pac-Man tribute by Armin Reichert",
-				Game2d.resources.font(Game2d.resources.handwritingFont, 9), Color.gray(0.5), 0.5 * TS, 27.5 * TS);
+
+		signature = createSignature();
+		signature.setTranslateX(5.5 * TS);
+		signature.setTranslateY(32.0 * TS);
+		overlay.getChildren().add(signature);
 	}
 
 	@Override
@@ -72,10 +72,9 @@ public class MsPacManIntroScene extends GameScene2D {
 		intro = new MsPacManIntro(context.gameController());
 		intro.addStateChangeListener((oldState, newState) -> {
 			if (oldState == MsPacManIntro.State.START) {
-				showTribute();
+				showSignature();
 			}
 		});
-		tributeNote.setOpacity(0);
 		intro.changeState(MsPacManIntro.State.START);
 
 		var msPacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
@@ -86,6 +85,8 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghost.setAnimations(ghostAnimations);
 			ghostAnimations.start();
 		});
+
+		signature.setOpacity(0); // invisible on start
 	}
 
 	@Override
@@ -146,13 +147,12 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawLevelCounter(g);
 	}
 
-	private void showTribute() {
-		Logger.info("Fade now");
-		var fadeIn = new FadeTransition(Duration.seconds(5), tributeNote);
+	private void showSignature() {
+		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
 		fadeIn.setFromValue(0);
 		fadeIn.setToValue(1);
 		fadeIn.setInterpolator(Interpolator.EASE_IN);
-		var fadeOut = new FadeTransition(Duration.seconds(1), tributeNote);
+		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
 		fadeOut.setFromValue(1);
 		fadeOut.setToValue(0);
 		var fade = new SequentialTransition(fadeIn, fadeOut);

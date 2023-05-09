@@ -50,6 +50,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Scale;
 
 /**
@@ -186,6 +187,18 @@ public abstract class GameScene2D implements GameScene {
 		// empty by default
 	}
 
+	protected TextFlow createSignature() {
+		var t1 = new Text("Remake (2023) by ");
+		t1.setFill(Color.gray(0.75));
+		t1.setFont(Font.font("Helvetica", 9));
+
+		var t2 = new Text("Armin Reichert");
+		t2.setFill(Color.gray(0.75));
+		t2.setFont(Game2d.resources.font(Game2d.resources.handwritingFont, 9));
+
+		return new TextFlow(t1, t2);
+	}
+
 	protected void drawLevelCounter(GraphicsContext g) {
 		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
 	}
@@ -195,14 +208,4 @@ public abstract class GameScene2D implements GameScene {
 		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
 	}
 
-	protected Text addNote(String s, Font font, Color color, double x, double y) {
-		var text = new Text(s);
-		text.setFill(color);
-		text.fontProperty().bind(Bindings.createObjectBinding(
-				() -> Font.font(font.getFamily(), font.getSize() * canvas.getScaleY()), canvas.scaleYProperty()));
-		text.translateXProperty().bind(Bindings.createDoubleBinding(() -> x * canvas.getScaleX(), canvas.scaleXProperty()));
-		text.translateYProperty().bind(Bindings.createDoubleBinding(() -> y * canvas.getScaleY(), canvas.scaleYProperty()));
-		overlay.getChildren().add(text);
-		return text;
-	}
 }
