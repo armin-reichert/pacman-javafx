@@ -53,10 +53,8 @@ import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -88,7 +86,6 @@ public class Game2d extends Application {
 	public static final ResourceManager RES = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 	//@formatter:off
-	public static final ObjectProperty<Color> mainSceneBgColorPy = new SimpleObjectProperty<>(Color.rgb(3,9,66));
 	public static final BooleanProperty       showHelpPy         = new SimpleBooleanProperty(false);
 	public static final BooleanProperty       showDebugInfoPy    = new SimpleBooleanProperty(false);
 	public static final IntegerProperty       simulationStepsPy  = new SimpleIntegerProperty(1);

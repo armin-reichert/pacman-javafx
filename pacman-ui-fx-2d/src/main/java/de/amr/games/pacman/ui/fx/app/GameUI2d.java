@@ -266,7 +266,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	 * @param settings application settings
 	 */
 	protected void initProperties(Settings settings) {
-		Game2d.mainSceneBgColorPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
 
 	/**
