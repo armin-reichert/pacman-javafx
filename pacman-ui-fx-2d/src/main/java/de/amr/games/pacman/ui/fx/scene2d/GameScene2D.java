@@ -47,6 +47,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -71,6 +72,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final StackPane root = new StackPane();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane overlay = new Pane();
+	protected final VBox helpRoot = new VBox();
 
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
@@ -88,6 +90,10 @@ public abstract class GameScene2D implements GameScene {
 		// This avoids a white vertical line left of the embedded 2D game scene
 		root.setBackground(ResourceManager.colorBackground(Color.BLACK));
 		root.getChildren().addAll(canvas, overlay);
+
+		overlay.getChildren().add(helpRoot);
+		helpRoot.setTranslateX(10);
+		helpRoot.setTranslateY(HEIGHT * 0.2);
 
 		infoVisiblePy.bind(Game2d.showDebugInfoPy);
 	}
@@ -119,6 +125,10 @@ public abstract class GameScene2D implements GameScene {
 
 	public Canvas canvas() {
 		return canvas;
+	}
+
+	public VBox helpRoot() {
+		return helpRoot;
 	}
 
 	/**

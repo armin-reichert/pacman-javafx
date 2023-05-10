@@ -51,6 +51,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene2d.BootScene;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene1;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene2;
@@ -67,7 +68,6 @@ import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
@@ -199,24 +199,22 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected void createMainSceneLayout() {
 		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
 		mainSceneRoot.getChildren().add(flashMessageView);
-		mainSceneRoot.getChildren().add(new Label("Help panel comes here"));
 	}
 
 	public void updateContextSensitiveHelp() {
-		if (Game2d.showHelpPy.get()) {
-			var help = contextSensitiveHelp.current();
-			if (help.isEmpty()) {
-				mainSceneRoot.getChildren().get(2).setVisible(false);
+		if (currentGameScene instanceof GameScene2D scene2D) {
+			if (Game2d.showHelpPy.get()) {
+				var help = contextSensitiveHelp.current();
+				if (help.isEmpty()) {
+					scene2D.helpRoot().getChildren().clear();
+				} else {
+					var font = Game2d.resources.font(Game2d.resources.arcadeFont, 8);
+					var panel = help.get().createPane(gameController, font);
+					scene2D.helpRoot().getChildren().setAll(panel);
+				}
 			} else {
-				var w = mainScene.getWidth();
-				var fontSize = w < 250 ? 10 : w < 440 ? 12 : 16;
-				var font = Game2d.resources.font(Game2d.resources.arcadeFont, fontSize);
-				var panel = help.get().createPane(gameController, font);
-				StackPane.setAlignment(panel, Pos.CENTER_LEFT);
-				mainSceneRoot.getChildren().set(2, panel);
+				scene2D.helpRoot().getChildren().clear();
 			}
-		} else {
-			mainSceneRoot.getChildren().get(2).setVisible(false);
 		}
 	}
 
@@ -243,23 +241,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	@Override
 	public void doRender() {
-//		renderActiveBackground();
 		flashMessageView.update();
 		currentGameScene.render();
 	}
-
-//	private void renderActiveBackground() {
-//		if (getUpdateCount() % 15 == 0 && currentGameScene instanceof PlayScene2D gameScene2D) {
-//			SnapshotParameters p = new SnapshotParameters();
-//			p.setTransform(new Scale(1.5, 1.5));
-//			p.setViewport(new Rectangle2D(40, 200, 100, 100));
-//			var snapshot = new WritableImage(28 * 8, 36 * 8);
-//			gameScene2D.canvas().snapshot(p, snapshot);
-//			var bgImage = new BackgroundImage(snapshot, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null,
-//					new BackgroundSize(1.0, 1.0, true, true, false, true));
-//			mainSceneRoot.setBackground(new Background(bgImage));
-//		}
-//	}
 
 	protected void updateStage() {
 		mainSceneRoot.setBackground(Game2d.resources.wallpaper2D);
