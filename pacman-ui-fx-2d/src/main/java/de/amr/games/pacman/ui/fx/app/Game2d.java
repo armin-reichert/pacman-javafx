@@ -86,9 +86,9 @@ public class Game2d extends Application {
 	public static final ResourceManager RES = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 	//@formatter:off
-	public static final BooleanProperty       showHelpPy         = new SimpleBooleanProperty(false);
-	public static final BooleanProperty       showDebugInfoPy    = new SimpleBooleanProperty(false);
-	public static final IntegerProperty       simulationStepsPy  = new SimpleIntegerProperty(1);
+	public static final BooleanProperty showHelpPy        = new SimpleBooleanProperty(false);
+	public static final BooleanProperty showDebugInfoPy   = new SimpleBooleanProperty(false);
+	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	//@formatter:on
 
 	public static class Resources {
@@ -108,9 +108,6 @@ public class Game2d extends Application {
 			public Image[] emptyFlashingMaze;
 		}
 
-		public record Graphics(PacManGameGraphics pacMan, MsPacManGameGraphics msPacMan) {
-		}
-
 		public final Font arcadeFont;
 		public final Font handwritingFont;
 
@@ -122,11 +119,13 @@ public class Game2d extends Application {
 		public final AudioClip voiceImmunityOff;
 		public final AudioClip voiceImmunityOn;
 
-		public final Graphics graphics;
 		public final Background wallpaper2D;
 
-		public final GameSounds gameSoundsMsPacMan;
-		public final GameSounds gameSoundsPacMan;
+		public final PacManGameGraphics graphicsPacMan;
+		public final MsPacManGameGraphics graphicsMsPacMan;
+
+		public final GameSounds soundsMsPacMan;
+		public final GameSounds soundsPacMan;
 
 		public Resources() {
 
@@ -135,28 +134,27 @@ public class Game2d extends Application {
 			handwritingFont = RES.font("fonts/RockSalt-Regular.ttf", 8);
 
 			// Graphics
-			var gmpm = new MsPacManGameGraphics();
-			gmpm.icon = RES.image("graphics/icons/mspacman.png");
-			gmpm.spritesheet = new Spritesheet(RES.image("graphics/mspacman/sprites.png"), 16);
-			gmpm.emptyFlashingMaze = new Image[6];
+			wallpaper2D = RES.imageBackground("graphics/pacman_wallpaper_gray.png");
+
+			graphicsMsPacMan = new MsPacManGameGraphics();
+			graphicsMsPacMan.icon = RES.image("graphics/icons/mspacman.png");
+			graphicsMsPacMan.spritesheet = new Spritesheet(RES.image("graphics/mspacman/sprites.png"), 16);
+			graphicsMsPacMan.emptyFlashingMaze = new Image[6];
 			for (int i = 0; i < 6; ++i) {
-				var maze = gmpm.spritesheet.subImage(228, 248 * i, 226, 248);
+				var maze = graphicsMsPacMan.spritesheet.subImage(228, 248 * i, 226, 248);
 				var mazeColors = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i];
-				gmpm.emptyFlashingMaze[i] = Ufx.colorsExchanged(maze, Map.of(//
+				graphicsMsPacMan.emptyFlashingMaze[i] = Ufx.colorsExchanged(maze, Map.of(//
 						mazeColors.wallBaseColor(), Color.WHITE, //
 						mazeColors.wallTopColor(), Color.BLACK));
 			}
-			gmpm.logo = RES.image("graphics/mspacman/midway.png");
+			graphicsMsPacMan.logo = RES.image("graphics/mspacman/midway.png");
 
-			var gpm = new PacManGameGraphics();
-			gpm.icon = RES.image("graphics/icons/pacman.png");
-			gpm.spritesheet = new Spritesheet(RES.image("graphics/pacman/sprites.png"), 16);
-			gpm.fullMaze = RES.image("graphics/pacman/maze_full.png");
-			gpm.emptyMaze = RES.image("graphics/pacman/maze_empty.png");
-			gpm.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
-
-			graphics = new Graphics(gpm, gmpm);
-			wallpaper2D = RES.imageBackground("graphics/pacman_wallpaper_gray.png");
+			graphicsPacMan = new PacManGameGraphics();
+			graphicsPacMan.icon = RES.image("graphics/icons/pacman.png");
+			graphicsPacMan.spritesheet = new Spritesheet(RES.image("graphics/pacman/sprites.png"), 16);
+			graphicsPacMan.fullMaze = RES.image("graphics/pacman/maze_full.png");
+			graphicsPacMan.emptyMaze = RES.image("graphics/pacman/maze_empty.png");
+			graphicsPacMan.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
 
 			// Texts
 			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
@@ -212,8 +210,8 @@ public class Game2d extends Application {
 			};
 			//@formatter:on
 
-			gameSoundsMsPacMan = new GameSounds(audioClipsMsPacman, true);
-			gameSoundsPacMan = new GameSounds(audioClipsPacman, true);
+			soundsMsPacMan = new GameSounds(audioClipsMsPacman, true);
+			soundsPacMan = new GameSounds(audioClipsPacman, true);
 		}
 
 		public Font font(Font font, double size) {
@@ -230,8 +228,8 @@ public class Game2d extends Application {
 
 		public GameSounds gameSounds(GameVariant variant) {
 			return switch (variant) {
-			case MS_PACMAN -> gameSoundsMsPacMan;
-			case PACMAN -> gameSoundsPacMan;
+			case MS_PACMAN -> soundsMsPacMan;
+			case PACMAN -> soundsPacMan;
 			default -> throw new IllegalGameVariantException(variant);
 			};
 		}

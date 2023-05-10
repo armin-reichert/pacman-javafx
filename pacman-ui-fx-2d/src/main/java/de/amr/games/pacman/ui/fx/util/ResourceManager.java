@@ -91,14 +91,14 @@ public class ResourceManager {
 				.toArray(String[]::new));
 	}
 
-	private final Class<?> clientClass;
+	private final Class<?> callerClass;
 	private final String rootDir;
 
-	public ResourceManager(String rootDir, Class<?> clientClass) {
+	public ResourceManager(String rootDir, Class<?> callerClass) {
 		checkNotNull(rootDir);
-		checkNotNull(clientClass);
+		checkNotNull(callerClass);
 		this.rootDir = rootDir;
-		this.clientClass = clientClass;
+		this.callerClass = callerClass; // TODO what about Reflection.getCallerClass()?
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class ResourceManager {
 	 */
 	public URL urlFromRelPath(String relPath) {
 		checkNotNull(relPath);
-		return clientClass.getResource(rootDir + relPath);
+		return callerClass.getResource(rootDir + relPath);
 	}
 
 	/**
