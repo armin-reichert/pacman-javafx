@@ -43,10 +43,13 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.Animation.Status;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -62,6 +65,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * This is 2D-only version of the Pac-Man and Ms. Pac-Man games.
@@ -239,14 +243,31 @@ public class Game2d extends Application {
 	public static class Actions {
 
 		private final GameUI2d ui;
+		private FadeTransition helpFadingAway;
 
 		public Actions(GameUI2d ui) {
 			this.ui = ui;
 		}
 
 		public void toggleHelp() {
-			Ufx.toggle(showHelpPy);
-			ui.updateContextSensitiveHelp();
+			boolean fadingAway = helpFadingAway != null && helpFadingAway.getStatus() == Status.RUNNING;
+			if (ui.currentGameScene().is3D() || fadingAway) {
+				return;
+			}
+			var gameScene = (GameScene2D) ui.currentGameScene;
+			if (showHelpPy.get()) {
+				showHelpPy.set(false);
+			} else {
+				showHelpPy.set(true);
+				ui.updateContextSensitiveHelp();
+				gameScene.helpRoot().setOpacity(1);
+				helpFadingAway = new FadeTransition(Duration.seconds(1), gameScene.helpRoot());
+				helpFadingAway.setFromValue(1);
+				helpFadingAway.setToValue(0);
+				helpFadingAway.setOnFinished(e -> showHelpPy.set(false));
+				helpFadingAway.setDelay(Duration.seconds(2));
+				helpFadingAway.play();
+			}
 		}
 
 		public void stopVoiceMessage() {
