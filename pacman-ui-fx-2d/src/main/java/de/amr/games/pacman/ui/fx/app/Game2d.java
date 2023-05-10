@@ -260,7 +260,7 @@ public class Game2d extends Application {
 				helpFadingAway.setFromValue(1);
 				helpFadingAway.setToValue(0);
 				helpFadingAway.setOnFinished(e -> showHelpPy.set(false));
-				helpFadingAway.setDelay(Duration.seconds(2));
+				helpFadingAway.setDelay(Duration.seconds(3));
 				helpFadingAway.play();
 			}
 		}

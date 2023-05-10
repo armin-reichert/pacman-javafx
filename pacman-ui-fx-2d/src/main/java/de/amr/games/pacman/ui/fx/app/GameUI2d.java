@@ -112,6 +112,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.stage = stage;
 		this.gameController = new GameController(settings.variant);
 		this.contextSensitiveHelp = new ContextSensitiveHelp(gameController);
+		contextSensitiveHelp.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, 8));
 
 		configureRenderers(settings);
 		createMsPacManSceneChoices();
@@ -208,8 +209,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 				if (help.isEmpty()) {
 					scene2D.helpRoot().getChildren().clear();
 				} else {
-					var font = Game2d.resources.font(Game2d.resources.arcadeFont, 8);
-					var panel = help.get().createPane(gameController, font);
+					var panel = help.get();
 					scene2D.helpRoot().getChildren().setAll(panel);
 				}
 			} else {
