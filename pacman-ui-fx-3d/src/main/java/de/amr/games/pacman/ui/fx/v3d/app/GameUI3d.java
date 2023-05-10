@@ -107,9 +107,8 @@ public class GameUI3d extends GameUI2d {
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pipGameScene.fxSubScene());
-		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
+		mainSceneRoot.getChildren().add(new Label("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
-		mainSceneRoot.getChildren().add(new Label("Help panel comes here"));
 		mainSceneRoot.getChildren().add(dashboardLayer);
 	}
 

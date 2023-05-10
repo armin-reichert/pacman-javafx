@@ -78,24 +78,21 @@ public class ContextSensitiveHelp {
 					GridPane.setColumnSpan(text, 2);
 				}
 			}
-			int rowIndex = table.size();
 			if (gameController.isAutoControlled()) {
 				var text = text("AUTOPILOT ON", font);
 				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex);
-				++rowIndex;
+				grid.add(text, 0, table.size());
 			}
 			if (gameController.game().isImmune()) {
 				var text = text("IMMUNITY ON", font);
 				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex);
-				++rowIndex;
+				grid.add(text, 0, table.size() + 1);
 			}
 
 			var pane = new BorderPane(grid);
 			pane.setMaxSize(100, 50);
 			pane.setPadding(new Insets(10));
-			pane.setBackground(ResourceManager.colorBackground(Color.rgb(200, 200, 200, 0.35)));
+			pane.setBackground(ResourceManager.colorBackground(Color.rgb(200, 200, 200, 0.66)));
 			return pane;
 		}
 	}
@@ -131,37 +128,37 @@ public class ContextSensitiveHelp {
 	private Help helpIntro() {
 		var help = new Help();
 		if (game().credit() > 0) {
-			help.addRow("START GAME", "1");
+			help.addRow("START GAME", "[1]");
 		}
-		help.addRow("ADD CREDIT", "5");
-		help.addRow(variant() == GameVariant.MS_PACMAN ? "PAC-MAN" : "MS.PAC-MAN", "V");
+		help.addRow("ADD CREDIT", "[5]");
+		help.addRow(variant() == GameVariant.MS_PACMAN ? "PAC-MAN" : "MS.PAC-MAN", "[V]");
 		return help;
 	}
 
 	private Help helpCredit() {
 		var help = new Help();
-		help.addRow("ADD CREDIT", "5");
 		if (game().credit() > 0) {
-			help.addRow("START GAME", "1");
+			help.addRow("START GAME", "[1]");
 		}
-		help.addRow("QUIT", "Q");
+		help.addRow("ADD CREDIT", "[5]");
+		help.addRow("QUIT", "[Q]");
 		return help;
 	}
 
 	private Help helpPlaying() {
 		var help = new Help();
-		help.addRow("LEFT", "CURSOR LEFT");
-		help.addRow("RIGHT", "CURSOR RIGHT");
-		help.addRow("UP", "CURSOR UP");
-		help.addRow("DOWN", "CURSOR DOWN");
-		help.addRow("QUIT", "Q");
+		help.addRow("LEFT", "[CURSOR LEFT]");
+		help.addRow("RIGHT", "[CURSOR RIGHT]");
+		help.addRow("UP", "[CURSOR UP]");
+		help.addRow("DOWN", "[CURSOR DOWN]");
+		help.addRow("QUIT", "[Q]");
 		return help;
 	}
 
 	private Help helpDemoLevel() {
 		var help = new Help();
-		help.addRow("ADD CREDIT", "5");
-		help.addRow("QUIT", "Q");
+		help.addRow("ADD CREDIT", "[5]");
+		help.addRow("QUIT", "[Q]");
 		return help;
 	}
 }
