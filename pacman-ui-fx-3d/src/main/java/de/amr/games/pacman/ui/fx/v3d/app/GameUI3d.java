@@ -28,6 +28,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 import java.util.Optional;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.Game2d;
@@ -42,6 +43,9 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.SubScene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -62,10 +66,41 @@ import javafx.stage.Stage;
  */
 public class GameUI3d extends GameUI2d {
 
-	public static final float PIP_MIN_HEIGHT = TS * TILES_Y;
-	public static final float PIP_MAX_HEIGHT = 2.5f * PIP_MIN_HEIGHT;
+	public class PictureInPicture {
 
-	private PlayScene2D pipGameScene;
+		public static final float MIN_HEIGHT = TS * TILES_Y;
+		public static final float MAX_HEIGHT = 2.5f * MIN_HEIGHT;
+
+		public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
+		private final PlayScene2D playScene;
+
+		public PictureInPicture(GameController gameController) {
+			playScene = new PlayScene2D(gameController);
+			playScene.fxSubScene().opacityProperty().bind(opacityPy);
+		}
+
+		public void update() {
+			boolean visible = Game3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
+			playScene.fxSubScene().setVisible(visible);
+			playScene.context().setCreditVisible(false);
+			playScene.context().setScoreVisible(true);
+			playScene.context().setRendering2D(currentGameScene.context().rendering2D());
+		}
+
+		public void render() {
+			playScene.render();
+		}
+
+		public SubScene fxSubScene() {
+			return playScene.fxSubScene();
+		}
+
+		public void setHeight(double height) {
+			playScene.resize(height);
+		}
+	}
+
+	private PictureInPicture pip;
 	private Dashboard dashboard;
 
 	public GameUI3d(Stage stage, Settings settings) {
@@ -81,7 +116,7 @@ public class GameUI3d extends GameUI2d {
 		flashMessageView.update();
 		currentGameScene.render();
 		dashboard.update();
-		pipGameScene.render();
+		pip.render();
 	}
 
 	@Override
@@ -102,11 +137,11 @@ public class GameUI3d extends GameUI2d {
 
 	@Override
 	protected void createMainSceneLayout() {
-		pipGameScene = new PlayScene2D(gameController);
+		pip = new PictureInPicture(gameController);
 		dashboard = new Dashboard(this);
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pipGameScene.fxSubScene());
+		dashboardLayer.setRight(pip.fxSubScene());
 		mainSceneRoot.getChildren().add(new Label("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 		mainSceneRoot.getChildren().add(dashboardLayer);
@@ -114,7 +149,7 @@ public class GameUI3d extends GameUI2d {
 
 	@Override
 	protected void updateStage() {
-		updatePictureInPictureView();
+		pip.update();
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (Game3d.d3_drawModePy.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(ResourceManager.colorBackground(Color.BLACK));
@@ -146,12 +181,12 @@ public class GameUI3d extends GameUI2d {
 		super.initProperties(settings);
 
 		dashboard.visibleProperty().bind(Game3d.dashboardVisiblePy);
-		Game3d.pipVisiblePy.addListener((py, oldVal, newVal) -> updatePictureInPictureView());
-		Game3d.pipHeightPy.addListener((py, oldVal, newVal) -> pipGameScene.resize(newVal.doubleValue()));
-		pipGameScene.fxSubScene().opacityProperty().bind(Game3d.pipOpacityPy);
+		pip.opacityPy.bind(Game3d.pipOpacityPy);
+		Game3d.pipVisiblePy.addListener((py, ov, nv) -> pip.update());
+		Game3d.pipHeightPy.addListener((py, ov, nv) -> pip.setHeight(nv.doubleValue()));
 
-		Game3d.d3_drawModePy.addListener((py, oldVal, newVal) -> updateStage());
-		Game3d.d3_enabledPy.addListener((py, oldVal, newVal) -> updateStage());
+		Game3d.d3_drawModePy.addListener((py, ov, nv) -> updateStage());
+		Game3d.d3_enabledPy.addListener((py, ov, nv) -> updateStage());
 		Game3d.d3_enabledPy.set(true);
 		Game3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
@@ -174,32 +209,26 @@ public class GameUI3d extends GameUI2d {
 	@Override
 	protected void handleKeyboardInput() {
 		super.handleKeyboardInput();
-		if (Keyboard.pressed(Game3d.Keys.TOGGLE_2D_3D)) {
-			toggleUse3DScene();
-		} else if (Keyboard.pressed(Game3d.Keys.DASHBOARD) || Keyboard.pressed(Game3d.Keys.DASHBOARD2)) {
+		if (Keyboard.pressed(Game3d.Keys.TOGGLE_3D_ENABLED)) {
+			toggle3DEnabled();
+		} else if (Keyboard.pressed(Game3d.Keys.TOGGLE_DASHBOARD_VISIBLE)
+				|| Keyboard.pressed(Game3d.Keys.TOGGLE_DASHBOARD_VISIBLE_2)) {
 			Game3d.actions.toggleDashboardVisible();
-		} else if (Keyboard.pressed(Game3d.Keys.PIP_VIEW)) {
+		} else if (Keyboard.pressed(Game3d.Keys.TOGGLE_PIP_VIEW_VISIBLE)) {
 			Game3d.actions.togglePipVisibility();
 		}
 	}
 
-	public void toggleUse3DScene() {
+	public void toggle3DEnabled() {
 		Ufx.toggle(Game3d.d3_enabledPy);
 		if (findGameScene(3).isPresent()) {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
+			// if for example toggle action occurs in intro scene, show message indicating which variant is used
 			var message = fmtMessage(Game3d.resources.messages, Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
 			Game2d.actions.showFlashMessage(message);
 		}
-	}
-
-	private void updatePictureInPictureView() {
-		boolean visible = Game3d.pipVisiblePy.get() && isPlayScene(currentGameScene);
-		pipGameScene.fxSubScene().setVisible(visible);
-		pipGameScene.context().setCreditVisible(false);
-		pipGameScene.context().setScoreVisible(true);
-		pipGameScene.context().setRendering2D(currentGameScene.context().rendering2D());
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {

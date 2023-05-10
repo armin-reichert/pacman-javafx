@@ -187,10 +187,10 @@ public class Game3d extends Application {
 	}
 
 	public static class Keys {
-		public static final KeyCodeCombination DASHBOARD = just(KeyCode.F1);
-		public static final KeyCodeCombination DASHBOARD2 = alt(KeyCode.B);
-		public static final KeyCodeCombination PIP_VIEW = just(KeyCode.F2);
-		public static final KeyCodeCombination TOGGLE_2D_3D = alt(KeyCode.DIGIT3);
+		public static final KeyCodeCombination TOGGLE_DASHBOARD_VISIBLE = just(KeyCode.F1);
+		public static final KeyCodeCombination TOGGLE_DASHBOARD_VISIBLE_2 = alt(KeyCode.B);
+		public static final KeyCodeCombination TOGGLE_PIP_VIEW_VISIBLE = just(KeyCode.F2);
+		public static final KeyCodeCombination TOGGLE_3D_ENABLED = alt(KeyCode.DIGIT3);
 		public static final KeyCodeCombination PREV_CAMERA = alt(KeyCode.LEFT);
 		public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 	}

@@ -56,8 +56,8 @@ public class Section3D extends Section {
 		comboPerspective.setOnAction(e -> Game3d.d3_perspectivePy.set(comboPerspective.getValue()));
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
 				.available(() -> gameScene().is3D());
-		sliderPiPSceneHeight = addSlider("PiP Size", GameUI3d.PIP_MIN_HEIGHT, GameUI3d.PIP_MAX_HEIGHT,
-				Game3d.pipHeightPy.get());
+		sliderPiPSceneHeight = addSlider("PiP Size", GameUI3d.PictureInPicture.MIN_HEIGHT,
+				GameUI3d.PictureInPicture.MAX_HEIGHT, Game3d.pipHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Game3d.pipHeightPy.set(newValue.doubleValue()));
 		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Game3d.pipOpacityPy.get());

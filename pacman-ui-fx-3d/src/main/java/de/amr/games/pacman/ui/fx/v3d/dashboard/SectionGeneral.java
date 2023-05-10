@@ -89,7 +89,7 @@ public class SectionGeneral extends Section {
 
 		addInfo("Total Updates", ui::getUpdateCount);
 
-		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggleUse3DScene);
+		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle3DEnabled);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Game2d.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.timeMeasuredPy));
