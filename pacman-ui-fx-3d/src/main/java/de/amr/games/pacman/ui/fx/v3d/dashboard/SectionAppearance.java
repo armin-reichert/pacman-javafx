@@ -58,9 +58,9 @@ public class SectionAppearance extends Section {
 	}
 
 	private String[] floorTextureComboBoxEntries() {
-		var names = Game3d.resources.floorTexturesByName.keySet().toArray(String[]::new);
+		var names = Game3d.assets.floorTexturesByName.keySet().toArray(String[]::new);
 		var entries = new String[names.length + 1];
-		entries[0] = Game3d.Resources.KEY_NO_TEXTURE;
+		entries[0] = Game3d.Assets.KEY_NO_TEXTURE;
 		System.arraycopy(names, 0, entries, 1, names.length);
 		return entries;
 	}

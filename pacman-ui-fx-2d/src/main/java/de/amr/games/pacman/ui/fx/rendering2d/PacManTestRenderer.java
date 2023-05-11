@@ -59,7 +59,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		return Game2d.resources.font(Game2d.resources.arcadeFont, size);
+		return Game2d.assets.font(Game2d.assets.arcadeFont, size);
 	}
 
 	@Override
@@ -222,8 +222,8 @@ public class PacManTestRenderer implements Rendering2D {
 		var x = bonus.entity().position().x();
 		var y = bonus.entity().position().y() + 8;
 		switch (bonus.state()) {
-		case Bonus.STATE_EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, Game2d.resources.arcadeFont, x - 20, y);
-		case Bonus.STATE_EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, Game2d.resources.arcadeFont, x - 8,
+		case Bonus.STATE_EDIBLE -> Rendering2D.drawText(g, "Bonus", Color.YELLOW, Game2d.assets.arcadeFont, x - 20, y);
+		case Bonus.STATE_EATEN -> Rendering2D.drawText(g, bonus.points() + "", Color.RED, Game2d.assets.arcadeFont, x - 8,
 				y);
 		default -> {
 		}
@@ -233,7 +233,8 @@ public class PacManTestRenderer implements Rendering2D {
 	@Override
 	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
 		levelNumber.ifPresent(number -> {
-			Rendering2D.drawText(g, "Level %s".formatted(number), Color.WHITE, Game2d.resources.arcadeFont, 18 * TS, 36 * TS - 2);
+			Rendering2D.drawText(g, "Level %s".formatted(number), Color.WHITE, Game2d.assets.arcadeFont, 18 * TS,
+					36 * TS - 2);
 		});
 	}
 

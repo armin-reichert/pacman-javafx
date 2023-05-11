@@ -204,7 +204,7 @@ public abstract class GameScene2D implements GameScene {
 
 		var t2 = new Text("Armin Reichert");
 		t2.setFill(Color.gray(0.75));
-		t2.setFont(Game2d.resources.font(Game2d.resources.handwritingFont, 9));
+		t2.setFont(Game2d.assets.font(Game2d.assets.handwritingFont, 9));
 
 		var signature = new TextFlow(t1, t2);
 		signature.setTranslateX(x);

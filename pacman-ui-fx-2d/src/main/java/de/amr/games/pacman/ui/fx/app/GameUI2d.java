@@ -111,8 +111,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 		this.stage = stage;
 		this.gameController = new GameController(settings.variant);
-		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.resources.messages);
-		csHelp.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, 6.5));
+		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
+		csHelp.setFont(Game2d.assets.font(Game2d.assets.arcadeFont, 6.5));
 
 		configureRenderers(settings);
 		createMsPacManSceneChoices();
@@ -246,17 +246,17 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.resources.wallpaper2D);
+		mainSceneRoot.setBackground(Game2d.assets.wallpaper2D);
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(ResourceManager.fmtMessage(Game2d.resources.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.resources.graphicsMsPacMan.icon);
+			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
+			stage.getIcons().setAll(Game2d.assets.graphicsMsPacMan.icon);
 		}
 		case PACMAN -> {
 			var messageKey = pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(ResourceManager.fmtMessage(Game2d.resources.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.resources.graphicsPacMan.icon);
+			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
+			stage.getIcons().setAll(Game2d.assets.graphicsPacMan.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}

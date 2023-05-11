@@ -84,7 +84,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			Game3d.Resources.KEY_NO_TEXTURE) {
+			Game3d.Assets.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			Logger.trace("Floor texture change detected");
@@ -172,7 +172,7 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = Game3d.resources.floorTexturesByName.get(key);
+		var texture = Game3d.assets.floorTexturesByName.get(key);
 		if (texture == null) {
 			texture = ResourceManager.coloredMaterial(floorColorPy.get());
 		}

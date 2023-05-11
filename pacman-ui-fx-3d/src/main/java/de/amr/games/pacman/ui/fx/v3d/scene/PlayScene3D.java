@@ -219,7 +219,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		if (Game3d.d3_floorTextureRandomPy.get()) {
-			var names = Game3d.resources.floorTexturesByName.keySet().toArray(String[]::new);
+			var names = Game3d.assets.floorTexturesByName.keySet().toArray(String[]::new);
 			Game3d.d3_floorTexturePy.set(names[randomInt(0, names.length)]);
 		}
 		Logger.info("3D game level {} created.", level.number());
@@ -349,8 +349,8 @@ public class PlayScene3D implements GameScene {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);
-				// TODO take texts and picker from 3d-only resources
-				var readyMessage = inPercentOfCases(40) ? Game2d.resources.randomReadyText(context.gameVariant()) : "READY!";
+				// TODO take texts and picker from 3d-only assets
+				var readyMessage = inPercentOfCases(40) ? Game2d.assets.randomReadyText(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -409,8 +409,8 @@ public class PlayScene3D implements GameScene {
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
-							//TODO use 3d-only resources
-							Game2d.actions.showFlashMessageSeconds(2, Game3d.resources.pickLevelCompleteMessage(level.number()));
+							//TODO use 3d-only assets
+							Game2d.actions.showFlashMessageSeconds(2, Game3d.assets.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -423,8 +423,8 @@ public class PlayScene3D implements GameScene {
 		case GAME_OVER -> {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
-			// TODO use 3d-only resources
-			Game2d.actions.showFlashMessageSeconds(3, Game3d.resources.pickGameOverMessage());
+			// TODO use 3d-only assets
+			Game2d.actions.showFlashMessageSeconds(3, Game3d.assets.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}

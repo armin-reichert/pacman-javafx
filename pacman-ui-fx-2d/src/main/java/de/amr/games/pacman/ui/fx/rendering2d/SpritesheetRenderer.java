@@ -64,8 +64,8 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		var font = Game2d.resources.arcadeFont;
-		return size == font.getSize() ? font : Game2d.resources.font(font, size);
+		var font = Game2d.assets.arcadeFont;
+		return size == font.getSize() ? font : Game2d.assets.font(font, size);
 	}
 
 	public abstract Rectangle2D ghostValueRegion(int index);

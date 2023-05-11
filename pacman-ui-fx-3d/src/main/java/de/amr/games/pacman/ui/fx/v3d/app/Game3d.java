@@ -69,7 +69,8 @@ import javafx.stage.Stage;
  */
 public class Game3d extends Application {
 
-	public static final ResourceManager RES = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", Game3d.class);
+	public static final ResourceManager ASSET_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/",
+			Game3d.class);
 
 	//@formatter:off
 	public static final BooleanProperty             dashboardVisiblePy      = new SimpleBooleanProperty(false);
@@ -95,7 +96,7 @@ public class Game3d extends Application {
 	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	//@formatter:on
 
-	public static class Resources {
+	public static class Assets {
 
 		public static final String KEY_NO_TEXTURE = "No Texture";
 
@@ -109,13 +110,13 @@ public class Game3d extends Application {
 		private final Picker<String> messagePickerLevelComplete;
 		private final Picker<String> messagePickerGameOver;
 
-		private Resources() {
+		private Assets() {
 			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 			messagePickerCheating = ResourceManager.createPicker(messages, "cheating");
 			messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
 			messagePickerGameOver = ResourceManager.createPicker(messages, "game.over");
 
-			wallpaper3D = RES.imageBackground("graphics/sky.png");
+			wallpaper3D = ASSET_MANAGER.imageBackground("graphics/sky.png");
 			floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 			floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 			floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -147,8 +148,8 @@ public class Game3d extends Application {
 
 		public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 			var texture = new PhongMaterial();
-			texture.setBumpMap(RES.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-			texture.setDiffuseMap(RES.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+			texture.setBumpMap(ASSET_MANAGER.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+			texture.setDiffuseMap(ASSET_MANAGER.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 			texture.setDiffuseColor(diffuseColor);
 			texture.setSpecularColor(specularColor);
 			return texture;
@@ -160,7 +161,7 @@ public class Game3d extends Application {
 		public void togglePipVisibility() {
 			Ufx.toggle(pipVisiblePy);
 			var key = pipVisiblePy.get() ? "pip_on" : "pip_off";
-			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, key));
+			Game2d.actions.showFlashMessage(fmtMessage(assets.messages, key));
 		}
 
 		public void toggleDashboardVisible() {
@@ -170,15 +171,15 @@ public class Game3d extends Application {
 		public void selectNextPerspective() {
 			var nextPerspective = d3_perspectivePy.get().next();
 			d3_perspectivePy.set(nextPerspective);
-			String perspectiveName = fmtMessage(resources.messages, nextPerspective.name());
-			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, "camera_perspective", perspectiveName));
+			String perspectiveName = fmtMessage(assets.messages, nextPerspective.name());
+			Game2d.actions.showFlashMessage(fmtMessage(assets.messages, "camera_perspective", perspectiveName));
 		}
 
 		public void selectPrevPerspective() {
 			var prevPerspective = d3_perspectivePy.get().prev();
 			d3_perspectivePy.set(prevPerspective);
-			String perspectiveName = fmtMessage(resources.messages, prevPerspective.name());
-			Game2d.actions.showFlashMessage(fmtMessage(resources.messages, "camera_perspective", perspectiveName));
+			String perspectiveName = fmtMessage(assets.messages, prevPerspective.name());
+			Game2d.actions.showFlashMessage(fmtMessage(assets.messages, "camera_perspective", perspectiveName));
 		}
 
 		public void toggleDrawMode() {
@@ -201,9 +202,9 @@ public class Game3d extends Application {
 	public static Actions actions;
 
 	/**
-	 * Static access to resources of 3D game.
+	 * Static access to assets of 3D game.
 	 */
-	public static Resources resources;
+	public static Assets assets;
 
 	private GameUI3d ui;
 
@@ -213,11 +214,11 @@ public class Game3d extends Application {
 		// Convert command-line arguments (if any) into application settings
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 
-		// Load 2D and 3D resources
+		// Load 2D and 3D assets
 		long start = System.nanoTime();
-		Game2d.resources = new Game2d.Resources();
-		Game3d.resources = new Game3d.Resources();
-		Logger.info("Loading resources: {} seconds.", (System.nanoTime() - start) / 1e9f);
+		Game2d.assets = new Game2d.Assets();
+		Game3d.assets = new Game3d.Assets();
+		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 
 		ui = new GameUI3d(primaryStage, settings);
 

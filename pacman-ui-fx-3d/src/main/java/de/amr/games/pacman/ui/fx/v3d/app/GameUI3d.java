@@ -173,23 +173,23 @@ public class GameUI3d extends GameUI2d {
 			if (Game3d.d3_drawModePy.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(ResourceManager.colorBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(Game3d.resources.wallpaper3D);
+				mainSceneRoot.setBackground(Game3d.assets.wallpaper3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(Game2d.resources.wallpaper2D);
+			mainSceneRoot.setBackground(Game2d.assets.wallpaper2D);
 		}
 		var paused = pausedPy.get();
-		var dimensionMsg = fmtMessage(Game3d.resources.messages, Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(fmtMessage(Game3d.resources.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(Game2d.resources.graphicsMsPacMan.icon);
+			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
+			stage.getIcons().setAll(Game2d.assets.graphicsMsPacMan.icon);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(fmtMessage(Game3d.resources.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(Game2d.resources.graphicsPacMan.icon);
+			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
+			stage.getIcons().setAll(Game2d.assets.graphicsPacMan.icon);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -246,7 +246,7 @@ public class GameUI3d extends GameUI2d {
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// if for example toggle action occurs in intro scene, show message indicating which variant is used
-			var message = fmtMessage(Game3d.resources.messages, Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
+			var message = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
 			Game2d.actions.showFlashMessage(message);
 		}
 	}

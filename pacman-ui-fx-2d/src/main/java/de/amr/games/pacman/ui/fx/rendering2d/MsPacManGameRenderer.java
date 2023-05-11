@@ -59,7 +59,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final int THIRD_COLUMN = 456;
 
 	public MsPacManGameRenderer() {
-		super(Game2d.resources.graphicsMsPacMan.spritesheet);
+		super(Game2d.assets.graphicsMsPacMan.spritesheet);
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
@@ -120,7 +120,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				g.drawImage(Game2d.resources.graphicsMsPacMan.emptyFlashingMaze[mazeNumber - 1], x, y);
+				g.drawImage(Game2d.assets.graphicsMsPacMan.emptyFlashingMaze[mazeNumber - 1], x, y);
 			} else {
 				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
@@ -143,11 +143,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
-		g.drawImage(Game2d.resources.graphicsMsPacMan.logo, x, y + 2, TS * (4) - 2, TS * (4));
+		g.drawImage(Game2d.assets.graphicsMsPacMan.logo, x, y + 2, TS * (4) - 2, TS * (4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol
-		g.setFont(Game2d.resources.arcadeFont);
+		g.setFont(Game2d.assets.arcadeFont);
 		g.fillText("MIDWAY MFG CO", x + TS * (7), y + TS * (2));
 		g.fillText("1980/1981", x + TS * (8), y + TS * (4));
 	}
@@ -258,7 +258,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 				if (clap.isVisible()) {
 					drawSpriteCenteredOverBox(g, sprite, clap.position().x(), clap.position().y());
 				}
-				g.setFont(Game2d.resources.arcadeFont);
+				g.setFont(Game2d.assets.arcadeFont);
 				g.setFill(ArcadeTheme.PALE);
 				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
 				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());

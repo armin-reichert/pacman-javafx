@@ -83,7 +83,7 @@ import javafx.util.Duration;
  */
 public class Game2d extends Application {
 
-	public static final ResourceManager RES = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
+	public static final ResourceManager ASSET_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 	//@formatter:off
 	public static final BooleanProperty showHelpPy        = new SimpleBooleanProperty(false);
@@ -91,7 +91,7 @@ public class Game2d extends Application {
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	//@formatter:on
 
-	public static class Resources {
+	public static class Assets {
 
 		public static class PacManGameGraphics {
 			public Image icon;
@@ -127,18 +127,18 @@ public class Game2d extends Application {
 		public final GameSounds soundsMsPacMan;
 		public final GameSounds soundsPacMan;
 
-		public Resources() {
+		public Assets() {
 
 			// Fonts
-			arcadeFont = RES.font("fonts/emulogic.ttf", 8);
-			handwritingFont = RES.font("fonts/RockSalt-Regular.ttf", 8);
+			arcadeFont = ASSET_MANAGER.font("fonts/emulogic.ttf", 8);
+			handwritingFont = ASSET_MANAGER.font("fonts/RockSalt-Regular.ttf", 8);
 
 			// Graphics
-			wallpaper2D = RES.imageBackground("graphics/pacman_wallpaper_gray.png");
+			wallpaper2D = ASSET_MANAGER.imageBackground("graphics/pacman_wallpaper_gray.png");
 
 			graphicsMsPacMan = new MsPacManGameGraphics();
-			graphicsMsPacMan.icon = RES.image("graphics/icons/mspacman.png");
-			graphicsMsPacMan.spritesheet = new Spritesheet(RES.image("graphics/mspacman/sprites.png"), 16);
+			graphicsMsPacMan.icon = ASSET_MANAGER.image("graphics/icons/mspacman.png");
+			graphicsMsPacMan.spritesheet = new Spritesheet(ASSET_MANAGER.image("graphics/mspacman/sprites.png"), 16);
 			graphicsMsPacMan.emptyFlashingMaze = new Image[6];
 			for (int i = 0; i < 6; ++i) {
 				var maze = graphicsMsPacMan.spritesheet.subImage(228, 248 * i, 226, 248);
@@ -147,24 +147,24 @@ public class Game2d extends Application {
 						mazeColors.wallBaseColor(), Color.WHITE, //
 						mazeColors.wallTopColor(), Color.BLACK));
 			}
-			graphicsMsPacMan.logo = RES.image("graphics/mspacman/midway.png");
+			graphicsMsPacMan.logo = ASSET_MANAGER.image("graphics/mspacman/midway.png");
 
 			graphicsPacMan = new PacManGameGraphics();
-			graphicsPacMan.icon = RES.image("graphics/icons/pacman.png");
-			graphicsPacMan.spritesheet = new Spritesheet(RES.image("graphics/pacman/sprites.png"), 16);
-			graphicsPacMan.fullMaze = RES.image("graphics/pacman/maze_full.png");
-			graphicsPacMan.emptyMaze = RES.image("graphics/pacman/maze_empty.png");
-			graphicsPacMan.flashingMaze = RES.image("graphics/pacman/maze_empty_flashing.png");
+			graphicsPacMan.icon = ASSET_MANAGER.image("graphics/icons/pacman.png");
+			graphicsPacMan.spritesheet = new Spritesheet(ASSET_MANAGER.image("graphics/pacman/sprites.png"), 16);
+			graphicsPacMan.fullMaze = ASSET_MANAGER.image("graphics/pacman/maze_full.png");
+			graphicsPacMan.emptyMaze = ASSET_MANAGER.image("graphics/pacman/maze_empty.png");
+			graphicsPacMan.flashingMaze = ASSET_MANAGER.image("graphics/pacman/maze_empty_flashing.png");
 
 			// Texts
 			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
 			// Sound
-			voiceExplainKeys = RES.audioClip("sound/voice/press-key.mp3");
-			voiceAutopilotOff = RES.audioClip("sound/voice/autopilot-off.mp3");
-			voiceAutopilotOn = RES.audioClip("sound/voice/autopilot-on.mp3");
-			voiceImmunityOff = RES.audioClip("sound/voice/immunity-off.mp3");
-			voiceImmunityOn = RES.audioClip("sound/voice/immunity-on.mp3");
+			voiceExplainKeys = ASSET_MANAGER.audioClip("sound/voice/press-key.mp3");
+			voiceAutopilotOff = ASSET_MANAGER.audioClip("sound/voice/autopilot-off.mp3");
+			voiceAutopilotOn = ASSET_MANAGER.audioClip("sound/voice/autopilot-on.mp3");
+			voiceImmunityOff = ASSET_MANAGER.audioClip("sound/voice/immunity-off.mp3");
+			voiceImmunityOn = ASSET_MANAGER.audioClip("sound/voice/immunity-on.mp3");
 
 			//@formatter:off
 			Object[][] audioClipsMsPacman = { 
@@ -303,7 +303,7 @@ public class Game2d extends Application {
 			if (ui.currentGameScene() != null) {
 				ui.currentGameScene().end();
 			}
-			ui.playVoice(Game2d.resources.voiceExplainKeys, 4);
+			ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
 			ui.gameController().restart(GameState.BOOT);
 		}
 
@@ -332,7 +332,7 @@ public class Game2d extends Application {
 			Ufx.toggle(ui.pausedPy);
 			// TODO mute and unmute?
 			if (ui.pausedPy.get()) {
-				resources.gameSounds(ui.gameController().game().variant()).stopAll();
+				assets.gameSounds(ui.gameController().game().variant()).stopAll();
 			}
 		}
 
@@ -364,25 +364,25 @@ public class Game2d extends Application {
 		public void selectNextGameVariant() {
 			var gameVariant = ui.gameController().game().variant().next();
 			ui.gameController().selectGameVariant(gameVariant);
-			ui.playVoice(Game2d.resources.voiceExplainKeys, 4);
+			ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
 		}
 
 		public void toggleAutopilot() {
 			ui.gameController().toggleAutoControlled();
 			var auto = ui.gameController().isAutoControlled();
-			String message = fmtMessage(resources.messages, auto ? "autopilot_on" : "autopilot_off");
+			String message = fmtMessage(assets.messages, auto ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(message);
 			ui.updateContextSensitiveHelp();
-			ui.playVoice(auto ? resources.voiceAutopilotOn : resources.voiceAutopilotOff);
+			ui.playVoice(auto ? assets.voiceAutopilotOn : assets.voiceAutopilotOff);
 		}
 
 		public void toggleImmunity() {
 			ui.gameController().game().setImmune(!ui.gameController().game().isImmune());
 			var immune = ui.gameController().game().isImmune();
-			String message = fmtMessage(resources.messages, immune ? "player_immunity_on" : "player_immunity_off");
+			String message = fmtMessage(assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
 			ui.updateContextSensitiveHelp();
-			ui.playVoice(immune ? resources.voiceImmunityOn : resources.voiceImmunityOff);
+			ui.playVoice(immune ? assets.voiceImmunityOn : assets.voiceImmunityOff);
 		}
 
 		public void startLevelTestMode() {
@@ -394,7 +394,7 @@ public class Game2d extends Application {
 
 		public void cheatAddLives(int numLives) {
 			ui.gameController().game().setLives(numLives + ui.gameController().game().lives());
-			showFlashMessage(fmtMessage(resources.messages, "cheat_add_lives", ui.gameController().game().lives()));
+			showFlashMessage(fmtMessage(assets.messages, "cheat_add_lives", ui.gameController().game().lives()));
 		}
 
 		public void cheatEatAllPellets() {
@@ -449,9 +449,9 @@ public class Game2d extends Application {
 	public static Actions actions;
 
 	/**
-	 * Static access to resources of 2D game.
+	 * Static access to assets of 2D game.
 	 */
-	public static Resources resources;
+	public static Assets assets;
 
 	private GameUI2d ui;
 
@@ -461,15 +461,15 @@ public class Game2d extends Application {
 		// Convert command-line arguments (if any) into application settings
 		var settings = new Settings(getParameters().getNamed());
 
-		// Load resources
+		// Load assets
 		long start = System.nanoTime();
-		resources = new Resources();
-		Logger.info("Loading resources: {} seconds.", (System.nanoTime() - start) / 1e9f);
+		Game2d.assets = new Assets();
+		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 
 		ui = new GameUI2d(primaryStage, settings);
 
 		// Some actions operate on on UI, thus must be created after UI
-		actions = new Actions(ui);
+		Game2d.actions = new Actions(ui);
 
 		// Initialize game state and start game clock
 		actions.reboot();
