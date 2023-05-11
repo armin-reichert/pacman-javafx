@@ -98,7 +98,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected Scene mainScene;
 	protected final StackPane mainSceneRoot = new StackPane();
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final ContextSensitiveHelp contextSensitiveHelp;
+	protected final ContextSensitiveHelp csHelp;
 	protected final SoundHandler soundHandler = new SoundHandler();
 	protected final GameController gameController;
 
@@ -111,8 +111,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 		this.stage = stage;
 		this.gameController = new GameController(settings.variant);
-		this.contextSensitiveHelp = new ContextSensitiveHelp(gameController);
-		contextSensitiveHelp.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, 8));
+		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.resources.messages);
+		csHelp.setFont(Game2d.resources.font(Game2d.resources.arcadeFont, 6.5));
 
 		configureRenderers(settings);
 		createMsPacManSceneChoices();
@@ -205,7 +205,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public void updateContextSensitiveHelp() {
 		if (currentGameScene instanceof GameScene2D scene2D) {
 			if (Game2d.showHelpPy.get()) {
-				var help = contextSensitiveHelp.current();
+				var help = csHelp.current();
 				if (help.isEmpty()) {
 					scene2D.helpRoot().getChildren().clear();
 				} else {

@@ -238,31 +238,31 @@ public class Game2d extends Application {
 	public static class Actions {
 
 		private final GameUI2d ui;
-		private FadeTransition helpFadingAway;
+		private FadeTransition helpFadingTransition;
 
 		public Actions(GameUI2d ui) {
 			this.ui = ui;
 		}
 
 		public void toggleHelp() {
-			boolean fadingAway = helpFadingAway != null && helpFadingAway.getStatus() == Status.RUNNING;
-			if (ui.currentGameScene().is3D() || fadingAway) {
+			boolean fading = helpFadingTransition != null && helpFadingTransition.getStatus() == Status.RUNNING;
+			if (fading) {
 				return;
 			}
-			var gameScene = (GameScene2D) ui.currentGameScene;
 			if (showHelpPy.get()) {
 				showHelpPy.set(false);
-			} else {
-				showHelpPy.set(true);
-				ui.updateContextSensitiveHelp();
-				gameScene.helpRoot().setOpacity(1);
-				helpFadingAway = new FadeTransition(Duration.seconds(1), gameScene.helpRoot());
-				helpFadingAway.setFromValue(1);
-				helpFadingAway.setToValue(0);
-				helpFadingAway.setOnFinished(e -> showHelpPy.set(false));
-				helpFadingAway.setDelay(Duration.seconds(3));
-				helpFadingAway.play();
+				return;
 			}
+			showHelpPy.set(true);
+			ui.updateContextSensitiveHelp();
+			var gameScene = (GameScene2D) ui.currentGameScene;
+			gameScene.helpRoot().setOpacity(1);
+			helpFadingTransition = new FadeTransition(Duration.seconds(1), gameScene.helpRoot());
+			helpFadingTransition.setFromValue(1);
+			helpFadingTransition.setToValue(0);
+			helpFadingTransition.setOnFinished(e -> showHelpPy.set(false));
+			helpFadingTransition.setDelay(Duration.seconds(3));
+			helpFadingTransition.play();
 		}
 
 		public void stopVoiceMessage() {

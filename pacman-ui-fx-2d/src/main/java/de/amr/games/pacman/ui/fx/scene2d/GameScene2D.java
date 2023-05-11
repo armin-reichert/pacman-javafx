@@ -87,7 +87,7 @@ public abstract class GameScene2D implements GameScene {
 		canvas.getTransforms().add(scaling);
 		overlay.getTransforms().add(scaling);
 
-		// This avoids a white vertical line left of the embedded 2D game scene
+		// TODO check this: This avoids a white vertical line left of the embedded 2D game scene
 		root.setBackground(ResourceManager.colorBackground(Color.BLACK));
 		root.getChildren().addAll(canvas, overlay);
 
