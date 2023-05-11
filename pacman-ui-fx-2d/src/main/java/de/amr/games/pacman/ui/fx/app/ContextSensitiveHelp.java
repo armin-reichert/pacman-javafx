@@ -112,17 +112,12 @@ public class ContextSensitiveHelp {
 
 		public Pane createPane() {
 			var grid = new GridPane();
-			grid.setHgap(20);
+			grid.setHgap(10);
 			grid.setVgap(10);
 			for (int rowIndex = 0; rowIndex < rows.size(); ++rowIndex) {
 				var row = rows.get(rowIndex);
-				if (row.get(1) != null) {
-					grid.add(row.get(0), 0, rowIndex);
-					grid.add(row.get(1), 1, rowIndex);
-				} else {
-					grid.add(row.get(0), 0, rowIndex);
-					GridPane.setColumnSpan(row.get(0), 2);
-				}
+				grid.add(row.get(0), 0, rowIndex);
+				grid.add(row.get(1), 1, rowIndex);
 			}
 			if (gameController.isAutoControlled()) {
 				var text = text(tt("help.autopilot_on"), Color.ORANGE);

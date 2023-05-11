@@ -257,11 +257,11 @@ public class Game2d extends Application {
 			ui.updateContextSensitiveHelp();
 			var gameScene = (GameScene2D) ui.currentGameScene;
 			gameScene.helpRoot().setOpacity(1);
-			helpFadingTransition = new FadeTransition(Duration.seconds(1), gameScene.helpRoot());
+			helpFadingTransition = new FadeTransition(Duration.seconds(2.5), gameScene.helpRoot());
 			helpFadingTransition.setFromValue(1);
 			helpFadingTransition.setToValue(0);
 			helpFadingTransition.setOnFinished(e -> showHelpPy.set(false));
-			helpFadingTransition.setDelay(Duration.seconds(3));
+			helpFadingTransition.setDelay(Duration.seconds(1.5));
 			helpFadingTransition.play();
 		}
 
