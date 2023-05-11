@@ -254,6 +254,7 @@ public class Game2d extends Application {
 				return;
 			}
 			showHelpPy.set(true);
+			ui.csHelp.setGameVariant(ui.gameController.game().variant());
 			ui.updateContextSensitiveHelp();
 			var gameScene = (GameScene2D) ui.currentGameScene;
 			gameScene.helpRoot().setOpacity(1);

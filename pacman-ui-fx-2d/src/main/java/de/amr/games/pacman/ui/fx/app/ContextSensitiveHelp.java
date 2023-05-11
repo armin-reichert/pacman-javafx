@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -66,6 +67,14 @@ public class ContextSensitiveHelp {
 		default -> null;
 		};
 		return Optional.ofNullable(pane);
+	}
+
+	public void setGameVariant(GameVariant variant) {
+		switch (variant) {
+		case MS_PACMAN -> setBackgroundColor(Color.rgb(255, 0, 0, 0.9));
+		case PACMAN -> setBackgroundColor(Color.rgb(33, 33, 255, 0.9));
+		default -> throw new IllegalGameVariantException(variant);
+		}
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {
