@@ -227,7 +227,7 @@ public class GameLevel3D {
 		}
 		// Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
-		var delayHiding = Ufx.afterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
+		var delayHiding = Ufx.actionAfterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
 		var eatenAnimation = eatable3D.getEatenAnimation();
 		if (eatenAnimation.isPresent() && Game3d.d3_energizerExplodesPy.get()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();

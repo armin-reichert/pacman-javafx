@@ -267,7 +267,7 @@ public class Game2d extends Application {
 		}
 
 		public void stopVoiceMessage() {
-			ui.stopVoiceMessage();
+			ui.stopVoice();
 		}
 
 		public void showFlashMessage(String message, Object... args) {
@@ -280,7 +280,7 @@ public class Game2d extends Application {
 
 		public void startGame() {
 			if (ui.gameController().game().hasCredit()) {
-				ui.stopVoiceMessage();
+				ui.stopVoice();
 				ui.gameController().startPlaying();
 			}
 		}
@@ -303,7 +303,7 @@ public class Game2d extends Application {
 			if (ui.currentGameScene() != null) {
 				ui.currentGameScene().end();
 			}
-			ui.playHelpVoiceMessageAfterSeconds(4);
+			ui.playVoice(Game2d.resources.voiceExplainKeys, 4);
 			ui.gameController().restart(GameState.BOOT);
 		}
 
@@ -364,7 +364,7 @@ public class Game2d extends Application {
 		public void selectNextGameVariant() {
 			var gameVariant = ui.gameController().game().variant().next();
 			ui.gameController().selectGameVariant(gameVariant);
-			ui.playHelpVoiceMessageAfterSeconds(4);
+			ui.playVoice(Game2d.resources.voiceExplainKeys, 4);
 		}
 
 		public void toggleAutopilot() {
@@ -373,7 +373,7 @@ public class Game2d extends Application {
 			String message = fmtMessage(resources.messages, auto ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(message);
 			ui.updateContextSensitiveHelp();
-			ui.playVoiceMessage(auto ? resources.voiceAutopilotOn : resources.voiceAutopilotOff);
+			ui.playVoice(auto ? resources.voiceAutopilotOn : resources.voiceAutopilotOff);
 		}
 
 		public void toggleImmunity() {
@@ -382,7 +382,7 @@ public class Game2d extends Application {
 			String message = fmtMessage(resources.messages, immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
 			ui.updateContextSensitiveHelp();
-			ui.playVoiceMessage(immune ? resources.voiceImmunityOn : resources.voiceImmunityOff);
+			ui.playVoice(immune ? resources.voiceImmunityOn : resources.voiceImmunityOff);
 		}
 
 		public void startLevelTestMode() {

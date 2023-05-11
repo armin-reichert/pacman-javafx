@@ -90,7 +90,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public static final byte INDEX_CREDIT_SCENE = 2;
 	public static final byte INDEX_PLAY_SCENE = 3;
 
-	private AudioClip currentVoiceMessage;
+	private AudioClip currentVoice;
 
 	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
 	protected final Map<GameVariant, List<GameSceneChoice>> sceneChoicesMap = new EnumMap<>(GameVariant.class);
@@ -415,21 +415,25 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		return flashMessageView;
 	}
 
-	public void playVoiceMessage(AudioClip voiceMessage) {
-		if (currentVoiceMessage != null && currentVoiceMessage.isPlaying()) {
-			return; // don't interrupt voice message still playing, maybe enqueue?
-		}
-		currentVoiceMessage = voiceMessage;
-		currentVoiceMessage.play();
+	public void playVoice(AudioClip clip) {
+		playVoice(clip, 0);
 	}
 
-	public void stopVoiceMessage() {
-		if (currentVoiceMessage != null) {
-			currentVoiceMessage.stop();
+	public void playVoice(AudioClip clip, float delay) {
+		if (currentVoice != null && currentVoice.isPlaying()) {
+			return; // don't interrupt voice
+		}
+		currentVoice = clip;
+		if (delay > 0) {
+			Ufx.actionAfterSeconds(delay, currentVoice::play).play();
+		} else {
+			currentVoice.play();
 		}
 	}
 
-	public void playHelpVoiceMessageAfterSeconds(int seconds) {
-		Ufx.afterSeconds(seconds, () -> playVoiceMessage(Game2d.resources.voiceExplainKeys)).play();
+	public void stopVoice() {
+		if (currentVoice != null) {
+			currentVoice.stop();
+		}
 	}
 }

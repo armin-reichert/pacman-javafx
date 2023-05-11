@@ -399,11 +399,11 @@ public class PlayScene3D implements GameScene {
 				// level complete animation is always played
 				var levelCompleteAnimation = createLevelCompleteAnimation(level);
 				// level change animation is played only if no intermission scene follows
-				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation() : Ufx.pause(0);
+				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation() : Ufx.pauseSeconds(0);
 				//@formatter:off
 				lockStateAndPlayAfterSeconds(1.0, 
 					levelCompleteAnimation, 
-					Ufx.afterSeconds(1.0, () -> {
+					Ufx.actionAfterSeconds(1.0, () -> {
 						level.pac().hide();
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
@@ -414,7 +414,7 @@ public class PlayScene3D implements GameScene {
 						}
 					}),
 					levelChangeAnimation,
-					Ufx.afterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
+					Ufx.actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
 				);
 				//@formatter:on
 			});
@@ -465,20 +465,20 @@ public class PlayScene3D implements GameScene {
 		rotation.setInterpolator(Interpolator.LINEAR);
 		//@formatter:off
 		return new SequentialTransition(
-			Ufx.afterSeconds(1.0, () -> {
+			Ufx.actionAfterSeconds(1.0, () -> {
 				perspectivePy.unbind();
 				perspectivePy.set(Perspective.TOTAL);
 			}),
 			rotation,
-			Ufx.afterSeconds(0.5, () -> context.sounds().play(AudioClipID.SWEEP)),
-			Ufx.afterSeconds(0.5, () -> perspectivePy.bind(Game3d.d3_perspectivePy))
+			Ufx.actionAfterSeconds(0.5, () -> context.sounds().play(AudioClipID.SWEEP)),
+			Ufx.actionAfterSeconds(0.5, () -> perspectivePy.bind(Game3d.d3_perspectivePy))
 		);
 		//@formatter:on
 	}
 
 	private Animation createLevelCompleteAnimation(GameLevel level) {
 		if (level.numFlashes == 0) {
-			return Ufx.pause(1.0);
+			return Ufx.pauseSeconds(1.0);
 		}
 		double wallHeight = Game3d.d3_mazeWallHeightPy.get();
 		var animation = new SinusCurveAnimation(level.numFlashes);

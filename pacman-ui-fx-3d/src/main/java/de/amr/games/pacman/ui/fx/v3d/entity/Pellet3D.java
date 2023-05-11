@@ -88,8 +88,7 @@ public class Pellet3D implements Eatable3D {
 
 	@Override
 	public void eat() {
-		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> shape.setVisible(false));
-		hideAfterDelay.play();
+		Ufx.actionAfterSeconds(0.05, () -> shape.setVisible(false)).play();
 	}
 
 	@Override

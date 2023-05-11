@@ -142,7 +142,7 @@ public interface GameScene extends GameEventListener {
 	 */
 	default void waitSeconds(double seconds) {
 		lockGameState();
-		var pause = Ufx.pause(seconds);
+		var pause = Ufx.pauseSeconds(seconds);
 		pause.setOnFinished(e -> unlockGameState());
 		pause.play();
 	}

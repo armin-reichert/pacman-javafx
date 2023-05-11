@@ -116,7 +116,7 @@ public class Energizer3D implements Eatable3D {
 	public void eat() {
 		pumping.stop();
 		// TODO check this
-		var hideAfterDelay = Ufx.afterSeconds(0.05, () -> shape.setVisible(false));
+		var hideAfterDelay = Ufx.actionAfterSeconds(0.05, () -> shape.setVisible(false));
 		if (eatenAnimation != null) {
 			new SequentialTransition(hideAfterDelay, eatenAnimation).play();
 		} else {

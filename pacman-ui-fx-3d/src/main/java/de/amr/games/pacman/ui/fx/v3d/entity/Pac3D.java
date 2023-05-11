@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
@@ -98,10 +96,9 @@ public class Pac3D {
 			spin.setRate(2);
 			//@formatter:off
 			animation = new SequentialTransition(
-				Ufx.afterSeconds(0, () -> Logger.info("Before dying animation: {}", Pac3D.this)),
-				Ufx.pause(0.5),
+				Ufx.pauseSeconds(0.5),
 				spin,
-				Ufx.pause(2)
+				Ufx.pauseSeconds(2)
 			);
 			//@formatter:on
 		}
@@ -137,10 +134,10 @@ public class Pac3D {
 			falling.setToZ(4);
 
 			animation = new SequentialTransition( //
-					Ufx.afterSeconds(0, this::clearOrientation), //
-					Ufx.pause(0.5), //
+					Ufx.actionAfterSeconds(0, this::clearOrientation), //
+					Ufx.pauseSeconds(0.5), //
 					new ParallelTransition(spinning, shrinking, falling), //
-					Ufx.afterSeconds(0.5, this::restoreOrientation) //
+					Ufx.actionAfterSeconds(0.5, this::restoreOrientation) //
 			);
 
 			animation.setOnFinished(e -> {

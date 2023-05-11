@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.util;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 import java.util.Map;
 
 import javafx.animation.Animation;
@@ -72,7 +74,7 @@ public class Ufx {
 	 * @param seconds number of seconds
 	 * @return pause transition
 	 */
-	public static PauseTransition pause(double seconds) {
+	public static PauseTransition pauseSeconds(double seconds) {
 		return new PauseTransition(Duration.seconds(seconds));
 	}
 
@@ -82,12 +84,13 @@ public class Ufx {
 	 * <p>
 	 * NOTE: Do NOT start an animation in the code!
 	 * 
-	 * @param seconds number of seconds
+	 * @param delaySeconds number of seconds
 	 * @param action  code to run
 	 * @return pause transition
 	 */
-	public static PauseTransition afterSeconds(double seconds, Runnable action) {
-		PauseTransition pause = pause(seconds);
+	public static PauseTransition actionAfterSeconds(double delaySeconds, Runnable action) {
+		checkNotNull(action);
+		PauseTransition pause = pauseSeconds(delaySeconds);
 		pause.setOnFinished(e -> action.run());
 		return pause;
 	}
