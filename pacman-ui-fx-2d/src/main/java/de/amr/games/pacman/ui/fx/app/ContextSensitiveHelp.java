@@ -51,7 +51,7 @@ public class ContextSensitiveHelp {
 
 	private final ResourceBundle translations;
 	private final GameController gameController;
-	private Color backgroundColor = Color.rgb(33, 33, 255, 0.9); // TODO different color in Ms. Pac-Man?
+	private Color backgroundColor = Color.WHITE;
 	private Font font = Font.font("Helvetica", 8);
 
 	public ContextSensitiveHelp(GameController gameController, ResourceBundle translations) {
