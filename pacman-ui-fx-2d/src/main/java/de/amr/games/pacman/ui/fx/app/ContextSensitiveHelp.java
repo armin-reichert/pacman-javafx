@@ -140,7 +140,6 @@ public class ContextSensitiveHelp {
 			}
 
 			var pane = new BorderPane(grid);
-			pane.setMaxSize(200, 50);
 			pane.setPadding(new Insets(10));
 			pane.setBackground(ResourceManager.colorBackground(backgroundColor));
 			return pane;
@@ -149,10 +148,6 @@ public class ContextSensitiveHelp {
 
 	private GameModel game() {
 		return gameController.game();
-	}
-
-	private GameVariant variant() {
-		return game().variant();
 	}
 
 	private boolean attractMode() {
@@ -166,7 +161,7 @@ public class ContextSensitiveHelp {
 			help.addRow(tt("help.start_game"), "1");
 		}
 		help.addRow(tt("help.add_credit"), "5");
-		help.addRow(tt(variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
+		help.addRow(tt(game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
 		return help.createPane();
 	}
 
@@ -180,20 +175,30 @@ public class ContextSensitiveHelp {
 		return help.createPane();
 	}
 
+	private Help helpPlaying;
+
 	private Pane helpPlaying() {
-		var help = new Help();
-		help.addRow(tt("help.move_left"), tt("help.cursor_left"));
-		help.addRow(tt("help.move_right"), tt("help.cursor_right"));
-		help.addRow(tt("help.move_up"), tt("help.cursor_up"));
-		help.addRow(tt("help.move_down"), tt("help.cursor_down"));
-		help.addRow(tt("help.show_intro"), "Q");
-		return help.createPane();
+		if (helpPlaying == null) {
+			var help = new Help();
+			help.addRow(tt("help.move_left"), tt("help.cursor_left"));
+			help.addRow(tt("help.move_right"), tt("help.cursor_right"));
+			help.addRow(tt("help.move_up"), tt("help.cursor_up"));
+			help.addRow(tt("help.move_down"), tt("help.cursor_down"));
+			help.addRow(tt("help.show_intro"), "Q");
+			helpPlaying = help;
+		}
+		return helpPlaying.createPane();
 	}
 
+	private Help helpDemoLevel;
+
 	private Pane helpDemoLevel() {
-		var help = new Help();
-		help.addRow(tt("help.start_game"), "5");
-		help.addRow(tt("help.show_intro"), "Q");
-		return help.createPane();
+		if (helpDemoLevel == null) {
+			var help = new Help();
+			help.addRow(tt("help.start_game"), "5");
+			help.addRow(tt("help.show_intro"), "Q");
+			helpDemoLevel = help;
+		}
+		return helpDemoLevel.createPane();
 	}
 }
