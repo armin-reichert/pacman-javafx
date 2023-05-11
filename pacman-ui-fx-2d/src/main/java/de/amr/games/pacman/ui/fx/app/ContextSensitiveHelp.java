@@ -166,7 +166,7 @@ public class ContextSensitiveHelp {
 			help.addRow(tt("help.start_game"), "1");
 		}
 		help.addRow(tt("help.add_credit"), "5");
-		help.addRow(tt(variant() == GameVariant.MS_PACMAN ? "help.ms_pacman" : "help.pacman"), "V");
+		help.addRow(tt(variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
 		return help.createPane();
 	}
 
