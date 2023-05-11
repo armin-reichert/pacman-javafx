@@ -237,14 +237,17 @@ public class Game2d extends Application {
 
 	public static class Actions {
 
-		private final GameUI2d ui;
+		private GameUI2d ui;
 		private FadeTransition helpFadingTransition;
 
-		public Actions(GameUI2d ui) {
+		public void setUI(GameUI2d ui) {
 			this.ui = ui;
 		}
 
 		public void toggleHelp() {
+			if (ui.currentGameScene() != null && ui.currentGameScene().is3D()) {
+				return;
+			}
 			boolean fading = helpFadingTransition != null && helpFadingTransition.getStatus() == Status.RUNNING;
 			if (fading) {
 				return;
@@ -457,21 +460,15 @@ public class Game2d extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-
-		// Convert command-line arguments (if any) into application settings
 		var settings = new Settings(getParameters().getNamed());
 
-		// Load assets
 		long start = System.nanoTime();
 		Game2d.assets = new Assets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
-
+		Game2d.actions = new Actions();
 		ui = new GameUI2d(primaryStage, settings);
+		Game2d.actions.setUI(ui);
 
-		// Some actions operate on on UI, thus must be created after UI
-		Game2d.actions = new Actions(ui);
-
-		// Initialize game state and start game clock
 		actions.reboot();
 		ui.start();
 

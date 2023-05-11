@@ -210,26 +210,23 @@ public class Game3d extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-
-		// Convert command-line arguments (if any) into application settings
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 
-		// Load 2D and 3D assets
 		long start = System.nanoTime();
 		Game2d.assets = new Game2d.Assets();
 		Game3d.assets = new Game3d.Assets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 
-		ui = new GameUI3d(primaryStage, settings);
-
-		// Actions operate on UI, so must be created after UI
-		Game2d.actions = new Game2d.Actions(ui);
+		Game2d.actions = new Game2d.Actions();
 		Game3d.actions = new Game3d.Actions();
 
-		// Dashboard depends on actions
+		ui = new GameUI3d(primaryStage, settings);
+
+		Game2d.actions.setUI(ui);
+
+		// TODO: Check if dashboard initalization used actions
 		ui.dashboard().init();
 
-		// Initialize game state and start game clock
 		Game2d.actions.reboot();
 		ui.start();
 
