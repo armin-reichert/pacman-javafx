@@ -88,20 +88,16 @@ public class Game2d extends Application {
 
 	public static class Assets {
 
-		public static class PacManGameGraphics {
-			public Image icon;
-			public Spritesheet spritesheet;
-			public Image fullMaze;
-			public Image emptyMaze;
-			public Image flashingMaze;
-		}
+		public Image iconPacManGame;
+		public Spritesheet spritesheetPacManGame;
+		public Image fullMazePacManGame;
+		public Image emptyMazePacManGame;
+		public Image flashingMazePacManGame;
 
-		public static class MsPacManGameGraphics {
-			public Image icon;
-			public Spritesheet spritesheet;
-			public Image logo;
-			public Image[] emptyFlashingMaze;
-		}
+		public Image iconMsPacManGame;
+		public Spritesheet spritesheetMsPacManGame;
+		public Image logoMsPacManGame;
+		public Image[] emptyFlashingMazeMsPacManGame;
 
 		public final Font arcadeFont;
 		public final Font handwritingFont;
@@ -116,40 +112,32 @@ public class Game2d extends Application {
 
 		public final Background wallpaper2D;
 
-		public final PacManGameGraphics graphicsPacMan;
-		public final MsPacManGameGraphics graphicsMsPacMan;
-
 		public final GameSounds soundsMsPacMan;
 		public final GameSounds soundsPacMan;
 
 		public Assets() {
-
-			// Fonts
 			arcadeFont = ASSET_MANAGER.font("fonts/emulogic.ttf", 8);
 			handwritingFont = ASSET_MANAGER.font("fonts/RockSalt-Regular.ttf", 8);
 
-			// Graphics
 			wallpaper2D = ASSET_MANAGER.imageBackground("graphics/pacman_wallpaper_gray.png");
 
-			graphicsMsPacMan = new MsPacManGameGraphics();
-			graphicsMsPacMan.icon = ASSET_MANAGER.image("graphics/icons/mspacman.png");
-			graphicsMsPacMan.spritesheet = new Spritesheet(ASSET_MANAGER.image("graphics/mspacman/sprites.png"), 16);
-			graphicsMsPacMan.emptyFlashingMaze = new Image[6];
+			iconMsPacManGame = ASSET_MANAGER.image("graphics/icons/mspacman.png");
+			spritesheetMsPacManGame = new Spritesheet(ASSET_MANAGER.image("graphics/mspacman/sprites.png"), 16);
+			emptyFlashingMazeMsPacManGame = new Image[6];
 			for (int i = 0; i < 6; ++i) {
-				var maze = graphicsMsPacMan.spritesheet.subImage(228, 248 * i, 226, 248);
+				var maze = spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
 				var mazeColors = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i];
-				graphicsMsPacMan.emptyFlashingMaze[i] = Ufx.colorsExchanged(maze, Map.of(//
+				emptyFlashingMazeMsPacManGame[i] = Ufx.colorsExchanged(maze, Map.of(//
 						mazeColors.wallBaseColor(), Color.WHITE, //
 						mazeColors.wallTopColor(), Color.BLACK));
 			}
-			graphicsMsPacMan.logo = ASSET_MANAGER.image("graphics/mspacman/midway.png");
+			logoMsPacManGame = ASSET_MANAGER.image("graphics/mspacman/midway.png");
 
-			graphicsPacMan = new PacManGameGraphics();
-			graphicsPacMan.icon = ASSET_MANAGER.image("graphics/icons/pacman.png");
-			graphicsPacMan.spritesheet = new Spritesheet(ASSET_MANAGER.image("graphics/pacman/sprites.png"), 16);
-			graphicsPacMan.fullMaze = ASSET_MANAGER.image("graphics/pacman/maze_full.png");
-			graphicsPacMan.emptyMaze = ASSET_MANAGER.image("graphics/pacman/maze_empty.png");
-			graphicsPacMan.flashingMaze = ASSET_MANAGER.image("graphics/pacman/maze_empty_flashing.png");
+			iconPacManGame = ASSET_MANAGER.image("graphics/icons/pacman.png");
+			spritesheetPacManGame = new Spritesheet(ASSET_MANAGER.image("graphics/pacman/sprites.png"), 16);
+			fullMazePacManGame = ASSET_MANAGER.image("graphics/pacman/maze_full.png");
+			emptyMazePacManGame = ASSET_MANAGER.image("graphics/pacman/maze_empty.png");
+			flashingMazePacManGame = ASSET_MANAGER.image("graphics/pacman/maze_empty_flashing.png");
 
 			// Texts
 			messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");

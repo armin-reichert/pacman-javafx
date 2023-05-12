@@ -252,12 +252,12 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		case MS_PACMAN -> {
 			var messageKey = pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.assets.graphicsMsPacMan.icon);
+			stage.getIcons().setAll(Game2d.assets.iconMsPacManGame);
 		}
 		case PACMAN -> {
 			var messageKey = pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.assets.graphicsPacMan.icon);
+			stage.getIcons().setAll(Game2d.assets.iconPacManGame);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
