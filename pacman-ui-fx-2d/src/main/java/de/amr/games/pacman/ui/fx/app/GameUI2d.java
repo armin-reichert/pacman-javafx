@@ -74,6 +74,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No dashboard, no picture-in-picture view.
@@ -202,26 +203,28 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		mainSceneRoot.getChildren().add(flashMessageView);
 	}
 
-	public void updateContextSensitiveHelp() {
-		if (currentGameScene instanceof GameScene2D scene2D) {
-			if (Game2d.showHelpPy.get()) {
-				var help = csHelp.current();
-				if (help.isEmpty()) {
-					scene2D.helpRoot().getChildren().clear();
-				} else {
-					var panel = help.get();
-					scene2D.helpRoot().getChildren().setAll(panel);
-				}
-			} else {
-				scene2D.helpRoot().getChildren().clear();
-			}
+	public void showHelp() {
+		if (currentGameScene != null && currentGameScene.is3D()) {
+			return;
+		}
+		var gameScene = (GameScene2D) currentGameScene;
+		updateHelp();
+		csHelp.show(gameScene.helpRoot(), Duration.seconds(2));
+	}
+
+	public void updateHelp() {
+		var gameScene = (GameScene2D) currentGameScene;
+		var help = csHelp.current();
+		if (help.isEmpty()) {
+			gameScene.helpRoot().getChildren().clear();
+		} else {
+			gameScene.helpRoot().getChildren().setAll(help.get());
 		}
 	}
 
 	protected void createMainScene(Settings settings) {
 		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
-		mainScene.widthProperty().addListener((py, ov, nv) -> updateContextSensitiveHelp());
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2 && currentGameScene != null) {
@@ -304,7 +307,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
 		}
-		updateContextSensitiveHelp();
 		updateStage();
 	}
 
@@ -335,8 +337,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2d.Keys.TOGGLE_HELP)) {
-			Game2d.actions.toggleHelp();
+		if (Keyboard.pressed(Game2d.Keys.SHOW_HELP)) {
+			showHelp();
 		} else if (Keyboard.pressed(Game2d.Keys.AUTOPILOT)) {
 			Game2d.actions.toggleAutopilot();
 		} else if (Keyboard.pressed(Game2d.Keys.BOOT)) {

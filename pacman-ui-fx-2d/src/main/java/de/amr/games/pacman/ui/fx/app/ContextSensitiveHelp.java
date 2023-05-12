@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -34,6 +35,8 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import javafx.animation.Animation.Status;
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -43,42 +46,85 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * @author Armin Reichert
  */
 public class ContextSensitiveHelp {
 
+	public static class Menu {
+		final List<List<Node>> rows = new ArrayList<>();
+	}
+
 	private final ResourceBundle translations;
 	private final GameController gameController;
 	private Color backgroundColor = Color.WHITE;
 	private Font font = Font.font("Helvetica", 8);
+	private FadeTransition closeAnimation;
 
 	public ContextSensitiveHelp(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;
 		this.translations = translations;
+		closeAnimation = new FadeTransition(Duration.seconds(0.5));
+		closeAnimation.setFromValue(1);
+		closeAnimation.setToValue(0);
+	}
+
+	public void show(Node anchor, Duration openDuration) {
+		if (closeAnimation.getStatus() == Status.RUNNING) {
+			return;
+		}
+		anchor.setOpacity(1);
+		closeAnimation.setNode(anchor);
+		closeAnimation.setDelay(openDuration);
+		closeAnimation.play();
+	}
+
+	public void addRow(Menu menu, String labelText, String keySpec) {
+		menu.rows.add(Arrays.asList(label(labelText), key(keySpec)));
+	}
+
+	public Pane createPane(Menu menu) {
+		var grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		for (int rowIndex = 0; rowIndex < menu.rows.size(); ++rowIndex) {
+			var row = menu.rows.get(rowIndex);
+			grid.add(row.get(0), 0, rowIndex);
+			grid.add(row.get(1), 1, rowIndex);
+		}
+		if (gameController.isAutoControlled()) {
+			var text = text(tt("help.autopilot_on"), Color.ORANGE);
+			GridPane.setColumnSpan(text, 2);
+			grid.add(text, 0, menu.rows.size());
+		}
+		if (gameController.game().isImmune()) {
+			var text = text(tt("help.immunity_on"), Color.ORANGE);
+			GridPane.setColumnSpan(text, 2);
+			grid.add(text, 0, menu.rows.size() + 1);
+		}
+
+		var pane = new BorderPane(grid);
+		pane.setPadding(new Insets(10));
+		pane.setBackground(ResourceManager.colorBackground(backgroundColor));
+		return pane;
 	}
 
 	public Optional<Pane> current() {
+		var variant = gameController.game().variant();
+		switch (variant) {
+		case MS_PACMAN -> backgroundColor = (Color.rgb(255, 0, 0, 0.9));
+		case PACMAN -> backgroundColor = (Color.rgb(33, 33, 255, 0.9));
+		default -> throw new IllegalGameVariantException(variant);
+		}
 		var pane = switch (gameController.state()) {
-		case CREDIT -> helpCredit();
-		case INTRO -> helpIntro();
-		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode() ? helpDemoLevel() : helpPlaying();
+		case CREDIT -> menuCredit();
+		case INTRO -> menuIntro();
+		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode() ? menuDemoLevel() : menuPlaying();
 		default -> null;
 		};
 		return Optional.ofNullable(pane);
-	}
-
-	public void setGameVariant(GameVariant variant) {
-		switch (variant) {
-		case MS_PACMAN -> setBackgroundColor(Color.rgb(255, 0, 0, 0.9));
-		case PACMAN -> setBackgroundColor(Color.rgb(33, 33, 255, 0.9));
-		default -> throw new IllegalGameVariantException(variant);
-		}
-	}
-
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
 	}
 
 	public void setFont(Font font) {
@@ -111,41 +157,6 @@ public class ContextSensitiveHelp {
 		return text("[" + key + "]");
 	}
 
-	private class Help {
-
-		private final List<List<Node>> rows = new ArrayList<>();
-
-		public void addRow(String labelText, String keySpec) {
-			rows.add(List.of(label(labelText), key(keySpec)));
-		}
-
-		public Pane createPane() {
-			var grid = new GridPane();
-			grid.setHgap(10);
-			grid.setVgap(10);
-			for (int rowIndex = 0; rowIndex < rows.size(); ++rowIndex) {
-				var row = rows.get(rowIndex);
-				grid.add(row.get(0), 0, rowIndex);
-				grid.add(row.get(1), 1, rowIndex);
-			}
-			if (gameController.isAutoControlled()) {
-				var text = text(tt("help.autopilot_on"), Color.ORANGE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rows.size());
-			}
-			if (gameController.game().isImmune()) {
-				var text = text(tt("help.immunity_on"), Color.ORANGE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rows.size() + 1);
-			}
-
-			var pane = new BorderPane(grid);
-			pane.setPadding(new Insets(10));
-			pane.setBackground(ResourceManager.colorBackground(backgroundColor));
-			return pane;
-		}
-	}
-
 	private GameModel game() {
 		return gameController.game();
 	}
@@ -155,50 +166,50 @@ public class ContextSensitiveHelp {
 		return gameLevel.isPresent() && gameLevel.get().isDemoLevel();
 	}
 
-	private Pane helpIntro() {
-		var help = new Help();
+	private Pane menuIntro() {
+		var menu = new Menu();
 		if (game().credit() > 0) {
-			help.addRow(tt("help.start_game"), "1");
+			addRow(menu, tt("help.start_game"), "1");
 		}
-		help.addRow(tt("help.add_credit"), "5");
-		help.addRow(tt(game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
-		return help.createPane();
+		addRow(menu, tt("help.add_credit"), "5");
+		addRow(menu, tt(game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
+		return createPane(menu);
 	}
 
-	private Pane helpCredit() {
-		var help = new Help();
+	private Pane menuCredit() {
+		var menu = new Menu();
 		if (game().credit() > 0) {
-			help.addRow(tt("help.start_game"), "1");
+			addRow(menu, tt("help.start_game"), "1");
 		}
-		help.addRow(tt("help.add_credit"), "5");
-		help.addRow(tt("help.show_intro"), "Q");
-		return help.createPane();
+		addRow(menu, tt("help.add_credit"), "5");
+		addRow(menu, tt("help.show_intro"), "Q");
+		return createPane(menu);
 	}
 
-	private Help helpPlaying;
+	private Menu menuPlaying;
 
-	private Pane helpPlaying() {
-		if (helpPlaying == null) {
-			var help = new Help();
-			help.addRow(tt("help.move_left"), tt("help.cursor_left"));
-			help.addRow(tt("help.move_right"), tt("help.cursor_right"));
-			help.addRow(tt("help.move_up"), tt("help.cursor_up"));
-			help.addRow(tt("help.move_down"), tt("help.cursor_down"));
-			help.addRow(tt("help.show_intro"), "Q");
-			helpPlaying = help;
+	private Pane menuPlaying() {
+		if (menuPlaying == null) {
+			var menu = new Menu();
+			addRow(menu, tt("help.move_left"), tt("help.cursor_left"));
+			addRow(menu, tt("help.move_right"), tt("help.cursor_right"));
+			addRow(menu, tt("help.move_up"), tt("help.cursor_up"));
+			addRow(menu, tt("help.move_down"), tt("help.cursor_down"));
+			addRow(menu, tt("help.show_intro"), "Q");
+			menuPlaying = menu;
 		}
-		return helpPlaying.createPane();
+		return createPane(menuPlaying);
 	}
 
-	private Help helpDemoLevel;
+	private Menu menuDemoLevel;
 
-	private Pane helpDemoLevel() {
-		if (helpDemoLevel == null) {
-			var help = new Help();
-			help.addRow(tt("help.start_game"), "5");
-			help.addRow(tt("help.show_intro"), "Q");
-			helpDemoLevel = help;
+	private Pane menuDemoLevel() {
+		if (menuDemoLevel == null) {
+			var menu = new Menu();
+			addRow(menu, tt("help.start_game"), "5");
+			addRow(menu, tt("help.show_intro"), "Q");
+			menuDemoLevel = menu;
 		}
-		return helpDemoLevel.createPane();
+		return createPane(menuDemoLevel);
 	}
 }

@@ -43,13 +43,10 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.Animation.Status;
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -63,7 +60,6 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  * This is 2D-only version of the Pac-Man and Ms. Pac-Man games.
@@ -86,7 +82,6 @@ public class Game2d extends Application {
 	public static final ResourceManager ASSET_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);
 
 	//@formatter:off
-	public static final BooleanProperty showHelpPy        = new SimpleBooleanProperty(false);
 	public static final BooleanProperty showDebugInfoPy   = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	//@formatter:on
@@ -238,35 +233,9 @@ public class Game2d extends Application {
 	public static class Actions {
 
 		private GameUI2d ui;
-		private FadeTransition helpFadingTransition;
 
 		public void setUI(GameUI2d ui) {
 			this.ui = ui;
-		}
-
-		public void toggleHelp() {
-			if (ui.currentGameScene() != null && ui.currentGameScene().is3D()) {
-				return;
-			}
-			boolean fading = helpFadingTransition != null && helpFadingTransition.getStatus() == Status.RUNNING;
-			if (fading) {
-				return;
-			}
-			if (showHelpPy.get()) {
-				showHelpPy.set(false);
-				return;
-			}
-			showHelpPy.set(true);
-			ui.csHelp.setGameVariant(ui.gameController.game().variant());
-			ui.updateContextSensitiveHelp();
-			var gameScene = (GameScene2D) ui.currentGameScene;
-			gameScene.helpRoot().setOpacity(1);
-			helpFadingTransition = new FadeTransition(Duration.seconds(0.5), gameScene.helpRoot());
-			helpFadingTransition.setFromValue(1);
-			helpFadingTransition.setToValue(0);
-			helpFadingTransition.setOnFinished(e -> showHelpPy.set(false));
-			helpFadingTransition.setDelay(Duration.seconds(2.0));
-			helpFadingTransition.play();
 		}
 
 		public void stopVoiceMessage() {
@@ -375,7 +344,7 @@ public class Game2d extends Application {
 			var auto = ui.gameController().isAutoControlled();
 			String message = fmtMessage(assets.messages, auto ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(message);
-			ui.updateContextSensitiveHelp();
+			ui.updateHelp();
 			ui.playVoice(auto ? assets.voiceAutopilotOn : assets.voiceAutopilotOff);
 		}
 
@@ -384,7 +353,7 @@ public class Game2d extends Application {
 			var immune = ui.gameController().game().isImmune();
 			String message = fmtMessage(assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
-			ui.updateContextSensitiveHelp();
+			ui.updateHelp();
 			ui.playVoice(immune ? assets.voiceImmunityOn : assets.voiceImmunityOff);
 		}
 
@@ -441,7 +410,7 @@ public class Game2d extends Application {
 		public static final KeyCodeCombination SELECT_VARIANT = just(KeyCode.V);
 		public static final KeyCodeCombination PLAY_CUTSCENES = alt(KeyCode.Z);
 
-		public static final KeyCodeCombination TOGGLE_HELP = just(KeyCode.H);
+		public static final KeyCodeCombination SHOW_HELP = just(KeyCode.H);
 		public static final KeyCodeCombination BOOT = just(KeyCode.F3);
 		public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 	}
