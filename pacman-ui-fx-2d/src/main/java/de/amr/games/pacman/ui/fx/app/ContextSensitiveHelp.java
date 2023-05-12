@@ -53,15 +53,14 @@ import javafx.util.Duration;
  */
 public class ContextSensitiveHelp {
 
-	public static class Menu {
+	private static class Menu {
 		final List<List<Node>> rows = new ArrayList<>();
 	}
 
 	private final ResourceBundle translations;
 	private final GameController gameController;
-	private Color backgroundColor = Color.WHITE;
+	private final FadeTransition closeAnimation;
 	private Font font = Font.font("Helvetica", 8);
-	private FadeTransition closeAnimation;
 
 	public ContextSensitiveHelp(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;
@@ -71,21 +70,17 @@ public class ContextSensitiveHelp {
 		closeAnimation.setToValue(0);
 	}
 
-	public void show(Node anchor, Duration openDuration) {
+	public void show(Node helpRoot, Duration openDuration) {
+		helpRoot.setOpacity(1);
 		if (closeAnimation.getStatus() == Status.RUNNING) {
-			return;
+			closeAnimation.playFromStart();
 		}
-		anchor.setOpacity(1);
-		closeAnimation.setNode(anchor);
+		closeAnimation.setNode(helpRoot);
 		closeAnimation.setDelay(openDuration);
 		closeAnimation.play();
 	}
 
-	public void addRow(Menu menu, String labelText, String keySpec) {
-		menu.rows.add(Arrays.asList(label(labelText), key(keySpec)));
-	}
-
-	public Pane createPane(Menu menu) {
+	private Pane createPane(Menu menu) {
 		var grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -107,17 +102,15 @@ public class ContextSensitiveHelp {
 
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
-		pane.setBackground(ResourceManager.colorBackground(backgroundColor));
+		switch (gameController.game().variant()) {
+		case MS_PACMAN -> pane.setBackground(ResourceManager.colorBackground(Color.rgb(255, 0, 0, 0.9)));
+		case PACMAN -> pane.setBackground(ResourceManager.colorBackground(Color.rgb(33, 33, 255, 0.9)));
+		default -> throw new IllegalGameVariantException(gameController.game().variant());
+		}
 		return pane;
 	}
 
 	public Optional<Pane> current() {
-		var variant = gameController.game().variant();
-		switch (variant) {
-		case MS_PACMAN -> backgroundColor = (Color.rgb(255, 0, 0, 0.9));
-		case PACMAN -> backgroundColor = (Color.rgb(33, 33, 255, 0.9));
-		default -> throw new IllegalGameVariantException(variant);
-		}
 		var pane = switch (gameController.state()) {
 		case CREDIT -> menuCredit();
 		case INTRO -> menuIntro();
@@ -157,6 +150,10 @@ public class ContextSensitiveHelp {
 		return text("[" + key + "]");
 	}
 
+	private void addRow(Menu menu, String labelText, String keySpec) {
+		menu.rows.add(Arrays.asList(label(labelText), key(keySpec)));
+	}
+
 	private GameModel game() {
 		return gameController.game();
 	}
@@ -186,30 +183,20 @@ public class ContextSensitiveHelp {
 		return createPane(menu);
 	}
 
-	private Menu menuPlaying;
-
 	private Pane menuPlaying() {
-		if (menuPlaying == null) {
-			var menu = new Menu();
-			addRow(menu, tt("help.move_left"), tt("help.cursor_left"));
-			addRow(menu, tt("help.move_right"), tt("help.cursor_right"));
-			addRow(menu, tt("help.move_up"), tt("help.cursor_up"));
-			addRow(menu, tt("help.move_down"), tt("help.cursor_down"));
-			addRow(menu, tt("help.show_intro"), "Q");
-			menuPlaying = menu;
-		}
-		return createPane(menuPlaying);
+		var menu = new Menu();
+		addRow(menu, tt("help.move_left"), tt("help.cursor_left"));
+		addRow(menu, tt("help.move_right"), tt("help.cursor_right"));
+		addRow(menu, tt("help.move_up"), tt("help.cursor_up"));
+		addRow(menu, tt("help.move_down"), tt("help.cursor_down"));
+		addRow(menu, tt("help.show_intro"), "Q");
+		return createPane(menu);
 	}
 
-	private Menu menuDemoLevel;
-
 	private Pane menuDemoLevel() {
-		if (menuDemoLevel == null) {
-			var menu = new Menu();
-			addRow(menu, tt("help.start_game"), "5");
-			addRow(menu, tt("help.show_intro"), "Q");
-			menuDemoLevel = menu;
-		}
-		return createPane(menuDemoLevel);
+		var menu = new Menu();
+		addRow(menu, tt("help.add_credit"), "5");
+		addRow(menu, tt("help.show_intro"), "Q");
+		return createPane(menu);
 	}
 }
