@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -54,7 +53,17 @@ import javafx.util.Duration;
 public class ContextSensitiveHelp {
 
 	private static class Menu {
-		final List<List<Node>> rows = new ArrayList<>();
+		private final List<Node> column0 = new ArrayList<>();
+		private final List<Node> column1 = new ArrayList<>();
+
+		public void addRow(Node node0, Node node1) {
+			column0.add(node0);
+			column1.add(node1);
+		}
+
+		public int size() {
+			return column0.size();
+		}
 	}
 
 	private final ResourceBundle translations;
@@ -84,20 +93,20 @@ public class ContextSensitiveHelp {
 		var grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
-		for (int rowIndex = 0; rowIndex < menu.rows.size(); ++rowIndex) {
-			var row = menu.rows.get(rowIndex);
-			grid.add(row.get(0), 0, rowIndex);
-			grid.add(row.get(1), 1, rowIndex);
+		for (int row = 0; row < menu.column0.size(); ++row) {
+			grid.add(menu.column0.get(row), 0, row);
+			grid.add(menu.column1.get(row), 1, row);
 		}
+		int rowIndex = menu.size();
 		if (gameController.isAutoControlled()) {
 			var text = text(tt("help.autopilot_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
-			grid.add(text, 0, menu.rows.size());
+			grid.add(text, 0, rowIndex++);
 		}
 		if (gameController.game().isImmune()) {
 			var text = text(tt("help.immunity_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
-			grid.add(text, 0, menu.rows.size() + 1);
+			grid.add(text, 0, rowIndex++);
 		}
 
 		var pane = new BorderPane(grid);
@@ -146,14 +155,6 @@ public class ContextSensitiveHelp {
 		return text(s, Color.YELLOW);
 	}
 
-	private Text key(String key) {
-		return text("[" + key + "]");
-	}
-
-	private void addRow(Menu menu, String labelText, String keySpec) {
-		menu.rows.add(Arrays.asList(label(labelText), key(keySpec)));
-	}
-
 	private GameModel game() {
 		return gameController.game();
 	}
@@ -163,40 +164,44 @@ public class ContextSensitiveHelp {
 		return gameLevel.isPresent() && gameLevel.get().isDemoLevel();
 	}
 
+	private void addEntry(Menu menu, String rbKey, String kbKey) {
+		menu.addRow(label(tt(rbKey)), text("[" + kbKey + "]"));
+	}
+
 	private Pane menuIntro() {
 		var menu = new Menu();
 		if (game().credit() > 0) {
-			addRow(menu, tt("help.start_game"), "1");
+			addEntry(menu, "help.start_game", "1");
 		}
-		addRow(menu, tt("help.add_credit"), "5");
-		addRow(menu, tt(game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman"), "V");
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
 		return createPane(menu);
 	}
 
 	private Pane menuCredit() {
 		var menu = new Menu();
 		if (game().credit() > 0) {
-			addRow(menu, tt("help.start_game"), "1");
+			addEntry(menu, "help.start_game", "1");
 		}
-		addRow(menu, tt("help.add_credit"), "5");
-		addRow(menu, tt("help.show_intro"), "Q");
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_intro", "Q");
 		return createPane(menu);
 	}
 
 	private Pane menuPlaying() {
 		var menu = new Menu();
-		addRow(menu, tt("help.move_left"), tt("help.cursor_left"));
-		addRow(menu, tt("help.move_right"), tt("help.cursor_right"));
-		addRow(menu, tt("help.move_up"), tt("help.cursor_up"));
-		addRow(menu, tt("help.move_down"), tt("help.cursor_down"));
-		addRow(menu, tt("help.show_intro"), "Q");
+		addEntry(menu, "help.move_left", tt("help.cursor_left"));
+		addEntry(menu, "help.move_right", tt("help.cursor_right"));
+		addEntry(menu, "help.move_up", tt("help.cursor_up"));
+		addEntry(menu, "help.move_down", tt("help.cursor_down"));
+		addEntry(menu, "help.show_intro", "Q");
 		return createPane(menu);
 	}
 
 	private Pane menuDemoLevel() {
 		var menu = new Menu();
-		addRow(menu, tt("help.add_credit"), "5");
-		addRow(menu, tt("help.show_intro"), "Q");
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_intro", "Q");
 		return createPane(menu);
 	}
 }
