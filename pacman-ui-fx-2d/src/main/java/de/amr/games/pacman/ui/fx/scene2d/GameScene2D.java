@@ -198,12 +198,14 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected TextFlow addSignature(double x, double y) {
+		var color = Color.web("0x030966");
+
 		var t1 = new Text("Remake (2023) by ");
-		t1.setFill(Color.gray(0.75));
+		t1.setFill(color);
 		t1.setFont(Font.font("Helvetica", 9));
 
 		var t2 = new Text("Armin Reichert");
-		t2.setFill(Color.gray(0.75));
+		t2.setFill(color);
 		t2.setFont(Game2d.assets.font(Game2d.assets.handwritingFont, 9));
 
 		var signature = new TextFlow(t1, t2);
