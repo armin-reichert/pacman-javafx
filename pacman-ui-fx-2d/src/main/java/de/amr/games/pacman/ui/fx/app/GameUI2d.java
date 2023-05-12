@@ -113,7 +113,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.stage = stage;
 		this.gameController = new GameController(settings.variant);
 		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
-		csHelp.setFont(Game2d.assets.font(Game2d.assets.arcadeFont, 6.5));
 
 		configureRenderers(settings);
 		createMsPacManSceneChoices();
@@ -204,21 +203,20 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	public void showHelp() {
-		if (currentGameScene != null && currentGameScene.is3D()) {
-			return;
+		if (currentGameScene instanceof GameScene2D gameScene2d) {
+			updateHelpContent();
+			csHelp.show(gameScene2d.helpRoot(), Duration.seconds(2));
 		}
-		var gameScene = (GameScene2D) currentGameScene;
-		updateHelp();
-		csHelp.show(gameScene.helpRoot(), Duration.seconds(2));
 	}
 
-	public void updateHelp() {
-		var gameScene = (GameScene2D) currentGameScene;
-		var help = csHelp.current();
-		if (help.isEmpty()) {
-			gameScene.helpRoot().getChildren().clear();
-		} else {
-			gameScene.helpRoot().getChildren().setAll(help.get());
+	public void updateHelpContent() {
+		if (currentGameScene instanceof GameScene2D gameScene2d) {
+			var help = csHelp.current();
+			if (help.isEmpty()) {
+				gameScene2d.helpRoot().getChildren().clear();
+			} else {
+				gameScene2d.helpRoot().getChildren().setAll(help.get());
+			}
 		}
 	}
 

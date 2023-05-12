@@ -60,7 +60,7 @@ public class ContextSensitiveHelp {
 	private final ResourceBundle translations;
 	private final GameController gameController;
 	private final FadeTransition closeAnimation;
-	private Font font = Font.font("Helvetica", 8);
+	private Font font = Font.font("Helvetica", 10);
 
 	public ContextSensitiveHelp(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;

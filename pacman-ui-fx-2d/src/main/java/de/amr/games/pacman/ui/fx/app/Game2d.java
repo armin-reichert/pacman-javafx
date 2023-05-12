@@ -344,7 +344,7 @@ public class Game2d extends Application {
 			var auto = ui.gameController().isAutoControlled();
 			String message = fmtMessage(assets.messages, auto ? "autopilot_on" : "autopilot_off");
 			showFlashMessage(message);
-			ui.updateHelp();
+			ui.updateHelpContent();
 			ui.playVoice(auto ? assets.voiceAutopilotOn : assets.voiceAutopilotOff);
 		}
 
@@ -353,7 +353,7 @@ public class Game2d extends Application {
 			var immune = ui.gameController().game().isImmune();
 			String message = fmtMessage(assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
-			ui.updateHelp();
+			ui.updateHelpContent();
 			ui.playVoice(immune ? assets.voiceImmunityOn : assets.voiceImmunityOff);
 		}
 
