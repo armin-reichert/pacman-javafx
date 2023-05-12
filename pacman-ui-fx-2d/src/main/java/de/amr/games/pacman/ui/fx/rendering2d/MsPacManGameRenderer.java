@@ -120,7 +120,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				var r = new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+				var r = new Rectangle2D(0, (mazeNumber - 1) * h, w, h);
 				g.drawImage(Game2d.assets.flashingMazesMsPacManGame, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(),
 						x - 3 /* don't tell your mommy */, y, r.getWidth(), r.getHeight());
 			} else {
