@@ -52,6 +52,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -97,7 +98,7 @@ public class Game2d extends Application {
 		public Image iconMsPacManGame;
 		public Spritesheet spritesheetMsPacManGame;
 		public Image logoMsPacManGame;
-		public Image[] emptyFlashingMazeMsPacManGame;
+		public Image flashingMazesMsPacManGame;
 
 		public final Font arcadeFont;
 		public final Font handwritingFont;
@@ -123,14 +124,15 @@ public class Game2d extends Application {
 
 			iconMsPacManGame = ASSET_MANAGER.image("graphics/icons/mspacman.png");
 			spritesheetMsPacManGame = new Spritesheet(ASSET_MANAGER.image("graphics/mspacman/sprites.png"), 16);
-			emptyFlashingMazeMsPacManGame = new Image[6];
-			for (int i = 0; i < 6; ++i) {
-				var maze = spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
-				var mazeColors = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i];
-				emptyFlashingMazeMsPacManGame[i] = Ufx.colorsExchanged(maze, Map.of(//
-						mazeColors.wallBaseColor(), Color.WHITE, //
-						mazeColors.wallTopColor(), Color.BLACK));
-			}
+			flashingMazesMsPacManGame = ASSET_MANAGER.image("graphics/mspacman/mazes-flashing.png");
+//			for (int i = 0; i < 6; ++i) {
+//				var maze = spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
+//				var mazeColors = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i];
+//				emptyFlashingMazeMsPacManGame[i] = Ufx.colorsExchanged(maze, Map.of(//
+//						mazeColors.wallBaseColor(), Color.WHITE, //
+//						mazeColors.wallTopColor(), Color.BLACK));
+//			}
+
 			logoMsPacManGame = ASSET_MANAGER.image("graphics/mspacman/midway.png");
 
 			iconPacManGame = ASSET_MANAGER.image("graphics/icons/pacman.png");
