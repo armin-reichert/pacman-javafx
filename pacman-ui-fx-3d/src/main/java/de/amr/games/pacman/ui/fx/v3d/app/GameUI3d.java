@@ -71,7 +71,7 @@ public class GameUI3d extends GameUI2d {
 
 	public class PictureInPicture {
 
-		public static final float MIN_HEIGHT = UNSCALED_HEIGHT;
+		public static final float MIN_HEIGHT = 36 * 8;
 		public static final float MAX_HEIGHT = 2.5f * MIN_HEIGHT;
 
 		public final BooleanProperty visiblePy = new SimpleBooleanProperty(false) {
@@ -122,8 +122,8 @@ public class GameUI3d extends GameUI2d {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	public GameUI3d(GameController gameController, Stage stage, double scaling) {
-		super(gameController, stage, scaling);
+	public GameUI3d(GameController gameController, Stage stage, double width, double height) {
+		super(gameController, stage, width, height);
 		pip = new PictureInPicture(gameController);
 		dashboard = new Dashboard(this);
 	}

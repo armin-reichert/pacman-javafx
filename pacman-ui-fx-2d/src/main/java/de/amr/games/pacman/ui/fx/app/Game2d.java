@@ -417,7 +417,7 @@ public class Game2d extends Application {
 		Game2d.actions = new Actions();
 
 		var gameController = new GameController(settings.variant);
-		ui = new GameUI2d(gameController, primaryStage, settings.zoom);
+		ui = new GameUI2d(gameController, primaryStage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
 		ui.init(settings);
 
 		Game2d.actions.setUI(ui);

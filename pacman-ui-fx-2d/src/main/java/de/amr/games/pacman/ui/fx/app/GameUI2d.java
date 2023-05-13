@@ -84,9 +84,6 @@ import javafx.util.Duration;
  */
 public class GameUI2d extends GameClock implements GameEventListener {
 
-	public static final short UNSCALED_WIDTH = 28 * 8;
-	public static final short UNSCALED_HEIGHT = 36 * 8;
-
 	protected final GameController gameController;
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
@@ -98,12 +95,12 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected GameScene currentGameScene;
 	private AudioClip currentVoice;
 
-	public GameUI2d(GameController gameController, Stage stage, double scaling) {
+	public GameUI2d(GameController gameController, Stage stage, double width, double height) {
 		checkNotNull(gameController);
 		checkNotNull(stage);
 		this.stage = stage;
 		this.gameController = gameController;
-		stage.setScene(new Scene(new Pane(), UNSCALED_WIDTH * scaling, UNSCALED_HEIGHT * scaling, Color.BLACK));
+		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
