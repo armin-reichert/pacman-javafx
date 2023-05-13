@@ -106,11 +106,11 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.stage = stage;
 		this.gameController = gameController;
 		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
+		this.pausedPy.addListener((py, ov, nv) -> updateStage());
 
 		createSceneConfiguration();
 		createMainScene(settings);
 		configureStage(settings);
-		configureGameLoop();
 		configurePacSteering(settings);
 		initProperties(settings);
 
@@ -122,7 +122,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		super.start();
+		super.start(); // start clock
 	}
 
 	protected void createSceneConfiguration() {
@@ -156,10 +156,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
 		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 		gameController.setManualPacSteering(keyboardSteering);
-	}
-
-	protected void configureGameLoop() {
-		pausedPy.addListener((py, oldVal, newVal) -> updateStage());
 	}
 
 	protected void configureStage(Settings settings) {
