@@ -409,17 +409,21 @@ public class Game2d extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters().getNamed());
+
 		primaryStage.setFullScreen(settings.fullScreen);
+		// min size is probably platform-dependent
+		primaryStage.setMinWidth(241);
+		primaryStage.setMinHeight(328);
+
+		var gameController = new GameController(settings.variant);
 
 		long start = System.nanoTime();
 		Game2d.assets = new Assets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 		Game2d.actions = new Actions();
 
-		var gameController = new GameController(settings.variant);
 		ui = new GameUI2d(gameController, primaryStage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
 		ui.init(settings);
-
 		Game2d.actions.setUI(ui);
 
 		actions.reboot();

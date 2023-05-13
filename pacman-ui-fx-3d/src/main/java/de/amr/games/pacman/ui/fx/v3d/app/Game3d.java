@@ -212,7 +212,13 @@ public class Game3d extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
+
 		primaryStage.setFullScreen(settings.fullScreen);
+		// min size is probably platform-dependent
+		primaryStage.setMinWidth(241);
+		primaryStage.setMinHeight(328);
+
+		var gameController = new GameController(settings.variant);
 
 		long start = System.nanoTime();
 		Game2d.assets = new Game2d.Assets();
@@ -222,7 +228,6 @@ public class Game3d extends Application {
 		Game2d.actions = new Game2d.Actions();
 		Game3d.actions = new Game3d.Actions();
 
-		var gameController = new GameController(settings.variant);
 		ui = new GameUI3d(gameController, primaryStage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
 		ui.init(settings);
 
