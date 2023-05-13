@@ -40,6 +40,7 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -85,16 +86,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public static final byte TILES_X = 28;
 	public static final byte TILES_Y = 36;
 
-	public static final byte INDEX_BOOT_SCENE = 0;
-	public static final byte INDEX_INTRO_SCENE = 1;
-	public static final byte INDEX_CREDIT_SCENE = 2;
-	public static final byte INDEX_PLAY_SCENE = 3;
-
 	private AudioClip currentVoice;
 
 	protected final Map<GameVariant, SceneConfiguration> sceneConfig = new EnumMap<>(GameVariant.class);
-//	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-//	protected final Map<GameVariant, List<GameSceneChoice>> sceneChoicesMap = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
 	protected Scene mainScene;
 	protected final StackPane mainSceneRoot = new StackPane();
@@ -268,12 +262,13 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		var game = gameController.game();
 		var state = gameController.state();
 		int index = switch (state) {
-		case BOOT -> INDEX_BOOT_SCENE;
-		case CREDIT -> INDEX_CREDIT_SCENE;
-		case INTRO -> INDEX_INTRO_SCENE;
-		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> INDEX_PLAY_SCENE;
-		case INTERMISSION -> INDEX_PLAY_SCENE + game.level().orElseThrow(IllegalStateException::new).intermissionNumber;
-		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + game.intermissionTestNumber;
+		case BOOT -> SceneConfiguration.INDEX_BOOT_SCENE;
+		case CREDIT -> SceneConfiguration.INDEX_CREDIT_SCENE;
+		case INTRO -> SceneConfiguration.INDEX_INTRO_SCENE;
+		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> SceneConfiguration.INDEX_PLAY_SCENE;
+		case INTERMISSION -> SceneConfiguration.INDEX_PLAY_SCENE
+				+ game.level().orElseThrow(IllegalStateException::new).intermissionNumber;
+		case INTERMISSION_TEST -> SceneConfiguration.INDEX_PLAY_SCENE + game.intermissionTestNumber;
 		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
 		};
 		return sceneConfig.get(game.variant()).choice(index);
@@ -388,6 +383,10 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	public GameController gameController() {
 		return gameController;
+	}
+
+	public GameModel game() {
+		return gameController.game();
 	}
 
 	public GameScene currentGameScene() {

@@ -33,6 +33,11 @@ import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
  */
 public class SceneConfiguration {
 
+	public static final byte INDEX_BOOT_SCENE = 0;
+	public static final byte INDEX_INTRO_SCENE = 1;
+	public static final byte INDEX_CREDIT_SCENE = 2;
+	public static final byte INDEX_PLAY_SCENE = 3;
+
 	private final Rendering2D renderer;
 	private final List<GameSceneChoice> choices;
 
@@ -47,5 +52,9 @@ public class SceneConfiguration {
 
 	public GameSceneChoice choice(int sceneIndex) {
 		return choices.get(sceneIndex);
+	}
+
+	public boolean isPlayScene(GameScene gameScene) {
+		return choice(INDEX_PLAY_SCENE).includes(gameScene);
 	}
 }

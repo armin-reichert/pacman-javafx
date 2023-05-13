@@ -37,6 +37,7 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.scene.SceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -99,7 +100,8 @@ public class GameUI3d extends GameUI2d {
 
 		public void update() {
 			if (currentGameScene != null) {
-				playScene.fxSubScene().setVisible(visiblePy.get() && currentGameScene.is3D() && isPlayScene(currentGameScene));
+				boolean isPlayScene = sceneConfig.get(game().variant()).isPlayScene(currentGameScene);
+				playScene.fxSubScene().setVisible(visiblePy.get() && currentGameScene.is3D() && isPlayScene);
 				playScene.context().setCreditVisible(false);
 				playScene.context().setScoreVisible(true);
 				playScene.context().setRendering2D(currentGameScene.context().rendering2D());
@@ -139,8 +141,10 @@ public class GameUI3d extends GameUI2d {
 	@Override
 	protected void createSceneConfiguration() {
 		super.createSceneConfiguration();
-		sceneConfig.get(GameVariant.MS_PACMAN).choice(INDEX_PLAY_SCENE).setScene3D(new PlayScene3D(gameController));
-		sceneConfig.get(GameVariant.PACMAN).choice(INDEX_PLAY_SCENE).setScene3D(new PlayScene3D(gameController));
+		sceneConfig.get(GameVariant.MS_PACMAN).choice(SceneConfiguration.INDEX_PLAY_SCENE)
+				.setScene3D(new PlayScene3D(gameController));
+		sceneConfig.get(GameVariant.PACMAN).choice(SceneConfiguration.INDEX_PLAY_SCENE)
+				.setScene3D(new PlayScene3D(gameController));
 	}
 
 	@Override
@@ -240,10 +244,5 @@ public class GameUI3d extends GameUI2d {
 			var message = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
 			Game2d.actions.showFlashMessage(message);
 		}
-	}
-
-	private boolean isPlayScene(GameScene gameScene) {
-		return sceneConfig.get(GameVariant.PACMAN).choice(INDEX_PLAY_SCENE).includes(gameScene)
-				|| sceneConfig.get(GameVariant.MS_PACMAN).choice(INDEX_PLAY_SCENE).includes(gameScene);
 	}
 }
