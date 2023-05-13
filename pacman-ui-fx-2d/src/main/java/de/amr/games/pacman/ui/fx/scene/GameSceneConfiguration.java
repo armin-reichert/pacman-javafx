@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 /**
  * @author Armin Reichert
  */
-public class SceneConfiguration {
+public class GameSceneConfiguration {
 
 	private static final byte INDEX_BOOT_SCENE = 0;
 	private static final byte INDEX_INTRO_SCENE = 1;
@@ -41,7 +41,7 @@ public class SceneConfiguration {
 	private final Rendering2D renderer;
 	private final GameSceneChoice[] choices;
 
-	public SceneConfiguration(Rendering2D renderer, GameSceneChoice... choices) {
+	public GameSceneConfiguration(Rendering2D renderer, GameSceneChoice... choices) {
 		checkNotNull(renderer);
 		checkNotNull(choices);
 		if (choices.length != 7) {

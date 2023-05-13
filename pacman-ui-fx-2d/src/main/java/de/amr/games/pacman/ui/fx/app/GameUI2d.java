@@ -49,7 +49,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene.SceneConfiguration;
+import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.BootScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
@@ -88,7 +88,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	private AudioClip currentVoice;
 
-	protected final Map<GameVariant, SceneConfiguration> sceneConfig = new EnumMap<>(GameVariant.class);
+	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
 	protected Scene mainScene;
 	protected final StackPane mainSceneRoot = new StackPane();
@@ -106,9 +106,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.stage = stage;
 		this.gameController = gameController;
 		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
-		this.pausedPy.addListener((py, ov, nv) -> updateStage());
+		super.pausedPy.addListener((py, ov, nv) -> updateStage());
 
-		createSceneConfiguration();
+		configureGameScenes();
 		createMainScene(settings);
 		configureStage(settings);
 		configurePacSteering(settings);
@@ -125,8 +125,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		super.start(); // start clock
 	}
 
-	protected void createSceneConfiguration() {
-		sceneConfig.put(GameVariant.PACMAN, new SceneConfiguration(new PacManGameRenderer(),
+	protected void configureGameScenes() {
+		gameSceneConfig.put(GameVariant.PACMAN, new GameSceneConfiguration(new PacManGameRenderer(),
 		//@formatter:off
 			new GameSceneChoice(new BootScene(gameController)),
 			new GameSceneChoice(new PacManIntroScene(gameController)),
@@ -138,7 +138,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		//@formatter:on
 		));
 
-		sceneConfig.put(GameVariant.MS_PACMAN, new SceneConfiguration(new MsPacManGameRenderer(),
+		gameSceneConfig.put(GameVariant.MS_PACMAN, new GameSceneConfiguration(new MsPacManGameRenderer(),
 		//@formatter:off
 			new GameSceneChoice(new BootScene(gameController)),
 			new GameSceneChoice(new MsPacManIntroScene(gameController)), 
@@ -250,7 +250,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
 		var state = gameController.state();
-		var config = sceneConfig.get(game().variant());
+		var config = gameSceneConfig.get(game().variant());
 		return switch (state) {
 		case BOOT -> config.bootSceneChoice();
 		case CREDIT -> config.creditSceneChoice();
@@ -287,7 +287,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		Logger.trace("Changing game scene from {} to {}", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
 		var variant = gameController.game().variant();
-		var renderer = sceneConfig.get(variant).renderer();
+		var renderer = gameSceneConfig.get(variant).renderer();
 		Logger.trace("Using renderer {}", renderer);
 		currentGameScene.context().setRendering2D(renderer);
 		currentGameScene.init();

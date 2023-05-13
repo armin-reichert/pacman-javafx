@@ -100,7 +100,7 @@ public class GameUI3d extends GameUI2d {
 
 		public void update() {
 			if (currentGameScene != null) {
-				boolean isPlayScene = sceneConfig.get(game().variant()).isPlayScene(currentGameScene);
+				boolean isPlayScene = gameSceneConfig.get(game().variant()).isPlayScene(currentGameScene);
 				playScene.fxSubScene().setVisible(visiblePy.get() && currentGameScene.is3D() && isPlayScene);
 				playScene.context().setCreditVisible(false);
 				playScene.context().setScoreVisible(true);
@@ -139,10 +139,10 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
-	protected void createSceneConfiguration() {
-		super.createSceneConfiguration();
-		sceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
-		sceneConfig.get(GameVariant.PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
+	protected void configureGameScenes() {
+		super.configureGameScenes();
+		gameSceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
+		gameSceneConfig.get(GameVariant.PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
 	}
 
 	@Override
