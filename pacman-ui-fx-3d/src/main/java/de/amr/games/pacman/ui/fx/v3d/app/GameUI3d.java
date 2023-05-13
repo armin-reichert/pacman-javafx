@@ -129,6 +129,12 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
+	public void init(Settings settings) {
+		super.init(settings);
+		dashboard.init();
+	}
+
+	@Override
 	protected void configureGameScenes() {
 		super.configureGameScenes();
 		gameSceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));

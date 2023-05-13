@@ -28,7 +28,6 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
 import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -211,38 +210,30 @@ public class Game3d extends Application {
 
 	@Override
 	public void init() throws Exception {
-	}
-
-	@Override
-	public void start(Stage primaryStage) throws IOException {
-		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
-
-		primaryStage.setFullScreen(settings.fullScreen);
-		// min size is probably platform-dependent
-		primaryStage.setMinWidth(241);
-		primaryStage.setMinHeight(328);
-
-		var gameController = new GameController(settings.variant);
-
 		long start = System.nanoTime();
 		Game2d.assets = new Game2d.Assets();
 		Game3d.assets = new Game3d.Assets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
-
 		Game2d.actions = new Game2d.Actions();
 		Game3d.actions = new Game3d.Actions();
+	}
 
-		ui = new GameUI3d(gameController, primaryStage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
-		ui.init(settings);
+	@Override
+	public void start(Stage stage) throws IOException {
+		var cfg = new Settings(getParameters().getNamed());
+
+		// Minimum size is probably platform-dependent
+		stage.setFullScreen(cfg.fullScreen);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+
+		ui = new GameUI3d(new GameController(cfg.variant), stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		ui.init(cfg);
+		ui.start();
 
 		Game2d.actions.setUI(ui);
-
-		// TODO: Check if dashboard initalization used actions
-		ui.dashboard().init();
-
 		Game2d.actions.reboot();
-		ui.start();
-		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), settings);
+		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), cfg);
 	}
 
 	@Override

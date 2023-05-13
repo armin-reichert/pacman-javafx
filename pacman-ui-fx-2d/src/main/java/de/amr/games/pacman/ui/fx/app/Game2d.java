@@ -415,22 +415,21 @@ public class Game2d extends Application {
 	};
 
 	@Override
-	public void start(Stage primaryStage) throws IOException {
-		var settings = new Settings(getParameters().getNamed());
+	public void start(Stage stage) throws IOException {
+		var cfg = new Settings(getParameters().getNamed());
 
-		primaryStage.setFullScreen(settings.fullScreen);
-		// min size is probably platform-dependent
-		primaryStage.setMinWidth(241);
-		primaryStage.setMinHeight(328);
+		// Minimum size is probably platform-dependent
+		stage.setFullScreen(cfg.fullScreen);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
 
-		var gameController = new GameController(settings.variant);
-		ui = new GameUI2d(gameController, primaryStage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
-		ui.init(settings);
+		ui = new GameUI2d(new GameController(cfg.variant), stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		ui.init(cfg);
 		ui.start();
 		actions.setUI(ui);
 		actions.reboot();
 
-		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), settings);
+		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), cfg);
 	}
 
 	@Override
