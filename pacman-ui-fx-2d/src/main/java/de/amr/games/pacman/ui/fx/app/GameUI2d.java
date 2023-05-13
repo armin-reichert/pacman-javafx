@@ -100,7 +100,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected final StackPane mainSceneRoot = new StackPane();
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final ContextSensitiveHelp csHelp;
-	protected final SoundHandler soundHandler = new SoundHandler();
 	protected final GameController gameController;
 
 	protected KeyboardSteering keyboardSteering;
@@ -400,7 +399,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		soundHandler.onSoundEvent(event);
+		SoundHandler.onSoundEvent(event);
 	}
 
 	public GameController gameController() {
