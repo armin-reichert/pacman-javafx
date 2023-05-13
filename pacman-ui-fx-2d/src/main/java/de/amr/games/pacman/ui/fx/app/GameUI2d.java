@@ -98,8 +98,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public GameUI2d(GameController gameController, Stage stage, double width, double height) {
 		checkNotNull(gameController);
 		checkNotNull(stage);
-		this.stage = stage;
 		this.gameController = gameController;
+		this.stage = stage;
 		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
 		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
 		pausedPy.addListener((py, ov, nv) -> updateStage());
