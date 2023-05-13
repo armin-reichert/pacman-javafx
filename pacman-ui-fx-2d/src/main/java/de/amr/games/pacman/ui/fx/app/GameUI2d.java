@@ -95,10 +95,10 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected GameScene currentGameScene;
 	private AudioClip currentVoice;
 
-	public GameUI2d(GameController gameController, Stage stage, double width, double height) {
-		checkNotNull(gameController);
+	public GameUI2d(GameVariant gameVariant, Stage stage, double width, double height) {
+		checkNotNull(gameVariant);
 		checkNotNull(stage);
-		this.gameController = gameController;
+		this.gameController = new GameController(gameVariant);
 		this.stage = stage;
 		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
 		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);

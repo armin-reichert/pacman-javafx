@@ -35,7 +35,6 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
@@ -423,7 +422,7 @@ public class Game2d extends Application {
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 
-		ui = new GameUI2d(new GameController(cfg.variant), stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		ui = new GameUI2d(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		ui.init(cfg);
 		ui.start();
 		actions.setUI(ui);

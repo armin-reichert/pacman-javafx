@@ -35,7 +35,6 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
@@ -227,7 +226,7 @@ public class Game3d extends Application {
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 
-		ui = new GameUI3d(new GameController(cfg.variant), stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		ui = new GameUI3d(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		ui.init(cfg);
 		ui.start();
 

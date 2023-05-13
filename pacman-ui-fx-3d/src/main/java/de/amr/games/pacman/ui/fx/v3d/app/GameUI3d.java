@@ -122,8 +122,8 @@ public class GameUI3d extends GameUI2d {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	public GameUI3d(GameController gameController, Stage stage, double width, double height) {
-		super(gameController, stage, width, height);
+	public GameUI3d(GameVariant gameVariant, Stage stage, double width, double height) {
+		super(gameVariant, stage, width, height);
 		pip = new PictureInPicture(gameController);
 		dashboard = new Dashboard(this);
 	}
