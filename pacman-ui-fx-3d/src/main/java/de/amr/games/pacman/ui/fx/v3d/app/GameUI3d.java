@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 import java.util.Optional;
@@ -70,7 +69,7 @@ public class GameUI3d extends GameUI2d {
 
 	public class PictureInPicture {
 
-		public static final float MIN_HEIGHT = TS * TILES_Y;
+		public static final float MIN_HEIGHT = UNSCALED_HEIGHT;
 		public static final float MAX_HEIGHT = 2.5f * MIN_HEIGHT;
 
 		public final BooleanProperty visiblePy = new SimpleBooleanProperty(false) {
@@ -121,8 +120,8 @@ public class GameUI3d extends GameUI2d {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	public GameUI3d(GameController gameController, Stage stage, Settings settings) {
-		super(gameController, stage, settings);
+	public GameUI3d(GameController gameController, Stage stage, double scaling) {
+		super(gameController, stage, scaling);
 		pip = new PictureInPicture(gameController);
 		dashboard = new Dashboard(this);
 	}

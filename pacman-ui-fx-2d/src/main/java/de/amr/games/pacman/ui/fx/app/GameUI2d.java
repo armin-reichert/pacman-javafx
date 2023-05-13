@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.util.EnumMap;
@@ -72,6 +71,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -83,8 +83,8 @@ import javafx.util.Duration;
  */
 public class GameUI2d extends GameClock implements GameEventListener {
 
-	public static final byte TILES_X = 28;
-	public static final byte TILES_Y = 36;
+	public static final short UNSCALED_WIDTH = 28 * 8;
+	public static final short UNSCALED_HEIGHT = 36 * 8;
 
 	private AudioClip currentVoice;
 
@@ -99,13 +99,12 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
 
-	public GameUI2d(GameController gameController, Stage stage, Settings settings) {
+	public GameUI2d(GameController gameController, Stage stage, double scaling) {
 		checkNotNull(gameController);
 		checkNotNull(stage);
-		checkNotNull(settings);
 		this.stage = stage;
 		this.gameController = gameController;
-		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
+		mainScene = new Scene(mainSceneRoot, UNSCALED_WIDTH * scaling, UNSCALED_HEIGHT * scaling, Color.BLACK);
 		stage.setScene(mainScene);
 		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
 		pausedPy.addListener((py, ov, nv) -> updateStage());

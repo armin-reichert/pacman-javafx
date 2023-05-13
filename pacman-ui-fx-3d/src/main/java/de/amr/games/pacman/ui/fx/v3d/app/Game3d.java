@@ -222,7 +222,7 @@ public class Game3d extends Application {
 		Game3d.actions = new Game3d.Actions();
 
 		var gameController = new GameController(settings.variant);
-		ui = new GameUI3d(gameController, primaryStage, settings);
+		ui = new GameUI3d(gameController, primaryStage, settings.zoom);
 		ui.init(settings);
 
 		Game2d.actions.setUI(ui);
