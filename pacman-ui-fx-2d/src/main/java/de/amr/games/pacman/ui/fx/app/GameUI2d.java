@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,9 +46,9 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.scene.SceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.BootScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
@@ -93,8 +92,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	private AudioClip currentVoice;
 
-	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
-	protected final Map<GameVariant, List<GameSceneChoice>> sceneChoicesMap = new EnumMap<>(GameVariant.class);
+	protected final Map<GameVariant, SceneConfiguration> sceneConfig = new EnumMap<>(GameVariant.class);
+//	protected final Map<GameVariant, Rendering2D> renderers = new EnumMap<>(GameVariant.class);
+//	protected final Map<GameVariant, List<GameSceneChoice>> sceneChoicesMap = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
 	protected Scene mainScene;
 	protected final StackPane mainSceneRoot = new StackPane();
@@ -113,9 +113,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.gameController = new GameController(settings.variant);
 		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
 
-		configureRenderers(settings);
-		createMsPacManSceneChoices();
-		createPacManSceneChoices();
+		createSceneConfiguration();
 		createMainSceneLayout();
 		createMainScene(settings);
 		configureStage(settings);
@@ -134,11 +132,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		super.start();
 	}
 
-	/**
-	 * @return mutable list of Pac-Man game scene choices
-	 */
-	protected void createPacManSceneChoices() {
-		var scenes = Arrays.asList(
+	protected void createSceneConfiguration() {
+		var pacManGameScenes = Arrays.asList(
 		//@formatter:off
 			new GameSceneChoice(new BootScene(gameController)),
 			new GameSceneChoice(new PacManIntroScene(gameController)),
@@ -149,14 +144,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 			new GameSceneChoice(new PacManCutscene3(gameController))
 		//@formatter:on
 		);
-		sceneChoicesMap.put(GameVariant.PACMAN, scenes);
-	}
 
-	/**
-	 * @return mutable list of Ms. Pac-Man game scene choices
-	 */
-	protected void createMsPacManSceneChoices() {
-		var scenes = Arrays.asList(
+		var msPacManGameScenes = Arrays.asList(
 		//@formatter:off
 			new GameSceneChoice(new BootScene(gameController)),
 			new GameSceneChoice(new MsPacManIntroScene(gameController)), 
@@ -167,15 +156,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 			new GameSceneChoice(new MsPacManIntermissionScene3(gameController))
 		//@formatter:on
 		);
-		sceneChoicesMap.put(GameVariant.MS_PACMAN, scenes);
-	}
 
-	/**
-	 * @param settings application settings
-	 */
-	protected void configureRenderers(Settings settings) {
-		renderers.put(GameVariant.MS_PACMAN, new MsPacManGameRenderer());
-		renderers.put(GameVariant.PACMAN, new PacManGameRenderer());
+		sceneConfig.put(GameVariant.PACMAN, new SceneConfiguration(new PacManGameRenderer(), pacManGameScenes));
+		sceneConfig.put(GameVariant.MS_PACMAN, new SceneConfiguration(new MsPacManGameRenderer(), msPacManGameScenes));
 	}
 
 	protected void configurePacSteering(Settings settings) {
@@ -293,7 +276,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		case INTERMISSION_TEST -> INDEX_PLAY_SCENE + game.intermissionTestNumber;
 		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
 		};
-		return sceneChoicesMap.get(game.variant()).get(index);
+		return sceneConfig.get(game.variant()).choice(index);
 	}
 
 	public void updateGameScene(boolean reload) {
@@ -317,7 +300,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		}
 		Logger.trace("Changing game scene from {} to {}", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		var renderer = renderers.get(gameController.game().variant());
+		var variant = gameController.game().variant();
+		var renderer = sceneConfig.get(variant).renderer();
 		Logger.trace("Using renderer {}", renderer);
 		currentGameScene.context().setRendering2D(renderer);
 		currentGameScene.init();

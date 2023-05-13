@@ -137,19 +137,10 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
-	protected void createPacManSceneChoices() {
-		super.createPacManSceneChoices();
-		var choices = sceneChoicesMap.get(GameVariant.PACMAN);
-		var playScene2D = choices.get(INDEX_PLAY_SCENE).scene2D();
-		choices.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gameController)));
-	}
-
-	@Override
-	protected void createMsPacManSceneChoices() {
-		super.createMsPacManSceneChoices();
-		var choices = sceneChoicesMap.get(GameVariant.MS_PACMAN);
-		var playScene2D = choices.get(INDEX_PLAY_SCENE).scene2D();
-		choices.set(INDEX_PLAY_SCENE, new GameSceneChoice(playScene2D, new PlayScene3D(gameController)));
+	protected void createSceneConfiguration() {
+		super.createSceneConfiguration();
+		sceneConfig.get(GameVariant.MS_PACMAN).choice(INDEX_PLAY_SCENE).setScene3D(new PlayScene3D(gameController));
+		sceneConfig.get(GameVariant.PACMAN).choice(INDEX_PLAY_SCENE).setScene3D(new PlayScene3D(gameController));
 	}
 
 	@Override
@@ -252,7 +243,7 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {
-		return sceneChoicesMap.get(GameVariant.PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene)
-				|| sceneChoicesMap.get(GameVariant.MS_PACMAN).get(INDEX_PLAY_SCENE).includes(gameScene);
+		return sceneConfig.get(GameVariant.PACMAN).choice(INDEX_PLAY_SCENE).includes(gameScene)
+				|| sceneConfig.get(GameVariant.MS_PACMAN).choice(INDEX_PLAY_SCENE).includes(gameScene);
 	}
 }

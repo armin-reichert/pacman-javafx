@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2021-2023 Armin Reichert
+Copyright (c) 2023 Armin Reichert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,42 +21,31 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 package de.amr.games.pacman.ui.fx.scene;
+
+import java.util.List;
+
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 
 /**
  * @author Armin Reichert
  */
-public class GameSceneChoice {
+public class SceneConfiguration {
 
-	private GameScene scene2D;
-	private GameScene scene3D;
+	private final Rendering2D renderer;
+	private final List<GameSceneChoice> choices;
 
-	public GameSceneChoice(GameScene scene2D, GameScene scene3D) {
-		this.scene2D = scene2D;
-		this.scene3D = scene3D;
+	public SceneConfiguration(Rendering2D renderer, List<GameSceneChoice> choices) {
+		this.renderer = renderer;
+		this.choices = choices;
 	}
 
-	public GameSceneChoice(GameScene scene2D) {
-		this.scene2D = scene2D;
+	public Rendering2D renderer() {
+		return renderer;
 	}
 
-	public GameScene scene2D() {
-		return scene2D;
-	}
-
-	public GameScene scene3D() {
-		return scene3D;
-	}
-
-	public void setScene2D(GameScene scene2d) {
-		scene2D = scene2d;
-	}
-
-	public void setScene3D(GameScene scene3d) {
-		scene3D = scene3d;
-	}
-
-	public boolean includes(GameScene gameScene) {
-		return gameScene == scene2D || gameScene == scene3D;
+	public GameSceneChoice choice(int sceneIndex) {
+		return choices.get(sceneIndex);
 	}
 }
