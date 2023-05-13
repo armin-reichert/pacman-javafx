@@ -47,12 +47,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -119,23 +118,13 @@ public class GameUI3d extends GameUI2d {
 		}
 	}
 
-	private PictureInPicture pip;
-	private Dashboard dashboard;
+	private final PictureInPicture pip;
+	private final Dashboard dashboard;
 
 	public GameUI3d(GameController gameController, Stage stage, Settings settings) {
 		super(gameController, stage, settings);
-	}
-
-	public Dashboard dashboard() {
-		return dashboard;
-	}
-
-	@Override
-	public void doRender() {
-		flashMessageView.update();
-		currentGameScene.render();
-		dashboard.update();
-		pip.render();
+		pip = new PictureInPicture(gameController);
+		dashboard = new Dashboard(this);
 	}
 
 	@Override
@@ -146,29 +135,46 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
-	protected void createMainScene(Settings settings) {
-		pip = new PictureInPicture(gameController);
-		dashboard = new Dashboard(this);
-
+	protected void configureMainScene(Settings settings) {
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.fxSubScene());
 
-		mainSceneRoot.getChildren().add(new Label("(Game scene)"));
+		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 		mainSceneRoot.getChildren().add(dashboardLayer);
 
-		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2 && currentGameScene != null) {
-				// resize 2D scene to fit
-				if (!currentGameScene.is3D() && !stage.isFullScreen()) {
-					stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
-				}
+			if (e.getClickCount() == 2) {
+				resizeStageToFitCurrentGameScene();
 			}
 		});
+	}
+
+	@Override
+	protected void configureBindings(Settings settings) {
+		super.configureBindings(settings);
+
+		dashboard.visibleProperty().bind(Game3d.dashboardVisiblePy);
+
+		pip.opacityPy.bind(Game3d.pipOpacityPy);
+		pip.heightPy.bind(Game3d.pipHeightPy);
+		pip.visiblePy.bind(Game3d.pipVisiblePy);
+
+		Game3d.d3_drawModePy.addListener((py, ov, nv) -> updateStage());
+		Game3d.d3_enabledPy.addListener((py, ov, nv) -> updateStage());
+		Game3d.d3_enabledPy.set(true);
+		Game3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
+	}
+
+	@Override
+	public void doRender() {
+		flashMessageView.update();
+		currentGameScene.render();
+		dashboard.update();
+		pip.render();
 	}
 
 	@Override
@@ -200,22 +206,6 @@ public class GameUI3d extends GameUI2d {
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
-	}
-
-	@Override
-	protected void initProperties(Settings settings) {
-		super.initProperties(settings);
-
-		dashboard.visibleProperty().bind(Game3d.dashboardVisiblePy);
-
-		pip.opacityPy.bind(Game3d.pipOpacityPy);
-		pip.heightPy.bind(Game3d.pipHeightPy);
-		pip.visiblePy.bind(Game3d.pipVisiblePy);
-
-		Game3d.d3_drawModePy.addListener((py, ov, nv) -> updateStage());
-		Game3d.d3_enabledPy.addListener((py, ov, nv) -> updateStage());
-		Game3d.d3_enabledPy.set(true);
-		Game3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
 
 	@Override
@@ -256,5 +246,9 @@ public class GameUI3d extends GameUI2d {
 			var message = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
 			Game2d.actions.showFlashMessage(message);
 		}
+	}
+
+	public Dashboard dashboard() {
+		return dashboard;
 	}
 }

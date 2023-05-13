@@ -69,10 +69,10 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -90,7 +90,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
-	protected Scene mainScene;
+	protected final Scene mainScene;
 	protected final StackPane mainSceneRoot = new StackPane();
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final ContextSensitiveHelp csHelp;
@@ -100,20 +100,23 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected GameScene currentGameScene;
 
 	public GameUI2d(GameController gameController, Stage stage, Settings settings) {
+		checkNotNull(gameController);
 		checkNotNull(stage);
 		checkNotNull(settings);
-
 		this.stage = stage;
 		this.gameController = gameController;
-		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
-		super.pausedPy.addListener((py, ov, nv) -> updateStage());
+		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
+		stage.setScene(mainScene);
+		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
+		pausedPy.addListener((py, ov, nv) -> updateStage());
+	}
 
+	public void init(Settings settings) {
 		configureGameScenes();
-		createMainScene(settings);
+		configureMainScene(settings);
 		configureStage(settings);
 		configurePacSteering(settings);
-		initProperties(settings);
-
+		configureBindings(settings);
 		GameEvents.addListener(this);
 	}
 
@@ -159,7 +162,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void configureStage(Settings settings) {
-		stage.setScene(mainScene);
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
@@ -183,21 +185,23 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		}
 	}
 
-	protected void createMainScene(Settings settings) {
-		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
+	protected void configureMainScene(Settings settings) {
+		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 
-		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2 && currentGameScene != null) {
-				// resize 2D scene to fit
-				if (!currentGameScene.is3D() && !stage.isFullScreen()) {
-					stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
-				}
+			if (e.getClickCount() == 2) {
+				resizeStageToFitCurrentGameScene();
 			}
 		});
+	}
+
+	protected void resizeStageToFitCurrentGameScene() {
+		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
+			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
+		}
 	}
 
 	@Override
@@ -232,8 +236,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	/**
 	 * @param settings application settings
 	 */
-	protected void initProperties(Settings settings) {
-		// empty
+	protected void configureBindings(Settings settings) {
+		// snooze...
 	}
 
 	/**

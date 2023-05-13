@@ -122,14 +122,6 @@ public class Game2d extends Application {
 			iconMsPacManGame = ASSET_MANAGER.image("graphics/icons/mspacman.png");
 			spritesheetMsPacManGame = new Spritesheet(ASSET_MANAGER.image("graphics/mspacman/sprites.png"), 16);
 			flashingMazesMsPacManGame = ASSET_MANAGER.image("graphics/mspacman/mazes-flashing.png");
-//			for (int i = 0; i < 6; ++i) {
-//				var maze = spritesheetMsPacManGame.subImage(228, 248 * i, 226, 248);
-//				var mazeColors = ArcadeTheme.MS_PACMAN_MAZE_COLORS[i];
-//				emptyFlashingMazeMsPacManGame[i] = Ufx.colorsExchanged(maze, Map.of(//
-//						mazeColors.wallBaseColor(), Color.WHITE, //
-//						mazeColors.wallTopColor(), Color.BLACK));
-//			}
-
 			logoMsPacManGame = ASSET_MANAGER.image("graphics/mspacman/midway.png");
 
 			iconPacManGame = ASSET_MANAGER.image("graphics/icons/pacman.png");
@@ -425,6 +417,7 @@ public class Game2d extends Application {
 
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI2d(gameController, primaryStage, settings);
+		ui.init(settings);
 		Game2d.actions.setUI(ui);
 
 		actions.reboot();
