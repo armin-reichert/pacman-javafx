@@ -47,6 +47,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -145,15 +146,29 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
-	protected void createMainSceneLayout() {
+	protected void createMainScene(Settings settings) {
 		pip = new PictureInPicture(gameController);
 		dashboard = new Dashboard(this);
+
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.fxSubScene());
+
 		mainSceneRoot.getChildren().add(new Label("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 		mainSceneRoot.getChildren().add(dashboardLayer);
+
+		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
+		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
+		mainScene.setOnKeyPressed(this::handleKeyPressed);
+		mainScene.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 2 && currentGameScene != null) {
+				// resize 2D scene to fit
+				if (!currentGameScene.is3D() && !stage.isFullScreen()) {
+					stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
+				}
+			}
+		});
 	}
 
 	@Override

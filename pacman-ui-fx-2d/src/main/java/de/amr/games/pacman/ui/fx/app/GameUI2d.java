@@ -108,7 +108,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
 
 		createSceneConfiguration();
-		createMainSceneLayout();
 		createMainScene(settings);
 		configureStage(settings);
 		configureGameLoop();
@@ -170,11 +169,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		stage.setMinHeight(328);
 	}
 
-	protected void createMainSceneLayout() {
-		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
-		mainSceneRoot.getChildren().add(flashMessageView);
-	}
-
 	public void showHelp() {
 		if (currentGameScene instanceof GameScene2D gameScene2d) {
 			updateHelpContent();
@@ -194,6 +188,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void createMainScene(Settings settings) {
+		mainSceneRoot.getChildren().add(new Label("Game scene comes here"));
+		mainSceneRoot.getChildren().add(flashMessageView);
+
 		mainScene = new Scene(mainSceneRoot, TILES_X * TS * settings.zoom, TILES_Y * TS * settings.zoom);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
@@ -303,7 +300,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		Logger.trace("Game scene changed to {}", currentGameScene);
 	}
 
-	private void handleKeyPressed(KeyEvent keyEvent) {
+	protected void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
 		currentGameScene.handleKeyboardInput();
