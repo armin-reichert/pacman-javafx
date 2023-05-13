@@ -210,6 +210,10 @@ public class Game3d extends Application {
 	private GameUI3d ui;
 
 	@Override
+	public void init() throws Exception {
+	}
+
+	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
 
@@ -238,14 +242,12 @@ public class Game3d extends Application {
 
 		Game2d.actions.reboot();
 		ui.start();
-
-		Logger.info("Game started. Locale: {} Clock speed: {} Hz Settings: {}", Locale.getDefault(),
-				ui.targetFrameratePy.get(), settings);
+		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), settings);
 	}
 
 	@Override
 	public void stop() throws Exception {
 		ui.stop();
-		Logger.info("Game stopped");
+		Logger.info("Game stopped.");
 	}
 }

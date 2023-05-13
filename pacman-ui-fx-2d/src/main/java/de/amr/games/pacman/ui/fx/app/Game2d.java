@@ -407,6 +407,14 @@ public class Game2d extends Application {
 	private GameUI2d ui;
 
 	@Override
+	public void init() throws Exception {
+		long start = System.nanoTime();
+		Game2d.assets = new Assets();
+		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
+		Game2d.actions = new Actions();
+	};
+
+	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters().getNamed());
 
@@ -416,27 +424,19 @@ public class Game2d extends Application {
 		primaryStage.setMinHeight(328);
 
 		var gameController = new GameController(settings.variant);
-
-		long start = System.nanoTime();
-		Game2d.assets = new Assets();
-		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
-		Game2d.actions = new Actions();
-
 		ui = new GameUI2d(gameController, primaryStage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
 		ui.init(settings);
-		Game2d.actions.setUI(ui);
-
-		actions.reboot();
 		ui.start();
+		actions.setUI(ui);
+		actions.reboot();
 
-		Logger.info("Game started. Locale: {} Clock speed: {} Hz Settings: {}", Locale.getDefault(),
-				ui.targetFrameratePy.get(), settings);
+		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), settings);
 	}
 
 	@Override
 	public void stop() throws Exception {
 		ui.stop();
-		Logger.info("Game stopped");
+		Logger.info("Game stopped.");
 	}
 
 	public static void main(String[] args) {

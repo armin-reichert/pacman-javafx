@@ -147,7 +147,11 @@ public class GameUI3d extends GameUI2d {
 		mainSceneRoot.getChildren().add(dashboardLayer);
 
 		mainScene.setRoot(mainSceneRoot);
-		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
+		mainScene.heightProperty().addListener((py, ov, nv) -> {
+			if (currentGameScene != null) {
+				currentGameScene.onParentSceneResize(mainScene);
+			}
+		});
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {

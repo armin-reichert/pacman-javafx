@@ -66,7 +66,7 @@ public abstract class GameClock {
 		var tickDuration = Duration.millis(1000.0 / fps);
 		clock = new Timeline(fps, new KeyFrame(tickDuration, e -> executeSingleStep(!isPaused())));
 		clock.setCycleCount(Animation.INDEFINITE);
-		Logger.info("Created clock with {} fps", fps);
+		Logger.trace("Created clock with {} fps", fps);
 	}
 
 	private void updateClock() {

@@ -63,7 +63,7 @@ public class GameSounds {
 	private static AudioClip makeAudioClip(AudioClipID id, String path, double volume) {
 		var clip = Game2d.ASSET_MANAGER.audioClip(path); // TODO
 		clip.setVolume(volume);
-		Logger.info("Audio clip created, id={} volume={}, source={}", id, clip.getVolume(), clip.getSource());
+		Logger.trace("Audio clip created, id={} volume={}, source={}", id, clip.getVolume(), clip.getSource());
 		return clip;
 	}
 

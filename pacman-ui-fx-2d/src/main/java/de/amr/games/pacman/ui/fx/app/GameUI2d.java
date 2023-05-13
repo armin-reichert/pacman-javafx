@@ -145,7 +145,11 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		mainSceneRoot.getChildren().add(flashMessageView);
 
 		mainScene.setRoot(mainSceneRoot);
-		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
+		mainScene.heightProperty().addListener((py, ov, nv) -> {
+			if (currentGameScene != null) {
+				currentGameScene.onParentSceneResize(mainScene);
+			}
+		});
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
