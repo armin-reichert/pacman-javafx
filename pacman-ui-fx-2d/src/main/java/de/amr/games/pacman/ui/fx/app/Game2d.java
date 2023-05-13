@@ -409,6 +409,7 @@ public class Game2d extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters().getNamed());
+		primaryStage.setFullScreen(settings.fullScreen);
 
 		long start = System.nanoTime();
 		Game2d.assets = new Assets();
@@ -418,6 +419,7 @@ public class Game2d extends Application {
 		var gameController = new GameController(settings.variant);
 		ui = new GameUI2d(gameController, primaryStage, settings.zoom);
 		ui.init(settings);
+
 		Game2d.actions.setUI(ui);
 
 		actions.reboot();

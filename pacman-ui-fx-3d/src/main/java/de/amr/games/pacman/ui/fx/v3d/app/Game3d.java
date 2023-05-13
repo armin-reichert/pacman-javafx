@@ -212,6 +212,7 @@ public class Game3d extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		var settings = new Settings(getParameters() != null ? getParameters().getNamed() : Collections.emptyMap());
+		primaryStage.setFullScreen(settings.fullScreen);
 
 		long start = System.nanoTime();
 		Game2d.assets = new Game2d.Assets();

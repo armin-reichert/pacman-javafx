@@ -104,6 +104,8 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.stage = stage;
 		this.gameController = gameController;
 		stage.setScene(new Scene(new Pane(), UNSCALED_WIDTH * scaling, UNSCALED_HEIGHT * scaling, Color.BLACK));
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
 		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
 		pausedPy.addListener((py, ov, nv) -> updateStage());
 	}
@@ -111,7 +113,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public void init(Settings settings) {
 		configureGameScenes();
 		configureMainScene(stage.getScene(), settings);
-		configureStage(settings);
 		configurePacSteering(settings);
 		configureBindings(settings);
 		GameEvents.addListener(this);
@@ -169,12 +170,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
 		gameController.setManualPacSteering(keyboardSteering);
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
-	}
-
-	protected void configureStage(Settings settings) {
-		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
 	}
 
 	@Override
