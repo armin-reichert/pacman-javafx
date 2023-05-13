@@ -40,6 +40,7 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -259,19 +260,20 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
-		var game = gameController.game();
 		var state = gameController.state();
-		int index = switch (state) {
-		case BOOT -> SceneConfiguration.INDEX_BOOT_SCENE;
-		case CREDIT -> SceneConfiguration.INDEX_CREDIT_SCENE;
-		case INTRO -> SceneConfiguration.INDEX_INTRO_SCENE;
-		case GAME_OVER, GHOST_DYING, HUNTING, LEVEL_COMPLETE, LEVEL_TEST, CHANGING_TO_NEXT_LEVEL, PACMAN_DYING, READY -> SceneConfiguration.INDEX_PLAY_SCENE;
-		case INTERMISSION -> SceneConfiguration.INDEX_PLAY_SCENE
-				+ game.level().orElseThrow(IllegalStateException::new).intermissionNumber;
-		case INTERMISSION_TEST -> SceneConfiguration.INDEX_PLAY_SCENE + game.intermissionTestNumber;
-		default -> throw new IllegalArgumentException("Unknown game state: %s".formatted(state));
+		var config = sceneConfig.get(game().variant());
+		return switch (state) {
+		case BOOT -> config.bootSceneChoice();
+		case CREDIT -> config.creditSceneChoice();
+		case INTRO -> config.introSceneChoice();
+		case INTERMISSION -> config.cutSceneChoice(gameLevel().intermissionNumber);
+		case INTERMISSION_TEST -> config.cutSceneChoice(game().intermissionTestNumber);
+		default -> config.playSceneChoice();
 		};
-		return sceneConfig.get(game.variant()).choice(index);
+	}
+
+	private GameLevel gameLevel() {
+		return game().level().orElseThrow(IllegalStateException::new);
 	}
 
 	public void updateGameScene(boolean reload) {

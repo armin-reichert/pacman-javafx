@@ -33,10 +33,10 @@ import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
  */
 public class SceneConfiguration {
 
-	public static final byte INDEX_BOOT_SCENE = 0;
-	public static final byte INDEX_INTRO_SCENE = 1;
-	public static final byte INDEX_CREDIT_SCENE = 2;
-	public static final byte INDEX_PLAY_SCENE = 3;
+	private static final byte INDEX_BOOT_SCENE = 0;
+	private static final byte INDEX_INTRO_SCENE = 1;
+	private static final byte INDEX_CREDIT_SCENE = 2;
+	private static final byte INDEX_PLAY_SCENE = 3;
 
 	private final Rendering2D renderer;
 	private final List<GameSceneChoice> choices;
@@ -50,11 +50,27 @@ public class SceneConfiguration {
 		return renderer;
 	}
 
-	public GameSceneChoice choice(int sceneIndex) {
-		return choices.get(sceneIndex);
+	public GameSceneChoice bootSceneChoice() {
+		return choices.get(INDEX_BOOT_SCENE);
+	}
+
+	public GameSceneChoice creditSceneChoice() {
+		return choices.get(INDEX_CREDIT_SCENE);
+	}
+
+	public GameSceneChoice introSceneChoice() {
+		return choices.get(INDEX_INTRO_SCENE);
+	}
+
+	public GameSceneChoice playSceneChoice() {
+		return choices.get(INDEX_PLAY_SCENE);
+	}
+
+	public GameSceneChoice cutSceneChoice(int cutSceneNumber) {
+		return choices.get(INDEX_PLAY_SCENE + cutSceneNumber);
 	}
 
 	public boolean isPlayScene(GameScene gameScene) {
-		return choice(INDEX_PLAY_SCENE).includes(gameScene);
+		return playSceneChoice().includes(gameScene);
 	}
 }

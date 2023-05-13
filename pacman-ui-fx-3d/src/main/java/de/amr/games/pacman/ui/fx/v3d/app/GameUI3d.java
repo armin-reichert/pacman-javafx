@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene.SceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -141,10 +140,8 @@ public class GameUI3d extends GameUI2d {
 	@Override
 	protected void createSceneConfiguration() {
 		super.createSceneConfiguration();
-		sceneConfig.get(GameVariant.MS_PACMAN).choice(SceneConfiguration.INDEX_PLAY_SCENE)
-				.setScene3D(new PlayScene3D(gameController));
-		sceneConfig.get(GameVariant.PACMAN).choice(SceneConfiguration.INDEX_PLAY_SCENE)
-				.setScene3D(new PlayScene3D(gameController));
+		sceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
+		sceneConfig.get(GameVariant.PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
 	}
 
 	@Override
