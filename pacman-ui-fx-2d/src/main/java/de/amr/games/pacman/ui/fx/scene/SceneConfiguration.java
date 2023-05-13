@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene;
 
-import java.util.List;
-
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 
 /**
@@ -39,9 +37,9 @@ public class SceneConfiguration {
 	private static final byte INDEX_PLAY_SCENE = 3;
 
 	private final Rendering2D renderer;
-	private final List<GameSceneChoice> choices;
+	private final GameSceneChoice[] choices;
 
-	public SceneConfiguration(Rendering2D renderer, List<GameSceneChoice> choices) {
+	public SceneConfiguration(Rendering2D renderer, GameSceneChoice... choices) {
 		this.renderer = renderer;
 		this.choices = choices;
 	}
@@ -51,23 +49,23 @@ public class SceneConfiguration {
 	}
 
 	public GameSceneChoice bootSceneChoice() {
-		return choices.get(INDEX_BOOT_SCENE);
+		return choices[INDEX_BOOT_SCENE];
 	}
 
 	public GameSceneChoice creditSceneChoice() {
-		return choices.get(INDEX_CREDIT_SCENE);
+		return choices[INDEX_CREDIT_SCENE];
 	}
 
 	public GameSceneChoice introSceneChoice() {
-		return choices.get(INDEX_INTRO_SCENE);
+		return choices[INDEX_INTRO_SCENE];
 	}
 
 	public GameSceneChoice playSceneChoice() {
-		return choices.get(INDEX_PLAY_SCENE);
+		return choices[INDEX_PLAY_SCENE];
 	}
 
 	public GameSceneChoice cutSceneChoice(int cutSceneNumber) {
-		return choices.get(INDEX_PLAY_SCENE + cutSceneNumber);
+		return choices[INDEX_PLAY_SCENE + cutSceneNumber];
 	}
 
 	public boolean isPlayScene(GameScene gameScene) {

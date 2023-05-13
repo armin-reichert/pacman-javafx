@@ -36,6 +36,7 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
@@ -220,7 +221,8 @@ public class Game3d extends Application {
 		Game2d.actions = new Game2d.Actions();
 		Game3d.actions = new Game3d.Actions();
 
-		ui = new GameUI3d(primaryStage, settings);
+		var gameController = new GameController(settings.variant);
+		ui = new GameUI3d(gameController, primaryStage, settings);
 
 		Game2d.actions.setUI(ui);
 

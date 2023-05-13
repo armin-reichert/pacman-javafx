@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.app;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -100,12 +99,12 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
 
-	public GameUI2d(Stage stage, Settings settings) {
+	public GameUI2d(GameController gameController, Stage stage, Settings settings) {
 		checkNotNull(stage);
 		checkNotNull(settings);
 
 		this.stage = stage;
-		this.gameController = new GameController(settings.variant);
+		this.gameController = gameController;
 		this.csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
 
 		createSceneConfiguration();
@@ -128,7 +127,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	}
 
 	protected void createSceneConfiguration() {
-		var pacManGameScenes = Arrays.asList(
+		sceneConfig.put(GameVariant.PACMAN, new SceneConfiguration(new PacManGameRenderer(),
 		//@formatter:off
 			new GameSceneChoice(new BootScene(gameController)),
 			new GameSceneChoice(new PacManIntroScene(gameController)),
@@ -138,9 +137,9 @@ public class GameUI2d extends GameClock implements GameEventListener {
 			new GameSceneChoice(new PacManCutscene2(gameController)),
 			new GameSceneChoice(new PacManCutscene3(gameController))
 		//@formatter:on
-		);
+		));
 
-		var msPacManGameScenes = Arrays.asList(
+		sceneConfig.put(GameVariant.MS_PACMAN, new SceneConfiguration(new MsPacManGameRenderer(),
 		//@formatter:off
 			new GameSceneChoice(new BootScene(gameController)),
 			new GameSceneChoice(new MsPacManIntroScene(gameController)), 
@@ -150,10 +149,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 			new GameSceneChoice(new MsPacManIntermissionScene2(gameController)),
 			new GameSceneChoice(new MsPacManIntermissionScene3(gameController))
 		//@formatter:on
-		);
-
-		sceneConfig.put(GameVariant.PACMAN, new SceneConfiguration(new PacManGameRenderer(), pacManGameScenes));
-		sceneConfig.put(GameVariant.MS_PACMAN, new SceneConfiguration(new MsPacManGameRenderer(), msPacManGameScenes));
+		));
 	}
 
 	protected void configurePacSteering(Settings settings) {

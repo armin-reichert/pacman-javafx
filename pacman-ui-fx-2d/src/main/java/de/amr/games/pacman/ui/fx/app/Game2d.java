@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.model.GameModel;
@@ -421,7 +422,9 @@ public class Game2d extends Application {
 		Game2d.assets = new Assets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 		Game2d.actions = new Actions();
-		ui = new GameUI2d(primaryStage, settings);
+
+		var gameController = new GameController(settings.variant);
+		ui = new GameUI2d(gameController, primaryStage, settings);
 		Game2d.actions.setUI(ui);
 
 		actions.reboot();

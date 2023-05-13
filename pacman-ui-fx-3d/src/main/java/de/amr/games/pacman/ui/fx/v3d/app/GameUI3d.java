@@ -121,8 +121,8 @@ public class GameUI3d extends GameUI2d {
 	private PictureInPicture pip;
 	private Dashboard dashboard;
 
-	public GameUI3d(Stage stage, Settings settings) {
-		super(stage, settings);
+	public GameUI3d(GameController gameController, Stage stage, Settings settings) {
+		super(gameController, stage, settings);
 	}
 
 	public Dashboard dashboard() {
