@@ -69,6 +69,7 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -86,45 +87,34 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public static final short UNSCALED_WIDTH = 28 * 8;
 	public static final short UNSCALED_HEIGHT = 36 * 8;
 
-	private AudioClip currentVoice;
-
+	protected final GameController gameController;
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
-	protected final Scene mainScene;
-	protected final StackPane mainSceneRoot = new StackPane();
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final ContextSensitiveHelp csHelp;
-	protected final GameController gameController;
 
+	protected Pane mainSceneRoot;
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
+	private AudioClip currentVoice;
 
 	public GameUI2d(GameController gameController, Stage stage, double scaling) {
 		checkNotNull(gameController);
 		checkNotNull(stage);
 		this.stage = stage;
 		this.gameController = gameController;
-		mainScene = new Scene(mainSceneRoot, UNSCALED_WIDTH * scaling, UNSCALED_HEIGHT * scaling, Color.BLACK);
-		stage.setScene(mainScene);
+		stage.setScene(new Scene(new Pane(), UNSCALED_WIDTH * scaling, UNSCALED_HEIGHT * scaling, Color.BLACK));
 		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
 		pausedPy.addListener((py, ov, nv) -> updateStage());
 	}
 
 	public void init(Settings settings) {
 		configureGameScenes();
-		configureMainScene(settings);
+		configureMainScene(stage.getScene(), settings);
 		configureStage(settings);
 		configurePacSteering(settings);
 		configureBindings(settings);
 		GameEvents.addListener(this);
-	}
-
-	@Override
-	public void start() {
-		stage.centerOnScreen();
-		stage.requestFocus();
-		stage.show();
-		super.start(); // start clock
 	}
 
 	protected void configureGameScenes() {
@@ -153,41 +143,12 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		));
 	}
 
-	protected void configurePacSteering(Settings settings) {
-		keyboardSteering = new KeyboardSteering(settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
-				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
-		gameController.setManualPacSteering(keyboardSteering);
-	}
-
-	protected void configureStage(Settings settings) {
-		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-	}
-
-	public void showHelp() {
-		if (currentGameScene instanceof GameScene2D gameScene2d) {
-			updateHelpContent();
-			csHelp.show(gameScene2d.helpRoot(), Duration.seconds(2));
-		}
-	}
-
-	public void updateHelpContent() {
-		if (currentGameScene instanceof GameScene2D gameScene2d) {
-			var help = csHelp.current();
-			if (help.isEmpty()) {
-				gameScene2d.helpRoot().getChildren().clear();
-			} else {
-				gameScene2d.helpRoot().getChildren().setAll(help.get());
-			}
-		}
-	}
-
-	protected void configureMainScene(Settings settings) {
+	protected void configureMainScene(Scene mainScene, Settings settings) {
+		mainSceneRoot = new StackPane();
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 
+		mainScene.setRoot(mainSceneRoot);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
@@ -201,6 +162,27 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
 			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
 		}
+	}
+
+	protected void configurePacSteering(Settings settings) {
+		keyboardSteering = new KeyboardSteering(settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
+				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+		gameController.setManualPacSteering(keyboardSteering);
+		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+	}
+
+	protected void configureStage(Settings settings) {
+		stage.setFullScreen(settings.fullScreen);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+	}
+
+	@Override
+	public void start() {
+		stage.centerOnScreen();
+		stage.requestFocus();
+		stage.show();
+		super.start(); // start clock
 	}
 
 	@Override
@@ -373,6 +355,24 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	@Override
 	public void onSoundEvent(SoundEvent event) {
 		SoundHandler.onSoundEvent(event);
+	}
+
+	public void showHelp() {
+		if (currentGameScene instanceof GameScene2D gameScene2d) {
+			updateHelpContent();
+			csHelp.show(gameScene2d.helpRoot(), Duration.seconds(2));
+		}
+	}
+
+	public void updateHelpContent() {
+		if (currentGameScene instanceof GameScene2D gameScene2d) {
+			var help = csHelp.current();
+			if (help.isEmpty()) {
+				gameScene2d.helpRoot().getChildren().clear();
+			} else {
+				gameScene2d.helpRoot().getChildren().setAll(help.get());
+			}
+		}
 	}
 
 	public GameController gameController() {

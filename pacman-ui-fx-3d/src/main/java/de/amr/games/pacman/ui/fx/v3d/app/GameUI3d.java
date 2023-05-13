@@ -46,8 +46,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Text;
@@ -134,15 +136,17 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
-	protected void configureMainScene(Settings settings) {
+	protected void configureMainScene(Scene mainScene, Settings settings) {
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.fxSubScene());
 
+		mainSceneRoot = new StackPane();
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 		mainSceneRoot.getChildren().add(dashboardLayer);
 
+		mainScene.setRoot(mainSceneRoot);
 		mainScene.heightProperty().addListener((py, ov, nv) -> currentGameScene.onParentSceneResize(mainScene));
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
