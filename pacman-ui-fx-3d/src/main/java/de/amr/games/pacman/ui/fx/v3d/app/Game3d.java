@@ -224,11 +224,6 @@ public class Game3d extends Application {
 	public void start(Stage stage) throws IOException {
 		var cfg = new Settings(getParameters().getNamed());
 
-		// Minimum size is probably platform-dependent
-		stage.setFullScreen(cfg.fullScreen);
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-
 		ui = new GameUI3d(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		ui.init(cfg);
 
@@ -236,6 +231,7 @@ public class Game3d extends Application {
 		Game3d.actions.setUI(ui);
 
 		Game2d.actions.reboot();
+		stage.setFullScreen(cfg.fullScreen);
 		ui.startClockAndShowStage();
 
 		Logger.info("Game started. {} Hz language={} {}", ui.clock().targetFrameratePy.get(), Locale.getDefault(), cfg);

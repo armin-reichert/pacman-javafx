@@ -200,6 +200,8 @@ public class GameUI2d implements GameEventListener {
 
 	public void startClockAndShowStage() {
 		clock.start();
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
