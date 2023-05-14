@@ -69,9 +69,9 @@ public class Game2dActions {
 	public static final KeyCodeCombination BOOT = just(KeyCode.F3);
 	public static final KeyCodeCombination FULLSCREEN = just(KeyCode.F11);
 
-	private Game2dUI ui;
+	private final Game2dUI ui;
 
-	public void setUI(Game2dUI ui) {
+	public Game2dActions(Game2dUI ui) {
 		this.ui = ui;
 	}
 

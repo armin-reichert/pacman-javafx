@@ -120,12 +120,16 @@ public class Game2dUI implements GameEventListener {
 
 	protected void doUpdate() {
 		gameController.update();
-		currentGameScene.update();
+		if (currentGameScene != null) {
+			currentGameScene.update();
+		}
 	}
 
 	protected void doRender() {
 		flashMessageView.update();
-		currentGameScene.render();
+		if (currentGameScene != null) {
+			currentGameScene.render();
+		}
 	}
 
 	public void init(Settings settings) {

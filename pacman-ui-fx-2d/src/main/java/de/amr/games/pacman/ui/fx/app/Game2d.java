@@ -57,27 +57,32 @@ public class Game2d extends Application {
 		launch(args);
 	}
 
-	public static final Game2dActions actions = new Game2dActions();
-	public static final Game2dAssets assets = new Game2dAssets();
-	public static Game2dUI ui;
-
 	//@formatter:off
 	public static final BooleanProperty showDebugInfoPy   = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	//@formatter:on
 
+	public static final Game2dAssets assets = new Game2dAssets();
+	public static Game2dUI ui;
+	public static Game2dActions actions;
+	private static Settings cfg;
+
+	@Override
+	public void init() throws Exception {
+		Game2d.cfg = new Settings(getParameters().getNamed());
+		Logger.info("Game configuration: {}", Game2d.cfg);
+	}
+
 	@Override
 	public void start(Stage stage) throws IOException {
+		stage.setFullScreen(Game2d.cfg.fullScreen);
 		Game2d.assets.load();
-		var cfg = new Settings(getParameters().getNamed());
-		Game2d.ui = new Game2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
-		Game2d.ui.init(cfg);
-		Game2d.actions.setUI(Game2d.ui);
-		Game2d.actions.reboot();
-		stage.setFullScreen(cfg.fullScreen);
+		Game2d.ui = new Game2dUI(Game2d.cfg.variant, stage, Game2d.cfg.zoom * 28 * 8, Game2d.cfg.zoom * 36 * 8);
+		Game2d.actions = new Game2dActions(ui);
+		Game2d.ui.init(Game2d.cfg);
 		Game2d.ui.startClockAndShowStage();
-		Logger.info("Game started. {} Hz language={} {}", Game2d.ui.clock().targetFrameratePy.get(), Locale.getDefault(),
-				cfg);
+		Game2d.actions.reboot();
+		Logger.info("Game started. {} Hz language={}", Game2d.ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override

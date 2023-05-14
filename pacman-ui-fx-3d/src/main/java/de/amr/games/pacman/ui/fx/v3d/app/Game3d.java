@@ -31,6 +31,7 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2dActions;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import javafx.application.Application;
@@ -50,10 +51,6 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class Game3d extends Application {
-
-	public static final Game3dActions actions = new Game3dActions();
-	public static final Game3dAssets assets = new Game3dAssets();
-	public static Game3dUI ui = null;
 
 	//@formatter:off
 	public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
@@ -76,11 +73,15 @@ public class Game3d extends Application {
 	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	//@formatter:on
 
-	private Settings cfg;
+	public static final Game3dAssets assets = new Game3dAssets();
+	public static Game3dActions actions = null;
+	public static Game3dUI ui = null;
+	private static Settings cfg;
 
 	@Override
 	public void init() throws Exception {
-		cfg = new Settings(getParameters().getNamed());
+		Game3d.cfg = new Settings(getParameters().getNamed());
+		Logger.info("Game configuration: {}", Game3d.cfg);
 		long start = System.nanoTime();
 		Game2d.assets.load();
 		Game3d.assets.load();
@@ -89,14 +90,14 @@ public class Game3d extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		Game3d.ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
-		Game3d.ui.init(cfg);
-		Game2d.actions.setUI(Game3d.ui); // TODO check this
-		Game2d.actions.reboot();
-		stage.setFullScreen(cfg.fullScreen);
+		stage.setFullScreen(Game3d.cfg.fullScreen);
+		Game3d.ui = new Game3dUI(Game3d.cfg.variant, stage, Game3d.cfg.zoom * 28 * 8, Game3d.cfg.zoom * 36 * 8);
+		Game2d.actions = new Game2dActions(Game3d.ui);
+		Game3d.actions = new Game3dActions();
+		Game3d.ui.init(Game3d.cfg);
 		Game3d.ui.startClockAndShowStage();
-		Logger.info("Game started. {} Hz language={} {}", Game3d.ui.clock().targetFrameratePy.get(), Locale.getDefault(),
-				cfg);
+		Game2d.actions.reboot();
+		Logger.info("Game started. {} Hz language={}", Game3d.ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override
