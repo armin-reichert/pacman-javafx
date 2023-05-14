@@ -69,7 +69,7 @@ public class Game2dHelp {
 	private final ResourceBundle translations;
 	private final GameController gameController;
 	private final FadeTransition closeAnimation;
-	private Font font = Font.font("Helvetica", 10);
+	private Font font = Game2d.assets.helpFont;
 
 	public Game2dHelp(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;

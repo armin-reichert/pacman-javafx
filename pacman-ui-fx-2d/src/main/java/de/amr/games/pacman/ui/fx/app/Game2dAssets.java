@@ -54,6 +54,7 @@ public class Game2dAssets extends ResourceManager {
 
 	public Font arcadeFont;
 	public Font handwritingFont;
+	public Font helpFont;
 
 	public ResourceBundle messages;
 
@@ -122,6 +123,7 @@ public class Game2dAssets extends ResourceManager {
 
 		arcadeFont = font("fonts/emulogic.ttf", 8);
 		handwritingFont = font("fonts/RockSalt-Regular.ttf", 8);
+		helpFont = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 
 		wallpaper2D = imageBackground("graphics/pacman_wallpaper_gray.png");
 
