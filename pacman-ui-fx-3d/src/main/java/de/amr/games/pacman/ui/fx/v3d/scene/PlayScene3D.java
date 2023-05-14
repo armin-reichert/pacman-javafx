@@ -46,7 +46,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2dKeys;
+import de.amr.games.pacman.ui.fx.app.Game2dActions;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -55,7 +55,7 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dKeys;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3dActions;
 import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
@@ -240,19 +240,19 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2dKeys.ADD_CREDIT) && !context.hasCredit()) {
+		if (Keyboard.pressed(Game2dActions.ADD_CREDIT) && !context.hasCredit()) {
 			Game2d.actions.addCredit(); // in demo mode, allow adding credit
-		} else if (Keyboard.pressed(Game3dKeys.PREV_CAMERA)) {
+		} else if (Keyboard.pressed(Game3dActions.PREV_CAMERA)) {
 			Game3d.actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Game3dKeys.NEXT_CAMERA)) {
+		} else if (Keyboard.pressed(Game3dActions.NEXT_CAMERA)) {
 			Game3d.actions.selectNextPerspective();
-		} else if (Keyboard.pressed(Game2dKeys.CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(Game2dActions.CHEAT_EAT_ALL)) {
 			Game2d.actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Game2dKeys.CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(Game2dActions.CHEAT_ADD_LIVES)) {
 			Game2d.actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Game2dKeys.CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(Game2dActions.CHEAT_NEXT_LEVEL)) {
 			Game2d.actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Game2dKeys.CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(Game2dActions.CHEAT_KILL_GHOSTS)) {
 			Game2d.actions.cheatKillAllEatableGhosts();
 		}
 	}

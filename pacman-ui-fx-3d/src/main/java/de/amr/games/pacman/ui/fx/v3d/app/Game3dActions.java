@@ -25,12 +25,23 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.app;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
+import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.shape.DrawMode;
 
 public class Game3dActions {
+
+	public static final KeyCodeCombination TOGGLE_DASHBOARD_VISIBLE = just(KeyCode.F1);
+	public static final KeyCodeCombination TOGGLE_DASHBOARD_VISIBLE_2 = alt(KeyCode.B);
+	public static final KeyCodeCombination TOGGLE_PIP_VIEW_VISIBLE = just(KeyCode.F2);
+	public static final KeyCodeCombination TOGGLE_3D_ENABLED = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination PREV_CAMERA = alt(KeyCode.LEFT);
+	public static final KeyCodeCombination NEXT_CAMERA = alt(KeyCode.RIGHT);
 
 	public void togglePipVisibility() {
 		var pip = Game3d.ui.pip();

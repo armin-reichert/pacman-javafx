@@ -52,7 +52,6 @@ public class Game3dApplication extends Application {
 		Game3d.actions = new Game3dActions();
 		Game3d.app = this;
 		Game3d.assets = assets;
-		Game3d.keys = new Game3dKeys();
 	}
 
 	@Override

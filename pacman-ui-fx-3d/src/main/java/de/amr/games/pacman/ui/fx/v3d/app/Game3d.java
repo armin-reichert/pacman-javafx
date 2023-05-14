@@ -46,7 +46,6 @@ public class Game3d {
 	public static Game3dApplication app;
 	public static Game3dActions actions;
 	public static Game3dAssets assets;
-	public static Game3dKeys keys;
 	public static Game3dUI ui;
 
 	public static final ResourceManager ASSET_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/",

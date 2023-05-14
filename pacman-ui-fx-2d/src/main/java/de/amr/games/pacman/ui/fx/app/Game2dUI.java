@@ -299,33 +299,33 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2dKeys.SHOW_HELP)) {
+		if (Keyboard.pressed(Game2dActions.SHOW_HELP)) {
 			showHelp();
-		} else if (Keyboard.pressed(Game2dKeys.AUTOPILOT)) {
+		} else if (Keyboard.pressed(Game2dActions.AUTOPILOT)) {
 			Game2d.actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Game2dKeys.BOOT)) {
+		} else if (Keyboard.pressed(Game2dActions.BOOT)) {
 			Game2d.actions.reboot();
-		} else if (Keyboard.pressed(Game2dKeys.DEBUG_INFO)) {
+		} else if (Keyboard.pressed(Game2dActions.DEBUG_INFO)) {
 			Ufx.toggle(Game2d.showDebugInfoPy);
-		} else if (Keyboard.pressed(Game2dKeys.IMMUNITIY)) {
+		} else if (Keyboard.pressed(Game2dActions.IMMUNITIY)) {
 			Game2d.actions.toggleImmunity();
-		} else if (Keyboard.pressed(Game2dKeys.PAUSE)) {
+		} else if (Keyboard.pressed(Game2dActions.PAUSE)) {
 			Game2d.actions.togglePaused();
-		} else if (Keyboard.pressed(Game2dKeys.PAUSE_STEP) || Keyboard.pressed(Game2dKeys.SINGLE_STEP)) {
+		} else if (Keyboard.pressed(Game2dActions.PAUSE_STEP) || Keyboard.pressed(Game2dActions.SINGLE_STEP)) {
 			Game2d.actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Game2dKeys.TEN_STEPS)) {
+		} else if (Keyboard.pressed(Game2dActions.TEN_STEPS)) {
 			Game2d.actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(Game2dKeys.SIMULATION_FASTER)) {
+		} else if (Keyboard.pressed(Game2dActions.SIMULATION_FASTER)) {
 			Game2d.actions.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(Game2dKeys.SIMULATION_SLOWER)) {
+		} else if (Keyboard.pressed(Game2dActions.SIMULATION_SLOWER)) {
 			Game2d.actions.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(Game2dKeys.SIMULATION_NORMAL)) {
+		} else if (Keyboard.pressed(Game2dActions.SIMULATION_NORMAL)) {
 			Game2d.actions.resetSimulationSpeed();
-		} else if (Keyboard.pressed(Game2dKeys.QUIT)) {
+		} else if (Keyboard.pressed(Game2dActions.QUIT)) {
 			Game2d.actions.restartIntro();
-		} else if (Keyboard.pressed(Game2dKeys.TEST_LEVELS)) {
+		} else if (Keyboard.pressed(Game2dActions.TEST_LEVELS)) {
 			Game2d.actions.startLevelTestMode();
-		} else if (Keyboard.pressed(Game2dKeys.FULLSCREEN)) {
+		} else if (Keyboard.pressed(Game2dActions.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
 	}

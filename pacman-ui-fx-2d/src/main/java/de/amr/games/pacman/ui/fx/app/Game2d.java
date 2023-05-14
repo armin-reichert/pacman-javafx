@@ -38,7 +38,6 @@ public class Game2d {
 	public static Game2dApplication app;
 	public static Game2dActions actions;
 	public static Game2dAssets assets;
-	public static Game2dKeys keys;
 	public static Game2dUI ui;
 
 	public static final ResourceManager ASSET_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/", Game2d.class);

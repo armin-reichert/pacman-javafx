@@ -58,7 +58,6 @@ public class Game2dApplication extends Application {
 		Game2d.actions = new Game2dActions();
 		Game2d.app = this;
 		Game2d.assets = new Game2dAssets();
-		Game2d.keys = new Game2dKeys();
 	}
 
 	@Override
