@@ -46,7 +46,7 @@ public class GameSounds {
 
 	private final Map<AudioClipID, ClipInfo> clipInfoMap = new EnumMap<>(AudioClipID.class);
 
-	public GameSounds(Object[][] data, boolean preload) {
+	public void init(Object[][] data, boolean preload) {
 		for (var row : data) {
 			AudioClipID id = (AudioClipID) row[0];
 			String path = (String) row[1];
@@ -61,7 +61,7 @@ public class GameSounds {
 	}
 
 	private static AudioClip makeAudioClip(AudioClipID id, String path, double volume) {
-		var clip = Game2d.ASSET_MANAGER.audioClip(path); // TODO
+		var clip = Game2d.assets.audioClip(path); // TODO
 		clip.setVolume(volume);
 		Logger.trace("Audio clip created, id={} volume={}, source={}", id, clip.getVolume(), clip.getSource());
 		return clip;
