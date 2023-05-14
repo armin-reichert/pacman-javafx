@@ -229,7 +229,7 @@ public class Game2d extends Application {
 		}
 
 		public void startGame() {
-			if (ui.gameController().game().hasCredit()) {
+			if (ui.game().hasCredit()) {
 				ui.stopVoice();
 				ui.gameController().startPlaying();
 			}
@@ -243,8 +243,8 @@ public class Game2d extends Application {
 		public void restartIntro() {
 			ui.currentGameScene().end();
 			GameEvents.setSoundEventsEnabled(true);
-			if (ui.gameController().game().isPlaying()) {
-				ui.gameController().game().changeCredit(-1);
+			if (ui.game().isPlaying()) {
+				ui.game().changeCredit(-1);
 			}
 			ui.gameController().restart(INTRO);
 		}
@@ -266,10 +266,10 @@ public class Game2d extends Application {
 			if (ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 				return;
 			}
-			ui.gameController().game().level().ifPresent(level -> {
+			ui.game().level().ifPresent(level -> {
 				if (newLevelNumber > level.number()) {
 					for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-						ui.gameController().game().nextLevel();
+						ui.game().nextLevel();
 					}
 					ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 				} else if (newLevelNumber < level.number()) {
@@ -282,7 +282,7 @@ public class Game2d extends Application {
 			Ufx.toggle(ui.pausedPy);
 			// TODO mute and unmute?
 			if (ui.pausedPy.get()) {
-				assets.gameSounds(ui.gameController().game().variant()).stopAll();
+				assets.gameSounds(ui.game().variant()).stopAll();
 			}
 		}
 
@@ -312,7 +312,7 @@ public class Game2d extends Application {
 		}
 
 		public void selectNextGameVariant() {
-			var gameVariant = ui.gameController().game().variant().next();
+			var gameVariant = ui.game().variant().next();
 			ui.gameController().selectGameVariant(gameVariant);
 			ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
 		}
@@ -327,8 +327,8 @@ public class Game2d extends Application {
 		}
 
 		public void toggleImmunity() {
-			ui.gameController().game().setImmune(!ui.gameController().game().isImmune());
-			var immune = ui.gameController().game().isImmune();
+			ui.game().setImmune(!ui.game().isImmune());
+			var immune = ui.game().isImmune();
 			String message = fmtMessage(assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
 			showFlashMessage(message);
 			ui.updateHelpContent();
@@ -342,9 +342,10 @@ public class Game2d extends Application {
 			}
 		}
 
-		public void cheatAddLives(int numLives) {
-			ui.gameController().game().setLives(numLives + ui.gameController().game().lives());
-			showFlashMessage(fmtMessage(assets.messages, "cheat_add_lives", ui.gameController().game().lives()));
+		public void cheatAddLives(int n) {
+			int newLivesCount = ui.game().lives() + n;
+			ui.game().setLives(newLivesCount);
+			showFlashMessage(fmtMessage(assets.messages, "cheat_add_lives", newLivesCount));
 		}
 
 		public void cheatEatAllPellets() {
