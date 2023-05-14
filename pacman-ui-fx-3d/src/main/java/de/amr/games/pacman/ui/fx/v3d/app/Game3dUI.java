@@ -179,13 +179,13 @@ public class Game3dUI extends Game2dUI {
 	protected void configureBindings(Settings settings) {
 		super.configureBindings(settings);
 
-		pip.opacityPy.bind(Game3dApplication.pipOpacityPy);
-		pip.heightPy.bind(Game3dApplication.pipHeightPy);
+		pip.opacityPy.bind(Game3d.pipOpacityPy);
+		pip.heightPy.bind(Game3d.pipHeightPy);
 
-		Game3dApplication.d3_drawModePy.addListener((py, ov, nv) -> updateStage());
-		Game3dApplication.d3_enabledPy.addListener((py, ov, nv) -> updateStage());
-		Game3dApplication.d3_enabledPy.set(true);
-		Game3dApplication.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
+		Game3d.d3_drawModePy.addListener((py, ov, nv) -> updateStage());
+		Game3d.d3_enabledPy.addListener((py, ov, nv) -> updateStage());
+		Game3d.d3_enabledPy.set(true);
+		Game3d.d3_perspectivePy.set(Perspective.NEAR_PLAYER);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class Game3dUI extends Game2dUI {
 			pip.update();
 		}
 		if (currentGameScene != null && currentGameScene.is3D()) {
-			if (Game3dApplication.d3_drawModePy.get() == DrawMode.LINE) {
+			if (Game3d.d3_drawModePy.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(ResourceManager.colorBackground(Color.BLACK));
 			} else {
 				mainSceneRoot.setBackground(Game3d.assets.wallpaper3D);
@@ -203,7 +203,7 @@ public class Game3dUI extends Game2dUI {
 			mainSceneRoot.setBackground(Game2d.assets.wallpaper2D);
 		}
 		var paused = clock().pausedPy.get();
-		var dimensionMsg = fmtMessage(Game3d.assets.messages, Game3dApplication.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
@@ -230,7 +230,7 @@ public class Game3dUI extends Game2dUI {
 
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		var use3D = Game3dApplication.d3_enabledPy.get();
+		var use3D = Game3d.d3_enabledPy.get();
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
 	}
 
@@ -248,14 +248,13 @@ public class Game3dUI extends Game2dUI {
 	}
 
 	public void toggle3DEnabled() {
-		Ufx.toggle(Game3dApplication.d3_enabledPy);
+		Ufx.toggle(Game3d.d3_enabledPy);
 		if (findGameScene(3).isPresent()) {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
 			// if for example toggle action occurs in intro scene, show message indicating which variant is used
-			var message = fmtMessage(Game3d.assets.messages,
-					Game3dApplication.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
+			var message = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
 			Game2d.actions.showFlashMessage(message);
 		}
 	}

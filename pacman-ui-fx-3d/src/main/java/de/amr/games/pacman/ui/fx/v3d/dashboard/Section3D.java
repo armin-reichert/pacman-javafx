@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dApplication;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
@@ -54,39 +53,38 @@ public class Section3D extends Section {
 	public Section3D(Game3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		comboPerspective = addComboBox("Perspective", Perspective.values());
-		comboPerspective.setOnAction(e -> Game3dApplication.d3_perspectivePy.set(comboPerspective.getValue()));
+		comboPerspective.setOnAction(e -> Game3d.d3_perspectivePy.set(comboPerspective.getValue()));
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
 				.available(() -> gameScene().is3D());
 		sliderPiPSceneHeight = addSlider("PiP Size", Game3dUI.PictureInPicture.MIN_HEIGHT,
-				Game3dUI.PictureInPicture.MAX_HEIGHT, Game3dApplication.pipHeightPy.get());
+				Game3dUI.PictureInPicture.MAX_HEIGHT, Game3d.pipHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Game3dApplication.pipHeightPy.set(newValue.doubleValue()));
-		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Game3dApplication.pipOpacityPy.get());
+				.addListener((obs, oldValue, newValue) -> Game3d.pipHeightPy.set(newValue.doubleValue()));
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Game3d.pipOpacityPy.get());
 		sliderPiPOpacity.valueProperty()
-				.addListener((obs, oldValue, newValue) -> Game3dApplication.pipOpacityPy.set(newValue.doubleValue()));
-		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, Game3dApplication.d3_mazeWallHeightPy.get());
+				.addListener((obs, oldValue, newValue) -> Game3d.pipOpacityPy.set(newValue.doubleValue()));
+		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, Game3d.d3_mazeWallHeightPy.get());
 		sliderWallHeight.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Game3dApplication.d3_mazeWallHeightPy.set(newVal.doubleValue()));
-		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, Game3dApplication.d3_mazeWallThicknessPy.get());
+				.addListener((obs, oldVal, newVal) -> Game3d.d3_mazeWallHeightPy.set(newVal.doubleValue()));
+		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, Game3d.d3_mazeWallThicknessPy.get());
 		sliderWallThickness.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Game3dApplication.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
-		cbEnergizerExplodes = addCheckBox("Energizer Explosion",
-				() -> Ufx.toggle(Game3dApplication.d3_energizerExplodesPy));
-		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(Game3dApplication.d3_pacLightedPy));
-		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(Game3dApplication.d3_axesVisiblePy));
+				.addListener((obs, oldVal, newVal) -> Game3d.d3_mazeWallThicknessPy.set(newVal.doubleValue()));
+		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(Game3d.d3_energizerExplodesPy));
+		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(Game3d.d3_pacLightedPy));
+		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(Game3d.d3_axesVisiblePy));
 		cbWireframeMode = addCheckBox("Wireframe Mode", Game3d.actions::toggleDrawMode);
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		comboPerspective.setValue(Game3dApplication.d3_perspectivePy.get());
-		sliderPiPSceneHeight.setValue(Game3dApplication.pipHeightPy.get());
-		sliderPiPOpacity.setValue(Game3dApplication.pipOpacityPy.get());
-		sliderWallHeight.setValue(Game3dApplication.d3_mazeWallHeightPy.get());
-		cbEnergizerExplodes.setSelected(Game3dApplication.d3_energizerExplodesPy.get());
-		cbPacLighted.setSelected(Game3dApplication.d3_pacLightedPy.get());
-		cbAxesVisible.setSelected(Game3dApplication.d3_axesVisiblePy.get());
-		cbWireframeMode.setSelected(Game3dApplication.d3_drawModePy.get() == DrawMode.LINE);
+		comboPerspective.setValue(Game3d.d3_perspectivePy.get());
+		sliderPiPSceneHeight.setValue(Game3d.pipHeightPy.get());
+		sliderPiPOpacity.setValue(Game3d.pipOpacityPy.get());
+		sliderWallHeight.setValue(Game3d.d3_mazeWallHeightPy.get());
+		cbEnergizerExplodes.setSelected(Game3d.d3_energizerExplodesPy.get());
+		cbPacLighted.setSelected(Game3d.d3_pacLightedPy.get());
+		cbAxesVisible.setSelected(Game3d.d3_axesVisiblePy.get());
+		cbWireframeMode.setSelected(Game3d.d3_drawModePy.get() == DrawMode.LINE);
 	}
 }

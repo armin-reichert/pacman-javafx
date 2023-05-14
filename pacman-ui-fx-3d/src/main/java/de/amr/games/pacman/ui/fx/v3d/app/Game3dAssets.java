@@ -59,7 +59,7 @@ public class Game3dAssets {
 		messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
 		messagePickerGameOver = ResourceManager.createPicker(messages, "game.over");
 
-		wallpaper3D = Game3dApplication.ASSET_MANAGER.imageBackground("graphics/sky.png");
+		wallpaper3D = Game3d.ASSET_MANAGER.imageBackground("graphics/sky.png");
 		floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 		floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 		floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -79,20 +79,19 @@ public class Game3dAssets {
 	}
 
 	public String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(messagePickerLevelComplete.next(),
-				fmtMessage(messages, "level_complete", levelNumber));
+		return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), fmtMessage(messages, "level_complete", levelNumber));
 	}
 
 	private PhongMaterial createFloorTexture(String textureBase, String ext) {
 		var material = textureMaterial(textureBase, ext, null, null);
-		material.diffuseColorProperty().bind(Game3dApplication.d3_floorColorPy);
+		material.diffuseColorProperty().bind(Game3d.d3_floorColorPy);
 		return material;
 	}
 
 	public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 		var texture = new PhongMaterial();
-		texture.setBumpMap(Game3dApplication.ASSET_MANAGER.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-		texture.setDiffuseMap(Game3dApplication.ASSET_MANAGER.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+		texture.setBumpMap(Game3d.ASSET_MANAGER.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+		texture.setDiffuseMap(Game3d.ASSET_MANAGER.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 		texture.setDiffuseColor(diffuseColor);
 		texture.setSpecularColor(specularColor);
 		return texture;

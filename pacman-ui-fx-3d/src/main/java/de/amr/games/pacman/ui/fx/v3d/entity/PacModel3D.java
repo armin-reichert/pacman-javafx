@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dApplication;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -65,7 +65,7 @@ public class PacModel3D extends Model3D {
 	}
 
 	public PacModel3D() {
-		super(Game3dApplication.ASSET_MANAGER.urlFromRelPath("model3D/pacman.obj"));
+		super(Game3d.ASSET_MANAGER.urlFromRelPath("model3D/pacman.obj"));
 	}
 
 	/**

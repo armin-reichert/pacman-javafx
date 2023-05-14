@@ -44,21 +44,20 @@ public class Game3dActions {
 	}
 
 	public void selectNextPerspective() {
-		var nextPerspective = Game3dApplication.d3_perspectivePy.get().next();
-		Game3dApplication.d3_perspectivePy.set(nextPerspective);
+		var nextPerspective = Game3d.d3_perspectivePy.get().next();
+		Game3d.d3_perspectivePy.set(nextPerspective);
 		String perspectiveName = fmtMessage(Game3d.assets.messages, nextPerspective.name());
 		Game2d.actions.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
 	}
 
 	public void selectPrevPerspective() {
-		var prevPerspective = Game3dApplication.d3_perspectivePy.get().prev();
-		Game3dApplication.d3_perspectivePy.set(prevPerspective);
+		var prevPerspective = Game3d.d3_perspectivePy.get().prev();
+		Game3d.d3_perspectivePy.set(prevPerspective);
 		String perspectiveName = fmtMessage(Game3d.assets.messages, prevPerspective.name());
 		Game2d.actions.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {
-		Game3dApplication.d3_drawModePy
-				.set(Game3dApplication.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Game3d.d3_drawModePy.set(Game3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 }

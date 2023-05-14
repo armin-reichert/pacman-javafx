@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dApplication;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -51,9 +51,9 @@ public class SectionGeneral extends Section {
 	private final CheckBox cbPoliticallyCorrect;
 	private final CheckBox cbDebugUI;
 	private final CheckBox cbTimeMeasured;
-	private final ImageView iconPlay = new ImageView(Game3dApplication.ASSET_MANAGER.image("graphics/icons/play.png"));
-	private final ImageView iconStop = new ImageView(Game3dApplication.ASSET_MANAGER.image("graphics/icons/stop.png"));
-	private final ImageView iconStep = new ImageView(Game3dApplication.ASSET_MANAGER.image("graphics/icons/step.png"));
+	private final ImageView iconPlay = new ImageView(Game3d.ASSET_MANAGER.image("graphics/icons/play.png"));
+	private final ImageView iconStop = new ImageView(Game3d.ASSET_MANAGER.image("graphics/icons/stop.png"));
+	private final ImageView iconStep = new ImageView(Game3d.ASSET_MANAGER.image("graphics/icons/step.png"));
 	private final Tooltip tooltipPlay = new Tooltip("Play");
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
@@ -91,7 +91,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui.clock()::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle3DEnabled);
-		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3dApplication.wokePussyMode));
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Game2d.showDebugInfoPy));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.clock().timeMeasuredPy));
 	}
@@ -104,8 +104,8 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!ui.clock().pausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Game2d.simulationStepsPy.get());
 		sliderTargetFPS.setValue(ui.clock().targetFrameratePy.get());
-		cbUsePlayScene3D.setSelected(Game3dApplication.d3_enabledPy.get());
-		cbPoliticallyCorrect.setSelected(Game3dApplication.wokePussyMode.get());
+		cbUsePlayScene3D.setSelected(Game3d.d3_enabledPy.get());
+		cbPoliticallyCorrect.setSelected(Game3d.wokePussyMode.get());
 		cbTimeMeasured.setSelected(ui.clock().timeMeasuredPy.get());
 		cbDebugUI.setSelected(Game2d.showDebugInfoPy.get());
 	}

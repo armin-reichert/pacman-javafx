@@ -24,7 +24,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dApplication;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
 
 /**
@@ -47,8 +47,8 @@ public class SectionKeys extends Section {
 		addInfo("Alt+N", "Next Level").available(() -> gc.game().isPlaying());
 		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().isPlaying());
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
-		addInfo("Alt+LEFT", () -> Game3dApplication.d3_perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
-		addInfo("Alt+RIGHT", () -> Game3dApplication.d3_perspectivePy.get().next().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+LEFT", () -> Game3d.d3_perspectivePy.get().prev().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+RIGHT", () -> Game3d.d3_perspectivePy.get().next().name()).available(() -> gameScene().is3D());
 		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
 		addInfo("SHIFT+P/SPACE", "Single Step");
