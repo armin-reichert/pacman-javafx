@@ -31,8 +31,6 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2dActions;
-import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import javafx.application.Application;
@@ -53,9 +51,9 @@ import javafx.stage.Stage;
  */
 public class Game3d extends Application {
 
-	public static Game3dActions actions;
-	public static Game3dAssets assets;
-	public static Game3dUI ui;
+	public static final Game3dActions actions = new Game3dActions();
+	public static final Game3dAssets assets = new Game3dAssets();
+	public static Game3dUI ui = null;
 
 	//@formatter:off
 	public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
@@ -79,21 +77,12 @@ public class Game3d extends Application {
 	//@formatter:on
 
 	@Override
-	public void init() throws Exception {
-		Game2d.assets = new Game2dAssets();
-		Game3d.assets = new Game3dAssets();
-
+	public void start(Stage stage) throws IOException {
 		long start = System.nanoTime();
 		Game2d.assets.load();
 		Game3d.assets.load();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 
-		Game2d.actions = new Game2dActions();
-		Game3d.actions = new Game3dActions();
-	}
-
-	@Override
-	public void start(Stage stage) throws IOException {
 		var cfg = new Settings(getParameters().getNamed());
 
 		Game3d.ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
