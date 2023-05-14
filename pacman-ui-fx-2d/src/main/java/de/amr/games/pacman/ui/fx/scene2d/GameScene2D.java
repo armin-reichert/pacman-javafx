@@ -49,9 +49,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Scale;
 
 /**
@@ -195,25 +192,6 @@ public abstract class GameScene2D implements GameScene {
 	 */
 	protected void drawInfo(GraphicsContext g) {
 		// empty by default
-	}
-
-	protected TextFlow addSignature(double x, double y) {
-		var color = Color.web("0x030966");
-
-		var t1 = new Text("Remake (2023) by ");
-		t1.setFill(color);
-		t1.setFont(Font.font("Helvetica", 9));
-
-		var t2 = new Text("Armin Reichert");
-		t2.setFill(color);
-		t2.setFont(Game2d.assets.font(Game2d.assets.handwritingFont, 9));
-
-		var signature = new TextFlow(t1, t2);
-		signature.setTranslateX(x);
-		signature.setTranslateY(y);
-
-		overlay.getChildren().add(signature);
-		return signature;
 	}
 
 	protected void drawLevelCounter(GraphicsContext g) {

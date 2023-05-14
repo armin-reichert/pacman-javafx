@@ -37,7 +37,6 @@ import de.amr.games.pacman.ui.fx.app.Game2dActions;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.TextFlow;
 
 /**
  * Intro scene of the PacMan game.
@@ -52,20 +51,26 @@ public class PacManIntroScene extends GameScene2D {
 	private static final String QUOTE = "\"";
 
 	private PacManIntro intro;
-	private TextFlow signature;
+	private Signature signature;
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature = addSignature(5.5 * TS, 32.0 * TS);
+		signature = new Signature();
+		signature.add(overlay, 5.5 * TS, 32.0 * TS);
 	}
 
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
-		signature.setVisible(false);
+		signature.setOpacity(0);
 
 		intro = new PacManIntro(context().gameController());
+		intro.addStateChangeListener((oldState, newState) -> {
+			if (oldState == PacManIntro.State.SHOWING_POINTS) {
+				signature.show();
+			}
+		});
 		intro.changeState(State.START);
 
 		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
@@ -128,7 +133,6 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawCopyright(GraphicsContext g) {
-		signature.setVisible(true);
 		drawMidwayCopyright(g, 4, 32);
 	}
 

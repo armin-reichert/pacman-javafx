@@ -37,12 +37,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.SequentialTransition;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.TextFlow;
-import javafx.util.Duration;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -54,11 +49,12 @@ import javafx.util.Duration;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private TextFlow signature;
+	private Signature signature;
 
 	public MsPacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature = addSignature(5.5 * TS, 32.0 * TS);
+		signature = new Signature();
+		signature.add(overlay, 5.5 * TS, 32.0 * TS);
 	}
 
 	@Override
@@ -69,7 +65,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		intro = new MsPacManIntro(context.gameController());
 		intro.addStateChangeListener((oldState, newState) -> {
 			if (oldState == MsPacManIntro.State.START) {
-				showSignature();
+				signature.show();
 			}
 		});
 		intro.changeState(MsPacManIntro.State.START);
@@ -142,18 +138,6 @@ public class MsPacManIntroScene extends GameScene2D {
 		r.drawPac(g, ic.msPacMan);
 		drawCopyright(g);
 		drawLevelCounter(g);
-	}
-
-	private void showSignature() {
-		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
-		fadeIn.setFromValue(0);
-		fadeIn.setToValue(1);
-		fadeIn.setInterpolator(Interpolator.EASE_IN);
-		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
-		fadeOut.setFromValue(1);
-		fadeOut.setToValue(0);
-		var fade = new SequentialTransition(fadeIn, fadeOut);
-		fade.play();
 	}
 
 	private void drawCopyright(GraphicsContext g) {
