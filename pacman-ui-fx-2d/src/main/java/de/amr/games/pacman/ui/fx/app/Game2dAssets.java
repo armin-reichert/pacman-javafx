@@ -52,24 +52,71 @@ public class Game2dAssets extends ResourceManager {
 	public Image logoMsPacManGame;
 	public Image flashingMazesMsPacManGame;
 
-	public final Font arcadeFont;
-	public final Font handwritingFont;
+	public Font arcadeFont;
+	public Font handwritingFont;
 
-	public final ResourceBundle messages;
+	public ResourceBundle messages;
 
-	public final AudioClip voiceExplainKeys;
-	public final AudioClip voiceAutopilotOff;
-	public final AudioClip voiceAutopilotOn;
-	public final AudioClip voiceImmunityOff;
-	public final AudioClip voiceImmunityOn;
+	public AudioClip voiceExplainKeys;
+	public AudioClip voiceAutopilotOff;
+	public AudioClip voiceAutopilotOn;
+	public AudioClip voiceImmunityOff;
+	public AudioClip voiceImmunityOn;
 
-	public final Background wallpaper2D;
+	//@formatter:off
+	private static Object[][] audioClipsMsPacman = { 
+		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
+		{ AudioClipID.CREDIT,          "sound/mspacman/Credit.mp3", 1.0 }, 
+		{ AudioClipID.EXTRA_LIFE,      "sound/mspacman/ExtraLife.mp3", 1.0 }, 
+		{ AudioClipID.GAME_READY,      "sound/mspacman/Start.mp3", 1.0 }, 
+		{ AudioClipID.GAME_OVER,       "sound/common/game-over.mp3", 1.0 }, 
+		{ AudioClipID.GHOST_EATEN,     "sound/mspacman/Ghost.mp3", 1.0 }, 
+		{ AudioClipID.GHOST_RETURNING, "sound/mspacman/GhostEyes.mp3", 1.0 }, 
+		{ AudioClipID.INTERMISSION_1,  "sound/mspacman/Act1TheyMeet.mp3", 1.0 }, 
+		{ AudioClipID.INTERMISSION_2,  "sound/mspacman/Act2TheChase.mp3", 1.0 }, 
+		{ AudioClipID.INTERMISSION_3,  "sound/mspacman/Act3Junior.mp3", 1.0 }, 
+		{ AudioClipID.LEVEL_COMPLETE,  "sound/common/level-complete.mp3", 1.0 }, 
+		{ AudioClipID.PACMAN_DEATH,    "sound/mspacman/Died.mp3", 1.0 }, 
+		{ AudioClipID.PACMAN_MUNCH,    "sound/mspacman/Pill.wav", 1.0 }, 
+		{ AudioClipID.PACMAN_POWER,    "sound/mspacman/ScaredGhost.mp3", 1.0 }, 
+		{ AudioClipID.SIREN_1,         "sound/mspacman/GhostNoise1.wav", 1.0 }, 
+		{ AudioClipID.SIREN_2,         "sound/mspacman/GhostNoise1.wav", 1.0 }, // TODO
+		{ AudioClipID.SIREN_3,         "sound/mspacman/GhostNoise1.wav", 1.0 }, // TODO
+		{ AudioClipID.SIREN_4,         "sound/mspacman/GhostNoise1.wav", 1.0 }, // TODO
+		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
+	};
 
-	public final GameSounds soundsMsPacMan = new GameSounds();
-	public final GameSounds soundsPacMan = new GameSounds();
+	private static Object[][] audioClipsPacman = { 
+		{ AudioClipID.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3", 1.0 }, 
+		{ AudioClipID.CREDIT,          "sound/pacman/credit.wav", 1.0 }, 
+		{ AudioClipID.EXTRA_LIFE,      "sound/pacman/extend.mp3", 1.0 }, 
+		{ AudioClipID.GAME_READY,      "sound/pacman/game_start.mp3", 1.0 }, 
+		{ AudioClipID.GAME_OVER,       "sound/common/game-over.mp3", 1.0 }, 
+		{ AudioClipID.GHOST_EATEN,     "sound/pacman/eat_ghost.mp3", 1.0 }, 
+		{ AudioClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, 
+		{ AudioClipID.INTERMISSION_1,  "sound/pacman/intermission.mp3", 1.0 }, 
+		{ AudioClipID.LEVEL_COMPLETE,  "sound/common/level-complete.mp3", 1.0 }, 
+		{ AudioClipID.PACMAN_DEATH,    "sound/pacman/pacman_death.wav", 1.0 }, 
+		{ AudioClipID.PACMAN_MUNCH,    "sound/pacman/doublemunch.wav", 1.0 }, 
+		{ AudioClipID.PACMAN_POWER,    "sound/pacman/ghost-turn-to-blue.mp3", 1.0 }, 
+		{ AudioClipID.SIREN_1,         "sound/pacman/siren_1.mp3", 1.0 }, 
+		{ AudioClipID.SIREN_2,         "sound/pacman/siren_2.mp3", 1.0 }, 
+		{ AudioClipID.SIREN_3,         "sound/pacman/siren_3.mp3", 1.0 }, 
+		{ AudioClipID.SIREN_4,         "sound/pacman/siren_4.mp3", 1.0 }, 
+		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
+	};
+	//@formatter:on
+
+	public Background wallpaper2D;
+
+	public GameSounds soundsMsPacMan = new GameSounds();
+	public GameSounds soundsPacMan = new GameSounds();
 
 	public Game2dAssets() {
 		super("/de/amr/games/pacman/ui/fx/", Game2dAssets.class);
+	}
+
+	public void load() {
 
 		long start = System.nanoTime();
 
@@ -98,6 +145,8 @@ public class Game2dAssets extends ResourceManager {
 		voiceAutopilotOn = audioClip("sound/voice/autopilot-on.mp3");
 		voiceImmunityOff = audioClip("sound/voice/immunity-off.mp3");
 		voiceImmunityOn = audioClip("sound/voice/immunity-on.mp3");
+		soundsMsPacMan.init(audioClipsMsPacman, false);
+		soundsPacMan.init(audioClipsPacman, false);
 
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
@@ -112,55 +161,6 @@ public class Game2dAssets extends ResourceManager {
 	 */
 	public String randomReadyText(GameVariant variant) {
 		return "READY!";
-	}
-
-	public void loadSounds() {
-		//@formatter:off
-		Object[][] audioClipsMsPacman = { 
-			{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
-			{ AudioClipID.CREDIT,          "sound/mspacman/Credit.mp3", 1.0 }, 
-			{ AudioClipID.EXTRA_LIFE,      "sound/mspacman/ExtraLife.mp3", 1.0 }, 
-			{ AudioClipID.GAME_READY,      "sound/mspacman/Start.mp3", 1.0 }, 
-			{ AudioClipID.GAME_OVER,       "sound/common/game-over.mp3", 1.0 }, 
-			{ AudioClipID.GHOST_EATEN,     "sound/mspacman/Ghost.mp3", 1.0 }, 
-			{ AudioClipID.GHOST_RETURNING, "sound/mspacman/GhostEyes.mp3", 1.0 }, 
-			{ AudioClipID.INTERMISSION_1,  "sound/mspacman/Act1TheyMeet.mp3", 1.0 }, 
-			{ AudioClipID.INTERMISSION_2,  "sound/mspacman/Act2TheChase.mp3", 1.0 }, 
-			{ AudioClipID.INTERMISSION_3,  "sound/mspacman/Act3Junior.mp3", 1.0 }, 
-			{ AudioClipID.LEVEL_COMPLETE,  "sound/common/level-complete.mp3", 1.0 }, 
-			{ AudioClipID.PACMAN_DEATH,    "sound/mspacman/Died.mp3", 1.0 }, 
-			{ AudioClipID.PACMAN_MUNCH,    "sound/mspacman/Pill.wav", 1.0 }, 
-			{ AudioClipID.PACMAN_POWER,    "sound/mspacman/ScaredGhost.mp3", 1.0 }, 
-			{ AudioClipID.SIREN_1,         "sound/mspacman/GhostNoise1.wav", 1.0 }, 
-			{ AudioClipID.SIREN_2,         "sound/mspacman/GhostNoise1.wav", 1.0 }, // TODO
-			{ AudioClipID.SIREN_3,         "sound/mspacman/GhostNoise1.wav", 1.0 }, // TODO
-			{ AudioClipID.SIREN_4,         "sound/mspacman/GhostNoise1.wav", 1.0 }, // TODO
-			{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
-		};
-
-		Object[][] audioClipsPacman = { 
-			{ AudioClipID.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3", 1.0 }, 
-			{ AudioClipID.CREDIT,          "sound/pacman/credit.wav", 1.0 }, 
-			{ AudioClipID.EXTRA_LIFE,      "sound/pacman/extend.mp3", 1.0 }, 
-			{ AudioClipID.GAME_READY,      "sound/pacman/game_start.mp3", 1.0 }, 
-			{ AudioClipID.GAME_OVER,       "sound/common/game-over.mp3", 1.0 }, 
-			{ AudioClipID.GHOST_EATEN,     "sound/pacman/eat_ghost.mp3", 1.0 }, 
-			{ AudioClipID.GHOST_RETURNING, "sound/pacman/retreating.mp3", 1.0 }, 
-			{ AudioClipID.INTERMISSION_1,  "sound/pacman/intermission.mp3", 1.0 }, 
-			{ AudioClipID.LEVEL_COMPLETE,  "sound/common/level-complete.mp3", 1.0 }, 
-			{ AudioClipID.PACMAN_DEATH,    "sound/pacman/pacman_death.wav", 1.0 }, 
-			{ AudioClipID.PACMAN_MUNCH,    "sound/pacman/doublemunch.wav", 1.0 }, 
-			{ AudioClipID.PACMAN_POWER,    "sound/pacman/ghost-turn-to-blue.mp3", 1.0 }, 
-			{ AudioClipID.SIREN_1,         "sound/pacman/siren_1.mp3", 1.0 }, 
-			{ AudioClipID.SIREN_2,         "sound/pacman/siren_2.mp3", 1.0 }, 
-			{ AudioClipID.SIREN_3,         "sound/pacman/siren_3.mp3", 1.0 }, 
-			{ AudioClipID.SIREN_4,         "sound/pacman/siren_4.mp3", 1.0 }, 
-			{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
-		};
-		//@formatter:on
-
-		soundsMsPacMan.init(audioClipsMsPacman, false);
-		soundsPacMan.init(audioClipsPacman, false);
 	}
 
 	public GameSounds gameSounds(GameVariant variant) {

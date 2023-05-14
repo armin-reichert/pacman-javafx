@@ -31,6 +31,6 @@ import javafx.application.Application;
 public class Main {
 
 	public static void main(String[] args) {
-		Application.launch(Game3dApplication.class, args);
+		Application.launch(Game3d.class, args);
 	}
 }

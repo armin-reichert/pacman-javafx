@@ -35,6 +35,6 @@ public class PelletModel3D extends Model3D {
 	public static final String MESH_ID_PELLET = "Fruit";
 
 	public PelletModel3D() {
-		super(Game3d.ASSET_MANAGER.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
+		super(Game3d.assets.urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 	}
 }

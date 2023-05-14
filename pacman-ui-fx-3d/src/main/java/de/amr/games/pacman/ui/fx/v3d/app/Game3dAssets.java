@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -39,27 +37,31 @@ import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
-public class Game3dAssets {
+public class Game3dAssets extends ResourceManager {
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
-	public final PacModel3D pacModel3D;
-	public final GhostModel3D ghostModel3D;
-	public final PelletModel3D pelletModel3D;
-	public final Background wallpaper3D;
-	public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
-	public final ResourceBundle messages;
-	private final Picker<String> messagePickerCheating;
-	private final Picker<String> messagePickerLevelComplete;
-	private final Picker<String> messagePickerGameOver;
+	public PacModel3D pacModel3D;
+	public GhostModel3D ghostModel3D;
+	public PelletModel3D pelletModel3D;
+	public Background wallpaper3D;
+	public Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+	public ResourceBundle messages;
+	private Picker<String> messagePickerCheating;
+	private Picker<String> messagePickerLevelComplete;
+	private Picker<String> messagePickerGameOver;
 
-	Game3dAssets() {
+	public Game3dAssets() {
+		super("/de/amr/games/pacman/ui/fx/v3d/", Game3dAssets.class);
+	}
+
+	public void load() {
 		messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 		messagePickerCheating = ResourceManager.createPicker(messages, "cheating");
 		messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
 		messagePickerGameOver = ResourceManager.createPicker(messages, "game.over");
 
-		wallpaper3D = Game3d.ASSET_MANAGER.imageBackground("graphics/sky.png");
+		wallpaper3D = imageBackground("graphics/sky.png");
 		floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 		floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 		floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -90,8 +92,8 @@ public class Game3dAssets {
 
 	public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 		var texture = new PhongMaterial();
-		texture.setBumpMap(Game3d.ASSET_MANAGER.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-		texture.setDiffuseMap(Game3d.ASSET_MANAGER.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+		texture.setBumpMap(image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+		texture.setDiffuseMap(image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 		texture.setDiffuseColor(diffuseColor);
 		texture.setSpecularColor(specularColor);
 		return texture;

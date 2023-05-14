@@ -21,13 +21,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 package de.amr.games.pacman.ui.fx.v3d.app;
+
+import java.io.IOException;
+import java.util.Locale;
+
+import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2dActions;
+import de.amr.games.pacman.ui.fx.app.Game2dAssets;
+import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
+import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -38,18 +46,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.stage.Stage;
 
 /**
  * @author Armin Reichert
  */
-public class Game3d {
-	public static Game3dApplication app;
+public class Game3d extends Application {
+
 	public static Game3dActions actions;
 	public static Game3dAssets assets;
 	public static Game3dUI ui;
-
-	public static final ResourceManager ASSET_MANAGER = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/",
-			Game3d.class);
 
 	//@formatter:off
 	public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
@@ -71,4 +77,41 @@ public class Game3d {
 
 	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	//@formatter:on
+
+	@Override
+	public void init() throws Exception {
+		Game2d.assets = new Game2dAssets();
+		Game3d.assets = new Game3dAssets();
+
+		long start = System.nanoTime();
+		Game2d.assets.load();
+		Game3d.assets.load();
+		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
+
+		Game2d.actions = new Game2dActions();
+		Game3d.actions = new Game3dActions();
+	}
+
+	@Override
+	public void start(Stage stage) throws IOException {
+		var cfg = new Settings(getParameters().getNamed());
+
+		Game3d.ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		Game3d.ui.init(cfg);
+
+		Game2d.actions.setUI(Game3d.ui);
+
+		Game2d.actions.reboot();
+		stage.setFullScreen(cfg.fullScreen);
+		Game3d.ui.startClockAndShowStage();
+
+		Logger.info("Game started. {} Hz language={} {}", Game3d.ui.clock().targetFrameratePy.get(), Locale.getDefault(),
+				cfg);
+	}
+
+	@Override
+	public void stop() throws Exception {
+		Game3d.ui.clock().stop();
+		Logger.info("Game stopped.");
+	}
 }

@@ -65,7 +65,7 @@ public class PacModel3D extends Model3D {
 	}
 
 	public PacModel3D() {
-		super(Game3d.ASSET_MANAGER.urlFromRelPath("model3D/pacman.obj"));
+		super(Game3d.assets.urlFromRelPath("model3D/pacman.obj"));
 	}
 
 	/**
