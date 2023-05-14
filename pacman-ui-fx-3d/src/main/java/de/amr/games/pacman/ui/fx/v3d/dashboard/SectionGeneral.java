@@ -73,7 +73,7 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.executeSteps(Game2d.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.clock().executeSteps(Game2d.simulationStepsPy.get(), true));
 
 		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Game2d.simulationStepsPy.get());
 		spinnerSimulationSteps.valueProperty()
@@ -83,29 +83,30 @@ public class SectionGeneral extends Section {
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 		sliderTargetFPS.valueProperty()
-				.addListener((obs, oldValue, newValue) -> ui.targetFrameratePy.set(newValue.intValue()));
+				.addListener((obs, oldValue, newValue) -> ui.clock().targetFrameratePy.set(newValue.intValue()));
 
-		addInfo("", () -> String.format("Target %dHz Actual %dHz", ui.targetFrameratePy.get(), ui.getFPS()));
+		addInfo("",
+				() -> String.format("Target %dHz Actual %dHz", ui.clock().targetFrameratePy.get(), ui.clock().getFPS()));
 
-		addInfo("Total Updates", ui::getUpdateCount);
+		addInfo("Total Updates", ui.clock()::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle3DEnabled);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.wokePussyMode));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Game2d.showDebugInfoPy));
-		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.timeMeasuredPy));
+		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.clock().timeMeasuredPy));
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		btnsSimulation[0].setGraphic(ui.pausedPy.get() ? iconPlay : iconStop);
-		btnsSimulation[0].setTooltip(ui.pausedPy.get() ? tooltipPlay : tooltipStop);
-		btnsSimulation[1].setDisable(!ui.pausedPy.get());
+		btnsSimulation[0].setGraphic(ui.clock().pausedPy.get() ? iconPlay : iconStop);
+		btnsSimulation[0].setTooltip(ui.clock().pausedPy.get() ? tooltipPlay : tooltipStop);
+		btnsSimulation[1].setDisable(!ui.clock().pausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Game2d.simulationStepsPy.get());
-		sliderTargetFPS.setValue(ui.targetFrameratePy.get());
+		sliderTargetFPS.setValue(ui.clock().targetFrameratePy.get());
 		cbUsePlayScene3D.setSelected(Game3d.d3_enabledPy.get());
 		cbPoliticallyCorrect.setSelected(Game3d.wokePussyMode.get());
-		cbTimeMeasured.setSelected(ui.timeMeasuredPy.get());
+		cbTimeMeasured.setSelected(ui.clock().timeMeasuredPy.get());
 		cbDebugUI.setSelected(Game2d.showDebugInfoPy.get());
 	}
 }

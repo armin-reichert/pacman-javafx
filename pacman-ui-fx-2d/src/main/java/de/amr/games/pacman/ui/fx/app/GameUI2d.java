@@ -83,8 +83,9 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class GameUI2d extends GameClock implements GameEventListener {
+public class GameUI2d implements GameEventListener {
 
+	protected final GameClock clock;
 	protected final GameController gameController;
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
@@ -103,7 +104,28 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		this.stage = stage;
 		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
 		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
-		pausedPy.addListener((py, ov, nv) -> updateStage());
+		clock = new GameClock() {
+			@Override
+			public void doUpdate() {
+				GameUI2d.this.doUpdate();
+			}
+
+			@Override
+			public void doRender() {
+				GameUI2d.this.doRender();
+			}
+		};
+		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
+	}
+
+	protected void doUpdate() {
+		gameController.update();
+		currentGameScene.update();
+	}
+
+	protected void doRender() {
+		flashMessageView.update();
+		currentGameScene.render();
 	}
 
 	public void init(Settings settings) {
@@ -176,35 +198,23 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 	}
 
-	public void startUI() {
+	public void startClockAndShowStage() {
+		clock.start();
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		start(); // start clock
-	}
-
-	@Override
-	public void doUpdate() {
-		gameController.update();
-		currentGameScene.update();
-	}
-
-	@Override
-	public void doRender() {
-		flashMessageView.update();
-		currentGameScene.render();
 	}
 
 	protected void updateStage() {
 		mainSceneRoot.setBackground(Game2d.assets.wallpaper2D);
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
-			var messageKey = pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
+			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
 			stage.getIcons().setAll(Game2d.assets.iconMsPacManGame);
 		}
 		case PACMAN -> {
-			var messageKey = pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
+			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
 			stage.getIcons().setAll(Game2d.assets.iconPacManGame);
 		}
@@ -373,22 +383,6 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		}
 	}
 
-	public GameController gameController() {
-		return gameController;
-	}
-
-	public GameModel game() {
-		return gameController.game();
-	}
-
-	public GameScene currentGameScene() {
-		return currentGameScene;
-	}
-
-	public FlashMessageView flashMessageView() {
-		return flashMessageView;
-	}
-
 	public void playVoice(AudioClip clip) {
 		playVoice(clip, 0);
 	}
@@ -409,5 +403,25 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		if (currentVoice != null) {
 			currentVoice.stop();
 		}
+	}
+
+	public GameClock clock() {
+		return clock;
+	}
+
+	public GameController gameController() {
+		return gameController;
+	}
+
+	public GameModel game() {
+		return gameController.game();
+	}
+
+	public GameScene currentGameScene() {
+		return currentGameScene;
+	}
+
+	public FlashMessageView flashMessageView() {
+		return flashMessageView;
 	}
 }

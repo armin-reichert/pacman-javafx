@@ -129,6 +129,14 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
+	public void doRender() {
+		flashMessageView.update();
+		currentGameScene.render();
+		dashboard.update();
+		pip.render();
+	}
+
+	@Override
 	public void init(Settings settings) {
 		super.init(settings);
 		dashboard.init();
@@ -143,9 +151,7 @@ public class GameUI3d extends GameUI2d {
 
 	@Override
 	protected void configureMainScene(Scene mainScene, Settings settings) {
-
 		dashboard.setVisible(false);
-
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.fxSubScene());
@@ -183,14 +189,6 @@ public class GameUI3d extends GameUI2d {
 	}
 
 	@Override
-	public void doRender() {
-		flashMessageView.update();
-		currentGameScene.render();
-		dashboard.update();
-		pip.render();
-	}
-
-	@Override
 	protected void updateStage() {
 		if (pip.visiblePy.get()) {
 			pip.update();
@@ -204,7 +202,7 @@ public class GameUI3d extends GameUI2d {
 		} else {
 			mainSceneRoot.setBackground(Game2d.assets.wallpaper2D);
 		}
-		var paused = pausedPy.get();
+		var paused = clock().pausedPy.get();
 		var dimensionMsg = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {

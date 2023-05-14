@@ -279,36 +279,36 @@ public class Game2d extends Application {
 		}
 
 		public void togglePaused() {
-			Ufx.toggle(ui.pausedPy);
+			Ufx.toggle(ui.clock().pausedPy);
 			// TODO mute and unmute?
-			if (ui.pausedPy.get()) {
+			if (ui.clock().pausedPy.get()) {
 				assets.gameSounds(ui.game().variant()).stopAll();
 			}
 		}
 
 		public void oneSimulationStep() {
-			if (ui.pausedPy.get()) {
-				ui.executeSingleStep(true);
+			if (ui.clock().pausedPy.get()) {
+				ui.clock().executeSingleStep(true);
 			}
 		}
 
 		public void tenSimulationSteps() {
-			if (ui.pausedPy.get()) {
-				ui.executeSteps(10, true);
+			if (ui.clock().pausedPy.get()) {
+				ui.clock().executeSteps(10, true);
 			}
 		}
 
 		public void changeSimulationSpeed(int delta) {
-			int newFramerate = ui.targetFrameratePy.get() + delta;
+			int newFramerate = ui.clock().targetFrameratePy.get() + delta;
 			if (newFramerate > 0 && newFramerate < 120) {
-				ui.targetFrameratePy.set(newFramerate);
+				ui.clock().targetFrameratePy.set(newFramerate);
 				showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 			}
 		}
 
 		public void resetSimulationSpeed() {
-			ui.targetFrameratePy.set(GameModel.FPS);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(ui.targetFrameratePy.get()));
+			ui.clock().targetFrameratePy.set(GameModel.FPS);
+			showFlashMessageSeconds(0.75, "%dHz".formatted(ui.clock().targetFrameratePy.get()));
 		}
 
 		public void selectNextGameVariant() {
@@ -428,14 +428,14 @@ public class Game2d extends Application {
 		actions.setUI(ui);
 
 		actions.reboot();
-		ui.startUI();
+		ui.startClockAndShowStage();
 
-		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), cfg);
+		Logger.info("Game started. {} Hz language={} {}", ui.clock().targetFrameratePy.get(), Locale.getDefault(), cfg);
 	}
 
 	@Override
 	public void stop() throws Exception {
-		ui.stop();
+		ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
 

@@ -231,18 +231,19 @@ public class Game3d extends Application {
 
 		ui = new GameUI3d(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		ui.init(cfg);
-		ui.start();
 
 		Game2d.actions.setUI(ui);
 		Game3d.actions.setUI(ui);
 
 		Game2d.actions.reboot();
-		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), cfg);
+		ui.startClockAndShowStage();
+
+		Logger.info("Game started. {} Hz language={} {}", ui.clock().targetFrameratePy.get(), Locale.getDefault(), cfg);
 	}
 
 	@Override
 	public void stop() throws Exception {
-		ui.stop();
+		ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
 }
