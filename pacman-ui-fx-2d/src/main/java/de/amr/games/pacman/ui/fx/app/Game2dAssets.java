@@ -37,6 +37,7 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class Game2dAssets extends ResourceManager {
@@ -109,6 +110,7 @@ public class Game2dAssets extends ResourceManager {
 	//@formatter:on
 
 	public Background wallpaper2D;
+	public Color wallpaperColor = Color.rgb(72, 78, 135);
 
 	public GameSounds soundsMsPacMan = new GameSounds();
 	public GameSounds soundsPacMan = new GameSounds();
@@ -125,7 +127,7 @@ public class Game2dAssets extends ResourceManager {
 		handwritingFont = font("fonts/RockSalt-Regular.ttf", 8);
 		helpFont = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 
-		wallpaper2D = imageBackground("graphics/pacman_wallpaper_gray.png");
+		wallpaper2D = imageBackground("graphics/pacman_wallpaper.png");
 
 		iconMsPacManGame = image("graphics/icons/mspacman.png");
 		spritesheetMsPacManGame = new Spritesheet(image("graphics/mspacman/sprites.png"), 16);

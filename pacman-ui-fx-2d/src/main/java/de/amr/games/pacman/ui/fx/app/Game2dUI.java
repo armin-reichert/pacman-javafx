@@ -168,6 +168,7 @@ public class Game2dUI implements GameEventListener {
 
 	protected void configureMainScene(Scene mainScene, Settings settings) {
 		mainSceneRoot = new StackPane();
+//		mainSceneRoot.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 

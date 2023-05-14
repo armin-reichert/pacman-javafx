@@ -84,8 +84,8 @@ public abstract class GameScene2D implements GameScene {
 		canvas.getTransforms().add(scaling);
 		overlay.getTransforms().add(scaling);
 
-		// TODO check this: This avoids a white vertical line left of the embedded 2D game scene
-		root.setBackground(ResourceManager.colorBackground(Color.BLACK));
+		// TODO check this: This avoids a vertical line on the left side of the embedded 2D game scene
+		root.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
 		root.getChildren().addAll(canvas, overlay);
 
 		overlay.getChildren().add(helpRoot);
@@ -154,9 +154,8 @@ public abstract class GameScene2D implements GameScene {
 		var r = context.rendering2D();
 		double w = Math.ceil(canvas.getWidth() / canvasScaling());
 		double h = Math.ceil(canvas.getHeight() / canvasScaling());
-//		Logger.info("{0.00} x {0.00}", w, h);
 
-		g.setFill(Color.GRAY);
+		g.setFill(Game2d.assets.wallpaperColor);
 		g.fillRect(0, 0, w, h);
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, w, h, 20, 20);
