@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3dApplication;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 
 /**
@@ -38,6 +38,6 @@ public class GhostModel3D extends Model3D {
 	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
 	public GhostModel3D() {
-		super(Game3d.ASSET_MANAGER.urlFromRelPath("model3D/ghost.obj"));
+		super(Game3dApplication.ASSET_MANAGER.urlFromRelPath("model3D/ghost.obj"));
 	}
 }
