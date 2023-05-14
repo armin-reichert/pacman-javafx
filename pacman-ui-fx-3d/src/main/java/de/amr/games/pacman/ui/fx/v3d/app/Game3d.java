@@ -76,24 +76,25 @@ public class Game3d extends Application {
 	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	//@formatter:on
 
+	private Settings cfg;
+
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void init() throws Exception {
+		cfg = new Settings(getParameters().getNamed());
 		long start = System.nanoTime();
 		Game2d.assets.load();
 		Game3d.assets.load();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
+	}
 
-		var cfg = new Settings(getParameters().getNamed());
-
+	@Override
+	public void start(Stage stage) throws IOException {
 		Game3d.ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		Game3d.ui.init(cfg);
-
-		Game2d.actions.setUI(Game3d.ui);
-
+		Game2d.actions.setUI(Game3d.ui); // TODO check this
 		Game2d.actions.reboot();
 		stage.setFullScreen(cfg.fullScreen);
 		Game3d.ui.startClockAndShowStage();
-
 		Logger.info("Game started. {} Hz language={} {}", Game3d.ui.clock().targetFrameratePy.get(), Locale.getDefault(),
 				cfg);
 	}
