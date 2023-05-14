@@ -143,6 +143,9 @@ public class GameUI3d extends GameUI2d {
 
 	@Override
 	protected void configureMainScene(Scene mainScene, Settings settings) {
+
+		dashboard.setVisible(false);
+
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.fxSubScene());
@@ -169,8 +172,6 @@ public class GameUI3d extends GameUI2d {
 	@Override
 	protected void configureBindings(Settings settings) {
 		super.configureBindings(settings);
-
-		dashboard.visibleProperty().bind(Game3d.dashboardVisiblePy);
 
 		pip.opacityPy.bind(Game3d.pipOpacityPy);
 		pip.heightPy.bind(Game3d.pipHeightPy);

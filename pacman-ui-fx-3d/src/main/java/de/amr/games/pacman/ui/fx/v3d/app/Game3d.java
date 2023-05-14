@@ -72,8 +72,6 @@ public class Game3d extends Application {
 			Game3d.class);
 
 	//@formatter:off
-	public static final BooleanProperty             dashboardVisiblePy      = new SimpleBooleanProperty(false);
-
 	public static final BooleanProperty             pipVisiblePy            = new SimpleBooleanProperty(false);
 	public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty              pipHeightPy             = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
@@ -157,6 +155,12 @@ public class Game3d extends Application {
 
 	public static class Actions {
 
+		private GameUI3d ui;
+
+		public void setUI(GameUI3d ui) {
+			this.ui = ui;
+		}
+
 		public void togglePipVisibility() {
 			Ufx.toggle(pipVisiblePy);
 			var key = pipVisiblePy.get() ? "pip_on" : "pip_off";
@@ -164,7 +168,7 @@ public class Game3d extends Application {
 		}
 
 		public void toggleDashboardVisible() {
-			Ufx.toggle(dashboardVisiblePy);
+			ui.dashboard().setVisible(!ui.dashboard().isVisible());
 		}
 
 		public void selectNextPerspective() {
@@ -231,6 +235,8 @@ public class Game3d extends Application {
 		ui.start();
 
 		Game2d.actions.setUI(ui);
+		Game3d.actions.setUI(ui);
+
 		Game2d.actions.reboot();
 		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), cfg);
 	}
