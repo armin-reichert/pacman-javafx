@@ -175,7 +175,6 @@ public class GameUI3d extends GameUI2d {
 
 		pip.opacityPy.bind(Game3d.pipOpacityPy);
 		pip.heightPy.bind(Game3d.pipHeightPy);
-		pip.visiblePy.bind(Game3d.pipVisiblePy);
 
 		Game3d.d3_drawModePy.addListener((py, ov, nv) -> updateStage());
 		Game3d.d3_enabledPy.addListener((py, ov, nv) -> updateStage());
@@ -264,5 +263,9 @@ public class GameUI3d extends GameUI2d {
 
 	public Dashboard dashboard() {
 		return dashboard;
+	}
+
+	public PictureInPicture pip() {
+		return pip;
 	}
 }

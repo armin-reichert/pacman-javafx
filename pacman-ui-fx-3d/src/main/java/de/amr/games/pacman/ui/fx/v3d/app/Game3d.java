@@ -72,7 +72,6 @@ public class Game3d extends Application {
 			Game3d.class);
 
 	//@formatter:off
-	public static final BooleanProperty             pipVisiblePy            = new SimpleBooleanProperty(false);
 	public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty              pipHeightPy             = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
 
@@ -162,9 +161,9 @@ public class Game3d extends Application {
 		}
 
 		public void togglePipVisibility() {
-			Ufx.toggle(pipVisiblePy);
-			var key = pipVisiblePy.get() ? "pip_on" : "pip_off";
-			Game2d.actions.showFlashMessage(fmtMessage(assets.messages, key));
+			Ufx.toggle(ui.pip().visiblePy);
+			var message = fmtMessage(assets.messages, ui.pip().visiblePy.get() ? "pip_on" : "pip_off");
+			Game2d.actions.showFlashMessage(message);
 		}
 
 		public void toggleDashboardVisible() {
