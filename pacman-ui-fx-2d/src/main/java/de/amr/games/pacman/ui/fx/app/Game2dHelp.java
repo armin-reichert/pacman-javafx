@@ -50,7 +50,7 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class ContextSensitiveHelp {
+public class Game2dHelp {
 
 	private static class Menu {
 		private final List<Node> column0 = new ArrayList<>();
@@ -71,7 +71,7 @@ public class ContextSensitiveHelp {
 	private final FadeTransition closeAnimation;
 	private Font font = Font.font("Helvetica", 10);
 
-	public ContextSensitiveHelp(GameController gameController, ResourceBundle translations) {
+	public Game2dHelp(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;
 		this.translations = translations;
 		closeAnimation = new FadeTransition(Duration.seconds(0.5));

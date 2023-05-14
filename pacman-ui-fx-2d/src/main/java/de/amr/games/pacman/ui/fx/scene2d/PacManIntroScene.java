@@ -33,7 +33,7 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2d.Keys;
+import de.amr.games.pacman.ui.fx.app.Game2dKeys;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.scene.canvas.GraphicsContext;
@@ -86,13 +86,13 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Keys.ADD_CREDIT)) {
+		if (Keyboard.pressed(Game2dKeys.ADD_CREDIT)) {
 			Game2d.actions.addCredit();
-		} else if (Keyboard.pressed(Keys.START_GAME)) {
+		} else if (Keyboard.pressed(Game2dKeys.START_GAME)) {
 			Game2d.actions.startGame();
-		} else if (Keyboard.pressed(Keys.SELECT_VARIANT)) {
+		} else if (Keyboard.pressed(Game2dKeys.SELECT_VARIANT)) {
 			Game2d.actions.selectNextGameVariant();
-		} else if (Keyboard.pressed(Keys.PLAY_CUTSCENES)) {
+		} else if (Keyboard.pressed(Game2dKeys.PLAY_CUTSCENES)) {
 			Game2d.actions.startCutscenesTest();
 		}
 	}

@@ -30,6 +30,7 @@ import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Game2dActions;
+import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -42,7 +43,7 @@ public class Game3dApplication extends Application {
 	@Override
 	public void init() throws Exception {
 		long start = System.nanoTime();
-		Game2d.assets = new Game2d.Assets();
+		Game2d.assets = new Game2dAssets();
 		var assets = new Game3dAssets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 		Game2d.actions = new Game2dActions();

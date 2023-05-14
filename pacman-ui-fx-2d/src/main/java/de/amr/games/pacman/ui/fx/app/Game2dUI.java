@@ -90,7 +90,7 @@ public class Game2dUI implements GameEventListener {
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final ContextSensitiveHelp csHelp;
+	protected final Game2dHelp csHelp;
 
 	protected Pane mainSceneRoot;
 	protected KeyboardSteering keyboardSteering;
@@ -103,7 +103,7 @@ public class Game2dUI implements GameEventListener {
 		this.gameController = new GameController(gameVariant);
 		this.stage = stage;
 		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
-		csHelp = new ContextSensitiveHelp(gameController, Game2d.assets.messages);
+		csHelp = new Game2dHelp(gameController, Game2d.assets.messages);
 		clock = new GameClock() {
 			@Override
 			public void doUpdate() {
@@ -299,33 +299,33 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2d.Keys.SHOW_HELP)) {
+		if (Keyboard.pressed(Game2dKeys.SHOW_HELP)) {
 			showHelp();
-		} else if (Keyboard.pressed(Game2d.Keys.AUTOPILOT)) {
+		} else if (Keyboard.pressed(Game2dKeys.AUTOPILOT)) {
 			Game2d.actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Game2d.Keys.BOOT)) {
+		} else if (Keyboard.pressed(Game2dKeys.BOOT)) {
 			Game2d.actions.reboot();
-		} else if (Keyboard.pressed(Game2d.Keys.DEBUG_INFO)) {
+		} else if (Keyboard.pressed(Game2dKeys.DEBUG_INFO)) {
 			Ufx.toggle(Game2d.showDebugInfoPy);
-		} else if (Keyboard.pressed(Game2d.Keys.IMMUNITIY)) {
+		} else if (Keyboard.pressed(Game2dKeys.IMMUNITIY)) {
 			Game2d.actions.toggleImmunity();
-		} else if (Keyboard.pressed(Game2d.Keys.PAUSE)) {
+		} else if (Keyboard.pressed(Game2dKeys.PAUSE)) {
 			Game2d.actions.togglePaused();
-		} else if (Keyboard.pressed(Game2d.Keys.PAUSE_STEP) || Keyboard.pressed(Game2d.Keys.SINGLE_STEP)) {
+		} else if (Keyboard.pressed(Game2dKeys.PAUSE_STEP) || Keyboard.pressed(Game2dKeys.SINGLE_STEP)) {
 			Game2d.actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Game2d.Keys.TEN_STEPS)) {
+		} else if (Keyboard.pressed(Game2dKeys.TEN_STEPS)) {
 			Game2d.actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_FASTER)) {
+		} else if (Keyboard.pressed(Game2dKeys.SIMULATION_FASTER)) {
 			Game2d.actions.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_SLOWER)) {
+		} else if (Keyboard.pressed(Game2dKeys.SIMULATION_SLOWER)) {
 			Game2d.actions.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(Game2d.Keys.SIMULATION_NORMAL)) {
+		} else if (Keyboard.pressed(Game2dKeys.SIMULATION_NORMAL)) {
 			Game2d.actions.resetSimulationSpeed();
-		} else if (Keyboard.pressed(Game2d.Keys.QUIT)) {
+		} else if (Keyboard.pressed(Game2dKeys.QUIT)) {
 			Game2d.actions.restartIntro();
-		} else if (Keyboard.pressed(Game2d.Keys.TEST_LEVELS)) {
+		} else if (Keyboard.pressed(Game2dKeys.TEST_LEVELS)) {
 			Game2d.actions.startLevelTestMode();
-		} else if (Keyboard.pressed(Game2d.Keys.FULLSCREEN)) {
+		} else if (Keyboard.pressed(Game2dKeys.FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
 	}
