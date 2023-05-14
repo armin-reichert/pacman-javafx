@@ -68,6 +68,7 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -108,7 +109,7 @@ public class GameUI2d extends GameClock implements GameEventListener {
 	public void init(Settings settings) {
 		configureGameScenes();
 		configureMainScene(stage.getScene(), settings);
-		configurePacSteering(settings);
+		configurePacSteering(settings.keyMap);
 		configureBindings(settings);
 		GameEvents.addListener(this);
 	}
@@ -164,19 +165,22 @@ public class GameUI2d extends GameClock implements GameEventListener {
 		}
 	}
 
-	protected void configurePacSteering(Settings settings) {
-		keyboardSteering = new KeyboardSteering(settings.keyMap.get(Direction.UP), settings.keyMap.get(Direction.DOWN), //
-				settings.keyMap.get(Direction.LEFT), settings.keyMap.get(Direction.RIGHT));
+	protected void configurePacSteering(Map<Direction, KeyCode> map) {
+		keyboardSteering = new KeyboardSteering(//
+				map.get(Direction.UP), //
+				map.get(Direction.DOWN), //
+				map.get(Direction.LEFT), //
+				map.get(Direction.RIGHT));
 		gameController.setManualPacSteering(keyboardSteering);
+		// TODO: maybe only play scene should handle steering keys?
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 	}
 
-	@Override
-	public void start() {
+	public void startUI() {
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		super.start(); // start clock
+		start(); // start clock
 	}
 
 	@Override

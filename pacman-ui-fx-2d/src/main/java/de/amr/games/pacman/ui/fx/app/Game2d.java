@@ -425,9 +425,10 @@ public class Game2d extends Application {
 
 		ui = new GameUI2d(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		ui.init(cfg);
-		ui.start();
 		actions.setUI(ui);
+
 		actions.reboot();
+		ui.startUI();
 
 		Logger.info("Game started. {} Hz language={} {}", ui.targetFrameratePy.get(), Locale.getDefault(), cfg);
 	}
