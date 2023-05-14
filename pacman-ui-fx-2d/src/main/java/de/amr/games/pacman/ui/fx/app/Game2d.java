@@ -62,21 +62,21 @@ public class Game2d extends Application {
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
 	//@formatter:on
 
-	public static final Game2dAssets assets = new Game2dAssets();
+	public static Game2dAssets assets = new Game2dAssets();
 	public static Game2dUI ui;
 	public static Game2dActions actions;
-	private static Settings cfg;
+	public static Settings cfg;
 
 	@Override
 	public void init() throws Exception {
 		Game2d.cfg = new Settings(getParameters().getNamed());
 		Logger.info("Game configuration: {}", Game2d.cfg);
+		Game2d.assets.load();
 	}
 
 	@Override
 	public void start(Stage stage) throws IOException {
 		stage.setFullScreen(Game2d.cfg.fullScreen);
-		Game2d.assets.load();
 		Game2d.ui = new Game2dUI(Game2d.cfg.variant, stage, Game2d.cfg.zoom * 28 * 8, Game2d.cfg.zoom * 36 * 8);
 		Game2d.actions = new Game2dActions(ui);
 		Game2d.ui.init(Game2d.cfg);
