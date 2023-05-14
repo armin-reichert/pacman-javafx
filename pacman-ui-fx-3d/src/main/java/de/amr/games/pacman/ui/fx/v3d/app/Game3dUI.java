@@ -31,7 +31,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.GameUI2d;
+import de.amr.games.pacman.ui.fx.app.Game2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -67,7 +67,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class GameUI3d extends GameUI2d {
+public class Game3dUI extends Game2dUI {
 
 	public class PictureInPicture {
 
@@ -122,7 +122,7 @@ public class GameUI3d extends GameUI2d {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	public GameUI3d(GameVariant gameVariant, Stage stage, double width, double height) {
+	public Game3dUI(GameVariant gameVariant, Stage stage, double width, double height) {
 		super(gameVariant, stage, width, height);
 		pip = new PictureInPicture(gameController);
 		dashboard = new Dashboard(this);

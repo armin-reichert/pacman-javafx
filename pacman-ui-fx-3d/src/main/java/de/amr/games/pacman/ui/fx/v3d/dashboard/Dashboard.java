@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -45,10 +45,10 @@ public class Dashboard extends VBox {
 	public static final Font LABEL_FONT = Font.font("Tahoma", 12);
 	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
-	private final GameUI3d ui;
+	private final Game3dUI ui;
 	private final List<Section> sections = new ArrayList<>();
 
-	public Dashboard(GameUI3d ui) {
+	public Dashboard(Game3dUI ui) {
 		this.ui = ui;
 	}
 

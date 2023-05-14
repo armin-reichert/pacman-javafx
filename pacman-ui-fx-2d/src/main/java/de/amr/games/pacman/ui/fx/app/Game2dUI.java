@@ -83,7 +83,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class GameUI2d implements GameEventListener {
+public class Game2dUI implements GameEventListener {
 
 	protected final GameClock clock;
 	protected final GameController gameController;
@@ -97,7 +97,7 @@ public class GameUI2d implements GameEventListener {
 	protected GameScene currentGameScene;
 	private AudioClip currentVoice;
 
-	public GameUI2d(GameVariant gameVariant, Stage stage, double width, double height) {
+	public Game2dUI(GameVariant gameVariant, Stage stage, double width, double height) {
 		checkNotNull(gameVariant);
 		checkNotNull(stage);
 		this.gameController = new GameController(gameVariant);
@@ -107,12 +107,12 @@ public class GameUI2d implements GameEventListener {
 		clock = new GameClock() {
 			@Override
 			public void doUpdate() {
-				GameUI2d.this.doUpdate();
+				Game2dUI.this.doUpdate();
 			}
 
 			@Override
 			public void doRender() {
-				GameUI2d.this.doRender();
+				Game2dUI.this.doRender();
 			}
 		};
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());

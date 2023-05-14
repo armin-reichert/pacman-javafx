@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
 import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 import static de.amr.games.pacman.ui.fx.util.Ufx.shift;
@@ -35,16 +33,12 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -208,159 +202,6 @@ public class Game2d extends Application {
 		}
 	}
 
-	public static class Actions {
-
-		private GameUI2d ui;
-
-		public void setUI(GameUI2d ui) {
-			this.ui = ui;
-		}
-
-		public void stopVoiceMessage() {
-			ui.stopVoice();
-		}
-
-		public void showFlashMessage(String message, Object... args) {
-			showFlashMessageSeconds(1, message, args);
-		}
-
-		public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-			ui.flashMessageView().showMessage(String.format(message, args), seconds);
-		}
-
-		public void startGame() {
-			if (ui.game().hasCredit()) {
-				ui.stopVoice();
-				ui.gameController().startPlaying();
-			}
-		}
-
-		public void startCutscenesTest() {
-			ui.gameController().startCutscenesTest();
-			showFlashMessage("Cut scenes");
-		}
-
-		public void restartIntro() {
-			ui.currentGameScene().end();
-			GameEvents.setSoundEventsEnabled(true);
-			if (ui.game().isPlaying()) {
-				ui.game().changeCredit(-1);
-			}
-			ui.gameController().restart(INTRO);
-		}
-
-		public void reboot() {
-			if (ui.currentGameScene() != null) {
-				ui.currentGameScene().end();
-			}
-			ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
-			ui.gameController().restart(GameState.BOOT);
-		}
-
-		public void addCredit() {
-			GameEvents.setSoundEventsEnabled(true);
-			ui.gameController().addCredit();
-		}
-
-		public void enterLevel(int newLevelNumber) {
-			if (ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
-				return;
-			}
-			ui.game().level().ifPresent(level -> {
-				if (newLevelNumber > level.number()) {
-					for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-						ui.game().nextLevel();
-					}
-					ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
-				} else if (newLevelNumber < level.number()) {
-					// not implemented
-				}
-			});
-		}
-
-		public void togglePaused() {
-			Ufx.toggle(ui.clock().pausedPy);
-			// TODO mute and unmute?
-			if (ui.clock().pausedPy.get()) {
-				assets.gameSounds(ui.game().variant()).stopAll();
-			}
-		}
-
-		public void oneSimulationStep() {
-			if (ui.clock().pausedPy.get()) {
-				ui.clock().executeSingleStep(true);
-			}
-		}
-
-		public void tenSimulationSteps() {
-			if (ui.clock().pausedPy.get()) {
-				ui.clock().executeSteps(10, true);
-			}
-		}
-
-		public void changeSimulationSpeed(int delta) {
-			int newFramerate = ui.clock().targetFrameratePy.get() + delta;
-			if (newFramerate > 0 && newFramerate < 120) {
-				ui.clock().targetFrameratePy.set(newFramerate);
-				showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
-			}
-		}
-
-		public void resetSimulationSpeed() {
-			ui.clock().targetFrameratePy.set(GameModel.FPS);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(ui.clock().targetFrameratePy.get()));
-		}
-
-		public void selectNextGameVariant() {
-			var gameVariant = ui.game().variant().next();
-			ui.gameController().selectGameVariant(gameVariant);
-			ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
-		}
-
-		public void toggleAutopilot() {
-			ui.gameController().toggleAutoControlled();
-			var auto = ui.gameController().isAutoControlled();
-			String message = fmtMessage(assets.messages, auto ? "autopilot_on" : "autopilot_off");
-			showFlashMessage(message);
-			ui.updateHelpContent();
-			ui.playVoice(auto ? assets.voiceAutopilotOn : assets.voiceAutopilotOff);
-		}
-
-		public void toggleImmunity() {
-			ui.game().setImmune(!ui.game().isImmune());
-			var immune = ui.game().isImmune();
-			String message = fmtMessage(assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
-			showFlashMessage(message);
-			ui.updateHelpContent();
-			ui.playVoice(immune ? assets.voiceImmunityOn : assets.voiceImmunityOff);
-		}
-
-		public void startLevelTestMode() {
-			if (ui.gameController().state() == GameState.INTRO) {
-				ui.gameController().restart(GameState.LEVEL_TEST);
-				showFlashMessage("Level TEST MODE");
-			}
-		}
-
-		public void cheatAddLives(int n) {
-			int newLivesCount = ui.game().lives() + n;
-			ui.game().setLives(newLivesCount);
-			showFlashMessage(fmtMessage(assets.messages, "cheat_add_lives", newLivesCount));
-		}
-
-		public void cheatEatAllPellets() {
-			ui.gameController().cheatEatAllPellets();
-		}
-
-		public void cheatEnterNextLevel() {
-			ui.gameController().cheatEnterNextLevel();
-		}
-
-		public void cheatKillAllEatableGhosts() {
-			ui.gameController().cheatKillAllEatableGhosts();
-		}
-	}
-
 	public static class Keys {
 
 		public static final KeyCodeCombination CHEAT_EAT_ALL = alt(KeyCode.E);
@@ -397,28 +238,28 @@ public class Game2d extends Application {
 	/**
 	 * Static access to actions of 2D game.
 	 */
-	public static Actions actions;
+	public static Game2dActions actions;
 
 	/**
 	 * Static access to assets of 2D game.
 	 */
 	public static Assets assets;
 
-	private GameUI2d ui;
+	private Game2dUI ui;
 
 	@Override
 	public void init() throws Exception {
 		long start = System.nanoTime();
 		Game2d.assets = new Assets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
-		Game2d.actions = new Actions();
+		Game2d.actions = new Game2dActions();
 	};
 
 	@Override
 	public void start(Stage stage) throws IOException {
 		var cfg = new Settings(getParameters().getNamed());
 
-		ui = new GameUI2d(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		ui = new Game2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		ui.init(cfg);
 		actions.setUI(ui);
 

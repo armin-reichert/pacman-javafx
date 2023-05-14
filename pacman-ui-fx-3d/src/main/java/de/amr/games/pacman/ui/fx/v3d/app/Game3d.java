@@ -38,6 +38,7 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2dActions;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -154,9 +155,9 @@ public class Game3d extends Application {
 
 	public static class Actions {
 
-		private GameUI3d ui;
+		private Game3dUI ui;
 
-		public void setUI(GameUI3d ui) {
+		public void setUI(Game3dUI ui) {
 			this.ui = ui;
 		}
 
@@ -208,7 +209,7 @@ public class Game3d extends Application {
 	 */
 	public static Assets assets;
 
-	private GameUI3d ui;
+	private Game3dUI ui;
 
 	@Override
 	public void init() throws Exception {
@@ -216,7 +217,7 @@ public class Game3d extends Application {
 		Game2d.assets = new Game2d.Assets();
 		Game3d.assets = new Game3d.Assets();
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
-		Game2d.actions = new Game2d.Actions();
+		Game2d.actions = new Game2dActions();
 		Game3d.actions = new Game3d.Actions();
 	}
 
@@ -224,7 +225,7 @@ public class Game3d extends Application {
 	public void start(Stage stage) throws IOException {
 		var cfg = new Settings(getParameters().getNamed());
 
-		ui = new GameUI3d(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		ui.init(cfg);
 
 		Game2d.actions.setUI(ui);

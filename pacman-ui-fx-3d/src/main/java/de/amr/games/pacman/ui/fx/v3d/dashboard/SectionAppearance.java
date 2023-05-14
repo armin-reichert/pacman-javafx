@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -40,7 +40,7 @@ public class SectionAppearance extends Section {
 	private final ComboBox<String> comboFloorTexture;
 	private final CheckBox cbFloorTextureRandom;
 
-	public SectionAppearance(GameUI3d ui, String title) {
+	public SectionAppearance(Game3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		pickerLightColor = addColorPicker("Light Color", Game3d.d3_lightColorPy.get());
 		pickerLightColor.setOnAction(e -> Game3d.d3_lightColorPy.set(pickerLightColor.getValue()));

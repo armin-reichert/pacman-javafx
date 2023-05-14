@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.GameUI3d;
+import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.control.CheckBox;
@@ -50,14 +50,14 @@ public class Section3D extends Section {
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
 
-	public Section3D(GameUI3d ui, String title) {
+	public Section3D(Game3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> Game3d.d3_perspectivePy.set(comboPerspective.getValue()));
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
 				.available(() -> gameScene().is3D());
-		sliderPiPSceneHeight = addSlider("PiP Size", GameUI3d.PictureInPicture.MIN_HEIGHT,
-				GameUI3d.PictureInPicture.MAX_HEIGHT, Game3d.pipHeightPy.get());
+		sliderPiPSceneHeight = addSlider("PiP Size", Game3dUI.PictureInPicture.MIN_HEIGHT,
+				Game3dUI.PictureInPicture.MAX_HEIGHT, Game3d.pipHeightPy.get());
 		sliderPiPSceneHeight.valueProperty()
 				.addListener((obs, oldValue, newValue) -> Game3d.pipHeightPy.set(newValue.doubleValue()));
 		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, Game3d.pipOpacityPy.get());
