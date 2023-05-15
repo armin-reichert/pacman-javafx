@@ -23,6 +23,7 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.app;
 
+import java.util.Collections;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.steering.Direction;
@@ -60,13 +61,14 @@ public class Settings {
 	public Map<Direction, KeyCode> keyMap;
 
 	public Settings() {
+		this(Collections.emptyMap());
+	}
+
+	public Settings(Map<String, String> pm) {
 		fullScreen = false;
 		variant = GameVariant.PACMAN;
 		zoom = 2;
 		keyMap = keyMap("cursor");
-	}
-
-	public Settings(Map<String, String> pm) {
 		merge(pm);
 	}
 
