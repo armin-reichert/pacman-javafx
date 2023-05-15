@@ -68,7 +68,7 @@ public class Game2d extends Application {
 
 	@Override
 	public void init() {
-		cfg = new Settings(getParameters().getNamed());
+		cfg.merge(getParameters().getNamed());
 		Logger.info("Game configuration: {}", Game2d.cfg);
 		Game2d.assets.load();
 	}
