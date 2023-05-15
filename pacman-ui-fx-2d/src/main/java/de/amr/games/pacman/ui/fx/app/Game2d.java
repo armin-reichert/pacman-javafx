@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import org.tinylog.Logger;
@@ -68,14 +67,14 @@ public class Game2d extends Application {
 	public static Settings cfg;
 
 	@Override
-	public void init() throws Exception {
+	public void init() {
 		Game2d.cfg = new Settings(getParameters().getNamed());
 		Logger.info("Game configuration: {}", Game2d.cfg);
 		Game2d.assets.load();
 	}
 
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void start(Stage stage) {
 		stage.setFullScreen(Game2d.cfg.fullScreen);
 		Game2d.ui = new Game2dUI(Game2d.cfg.variant, stage, Game2d.cfg.zoom * 28 * 8, Game2d.cfg.zoom * 36 * 8);
 		Game2d.actions = new Game2dActions(ui);
@@ -86,7 +85,7 @@ public class Game2d extends Application {
 	}
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() {
 		Game2d.ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
