@@ -24,9 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import java.util.Map;
-import java.util.function.Function;
-
-import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
@@ -37,44 +34,55 @@ import javafx.scene.input.KeyCode;
  */
 public class Settings {
 
-	private static <T> T parse(Map<String, String> parameters, String key, T defaultValue, Function<String, T> parser) {
-		try {
-			String valueAsString = parameters.getOrDefault(key, String.valueOf(defaultValue));
-			return parser.apply(valueAsString);
-		} catch (Exception e) {
-			Logger.error("Error parsing parameter '{}': {}", key, e.getMessage());
-			return defaultValue;
-		}
-	}
+	private static final Map<Direction, KeyCode> KEYS_NUMPAD = Map.of(//
+			Direction.UP, KeyCode.NUMPAD8, //
+			Direction.DOWN, KeyCode.NUMPAD5, //
+			Direction.LEFT, KeyCode.NUMPAD4, //
+			Direction.RIGHT, KeyCode.NUMPAD6);
 
-	private static Map<Direction, KeyCode> parseKeyMap(String spec) {
-		return switch (spec) {
-		case "numpad" -> Map.of(//
-				Direction.UP, KeyCode.NUMPAD8, //
-				Direction.DOWN, KeyCode.NUMPAD5, //
-				Direction.LEFT, KeyCode.NUMPAD4, //
-				Direction.RIGHT, KeyCode.NUMPAD6);
-		default -> Map.of(//
-				Direction.UP, KeyCode.UP, //
-				Direction.DOWN, KeyCode.DOWN, //
-				Direction.LEFT, KeyCode.LEFT, //
-				Direction.RIGHT, KeyCode.RIGHT);
+	private static final Map<Direction, KeyCode> KEYS_CURSOR = Map.of(//
+			Direction.UP, KeyCode.UP, //
+			Direction.DOWN, KeyCode.DOWN, //
+			Direction.LEFT, KeyCode.LEFT, //
+			Direction.RIGHT, KeyCode.RIGHT);
+
+	private static Map<Direction, KeyCode> keyMap(String name) {
+		return switch (name) {
+		case "numpad" -> KEYS_NUMPAD;
+		case "cursor" -> KEYS_CURSOR;
+		default -> throw new IllegalArgumentException("Unknown keymap name: " + name);
 		};
 	}
 
-	public final boolean fullScreen;
-	public final GameVariant variant;
-	public final float zoom;
-	public final Map<Direction, KeyCode> keyMap;
-	public final boolean useTestRenderer;
+	public boolean fullScreen;
+	public GameVariant variant;
+	public float zoom;
+	public Map<Direction, KeyCode> keyMap;
 
-	@SuppressWarnings("unchecked")
-	public Settings(Map<String, String> parameters) {
-		fullScreen = parse(parameters, "fullScreen", false, Boolean::valueOf);
-		variant = parse(parameters, "variant", GameVariant.PACMAN, GameVariant::valueOf);
-		zoom = parse(parameters, "zoom", 2.0f, Float::valueOf);
-		keyMap = (Map<Direction, KeyCode>) parse(parameters, "keys", "cursor", Settings::parseKeyMap);
-		useTestRenderer = parse(parameters, "useTestRenderer", false, Boolean::valueOf);
+	public Settings() {
+		fullScreen = false;
+		variant = GameVariant.PACMAN;
+		zoom = 2;
+		keyMap = keyMap("cursor");
+	}
+
+	public Settings(Map<String, String> pm) {
+		merge(pm);
+	}
+
+	public void merge(Map<String, String> pm) {
+		if (pm.containsKey("fullScreen")) {
+			fullScreen = Boolean.valueOf(pm.get("fullScreen"));
+		}
+		if (pm.containsKey("variant")) {
+			variant = GameVariant.valueOf(pm.get("variant"));
+		}
+		if (pm.containsKey("zoom")) {
+			zoom = Float.valueOf(pm.get("zoom"));
+		}
+		if (pm.containsKey("keys")) {
+			keyMap = keyMap(pm.get("keys"));
+		}
 	}
 
 	@Override

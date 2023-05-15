@@ -64,11 +64,11 @@ public class Game2d extends Application {
 	public static Game2dAssets assets = new Game2dAssets();
 	public static Game2dUI ui;
 	public static Game2dActions actions;
-	public static Settings cfg;
+	public static Settings cfg = new Settings();
 
 	@Override
 	public void init() {
-		Game2d.cfg = new Settings(getParameters().getNamed());
+		cfg = new Settings(getParameters().getNamed());
 		Logger.info("Game configuration: {}", Game2d.cfg);
 		Game2d.assets.load();
 	}
