@@ -237,12 +237,12 @@ public class Game3dUI extends Game2dUI {
 	@Override
 	protected void handleKeyboardInput() {
 		super.handleKeyboardInput();
-		if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_3D_ENABLED)) {
+		if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_2D_3D)) {
 			toggle3DEnabled();
-		} else if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_DASHBOARD_VISIBLE)
-				|| Keyboard.pressed(Game3dActions.KEY_TOGGLE_DASHBOARD_VISIBLE_2)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_DASHBOARD)
+				|| Keyboard.pressed(Game3dActions.KEY_TOGGLE_DASHBOARD_2)) {
 			Game3d.actions.toggleDashboardVisible();
-		} else if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_PIP_VIEW_VISIBLE)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_PIP_VIEW)) {
 			Game3d.actions.togglePipVisibility();
 		}
 	}

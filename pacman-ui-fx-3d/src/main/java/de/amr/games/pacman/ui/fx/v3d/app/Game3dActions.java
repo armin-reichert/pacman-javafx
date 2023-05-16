@@ -36,12 +36,12 @@ import javafx.scene.shape.DrawMode;
 public class Game3dActions {
 
 	//@formatter:off
-	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD_VISIBLE = just(KeyCode.F1);
-	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD_VISIBLE_2 = alt(KeyCode.B);
-	public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW_VISIBLE = just(KeyCode.F2);
-	public static final KeyCodeCombination KEY_TOGGLE_3D_ENABLED = alt(KeyCode.DIGIT3);
-	public static final KeyCodeCombination KEY_PREV_CAMERA = alt(KeyCode.LEFT);
-	public static final KeyCodeCombination KEY_NEXT_CAMERA = alt(KeyCode.RIGHT);
+	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD   = just(KeyCode.F1);
+	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD_2 = alt(KeyCode.B);
+	public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW    = just(KeyCode.F2);
+	public static final KeyCodeCombination KEY_TOGGLE_2D_3D       = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination KEY_PREV_PERSPECTIVE   = alt(KeyCode.LEFT);
+	public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE   = alt(KeyCode.RIGHT);
 	//@formatter:on
 
 	private final Game3dUI ui;
@@ -51,9 +51,8 @@ public class Game3dActions {
 	}
 
 	public void togglePipVisibility() {
-		var pip = ui.pip();
-		Ufx.toggle(pip.visiblePy);
-		var message = fmtMessage(Game3d.assets.messages, pip.visiblePy.get() ? "pip_on" : "pip_off");
+		Ufx.toggle(ui.pip().visiblePy);
+		var message = fmtMessage(Game3d.assets.messages, ui.pip().visiblePy.get() ? "pip_on" : "pip_off");
 		ui.showFlashMessage(message);
 	}
 
@@ -62,16 +61,16 @@ public class Game3dActions {
 	}
 
 	public void selectNextPerspective() {
-		var nextPerspective = Game3d.d3_perspectivePy.get().next();
-		Game3d.d3_perspectivePy.set(nextPerspective);
-		String perspectiveName = fmtMessage(Game3d.assets.messages, nextPerspective.name());
+		var next = Game3d.d3_perspectivePy.get().next();
+		Game3d.d3_perspectivePy.set(next);
+		String perspectiveName = fmtMessage(Game3d.assets.messages, next.name());
 		ui.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
 	}
 
 	public void selectPrevPerspective() {
-		var prevPerspective = Game3d.d3_perspectivePy.get().prev();
-		Game3d.d3_perspectivePy.set(prevPerspective);
-		String perspectiveName = fmtMessage(Game3d.assets.messages, prevPerspective.name());
+		var prev = Game3d.d3_perspectivePy.get().prev();
+		Game3d.d3_perspectivePy.set(prev);
+		String perspectiveName = fmtMessage(Game3d.assets.messages, prev.name());
 		ui.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
 	}
 

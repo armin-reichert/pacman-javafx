@@ -242,9 +242,9 @@ public class PlayScene3D implements GameScene {
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Game2dActions.KEY_ADD_CREDIT) && !context.hasCredit()) {
 			Game2d.actions.addCredit(); // in demo mode, allow adding credit
-		} else if (Keyboard.pressed(Game3dActions.KEY_PREV_CAMERA)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_PREV_PERSPECTIVE)) {
 			Game3d.actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Game3dActions.KEY_NEXT_CAMERA)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_NEXT_PERSPECTIVE)) {
 			Game3d.actions.selectNextPerspective();
 		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_EAT_ALL)) {
 			Game2d.actions.cheatEatAllPellets();
