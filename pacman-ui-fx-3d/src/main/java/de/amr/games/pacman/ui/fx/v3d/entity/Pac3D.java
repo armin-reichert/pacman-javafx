@@ -77,22 +77,7 @@ public class Pac3D {
 	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
-	public interface WalkingAnimation {
-		void update(Pac pac);
-
-		void end(Pac pac);
-
-		void setPowerMode(boolean power);
-
-		Animation animation();
-	}
-
-	public interface DyingAnimation {
-
-		Animation animation();
-	}
-
-	private static class MsPacManDyingAnimation implements Pac3D.DyingAnimation {
+	private static class MsPacManDyingAnimation implements DyingAnimation {
 
 		private final Animation animation;
 
@@ -119,7 +104,7 @@ public class Pac3D {
 		}
 	}
 
-	private static class PacManDyingAnimation implements Pac3D.DyingAnimation {
+	private static class PacManDyingAnimation implements DyingAnimation {
 
 		private final Animation animation;
 		private final RotateTransition spinning;
@@ -195,7 +180,7 @@ public class Pac3D {
 
 		var pacGroup = createPacManGroup(model3D, colors);
 		var pac3D = new Pac3D(pacGroup, pacMan, colors.headColor());
-		pac3D.walkingAnimation = new HeadBanging(pac3D.root);
+		pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
 		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
 		pac3D.drawModePy.bind(Game3d.d3_drawModePy);
 
@@ -209,7 +194,7 @@ public class Pac3D {
 
 		var pacGroup = createMsPacManGroup(model3D, colors);
 		var pac3D = new Pac3D(pacGroup, msPacMan, colors.headColor());
-		pac3D.walkingAnimation = new HipSwaying(pac3D.root);
+		pac3D.walkingAnimation = new HipSwaying(msPacMan, pac3D.root);
 		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
 		pac3D.drawModePy.bind(Game3d.d3_drawModePy);
 
@@ -330,17 +315,17 @@ public class Pac3D {
 		updatePosition();
 		turnTo(pac.moveDir());
 		updateVisibility(level);
-		walkingAnimation.end(pac);
+		walkingAnimation.hold();
 	}
 
 	public void update(GameLevel level) {
 		if (pac.isDead()) {
-			walkingAnimation.end(pac);
+			walkingAnimation.hold();
 		} else {
 			updatePosition();
 			updateVisibility(level);
 			turnTo(pac.moveDir());
-			walkingAnimation.update(pac);
+			walkingAnimation.walk();
 		}
 	}
 

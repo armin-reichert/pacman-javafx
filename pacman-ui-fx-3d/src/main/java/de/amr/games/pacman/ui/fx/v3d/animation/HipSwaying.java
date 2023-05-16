@@ -25,7 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.WalkingAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -36,21 +36,23 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class HipSwaying implements Pac3D.WalkingAnimation {
+public class HipSwaying implements WalkingAnimation {
 
 	private static final short DEFAULT_ANGLE_FROM = -20;
 	private static final short DEFAULT_ANGLE_TO = 20;
 	private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
 
+	private final Pac pac;
 	private final RotateTransition animation;
 
-	public HipSwaying(Node node) {
+	public HipSwaying(Pac pac, Node node) {
+		this.pac = pac;
 		animation = new RotateTransition(DEFAULT_DURATION, node);
 		animation.setAxis(Rotate.Z_AXIS);
 		animation.setCycleCount(Animation.INDEFINITE);
 		animation.setAutoReverse(true);
 		animation.setInterpolator(Interpolator.EASE_BOTH);
-		setPowerMode(false);
+		setPowerWalking(false);
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class HipSwaying implements Pac3D.WalkingAnimation {
 	}
 
 	@Override
-	public void setPowerMode(boolean power) {
+	public void setPowerWalking(boolean power) {
 		double amplification = power ? 1.5 : 1;
 		double rate = power ? 2 : 1;
 		animation.stop();
@@ -69,9 +71,9 @@ public class HipSwaying implements Pac3D.WalkingAnimation {
 	}
 
 	@Override
-	public void update(Pac pac) {
+	public void walk() {
 		if (pac.isStandingStill()) {
-			end(pac);
+			hold();
 			animation.getNode().setRotate(0);
 			return;
 		}
@@ -79,7 +81,7 @@ public class HipSwaying implements Pac3D.WalkingAnimation {
 	}
 
 	@Override
-	public void end(Pac pac) {
+	public void hold() {
 		animation.stop();
 		animation.getNode().setRotationAxis(animation.getAxis());
 		animation.getNode().setRotate(0);
