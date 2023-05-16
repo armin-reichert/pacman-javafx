@@ -52,7 +52,7 @@ public class Model3D {
 				"Node with CSS ID '%s' is not a MeshView but a %s".formatted(cssID, node.getClass()));
 	}
 
-	protected static String cssID(String id) {
+	public static String cssID(String id) {
 		// TODO what else need to be escaped?
 		return id.replace('.', '-');
 	}

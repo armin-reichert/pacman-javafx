@@ -84,9 +84,9 @@ public class LivesCounter3D {
 		for (int i = 0; i < maxLives; ++i) {
 			addPillarAndPlate(2 * i * TS);
 			var pacShape = fnPacNode.get();
-			PacModel3D.headMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
-			PacModel3D.palateMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
-			PacModel3D.eyesMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Pac3D.headMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Pac3D.palateMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Pac3D.eyesMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
 			pacShape.setTranslateX(2.0 * i * TS);
 			pacShape.setTranslateZ(-(pillarHeight + 5.5));
 			if (lookRight) {
