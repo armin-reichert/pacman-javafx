@@ -133,7 +133,7 @@ public class PacManCutscene1 extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		if (Game2d.showDebugInfoPy.get()) {
+		if (Game2d.PY_SHOW_DEBUG_INFO.get()) {
 			g.setFont(context.rendering2D().screenFont(TS));
 			g.setFill(Color.WHITE);
 			if (initialDelay > 0) {

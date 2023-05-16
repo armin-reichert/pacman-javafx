@@ -92,7 +92,7 @@ public abstract class GameScene2D implements GameScene {
 		helpRoot.setTranslateX(10);
 		helpRoot.setTranslateY(HEIGHT * 0.2);
 
-		infoVisiblePy.bind(Game2d.showDebugInfoPy);
+		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO);
 	}
 
 	@Override

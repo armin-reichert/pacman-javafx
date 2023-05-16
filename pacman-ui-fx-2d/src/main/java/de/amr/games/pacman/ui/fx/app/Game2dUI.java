@@ -311,7 +311,7 @@ public class Game2dUI implements GameEventListener {
 		} else if (Keyboard.pressed(Game2d.KEY_BOOT)) {
 			Game2d.app.reboot();
 		} else if (Keyboard.pressed(Game2d.KEY_DEBUG_INFO)) {
-			Ufx.toggle(Game2d.showDebugInfoPy);
+			Ufx.toggle(Game2d.PY_SHOW_DEBUG_INFO);
 		} else if (Keyboard.pressed(Game2d.KEY_IMMUNITIY)) {
 			Game2d.app.toggleImmunity();
 		} else if (Keyboard.pressed(Game2d.KEY_PAUSE)) {

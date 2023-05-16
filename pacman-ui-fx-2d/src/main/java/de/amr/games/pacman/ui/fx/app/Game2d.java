@@ -69,8 +69,8 @@ public class Game2d extends Application {
 	}
 
 	//@formatter:off
-	public static final BooleanProperty showDebugInfoPy   = new SimpleBooleanProperty(false);
-	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
+	public static final BooleanProperty PY_SHOW_DEBUG_INFO       = new SimpleBooleanProperty(false);
+	public static final IntegerProperty PY_NUM_SIMULATION_STEPS  = new SimpleIntegerProperty(1);
 
 	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
 	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES   = alt(KeyCode.L);
