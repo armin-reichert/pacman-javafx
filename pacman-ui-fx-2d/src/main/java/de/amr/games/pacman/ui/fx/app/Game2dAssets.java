@@ -42,9 +42,7 @@ import javafx.scene.text.Font;
  * @author Armin Reichert
  */
 public class Game2dAssets extends ResourceManager {
-
 	//@formatter:off
-	
 	private static final Object[][] audioClipsMsPacman = { 
 		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
 		{ AudioClipID.CREDIT,          "sound/mspacman/Credit.mp3", 1.0 }, 
@@ -87,31 +85,34 @@ public class Game2dAssets extends ResourceManager {
 		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
 	};
 
-	public final ResourceBundle messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
+	public final ResourceBundle messages           = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
-	public final Font arcadeFont      = font("fonts/emulogic.ttf", 8);
-	public final Font handwritingFont = font("fonts/RockSalt-Regular.ttf", 8);
-	public final Font helpFont        = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+	public final Font arcadeFont                   = font("fonts/emulogic.ttf", 8);
+	public final Font handwritingFont              = font("fonts/RockSalt-Regular.ttf", 8);
+	public final Font helpFont                     = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 	
-	public final Background wallpaper2D                = imageBackground("graphics/pacman_wallpaper.png");
-	public final Color      wallpaperColor             = Color.rgb(72, 78, 135);
-	public final Spritesheet spritesheetMsPacManGame   = new Spritesheet(image("graphics/mspacman/sprites.png"), 16);
-	public final Image       iconMsPacManGame          = image("graphics/icons/mspacman.png");
-	public final Image       flashingMazesMsPacManGame = image("graphics/mspacman/mazes-flashing.png");
-	public final Image       logoMsPacManGame          = image("graphics/mspacman/midway.png");
-	public final Spritesheet spritesheetPacManGame     = new Spritesheet(image("graphics/pacman/sprites.png"), 16);
-	public final Image iconPacManGame                  = image("graphics/icons/pacman.png");
-	public final Image fullMazePacManGame              = image("graphics/pacman/maze_full.png");
-	public final Image emptyMazePacManGame             = image("graphics/pacman/maze_empty.png");
-	public final Image flashingMazePacManGame          = image("graphics/pacman/maze_empty_flashing.png");
+	public final Background wallpaper2D            = imageBackground("graphics/pacman_wallpaper.png");
+	public final Color wallpaperColor              = Color.rgb(72, 78, 135);
 
-	public final AudioClip voiceExplainKeys            = audioClip("sound/voice/press-key.mp3");
-	public final AudioClip voiceAutopilotOff           = audioClip("sound/voice/autopilot-off.mp3");
-	public final AudioClip voiceAutopilotOn            = audioClip("sound/voice/autopilot-on.mp3");
-	public final AudioClip voiceImmunityOff            = audioClip("sound/voice/immunity-off.mp3");
-	public final AudioClip voiceImmunityOn             = audioClip("sound/voice/immunity-on.mp3");
-	public final GameSounds soundsMsPacMan             = new GameSounds();
-	public final GameSounds soundsPacMan               = new GameSounds();
+	public final Spritesheet spritesMsPacMan       = new Spritesheet(image("graphics/mspacman/sprites.png"), 16);
+	public final Image iconMsPacMan                = image("graphics/icons/mspacman.png");
+	public final Image flashingMazesMsPacMan       = image("graphics/mspacman/mazes-flashing.png");
+	public final Image logoMsPacMan                = image("graphics/mspacman/midway.png");
+	
+	public final Spritesheet spritesPacMan         = new Spritesheet(image("graphics/pacman/sprites.png"), 16);
+	public final Image iconPacMan                  = image("graphics/icons/pacman.png");
+	public final Image fullMazePacMan              = image("graphics/pacman/maze_full.png");
+	public final Image emptyMazePacMan             = image("graphics/pacman/maze_empty.png");
+	public final Image flashingMazePacMan          = image("graphics/pacman/maze_empty_flashing.png");
+
+	public final AudioClip voiceExplainKeys        = audioClip("sound/voice/press-key.mp3");
+	public final AudioClip voiceAutopilotOff       = audioClip("sound/voice/autopilot-off.mp3");
+	public final AudioClip voiceAutopilotOn        = audioClip("sound/voice/autopilot-on.mp3");
+	public final AudioClip voiceImmunityOff        = audioClip("sound/voice/immunity-off.mp3");
+	public final AudioClip voiceImmunityOn         = audioClip("sound/voice/immunity-on.mp3");
+	
+	public final GameSounds soundsMsPacMan         = new GameSounds();
+	public final GameSounds soundsPacMan           = new GameSounds();
 	//@formatter:on
 
 	public static Font font(Font font, double size) {

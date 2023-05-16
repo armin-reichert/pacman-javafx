@@ -208,12 +208,12 @@ public class Game3dUI extends Game2dUI {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(Game2d.assets.iconMsPacManGame);
+			stage.getIcons().setAll(Game2d.assets.iconMsPacMan);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(Game2d.assets.iconPacManGame);
+			stage.getIcons().setAll(Game2d.assets.iconPacMan);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}

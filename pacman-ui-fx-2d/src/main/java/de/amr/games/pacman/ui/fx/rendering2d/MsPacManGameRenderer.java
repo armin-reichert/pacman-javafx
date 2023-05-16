@@ -59,7 +59,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final int THIRD_COLUMN = 456;
 
 	public MsPacManGameRenderer() {
-		super(Game2d.assets.spritesheetMsPacManGame);
+		super(Game2d.assets.spritesMsPacMan);
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
@@ -121,7 +121,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
 				var r = new Rectangle2D(0, (mazeNumber - 1) * h, w, h);
-				g.drawImage(Game2d.assets.flashingMazesMsPacManGame, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(),
+				g.drawImage(Game2d.assets.flashingMazesMsPacMan, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(),
 						x - 3 /* don't tell your mommy */, y, r.getWidth(), r.getHeight());
 			} else {
 				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
@@ -145,7 +145,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
 		int x = TS * (6);
 		int y = TS * (tileY - 1);
-		g.drawImage(Game2d.assets.logoMsPacManGame, x, y + 2, TS * (4) - 2, TS * (4));
+		g.drawImage(Game2d.assets.logoMsPacMan, x, y + 2, TS * (4) - 2, TS * (4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol

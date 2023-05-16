@@ -218,12 +218,12 @@ public class Game2dUI implements GameEventListener {
 		case MS_PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.assets.iconMsPacManGame);
+			stage.getIcons().setAll(Game2d.assets.iconMsPacMan);
 		}
 		case PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.assets.iconPacManGame);
+			stage.getIcons().setAll(Game2d.assets.iconPacMan);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
