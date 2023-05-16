@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx.app;
 
 import java.util.ResourceBundle;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
@@ -46,6 +44,7 @@ import javafx.scene.text.Font;
 public class Game2dAssets extends ResourceManager {
 
 	//@formatter:off
+	
 	private static final Object[][] audioClipsMsPacman = { 
 		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
 		{ AudioClipID.CREDIT,          "sound/mspacman/Credit.mp3", 1.0 }, 
@@ -87,78 +86,42 @@ public class Game2dAssets extends ResourceManager {
 		{ AudioClipID.SIREN_4,         "sound/pacman/siren_4.mp3", 1.0 }, 
 		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
 	};
+
+	public final ResourceBundle messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
+
+	public final Font arcadeFont      = font("fonts/emulogic.ttf", 8);
+	public final Font handwritingFont = font("fonts/RockSalt-Regular.ttf", 8);
+	public final Font helpFont        = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+	
+	public final Background wallpaper2D                = imageBackground("graphics/pacman_wallpaper.png");
+	public final Color      wallpaperColor             = Color.rgb(72, 78, 135);
+	public final Spritesheet spritesheetMsPacManGame   = new Spritesheet(image("graphics/mspacman/sprites.png"), 16);
+	public final Image       iconMsPacManGame          = image("graphics/icons/mspacman.png");
+	public final Image       flashingMazesMsPacManGame = image("graphics/mspacman/mazes-flashing.png");
+	public final Image       logoMsPacManGame          = image("graphics/mspacman/midway.png");
+	public final Spritesheet spritesheetPacManGame     = new Spritesheet(image("graphics/pacman/sprites.png"), 16);
+	public final Image iconPacManGame                  = image("graphics/icons/pacman.png");
+	public final Image fullMazePacManGame              = image("graphics/pacman/maze_full.png");
+	public final Image emptyMazePacManGame             = image("graphics/pacman/maze_empty.png");
+	public final Image flashingMazePacManGame          = image("graphics/pacman/maze_empty_flashing.png");
+
+	public final AudioClip voiceExplainKeys            = audioClip("sound/voice/press-key.mp3");
+	public final AudioClip voiceAutopilotOff           = audioClip("sound/voice/autopilot-off.mp3");
+	public final AudioClip voiceAutopilotOn            = audioClip("sound/voice/autopilot-on.mp3");
+	public final AudioClip voiceImmunityOff            = audioClip("sound/voice/immunity-off.mp3");
+	public final AudioClip voiceImmunityOn             = audioClip("sound/voice/immunity-on.mp3");
+	public final GameSounds soundsMsPacMan             = new GameSounds();
+	public final GameSounds soundsPacMan               = new GameSounds();
 	//@formatter:on
 
-	public final Image iconPacManGame;
-	public final Spritesheet spritesheetPacManGame;
-	public final Image fullMazePacManGame;
-	public final Image emptyMazePacManGame;
-	public final Image flashingMazePacManGame;
-
-	public final Image iconMsPacManGame;
-	public final Spritesheet spritesheetMsPacManGame;
-	public final Image logoMsPacManGame;
-	public final Image flashingMazesMsPacManGame;
-
-	public final Font arcadeFont;
-	public final Font handwritingFont;
-	public final Font helpFont;
-
-	public final ResourceBundle messages;
-
-	public final AudioClip voiceExplainKeys;
-	public final AudioClip voiceAutopilotOff;
-	public final AudioClip voiceAutopilotOn;
-	public final AudioClip voiceImmunityOff;
-	public final AudioClip voiceImmunityOn;
-
-	public final Background wallpaper2D;
-	public final Color wallpaperColor = Color.rgb(72, 78, 135);
-
-	public final GameSounds soundsMsPacMan = new GameSounds();
-	public final GameSounds soundsPacMan = new GameSounds();
+	public static Font font(Font font, double size) {
+		return Font.font(font.getFamily(), size);
+	}
 
 	public Game2dAssets() {
 		super("/de/amr/games/pacman/ui/fx/", Game2dAssets.class);
-
-		long start = System.nanoTime();
-
-		//@formatter:off
-		arcadeFont = font("fonts/emulogic.ttf", 8);
-		handwritingFont = font("fonts/RockSalt-Regular.ttf", 8);
-		helpFont = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
-
-		wallpaper2D = imageBackground("graphics/pacman_wallpaper.png");
-
-		iconMsPacManGame = image("graphics/icons/mspacman.png");
-		spritesheetMsPacManGame = new Spritesheet(image("graphics/mspacman/sprites.png"), 16);
-		flashingMazesMsPacManGame = image("graphics/mspacman/mazes-flashing.png");
-		logoMsPacManGame = image("graphics/mspacman/midway.png");
-
-		iconPacManGame = image("graphics/icons/pacman.png");
-		spritesheetPacManGame = new Spritesheet(image("graphics/pacman/sprites.png"), 16);
-		fullMazePacManGame = image("graphics/pacman/maze_full.png");
-		emptyMazePacManGame = image("graphics/pacman/maze_empty.png");
-		flashingMazePacManGame = image("graphics/pacman/maze_empty_flashing.png");
-
-		// Texts
-		messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
-
-		// Sound
-		voiceExplainKeys = audioClip("sound/voice/press-key.mp3");
-		voiceAutopilotOff = audioClip("sound/voice/autopilot-off.mp3");
-		voiceAutopilotOn = audioClip("sound/voice/autopilot-on.mp3");
-		voiceImmunityOff = audioClip("sound/voice/immunity-off.mp3");
-		voiceImmunityOn = audioClip("sound/voice/immunity-on.mp3");
 		soundsMsPacMan.init(audioClipsMsPacman, false);
 		soundsPacMan.init(audioClipsPacman, false);
-		//@formatter:on
-
-		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
-	}
-
-	public Font font(Font font, double size) {
-		return Font.font(font.getFamily(), size);
 	}
 
 	public GameSounds gameSounds(GameVariant variant) {

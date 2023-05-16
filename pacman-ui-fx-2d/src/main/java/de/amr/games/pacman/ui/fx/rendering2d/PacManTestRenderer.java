@@ -42,6 +42,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -59,7 +60,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public Font screenFont(double size) {
-		return Game2d.assets.font(Game2d.assets.arcadeFont, size);
+		return Game2dAssets.font(Game2d.assets.arcadeFont, size);
 	}
 
 	@Override
