@@ -23,9 +23,12 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.util;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Selects entries randomly from a list without repetitions.
@@ -33,6 +36,16 @@ import java.util.List;
  * @author Armin Reichert
  */
 public class Picker<T> {
+
+	public static Picker<String> fromBundle(ResourceBundle bundle, String prefix) {
+		checkNotNull(bundle);
+		return new Picker<>(bundle.keySet().stream()//
+				.filter(key -> key.startsWith(prefix))//
+				.sorted()//
+				.map(bundle::getString)//
+				.toArray(String[]::new));
+	}
+
 	private final List<T> entries;
 	private int current;
 

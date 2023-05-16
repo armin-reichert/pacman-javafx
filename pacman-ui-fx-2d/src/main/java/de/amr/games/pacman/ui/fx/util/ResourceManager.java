@@ -82,15 +82,6 @@ public class ResourceManager {
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
-	public static Picker<String> createPicker(ResourceBundle bundle, String prefix) {
-		checkNotNull(bundle);
-		return new Picker<>(bundle.keySet().stream()//
-				.filter(key -> key.startsWith(prefix))//
-				.sorted()//
-				.map(bundle::getString)//
-				.toArray(String[]::new));
-	}
-
 	private final Class<?> callerClass;
 	private final String rootDir;
 

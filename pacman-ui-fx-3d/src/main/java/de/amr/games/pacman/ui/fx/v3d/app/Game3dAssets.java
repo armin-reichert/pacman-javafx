@@ -47,11 +47,11 @@ public class Game3dAssets extends ResourceManager {
 	//@formatter:off
 	public final ResourceBundle messages              = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 
-	private final Picker<String> pickerReadyPacMan    = ResourceManager.createPicker(messages, "pacman.ready");
-	private final Picker<String> pickerReadyMsPacMan  = ResourceManager.createPicker(messages, "mspacman.ready");
-	private final Picker<String> pickerCheating       = ResourceManager.createPicker(messages, "cheating");
-	private final Picker<String> pickerLevelComplete  = ResourceManager.createPicker(messages, "level.complete");
-	private final Picker<String> pickerGameOver       = ResourceManager.createPicker(messages, "game.over");
+	private final Picker<String> pickerReadyPacMan    = Picker.fromBundle(messages, "pacman.ready");
+	private final Picker<String> pickerReadyMsPacMan  = Picker.fromBundle(messages, "mspacman.ready");
+	private final Picker<String> pickerCheating       = Picker.fromBundle(messages, "cheating");
+	private final Picker<String> pickerLevelComplete  = Picker.fromBundle(messages, "level.complete");
+	private final Picker<String> pickerGameOver       = Picker.fromBundle(messages, "game.over");
 
 	public final Model3D pacModel3D                   = new Model3D(urlFromRelPath("model3D/pacman.obj"));
 	public final Model3D ghostModel3D                 = new Model3D(urlFromRelPath("model3D/ghost.obj"));
