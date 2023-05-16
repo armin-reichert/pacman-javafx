@@ -28,8 +28,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.Picker;
@@ -39,65 +37,59 @@ import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
+/**
+ * @author Armin Reichert
+ */
 public class Game3dAssets extends ResourceManager {
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
-	public final Model3D pacModel3D;
-	public final Model3D ghostModel3D;
-	public final Model3D pelletModel3D;
-	public final Background wallpaper3D;
+	//@formatter:off
+	public final ResourceBundle messages              = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
+
+	private final Picker<String> pickerReadyPacMan    = ResourceManager.createPicker(messages, "pacman.ready");
+	private final Picker<String> pickerReadyMsPacMan  = ResourceManager.createPicker(messages, "mspacman.ready");
+	private final Picker<String> pickerCheating       = ResourceManager.createPicker(messages, "cheating");
+	private final Picker<String> pickerLevelComplete  = ResourceManager.createPicker(messages, "level.complete");
+	private final Picker<String> pickerGameOver       = ResourceManager.createPicker(messages, "game.over");
+
+	public final Model3D pacModel3D                   = new Model3D(urlFromRelPath("model3D/pacman.obj"));
+	public final Model3D ghostModel3D                 = new Model3D(urlFromRelPath("model3D/ghost.obj"));
+	public final Model3D pelletModel3D                = new Model3D(urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
+
+	public final Background wallpaper3D               = imageBackground("graphics/sky.png");
+	
 	public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
-	public final ResourceBundle messages;
-	private final Picker<String> messagePickerReadyPacMan;
-	private final Picker<String> messagePickerReadyMsPacMan;
-	private final Picker<String> messagePickerCheating;
-	private final Picker<String> messagePickerLevelComplete;
-	private final Picker<String> messagePickerGameOver;
-
-	public Game3dAssets() {
-		super("/de/amr/games/pacman/ui/fx/v3d/", Game3dAssets.class);
-
-		long start = System.nanoTime();
-
-		messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
-		messagePickerReadyPacMan = ResourceManager.createPicker(messages, "pacman.ready");
-		messagePickerReadyMsPacMan = ResourceManager.createPicker(messages, "mspacman.ready");
-		messagePickerCheating = ResourceManager.createPicker(messages, "cheating");
-		messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
-		messagePickerGameOver = ResourceManager.createPicker(messages, "game.over");
-
-		wallpaper3D = imageBackground("graphics/sky.png");
+	{
 		floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 		floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 		floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
 		floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
+	}
+	//@formatter:on
 
-		pacModel3D = new Model3D(urlFromRelPath("model3D/pacman.obj"));
-		ghostModel3D = new Model3D(urlFromRelPath("model3D/ghost.obj"));
-		pelletModel3D = new Model3D(urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
-
-		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
+	public Game3dAssets() {
+		super("/de/amr/games/pacman/ui/fx/v3d/", Game3dAssets.class);
 	}
 
 	public String pickFunnyReadyMessage(GameVariant gameVariant) {
 		return switch (gameVariant) {
-		case MS_PACMAN -> messagePickerReadyMsPacMan.next();
-		case PACMAN -> messagePickerReadyPacMan.next();
+		case MS_PACMAN -> pickerReadyMsPacMan.next();
+		case PACMAN -> pickerReadyPacMan.next();
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 	}
 
 	public String pickCheatingMessage() {
-		return messagePickerCheating.next();
+		return pickerCheating.next();
 	}
 
 	public String pickGameOverMessage() {
-		return messagePickerGameOver.next();
+		return pickerGameOver.next();
 	}
 
 	public String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(messagePickerLevelComplete.next(), fmtMessage(messages, "level_complete", levelNumber));
+		return "%s%n%n%s".formatted(pickerLevelComplete.next(), fmtMessage(messages, "level_complete", levelNumber));
 	}
 
 	private PhongMaterial createFloorTexture(String textureBase, String ext) {
