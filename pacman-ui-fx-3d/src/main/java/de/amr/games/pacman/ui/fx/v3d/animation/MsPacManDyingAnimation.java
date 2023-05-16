@@ -24,10 +24,11 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -35,54 +36,29 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class HipSwaying implements WalkingAnimation {
+public class MsPacManDyingAnimation implements DyingAnimation {
 
-	private static final short DEFAULT_ANGLE_FROM = -20;
-	private static final short DEFAULT_ANGLE_TO = 20;
-	private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
+	private final Animation animation;
 
-	private final Pac pac;
-	private final RotateTransition animation;
-
-	public HipSwaying(Pac pac, Node node) {
-		this.pac = pac;
-		animation = new RotateTransition(DEFAULT_DURATION, node);
-		animation.setAxis(Rotate.Z_AXIS);
-		animation.setCycleCount(Animation.INDEFINITE);
-		animation.setAutoReverse(true);
-		animation.setInterpolator(Interpolator.EASE_BOTH);
-		setPowerWalking(false);
+	public MsPacManDyingAnimation(Node node) {
+		var spin = new RotateTransition(Duration.seconds(0.5), node);
+		spin.setAxis(Rotate.X_AXIS);
+		spin.setFromAngle(0);
+		spin.setToAngle(360);
+		spin.setInterpolator(Interpolator.LINEAR);
+		spin.setCycleCount(4);
+		spin.setRate(2);
+		//@formatter:off
+		animation = new SequentialTransition(
+			Ufx.pauseSeconds(0.5),
+			spin,
+			Ufx.pauseSeconds(2)
+		);
+		//@formatter:on
 	}
 
 	@Override
-	public RotateTransition animation() {
+	public Animation animation() {
 		return animation;
-	}
-
-	@Override
-	public void setPowerWalking(boolean power) {
-		double amplification = power ? 1.5 : 1;
-		double rate = power ? 2 : 1;
-		animation.stop();
-		animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-		animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-		animation.setRate(rate);
-	}
-
-	@Override
-	public void walk() {
-		if (pac.isStandingStill()) {
-			hold();
-			animation.getNode().setRotate(0);
-			return;
-		}
-		animation.play();
-	}
-
-	@Override
-	public void hold() {
-		animation.stop();
-		animation.getNode().setRotationAxis(animation.getAxis());
-		animation.getNode().setRotate(0);
 	}
 }

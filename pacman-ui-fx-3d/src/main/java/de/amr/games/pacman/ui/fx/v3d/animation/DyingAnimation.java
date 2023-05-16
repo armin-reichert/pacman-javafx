@@ -22,20 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.v3d.entity;
+package de.amr.games.pacman.ui.fx.v3d.animation;
 
 import javafx.animation.Animation;
 
-/**
- * @author Armin Reichert
- */
-public interface WalkingAnimation {
-
-	void walk();
-
-	void hold();
-
-	void setPowerWalking(boolean power);
+public interface DyingAnimation {
 
 	Animation animation();
 }

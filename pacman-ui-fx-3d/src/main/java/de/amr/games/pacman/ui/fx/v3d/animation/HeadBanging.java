@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.v3d.entity.WalkingAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

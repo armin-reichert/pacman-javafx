@@ -36,19 +36,15 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.v3d.animation.DyingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
+import de.amr.games.pacman.ui.fx.v3d.animation.MsPacManDyingAnimation;
+import de.amr.games.pacman.ui.fx.v3d.animation.PacManDyingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
+import de.amr.games.pacman.ui.fx.v3d.animation.WalkingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -61,7 +57,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 
 /**
  * 3D-representation of Pac-Man and Ms. Pac-Man.
@@ -76,86 +71,6 @@ public class Pac3D {
 	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
 	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
 	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
-
-	private static class MsPacManDyingAnimation implements DyingAnimation {
-
-		private final Animation animation;
-
-		public MsPacManDyingAnimation(Node node) {
-			var spin = new RotateTransition(Duration.seconds(0.5), node);
-			spin.setAxis(Rotate.X_AXIS);
-			spin.setFromAngle(0);
-			spin.setToAngle(360);
-			spin.setInterpolator(Interpolator.LINEAR);
-			spin.setCycleCount(4);
-			spin.setRate(2);
-			//@formatter:off
-			animation = new SequentialTransition(
-				Ufx.pauseSeconds(0.5),
-				spin,
-				Ufx.pauseSeconds(2)
-			);
-			//@formatter:on
-		}
-
-		@Override
-		public Animation animation() {
-			return animation;
-		}
-	}
-
-	private static class PacManDyingAnimation implements DyingAnimation {
-
-		private final Animation animation;
-		private final RotateTransition spinning;
-
-		public PacManDyingAnimation(Pac3D pac3D) {
-			var totalDuration = Duration.seconds(1.5);
-			var numSpins = 12;
-
-			spinning = new RotateTransition(totalDuration.divide(numSpins), pac3D.root);
-			spinning.setAxis(Rotate.Z_AXIS);
-			spinning.setByAngle(360);
-			spinning.setCycleCount(numSpins);
-			spinning.setInterpolator(Interpolator.LINEAR);
-			spinning.setRate(1.0); // TODO
-
-			var shrinking = new ScaleTransition(totalDuration, pac3D.root);
-			shrinking.setToX(0.75);
-			shrinking.setToY(0.75);
-			shrinking.setToZ(0.0);
-
-			var falling = new TranslateTransition(totalDuration, pac3D.root);
-			falling.setToZ(4);
-
-			animation = new SequentialTransition( //
-					Ufx.actionAfterSeconds(0, () -> clearOrientation(pac3D)), //
-					Ufx.pauseSeconds(0.5), //
-					new ParallelTransition(spinning, shrinking, falling), //
-					Ufx.actionAfterSeconds(0.5, () -> restoreOrientation(pac3D)) //
-			);
-
-			animation.setOnFinished(e -> {
-				pac3D.root.setVisible(false);
-				pac3D.root.setTranslateZ(0);
-			});
-		}
-
-		private void clearOrientation(Pac3D pac3D) {
-			var pacNode = pac3D.root.getChildren().get(0);
-			pacNode.getTransforms().remove(pac3D.orientation);
-		}
-
-		private void restoreOrientation(Pac3D pac3D) {
-			var pacNode = pac3D.root.getChildren().get(0);
-			pacNode.getTransforms().add(pac3D.orientation);
-		}
-
-		@Override
-		public Animation animation() {
-			return animation;
-		}
-	}
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
@@ -287,7 +202,7 @@ public class Pac3D {
 				walkingAnimation.animation().getStatus());
 	}
 
-	public Node getRoot() {
+	public Group getRoot() {
 		return root;
 	}
 
