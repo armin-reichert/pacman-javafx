@@ -240,19 +240,19 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2dActions.ADD_CREDIT) && !context.hasCredit()) {
+		if (Keyboard.pressed(Game2dActions.KEY_ADD_CREDIT) && !context.hasCredit()) {
 			Game2d.actions.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(Game3dActions.PREV_CAMERA)) {
 			Game3d.actions.selectPrevPerspective();
 		} else if (Keyboard.pressed(Game3dActions.NEXT_CAMERA)) {
 			Game3d.actions.selectNextPerspective();
-		} else if (Keyboard.pressed(Game2dActions.CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_EAT_ALL)) {
 			Game2d.actions.cheatEatAllPellets();
-		} else if (Keyboard.pressed(Game2dActions.CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_ADD_LIVES)) {
 			Game2d.actions.cheatAddLives(3);
-		} else if (Keyboard.pressed(Game2dActions.CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_NEXT_LEVEL)) {
 			Game2d.actions.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(Game2dActions.CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_KILL_GHOSTS)) {
 			Game2d.actions.cheatKillAllEatableGhosts();
 		}
 	}
