@@ -92,7 +92,7 @@ public class Game3d extends Application {
 		stage.setFullScreen(Game3d.cfg.fullScreen);
 		Game3d.ui = new Game3dUI(Game3d.cfg.variant, stage, Game3d.cfg.zoom * 28 * 8, Game3d.cfg.zoom * 36 * 8);
 		Game2d.actions = new Game2dActions(Game3d.ui);
-		Game3d.actions = new Game3dActions();
+		Game3d.actions = new Game3dActions(Game3d.ui);
 		Game3d.ui.init(Game3d.cfg);
 		Game3d.ui.startClockAndShowStage();
 		Game2d.actions.reboot();

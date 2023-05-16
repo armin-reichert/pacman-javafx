@@ -242,14 +242,14 @@ public class PlayScene3D implements GameScene {
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Game2dActions.KEY_ADD_CREDIT) && !context.hasCredit()) {
 			Game2d.actions.addCredit(); // in demo mode, allow adding credit
-		} else if (Keyboard.pressed(Game3dActions.PREV_CAMERA)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_PREV_CAMERA)) {
 			Game3d.actions.selectPrevPerspective();
-		} else if (Keyboard.pressed(Game3dActions.NEXT_CAMERA)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_NEXT_CAMERA)) {
 			Game3d.actions.selectNextPerspective();
 		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_EAT_ALL)) {
 			Game2d.actions.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_ADD_LIVES)) {
-			Game2d.actions.cheatAddLives(3);
+			Game2d.actions.cheatAddLives();
 		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_NEXT_LEVEL)) {
 			Game2d.actions.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(Game2dActions.KEY_CHEAT_KILL_GHOSTS)) {
@@ -411,8 +411,7 @@ public class PlayScene3D implements GameScene {
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
-							//TODO use 3d-only assets
-							Game2d.actions.showFlashMessageSeconds(2, Game3d.assets.pickLevelCompleteMessage(level.number()));
+							Game3d.ui.showFlashMessageSeconds(2, Game3d.assets.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -425,8 +424,7 @@ public class PlayScene3D implements GameScene {
 		case GAME_OVER -> {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
-			// TODO use 3d-only assets
-			Game2d.actions.showFlashMessageSeconds(3, Game3d.assets.pickGameOverMessage());
+			Game3d.ui.showFlashMessageSeconds(3, Game3d.assets.pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}

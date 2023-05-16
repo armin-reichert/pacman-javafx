@@ -237,12 +237,12 @@ public class Game3dUI extends Game2dUI {
 	@Override
 	protected void handleKeyboardInput() {
 		super.handleKeyboardInput();
-		if (Keyboard.pressed(Game3dActions.TOGGLE_3D_ENABLED)) {
+		if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_3D_ENABLED)) {
 			toggle3DEnabled();
-		} else if (Keyboard.pressed(Game3dActions.TOGGLE_DASHBOARD_VISIBLE)
-				|| Keyboard.pressed(Game3dActions.TOGGLE_DASHBOARD_VISIBLE_2)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_DASHBOARD_VISIBLE)
+				|| Keyboard.pressed(Game3dActions.KEY_TOGGLE_DASHBOARD_VISIBLE_2)) {
 			Game3d.actions.toggleDashboardVisible();
-		} else if (Keyboard.pressed(Game3dActions.TOGGLE_PIP_VIEW_VISIBLE)) {
+		} else if (Keyboard.pressed(Game3dActions.KEY_TOGGLE_PIP_VIEW_VISIBLE)) {
 			Game3d.actions.togglePipVisibility();
 		}
 	}
@@ -253,9 +253,8 @@ public class Game3dUI extends Game2dUI {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
-			// if for example toggle action occurs in intro scene, show message indicating which variant is used
 			var message = fmtMessage(Game3d.assets.messages, Game3d.d3_enabledPy.get() ? "use_3D_scene" : "use_2D_scene");
-			Game2d.actions.showFlashMessage(message);
+			Game3d.ui.showFlashMessage(message);
 		}
 	}
 

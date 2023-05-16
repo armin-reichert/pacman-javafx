@@ -390,6 +390,14 @@ public class Game2dUI implements GameEventListener {
 		}
 	}
 
+	public void showFlashMessage(String message, Object... args) {
+		showFlashMessageSeconds(1, message, args);
+	}
+
+	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
+		flashMessageView.showMessage(String.format(message, args), seconds);
+	}
+
 	public void playVoice(AudioClip clip) {
 		playVoice(clip, 0);
 	}

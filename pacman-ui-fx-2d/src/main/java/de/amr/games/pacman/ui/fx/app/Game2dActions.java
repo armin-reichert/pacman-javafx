@@ -39,34 +39,36 @@ import javafx.scene.input.KeyCodeCombination;
 
 public class Game2dActions {
 
-	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL = alt(KeyCode.E);
-	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES = alt(KeyCode.L);
-	public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL = alt(KeyCode.N);
+	//@formatter:off
+	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
+	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES   = alt(KeyCode.L);
+	public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL  = alt(KeyCode.N);
 	public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS = alt(KeyCode.X);
 
-	public static final KeyCodeCombination KEY_AUTOPILOT = alt(KeyCode.A);
-	public static final KeyCodeCombination KEY_DEBUG_INFO = alt(KeyCode.D);
-	public static final KeyCodeCombination KEY_IMMUNITIY = alt(KeyCode.I);
+	public static final KeyCodeCombination KEY_AUTOPILOT         = alt(KeyCode.A);
+	public static final KeyCodeCombination KEY_DEBUG_INFO        = alt(KeyCode.D);
+	public static final KeyCodeCombination KEY_IMMUNITIY         = alt(KeyCode.I);
 
-	public static final KeyCodeCombination KEY_PAUSE = just(KeyCode.P);
-	public static final KeyCodeCombination KEY_PAUSE_STEP = shift(KeyCode.P);
-	public static final KeyCodeCombination KEY_SINGLE_STEP = just(KeyCode.SPACE);
-	public static final KeyCodeCombination KEY_TEN_STEPS = shift(KeyCode.SPACE);
+	public static final KeyCodeCombination KEY_PAUSE             = just(KeyCode.P);
+	public static final KeyCodeCombination KEY_PAUSE_STEP        = shift(KeyCode.P);
+	public static final KeyCodeCombination KEY_SINGLE_STEP       = just(KeyCode.SPACE);
+	public static final KeyCodeCombination KEY_TEN_STEPS         = shift(KeyCode.SPACE);
 	public static final KeyCodeCombination KEY_SIMULATION_FASTER = alt(KeyCode.PLUS);
 	public static final KeyCodeCombination KEY_SIMULATION_SLOWER = alt(KeyCode.MINUS);
 	public static final KeyCodeCombination KEY_SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
 
-	public static final KeyCodeCombination KEY_START_GAME = just(KeyCode.DIGIT1);
-	public static final KeyCodeCombination KEY_ADD_CREDIT = just(KeyCode.DIGIT5);
+	public static final KeyCodeCombination KEY_START_GAME        = just(KeyCode.DIGIT1);
+	public static final KeyCodeCombination KEY_ADD_CREDIT        = just(KeyCode.DIGIT5);
 
-	public static final KeyCodeCombination KEY_QUIT = just(KeyCode.Q);
-	public static final KeyCodeCombination KEY_TEST_LEVELS = alt(KeyCode.T);
-	public static final KeyCodeCombination KEY_SELECT_VARIANT = just(KeyCode.V);
-	public static final KeyCodeCombination KEY_PLAY_CUTSCENES = alt(KeyCode.Z);
+	public static final KeyCodeCombination KEY_QUIT              = just(KeyCode.Q);
+	public static final KeyCodeCombination KEY_TEST_LEVELS       = alt(KeyCode.T);
+	public static final KeyCodeCombination KEY_SELECT_VARIANT    = just(KeyCode.V);
+	public static final KeyCodeCombination KEY_PLAY_CUTSCENES    = alt(KeyCode.Z);
 
-	public static final KeyCodeCombination KEY_SHOW_HELP = just(KeyCode.H);
-	public static final KeyCodeCombination KEY_BOOT = just(KeyCode.F3);
-	public static final KeyCodeCombination KEY_FULLSCREEN = just(KeyCode.F11);
+	public static final KeyCodeCombination KEY_SHOW_HELP         = just(KeyCode.H);
+	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
+	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
+	//@formatter:on
 
 	private final Game2dUI ui;
 
@@ -78,14 +80,6 @@ public class Game2dActions {
 		ui.stopVoice();
 	}
 
-	public void showFlashMessage(String message, Object... args) {
-		showFlashMessageSeconds(1, message, args);
-	}
-
-	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		ui.flashMessageView().showMessage(String.format(message, args), seconds);
-	}
-
 	public void startGame() {
 		if (ui.game().hasCredit()) {
 			ui.stopVoice();
@@ -95,7 +89,7 @@ public class Game2dActions {
 
 	public void startCutscenesTest() {
 		ui.gameController().startCutscenesTest();
-		showFlashMessage("Cut scenes");
+		ui.showFlashMessage("Cut scenes");
 	}
 
 	public void restartIntro() {
@@ -160,13 +154,13 @@ public class Game2dActions {
 		int newFramerate = ui.clock().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
 			ui.clock().targetFrameratePy.set(newFramerate);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
+			ui.showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 		}
 	}
 
 	public void resetSimulationSpeed() {
 		ui.clock().targetFrameratePy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, "%dHz".formatted(ui.clock().targetFrameratePy.get()));
+		ui.showFlashMessageSeconds(0.75, "%dHz".formatted(ui.clock().targetFrameratePy.get()));
 	}
 
 	public void selectNextGameVariant() {
@@ -179,7 +173,7 @@ public class Game2dActions {
 		ui.gameController().toggleAutoControlled();
 		var auto = ui.gameController().isAutoControlled();
 		String message = fmtMessage(Game2d.assets.messages, auto ? "autopilot_on" : "autopilot_off");
-		showFlashMessage(message);
+		ui.showFlashMessage(message);
 		ui.updateHelpContent();
 		ui.playVoice(auto ? Game2d.assets.voiceAutopilotOn : Game2d.assets.voiceAutopilotOff);
 	}
@@ -188,7 +182,7 @@ public class Game2dActions {
 		ui.game().setImmune(!ui.game().isImmune());
 		var immune = ui.game().isImmune();
 		String message = fmtMessage(Game2d.assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
-		showFlashMessage(message);
+		ui.showFlashMessage(message);
 		ui.updateHelpContent();
 		ui.playVoice(immune ? Game2d.assets.voiceImmunityOn : Game2d.assets.voiceImmunityOff);
 	}
@@ -196,14 +190,14 @@ public class Game2dActions {
 	public void startLevelTestMode() {
 		if (ui.gameController().state() == GameState.INTRO) {
 			ui.gameController().restart(GameState.LEVEL_TEST);
-			showFlashMessage("Level TEST MODE");
+			ui.showFlashMessage("Level TEST MODE");
 		}
 	}
 
 	public void cheatAddLives() {
 		int newLivesCount = ui.game().lives() + 3;
 		ui.game().setLives(newLivesCount);
-		showFlashMessage(fmtMessage(Game2d.assets.messages, "cheat_add_lives", newLivesCount));
+		ui.showFlashMessage(fmtMessage(Game2d.assets.messages, "cheat_add_lives", newLivesCount));
 	}
 
 	public void cheatEatAllPellets() {
