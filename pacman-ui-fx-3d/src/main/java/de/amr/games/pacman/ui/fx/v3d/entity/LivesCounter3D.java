@@ -101,9 +101,9 @@ public class LivesCounter3D {
 				pacShape.setRotationAxis(Rotate.Z_AXIS);
 				pacShape.setRotate(180);
 			}
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(Game3d.d3_drawModePy);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(Game3d.d3_drawModePy);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
 
 			var plateRotation = new RotateTransition(Duration.seconds(20.0), pacShape);
 			plateRotation.setAxis(Rotate.Z_AXIS);
@@ -140,7 +140,7 @@ public class LivesCounter3D {
 		plate.setTranslateZ(-pillarHeight - plateThickness);
 		plate.setRotationAxis(Rotate.X_AXIS);
 		plate.setRotate(90);
-		plate.drawModeProperty().bind(Game3d.d3_drawModePy);
+		plate.drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
 
 		var pillar = new Cylinder(1, pillarHeight);
 		pillar.setMaterial(pillarMaterial);
@@ -148,7 +148,7 @@ public class LivesCounter3D {
 		pillar.setTranslateZ(-0.5 * pillarHeight);
 		pillar.setRotationAxis(Rotate.X_AXIS);
 		pillar.setRotate(90);
-		pillar.drawModeProperty().bind(Game3d.d3_drawModePy);
+		pillar.drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
 
 		standsGroup.getChildren().addAll(plate, pillar);
 	}

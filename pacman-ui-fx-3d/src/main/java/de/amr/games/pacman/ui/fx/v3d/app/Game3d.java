@@ -59,24 +59,23 @@ import javafx.stage.Stage;
 public class Game3d extends Application {
 
 	//@formatter:off
-	public static final DoubleProperty              pipOpacityPy            = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty              pipHeightPy             = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
+	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
+	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
 
-	public static final BooleanProperty             d3_axesVisiblePy        = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<DrawMode>    d3_drawModePy           = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final BooleanProperty             d3_enabledPy            = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Color>       d3_floorColorPy         = new SimpleObjectProperty<>(Color.grayRgb(0x60));
-	public static final StringProperty              d3_floorTexturePy       = new SimpleStringProperty("Knobs & Bumps");
-	public static final BooleanProperty             d3_floorTextureRandomPy = new SimpleBooleanProperty(false);
-	public static final BooleanProperty             d3_foodOscillationPy    = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Color>       d3_lightColorPy         = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-	public static final DoubleProperty              d3_mazeWallHeightPy     = new SimpleDoubleProperty(1.75);
-	public static final DoubleProperty              d3_mazeWallThicknessPy  = new SimpleDoubleProperty(1.25);
-	public static final BooleanProperty             d3_pacLightedPy         = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Perspective> d3_perspectivePy        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty             d3_energizerExplodesPy  = new SimpleBooleanProperty(true);
+	public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x60));
+	public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("Knobs & Bumps");
+	public static final BooleanProperty             PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+	public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);
+	public static final DoubleProperty              PY_3D_WALL_THICKNESS     = new SimpleDoubleProperty(1.25);
+	public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
 
-	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
+	public static final BooleanProperty             PY_WOKE_PUSSY            = new SimpleBooleanProperty(false); 
 	//@formatter:on
 
 	//@formatter:off
@@ -137,20 +136,20 @@ public class Game3d extends Application {
 	}
 
 	public void selectNextPerspective() {
-		var next = Game3d.d3_perspectivePy.get().next();
-		Game3d.d3_perspectivePy.set(next);
+		var next = Game3d.PY_3D_PERSPECTIVE.get().next();
+		Game3d.PY_3D_PERSPECTIVE.set(next);
 		String perspectiveName = fmtMessage(Game3d.assets.messages, next.name());
 		ui.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
 	}
 
 	public void selectPrevPerspective() {
-		var prev = Game3d.d3_perspectivePy.get().prev();
-		Game3d.d3_perspectivePy.set(prev);
+		var prev = Game3d.PY_3D_PERSPECTIVE.get().prev();
+		Game3d.PY_3D_PERSPECTIVE.set(prev);
 		String perspectiveName = fmtMessage(Game3d.assets.messages, prev.name());
 		ui.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {
-		Game3d.d3_drawModePy.set(Game3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		Game3d.PY_3D_DRAW_MODE.set(Game3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 }

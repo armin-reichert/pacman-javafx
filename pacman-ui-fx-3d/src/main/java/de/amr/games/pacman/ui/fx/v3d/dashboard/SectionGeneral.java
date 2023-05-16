@@ -73,11 +73,11 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.clock().executeSteps(Game2d.simulationStepsPy.get(), true));
+		btnStep.setOnAction(e -> ui.clock().executeSteps(Game2d.PY_NUM_SIMULATION_STEPS.get(), true));
 
 		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, Game2d.PY_NUM_SIMULATION_STEPS.get());
 		spinnerSimulationSteps.valueProperty()
-				.addListener((obs, oldVal, newVal) -> Game2d.simulationStepsPy.set(newVal.intValue()));
+				.addListener((obs, oldVal, newVal) -> Game2d.PY_NUM_SIMULATION_STEPS.set(newVal.intValue()));
 
 		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
@@ -91,7 +91,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui.clock()::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle3DEnabled);
-		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.wokePussyMode));
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.PY_WOKE_PUSSY));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(Game2d.PY_SHOW_DEBUG_INFO));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.clock().timeMeasuredPy));
 	}
@@ -104,8 +104,8 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!ui.clock().pausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(Game2d.PY_NUM_SIMULATION_STEPS.get());
 		sliderTargetFPS.setValue(ui.clock().targetFrameratePy.get());
-		cbUsePlayScene3D.setSelected(Game3d.d3_enabledPy.get());
-		cbPoliticallyCorrect.setSelected(Game3d.wokePussyMode.get());
+		cbUsePlayScene3D.setSelected(Game3d.PY_3D_ENABLED.get());
+		cbPoliticallyCorrect.setSelected(Game3d.PY_WOKE_PUSSY.get());
 		cbTimeMeasured.setSelected(ui.clock().timeMeasuredPy.get());
 		cbDebugUI.setSelected(Game2d.PY_SHOW_DEBUG_INFO.get());
 	}

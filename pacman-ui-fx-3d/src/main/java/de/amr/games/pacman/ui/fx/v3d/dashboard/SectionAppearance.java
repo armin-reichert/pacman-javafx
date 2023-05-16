@@ -43,19 +43,19 @@ public class SectionAppearance extends Section {
 
 	public SectionAppearance(Game3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		pickerLightColor = addColorPicker("Light Color", Game3d.d3_lightColorPy.get());
-		pickerLightColor.setOnAction(e -> Game3d.d3_lightColorPy.set(pickerLightColor.getValue()));
-		pickerFloorColor = addColorPicker("Floor Color", Game3d.d3_floorColorPy.get());
-		pickerFloorColor.setOnAction(e -> Game3d.d3_floorColorPy.set(pickerFloorColor.getValue()));
+		pickerLightColor = addColorPicker("Light Color", Game3d.PY_3D_LIGHT_COLOR.get());
+		pickerLightColor.setOnAction(e -> Game3d.PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
+		pickerFloorColor = addColorPicker("Floor Color", Game3d.PY_3D_FLOOR_COLOR.get());
+		pickerFloorColor.setOnAction(e -> Game3d.PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
 		comboFloorTexture = addComboBox("Floor Texture", floorTextureComboBoxEntries());
-		comboFloorTexture.setOnAction(e -> Game3d.d3_floorTexturePy.set(comboFloorTexture.getValue()));
-		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Game3d.d3_floorTextureRandomPy));
+		comboFloorTexture.setOnAction(e -> Game3d.PY_3D_FLOOR_TEXTURE.set(comboFloorTexture.getValue()));
+		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Game3d.PY_3D_FLOOR_TEXTURE_RND));
 	}
 
 	@Override
 	public void update() {
-		comboFloorTexture.setValue(Game3d.d3_floorTexturePy.get());
-		cbFloorTextureRandom.setSelected(Game3d.d3_floorTextureRandomPy.get());
+		comboFloorTexture.setValue(Game3d.PY_3D_FLOOR_TEXTURE.get());
+		cbFloorTextureRandom.setSelected(Game3d.PY_3D_FLOOR_TEXTURE_RND.get());
 	}
 
 	private String[] floorTextureComboBoxEntries() {

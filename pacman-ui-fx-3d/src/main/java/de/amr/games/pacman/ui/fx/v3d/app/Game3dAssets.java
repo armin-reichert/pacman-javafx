@@ -94,7 +94,7 @@ public class Game3dAssets extends ResourceManager {
 
 	private PhongMaterial createFloorTexture(String textureBase, String ext) {
 		var material = textureMaterial(textureBase, ext, null, null);
-		material.diffuseColorProperty().bind(Game3d.d3_floorColorPy);
+		material.diffuseColorProperty().bind(Game3d.PY_3D_FLOOR_COLOR);
 		return material;
 	}
 
