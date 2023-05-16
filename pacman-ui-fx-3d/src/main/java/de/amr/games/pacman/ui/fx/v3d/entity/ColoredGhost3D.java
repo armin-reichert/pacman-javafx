@@ -46,6 +46,10 @@ import javafx.scene.transform.Rotate;
  */
 public class ColoredGhost3D {
 
+	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+	public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+
 	private final Group root;
 	private final Group eyesGroup;
 	private final Group dressGroup;
@@ -69,15 +73,15 @@ public class ColoredGhost3D {
 
 		this.coloring = coloring;
 
-		dressShape = new MeshView(model3D.mesh(GhostModel3D.MESH_ID_GHOST_DRESS));
+		dressShape = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
 		dressShape.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
 		dressColorPy.set(coloring.dress());
 
-		eyeballsShape = new MeshView(model3D.mesh(GhostModel3D.MESH_ID_GHOST_EYEBALLS));
+		eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
 		eyeballsShape.setMaterial(Ufx.createColorBoundMaterial(eyeballsColorPy));
 		eyeballsColorPy.set(coloring.eyeballs());
 
-		pupilsShape = new MeshView(model3D.mesh(GhostModel3D.MESH_ID_GHOST_PUPILS));
+		pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
 		pupilsShape.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
 		pupilsColorPy.set(coloring.pupils());
 

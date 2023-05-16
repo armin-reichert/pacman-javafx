@@ -47,13 +47,15 @@ import javafx.scene.transform.Scale;
  */
 public class Pellet3D implements Eatable3D {
 
+	public static final String MESH_ID_PELLET = "Fruit";
+
 	private final Shape3D shape;
 
 	public Pellet3D(Model3D model3D, double radius) {
 		requireNonNull(model3D);
 		requirePositive(radius, "Pellet3D radius must be positive but is %f");
 
-		shape = model3D.meshView(PelletModel3D.MESH_ID_PELLET);
+		shape = model3D.meshView(MESH_ID_PELLET);
 		shape.setRotationAxis(Rotate.Z_AXIS);
 		shape.setRotate(90);
 		shape.setUserData(this);

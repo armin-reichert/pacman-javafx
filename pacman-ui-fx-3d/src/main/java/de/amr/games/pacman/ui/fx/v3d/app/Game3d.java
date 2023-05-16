@@ -96,17 +96,14 @@ public class Game3d extends Application {
 
 	@Override
 	public void init() {
+		app = this;
 		Game2d.app = new Game2d();
-		Game2d.assets = new Game2dAssets();
 
-		Game3d.app = this;
-		Game3d.assets = new Game3dAssets();
-		Game3d.cfg = new Settings(getParameters().getNamed());
-
-		Game2d.assets.load();
-		Game3d.assets.load();
-
+		cfg = new Settings(getParameters().getNamed());
 		Logger.info("Game configuration: {}", Game3d.cfg);
+
+		Game2d.assets = new Game2dAssets();
+		Game3d.assets = new Game3dAssets();
 	}
 
 	@Override

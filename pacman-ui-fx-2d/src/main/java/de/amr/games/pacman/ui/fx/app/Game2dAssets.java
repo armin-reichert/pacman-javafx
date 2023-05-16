@@ -40,6 +40,9 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * @author Armin Reichert
+ */
 public class Game2dAssets extends ResourceManager {
 
 	public Image iconPacManGame;
@@ -117,9 +120,6 @@ public class Game2dAssets extends ResourceManager {
 
 	public Game2dAssets() {
 		super("/de/amr/games/pacman/ui/fx/", Game2dAssets.class);
-	}
-
-	public void load() {
 
 		long start = System.nanoTime();
 

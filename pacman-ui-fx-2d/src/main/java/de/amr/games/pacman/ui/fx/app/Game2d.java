@@ -103,17 +103,17 @@ public class Game2d extends Application {
 	//@formatter:on
 
 	public static Game2d app;;
-	public static Game2dAssets assets = new Game2dAssets();
+	public static Game2dAssets assets;
 	public static Game2dUI ui;
 
 	private Settings cfg = new Settings();
 
 	@Override
 	public void init() {
-		cfg.merge(getParameters().getNamed());
-		assets.load();
 		app = this;
+		cfg.merge(getParameters().getNamed());
 		Logger.info("Game configuration: {}", cfg);
+		assets = new Game2dAssets();
 	}
 
 	@Override

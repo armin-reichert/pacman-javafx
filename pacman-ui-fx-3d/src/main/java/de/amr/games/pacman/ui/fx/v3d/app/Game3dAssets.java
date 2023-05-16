@@ -32,9 +32,8 @@ import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.v3d.entity.GhostModel3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.PacModel3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.PelletModel3D;
+import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -44,8 +43,8 @@ public class Game3dAssets extends ResourceManager {
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
 	public PacModel3D pacModel3D;
-	public GhostModel3D ghostModel3D;
-	public PelletModel3D pelletModel3D;
+	public Model3D ghostModel3D;
+	public Model3D pelletModel3D;
 	public Background wallpaper3D;
 	public Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 	public ResourceBundle messages;
@@ -55,9 +54,7 @@ public class Game3dAssets extends ResourceManager {
 
 	public Game3dAssets() {
 		super("/de/amr/games/pacman/ui/fx/v3d/", Game3dAssets.class);
-	}
 
-	public void load() {
 		long start = System.nanoTime();
 
 		messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
@@ -71,9 +68,9 @@ public class Game3dAssets extends ResourceManager {
 		floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
 		floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
 
-		pacModel3D = new PacModel3D();
-		ghostModel3D = new GhostModel3D();
-		pelletModel3D = new PelletModel3D();
+		pacModel3D = new PacModel3D(urlFromRelPath("model3D/pacman.obj"));
+		ghostModel3D = new Model3D(urlFromRelPath("model3D/ghost.obj"));
+		pelletModel3D = new Model3D(urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
