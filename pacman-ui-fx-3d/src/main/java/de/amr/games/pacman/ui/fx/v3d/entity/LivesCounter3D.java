@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -57,6 +59,14 @@ import javafx.util.Duration;
  */
 public class LivesCounter3D {
 
+	public static LivesCounter3D of(PacManColoring colors) {
+		return new LivesCounter3D(() -> Pac3D.createPacManGroup(Game3d.assets.pacModel3D, colors), false);
+	}
+
+	public static LivesCounter3D of(MsPacManColoring colors) {
+		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(Game3d.assets.pacModel3D, colors), true);
+	}
+
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
@@ -74,7 +84,7 @@ public class LivesCounter3D {
 
 	private final List<Animation> animations = new ArrayList<>();
 
-	public LivesCounter3D(Supplier<Group> pacShapeProducer, boolean lookRight) {
+	private LivesCounter3D(Supplier<Group> pacShapeProducer, boolean lookRight) {
 		requireNonNull(pacShapeProducer);
 
 		pillarMaterial = ResourceManager.coloredMaterial(Color.rgb(100, 100, 100));

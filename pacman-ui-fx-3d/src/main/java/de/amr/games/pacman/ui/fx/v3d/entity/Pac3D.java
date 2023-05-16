@@ -197,6 +197,8 @@ public class Pac3D {
 		var pac3D = new Pac3D(pacGroup, pacMan, colors.headColor());
 		pac3D.walkingAnimation = new HeadBanging(pac3D.root);
 		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
+		pac3D.drawModePy.bind(Game3d.d3_drawModePy);
+
 		return pac3D;
 	}
 
@@ -209,6 +211,8 @@ public class Pac3D {
 		var pac3D = new Pac3D(pacGroup, msPacMan, colors.headColor());
 		pac3D.walkingAnimation = new HipSwaying(pac3D.root);
 		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
+		pac3D.drawModePy.bind(Game3d.d3_drawModePy);
+
 		return pac3D;
 	}
 

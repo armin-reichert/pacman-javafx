@@ -33,7 +33,6 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -89,36 +88,21 @@ public class GameLevel3D {
 		checkNotNull(ghostColors);
 
 		this.level = level;
-		final GameVariant gameVariant = level.game().variant();
+		boolean msPacMan = level.game().variant() == GameVariant.MS_PACMAN;
 
 		world3D = new World3D(level.world(), mazeColors, Game3d.assets.pelletModel3D);
-
-		pac3D = switch (gameVariant) {
-		case MS_PACMAN -> createMsPacMan3D(msPacManColors);
-		case PACMAN -> createPacMan3D(pacManColors);
-		default -> throw new IllegalGameVariantException(gameVariant);
-		};
+		pac3D = msPacMan ? Pac3D.createMsPacMan3D(Game3d.assets.pacModel3D, level.pac(), msPacManColors)
+				: Pac3D.createPacMan3D(Game3d.assets.pacModel3D, level.pac(), pacManColors);
 		pacLight = createPacLight(pac3D);
-
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
-
 		levelCounter3D = createLevelCounter3D(r2D);
-
-		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(() -> Pac3D.createMsPacManGroup(Game3d.assets.pacModel3D, msPacManColors),
-				true);
-		case PACMAN -> new LivesCounter3D(() -> Pac3D.createPacManGroup(Game3d.assets.pacModel3D, pacManColors), false);
-		default -> throw new IllegalGameVariantException(gameVariant);
-		};
-
+		livesCounter3D = msPacMan ? LivesCounter3D.of(msPacManColors) : LivesCounter3D.of(pacManColors);
 		scores3D = new Scores3D(r2D.screenFont(8));
 
-		// layout stuff
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
 		levelCounter3D.setRightPosition((level.world().numCols() - 2) * TS, 2 * TS, -HTS);
 
-		// populate level
 		root.getChildren().add(scores3D.getRoot());
 		root.getChildren().add(levelCounter3D.getRoot());
 		root.getChildren().add(livesCounter3D.getRoot());
@@ -128,10 +112,9 @@ public class GameLevel3D {
 		root.getChildren().add(ghosts3D[1].getRoot());
 		root.getChildren().add(ghosts3D[2].getRoot());
 		root.getChildren().add(ghosts3D[3].getRoot());
-		// Note: world/ghosthouse must be added after the guys if transparent ghosthouse shall be rendered correctly!
+		// Adding world (ghosthouse) *after* the guys if mandatory to get semi-transparent ghosthouse rendered correctly!
 		root.getChildren().add(world3D.getRoot());
 
-		// connect to environment
 		pac3D.lightedPy.bind(Game3d.d3_pacLightedPy);
 		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(Game3d.d3_drawModePy);
 		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(Game3d.d3_drawModePy);
@@ -151,18 +134,6 @@ public class GameLevel3D {
 		}
 		bonus3D = createBonus3D(bonus, r2D, moving);
 		root.getChildren().add(bonus3D.getRoot());
-	}
-
-	private Pac3D createPacMan3D(PacManColoring colors) {
-		var pacMan3D = Pac3D.createPacMan3D(Game3d.assets.pacModel3D, level.pac(), colors);
-		pacMan3D.drawModePy.bind(Game3d.d3_drawModePy);
-		return pacMan3D;
-	}
-
-	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
-		var msPacMan3D = Pac3D.createMsPacMan3D(Game3d.assets.pacModel3D, level.pac(), colors);
-		msPacMan3D.drawModePy.bind(Game3d.d3_drawModePy);
-		return msPacMan3D;
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
