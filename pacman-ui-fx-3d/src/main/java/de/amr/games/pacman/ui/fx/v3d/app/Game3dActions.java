@@ -51,14 +51,14 @@ public class Game3dActions {
 	}
 
 	public void togglePipVisibility() {
-		var pip = Game3d.ui.pip();
+		var pip = ui.pip();
 		Ufx.toggle(pip.visiblePy);
 		var message = fmtMessage(Game3d.assets.messages, pip.visiblePy.get() ? "pip_on" : "pip_off");
 		ui.showFlashMessage(message);
 	}
 
 	public void toggleDashboardVisible() {
-		Game3d.ui.dashboard().setVisible(!Game3d.ui.dashboard().isVisible());
+		ui.dashboard().setVisible(!ui.dashboard().isVisible());
 	}
 
 	public void selectNextPerspective() {
