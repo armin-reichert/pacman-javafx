@@ -108,18 +108,19 @@ public class Game3d extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		stage.setFullScreen(Game3d.cfg.fullScreen);
-		Game3d.ui = new Game3dUI(Game3d.cfg.variant, stage, Game3d.cfg.zoom * 28 * 8, Game3d.cfg.zoom * 36 * 8);
-		Game2d.actions = new Game2dActions(Game3d.ui);
-		Game3d.ui.init(Game3d.cfg);
-		Game3d.ui.startClockAndShowStage();
+		stage.setFullScreen(cfg.fullScreen);
+		ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		Game2d.actions = new Game2dActions(ui);
+
+		ui.init(cfg);
+		ui.startClockAndShowStage();
 		Game2d.actions.reboot();
-		Logger.info("Game started. {} Hz language={}", Game3d.ui.clock().targetFrameratePy.get(), Locale.getDefault());
+		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override
 	public void stop() {
-		Game3d.ui.clock().stop();
+		ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
 
