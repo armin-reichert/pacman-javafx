@@ -85,7 +85,13 @@ public class Pac3D {
 	private DyingAnimation dyingAnimation;
 
 	public static Group createPacManGroup(Model3D model3D, PacManColoring colors) {
-		return new Group(createShape(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor()));
+		var body = createBody(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor());
+		return new Group(body);
+	}
+
+	public static Group createMsPacManGroup(Model3D model3D, MsPacManColoring colors) {
+		var body = createBody(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor());
+		return new Group(body, createFeminineParts(9, colors));
 	}
 
 	public static Pac3D createPacMan3D(Model3D model3D, Pac pacMan, PacManColoring colors) {
@@ -93,8 +99,7 @@ public class Pac3D {
 		checkNotNull(pacMan);
 		checkNotNull(colors);
 
-		var pacGroup = createPacManGroup(model3D, colors);
-		var pac3D = new Pac3D(pacGroup, pacMan, colors.headColor());
+		var pac3D = new Pac3D(createPacManGroup(model3D, colors), pacMan, colors.headColor());
 		pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
 		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
 		pac3D.drawModePy.bind(Game3d.d3_drawModePy);
@@ -107,8 +112,7 @@ public class Pac3D {
 		checkNotNull(msPacMan);
 		checkNotNull(colors);
 
-		var pacGroup = createMsPacManGroup(model3D, colors);
-		var pac3D = new Pac3D(pacGroup, msPacMan, colors.headColor());
+		var pac3D = new Pac3D(createMsPacManGroup(model3D, colors), msPacMan, colors.headColor());
 		pac3D.walkingAnimation = new HipSwaying(msPacMan, pac3D.root);
 		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
 		pac3D.drawModePy.bind(Game3d.d3_drawModePy);
@@ -116,12 +120,7 @@ public class Pac3D {
 		return pac3D;
 	}
 
-	public static Group createMsPacManGroup(Model3D model3D, MsPacManColoring colors) {
-		return new Group(createShape(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor()),
-				createBeautyAccessories(9, colors.headColor(), colors.hairBowColor(), colors.hairBowPearlsColor()));
-	}
-
-	private static Group createShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
+	private static Group createBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
 		head.setId(Model3D.cssID(MESH_ID_HEAD));
 		head.setMaterial(ResourceManager.coloredMaterial(headColor));
@@ -148,8 +147,8 @@ public class Pac3D {
 		return root;
 	}
 
-	private static Group createBeautyAccessories(double pacSize, Color headColor, Color bowColor, Color pearlColor) {
-		var bowMaterial = ResourceManager.coloredMaterial(bowColor);
+	private static Group createFeminineParts(double pacSize, MsPacManColoring colors) {
+		var bowMaterial = ResourceManager.coloredMaterial(colors.hairBowColor());
 
 		var bowLeft = new Sphere(1.2);
 		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
@@ -159,7 +158,7 @@ public class Pac3D {
 		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
 		bowRight.setMaterial(bowMaterial);
 
-		var pearlMaterial = ResourceManager.coloredMaterial(pearlColor);
+		var pearlMaterial = ResourceManager.coloredMaterial(colors.hairBowPearlsColor());
 
 		var pearlLeft = new Sphere(0.4);
 		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
@@ -173,7 +172,7 @@ public class Pac3D {
 		beautySpot.setMaterial(ResourceManager.coloredMaterial(Color.rgb(100, 100, 100)));
 		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
-		var silicone = ResourceManager.coloredMaterial(headColor.deriveColor(0, 1.0, 0.96, 1.0));
+		var silicone = ResourceManager.coloredMaterial(colors.headColor().deriveColor(0, 1.0, 0.96, 1.0));
 
 		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);
@@ -187,19 +186,13 @@ public class Pac3D {
 	}
 
 	private Pac3D(Node pacNode, Pac pac, Color headColor) {
+		this.root = new Group(pacNode);
 		this.pac = pac;
 		this.headColor = headColor;
-		root = new Group(pacNode);
 		pacNode.getTransforms().setAll(position, orientation);
-		Model3D.meshView(pacNode, MESH_ID_EYES).drawModeProperty().bind(Game3d.d3_drawModePy);
-		Model3D.meshView(pacNode, MESH_ID_HEAD).drawModeProperty().bind(Game3d.d3_drawModePy);
-		Model3D.meshView(pacNode, MESH_ID_PALATE).drawModeProperty().bind(Game3d.d3_drawModePy);
-	}
-
-	@Override
-	public String toString() {
-		return "Pac3D[position=%s, orientation=%s, walking: %s]".formatted(position, orientation,
-				walkingAnimation.animation().getStatus());
+		Model3D.meshView(pacNode, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+		Model3D.meshView(pacNode, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+		Model3D.meshView(pacNode, MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 	}
 
 	public Group getRoot() {
