@@ -23,6 +23,10 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
+import static de.amr.games.pacman.ui.fx.util.Ufx.just;
+
 import java.util.Locale;
 
 import org.tinylog.Logger;
@@ -32,6 +36,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Game2dActions;
 import de.amr.games.pacman.ui.fx.app.Settings;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
@@ -42,6 +47,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
@@ -72,19 +79,31 @@ public class Game3d extends Application {
 	public static final BooleanProperty             wokePussyMode           = new SimpleBooleanProperty(false); 
 	//@formatter:on
 
-	public static final Game3dAssets assets = new Game3dAssets();
-	public static Game3dActions actions = null;
-	public static Game3dUI ui = null;
+	//@formatter:off
+	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD   = just(KeyCode.F1);
+	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD_2 = alt(KeyCode.B);
+	public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW    = just(KeyCode.F2);
+	public static final KeyCodeCombination KEY_TOGGLE_2D_3D       = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination KEY_PREV_PERSPECTIVE   = alt(KeyCode.LEFT);
+	public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE   = alt(KeyCode.RIGHT);
+	//@formatter:on
+
+	public static Game3d app;
+	public static Game3dAssets assets;
+	public static Game3dUI ui;
+
 	private static Settings cfg;
 
 	@Override
 	public void init() {
+		app = this;
+
 		Game3d.cfg = new Settings(getParameters().getNamed());
 		Logger.info("Game configuration: {}", Game3d.cfg);
-		long start = System.nanoTime();
+
 		Game2d.assets.load();
+		Game3d.assets = new Game3dAssets();
 		Game3d.assets.load();
-		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
 	@Override
@@ -92,7 +111,6 @@ public class Game3d extends Application {
 		stage.setFullScreen(Game3d.cfg.fullScreen);
 		Game3d.ui = new Game3dUI(Game3d.cfg.variant, stage, Game3d.cfg.zoom * 28 * 8, Game3d.cfg.zoom * 36 * 8);
 		Game2d.actions = new Game2dActions(Game3d.ui);
-		Game3d.actions = new Game3dActions(Game3d.ui);
 		Game3d.ui.init(Game3d.cfg);
 		Game3d.ui.startClockAndShowStage();
 		Game2d.actions.reboot();
@@ -103,5 +121,35 @@ public class Game3d extends Application {
 	public void stop() {
 		Game3d.ui.clock().stop();
 		Logger.info("Game stopped.");
+	}
+
+	// --- Actions ---
+
+	public void togglePipVisibility() {
+		Ufx.toggle(ui.pip().visiblePy);
+		var message = fmtMessage(Game3d.assets.messages, ui.pip().visiblePy.get() ? "pip_on" : "pip_off");
+		ui.showFlashMessage(message);
+	}
+
+	public void toggleDashboardVisible() {
+		ui.dashboard().setVisible(!ui.dashboard().isVisible());
+	}
+
+	public void selectNextPerspective() {
+		var next = Game3d.d3_perspectivePy.get().next();
+		Game3d.d3_perspectivePy.set(next);
+		String perspectiveName = fmtMessage(Game3d.assets.messages, next.name());
+		ui.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
+	}
+
+	public void selectPrevPerspective() {
+		var prev = Game3d.d3_perspectivePy.get().prev();
+		Game3d.d3_perspectivePy.set(prev);
+		String perspectiveName = fmtMessage(Game3d.assets.messages, prev.name());
+		ui.showFlashMessage(fmtMessage(Game3d.assets.messages, "camera_perspective", perspectiveName));
+	}
+
+	public void toggleDrawMode() {
+		Game3d.d3_drawModePy.set(Game3d.d3_drawModePy.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 }

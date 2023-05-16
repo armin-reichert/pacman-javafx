@@ -28,6 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.tinylog.Logger;
+
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.entity.GhostModel3D;
@@ -56,6 +58,8 @@ public class Game3dAssets extends ResourceManager {
 	}
 
 	public void load() {
+		long start = System.nanoTime();
+
 		messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 		messagePickerCheating = ResourceManager.createPicker(messages, "cheating");
 		messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
@@ -70,6 +74,8 @@ public class Game3dAssets extends ResourceManager {
 		pacModel3D = new PacModel3D();
 		ghostModel3D = new GhostModel3D();
 		pelletModel3D = new PelletModel3D();
+
+		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
 	}
 
 	public String pickCheatingMessage() {

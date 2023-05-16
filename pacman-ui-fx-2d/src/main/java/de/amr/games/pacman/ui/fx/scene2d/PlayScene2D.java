@@ -158,5 +158,4 @@ public class PlayScene2D extends GameScene2D {
 			context.sounds().stop(AudioClipID.GHOST_RETURNING);
 		}
 	}
-
 }
