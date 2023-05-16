@@ -23,15 +23,27 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.app;
 
+import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
+import static de.amr.games.pacman.ui.fx.util.Ufx.just;
+import static de.amr.games.pacman.ui.fx.util.Ufx.shift;
+
 import java.util.Locale;
 
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 
 /**
@@ -59,34 +71,200 @@ public class Game2d extends Application {
 	//@formatter:off
 	public static final BooleanProperty showDebugInfoPy   = new SimpleBooleanProperty(false);
 	public static final IntegerProperty simulationStepsPy = new SimpleIntegerProperty(1);
+
+	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
+	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES   = alt(KeyCode.L);
+	public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL  = alt(KeyCode.N);
+	public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS = alt(KeyCode.X);
+
+	public static final KeyCodeCombination KEY_AUTOPILOT         = alt(KeyCode.A);
+	public static final KeyCodeCombination KEY_DEBUG_INFO        = alt(KeyCode.D);
+	public static final KeyCodeCombination KEY_IMMUNITIY         = alt(KeyCode.I);
+
+	public static final KeyCodeCombination KEY_PAUSE             = just(KeyCode.P);
+	public static final KeyCodeCombination KEY_PAUSE_STEP        = shift(KeyCode.P);
+	public static final KeyCodeCombination KEY_SINGLE_STEP       = just(KeyCode.SPACE);
+	public static final KeyCodeCombination KEY_TEN_STEPS         = shift(KeyCode.SPACE);
+	public static final KeyCodeCombination KEY_SIMULATION_FASTER = alt(KeyCode.PLUS);
+	public static final KeyCodeCombination KEY_SIMULATION_SLOWER = alt(KeyCode.MINUS);
+	public static final KeyCodeCombination KEY_SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
+
+	public static final KeyCodeCombination KEY_START_GAME        = just(KeyCode.DIGIT1);
+	public static final KeyCodeCombination KEY_ADD_CREDIT        = just(KeyCode.DIGIT5);
+
+	public static final KeyCodeCombination KEY_QUIT              = just(KeyCode.Q);
+	public static final KeyCodeCombination KEY_TEST_LEVELS       = alt(KeyCode.T);
+	public static final KeyCodeCombination KEY_SELECT_VARIANT    = just(KeyCode.V);
+	public static final KeyCodeCombination KEY_PLAY_CUTSCENES    = alt(KeyCode.Z);
+
+	public static final KeyCodeCombination KEY_SHOW_HELP         = just(KeyCode.H);
+	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
+	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
 	//@formatter:on
 
+	public static Game2d app;;
 	public static Game2dAssets assets = new Game2dAssets();
 	public static Game2dUI ui;
-	public static Game2dActions actions;
-	public static Settings cfg = new Settings();
+
+	private Settings cfg = new Settings();
 
 	@Override
 	public void init() {
 		cfg.merge(getParameters().getNamed());
-		Logger.info("Game configuration: {}", Game2d.cfg);
-		Game2d.assets.load();
+		assets.load();
+		app = this;
+		Logger.info("Game configuration: {}", cfg);
 	}
 
 	@Override
 	public void start(Stage stage) {
-		stage.setFullScreen(Game2d.cfg.fullScreen);
-		Game2d.ui = new Game2dUI(Game2d.cfg.variant, stage, Game2d.cfg.zoom * 28 * 8, Game2d.cfg.zoom * 36 * 8);
-		Game2d.actions = new Game2dActions(ui);
-		Game2d.ui.init(Game2d.cfg);
-		Game2d.ui.startClockAndShowStage();
-		Game2d.actions.reboot();
-		Logger.info("Game started. {} Hz language={}", Game2d.ui.clock().targetFrameratePy.get(), Locale.getDefault());
+		stage.setFullScreen(cfg.fullScreen);
+		ui = new Game2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+
+		ui.init(cfg);
+		ui.startClockAndShowStage();
+		reboot();
+
+		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override
 	public void stop() {
-		Game2d.ui.clock().stop();
+		ui.clock().stop();
 		Logger.info("Game stopped.");
+	}
+
+	// --- Actions
+
+	public void startGame() {
+		if (ui.game().hasCredit()) {
+			ui.stopVoice();
+			ui.gameController().startPlaying();
+		}
+	}
+
+	public void startCutscenesTest() {
+		ui.gameController().startCutscenesTest();
+		ui.showFlashMessage("Cut scenes");
+	}
+
+	public void restartIntro() {
+		ui.currentGameScene().end();
+		GameEvents.setSoundEventsEnabled(true);
+		if (ui.game().isPlaying()) {
+			ui.game().changeCredit(-1);
+		}
+		ui.gameController().restart(INTRO);
+	}
+
+	public void reboot() {
+		if (ui.currentGameScene() != null) {
+			ui.currentGameScene().end();
+		}
+		ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
+		ui.gameController().restart(GameState.BOOT);
+	}
+
+	public void addCredit() {
+		GameEvents.setSoundEventsEnabled(true);
+		ui.gameController().addCredit();
+	}
+
+	public void enterLevel(int newLevelNumber) {
+		if (ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+			return;
+		}
+		ui.game().level().ifPresent(level -> {
+			if (newLevelNumber > level.number()) {
+				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
+					ui.game().nextLevel();
+				}
+				ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+			} else if (newLevelNumber < level.number()) {
+				// not implemented
+			}
+		});
+	}
+
+	public void togglePaused() {
+		Ufx.toggle(ui.clock().pausedPy);
+		// TODO mute and unmute?
+		if (ui.clock().pausedPy.get()) {
+			Game2d.assets.gameSounds(ui.game().variant()).stopAll();
+		}
+	}
+
+	public void oneSimulationStep() {
+		if (ui.clock().pausedPy.get()) {
+			ui.clock().executeSingleStep(true);
+		}
+	}
+
+	public void tenSimulationSteps() {
+		if (ui.clock().pausedPy.get()) {
+			ui.clock().executeSteps(10, true);
+		}
+	}
+
+	public void changeSimulationSpeed(int delta) {
+		int newFramerate = ui.clock().targetFrameratePy.get() + delta;
+		if (newFramerate > 0 && newFramerate < 120) {
+			ui.clock().targetFrameratePy.set(newFramerate);
+			ui.showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
+		}
+	}
+
+	public void resetSimulationSpeed() {
+		ui.clock().targetFrameratePy.set(GameModel.FPS);
+		ui.showFlashMessageSeconds(0.75, "%dHz".formatted(ui.clock().targetFrameratePy.get()));
+	}
+
+	public void selectNextGameVariant() {
+		var gameVariant = ui.game().variant().next();
+		ui.gameController().selectGameVariant(gameVariant);
+		ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
+	}
+
+	public void toggleAutopilot() {
+		ui.gameController().toggleAutoControlled();
+		var auto = ui.gameController().isAutoControlled();
+		String message = fmtMessage(Game2d.assets.messages, auto ? "autopilot_on" : "autopilot_off");
+		ui.showFlashMessage(message);
+		ui.updateHelpContent();
+		ui.playVoice(auto ? Game2d.assets.voiceAutopilotOn : Game2d.assets.voiceAutopilotOff);
+	}
+
+	public void toggleImmunity() {
+		ui.game().setImmune(!ui.game().isImmune());
+		var immune = ui.game().isImmune();
+		String message = fmtMessage(Game2d.assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
+		ui.showFlashMessage(message);
+		ui.updateHelpContent();
+		ui.playVoice(immune ? Game2d.assets.voiceImmunityOn : Game2d.assets.voiceImmunityOff);
+	}
+
+	public void startLevelTestMode() {
+		if (ui.gameController().state() == GameState.INTRO) {
+			ui.gameController().restart(GameState.LEVEL_TEST);
+			ui.showFlashMessage("Level TEST MODE");
+		}
+	}
+
+	public void cheatAddLives() {
+		int newLivesCount = ui.game().lives() + 3;
+		ui.game().setLives(newLivesCount);
+		ui.showFlashMessage(fmtMessage(Game2d.assets.messages, "cheat_add_lives", newLivesCount));
+	}
+
+	public void cheatEatAllPellets() {
+		ui.gameController().cheatEatAllPellets();
+	}
+
+	public void cheatEnterNextLevel() {
+		ui.gameController().cheatEnterNextLevel();
+	}
+
+	public void cheatKillAllEatableGhosts() {
+		ui.gameController().cheatKillAllEatableGhosts();
 	}
 }

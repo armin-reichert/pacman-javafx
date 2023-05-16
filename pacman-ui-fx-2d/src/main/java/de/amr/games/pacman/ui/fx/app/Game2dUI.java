@@ -304,33 +304,33 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2dActions.KEY_SHOW_HELP)) {
+		if (Keyboard.pressed(Game2d.KEY_SHOW_HELP)) {
 			showHelp();
-		} else if (Keyboard.pressed(Game2dActions.KEY_AUTOPILOT)) {
-			Game2d.actions.toggleAutopilot();
-		} else if (Keyboard.pressed(Game2dActions.KEY_BOOT)) {
-			Game2d.actions.reboot();
-		} else if (Keyboard.pressed(Game2dActions.KEY_DEBUG_INFO)) {
+		} else if (Keyboard.pressed(Game2d.KEY_AUTOPILOT)) {
+			Game2d.app.toggleAutopilot();
+		} else if (Keyboard.pressed(Game2d.KEY_BOOT)) {
+			Game2d.app.reboot();
+		} else if (Keyboard.pressed(Game2d.KEY_DEBUG_INFO)) {
 			Ufx.toggle(Game2d.showDebugInfoPy);
-		} else if (Keyboard.pressed(Game2dActions.KEY_IMMUNITIY)) {
-			Game2d.actions.toggleImmunity();
-		} else if (Keyboard.pressed(Game2dActions.KEY_PAUSE)) {
-			Game2d.actions.togglePaused();
-		} else if (Keyboard.pressed(Game2dActions.KEY_PAUSE_STEP) || Keyboard.pressed(Game2dActions.KEY_SINGLE_STEP)) {
-			Game2d.actions.oneSimulationStep();
-		} else if (Keyboard.pressed(Game2dActions.KEY_TEN_STEPS)) {
-			Game2d.actions.tenSimulationSteps();
-		} else if (Keyboard.pressed(Game2dActions.KEY_SIMULATION_FASTER)) {
-			Game2d.actions.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(Game2dActions.KEY_SIMULATION_SLOWER)) {
-			Game2d.actions.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(Game2dActions.KEY_SIMULATION_NORMAL)) {
-			Game2d.actions.resetSimulationSpeed();
-		} else if (Keyboard.pressed(Game2dActions.KEY_QUIT)) {
-			Game2d.actions.restartIntro();
-		} else if (Keyboard.pressed(Game2dActions.KEY_TEST_LEVELS)) {
-			Game2d.actions.startLevelTestMode();
-		} else if (Keyboard.pressed(Game2dActions.KEY_FULLSCREEN)) {
+		} else if (Keyboard.pressed(Game2d.KEY_IMMUNITIY)) {
+			Game2d.app.toggleImmunity();
+		} else if (Keyboard.pressed(Game2d.KEY_PAUSE)) {
+			Game2d.app.togglePaused();
+		} else if (Keyboard.pressed(Game2d.KEY_PAUSE_STEP) || Keyboard.pressed(Game2d.KEY_SINGLE_STEP)) {
+			Game2d.app.oneSimulationStep();
+		} else if (Keyboard.pressed(Game2d.KEY_TEN_STEPS)) {
+			Game2d.app.tenSimulationSteps();
+		} else if (Keyboard.pressed(Game2d.KEY_SIMULATION_FASTER)) {
+			Game2d.app.changeSimulationSpeed(5);
+		} else if (Keyboard.pressed(Game2d.KEY_SIMULATION_SLOWER)) {
+			Game2d.app.changeSimulationSpeed(-5);
+		} else if (Keyboard.pressed(Game2d.KEY_SIMULATION_NORMAL)) {
+			Game2d.app.resetSimulationSpeed();
+		} else if (Keyboard.pressed(Game2d.KEY_QUIT)) {
+			Game2d.app.restartIntro();
+		} else if (Keyboard.pressed(Game2d.KEY_TEST_LEVELS)) {
+			Game2d.app.startLevelTestMode();
+		} else if (Keyboard.pressed(Game2d.KEY_FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
 	}

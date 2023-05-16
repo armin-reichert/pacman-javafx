@@ -67,7 +67,7 @@ public class SectionGeneral extends Section {
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
-		btnPlayPause.setOnAction(e -> Game2d.actions.togglePaused());
+		btnPlayPause.setOnAction(e -> Game2d.app.togglePaused());
 
 		btnStep.setGraphic(iconStep);
 		btnStep.setStyle("-fx-background-color: transparent");
