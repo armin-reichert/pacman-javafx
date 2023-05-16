@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
@@ -75,26 +74,26 @@ public class LivesCounter3D {
 
 	private final List<Animation> animations = new ArrayList<>();
 
-	public LivesCounter3D(int maxLives, Supplier<Group> pacShapeProducer, boolean lookRight) {
-		requirePositive(maxLives);
+	public LivesCounter3D(Supplier<Group> pacShapeProducer, boolean lookRight) {
 		requireNonNull(pacShapeProducer);
 
 		pillarMaterial = ResourceManager.coloredMaterial(Color.rgb(100, 100, 100));
 		plateMaterial = ResourceManager.coloredMaterial(Color.rgb(180, 180, 180));
 
+		int maxLives = 5;
 		for (int i = 0; i < maxLives; ++i) {
-			addPillarAndPlate(2 * i * TS);
+			addStand(2 * i * TS);
+
 			var pacShape = pacShapeProducer.get();
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(Game3d.d3_drawModePy);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(Game3d.d3_drawModePy);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(Game3d.d3_drawModePy);
 			pacShape.setTranslateX(2.0 * i * TS);
 			pacShape.setTranslateZ(-(pillarHeight + 5.5));
 			if (lookRight) {
 				pacShape.setRotationAxis(Rotate.Z_AXIS);
 				pacShape.setRotate(180);
 			}
-			pacShapesGroup.getChildren().add(pacShape);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(Game3d.d3_drawModePy);
 
 			var plateRotation = new RotateTransition(Duration.seconds(20.0), pacShape);
 			plateRotation.setAxis(Rotate.Z_AXIS);
@@ -102,6 +101,8 @@ public class LivesCounter3D {
 			plateRotation.setInterpolator(Interpolator.LINEAR);
 			plateRotation.setCycleCount(Animation.INDEFINITE);
 			animations.add(plateRotation);
+
+			pacShapesGroup.getChildren().add(pacShape);
 		}
 
 		light = new PointLight(Color.CORNFLOWERBLUE);
@@ -122,7 +123,7 @@ public class LivesCounter3D {
 		animations.forEach(Animation::stop);
 	}
 
-	private void addPillarAndPlate(double x) {
+	private void addStand(double x) {
 		var plate = new Cylinder(plateRadius, plateThickness);
 		plate.setMaterial(plateMaterial);
 		plate.setTranslateX(x);

@@ -105,9 +105,9 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> Pac3D.createMsPacManGroup(Game3d.assets.pacModel3D, msPacManColors),
+		case MS_PACMAN -> new LivesCounter3D(() -> Pac3D.createMsPacManGroup(Game3d.assets.pacModel3D, msPacManColors),
 				true);
-		case PACMAN -> new LivesCounter3D(5, () -> Pac3D.createPacManGroup(Game3d.assets.pacModel3D, pacManColors), false);
+		case PACMAN -> new LivesCounter3D(() -> Pac3D.createPacManGroup(Game3d.assets.pacModel3D, pacManColors), false);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
