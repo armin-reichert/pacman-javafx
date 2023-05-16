@@ -349,8 +349,7 @@ public class PlayScene3D implements GameScene {
 					level3D.world3D().foodOscillation().play();
 				}
 				readyMessageText3D.setVisible(true);
-				// TODO take texts and picker from 3d-only assets
-				var readyMessage = inPercentOfCases(40) ? Game2d.assets.randomReadyText(context.gameVariant()) : "READY!";
+				var readyMessage = inPercentOfCases(40) ? Game3d.assets.pickFunnyReadyMessage(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}

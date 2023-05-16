@@ -30,6 +30,8 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -41,15 +43,17 @@ public class Game3dAssets extends ResourceManager {
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
-	public Model3D pacModel3D;
-	public Model3D ghostModel3D;
-	public Model3D pelletModel3D;
-	public Background wallpaper3D;
-	public Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
-	public ResourceBundle messages;
-	private Picker<String> messagePickerCheating;
-	private Picker<String> messagePickerLevelComplete;
-	private Picker<String> messagePickerGameOver;
+	public final Model3D pacModel3D;
+	public final Model3D ghostModel3D;
+	public final Model3D pelletModel3D;
+	public final Background wallpaper3D;
+	public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
+	public final ResourceBundle messages;
+	private final Picker<String> messagePickerReadyPacMan;
+	private final Picker<String> messagePickerReadyMsPacMan;
+	private final Picker<String> messagePickerCheating;
+	private final Picker<String> messagePickerLevelComplete;
+	private final Picker<String> messagePickerGameOver;
 
 	public Game3dAssets() {
 		super("/de/amr/games/pacman/ui/fx/v3d/", Game3dAssets.class);
@@ -57,6 +61,8 @@ public class Game3dAssets extends ResourceManager {
 		long start = System.nanoTime();
 
 		messages = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
+		messagePickerReadyPacMan = ResourceManager.createPicker(messages, "pacman.ready");
+		messagePickerReadyMsPacMan = ResourceManager.createPicker(messages, "mspacman.ready");
 		messagePickerCheating = ResourceManager.createPicker(messages, "cheating");
 		messagePickerLevelComplete = ResourceManager.createPicker(messages, "level.complete");
 		messagePickerGameOver = ResourceManager.createPicker(messages, "game.over");
@@ -72,6 +78,14 @@ public class Game3dAssets extends ResourceManager {
 		pelletModel3D = new Model3D(urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
 
 		Logger.info("Loading assets: {} seconds.", (System.nanoTime() - start) / 1e9f);
+	}
+
+	public String pickFunnyReadyMessage(GameVariant gameVariant) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> messagePickerReadyMsPacMan.next();
+		case PACMAN -> messagePickerReadyPacMan.next();
+		default -> throw new IllegalGameVariantException(gameVariant);
+		};
 	}
 
 	public String pickCheatingMessage() {
