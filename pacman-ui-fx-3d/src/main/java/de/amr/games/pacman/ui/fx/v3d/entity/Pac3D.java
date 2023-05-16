@@ -73,21 +73,9 @@ import javafx.util.Duration;
  */
 public class Pac3D {
 
-	private static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
-	private static final String MESH_ID_HEAD = "Sphere_yellow_packman";
-	private static final String MESH_ID_PALATE = "Sphere_grey_wall";
-
-	public static MeshView headMeshView(Node pacShape) {
-		return Model3D.meshView(pacShape, MESH_ID_HEAD);
-	}
-
-	public static MeshView eyesMeshView(Node pacShape) {
-		return Model3D.meshView(pacShape, MESH_ID_EYES);
-	}
-
-	public static MeshView palateMeshView(Node pacShape) {
-		return Model3D.meshView(pacShape, MESH_ID_PALATE);
-	}
+	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
+	public static final String MESH_ID_HEAD = "Sphere_yellow_packman";
+	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
 
 	public interface WalkingAnimation {
 		void update(Pac pac);
@@ -196,41 +184,35 @@ public class Pac3D {
 	private WalkingAnimation walkingAnimation;
 	private DyingAnimation dyingAnimation;
 
-	public static Pac3D createPacMan(Model3D model3D, Pac pac, PacManColoring colors) {
-		checkNotNull(pac);
+	public static Group createPacManGroup(Model3D model3D, PacManColoring colors) {
+		return new Group(createShape(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor()));
+	}
 
-		var pac3D = new Pac3D(pac, colors.headColor());
-		var pacNode = createPacManNode(model3D, colors);
-		pac3D.root = new Group(pacNode);
-		pacNode.getTransforms().setAll(pac3D.position, pac3D.orientation);
-		eyesMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
-		headMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
-		palateMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
+	public static Pac3D createPacMan3D(Model3D model3D, Pac pacMan, PacManColoring colors) {
+		checkNotNull(model3D);
+		checkNotNull(pacMan);
+		checkNotNull(colors);
+
+		var pacGroup = createPacManGroup(model3D, colors);
+		var pac3D = new Pac3D(pacGroup, pacMan, colors.headColor());
 		pac3D.walkingAnimation = new HeadBanging(pac3D.root);
 		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
 		return pac3D;
 	}
 
-	public static Node createPacManNode(Model3D model3D, PacManColoring colors) {
-		return new Group(createShape(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor()));
-	}
+	public static Pac3D createMsPacMan3D(Model3D model3D, Pac msPacMan, MsPacManColoring colors) {
+		checkNotNull(model3D);
+		checkNotNull(msPacMan);
+		checkNotNull(colors);
 
-	public static Pac3D createMsPacMan(Model3D model3D, Pac pac, MsPacManColoring colors) {
-		checkNotNull(pac);
-
-		var pac3D = new Pac3D(pac, colors.headColor());
-		var pacNode = createMsPacManNode(model3D, colors);
-		pac3D.root = new Group(pacNode);
-		pacNode.getTransforms().setAll(pac3D.position, pac3D.orientation);
-		eyesMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
-		headMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
-		palateMeshView(pacNode).drawModeProperty().bind(Game3d.d3_drawModePy);
+		var pacGroup = createMsPacManGroup(model3D, colors);
+		var pac3D = new Pac3D(pacGroup, msPacMan, colors.headColor());
 		pac3D.walkingAnimation = new HipSwaying(pac3D.root);
 		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
 		return pac3D;
 	}
 
-	public static Group createMsPacManNode(Model3D model3D, MsPacManColoring colors) {
+	public static Group createMsPacManGroup(Model3D model3D, MsPacManColoring colors) {
 		return new Group(createShape(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor()),
 				createBeautyAccessories(9, colors.headColor(), colors.hairBowColor(), colors.hairBowPearlsColor()));
 	}
@@ -253,6 +235,7 @@ public class Pac3D {
 
 		var root = new Group(head, eyes, palate);
 		root.getTransforms().add(Model3D.scale(root, size));
+
 		// TODO new obj importer has all meshes upside-down and backwards. Why?
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
@@ -299,9 +282,14 @@ public class Pac3D {
 		return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
 	}
 
-	private Pac3D(Pac pac, Color headColor) {
+	private Pac3D(Node pacNode, Pac pac, Color headColor) {
 		this.pac = pac;
 		this.headColor = headColor;
+		root = new Group(pacNode);
+		pacNode.getTransforms().setAll(position, orientation);
+		Model3D.meshView(pacNode, MESH_ID_EYES).drawModeProperty().bind(Game3d.d3_drawModePy);
+		Model3D.meshView(pacNode, MESH_ID_HEAD).drawModeProperty().bind(Game3d.d3_drawModePy);
+		Model3D.meshView(pacNode, MESH_ID_PALATE).drawModeProperty().bind(Game3d.d3_drawModePy);
 	}
 
 	@Override

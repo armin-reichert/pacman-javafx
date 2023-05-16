@@ -33,6 +33,7 @@ import java.util.function.Supplier;
 
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
+import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -61,8 +62,8 @@ public class LivesCounter3D {
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
 	private final Group root = new Group();
-	private final Group pacGroup = new Group();
-	private final Group pillarAndPlateGroup = new Group();
+	private final Group pacShapesGroup = new Group();
+	private final Group standsGroup = new Group();
 	private final PointLight light;
 
 	private double pillarHeight = 5.0;
@@ -74,26 +75,26 @@ public class LivesCounter3D {
 
 	private final List<Animation> animations = new ArrayList<>();
 
-	public LivesCounter3D(int maxLives, Supplier<Node> fnPacNode, boolean lookRight) {
+	public LivesCounter3D(int maxLives, Supplier<Group> pacShapeProducer, boolean lookRight) {
 		requirePositive(maxLives);
-		requireNonNull(fnPacNode);
+		requireNonNull(pacShapeProducer);
 
 		pillarMaterial = ResourceManager.coloredMaterial(Color.rgb(100, 100, 100));
 		plateMaterial = ResourceManager.coloredMaterial(Color.rgb(180, 180, 180));
 
 		for (int i = 0; i < maxLives; ++i) {
 			addPillarAndPlate(2 * i * TS);
-			var pacShape = fnPacNode.get();
-			Pac3D.headMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
-			Pac3D.palateMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
-			Pac3D.eyesMeshView(pacShape).drawModeProperty().bind(Game3d.d3_drawModePy);
+			var pacShape = pacShapeProducer.get();
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(Game3d.d3_drawModePy);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(Game3d.d3_drawModePy);
 			pacShape.setTranslateX(2.0 * i * TS);
 			pacShape.setTranslateZ(-(pillarHeight + 5.5));
 			if (lookRight) {
 				pacShape.setRotationAxis(Rotate.Z_AXIS);
 				pacShape.setRotate(180);
 			}
-			pacGroup.getChildren().add(pacShape);
+			pacShapesGroup.getChildren().add(pacShape);
 
 			var plateRotation = new RotateTransition(Duration.seconds(20.0), pacShape);
 			plateRotation.setAxis(Rotate.Z_AXIS);
@@ -110,7 +111,7 @@ public class LivesCounter3D {
 		light.setTranslateZ(-pillarHeight - 20);
 		light.lightOnProperty().bind(lightOnPy);
 
-		root.getChildren().addAll(pillarAndPlateGroup, pacGroup, light);
+		root.getChildren().addAll(standsGroup, pacShapesGroup, light);
 	}
 
 	public void startAnimation() {
@@ -138,7 +139,7 @@ public class LivesCounter3D {
 		pillar.setRotate(90);
 		pillar.drawModeProperty().bind(Game3d.d3_drawModePy);
 
-		pillarAndPlateGroup.getChildren().addAll(plate, pillar);
+		standsGroup.getChildren().addAll(plate, pillar);
 	}
 
 	public Node getRoot() {
@@ -152,8 +153,8 @@ public class LivesCounter3D {
 	}
 
 	public void update(int numLives) {
-		for (int i = 0; i < pacGroup.getChildren().size(); ++i) {
-			var node = pacGroup.getChildren().get(i);
+		for (int i = 0; i < pacShapesGroup.getChildren().size(); ++i) {
+			var node = pacShapesGroup.getChildren().get(i);
 			node.setVisible(i < numLives);
 		}
 	}

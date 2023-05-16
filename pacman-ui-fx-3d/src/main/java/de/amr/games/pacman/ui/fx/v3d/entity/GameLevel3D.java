@@ -105,9 +105,9 @@ public class GameLevel3D {
 		levelCounter3D = createLevelCounter3D(r2D);
 
 		livesCounter3D = switch (gameVariant) {
-		case MS_PACMAN -> new LivesCounter3D(5, () -> Pac3D.createMsPacManNode(Game3d.assets.pacModel3D, msPacManColors),
+		case MS_PACMAN -> new LivesCounter3D(5, () -> Pac3D.createMsPacManGroup(Game3d.assets.pacModel3D, msPacManColors),
 				true);
-		case PACMAN -> new LivesCounter3D(5, () -> Pac3D.createPacManNode(Game3d.assets.pacModel3D, pacManColors), false);
+		case PACMAN -> new LivesCounter3D(5, () -> Pac3D.createPacManGroup(Game3d.assets.pacModel3D, pacManColors), false);
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 
@@ -154,13 +154,13 @@ public class GameLevel3D {
 	}
 
 	private Pac3D createPacMan3D(PacManColoring colors) {
-		var pacMan3D = Pac3D.createPacMan(Game3d.assets.pacModel3D, level.pac(), colors);
+		var pacMan3D = Pac3D.createPacMan3D(Game3d.assets.pacModel3D, level.pac(), colors);
 		pacMan3D.drawModePy.bind(Game3d.d3_drawModePy);
 		return pacMan3D;
 	}
 
 	private Pac3D createMsPacMan3D(MsPacManColoring colors) {
-		var msPacMan3D = Pac3D.createMsPacMan(Game3d.assets.pacModel3D, level.pac(), colors);
+		var msPacMan3D = Pac3D.createMsPacMan3D(Game3d.assets.pacModel3D, level.pac(), colors);
 		msPacMan3D.drawModePy.bind(Game3d.d3_drawModePy);
 		return msPacMan3D;
 	}
