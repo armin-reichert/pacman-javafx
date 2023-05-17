@@ -59,6 +59,10 @@ public abstract class GameScene2D implements GameScene {
 	private static final float HEIGHT = World.TILES_Y * TS;
 	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
 
+	protected static double t(double tiles) {
+		return tiles * TS;
+	}
+
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	protected final GameSceneContext context;
@@ -71,7 +75,9 @@ public abstract class GameScene2D implements GameScene {
 	protected GameScene2D(GameController gameController) {
 		checkNotNull(gameController);
 		context = new GameSceneContext(gameController);
+
 		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
+
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 
@@ -85,15 +91,28 @@ public abstract class GameScene2D implements GameScene {
 		root.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
 		root.getChildren().addAll(canvas, overlay);
 
-		overlay.getChildren().add(helpRoot);
+		// anchor for help popup
 		helpRoot.setTranslateX(10);
 		helpRoot.setTranslateY(HEIGHT * 0.2);
+		overlay.getChildren().add(helpRoot);
 
 		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO);
 	}
 
-	protected double t(double tiles) {
-		return tiles * TS;
+	/**
+	 * Resizes the game scene to the given height, keeping the aspect ratio.
+	 * 
+	 * @param height new game scene height
+	 */
+	public void resize(double height) {
+		if (height <= 0) {
+			throw new IllegalArgumentException("Scene height must be positive");
+		}
+		var width = ASPECT_RATIO * height;
+		fxSubScene.setWidth(width);
+		fxSubScene.setHeight(height);
+		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height,
+				canvasScaling());
 	}
 
 	@Override
@@ -129,22 +148,6 @@ public abstract class GameScene2D implements GameScene {
 		return helpRoot;
 	}
 
-	/**
-	 * Resizes the game scene to the given height, keeping the aspect ratio.
-	 * 
-	 * @param height new game scene height
-	 */
-	public void resize(double height) {
-		if (height <= 0) {
-			throw new IllegalArgumentException("Scene height must be positive");
-		}
-		var width = ASPECT_RATIO * height;
-		fxSubScene.setWidth(width);
-		fxSubScene.setHeight(height);
-		Logger.trace("2D game scene resized to {0.00} x {0.00}, scaling: {0.00} ({})", width, height, canvasScaling(),
-				getClass().getSimpleName());
-	}
-
 	private double canvasScaling() {
 		return fxSubScene.getHeight() / HEIGHT;
 	}
@@ -157,11 +160,11 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
 		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", TS, TS));
-			context.game().highScore().ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", TS * 16, TS));
+			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", t(1), t(1)));
+			context.game().highScore().ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", t(16), t(1)));
 		}
 		if (context.isCreditVisible()) {
-			Rendering2D.drawCredit(g, context.game().credit(), TS * 2, TS * 36 - 1);
+			Rendering2D.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent(g);
 		if (infoVisiblePy.get()) {
