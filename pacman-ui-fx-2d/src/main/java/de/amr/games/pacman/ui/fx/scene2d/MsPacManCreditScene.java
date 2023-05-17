@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -66,12 +64,11 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void drawScene(GraphicsContext g) {
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		Rendering2D.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, TS * (6), TS * (16));
-		Rendering2D.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, TS * (8), TS * (18));
-		Rendering2D.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, TS * (2),
-				TS * (25));
-		r.drawSprite(g, r.lifeSymbol(), TS * (13), TS * (23) + 1);
-		Rendering2D.drawText(g, "PTS", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont6, TS * (25), TS * (25));
-		r.drawMsPacManCopyright(g, 29);
+		Rendering2D.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(6), t(16));
+		Rendering2D.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(8), t(18));
+		Rendering2D.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(2), t(25));
+		r.drawSprite(g, r.lifeSymbol(), t(13), t(23) + 1);
+		Rendering2D.drawText(g, "PTS", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont6, t(25), t(25));
+		MsPacManGameRenderer.drawCopyright(g, t(6), t(28));
 	}
 }

@@ -147,16 +147,14 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return tileFromThirdColumn(1, 0);
 	}
 
-	public void drawMsPacManCopyright(GraphicsContext g, int tileY) {
-		int x = TS * (6);
-		int y = TS * (tileY - 1);
-		g.drawImage(Game2d.assets.logoMsPacMan, x, y + 2, TS * (4) - 2, TS * (4));
+	public static void drawCopyright(GraphicsContext g, double x, double y) {
+		g.drawImage(Game2d.assets.logoMsPacMan, x, y + 2, TS * 4 - 2, TS * 4);
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
-		g.fillText("\u00a9", x + TS * (5), y + TS * (2) + 2); // (c) symbol
+		g.fillText("\u00a9", x + TS * 5, y + TS * 2 + 2); // (c) symbol
 		g.setFont(Game2d.assets.arcadeFont);
-		g.fillText("MIDWAY MFG CO", x + TS * (7), y + TS * (2));
-		g.fillText("1980/1981", x + TS * (8), y + TS * (4));
+		g.fillText("MIDWAY MFG CO", x + TS * 7, y + TS * 2);
+		g.fillText("1980/1981", x + TS * 8, y + TS * 4);
 	}
 
 	// Animations

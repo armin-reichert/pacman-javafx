@@ -93,6 +93,10 @@ public abstract class GameScene2D implements GameScene {
 		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO);
 	}
 
+	protected double t(double tiles) {
+		return tiles * TS;
+	}
+
 	@Override
 	public GameSceneContext context() {
 		return context;

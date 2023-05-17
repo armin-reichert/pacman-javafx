@@ -134,13 +134,8 @@ public class MsPacManIntroScene extends GameScene2D {
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);
-		drawCopyright(g);
+		MsPacManGameRenderer.drawCopyright(g, t(6), t(28));
 		r.drawLevelCounter(g, context.game().levelCounter());
-	}
-
-	private void drawCopyright(GraphicsContext g) {
-		var r = (MsPacManGameRenderer) context.rendering2D();
-		r.drawMsPacManCopyright(g, 29);
 	}
 
 	private void drawMarquee(GraphicsContext g) {
