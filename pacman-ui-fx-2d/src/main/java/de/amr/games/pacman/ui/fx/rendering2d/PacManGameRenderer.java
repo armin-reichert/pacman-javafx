@@ -87,7 +87,6 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		return map;
 	}
 
-	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
 		var region = spritesheet.tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
 		drawSpriteCenteredOverBox(g, region, x, y);

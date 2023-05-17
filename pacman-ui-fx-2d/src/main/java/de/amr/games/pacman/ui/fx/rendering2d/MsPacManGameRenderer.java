@@ -66,7 +66,6 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return spritesheet.tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
 	}
 
-
 	@Override
 	public Rectangle2D ghostValueRegion(int index) {
 		return tileFromThirdColumn(index, 8);
@@ -99,12 +98,6 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		} else {
 			super.drawBonus(g, bonus);
 		}
-	}
-
-	@Override
-	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
-		var region = tileFromThirdColumn(2 * DIR_ORDER.index(Direction.RIGHT) + 1, 4 + ghostID);
-		drawSpriteCenteredOverBox(g, region, x, y);
 	}
 
 	@Override

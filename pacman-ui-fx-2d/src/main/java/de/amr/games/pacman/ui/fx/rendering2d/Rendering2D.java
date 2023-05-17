@@ -90,8 +90,6 @@ public interface Rendering2D {
 
 	void drawGhost(GraphicsContext g, Ghost ghost);
 
-	void drawGhostFacingRight(GraphicsContext g, int id, int x, int y);
-
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
 	void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelSymbols);

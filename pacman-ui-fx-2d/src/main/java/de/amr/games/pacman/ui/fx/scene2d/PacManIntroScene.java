@@ -143,7 +143,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
-		var r = context.rendering2D();
+		var r = (PacManGameRenderer) context.rendering2D();
 		var col = intro.context().leftTileX;
 		var font = Game2d.assets.arcadeFont;
 		if (intro.context().titleVisible) {
