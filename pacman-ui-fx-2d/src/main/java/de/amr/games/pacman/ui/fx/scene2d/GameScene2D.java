@@ -151,7 +151,6 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
-		var r = context.rendering2D();
 		double w = Math.ceil(canvas.getWidth() / canvasScaling());
 		double h = Math.ceil(canvas.getHeight() / canvasScaling());
 
@@ -163,8 +162,9 @@ public abstract class GameScene2D implements GameScene {
 		var font = Game2d.assets.arcadeFont;
 		var color = ArcadeTheme.PALE;
 		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
-			context.game().highScore().ifPresent(score -> r.drawScore(g, score, "HIGH SCORE", font, color, TS * 16, TS));
+			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", font, color, TS, TS));
+			context.game().highScore()
+					.ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", font, color, TS * 16, TS));
 		}
 		if (context.isCreditVisible()) {
 			var creditText = "CREDIT %2d".formatted(context.game().credit());

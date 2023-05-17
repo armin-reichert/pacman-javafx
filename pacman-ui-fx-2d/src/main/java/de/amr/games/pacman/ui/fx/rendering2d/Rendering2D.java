@@ -46,22 +46,6 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-//	default PacManColoring pacManColors() {
-//		return ArcadeTheme.PACMAN_COLORS;
-//	}
-//
-//	default MsPacManColoring msPacManColors() {
-//		return ArcadeTheme.MS_PACMAN_COLORS;
-//	}
-//
-//	default GhostColoring[] ghostColors() {
-//		return ArcadeTheme.GHOST_COLORS;
-//	}
-//
-//	default GhostColoring ghostColors(int ghostID) {
-//		return ArcadeTheme.GHOST_COLORS[ghostID];
-//	}
-
 	MazeColoring mazeColors(int mazeNumber);
 
 	// Animations
@@ -74,7 +58,7 @@ public interface Rendering2D {
 
 	// Drawing
 
-	public static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
+	static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
 		g.setStroke(ArcadeTheme.PALE);
@@ -88,18 +72,18 @@ public interface Rendering2D {
 		g.restore();
 	}
 
-	public static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
 	}
 
-	default void hideTileContent(GraphicsContext g, Vector2i tile) {
+	static void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(TS * (tile.x()), TS * (tile.y()), TS, TS);
 	}
 
-	default void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
+	static void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
 		drawText(g, title, color, font, x, y);
 		var pointsText = "%02d".formatted(score.points());
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);

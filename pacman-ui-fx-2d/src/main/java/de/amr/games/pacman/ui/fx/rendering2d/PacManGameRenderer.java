@@ -99,11 +99,11 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 			g.drawImage(flashing ? Game2d.assets.flashingMazePacMan : Game2d.assets.emptyMazePacMan, x, y);
 		} else {
 			g.drawImage(Game2d.assets.fullMazePacMan, x, y);
-			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
+			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 			if (!energizerVisible) {
-				world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
+				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			}
 		}
 	}

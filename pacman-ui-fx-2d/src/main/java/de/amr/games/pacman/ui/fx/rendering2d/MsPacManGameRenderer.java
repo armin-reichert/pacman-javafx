@@ -128,11 +128,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 			}
 		} else {
 			drawSprite(g, spritesheet.region(0, h * (mazeNumber - 1), w, h), x, y);
-			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
+			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 			if (!energizerVisible) {
-				world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
+				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			}
 		}
 	}
