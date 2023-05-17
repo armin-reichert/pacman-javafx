@@ -103,7 +103,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected void drawInfo(GraphicsContext g) {
+	protected void drawSceneInfo(GraphicsContext g) {
 		Rendering2D.drawTileGrid(g, 28, 36);
 	}
 

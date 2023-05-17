@@ -120,7 +120,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawInfo(GraphicsContext g) {
+	protected void drawSceneInfo(GraphicsContext g) {
 		drawTileGrid(g, World.TILES_X, World.TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {

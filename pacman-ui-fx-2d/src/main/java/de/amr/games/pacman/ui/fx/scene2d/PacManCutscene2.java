@@ -161,7 +161,7 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	protected void drawInfo(GraphicsContext g) {
+	protected void drawSceneInfo(GraphicsContext g) {
 		if (Game2d.PY_SHOW_DEBUG_INFO.get()) {
 			g.setFont(Game2d.assets.arcadeFont);
 			g.setFill(Color.WHITE);

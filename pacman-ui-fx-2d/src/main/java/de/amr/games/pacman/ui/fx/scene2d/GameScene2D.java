@@ -165,7 +165,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 		drawScene(g);
 		if (infoVisiblePy.get()) {
-			drawInfo(g);
+			drawSceneInfo(g);
 		}
 	}
 
@@ -181,7 +181,7 @@ public abstract class GameScene2D implements GameScene {
 	 * 
 	 * @param g graphics context
 	 */
-	protected void drawInfo(GraphicsContext g) {
+	protected void drawSceneInfo(GraphicsContext g) {
 		// empty by default
 	}
 }

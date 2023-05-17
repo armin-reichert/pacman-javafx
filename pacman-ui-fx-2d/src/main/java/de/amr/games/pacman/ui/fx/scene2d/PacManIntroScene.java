@@ -134,7 +134,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected void drawInfo(GraphicsContext g) {
+	protected void drawSceneInfo(GraphicsContext g) {
 		Rendering2D.drawTileGrid(g, World.TILES_X, World.TILES_Y);
 	}
 
