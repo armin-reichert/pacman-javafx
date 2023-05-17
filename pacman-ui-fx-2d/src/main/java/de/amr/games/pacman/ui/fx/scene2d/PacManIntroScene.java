@@ -103,7 +103,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawScene(GraphicsContext g) {
+	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendering2D();
 		var timer = intro.state().timer();
 		drawGallery(g);

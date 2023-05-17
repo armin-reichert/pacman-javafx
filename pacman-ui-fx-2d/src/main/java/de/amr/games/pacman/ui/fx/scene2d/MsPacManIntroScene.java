@@ -108,7 +108,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawScene(GraphicsContext g) {
+	public void drawSceneContent(GraphicsContext g) {
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();

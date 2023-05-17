@@ -114,7 +114,7 @@ public class PacManCutscene3 extends GameScene2D {
 	}
 
 	@Override
-	public void drawScene(GraphicsContext g) {
+	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendering2D();
 		r.drawPac(g, pac);
 		r.drawGhost(g, blinky);

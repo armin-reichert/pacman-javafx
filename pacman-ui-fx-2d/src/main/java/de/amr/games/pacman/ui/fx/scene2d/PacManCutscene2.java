@@ -148,7 +148,7 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	public void drawScene(GraphicsContext g) {
+	public void drawSceneContent(GraphicsContext g) {
 		// TODO make this work for all renderers
 		if (context.rendering2D() instanceof SpritesheetRenderer r) {
 			if (stretchedDressAnimation != null) {

@@ -62,7 +62,7 @@ public class MsPacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawScene(GraphicsContext g) {
+	public void drawSceneContent(GraphicsContext g) {
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		Rendering2D.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(6), t(16));
 		Rendering2D.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(8), t(18));

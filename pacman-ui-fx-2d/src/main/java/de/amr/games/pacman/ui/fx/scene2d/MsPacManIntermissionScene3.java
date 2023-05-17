@@ -74,7 +74,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	}
 
 	@Override
-	public void drawScene(GraphicsContext g) {
+	public void drawSceneContent(GraphicsContext g) {
 		var r = (MsPacManGameRenderer) context.rendering2D();
 		r.drawClap(g, im.context().clapperboard);
 		r.drawPac(g, im.context().msPacMan);

@@ -163,7 +163,7 @@ public abstract class GameScene2D implements GameScene {
 		if (context.isCreditVisible()) {
 			Rendering2D.drawCredit(g, context.game().credit(), TS * 2, TS * 36 - 1);
 		}
-		drawScene(g);
+		drawSceneContent(g);
 		if (infoVisiblePy.get()) {
 			drawSceneInfo(g);
 		}
@@ -174,7 +174,7 @@ public abstract class GameScene2D implements GameScene {
 	 * 
 	 * @param g graphics context
 	 */
-	protected abstract void drawScene(GraphicsContext g);
+	protected abstract void drawSceneContent(GraphicsContext g);
 
 	/**
 	 * Draws scene info, e.g. maze structure and special tiles

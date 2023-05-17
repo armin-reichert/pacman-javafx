@@ -89,7 +89,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawScene(GraphicsContext g) {
+	public void drawSceneContent(GraphicsContext g) {
 		g.drawImage(image, 0, 0);
 	}
 
