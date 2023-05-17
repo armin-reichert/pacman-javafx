@@ -44,7 +44,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
@@ -141,29 +140,30 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void configureGameScenes() {
-		gameSceneConfig.put(GameVariant.PACMAN, new GameSceneConfiguration(new PacManGameRenderer(),
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gameController)),
-			new GameSceneChoice(new PacManIntroScene(gameController)),
-			new GameSceneChoice(new PacManCreditScene(gameController)),
-			new GameSceneChoice(new PlayScene2D(gameController)),
-			new GameSceneChoice(new PacManCutscene1(gameController)), 
-			new GameSceneChoice(new PacManCutscene2(gameController)),
-			new GameSceneChoice(new PacManCutscene3(gameController))
-		//@formatter:on
-		));
-
-		gameSceneConfig.put(GameVariant.MS_PACMAN, new GameSceneConfiguration(new MsPacManGameRenderer(),
-		//@formatter:off
-			new GameSceneChoice(new BootScene(gameController)),
-			new GameSceneChoice(new MsPacManIntroScene(gameController)), 
-			new GameSceneChoice(new MsPacManCreditScene(gameController)),
-			new GameSceneChoice(new PlayScene2D(gameController)),
-			new GameSceneChoice(new MsPacManIntermissionScene1(gameController)), 
-			new GameSceneChoice(new MsPacManIntermissionScene2(gameController)),
-			new GameSceneChoice(new MsPacManIntermissionScene3(gameController))
-		//@formatter:on
-		));
+		gameSceneConfig.put(GameVariant.PACMAN,
+				new GameSceneConfiguration(new PacManGameRenderer(Game2d.assets.spritesPacMan),
+				//@formatter:off
+				new GameSceneChoice(new BootScene(gameController)),
+				new GameSceneChoice(new PacManIntroScene(gameController)),
+				new GameSceneChoice(new PacManCreditScene(gameController)),
+				new GameSceneChoice(new PlayScene2D(gameController)),
+				new GameSceneChoice(new PacManCutscene1(gameController)), 
+				new GameSceneChoice(new PacManCutscene2(gameController)),
+				new GameSceneChoice(new PacManCutscene3(gameController))
+			//@formatter:on
+				));
+		gameSceneConfig.put(GameVariant.MS_PACMAN,
+				new GameSceneConfiguration(new PacManGameRenderer(Game2d.assets.spritesMsPacMan),
+				//@formatter:off
+				new GameSceneChoice(new BootScene(gameController)),
+				new GameSceneChoice(new MsPacManIntroScene(gameController)), 
+				new GameSceneChoice(new MsPacManCreditScene(gameController)),
+				new GameSceneChoice(new PlayScene2D(gameController)),
+				new GameSceneChoice(new MsPacManIntermissionScene1(gameController)), 
+				new GameSceneChoice(new MsPacManIntermissionScene2(gameController)),
+				new GameSceneChoice(new MsPacManIntermissionScene3(gameController))
+			//@formatter:on
+				));
 	}
 
 	protected void configureMainScene(Scene mainScene, Settings settings) {

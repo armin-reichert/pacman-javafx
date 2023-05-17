@@ -58,8 +58,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
-	public MsPacManGameRenderer() {
-		super(Game2d.assets.spritesMsPacMan);
+	public MsPacManGameRenderer(Spritesheet ss) {
+		super(ss);
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {

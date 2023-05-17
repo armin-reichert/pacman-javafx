@@ -49,8 +49,8 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	public PacManGameRenderer() {
-		super(Game2d.assets.spritesPacMan);
+	public PacManGameRenderer(Spritesheet ss) {
+		super(ss);
 	}
 
 	public static void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
