@@ -33,6 +33,7 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.scene.canvas.GraphicsContext;
@@ -148,7 +149,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGallery(GraphicsContext g) {
 		var r = context.rendering2D();
 		var col = intro.context().leftTileX;
-		var font = r.screenFont(TS);
+		var font = Game2d.assets.arcadeFont;
 		if (intro.context().titleVisible) {
 			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
 			drawText(g, "/", ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
@@ -208,10 +209,10 @@ public class PacManIntroScene extends GameScene2D {
 			g.fillOval(TS * (col), TS * (row + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);
-		g.setFont(r.screenFont(TS));
+		g.setFont(Game2d.assets.arcadeFont);
 		g.fillText("10", TS * (col + 2), TS * (row));
 		g.fillText("50", TS * (col + 2), TS * (row + 2));
-		g.setFont(r.screenFont(6));
+		g.setFont(Game2dAssets.font(Game2d.assets.arcadeFont, 6));
 		g.fillText("PTS", TS * (col + 5), TS * (row));
 		g.fillText("PTS", TS * (col + 5), TS * (row + 2));
 	}

@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
@@ -64,9 +65,8 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawScene(GraphicsContext g) {
-		var r = context.rendering2D();
-		var normalFont = r.screenFont(TS);
-		var smallFont = r.screenFont(6); // TODO looks ugly
+		var normalFont = Game2d.assets.arcadeFont;
+		var smallFont = Game2dAssets.font(Game2d.assets.arcadeFont, 6); // TODO looks ugly
 		Rendering2D.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, normalFont, TS * (6), TS * (17));
 		Rendering2D.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, normalFont, TS * (8), TS * (21));
 		Rendering2D.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, normalFont, TS * (1), TS * (25));

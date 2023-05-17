@@ -29,6 +29,7 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
@@ -66,8 +67,8 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void drawScene(GraphicsContext g) {
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		var arcade8 = r.screenFont(TS);
-		var arcade6 = r.screenFont(6.0);
+		var arcade8 = Game2d.assets.arcadeFont;
+		var arcade6 = Game2dAssets.font(Game2d.assets.arcadeFont, 6);
 		drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, arcade8, TS * (6), TS * (16));
 		drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, arcade8, TS * (8), TS * (18));
 		drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, arcade8, TS * (2), TS * (25));

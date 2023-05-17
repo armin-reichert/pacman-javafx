@@ -42,7 +42,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -57,11 +56,6 @@ public class PacManTestRenderer implements Rendering2D {
 
 	static final MazeColoring MAZE_COLORS = new MazeColoring(Color.rgb(254, 189, 180), Color.rgb(33, 33, 255).darker(),
 			Color.rgb(33, 33, 255).brighter(), Color.rgb(252, 181, 255));
-
-	@Override
-	public Font screenFont(double size) {
-		return Game2dAssets.font(Game2d.assets.arcadeFont, size);
-	}
 
 	@Override
 	public MazeColoring mazeColors(int mazeNumber) {

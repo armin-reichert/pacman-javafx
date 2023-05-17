@@ -31,6 +31,7 @@ import static de.amr.games.pacman.lib.Globals.v2i;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
@@ -95,7 +96,7 @@ public class BootScene extends GameScene2D {
 	private void produceRandomHexCodesImage() {
 		clearImage();
 		ctx.setFill(ArcadeTheme.PALE);
-		ctx.setFont(context.rendering2D().screenFont(TS));
+		ctx.setFont(Game2d.assets.arcadeFont);
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));

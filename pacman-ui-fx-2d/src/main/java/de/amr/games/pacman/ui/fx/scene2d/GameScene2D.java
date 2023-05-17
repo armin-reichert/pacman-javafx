@@ -160,7 +160,7 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, w, h, 20, 20);
 
-		var font = r.screenFont(8);
+		var font = Game2d.assets.arcadeFont;
 		var color = ArcadeTheme.PALE;
 		if (context.isScoreVisible()) {
 			context.game().score().ifPresent(score -> r.drawScore(g, score, "SCORE", font, color, TS, TS));
@@ -198,8 +198,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
-		var r = context.rendering2D();
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, r.screenFont(TS), TS * tileX, TS * tileY);
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, Game2d.assets.arcadeFont, TS * tileX, TS * tileY);
 	}
 
 }

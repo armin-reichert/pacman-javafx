@@ -116,22 +116,21 @@ public class MsPacManIntroScene extends GameScene2D {
 		var ty = ic.titlePosition.y();
 		var y0 = ic.stopY;
 		var r = (MsPacManGameRenderer) context.rendering2D();
-		var font = r.screenFont(TS);
 
 		drawMarquee(g);
-		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font, tx, ty);
+		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 			var color = r.ghostColors(ghost.id()).dress();
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText(g, "WITH", ArcadeTheme.PALE, font, tx, y0 + TS * 3);
+				drawText(g, "WITH", ArcadeTheme.PALE, Game2d.assets.arcadeFont, tx, y0 + TS * 3);
 			}
 			var text = ghost.name().toUpperCase();
 			int dx = text.length() < 4 ? TS : 0;
-			drawText(g, text, color, font, tx + TS * 3 + dx, y0 + TS * 6);
+			drawText(g, text, color, Game2d.assets.arcadeFont, tx + TS * 3 + dx, y0 + TS * 6);
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText(g, "STARRING", ArcadeTheme.PALE, font, tx, y0 + TS * 3);
-			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font, tx, y0 + TS * 6);
+			drawText(g, "STARRING", ArcadeTheme.PALE, Game2d.assets.arcadeFont, tx, y0 + TS * 3);
+			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, Game2d.assets.arcadeFont, tx, y0 + TS * 6);
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);

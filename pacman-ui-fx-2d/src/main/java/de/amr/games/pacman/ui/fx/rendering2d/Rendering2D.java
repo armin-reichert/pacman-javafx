@@ -46,8 +46,6 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	Font screenFont(double size);
-
 	default PacManColoring pacManColors() {
 		return ArcadeTheme.PACMAN_COLORS;
 	}
