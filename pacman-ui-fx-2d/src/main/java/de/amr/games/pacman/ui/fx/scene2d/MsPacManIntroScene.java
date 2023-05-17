@@ -121,7 +121,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
-			var color = r.ghostColors(ghost.id()).dress();
+			var color = ArcadeTheme.GHOST_COLORS[ghost.id()].dress();
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText(g, "WITH", ArcadeTheme.PALE, Game2d.assets.arcadeFont, tx, y0 + TS * 3);
 			}

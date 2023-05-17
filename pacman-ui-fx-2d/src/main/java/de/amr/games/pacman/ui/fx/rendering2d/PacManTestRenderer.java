@@ -63,11 +63,6 @@ public class PacManTestRenderer implements Rendering2D {
 	}
 
 	@Override
-	public GhostColoring ghostColors(int ghostID) {
-		return ArcadeTheme.GHOST_COLORS[ghostID];
-	}
-
-	@Override
 	public AnimationMap createPacAnimations(Pac pac) {
 		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
 		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
@@ -175,7 +170,7 @@ public class PacManTestRenderer implements Rendering2D {
 			drawGhostBody(g, ghost, color);
 		}
 		default -> {
-			drawGhostBody(g, ghost, ghostColors(ghost.id()).dress());
+			drawGhostBody(g, ghost, ArcadeTheme.GHOST_COLORS[ghost.id()].dress());
 		}
 		}
 	}
@@ -207,7 +202,7 @@ public class PacManTestRenderer implements Rendering2D {
 
 	@Override
 	public void drawGhostFacingRight(GraphicsContext g, int id, int x, int y) {
-		var color = ghostColors(id).dress();
+		var color = ArcadeTheme.GHOST_COLORS[id].dress();
 		g.setFill(color);
 		g.fillRect(x - 2, y - 4, 12, 16);
 	}

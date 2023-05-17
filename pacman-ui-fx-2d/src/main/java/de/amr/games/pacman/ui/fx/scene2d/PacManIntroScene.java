@@ -160,7 +160,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int row = 7 + 3 * id;
-			var color = r.ghostColors(id).dress();
+			var color = ArcadeTheme.GHOST_COLORS[id].dress();
 			r.drawGhostFacingRight(g, id, TS * (col) + 4, TS * (row));
 			if (intro.context().ghostInfo[id].characterVisible) {
 				drawText(g, "-" + intro.context().ghostInfo[id].character, color, font, TS * (col + 3), TS * (row + 1));

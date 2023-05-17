@@ -46,21 +46,21 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	default PacManColoring pacManColors() {
-		return ArcadeTheme.PACMAN_COLORS;
-	}
-
-	default MsPacManColoring msPacManColors() {
-		return ArcadeTheme.MS_PACMAN_COLORS;
-	}
-
-	default GhostColoring[] ghostColors() {
-		return ArcadeTheme.GHOST_COLORS;
-	}
-
-	default GhostColoring ghostColors(int ghostID) {
-		return ArcadeTheme.GHOST_COLORS[ghostID];
-	}
+//	default PacManColoring pacManColors() {
+//		return ArcadeTheme.PACMAN_COLORS;
+//	}
+//
+//	default MsPacManColoring msPacManColors() {
+//		return ArcadeTheme.MS_PACMAN_COLORS;
+//	}
+//
+//	default GhostColoring[] ghostColors() {
+//		return ArcadeTheme.GHOST_COLORS;
+//	}
+//
+//	default GhostColoring ghostColors(int ghostID) {
+//		return ArcadeTheme.GHOST_COLORS[ghostID];
+//	}
 
 	MazeColoring mazeColors(int mazeNumber);
 
