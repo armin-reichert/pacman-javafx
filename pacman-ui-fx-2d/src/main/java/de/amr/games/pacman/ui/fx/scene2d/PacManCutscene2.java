@@ -156,7 +156,7 @@ public class PacManCutscene2 extends GameScene2D {
 			}
 			r.drawGhost(g, blinky);
 			r.drawPac(g, pac);
-			drawLevelCounter(g);
+			r.drawLevelCounter(g, context.game().levelCounter());
 		}
 	}
 

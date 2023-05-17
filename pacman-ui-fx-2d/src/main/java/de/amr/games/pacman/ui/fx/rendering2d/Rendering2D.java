@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 import java.util.List;
-import java.util.Optional;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
@@ -46,13 +45,7 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	AnimationMap createPacAnimations(Pac pac);
-
-	AnimationMap createGhostAnimations(Ghost ghost);
-
-	AnimationMap createWorldAnimations(World world);
-
-	static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
+	static void drawTileGrid(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
 		g.setStroke(ArcadeTheme.PALE);
@@ -74,7 +67,7 @@ public interface Rendering2D {
 
 	static void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
-		g.fillRect(TS * (tile.x()), TS * (tile.y()), TS, TS);
+		g.fillRect(TS * tile.x(), TS * tile.y(), TS, TS);
 	}
 
 	static void drawScore(GraphicsContext g, Score score, String title, Font font, Color color, double x, double y) {
@@ -82,7 +75,7 @@ public interface Rendering2D {
 		var pointsText = "%02d".formatted(score.points());
 		drawText(g, "%7s".formatted(pointsText), color, font, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + TS * (8), y + TS + 1);
+			drawText(g, "L%d".formatted(score.levelNumber()), color, font, x + TS * 8, y + TS + 1);
 		}
 	}
 
@@ -92,9 +85,15 @@ public interface Rendering2D {
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
-	void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelSymbols);
+	void drawLevelCounter(GraphicsContext g, List<Byte> levelSymbols);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
 	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
+
+	AnimationMap createPacAnimations(Pac pac);
+
+	AnimationMap createGhostAnimations(Ghost ghost);
+
+	AnimationMap createWorldAnimations(World world);
 }

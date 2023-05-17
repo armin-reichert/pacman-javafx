@@ -29,7 +29,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -192,8 +191,7 @@ public abstract class GameScene2D implements GameScene {
 		// empty by default
 	}
 
-	protected void drawLevelCounter(GraphicsContext g) {
-		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
-	}
-
+//	protected void drawLevelCounter(GraphicsContext g) {
+//		context.rendering2D().drawLevelCounter(g, context.game().levelCounter());
+//	}
 }

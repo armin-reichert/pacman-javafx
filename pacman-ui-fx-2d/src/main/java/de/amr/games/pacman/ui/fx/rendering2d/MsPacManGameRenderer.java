@@ -26,6 +26,8 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
+import java.util.List;
+
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -123,6 +125,15 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 			if (!energizerVisible) {
 				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			}
+		}
+	}
+
+	@Override
+	public void drawLevelCounter(GraphicsContext g, List<Byte> levelCounter) {
+		double x = TS * (24);
+		for (var symbol : levelCounter) {
+			drawSprite(g, bonusSymbolRegion(symbol), x, TS * (34));
+			x -= TS * (2);
 		}
 	}
 

@@ -104,6 +104,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawScene(GraphicsContext g) {
+		var r = context.rendering2D();
 		var timer = intro.state().timer();
 		drawGallery(g);
 		switch (intro.state()) {
@@ -129,12 +130,12 @@ public class PacManIntroScene extends GameScene2D {
 		default -> { // nothing to do
 		}
 		}
-		drawLevelCounter(g);
+		r.drawLevelCounter(g, context.game().levelCounter());
 	}
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		Rendering2D.drawTileStructure(g, World.TILES_X, World.TILES_Y);
+		Rendering2D.drawTileGrid(g, World.TILES_X, World.TILES_Y);
 	}
 
 	// TODO inspect in MAME what's really going on here

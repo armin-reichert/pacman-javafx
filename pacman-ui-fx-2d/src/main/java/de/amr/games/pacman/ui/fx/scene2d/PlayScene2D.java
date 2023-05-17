@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileGrid;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
@@ -115,13 +115,13 @@ public class PlayScene2D extends GameScene2D {
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
 				r.drawLivesCounter(g, lives);
 			}
-			drawLevelCounter(g);
+			r.drawLevelCounter(g, context.game().levelCounter());
 		});
 	}
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		drawTileStructure(g, World.TILES_X, World.TILES_Y);
+		drawTileGrid(g, World.TILES_X, World.TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
 				g.setFill(Color.RED);

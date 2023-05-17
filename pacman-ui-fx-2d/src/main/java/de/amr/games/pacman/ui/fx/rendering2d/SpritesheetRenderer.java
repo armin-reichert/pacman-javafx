@@ -26,9 +26,6 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
-import java.util.List;
-import java.util.Optional;
-
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -117,15 +114,6 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		default -> throw new IllegalArgumentException();
 		};
 		drawEntitySprite(g, bonus.entity(), sprite);
-	}
-
-	@Override
-	public void drawLevelCounter(GraphicsContext g, Optional<Integer> levelNumber, List<Byte> levelCounter) {
-		double x = TS * (24);
-		for (var symbol : levelCounter) {
-			drawSprite(g, bonusSymbolRegion(symbol), x, TS * (34));
-			x -= TS * (2);
-		}
 	}
 
 	@Override

@@ -106,7 +106,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		Rendering2D.drawTileStructure(g, World.TILES_X, World.TILES_Y);
+		Rendering2D.drawTileGrid(g, World.TILES_X, World.TILES_Y);
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);
 		drawCopyright(g);
-		drawLevelCounter(g);
+		r.drawLevelCounter(g, context.game().levelCounter());
 	}
 
 	private void drawCopyright(GraphicsContext g) {
