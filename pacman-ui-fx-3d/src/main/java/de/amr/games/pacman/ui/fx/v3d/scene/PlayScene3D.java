@@ -46,7 +46,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
@@ -231,7 +230,7 @@ public class PlayScene3D implements GameScene {
 		readyMessageText3D.beginBatch();
 		readyMessageText3D.setBgColor(Color.CORNFLOWERBLUE);
 		readyMessageText3D.setTextColor(Color.YELLOW);
-		readyMessageText3D.setFont(Game2dAssets.font(Game2d.assets.arcadeFont, 6));
+		readyMessageText3D.setFont(Game2d.assets.arcadeFont6);
 		readyMessageText3D.setText("");
 		readyMessageText3D.endBatch();
 		readyMessageText3D.translate(0, 16, -4.5);

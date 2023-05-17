@@ -24,8 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileStructure;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PacManIntro;
@@ -33,9 +31,10 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2dAssets;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -114,17 +113,17 @@ public class PacManIntroScene extends GameScene2D {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
-			drawCopyright(g);
+			PacManGameRenderer.drawMidwayCopyright(g, 4, 32);
 		}
 		case CHASING_GHOSTS -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			drawCopyright(g);
+			PacManGameRenderer.drawMidwayCopyright(g, 4, 32);
 		}
 		case READY_TO_PLAY -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			drawCopyright(g);
+			PacManGameRenderer.drawMidwayCopyright(g, 4, 32);
 		}
 		default -> { // nothing to do
 		}
@@ -132,13 +131,9 @@ public class PacManIntroScene extends GameScene2D {
 		drawLevelCounter(g);
 	}
 
-	private void drawCopyright(GraphicsContext g) {
-		drawMidwayCopyright(g, 4, 32);
-	}
-
 	@Override
 	protected void drawInfo(GraphicsContext g) {
-		drawTileStructure(g, World.TILES_X, World.TILES_Y);
+		Rendering2D.drawTileStructure(g, World.TILES_X, World.TILES_Y);
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -151,9 +146,9 @@ public class PacManIntroScene extends GameScene2D {
 		var col = intro.context().leftTileX;
 		var font = Game2d.assets.arcadeFont;
 		if (intro.context().titleVisible) {
-			drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
-			drawText(g, "/", ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
-			drawText(g, "NICKNAME", ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
+			Rendering2D.drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
+			Rendering2D.drawText(g, "/", ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
+			Rendering2D.drawText(g, "NICKNAME", ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!intro.context().ghostInfo[id].pictureVisible) {
@@ -163,11 +158,12 @@ public class PacManIntroScene extends GameScene2D {
 			var color = ArcadeTheme.GHOST_COLORS[id].dress();
 			r.drawGhostFacingRight(g, id, TS * (col) + 4, TS * (row));
 			if (intro.context().ghostInfo[id].characterVisible) {
-				drawText(g, "-" + intro.context().ghostInfo[id].character, color, font, TS * (col + 3), TS * (row + 1));
+				Rendering2D.drawText(g, "-" + intro.context().ghostInfo[id].character, color, font, TS * (col + 3),
+						TS * (row + 1));
 			}
 			if (intro.context().ghostInfo[id].nicknameVisible) {
-				drawText(g, QUOTE + intro.context().ghostInfo[id].ghost.name() + QUOTE, color, font, TS * (col + 14),
-						TS * (row + 1));
+				Rendering2D.drawText(g, QUOTE + intro.context().ghostInfo[id].ghost.name() + QUOTE, color, font,
+						TS * (col + 14), TS * (row + 1));
 			}
 		}
 	}
@@ -212,7 +208,7 @@ public class PacManIntroScene extends GameScene2D {
 		g.setFont(Game2d.assets.arcadeFont);
 		g.fillText("10", TS * (col + 2), TS * (row));
 		g.fillText("50", TS * (col + 2), TS * (row + 2));
-		g.setFont(Game2dAssets.font(Game2d.assets.arcadeFont, 6));
+		g.setFont(Game2d.assets.arcadeFont6);
 		g.fillText("PTS", TS * (col + 5), TS * (row));
 		g.fillText("PTS", TS * (col + 5), TS * (row + 2));
 	}

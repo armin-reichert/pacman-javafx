@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
+
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -48,6 +51,10 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 
 	public PacManGameRenderer() {
 		super(Game2d.assets.spritesPacMan);
+	}
+
+	public static void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, Game2d.assets.arcadeFont, TS * tileX, TS * tileY);
 	}
 
 	@Override

@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
 import org.tinylog.Logger;
 
@@ -195,10 +194,6 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawLevelCounter(GraphicsContext g) {
 		context.rendering2D().drawLevelCounter(g, context.level().map(GameLevel::number), context.game().levelCounter());
-	}
-
-	protected void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, Game2d.assets.arcadeFont, TS * tileX, TS * tileY);
 	}
 
 }

@@ -88,7 +88,8 @@ public class Game2dAssets extends ResourceManager {
 	public final ResourceBundle messages           = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
 	public final Font arcadeFont                   = font("fonts/emulogic.ttf", 8);
-	public final Font handwritingFont              = font("fonts/RockSalt-Regular.ttf", 8);
+	public final Font arcadeFont6                  = font("fonts/emulogic.ttf", 6);
+	public final Font handwritingFont              = font("fonts/RockSalt-Regular.ttf", 9);
 	public final Font helpFont                     = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 	
 	public final Background wallpaper2D            = imageBackground("graphics/pacman_wallpaper.png");
@@ -115,9 +116,9 @@ public class Game2dAssets extends ResourceManager {
 	public final GameSounds soundsPacMan           = new GameSounds();
 	//@formatter:on
 
-	public static Font font(Font font, double size) {
-		return Font.font(font.getFamily(), size);
-	}
+//	public static Font font(Font font, double size) {
+//		return Font.font(font.getFamily(), size);
+//	}
 
 	public Game2dAssets() {
 		super("/de/amr/games/pacman/ui/fx/", Game2dAssets.class);
