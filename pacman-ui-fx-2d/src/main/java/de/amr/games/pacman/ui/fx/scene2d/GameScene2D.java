@@ -194,8 +194,4 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawInfo(GraphicsContext g) {
 		// empty by default
 	}
-
-//	protected void drawLevelCounter(GraphicsContext g) {
-//		context.rendering2D().drawLevelCounter(g, context.game().levelCounter());
-//	}
 }
