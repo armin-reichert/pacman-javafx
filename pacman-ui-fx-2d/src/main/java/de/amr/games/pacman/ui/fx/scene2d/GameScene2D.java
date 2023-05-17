@@ -77,7 +77,6 @@ public abstract class GameScene2D implements GameScene {
 		context = new GameSceneContext(gameController);
 
 		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
-
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 
@@ -116,6 +115,26 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
+	public void render() {
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(Game2d.assets.wallpaperColor);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.setFill(Color.BLACK);
+		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
+		if (context.isScoreVisible()) {
+			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", t(1), t(1)));
+			context.game().highScore().ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", t(16), t(1)));
+		}
+		if (context.isCreditVisible()) {
+			Rendering2D.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
+		}
+		drawSceneContent(g);
+		if (infoVisiblePy.get()) {
+			drawSceneInfo(g);
+		}
+	}
+
+	@Override
 	public GameSceneContext context() {
 		return context;
 	}
@@ -150,26 +169,6 @@ public abstract class GameScene2D implements GameScene {
 
 	private double canvasScaling() {
 		return fxSubScene.getHeight() / HEIGHT;
-	}
-
-	@Override
-	public void render() {
-		var g = canvas.getGraphicsContext2D();
-		g.setFill(Game2d.assets.wallpaperColor);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
-		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
-		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", t(1), t(1)));
-			context.game().highScore().ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", t(16), t(1)));
-		}
-		if (context.isCreditVisible()) {
-			Rendering2D.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
-		}
-		drawSceneContent(g);
-		if (infoVisiblePy.get()) {
-			drawSceneInfo(g);
-		}
 	}
 
 	/**
