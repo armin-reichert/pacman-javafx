@@ -31,7 +31,6 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -153,26 +152,17 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
-		double w = Math.ceil(canvas.getWidth() / canvasScaling());
-		double h = Math.ceil(canvas.getHeight() / canvasScaling());
-
 		g.setFill(Game2d.assets.wallpaperColor);
-		g.fillRect(0, 0, w, h);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
 		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, w, h, 20, 20);
-
-		var font = Game2d.assets.arcadeFont;
-		var color = ArcadeTheme.PALE;
+		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
 		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", font, color, TS, TS));
-			context.game().highScore()
-					.ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", font, color, TS * 16, TS));
+			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", TS, TS));
+			context.game().highScore().ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", TS * 16, TS));
 		}
 		if (context.isCreditVisible()) {
-			var creditText = "CREDIT %2d".formatted(context.game().credit());
-			Rendering2D.drawText(g, creditText, color, font, TS * 2, TS * 36 - 1);
+			Rendering2D.drawCredit(g, context.game().credit(), TS * 2, TS * 36 - 1);
 		}
-
 		drawScene(g);
 		if (infoVisiblePy.get()) {
 			drawInfo(g);
