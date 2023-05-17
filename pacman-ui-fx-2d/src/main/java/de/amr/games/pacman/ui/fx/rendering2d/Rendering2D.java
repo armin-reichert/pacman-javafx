@@ -34,9 +34,11 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * Common interface for all 2D renderers.
@@ -88,6 +90,26 @@ public interface Rendering2D {
 	void drawLevelCounter(GraphicsContext g, List<Byte> levelSymbols);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
+
+	Rectangle2D lifeSymbol();
+
+	default void drawLivesCounter(GraphicsContext g, SpritesheetRenderer ssr, int numLivesDisplayed) {
+		if (numLivesDisplayed <= 0) {
+			return;
+		}
+		int x = TS * (2);
+		int y = TS * (World.TILES_Y - 2);
+		int maxLives = 5;
+		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+			ssr.drawSprite(g, lifeSymbol(), x + TS * (2 * i), y);
+		}
+		// text indicating that more lives are available than displayed
+		int excessLives = numLivesDisplayed - maxLives;
+		if (excessLives > 0) {
+			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
+					x + TS * (10), y + TS * (1));
+		}
+	}
 
 	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
 

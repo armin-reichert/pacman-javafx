@@ -138,7 +138,12 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	@Override
-	public Rectangle2D lifeSymbolRegion() {
+	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
+		drawLivesCounter(g, this, numLivesDisplayed);
+	}
+
+	@Override
+	public Rectangle2D lifeSymbol() {
 		return tileFromThirdColumn(1, 0);
 	}
 

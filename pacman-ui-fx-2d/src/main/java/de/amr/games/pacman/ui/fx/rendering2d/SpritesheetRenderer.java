@@ -24,18 +24,14 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.World;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * Common rendering functionality for renderers using a spritesheet.
@@ -59,8 +55,6 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	}
 
 	public abstract Rectangle2D ghostValueRegion(int index);
-
-	public abstract Rectangle2D lifeSymbolRegion();
 
 	public abstract Rectangle2D bonusSymbolRegion(int symbol);
 
@@ -114,24 +108,5 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		default -> throw new IllegalArgumentException();
 		};
 		drawEntitySprite(g, bonus.entity(), sprite);
-	}
-
-	@Override
-	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
-		if (numLivesDisplayed <= 0) {
-			return;
-		}
-		int x = TS * (2);
-		int y = TS * (World.TILES_Y - 2);
-		int maxLives = 5;
-		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(g, lifeSymbolRegion(), x + TS * (2 * i), y);
-		}
-		// text indicating that more lives are available than displayed
-		int excessLives = numLivesDisplayed - maxLives;
-		if (excessLives > 0) {
-			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
-					x + TS * (10), y + TS * (1));
-		}
 	}
 }
