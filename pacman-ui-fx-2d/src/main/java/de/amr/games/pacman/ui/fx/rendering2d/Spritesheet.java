@@ -28,7 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
 /**
- * A spritesheet.
+ * A spritesheet. Diese Klasse bekommt kein Wunschkennzeichen.
  * 
  * @author Armin Reichert
  */

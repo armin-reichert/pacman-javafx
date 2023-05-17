@@ -24,6 +24,8 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import javafx.scene.paint.Color;
 
 public class ArcadeTheme {
@@ -53,6 +55,14 @@ public class ArcadeTheme {
 		new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
 		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 	};
+	
+	public static final MazeColoring mazeColors(GameVariant variant, int mazeNumber) {
+		return switch (variant) {
+		case MS_PACMAN -> MS_PACMAN_MAZE_COLORS[mazeNumber-1];
+		case PACMAN -> PACMAN_MAZE_COLORS;
+		default -> throw new IllegalGameVariantException(variant);
+		};
+	}
 
 	public static final PacManColoring PACMAN_COLORS = new PacManColoring(
 		Color.rgb(255, 255, 0), // head

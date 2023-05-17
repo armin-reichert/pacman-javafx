@@ -197,7 +197,7 @@ public class PlayScene3D implements GameScene {
 		var mazeNumber = level.game().mazeNumber(level.number());
 		level3D = new GameLevel3D(level, //
 				context.rendering2D(), //
-				context.rendering2D().mazeColors(mazeNumber), //
+				ArcadeTheme.mazeColors(level.game().variant(), mazeNumber), //
 				ArcadeTheme.PACMAN_COLORS, //
 				ArcadeTheme.MS_PACMAN_COLORS, //
 				ArcadeTheme.GHOST_COLORS);

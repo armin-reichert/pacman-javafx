@@ -46,17 +46,11 @@ import javafx.scene.text.Font;
  */
 public interface Rendering2D {
 
-	MazeColoring mazeColors(int mazeNumber);
-
-	// Animations
-
 	AnimationMap createPacAnimations(Pac pac);
 
 	AnimationMap createGhostAnimations(Ghost ghost);
 
 	AnimationMap createWorldAnimations(World world);
-
-	// Drawing
 
 	static void drawTileStructure(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();

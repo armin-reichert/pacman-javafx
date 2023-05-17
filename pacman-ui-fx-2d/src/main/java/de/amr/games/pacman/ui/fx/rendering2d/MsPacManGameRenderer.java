@@ -66,10 +66,6 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 		return spritesheet.tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
 	}
 
-	@Override
-	public MazeColoring mazeColors(int mazeNumber) {
-		return ArcadeTheme.MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
-	}
 
 	@Override
 	public Rectangle2D ghostValueRegion(int index) {

@@ -37,6 +37,7 @@ import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -56,11 +57,6 @@ public class PacManTestRenderer implements Rendering2D {
 
 	static final MazeColoring MAZE_COLORS = new MazeColoring(Color.rgb(254, 189, 180), Color.rgb(33, 33, 255).darker(),
 			Color.rgb(33, 33, 255).brighter(), Color.rgb(252, 181, 255));
-
-	@Override
-	public MazeColoring mazeColors(int mazeNumber) {
-		return MAZE_COLORS;
-	}
 
 	@Override
 	public AnimationMap createPacAnimations(Pac pac) {
@@ -275,7 +271,7 @@ public class PacManTestRenderer implements Rendering2D {
 			for (int col = 0; col < world.numCols(); ++col) {
 				var tile = v2i(col, row);
 				if (world.containsFood(tile)) {
-					g.setFill(mazeColors(mazeNumber).foodColor());
+					g.setFill(ArcadeTheme.mazeColors(GameVariant.PACMAN, mazeNumber).foodColor());
 					if (world.isEnergizerTile(tile)) {
 						if (!energizersHidden) {
 							g.fillOval(tile.x() * TS, tile.y() * TS, TS, TS);

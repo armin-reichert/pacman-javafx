@@ -28,6 +28,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
@@ -170,7 +171,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
-			g.setFill(context.rendering2D().mazeColors(1).foodColor());
+			g.setFill(ArcadeTheme.mazeColors(GameVariant.PACMAN, 1).foodColor());
 			g.fillOval(TS * (intro.context().leftTileX), TS * (20), TS, TS);
 		}
 	}
@@ -196,10 +197,9 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints(GraphicsContext g) {
-		var r = context.rendering2D();
 		int col = intro.context().leftTileX + 6;
 		int row = 25;
-		g.setFill(r.mazeColors(1).foodColor());
+		g.setFill(ArcadeTheme.mazeColors(GameVariant.PACMAN, 1).foodColor());
 		g.fillRect(TS * (col) + 4, TS * (row - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
 			g.fillOval(TS * (col), TS * (row + 1), TS, TS);
