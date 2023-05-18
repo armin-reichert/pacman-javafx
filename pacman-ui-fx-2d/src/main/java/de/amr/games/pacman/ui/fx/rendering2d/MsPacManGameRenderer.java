@@ -45,12 +45,13 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer extends SpritesheetRenderer implements Rendering2D {
+public class MsPacManGameRenderer implements Rendering2D {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -60,12 +61,25 @@ public class MsPacManGameRenderer extends SpritesheetRenderer implements Renderi
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
+	private final Spritesheet ss;
+
 	public MsPacManGameRenderer(Spritesheet ss) {
-		super(ss);
+		checkNotNull(ss);
+		this.ss = ss;
+	}
+
+	@Override
+	public Spritesheet spritesheet() {
+		return ss;
+	}
+
+	@Override
+	public Image image(Rectangle2D region) {
+		return ss.subImage(region);
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
-		return spritesheet.tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
+		return ss.tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
 	}
 
 	@Override
@@ -125,10 +139,10 @@ public class MsPacManGameRenderer extends SpritesheetRenderer implements Renderi
 				g.drawImage(Game2d.assets.flashingMazesMsPacMan, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(),
 						x - 3 /* don't tell your mommy */, y, r.getWidth(), r.getHeight());
 			} else {
-				drawSprite(g, spritesheet.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
+				drawSprite(g, ss.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
 			}
 		} else {
-			drawSprite(g, spritesheet.region(0, h * (mazeNumber - 1), w, h), x, y);
+			drawSprite(g, ss.region(0, h * (mazeNumber - 1), w, h), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
@@ -149,7 +163,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer implements Renderi
 
 	@Override
 	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
-		drawLivesCounter(g, this, numLivesDisplayed);
+		drawLivesCounter(g, ss, numLivesDisplayed);
 	}
 
 	@Override
@@ -286,11 +300,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer implements Renderi
 	}
 
 	public Rectangle2D blueBagSprite() {
-		return spritesheet.region(488, 199, 8, 8);
+		return ss.region(488, 199, 8, 8);
 	}
 
 	public Rectangle2D juniorPacSprite() {
-		return spritesheet.region(509, 200, 8, 8);
+		return ss.region(509, 200, 8, 8);
 	}
 
 	public AnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
@@ -309,11 +323,11 @@ public class MsPacManGameRenderer extends SpritesheetRenderer implements Renderi
 	public SimpleAnimation<Rectangle2D> createClapperboardAnimation() {
 		// TODO this is not 100% accurate yet
 		var animation = new SimpleAnimation<>( //
-				spritesheet.region(456, 208, 32, 32), //
-				spritesheet.region(488, 208, 32, 32), //
-				spritesheet.region(520, 208, 32, 32), //
-				spritesheet.region(488, 208, 32, 32), //
-				spritesheet.region(456, 208, 32, 32)//
+				ss.region(456, 208, 32, 32), //
+				ss.region(488, 208, 32, 32), //
+				ss.region(520, 208, 32, 32), //
+				ss.region(488, 208, 32, 32), //
+				ss.region(456, 208, 32, 32)//
 		);
 		animation.setFrameDuration(4);
 		return animation;
@@ -321,8 +335,8 @@ public class MsPacManGameRenderer extends SpritesheetRenderer implements Renderi
 
 	public SimpleAnimation<Rectangle2D> createStorkFlyingAnimation() {
 		var animation = new SimpleAnimation<>( //
-				spritesheet.region(489, 176, 32, 16), //
-				spritesheet.region(521, 176, 32, 16) //
+				ss.region(489, 176, 32, 16), //
+				ss.region(521, 176, 32, 16) //
 		);
 		animation.repeatForever();
 		animation.setFrameDuration(8);

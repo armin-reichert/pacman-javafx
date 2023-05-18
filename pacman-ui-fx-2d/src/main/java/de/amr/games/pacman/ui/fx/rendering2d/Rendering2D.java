@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 import java.util.List;
@@ -31,6 +32,7 @@ import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
@@ -89,6 +91,37 @@ public interface Rendering2D {
 
 	}
 
+	/**
+	 * Draws a region from the spritesheet, no need for separate image copy.
+	 * 
+	 * @param g graphics context
+	 * @param r rectangular spritesheet region
+	 * @param x x position
+	 * @param y y position
+	 */
+	default void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
+		if (r != null) {
+			g.drawImage(spritesheet().source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
+					r.getHeight());
+		}
+	}
+
+	default void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D r, double x, double y) {
+		if (r != null) {
+			double dx = HTS - r.getWidth() / 2;
+			double dy = HTS - r.getHeight() / 2;
+			drawSprite(g, r, x + dx, y + dy);
+		}
+	}
+
+	default void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
+		if (entity.isVisible()) {
+			drawSpriteCenteredOverBox(g, r, entity.position().x(), entity.position().y());
+		}
+	}
+
+	Spritesheet spritesheet();
+
 	void drawPac(GraphicsContext g, Pac pac);
 
 	void drawGhost(GraphicsContext g, Ghost ghost);
@@ -109,7 +142,8 @@ public interface Rendering2D {
 
 	Rectangle2D bonusValueRegion(int symbol);
 
-	default void drawLivesCounter(GraphicsContext g, SpritesheetRenderer ssr, int numLivesDisplayed) {
+	// TODO this is not the last word on this
+	default void drawLivesCounter(GraphicsContext g, Spritesheet ss, int numLivesDisplayed) {
 		if (numLivesDisplayed <= 0) {
 			return;
 		}
@@ -117,7 +151,7 @@ public interface Rendering2D {
 		int y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			ssr.drawSprite(g, lifeSymbol(), x + TS * (2 * i), y);
+			drawSprite(g, lifeSymbol(), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;

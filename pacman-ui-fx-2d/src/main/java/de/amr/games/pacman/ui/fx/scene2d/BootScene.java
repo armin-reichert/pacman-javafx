@@ -33,7 +33,6 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -107,17 +106,16 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void produceRandomSpriteImage() {
+		var r = context.rendering2D();
 		clearImage();
-		if (context.rendering2D() instanceof SpritesheetRenderer ssr) {
-			for (int row = 0; row < TILES_Y / 2; ++row) {
-				if (RND.nextInt(100) > 10) {
-					var region1 = randomSquare(ssr.spritesheet());
-					var region2 = randomSquare(ssr.spritesheet());
-					var splitX = TILES_X / 8 + RND.nextInt(TILES_X / 4);
-					for (int col = 0; col < TILES_X / 2; ++col) {
-						var region = col < splitX ? region1 : region2;
-						ssr.drawSprite(ctx, region, region.getWidth() * col, region.getHeight() * row);
-					}
+		for (int row = 0; row < TILES_Y / 2; ++row) {
+			if (RND.nextInt(100) > 10) {
+				var region1 = randomSquare(r.spritesheet());
+				var region2 = randomSquare(r.spritesheet());
+				var splitX = TILES_X / 8 + RND.nextInt(TILES_X / 4);
+				for (int col = 0; col < TILES_X / 2; ++col) {
+					var region = col < splitX ? region1 : region2;
+					r.drawSprite(ctx, region, region.getWidth() * col, region.getHeight() * row);
 				}
 			}
 		}
