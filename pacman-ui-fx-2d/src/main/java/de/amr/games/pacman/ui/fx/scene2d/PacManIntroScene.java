@@ -130,7 +130,7 @@ public class PacManIntroScene extends GameScene2D {
 		default -> { // nothing to do
 		}
 		}
-		r.drawLevelCounter(g, context.game().levelCounter());
+		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 
 	@Override

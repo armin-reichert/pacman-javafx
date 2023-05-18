@@ -141,13 +141,13 @@ public class GameLevel3D {
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
-		var symbolImage = r2D.spritesheet().subImage(r2D.bonusSymbolRegion(bonus.symbol()));
-		var pointsImage = r2D.spritesheet().subImage(r2D.bonusValueRegion(bonus.symbol()));
+		var symbolImage = r2D.spritesheet().subImage(r2D.bonusSymbolSprite(bonus.symbol()));
+		var pointsImage = r2D.spritesheet().subImage(r2D.bonusValueSprite(bonus.symbol()));
 		return new Bonus3D(bonus, symbolImage, pointsImage, moving);
 	}
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
-		var symbolImages = level.game().levelCounter().stream().map(r2D::bonusSymbolRegion).map(r2D.spritesheet()::subImage)
+		var symbolImages = level.game().levelCounter().stream().map(r2D::bonusSymbolSprite).map(r2D.spritesheet()::subImage)
 				.toArray(Image[]::new);
 		return new LevelCounter3D(symbolImages);
 	}

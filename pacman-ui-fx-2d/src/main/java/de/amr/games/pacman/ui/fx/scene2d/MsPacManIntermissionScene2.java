@@ -77,6 +77,6 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		r.drawClap(g, im.context().clapperboard);
 		r.drawPac(g, im.context().msPacMan);
 		r.drawPac(g, im.context().pacMan);
-		r.drawLevelCounter(g, context.game().levelCounter());
+		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 }

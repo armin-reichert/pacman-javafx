@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-import java.util.List;
-
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -77,28 +75,18 @@ public class MsPacManGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D ghostValueRegion(int index) {
+	public Rectangle2D ghostValueSprite(int index) {
 		return tileFromThirdColumn(index, 8);
 	}
 
 	@Override
-	public Rectangle2D bonusSymbolRegion(int symbol) {
+	public Rectangle2D bonusSymbolSprite(int symbol) {
 		return tileFromThirdColumn(3 + symbol, 0);
 	}
 
 	@Override
-	public Rectangle2D bonusValueRegion(int symbol) {
+	public Rectangle2D bonusValueSprite(int symbol) {
 		return tileFromThirdColumn(3 + symbol, 1);
-	}
-
-	@Override
-	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
-	}
-
-	@Override
-	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
 	}
 
 	@Override
@@ -106,8 +94,8 @@ public class MsPacManGameRenderer implements Rendering2D {
 		checkNotNull(bonus);
 		var sprite = switch (bonus.state()) {
 		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
-		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
+		case Bonus.STATE_EDIBLE -> bonusSymbolSprite(bonus.symbol());
+		case Bonus.STATE_EATEN -> bonusValueSprite(bonus.symbol());
 		default -> throw new IllegalArgumentException("Illegal bonus state: '%s'".formatted(bonus.state()));
 		};
 		if (bonus instanceof MovingBonus movingBonus) {
@@ -147,21 +135,12 @@ public class MsPacManGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, List<Byte> levelCounter) {
-		double x = TS * (24);
-		for (var symbol : levelCounter) {
-			drawSprite(g, bonusSymbolRegion(symbol), x, TS * (34));
-			x -= TS * (2);
-		}
-	}
-
-	@Override
 	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
 		drawLivesCounter(g, ss, numLivesDisplayed);
 	}
 
 	@Override
-	public Rectangle2D lifeSymbol() {
+	public Rectangle2D livesCounterSprite() {
 		return tileFromThirdColumn(1, 0);
 	}
 
@@ -269,7 +248,7 @@ public class MsPacManGameRenderer implements Rendering2D {
 	}
 
 	private Animated createGhostValueSpriteList() {
-		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2), ghostValueRegion(3));
+		return new FrameSequence<>(ghostValueSprite(0), ghostValueSprite(1), ghostValueSprite(2), ghostValueSprite(3));
 	}
 
 	// Ms. Pac-Man specific:

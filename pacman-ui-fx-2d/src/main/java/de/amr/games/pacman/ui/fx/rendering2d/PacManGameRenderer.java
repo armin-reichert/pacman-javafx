@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
-import java.util.List;
-
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -70,17 +68,17 @@ public class PacManGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public Rectangle2D ghostValueRegion(int index) {
+	public Rectangle2D ghostValueSprite(int index) {
 		return ss.tile(index, 8);
 	}
 
 	@Override
-	public Rectangle2D bonusSymbolRegion(int symbol) {
+	public Rectangle2D bonusSymbolSprite(int symbol) {
 		return ss.tile(2 + symbol, 3);
 	}
 
 	@Override
-	public Rectangle2D bonusValueRegion(int symbol) {
+	public Rectangle2D bonusValueSprite(int symbol) {
 		if (symbol <= 3) {
 			return ss.tile(symbol, 9);
 		}
@@ -113,8 +111,8 @@ public class PacManGameRenderer implements Rendering2D {
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
-		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
+		case Bonus.STATE_EDIBLE -> bonusSymbolSprite(bonus.symbol());
+		case Bonus.STATE_EATEN -> bonusValueSprite(bonus.symbol());
 		default -> throw new IllegalArgumentException();
 		};
 		drawEntitySprite(g, bonus.entity(), sprite);
@@ -143,21 +141,12 @@ public class PacManGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawLevelCounter(GraphicsContext g, List<Byte> levelCounter) {
-		double x = TS * (24);
-		for (var symbol : levelCounter) {
-			drawSprite(g, bonusSymbolRegion(symbol), x, TS * (34));
-			x -= TS * (2);
-		}
-	}
-
-	@Override
 	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
 		drawLivesCounter(g, ss, numLivesDisplayed);
 	}
 
 	@Override
-	public Rectangle2D lifeSymbol() {
+	public Rectangle2D livesCounterSprite() {
 		return ss.tile(8, 1);
 	}
 
@@ -238,7 +227,7 @@ public class PacManGameRenderer implements Rendering2D {
 	}
 
 	private Animated createGhostValueSpriteList() {
-		return new FrameSequence<>(ghostValueRegion(0), ghostValueRegion(1), ghostValueRegion(2), ghostValueRegion(3));
+		return new FrameSequence<>(ghostValueSprite(0), ghostValueSprite(1), ghostValueSprite(2), ghostValueSprite(3));
 	}
 
 	// Pac-Man specific:

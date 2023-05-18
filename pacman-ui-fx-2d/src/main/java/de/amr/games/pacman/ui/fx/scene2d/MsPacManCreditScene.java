@@ -67,7 +67,7 @@ public class MsPacManCreditScene extends GameScene2D {
 		Rendering2D.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(6), t(16));
 		Rendering2D.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(8), t(18));
 		Rendering2D.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(2), t(25));
-		r.drawSprite(g, r.lifeSymbol(), t(13), t(23) + 1);
+		r.drawSprite(g, r.livesCounterSprite(), t(13), t(23) + 1);
 		Rendering2D.drawText(g, "PTS", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont6, t(25), t(25));
 		MsPacManGameRenderer.drawCopyright(g, t(6), t(28));
 	}

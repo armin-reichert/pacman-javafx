@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * Common interface for all 2D renderers.
+ * Common interface for the Pac-Man and Ms. Pac-Man game renderers.
  * 
  * @author Armin Reichert
  */
@@ -91,13 +92,27 @@ public interface Rendering2D {
 
 	Spritesheet spritesheet();
 
-	Rectangle2D lifeSymbol();
+	/**
+	 * @return sprite used in lives counter
+	 */
+	Rectangle2D livesCounterSprite();
 
-	Rectangle2D ghostValueRegion(int index);
+	/**
+	 * @return sprite showing ghost value (200, 400, 800, 1600)
+	 */
+	Rectangle2D ghostValueSprite(int index);
 
-	Rectangle2D bonusSymbolRegion(int symbol);
+	/**
+	 * @param symbol bonus symbol (index)
+	 * @return sprite showing bonus symbol (cherries, strawberry, ...)
+	 */
+	Rectangle2D bonusSymbolSprite(int symbol);
 
-	Rectangle2D bonusValueRegion(int symbol);
+	/**
+	 * @param symbol bonus symbol (index)
+	 * @return sprite showing bonus symbol value (100, 300, ...)
+	 */
+	Rectangle2D bonusValueSprite(int symbol);
 
 	/**
 	 * Draws a sprite at the given position. The position specifies the left-upper corner.
@@ -138,20 +153,37 @@ public interface Rendering2D {
 	 * @param r      the sprite
 	 */
 	default void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
+		checkNotNull(entity);
 		if (entity.isVisible()) {
 			drawSpriteOverBoundingBox(g, r, entity.position().x(), entity.position().y());
 		}
 	}
 
-	void drawPac(GraphicsContext g, Pac pac);
+	default void drawPac(GraphicsContext g, Pac pac) {
+		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
+	}
 
-	void drawGhost(GraphicsContext g, Ghost ghost);
+	default void drawGhost(GraphicsContext g, Ghost ghost) {
+		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
+	}
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
 	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
 
-	void drawLevelCounter(GraphicsContext g, List<Byte> levelSymbols);
+	/**
+	 * @param g            graphics context
+	 * @param xr           x coordinate (right-upper corner, default: 24 * TS)
+	 * @param yr           y coordinate (right-upper corner, default: 34 * TS)
+	 * @param levelSymbols symbols to draw
+	 */
+	default void drawLevelCounter(GraphicsContext g, double xr, double yr, List<Byte> levelSymbols) {
+		double x = xr;
+		for (var symbol : levelSymbols) {
+			drawSprite(g, bonusSymbolSprite(symbol), x, yr);
+			x -= TS * 2;
+		}
+	}
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
@@ -164,7 +196,7 @@ public interface Rendering2D {
 		int y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(g, lifeSymbol(), x + TS * (2 * i), y);
+			drawSprite(g, livesCounterSprite(), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
