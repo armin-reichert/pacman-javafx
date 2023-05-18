@@ -169,7 +169,7 @@ public interface Rendering2D {
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
-	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
+	void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world);
 
 	/**
 	 * @param g            graphics context

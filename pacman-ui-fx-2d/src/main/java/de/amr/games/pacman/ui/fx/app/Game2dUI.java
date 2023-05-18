@@ -173,6 +173,9 @@ public class Game2dUI implements GameEventListener {
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 
+		// Without this, there appears an ugly vertical line right of the embedded subscene
+		mainSceneRoot.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
+
 		mainScene.setRoot(mainSceneRoot);
 		mainScene.heightProperty().addListener((py, ov, nv) -> {
 			if (currentGameScene != null) {

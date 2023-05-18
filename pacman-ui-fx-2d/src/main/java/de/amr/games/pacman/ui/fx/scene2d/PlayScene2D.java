@@ -94,15 +94,15 @@ public class PlayScene2D extends GameScene2D {
 	public void drawSceneContent(GraphicsContext g) {
 		context.level().ifPresent(level -> {
 			var r = context.rendering2D();
-			var mazeNumber = level.game().mazeNumber(level.number());
-			r.drawMaze(g, 0, TS * (3), mazeNumber, level.world());
+			int levelNumber = level.number();
+			int mazeNumber = level.game().mazeNumber(levelNumber);
+			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
-				drawText(g, "TEST    L%d".formatted(level.number()), ArcadeTheme.YELLOW, Game2d.assets.arcadeFont, TS * (8) + 4,
-						TS * (21));
+				drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, Game2d.assets.arcadeFont, t(8.5), t(21));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				drawText(g, "GAME  OVER", ArcadeTheme.RED, Game2d.assets.arcadeFont, TS * (9), TS * (21));
+				drawText(g, "GAME  OVER", ArcadeTheme.RED, Game2d.assets.arcadeFont, t(9), t(21));
 			} else if (context.state() == GameState.READY) {
-				drawText(g, "READY!", ArcadeTheme.YELLOW, Game2d.assets.arcadeFont, TS * (11), TS * (21));
+				drawText(g, "READY!", ArcadeTheme.YELLOW, Game2d.assets.arcadeFont, t(11), t(21));
 			}
 			level.bonusManagement().getBonus().ifPresent(bonus -> r.drawBonus(g, bonus));
 			r.drawPac(g, level.pac());
@@ -111,7 +111,7 @@ public class PlayScene2D extends GameScene2D {
 			r.drawGhost(g, level.ghost(GameModel.PINK_GHOST));
 			r.drawGhost(g, level.ghost(GameModel.RED_GHOST));
 			if (!context.isCreditVisible()) {
-				// TODO get rid of this crap
+				// TODO get rid of this crap:
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
 				r.drawLivesCounter(g, lives);
 			}
@@ -125,9 +125,9 @@ public class PlayScene2D extends GameScene2D {
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
 				g.setFill(Color.RED);
-				g.fillOval(tile.x() * TS, (tile.y() - 1) * TS, TS, TS);
+				g.fillOval(t(tile.x()), t(tile.y() - 1), TS, TS);
 				g.setFill(Color.WHITE);
-				g.fillRect(tile.x() * TS + 1, tile.y() * TS - HTS - 1, TS - 2, 2);
+				g.fillRect(t(tile.x()) + 1, t(tile.y()) - HTS - 1, TS - 2, 2);
 			});
 		});
 	}

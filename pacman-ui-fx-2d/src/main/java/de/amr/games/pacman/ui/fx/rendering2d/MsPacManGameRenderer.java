@@ -109,7 +109,7 @@ public class MsPacManGameRenderer implements Rendering2D {
 	}
 
 	@Override
-	public void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world) {
+	public void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world) {
 		checkNotNull(world);
 		var w = MAZE_IMAGE_WIDTH;
 		var h = MAZE_IMAGE_HEIGHT;
