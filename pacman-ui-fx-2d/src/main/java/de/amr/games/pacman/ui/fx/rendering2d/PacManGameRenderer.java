@@ -44,7 +44,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
@@ -64,11 +63,6 @@ public class PacManGameRenderer implements Rendering2D {
 	@Override
 	public Spritesheet spritesheet() {
 		return ss;
-	}
-
-	@Override
-	public Image image(Rectangle2D region) {
-		return ss.subImage(region);
 	}
 
 	public static void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
@@ -128,7 +122,7 @@ public class PacManGameRenderer implements Rendering2D {
 
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
 		var region = ss.tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
-		drawSpriteCenteredOverBox(g, region, x, y);
+		drawSpriteOverBoundingBox(g, region, x, y);
 	}
 
 	@Override

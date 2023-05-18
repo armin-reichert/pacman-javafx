@@ -45,7 +45,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 
 /**
@@ -71,11 +70,6 @@ public class MsPacManGameRenderer implements Rendering2D {
 	@Override
 	public Spritesheet spritesheet() {
 		return ss;
-	}
-
-	@Override
-	public Image image(Rectangle2D region) {
-		return ss.subImage(region);
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
@@ -285,7 +279,7 @@ public class MsPacManGameRenderer implements Rendering2D {
 			clap.animation().map(Animated::animate).ifPresent(frame -> {
 				var sprite = (Rectangle2D) frame;
 				if (clap.isVisible()) {
-					drawSpriteCenteredOverBox(g, sprite, clap.position().x(), clap.position().y());
+					drawSpriteOverBoundingBox(g, sprite, clap.position().x(), clap.position().y());
 				}
 				g.setFont(Game2d.assets.arcadeFont);
 				g.setFill(ArcadeTheme.PALE);

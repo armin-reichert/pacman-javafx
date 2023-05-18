@@ -373,7 +373,7 @@ public class PlayScene3D implements GameScene {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
 					var r = context.rendering2D();
-					ghost3D.setNumberImage(r.image(r.ghostValueRegion(index)));
+					ghost3D.setNumberImage(r.spritesheet().subImage(r.ghostValueRegion(index)));
 				});
 			});
 		}

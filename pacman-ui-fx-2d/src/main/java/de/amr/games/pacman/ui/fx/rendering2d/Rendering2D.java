@@ -39,7 +39,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -88,14 +87,23 @@ public interface Rendering2D {
 
 	static void drawCredit(GraphicsContext g, int credit, double x, double y) {
 		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, Game2d.assets.arcadeFont, x, y);
-
 	}
 
+	Spritesheet spritesheet();
+
+	Rectangle2D lifeSymbol();
+
+	Rectangle2D ghostValueRegion(int index);
+
+	Rectangle2D bonusSymbolRegion(int symbol);
+
+	Rectangle2D bonusValueRegion(int symbol);
+
 	/**
-	 * Draws a region from the spritesheet, no need for separate image copy.
+	 * Draws a sprite at the given position. The position specifies the left-upper corner.
 	 * 
 	 * @param g graphics context
-	 * @param r rectangular spritesheet region
+	 * @param r sprite (may be null)
 	 * @param x x position
 	 * @param y y position
 	 */
@@ -106,21 +114,34 @@ public interface Rendering2D {
 		}
 	}
 
-	default void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D r, double x, double y) {
+	/**
+	 * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
+	 * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
+	 * bounding box is only 8 pixels (one square tile) wide.
+	 * 
+	 * @param g graphics context
+	 * @param r spritesheet region (may be null)
+	 * @param x x coordinate of left-upper corner of bounding box
+	 * @param y y coordinate of left-upper corner of bounding box
+	 */
+	default void drawSpriteOverBoundingBox(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {
-			double dx = HTS - r.getWidth() / 2;
-			double dy = HTS - r.getHeight() / 2;
-			drawSprite(g, r, x + dx, y + dy);
+			drawSprite(g, r, x + HTS - r.getWidth() / 2, y + HTS - r.getHeight() / 2);
 		}
 	}
 
+	/**
+	 * Draws the sprite over the bounding box of the given entity (if visible).
+	 * 
+	 * @param g      graphics context
+	 * @param entity an entity like Pac-Man or a ghost
+	 * @param r      the sprite
+	 */
 	default void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
 		if (entity.isVisible()) {
-			drawSpriteCenteredOverBox(g, r, entity.position().x(), entity.position().y());
+			drawSpriteOverBoundingBox(g, r, entity.position().x(), entity.position().y());
 		}
 	}
-
-	Spritesheet spritesheet();
 
 	void drawPac(GraphicsContext g, Pac pac);
 
@@ -128,19 +149,11 @@ public interface Rendering2D {
 
 	void drawBonus(GraphicsContext g, Bonus bonus);
 
+	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
+
 	void drawLevelCounter(GraphicsContext g, List<Byte> levelSymbols);
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
-
-	Image image(Rectangle2D region);
-
-	Rectangle2D lifeSymbol();
-
-	Rectangle2D ghostValueRegion(int index);
-
-	Rectangle2D bonusSymbolRegion(int symbol);
-
-	Rectangle2D bonusValueRegion(int symbol);
 
 	// TODO this is not the last word on this
 	default void drawLivesCounter(GraphicsContext g, Spritesheet ss, int numLivesDisplayed) {
@@ -160,8 +173,6 @@ public interface Rendering2D {
 					x + TS * (10), y + TS * (1));
 		}
 	}
-
-	void drawMaze(GraphicsContext g, int x, int y, int mazeNumber, World world);
 
 	AnimationMap createPacAnimations(Pac pac);
 
