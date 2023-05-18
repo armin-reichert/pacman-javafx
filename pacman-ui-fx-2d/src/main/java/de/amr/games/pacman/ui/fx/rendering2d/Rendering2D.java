@@ -40,6 +40,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -50,6 +51,12 @@ import javafx.scene.text.FontWeight;
  * @author Armin Reichert
  */
 public interface Rendering2D {
+
+	static void drawSprite(GraphicsContext g, Image source, Rectangle2D r, double x, double y) {
+		if (r != null) {
+			g.drawImage(source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
+		}
+	}
 
 	static void drawTileGrid(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
@@ -123,10 +130,7 @@ public interface Rendering2D {
 	 * @param y y position
 	 */
 	default void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
-		if (r != null) {
-			g.drawImage(spritesheet().source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(),
-					r.getHeight());
-		}
+		drawSprite(g, spritesheet().source(), r, x, y);
 	}
 
 	/**

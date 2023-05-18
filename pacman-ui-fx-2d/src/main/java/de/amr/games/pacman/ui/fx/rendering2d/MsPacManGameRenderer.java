@@ -108,27 +108,43 @@ public class MsPacManGameRenderer implements Rendering2D {
 		}
 	}
 
+	private Rectangle2D highlightedMaze(int mazeNumber) {
+		return new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+	}
+
+	private Rectangle2D emptyMaze(int mazeNumber) {
+		return ss.region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+	}
+
+	private Rectangle2D filledMaze(int mazeNumber) {
+		return ss.region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+	}
+
 	@Override
 	public void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world) {
 		checkNotNull(world);
-		var w = MAZE_IMAGE_WIDTH;
-		var h = MAZE_IMAGE_HEIGHT;
+
+		// check if flashing animation is running
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				var r = new Rectangle2D(0, (mazeNumber - 1) * h, w, h);
-				g.drawImage(Game2d.assets.flashingMazesMsPacMan, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(),
-						x - 3 /* don't tell your mommy */, y, r.getWidth(), r.getHeight());
+				Rendering2D.drawSprite(g, Game2d.assets.flashingMazesMsPacMan, highlightedMaze(mazeNumber),
+						x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(g, ss.region(SECOND_COLUMN, h * (mazeNumber - 1), w, h), x, y);
+				drawSprite(g, emptyMaze(mazeNumber), x, y);
 			}
-		} else {
-			drawSprite(g, ss.region(0, h * (mazeNumber - 1), w, h), x, y);
+		}
+
+		else {
+			// draw filled maze and hide eaten food
+			drawSprite(g, filledMaze(mazeNumber), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
-			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
-			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
-			if (!energizerVisible) {
+
+			// draw energizer animation
+			var blinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
+			boolean energizerDark = !blinking.isPresent() || !(boolean) blinking.get().frame();
+			if (energizerDark) {
 				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
 			}
 		}
