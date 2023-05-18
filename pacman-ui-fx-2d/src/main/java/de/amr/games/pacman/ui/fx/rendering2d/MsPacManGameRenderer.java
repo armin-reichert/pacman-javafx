@@ -137,16 +137,16 @@ public class MsPacManGameRenderer implements Rendering2D {
 		}
 
 		else {
-			// draw filled maze and hide eaten food
+			// draw filled maze and hide eaten food (including energizers)
 			drawSprite(g, filledMaze(mazeNumber), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
 
-			// draw energizer animation
-			var blinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
-			boolean energizerDark = !blinking.isPresent() || !(boolean) blinking.get().frame();
-			if (energizerDark) {
-				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
-			}
+			// energizer animation
+			world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING).ifPresent(blinking -> {
+				if (Boolean.FALSE.equals(blinking.frame())) {
+					world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
+				}
+			});
 		}
 	}
 
