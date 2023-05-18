@@ -36,7 +36,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -149,15 +148,13 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		// TODO make this work for all renderers
-		if (context.rendering2D() instanceof SpritesheetRenderer r) {
-			if (stretchedDressAnimation != null) {
-				r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), TS * (14), TS * (19) + 3.0);
-			}
-			r.drawGhost(g, blinky);
-			r.drawPac(g, pac);
-			r.drawLevelCounter(g, context.game().levelCounter());
+		var r = (PacManGameRenderer) context.rendering2D();
+		if (stretchedDressAnimation != null) {
+			r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), TS * (14), TS * (19) + 3.0);
 		}
+		r.drawGhost(g, blinky);
+		r.drawPac(g, pac);
+		r.drawLevelCounter(g, context.game().levelCounter());
 	}
 
 	@Override

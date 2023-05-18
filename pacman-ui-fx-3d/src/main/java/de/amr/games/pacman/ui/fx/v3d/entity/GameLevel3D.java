@@ -43,7 +43,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import javafx.animation.SequentialTransition;
@@ -142,21 +141,15 @@ public class GameLevel3D {
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
-		if (r2D instanceof SpritesheetRenderer sr) {
-			var symbolImage = sr.image(sr.bonusSymbolRegion(bonus.symbol()));
-			var pointsImage = sr.image(sr.bonusValueRegion(bonus.symbol()));
-			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
-		}
-		throw new UnsupportedOperationException();
+		var symbolImage = r2D.image(r2D.bonusSymbolRegion(bonus.symbol()));
+		var pointsImage = r2D.image(r2D.bonusValueRegion(bonus.symbol()));
+		return new Bonus3D(bonus, symbolImage, pointsImage, moving);
 	}
 
 	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
-		if (r2D instanceof SpritesheetRenderer sr) {
-			var symbolImages = level.game().levelCounter().stream().map(sr::bonusSymbolRegion).map(sr::image)
-					.toArray(Image[]::new);
-			return new LevelCounter3D(symbolImages);
-		}
-		throw new UnsupportedOperationException();
+		var symbolImages = level.game().levelCounter().stream().map(r2D::bonusSymbolRegion).map(r2D::image)
+				.toArray(Image[]::new);
+		return new LevelCounter3D(symbolImages);
 	}
 
 	private void updatePacLight() {

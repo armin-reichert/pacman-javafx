@@ -25,10 +25,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.Pac;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -38,7 +35,7 @@ import javafx.scene.image.Image;
  * 
  * @author Armin Reichert
  */
-public abstract class SpritesheetRenderer implements Rendering2D {
+public abstract class SpritesheetRenderer {
 
 	protected final Spritesheet spritesheet;
 
@@ -53,12 +50,6 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 	public Image image(Rectangle2D region) {
 		return spritesheet.subImage(region);
 	}
-
-	public abstract Rectangle2D ghostValueRegion(int index);
-
-	public abstract Rectangle2D bonusSymbolRegion(int symbol);
-
-	public abstract Rectangle2D bonusValueRegion(int symbol);
 
 	/**
 	 * Draws a region from the spritesheet, no need for separate image copy.
@@ -89,24 +80,4 @@ public abstract class SpritesheetRenderer implements Rendering2D {
 		}
 	}
 
-	@Override
-	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
-	}
-
-	@Override
-	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
-	}
-
-	@Override
-	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		var sprite = switch (bonus.state()) {
-		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
-		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
-		default -> throw new IllegalArgumentException();
-		};
-		drawEntitySprite(g, bonus.entity(), sprite);
-	}
 }

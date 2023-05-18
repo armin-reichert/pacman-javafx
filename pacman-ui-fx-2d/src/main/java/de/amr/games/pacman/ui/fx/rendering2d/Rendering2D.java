@@ -37,6 +37,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -98,7 +99,15 @@ public interface Rendering2D {
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
+	Image image(Rectangle2D region);
+
 	Rectangle2D lifeSymbol();
+
+	Rectangle2D ghostValueRegion(int index);
+
+	Rectangle2D bonusSymbolRegion(int symbol);
+
+	Rectangle2D bonusValueRegion(int symbol);
 
 	default void drawLivesCounter(GraphicsContext g, SpritesheetRenderer ssr, int numLivesDisplayed) {
 		if (numLivesDisplayed <= 0) {

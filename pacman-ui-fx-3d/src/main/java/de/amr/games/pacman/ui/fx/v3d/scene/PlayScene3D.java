@@ -48,7 +48,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
@@ -373,10 +372,8 @@ public class PlayScene3D implements GameScene {
 				level.memo().killedGhosts.forEach(killedGhost -> {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					// TODO make this work for all renderers
-					if (context.rendering2D() instanceof SpritesheetRenderer sgr) {
-						ghost3D.setNumberImage(sgr.image(sgr.ghostValueRegion(index)));
-					}
+					var r = context.rendering2D();
+					ghost3D.setNumberImage(r.image(r.ghostValueRegion(index)));
 				});
 			});
 		}

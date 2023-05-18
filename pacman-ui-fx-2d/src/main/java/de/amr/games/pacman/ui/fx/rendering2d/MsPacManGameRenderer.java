@@ -50,7 +50,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer extends SpritesheetRenderer {
+public class MsPacManGameRenderer extends SpritesheetRenderer implements Rendering2D {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -84,6 +84,16 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 	}
 
 	@Override
+	public void drawPac(GraphicsContext g, Pac pac) {
+		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
+	}
+
+	@Override
+	public void drawGhost(GraphicsContext g, Ghost ghost) {
+		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
+	}
+
+	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		checkNotNull(bonus);
 		var sprite = switch (bonus.state()) {
@@ -98,7 +108,7 @@ public class MsPacManGameRenderer extends SpritesheetRenderer {
 			drawEntitySprite(g, movingBonus.entity(), sprite);
 			g.restore();
 		} else {
-			super.drawBonus(g, bonus);
+			drawEntitySprite(g, bonus.entity(), sprite);
 		}
 	}
 

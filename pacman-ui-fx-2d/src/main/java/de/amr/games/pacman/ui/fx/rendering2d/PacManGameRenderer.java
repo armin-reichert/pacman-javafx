@@ -36,6 +36,7 @@ import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
@@ -46,7 +47,7 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * @author Armin Reichert
  */
-public class PacManGameRenderer extends SpritesheetRenderer {
+public class PacManGameRenderer extends SpritesheetRenderer implements Rendering2D {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -87,6 +88,27 @@ public class PacManGameRenderer extends SpritesheetRenderer {
 		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
 		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
 		return map;
+	}
+
+	@Override
+	public void drawPac(GraphicsContext g, Pac pac) {
+		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
+	}
+
+	@Override
+	public void drawGhost(GraphicsContext g, Ghost ghost) {
+		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
+	}
+
+	@Override
+	public void drawBonus(GraphicsContext g, Bonus bonus) {
+		var sprite = switch (bonus.state()) {
+		case Bonus.STATE_INACTIVE -> null;
+		case Bonus.STATE_EDIBLE -> bonusSymbolRegion(bonus.symbol());
+		case Bonus.STATE_EATEN -> bonusValueRegion(bonus.symbol());
+		default -> throw new IllegalArgumentException();
+		};
+		drawEntitySprite(g, bonus.entity(), sprite);
 	}
 
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
