@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -149,7 +148,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var r = (MsPacManGameRenderer) context.rendering2D();
+		var r = (PacManGameRenderer) context.rendering2D();
 		if (stretchedDressAnimation != null) {
 			r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), TS * (14), TS * (19) + 3.0);
 		}
