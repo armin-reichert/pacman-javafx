@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -99,21 +98,16 @@ public class Game3dUI extends Game2dUI {
 			playScene.fxSubScene().setVisible(false);
 		}
 
-		public void init() {
-			playScene.setContext(new GameSceneContext(gameController, currentGameScene.context().rendering2D()));
-		}
-
 		public void update() {
-			if (currentGameScene != null) {
-				boolean isPlayScene = gameSceneConfig.get(game().variant()).isPlayScene(currentGameScene);
-				playScene.fxSubScene().setVisible(visiblePy.get() && currentGameScene.is3D() && isPlayScene);
+			if (currentGameScene != null && playScene.context() != null) {
+				playScene.fxSubScene().setVisible(visiblePy.get() && isPlayScene3d(currentGameScene));
 				playScene.context().setCreditVisible(false);
 				playScene.context().setScoreVisible(true);
 			}
 		}
 
 		public void render() {
-			if (playScene.context().rendering2D() != null) {
+			if (playScene.context() != null) {
 				playScene.render();
 			}
 		}
@@ -235,8 +229,15 @@ public class Game3dUI extends Game2dUI {
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
 		var use3D = Game3d.PY_3D_ENABLED.get();
-		pip.init(); // TODO check this
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
+	}
+
+	@Override
+	protected void changeGameScene(GameScene newGameScene) {
+		super.changeGameScene(newGameScene);
+		if (isPlayScene3d(newGameScene)) {
+			pip.playScene.setContext(newGameScene.context());
+		}
 	}
 
 	@Override
@@ -249,6 +250,10 @@ public class Game3dUI extends Game2dUI {
 		} else if (Keyboard.pressed(Game3d.KEY_TOGGLE_PIP_VIEW)) {
 			Game3d.app.togglePipVisibility();
 		}
+	}
+
+	private boolean isPlayScene3d(GameScene gameScene) {
+		return gameSceneConfig.get(game().variant()).isPlayScene(currentGameScene) && gameScene.is3D();
 	}
 
 	public void toggle3DEnabled() {

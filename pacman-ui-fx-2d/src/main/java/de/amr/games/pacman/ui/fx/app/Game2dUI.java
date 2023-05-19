@@ -285,7 +285,7 @@ public class Game2dUI implements GameEventListener {
 		return choice.scene2D();
 	}
 
-	protected final void changeGameScene(GameScene newGameScene) {
+	protected void changeGameScene(GameScene newGameScene) {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
