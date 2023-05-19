@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 import de.amr.games.pacman.controller.GameController;
@@ -33,10 +32,11 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -123,14 +123,7 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo(GraphicsContext g) {
-		if (Game2d.PY_SHOW_DEBUG_INFO.get()) {
-			g.setFont(Game2d.assets.arcadeFont);
-			g.setFill(Color.WHITE);
-			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), TS * (1), TS * (5));
-			} else {
-				g.fillText("Frame %d".formatted(frame), TS * (1), TS * (5));
-			}
-		}
+		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
+		Rendering2D.drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}
 }

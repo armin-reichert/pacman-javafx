@@ -50,11 +50,6 @@ public class PacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void update() {
-		// Nothing to do
-	}
-
-	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(Game2d.KEY_ADD_CREDIT) || Keyboard.pressed(Game2d.KEY_ADD_CREDIT_NUMPAD)) {
 			Game2d.app.addCredit();

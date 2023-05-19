@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 import de.amr.games.pacman.controller.GameController;
@@ -34,17 +33,19 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
  */
 public class PacManCutscene2 extends GameScene2D {
 
+	private PacManGameRenderer r;
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
@@ -58,10 +59,11 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
+		r = (PacManGameRenderer) context.rendering2D();
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		var renderer = (PacManGameRenderer) context.rendering2D();
 		frame = -1;
 		initialDelay = 120;
 
@@ -71,11 +73,11 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.setPixelSpeed(1.15f);
 		pac.show();
 
-		var pacAnimations = renderer.createPacAnimations(pac);
+		var pacAnimations = r.createPacAnimations(pac);
 		pacAnimations.selectAndRestart(GameModel.AK_PAC_MUNCHING);
 		pac.setAnimations(pacAnimations);
 
-		stretchedDressAnimation = renderer.createBlinkyStretchedAnimation();
+		stretchedDressAnimation = r.createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.placeAtTile(v2i(28, 20), 0, 0);
@@ -83,8 +85,8 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.setPixelSpeed(0);
 		blinky.hide();
 
-		var blinkyAnimations = renderer.createGhostAnimations(blinky);
-		damagedAnimation = renderer.createBlinkyDamagedAnimation();
+		var blinkyAnimations = r.createGhostAnimations(blinky);
+		damagedAnimation = r.createBlinkyDamagedAnimation();
 		blinkyAnimations.put(GameModel.AK_BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.selectAndRestart(GameModel.AK_GHOST_COLOR);
 		blinky.setAnimations(blinkyAnimations);
@@ -148,9 +150,8 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var r = (PacManGameRenderer) context.rendering2D();
 		if (stretchedDressAnimation != null) {
-			r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), TS * (14), TS * (19) + 3.0);
+			r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 		}
 		r.drawGhost(g, blinky);
 		r.drawPac(g, pac);
@@ -159,14 +160,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo(GraphicsContext g) {
-		if (Game2d.PY_SHOW_DEBUG_INFO.get()) {
-			g.setFont(Game2d.assets.arcadeFont);
-			g.setFill(Color.WHITE);
-			if (initialDelay > 0) {
-				g.fillText("Wait %d".formatted(initialDelay), TS * (1), TS * (5));
-			} else {
-				g.fillText("Frame %d".formatted(frame), TS * (1), TS * (5));
-			}
-		}
+		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
+		Rendering2D.drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}
 }
