@@ -29,7 +29,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.scene.layout.Pane;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -69,13 +69,13 @@ public class Signature {
 		animation = new SequentialTransition(fadeIn, fadeOut);
 	}
 
-	public void add(Pane parent, double x, double y) {
-		text.setTranslateX(x);
-		text.setTranslateY(y);
-		parent.getChildren().add(text);
+	public Node root() {
+		return text;
 	}
 
-	public void show() {
+	public void show(double x, double y) {
+		text.setTranslateX(x);
+		text.setTranslateY(y);
 		animation.play();
 	}
 

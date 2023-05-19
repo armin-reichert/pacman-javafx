@@ -52,7 +52,7 @@ public class PacManIntroScene extends GameScene2D {
 	private final Signature signature = new Signature();
 
 	public PacManIntroScene() {
-		signature.add(overlay, 5.5 * TS, 32.0 * TS);
+		overlay.getChildren().add(signature.root());
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class PacManIntroScene extends GameScene2D {
 		intro = new PacManIntro(context().gameController());
 		intro.addStateChangeListener((oldState, newState) -> {
 			if (oldState == PacManIntro.State.SHOWING_POINTS) {
-				signature.show();
+				signature.show(t(5.5), t(32.0));
 			}
 		});
 		ic = intro.context();

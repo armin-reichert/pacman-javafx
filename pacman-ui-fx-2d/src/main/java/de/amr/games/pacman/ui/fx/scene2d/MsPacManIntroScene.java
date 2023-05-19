@@ -45,11 +45,10 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private Signature signature;
+	private final Signature signature = new Signature();
 
 	public MsPacManIntroScene() {
-		signature = new Signature();
-		signature.add(overlay, t(5.5), t(32.0));
+		overlay.getChildren().add(signature.root());
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		intro = new MsPacManIntro(context.gameController());
 		intro.addStateChangeListener((oldState, newState) -> {
 			if (oldState == MsPacManIntro.State.START) {
-				signature.show();
+				signature.show(t(5.5), t(32.0));
 			}
 		});
 		intro.changeState(MsPacManIntro.State.START);

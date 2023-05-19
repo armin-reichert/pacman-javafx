@@ -65,8 +65,7 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	protected final SubScene fxSubScene;
-	protected final StackPane root;
+	protected final SubScene fxSubScene; // we probably could just use some pane instead
 	protected final Canvas canvas;
 	protected final Pane overlay;
 	protected final VBox helpRoot;
@@ -76,41 +75,23 @@ public abstract class GameScene2D implements GameScene {
 	protected GameScene2D() {
 		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO);
 
-		root = new StackPane();
+		var root = new StackPane();
 		// This avoids a vertical line on the left side of the embedded 2D game scene
 		root.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
 
 		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
-
 		var scaling = new Scale();
 		scaling.xProperty().bind(Bindings.createDoubleBinding(this::sceneScaling, fxSubScene.widthProperty()));
 		scaling.yProperty().bind(Bindings.createDoubleBinding(this::sceneScaling, fxSubScene.heightProperty()));
-
-		canvas = new Canvas();
-		canvas.widthProperty().bind(fxSubScene.widthProperty());
-		canvas.heightProperty().bind(fxSubScene.heightProperty());
-		canvas.getTransforms().add(scaling);
-
+		canvas = new Canvas(WIDTH, HEIGHT);
 		overlay = new Pane();
 		overlay.getTransforms().add(scaling);
+		root.getChildren().addAll(canvas, overlay);
 
-		// anchor for help popup
 		helpRoot = new VBox();
 		helpRoot.setTranslateX(10);
 		helpRoot.setTranslateY(HEIGHT * 0.2);
 		overlay.getChildren().add(helpRoot);
-
-		root.getChildren().addAll(canvas, overlay);
-	}
-
-	@Override
-	public void setContext(GameSceneContext context) {
-		checkNotNull(context);
-		this.context = context;
-	}
-
-	protected double sceneScaling() {
-		return fxSubScene.getHeight() / HEIGHT;
 	}
 
 	/**
@@ -125,8 +106,21 @@ public abstract class GameScene2D implements GameScene {
 		var width = ASPECT_RATIO * height;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
+		var s = sceneScaling();
+		canvas.setScaleX(s);
+		canvas.setScaleY(s);
 		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height,
 				sceneScaling());
+	}
+
+	@Override
+	public void setContext(GameSceneContext context) {
+		checkNotNull(context);
+		this.context = context;
+	}
+
+	protected double sceneScaling() {
+		return fxSubScene.getHeight() / HEIGHT;
 	}
 
 	@Override
