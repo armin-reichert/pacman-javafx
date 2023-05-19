@@ -90,7 +90,9 @@ public class Game2d extends Application {
 	public static final KeyCodeCombination KEY_SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
 
 	public static final KeyCodeCombination KEY_START_GAME        = just(KeyCode.DIGIT1);
+	public static final KeyCodeCombination KEY_START_GAME_NUMPAD = just(KeyCode.NUMPAD1);
 	public static final KeyCodeCombination KEY_ADD_CREDIT        = just(KeyCode.DIGIT5);
+	public static final KeyCodeCombination KEY_ADD_CREDIT_NUMPAD = just(KeyCode.NUMPAD5);
 
 	public static final KeyCodeCombination KEY_QUIT              = just(KeyCode.Q);
 	public static final KeyCodeCombination KEY_TEST_LEVELS       = alt(KeyCode.T);
