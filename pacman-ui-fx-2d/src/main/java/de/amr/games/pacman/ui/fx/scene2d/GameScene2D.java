@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
@@ -55,9 +54,9 @@ public abstract class GameScene2D implements GameScene {
 
 	public static final int TILES_X = 28;
 	public static final int TILES_Y = 36;
-	public static final int WIDTH = TILES_X * TS;
-	public static final int HEIGHT = TILES_Y * TS;
-	public static final float ASPECT_RATIO = (float) WIDTH / HEIGHT;
+	public static final int WIDTH = 224;
+	public static final int HEIGHT = 288;
+	public static final float ASPECT_RATIO = 28f / 36f;
 
 	protected static float t(double tiles) {
 		return (float) tiles * TS;
@@ -73,29 +72,31 @@ public abstract class GameScene2D implements GameScene {
 	protected GameSceneContext context;
 
 	protected GameScene2D() {
-		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO);
+		canvas = new Canvas(WIDTH, HEIGHT);
+		overlay = new Pane();
 
 		var root = new StackPane();
 		// This avoids a vertical line on the left side of the embedded 2D game scene
 		root.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
-
-		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
-		var scaling = new Scale();
-		scaling.xProperty().bind(Bindings.createDoubleBinding(this::sceneScaling, fxSubScene.widthProperty()));
-		scaling.yProperty().bind(Bindings.createDoubleBinding(this::sceneScaling, fxSubScene.heightProperty()));
-		canvas = new Canvas(WIDTH, HEIGHT);
-		overlay = new Pane();
-		overlay.getTransforms().add(scaling);
 		root.getChildren().addAll(canvas, overlay);
 
 		helpRoot = new VBox();
 		helpRoot.setTranslateX(10);
 		helpRoot.setTranslateY(HEIGHT * 0.2);
 		overlay.getChildren().add(helpRoot);
+
+		// scale overlay pane to cover subscene
+		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
+		fxSubScene.heightProperty().addListener((py, ov, nv) -> {
+			var s = nv.doubleValue() / HEIGHT;
+			overlay.getTransforms().setAll(new Scale(s, s));
+		});
+
+		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
 	/**
-	 * Resizes the game scene to the given height, keeping the aspect ratio.
+	 * Resizes the scene to the given height, keeping the aspect ratio.
 	 * 
 	 * @param height new game scene height
 	 */
@@ -104,23 +105,18 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scene height must be positive");
 		}
 		var width = ASPECT_RATIO * height;
+		var scale = height / HEIGHT;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		var s = sceneScaling();
-		canvas.setScaleX(s);
-		canvas.setScaleY(s);
-		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height,
-				sceneScaling());
+		canvas.setScaleX(scale);
+		canvas.setScaleY(scale);
+		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height, scale);
 	}
 
 	@Override
 	public void setContext(GameSceneContext context) {
 		checkNotNull(context);
 		this.context = context;
-	}
-
-	protected double sceneScaling() {
-		return fxSubScene.getHeight() / HEIGHT;
 	}
 
 	@Override
