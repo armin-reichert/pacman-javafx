@@ -44,7 +44,10 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	private MsPacManIntermission3 im;
-	private SimpleAnimation<Rectangle2D> flyingStork;
+	private MsPacManIntermission3.Context imc;
+	private MsPacManGameRenderer r;
+
+	private SimpleAnimation<Rectangle2D> storkAnimation;
 
 	public MsPacManIntermissionScene3(GameController gameController) {
 		super(gameController);
@@ -52,35 +55,39 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void init() {
+		r = (MsPacManGameRenderer) context.rendering2D();
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
 		im = new MsPacManIntermission3(context.gameController());
+		imc = im.context();
+
 		im.changeState(MsPacManIntermission3.State.FLAP);
 
-		var r = (MsPacManGameRenderer) context.rendering2D();
-		im.context().clapperboard.setAnimation(r.createClapperboardAnimation());
-		im.context().msPacMan.setAnimations(r.createPacAnimations(im.context().msPacMan));
-		im.context().pacMan.setAnimations(r.createPacAnimations(im.context().pacMan));
-		im.context().pacMan.animations().ifPresent(
-				anims -> anims.put(GameModel.AK_PAC_MUNCHING, r.createPacManMunchingAnimationMap(im.context().pacMan)));
-		flyingStork = r.createStorkFlyingAnimation();
-		flyingStork.start();
+		imc.clapperboard.setAnimation(r.createClapperboardAnimation());
+		imc.msPacMan.setAnimations(r.createPacAnimations(imc.msPacMan));
+		imc.pacMan.setAnimations(r.createPacAnimations(imc.pacMan));
+		imc.pacMan.animations()
+				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, r.createPacManMunchingAnimationMap(imc.pacMan)));
+
+		storkAnimation = r.createStorkFlyingAnimation();
+		storkAnimation.start();
 	}
 
 	@Override
 	public void update() {
 		im.update();
+		storkAnimation.animate();
 	}
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var r = (MsPacManGameRenderer) context.rendering2D();
-		r.drawClap(g, im.context().clapperboard);
-		r.drawPac(g, im.context().msPacMan);
-		r.drawPac(g, im.context().pacMan);
-		r.drawEntitySprite(g, im.context().stork, flyingStork.animate());
-		r.drawEntitySprite(g, im.context().bag, im.context().bagOpen ? r.juniorPacSprite() : r.blueBagSprite());
+		r.drawClap(g, imc.clapperboard);
+		r.drawPac(g, imc.msPacMan);
+		r.drawPac(g, imc.pacMan);
+		r.drawEntitySprite(g, imc.stork, storkAnimation.frame());
+		r.drawEntitySprite(g, imc.bag, imc.bagOpen ? r.juniorPacSprite() : r.blueBagSprite());
 		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 }

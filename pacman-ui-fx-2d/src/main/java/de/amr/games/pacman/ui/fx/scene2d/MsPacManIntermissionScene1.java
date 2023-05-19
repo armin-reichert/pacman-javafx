@@ -42,6 +42,8 @@ import javafx.scene.canvas.GraphicsContext;
 public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	private MsPacManIntermission1 im;
+	private MsPacManIntermission1.Context imc;
+	private MsPacManGameRenderer r;
 
 	public MsPacManIntermissionScene1(GameController gameController) {
 		super(gameController);
@@ -49,26 +51,28 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void init() {
+		r = (MsPacManGameRenderer) context.rendering2D();
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
 		im = new MsPacManIntermission1(context.gameController());
+		imc = im.context();
 		im.changeState(MsPacManIntermission1.State.FLAP);
 
-		var r = (MsPacManGameRenderer) context.rendering2D();
-		im.context().clapperboard.setAnimation(r.createClapperboardAnimation());
-		im.context().msPac.setAnimations(r.createPacAnimations(im.context().msPac));
-		im.context().msPac.animations().ifPresent(AnimationMap::ensureRunning);
-		im.context().pacMan.setAnimations(r.createPacAnimations(im.context().pacMan));
-		im.context().pacMan.animations().ifPresent(animations -> {
-			var munching = r.createPacManMunchingAnimationMap(im.context().pacMan);
+		imc.clapperboard.setAnimation(r.createClapperboardAnimation());
+		imc.msPac.setAnimations(r.createPacAnimations(imc.msPac));
+		imc.msPac.animations().ifPresent(AnimationMap::ensureRunning);
+		imc.pacMan.setAnimations(r.createPacAnimations(imc.pacMan));
+		imc.pacMan.animations().ifPresent(animations -> {
+			var munching = r.createPacManMunchingAnimationMap(imc.pacMan);
 			animations.put(GameModel.AK_PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		im.context().inky.setAnimations(r.createGhostAnimations(im.context().inky));
-		im.context().inky.animations().ifPresent(AnimationMap::ensureRunning);
-		im.context().pinky.setAnimations(r.createGhostAnimations(im.context().pinky));
-		im.context().pinky.animations().ifPresent(AnimationMap::ensureRunning);
+		imc.inky.setAnimations(r.createGhostAnimations(imc.inky));
+		imc.inky.animations().ifPresent(AnimationMap::ensureRunning);
+		imc.pinky.setAnimations(r.createGhostAnimations(imc.pinky));
+		imc.pinky.animations().ifPresent(AnimationMap::ensureRunning);
 	}
 
 	@Override
@@ -78,13 +82,12 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var r = (MsPacManGameRenderer) context.rendering2D();
-		r.drawClap(g, im.context().clapperboard);
-		r.drawPac(g, im.context().msPac);
-		r.drawPac(g, im.context().pacMan);
-		r.drawGhost(g, im.context().inky);
-		r.drawGhost(g, im.context().pinky);
-		r.drawEntitySprite(g, im.context().heart, r.heartSprite());
+		r.drawClap(g, imc.clapperboard);
+		r.drawPac(g, imc.msPac);
+		r.drawPac(g, imc.pacMan);
+		r.drawGhost(g, imc.inky);
+		r.drawGhost(g, imc.pinky);
+		r.drawEntitySprite(g, imc.heart, r.heartSprite());
 		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 }
