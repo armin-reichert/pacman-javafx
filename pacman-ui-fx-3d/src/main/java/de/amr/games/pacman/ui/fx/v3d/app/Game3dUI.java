@@ -143,8 +143,8 @@ public class Game3dUI extends Game2dUI {
 	@Override
 	protected void configureGameScenes() {
 		super.configureGameScenes();
-		gameSceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
-		gameSceneConfig.get(GameVariant.PACMAN).playSceneChoice().setScene3D(new PlayScene3D(gameController));
+		gameSceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D());
+		gameSceneConfig.get(GameVariant.PACMAN).playSceneChoice().setScene3D(new PlayScene3D());
 	}
 
 	@Override

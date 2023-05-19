@@ -24,47 +24,46 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * @author Armin Reichert
  */
 public class GameSceneConfiguration {
 
-	private static final byte INDEX_BOOT_SCENE = 0;
-	private static final byte INDEX_INTRO_SCENE = 1;
-	private static final byte INDEX_CREDIT_SCENE = 2;
-	private static final byte INDEX_PLAY_SCENE = 3;
+	private final GameSceneChoice bootSceneChoice;
+	private final GameSceneChoice introSceneChoice;
+	private final GameSceneChoice creditSceneChoice;
+	private final GameSceneChoice playSceneChoice;
+	private final GameSceneChoice[] cutSceneChoices = new GameSceneChoice[3];
 
-	private final GameSceneChoice[] choices;
-
-	public GameSceneConfiguration(GameSceneChoice... choices) {
-		checkNotNull(choices);
-		if (choices.length != 7) {
-			throw new IllegalArgumentException(
-					"Scene configuration must provide 7 game scenes in order: boot, intro, credit, play, cut1, cut2, cut3.");
-		}
-		this.choices = choices;
+	public GameSceneConfiguration(GameSceneChoice boot, GameSceneChoice intro, GameSceneChoice credit,
+			GameSceneChoice play, GameSceneChoice cut1, GameSceneChoice cut2, GameSceneChoice cut3) {
+		bootSceneChoice = boot;
+		introSceneChoice = intro;
+		creditSceneChoice = credit;
+		playSceneChoice = play;
+		cutSceneChoices[0] = cut1;
+		cutSceneChoices[1] = cut2;
+		cutSceneChoices[2] = cut3;
 	}
 
 	public GameSceneChoice bootSceneChoice() {
-		return choices[INDEX_BOOT_SCENE];
+		return bootSceneChoice;
 	}
 
 	public GameSceneChoice creditSceneChoice() {
-		return choices[INDEX_CREDIT_SCENE];
+		return creditSceneChoice;
 	}
 
 	public GameSceneChoice introSceneChoice() {
-		return choices[INDEX_INTRO_SCENE];
+		return introSceneChoice;
 	}
 
 	public GameSceneChoice playSceneChoice() {
-		return choices[INDEX_PLAY_SCENE];
+		return playSceneChoice;
 	}
 
 	public GameSceneChoice cutSceneChoice(int cutSceneNumber) {
-		return choices[INDEX_PLAY_SCENE + cutSceneNumber];
+		return cutSceneChoices[cutSceneNumber - 1];
 	}
 
 	public boolean isPlayScene(GameScene gameScene) {

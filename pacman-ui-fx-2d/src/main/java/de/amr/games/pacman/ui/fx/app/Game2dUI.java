@@ -299,7 +299,7 @@ public class Game2dUI implements GameEventListener {
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
-		Logger.info("Game scene changed from {} to {}", prevGameScene, currentGameScene);
+		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
 	protected void handleKeyPressed(KeyEvent keyEvent) {

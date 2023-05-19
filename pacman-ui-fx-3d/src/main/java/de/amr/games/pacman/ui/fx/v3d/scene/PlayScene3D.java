@@ -37,7 +37,6 @@ import java.util.stream.Stream;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -100,9 +99,7 @@ public class PlayScene3D implements GameScene {
 	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
 	private CameraController camController;
 
-	public PlayScene3D(GameController gameController) {
-		checkNotNull(gameController);
-
+	public PlayScene3D() {
 		camControllerMap.put(Perspective.DRONE, new CamDrone());
 		camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		camControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
