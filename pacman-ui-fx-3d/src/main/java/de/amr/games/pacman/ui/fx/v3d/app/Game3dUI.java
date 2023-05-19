@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -93,9 +94,13 @@ public class Game3dUI extends Game2dUI {
 		private final PlayScene2D playScene;
 
 		public PictureInPicture(GameController gameController) {
-			playScene = new PlayScene2D(gameController);
+			playScene = new PlayScene2D();
 			playScene.fxSubScene().opacityProperty().bind(opacityPy);
 			playScene.fxSubScene().setVisible(false);
+		}
+
+		public void init() {
+			playScene.setContext(new GameSceneContext(gameController, currentGameScene.context().rendering2D()));
 		}
 
 		public void update() {
@@ -104,7 +109,6 @@ public class Game3dUI extends Game2dUI {
 				playScene.fxSubScene().setVisible(visiblePy.get() && currentGameScene.is3D() && isPlayScene);
 				playScene.context().setCreditVisible(false);
 				playScene.context().setScoreVisible(true);
-				playScene.context().setRendering2D(currentGameScene.context().rendering2D());
 			}
 		}
 
@@ -231,6 +235,7 @@ public class Game3dUI extends Game2dUI {
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
 		var use3D = Game3d.PY_3D_ENABLED.get();
+		pip.init(); // TODO check this
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
 	}
 

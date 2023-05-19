@@ -43,20 +43,17 @@ import de.amr.games.pacman.ui.fx.sound.GameSounds;
 public class GameSceneContext {
 
 	private final GameController gameController;
+	private final Rendering2D renderer;
 	private boolean scoreVisible;
 	private boolean creditVisible;
-	private Rendering2D rendering2D;
 
-	public GameSceneContext(GameController gameController) {
+	public GameSceneContext(GameController gameController, Rendering2D renderer) {
 		this.gameController = Objects.requireNonNull(gameController, "Game controller must not be NULL");
+		this.renderer = renderer;
 	}
 
 	public Rendering2D rendering2D() {
-		return rendering2D;
-	}
-
-	public void setRendering2D(Rendering2D renderer) {
-		this.rendering2D = Objects.requireNonNull(renderer, "2D renderer must not be NULL");
+		return renderer;
 	}
 
 	public boolean isScoreVisible() {

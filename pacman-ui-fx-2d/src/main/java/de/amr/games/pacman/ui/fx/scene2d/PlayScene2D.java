@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileGrid;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -51,10 +50,6 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
-
-	public PlayScene2D(GameController gameController) {
-		super(gameController);
-	}
 
 	@Override
 	public void handleKeyboardInput() {

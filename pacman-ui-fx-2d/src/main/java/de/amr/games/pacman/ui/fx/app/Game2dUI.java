@@ -49,6 +49,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.BootScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
@@ -144,26 +145,26 @@ public class Game2dUI implements GameEventListener {
 		gameSceneConfig.put(GameVariant.MS_PACMAN,
 				new GameSceneConfiguration(new MsPacManGameRenderer(Game2d.assets.spritesMsPacMan),
 				//@formatter:off
-					new GameSceneChoice(new BootScene(gameController)),
-					new GameSceneChoice(new MsPacManIntroScene(gameController)), 
-					new GameSceneChoice(new MsPacManCreditScene(gameController)),
-					new GameSceneChoice(new PlayScene2D(gameController)),
-					new GameSceneChoice(new MsPacManIntermissionScene1(gameController)), 
-					new GameSceneChoice(new MsPacManIntermissionScene2(gameController)),
-					new GameSceneChoice(new MsPacManIntermissionScene3(gameController))
+					new GameSceneChoice(new BootScene()),
+					new GameSceneChoice(new MsPacManIntroScene()), 
+					new GameSceneChoice(new MsPacManCreditScene()),
+					new GameSceneChoice(new PlayScene2D()),
+					new GameSceneChoice(new MsPacManIntermissionScene1()), 
+					new GameSceneChoice(new MsPacManIntermissionScene2()),
+					new GameSceneChoice(new MsPacManIntermissionScene3())
 			  //@formatter:on
 				));
 
 		gameSceneConfig.put(GameVariant.PACMAN,
 				new GameSceneConfiguration(new PacManGameRenderer(Game2d.assets.spritesPacMan),
 				//@formatter:off
-					new GameSceneChoice(new BootScene(gameController)),
-					new GameSceneChoice(new PacManIntroScene(gameController)),
-					new GameSceneChoice(new PacManCreditScene(gameController)),
-					new GameSceneChoice(new PlayScene2D(gameController)),
-					new GameSceneChoice(new PacManCutscene1(gameController)), 
-					new GameSceneChoice(new PacManCutscene2(gameController)),
-					new GameSceneChoice(new PacManCutscene3(gameController))
+					new GameSceneChoice(new BootScene()),
+					new GameSceneChoice(new PacManIntroScene()),
+					new GameSceneChoice(new PacManCreditScene()),
+					new GameSceneChoice(new PlayScene2D()),
+					new GameSceneChoice(new PacManCutscene1()), 
+					new GameSceneChoice(new PacManCutscene2()),
+					new GameSceneChoice(new PacManCutscene3())
 			  //@formatter:on
 				));
 	}
@@ -290,10 +291,10 @@ public class Game2dUI implements GameEventListener {
 		}
 		Logger.trace("Changing game scene from {} to {}", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		var variant = gameController.game().variant();
+		var variant = game().variant();
 		var renderer = gameSceneConfig.get(variant).renderer();
 		Logger.trace("Using renderer {}", renderer);
-		currentGameScene.context().setRendering2D(renderer);
+		currentGameScene.setContext(new GameSceneContext(gameController, renderer));
 		currentGameScene.init();
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());

@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
@@ -48,8 +47,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	private MsPacManIntro intro;
 	private Signature signature;
 
-	public MsPacManIntroScene(GameController gameController) {
-		super(gameController);
+	public MsPacManIntroScene() {
 		signature = new Signature();
 		signature.add(overlay, t(5.5), t(32.0));
 	}

@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.RND;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
@@ -47,8 +46,7 @@ public class BootScene extends GameScene2D {
 	// current scene content
 	private final WritableImage sceneImage;
 
-	public BootScene(GameController gameController) {
-		super(gameController);
+	public BootScene() {
 		contentCanvas = new Canvas(WIDTH, HEIGHT);
 		ctx = contentCanvas.getGraphicsContext2D();
 		sceneImage = new WritableImage(WIDTH, HEIGHT);

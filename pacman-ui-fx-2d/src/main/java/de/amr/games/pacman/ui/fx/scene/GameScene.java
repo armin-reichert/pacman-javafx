@@ -43,6 +43,8 @@ public interface GameScene extends GameEventListener {
 	 */
 	GameSceneContext context();
 
+	void setContext(GameSceneContext context);
+
 	/**
 	 * Called when the scene becomes the current one.
 	 */

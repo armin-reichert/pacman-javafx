@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -38,10 +37,6 @@ import javafx.scene.canvas.GraphicsContext;
  * @author Armin Reichert
  */
 public class PacManCreditScene extends GameScene2D {
-
-	public PacManCreditScene(GameController gameController) {
-		super(gameController);
-	}
 
 	@Override
 	public void init() {

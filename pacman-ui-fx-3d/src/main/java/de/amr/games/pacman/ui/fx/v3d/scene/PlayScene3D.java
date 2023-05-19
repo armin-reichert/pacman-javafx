@@ -91,7 +91,7 @@ public class PlayScene3D implements GameScene {
 		}
 	};
 
-	private final GameSceneContext context;
+	private GameSceneContext context;
 	private final SubScene fxSubScene;
 	private final Group root;
 	private final Text3D readyMessageText3D = new Text3D();
@@ -102,8 +102,6 @@ public class PlayScene3D implements GameScene {
 
 	public PlayScene3D(GameController gameController) {
 		checkNotNull(gameController);
-
-		context = new GameSceneContext(gameController);
 
 		camControllerMap.put(Perspective.DRONE, new CamDrone());
 		camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
@@ -121,6 +119,12 @@ public class PlayScene3D implements GameScene {
 		// initial scene size is irrelevant, will be bound to main scene size
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
+	}
+
+	@Override
+	public void setContext(GameSceneContext context) {
+		checkNotNull(context);
+		this.context = context;
 	}
 
 	@Override
