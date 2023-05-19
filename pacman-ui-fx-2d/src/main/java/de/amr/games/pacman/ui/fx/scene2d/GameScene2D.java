@@ -81,8 +81,8 @@ public abstract class GameScene2D implements GameScene {
 		canvas.heightProperty().bind(fxSubScene.heightProperty());
 
 		var scaling = new Scale();
-		scaling.xProperty().bind(Bindings.createDoubleBinding(this::canvasScaling, fxSubScene.widthProperty()));
-		scaling.yProperty().bind(Bindings.createDoubleBinding(this::canvasScaling, fxSubScene.heightProperty()));
+		scaling.xProperty().bind(Bindings.createDoubleBinding(this::sceneScaling, fxSubScene.widthProperty()));
+		scaling.yProperty().bind(Bindings.createDoubleBinding(this::sceneScaling, fxSubScene.heightProperty()));
 		canvas.getTransforms().add(scaling);
 		overlay.getTransforms().add(scaling);
 
@@ -111,7 +111,7 @@ public abstract class GameScene2D implements GameScene {
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
 		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height,
-				canvasScaling());
+				sceneScaling());
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public abstract class GameScene2D implements GameScene {
 		return helpRoot;
 	}
 
-	private double canvasScaling() {
+	private double sceneScaling() {
 		return fxSubScene.getHeight() / HEIGHT;
 	}
 
