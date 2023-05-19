@@ -30,16 +30,17 @@ import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileGrid;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
+import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -57,8 +58,10 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2d.KEY_ADD_CREDIT) && !context.hasCredit()) {
-			Game2d.app.addCredit();
+		if (Keyboard.pressed(Game2d.KEY_ADD_CREDIT) || Keyboard.pressed(Game2d.KEY_ADD_CREDIT_NUMPAD)) {
+			if (!context.hasCredit()) {
+				Game2d.app.addCredit();
+			}
 		} else if (Keyboard.pressed(Game2d.KEY_CHEAT_EAT_ALL)) {
 			Game2d.app.cheatEatAllPellets();
 		} else if (Keyboard.pressed(Game2d.KEY_CHEAT_ADD_LIVES)) {
@@ -78,15 +81,11 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		if (context.state() == GameState.GAME_OVER) {
-			context.setCreditVisible(true);
-		}
-		context.level().ifPresent(this::updateSound);
+		context.level().ifPresent(level -> updateSound(level, context.sounds()));
 	}
 
 	@Override
 	public void end() {
-		// TODO check if this is needed
 		context.sounds().stopAll();
 	}
 
@@ -121,15 +120,23 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo(GraphicsContext g) {
-		drawTileGrid(g, World.TILES_X, World.TILES_Y);
+		drawTileGrid(g, TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
+				// No trespassing symbol
 				g.setFill(Color.RED);
 				g.fillOval(t(tile.x()), t(tile.y() - 1), TS, TS);
 				g.setFill(Color.WHITE);
 				g.fillRect(t(tile.x()) + 1, t(tile.y()) - HTS - 1, TS - 2, 2);
 			});
 		});
+	}
+
+	@Override
+	public void onGameStateChange(GameStateChangeEvent e) {
+		if (e.newGameState == GameState.GAME_OVER) {
+			context.setCreditVisible(true);
+		}
 	}
 
 	@Override
@@ -143,18 +150,18 @@ public class PlayScene2D extends GameScene2D {
 		});
 	}
 
-	private void updateSound(GameLevel level) {
+	private void updateSound(GameLevel level, GameSounds sounds) {
 		if (level.isDemoLevel()) {
 			return;
 		}
-		if (level.pac().starvingTicks() > 10) {
-			context.sounds().stop(AudioClipID.PACMAN_MUNCH);
+		if (level.pac().starvingTicks() > 8) { // TODO not sure
+			sounds.stop(AudioClipID.PACMAN_MUNCH);
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			context.sounds().ensureLoop(AudioClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
+			sounds.ensureLoop(AudioClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			context.sounds().stop(AudioClipID.GHOST_RETURNING);
+			sounds.stop(AudioClipID.GHOST_RETURNING);
 		}
 	}
 }
