@@ -84,7 +84,7 @@ public interface GameScene extends GameEventListener {
 	boolean is3D();
 
 	/**
-	 * Called when this game scene is embedded (displayed) inside its parent FX scene.
+	 * Called when this game scene has been embedded inside its parent FX scene.
 	 * 
 	 * @param parentScene the JavaFX parent scene
 	 */

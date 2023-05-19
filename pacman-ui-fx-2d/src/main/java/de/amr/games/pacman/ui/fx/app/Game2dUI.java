@@ -297,8 +297,8 @@ public class Game2dUI implements GameEventListener {
 		Logger.trace("Using renderer {}", renderer);
 		currentGameScene.setContext(new GameSceneContext(gameController, renderer));
 		currentGameScene.init();
-		currentGameScene.onEmbedIntoParentScene(stage.getScene());
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
+		currentGameScene.onEmbedIntoParentScene(stage.getScene());
 		Logger.info("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
