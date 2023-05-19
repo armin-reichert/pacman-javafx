@@ -142,31 +142,29 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void configureGameScenes() {
-		gameSceneConfig.put(GameVariant.MS_PACMAN,
-				new GameSceneConfiguration(new MsPacManGameRenderer(Game2d.assets.spritesMsPacMan),
-				//@formatter:off
-					new GameSceneChoice(new BootScene()),
-					new GameSceneChoice(new MsPacManIntroScene()), 
-					new GameSceneChoice(new MsPacManCreditScene()),
-					new GameSceneChoice(new PlayScene2D()),
-					new GameSceneChoice(new MsPacManIntermissionScene1()), 
-					new GameSceneChoice(new MsPacManIntermissionScene2()),
-					new GameSceneChoice(new MsPacManIntermissionScene3())
-			  //@formatter:on
-				));
+		gameSceneConfig.put(GameVariant.MS_PACMAN, new GameSceneConfiguration(
+		//@formatter:off
+			new GameSceneChoice(new BootScene()),
+			new GameSceneChoice(new MsPacManIntroScene()), 
+			new GameSceneChoice(new MsPacManCreditScene()),
+			new GameSceneChoice(new PlayScene2D()),
+			new GameSceneChoice(new MsPacManIntermissionScene1()), 
+			new GameSceneChoice(new MsPacManIntermissionScene2()),
+			new GameSceneChoice(new MsPacManIntermissionScene3())
+	  //@formatter:on
+		));
 
-		gameSceneConfig.put(GameVariant.PACMAN,
-				new GameSceneConfiguration(new PacManGameRenderer(Game2d.assets.spritesPacMan),
-				//@formatter:off
-					new GameSceneChoice(new BootScene()),
-					new GameSceneChoice(new PacManIntroScene()),
-					new GameSceneChoice(new PacManCreditScene()),
-					new GameSceneChoice(new PlayScene2D()),
-					new GameSceneChoice(new PacManCutscene1()), 
-					new GameSceneChoice(new PacManCutscene2()),
-					new GameSceneChoice(new PacManCutscene3())
-			  //@formatter:on
-				));
+		gameSceneConfig.put(GameVariant.PACMAN, new GameSceneConfiguration(
+		//@formatter:off
+			new GameSceneChoice(new BootScene()),
+			new GameSceneChoice(new PacManIntroScene()),
+			new GameSceneChoice(new PacManCreditScene()),
+			new GameSceneChoice(new PlayScene2D()),
+			new GameSceneChoice(new PacManCutscene1()), 
+			new GameSceneChoice(new PacManCutscene2()),
+			new GameSceneChoice(new PacManCutscene3())
+	  //@formatter:on
+		));
 	}
 
 	protected void configureMainScene(Scene mainScene, Settings settings) {
@@ -286,19 +284,22 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void changeGameScene(GameScene newGameScene) {
-		if (currentGameScene != null) {
-			currentGameScene.end();
+		var prevGameScene = currentGameScene;
+		if (prevGameScene != null) {
+			prevGameScene.end();
 		}
-		Logger.trace("Changing game scene from {} to {}", currentGameScene, newGameScene);
 		currentGameScene = newGameScene;
-		var variant = game().variant();
-		var renderer = gameSceneConfig.get(variant).renderer();
+		var renderer = switch (game().variant()) {
+		case MS_PACMAN -> new MsPacManGameRenderer(Game2d.assets.spritesMsPacMan);
+		case PACMAN -> new PacManGameRenderer(Game2d.assets.spritesPacMan);
+		default -> throw new IllegalGameVariantException(game().variant());
+		};
 		Logger.trace("Using renderer {}", renderer);
 		currentGameScene.setContext(new GameSceneContext(gameController, renderer));
 		currentGameScene.init();
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
-		Logger.trace("Game scene changed to {}", currentGameScene);
+		Logger.info("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
 	protected void handleKeyPressed(KeyEvent keyEvent) {

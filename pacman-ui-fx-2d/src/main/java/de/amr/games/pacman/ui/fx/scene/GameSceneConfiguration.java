@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx.scene;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
-
 /**
  * @author Armin Reichert
  */
@@ -38,22 +36,15 @@ public class GameSceneConfiguration {
 	private static final byte INDEX_CREDIT_SCENE = 2;
 	private static final byte INDEX_PLAY_SCENE = 3;
 
-	private final Rendering2D renderer;
 	private final GameSceneChoice[] choices;
 
-	public GameSceneConfiguration(Rendering2D renderer, GameSceneChoice... choices) {
-		checkNotNull(renderer);
+	public GameSceneConfiguration(GameSceneChoice... choices) {
 		checkNotNull(choices);
 		if (choices.length != 7) {
 			throw new IllegalArgumentException(
 					"Scene configuration must provide 7 game scenes in order: boot, intro, credit, play, cut1, cut2, cut3.");
 		}
-		this.renderer = renderer;
 		this.choices = choices;
-	}
-
-	public Rendering2D renderer() {
-		return renderer;
 	}
 
 	public GameSceneChoice bootSceneChoice() {
