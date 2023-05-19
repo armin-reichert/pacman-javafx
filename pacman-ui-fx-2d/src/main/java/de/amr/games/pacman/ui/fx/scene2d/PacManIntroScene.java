@@ -28,9 +28,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -132,7 +129,8 @@ public class PacManIntroScene extends GameScene2D {
 			drawGuys(g, 0);
 			PacManGameRenderer.drawMidwayCopyright(g, 4, 32);
 		}
-		default -> { // nothing to do
+		default -> {
+			// nothing to do
 		}
 		}
 		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
@@ -140,7 +138,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo(GraphicsContext g) {
-		Rendering2D.drawTileGrid(g, World.TILES_X, World.TILES_Y);
+		Rendering2D.drawTileGrid(g, TILES_X, TILES_Y);
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -149,70 +147,68 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
-		var col = ic.leftTileX;
-		var font = Game2d.assets.arcadeFont;
+		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			Rendering2D.drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
-			Rendering2D.drawText(g, "/", ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
-			Rendering2D.drawText(g, "NICKNAME", ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
+			Rendering2D.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, Game2d.assets.arcadeFont, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!ic.ghostInfo[id].pictureVisible) {
 				continue;
 			}
-			int row = 7 + 3 * id;
-			var color = ArcadeTheme.GHOST_COLORS[id].dress();
-			r.drawGhostFacingRight(g, id, TS * (col) + 4, TS * (row));
+			int ty = 7 + 3 * id;
+			r.drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
-				Rendering2D.drawText(g, "-" + ic.ghostInfo[id].character, color, font, TS * (col + 3), TS * (row + 1));
+				var text = "-" + ic.ghostInfo[id].character;
+				var color = ArcadeTheme.GHOST_COLORS[id].dress();
+				Rendering2D.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
-				Rendering2D.drawText(g, QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE, color, font, TS * (col + 14),
-						TS * (row + 1));
+				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
+				var color = ArcadeTheme.GHOST_COLORS[id].dress();
+				Rendering2D.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 14), t(ty + 1));
 			}
 		}
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
-			g.setFill(ArcadeTheme.mazeColors(GameVariant.PACMAN, 1).foodColor());
-			g.fillOval(TS * (ic.leftTileX), TS * (20), TS, TS);
+			g.setFill(ArcadeTheme.PACMAN_MAZE_COLORS.foodColor());
+			g.fillOval(t(ic.leftTileX), t(20), TS, TS);
 		}
 	}
 
-	private void drawGuys(GraphicsContext g, int offsetX) {
-		var pacMan = ic.pacMan;
-		var ghosts = ic.ghosts().toArray(Ghost[]::new);
-		if (offsetX == 0) {
-			for (var ghost : ghosts) {
-				r.drawGhost(g, ghost);
-			}
+	private void drawGuys(GraphicsContext g, int shakingAmount) {
+		if (shakingAmount == 0) {
+			ic.ghosts().forEach(ghost -> r.drawGhost(g, ghost));
 		} else {
-			r.drawGhost(g, ghosts[0]);
+			r.drawGhost(g, ic.ghost(0));
+			r.drawGhost(g, ic.ghost(3));
+			// shaking ghosts effect, not quite as in original game
 			g.save();
-			g.translate(offsetX, 0);
-			r.drawGhost(g, ghosts[1]);
-			r.drawGhost(g, ghosts[2]);
+			g.translate(shakingAmount, 0);
+			r.drawGhost(g, ic.ghost(1));
+			r.drawGhost(g, ic.ghost(2));
 			g.restore();
-			r.drawGhost(g, ghosts[3]);
 		}
-		r.drawPac(g, pacMan);
+		r.drawPac(g, ic.pacMan);
 	}
 
 	private void drawPoints(GraphicsContext g) {
-		int col = ic.leftTileX + 6;
-		int row = 25;
-		g.setFill(ArcadeTheme.mazeColors(GameVariant.PACMAN, 1).foodColor());
-		g.fillRect(TS * (col) + 4, TS * (row - 1) + 4, 2, 2);
+		int tx = ic.leftTileX + 6;
+		int ty = 25;
+		g.setFill(ArcadeTheme.PACMAN_MAZE_COLORS.foodColor());
+		g.fillRect(t(tx) + 4, t(ty - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
-			g.fillOval(TS * (col), TS * (row + 1), TS, TS);
+			g.fillOval(t(tx), t(ty + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);
 		g.setFont(Game2d.assets.arcadeFont);
-		g.fillText("10", TS * (col + 2), TS * (row));
-		g.fillText("50", TS * (col + 2), TS * (row + 2));
-		g.setFont(Game2d.assets.arcadeFont6);
-		g.fillText("PTS", TS * (col + 5), TS * (row));
-		g.fillText("PTS", TS * (col + 5), TS * (row + 2));
+		g.fillText("10", t(tx + 2), t(ty));
+		g.setFont(Game2d.assets.arcadeFont6); // TODO looks ugly
+		g.fillText("PTS", t(tx + 5), t(ty));
+		g.setFont(Game2d.assets.arcadeFont);
+		g.fillText("50", t(tx + 2), t(ty + 2));
+		g.setFont(Game2d.assets.arcadeFont6); // TODO still looks ugly
+		g.fillText("PTS", t(tx + 5), t(ty + 2));
 	}
 }

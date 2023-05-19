@@ -118,7 +118,7 @@ public class PacManGameRenderer implements Rendering2D {
 		drawEntitySprite(g, bonus.entity(), sprite);
 	}
 
-	public void drawGhostFacingRight(GraphicsContext g, int ghostID, int x, int y) {
+	public void drawGhostFacingRight(GraphicsContext g, int ghostID, double x, double y) {
 		var region = ss.tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
 		drawSpriteOverBoundingBox(g, region, x, y);
 	}
