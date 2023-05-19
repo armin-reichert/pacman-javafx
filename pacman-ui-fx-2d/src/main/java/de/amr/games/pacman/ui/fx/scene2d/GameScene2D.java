@@ -29,7 +29,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -55,12 +54,14 @@ import javafx.scene.transform.Scale;
  */
 public abstract class GameScene2D implements GameScene {
 
-	private static final float WIDTH = World.TILES_X * TS;
-	private static final float HEIGHT = World.TILES_Y * TS;
-	private static final float ASPECT_RATIO = WIDTH / HEIGHT;
+	public static final int TILES_X = 28;
+	public static final int TILES_Y = 36;
+	public static final int WIDTH = TILES_X * TS;
+	public static final int HEIGHT = TILES_Y * TS;
+	public static final float ASPECT_RATIO = (float) WIDTH / HEIGHT;
 
-	protected static double t(double tiles) {
-		return tiles * TS;
+	protected static float t(double tiles) {
+		return (float) tiles * TS;
 	}
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
@@ -96,6 +97,10 @@ public abstract class GameScene2D implements GameScene {
 		overlay.getChildren().add(helpRoot);
 
 		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO);
+	}
+
+	protected double sceneScaling() {
+		return fxSubScene.getHeight() / HEIGHT;
 	}
 
 	/**
@@ -165,10 +170,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public VBox helpRoot() {
 		return helpRoot;
-	}
-
-	private double sceneScaling() {
-		return fxSubScene.getHeight() / HEIGHT;
 	}
 
 	/**
