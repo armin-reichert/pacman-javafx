@@ -28,6 +28,7 @@ import de.amr.games.pacman.ui.fx.app.Game2d;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -41,6 +42,9 @@ import javafx.util.Duration;
 public class Signature {
 
 	private TextFlow text = new TextFlow();
+	private final FadeTransition fadeIn;
+	private final FadeTransition fadeOut;
+	private final Transition animation;
 
 	public Signature() {
 		var part1 = new Text("Remake (2023) by ");
@@ -52,6 +56,17 @@ public class Signature {
 		part2.setFont(Game2d.assets.handwritingFont);
 
 		text = new TextFlow(part1, part2);
+
+		fadeIn = new FadeTransition(Duration.seconds(5), text);
+		fadeIn.setFromValue(0);
+		fadeIn.setToValue(1);
+		fadeIn.setInterpolator(Interpolator.EASE_IN);
+
+		fadeOut = new FadeTransition(Duration.seconds(1), text);
+		fadeOut.setFromValue(1);
+		fadeOut.setToValue(0);
+
+		animation = new SequentialTransition(fadeIn, fadeOut);
 	}
 
 	public void add(Pane parent, double x, double y) {
@@ -60,19 +75,12 @@ public class Signature {
 		parent.getChildren().add(text);
 	}
 
-	public void setOpacity(double opacity) {
-		text.setOpacity(opacity);
+	public void show() {
+		animation.play();
 	}
 
-	public void show() {
-		var fadeIn = new FadeTransition(Duration.seconds(5), text);
-		fadeIn.setFromValue(0);
-		fadeIn.setToValue(1);
-		fadeIn.setInterpolator(Interpolator.EASE_IN);
-		var fadeOut = new FadeTransition(Duration.seconds(1), text);
-		fadeOut.setFromValue(1);
-		fadeOut.setToValue(0);
-		var fade = new SequentialTransition(fadeIn, fadeOut);
-		fade.play();
+	public void hide() {
+		animation.stop();
+		text.setOpacity(0);
 	}
 }

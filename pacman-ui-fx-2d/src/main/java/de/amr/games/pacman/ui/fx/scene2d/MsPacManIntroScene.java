@@ -76,7 +76,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghostAnimations.start();
 		});
 
-		signature.setOpacity(0); // invisible on start
+		signature.hide();
 	}
 
 	@Override

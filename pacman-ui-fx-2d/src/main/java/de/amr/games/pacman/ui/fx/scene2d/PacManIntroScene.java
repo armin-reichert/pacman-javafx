@@ -50,20 +50,24 @@ public class PacManIntroScene extends GameScene2D {
 
 	private static final String QUOTE = "\"";
 
+	private PacManGameRenderer r;
 	private PacManIntro intro;
-	private Signature signature;
+	private PacManIntro.Context ic;
+	private final Signature signature = new Signature();
 
 	public PacManIntroScene(GameController gameController) {
 		super(gameController);
-		signature = new Signature();
 		signature.add(overlay, 5.5 * TS, 32.0 * TS);
 	}
 
 	@Override
 	public void init() {
+		r = (PacManGameRenderer) context.rendering2D();
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
-		signature.setOpacity(0);
+
+		signature.hide();
 
 		intro = new PacManIntro(context().gameController());
 		intro.addStateChangeListener((oldState, newState) -> {
@@ -71,22 +75,24 @@ public class PacManIntroScene extends GameScene2D {
 				signature.show();
 			}
 		});
-		intro.changeState(State.START);
+		ic = intro.context();
 
-		intro.context().pacMan.setAnimations(context.rendering2D().createPacAnimations(intro.context().pacMan));
-		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(context.rendering2D().createGhostAnimations(ghost)));
-		intro.context().blinking.reset();
+		ic.pacMan.setAnimations(r.createPacAnimations(ic.pacMan));
+		ic.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
+		ic.blinking.reset();
+
+		intro.changeState(State.START);
 	}
 
 	@Override
 	public void update() {
 		intro.update();
-		context.setCreditVisible(intro.context().creditVisible);
 	}
 
 	@Override
 	public void end() {
 		Game2d.ui.stopVoice();
+		signature.hide();
 	}
 
 	@Override
@@ -104,7 +110,6 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var r = context.rendering2D();
 		var timer = intro.state().timer();
 		drawGallery(g);
 		switch (intro.state()) {
@@ -144,43 +149,40 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
-		var r = (PacManGameRenderer) context.rendering2D();
-		var col = intro.context().leftTileX;
+		var col = ic.leftTileX;
 		var font = Game2d.assets.arcadeFont;
-		if (intro.context().titleVisible) {
+		if (ic.titleVisible) {
 			Rendering2D.drawText(g, "CHARACTER", ArcadeTheme.PALE, font, TS * (col + 3), TS * (6));
 			Rendering2D.drawText(g, "/", ArcadeTheme.PALE, font, TS * (col + 13), TS * (6));
 			Rendering2D.drawText(g, "NICKNAME", ArcadeTheme.PALE, font, TS * (col + 15), TS * (6));
 		}
 		for (int id = 0; id < 4; ++id) {
-			if (!intro.context().ghostInfo[id].pictureVisible) {
+			if (!ic.ghostInfo[id].pictureVisible) {
 				continue;
 			}
 			int row = 7 + 3 * id;
 			var color = ArcadeTheme.GHOST_COLORS[id].dress();
 			r.drawGhostFacingRight(g, id, TS * (col) + 4, TS * (row));
-			if (intro.context().ghostInfo[id].characterVisible) {
-				Rendering2D.drawText(g, "-" + intro.context().ghostInfo[id].character, color, font, TS * (col + 3),
-						TS * (row + 1));
+			if (ic.ghostInfo[id].characterVisible) {
+				Rendering2D.drawText(g, "-" + ic.ghostInfo[id].character, color, font, TS * (col + 3), TS * (row + 1));
 			}
-			if (intro.context().ghostInfo[id].nicknameVisible) {
-				Rendering2D.drawText(g, QUOTE + intro.context().ghostInfo[id].ghost.name() + QUOTE, color, font,
-						TS * (col + 14), TS * (row + 1));
+			if (ic.ghostInfo[id].nicknameVisible) {
+				Rendering2D.drawText(g, QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE, color, font, TS * (col + 14),
+						TS * (row + 1));
 			}
 		}
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
-		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
+		if (Boolean.TRUE.equals(ic.blinking.frame())) {
 			g.setFill(ArcadeTheme.mazeColors(GameVariant.PACMAN, 1).foodColor());
-			g.fillOval(TS * (intro.context().leftTileX), TS * (20), TS, TS);
+			g.fillOval(TS * (ic.leftTileX), TS * (20), TS, TS);
 		}
 	}
 
 	private void drawGuys(GraphicsContext g, int offsetX) {
-		var r = context.rendering2D();
-		var pacMan = intro.context().pacMan;
-		var ghosts = intro.context().ghosts().toArray(Ghost[]::new);
+		var pacMan = ic.pacMan;
+		var ghosts = ic.ghosts().toArray(Ghost[]::new);
 		if (offsetX == 0) {
 			for (var ghost : ghosts) {
 				r.drawGhost(g, ghost);
@@ -198,11 +200,11 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints(GraphicsContext g) {
-		int col = intro.context().leftTileX + 6;
+		int col = ic.leftTileX + 6;
 		int row = 25;
 		g.setFill(ArcadeTheme.mazeColors(GameVariant.PACMAN, 1).foodColor());
 		g.fillRect(TS * (col) + 4, TS * (row - 1) + 4, 2, 2);
-		if (Boolean.TRUE.equals(intro.context().blinking.frame())) {
+		if (Boolean.TRUE.equals(ic.blinking.frame())) {
 			g.fillOval(TS * (col), TS * (row + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);
