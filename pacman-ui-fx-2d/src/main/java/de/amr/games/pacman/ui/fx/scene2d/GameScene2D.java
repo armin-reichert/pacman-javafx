@@ -39,6 +39,8 @@ import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Camera;
+import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -69,6 +71,7 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
+	protected final Camera camera;
 	protected final SubScene fxSubScene; // we probably could just use some pane instead
 	protected final Canvas canvas;
 	protected final Pane overlay;
@@ -103,6 +106,9 @@ public abstract class GameScene2D implements GameScene {
 			var s = nv.doubleValue() / HEIGHT;
 			overlay.getTransforms().setAll(new Scale(s, s));
 		});
+
+		camera = new ParallelCamera();
+		fxSubScene.setCamera(camera);
 
 		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
@@ -156,8 +162,10 @@ public abstract class GameScene2D implements GameScene {
 		var scale = height / HEIGHT;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		canvas.setScaleX(scale);
-		canvas.setScaleY(scale);
+		canvas.setWidth(width);
+		canvas.setHeight(height);
+		camera.setScaleX(1.0 / scale);
+		camera.setScaleY(1.0 / scale);
 		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height, scale);
 	}
 
