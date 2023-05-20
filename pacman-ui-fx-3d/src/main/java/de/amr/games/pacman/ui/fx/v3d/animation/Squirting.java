@@ -23,13 +23,14 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
+import static de.amr.games.pacman.lib.Globals.randomDouble;
 import static de.amr.games.pacman.lib.Globals.randomFloat;
 import static de.amr.games.pacman.lib.Globals.randomInt;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Transition;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
@@ -42,45 +43,45 @@ import javafx.util.Duration;
 public abstract class Squirting extends Transition {
 
 	public static class Drop extends Sphere {
-		private float vx;
-		private float vy;
-		private float vz;
+		private double vx;
+		private double vy;
+		private double vz;
 
 		private Drop(Squirting squirting, double radius) {
 			super(radius);
 			setMaterial(squirting.dropMaterial);
-			setTranslateX(squirting.origin.x());
-			setTranslateY(squirting.origin.y());
-			setTranslateZ(squirting.origin.z());
+			setTranslateX(squirting.origin.getX());
+			setTranslateY(squirting.origin.getY());
+			setTranslateZ(squirting.origin.getZ());
 			setVisible(false);
 		}
 
-		private void setVelocity(float x, float y, float z) {
+		private void setVelocity(double x, double y, double z) {
 			vx = x;
 			vy = y;
 			vz = z;
 		}
 
-		private void move(Vector3f gravity) {
+		private void move(Point3D gravity) {
 			setTranslateX(getTranslateX() + vx);
 			setTranslateY(getTranslateY() + vy);
 			setTranslateZ(getTranslateZ() + vz);
-			vx += gravity.x();
-			vy += gravity.y();
-			vz += gravity.z();
+			vx += gravity.getX();
+			vy += gravity.getY();
+			vz += gravity.getZ();
 		}
 	}
 
 	private final Group particleGroup = new Group();
 	private PhongMaterial dropMaterial = new PhongMaterial();
-	private Vector3f origin = new Vector3f(0, 0, 0);
-	private Vector3f gravity = new Vector3f(0, 0, 0.1f);
+	private Point3D origin = new Point3D(0, 0, 0);
+	private Point3D gravity = new Point3D(0, 0, 0.1f);
 	private int dropCountMin = 20;
 	private int dropCountMax = 40;
 	private float dropRadiusMin = 0.1f;
 	private float dropRadiusMax = 1.0f;
-	private Vector3f dropVelocityMin = new Vector3f(-0.25f, -0.25f, -4.0f);
-	private Vector3f dropVelocityMax = new Vector3f(0.25f, 0.25f, -1.0f);
+	private Point3D dropVelocityMin = new Point3D(-0.25f, -0.25f, -4.0f);
+	private Point3D dropVelocityMax = new Point3D(0.25f, 0.25f, -1.0f);
 
 	protected Squirting(Group parent) {
 		setCycleDuration(Duration.seconds(2));
@@ -93,18 +94,18 @@ public abstract class Squirting extends Transition {
 	}
 
 	public void setOrigin(float x, float y, float z) {
-		origin = new Vector3f(x, y, z);
+		origin = new Point3D(x, y, z);
 	}
 
 	public void setOrigin(Node node) {
 		setOrigin((float) node.getTranslateX(), (float) node.getTranslateY(), (float) node.getTranslateZ());
 	}
 
-	public Vector3f getGravity() {
+	public Point3D getGravity() {
 		return gravity;
 	}
 
-	public void setGravity(Vector3f gravity) {
+	public void setGravity(Point3D gravity) {
 		this.gravity = gravity;
 	}
 
@@ -140,19 +141,19 @@ public abstract class Squirting extends Transition {
 		this.dropRadiusMax = dropRadiusMax;
 	}
 
-	public Vector3f getDropVelocityMin() {
+	public Point3D getDropVelocityMin() {
 		return dropVelocityMin;
 	}
 
-	public void setDropVelocityMin(Vector3f dropVelocityMin) {
+	public void setDropVelocityMin(Point3D dropVelocityMin) {
 		this.dropVelocityMin = dropVelocityMin;
 	}
 
-	public Vector3f getDropVelocityMax() {
+	public Point3D getDropVelocityMax() {
 		return dropVelocityMax;
 	}
 
-	public void setDropVelocityMax(Vector3f dropVelocityMax) {
+	public void setDropVelocityMax(Point3D dropVelocityMax) {
 		this.dropVelocityMax = dropVelocityMax;
 	}
 
@@ -167,9 +168,9 @@ public abstract class Squirting extends Transition {
 			var drop = new Drop(this, randomFloat(dropRadiusMin, dropRadiusMax));
 			drop.setVisible(true);
 			drop.setVelocity(//
-					randomFloat(dropVelocityMin.x(), dropVelocityMax.x()), //
-					randomFloat(dropVelocityMin.y(), dropVelocityMax.y()), //
-					randomFloat(dropVelocityMin.z(), dropVelocityMax.z()));
+					randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()), //
+					randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()), //
+					randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
 			particleGroup.getChildren().add(drop);
 		}
 		Logger.trace("{} drops created", particleGroup.getChildren().size());

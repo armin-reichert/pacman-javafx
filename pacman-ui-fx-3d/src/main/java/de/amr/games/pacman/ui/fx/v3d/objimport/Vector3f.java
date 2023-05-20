@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.util;
+package de.amr.games.pacman.ui.fx.v3d.objimport;
 
 import de.amr.games.pacman.lib.math.Vector2f;
 
@@ -31,7 +31,7 @@ import de.amr.games.pacman.lib.math.Vector2f;
  * 
  * @author Armin Reichert
  */
-public record Vector3f(float x, float y, float z) {
+record Vector3f(float x, float y, float z) {
 
 	public Vector3f(Vector3f v) {
 		this(v.x, v.y, v.z);

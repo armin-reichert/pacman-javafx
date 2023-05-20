@@ -55,7 +55,8 @@ public class FoodOscillation extends Transition {
 	protected void interpolate(double t) {
 		for (var node : foodGroup.getChildren()) {
 			if (node.getUserData() instanceof Pellet3D pellet3D) {
-				var centerDistance = pellet3D.position().toVector2f().euclideanDistance(CENTER);
+				var position2D = new Vector2f((float) pellet3D.position().getX(), (float) pellet3D.position().getY());
+				var centerDistance = position2D.euclideanDistance(CENTER);
 				double dz = 2 * Math.sin(2 * centerDistance) * t;
 				node.setTranslateZ(-4 + dz);
 			}

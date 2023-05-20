@@ -26,8 +26,8 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 import java.util.Optional;
 
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Animation;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 
 /**
@@ -43,5 +43,5 @@ public interface Eatable3D {
 
 	Vector2i tile();
 
-	Vector3f position();
+	Point3D position();
 }

@@ -33,12 +33,12 @@ import java.util.Optional;
 
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.util.Vector3f;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
+import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -89,8 +89,8 @@ public class Energizer3D implements Eatable3D {
 	}
 
 	@Override
-	public Vector3f position() {
-		return new Vector3f((float) shape.getTranslateX(), (float) shape.getTranslateY(), (float) shape.getTranslateZ());
+	public Point3D position() {
+		return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
 	}
 
 	@Override
