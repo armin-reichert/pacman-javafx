@@ -294,7 +294,7 @@ public class Game2dUI implements GameEventListener {
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
-	protected void handleKeyPressed(KeyEvent keyEvent) {
+	public void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
 		currentGameScene.handleKeyboardInput();
