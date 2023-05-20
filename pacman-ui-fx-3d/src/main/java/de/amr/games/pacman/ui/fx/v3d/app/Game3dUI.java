@@ -27,7 +27,6 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 import java.util.Optional;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -50,7 +49,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -80,48 +78,35 @@ public class Game3dUI extends Game2dUI {
 		public static final float MIN_HEIGHT = 36 * 8;
 		public static final float MAX_HEIGHT = 2.5f * MIN_HEIGHT;
 
+		public final DoubleProperty heightPy = new SimpleDoubleProperty(MIN_HEIGHT);
+		public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 		public final BooleanProperty visiblePy = new SimpleBooleanProperty(false) {
 			@Override
 			protected void invalidated() {
-				update();
-			}
-		};
-
-		public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
-
-		public final DoubleProperty heightPy = new SimpleDoubleProperty(MIN_HEIGHT) {
-			@Override
-			protected void invalidated() {
-				double h = get();
-				playScene.fxSubScene().setHeight(h);
-				playScene.fxSubScene().setWidth(h * GameScene2D.ASPECT_RATIO);
+				updateVisibility();
 			}
 		};
 
 		private final PlayScene2D playScene;
 
-		public PictureInPicture(GameController gameController) {
+		public PictureInPicture() {
 			playScene = new PlayScene2D();
+			playScene.fxSubScene().heightProperty().bind(heightPy);
+			playScene.fxSubScene().widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
 			playScene.fxSubScene().opacityProperty().bind(opacityPy);
 			playScene.fxSubScene().setVisible(false);
 		}
 
 		public void update() {
 			if (currentGameScene != null && playScene.context() != null) {
-				playScene.fxSubScene().setVisible(visiblePy.get() && isPlayScene3d(currentGameScene));
 				playScene.context().setCreditVisible(false);
 				playScene.context().setScoreVisible(true);
+				updateVisibility();
 			}
 		}
 
-		public void render() {
-			if (playScene.context() != null) {
-				playScene.render();
-			}
-		}
-
-		public SubScene fxSubScene() {
-			return playScene.fxSubScene();
+		private void updateVisibility() {
+			playScene.fxSubScene().setVisible(visiblePy.get() && isPlayScene3d(currentGameScene));
 		}
 	}
 
@@ -130,7 +115,7 @@ public class Game3dUI extends Game2dUI {
 
 	public Game3dUI(GameVariant gameVariant, Stage stage, double width, double height) {
 		super(gameVariant, stage, width, height);
-		pip = new PictureInPicture(gameController);
+		pip = new PictureInPicture();
 		dashboard = new Dashboard(this);
 	}
 
@@ -139,7 +124,7 @@ public class Game3dUI extends Game2dUI {
 		flashMessageView.update();
 		currentGameScene.render();
 		dashboard.update();
-		pip.render();
+		pip.playScene.render();
 	}
 
 	@Override
@@ -160,7 +145,7 @@ public class Game3dUI extends Game2dUI {
 		dashboard.setVisible(false);
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pip.fxSubScene());
+		dashboardLayer.setRight(pip.playScene.fxSubScene());
 
 		mainSceneRoot = new StackPane();
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
@@ -203,7 +188,6 @@ public class Game3dUI extends Game2dUI {
 
 		Game3d.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
 		Game3d.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
-		Game3d.PY_3D_ENABLED.set(true);
 		Game3d.PY_3D_PERSPECTIVE.set(Perspective.NEAR_PLAYER);
 	}
 

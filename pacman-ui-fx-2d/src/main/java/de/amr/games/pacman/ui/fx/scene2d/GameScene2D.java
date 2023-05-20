@@ -163,6 +163,9 @@ public abstract class GameScene2D implements GameScene {
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
+		if (context == null) {
+			return;
+		}
 		if (context.isScoreVisible()) {
 			context.game().score().ifPresent(score -> GameRenderer.drawScore(g, score, "SCORE", t(1), t(1)));
 			context.game().highScore().ifPresent(score -> GameRenderer.drawScore(g, score, "HIGH SCORE", t(16), t(1)));
