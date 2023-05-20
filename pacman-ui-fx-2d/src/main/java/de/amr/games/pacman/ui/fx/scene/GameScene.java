@@ -45,6 +45,8 @@ public interface GameScene extends GameEventListener {
 
 	void setContext(GameSceneContext context);
 
+	void setParentScene(Scene parentScene);
+
 	/**
 	 * Called when the scene becomes the current one.
 	 */
@@ -82,20 +84,6 @@ public interface GameScene extends GameEventListener {
 	 * @return if this is a scene with 3D content
 	 */
 	boolean is3D();
-
-	/**
-	 * Called when this game scene has been embedded inside its parent FX scene.
-	 * 
-	 * @param parentScene the JavaFX parent scene
-	 */
-	void onEmbedIntoParentScene(Scene parentScene);
-
-	/**
-	 * Called when the size of the parent of this game scene changes.
-	 * 
-	 * @param parentScene the JavaFX parent scene
-	 */
-	void onParentSceneResize(Scene parentScene);
 
 	/**
 	 * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.

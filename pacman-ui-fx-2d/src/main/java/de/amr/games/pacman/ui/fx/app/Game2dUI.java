@@ -177,7 +177,7 @@ public class Game2dUI implements GameEventListener {
 		mainScene.setRoot(mainSceneRoot);
 		mainScene.heightProperty().addListener((py, ov, nv) -> {
 			if (currentGameScene != null) {
-				currentGameScene.onParentSceneResize(mainScene);
+				currentGameScene.setParentScene(mainScene);
 			}
 		});
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
@@ -284,13 +284,13 @@ public class Game2dUI implements GameEventListener {
 			prevGameScene.end();
 		}
 		currentGameScene = newGameScene;
+		currentGameScene.setParentScene(stage.getScene());
 		currentGameScene.setContext(new GameSceneContext(//
 				gameController, //
 				new MsPacManGameRenderer(Game2d.assets.spritesMsPacMan), //
 				new PacManGameRenderer(Game2d.assets.spritesPacMan)));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
-		currentGameScene.onEmbedIntoParentScene(stage.getScene());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 

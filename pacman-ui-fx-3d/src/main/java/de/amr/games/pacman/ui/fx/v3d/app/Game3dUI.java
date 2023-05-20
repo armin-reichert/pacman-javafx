@@ -92,7 +92,9 @@ public class Game3dUI extends Game2dUI {
 		public final DoubleProperty heightPy = new SimpleDoubleProperty(MIN_HEIGHT) {
 			@Override
 			protected void invalidated() {
-				playScene.resize(get());
+				double h = get();
+				playScene.fxSubScene().setHeight(h);
+				playScene.fxSubScene().setWidth(h * GameScene2D.ASPECT_RATIO);
 			}
 		};
 
@@ -168,7 +170,7 @@ public class Game3dUI extends Game2dUI {
 		mainScene.setRoot(mainSceneRoot);
 		mainScene.heightProperty().addListener((py, ov, nv) -> {
 			if (currentGameScene != null) {
-				currentGameScene.onParentSceneResize(mainScene);
+				currentGameScene.setParentScene(mainScene);
 			}
 		});
 		mainScene.setOnKeyPressed(this::handleKeyPressed);

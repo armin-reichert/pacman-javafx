@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
@@ -110,6 +108,9 @@ public abstract class GameScene2D implements GameScene {
 		camera = new ParallelCamera();
 		fxSubScene.setCamera(camera);
 
+		canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
+		canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
+
 		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
@@ -149,24 +150,6 @@ public abstract class GameScene2D implements GameScene {
 		helpMenuAnimation.play();
 	}
 
-	/**
-	 * Resizes the scene to the given height, keeping the aspect ratio.
-	 * 
-	 * @param height new game scene height
-	 */
-	public void resize(double height) {
-		if (height <= 0) {
-			throw new IllegalArgumentException("Scene height must be positive");
-		}
-		var width = ASPECT_RATIO * height;
-		var scale = height / HEIGHT;
-		fxSubScene.setWidth(width);
-		fxSubScene.setHeight(height);
-		canvas.setScaleX(scale);
-		canvas.setScaleY(scale);
-		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height, scale);
-	}
-
 	@Override
 	public void setContext(GameSceneContext context) {
 		checkNotNull(context);
@@ -203,23 +186,19 @@ public abstract class GameScene2D implements GameScene {
 		return fxSubScene;
 	}
 
-	@Override
-	public void onEmbedIntoParentScene(Scene parentScene) {
-		resize(parentScene.getHeight());
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
 	@Override
-	public void onParentSceneResize(Scene parentScene) {
-		resize(parentScene.getHeight());
+	public void setParentScene(Scene parentScene) {
+		fxSubScene.widthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
+		fxSubScene.heightProperty().bind(parentScene.heightProperty());
 	}
 
 	@Override
 	public boolean is3D() {
 		return false;
-	}
-
-	public Canvas canvas() {
-		return canvas;
 	}
 
 	/**
