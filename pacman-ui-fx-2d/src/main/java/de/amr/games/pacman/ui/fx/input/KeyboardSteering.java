@@ -23,8 +23,10 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.input;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.tinylog.Logger;
 
@@ -35,7 +37,7 @@ import de.amr.games.pacman.model.actors.Creature;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCombination.Modifier;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -43,30 +45,35 @@ import javafx.scene.input.KeyEvent;
  * 
  * @author Armin Reichert
  */
-public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
+public class KeyboardSteering extends Steering implements EventHandler<KeyEvent> {
 
-	private static final KeyboardSteering DEFAULT_STEERING = new KeyboardSteering(//
-			new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN),
-			new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN),
-			new KeyCodeCombination(KeyCode.LEFT, KeyCombination.CONTROL_DOWN),
-			new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_DOWN));
+	protected Map<KeyCodeCombination, Direction> dirByCombination = new HashMap<>();
+	protected Direction dir;
 
-	private Map<KeyCodeCombination, Direction> directionByKey;
-	private Direction dir;
-	private boolean enabled = false;
-
-	public KeyboardSteering(KeyCodeCombination up, KeyCodeCombination down, KeyCodeCombination left,
-			KeyCodeCombination right) {
-		directionByKey = Map.of(up, Direction.UP, down, Direction.DOWN, left, Direction.LEFT, right, Direction.RIGHT);
+	/**
+	 * Default steering: unmodified cursor keys.
+	 */
+	public KeyboardSteering() {
+		put(new KeyCodeCombination(KeyCode.UP), Direction.UP);
+		put(new KeyCodeCombination(KeyCode.DOWN), Direction.DOWN);
+		put(new KeyCodeCombination(KeyCode.LEFT), Direction.LEFT);
+		put(new KeyCodeCombination(KeyCode.RIGHT), Direction.RIGHT);
 	}
 
-	public KeyboardSteering(KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
-		directionByKey = Map.of(//
-				new KeyCodeCombination(up), Direction.UP, //
-				new KeyCodeCombination(down), Direction.DOWN, //
-				new KeyCodeCombination(left), Direction.LEFT, //
-				new KeyCodeCombination(right), Direction.RIGHT//
-		);
+	@Override
+	public void handle(KeyEvent event) {
+		if (combinations().noneMatch(c -> c.match(event))) {
+			return;
+		}
+		if (!isEnabled()) {
+			Logger.trace("Steering disabled, ignore key event '{}'", event.getCode());
+			event.consume();
+			return;
+		}
+		dir = computeDirection(event).orElse(null);
+		if (dir != null) {
+			event.consume();
+		}
 	}
 
 	@Override
@@ -77,41 +84,23 @@ public class KeyboardSteering implements Steering, EventHandler<KeyEvent> {
 		}
 	}
 
-	private boolean isSteeringEvent(KeyEvent e) {
-		return directionByKey.keySet().stream().anyMatch(keyCombination -> keyCombination.match(e))
-				|| DEFAULT_STEERING.directionByKey.keySet().stream().anyMatch(keyCombination -> keyCombination.match(e));
+	public void define(Direction dir, KeyCode code, Modifier... modifiers) {
+		dirByCombination.put(new KeyCodeCombination(code, modifiers), dir);
 	}
 
-	@Override
-	public void handle(KeyEvent e) {
-		if (!isSteeringEvent(e)) {
-			return;
-		}
-		if (!enabled) {
-			Logger.trace("Steering disabled, ignore key event '{}'", e.getCode());
-			e.consume();
-			return;
-		}
-		dir = computeDirection(e).or(() -> DEFAULT_STEERING.computeDirection(e)).orElse(null);
-		if (dir != null) {
-			e.consume();
-		}
+	public void put(KeyCodeCombination combination, Direction dir) {
+		dirByCombination.put(combination, dir);
 	}
 
-	@Override
-	public boolean isEnabled() {
-		return enabled;
+	public Stream<KeyCodeCombination> combinations() {
+		return dirByCombination.keySet().stream();
 	}
 
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		Logger.trace("Steering {}abled", enabled ? "en" : "dis");
+	public boolean isSteeringEvent(KeyEvent event) {
+		return combinations().anyMatch(c -> c.match(event));
 	}
 
-	private Optional<Direction> computeDirection(KeyEvent event) {
-		return directionByKey.keySet().stream()//
-				.filter(kcc -> kcc.match(event)).findFirst()//
-				.map(directionByKey::get);
+	public Optional<Direction> computeDirection(KeyEvent event) {
+		return combinations().filter(c -> c.match(event)).findFirst().map(dirByCombination::get);
 	}
 }

@@ -37,7 +37,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
-import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -70,7 +69,6 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -137,7 +135,7 @@ public class Game2dUI implements GameEventListener {
 	public void init(Settings settings) {
 		configureGameScenes();
 		configureMainScene(stage.getScene(), settings);
-		configurePacSteering(settings.keyMap);
+		configurePacSteering();
 		configureBindings(settings);
 		GameEvents.addListener(this);
 	}
@@ -196,12 +194,8 @@ public class Game2dUI implements GameEventListener {
 		}
 	}
 
-	protected void configurePacSteering(Map<Direction, KeyCode> map) {
-		keyboardSteering = new KeyboardSteering(//
-				map.get(Direction.UP), //
-				map.get(Direction.DOWN), //
-				map.get(Direction.LEFT), //
-				map.get(Direction.RIGHT));
+	protected void configurePacSteering() {
+		keyboardSteering = new KeyboardSteering();
 		gameController.setManualPacSteering(keyboardSteering);
 		// TODO: maybe only play scene should handle steering keys?
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);

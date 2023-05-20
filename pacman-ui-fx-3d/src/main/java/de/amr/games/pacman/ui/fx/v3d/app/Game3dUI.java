@@ -28,12 +28,14 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 import java.util.Optional;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.app.Game2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -49,6 +51,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -172,6 +177,19 @@ public class Game3dUI extends Game2dUI {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
+	}
+
+	@Override
+	protected void configurePacSteering() {
+		// Steering with unmodified or with CONTROL+cursor key
+		keyboardSteering = new KeyboardSteering();
+		keyboardSteering.define(Direction.UP, KeyCode.UP, KeyCodeCombination.CONTROL_DOWN);
+		keyboardSteering.define(Direction.DOWN, KeyCode.DOWN, KeyCodeCombination.CONTROL_DOWN);
+		keyboardSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCodeCombination.CONTROL_DOWN);
+		keyboardSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCodeCombination.CONTROL_DOWN);
+
+		gameController.setManualPacSteering(keyboardSteering);
+		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 	}
 
 	@Override
