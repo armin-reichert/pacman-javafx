@@ -172,5 +172,4 @@ public class HelpMenus {
 	private void addEntry(Menu menu, String rbKey, String kbKey) {
 		menu.addRow(label(tt(rbKey)), text("[" + kbKey + "]"));
 	}
-
 }
