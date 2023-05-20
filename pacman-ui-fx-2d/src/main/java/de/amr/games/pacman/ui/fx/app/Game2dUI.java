@@ -289,13 +289,10 @@ public class Game2dUI implements GameEventListener {
 			prevGameScene.end();
 		}
 		currentGameScene = newGameScene;
-		var renderer = switch (game().variant()) {
-		case MS_PACMAN -> new MsPacManGameRenderer(Game2d.assets.spritesMsPacMan);
-		case PACMAN -> new PacManGameRenderer(Game2d.assets.spritesPacMan);
-		default -> throw new IllegalGameVariantException(game().variant());
-		};
-		Logger.trace("Using renderer {}", renderer);
-		currentGameScene.setContext(new GameSceneContext(gameController, renderer));
+		currentGameScene.setContext(new GameSceneContext(//
+				gameController, //
+				new MsPacManGameRenderer(Game2d.assets.spritesMsPacMan), //
+				new PacManGameRenderer(Game2d.assets.spritesPacMan)));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		currentGameScene.onEmbedIntoParentScene(stage.getScene());
@@ -364,7 +361,7 @@ public class Game2dUI implements GameEventListener {
 	@Override
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
-			var r = currentGameScene.context().rendering2D();
+			var r = currentGameScene.context().renderer();
 			level.pac().setAnimations(r.createPacAnimations(level.pac()));
 			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
 			level.world().setAnimations(r.createWorldAnimations(level.world()));

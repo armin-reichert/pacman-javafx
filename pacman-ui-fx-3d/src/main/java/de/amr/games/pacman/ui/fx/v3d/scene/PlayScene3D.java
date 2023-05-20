@@ -196,7 +196,7 @@ public class PlayScene3D implements GameScene {
 
 		var mazeNumber = level.game().mazeNumber(level.number());
 		level3D = new GameLevel3D(level, //
-				context.rendering2D(), //
+				context.renderer(), //
 				ArcadeTheme.mazeColors(level.game().variant(), mazeNumber), //
 				ArcadeTheme.PACMAN_COLORS, //
 				ArcadeTheme.MS_PACMAN_COLORS, //
@@ -308,7 +308,7 @@ public class PlayScene3D implements GameScene {
 		context.level().ifPresent(level -> {
 			boolean moving = context.gameVariant() == GameVariant.MS_PACMAN;
 			level.bonusManagement().getBonus().ifPresent(bonus -> {
-				level3D.replaceBonus3D(bonus, context.rendering2D(), moving);
+				level3D.replaceBonus3D(bonus, context.renderer(), moving);
 			});
 			level3D.bonus3D().showEdible();
 		});
@@ -373,7 +373,7 @@ public class PlayScene3D implements GameScene {
 				level.memo().killedGhosts.forEach(killedGhost -> {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					var r = context.rendering2D();
+					var r = context.renderer();
 					ghost3D.setNumberImage(r.spritesheet().subImage(r.ghostValueSprite(index)));
 				});
 			});

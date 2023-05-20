@@ -64,11 +64,11 @@ public class MsPacManIntroScene extends GameScene2D {
 		});
 		intro.changeState(MsPacManIntro.State.START);
 
-		var msPacAnimations = context.rendering2D().createPacAnimations(intro.context().msPacMan);
+		var msPacAnimations = context.rendererMsPacMan().createPacAnimations(intro.context().msPacMan);
 		intro.context().msPacMan.setAnimations(msPacAnimations);
 		msPacAnimations.start();
 		intro.context().ghosts.forEach(ghost -> {
-			var ghostAnimations = context.rendering2D().createGhostAnimations(ghost);
+			var ghostAnimations = context.rendererMsPacMan().createGhostAnimations(ghost);
 			ghost.setAnimations(ghostAnimations);
 			ghostAnimations.start();
 		});
@@ -110,7 +110,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();
 		var y0 = ic.stopY;
-		var r = (MsPacManGameRenderer) context.rendering2D();
+		var r = context.rendererMsPacMan();
 
 		drawMarquee(g);
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, tx, ty);

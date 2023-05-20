@@ -24,7 +24,8 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene;
 
-import java.util.Objects;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 import java.util.Optional;
 
 import de.amr.games.pacman.controller.GameController;
@@ -34,6 +35,8 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
@@ -43,17 +46,31 @@ import de.amr.games.pacman.ui.fx.sound.GameSounds;
 public class GameSceneContext {
 
 	private final GameController gameController;
-	private final Rendering2D renderer;
+	private final PacManGameRenderer rendererPacMan;
+	private final MsPacManGameRenderer rendererMsPacMan;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 
-	public GameSceneContext(GameController gameController, Rendering2D renderer) {
-		this.gameController = Objects.requireNonNull(gameController, "Game controller must not be NULL");
-		this.renderer = renderer;
+	public GameSceneContext(GameController gameController, MsPacManGameRenderer rendererMsPacMan,
+			PacManGameRenderer rendererPacMan) {
+		checkNotNull(gameController);
+		checkNotNull(rendererMsPacMan);
+		checkNotNull(rendererPacMan);
+		this.gameController = gameController;
+		this.rendererMsPacMan = rendererMsPacMan;
+		this.rendererPacMan = rendererPacMan;
 	}
 
-	public Rendering2D rendering2D() {
-		return renderer;
+	public MsPacManGameRenderer rendererMsPacMan() {
+		return rendererMsPacMan;
+	}
+
+	public PacManGameRenderer rendererPacMan() {
+		return rendererPacMan;
+	}
+
+	public Rendering2D renderer() {
+		return gameVariant() == GameVariant.MS_PACMAN ? rendererMsPacMan : rendererPacMan;
 	}
 
 	public boolean isScoreVisible() {

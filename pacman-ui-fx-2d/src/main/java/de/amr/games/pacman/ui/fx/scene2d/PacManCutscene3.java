@@ -32,7 +32,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
@@ -52,7 +51,7 @@ public class PacManCutscene3 extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		var renderer = (PacManGameRenderer) context.rendering2D();
+		var renderer = context.rendererPacMan();
 		frame = -1;
 		initialDelay = 120;
 
@@ -110,7 +109,7 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var r = context.rendering2D();
+		var r = context.rendererPacMan();
 		r.drawPac(g, pac);
 		r.drawGhost(g, blinky);
 		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());

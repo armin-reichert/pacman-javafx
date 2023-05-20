@@ -101,7 +101,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void paintRandomSprites() {
-		var ss = context.rendering2D().spritesheet();
+		var ss = context.renderer().spritesheet();
 		clearCanvas();
 		for (int row = 0; row < TILES_Y / 2; ++row) {
 			if (RND.nextInt(100) > 10) {
@@ -110,7 +110,7 @@ public class BootScene extends GameScene2D {
 				var splitX = TILES_X / 8 + RND.nextInt(TILES_X / 4);
 				for (int col = 0; col < TILES_X / 2; ++col) {
 					var region = col < splitX ? region1 : region2;
-					context.rendering2D().drawSprite(ctx, region, region.getWidth() * col, region.getHeight() * row);
+					context.renderer().drawSprite(ctx, region, region.getWidth() * col, region.getHeight() * row);
 				}
 			}
 		}
