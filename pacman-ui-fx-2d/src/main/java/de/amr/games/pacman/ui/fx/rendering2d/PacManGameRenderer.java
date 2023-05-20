@@ -100,16 +100,6 @@ public class PacManGameRenderer implements GameRenderer {
 	}
 
 	@Override
-	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
-	}
-
-	@Override
-	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
-	}
-
-	@Override
 	public void drawBonus(GraphicsContext g, Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case Bonus.STATE_INACTIVE -> null;

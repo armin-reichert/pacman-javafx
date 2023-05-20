@@ -166,6 +166,16 @@ public interface GameRenderer {
 
 	default void drawPac(GraphicsContext g, Pac pac) {
 		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
+		if (pac.moveDir() != pac.wishDir() && pac.wishDir() != null) {
+			// drawWishDirIndicator(g, pac);
+		}
+	}
+
+	default void drawWishDirIndicator(GraphicsContext g, Pac pac) {
+		g.setFill(Color.RED);
+		float r = 4;
+		var center = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(8f)).minus(r, r);
+		g.fillOval(center.x(), center.y(), 2 * r, 2 * r);
 	}
 
 	default void drawGhost(GraphicsContext g, Ghost ghost) {
