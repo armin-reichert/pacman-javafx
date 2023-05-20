@@ -50,7 +50,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public interface Rendering2D {
+public interface GameRenderer {
 
 	static void drawSprite(GraphicsContext g, Image source, Rectangle2D r, double x, double y) {
 		if (r != null) {
@@ -205,7 +205,7 @@ public interface Rendering2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			Rendering2D.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
+			GameRenderer.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
 					x + TS * (10), y + TS * (1));
 		}
 	}

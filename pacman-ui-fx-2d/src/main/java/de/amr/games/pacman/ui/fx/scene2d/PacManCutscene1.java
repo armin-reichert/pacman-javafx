@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 
@@ -129,6 +129,6 @@ public class PacManCutscene1 extends GameScene2D {
 	@Override
 	protected void drawSceneInfo(GraphicsContext g) {
 		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
-		Rendering2D.drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
+		GameRenderer.drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}
 }

@@ -48,7 +48,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer implements Rendering2D {
+public class MsPacManGameRenderer implements GameRenderer {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -129,7 +129,7 @@ public class MsPacManGameRenderer implements Rendering2D {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				Rendering2D.drawSprite(g, Game2d.assets.flashingMazesMsPacMan, highlightedMaze(mazeNumber),
+				GameRenderer.drawSprite(g, Game2d.assets.flashingMazesMsPacMan, highlightedMaze(mazeNumber),
 						x - 3 /* don't tell your mommy */, y);
 			} else {
 				drawSprite(g, emptyMaze(mazeNumber), x, y);
@@ -139,12 +139,12 @@ public class MsPacManGameRenderer implements Rendering2D {
 		else {
 			// draw filled maze and hide eaten food (including energizers)
 			drawSprite(g, filledMaze(mazeNumber), x, y);
-			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
+			world.tiles().filter(world::containsEatenFood).forEach(tile -> GameRenderer.hideTileContent(g, tile));
 
 			// energizer animation
 			world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING).ifPresent(blinking -> {
 				if (Boolean.FALSE.equals(blinking.frame())) {
-					world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
+					world.energizerTiles().forEach(tile -> GameRenderer.hideTileContent(g, tile));
 				}
 			});
 		}

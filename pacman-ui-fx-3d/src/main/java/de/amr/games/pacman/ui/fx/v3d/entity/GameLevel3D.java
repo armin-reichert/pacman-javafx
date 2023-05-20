@@ -42,7 +42,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
 import javafx.animation.SequentialTransition;
@@ -77,7 +77,7 @@ public class GameLevel3D {
 	private final Scores3D scores3D;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, Rendering2D r2D, MazeColoring mazeColors, PacManColoring pacManColors,
+	public GameLevel3D(GameLevel level, GameRenderer r2D, MazeColoring mazeColors, PacManColoring pacManColors,
 			MsPacManColoring msPacManColors, GhostColoring[] ghostColors) {
 
 		checkLevelNotNull(level);
@@ -128,7 +128,7 @@ public class GameLevel3D {
 		livesCounter3D.drawModePy.bind(Game3d.PY_3D_DRAW_MODE);
 	}
 
-	public void replaceBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
+	public void replaceBonus3D(Bonus bonus, GameRenderer r2D, boolean moving) {
 		if (bonus3D != null) {
 			root.getChildren().remove(bonus3D.getRoot());
 		}
@@ -140,13 +140,13 @@ public class GameLevel3D {
 		return new Ghost3D(ghost, colors, Game3d.assets.ghostModel3D, 8.5);
 	}
 
-	private Bonus3D createBonus3D(Bonus bonus, Rendering2D r2D, boolean moving) {
+	private Bonus3D createBonus3D(Bonus bonus, GameRenderer r2D, boolean moving) {
 		var symbolImage = r2D.spritesheet().subImage(r2D.bonusSymbolSprite(bonus.symbol()));
 		var pointsImage = r2D.spritesheet().subImage(r2D.bonusValueSprite(bonus.symbol()));
 		return new Bonus3D(bonus, symbolImage, pointsImage, moving);
 	}
 
-	private LevelCounter3D createLevelCounter3D(Rendering2D r2D) {
+	private LevelCounter3D createLevelCounter3D(GameRenderer r2D) {
 		var symbolImages = level.game().levelCounter().stream().map(r2D::bonusSymbolSprite).map(r2D.spritesheet()::subImage)
 				.toArray(Image[]::new);
 		return new LevelCounter3D(symbolImages);

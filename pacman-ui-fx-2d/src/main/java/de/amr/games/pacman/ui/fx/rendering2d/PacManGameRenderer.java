@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawText;
 
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
@@ -46,7 +46,7 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * @author Armin Reichert
  */
-public class PacManGameRenderer implements Rendering2D {
+public class PacManGameRenderer implements GameRenderer {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -131,11 +131,11 @@ public class PacManGameRenderer implements Rendering2D {
 			g.drawImage(flashing ? Game2d.assets.flashingMazePacMan : Game2d.assets.emptyMazePacMan, x, y);
 		} else {
 			g.drawImage(Game2d.assets.fullMazePacMan, x, y);
-			world.tiles().filter(world::containsEatenFood).forEach(tile -> Rendering2D.hideTileContent(g, tile));
+			world.tiles().filter(world::containsEatenFood).forEach(tile -> GameRenderer.hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 			if (!energizerVisible) {
-				world.energizerTiles().forEach(tile -> Rendering2D.hideTileContent(g, tile));
+				world.energizerTiles().forEach(tile -> GameRenderer.hideTileContent(g, tile));
 			}
 		}
 	}

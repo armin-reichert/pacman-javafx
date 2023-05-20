@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -136,7 +136,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo(GraphicsContext g) {
-		Rendering2D.drawTileGrid(g, TILES_X, TILES_Y);
+		GameRenderer.drawTileGrid(g, TILES_X, TILES_Y);
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -147,7 +147,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGallery(GraphicsContext g) {
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			Rendering2D.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, Game2d.assets.arcadeFont, t(tx + 3), t(6));
+			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, Game2d.assets.arcadeFont, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!ic.ghostInfo[id].pictureVisible) {
@@ -158,12 +158,12 @@ public class PacManIntroScene extends GameScene2D {
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = ArcadeTheme.GHOST_COLORS[id].dress();
-				Rendering2D.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 3), t(ty + 1));
+				GameRenderer.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
 				var color = ArcadeTheme.GHOST_COLORS[id].dress();
-				Rendering2D.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 14), t(ty + 1));
+				GameRenderer.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 14), t(ty + 1));
 			}
 		}
 	}

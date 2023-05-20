@@ -35,9 +35,9 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**
@@ -69,7 +69,7 @@ public class GameSceneContext {
 		return rendererPacMan;
 	}
 
-	public Rendering2D renderer() {
+	public GameRenderer renderer() {
 		return gameVariant() == GameVariant.MS_PACMAN ? rendererMsPacMan : rendererPacMan;
 	}
 

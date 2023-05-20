@@ -23,7 +23,7 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
+import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawText;
 
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
@@ -32,7 +32,7 @@ import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -101,7 +101,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo(GraphicsContext g) {
-		Rendering2D.drawTileGrid(g, 28, 36);
+		GameRenderer.drawTileGrid(g, 28, 36);
 	}
 
 	@Override

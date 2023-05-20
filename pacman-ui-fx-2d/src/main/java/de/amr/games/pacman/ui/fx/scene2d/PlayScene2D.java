@@ -25,8 +25,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.Rendering2D.drawTileGrid;
+import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawText;
+import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawTileGrid;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;

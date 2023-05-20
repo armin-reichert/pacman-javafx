@@ -29,7 +29,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.rendering2d.Rendering2D;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -127,11 +127,11 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
 		if (context.isScoreVisible()) {
-			context.game().score().ifPresent(score -> Rendering2D.drawScore(g, score, "SCORE", t(1), t(1)));
-			context.game().highScore().ifPresent(score -> Rendering2D.drawScore(g, score, "HIGH SCORE", t(16), t(1)));
+			context.game().score().ifPresent(score -> GameRenderer.drawScore(g, score, "SCORE", t(1), t(1)));
+			context.game().highScore().ifPresent(score -> GameRenderer.drawScore(g, score, "HIGH SCORE", t(16), t(1)));
 		}
 		if (context.isCreditVisible()) {
-			Rendering2D.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
+			GameRenderer.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent(g);
 		if (infoVisiblePy.get()) {
