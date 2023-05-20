@@ -52,6 +52,7 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.BootScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+import de.amr.games.pacman.ui.fx.scene2d.HelpMenus;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene1;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene2;
@@ -91,7 +92,7 @@ public class Game2dUI implements GameEventListener {
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final Game2dHelp csHelp;
+	protected final HelpMenus helpMenus;
 
 	protected Pane mainSceneRoot;
 	protected KeyboardSteering keyboardSteering;
@@ -104,7 +105,7 @@ public class Game2dUI implements GameEventListener {
 		this.gameController = new GameController(gameVariant);
 		this.stage = stage;
 		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
-		csHelp = new Game2dHelp(gameController, Game2d.assets.messages);
+		helpMenus = new HelpMenus(gameController, Game2d.assets.messages);
 		clock = new GameClock() {
 			@Override
 			public void doUpdate() {
@@ -377,19 +378,7 @@ public class Game2dUI implements GameEventListener {
 
 	public void showHelp() {
 		if (currentGameScene instanceof GameScene2D gameScene2d) {
-			updateHelpContent();
-			csHelp.show(gameScene2d.helpRoot(), Duration.seconds(2));
-		}
-	}
-
-	public void updateHelpContent() {
-		if (currentGameScene instanceof GameScene2D gameScene2d) {
-			var help = csHelp.current();
-			if (help.isEmpty()) {
-				gameScene2d.helpRoot().getChildren().clear();
-			} else {
-				gameScene2d.helpRoot().getChildren().setAll(help.get());
-			}
+			gameScene2d.showHelpMenu(helpMenus, Duration.seconds(2));
 		}
 	}
 

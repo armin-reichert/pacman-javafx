@@ -22,20 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx.scene2d;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import javafx.animation.Animation.Status;
-import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -45,12 +43,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 /**
  * @author Armin Reichert
  */
-public class Game2dHelp {
+public class HelpMenus {
 
 	private static class Menu {
 		private final List<Node> column0 = new ArrayList<>();
@@ -68,25 +65,48 @@ public class Game2dHelp {
 
 	private final ResourceBundle translations;
 	private final GameController gameController;
-	private final FadeTransition closeAnimation;
 	private Font font = Game2d.assets.helpFont;
 
-	public Game2dHelp(GameController gameController, ResourceBundle translations) {
+	public HelpMenus(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;
 		this.translations = translations;
-		closeAnimation = new FadeTransition(Duration.seconds(0.5));
-		closeAnimation.setFromValue(1);
-		closeAnimation.setToValue(0);
 	}
 
-	public void show(Node helpRoot, Duration openDuration) {
-		helpRoot.setOpacity(1);
-		if (closeAnimation.getStatus() == Status.RUNNING) {
-			closeAnimation.playFromStart();
+	public Pane menuIntro() {
+		var menu = new Menu();
+		if (game().credit() > 0) {
+			addEntry(menu, "help.start_game", "1");
 		}
-		closeAnimation.setNode(helpRoot);
-		closeAnimation.setDelay(openDuration);
-		closeAnimation.play();
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+		return createPane(menu);
+	}
+
+	public Pane menuCredit() {
+		var menu = new Menu();
+		if (game().credit() > 0) {
+			addEntry(menu, "help.start_game", "1");
+		}
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_intro", "Q");
+		return createPane(menu);
+	}
+
+	public Pane menuPlaying() {
+		var menu = new Menu();
+		addEntry(menu, "help.move_left", tt("help.cursor_left"));
+		addEntry(menu, "help.move_right", tt("help.cursor_right"));
+		addEntry(menu, "help.move_up", tt("help.cursor_up"));
+		addEntry(menu, "help.move_down", tt("help.cursor_down"));
+		addEntry(menu, "help.show_intro", "Q");
+		return createPane(menu);
+	}
+
+	public Pane menuDemoLevel() {
+		var menu = new Menu();
+		addEntry(menu, "help.add_credit", "5");
+		addEntry(menu, "help.show_intro", "Q");
+		return createPane(menu);
 	}
 
 	private Pane createPane(Menu menu) {
@@ -119,16 +139,6 @@ public class Game2dHelp {
 		return pane;
 	}
 
-	public Optional<Pane> current() {
-		var pane = switch (gameController.state()) {
-		case CREDIT -> menuCredit();
-		case INTRO -> menuIntro();
-		case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> attractMode() ? menuDemoLevel() : menuPlaying();
-		default -> null;
-		};
-		return Optional.ofNullable(pane);
-	}
-
 	public void setFont(Font font) {
 		this.font = font;
 	}
@@ -159,49 +169,8 @@ public class Game2dHelp {
 		return gameController.game();
 	}
 
-	private boolean attractMode() {
-		var gameLevel = game().level();
-		return gameLevel.isPresent() && gameLevel.get().isDemoLevel();
-	}
-
 	private void addEntry(Menu menu, String rbKey, String kbKey) {
 		menu.addRow(label(tt(rbKey)), text("[" + kbKey + "]"));
 	}
 
-	private Pane menuIntro() {
-		var menu = new Menu();
-		if (game().credit() > 0) {
-			addEntry(menu, "help.start_game", "1");
-		}
-		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
-		return createPane(menu);
-	}
-
-	private Pane menuCredit() {
-		var menu = new Menu();
-		if (game().credit() > 0) {
-			addEntry(menu, "help.start_game", "1");
-		}
-		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
-	}
-
-	private Pane menuPlaying() {
-		var menu = new Menu();
-		addEntry(menu, "help.move_left", tt("help.cursor_left"));
-		addEntry(menu, "help.move_right", tt("help.cursor_right"));
-		addEntry(menu, "help.move_up", tt("help.cursor_up"));
-		addEntry(menu, "help.move_down", tt("help.cursor_down"));
-		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
-	}
-
-	private Pane menuDemoLevel() {
-		var menu = new Menu();
-		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
-	}
 }

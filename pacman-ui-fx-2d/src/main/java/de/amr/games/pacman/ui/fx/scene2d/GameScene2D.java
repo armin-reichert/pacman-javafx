@@ -25,14 +25,18 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.Game2d;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import javafx.animation.Animation.Status;
+import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
@@ -44,6 +48,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
+import javafx.util.Duration;
 
 /**
  * Base class of all 2D scenes. Each 2D scene has its own canvas.
@@ -67,7 +72,9 @@ public abstract class GameScene2D implements GameScene {
 	protected final SubScene fxSubScene; // we probably could just use some pane instead
 	protected final Canvas canvas;
 	protected final Pane overlay;
+
 	protected final VBox helpRoot;
+	private final FadeTransition helpMenuAnimation;
 
 	protected GameSceneContext context;
 
@@ -83,6 +90,11 @@ public abstract class GameScene2D implements GameScene {
 		helpRoot = new VBox();
 		helpRoot.setTranslateX(10);
 		helpRoot.setTranslateY(HEIGHT * 0.2);
+
+		helpMenuAnimation = new FadeTransition(Duration.seconds(0.5), helpRoot);
+		helpMenuAnimation.setFromValue(1);
+		helpMenuAnimation.setToValue(0);
+
 		overlay.getChildren().add(helpRoot);
 
 		// scale overlay pane to cover subscene
@@ -93,6 +105,42 @@ public abstract class GameScene2D implements GameScene {
 		});
 
 		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
+	}
+
+	// not sure if this logic belongs in this class...
+	private void updateHelpMenu(HelpMenus menus) {
+		var gameState = context.state();
+		Pane menu = null;
+		if (gameState == GameState.INTRO) {
+			menu = menus.menuIntro();
+		} else if (gameState == GameState.CREDIT) {
+			menu = menus.menuCredit();
+		} else if (oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
+			var level = context.level();
+			if (level.isPresent()) {
+				menu = level.get().isDemoLevel() ? menus.menuDemoLevel() : menus.menuPlaying();
+			}
+		}
+		if (menu == null) {
+			helpRoot.getChildren().clear();
+		} else {
+			helpRoot.getChildren().setAll(menu);
+		}
+	}
+
+	/**
+	 * Makes the help root visible for given duration and then plays the close animation.
+	 * 
+	 * @param openDuration duration the menu stays open
+	 */
+	public void showHelpMenu(HelpMenus menus, Duration openDuration) {
+		updateHelpMenu(menus);
+		helpRoot.setOpacity(1);
+		if (helpMenuAnimation.getStatus() == Status.RUNNING) {
+			helpMenuAnimation.playFromStart();
+		}
+		helpMenuAnimation.setDelay(openDuration);
+		helpMenuAnimation.play();
 	}
 
 	/**
@@ -166,10 +214,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public Canvas canvas() {
 		return canvas;
-	}
-
-	public VBox helpRoot() {
-		return helpRoot;
 	}
 
 	/**

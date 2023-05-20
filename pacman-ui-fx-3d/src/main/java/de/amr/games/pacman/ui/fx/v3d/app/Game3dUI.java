@@ -36,6 +36,7 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -249,6 +250,13 @@ public class Game3dUI extends Game2dUI {
 			Game3d.app.toggleDashboardVisible();
 		} else if (Keyboard.pressed(Game3d.KEY_TOGGLE_PIP_VIEW)) {
 			Game3d.app.togglePipVisibility();
+		}
+	}
+
+	@Override
+	public void showHelp() {
+		if (currentGameScene instanceof GameScene2D) {
+			super.showHelp();
 		}
 	}
 
