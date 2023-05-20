@@ -162,10 +162,8 @@ public abstract class GameScene2D implements GameScene {
 		var scale = height / HEIGHT;
 		fxSubScene.setWidth(width);
 		fxSubScene.setHeight(height);
-		canvas.setWidth(width);
-		canvas.setHeight(height);
-		camera.setScaleX(1.0 / scale);
-		camera.setScaleY(1.0 / scale);
+		canvas.setScaleX(scale);
+		canvas.setScaleY(scale);
 		Logger.trace("{} resized to {0.00} x {0.00}, scaling: {0.00}", getClass().getSimpleName(), width, height, scale);
 	}
 
