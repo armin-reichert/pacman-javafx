@@ -28,10 +28,10 @@ import java.util.ResourceBundle;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.rendering2d.Spritesheet;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;

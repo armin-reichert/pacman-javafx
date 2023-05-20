@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package de.amr.games.pacman.ui.fx.rendering2d;
+package de.amr.games.pacman.ui.fx.util;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -129,5 +129,4 @@ public class Spritesheet {
 		}
 		return tiles;
 	}
-
 }
