@@ -32,7 +32,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -65,7 +65,7 @@ public class HelpMenus {
 
 	private final ResourceBundle translations;
 	private final GameController gameController;
-	private Font font = Game2d.assets.helpFont;
+	private Font font = PacManGames2d.assets.helpFont;
 
 	public HelpMenus(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;

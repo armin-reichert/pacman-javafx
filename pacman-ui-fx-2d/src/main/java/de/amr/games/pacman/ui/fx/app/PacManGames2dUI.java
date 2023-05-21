@@ -83,7 +83,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class Game2dUI implements GameEventListener {
+public class PacManGames2dUI implements GameEventListener {
 
 	protected final GameClock clock;
 	protected final GameController gameController;
@@ -97,22 +97,22 @@ public class Game2dUI implements GameEventListener {
 	protected GameScene currentGameScene;
 	private AudioClip currentVoice;
 
-	public Game2dUI(GameVariant gameVariant, Stage stage, double width, double height) {
+	public PacManGames2dUI(GameVariant gameVariant, Stage stage, double width, double height) {
 		checkNotNull(gameVariant);
 		checkNotNull(stage);
 		this.gameController = new GameController(gameVariant);
 		this.stage = stage;
 		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
-		helpMenus = new HelpMenus(gameController, Game2d.assets.messages);
+		helpMenus = new HelpMenus(gameController, PacManGames2d.assets.messages);
 		clock = new GameClock() {
 			@Override
 			public void doUpdate() {
-				Game2dUI.this.doUpdate();
+				PacManGames2dUI.this.doUpdate();
 			}
 
 			@Override
 			public void doRender() {
-				Game2dUI.this.doRender();
+				PacManGames2dUI.this.doRender();
 			}
 		};
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
@@ -172,7 +172,7 @@ public class Game2dUI implements GameEventListener {
 		mainSceneRoot.getChildren().add(flashMessageView);
 
 		// Without this, there appears an ugly vertical line right of the embedded subscene
-		mainSceneRoot.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
+		mainSceneRoot.setBackground(ResourceManager.colorBackground(PacManGames2d.assets.wallpaperColor));
 
 		mainScene.setRoot(mainSceneRoot);
 		mainScene.heightProperty().addListener((py, ov, nv) -> {
@@ -211,17 +211,17 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(Game2d.assets.wallpaper2D);
+		mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper2D);
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.assets.iconMsPacMan);
+			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.assets.messages, messageKey, ""));
+			stage.getIcons().setAll(PacManGames2d.assets.iconMsPacMan);
 		}
 		case PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(ResourceManager.fmtMessage(Game2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(Game2d.assets.iconPacMan);
+			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.assets.messages, messageKey, ""));
+			stage.getIcons().setAll(PacManGames2d.assets.iconPacMan);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -287,8 +287,8 @@ public class Game2dUI implements GameEventListener {
 		currentGameScene.setParentScene(stage.getScene());
 		currentGameScene.setContext(new GameSceneContext(//
 				gameController, //
-				new MsPacManGameRenderer(Game2d.assets.spritesMsPacMan), //
-				new PacManGameRenderer(Game2d.assets.spritesPacMan)));
+				new MsPacManGameRenderer(PacManGames2d.assets.spritesMsPacMan), //
+				new PacManGameRenderer(PacManGames2d.assets.spritesPacMan)));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
@@ -302,33 +302,33 @@ public class Game2dUI implements GameEventListener {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2d.KEY_SHOW_HELP)) {
+		if (Keyboard.pressed(PacManGames2dApp.KEY_SHOW_HELP)) {
 			showHelp();
-		} else if (Keyboard.pressed(Game2d.KEY_AUTOPILOT)) {
-			Game2d.app.toggleAutopilot();
-		} else if (Keyboard.pressed(Game2d.KEY_BOOT)) {
-			Game2d.app.reboot();
-		} else if (Keyboard.pressed(Game2d.KEY_DEBUG_INFO)) {
-			Ufx.toggle(Game2d.PY_SHOW_DEBUG_INFO);
-		} else if (Keyboard.pressed(Game2d.KEY_IMMUNITIY)) {
-			Game2d.app.toggleImmunity();
-		} else if (Keyboard.pressed(Game2d.KEY_PAUSE)) {
-			Game2d.app.togglePaused();
-		} else if (Keyboard.pressed(Game2d.KEY_PAUSE_STEP) || Keyboard.pressed(Game2d.KEY_SINGLE_STEP)) {
-			Game2d.app.oneSimulationStep();
-		} else if (Keyboard.pressed(Game2d.KEY_TEN_STEPS)) {
-			Game2d.app.tenSimulationSteps();
-		} else if (Keyboard.pressed(Game2d.KEY_SIMULATION_FASTER)) {
-			Game2d.app.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(Game2d.KEY_SIMULATION_SLOWER)) {
-			Game2d.app.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(Game2d.KEY_SIMULATION_NORMAL)) {
-			Game2d.app.resetSimulationSpeed();
-		} else if (Keyboard.pressed(Game2d.KEY_QUIT)) {
-			Game2d.app.restartIntro();
-		} else if (Keyboard.pressed(Game2d.KEY_TEST_LEVELS)) {
-			Game2d.app.startLevelTestMode();
-		} else if (Keyboard.pressed(Game2d.KEY_FULLSCREEN)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_AUTOPILOT)) {
+			PacManGames2d.app.toggleAutopilot();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_BOOT)) {
+			PacManGames2d.app.reboot();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_DEBUG_INFO)) {
+			Ufx.toggle(PacManGames2dApp.PY_SHOW_DEBUG_INFO);
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_IMMUNITIY)) {
+			PacManGames2d.app.toggleImmunity();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PAUSE)) {
+			PacManGames2d.app.togglePaused();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PAUSE_STEP) || Keyboard.pressed(PacManGames2dApp.KEY_SINGLE_STEP)) {
+			PacManGames2d.app.oneSimulationStep();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEN_STEPS)) {
+			PacManGames2d.app.tenSimulationSteps();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SIMULATION_FASTER)) {
+			PacManGames2d.app.changeSimulationSpeed(5);
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SIMULATION_SLOWER)) {
+			PacManGames2d.app.changeSimulationSpeed(-5);
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SIMULATION_NORMAL)) {
+			PacManGames2d.app.resetSimulationSpeed();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_QUIT)) {
+			PacManGames2d.app.restartIntro();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEST_LEVELS)) {
+			PacManGames2d.app.startLevelTestMode();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_FULLSCREEN)) {
 			stage.setFullScreen(true);
 		}
 	}

@@ -28,7 +28,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -85,7 +86,7 @@ public abstract class GameScene2D implements GameScene {
 
 		var root = new StackPane();
 		// This avoids a vertical line on the left side of the embedded 2D game scene
-		root.setBackground(ResourceManager.colorBackground(Game2d.assets.wallpaperColor));
+		root.setBackground(ResourceManager.colorBackground(PacManGames2d.assets.wallpaperColor));
 		root.getChildren().addAll(canvas, overlay);
 
 		helpRoot = new VBox();
@@ -111,7 +112,7 @@ public abstract class GameScene2D implements GameScene {
 		canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
 		canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
 
-		infoVisiblePy.bind(Game2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
+		infoVisiblePy.bind(PacManGames2dApp.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
 	// not sure if this logic belongs in this class...
@@ -159,7 +160,7 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public void render() {
 		var g = canvas.getGraphicsContext2D();
-		g.setFill(Game2d.assets.wallpaperColor);
+		g.setFill(PacManGames2d.assets.wallpaperColor);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);

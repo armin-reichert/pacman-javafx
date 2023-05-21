@@ -24,7 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
@@ -53,7 +53,7 @@ public class Signature {
 
 		var part2 = new Text("Armin Reichert");
 		part2.setFill(Color.gray(0.6));
-		part2.setFont(Game2d.assets.handwritingFont);
+		part2.setFont(PacManGames2d.assets.handwritingFont);
 
 		text = new TextFlow(part1, part2);
 

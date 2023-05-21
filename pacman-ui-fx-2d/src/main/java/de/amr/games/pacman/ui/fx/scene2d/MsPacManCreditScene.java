@@ -24,7 +24,8 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
@@ -44,21 +45,22 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2d.KEY_ADD_CREDIT) || Keyboard.pressed(Game2d.KEY_ADD_CREDIT_NUMPAD)) {
-			Game2d.app.addCredit();
-		} else if (Keyboard.pressed(Game2d.KEY_START_GAME) || Keyboard.pressed(Game2d.KEY_START_GAME_NUMPAD)) {
-			Game2d.app.startGame();
+		if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) || Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT_NUMPAD)) {
+			PacManGames2d.app.addCredit();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_START_GAME) || Keyboard.pressed(PacManGames2dApp.KEY_START_GAME_NUMPAD)) {
+			PacManGames2d.app.startGame();
 		}
 	}
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendererMsPacMan();
-		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(6), t(16));
-		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(8), t(18));
-		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont, t(2), t(25));
+		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont, t(6), t(16));
+		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont, t(8), t(18));
+		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont, t(2),
+				t(25));
 		r.drawSprite(g, r.livesCounterSprite(), t(13), t(23) + 1);
-		GameRenderer.drawText(g, "PTS", ArcadeTheme.ORANGE, Game2d.assets.arcadeFont6, t(25), t(25));
+		GameRenderer.drawText(g, "PTS", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont6, t(25), t(25));
 		MsPacManGameRenderer.drawCopyright(g, t(6), t(28));
 	}
 }

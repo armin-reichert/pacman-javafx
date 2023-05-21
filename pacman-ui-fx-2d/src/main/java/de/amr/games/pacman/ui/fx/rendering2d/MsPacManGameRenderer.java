@@ -40,7 +40,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -131,7 +131,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				GameRenderer.drawSprite(g, Game2d.assets.flashingMazesMsPacMan, highlightedMaze(mazeNumber),
+				GameRenderer.drawSprite(g, PacManGames2d.assets.flashingMazesMsPacMan, highlightedMaze(mazeNumber),
 						x - 3 /* don't tell your mommy */, y);
 			} else {
 				drawSprite(g, emptyMaze(mazeNumber), x, y);
@@ -163,11 +163,11 @@ public class MsPacManGameRenderer implements GameRenderer {
 	}
 
 	public static void drawCopyright(GraphicsContext g, double x, double y) {
-		g.drawImage(Game2d.assets.logoMsPacMan, x, y + 2, TS * 4 - 2, TS * 4);
+		g.drawImage(PacManGames2d.assets.logoMsPacMan, x, y + 2, TS * 4 - 2, TS * 4);
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * 5, y + TS * 2 + 2); // (c) symbol
-		g.setFont(Game2d.assets.arcadeFont);
+		g.setFont(PacManGames2d.assets.arcadeFont);
 		g.fillText("MIDWAY MFG CO", x + TS * 7, y + TS * 2);
 		g.fillText("1980/1981", x + TS * 8, y + TS * 4);
 	}
@@ -278,7 +278,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 				if (clap.isVisible()) {
 					drawSpriteOverBoundingBox(g, sprite, clap.position().x(), clap.position().y());
 				}
-				g.setFont(Game2d.assets.arcadeFont);
+				g.setFont(PacManGames2d.assets.arcadeFont);
 				g.setFill(ArcadeTheme.PALE);
 				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
 				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());

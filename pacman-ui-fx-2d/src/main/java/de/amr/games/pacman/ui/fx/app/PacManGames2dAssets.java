@@ -41,7 +41,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class Game2dAssets extends ResourceManager {
+public class PacManGames2dAssets extends ResourceManager {
 	//@formatter:off
 	private static final Object[][] audioClipsMsPacman = { 
 		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
@@ -120,8 +120,8 @@ public class Game2dAssets extends ResourceManager {
 //		return Font.font(font.getFamily(), size);
 //	}
 
-	public Game2dAssets() {
-		super("/de/amr/games/pacman/ui/fx/", Game2dAssets.class);
+	public PacManGames2dAssets() {
+		super("/de/amr/games/pacman/ui/fx/", PacManGames2dAssets.class);
 		soundsMsPacMan.init(audioClipsMsPacman, false);
 		soundsPacMan.init(audioClipsPacman, false);
 	}

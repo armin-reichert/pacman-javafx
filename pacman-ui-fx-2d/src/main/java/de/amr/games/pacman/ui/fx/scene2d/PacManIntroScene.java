@@ -27,7 +27,8 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
@@ -86,20 +87,20 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		Game2d.ui.stopVoice();
+		PacManGames2d.ui.stopVoice();
 		signature.hide();
 	}
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(Game2d.KEY_ADD_CREDIT) || Keyboard.pressed(Game2d.KEY_ADD_CREDIT_NUMPAD)) {
-			Game2d.app.addCredit();
-		} else if (Keyboard.pressed(Game2d.KEY_START_GAME) || Keyboard.pressed(Game2d.KEY_START_GAME_NUMPAD)) {
-			Game2d.app.startGame();
-		} else if (Keyboard.pressed(Game2d.KEY_SELECT_VARIANT)) {
-			Game2d.app.selectNextGameVariant();
-		} else if (Keyboard.pressed(Game2d.KEY_PLAY_CUTSCENES)) {
-			Game2d.app.startCutscenesTest();
+		if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) || Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT_NUMPAD)) {
+			PacManGames2d.app.addCredit();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_START_GAME) || Keyboard.pressed(PacManGames2dApp.KEY_START_GAME_NUMPAD)) {
+			PacManGames2d.app.startGame();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SELECT_VARIANT)) {
+			PacManGames2d.app.selectNextGameVariant();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PLAY_CUTSCENES)) {
+			PacManGames2d.app.startCutscenesTest();
 		}
 	}
 
@@ -147,7 +148,8 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGallery(GraphicsContext g) {
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, Game2d.assets.arcadeFont, t(tx + 3), t(6));
+			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, t(tx + 3),
+					t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!ic.ghostInfo[id].pictureVisible) {
@@ -158,12 +160,12 @@ public class PacManIntroScene extends GameScene2D {
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = ArcadeTheme.GHOST_COLORS[id].dress();
-				GameRenderer.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 3), t(ty + 1));
+				GameRenderer.drawText(g, text, color, PacManGames2d.assets.arcadeFont, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
 				var color = ArcadeTheme.GHOST_COLORS[id].dress();
-				GameRenderer.drawText(g, text, color, Game2d.assets.arcadeFont, t(tx + 14), t(ty + 1));
+				GameRenderer.drawText(g, text, color, PacManGames2d.assets.arcadeFont, t(tx + 14), t(ty + 1));
 			}
 		}
 	}
@@ -200,13 +202,13 @@ public class PacManIntroScene extends GameScene2D {
 			g.fillOval(t(tx), t(ty + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);
-		g.setFont(Game2d.assets.arcadeFont);
+		g.setFont(PacManGames2d.assets.arcadeFont);
 		g.fillText("10", t(tx + 2), t(ty));
-		g.setFont(Game2d.assets.arcadeFont6); // TODO looks ugly
+		g.setFont(PacManGames2d.assets.arcadeFont6); // TODO looks ugly
 		g.fillText("PTS", t(tx + 5), t(ty));
-		g.setFont(Game2d.assets.arcadeFont);
+		g.setFont(PacManGames2d.assets.arcadeFont);
 		g.fillText("50", t(tx + 2), t(ty + 2));
-		g.setFont(Game2d.assets.arcadeFont6); // TODO still looks ugly
+		g.setFont(PacManGames2d.assets.arcadeFont6); // TODO still looks ugly
 		g.fillText("PTS", t(tx + 5), t(ty + 2));
 	}
 }

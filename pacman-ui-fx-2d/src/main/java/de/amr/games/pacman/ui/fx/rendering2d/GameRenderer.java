@@ -37,7 +37,7 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -85,17 +85,17 @@ public interface GameRenderer {
 	}
 
 	static void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-		drawText(g, title, ArcadeTheme.PALE, Game2d.assets.arcadeFont, x, y);
+		drawText(g, title, ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x, y);
 		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, Game2d.assets.arcadeFont, x, y + TS + 1);
+		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, Game2d.assets.arcadeFont, x + TS * 8,
+			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x + TS * 8,
 					y + TS + 1);
 		}
 	}
 
 	static void drawCredit(GraphicsContext g, int credit, double x, double y) {
-		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, Game2d.assets.arcadeFont, x, y);
+		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x, y);
 	}
 
 	Spritesheet spritesheet();

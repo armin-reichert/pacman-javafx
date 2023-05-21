@@ -33,8 +33,9 @@ import org.tinylog.Logger;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2dAssets;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
@@ -96,24 +97,24 @@ public class Game3d extends Application {
 	@Override
 	public void init() {
 		app = this;
-		Game2d.app = new Game2d();
+		PacManGames2d.app = new PacManGames2dApp();
 
 		cfg = new Settings(getParameters().getNamed());
 		Logger.info("Game configuration: {}", Game3d.cfg);
 
-		Game2d.assets = new Game2dAssets();
+		PacManGames2d.assets = new PacManGames2dAssets();
 		Game3d.assets = new Game3dAssets();
 	}
 
 	@Override
 	public void start(Stage stage) {
 		stage.setFullScreen(cfg.fullScreen);
-		Game2d.ui = Game3d.ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		PacManGames2d.ui = Game3d.ui = new Game3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 
 		ui.init(cfg);
 		ui.startClockAndShowStage();
 
-		Game2d.app.reboot();
+		PacManGames2d.app.reboot();
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 

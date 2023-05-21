@@ -34,7 +34,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.Game2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
@@ -118,6 +118,6 @@ public class GameSceneContext {
 	}
 
 	public GameSounds sounds() {
-		return Game2d.assets.gameSounds(gameVariant());
+		return PacManGames2d.assets.gameSounds(gameVariant());
 	}
 }

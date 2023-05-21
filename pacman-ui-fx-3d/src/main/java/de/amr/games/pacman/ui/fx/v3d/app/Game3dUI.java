@@ -30,8 +30,8 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.Game2d;
-import de.amr.games.pacman.ui.fx.app.Game2dUI;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -71,7 +71,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class Game3dUI extends Game2dUI {
+public class Game3dUI extends PacManGames2dUI {
 
 	public class PictureInPicture {
 
@@ -203,7 +203,7 @@ public class Game3dUI extends Game2dUI {
 				mainSceneRoot.setBackground(Game3d.assets.wallpaper3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(Game2d.assets.wallpaper2D);
+			mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper2D);
 		}
 		var paused = clock().pausedPy.get();
 		var dimensionMsg = fmtMessage(Game3d.assets.messages, Game3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
@@ -211,12 +211,12 @@ public class Game3dUI extends Game2dUI {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(Game2d.assets.iconMsPacMan);
+			stage.getIcons().setAll(PacManGames2d.assets.iconMsPacMan);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(Game2d.assets.iconPacMan);
+			stage.getIcons().setAll(PacManGames2d.assets.iconPacMan);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}

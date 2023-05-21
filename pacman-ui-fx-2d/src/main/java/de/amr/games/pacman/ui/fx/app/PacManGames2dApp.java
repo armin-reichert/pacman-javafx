@@ -47,30 +47,19 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 
 /**
- * This is 2D-only version of the Pac-Man and Ms. Pac-Man games.
- * 
- * <p>
- * The application is structured according to the MVC (model-view-controller) design pattern. The model layer consists
- * of the two game models <code> PacManGame</code> and <code> MsPacManGame</code>. The controller is a finite-state
- * machine which is triggered 60 times per second by the game loop. The user interface listens to game events sent from
- * the controller/model layer. The model and controller layers are decoupled from the user interface. This allow to
- * attach different user interfaces without having to change the controller or model.
- * 
- * <p>
- * As a proof of concept I implemented also a (simpler) Swing user interface, see repository
- * <a href="https://github.com/armin-reichert/pacman-ui-swing">Pac-Man Swing UI</a>.
+ * This is 2D version of the Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
-public class Game2d extends Application {
+public class PacManGames2dApp extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	//@formatter:off
-	public static final BooleanProperty PY_SHOW_DEBUG_INFO       = new SimpleBooleanProperty(false);
-	public static final IntegerProperty PY_NUM_SIMULATION_STEPS  = new SimpleIntegerProperty(1);
+	public static final BooleanProperty    PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);
+	public static final IntegerProperty    PY_SIMULATION_STEPS   = new SimpleIntegerProperty(1);
 
 	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
 	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES   = alt(KeyCode.L);
@@ -104,84 +93,81 @@ public class Game2d extends Application {
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
 	//@formatter:on
 
-	public static Game2d app;;
-	public static Game2dAssets assets;
-	public static Game2dUI ui;
-
-	private Settings cfg = new Settings();
+	private final Settings cfg = new Settings();
 
 	@Override
 	public void init() {
-		app = this;
 		cfg.merge(getParameters().getNamed());
-		Logger.info("Game configuration: {}", cfg);
-		assets = new Game2dAssets();
+		PacManGames2d.app = this;
+		PacManGames2d.assets = new PacManGames2dAssets();
+		Logger.info("Game initialized, configuration: {}", cfg);
 	}
 
 	@Override
 	public void start(Stage stage) {
-		stage.setFullScreen(cfg.fullScreen);
-		ui = new Game2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
-
+		var ui = new PacManGames2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		PacManGames2d.ui = ui;
 		ui.init(cfg);
+		stage.setFullScreen(cfg.fullScreen);
 		ui.startClockAndShowStage();
 		reboot();
 
-		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
+		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),
+				Locale.getDefault());
 	}
 
 	@Override
 	public void stop() {
-		ui.clock().stop();
+		PacManGames2d.ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
 
 	// --- Actions
 
 	public void startGame() {
-		if (ui.game().hasCredit()) {
-			ui.stopVoice();
-			ui.gameController().startPlaying();
+		if (PacManGames2d.ui.game().hasCredit()) {
+			PacManGames2d.ui.stopVoice();
+			PacManGames2d.ui.gameController().startPlaying();
 		}
 	}
 
 	public void startCutscenesTest() {
-		ui.gameController().startCutscenesTest();
-		ui.showFlashMessage("Cut scenes");
+		PacManGames2d.ui.gameController().startCutscenesTest();
+		PacManGames2d.ui.showFlashMessage("Cut scenes");
 	}
 
 	public void restartIntro() {
-		ui.currentGameScene().end();
+		PacManGames2d.ui.currentGameScene().end();
 		GameEvents.setSoundEventsEnabled(true);
-		if (ui.game().isPlaying()) {
-			ui.game().changeCredit(-1);
+		if (PacManGames2d.ui.game().isPlaying()) {
+			PacManGames2d.ui.game().changeCredit(-1);
 		}
-		ui.gameController().restart(INTRO);
+		PacManGames2d.ui.gameController().restart(INTRO);
 	}
 
 	public void reboot() {
-		if (ui.currentGameScene() != null) {
-			ui.currentGameScene().end();
+		if (PacManGames2d.ui.currentGameScene() != null) {
+			PacManGames2d.ui.currentGameScene().end();
 		}
-		ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
-		ui.gameController().restart(GameState.BOOT);
+		PacManGames2d.ui.playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
+		PacManGames2d.ui.gameController().restart(GameState.BOOT);
 	}
 
 	public void addCredit() {
 		GameEvents.setSoundEventsEnabled(true);
-		ui.gameController().addCredit();
+		PacManGames2d.ui.gameController().addCredit();
 	}
 
 	public void enterLevel(int newLevelNumber) {
-		if (ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (PacManGames2d.ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
-		ui.game().level().ifPresent(level -> {
+		PacManGames2d.ui.game().level().ifPresent(level -> {
 			if (newLevelNumber > level.number()) {
 				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-					ui.game().nextLevel();
+					PacManGames2d.ui.game().nextLevel();
 				}
-				ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+				PacManGames2d.ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			} else if (newLevelNumber < level.number()) {
 				// not implemented
 			}
@@ -189,82 +175,82 @@ public class Game2d extends Application {
 	}
 
 	public void togglePaused() {
-		Ufx.toggle(ui.clock().pausedPy);
+		Ufx.toggle(PacManGames2d.ui.clock().pausedPy);
 		// TODO mute and unmute?
-		if (ui.clock().pausedPy.get()) {
-			Game2d.assets.gameSounds(ui.game().variant()).stopAll();
+		if (PacManGames2d.ui.clock().pausedPy.get()) {
+			PacManGames2d.assets.gameSounds(PacManGames2d.ui.game().variant()).stopAll();
 		}
 	}
 
 	public void oneSimulationStep() {
-		if (ui.clock().pausedPy.get()) {
-			ui.clock().executeSingleStep(true);
+		if (PacManGames2d.ui.clock().pausedPy.get()) {
+			PacManGames2d.ui.clock().executeSingleStep(true);
 		}
 	}
 
 	public void tenSimulationSteps() {
-		if (ui.clock().pausedPy.get()) {
-			ui.clock().executeSteps(10, true);
+		if (PacManGames2d.ui.clock().pausedPy.get()) {
+			PacManGames2d.ui.clock().executeSteps(10, true);
 		}
 	}
 
 	public void changeSimulationSpeed(int delta) {
-		int newFramerate = ui.clock().targetFrameratePy.get() + delta;
+		int newFramerate = PacManGames2d.ui.clock().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
-			ui.clock().targetFrameratePy.set(newFramerate);
-			ui.showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
+			PacManGames2d.ui.clock().targetFrameratePy.set(newFramerate);
+			PacManGames2d.ui.showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 		}
 	}
 
 	public void resetSimulationSpeed() {
-		ui.clock().targetFrameratePy.set(GameModel.FPS);
-		ui.showFlashMessageSeconds(0.75, "%dHz".formatted(ui.clock().targetFrameratePy.get()));
+		PacManGames2d.ui.clock().targetFrameratePy.set(GameModel.FPS);
+		PacManGames2d.ui.showFlashMessageSeconds(0.75, "%dHz".formatted(PacManGames2d.ui.clock().targetFrameratePy.get()));
 	}
 
 	public void selectNextGameVariant() {
-		var gameVariant = ui.game().variant().next();
-		ui.gameController().selectGameVariant(gameVariant);
-		ui.playVoice(Game2d.assets.voiceExplainKeys, 4);
+		var gameVariant = PacManGames2d.ui.game().variant().next();
+		PacManGames2d.ui.gameController().selectGameVariant(gameVariant);
+		PacManGames2d.ui.playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
 	}
 
 	public void toggleAutopilot() {
-		ui.gameController().toggleAutoControlled();
-		var auto = ui.gameController().isAutoControlled();
-		String message = fmtMessage(Game2d.assets.messages, auto ? "autopilot_on" : "autopilot_off");
-		ui.showFlashMessage(message);
-		ui.playVoice(auto ? Game2d.assets.voiceAutopilotOn : Game2d.assets.voiceAutopilotOff);
+		PacManGames2d.ui.gameController().toggleAutoControlled();
+		var auto = PacManGames2d.ui.gameController().isAutoControlled();
+		String message = fmtMessage(PacManGames2d.assets.messages, auto ? "autopilot_on" : "autopilot_off");
+		PacManGames2d.ui.showFlashMessage(message);
+		PacManGames2d.ui.playVoice(auto ? PacManGames2d.assets.voiceAutopilotOn : PacManGames2d.assets.voiceAutopilotOff);
 	}
 
 	public void toggleImmunity() {
-		ui.game().setImmune(!ui.game().isImmune());
-		var immune = ui.game().isImmune();
-		String message = fmtMessage(Game2d.assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
-		ui.showFlashMessage(message);
-		ui.playVoice(immune ? Game2d.assets.voiceImmunityOn : Game2d.assets.voiceImmunityOff);
+		PacManGames2d.ui.game().setImmune(!PacManGames2d.ui.game().isImmune());
+		var immune = PacManGames2d.ui.game().isImmune();
+		String message = fmtMessage(PacManGames2d.assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
+		PacManGames2d.ui.showFlashMessage(message);
+		PacManGames2d.ui.playVoice(immune ? PacManGames2d.assets.voiceImmunityOn : PacManGames2d.assets.voiceImmunityOff);
 	}
 
 	public void startLevelTestMode() {
-		if (ui.gameController().state() == GameState.INTRO) {
-			ui.gameController().restart(GameState.LEVEL_TEST);
-			ui.showFlashMessage("Level TEST MODE");
+		if (PacManGames2d.ui.gameController().state() == GameState.INTRO) {
+			PacManGames2d.ui.gameController().restart(GameState.LEVEL_TEST);
+			PacManGames2d.ui.showFlashMessage("Level TEST MODE");
 		}
 	}
 
 	public void cheatAddLives() {
-		int newLivesCount = ui.game().lives() + 3;
-		ui.game().setLives(newLivesCount);
-		ui.showFlashMessage(fmtMessage(Game2d.assets.messages, "cheat_add_lives", newLivesCount));
+		int newLivesCount = PacManGames2d.ui.game().lives() + 3;
+		PacManGames2d.ui.game().setLives(newLivesCount);
+		PacManGames2d.ui.showFlashMessage(fmtMessage(PacManGames2d.assets.messages, "cheat_add_lives", newLivesCount));
 	}
 
 	public void cheatEatAllPellets() {
-		ui.gameController().cheatEatAllPellets();
+		PacManGames2d.ui.gameController().cheatEatAllPellets();
 	}
 
 	public void cheatEnterNextLevel() {
-		ui.gameController().cheatEnterNextLevel();
+		PacManGames2d.ui.gameController().cheatEnterNextLevel();
 	}
 
 	public void cheatKillAllEatableGhosts() {
-		ui.gameController().cheatKillAllEatableGhosts();
+		PacManGames2d.ui.gameController().cheatKillAllEatableGhosts();
 	}
 }
