@@ -24,9 +24,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dAssets;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -41,27 +41,27 @@ public class SectionAppearance extends Section {
 	private final ComboBox<String> comboFloorTexture;
 	private final CheckBox cbFloorTextureRandom;
 
-	public SectionAppearance(Game3dUI ui, String title) {
+	public SectionAppearance(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
-		pickerLightColor = addColorPicker("Light Color", Game3d.PY_3D_LIGHT_COLOR.get());
-		pickerLightColor.setOnAction(e -> Game3d.PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
-		pickerFloorColor = addColorPicker("Floor Color", Game3d.PY_3D_FLOOR_COLOR.get());
-		pickerFloorColor.setOnAction(e -> Game3d.PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
+		pickerLightColor = addColorPicker("Light Color", PacManGames3d.PY_3D_LIGHT_COLOR.get());
+		pickerLightColor.setOnAction(e -> PacManGames3d.PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
+		pickerFloorColor = addColorPicker("Floor Color", PacManGames3d.PY_3D_FLOOR_COLOR.get());
+		pickerFloorColor.setOnAction(e -> PacManGames3d.PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
 		comboFloorTexture = addComboBox("Floor Texture", floorTextureComboBoxEntries());
-		comboFloorTexture.setOnAction(e -> Game3d.PY_3D_FLOOR_TEXTURE.set(comboFloorTexture.getValue()));
-		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(Game3d.PY_3D_FLOOR_TEXTURE_RND));
+		comboFloorTexture.setOnAction(e -> PacManGames3d.PY_3D_FLOOR_TEXTURE.set(comboFloorTexture.getValue()));
+		cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> Ufx.toggle(PacManGames3d.PY_3D_FLOOR_TEXTURE_RND));
 	}
 
 	@Override
 	public void update() {
-		comboFloorTexture.setValue(Game3d.PY_3D_FLOOR_TEXTURE.get());
-		cbFloorTextureRandom.setSelected(Game3d.PY_3D_FLOOR_TEXTURE_RND.get());
+		comboFloorTexture.setValue(PacManGames3d.PY_3D_FLOOR_TEXTURE.get());
+		cbFloorTextureRandom.setSelected(PacManGames3d.PY_3D_FLOOR_TEXTURE_RND.get());
 	}
 
 	private String[] floorTextureComboBoxEntries() {
-		var names = Game3d.assets.floorTexturesByName.keySet().toArray(String[]::new);
+		var names = PacManGames3d.assets.floorTexturesByName.keySet().toArray(String[]::new);
 		var entries = new String[names.length + 1];
-		entries[0] = Game3dAssets.KEY_NO_TEXTURE;
+		entries[0] = PacManGames3dAssets.KEY_NO_TEXTURE;
 		System.arraycopy(names, 0, entries, 1, names.length);
 		return entries;
 	}

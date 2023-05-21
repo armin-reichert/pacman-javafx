@@ -30,14 +30,14 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 
 /**
  * @author Armin Reichert
  */
 public class SectionGhostsInfo extends Section {
 
-	public SectionGhostsInfo(Game3dUI ui, String title) {
+	public SectionGhostsInfo(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		addGhostInfo(GameModel.RED_GHOST);
 		addEmptyLine();

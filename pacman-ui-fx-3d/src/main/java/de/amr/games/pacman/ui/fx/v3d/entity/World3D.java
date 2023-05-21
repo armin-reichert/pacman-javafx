@@ -42,8 +42,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dAssets;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -85,7 +85,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			Game3dAssets.KEY_NO_TEXTURE) {
+			PacManGames3dAssets.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			Logger.trace("Floor texture change detected");
@@ -173,7 +173,7 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = Game3d.assets.floorTexturesByName.get(key);
+		var texture = PacManGames3d.assets.floorTexturesByName.get(key);
 		if (texture == null) {
 			texture = ResourceManager.coloredMaterial(floorColorPy.get());
 		}

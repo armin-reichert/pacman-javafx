@@ -24,8 +24,8 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 
 /**
  * Keyboard shortcuts.
@@ -34,7 +34,7 @@ import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
  */
 public class SectionKeys extends Section {
 
-	public SectionKeys(Game3dUI ui, String title) {
+	public SectionKeys(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		addInfo("F1", "Dashboard On/Off");
 		addInfo("F2", "PiP View On/Off");
@@ -47,8 +47,8 @@ public class SectionKeys extends Section {
 		addInfo("Alt+N", "Next Level").available(() -> gc.game().isPlaying());
 		addInfo("Alt+X", "Kill hunting ghosts").available(() -> gc.game().isPlaying());
 		addInfo("Alt+Z", "Play Intermission Scenes").available(() -> gc.state() == GameState.INTRO);
-		addInfo("Alt+LEFT", () -> Game3d.PY_3D_PERSPECTIVE.get().prev().name()).available(() -> gameScene().is3D());
-		addInfo("Alt+RIGHT", () -> Game3d.PY_3D_PERSPECTIVE.get().next().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+LEFT", () -> PacManGames3d.PY_3D_PERSPECTIVE.get().prev().name()).available(() -> gameScene().is3D());
+		addInfo("Alt+RIGHT", () -> PacManGames3d.PY_3D_PERSPECTIVE.get().next().name()).available(() -> gameScene().is3D());
 		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
 		addInfo("SHIFT+P/SPACE", "Single Step");

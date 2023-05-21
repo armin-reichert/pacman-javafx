@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -60,11 +60,11 @@ import javafx.util.Duration;
 public class LivesCounter3D {
 
 	public static LivesCounter3D of(PacManColoring colors) {
-		return new LivesCounter3D(() -> Pac3D.createPacManGroup(Game3d.assets.pacModel3D, colors), false);
+		return new LivesCounter3D(() -> Pac3D.createPacManGroup(PacManGames3d.assets.pacModel3D, colors), false);
 	}
 
 	public static LivesCounter3D of(MsPacManColoring colors) {
-		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(Game3d.assets.pacModel3D, colors), true);
+		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(PacManGames3d.assets.pacModel3D, colors), true);
 	}
 
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
@@ -101,9 +101,9 @@ public class LivesCounter3D {
 				pacShape.setRotationAxis(Rotate.Z_AXIS);
 				pacShape.setRotate(180);
 			}
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(PacManGames3d.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(PacManGames3d.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(PacManGames3d.PY_3D_DRAW_MODE);
 
 			var plateRotation = new RotateTransition(Duration.seconds(20.0), pacShape);
 			plateRotation.setAxis(Rotate.Z_AXIS);
@@ -140,7 +140,7 @@ public class LivesCounter3D {
 		plate.setTranslateZ(-pillarHeight - plateThickness);
 		plate.setRotationAxis(Rotate.X_AXIS);
 		plate.setRotate(90);
-		plate.drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
+		plate.drawModeProperty().bind(PacManGames3d.PY_3D_DRAW_MODE);
 
 		var pillar = new Cylinder(1, pillarHeight);
 		pillar.setMaterial(pillarMaterial);
@@ -148,7 +148,7 @@ public class LivesCounter3D {
 		pillar.setTranslateZ(-0.5 * pillarHeight);
 		pillar.setRotationAxis(Rotate.X_AXIS);
 		pillar.setRotate(90);
-		pillar.drawModeProperty().bind(Game3d.PY_3D_DRAW_MODE);
+		pillar.drawModeProperty().bind(PacManGames3d.PY_3D_DRAW_MODE);
 
 		standsGroup.getChildren().addAll(plate, pillar);
 	}

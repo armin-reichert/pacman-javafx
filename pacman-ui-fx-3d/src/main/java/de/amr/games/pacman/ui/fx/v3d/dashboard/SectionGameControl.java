@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -56,7 +56,7 @@ public class SectionGameControl extends Section {
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 
-	public SectionGameControl(Game3dUI ui, String title) {
+	public SectionGameControl(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);

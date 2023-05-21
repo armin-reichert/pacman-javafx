@@ -71,7 +71,7 @@ import javafx.stage.Stage;
  * 
  * @author Armin Reichert
  */
-public class Game3dUI extends PacManGames2dUI {
+public class PacManGames3dUI extends PacManGames2dUI {
 
 	public class PictureInPicture {
 
@@ -113,7 +113,7 @@ public class Game3dUI extends PacManGames2dUI {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	public Game3dUI(GameVariant gameVariant, Stage stage, double width, double height) {
+	public PacManGames3dUI(GameVariant gameVariant, Stage stage, double width, double height) {
 		super(gameVariant, stage, width, height);
 		pip = new PictureInPicture();
 		dashboard = new Dashboard(this);
@@ -183,12 +183,12 @@ public class Game3dUI extends PacManGames2dUI {
 	protected void configureBindings(Settings settings) {
 		super.configureBindings(settings);
 
-		pip.opacityPy.bind(Game3d.PY_PIP_OPACITY);
-		pip.heightPy.bind(Game3d.PY_PIP_HEIGHT);
+		pip.opacityPy.bind(PacManGames3d.PY_PIP_OPACITY);
+		pip.heightPy.bind(PacManGames3d.PY_PIP_HEIGHT);
 
-		Game3d.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
-		Game3d.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
-		Game3d.PY_3D_PERSPECTIVE.set(Perspective.NEAR_PLAYER);
+		PacManGames3d.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
+		PacManGames3d.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
+		PacManGames3d.PY_3D_PERSPECTIVE.set(Perspective.NEAR_PLAYER);
 	}
 
 	@Override
@@ -197,25 +197,25 @@ public class Game3dUI extends PacManGames2dUI {
 			pip.update();
 		}
 		if (currentGameScene != null && currentGameScene.is3D()) {
-			if (Game3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(ResourceManager.colorBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(Game3d.assets.wallpaper3D);
+				mainSceneRoot.setBackground(PacManGames3d.assets.wallpaper3D);
 			}
 		} else {
 			mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper2D);
 		}
 		var paused = clock().pausedPy.get();
-		var dimensionMsg = fmtMessage(Game3d.assets.messages, Game3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = fmtMessage(PacManGames3d.assets.messages, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
+			stage.setTitle(fmtMessage(PacManGames3d.assets.messages, messageKey, dimensionMsg));
 			stage.getIcons().setAll(PacManGames2d.assets.iconMsPacMan);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(fmtMessage(Game3d.assets.messages, messageKey, dimensionMsg));
+			stage.setTitle(fmtMessage(PacManGames3d.assets.messages, messageKey, dimensionMsg));
 			stage.getIcons().setAll(PacManGames2d.assets.iconPacMan);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
@@ -233,7 +233,7 @@ public class Game3dUI extends PacManGames2dUI {
 
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		var use3D = Game3d.PY_3D_ENABLED.get();
+		var use3D = PacManGames3d.PY_3D_ENABLED.get();
 		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
 	}
 
@@ -248,12 +248,13 @@ public class Game3dUI extends PacManGames2dUI {
 	@Override
 	protected void handleKeyboardInput() {
 		super.handleKeyboardInput();
-		if (Keyboard.pressed(Game3d.KEY_TOGGLE_2D_3D)) {
+		if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
 			toggle3DEnabled();
-		} else if (Keyboard.pressed(Game3d.KEY_TOGGLE_DASHBOARD) || Keyboard.pressed(Game3d.KEY_TOGGLE_DASHBOARD_2)) {
-			Game3d.app.toggleDashboardVisible();
-		} else if (Keyboard.pressed(Game3d.KEY_TOGGLE_PIP_VIEW)) {
-			Game3d.app.togglePipVisibility();
+		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_DASHBOARD)
+				|| Keyboard.pressed(PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
+			PacManGames3d.app.toggleDashboardVisible();
+		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_PIP_VIEW)) {
+			PacManGames3d.app.togglePipVisibility();
 		}
 	}
 
@@ -269,13 +270,14 @@ public class Game3dUI extends PacManGames2dUI {
 	}
 
 	public void toggle3DEnabled() {
-		Ufx.toggle(Game3d.PY_3D_ENABLED);
+		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
 		if (findGameScene(3).isPresent()) {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
-			var message = fmtMessage(Game3d.assets.messages, Game3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
-			Game3d.ui.showFlashMessage(message);
+			var message = fmtMessage(PacManGames3d.assets.messages,
+					PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
+			PacManGames3d.ui.showFlashMessage(message);
 		}
 	}
 

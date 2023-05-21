@@ -23,11 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3d;
-import de.amr.games.pacman.ui.fx.v3d.app.Game3dUI;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
@@ -52,14 +52,14 @@ public class SectionGeneral extends Section {
 	private final CheckBox cbPoliticallyCorrect;
 	private final CheckBox cbDebugUI;
 	private final CheckBox cbTimeMeasured;
-	private final ImageView iconPlay = new ImageView(Game3d.assets.image("graphics/icons/play.png"));
-	private final ImageView iconStop = new ImageView(Game3d.assets.image("graphics/icons/stop.png"));
-	private final ImageView iconStep = new ImageView(Game3d.assets.image("graphics/icons/step.png"));
+	private final ImageView iconPlay = new ImageView(PacManGames3d.assets.image("graphics/icons/play.png"));
+	private final ImageView iconStop = new ImageView(PacManGames3d.assets.image("graphics/icons/stop.png"));
+	private final ImageView iconStep = new ImageView(PacManGames3d.assets.image("graphics/icons/step.png"));
 	private final Tooltip tooltipPlay = new Tooltip("Play");
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
-	public SectionGeneral(Game3dUI ui, String title) {
+	public SectionGeneral(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
@@ -92,7 +92,7 @@ public class SectionGeneral extends Section {
 		addInfo("Total Updates", ui.clock()::getUpdateCount);
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle3DEnabled);
-		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(Game3d.PY_WOKE_PUSSY));
+		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(PacManGames3d.PY_WOKE_PUSSY));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(PacManGames2dApp.PY_SHOW_DEBUG_INFO));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.clock().timeMeasuredPy));
 	}
@@ -105,8 +105,8 @@ public class SectionGeneral extends Section {
 		btnsSimulation[1].setDisable(!ui.clock().pausedPy.get());
 		spinnerSimulationSteps.getValueFactory().setValue(PacManGames2dApp.PY_SIMULATION_STEPS.get());
 		sliderTargetFPS.setValue(ui.clock().targetFrameratePy.get());
-		cbUsePlayScene3D.setSelected(Game3d.PY_3D_ENABLED.get());
-		cbPoliticallyCorrect.setSelected(Game3d.PY_WOKE_PUSSY.get());
+		cbUsePlayScene3D.setSelected(PacManGames3d.PY_3D_ENABLED.get());
+		cbPoliticallyCorrect.setSelected(PacManGames3d.PY_WOKE_PUSSY.get());
 		cbTimeMeasured.setSelected(ui.clock().timeMeasuredPy.get());
 		cbDebugUI.setSelected(PacManGames2dApp.PY_SHOW_DEBUG_INFO.get());
 	}

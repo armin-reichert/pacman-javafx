@@ -40,7 +40,7 @@ import javafx.scene.paint.PhongMaterial;
 /**
  * @author Armin Reichert
  */
-public class Game3dAssets extends ResourceManager {
+public class PacManGames3dAssets extends ResourceManager {
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
@@ -68,8 +68,8 @@ public class Game3dAssets extends ResourceManager {
 	}
 	//@formatter:on
 
-	public Game3dAssets() {
-		super("/de/amr/games/pacman/ui/fx/v3d/", Game3dAssets.class);
+	public PacManGames3dAssets() {
+		super("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3dAssets.class);
 	}
 
 	public String pickFunnyReadyMessage(GameVariant gameVariant) {
@@ -94,7 +94,7 @@ public class Game3dAssets extends ResourceManager {
 
 	private PhongMaterial createFloorTexture(String textureBase, String ext) {
 		var material = textureMaterial(textureBase, ext, null, null);
-		material.diffuseColorProperty().bind(Game3d.PY_3D_FLOOR_COLOR);
+		material.diffuseColorProperty().bind(PacManGames3d.PY_3D_FLOOR_COLOR);
 		return material;
 	}
 
