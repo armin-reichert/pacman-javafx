@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -112,7 +111,7 @@ public abstract class GameScene2D implements GameScene {
 		canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
 		canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
 
-		infoVisiblePy.bind(PacManGames2dApp.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
+		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
 	// not sure if this logic belongs in this class...
