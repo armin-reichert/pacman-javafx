@@ -29,10 +29,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -64,52 +62,51 @@ public class HelpMenus {
 	}
 
 	private final ResourceBundle translations;
-	private final GameController gameController;
-	private Font font = PacManGames2d.assets.helpFont12;
+	private Font font;
 
-	public HelpMenus(GameController gameController, ResourceBundle translations) {
-		this.gameController = gameController;
+	public HelpMenus(ResourceBundle translations) {
 		this.translations = translations;
+		this.font = Font.font("Sans", 12);
 	}
 
-	public Pane menuIntro() {
+	public Pane menuIntro(GameController gameController) {
 		var menu = new Menu();
-		if (game().credit() > 0) {
+		if (gameController.game().credit() > 0) {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
-		return createPane(menu);
+		addEntry(menu, gameController.game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+		return createPane(gameController, menu);
 	}
 
-	public Pane menuCredit() {
+	public Pane menuCredit(GameController gameController) {
 		var menu = new Menu();
-		if (game().credit() > 0) {
+		if (gameController.game().credit() > 0) {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
 		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
+		return createPane(gameController, menu);
 	}
 
-	public Pane menuPlaying() {
+	public Pane menuPlaying(GameController gameController) {
 		var menu = new Menu();
 		addEntry(menu, "help.move_left", tt("help.cursor_left"));
 		addEntry(menu, "help.move_right", tt("help.cursor_right"));
 		addEntry(menu, "help.move_up", tt("help.cursor_up"));
 		addEntry(menu, "help.move_down", tt("help.cursor_down"));
 		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
+		return createPane(gameController, menu);
 	}
 
-	public Pane menuDemoLevel() {
+	public Pane menuDemoLevel(GameController gameController) {
 		var menu = new Menu();
 		addEntry(menu, "help.add_credit", "5");
 		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
+		return createPane(gameController, menu);
 	}
 
-	private Pane createPane(Menu menu) {
+	private Pane createPane(GameController gameController, Menu menu) {
 		var grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -163,10 +160,6 @@ public class HelpMenus {
 
 	private Text text(String s) {
 		return text(s, Color.YELLOW);
-	}
-
-	private GameModel game() {
-		return gameController.game();
 	}
 
 	private void addEntry(Menu menu, String rbKey, String kbKey) {

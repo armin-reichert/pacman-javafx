@@ -90,7 +90,7 @@ public class PacManGames2dAssets extends ResourceManager {
 	public final Font arcadeFont8                  = font("fonts/emulogic.ttf", 8);
 	public final Font arcadeFont6                  = font("fonts/emulogic.ttf", 6);
 	public final Font handwritingFont9             = font("fonts/RockSalt-Regular.ttf", 9);
-	public final Font helpFont12                   = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+	public final Font inconsolateBold12            = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 	
 	public final Background wallpaper              = imageBackground("graphics/pacman_wallpaper.png");
 	public final Color wallpaperColor              = Color.rgb(72, 78, 135);

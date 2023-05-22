@@ -113,14 +113,14 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	public PacManGames3dUI(GameVariant gameVariant, Stage stage, double width, double height) {
-		super(gameVariant, stage, width, height);
+	public PacManGames3dUI(Stage stage, double width, double height) {
+		super(stage, width, height);
 		pip = new PictureInPicture();
 		dashboard = new Dashboard(this);
 	}
 
 	@Override
-	public void doRender() {
+	public void onRender() {
 		flashMessageView.update();
 		currentGameScene.render();
 		dashboard.update();

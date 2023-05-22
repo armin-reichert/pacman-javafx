@@ -89,46 +89,42 @@ import javafx.util.Duration;
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
 	protected final GameClock clock;
-	protected final GameController gameController;
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final Stage stage;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final HelpMenus helpMenus;
-
+	protected HelpMenus helpMenus;
+	protected GameController gameController;
 	protected Pane mainSceneRoot;
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
 	private AudioClip currentVoice;
 
-	public PacManGames2dUI(GameVariant gameVariant, Stage stage, double width, double height) {
-		checkNotNull(gameVariant);
+	public PacManGames2dUI(Stage stage, double width, double height) {
 		checkNotNull(stage);
-		this.gameController = new GameController(gameVariant);
 		this.stage = stage;
 		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
-		helpMenus = new HelpMenus(gameController, PacManGames2d.assets.messages);
 		clock = new GameClock() {
 			@Override
 			public void doUpdate() {
-				PacManGames2dUI.this.doUpdate();
+				onTick();
 			}
 
 			@Override
 			public void doRender() {
-				PacManGames2dUI.this.doRender();
+				onRender();
 			}
 		};
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 	}
 
-	protected void doUpdate() {
+	protected void onTick() {
 		gameController.update();
 		if (currentGameScene != null) {
 			currentGameScene.update();
 		}
 	}
 
-	protected void doRender() {
+	protected void onRender() {
 		flashMessageView.update();
 		if (currentGameScene != null) {
 			currentGameScene.render();
@@ -137,8 +133,10 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void init(Settings settings) {
+		this.gameController = new GameController(settings.variant);
 		configureGameScenes();
 		configureMainScene(stage.getScene(), settings);
+		configureHelpMenus();
 		configurePacSteering();
 		configureBindings(settings);
 		GameEvents.addListener(this);
@@ -190,6 +188,11 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				resizeStageToFitCurrentGameScene();
 			}
 		});
+	}
+
+	protected void configureHelpMenus() {
+		helpMenus = new HelpMenus(PacManGames2d.assets.messages);
+		helpMenus.setFont(PacManGames2d.assets.inconsolateBold12);
 	}
 
 	protected void resizeStageToFitCurrentGameScene() {

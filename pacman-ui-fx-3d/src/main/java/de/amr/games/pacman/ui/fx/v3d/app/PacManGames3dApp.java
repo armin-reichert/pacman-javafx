@@ -52,7 +52,7 @@ public class PacManGames3dApp extends PacManGames2dApp {
 	@Override
 	public void start(Stage stage) {
 		stage.setFullScreen(cfg.fullScreen);
-		PacManGames3d.ui = new PacManGames3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		PacManGames3d.ui = new PacManGames3dUI(stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		PacManGames2d.ui = PacManGames3d.ui;
 		PacManGames3d.ui.init(cfg);
 		PacManGames3d.ui.gameController().changeState(GameState.BOOT);

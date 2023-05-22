@@ -114,18 +114,19 @@ public abstract class GameScene2D implements GameScene {
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
-	// not sure if this logic belongs in this class...
-	private void updateHelpMenu(HelpMenus menus) {
+	// TODO: not sure if this logic belongs here...
+	private void updateHelpMenu(HelpMenus help) {
 		var gameState = context.state();
 		Pane menu = null;
 		if (gameState == GameState.INTRO) {
-			menu = menus.menuIntro();
+			menu = help.menuIntro(context.gameController());
 		} else if (gameState == GameState.CREDIT) {
-			menu = menus.menuCredit();
+			menu = help.menuCredit(context.gameController());
 		} else if (oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
 			var level = context.level();
 			if (level.isPresent()) {
-				menu = level.get().isDemoLevel() ? menus.menuDemoLevel() : menus.menuPlaying();
+				menu = level.get().isDemoLevel() ? help.menuDemoLevel(context.gameController())
+						: help.menuPlaying(context.gameController());
 			}
 		}
 		if (menu == null) {

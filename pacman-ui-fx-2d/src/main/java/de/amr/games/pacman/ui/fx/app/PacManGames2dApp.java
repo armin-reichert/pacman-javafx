@@ -32,26 +32,26 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * This is 2D version of the Pac-Man and Ms. Pac-Man games.
+ * This is the 2D-only version of the Pac-Man and Ms. Pac-Man games.
  * 
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application {
 
-	private final Settings cfg = new Settings();
+	private final Settings settings = new Settings();
 
 	@Override
 	public void init() {
-		cfg.merge(getParameters().getNamed());
+		settings.merge(getParameters().getNamed());
 		PacManGames2d.assets = new PacManGames2dAssets();
-		Logger.info("Game initialized, configuration: {}", cfg);
+		Logger.info("Game initialized: {}", settings);
 	}
 
 	@Override
 	public void start(Stage stage) {
-		stage.setFullScreen(cfg.fullScreen);
-		PacManGames2d.ui = new PacManGames2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
-		PacManGames2d.ui.init(cfg);
+		stage.setFullScreen(settings.fullScreen);
+		PacManGames2d.ui = new PacManGames2dUI(stage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
+		PacManGames2d.ui.init(settings);
 		PacManGames2d.ui.gameController().changeState(GameState.BOOT);
 		PacManGames2d.ui.showStage();
 		PacManGames2d.ui.clock.start();
