@@ -67,7 +67,7 @@ public class SectionGameControl extends Section {
 		});
 
 		comboInitialLives = addComboBox("Initial Lives", 3, 5);
-		comboInitialLives.setOnAction(e -> GameModel.initialLives = comboInitialLives.getValue());
+		comboInitialLives.setOnAction(e -> game().setInitialLives(comboInitialLives.getValue()));
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.startPlaying());
@@ -95,7 +95,7 @@ public class SectionGameControl extends Section {
 		comboGameVariant.setValue(game().variant());
 		comboGameVariant.setDisable(gc.state() != GameState.INTRO);
 
-		comboInitialLives.setValue(GameModel.initialLives);
+		comboInitialLives.setValue(game().getInitialLives());
 
 		cbAutopilot.setSelected(gc.isAutoControlled());
 		cbImmunity.setSelected(game().isImmune());
