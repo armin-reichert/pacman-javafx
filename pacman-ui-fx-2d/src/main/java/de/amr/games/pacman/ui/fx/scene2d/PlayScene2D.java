@@ -52,15 +52,12 @@ import javafx.scene.shape.Rectangle;
  */
 public class PlayScene2D extends GameScene2D {
 
-	private GestureHandler gestureHandler;
-	private Rectangle touchPad = new Rectangle(80, 50);
-
-	public PlayScene2D() {
-		touchPad.setTranslateX(0.5 * (GameScene2D.WIDTH - touchPad.getWidth()));
-		touchPad.setTranslateY(0.5 * (GameScene2D.HEIGHT - touchPad.getHeight()) - 4);
-		touchPad.setFill(Color.gray(0.25, 0.25));
+	public void addTouchSupport() {
+		var touchPad = new Rectangle(WIDTH, HEIGHT);
+		touchPad.setScaleX(0.9);
+		touchPad.setScaleY(0.9);
 		overlay.getChildren().add(touchPad);
-		gestureHandler = new GestureHandler(touchPad);
+		var gestureHandler = new GestureHandler(touchPad);
 		gestureHandler.setOnDirectionRecognized(dir -> {
 			context.game().level().ifPresent(level -> {
 				level.pac().setWishDir(dir);
