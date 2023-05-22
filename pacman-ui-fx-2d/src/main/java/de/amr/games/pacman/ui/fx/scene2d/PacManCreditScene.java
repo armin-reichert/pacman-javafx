@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -57,13 +55,12 @@ public class PacManCreditScene extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendererPacMan();
-		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, TS * (6),
-				TS * (17));
-		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, PacManGames2d.assets.arcadeFont8, TS * (8), TS * (21));
-		GameRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, PacManGames2d.assets.arcadeFont8, TS * (1),
-				TS * (25));
-		GameRenderer.drawText(g, "PTS", ArcadeTheme.ROSE, PacManGames2d.assets.arcadeFont6, TS * (25), TS * (25));
-		PacManGameRenderer.drawMidwayCopyright(g, 4, 29);
+		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, t(6), t(17));
+		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, PacManGames2d.assets.arcadeFont8, t(8), t(21));
+		GameRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, PacManGames2d.assets.arcadeFont8, t(1),
+				t(25));
+		GameRenderer.drawText(g, "PTS", ArcadeTheme.ROSE, PacManGames2d.assets.arcadeFont6, t(25), t(25));
+		PacManGameRenderer.drawMidwayCopyright(g, t(4), t(29));
 		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 }

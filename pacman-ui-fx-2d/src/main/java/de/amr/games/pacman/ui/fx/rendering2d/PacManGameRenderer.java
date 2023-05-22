@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawText;
 
@@ -65,9 +64,8 @@ public class PacManGameRenderer implements GameRenderer {
 		return ss;
 	}
 
-	public static void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, PacManGames2d.assets.arcadeFont8, TS * tileX,
-				TS * tileY);
+	public static void drawMidwayCopyright(GraphicsContext g, double x, double y) {
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, PacManGames2d.assets.arcadeFont8, x, y);
 	}
 
 	@Override
