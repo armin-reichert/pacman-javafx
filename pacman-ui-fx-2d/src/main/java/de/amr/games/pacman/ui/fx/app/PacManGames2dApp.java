@@ -32,8 +32,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * This is the 2D-only version of the Pac-Man and Ms. Pac-Man games.
- * 
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application {

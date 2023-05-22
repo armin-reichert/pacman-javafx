@@ -362,10 +362,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
-			var r = currentGameScene.context().renderer();
-			level.pac().setAnimations(r.createPacAnimations(level.pac()));
-			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
-			level.world().setAnimations(r.createWorldAnimations(level.world()));
+			var renderer = switch (level.game().variant()) {
+			case MS_PACMAN -> new MsPacManGameRenderer(PacManGames2d.assets.spritesMsPacMan);
+			case PACMAN -> new PacManGameRenderer(PacManGames2d.assets.spritesPacMan);
+			default -> throw new IllegalGameVariantException(level.game().variant());
+			};
+			level.pac().setAnimations(renderer.createPacAnimations(level.pac()));
+			level.ghosts().forEach(ghost -> ghost.setAnimations(renderer.createGhostAnimations(ghost)));
+			level.world().setAnimations(renderer.createWorldAnimations(level.world()));
 			Logger.trace("Created creature and world animations for level #{}", level.number());
 		});
 		updateGameScene(true);
