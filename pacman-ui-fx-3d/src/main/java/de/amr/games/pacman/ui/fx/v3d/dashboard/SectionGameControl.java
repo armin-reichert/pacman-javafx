@@ -27,7 +27,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.app.PacManGamesUserInterface;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -56,7 +56,7 @@ public class SectionGameControl extends Section {
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 
-	public SectionGameControl(PacManGames3dUI ui, String title) {
+	public SectionGameControl(PacManGamesUserInterface ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
@@ -71,7 +71,7 @@ public class SectionGameControl extends Section {
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.startPlaying());
-		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> PacManGames2d.ui.restartIntro());
+		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> ui.restartIntro());
 		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.cheatEnterNextLevel());
 
 		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
@@ -79,13 +79,13 @@ public class SectionGameControl extends Section {
 		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> PacManGames2d.ui.restartIntro());
 
 		spGameLevel = addSpinner("Level", 1, 100, 1);
-		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> PacManGames2d.ui.enterLevel(newVal.intValue()));
+		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> ui.enterLevel(newVal.intValue()));
 
 		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
 		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
-		cbAutopilot = addCheckBox("Autopilot", PacManGames2d.ui::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", PacManGames2d.ui::toggleImmunity);
+		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
+		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
 	}
 
 	@Override

@@ -86,7 +86,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener {
+public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
 	protected final GameClock clock;
 	protected final GameController gameController;
@@ -135,6 +135,7 @@ public class PacManGames2dUI implements GameEventListener {
 		}
 	}
 
+	@Override
 	public void init(Settings settings) {
 		configureGameScenes();
 		configureMainScene(stage.getScene(), settings);
@@ -204,6 +205,7 @@ public class PacManGames2dUI implements GameEventListener {
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 	}
 
+	@Override
 	public void startClockAndShowStage() {
 		clock.start();
 		stage.setMinWidth(241);
@@ -290,7 +292,7 @@ public class PacManGames2dUI implements GameEventListener {
 		currentGameScene.setParentScene(stage.getScene());
 		//@formatter:off
 		currentGameScene.setContext(
-			new GameSceneContext(gameController,
+			new GameSceneContext(gameController, this,
 				new MsPacManGameRenderer(PacManGames2d.assets.spritesMsPacMan),
 				new PacManGameRenderer(PacManGames2d.assets.spritesPacMan),
 				PacManGames2d.assets.gameSounds(game().variant())
@@ -407,16 +409,19 @@ public class PacManGames2dUI implements GameEventListener {
 		}
 	}
 
+	@Override
 	public void stopVoice() {
 		if (currentVoice != null) {
 			currentVoice.stop();
 		}
 	}
 
+	@Override
 	public GameClock clock() {
 		return clock;
 	}
 
+	@Override
 	public GameController gameController() {
 		return gameController;
 	}
@@ -425,6 +430,7 @@ public class PacManGames2dUI implements GameEventListener {
 		return gameController.game();
 	}
 
+	@Override
 	public GameScene currentGameScene() {
 		return currentGameScene;
 	}
@@ -435,6 +441,7 @@ public class PacManGames2dUI implements GameEventListener {
 
 	// Actions
 
+	@Override
 	public void startGame() {
 		if (game().hasCredit()) {
 			stopVoice();
@@ -442,11 +449,13 @@ public class PacManGames2dUI implements GameEventListener {
 		}
 	}
 
+	@Override
 	public void startCutscenesTest() {
 		gameController().startCutscenesTest();
 		showFlashMessage("Cut scenes");
 	}
 
+	@Override
 	public void restartIntro() {
 		currentGameScene().end();
 		GameEvents.setSoundEventsEnabled(true);
@@ -464,11 +473,13 @@ public class PacManGames2dUI implements GameEventListener {
 		gameController().restart(GameState.BOOT);
 	}
 
+	@Override
 	public void addCredit() {
 		GameEvents.setSoundEventsEnabled(true);
 		gameController().addCredit();
 	}
 
+	@Override
 	public void enterLevel(int newLevelNumber) {
 		if (gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
@@ -485,6 +496,7 @@ public class PacManGames2dUI implements GameEventListener {
 		});
 	}
 
+	@Override
 	public void togglePaused() {
 		Ufx.toggle(clock().pausedPy);
 		// TODO mute and unmute?
@@ -518,12 +530,14 @@ public class PacManGames2dUI implements GameEventListener {
 		showFlashMessageSeconds(0.75, "%dHz".formatted(clock().targetFrameratePy.get()));
 	}
 
+	@Override
 	public void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
 		gameController().selectGameVariant(gameVariant);
 		playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
 	}
 
+	@Override
 	public void toggleAutopilot() {
 		gameController().toggleAutoControlled();
 		var auto = gameController().isAutoControlled();
@@ -532,6 +546,7 @@ public class PacManGames2dUI implements GameEventListener {
 		playVoice(auto ? PacManGames2d.assets.voiceAutopilotOn : PacManGames2d.assets.voiceAutopilotOff);
 	}
 
+	@Override
 	public void toggleImmunity() {
 		game().setImmune(!game().isImmune());
 		var immune = game().isImmune();
@@ -547,20 +562,24 @@ public class PacManGames2dUI implements GameEventListener {
 		}
 	}
 
+	@Override
 	public void cheatAddLives() {
 		int newLivesCount = game().lives() + 3;
 		game().setLives(newLivesCount);
 		showFlashMessage(fmtMessage(PacManGames2d.assets.messages, "cheat_add_lives", newLivesCount));
 	}
 
+	@Override
 	public void cheatEatAllPellets() {
 		gameController().cheatEatAllPellets();
 	}
 
+	@Override
 	public void cheatEnterNextLevel() {
 		gameController().cheatEnterNextLevel();
 	}
 
+	@Override
 	public void cheatKillAllEatableGhosts() {
 		gameController().cheatKillAllEatableGhosts();
 	}

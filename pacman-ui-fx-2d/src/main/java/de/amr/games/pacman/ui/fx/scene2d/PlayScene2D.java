@@ -72,16 +72,16 @@ public class PlayScene2D extends GameScene2D {
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) || Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
 			if (!context.hasCredit()) {
-				PacManGames2d.ui.addCredit();
+				context.ui().addCredit();
 			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
-			PacManGames2d.ui.cheatEatAllPellets();
+			context.ui().cheatEatAllPellets();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {
-			PacManGames2d.ui.cheatAddLives();
+			context.ui().cheatAddLives();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_NEXT_LEVEL)) {
-			PacManGames2d.ui.cheatEnterNextLevel();
+			context.ui().cheatEnterNextLevel();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
-			PacManGames2d.ui.cheatKillAllEatableGhosts();
+			context.ui().cheatKillAllEatableGhosts();
 		}
 	}
 

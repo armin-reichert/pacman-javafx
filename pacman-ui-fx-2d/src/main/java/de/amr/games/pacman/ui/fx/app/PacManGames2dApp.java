@@ -38,10 +38,6 @@ import javafx.stage.Stage;
  */
 public class PacManGames2dApp extends Application {
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
 	private final Settings cfg = new Settings();
 
 	@Override
@@ -54,12 +50,10 @@ public class PacManGames2dApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		stage.setFullScreen(cfg.fullScreen);
-
 		PacManGames2d.ui = new PacManGames2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		PacManGames2d.ui.init(cfg);
 		PacManGames2d.ui.gameController().restart(GameState.BOOT);
 		PacManGames2d.ui.startClockAndShowStage();
-
 		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),
 				Locale.getDefault());
 	}

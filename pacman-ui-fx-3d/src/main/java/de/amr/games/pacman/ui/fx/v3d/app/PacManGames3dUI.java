@@ -319,5 +319,4 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		PacManGames3d.PY_3D_DRAW_MODE
 				.set(PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
-
 }

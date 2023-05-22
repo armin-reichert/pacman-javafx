@@ -83,20 +83,20 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		PacManGames2d.ui.stopVoice();
+		context.ui().stopVoice();
 	}
 
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) || Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			PacManGames2d.ui.addCredit();
+			context.ui().addCredit();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_START_GAME)
 				|| Keyboard.pressed(PacManGames2d.KEY_START_GAME_NUMPAD)) {
-			PacManGames2d.ui.startGame();
+			context.ui().startGame();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_SELECT_VARIANT)) {
-			PacManGames2d.ui.selectNextGameVariant();
+			context.ui().selectNextGameVariant();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_PLAY_CUTSCENES)) {
-			PacManGames2d.ui.startCutscenesTest();
+			context.ui().startCutscenesTest();
 		}
 	}
 
