@@ -76,6 +76,6 @@ public class PacManGames2d {
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
 
 	public static PacManGames2dAssets assets;
-	public static PacManGamesUserInterface ui;
+	public static PacManGames2dUI     ui;
 	//@formatter:on
 }

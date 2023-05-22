@@ -52,8 +52,9 @@ public class PacManGames2dApp extends Application {
 		stage.setFullScreen(cfg.fullScreen);
 		PacManGames2d.ui = new PacManGames2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		PacManGames2d.ui.init(cfg);
-		PacManGames2d.ui.gameController().restart(GameState.BOOT);
-		PacManGames2d.ui.startClockAndShowStage();
+		PacManGames2d.ui.gameController().changeState(GameState.BOOT);
+		PacManGames2d.ui.showStage();
+		PacManGames2d.ui.clock.start();
 		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),
 				Locale.getDefault());
 	}

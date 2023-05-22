@@ -70,8 +70,6 @@ public interface PacManGamesUserInterface {
 
 	void startCutscenesTest();
 
-	void startClockAndShowStage();
-
 	void cheatAddLives();
 
 	void cheatEatAllPellets();

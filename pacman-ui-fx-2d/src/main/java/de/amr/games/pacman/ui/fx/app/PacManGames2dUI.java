@@ -205,9 +205,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 	}
 
-	@Override
-	public void startClockAndShowStage() {
-		clock.start();
+	public void showStage() {
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.centerOnScreen();
