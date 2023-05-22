@@ -50,8 +50,8 @@ public class PacManGames2dApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		stage.setFullScreen(settings.fullScreen);
-		PacManGames2d.ui = new PacManGames2dUI(stage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
-		PacManGames2d.ui.init(settings);
+		PacManGames2d.ui = new PacManGames2dUI();
+		PacManGames2d.ui.init(stage, settings);
 		PacManGames2d.ui.gameController().changeState(GameState.BOOT);
 		PacManGames2d.ui.showStage();
 		PacManGames2d.ui.clock.start();

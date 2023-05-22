@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.GameClock;
+import javafx.stage.Stage;
 
 /**
  * @author Armin Reichert
@@ -54,7 +55,7 @@ public interface PacManGamesUserInterface {
 
 	GameScene currentGameScene();
 
-	void init(Settings cfg);
+	void init(Stage state, Settings cfg);
 
 	void addCredit();
 

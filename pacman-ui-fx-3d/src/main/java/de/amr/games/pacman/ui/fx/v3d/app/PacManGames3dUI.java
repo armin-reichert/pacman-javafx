@@ -110,13 +110,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		}
 	}
 
-	private final PictureInPicture pip;
-	private final Dashboard dashboard;
+	private PictureInPicture pip;
+	private Dashboard dashboard;
 
-	public PacManGames3dUI(Stage stage, double width, double height) {
-		super(stage, width, height);
-		pip = new PictureInPicture();
-		dashboard = new Dashboard(this);
+	@Override
+	public void init(Stage stage, Settings settings) {
+		super.init(stage, settings);
 	}
 
 	@Override
@@ -128,12 +127,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	public void init(Settings settings) {
-		super.init(settings);
-		dashboard.init();
-	}
-
-	@Override
 	protected void configureGameScenes() {
 		super.configureGameScenes();
 		gameSceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D());
@@ -141,8 +134,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	protected void configureMainScene(Scene mainScene, Settings settings) {
+	protected void createMainScene(Stage stage, Settings settings) {
+		pip = new PictureInPicture();
+
+		dashboard = new Dashboard(this);
 		dashboard.setVisible(false);
+		dashboard.init();
+
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.playScene.fxSubScene());
@@ -152,18 +150,16 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		mainSceneRoot.getChildren().add(flashMessageView);
 		mainSceneRoot.getChildren().add(dashboardLayer);
 
-		mainScene.setRoot(mainSceneRoot);
-		mainScene.heightProperty().addListener((py, ov, nv) -> {
-			if (currentGameScene != null) {
-				currentGameScene.setParentScene(mainScene);
-			}
-		});
+		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
+
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
+
+		stage.setScene(mainScene);
 	}
 
 	@Override

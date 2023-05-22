@@ -88,10 +88,20 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
-	protected final GameClock clock;
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
-	protected final Stage stage;
-	protected final FlashMessageView flashMessageView = new FlashMessageView();
+	protected final GameClock clock = new GameClock() {
+		@Override
+		public void doUpdate() {
+			onTick();
+		}
+
+		@Override
+		public void doRender() {
+			onRender();
+		}
+	};
+	protected Stage stage;
+	protected FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
 	protected GameController gameController;
 	protected Pane mainSceneRoot;
@@ -99,21 +109,18 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected GameScene currentGameScene;
 	private AudioClip currentVoice;
 
-	public PacManGames2dUI(Stage stage, double width, double height) {
+	@Override
+	public void init(Stage stage, Settings settings) {
 		checkNotNull(stage);
+		checkNotNull(settings);
 		this.stage = stage;
-		stage.setScene(new Scene(new Pane(), width, height, Color.BLACK));
-		clock = new GameClock() {
-			@Override
-			public void doUpdate() {
-				onTick();
-			}
-
-			@Override
-			public void doRender() {
-				onRender();
-			}
-		};
+		this.gameController = new GameController(settings.variant);
+		configureGameScenes();
+		createMainScene(stage, settings);
+		configureHelpMenus();
+		configurePacSteering();
+		configureBindings(settings);
+		GameEvents.addListener(this);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 	}
 
@@ -129,17 +136,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		if (currentGameScene != null) {
 			currentGameScene.render();
 		}
-	}
-
-	@Override
-	public void init(Settings settings) {
-		this.gameController = new GameController(settings.variant);
-		configureGameScenes();
-		configureMainScene(stage.getScene(), settings);
-		configureHelpMenus();
-		configurePacSteering();
-		configureBindings(settings);
-		GameEvents.addListener(this);
 	}
 
 	protected void configureGameScenes() {
@@ -168,26 +164,23 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		));
 	}
 
-	protected void configureMainScene(Scene mainScene, Settings settings) {
+	protected void createMainScene(Stage stage, Settings settings) {
 		mainSceneRoot = new StackPane();
+		// Without this, there appears an ugly vertical line right of the embedded subscene
+		mainSceneRoot.setBackground(ResourceManager.coloredBackground(PacManGames2d.assets.wallpaperColor));
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 
-		// Without this, there appears an ugly vertical line right of the embedded subscene
-		mainSceneRoot.setBackground(ResourceManager.coloredBackground(PacManGames2d.assets.wallpaperColor));
+		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
 
-		mainScene.setRoot(mainSceneRoot);
-		mainScene.heightProperty().addListener((py, ov, nv) -> {
-			if (currentGameScene != null) {
-				currentGameScene.setParentScene(mainScene);
-			}
-		});
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
+
+		stage.setScene(mainScene);
 	}
 
 	protected void configureHelpMenus() {
