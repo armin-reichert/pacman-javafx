@@ -37,8 +37,6 @@ import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Camera;
-import javafx.scene.ParallelCamera;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -69,26 +67,26 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	protected final Camera camera;
+	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene; // we probably could just use some pane instead
-	protected final Canvas canvas;
-	protected final Pane overlay;
-
-	protected final VBox helpRoot;
-	private final FadeTransition helpMenuAnimation;
-
+	protected final Canvas canvas = new Canvas(WIDTH, HEIGHT);
+	protected final Pane overlay = new Pane();
+	protected final Scale overlayScale = new Scale();
+	protected final VBox helpRoot = new VBox();
+	protected final FadeTransition helpMenuAnimation;
 	protected GameSceneContext context;
 
 	protected GameScene2D() {
-		canvas = new Canvas(WIDTH, HEIGHT);
-		overlay = new Pane();
+		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
 
-		var root = new StackPane();
-		// This avoids a vertical line on the left side of the embedded 2D game scene
-		root.setBackground(ResourceManager.coloredBackground(PacManGames2d.assets.wallpaperColor));
 		root.getChildren().addAll(canvas, overlay);
+		overlay.getChildren().add(helpRoot);
 
-		helpRoot = new VBox();
+		canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
+		canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
+
+		overlay.getTransforms().add(overlayScale);
+
 		helpRoot.setTranslateX(10);
 		helpRoot.setTranslateY(HEIGHT * 0.2);
 
@@ -96,20 +94,15 @@ public abstract class GameScene2D implements GameScene {
 		helpMenuAnimation.setFromValue(1);
 		helpMenuAnimation.setToValue(0);
 
-		overlay.getChildren().add(helpRoot);
+		// This avoids a vertical line on the left side of the embedded 2D game scene
+		root.setBackground(ResourceManager.coloredBackground(PacManGames2d.assets.wallpaperColor));
 
 		// scale overlay pane to cover subscene
-		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
 		fxSubScene.heightProperty().addListener((py, ov, nv) -> {
-			var s = nv.doubleValue() / HEIGHT;
-			overlay.getTransforms().setAll(new Scale(s, s));
+			var scaling = nv.doubleValue() / HEIGHT;
+			overlayScale.setX(scaling);
+			overlayScale.setY(scaling);
 		});
-
-		camera = new ParallelCamera();
-		fxSubScene.setCamera(camera);
-
-		canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
-		canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
 
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
