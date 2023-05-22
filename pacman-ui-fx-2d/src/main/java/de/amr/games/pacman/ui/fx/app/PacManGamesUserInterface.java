@@ -25,6 +25,9 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 
@@ -36,6 +39,18 @@ public interface PacManGamesUserInterface {
 	GameClock clock();
 
 	GameController gameController();
+
+	default GameModel game() {
+		return gameController().game();
+	}
+
+	default GameVariant gameVariant() {
+		return game().variant();
+	}
+
+	default GameState gameState() {
+		return gameController().state();
+	}
 
 	GameScene currentGameScene();
 

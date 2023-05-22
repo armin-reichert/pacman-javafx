@@ -426,10 +426,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		return gameController;
 	}
 
-	public GameModel game() {
-		return gameController.game();
-	}
-
 	@Override
 	public GameScene currentGameScene() {
 		return currentGameScene;
@@ -445,43 +441,43 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void startGame() {
 		if (game().hasCredit()) {
 			stopVoice();
-			gameController().startPlaying();
+			gameController.startPlaying();
 		}
 	}
 
 	@Override
 	public void startCutscenesTest() {
-		gameController().startCutscenesTest();
+		gameController.startCutscenesTest();
 		showFlashMessage("Cut scenes");
 	}
 
 	@Override
 	public void restartIntro() {
-		currentGameScene().end();
+		currentGameScene.end();
 		GameEvents.setSoundEventsEnabled(true);
 		if (game().isPlaying()) {
 			game().changeCredit(-1);
 		}
-		gameController().restart(INTRO);
+		gameController.restart(INTRO);
 	}
 
 	public void reboot() {
-		if (currentGameScene() != null) {
-			currentGameScene().end();
+		if (currentGameScene != null) {
+			currentGameScene.end();
 		}
 		playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
-		gameController().restart(GameState.BOOT);
+		gameController.restart(GameState.BOOT);
 	}
 
 	@Override
 	public void addCredit() {
 		GameEvents.setSoundEventsEnabled(true);
-		gameController().addCredit();
+		gameController.addCredit();
 	}
 
 	@Override
 	public void enterLevel(int newLevelNumber) {
-		if (gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (gameController.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
 		game().level().ifPresent(level -> {
@@ -489,7 +485,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
 					game().nextLevel();
 				}
-				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+				gameController.changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			} else if (newLevelNumber < level.number()) {
 				// not implemented
 			}
@@ -498,49 +494,49 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void togglePaused() {
-		Ufx.toggle(clock().pausedPy);
+		Ufx.toggle(clock.pausedPy);
 		// TODO mute and unmute?
-		if (clock().pausedPy.get()) {
+		if (clock.pausedPy.get()) {
 			PacManGames2d.assets.gameSounds(game().variant()).stopAll();
 		}
 	}
 
 	public void oneSimulationStep() {
-		if (clock().pausedPy.get()) {
-			clock().executeSingleStep(true);
+		if (clock.pausedPy.get()) {
+			clock.executeSingleStep(true);
 		}
 	}
 
 	public void tenSimulationSteps() {
-		if (clock().pausedPy.get()) {
-			clock().executeSteps(10, true);
+		if (clock.pausedPy.get()) {
+			clock.executeSteps(10, true);
 		}
 	}
 
 	public void changeSimulationSpeed(int delta) {
-		int newFramerate = clock().targetFrameratePy.get() + delta;
+		int newFramerate = clock.targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
-			clock().targetFrameratePy.set(newFramerate);
+			clock.targetFrameratePy.set(newFramerate);
 			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 		}
 	}
 
 	public void resetSimulationSpeed() {
-		clock().targetFrameratePy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, "%dHz".formatted(clock().targetFrameratePy.get()));
+		clock.targetFrameratePy.set(GameModel.FPS);
+		showFlashMessageSeconds(0.75, "%dHz".formatted(clock.targetFrameratePy.get()));
 	}
 
 	@Override
 	public void selectNextGameVariant() {
 		var gameVariant = game().variant().next();
-		gameController().selectGameVariant(gameVariant);
+		gameController.selectGameVariant(gameVariant);
 		playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
 	}
 
 	@Override
 	public void toggleAutopilot() {
-		gameController().toggleAutoControlled();
-		var auto = gameController().isAutoControlled();
+		gameController.toggleAutoControlled();
+		var auto = gameController.isAutoControlled();
 		String message = fmtMessage(PacManGames2d.assets.messages, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		playVoice(auto ? PacManGames2d.assets.voiceAutopilotOn : PacManGames2d.assets.voiceAutopilotOff);
@@ -556,8 +552,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	public void startLevelTestMode() {
-		if (gameController().state() == GameState.INTRO) {
-			gameController().restart(GameState.LEVEL_TEST);
+		if (gameController.state() == GameState.INTRO) {
+			gameController.restart(GameState.LEVEL_TEST);
 			showFlashMessage("Level TEST MODE");
 		}
 	}
@@ -571,16 +567,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void cheatEatAllPellets() {
-		gameController().cheatEatAllPellets();
+		gameController.cheatEatAllPellets();
 	}
 
 	@Override
 	public void cheatEnterNextLevel() {
-		gameController().cheatEnterNextLevel();
+		gameController.cheatEnterNextLevel();
 	}
 
 	@Override
 	public void cheatKillAllEatableGhosts() {
-		gameController().cheatKillAllEatableGhosts();
+		gameController.cheatKillAllEatableGhosts();
 	}
 }
