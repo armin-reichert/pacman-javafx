@@ -31,7 +31,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
-import de.amr.games.pacman.ui.fx.app.Settings;
 import javafx.stage.Stage;
 
 /**
@@ -39,22 +38,20 @@ import javafx.stage.Stage;
  */
 public class PacManGames3dApp extends PacManGames2dApp {
 
-	private static Settings cfg;
-
 	@Override
 	public void init() {
-		cfg = new Settings(getParameters().getNamed());
+		settings.merge(getParameters().getNamed());
 		PacManGames2d.assets = new PacManGames2dAssets();
 		PacManGames3d.assets = new PacManGames3dAssets();
-		Logger.info("Game initialized, configuration: {}", cfg);
+		Logger.info("Game initialized: {}", settings);
 	}
 
 	@Override
 	public void start(Stage stage) {
-		stage.setFullScreen(cfg.fullScreen);
-		PacManGames3d.ui = new PacManGames3dUI(stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		stage.setFullScreen(settings.fullScreen);
+		PacManGames3d.ui = new PacManGames3dUI(stage, settings.zoom * 28 * 8, settings.zoom * 36 * 8);
 		PacManGames2d.ui = PacManGames3d.ui;
-		PacManGames3d.ui.init(cfg);
+		PacManGames3d.ui.init(settings);
 		PacManGames3d.ui.gameController().changeState(GameState.BOOT);
 		PacManGames3d.ui.showStage();
 		PacManGames3d.ui.clock().start();

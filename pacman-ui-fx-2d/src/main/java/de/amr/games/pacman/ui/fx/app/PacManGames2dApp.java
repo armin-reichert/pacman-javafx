@@ -38,7 +38,7 @@ import javafx.stage.Stage;
  */
 public class PacManGames2dApp extends Application {
 
-	private final Settings settings = new Settings();
+	protected final Settings settings = new Settings();
 
 	@Override
 	public void init() {
