@@ -49,12 +49,10 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		stage.setFullScreen(settings.fullScreen);
 		PacManGames2d.ui = new PacManGames2dUI();
 		PacManGames2d.ui.init(stage, settings);
 		PacManGames2d.ui.gameController().changeState(GameState.BOOT);
-		PacManGames2d.ui.showStage();
-		PacManGames2d.ui.clock.start();
+		PacManGames2d.ui.show();
 		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),
 				Locale.getDefault());
 	}

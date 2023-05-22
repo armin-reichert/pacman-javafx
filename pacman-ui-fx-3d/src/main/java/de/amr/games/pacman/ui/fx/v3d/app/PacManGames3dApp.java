@@ -48,13 +48,10 @@ public class PacManGames3dApp extends PacManGames2dApp {
 
 	@Override
 	public void start(Stage stage) {
-		stage.setFullScreen(settings.fullScreen);
-		PacManGames3d.ui = new PacManGames3dUI();
-		PacManGames2d.ui = PacManGames3d.ui;
+		PacManGames2d.ui = PacManGames3d.ui = new PacManGames3dUI();
 		PacManGames3d.ui.init(stage, settings);
 		PacManGames3d.ui.gameController().changeState(GameState.BOOT);
-		PacManGames3d.ui.showStage();
-		PacManGames3d.ui.clock().start();
+		PacManGames3d.ui.show();
 		Logger.info("Game started. {} Hz language={}", PacManGames3d.ui.clock().targetFrameratePy.get(),
 				Locale.getDefault());
 	}

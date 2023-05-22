@@ -57,6 +57,8 @@ public interface PacManGamesUserInterface {
 
 	void init(Stage state, Settings cfg);
 
+	void show();
+
 	void addCredit();
 
 	void startGame();

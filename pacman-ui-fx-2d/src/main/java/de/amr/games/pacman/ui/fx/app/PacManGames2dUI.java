@@ -114,6 +114,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		checkNotNull(stage);
 		checkNotNull(settings);
 		this.stage = stage;
+		stage.setFullScreen(settings.fullScreen);
 		this.gameController = new GameController(settings.variant);
 		configureGameScenes();
 		createMainScene(stage, settings);
@@ -201,12 +202,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 	}
 
-	public void showStage() {
+	@Override
+	public void show() {
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
+		clock.start();
 	}
 
 	protected void updateStage() {
