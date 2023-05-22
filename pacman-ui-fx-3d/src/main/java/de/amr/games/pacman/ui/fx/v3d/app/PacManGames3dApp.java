@@ -23,35 +23,28 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
-
 import java.util.Locale;
 
 import org.tinylog.Logger;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import de.amr.games.pacman.ui.fx.app.Settings;
-import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.application.Application;
-import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
 /**
  * @author Armin Reichert
  */
-public class PacManGames3dApp extends Application {
+public class PacManGames3dApp extends PacManGames2dApp {
 
-	private PacManGames3dUI ui;
 	private static Settings cfg;
 
 	@Override
 	public void init() {
 		cfg = new Settings(getParameters().getNamed());
-		PacManGames2d.app = new PacManGames2dApp();
 		PacManGames2d.assets = new PacManGames2dAssets();
-		PacManGames3d.app = this;
 		PacManGames3d.assets = new PacManGames3dAssets();
 		Logger.info("Game initialized, configuration: {}", cfg);
 	}
@@ -59,48 +52,18 @@ public class PacManGames3dApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		stage.setFullScreen(cfg.fullScreen);
-		ui = new PacManGames3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
-		PacManGames3d.ui = ui;
-		ui.init(cfg);
-		ui.startClockAndShowStage();
-		PacManGames2d.app.reboot();
-		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
+		PacManGames3d.ui = new PacManGames3dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		PacManGames2d.ui = PacManGames3d.ui;
+		PacManGames3d.ui.init(cfg);
+		PacManGames3d.ui.gameController().restart(GameState.BOOT);
+		PacManGames3d.ui.startClockAndShowStage();
+		Logger.info("Game started. {} Hz language={}", PacManGames3d.ui.clock().targetFrameratePy.get(),
+				Locale.getDefault());
 	}
 
 	@Override
 	public void stop() {
-		ui.clock().stop();
+		PacManGames3d.ui.clock().stop();
 		Logger.info("Game stopped.");
-	}
-
-	// --- Actions ---
-
-	public void togglePipVisibility() {
-		Ufx.toggle(ui.pip().visiblePy);
-		var message = fmtMessage(PacManGames3d.assets.messages, ui.pip().visiblePy.get() ? "pip_on" : "pip_off");
-		ui.showFlashMessage(message);
-	}
-
-	public void toggleDashboardVisible() {
-		ui.dashboard().setVisible(!ui.dashboard().isVisible());
-	}
-
-	public void selectNextPerspective() {
-		var next = PacManGames3d.PY_3D_PERSPECTIVE.get().next();
-		PacManGames3d.PY_3D_PERSPECTIVE.set(next);
-		String perspectiveName = fmtMessage(PacManGames3d.assets.messages, next.name());
-		ui.showFlashMessage(fmtMessage(PacManGames3d.assets.messages, "camera_perspective", perspectiveName));
-	}
-
-	public void selectPrevPerspective() {
-		var prev = PacManGames3d.PY_3D_PERSPECTIVE.get().prev();
-		PacManGames3d.PY_3D_PERSPECTIVE.set(prev);
-		String perspectiveName = fmtMessage(PacManGames3d.assets.messages, prev.name());
-		ui.showFlashMessage(fmtMessage(PacManGames3d.assets.messages, "camera_perspective", perspectiveName));
-	}
-
-	public void toggleDrawMode() {
-		PacManGames3d.PY_3D_DRAW_MODE
-				.set(PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 }

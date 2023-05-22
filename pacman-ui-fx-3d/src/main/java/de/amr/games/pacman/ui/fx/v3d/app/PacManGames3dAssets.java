@@ -45,31 +45,29 @@ public class PacManGames3dAssets extends ResourceManager {
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
 	//@formatter:off
-	public final ResourceBundle messages              = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
+	public final ResourceBundle messages             = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 
-	private final Picker<String> pickerReadyPacMan    = Picker.fromBundle(messages, "pacman.ready");
-	private final Picker<String> pickerReadyMsPacMan  = Picker.fromBundle(messages, "mspacman.ready");
-	private final Picker<String> pickerCheating       = Picker.fromBundle(messages, "cheating");
-	private final Picker<String> pickerLevelComplete  = Picker.fromBundle(messages, "level.complete");
-	private final Picker<String> pickerGameOver       = Picker.fromBundle(messages, "game.over");
+	private final Picker<String> pickerReadyPacMan   = Picker.fromBundle(messages, "pacman.ready");
+	private final Picker<String> pickerReadyMsPacMan = Picker.fromBundle(messages, "mspacman.ready");
+	private final Picker<String> pickerCheating      = Picker.fromBundle(messages, "cheating");
+	private final Picker<String> pickerLevelComplete = Picker.fromBundle(messages, "level.complete");
+	private final Picker<String> pickerGameOver      = Picker.fromBundle(messages, "game.over");
 
-	public final Model3D pacModel3D                   = new Model3D(urlFromRelPath("model3D/pacman.obj"));
-	public final Model3D ghostModel3D                 = new Model3D(urlFromRelPath("model3D/ghost.obj"));
-	public final Model3D pelletModel3D                = new Model3D(urlFromRelPath("model3D/12206_Fruit_v1_L3.obj"));
+	public final Model3D pacModel3D                  = new Model3D(url("model3D/pacman.obj"));
+	public final Model3D ghostModel3D                = new Model3D(url("model3D/ghost.obj"));
+	public final Model3D pelletModel3D               = new Model3D(url("model3D/12206_Fruit_v1_L3.obj"));
 
-	public final Background wallpaper3D               = imageBackground("graphics/sky.png");
+	public final Background wallpaper3D              = imageBackground("graphics/sky.png");
 	
 	public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
-	{
-		floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
-		floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
-		floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
-		floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
-	}
 	//@formatter:on
 
 	public PacManGames3dAssets() {
 		super("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3dAssets.class);
+		floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
+		floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
+		floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
+		floorTexturesByName.put("Wood", createFloorTexture("wood", "jpg"));
 	}
 
 	public String pickFunnyReadyMessage(GameVariant gameVariant) {

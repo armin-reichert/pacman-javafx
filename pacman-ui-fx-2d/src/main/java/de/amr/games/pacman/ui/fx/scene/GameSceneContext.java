@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
@@ -48,17 +47,20 @@ public class GameSceneContext {
 	private final GameController gameController;
 	private final PacManGameRenderer rendererPacMan;
 	private final MsPacManGameRenderer rendererMsPacMan;
+	private final GameSounds sounds;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 
 	public GameSceneContext(GameController gameController, MsPacManGameRenderer rendererMsPacMan,
-			PacManGameRenderer rendererPacMan) {
+			PacManGameRenderer rendererPacMan, GameSounds sounds) {
 		checkNotNull(gameController);
 		checkNotNull(rendererMsPacMan);
 		checkNotNull(rendererPacMan);
+		checkNotNull(sounds);
 		this.gameController = gameController;
 		this.rendererMsPacMan = rendererMsPacMan;
 		this.rendererPacMan = rendererPacMan;
+		this.sounds = sounds;
 	}
 
 	public MsPacManGameRenderer rendererMsPacMan() {
@@ -118,6 +120,6 @@ public class GameSceneContext {
 	}
 
 	public GameSounds sounds() {
-		return PacManGames2d.assets.gameSounds(gameVariant());
+		return sounds;
 	}
 }

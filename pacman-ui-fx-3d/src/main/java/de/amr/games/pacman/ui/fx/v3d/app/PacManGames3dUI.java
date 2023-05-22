@@ -50,7 +50,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -170,10 +170,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	protected void configurePacSteering() {
 		// Steering with unmodified or with CONTROL+cursor key
 		keyboardSteering = new KeyboardSteering();
-		keyboardSteering.define(Direction.UP, KeyCode.UP, KeyCodeCombination.CONTROL_DOWN);
-		keyboardSteering.define(Direction.DOWN, KeyCode.DOWN, KeyCodeCombination.CONTROL_DOWN);
-		keyboardSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCodeCombination.CONTROL_DOWN);
-		keyboardSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCodeCombination.CONTROL_DOWN);
+		keyboardSteering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
+		keyboardSteering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
+		keyboardSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
+		keyboardSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 
 		gameController.setManualPacSteering(keyboardSteering);
 		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
@@ -198,12 +198,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		}
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				mainSceneRoot.setBackground(ResourceManager.colorBackground(Color.BLACK));
+				mainSceneRoot.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
 				mainSceneRoot.setBackground(PacManGames3d.assets.wallpaper3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper2D);
+			mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper);
 		}
 		var paused = clock().pausedPy.get();
 		var dimensionMsg = fmtMessage(PacManGames3d.assets.messages, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
@@ -252,9 +252,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			toggle3DEnabled();
 		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_DASHBOARD)
 				|| Keyboard.pressed(PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
-			PacManGames3d.app.toggleDashboardVisible();
+			toggleDashboardVisible();
 		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_PIP_VIEW)) {
-			PacManGames3d.app.togglePipVisibility();
+			togglePipVisibility();
 		}
 	}
 
@@ -277,7 +277,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		} else {
 			var message = fmtMessage(PacManGames3d.assets.messages,
 					PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
-			PacManGames3d.ui.showFlashMessage(message);
+			showFlashMessage(message);
 		}
 	}
 
@@ -288,4 +288,36 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	public PictureInPicture pip() {
 		return pip;
 	}
+
+	// --- Actions ---
+
+	public void togglePipVisibility() {
+		Ufx.toggle(pip().visiblePy);
+		var message = fmtMessage(PacManGames3d.assets.messages, pip().visiblePy.get() ? "pip_on" : "pip_off");
+		showFlashMessage(message);
+	}
+
+	public void toggleDashboardVisible() {
+		dashboard().setVisible(!dashboard().isVisible());
+	}
+
+	public void selectNextPerspective() {
+		var next = PacManGames3d.PY_3D_PERSPECTIVE.get().next();
+		PacManGames3d.PY_3D_PERSPECTIVE.set(next);
+		String perspectiveName = fmtMessage(PacManGames3d.assets.messages, next.name());
+		showFlashMessage(fmtMessage(PacManGames3d.assets.messages, "camera_perspective", perspectiveName));
+	}
+
+	public void selectPrevPerspective() {
+		var prev = PacManGames3d.PY_3D_PERSPECTIVE.get().prev();
+		PacManGames3d.PY_3D_PERSPECTIVE.set(prev);
+		String perspectiveName = fmtMessage(PacManGames3d.assets.messages, prev.name());
+		showFlashMessage(fmtMessage(PacManGames3d.assets.messages, "camera_perspective", perspectiveName));
+	}
+
+	public void toggleDrawMode() {
+		PacManGames3d.PY_3D_DRAW_MODE
+				.set(PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+	}
+
 }

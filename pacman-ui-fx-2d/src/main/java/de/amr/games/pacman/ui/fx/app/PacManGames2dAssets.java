@@ -43,7 +43,7 @@ import javafx.scene.text.Font;
  */
 public class PacManGames2dAssets extends ResourceManager {
 	//@formatter:off
-	private static final Object[][] audioClipsMsPacman = { 
+	private static final Object[][] CLIPS_MS_PACMAN = { 
 		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
 		{ AudioClipID.CREDIT,          "sound/mspacman/Credit.mp3", 1.0 }, 
 		{ AudioClipID.EXTRA_LIFE,      "sound/mspacman/ExtraLife.mp3", 1.0 }, 
@@ -65,7 +65,7 @@ public class PacManGames2dAssets extends ResourceManager {
 		{ AudioClipID.SWEEP,           "sound/common/sweep.mp3", 1.0 }, 
 	};
 
-	private static final Object[][] audioClipsPacman = { 
+	private static final Object[][] CLIPS_PACMAN = { 
 		{ AudioClipID.BONUS_EATEN,     "sound/pacman/eat_fruit.mp3", 1.0 }, 
 		{ AudioClipID.CREDIT,          "sound/pacman/credit.wav", 1.0 }, 
 		{ AudioClipID.EXTRA_LIFE,      "sound/pacman/extend.mp3", 1.0 }, 
@@ -87,12 +87,12 @@ public class PacManGames2dAssets extends ResourceManager {
 
 	public final ResourceBundle messages           = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
-	public final Font arcadeFont                   = font("fonts/emulogic.ttf", 8);
+	public final Font arcadeFont8                  = font("fonts/emulogic.ttf", 8);
 	public final Font arcadeFont6                  = font("fonts/emulogic.ttf", 6);
-	public final Font handwritingFont              = font("fonts/RockSalt-Regular.ttf", 9);
-	public final Font helpFont                     = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+	public final Font handwritingFont9             = font("fonts/RockSalt-Regular.ttf", 9);
+	public final Font helpFont12                   = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 	
-	public final Background wallpaper2D            = imageBackground("graphics/pacman_wallpaper.png");
+	public final Background wallpaper              = imageBackground("graphics/pacman_wallpaper.png");
 	public final Color wallpaperColor              = Color.rgb(72, 78, 135);
 
 	public final Spritesheet spritesMsPacMan       = new Spritesheet(image("graphics/mspacman/sprites.png"), 16);
@@ -112,18 +112,14 @@ public class PacManGames2dAssets extends ResourceManager {
 	public final AudioClip voiceImmunityOff        = audioClip("sound/voice/immunity-off.mp3");
 	public final AudioClip voiceImmunityOn         = audioClip("sound/voice/immunity-on.mp3");
 	
-	public final GameSounds soundsMsPacMan         = new GameSounds();
-	public final GameSounds soundsPacMan           = new GameSounds();
+	private final GameSounds soundsMsPacMan        = new GameSounds();
+	private final GameSounds soundsPacMan          = new GameSounds();
 	//@formatter:on
-
-//	public static Font font(Font font, double size) {
-//		return Font.font(font.getFamily(), size);
-//	}
 
 	public PacManGames2dAssets() {
 		super("/de/amr/games/pacman/ui/fx/", PacManGames2dAssets.class);
-		soundsMsPacMan.init(audioClipsMsPacman, false);
-		soundsPacMan.init(audioClipsPacman, false);
+		soundsMsPacMan.init(CLIPS_MS_PACMAN, false);
+		soundsPacMan.init(CLIPS_PACMAN, false);
 	}
 
 	public GameSounds gameSounds(GameVariant variant) {

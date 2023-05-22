@@ -47,20 +47,20 @@ public class PacManCreditScene extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) || Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			PacManGames2d.app.addCredit();
+			PacManGames2d.ui.addCredit();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_START_GAME)
 				|| Keyboard.pressed(PacManGames2d.KEY_START_GAME_NUMPAD)) {
-			PacManGames2d.app.startGame();
+			PacManGames2d.ui.startGame();
 		}
 	}
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendererPacMan();
-		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont, TS * (6),
+		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, TS * (6),
 				TS * (17));
-		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, PacManGames2d.assets.arcadeFont, TS * (8), TS * (21));
-		GameRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, PacManGames2d.assets.arcadeFont, TS * (1),
+		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, PacManGames2d.assets.arcadeFont8, TS * (8), TS * (21));
+		GameRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, PacManGames2d.assets.arcadeFont8, TS * (1),
 				TS * (25));
 		GameRenderer.drawText(g, "PTS", ArcadeTheme.ROSE, PacManGames2d.assets.arcadeFont6, TS * (25), TS * (25));
 		PacManGameRenderer.drawMidwayCopyright(g, 4, 29);

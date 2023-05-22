@@ -72,7 +72,7 @@ public class Section3D extends Section {
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(PacManGames3d.PY_3D_ENERGIZER_EXPLODES));
 		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(PacManGames3d.PY_3D_PAC_LIGHT_ENABLED));
 		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(PacManGames3d.PY_3D_AXES_VISIBLE));
-		cbWireframeMode = addCheckBox("Wireframe Mode", PacManGames3d.app::toggleDrawMode);
+		cbWireframeMode = addCheckBox("Wireframe Mode", PacManGames3d.ui::toggleDrawMode);
 	}
 
 	@Override

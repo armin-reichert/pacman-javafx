@@ -32,10 +32,12 @@ import java.util.ResourceBundle;
 
 import org.tinylog.Logger;
 
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -47,27 +49,32 @@ import javafx.scene.text.Font;
 public class ResourceManager {
 
 	/**
-	 * Builds a resource key from the given key pattern and arguments and reads the corresponding message from the
-	 * messages resource bundle.
+	 * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
+	 * resource bundle.
 	 * 
-	 * @param messageBundle message resource bundle
-	 * @param keyPattern    message key pattern
-	 * @param args          arguments merged into key pattern
-	 * @return message text for composed key or string indicating missing text
+	 * @param bundle     resource bundle
+	 * @param keyPattern pattern for creating final resource bundle key
+	 * @param args       arguments merged into key pattern
+	 * @return text for composed key or string indicating missing text
 	 */
-	public static String fmtMessage(ResourceBundle messageBundle, String keyPattern, Object... args) {
+	public static String fmtMessage(ResourceBundle bundle, String keyPattern, Object... args) {
 		try {
-			var pattern = messageBundle.getString(keyPattern);
+			var pattern = bundle.getString(keyPattern);
 			return MessageFormat.format(pattern, args);
 		} catch (Exception x) {
 			Logger.error("No text resource found for key '{}'", keyPattern);
-			return "missing{%s}".formatted(keyPattern);
+			return "noresfound{%s}".formatted(keyPattern);
 		}
 	}
 
-	public static Background colorBackground(Color color) {
+	public static Background coloredBackground(Color color) {
 		checkNotNull(color);
-		return new Background(new BackgroundFill(color, null, null));
+		return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+	}
+
+	public static Background coloredRoundedBackground(Color color, int radius) {
+		checkNotNull(color);
+		return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
 	}
 
 	public static PhongMaterial coloredMaterial(Color color) {
@@ -93,12 +100,18 @@ public class ResourceManager {
 	}
 
 	/**
-	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * Creates an URL from a resource path. If the path does not start with a slash, the path to the asset root directory
+	 * is prepended.
+	 * 
+	 * @param path path of resource
 	 * @return URL of resource addressed by this path
 	 */
-	public URL urlFromRelPath(String relPath) {
-		checkNotNull(relPath);
-		return callerClass.getResource(rootDir + relPath);
+	public URL url(String path) {
+		checkNotNull(path);
+		if (path.startsWith("/")) {
+			return callerClass.getResource(path);
+		}
+		return callerClass.getResource(rootDir + path);
 	}
 
 	/**
@@ -106,7 +119,7 @@ public class ResourceManager {
 	 * @return audio clip from resource addressed by this path
 	 */
 	public AudioClip audioClip(String relPath) {
-		return new AudioClip(urlFromRelPath(relPath).toExternalForm());
+		return new AudioClip(url(relPath).toExternalForm());
 	}
 
 	/**
@@ -118,7 +131,7 @@ public class ResourceManager {
 		if (size <= 0) {
 			throw new IllegalArgumentException("Font size must be positive but is %.2f".formatted(size));
 		}
-		var url = urlFromRelPath(relPath);
+		var url = url(relPath);
 		var font = Font.loadFont(url.toExternalForm(), size);
 		if (font == null) {
 			Logger.error("Font with URL '{}' could not be loaded", url);
@@ -132,7 +145,7 @@ public class ResourceManager {
 	 * @return image loaded from resource addressed by this path.
 	 */
 	public Image image(String relPath) {
-		var url = urlFromRelPath(relPath);
+		var url = url(relPath);
 		return new Image(url.toExternalForm());
 	}
 

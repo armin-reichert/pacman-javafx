@@ -45,19 +45,19 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) || Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			PacManGames2d.app.addCredit();
+			PacManGames2d.ui.addCredit();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_START_GAME)
 				|| Keyboard.pressed(PacManGames2d.KEY_START_GAME_NUMPAD)) {
-			PacManGames2d.app.startGame();
+			PacManGames2d.ui.startGame();
 		}
 	}
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendererMsPacMan();
-		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont, t(6), t(16));
-		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont, t(8), t(18));
-		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont, t(2),
+		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, t(6), t(16));
+		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, t(8), t(18));
+		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, t(2),
 				t(25));
 		r.drawSprite(g, r.livesCounterSprite(), t(13), t(23) + 1);
 		GameRenderer.drawText(g, "PTS", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont6, t(25), t(25));

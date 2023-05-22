@@ -40,7 +40,6 @@ import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
-import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -73,16 +72,16 @@ public class PlayScene2D extends GameScene2D {
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) || Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
 			if (!context.hasCredit()) {
-				PacManGames2d.app.addCredit();
+				PacManGames2d.ui.addCredit();
 			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
-			PacManGames2d.app.cheatEatAllPellets();
+			PacManGames2d.ui.cheatEatAllPellets();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {
-			PacManGames2d.app.cheatAddLives();
+			PacManGames2d.ui.cheatAddLives();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_NEXT_LEVEL)) {
-			PacManGames2d.app.cheatEnterNextLevel();
+			PacManGames2d.ui.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
-			PacManGames2d.app.cheatKillAllEatableGhosts();
+			PacManGames2d.ui.cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -94,7 +93,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		context.level().ifPresent(level -> updateSound(level, context.sounds()));
+		context.level().ifPresent(level -> updateSound(level));
 	}
 
 	@Override
@@ -110,12 +109,12 @@ public class PlayScene2D extends GameScene2D {
 			int mazeNumber = level.game().mazeNumber(levelNumber);
 			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
-				drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, PacManGames2d.assets.arcadeFont, t(8.5),
+				drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, PacManGames2d.assets.arcadeFont8, t(8.5),
 						t(21));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				drawText(g, "GAME  OVER", ArcadeTheme.RED, PacManGames2d.assets.arcadeFont, t(9), t(21));
+				drawText(g, "GAME  OVER", ArcadeTheme.RED, PacManGames2d.assets.arcadeFont8, t(9), t(21));
 			} else if (context.state() == GameState.READY) {
-				drawText(g, "READY!", ArcadeTheme.YELLOW, PacManGames2d.assets.arcadeFont, t(11), t(21));
+				drawText(g, "READY!", ArcadeTheme.YELLOW, PacManGames2d.assets.arcadeFont8, t(11), t(21));
 			}
 			level.bonusManagement().getBonus().ifPresent(bonus -> r.drawBonus(g, bonus));
 			r.drawPac(g, level.pac());
@@ -164,18 +163,18 @@ public class PlayScene2D extends GameScene2D {
 		});
 	}
 
-	private void updateSound(GameLevel level, GameSounds sounds) {
+	private void updateSound(GameLevel level) {
 		if (level.isDemoLevel()) {
 			return;
 		}
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			sounds.stop(AudioClipID.PACMAN_MUNCH);
+			context.sounds().stop(AudioClipID.PACMAN_MUNCH);
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			sounds.ensureLoop(AudioClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
+			context.sounds().ensureLoop(AudioClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
 		} else {
-			sounds.stop(AudioClipID.GHOST_RETURNING);
+			context.sounds().stop(AudioClipID.GHOST_RETURNING);
 		}
 	}
 }

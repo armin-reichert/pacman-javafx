@@ -65,7 +65,7 @@ public class HelpMenus {
 
 	private final ResourceBundle translations;
 	private final GameController gameController;
-	private Font font = PacManGames2d.assets.helpFont;
+	private Font font = PacManGames2d.assets.helpFont12;
 
 	public HelpMenus(GameController gameController, ResourceBundle translations) {
 		this.gameController = gameController;
@@ -132,8 +132,8 @@ public class HelpMenus {
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
 		switch (gameController.game().variant()) {
-		case MS_PACMAN -> pane.setBackground(ResourceManager.colorBackground(Color.rgb(255, 0, 0, 0.9)));
-		case PACMAN -> pane.setBackground(ResourceManager.colorBackground(Color.rgb(33, 33, 255, 0.9)));
+		case MS_PACMAN -> pane.setBackground(ResourceManager.coloredBackground(Color.rgb(255, 0, 0, 0.9)));
+		case PACMAN -> pane.setBackground(ResourceManager.coloredBackground(Color.rgb(33, 33, 255, 0.9)));
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
 		return pane;

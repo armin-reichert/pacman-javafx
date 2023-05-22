@@ -167,7 +167,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * 5, y + TS * 2 + 2); // (c) symbol
-		g.setFont(PacManGames2d.assets.arcadeFont);
+		g.setFont(PacManGames2d.assets.arcadeFont8);
 		g.fillText("MIDWAY MFG CO", x + TS * 7, y + TS * 2);
 		g.fillText("1980/1981", x + TS * 8, y + TS * 4);
 	}
@@ -278,7 +278,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 				if (clap.isVisible()) {
 					drawSpriteOverBoundingBox(g, sprite, clap.position().x(), clap.position().y());
 				}
-				g.setFont(PacManGames2d.assets.arcadeFont);
+				g.setFont(PacManGames2d.assets.arcadeFont8);
 				g.setFill(ArcadeTheme.PALE);
 				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
 				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());

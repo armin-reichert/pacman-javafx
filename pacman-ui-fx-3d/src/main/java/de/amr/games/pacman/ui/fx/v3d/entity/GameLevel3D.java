@@ -97,7 +97,7 @@ public class GameLevel3D {
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = msPacMan ? LivesCounter3D.of(msPacManColors) : LivesCounter3D.of(pacManColors);
-		scores3D = new Scores3D(PacManGames2d.assets.arcadeFont);
+		scores3D = new Scores3D(PacManGames2d.assets.arcadeFont8);
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);

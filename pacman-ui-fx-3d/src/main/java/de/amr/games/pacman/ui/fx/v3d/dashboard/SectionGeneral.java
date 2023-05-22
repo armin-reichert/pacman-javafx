@@ -67,7 +67,7 @@ public class SectionGeneral extends Section {
 
 		btnPlayPause.setText(null);
 		btnPlayPause.setStyle("-fx-background-color: transparent");
-		btnPlayPause.setOnAction(e -> PacManGames2d.app.togglePaused());
+		btnPlayPause.setOnAction(e -> PacManGames2d.ui.togglePaused());
 
 		btnStep.setGraphic(iconStep);
 		btnStep.setStyle("-fx-background-color: transparent");

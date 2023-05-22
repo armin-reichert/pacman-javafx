@@ -90,7 +90,7 @@ public class BootScene extends GameScene2D {
 	private void paintRandomHexCodes() {
 		clearCanvas();
 		ctx.setFill(ArcadeTheme.PALE);
-		ctx.setFont(PacManGames2d.assets.arcadeFont);
+		ctx.setFont(PacManGames2d.assets.arcadeFont8);
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));

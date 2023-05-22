@@ -85,17 +85,17 @@ public interface GameRenderer {
 	}
 
 	static void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-		drawText(g, title, ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x, y);
+		drawText(g, title, ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont8, x, y);
 		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x, y + TS + 1);
+		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont8, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x + TS * 8,
+			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont8, x + TS * 8,
 					y + TS + 1);
 		}
 	}
 
 	static void drawCredit(GraphicsContext g, int credit, double x, double y) {
-		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont, x, y);
+		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont8, x, y);
 	}
 
 	Spritesheet spritesheet();

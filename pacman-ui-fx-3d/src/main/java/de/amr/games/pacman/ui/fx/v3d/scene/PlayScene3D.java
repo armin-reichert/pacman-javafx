@@ -235,19 +235,19 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) && !context.hasCredit()) {
-			PacManGames2d.app.addCredit(); // in demo mode, allow adding credit
+			PacManGames2d.ui.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(PacManGames3d.KEY_PREV_PERSPECTIVE)) {
-			PacManGames3d.app.selectPrevPerspective();
+			PacManGames3d.ui.selectPrevPerspective();
 		} else if (Keyboard.pressed(PacManGames3d.KEY_NEXT_PERSPECTIVE)) {
-			PacManGames3d.app.selectNextPerspective();
+			PacManGames3d.ui.selectNextPerspective();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
-			PacManGames2d.app.cheatEatAllPellets();
+			PacManGames2d.ui.cheatEatAllPellets();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {
-			PacManGames2d.app.cheatAddLives();
+			PacManGames2d.ui.cheatAddLives();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_NEXT_LEVEL)) {
-			PacManGames2d.app.cheatEnterNextLevel();
+			PacManGames2d.ui.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
-			PacManGames2d.app.cheatKillAllEatableGhosts();
+			PacManGames2d.ui.cheatKillAllEatableGhosts();
 		}
 	}
 

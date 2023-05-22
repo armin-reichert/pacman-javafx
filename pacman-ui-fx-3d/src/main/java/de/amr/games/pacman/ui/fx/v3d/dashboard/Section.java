@@ -82,7 +82,7 @@ public abstract class Section {
 		this.textColor = textColor;
 		this.textFont = textFont;
 		this.labelFont = labelFont;
-		content.setBackground(ResourceManager.colorBackground(new Color(0.2, 0.2, 0.4, 0.8)));
+		content.setBackground(ResourceManager.coloredBackground(new Color(0.2, 0.2, 0.4, 0.8)));
 		content.setHgap(4);
 		content.setVgap(3);
 		content.setPadding(new Insets(5));

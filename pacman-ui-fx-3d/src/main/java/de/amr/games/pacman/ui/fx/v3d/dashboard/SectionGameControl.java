@@ -71,21 +71,21 @@ public class SectionGameControl extends Section {
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> gc.startPlaying());
-		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> PacManGames2d.app.restartIntro());
+		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> PacManGames2d.ui.restartIntro());
 		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> gc.cheatEnterNextLevel());
 
 		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
-		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> PacManGames2d.app.startCutscenesTest());
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> PacManGames2d.app.restartIntro());
+		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> PacManGames2d.ui.startCutscenesTest());
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> PacManGames2d.ui.restartIntro());
 
 		spGameLevel = addSpinner("Level", 1, 100, 1);
-		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> PacManGames2d.app.enterLevel(newVal.intValue()));
+		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> PacManGames2d.ui.enterLevel(newVal.intValue()));
 
 		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
 		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
 
-		cbAutopilot = addCheckBox("Autopilot", PacManGames2d.app::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", PacManGames2d.app::toggleImmunity);
+		cbAutopilot = addCheckBox("Autopilot", PacManGames2d.ui::toggleAutopilot);
+		cbImmunity = addCheckBox("Player immune", PacManGames2d.ui::toggleImmunity);
 	}
 
 	@Override

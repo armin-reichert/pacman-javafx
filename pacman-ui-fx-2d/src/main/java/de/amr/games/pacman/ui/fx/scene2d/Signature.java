@@ -53,7 +53,7 @@ public class Signature {
 
 		var part2 = new Text("Armin Reichert");
 		part2.setFill(Color.gray(0.6));
-		part2.setFont(PacManGames2d.assets.handwritingFont);
+		part2.setFont(PacManGames2d.assets.handwritingFont9);
 
 		text = new TextFlow(part1, part2);
 

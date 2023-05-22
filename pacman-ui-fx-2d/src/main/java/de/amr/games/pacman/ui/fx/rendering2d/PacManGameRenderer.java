@@ -66,7 +66,7 @@ public class PacManGameRenderer implements GameRenderer {
 	}
 
 	public static void drawMidwayCopyright(GraphicsContext g, int tileX, int tileY) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, PacManGames2d.assets.arcadeFont, TS * tileX,
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, PacManGames2d.assets.arcadeFont8, TS * tileX,
 				TS * tileY);
 	}
 

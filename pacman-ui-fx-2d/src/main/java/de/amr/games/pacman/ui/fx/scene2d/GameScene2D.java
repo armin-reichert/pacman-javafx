@@ -85,7 +85,7 @@ public abstract class GameScene2D implements GameScene {
 
 		var root = new StackPane();
 		// This avoids a vertical line on the left side of the embedded 2D game scene
-		root.setBackground(ResourceManager.colorBackground(PacManGames2d.assets.wallpaperColor));
+		root.setBackground(ResourceManager.coloredBackground(PacManGames2d.assets.wallpaperColor));
 		root.getChildren().addAll(canvas, overlay);
 
 		helpRoot = new VBox();
