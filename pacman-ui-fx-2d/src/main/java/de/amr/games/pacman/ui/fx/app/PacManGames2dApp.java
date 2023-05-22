@@ -49,6 +49,7 @@ public class PacManGames2dApp extends Application {
 	}
 
 	private final Settings cfg = new Settings();
+	private PacManGames2dUI ui;
 
 	@Override
 	public void init() {
@@ -60,69 +61,68 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		var ui = new PacManGames2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
+		ui = new PacManGames2dUI(cfg.variant, stage, cfg.zoom * 28 * 8, cfg.zoom * 36 * 8);
 		PacManGames2d.ui = ui;
 		ui.init(cfg);
 		stage.setFullScreen(cfg.fullScreen);
 		ui.startClockAndShowStage();
 		reboot();
 
-		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),
-				Locale.getDefault());
+		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override
 	public void stop() {
-		PacManGames2d.ui.clock().stop();
+		ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
 
 	// --- Actions
 
 	public void startGame() {
-		if (PacManGames2d.ui.game().hasCredit()) {
-			PacManGames2d.ui.stopVoice();
-			PacManGames2d.ui.gameController().startPlaying();
+		if (ui.game().hasCredit()) {
+			ui.stopVoice();
+			ui.gameController().startPlaying();
 		}
 	}
 
 	public void startCutscenesTest() {
-		PacManGames2d.ui.gameController().startCutscenesTest();
-		PacManGames2d.ui.showFlashMessage("Cut scenes");
+		ui.gameController().startCutscenesTest();
+		ui.showFlashMessage("Cut scenes");
 	}
 
 	public void restartIntro() {
-		PacManGames2d.ui.currentGameScene().end();
+		ui.currentGameScene().end();
 		GameEvents.setSoundEventsEnabled(true);
-		if (PacManGames2d.ui.game().isPlaying()) {
-			PacManGames2d.ui.game().changeCredit(-1);
+		if (ui.game().isPlaying()) {
+			ui.game().changeCredit(-1);
 		}
-		PacManGames2d.ui.gameController().restart(INTRO);
+		ui.gameController().restart(INTRO);
 	}
 
 	public void reboot() {
-		if (PacManGames2d.ui.currentGameScene() != null) {
-			PacManGames2d.ui.currentGameScene().end();
+		if (ui.currentGameScene() != null) {
+			ui.currentGameScene().end();
 		}
-		PacManGames2d.ui.playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
-		PacManGames2d.ui.gameController().restart(GameState.BOOT);
+		ui.playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
+		ui.gameController().restart(GameState.BOOT);
 	}
 
 	public void addCredit() {
 		GameEvents.setSoundEventsEnabled(true);
-		PacManGames2d.ui.gameController().addCredit();
+		ui.gameController().addCredit();
 	}
 
 	public void enterLevel(int newLevelNumber) {
-		if (PacManGames2d.ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (ui.gameController().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
-		PacManGames2d.ui.game().level().ifPresent(level -> {
+		ui.game().level().ifPresent(level -> {
 			if (newLevelNumber > level.number()) {
 				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-					PacManGames2d.ui.game().nextLevel();
+					ui.game().nextLevel();
 				}
-				PacManGames2d.ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+				ui.gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			} else if (newLevelNumber < level.number()) {
 				// not implemented
 			}
@@ -130,82 +130,82 @@ public class PacManGames2dApp extends Application {
 	}
 
 	public void togglePaused() {
-		Ufx.toggle(PacManGames2d.ui.clock().pausedPy);
+		Ufx.toggle(ui.clock().pausedPy);
 		// TODO mute and unmute?
-		if (PacManGames2d.ui.clock().pausedPy.get()) {
-			PacManGames2d.assets.gameSounds(PacManGames2d.ui.game().variant()).stopAll();
+		if (ui.clock().pausedPy.get()) {
+			PacManGames2d.assets.gameSounds(ui.game().variant()).stopAll();
 		}
 	}
 
 	public void oneSimulationStep() {
-		if (PacManGames2d.ui.clock().pausedPy.get()) {
-			PacManGames2d.ui.clock().executeSingleStep(true);
+		if (ui.clock().pausedPy.get()) {
+			ui.clock().executeSingleStep(true);
 		}
 	}
 
 	public void tenSimulationSteps() {
-		if (PacManGames2d.ui.clock().pausedPy.get()) {
-			PacManGames2d.ui.clock().executeSteps(10, true);
+		if (ui.clock().pausedPy.get()) {
+			ui.clock().executeSteps(10, true);
 		}
 	}
 
 	public void changeSimulationSpeed(int delta) {
-		int newFramerate = PacManGames2d.ui.clock().targetFrameratePy.get() + delta;
+		int newFramerate = ui.clock().targetFrameratePy.get() + delta;
 		if (newFramerate > 0 && newFramerate < 120) {
-			PacManGames2d.ui.clock().targetFrameratePy.set(newFramerate);
-			PacManGames2d.ui.showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
+			ui.clock().targetFrameratePy.set(newFramerate);
+			ui.showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 		}
 	}
 
 	public void resetSimulationSpeed() {
-		PacManGames2d.ui.clock().targetFrameratePy.set(GameModel.FPS);
-		PacManGames2d.ui.showFlashMessageSeconds(0.75, "%dHz".formatted(PacManGames2d.ui.clock().targetFrameratePy.get()));
+		ui.clock().targetFrameratePy.set(GameModel.FPS);
+		ui.showFlashMessageSeconds(0.75, "%dHz".formatted(ui.clock().targetFrameratePy.get()));
 	}
 
 	public void selectNextGameVariant() {
-		var gameVariant = PacManGames2d.ui.game().variant().next();
-		PacManGames2d.ui.gameController().selectGameVariant(gameVariant);
-		PacManGames2d.ui.playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
+		var gameVariant = ui.game().variant().next();
+		ui.gameController().selectGameVariant(gameVariant);
+		ui.playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
 	}
 
 	public void toggleAutopilot() {
-		PacManGames2d.ui.gameController().toggleAutoControlled();
-		var auto = PacManGames2d.ui.gameController().isAutoControlled();
+		ui.gameController().toggleAutoControlled();
+		var auto = ui.gameController().isAutoControlled();
 		String message = fmtMessage(PacManGames2d.assets.messages, auto ? "autopilot_on" : "autopilot_off");
-		PacManGames2d.ui.showFlashMessage(message);
-		PacManGames2d.ui.playVoice(auto ? PacManGames2d.assets.voiceAutopilotOn : PacManGames2d.assets.voiceAutopilotOff);
+		ui.showFlashMessage(message);
+		ui.playVoice(auto ? PacManGames2d.assets.voiceAutopilotOn : PacManGames2d.assets.voiceAutopilotOff);
 	}
 
 	public void toggleImmunity() {
-		PacManGames2d.ui.game().setImmune(!PacManGames2d.ui.game().isImmune());
-		var immune = PacManGames2d.ui.game().isImmune();
+		ui.game().setImmune(!ui.game().isImmune());
+		var immune = ui.game().isImmune();
 		String message = fmtMessage(PacManGames2d.assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
-		PacManGames2d.ui.showFlashMessage(message);
-		PacManGames2d.ui.playVoice(immune ? PacManGames2d.assets.voiceImmunityOn : PacManGames2d.assets.voiceImmunityOff);
+		ui.showFlashMessage(message);
+		ui.playVoice(immune ? PacManGames2d.assets.voiceImmunityOn : PacManGames2d.assets.voiceImmunityOff);
 	}
 
 	public void startLevelTestMode() {
-		if (PacManGames2d.ui.gameController().state() == GameState.INTRO) {
-			PacManGames2d.ui.gameController().restart(GameState.LEVEL_TEST);
-			PacManGames2d.ui.showFlashMessage("Level TEST MODE");
+		if (ui.gameController().state() == GameState.INTRO) {
+			ui.gameController().restart(GameState.LEVEL_TEST);
+			ui.showFlashMessage("Level TEST MODE");
 		}
 	}
 
 	public void cheatAddLives() {
-		int newLivesCount = PacManGames2d.ui.game().lives() + 3;
-		PacManGames2d.ui.game().setLives(newLivesCount);
-		PacManGames2d.ui.showFlashMessage(fmtMessage(PacManGames2d.assets.messages, "cheat_add_lives", newLivesCount));
+		int newLivesCount = ui.game().lives() + 3;
+		ui.game().setLives(newLivesCount);
+		ui.showFlashMessage(fmtMessage(PacManGames2d.assets.messages, "cheat_add_lives", newLivesCount));
 	}
 
 	public void cheatEatAllPellets() {
-		PacManGames2d.ui.gameController().cheatEatAllPellets();
+		ui.gameController().cheatEatAllPellets();
 	}
 
 	public void cheatEnterNextLevel() {
-		PacManGames2d.ui.gameController().cheatEnterNextLevel();
+		ui.gameController().cheatEnterNextLevel();
 	}
 
 	public void cheatKillAllEatableGhosts() {
-		PacManGames2d.ui.gameController().cheatKillAllEatableGhosts();
+		ui.gameController().cheatKillAllEatableGhosts();
 	}
 }
