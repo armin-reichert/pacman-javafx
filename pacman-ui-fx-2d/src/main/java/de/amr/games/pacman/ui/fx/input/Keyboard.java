@@ -24,6 +24,8 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.input;
 
+import java.util.stream.Stream;
+
 import org.tinylog.Logger;
 
 import javafx.scene.input.KeyCodeCombination;
@@ -50,6 +52,10 @@ public class Keyboard {
 			e.consume();
 			Logger.trace("Consumed key event ({}): {}", e.getCode(), e);
 		}
+	}
+
+	public static boolean anyPressed(KeyCodeCombination... combinations) {
+		return Stream.of(combinations).anyMatch(Keyboard::pressed);
 	}
 
 	public static boolean pressed(KeyCodeCombination combination) {
