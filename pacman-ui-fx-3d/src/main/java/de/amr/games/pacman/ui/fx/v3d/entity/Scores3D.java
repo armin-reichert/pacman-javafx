@@ -96,18 +96,15 @@ public class Scores3D {
 		txtScoreTitle.setFill(titleColor);
 		txtScoreTitle.setFont(font);
 		if (pointsDisplayed) {
-			level.game().score().ifPresent(score -> {
-				txtScore.setFont(font);
-				txtScore.setText(String.format("%7d L%d", score.points(), score.levelNumber()));
-				txtScore.setFill(Color.YELLOW);
-			});
+			txtScore.setFont(font);
+			txtScore.setText(String.format("%7d L%d", level.game().score().points(), level.game().score().levelNumber()));
+			txtScore.setFill(Color.YELLOW);
 		}
-		level.game().highScore().ifPresent(hiscore -> {
-			txtHiscoreTitle.setFill(titleColor);
-			txtHiscoreTitle.setFont(font);
-			txtHiscore.setFill(scoreColor);
-			txtHiscore.setFont(font);
-			txtHiscore.setText(String.format("%7d L%d", hiscore.points(), hiscore.levelNumber()));
-		});
+		txtHiscoreTitle.setFill(titleColor);
+		txtHiscoreTitle.setFont(font);
+		txtHiscore.setFill(scoreColor);
+		txtHiscore.setFont(font);
+		txtHiscore
+				.setText(String.format("%7d L%d", level.game().highScore().points(), level.game().highScore().levelNumber()));
 	}
 }
