@@ -61,12 +61,10 @@ public class MsPacManGameRenderer implements GameRenderer {
 	private static final int THIRD_COLUMN = 456;
 
 	private final PacManGames2dAssets assets;
-	private final Spritesheet ss;
 
 	public MsPacManGameRenderer(PacManGames2dAssets assets) {
 		checkNotNull(assets);
 		this.assets = assets;
-		ss = assets.spritesMsPacMan;
 	}
 
 	@Override
@@ -76,11 +74,11 @@ public class MsPacManGameRenderer implements GameRenderer {
 
 	@Override
 	public Spritesheet spritesheet() {
-		return ss;
+		return assets.spritesMsPacMan;
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
-		return ss.tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
+		return assets.spritesMsPacMan.tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
 	}
 
 	@Override
@@ -122,11 +120,12 @@ public class MsPacManGameRenderer implements GameRenderer {
 	}
 
 	private Rectangle2D emptyMaze(int mazeNumber) {
-		return ss.region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		return assets.spritesMsPacMan.region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH,
+				MAZE_IMAGE_HEIGHT);
 	}
 
 	private Rectangle2D filledMaze(int mazeNumber) {
-		return ss.region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		return assets.spritesMsPacMan.region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 	}
 
 	@Override
@@ -161,7 +160,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 
 	@Override
 	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
-		drawLivesCounter(g, ss, numLivesDisplayed);
+		drawLivesCounter(g, assets.spritesMsPacMan, numLivesDisplayed);
 	}
 
 	@Override
@@ -298,11 +297,11 @@ public class MsPacManGameRenderer implements GameRenderer {
 	}
 
 	public Rectangle2D blueBagSprite() {
-		return ss.region(488, 199, 8, 8);
+		return assets.spritesMsPacMan.region(488, 199, 8, 8);
 	}
 
 	public Rectangle2D juniorPacSprite() {
-		return ss.region(509, 200, 8, 8);
+		return assets.spritesMsPacMan.region(509, 200, 8, 8);
 	}
 
 	public AnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
@@ -321,11 +320,11 @@ public class MsPacManGameRenderer implements GameRenderer {
 	public SimpleAnimation<Rectangle2D> createClapperboardAnimation() {
 		// TODO this is not 100% accurate yet
 		var animation = new SimpleAnimation<>( //
-				ss.region(456, 208, 32, 32), //
-				ss.region(488, 208, 32, 32), //
-				ss.region(520, 208, 32, 32), //
-				ss.region(488, 208, 32, 32), //
-				ss.region(456, 208, 32, 32)//
+				assets.spritesMsPacMan.region(456, 208, 32, 32), //
+				assets.spritesMsPacMan.region(488, 208, 32, 32), //
+				assets.spritesMsPacMan.region(520, 208, 32, 32), //
+				assets.spritesMsPacMan.region(488, 208, 32, 32), //
+				assets.spritesMsPacMan.region(456, 208, 32, 32)//
 		);
 		animation.setFrameDuration(4);
 		return animation;
@@ -333,8 +332,8 @@ public class MsPacManGameRenderer implements GameRenderer {
 
 	public SimpleAnimation<Rectangle2D> createStorkFlyingAnimation() {
 		var animation = new SimpleAnimation<>( //
-				ss.region(489, 176, 32, 16), //
-				ss.region(521, 176, 32, 16) //
+				assets.spritesMsPacMan.region(489, 176, 32, 16), //
+				assets.spritesMsPacMan.region(521, 176, 32, 16) //
 		);
 		animation.repeatForever();
 		animation.setFrameDuration(8);

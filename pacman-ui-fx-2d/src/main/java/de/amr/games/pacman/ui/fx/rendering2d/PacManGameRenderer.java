@@ -53,12 +53,10 @@ public class PacManGameRenderer implements GameRenderer {
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	private final PacManGames2dAssets assets;
-	private final Spritesheet ss;
 
 	public PacManGameRenderer(PacManGames2dAssets assets) {
 		checkNotNull(assets);
 		this.assets = assets;
-		ss = assets.spritesPacMan;
 	}
 
 	@Override
@@ -68,7 +66,7 @@ public class PacManGameRenderer implements GameRenderer {
 
 	@Override
 	public Spritesheet spritesheet() {
-		return ss;
+		return assets.spritesPacMan;
 	}
 
 	public void drawMidwayCopyright(GraphicsContext g, double x, double y) {
@@ -77,24 +75,25 @@ public class PacManGameRenderer implements GameRenderer {
 
 	@Override
 	public Rectangle2D ghostValueSprite(int index) {
-		return ss.tile(index, 8);
+		return assets.spritesPacMan.tile(index, 8);
 	}
 
 	@Override
 	public Rectangle2D bonusSymbolSprite(int symbol) {
-		return ss.tile(2 + symbol, 3);
+		return assets.spritesPacMan.tile(2 + symbol, 3);
 	}
 
 	@Override
 	public Rectangle2D bonusValueSprite(int symbol) {
 		if (symbol <= 3) {
-			return ss.tile(symbol, 9);
+			return assets.spritesPacMan.tile(symbol, 9);
 		}
 		if (symbol == 4) {
-			var region = ss.tiles(4, 9, 2, 1);
-			return ss.region(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
+			var region = assets.spritesPacMan.tiles(4, 9, 2, 1);
+			return assets.spritesPacMan.region(region.getMinX(), region.getMinY(), region.getWidth() - 13,
+					region.getHeight()); // WTF
 		}
-		return ss.tiles(3, 5 + symbol, 3, 1);
+		return assets.spritesPacMan.tiles(3, 5 + symbol, 3, 1);
 	}
 
 	@Override
@@ -117,7 +116,7 @@ public class PacManGameRenderer implements GameRenderer {
 	}
 
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, double x, double y) {
-		var region = ss.tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
+		var region = assets.spritesPacMan.tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
 		drawSpriteOverBoundingBox(g, region, x, y);
 	}
 
@@ -140,12 +139,12 @@ public class PacManGameRenderer implements GameRenderer {
 
 	@Override
 	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
-		drawLivesCounter(g, ss, numLivesDisplayed);
+		drawLivesCounter(g, assets.spritesPacMan, numLivesDisplayed);
 	}
 
 	@Override
 	public Rectangle2D livesCounterSprite() {
-		return ss.tile(8, 1);
+		return assets.spritesPacMan.tile(8, 1);
 	}
 
 	@Override
@@ -161,9 +160,9 @@ public class PacManGameRenderer implements GameRenderer {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var wide = ss.tile(0, d);
-			var middle = ss.tile(1, d);
-			var closed = ss.tile(2, 0);
+			var wide = assets.spritesPacMan.tile(0, d);
+			var middle = assets.spritesPacMan.tile(1, d);
+			var closed = assets.spritesPacMan.tile(2, 0);
 			var animation = new SimpleAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle);
 			animation.setFrameDuration(1);
 			animation.repeatForever();
@@ -173,7 +172,7 @@ public class PacManGameRenderer implements GameRenderer {
 	}
 
 	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SimpleAnimation<>(ss.tilesRightOf(3, 0, 11));
+		var animation = new SimpleAnimation<>(assets.spritesPacMan.tilesRightOf(3, 0, 11));
 		animation.setFrameDuration(8);
 		return animation;
 	}
@@ -194,7 +193,7 @@ public class PacManGameRenderer implements GameRenderer {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var animation = new SimpleAnimation<>(ss.tilesRightOf(2 * d, 4 + ghost.id(), 2));
+			var animation = new SimpleAnimation<>(assets.spritesPacMan.tilesRightOf(2 * d, 4 + ghost.id(), 2));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -203,14 +202,14 @@ public class PacManGameRenderer implements GameRenderer {
 	}
 
 	private SimpleAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SimpleAnimation<>(ss.tile(8, 4), ss.tile(9, 4));
+		var animation = new SimpleAnimation<>(assets.spritesPacMan.tile(8, 4), assets.spritesPacMan.tile(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
 	private SimpleAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SimpleAnimation<>(ss.tilesRightOf(8, 4, 4));
+		var animation = new SimpleAnimation<>(assets.spritesPacMan.tilesRightOf(8, 4, 4));
 		animation.setFrameDuration(6);
 		return animation;
 	}
@@ -219,7 +218,7 @@ public class PacManGameRenderer implements GameRenderer {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			animationByDir.put(dir, new SimpleAnimation<>(ss.tile(8 + d, 5)));
+			animationByDir.put(dir, new SimpleAnimation<>(assets.spritesPacMan.tile(8 + d, 5)));
 		}
 		return animationByDir;
 	}
@@ -231,29 +230,31 @@ public class PacManGameRenderer implements GameRenderer {
 	// Pac-Man specific:
 
 	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new SimpleAnimation<>(ss.tiles(2, 1, 2, 2), ss.tiles(4, 1, 2, 2), ss.tiles(6, 1, 2, 2));
+		var animation = new SimpleAnimation<>(assets.spritesPacMan.tiles(2, 1, 2, 2),
+				assets.spritesPacMan.tiles(4, 1, 2, 2), assets.spritesPacMan.tiles(6, 1, 2, 2));
 		animation.setFrameDuration(3);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public FrameSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new FrameSequence<>(ss.tilesRightOf(8, 6, 5));
+		return new FrameSequence<>(assets.spritesPacMan.tilesRightOf(8, 6, 5));
 	}
 
 	public FrameSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new FrameSequence<>(ss.tile(8, 7), ss.tile(9, 7));
+		return new FrameSequence<>(assets.spritesPacMan.tile(8, 7), assets.spritesPacMan.tile(9, 7));
 	}
 
 	public SimpleAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-		var animation = new SimpleAnimation<>(ss.tile(10, 7), ss.tile(11, 7));
+		var animation = new SimpleAnimation<>(assets.spritesPacMan.tile(10, 7), assets.spritesPacMan.tile(11, 7));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public SimpleAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SimpleAnimation<>(ss.tiles(8, 8, 2, 1), ss.tiles(10, 8, 2, 1));
+		var animation = new SimpleAnimation<>(assets.spritesPacMan.tiles(8, 8, 2, 1),
+				assets.spritesPacMan.tiles(10, 8, 2, 1));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;

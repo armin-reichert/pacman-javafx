@@ -84,19 +84,6 @@ public interface GameRenderer {
 		g.fillRect(TS * tile.x(), TS * tile.y(), TS, TS);
 	}
 
-	default void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-		drawText(g, title, ArcadeTheme.PALE, assets().arcadeFont8, x, y);
-		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, assets().arcadeFont8, x, y + TS + 1);
-		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, assets().arcadeFont8, x + TS * 8, y + TS + 1);
-		}
-	}
-
-	default void drawCredit(GraphicsContext g, int credit, double x, double y) {
-		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, assets().arcadeFont8, x, y);
-	}
-
 	PacManGames2dAssets assets();
 
 	Spritesheet spritesheet();
@@ -199,6 +186,19 @@ public interface GameRenderer {
 			drawSprite(g, bonusSymbolSprite(symbol), x, yr);
 			x -= TS * 2;
 		}
+	}
+
+	default void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
+		drawText(g, title, ArcadeTheme.PALE, assets().arcadeFont8, x, y);
+		var pointsText = "%02d".formatted(score.points());
+		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, assets().arcadeFont8, x, y + TS + 1);
+		if (score.points() != 0) {
+			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, assets().arcadeFont8, x + TS * 8, y + TS + 1);
+		}
+	}
+
+	default void drawCredit(GraphicsContext g, int credit, double x, double y) {
+		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, assets().arcadeFont8, x, y);
 	}
 
 	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
