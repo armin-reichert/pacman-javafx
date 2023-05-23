@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -42,27 +44,35 @@ public class Theme {
 		namedThings.put(name, thing);
 	}
 
-	protected void addToArray(String arrayName, Color color) {
+	protected void add(String arrayName, Color color) {
 		if (!namedArrays.containsKey(arrayName)) {
 			namedArrays.put(arrayName, new ArrayList<>());
 		}
 		namedArrays.get(arrayName).add(color);
 	}
 
-	public Color color(String key, int i) {
-		var array = namedArrays.get(key);
+	public Color color(String name, int i) {
+		var array = namedArrays.get(name);
 		return (Color) array.get(i);
 	}
 
-	public Color color(String key) {
-		return (Color) namedThings.get(key);
+	public Color color(String name) {
+		return (Color) namedThings.get(name);
 	}
 
-	private Font font(String key) {
-		return (Font) namedThings.get(key);
+	public Font font(String name) {
+		return (Font) namedThings.get(name);
 	}
 
-	public Font font(String key, double size) {
-		return Font.font(font(key).getFamily(), size);
+	public Font font(String name, double size) {
+		return Font.font(font(name).getFamily(), size);
+	}
+
+	public Image image(String name) {
+		return (Image) namedThings.get(name);
+	}
+
+	public Spritesheet spritesheet(String name) {
+		return (Spritesheet) namedThings.get(name);
 	}
 }

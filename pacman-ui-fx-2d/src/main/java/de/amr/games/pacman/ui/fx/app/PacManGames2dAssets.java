@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
@@ -97,12 +96,10 @@ public class PacManGames2dAssets {
 	public final Background wallpaper              = MGR.imageBackground("graphics/pacman_wallpaper.png");
 	public final Color wallpaperColor              = Color.rgb(72, 78, 135);
 
-	public final Spritesheet spritesMsPacMan       = new Spritesheet(MGR.image("graphics/mspacman/sprites.png"), 16);
 	public final Image iconMsPacMan                = MGR.image("graphics/icons/mspacman.png");
 	public final Image flashingMazesMsPacMan       = MGR.image("graphics/mspacman/mazes-flashing.png");
 	public final Image logoMsPacMan                = MGR.image("graphics/mspacman/midway.png");
 	
-	public final Spritesheet spritesPacMan         = new Spritesheet(MGR.image("graphics/pacman/sprites.png"), 16);
 	public final Image iconPacMan                  = MGR.image("graphics/icons/pacman.png");
 	public final Image fullMazePacMan              = MGR.image("graphics/pacman/maze_full.png");
 	public final Image emptyMazePacMan             = MGR.image("graphics/pacman/maze_empty.png");
