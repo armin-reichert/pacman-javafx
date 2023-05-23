@@ -30,6 +30,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.GameClock;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 
 /**
@@ -68,6 +69,12 @@ public interface PacManGamesUserInterface {
 	void enterLevel(int intValue);
 
 	void selectNextGameVariant();
+
+	void playVoice(AudioClip clip, float delaySeconds);
+
+	default void playVoice(AudioClip clip) {
+		playVoice(clip, 0);
+	}
 
 	void stopVoice();
 

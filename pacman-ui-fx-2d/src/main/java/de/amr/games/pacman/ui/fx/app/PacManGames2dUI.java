@@ -132,8 +132,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void configureGameScenes() {
-		gameSceneConfig.put(GameVariant.MS_PACMAN, new GameSceneConfiguration(
 		//@formatter:off
+		gameSceneConfig.put(GameVariant.MS_PACMAN, new GameSceneConfiguration(
 			new GameSceneChoice(new BootScene()),
 			new GameSceneChoice(new MsPacManIntroScene()), 
 			new GameSceneChoice(new MsPacManCreditScene()),
@@ -141,11 +141,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new GameSceneChoice(new MsPacManIntermissionScene1()), 
 			new GameSceneChoice(new MsPacManIntermissionScene2()),
 			new GameSceneChoice(new MsPacManIntermissionScene3())
-	  //@formatter:on
 		));
 
 		gameSceneConfig.put(GameVariant.PACMAN, new GameSceneConfiguration(
-		//@formatter:off
 			new GameSceneChoice(new BootScene()),
 			new GameSceneChoice(new PacManIntroScene()),
 			new GameSceneChoice(new PacManCreditScene()),
@@ -153,8 +151,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new GameSceneChoice(new PacManCutscene1()), 
 			new GameSceneChoice(new PacManCutscene2()),
 			new GameSceneChoice(new PacManCutscene3())
-	  //@formatter:on
 		));
+	  //@formatter:on
 	}
 
 	protected void createMainScene(Stage stage, Settings settings) {
@@ -178,7 +176,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void configureHelpMenus() {
 		helpMenus = new HelpMenus(PacManGames2d.assets.messages);
-		helpMenus.setFont(PacManGames2d.assets.inconsolateBold12);
+		helpMenus.setFont(PacManGames2d.assets.inconsolataBold12);
 	}
 
 	protected void resizeStageToFitCurrentGameScene() {
@@ -206,7 +204,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void updateStage() {
 		mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper);
-		switch (gameController.game().variant()) {
+		switch (gameVariant()) {
 		case MS_PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.assets.messages, messageKey, ""));
@@ -217,7 +215,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.assets.messages, messageKey, ""));
 			stage.getIcons().setAll(PacManGames2d.assets.iconPacMan);
 		}
-		default -> throw new IllegalGameVariantException(gameController.game().variant());
+		default -> throw new IllegalGameVariantException(gameVariant());
 		}
 	}
 
@@ -241,9 +239,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
-		var state = gameController.state();
-		var config = gameSceneConfig.get(game().variant());
-		return switch (state) {
+		var config = gameSceneConfig.get(gameVariant());
+		return switch (gameState()) {
 		case BOOT -> config.bootSceneChoice();
 		case CREDIT -> config.creditSceneChoice();
 		case INTRO -> config.introSceneChoice();
@@ -260,7 +257,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void updateGameScene(boolean reload) {
 		var nextGameScene = chooseGameScene(sceneChoiceMatchingCurrentGameState());
 		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameController.state()));
+			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameState()));
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
@@ -386,17 +383,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		flashMessageView.showMessage(String.format(message, args), seconds);
 	}
 
-	public void playVoice(AudioClip clip) {
-		playVoice(clip, 0);
-	}
-
-	public void playVoice(AudioClip clip, float delay) {
+	@Override
+	public void playVoice(AudioClip clip, float delaySeconds) {
 		if (currentVoice != null && currentVoice.isPlaying()) {
 			return; // don't interrupt voice
 		}
 		currentVoice = clip;
-		if (delay > 0) {
-			Ufx.actionAfterSeconds(delay, currentVoice::play).play();
+		if (delaySeconds > 0) {
+			Ufx.actionAfterSeconds(delaySeconds, currentVoice::play).play();
 		} else {
 			currentVoice.play();
 		}
@@ -470,7 +464,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void enterLevel(int newLevelNumber) {
-		if (gameController.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
 		game().level().ifPresent(level -> {
@@ -490,7 +484,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		Ufx.toggle(clock.pausedPy);
 		// TODO mute and unmute?
 		if (clock.pausedPy.get()) {
-			PacManGames2d.assets.gameSounds(game().variant()).stopAll();
+			PacManGames2d.assets.gameSounds(gameVariant()).stopAll();
 		}
 	}
 
@@ -508,7 +502,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	public void changeSimulationSpeed(int delta) {
 		int newFramerate = clock.targetFrameratePy.get() + delta;
-		if (newFramerate > 0 && newFramerate < 120) {
+		if (newFramerate > 0) {
 			clock.targetFrameratePy.set(newFramerate);
 			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
 		}
@@ -521,8 +515,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void selectNextGameVariant() {
-		var gameVariant = game().variant().next();
-		gameController.selectGameVariant(gameVariant);
+		gameController.selectGameVariant(gameVariant().next());
 		playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
 	}
 
@@ -545,7 +538,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	public void startLevelTestMode() {
-		if (gameController.state() == GameState.INTRO) {
+		if (gameState() == GameState.INTRO) {
 			gameController.restart(GameState.LEVEL_TEST);
 			showFlashMessage("Level TEST MODE");
 		}
