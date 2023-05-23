@@ -90,7 +90,7 @@ public class SectionGeneral extends Section {
 
 		addInfo("Total Updates", ui.clock()::getUpdateCount);
 
-		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle3DEnabled);
+		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle2D3D);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(PacManGames3d.PY_WOKE_PUSSY));
 		cbDebugUI = addCheckBox("Show Debug Info", () -> Ufx.toggle(PacManGames2d.PY_SHOW_DEBUG_INFO));
 		cbTimeMeasured = addCheckBox("Time Measured", () -> Ufx.toggle(ui.clock().timeMeasuredPy));

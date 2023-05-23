@@ -136,6 +136,8 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
+		context.setCreditVisible(false);
+		context.setScoreVisible(true);
 		resetReadyMessageText3D();
 		perspectivePy.bind(PacManGames3d.PY_3D_PERSPECTIVE);
 		context.level().ifPresent(this::replaceGameLevel3D);

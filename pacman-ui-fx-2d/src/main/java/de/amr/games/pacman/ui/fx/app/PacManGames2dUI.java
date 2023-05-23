@@ -254,7 +254,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		return game().level().orElseThrow(IllegalStateException::new);
 	}
 
-	public void updateGameScene(boolean reload) {
+	protected void updateGameScene(boolean reload) {
 		var nextGameScene = chooseGameScene(sceneChoiceMatchingCurrentGameState());
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameState()));

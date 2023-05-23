@@ -54,6 +54,7 @@ public class PacManGames3d {
 
 	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
+	public static final BooleanProperty             PY_PIP_ON                = new SimpleBooleanProperty(false);
 
 	public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);

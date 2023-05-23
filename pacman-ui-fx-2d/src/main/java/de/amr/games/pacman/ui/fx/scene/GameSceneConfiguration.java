@@ -65,8 +65,4 @@ public class GameSceneConfiguration {
 	public GameSceneChoice cutSceneChoice(int cutSceneNumber) {
 		return cutSceneChoices[cutSceneNumber - 1];
 	}
-
-	public boolean isPlayScene(GameScene gameScene) {
-		return playSceneChoice().includes(gameScene);
-	}
 }

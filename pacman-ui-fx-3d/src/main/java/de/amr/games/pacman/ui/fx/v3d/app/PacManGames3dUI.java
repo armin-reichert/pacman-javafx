@@ -37,17 +37,13 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
@@ -73,39 +69,6 @@ import javafx.stage.Stage;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-	public class PictureInPicture {
-		public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3d.PIP_MIN_HEIGHT);
-		public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
-		public final BooleanProperty visiblePy = new SimpleBooleanProperty(false) {
-			@Override
-			protected void invalidated() {
-				updateVisibility();
-			}
-		};
-
-		private final GameScene2D gameScene;
-
-		public PictureInPicture() {
-			gameScene = new PlayScene2D();
-			gameScene.fxSubScene().heightProperty().bind(heightPy);
-			gameScene.fxSubScene().widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
-			gameScene.fxSubScene().opacityProperty().bind(opacityPy);
-			gameScene.fxSubScene().setVisible(false);
-		}
-
-		public void update() {
-			if (currentGameScene != null && gameScene.context() != null) {
-				gameScene.context().setCreditVisible(false);
-				gameScene.context().setScoreVisible(true);
-				updateVisibility();
-			}
-		}
-
-		private void updateVisibility() {
-			gameScene.fxSubScene().setVisible(visiblePy.get() && isPlayScene3d(currentGameScene));
-		}
-	}
-
 	private PictureInPicture pip;
 	private Dashboard dashboard;
 
@@ -119,7 +82,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		flashMessageView.update();
 		currentGameScene.render();
 		dashboard.update();
-		pip.gameScene.render();
+		pip.render();
 	}
 
 	@Override
@@ -139,7 +102,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pip.gameScene.fxSubScene());
+		dashboardLayer.setRight(pip.root());
 
 		mainSceneRoot = new StackPane();
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
@@ -185,9 +148,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	protected void updateStage() {
-		if (pip.visiblePy.get()) {
-			pip.update();
-		}
+		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(ResourceManager.coloredBackground(Color.BLACK));
@@ -230,38 +191,25 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	protected void changeGameScene(GameScene newGameScene) {
-		super.changeGameScene(newGameScene);
-		if (isPlayScene3d(newGameScene)) {
-			pip.gameScene.setContext(newGameScene.context());
-		}
-	}
-
-	@Override
 	protected void handleKeyboardInput() {
 		super.handleKeyboardInput();
 		if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
-			toggle3DEnabled();
-		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_DASHBOARD)
-				|| Keyboard.pressed(PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
+			toggle2D3D();
+		} else if (Keyboard.anyPressed(PacManGames3d.KEY_TOGGLE_DASHBOARD, PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
 			toggleDashboardVisible();
 		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_PIP_VIEW)) {
-			togglePipVisibility();
+			togglePipOn();
 		}
 	}
 
 	@Override
 	public void showHelp() {
-		if (currentGameScene instanceof GameScene2D) {
+		if (!currentGameScene.is3D()) {
 			super.showHelp();
 		}
 	}
 
-	private boolean isPlayScene3d(GameScene gameScene) {
-		return gameSceneConfig.get(game().variant()).isPlayScene(currentGameScene) && gameScene.is3D();
-	}
-
-	public void toggle3DEnabled() {
+	public void toggle2D3D() {
 		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
 		if (findGameScene(3).isPresent()) {
 			updateGameScene(true);
@@ -283,9 +231,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	// --- Actions ---
 
-	public void togglePipVisibility() {
-		Ufx.toggle(pip().visiblePy);
-		var message = fmtMessage(PacManGames3d.assets.messages, pip().visiblePy.get() ? "pip_on" : "pip_off");
+	public void togglePipOn() {
+		Ufx.toggle(PacManGames3d.PY_PIP_ON);
+		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
+		var message = fmtMessage(PacManGames3d.assets.messages, PacManGames3d.PY_PIP_ON.get() ? "pip_on" : "pip_off");
 		showFlashMessage(message);
 	}
 
