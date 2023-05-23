@@ -48,6 +48,7 @@ public class ArcadeTheme extends Theme {
 	  
 		// Ms. Pac-Man game
 		
+		set("mspacman.icon",                   rm.image("graphics/icons/mspacman.png"));
 		set("mspacman.spritesheet",            new Spritesheet(rm.image("graphics/mspacman/sprites.png"), 16));
 		set("mspacman.flashingMazes",          rm.image("graphics/mspacman/mazes-flashing.png"));
 
@@ -80,9 +81,10 @@ public class ArcadeTheme extends Theme {
 		set("mspacman.color.hairbow.pearls",   Color.rgb(33, 33, 255));
 		
 		set("mspacman.maze.doorColor",         Color.rgb(255, 183, 255));
-		
+
 		// Pac-Man game
 		
+		set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
 		set("pacman.spritesheet",              new Spritesheet(rm.image("graphics/pacman/sprites.png"), 16));
 		set("pacman.flashingMaze",             rm.image("graphics/pacman/maze_empty_flashing.png"));
 		set("pacman.fullMaze",                 rm.image("graphics/pacman/maze_full.png"));

@@ -91,10 +91,8 @@ public class PacManGames2dAssets {
 
 	public final Theme arcadeTheme                 = new ArcadeTheme(MGR);
 	
-	public final Image iconMsPacMan                = MGR.image("graphics/icons/mspacman.png");
 	public final Image logoMsPacMan                = MGR.image("graphics/mspacman/midway.png");
 	
-	public final Image iconPacMan                  = MGR.image("graphics/icons/pacman.png");
 
 	public final AudioClip voiceExplainKeys        = MGR.audioClip("sound/voice/press-key.mp3");
 	public final AudioClip voiceAutopilotOff       = MGR.audioClip("sound/voice/autopilot-off.mp3");

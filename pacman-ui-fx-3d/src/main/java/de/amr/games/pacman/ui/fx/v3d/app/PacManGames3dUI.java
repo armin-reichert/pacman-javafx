@@ -163,12 +163,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(fmtMessage(assets().messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(assets().iconMsPacMan);
+			stage.getIcons().setAll(theme.image("mspacman.icon"));
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(fmtMessage(assets().messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(assets().iconPacMan);
+			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}

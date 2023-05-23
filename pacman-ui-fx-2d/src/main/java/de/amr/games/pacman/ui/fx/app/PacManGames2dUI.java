@@ -221,12 +221,12 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		case MS_PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceManager.fmtMessage(assets.messages, messageKey, ""));
-			stage.getIcons().setAll(assets.iconMsPacMan);
+			stage.getIcons().setAll(theme.image("mspacman.icon"));
 		}
 		case PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(ResourceManager.fmtMessage(assets.messages, messageKey, ""));
-			stage.getIcons().setAll(assets.iconPacMan);
+			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
 		default -> throw new IllegalGameVariantException(gameVariant());
 		}
