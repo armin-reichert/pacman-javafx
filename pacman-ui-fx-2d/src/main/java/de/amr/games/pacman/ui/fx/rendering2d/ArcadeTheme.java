@@ -56,17 +56,15 @@ public class ArcadeTheme {
 		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 	};
 	
-	public static final Color PACMAN_COLOR_HEAD   = Color.rgb(255, 255, 0);
-	public static final Color PACMAN_COLOR_PALATE = Color.rgb(191, 79, 61);
-	public static final Color PACMAN_COLOR_EYES   = Color.rgb(33, 33, 33);
+	public static final Color PACMAN_COLOR_HEAD              = Color.rgb(255, 255, 0);
+	public static final Color PACMAN_COLOR_PALATE            = Color.rgb(191, 79, 61);
+	public static final Color PACMAN_COLOR_EYES              = Color.rgb(33, 33, 33);
 
-	public static final MsPacManColoring MS_PACMAN_COLORS = new MsPacManColoring(
-		Color.rgb(255, 255, 0), // head
-		Color.rgb(191, 79, 61), // palate
-		Color.rgb(33, 33, 33),  // eyes
-		Color.rgb(255, 0, 0),   // hair bow
-		Color.rgb(33, 33, 255)  // hair bow pearls
-	);
+	public static final Color	MS_PACMAN_COLOR_HEAD           = Color.rgb(255, 255, 0);
+	public static final Color	MS_PACMAN_COLOR_PALATE	       = Color.rgb(191, 79, 61);
+	public static final Color	MS_PACMAN_COLOR_EYES	         = Color.rgb(33, 33, 33);
+	public static final Color	MS_PACMAN_COLOR_HAIRBOW	       = Color.rgb(255, 0, 0);
+	public static final Color	MS_PACMAN_COLOR_HAIRBOW_PEARLS = Color.rgb(33, 33, 255);
 	
 	public static final GhostColoring[] GHOST_COLORS = {
 		new GhostColoring(

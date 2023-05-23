@@ -34,7 +34,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.DyingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
@@ -90,9 +89,10 @@ public class Pac3D {
 		return new Group(body);
 	}
 
-	public static Group createMsPacManGroup(Model3D model3D, MsPacManColoring colors) {
-		var body = createBody(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor());
-		return new Group(body, createFeminineParts(9, colors));
+	public static Group createMsPacManGroup(Model3D model3D) {
+		var body = createBody(model3D, 9, ArcadeTheme.MS_PACMAN_COLOR_HEAD, ArcadeTheme.MS_PACMAN_COLOR_EYES,
+				ArcadeTheme.MS_PACMAN_COLOR_PALATE);
+		return new Group(body, createFeminineParts(9));
 	}
 
 	public static Pac3D createPacMan3D(Model3D model3D, Pac pacMan) {
@@ -107,12 +107,11 @@ public class Pac3D {
 		return pac3D;
 	}
 
-	public static Pac3D createMsPacMan3D(Model3D model3D, Pac msPacMan, MsPacManColoring colors) {
+	public static Pac3D createMsPacMan3D(Model3D model3D, Pac msPacMan) {
 		checkNotNull(model3D);
 		checkNotNull(msPacMan);
-		checkNotNull(colors);
 
-		var pac3D = new Pac3D(createMsPacManGroup(model3D, colors), msPacMan, colors.headColor());
+		var pac3D = new Pac3D(createMsPacManGroup(model3D), msPacMan, ArcadeTheme.MS_PACMAN_COLOR_HEAD);
 		pac3D.walkingAnimation = new HipSwaying(msPacMan, pac3D.root);
 		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
 		pac3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
@@ -147,8 +146,8 @@ public class Pac3D {
 		return root;
 	}
 
-	private static Group createFeminineParts(double pacSize, MsPacManColoring colors) {
-		var bowMaterial = ResourceManager.coloredMaterial(colors.hairBowColor());
+	private static Group createFeminineParts(double pacSize) {
+		var bowMaterial = ResourceManager.coloredMaterial(ArcadeTheme.MS_PACMAN_COLOR_HAIRBOW);
 
 		var bowLeft = new Sphere(1.2);
 		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
@@ -158,7 +157,7 @@ public class Pac3D {
 		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
 		bowRight.setMaterial(bowMaterial);
 
-		var pearlMaterial = ResourceManager.coloredMaterial(colors.hairBowPearlsColor());
+		var pearlMaterial = ResourceManager.coloredMaterial(ArcadeTheme.MS_PACMAN_COLOR_HAIRBOW_PEARLS);
 
 		var pearlLeft = new Sphere(0.4);
 		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
@@ -172,7 +171,7 @@ public class Pac3D {
 		beautySpot.setMaterial(ResourceManager.coloredMaterial(Color.rgb(100, 100, 100)));
 		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
-		var silicone = ResourceManager.coloredMaterial(colors.headColor().deriveColor(0, 1.0, 0.96, 1.0));
+		var silicone = ResourceManager.coloredMaterial(ArcadeTheme.MS_PACMAN_COLOR_HEAD.deriveColor(0, 1.0, 0.96, 1.0));
 
 		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);

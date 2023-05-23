@@ -40,7 +40,6 @@ import de.amr.games.pacman.model.world.Door;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
@@ -78,26 +77,25 @@ public class GameLevel3D {
 	private Bonus3D bonus3D;
 
 	public GameLevel3D(GameLevel level, PacManGames3dAssets assets, GameRenderer r2D, MazeColoring mazeColors,
-			MsPacManColoring msPacManColors, GhostColoring[] ghostColors) {
+			GhostColoring[] ghostColors) {
 
 		checkLevelNotNull(level);
 		checkNotNull(r2D);
 		checkNotNull(mazeColors);
-		checkNotNull(msPacManColors);
 		checkNotNull(ghostColors);
 
 		this.level = level;
 		boolean msPacMan = level.game().variant() == GameVariant.MS_PACMAN;
 
 		world3D = new World3D(level.world(), assets, mazeColors, assets.pelletModel3D);
-		pac3D = msPacMan ? Pac3D.createMsPacMan3D(assets.pacModel3D, level.pac(), msPacManColors)
+		pac3D = msPacMan ? Pac3D.createMsPacMan3D(assets.pacModel3D, level.pac())
 				: Pac3D.createPacMan3D(assets.pacModel3D, level.pac());
 		pacLight = createPacLight(pac3D);
 		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, assets.ghostModel3D, ghostColors[ghost.id()]))
 				.toArray(Ghost3D[]::new);
 		levelCounter3D = createLevelCounter3D(r2D);
-		livesCounter3D = msPacMan ? LivesCounter3D.of(assets.pacModel3D, msPacManColors)
-				: LivesCounter3D.of(assets.pacModel3D);
+		livesCounter3D = msPacMan ? LivesCounter3D.counterMsPacManGame(assets.pacModel3D)
+				: LivesCounter3D.counterPacManGame(assets.pacModel3D);
 		scores3D = new Scores3D(assets.arcadeFont8);
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
