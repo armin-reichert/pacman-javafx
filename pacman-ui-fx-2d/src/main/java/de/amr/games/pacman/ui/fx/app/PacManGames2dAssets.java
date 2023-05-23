@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -90,9 +89,6 @@ public class PacManGames2dAssets {
 	public final ResourceBundle messages           = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
 	public final Theme arcadeTheme                 = new ArcadeTheme(MGR);
-	
-	public final Image logoMsPacMan                = MGR.image("graphics/mspacman/midway.png");
-	
 
 	public final AudioClip voiceExplainKeys        = MGR.audioClip("sound/voice/press-key.mp3");
 	public final AudioClip voiceAutopilotOff       = MGR.audioClip("sound/voice/autopilot-off.mp3");

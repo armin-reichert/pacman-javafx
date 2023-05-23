@@ -49,6 +49,7 @@ public class ArcadeTheme extends Theme {
 		// Ms. Pac-Man game
 		
 		set("mspacman.icon",                   rm.image("graphics/icons/mspacman.png"));
+		set("mspacman.logo.midway",            rm.image("graphics/mspacman/midway.png"));
 		set("mspacman.spritesheet",            new Spritesheet(rm.image("graphics/mspacman/sprites.png"), 16));
 		set("mspacman.flashingMazes",          rm.image("graphics/mspacman/mazes-flashing.png"));
 
