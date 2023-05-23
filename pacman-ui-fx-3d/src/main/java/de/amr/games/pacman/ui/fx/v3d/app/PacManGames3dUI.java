@@ -74,11 +74,7 @@ import javafx.stage.Stage;
 public class PacManGames3dUI extends PacManGames2dUI {
 
 	public class PictureInPicture {
-
-		public static final float MIN_HEIGHT = 36 * 8;
-		public static final float MAX_HEIGHT = 2.5f * MIN_HEIGHT;
-
-		public final DoubleProperty heightPy = new SimpleDoubleProperty(MIN_HEIGHT);
+		public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3d.PIP_MIN_HEIGHT);
 		public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 		public final BooleanProperty visiblePy = new SimpleBooleanProperty(false) {
 			@Override
@@ -87,26 +83,26 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			}
 		};
 
-		private final PlayScene2D playScene;
+		private final GameScene2D gameScene;
 
 		public PictureInPicture() {
-			playScene = new PlayScene2D();
-			playScene.fxSubScene().heightProperty().bind(heightPy);
-			playScene.fxSubScene().widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
-			playScene.fxSubScene().opacityProperty().bind(opacityPy);
-			playScene.fxSubScene().setVisible(false);
+			gameScene = new PlayScene2D();
+			gameScene.fxSubScene().heightProperty().bind(heightPy);
+			gameScene.fxSubScene().widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+			gameScene.fxSubScene().opacityProperty().bind(opacityPy);
+			gameScene.fxSubScene().setVisible(false);
 		}
 
 		public void update() {
-			if (currentGameScene != null && playScene.context() != null) {
-				playScene.context().setCreditVisible(false);
-				playScene.context().setScoreVisible(true);
+			if (currentGameScene != null && gameScene.context() != null) {
+				gameScene.context().setCreditVisible(false);
+				gameScene.context().setScoreVisible(true);
 				updateVisibility();
 			}
 		}
 
 		private void updateVisibility() {
-			playScene.fxSubScene().setVisible(visiblePy.get() && isPlayScene3d(currentGameScene));
+			gameScene.fxSubScene().setVisible(visiblePy.get() && isPlayScene3d(currentGameScene));
 		}
 	}
 
@@ -123,7 +119,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		flashMessageView.update();
 		currentGameScene.render();
 		dashboard.update();
-		pip.playScene.render();
+		pip.gameScene.render();
 	}
 
 	@Override
@@ -143,7 +139,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pip.playScene.fxSubScene());
+		dashboardLayer.setRight(pip.gameScene.fxSubScene());
 
 		mainSceneRoot = new StackPane();
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
@@ -237,7 +233,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	protected void changeGameScene(GameScene newGameScene) {
 		super.changeGameScene(newGameScene);
 		if (isPlayScene3d(newGameScene)) {
-			pip.playScene.setContext(newGameScene.context());
+			pip.gameScene.setContext(newGameScene.context());
 		}
 	}
 

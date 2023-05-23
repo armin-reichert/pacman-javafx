@@ -89,17 +89,7 @@ import javafx.util.Duration;
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
-	protected final GameClock clock = new GameClock() {
-		@Override
-		public void doUpdate() {
-			onTick();
-		}
-
-		@Override
-		public void doRender() {
-			onRender();
-		}
-	};
+	protected final GameClock clock = new GameClock(GameModel.FPS);
 	protected Stage stage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
@@ -123,6 +113,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		configureBindings(settings);
 		GameEvents.addListener(this);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
+		clock.setOnTick(this::onTick);
+		clock.setOnRender(this::onRender);
 	}
 
 	protected void onTick() {

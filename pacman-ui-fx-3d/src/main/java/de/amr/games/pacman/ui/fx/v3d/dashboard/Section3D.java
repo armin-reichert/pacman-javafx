@@ -56,8 +56,8 @@ public class Section3D extends Section {
 		comboPerspective.setOnAction(e -> PacManGames3d.PY_3D_PERSPECTIVE.set(comboPerspective.getValue()));
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
 				.available(() -> gameScene().is3D());
-		sliderPiPSceneHeight = addSlider("PiP Size", PacManGames3dUI.PictureInPicture.MIN_HEIGHT,
-				PacManGames3dUI.PictureInPicture.MAX_HEIGHT, PacManGames3d.PY_PIP_HEIGHT.get());
+		sliderPiPSceneHeight = addSlider("PiP Size", PacManGames3d.PIP_MIN_HEIGHT, PacManGames3d.PIP_MAX_HEIGHT,
+				PacManGames3d.PY_PIP_HEIGHT.get());
 		sliderPiPSceneHeight.valueProperty()
 				.addListener((obs, oldValue, newValue) -> PacManGames3d.PY_PIP_HEIGHT.set(newValue.doubleValue()));
 		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, PacManGames3d.PY_PIP_OPACITY.get());

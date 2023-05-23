@@ -40,7 +40,7 @@ import javafx.util.Duration;
  * 
  * @author Armin Reichert
  */
-public abstract class GameClock {
+public class GameClock {
 
 	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
 		@Override
@@ -51,14 +51,29 @@ public abstract class GameClock {
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
 	public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
+	private Runnable onTick;
+	private Runnable onRender;
 	private Timeline clock;
 	private long updateCount;
 	private long ticksPerSec;
 	private long countTicksStartTime;
 	private long ticks;
 
-	protected GameClock() {
+	public GameClock(int fps) {
+		onTick = () -> {
+		};
+		onRender = () -> {
+		};
 		createClock();
+		targetFrameratePy.set(fps);
+	}
+
+	public void setOnTick(Runnable onTick) {
+		this.onTick = onTick;
+	}
+
+	public void setOnRender(Runnable onRender) {
+		this.onRender = onRender;
 	}
 
 	private void createClock() {
@@ -66,7 +81,7 @@ public abstract class GameClock {
 		var tickDuration = Duration.millis(1000.0 / fps);
 		clock = new Timeline(fps, new KeyFrame(tickDuration, e -> executeSingleStep(!isPaused())));
 		clock.setCycleCount(Animation.INDEFINITE);
-		Logger.trace("Created clock with {} fps", fps);
+		Logger.info("Clock created, target speed: {} fps", fps);
 	}
 
 	private void updateClock() {
@@ -79,16 +94,6 @@ public abstract class GameClock {
 			start();
 		}
 	}
-
-	/**
-	 * Code called in update phase (e.g. simulation).
-	 */
-	public abstract void doUpdate();
-
-	/**
-	 * Code called after update phase (e.g. rendering).
-	 */
-	public abstract void doRender();
 
 	public void start() {
 		clock.play();
@@ -127,10 +132,10 @@ public abstract class GameClock {
 	public void executeSingleStep(boolean updateEnabled) {
 		long tickTime = System.nanoTime();
 		if (updateEnabled) {
-			runPhase(this::doUpdate, "Update phase: {} milliseconds");
+			runPhase(onTick, "Update phase: {} milliseconds");
 			updateCount++;
 		}
-		runPhase(this::doRender, "Render phase: {} milliseconds");
+		runPhase(onRender, "Render phase: {} milliseconds");
 		++ticks;
 		computeFrameRate(tickTime);
 	}

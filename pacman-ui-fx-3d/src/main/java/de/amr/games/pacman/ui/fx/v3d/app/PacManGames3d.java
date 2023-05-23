@@ -48,6 +48,10 @@ import javafx.scene.shape.DrawMode;
  */
 public class PacManGames3d {
 	//@formatter:off
+
+	public static final float                       PIP_MIN_HEIGHT           = 36 * 8;
+	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
+
 	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
 	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
 
