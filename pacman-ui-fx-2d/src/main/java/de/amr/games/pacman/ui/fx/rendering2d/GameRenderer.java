@@ -51,15 +51,15 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public interface GameRenderer {
+public abstract class GameRenderer {
 
-	static void drawSprite(GraphicsContext g, Image source, Rectangle2D r, double x, double y) {
+	public static void drawSprite(GraphicsContext g, Image source, Rectangle2D r, double x, double y) {
 		if (r != null) {
 			g.drawImage(source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
 		}
 	}
 
-	static void drawTileGrid(GraphicsContext g, int tilesX, int tilesY) {
+	public static void drawTileGrid(GraphicsContext g, int tilesX, int tilesY) {
 		g.save();
 		g.translate(0.5, 0.5);
 		g.setStroke(ArcadeTheme.PALE);
@@ -73,44 +73,63 @@ public interface GameRenderer {
 		g.restore();
 	}
 
-	static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	public static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);
 	}
 
-	static void hideTileContent(GraphicsContext g, Vector2i tile) {
+	public static void hideTileContent(GraphicsContext g, Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(TS * tile.x(), TS * tile.y(), TS, TS);
 	}
 
-	Theme theme();
+	protected final PacManGames2dAssets assets;
+	protected final Theme theme;
+	protected final Spritesheet spritesheet;
 
-	PacManGames2dAssets assets();
+	protected GameRenderer(PacManGames2dAssets assets, Theme theme, Spritesheet spritesheet) {
+		checkNotNull(assets);
+		checkNotNull(theme);
+		checkNotNull(spritesheet);
+		this.assets = assets;
+		this.theme = theme;
+		this.spritesheet = spritesheet;
+	}
 
-	Spritesheet spritesheet();
+	public PacManGames2dAssets assets() {
+		return assets;
+	}
+
+	public Theme theme() {
+		return theme;
+	}
+
+	public Spritesheet spritesheet() {
+		return spritesheet;
+	}
 
 	/**
 	 * @return sprite used in lives counter
 	 */
-	Rectangle2D livesCounterSprite();
+	public abstract Rectangle2D livesCounterSprite();
 
 	/**
 	 * @return sprite showing ghost value (200, 400, 800, 1600)
 	 */
-	Rectangle2D ghostValueSprite(int index);
+	public abstract Rectangle2D ghostValueSprite(int index);
 
 	/**
 	 * @param symbol bonus symbol (index)
 	 * @return sprite showing bonus symbol (cherries, strawberry, ...)
 	 */
-	Rectangle2D bonusSymbolSprite(int symbol);
+	public abstract Rectangle2D bonusSymbolSprite(int symbol);
 
 	/**
 	 * @param symbol bonus symbol (index)
 	 * @return sprite showing bonus symbol value (100, 300, ...)
 	 */
-	Rectangle2D bonusValueSprite(int symbol);
+	public abstract Rectangle2D bonusValueSprite(int symbol);
 
 	/**
 	 * Draws a sprite at the given position. The position specifies the left-upper corner.
@@ -120,7 +139,7 @@ public interface GameRenderer {
 	 * @param x x position
 	 * @param y y position
 	 */
-	default void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
+	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
 		drawSprite(g, spritesheet().source(), r, x, y);
 	}
 
@@ -134,7 +153,7 @@ public interface GameRenderer {
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
 	 */
-	default void drawSpriteOverBoundingBox(GraphicsContext g, Rectangle2D r, double x, double y) {
+	public void drawSpriteOverBoundingBox(GraphicsContext g, Rectangle2D r, double x, double y) {
 		if (r != null) {
 			drawSprite(g, r, x + HTS - r.getWidth() / 2, y + HTS - r.getHeight() / 2);
 		}
@@ -147,34 +166,34 @@ public interface GameRenderer {
 	 * @param entity an entity like Pac-Man or a ghost
 	 * @param r      the sprite
 	 */
-	default void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
+	public void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
 		checkNotNull(entity);
 		if (entity.isVisible()) {
 			drawSpriteOverBoundingBox(g, r, entity.position().x(), entity.position().y());
 		}
 	}
 
-	default void drawPac(GraphicsContext g, Pac pac) {
+	public void drawPac(GraphicsContext g, Pac pac) {
 		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
 		if (pac.moveDir() != pac.wishDir() && pac.wishDir() != null) {
 			// drawWishDirIndicator(g, pac);
 		}
 	}
 
-	default void drawWishDirIndicator(GraphicsContext g, Pac pac) {
+	public void drawWishDirIndicator(GraphicsContext g, Pac pac) {
 		g.setFill(Color.RED);
 		float r = 4;
 		var center = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(8f)).minus(r, r);
 		g.fillOval(center.x(), center.y(), 2 * r, 2 * r);
 	}
 
-	default void drawGhost(GraphicsContext g, Ghost ghost) {
+	public void drawGhost(GraphicsContext g, Ghost ghost) {
 		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
 	}
 
-	void drawBonus(GraphicsContext g, Bonus bonus);
+	public abstract void drawBonus(GraphicsContext g, Bonus bonus);
 
-	void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world);
+	public abstract void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world);
 
 	/**
 	 * @param g            graphics context
@@ -182,7 +201,7 @@ public interface GameRenderer {
 	 * @param yr           y coordinate (right-upper corner, default: 34 * TS)
 	 * @param levelSymbols symbols to draw
 	 */
-	default void drawLevelCounter(GraphicsContext g, double xr, double yr, List<Byte> levelSymbols) {
+	public void drawLevelCounter(GraphicsContext g, double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
 		for (var symbol : levelSymbols) {
 			drawSprite(g, bonusSymbolSprite(symbol), x, yr);
@@ -190,7 +209,7 @@ public interface GameRenderer {
 		}
 	}
 
-	default void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
+	public void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
 		var font = theme().font("font.arcade", 8);
 		drawText(g, title, ArcadeTheme.PALE, font, x, y);
 		var pointsText = "%02d".formatted(score.points());
@@ -200,15 +219,15 @@ public interface GameRenderer {
 		}
 	}
 
-	default void drawCredit(GraphicsContext g, int credit, double x, double y) {
+	public void drawCredit(GraphicsContext g, int credit, double x, double y) {
 		var font = theme().font("font.arcade", 8);
 		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, font, x, y);
 	}
 
-	void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
+	public abstract void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
 	// TODO this is not the last word on this
-	default void drawLivesCounter(GraphicsContext g, Spritesheet ss, int numLivesDisplayed) {
+	public void drawLivesCounter(GraphicsContext g, Spritesheet ss, int numLivesDisplayed) {
 		if (numLivesDisplayed <= 0) {
 			return;
 		}
@@ -226,9 +245,9 @@ public interface GameRenderer {
 		}
 	}
 
-	AnimationMap createPacAnimations(Pac pac);
+	public abstract AnimationMap createPacAnimations(Pac pac);
 
-	AnimationMap createGhostAnimations(Ghost ghost);
+	public abstract AnimationMap createGhostAnimations(Ghost ghost);
 
-	AnimationMap createWorldAnimations(World world);
+	public abstract AnimationMap createWorldAnimations(World world);
 }

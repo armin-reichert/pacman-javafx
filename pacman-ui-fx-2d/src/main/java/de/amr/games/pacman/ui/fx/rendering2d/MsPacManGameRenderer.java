@@ -42,7 +42,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import de.amr.games.pacman.ui.fx.util.Order;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
@@ -50,7 +49,7 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameRenderer implements GameRenderer {
+public class MsPacManGameRenderer extends GameRenderer {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -60,29 +59,8 @@ public class MsPacManGameRenderer implements GameRenderer {
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
-	private final PacManGames2dAssets assets;
-	private final Theme theme;
-
 	public MsPacManGameRenderer(PacManGames2dAssets assets, Theme theme) {
-		checkNotNull(assets);
-		checkNotNull(theme);
-		this.assets = assets;
-		this.theme = theme;
-	}
-
-	@Override
-	public PacManGames2dAssets assets() {
-		return assets;
-	}
-
-	@Override
-	public Theme theme() {
-		return theme;
-	}
-
-	@Override
-	public Spritesheet spritesheet() {
-		return theme().spritesheet("mspacman.spritesheet");
+		super(assets, theme, theme.spritesheet("mspacman.spritesheet"));
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
