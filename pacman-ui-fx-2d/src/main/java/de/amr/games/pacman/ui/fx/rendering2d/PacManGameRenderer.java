@@ -107,9 +107,9 @@ public class PacManGameRenderer extends GameRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flashing ? assets.flashingMazePacMan : assets.emptyMazePacMan, x, y);
+			g.drawImage(flashing ? theme.image("pacman.flashingMaze") : theme.image("pacman.emptyMaze"), x, y);
 		} else {
-			g.drawImage(assets.fullMazePacMan, x, y);
+			g.drawImage(theme.image("pacman.fullMaze"), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> GameRenderer.hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();

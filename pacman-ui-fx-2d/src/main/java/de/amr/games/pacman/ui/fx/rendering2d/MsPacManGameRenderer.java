@@ -123,7 +123,7 @@ public class MsPacManGameRenderer extends GameRenderer {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				GameRenderer.drawSprite(g, assets.flashingMazesMsPacMan, highlightedMaze(mazeNumber),
+				GameRenderer.drawSprite(g, theme.image("mspacman.flashingMazes"), highlightedMaze(mazeNumber),
 						x - 3 /* don't tell your mommy */, y);
 			} else {
 				drawSprite(g, emptyMaze(mazeNumber), x, y);
