@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -59,8 +58,8 @@ import javafx.util.Duration;
  */
 public class LivesCounter3D {
 
-	public static LivesCounter3D of(Model3D model3D, PacManColoring colors) {
-		return new LivesCounter3D(() -> Pac3D.createPacManGroup(model3D, colors), false);
+	public static LivesCounter3D of(Model3D model3D) {
+		return new LivesCounter3D(() -> Pac3D.createPacManGroup(model3D), false);
 	}
 
 	public static LivesCounter3D of(Model3D model3D, MsPacManColoring colors) {

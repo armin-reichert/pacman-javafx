@@ -200,7 +200,6 @@ public class PlayScene3D implements GameScene {
 				assets(), //
 				context.renderer(), //
 				ArcadeTheme.mazeColors(level.game().variant(), mazeNumber), //
-				ArcadeTheme.PACMAN_COLORS, //
 				ArcadeTheme.MS_PACMAN_COLORS, //
 				ArcadeTheme.GHOST_COLORS);
 

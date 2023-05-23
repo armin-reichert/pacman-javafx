@@ -33,8 +33,8 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.DyingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
@@ -84,8 +84,9 @@ public class Pac3D {
 	private WalkingAnimation walkingAnimation;
 	private DyingAnimation dyingAnimation;
 
-	public static Group createPacManGroup(Model3D model3D, PacManColoring colors) {
-		var body = createBody(model3D, 9, colors.headColor(), colors.eyesColor(), colors.palateColor());
+	public static Group createPacManGroup(Model3D model3D) {
+		var body = createBody(model3D, 9, ArcadeTheme.PACMAN_COLOR_HEAD, ArcadeTheme.PACMAN_COLOR_EYES,
+				ArcadeTheme.PACMAN_COLOR_PALATE);
 		return new Group(body);
 	}
 
@@ -94,12 +95,11 @@ public class Pac3D {
 		return new Group(body, createFeminineParts(9, colors));
 	}
 
-	public static Pac3D createPacMan3D(Model3D model3D, Pac pacMan, PacManColoring colors) {
+	public static Pac3D createPacMan3D(Model3D model3D, Pac pacMan) {
 		checkNotNull(model3D);
 		checkNotNull(pacMan);
-		checkNotNull(colors);
 
-		var pac3D = new Pac3D(createPacManGroup(model3D, colors), pacMan, colors.headColor());
+		var pac3D = new Pac3D(createPacManGroup(model3D), pacMan, ArcadeTheme.PACMAN_COLOR_HEAD);
 		pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
 		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
 		pac3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);

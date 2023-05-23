@@ -56,19 +56,9 @@ public class ArcadeTheme {
 		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
 	};
 	
-	public static final MazeColoring mazeColors(GameVariant variant, int mazeNumber) {
-		return switch (variant) {
-		case MS_PACMAN -> MS_PACMAN_MAZE_COLORS[mazeNumber-1];
-		case PACMAN -> PACMAN_MAZE_COLORS;
-		default -> throw new IllegalGameVariantException(variant);
-		};
-	}
-
-	public static final PacManColoring PACMAN_COLORS = new PacManColoring(
-		Color.rgb(255, 255, 0), // head
-		Color.rgb(191, 79, 61), // palate
-		Color.rgb(33, 33, 33)   // eyes
-	);
+	public static final Color PACMAN_COLOR_HEAD   = Color.rgb(255, 255, 0);
+	public static final Color PACMAN_COLOR_PALATE = Color.rgb(191, 79, 61);
+	public static final Color PACMAN_COLOR_EYES   = Color.rgb(33, 33, 33);
 
 	public static final MsPacManColoring MS_PACMAN_COLORS = new MsPacManColoring(
 		Color.rgb(255, 255, 0), // head
@@ -101,4 +91,12 @@ public class ArcadeTheme {
 		)
 	};
 	//@formatter:on
+
+	public static final MazeColoring mazeColors(GameVariant variant, int mazeNumber) {
+		return switch (variant) {
+		case MS_PACMAN -> MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
+		case PACMAN -> PACMAN_MAZE_COLORS;
+		default -> throw new IllegalGameVariantException(variant);
+		};
+	}
 }
