@@ -155,7 +155,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 				mainSceneRoot.setBackground(assets().wallpaper3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(assets().wallpaper);
+			mainSceneRoot.setBackground(assets().arcadeTheme.background("wallpaper.background"));
 		}
 		var paused = clock().pausedPy.get();
 		var dimensionMsg = fmtMessage(assets().messages, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO

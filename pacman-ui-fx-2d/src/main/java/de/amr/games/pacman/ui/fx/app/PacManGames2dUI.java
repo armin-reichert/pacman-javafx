@@ -48,6 +48,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
@@ -91,6 +92,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final GameClock clock = new GameClock(GameModel.FPS);
 	protected PacManGames2dAssets assets;
+	protected Theme theme;
 	protected Stage stage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
@@ -101,13 +103,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	private AudioClip currentVoice;
 
 	@Override
-	public void init(Stage stage, Settings settings, PacManGames2dAssets assets) {
+	public void init(Stage stage, Settings settings, PacManGames2dAssets assets, Theme theme) {
 		checkNotNull(stage);
 		checkNotNull(settings);
 		checkNotNull(assets);
+		checkNotNull(theme);
+
 		this.stage = stage;
 		stage.setFullScreen(settings.fullScreen);
 		this.assets = assets;
+		this.theme = theme;
 		this.gameController = new GameController(settings.variant);
 		configureGameScenes();
 		createMainScene(stage, settings);
@@ -161,7 +166,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void createMainScene(Stage stage, Settings settings) {
 		mainSceneRoot = new StackPane();
 		// Without this, there appears an ugly vertical line right of the embedded subscene
-		mainSceneRoot.setBackground(ResourceManager.coloredBackground(assets.wallpaperColor));
+		mainSceneRoot.setBackground(ResourceManager.coloredBackground(theme.color("wallpaper.color")));
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 
@@ -211,7 +216,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(assets.wallpaper);
+		mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		switch (gameVariant()) {
 		case MS_PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";

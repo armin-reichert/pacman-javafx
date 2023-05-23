@@ -47,7 +47,7 @@ public class PacManGames3dApp extends PacManGames2dApp {
 	public void start(Stage stage) {
 		var assets = new PacManGames3dAssets();
 		PacManGames2d.ui = PacManGames3d.ui = new PacManGames3dUI();
-		PacManGames3d.ui.init(stage, settings, assets);
+		PacManGames3d.ui.init(stage, settings, assets, assets.arcadeTheme);
 		PacManGames3d.ui.gameController().changeState(GameState.BOOT);
 		PacManGames3d.ui.show();
 		Logger.info("Game started. {} Hz language={}", PacManGames3d.ui.clock().targetFrameratePy.get(),

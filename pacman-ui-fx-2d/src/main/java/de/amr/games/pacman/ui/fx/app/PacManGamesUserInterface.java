@@ -28,6 +28,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import javafx.scene.media.AudioClip;
@@ -56,7 +57,7 @@ public interface PacManGamesUserInterface {
 
 	GameScene currentGameScene();
 
-	void init(Stage stage, Settings cfg, PacManGames2dAssets assets);
+	void init(Stage stage, Settings cfg, PacManGames2dAssets assets, Theme theme);
 
 	PacManGames2dAssets assets();
 

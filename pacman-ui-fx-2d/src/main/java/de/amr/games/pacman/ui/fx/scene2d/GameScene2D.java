@@ -145,8 +145,9 @@ public abstract class GameScene2D implements GameScene {
 		checkNotNull(context);
 		this.context = context;
 		// This avoids a vertical line on the left side of the embedded 2D game scene
-		root.setBackground(ResourceManager.coloredBackground(context.ui().assets().wallpaperColor));
-
+		var wallpaperColor = context.renderer().theme().color("wallpaper.color");
+		var background = ResourceManager.coloredBackground(wallpaperColor);
+		root.setBackground(background);
 	}
 
 	@Override
@@ -156,12 +157,13 @@ public abstract class GameScene2D implements GameScene {
 		}
 
 		var g = canvas.getGraphicsContext2D();
-		g.setFill(context.ui().assets().wallpaperColor);
+		var r = context.renderer();
+
+		g.setFill(r.theme().color("wallpaper.color"));
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
 
-		var r = context.renderer();
 		if (context.isScoreVisible()) {
 			r.drawScore(g, context.game().score(), "SCORE", t(1), t(1));
 			r.drawScore(g, context.game().highScore(), "HIGH SCORE", t(16), t(1));

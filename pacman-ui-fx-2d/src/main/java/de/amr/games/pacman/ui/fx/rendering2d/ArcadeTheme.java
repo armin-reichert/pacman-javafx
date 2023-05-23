@@ -94,7 +94,10 @@ public class ArcadeTheme extends Theme {
 		set("pacman.color.eyes",               Color.rgb(33, 33, 33));
 		
 		// Common to both games
-		
+
+		set("wallpaper.background",            rm.imageBackground("graphics/pacman_wallpaper.png"));
+		set("wallpaper.color",                 Color.rgb(72, 78, 135));
+
 		set("font.arcade",                     rm.font("fonts/emulogic.ttf", 8));
 		set("font.handwriting",                rm.font("fonts/RockSalt-Regular.ttf", 9));
 		set("font.monospaced",                 rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));

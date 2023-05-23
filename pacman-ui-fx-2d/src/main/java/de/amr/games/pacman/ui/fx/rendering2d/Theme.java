@@ -29,6 +29,7 @@ import java.util.Map;
 
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -74,5 +75,9 @@ public class Theme {
 
 	public Spritesheet spritesheet(String name) {
 		return (Spritesheet) namedThings.get(name);
+	}
+
+	public Background background(String name) {
+		return (Background) namedThings.get(name);
 	}
 }

@@ -34,9 +34,7 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -93,8 +91,6 @@ public class PacManGames2dAssets {
 
 	public final Theme arcadeTheme                 = new ArcadeTheme(MGR);
 	
-	public final Background wallpaper              = MGR.imageBackground("graphics/pacman_wallpaper.png");
-	public final Color wallpaperColor              = Color.rgb(72, 78, 135);
 
 	public final Image iconMsPacMan                = MGR.image("graphics/icons/mspacman.png");
 	public final Image flashingMazesMsPacMan       = MGR.image("graphics/mspacman/mazes-flashing.png");
