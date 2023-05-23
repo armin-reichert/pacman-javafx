@@ -46,7 +46,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
@@ -195,9 +194,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		var mazeNumber = level.game().mazeNumber(level.number());
-		level3D = new GameLevel3D(level, assets(), context.renderer(),
-				ArcadeTheme.mazeColors(level.game().variant(), mazeNumber));
+		level3D = new GameLevel3D(level, assets(), context.renderer());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;

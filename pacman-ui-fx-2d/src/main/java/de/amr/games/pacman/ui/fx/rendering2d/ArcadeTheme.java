@@ -24,8 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import javafx.scene.paint.Color;
 
 public class ArcadeTheme {
@@ -40,21 +38,39 @@ public class ArcadeTheme {
 	public static final Color ROSE = Color.rgb(252, 187, 179);
 
 	//@formatter:off
-	public static final MazeColoring PACMAN_MAZE_COLORS = new MazeColoring(//
-		Color.rgb(254, 189, 180), // food color
-		Color.rgb(33, 33, 255).darker(), // wall top color
-		Color.rgb(33, 33, 255).brighter(), // wall side color
-		Color.rgb(252, 181, 255) // ghosthouse door color
-	);
+	public static final Color PACMAN_MAZE_COLOR_FOOD = Color.rgb(254, 189, 180);
+	public static final Color PACMAN_MAZE_COLOR_WALL_TOP = Color.rgb(33, 33, 255).darker();
+	public static final Color PACMAN_MAZE_COLOR_WALL_BASE =	Color.rgb(33, 33, 255).brighter();
+	public static final Color PACMAN_MAZE_COLOR_DOOR = Color.rgb(252, 181, 255);
 
-	public static final MazeColoring[] MS_PACMAN_MAZE_COLORS = {
-		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(255, 255, 0),   Color.rgb( 71, 183, 255),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(255,   0, 0),   Color.rgb(222, 151,  81),  Color.rgb(222, 222, 255), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb( 33,  33, 255),  Color.rgb(255, 183,  81), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(0,   255, 255), Color.rgb(255, 183, 255),  Color.rgb(255, 255,   0), Color.rgb(255, 183, 255)),
-		new MazeColoring(Color.rgb(222, 222, 255), Color.rgb(255, 183, 174),  Color.rgb(255,   0,   0), Color.rgb(255, 183, 255)),
+	public static final Color[] MS_PACMAN_MAZE_COLORS_FOOD = {
+		Color.rgb(222, 222, 255), 
+		Color.rgb(255, 255, 0),
+		Color.rgb(255,   0, 0),
+		Color.rgb(222, 222, 255),
+		Color.rgb(0,   255, 255),
+		Color.rgb(222, 222, 255),
 	};
+	
+	public static final Color[] MS_PACMAN_MAZE_COLORS_WALL_TOP = {
+		Color.rgb(255, 183, 174),  
+		Color.rgb( 71, 183, 255), 
+		Color.rgb(222, 151,  81), 
+		Color.rgb( 33,  33, 255), 
+		Color.rgb(255, 183, 255),
+		Color.rgb(255, 183, 174), 
+	};
+	
+	public static final Color[] MS_PACMAN_MAZE_COLORS_WALL_BASE = {
+		Color.rgb(255,   0,   0),
+		Color.rgb(222, 222, 255),
+		Color.rgb(222, 222, 255),
+		Color.rgb(255, 183,  81),
+		Color.rgb(255, 255,   0),
+		Color.rgb(255,   0,   0),
+	};
+
+	public static final Color MS_PACMAN_MAZE_COLOR_DOOR = Color.rgb(255, 183, 255);
 	
 	public static final Color PACMAN_COLOR_HEAD              = Color.rgb(255, 255, 0);
 	public static final Color PACMAN_COLOR_PALATE            = Color.rgb(191, 79, 61);
@@ -66,53 +82,22 @@ public class ArcadeTheme {
 	public static final Color	MS_PACMAN_COLOR_HAIRBOW	       = Color.rgb(255, 0, 0);
 	public static final Color	MS_PACMAN_COLOR_HAIRBOW_PEARLS = Color.rgb(33, 33, 255);
 
-	public static final Color[][] GHOST_COLORS_NORMAL = {
-		// dress  eyeballs  pupils
+	public static final Color[][] GHOST_COLORS_NORMAL = { // dress, eyeballs, pupils
 		{ RED,    PALE,     BLUE, },
 		{ PINK,   PALE,     BLUE, },
 		{ CYAN,   PALE,     BLUE, },
 		{ ORANGE, PALE,     BLUE, },
 	};
 	
-	public static final Color[] GHOST_COLORS_FRIGHTENED = {
-		// dress  eyeballs  pupils
-		   BLUE,  ROSE,     ROSE
-	};
-
-	public static final Color[] GHOST_COLORS_FLASHING = {
-		// dress  eyeballs  pupils
-		   PALE,  ROSE,     RED
-	};
-	
-//	public static final GhostColoring[] GHOST_COLORS = {
-//		new GhostColoring(
-//			RED,  PALE, BLUE, // normal
-//			BLUE, ROSE, ROSE, // frightened
-//			PALE, ROSE, RED   // flashing
-//		),
-//		new GhostColoring(
-//			PINK, PALE, BLUE, // normal
-//			BLUE, ROSE, ROSE, // frightened
-//			PALE, ROSE, RED   // flashing
-//		),
-//		new GhostColoring(
-//			CYAN, PALE, BLUE, // normal
-//			BLUE, ROSE, ROSE, // frightened
-//			PALE, ROSE, RED   // flashing
-//		),
-//		new GhostColoring(
-//			ORANGE, PALE, BLUE, // normal
-//			BLUE,   ROSE, ROSE, // frightened
-//			PALE,   ROSE, RED   // flashing
-//		)
-//	};
+	public static final Color[] GHOST_COLORS_FRIGHTENED = { BLUE, ROSE,  ROSE }; // dress, eyeballs, pupils
+	public static final Color[] GHOST_COLORS_FLASHING = { PALE, ROSE, RED }; // dress, eyeballs,pupils
 	//@formatter:on
 
-	public static final MazeColoring mazeColors(GameVariant variant, int mazeNumber) {
-		return switch (variant) {
-		case MS_PACMAN -> MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
-		case PACMAN -> PACMAN_MAZE_COLORS;
-		default -> throw new IllegalGameVariantException(variant);
-		};
-	}
+//	public static final MazeColoring mazeColors(GameVariant variant, int mazeNumber) {
+//		return switch (variant) {
+//		case MS_PACMAN -> MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
+//		case PACMAN -> PACMAN_MAZE_COLORS;
+//		default -> throw new IllegalGameVariantException(variant);
+//		};
+//	}
 }

@@ -38,7 +38,6 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
@@ -105,7 +104,6 @@ public class World3D {
 	private final PacManGames3dAssets assets;
 	private final Model3D pelletModel3D;
 	private final World world;
-	private final MazeColoring mazeColoring;
 	private final Group root = new Group();
 	private final Group floorGroup = new Group();
 	private final Group wallsGroup = new Group();
@@ -115,16 +113,30 @@ public class World3D {
 	private final Group foodGroup = new Group();
 	private final FoodOscillation foodOscillation;
 
-	public World3D(World world, PacManGames3dAssets assets, MazeColoring mazeColoring, Model3D pelletModel3D) {
+	private Color foodColor;
+	private Color wallBaseColor;
+	private Color wallTopColor;
+	private Color doorColor;
+
+	public World3D(World world, PacManGames3dAssets assets, Model3D pelletModel3D, Color foodColor, Color wallBaseColor,
+			Color wallTopColor, Color doorColor) {
+
 		checkNotNull(world);
 		checkNotNull(assets);
-		checkNotNull(mazeColoring);
 		checkNotNull(pelletModel3D);
+		checkNotNull(foodColor);
+		checkNotNull(wallBaseColor);
+		checkNotNull(wallTopColor);
+		checkNotNull(doorColor);
 
 		this.world = world;
 		this.assets = assets;
-		this.mazeColoring = mazeColoring;
 		this.pelletModel3D = pelletModel3D;
+		this.foodColor = foodColor;
+		this.wallBaseColor = wallBaseColor;
+		this.wallTopColor = wallTopColor;
+		this.doorColor = doorColor;
+
 		this.houseLight = createGhostHouseLight();
 		this.foodOscillation = new FoodOscillation(foodGroup);
 
@@ -137,7 +149,7 @@ public class World3D {
 
 	private PointLight createGhostHouseLight() {
 		var light = new PointLight();
-		light.setColor(mazeColoring.wallBaseColor());
+		light.setColor(wallBaseColor);
 		light.setMaxRange(3 * TS);
 		var center = world.house().seatPositions().get(1);
 		light.setTranslateX(center.x() + HTS);
@@ -185,9 +197,9 @@ public class World3D {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = ResourceManager.coloredMaterial(mazeColoring.wallBaseColor());
-		wallData.topMaterial = ResourceManager.coloredMaterial(mazeColoring.wallTopColor());
-		wallData.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(mazeColoring.wallBaseColor(), 0.25));
+		wallData.baseMaterial = ResourceManager.coloredMaterial(wallBaseColor);
+		wallData.topMaterial = ResourceManager.coloredMaterial(wallTopColor);
+		wallData.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallBaseColor, 0.25));
 		return wallData;
 	}
 
@@ -243,7 +255,7 @@ public class World3D {
 	}
 
 	private void addDoorWing(Vector2i tile) {
-		var wing3D = new DoorWing3D(tile, mazeColoring.houseDoorColor());
+		var wing3D = new DoorWing3D(tile, doorColor);
 		wing3D.drawModePy.bind(drawModePy);
 		doorWings3D.add(wing3D);
 		doorGroup.getChildren().add(wing3D.getRoot());
@@ -387,7 +399,7 @@ public class World3D {
 	// Food
 
 	private void addFood() {
-		var foodMaterial = ResourceManager.coloredMaterial(mazeColoring.foodColor());
+		var foodMaterial = ResourceManager.coloredMaterial(foodColor);
 		world.tiles().filter(world::containsFood).forEach(tile -> {
 			var food3D = world.isEnergizerTile(tile)//
 					? createEnergizer3D(tile, foodMaterial)//
@@ -416,7 +428,7 @@ public class World3D {
 		squirting.setOrigin(energizer3D.getRoot());
 		squirting.setDropCountMin(15);
 		squirting.setDropCountMax(45);
-		squirting.setDropMaterial(ResourceManager.coloredMaterial(mazeColoring.foodColor().desaturate()));
+		squirting.setDropMaterial(ResourceManager.coloredMaterial(foodColor.desaturate()));
 		energizer3D.setEatenAnimation(squirting);
 		return energizer3D;
 	}
