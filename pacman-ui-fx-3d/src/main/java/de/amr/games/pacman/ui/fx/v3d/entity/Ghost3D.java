@@ -31,6 +31,7 @@ import static java.util.Objects.requireNonNull;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation;
@@ -87,14 +88,14 @@ public class Ghost3D {
 	private Image numberImage;
 	private Look currentLook;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, double size) {
+	public Ghost3D(Ghost ghost, Model3D model3D, Theme theme, double size) {
 		requireNonNull(ghost);
 		requireNonNull(model3D);
 		requirePositive(size, "Ghost3D size must be positive but is %f");
 
 		this.ghost = ghost;
 
-		coloredGhost3D = new ColoredGhost3D(model3D, ghost.id(), size);
+		coloredGhost3D = new ColoredGhost3D(model3D, theme, ghost.id(), size);
 		coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
 		coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);

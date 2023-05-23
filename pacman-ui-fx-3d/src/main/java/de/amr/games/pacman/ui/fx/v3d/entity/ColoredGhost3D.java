@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.ColorFlashing;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -51,6 +51,7 @@ public class ColoredGhost3D {
 	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
 	private final byte id;
+	private final Theme theme;
 	private final Group root;
 	private final Group eyesGroup;
 	private final Group dressGroup;
@@ -66,23 +67,25 @@ public class ColoredGhost3D {
 	private ColorFlashing dressFlashingAnimation;
 	private ColorFlashing pupilsFlashingAnimation;
 
-	public ColoredGhost3D(Model3D model3D, byte id, double size) {
+	public ColoredGhost3D(Model3D model3D, Theme theme, byte id, double size) {
 		requireNonNull(model3D);
+		requireNonNull(theme);
 		requirePositive(size, "ColoredGhost3D size must be positive but is %f");
 
+		this.theme = theme;
 		this.id = id;
 
 		dressShape = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
 		dressShape.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
-		dressColorPy.set(ArcadeTheme.GHOST_COLORS_NORMAL[id][0]);
+		dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
 
 		eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
 		eyeballsShape.setMaterial(Ufx.createColorBoundMaterial(eyeballsColorPy));
-		eyeballsColorPy.set(ArcadeTheme.GHOST_COLORS_NORMAL[id][1]);
+		eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
 
 		pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
 		pupilsShape.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
-		pupilsColorPy.set(ArcadeTheme.GHOST_COLORS_NORMAL[id][2]);
+		pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 
 		var centerTransform = Model3D.centerOverOrigin(dressShape);
 		dressShape.getTransforms().add(centerTransform);
@@ -128,27 +131,27 @@ public class ColoredGhost3D {
 	public void appearFlashing(int numFlashes, double durationSeconds) {
 		ensureFlashingAnimationIsPlaying(numFlashes, durationSeconds);
 		dressColorPy.bind(dressFlashingAnimation.colorPy);
-		eyeballsColorPy.set(ArcadeTheme.GHOST_COLORS_FRIGHTENED[1]);
+		eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
 		pupilsColorPy.bind(pupilsFlashingAnimation.colorPy);
 		dressShape.setVisible(true);
 	}
 
 	public void appearFrightened() {
 		dressColorPy.unbind();
-		dressColorPy.set(ArcadeTheme.GHOST_COLORS_FRIGHTENED[0]);
-		eyeballsColorPy.set(ArcadeTheme.GHOST_COLORS_FRIGHTENED[1]);
+		dressColorPy.set(theme.color("ghost.color.frightened.dress"));
+		eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
 		pupilsColorPy.unbind();
-		pupilsColorPy.set(ArcadeTheme.GHOST_COLORS_FRIGHTENED[2]);
+		pupilsColorPy.set(theme.color("ghost.color.frightened.pupils"));
 		dressShape.setVisible(true);
 		ensureFlashingAnimationIsStopped();
 	}
 
 	public void appearNormal() {
 		dressColorPy.unbind();
-		dressColorPy.set(ArcadeTheme.GHOST_COLORS_NORMAL[id][0]);
-		eyeballsColorPy.set(ArcadeTheme.GHOST_COLORS_NORMAL[id][1]);
+		dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
+		eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
 		pupilsColorPy.unbind();
-		pupilsColorPy.set(ArcadeTheme.GHOST_COLORS_NORMAL[id][2]);
+		pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 		dressShape.setVisible(true);
 		ensureFlashingAnimationIsStopped();
 	}
@@ -159,13 +162,11 @@ public class ColoredGhost3D {
 	}
 
 	private void createFlashingAnimation(int numFlashes, double durationSeconds) {
-		dressFlashingAnimation = new ColorFlashing(//
-				ArcadeTheme.GHOST_COLORS_FRIGHTENED[0], ArcadeTheme.GHOST_COLORS_FLASHING[0], //
-				durationSeconds, numFlashes);
+		dressFlashingAnimation = new ColorFlashing(theme.color("ghost.color.frightened.dress"),
+				theme.color("ghost.color.flashing.dress"), durationSeconds, numFlashes);
 
-		pupilsFlashingAnimation = new ColorFlashing(//
-				ArcadeTheme.GHOST_COLORS_FRIGHTENED[2], ArcadeTheme.GHOST_COLORS_FLASHING[2], //
-				durationSeconds, numFlashes);
+		pupilsFlashingAnimation = new ColorFlashing(theme.color("ghost.color.frightened.pupils"),
+				theme.color("ghost.color.flashing.pupils"), durationSeconds, numFlashes);
 
 		flashingAnimation = new ParallelTransition(dressFlashingAnimation, pupilsFlashingAnimation);
 	}

@@ -106,6 +106,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
+		var theme = context.ui().assets().arcadeTheme; // TODOs
+
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();
@@ -116,7 +118,8 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
-			var color = ArcadeTheme.GHOST_COLORS_NORMAL[ghost.id()][0];
+
+			var color = theme.color("ghost.%d.color.normal.dress".formatted(ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText(g, "WITH", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, tx, y0 + t(3));
 			}

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -57,12 +58,12 @@ import javafx.util.Duration;
  */
 public class LivesCounter3D {
 
-	public static LivesCounter3D counterPacManGame(Model3D model3D) {
-		return new LivesCounter3D(() -> Pac3D.createPacManGroup(model3D), false);
+	public static LivesCounter3D counterPacManGame(Model3D model3D, Theme theme) {
+		return new LivesCounter3D(() -> Pac3D.createPacManGroup(model3D, theme), false);
 	}
 
-	public static LivesCounter3D counterMsPacManGame(Model3D model3D) {
-		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(model3D), true);
+	public static LivesCounter3D counterMsPacManGame(Model3D model3D, Theme theme) {
+		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(model3D, theme), true);
 	}
 
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);

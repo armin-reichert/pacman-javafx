@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.sound.GameSounds;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -91,6 +93,7 @@ public class PacManGames2dAssets {
 
 	public final ResourceBundle messages           = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
+	public final Theme arcadeTheme                 = new ArcadeTheme();
 	public final Font arcadeFont8                  = MGR.font("fonts/emulogic.ttf", 8);
 	public final Font arcadeFont6                  = MGR.font("fonts/emulogic.ttf", 6);
 	public final Font handwritingFont9             = MGR.font("fonts/RockSalt-Regular.ttf", 9);

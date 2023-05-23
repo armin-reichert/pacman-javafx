@@ -194,7 +194,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		level3D = new GameLevel3D(level, assets(), context.renderer());
+		level3D = new GameLevel3D(level, assets(), assets().arcadeTheme, context.renderer());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;

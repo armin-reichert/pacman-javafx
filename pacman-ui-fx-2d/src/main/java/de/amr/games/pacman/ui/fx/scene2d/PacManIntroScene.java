@@ -147,6 +147,8 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
+		var theme = context.ui().assets().arcadeTheme; // TODO
+
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
 			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, t(tx + 3),
@@ -160,20 +162,21 @@ public class PacManIntroScene extends GameScene2D {
 			r.drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
-				var color = ArcadeTheme.GHOST_COLORS_NORMAL[id][0];
+				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
 				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
-				var color = ArcadeTheme.GHOST_COLORS_NORMAL[id][0];
+				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
 				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 14), t(ty + 1));
 			}
 		}
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
+		var theme = context.ui().assets().arcadeTheme; // TODO
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
-			g.setFill(ArcadeTheme.PACMAN_MAZE_COLOR_FOOD);
+			g.setFill(theme.color("pacman.maze.foodColor"));
 			g.fillOval(t(ic.leftTileX), t(20), TS, TS);
 		}
 	}
@@ -195,9 +198,11 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints(GraphicsContext g) {
+		var theme = context.ui().assets().arcadeTheme; // TODO
+
 		int tx = ic.leftTileX + 6;
 		int ty = 25;
-		g.setFill(ArcadeTheme.PACMAN_MAZE_COLOR_FOOD);
+		g.setFill(theme.color("pacman.maze.foodColor"));
 		g.fillRect(t(tx) + 4, t(ty - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
 			g.fillOval(t(tx), t(ty + 1), TS, TS);

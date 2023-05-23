@@ -33,7 +33,7 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.DyingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
@@ -83,23 +83,23 @@ public class Pac3D {
 	private WalkingAnimation walkingAnimation;
 	private DyingAnimation dyingAnimation;
 
-	public static Group createPacManGroup(Model3D model3D) {
-		var body = createBody(model3D, 9, ArcadeTheme.PACMAN_COLOR_HEAD, ArcadeTheme.PACMAN_COLOR_EYES,
-				ArcadeTheme.PACMAN_COLOR_PALATE);
+	public static Group createPacManGroup(Model3D model3D, Theme theme) {
+		var body = createBody(model3D, 9, theme.color("pacman.color.head"), theme.color("pacman.color.eyes"),
+				theme.color("pacman.color.palate"));
 		return new Group(body);
 	}
 
-	public static Group createMsPacManGroup(Model3D model3D) {
-		var body = createBody(model3D, 9, ArcadeTheme.MS_PACMAN_COLOR_HEAD, ArcadeTheme.MS_PACMAN_COLOR_EYES,
-				ArcadeTheme.MS_PACMAN_COLOR_PALATE);
-		return new Group(body, createFeminineParts(9));
+	public static Group createMsPacManGroup(Model3D model3D, Theme theme) {
+		var body = createBody(model3D, 9, theme.color("mspacman.color.head"), theme.color("mspacman.color.eyes"),
+				theme.color("mspacman.color.palate"));
+		return new Group(body, createFeminineParts(theme, 9));
 	}
 
-	public static Pac3D createPacMan3D(Model3D model3D, Pac pacMan) {
+	public static Pac3D createPacMan3D(Model3D model3D, Theme theme, Pac pacMan) {
 		checkNotNull(model3D);
 		checkNotNull(pacMan);
 
-		var pac3D = new Pac3D(createPacManGroup(model3D), pacMan, ArcadeTheme.PACMAN_COLOR_HEAD);
+		var pac3D = new Pac3D(createPacManGroup(model3D, theme), pacMan, theme.color("pacman.color.head"));
 		pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
 		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
 		pac3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
@@ -107,11 +107,11 @@ public class Pac3D {
 		return pac3D;
 	}
 
-	public static Pac3D createMsPacMan3D(Model3D model3D, Pac msPacMan) {
+	public static Pac3D createMsPacMan3D(Model3D model3D, Theme theme, Pac msPacMan) {
 		checkNotNull(model3D);
 		checkNotNull(msPacMan);
 
-		var pac3D = new Pac3D(createMsPacManGroup(model3D), msPacMan, ArcadeTheme.MS_PACMAN_COLOR_HEAD);
+		var pac3D = new Pac3D(createMsPacManGroup(model3D, theme), msPacMan, theme.color("mspacman.color.head"));
 		pac3D.walkingAnimation = new HipSwaying(msPacMan, pac3D.root);
 		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
 		pac3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
@@ -146,8 +146,8 @@ public class Pac3D {
 		return root;
 	}
 
-	private static Group createFeminineParts(double pacSize) {
-		var bowMaterial = ResourceManager.coloredMaterial(ArcadeTheme.MS_PACMAN_COLOR_HAIRBOW);
+	private static Group createFeminineParts(Theme theme, double pacSize) {
+		var bowMaterial = ResourceManager.coloredMaterial(theme.color("mspacman.color.hairbow"));
 
 		var bowLeft = new Sphere(1.2);
 		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
@@ -157,7 +157,7 @@ public class Pac3D {
 		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
 		bowRight.setMaterial(bowMaterial);
 
-		var pearlMaterial = ResourceManager.coloredMaterial(ArcadeTheme.MS_PACMAN_COLOR_HAIRBOW_PEARLS);
+		var pearlMaterial = ResourceManager.coloredMaterial(theme.color("mspacman.color.hairbow.pearls"));
 
 		var pearlLeft = new Sphere(0.4);
 		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
@@ -171,7 +171,7 @@ public class Pac3D {
 		beautySpot.setMaterial(ResourceManager.coloredMaterial(Color.rgb(100, 100, 100)));
 		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
-		var silicone = ResourceManager.coloredMaterial(ArcadeTheme.MS_PACMAN_COLOR_HEAD.deriveColor(0, 1.0, 0.96, 1.0));
+		var silicone = ResourceManager.coloredMaterial(theme.color("mspacman.color.boobs"));
 
 		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);

@@ -26,7 +26,12 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import javafx.scene.paint.Color;
 
-public class ArcadeTheme {
+/**
+ * @author Armin Reichert
+ */
+public class ArcadeTheme extends Theme {
+
+	//@formatter:off
 	public static final Color RED = Color.rgb(255, 0, 0);
 	public static final Color YELLOW = Color.rgb(255, 255, 0);
 	public static final Color PINK = Color.rgb(252, 181, 255);
@@ -37,67 +42,90 @@ public class ArcadeTheme {
 	public static final Color PALE = Color.rgb(222, 222, 255);
 	public static final Color ROSE = Color.rgb(252, 187, 179);
 
-	//@formatter:off
-	public static final Color PACMAN_MAZE_COLOR_FOOD = Color.rgb(254, 189, 180);
-	public static final Color PACMAN_MAZE_COLOR_WALL_TOP = Color.rgb(33, 33, 255).darker();
-	public static final Color PACMAN_MAZE_COLOR_WALL_BASE =	Color.rgb(33, 33, 255).brighter();
-	public static final Color PACMAN_MAZE_COLOR_DOOR = Color.rgb(252, 181, 255);
 
-	public static final Color[] MS_PACMAN_MAZE_COLORS_FOOD = {
-		Color.rgb(222, 222, 255), 
-		Color.rgb(255, 255, 0),
-		Color.rgb(255,   0, 0),
-		Color.rgb(222, 222, 255),
-		Color.rgb(0,   255, 255),
-		Color.rgb(222, 222, 255),
-	};
+	public ArcadeTheme() {
+		// Mazes
+		{
+			var key = "mspacman.maze.foodColor";
+			addToArray(key, Color.rgb(222, 222, 255));
+			addToArray(key, Color.rgb(255, 255, 0));
+			addToArray(key, Color.rgb(255, 0, 0));
+			addToArray(key, Color.rgb(222, 222, 255));
+			addToArray(key, Color.rgb(0, 255, 255));
+			addToArray(key, Color.rgb(222, 222, 255));
+		}
+		{
+			var key = "mspacman.maze.wallBaseColor";
+			addToArray(key, Color.rgb(255,   0,   0));
+			addToArray(key, Color.rgb(222, 222, 255));
+			addToArray(key, Color.rgb(222, 222, 255));
+			addToArray(key, Color.rgb(255, 183,  81));
+			addToArray(key, Color.rgb(255, 255,   0));
+			addToArray(key, Color.rgb(255,   0,   0));
+		}
+		{
+			var key = "mspacman.maze.wallTopColor";
+			addToArray(key, Color.rgb(255, 183, 174));
+			addToArray(key, Color.rgb( 71, 183, 255));
+			addToArray(key, Color.rgb(222, 151,  81));
+			addToArray(key, Color.rgb(222, 151,  81));
+			addToArray(key, Color.rgb(222, 151,  81));
+			addToArray(key, Color.rgb(222, 151,  81));
+		}
+		{
+			set("mspacman.maze.doorColor", Color.rgb(255, 183, 255));
+		}
 	
-	public static final Color[] MS_PACMAN_MAZE_COLORS_WALL_TOP = {
-		Color.rgb(255, 183, 174),  
-		Color.rgb( 71, 183, 255), 
-		Color.rgb(222, 151,  81), 
-		Color.rgb( 33,  33, 255), 
-		Color.rgb(255, 183, 255),
-		Color.rgb(255, 183, 174), 
-	};
-	
-	public static final Color[] MS_PACMAN_MAZE_COLORS_WALL_BASE = {
-		Color.rgb(255,   0,   0),
-		Color.rgb(222, 222, 255),
-		Color.rgb(222, 222, 255),
-		Color.rgb(255, 183,  81),
-		Color.rgb(255, 255,   0),
-		Color.rgb(255,   0,   0),
-	};
+		{
+		  set("pacman.maze.foodColor",     Color.rgb(254, 189, 180));
+			set("pacman.maze.wallBaseColor", Color.rgb(33, 33, 255).brighter());
+			set("pacman.maze.wallTopColor",  Color.rgb(33, 33, 255).darker());
+			set("pacman.maze.doorColor",	   Color.rgb(252, 181, 255));
+		}
+		
+		// Pac-Man
+		{
+			set("pacman.color.head", Color.rgb(255, 255, 0));
+			set("pacman.color.palate", Color.rgb(191, 79, 61));
+			set("pacman.color.eyes", Color.rgb(33, 33, 33));
+		}
+		
+		// Ms. Pac-Man
+		{
+			set("mspacman.color.head", Color.rgb(255, 255, 0));
+			set("mspacman.color.palate",  Color.rgb(191, 79, 61));
+			set("mspacman.color.eyes",  Color.rgb(33, 33, 33));
+			set("mspacman.color.boobs", Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+			set("mspacman.color.hairbow",  Color.rgb(255, 0, 0));
+			set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
+		}
+		
+		// Ghosts
+		{
+			set("ghost.0.color.normal.dress",      RED);
+			set("ghost.0.color.normal.eyeballs",   PALE);
+			set("ghost.0.color.normal.pupils",     BLUE);
 
-	public static final Color MS_PACMAN_MAZE_COLOR_DOOR = Color.rgb(255, 183, 255);
-	
-	public static final Color PACMAN_COLOR_HEAD              = Color.rgb(255, 255, 0);
-	public static final Color PACMAN_COLOR_PALATE            = Color.rgb(191, 79, 61);
-	public static final Color PACMAN_COLOR_EYES              = Color.rgb(33, 33, 33);
-
-	public static final Color	MS_PACMAN_COLOR_HEAD           = Color.rgb(255, 255, 0);
-	public static final Color	MS_PACMAN_COLOR_PALATE	       = Color.rgb(191, 79, 61);
-	public static final Color	MS_PACMAN_COLOR_EYES	         = Color.rgb(33, 33, 33);
-	public static final Color	MS_PACMAN_COLOR_HAIRBOW	       = Color.rgb(255, 0, 0);
-	public static final Color	MS_PACMAN_COLOR_HAIRBOW_PEARLS = Color.rgb(33, 33, 255);
-
-	public static final Color[][] GHOST_COLORS_NORMAL = { // dress, eyeballs, pupils
-		{ RED,    PALE,     BLUE, },
-		{ PINK,   PALE,     BLUE, },
-		{ CYAN,   PALE,     BLUE, },
-		{ ORANGE, PALE,     BLUE, },
-	};
-	
-	public static final Color[] GHOST_COLORS_FRIGHTENED = { BLUE, ROSE,  ROSE }; // dress, eyeballs, pupils
-	public static final Color[] GHOST_COLORS_FLASHING = { PALE, ROSE, RED }; // dress, eyeballs,pupils
+			set("ghost.1.color.normal.dress",      PINK);
+			set("ghost.1.color.normal.eyeballs",   PALE);
+			set("ghost.1.color.normal.pupils",     BLUE);
+			
+			set("ghost.2.color.normal.dress",      CYAN);
+			set("ghost.2.color.normal.eyeballs",   PALE);
+			set("ghost.2.color.normal.pupils",     BLUE);
+			
+			set("ghost.3.color.normal.dress",      ORANGE);
+			set("ghost.3.color.normal.eyeballs",   PALE);
+			set("ghost.3.color.normal.pupils",     BLUE);
+			
+			set("ghost.color.frightened.dress",    BLUE);
+			set("ghost.color.frightened.eyeballs", ROSE);
+			set("ghost.color.frightened.pupils",   ROSE);
+			
+			set("ghost.color.flashing.dress",      PALE);
+			set("ghost.color.flashing.eyeballs",   ROSE);
+			set("ghost.color.flashing.pupils",     RED);
+		}
+	}
 	//@formatter:on
-
-//	public static final MazeColoring mazeColors(GameVariant variant, int mazeNumber) {
-//		return switch (variant) {
-//		case MS_PACMAN -> MS_PACMAN_MAZE_COLORS[mazeNumber - 1];
-//		case PACMAN -> PACMAN_MAZE_COLORS;
-//		default -> throw new IllegalGameVariantException(variant);
-//		};
-//	}
 }
