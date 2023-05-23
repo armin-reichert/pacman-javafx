@@ -53,11 +53,13 @@ public class PacManCreditScene extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendererPacMan();
-		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, t(6), t(17));
-		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, context.ui().assets().arcadeFont8, t(8), t(21));
-		GameRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, context.ui().assets().arcadeFont8, t(1),
-				t(25));
-		GameRenderer.drawText(g, "PTS", ArcadeTheme.ROSE, context.ui().assets().arcadeFont6, t(25), t(25));
+		var theme = context.ui().assets().arcadeTheme; // TODO
+		var font6 = theme.font("font.arcade.6");
+		var font8 = theme.font("font.arcade.8");
+		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, font8, t(6), t(17));
+		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.CYAN, font8, t(8), t(21));
+		GameRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, font8, t(1), t(25));
+		GameRenderer.drawText(g, "PTS", ArcadeTheme.ROSE, font6, t(25), t(25));
 		r.drawMidwayCopyright(g, t(4), t(29));
 		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}

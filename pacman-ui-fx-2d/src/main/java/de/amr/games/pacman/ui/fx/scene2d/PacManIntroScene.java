@@ -63,7 +63,7 @@ public class PacManIntroScene extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		signature.setNameFont(context.ui().assets().handwritingFont9);
+		signature.setNameFont(context.ui().assets().arcadeTheme.font("font.handwriting.9"));
 		signature.hide();
 
 		intro = new PacManIntro(context().gameController());
@@ -148,11 +148,11 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGallery(GraphicsContext g) {
 		var theme = context.ui().assets().arcadeTheme; // TODO
+		var font8 = theme.font("font.arcade.8");
 
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, t(tx + 3),
-					t(6));
+			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, font8, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!ic.ghostInfo[id].pictureVisible) {
@@ -163,12 +163,12 @@ public class PacManIntroScene extends GameScene2D {
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 3), t(ty + 1));
+				GameRenderer.drawText(g, text, color, font8, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
 				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 14), t(ty + 1));
+				GameRenderer.drawText(g, text, color, font8, t(tx + 14), t(ty + 1));
 			}
 		}
 	}
@@ -199,6 +199,8 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawPoints(GraphicsContext g) {
 		var theme = context.ui().assets().arcadeTheme; // TODO
+		var font6 = theme.font("font.arcade.6");
+		var font8 = theme.font("font.arcade.8");
 
 		int tx = ic.leftTileX + 6;
 		int ty = 25;
@@ -208,13 +210,13 @@ public class PacManIntroScene extends GameScene2D {
 			g.fillOval(t(tx), t(ty + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);
-		g.setFont(context.ui().assets().arcadeFont8);
+		g.setFont(font8);
 		g.fillText("10", t(tx + 2), t(ty));
-		g.setFont(context.ui().assets().arcadeFont6); // TODO looks ugly
+		g.setFont(font6); // TODO looks ugly
 		g.fillText("PTS", t(tx + 5), t(ty));
-		g.setFont(context.ui().assets().arcadeFont8);
+		g.setFont(font8);
 		g.fillText("50", t(tx + 2), t(ty + 2));
-		g.setFont(context.ui().assets().arcadeFont6); // TODO still looks ugly
+		g.setFont(font6); // TODO still looks ugly
 		g.fillText("PTS", t(tx + 5), t(ty + 2));
 	}
 }

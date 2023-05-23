@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -55,5 +56,13 @@ public class Theme {
 
 	public Color color(String key) {
 		return (Color) namedThings.get(key);
+	}
+
+	public Font font(String key) {
+		return (Font) namedThings.get(key);
+	}
+
+	public Font font(String key, double size) {
+		return Font.font(font(key).getFamily(), size);
 	}
 }

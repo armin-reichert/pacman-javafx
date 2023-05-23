@@ -87,9 +87,11 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void paintRandomHexCodes() {
+		var theme = context.renderer().theme();
+		var font8 = theme.font("font.arcade.8");
 		clearCanvas();
 		ctx.setFill(ArcadeTheme.PALE);
-		ctx.setFont(context.ui().assets().arcadeFont8);
+		ctx.setFont(font8);
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));

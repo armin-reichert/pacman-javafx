@@ -61,15 +61,23 @@ public class MsPacManGameRenderer implements GameRenderer {
 	private static final int THIRD_COLUMN = 456;
 
 	private final PacManGames2dAssets assets;
+	private final Theme theme;
 
-	public MsPacManGameRenderer(PacManGames2dAssets assets) {
+	public MsPacManGameRenderer(PacManGames2dAssets assets, Theme theme) {
 		checkNotNull(assets);
+		checkNotNull(theme);
 		this.assets = assets;
+		this.theme = theme;
 	}
 
 	@Override
 	public PacManGames2dAssets assets() {
 		return assets;
+	}
+
+	@Override
+	public Theme theme() {
+		return theme;
 	}
 
 	@Override
@@ -169,11 +177,12 @@ public class MsPacManGameRenderer implements GameRenderer {
 	}
 
 	public void drawCopyright(GraphicsContext g, double x, double y) {
+		var font = theme().font("font.arcade.8");
 		g.drawImage(assets.logoMsPacMan, x, y + 2, TS * 4 - 2, TS * 4);
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
 		g.fillText("\u00a9", x + TS * 5, y + TS * 2 + 2); // (c) symbol
-		g.setFont(assets.arcadeFont8);
+		g.setFont(font);
 		g.fillText("MIDWAY MFG CO", x + TS * 7, y + TS * 2);
 		g.fillText("1980/1981", x + TS * 8, y + TS * 4);
 	}
@@ -284,7 +293,8 @@ public class MsPacManGameRenderer implements GameRenderer {
 				if (clap.isVisible()) {
 					drawSpriteOverBoundingBox(g, sprite, clap.position().x(), clap.position().y());
 				}
-				g.setFont(assets.arcadeFont8);
+				var font = theme().font("font.arcade.8");
+				g.setFont(font);
 				g.setFill(ArcadeTheme.PALE);
 				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
 				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());

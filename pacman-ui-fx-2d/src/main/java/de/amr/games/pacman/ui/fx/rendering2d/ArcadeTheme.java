@@ -24,6 +24,7 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.scene.paint.Color;
 
 /**
@@ -43,8 +44,18 @@ public class ArcadeTheme extends Theme {
 	public static final Color ROSE = Color.rgb(252, 187, 179);
 
 
-	public ArcadeTheme() {
-		// Mazes
+
+	public ArcadeTheme(ResourceManager rm) {
+		
+  	// Fonts
+		{
+			set("font.arcade.6",      rm.font("fonts/emulogic.ttf", 6));
+			set("font.arcade.8",      rm.font("fonts/emulogic.ttf", 8));
+			set("font.handwriting.9", rm.font("fonts/RockSalt-Regular.ttf", 9));
+			set("font.monospaced.12", rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+		}
+		
+	  // Maze colors
 		{
 			var key = "mspacman.maze.foodColor";
 			addToArray(key, Color.rgb(222, 222, 255));
@@ -83,14 +94,14 @@ public class ArcadeTheme extends Theme {
 			set("pacman.maze.doorColor",	   Color.rgb(252, 181, 255));
 		}
 		
-		// Pac-Man
+		// Pac-Man colors
 		{
 			set("pacman.color.head", Color.rgb(255, 255, 0));
 			set("pacman.color.palate", Color.rgb(191, 79, 61));
 			set("pacman.color.eyes", Color.rgb(33, 33, 33));
 		}
 		
-		// Ms. Pac-Man
+		// Ms. Pac-Man colors
 		{
 			set("mspacman.color.head", Color.rgb(255, 255, 0));
 			set("mspacman.color.palate",  Color.rgb(191, 79, 61));
@@ -100,7 +111,7 @@ public class ArcadeTheme extends Theme {
 			set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
 		}
 		
-		// Ghosts
+		// Ghost colors
 		{
 			set("ghost.0.color.normal.dress",      RED);
 			set("ghost.0.color.normal.eyeballs",   PALE);

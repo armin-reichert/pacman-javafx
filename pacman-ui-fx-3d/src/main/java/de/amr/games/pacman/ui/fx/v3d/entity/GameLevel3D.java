@@ -107,7 +107,7 @@ public class GameLevel3D {
 
 		pacLight = createPacLight(pac3D);
 		levelCounter3D = createLevelCounter3D(r2D);
-		scores3D = new Scores3D(assets.arcadeFont8);
+		scores3D = new Scores3D(theme.font("font.arcade.8"));
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);

@@ -179,7 +179,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void configureHelpMenus() {
 		helpMenus = new HelpMenus(assets.messages);
-		helpMenus.setFont(assets.inconsolataBold12);
+		helpMenus.setFont(assets.arcadeTheme.font("font.monospaced.12"));
 	}
 
 	protected void resizeStageToFitCurrentGameScene() {
@@ -287,8 +287,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		//@formatter:off
 		currentGameScene.setContext(
 			new GameSceneContext(gameController, this,
-				new MsPacManGameRenderer(assets),
-				new PacManGameRenderer(assets),
+				new MsPacManGameRenderer(assets, assets.arcadeTheme),
+				new PacManGameRenderer(assets, assets.arcadeTheme),
 				assets.gameSounds(game().variant())
 		));
 		//@formatter:on
@@ -360,8 +360,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
 			var renderer = switch (level.game().variant()) {
-			case MS_PACMAN -> new MsPacManGameRenderer(assets);
-			case PACMAN -> new PacManGameRenderer(assets);
+			case MS_PACMAN -> new MsPacManGameRenderer(assets, assets.arcadeTheme);
+			case PACMAN -> new PacManGameRenderer(assets, assets.arcadeTheme);
 			default -> throw new IllegalGameVariantException(level.game().variant());
 			};
 			level.pac().setAnimations(renderer.createPacAnimations(level.pac()));

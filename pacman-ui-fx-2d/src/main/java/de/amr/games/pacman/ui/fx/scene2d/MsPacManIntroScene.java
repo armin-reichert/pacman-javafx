@@ -72,7 +72,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghostAnimations.start();
 		});
 
-		signature.setNameFont(context.ui().assets().handwritingFont9);
+		signature.setNameFont(context.ui().assets().arcadeTheme.font("font.handwriting.9"));
 		signature.hide();
 	}
 
@@ -107,6 +107,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var theme = context.ui().assets().arcadeTheme; // TODOs
+		var font8 = theme.font("font.arcade.8");
 
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();
@@ -115,20 +116,20 @@ public class MsPacManIntroScene extends GameScene2D {
 		var r = context.rendererMsPacMan();
 
 		drawMarquee(g);
-		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, tx, ty);
+		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font8, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 
 			var color = theme.color("ghost.%d.color.normal.dress".formatted(ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText(g, "WITH", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, tx, y0 + t(3));
+				drawText(g, "WITH", ArcadeTheme.PALE, font8, tx, y0 + t(3));
 			}
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
-			drawText(g, text, color, context.ui().assets().arcadeFont8, tx + t(3) + dx, y0 + t(6));
+			drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText(g, "STARRING", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, tx, y0 + t(3));
-			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, context.ui().assets().arcadeFont8, tx, y0 + t(6));
+			drawText(g, "STARRING", ArcadeTheme.PALE, font8, tx, y0 + t(3));
+			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font8, tx, y0 + t(6));
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);

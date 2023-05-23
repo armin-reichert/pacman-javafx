@@ -48,7 +48,8 @@ public class SectionAbout extends Section {
 		madeBy.setFill(Color.grayRgb(150));
 
 		var signature = new Text("Armin Reichert");
-		var font = Font.font(ui.assets().handwritingFont9.getFamily(), 18.0);
+		var theme = ui.assets().arcadeTheme; // TODO
+		var font = theme.font("font.handwriting.9", 18);
 		signature.setFont(font);
 		signature.setFill(Color.grayRgb(225));
 

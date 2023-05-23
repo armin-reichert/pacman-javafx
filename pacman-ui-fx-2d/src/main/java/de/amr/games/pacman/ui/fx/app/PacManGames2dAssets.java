@@ -38,7 +38,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -93,11 +92,7 @@ public class PacManGames2dAssets {
 
 	public final ResourceBundle messages           = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
-	public final Theme arcadeTheme                 = new ArcadeTheme();
-	public final Font arcadeFont8                  = MGR.font("fonts/emulogic.ttf", 8);
-	public final Font arcadeFont6                  = MGR.font("fonts/emulogic.ttf", 6);
-	public final Font handwritingFont9             = MGR.font("fonts/RockSalt-Regular.ttf", 9);
-	public final Font inconsolataBold12            = MGR.font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+	public final Theme arcadeTheme                 = new ArcadeTheme(MGR);
 	
 	public final Background wallpaper              = MGR.imageBackground("graphics/pacman_wallpaper.png");
 	public final Color wallpaperColor              = Color.rgb(72, 78, 135);

@@ -53,10 +53,13 @@ public class PacManGameRenderer implements GameRenderer {
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	private final PacManGames2dAssets assets;
+	private final Theme theme;
 
-	public PacManGameRenderer(PacManGames2dAssets assets) {
+	public PacManGameRenderer(PacManGames2dAssets assets, Theme theme) {
 		checkNotNull(assets);
+		checkNotNull(theme);
 		this.assets = assets;
+		this.theme = theme;
 	}
 
 	@Override
@@ -65,12 +68,17 @@ public class PacManGameRenderer implements GameRenderer {
 	}
 
 	@Override
+	public Theme theme() {
+		return theme;
+	}
+
+	@Override
 	public Spritesheet spritesheet() {
 		return assets.spritesPacMan;
 	}
 
 	public void drawMidwayCopyright(GraphicsContext g, double x, double y) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, assets.arcadeFont8, x, y);
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, theme.font("font.arcade.8"), x, y);
 	}
 
 	@Override
