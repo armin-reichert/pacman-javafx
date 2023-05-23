@@ -102,7 +102,7 @@ public class PlayScene2D extends GameScene2D {
 	public void drawSceneContent(GraphicsContext g) {
 		context.level().ifPresent(level -> {
 			var r = context.renderer();
-			var font8 = r.theme().font("font.arcade.8");
+			var font8 = r.theme().font("font.arcade", 8);
 			int levelNumber = level.number();
 			int mazeNumber = level.game().mazeNumber(levelNumber);
 			r.drawMaze(g, 0, t(3), mazeNumber, level.world());

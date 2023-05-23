@@ -179,7 +179,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void configureHelpMenus() {
 		helpMenus = new HelpMenus(assets.messages);
-		helpMenus.setFont(assets.arcadeTheme.font("font.monospaced.12"));
+		helpMenus.setFont(assets.arcadeTheme.font("font.monospaced", 12));
 	}
 
 	protected void resizeStageToFitCurrentGameScene() {

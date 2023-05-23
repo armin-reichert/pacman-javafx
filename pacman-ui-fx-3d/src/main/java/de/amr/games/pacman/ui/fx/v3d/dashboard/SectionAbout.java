@@ -49,7 +49,7 @@ public class SectionAbout extends Section {
 
 		var signature = new Text("Armin Reichert");
 		var theme = ui.assets().arcadeTheme; // TODO
-		var font = theme.font("font.handwriting.9", 18);
+		var font = theme.font("font.handwriting", 18);
 		signature.setFont(font);
 		signature.setFill(Color.grayRgb(225));
 

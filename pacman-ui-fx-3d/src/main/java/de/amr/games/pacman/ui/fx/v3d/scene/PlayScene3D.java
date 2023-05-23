@@ -224,7 +224,7 @@ public class PlayScene3D implements GameScene {
 		readyMessageText3D.beginBatch();
 		readyMessageText3D.setBgColor(Color.CORNFLOWERBLUE);
 		readyMessageText3D.setTextColor(Color.YELLOW);
-		readyMessageText3D.setFont(context.renderer().theme().font("font.arcade.6"));
+		readyMessageText3D.setFont(context.renderer().theme().font("font.arcade", 6));
 		readyMessageText3D.setText("");
 		readyMessageText3D.endBatch();
 		readyMessageText3D.translate(0, 16, -4.5);

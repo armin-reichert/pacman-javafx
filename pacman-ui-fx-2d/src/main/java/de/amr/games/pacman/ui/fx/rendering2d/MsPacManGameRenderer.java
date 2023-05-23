@@ -177,7 +177,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 	}
 
 	public void drawCopyright(GraphicsContext g, double x, double y) {
-		var font = theme().font("font.arcade.8");
+		var font = theme().font("font.arcade", 8);
 		g.drawImage(assets.logoMsPacMan, x, y + 2, TS * 4 - 2, TS * 4);
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", 11));
@@ -293,7 +293,7 @@ public class MsPacManGameRenderer implements GameRenderer {
 				if (clap.isVisible()) {
 					drawSpriteOverBoundingBox(g, sprite, clap.position().x(), clap.position().y());
 				}
-				var font = theme().font("font.arcade.8");
+				var font = theme().font("font.arcade", 8);
 				g.setFont(font);
 				g.setFill(ArcadeTheme.PALE);
 				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);

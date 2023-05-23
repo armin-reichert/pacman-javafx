@@ -63,7 +63,7 @@ public class PacManIntroScene extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		signature.setNameFont(context.ui().assets().arcadeTheme.font("font.handwriting.9"));
+		signature.setNameFont(r.theme().font("font.handwriting", 9));
 		signature.hide();
 
 		intro = new PacManIntro(context().gameController());
@@ -147,8 +147,8 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery(GraphicsContext g) {
-		var theme = context.ui().assets().arcadeTheme; // TODO
-		var font8 = theme.font("font.arcade.8");
+		var theme = context.renderer().theme();
+		var font8 = theme.font("font.arcade", 8);
 
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
@@ -198,9 +198,9 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints(GraphicsContext g) {
-		var theme = context.ui().assets().arcadeTheme; // TODO
-		var font6 = theme.font("font.arcade.6");
-		var font8 = theme.font("font.arcade.8");
+		var theme = context.renderer().theme();
+		var font6 = theme.font("font.arcade", 6);
+		var font8 = theme.font("font.arcade", 8);
 
 		int tx = ic.leftTileX + 6;
 		int ty = 25;

@@ -49,10 +49,9 @@ public class ArcadeTheme extends Theme {
 		
   	// Fonts
 		{
-			set("font.arcade.6",      rm.font("fonts/emulogic.ttf", 6));
-			set("font.arcade.8",      rm.font("fonts/emulogic.ttf", 8));
-			set("font.handwriting.9", rm.font("fonts/RockSalt-Regular.ttf", 9));
-			set("font.monospaced.12", rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+			set("font.arcade",        rm.font("fonts/emulogic.ttf", 8));
+			set("font.handwriting",   rm.font("fonts/RockSalt-Regular.ttf", 9));
+			set("font.monospaced",    rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 		}
 		
 	  // Maze colors

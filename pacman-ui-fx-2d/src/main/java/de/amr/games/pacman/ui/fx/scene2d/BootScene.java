@@ -88,7 +88,7 @@ public class BootScene extends GameScene2D {
 
 	private void paintRandomHexCodes() {
 		var theme = context.renderer().theme();
-		var font8 = theme.font("font.arcade.8");
+		var font8 = theme.font("font.arcade", 8);
 		clearCanvas();
 		ctx.setFill(ArcadeTheme.PALE);
 		ctx.setFont(font8);

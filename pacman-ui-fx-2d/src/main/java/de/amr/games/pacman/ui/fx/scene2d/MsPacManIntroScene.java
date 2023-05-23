@@ -72,7 +72,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghostAnimations.start();
 		});
 
-		signature.setNameFont(context.ui().assets().arcadeTheme.font("font.handwriting.9"));
+		signature.setNameFont(context.renderer().theme().font("font.handwriting", 9));
 		signature.hide();
 	}
 
@@ -106,8 +106,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
-		var theme = context.ui().assets().arcadeTheme; // TODOs
-		var font8 = theme.font("font.arcade.8");
+		var theme = context.renderer().theme();
+		var font8 = theme.font("font.arcade", 8);
 
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();

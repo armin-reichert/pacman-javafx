@@ -58,7 +58,7 @@ public class Theme {
 		return (Color) namedThings.get(key);
 	}
 
-	public Font font(String key) {
+	private Font font(String key) {
 		return (Font) namedThings.get(key);
 	}
 

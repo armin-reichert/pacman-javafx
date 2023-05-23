@@ -191,7 +191,7 @@ public interface GameRenderer {
 	}
 
 	default void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-		var font = theme().font("font.arcade.8");
+		var font = theme().font("font.arcade", 8);
 		drawText(g, title, ArcadeTheme.PALE, font, x, y);
 		var pointsText = "%02d".formatted(score.points());
 		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
@@ -201,7 +201,7 @@ public interface GameRenderer {
 	}
 
 	default void drawCredit(GraphicsContext g, int credit, double x, double y) {
-		var font = theme().font("font.arcade.8");
+		var font = theme().font("font.arcade", 8);
 		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, font, x, y);
 	}
 

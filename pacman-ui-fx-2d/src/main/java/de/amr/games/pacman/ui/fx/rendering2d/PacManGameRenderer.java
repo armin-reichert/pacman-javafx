@@ -78,7 +78,7 @@ public class PacManGameRenderer implements GameRenderer {
 	}
 
 	public void drawMidwayCopyright(GraphicsContext g, double x, double y) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, theme.font("font.arcade.8"), x, y);
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, theme.font("font.arcade", 8), x, y);
 	}
 
 	@Override
