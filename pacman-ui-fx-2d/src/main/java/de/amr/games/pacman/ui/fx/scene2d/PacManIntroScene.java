@@ -160,12 +160,12 @@ public class PacManIntroScene extends GameScene2D {
 			r.drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
-				var color = ArcadeTheme.GHOST_COLORS[id].dress();
+				var color = ArcadeTheme.GHOST_COLORS_NORMAL[id][0];
 				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
-				var color = ArcadeTheme.GHOST_COLORS[id].dress();
+				var color = ArcadeTheme.GHOST_COLORS_NORMAL[id][0];
 				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 14), t(ty + 1));
 			}
 		}

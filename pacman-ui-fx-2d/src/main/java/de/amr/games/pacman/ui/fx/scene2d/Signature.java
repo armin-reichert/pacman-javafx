@@ -40,28 +40,30 @@ import javafx.util.Duration;
  */
 public class Signature {
 
-	private TextFlow text = new TextFlow();
+	private Text remakeText;
+	private Text nameText;
+	private final TextFlow sentence;
 	private final FadeTransition fadeIn;
 	private final FadeTransition fadeOut;
 	private final Transition animation;
 
 	public Signature() {
-		var part1 = new Text("Remake (2023) by ");
-		part1.setFill(Color.gray(0.6));
-		part1.setFont(Font.font("Helvetica", 9));
+		remakeText = new Text("Remake (2023) by ");
+		remakeText.setFill(Color.gray(0.6));
+		remakeText.setFont(Font.font("Helvetica", 9));
 
-		var name = new Text("Armin Reichert");
-		name.setFill(Color.gray(0.6));
-		name.setFont(Font.font("Serif", 9));
+		nameText = new Text("Armin Reichert");
+		nameText.setFill(Color.gray(0.6));
+		nameText.setFont(Font.font("Serif", 9));
 
-		text = new TextFlow(part1, name);
+		sentence = new TextFlow(remakeText, nameText);
 
-		fadeIn = new FadeTransition(Duration.seconds(5), text);
+		fadeIn = new FadeTransition(Duration.seconds(5), sentence);
 		fadeIn.setFromValue(0);
 		fadeIn.setToValue(1);
 		fadeIn.setInterpolator(Interpolator.EASE_IN);
 
-		fadeOut = new FadeTransition(Duration.seconds(1), text);
+		fadeOut = new FadeTransition(Duration.seconds(1), sentence);
 		fadeOut.setFromValue(1);
 		fadeOut.setToValue(0);
 
@@ -69,22 +71,21 @@ public class Signature {
 	}
 
 	public void setNameFont(Font font) {
-		var name = (Text) text.getChildren().get(1);
-		name.setFont(font);
+		nameText.setFont(font);
 	}
 
 	public Node root() {
-		return text;
+		return sentence;
 	}
 
 	public void show(double x, double y) {
-		text.setTranslateX(x);
-		text.setTranslateY(y);
+		sentence.setTranslateX(x);
+		sentence.setTranslateY(y);
 		animation.play();
 	}
 
 	public void hide() {
 		animation.stop();
-		text.setOpacity(0);
+		sentence.setOpacity(0);
 	}
 }

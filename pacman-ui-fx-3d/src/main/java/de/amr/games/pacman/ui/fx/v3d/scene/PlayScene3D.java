@@ -196,11 +196,8 @@ public class PlayScene3D implements GameScene {
 		}
 
 		var mazeNumber = level.game().mazeNumber(level.number());
-		level3D = new GameLevel3D(level, //
-				assets(), //
-				context.renderer(), //
-				ArcadeTheme.mazeColors(level.game().variant(), mazeNumber), //
-				ArcadeTheme.GHOST_COLORS);
+		level3D = new GameLevel3D(level, assets(), context.renderer(),
+				ArcadeTheme.mazeColors(level.game().variant(), mazeNumber));
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;

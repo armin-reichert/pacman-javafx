@@ -65,29 +65,47 @@ public class ArcadeTheme {
 	public static final Color	MS_PACMAN_COLOR_EYES	         = Color.rgb(33, 33, 33);
 	public static final Color	MS_PACMAN_COLOR_HAIRBOW	       = Color.rgb(255, 0, 0);
 	public static final Color	MS_PACMAN_COLOR_HAIRBOW_PEARLS = Color.rgb(33, 33, 255);
-	
-	public static final GhostColoring[] GHOST_COLORS = {
-		new GhostColoring(
-			RED,  PALE, BLUE, // normal
-			BLUE, ROSE, ROSE, // frightened
-			PALE, ROSE, RED   // flashing
-		),
-		new GhostColoring(
-			PINK, PALE, BLUE, // normal
-			BLUE, ROSE, ROSE, // frightened
-			PALE, ROSE, RED   // flashing
-		),
-		new GhostColoring(
-			CYAN, PALE, BLUE, // normal
-			BLUE, ROSE, ROSE, // frightened
-			PALE, ROSE, RED   // flashing
-		),
-		new GhostColoring(
-			ORANGE, PALE, BLUE, // normal
-			BLUE,   ROSE, ROSE, // frightened
-			PALE,   ROSE, RED   // flashing
-		)
+
+	public static final Color[][] GHOST_COLORS_NORMAL = {
+		// dress  eyeballs  pupils
+		{ RED,    PALE,     BLUE, },
+		{ PINK,   PALE,     BLUE, },
+		{ CYAN,   PALE,     BLUE, },
+		{ ORANGE, PALE,     BLUE, },
 	};
+	
+	public static final Color[] GHOST_COLORS_FRIGHTENED = {
+		// dress  eyeballs  pupils
+		   BLUE,  ROSE,     ROSE
+	};
+
+	public static final Color[] GHOST_COLORS_FLASHING = {
+		// dress  eyeballs  pupils
+		   PALE,  ROSE,     RED
+	};
+	
+//	public static final GhostColoring[] GHOST_COLORS = {
+//		new GhostColoring(
+//			RED,  PALE, BLUE, // normal
+//			BLUE, ROSE, ROSE, // frightened
+//			PALE, ROSE, RED   // flashing
+//		),
+//		new GhostColoring(
+//			PINK, PALE, BLUE, // normal
+//			BLUE, ROSE, ROSE, // frightened
+//			PALE, ROSE, RED   // flashing
+//		),
+//		new GhostColoring(
+//			CYAN, PALE, BLUE, // normal
+//			BLUE, ROSE, ROSE, // frightened
+//			PALE, ROSE, RED   // flashing
+//		),
+//		new GhostColoring(
+//			ORANGE, PALE, BLUE, // normal
+//			BLUE,   ROSE, ROSE, // frightened
+//			PALE,   ROSE, RED   // flashing
+//		)
+//	};
 	//@formatter:on
 
 	public static final MazeColoring mazeColors(GameVariant variant, int mazeNumber) {

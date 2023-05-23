@@ -72,6 +72,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghostAnimations.start();
 		});
 
+		signature.setNameFont(context.ui().assets().handwritingFont9);
 		signature.hide();
 	}
 
@@ -115,7 +116,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
-			var color = ArcadeTheme.GHOST_COLORS[ghost.id()].dress();
+			var color = ArcadeTheme.GHOST_COLORS_NORMAL[ghost.id()][0];
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText(g, "WITH", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, tx, y0 + t(3));
 			}

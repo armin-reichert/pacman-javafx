@@ -38,7 +38,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.Door;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
@@ -76,13 +75,10 @@ public class GameLevel3D {
 	private final Scores3D scores3D;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, PacManGames3dAssets assets, GameRenderer r2D, MazeColoring mazeColors,
-			GhostColoring[] ghostColors) {
-
+	public GameLevel3D(GameLevel level, PacManGames3dAssets assets, GameRenderer r2D, MazeColoring mazeColors) {
 		checkLevelNotNull(level);
 		checkNotNull(r2D);
 		checkNotNull(mazeColors);
-		checkNotNull(ghostColors);
 
 		this.level = level;
 		boolean msPacMan = level.game().variant() == GameVariant.MS_PACMAN;
@@ -91,8 +87,7 @@ public class GameLevel3D {
 		pac3D = msPacMan ? Pac3D.createMsPacMan3D(assets.pacModel3D, level.pac())
 				: Pac3D.createPacMan3D(assets.pacModel3D, level.pac());
 		pacLight = createPacLight(pac3D);
-		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, assets.ghostModel3D, ghostColors[ghost.id()]))
-				.toArray(Ghost3D[]::new);
+		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, assets.ghostModel3D)).toArray(Ghost3D[]::new);
 		levelCounter3D = createLevelCounter3D(r2D);
 		livesCounter3D = msPacMan ? LivesCounter3D.counterMsPacManGame(assets.pacModel3D)
 				: LivesCounter3D.counterPacManGame(assets.pacModel3D);
@@ -135,8 +130,8 @@ public class GameLevel3D {
 		root.getChildren().add(bonus3D.getRoot());
 	}
 
-	private Ghost3D createGhost3D(Ghost ghost, Model3D ghostModel3D, GhostColoring colors) {
-		return new Ghost3D(ghost, colors, ghostModel3D, 8.5);
+	private Ghost3D createGhost3D(Ghost ghost, Model3D ghostModel3D) {
+		return new Ghost3D(ghost, ghostModel3D, 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, GameRenderer r2D, boolean moving) {
