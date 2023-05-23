@@ -37,7 +37,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
@@ -45,6 +44,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.MsPacManColoring;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManColoring;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
+import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -77,8 +78,8 @@ public class GameLevel3D {
 	private final Scores3D scores3D;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, GameRenderer r2D, MazeColoring mazeColors, PacManColoring pacManColors,
-			MsPacManColoring msPacManColors, GhostColoring[] ghostColors) {
+	public GameLevel3D(GameLevel level, PacManGames3dAssets assets, GameRenderer r2D, MazeColoring mazeColors,
+			PacManColoring pacManColors, MsPacManColoring msPacManColors, GhostColoring[] ghostColors) {
 
 		checkLevelNotNull(level);
 		checkNotNull(r2D);
@@ -90,14 +91,16 @@ public class GameLevel3D {
 		this.level = level;
 		boolean msPacMan = level.game().variant() == GameVariant.MS_PACMAN;
 
-		world3D = new World3D(level.world(), mazeColors, PacManGames3d.assets.pelletModel3D);
-		pac3D = msPacMan ? Pac3D.createMsPacMan3D(PacManGames3d.assets.pacModel3D, level.pac(), msPacManColors)
-				: Pac3D.createPacMan3D(PacManGames3d.assets.pacModel3D, level.pac(), pacManColors);
+		world3D = new World3D(level.world(), assets, mazeColors, assets.pelletModel3D);
+		pac3D = msPacMan ? Pac3D.createMsPacMan3D(assets.pacModel3D, level.pac(), msPacManColors)
+				: Pac3D.createPacMan3D(assets.pacModel3D, level.pac(), pacManColors);
 		pacLight = createPacLight(pac3D);
-		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostColors[ghost.id()])).toArray(Ghost3D[]::new);
+		ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, assets.ghostModel3D, ghostColors[ghost.id()]))
+				.toArray(Ghost3D[]::new);
 		levelCounter3D = createLevelCounter3D(r2D);
-		livesCounter3D = msPacMan ? LivesCounter3D.of(msPacManColors) : LivesCounter3D.of(pacManColors);
-		scores3D = new Scores3D(PacManGames2d.assets.arcadeFont8);
+		livesCounter3D = msPacMan ? LivesCounter3D.of(assets.pacModel3D, msPacManColors)
+				: LivesCounter3D.of(assets.pacModel3D, pacManColors);
+		scores3D = new Scores3D(assets.arcadeFont8);
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
@@ -136,8 +139,8 @@ public class GameLevel3D {
 		root.getChildren().add(bonus3D.getRoot());
 	}
 
-	private Ghost3D createGhost3D(Ghost ghost, GhostColoring colors) {
-		return new Ghost3D(ghost, colors, PacManGames3d.assets.ghostModel3D, 8.5);
+	private Ghost3D createGhost3D(Ghost ghost, Model3D ghostModel3D, GhostColoring colors) {
+		return new Ghost3D(ghost, colors, ghostModel3D, 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, GameRenderer r2D, boolean moving) {

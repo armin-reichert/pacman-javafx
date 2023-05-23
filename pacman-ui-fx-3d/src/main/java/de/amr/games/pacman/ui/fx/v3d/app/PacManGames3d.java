@@ -78,7 +78,6 @@ public class PacManGames3d {
 	public static final KeyCodeCombination          KEY_PREV_PERSPECTIVE     = alt(KeyCode.LEFT);
 	public static final KeyCodeCombination          KEY_NEXT_PERSPECTIVE     = alt(KeyCode.RIGHT);
 
-	public static PacManGames3dAssets assets;
 	public static PacManGames3dUI     ui;
 	//@formatter:on
 }

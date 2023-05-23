@@ -24,7 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
@@ -51,11 +50,11 @@ public class Signature {
 		part1.setFill(Color.gray(0.6));
 		part1.setFont(Font.font("Helvetica", 9));
 
-		var part2 = new Text("Armin Reichert");
-		part2.setFill(Color.gray(0.6));
-		part2.setFont(PacManGames2d.assets.handwritingFont9);
+		var name = new Text("Armin Reichert");
+		name.setFill(Color.gray(0.6));
+		name.setFont(Font.font("Serif", 9));
 
-		text = new TextFlow(part1, part2);
+		text = new TextFlow(part1, name);
 
 		fadeIn = new FadeTransition(Duration.seconds(5), text);
 		fadeIn.setFromValue(0);
@@ -67,6 +66,11 @@ public class Signature {
 		fadeOut.setToValue(0);
 
 		animation = new SequentialTransition(fadeIn, fadeOut);
+	}
+
+	public void setNameFont(Font font) {
+		var name = (Text) text.getChildren().get(1);
+		name.setFont(font);
 	}
 
 	public Node root() {

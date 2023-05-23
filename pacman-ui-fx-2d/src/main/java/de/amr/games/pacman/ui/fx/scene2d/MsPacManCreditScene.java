@@ -28,7 +28,6 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -54,12 +53,12 @@ public class MsPacManCreditScene extends GameScene2D {
 	@Override
 	public void drawSceneContent(GraphicsContext g) {
 		var r = context.rendererMsPacMan();
-		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, t(6), t(16));
-		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, t(8), t(18));
-		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, t(2),
+		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, t(6), t(16));
+		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, t(8), t(18));
+		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, t(2),
 				t(25));
 		r.drawSprite(g, r.livesCounterSprite(), t(13), t(23) + 1);
-		GameRenderer.drawText(g, "PTS", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont6, t(25), t(25));
-		MsPacManGameRenderer.drawCopyright(g, t(6), t(28));
+		GameRenderer.drawText(g, "PTS", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont6, t(25), t(25));
+		r.drawCopyright(g, t(6), t(28));
 	}
 }

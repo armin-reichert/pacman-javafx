@@ -42,7 +42,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.MazeColoring;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.DoubleProperty;
@@ -103,6 +102,7 @@ public class World3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
+	private final PacManGames3dAssets assets;
 	private final Model3D pelletModel3D;
 	private final World world;
 	private final MazeColoring mazeColoring;
@@ -115,12 +115,14 @@ public class World3D {
 	private final Group foodGroup = new Group();
 	private final FoodOscillation foodOscillation;
 
-	public World3D(World world, MazeColoring mazeColoring, Model3D pelletModel3D) {
+	public World3D(World world, PacManGames3dAssets assets, MazeColoring mazeColoring, Model3D pelletModel3D) {
 		checkNotNull(world);
+		checkNotNull(assets);
 		checkNotNull(mazeColoring);
 		checkNotNull(pelletModel3D);
 
 		this.world = world;
+		this.assets = assets;
 		this.mazeColoring = mazeColoring;
 		this.pelletModel3D = pelletModel3D;
 		this.houseLight = createGhostHouseLight();
@@ -173,7 +175,7 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = PacManGames3d.assets.floorTexturesByName.get(key);
+		var texture = assets.floorTexturesByName.get(key);
 		if (texture == null) {
 			texture = ResourceManager.coloredMaterial(floorColorPy.get());
 		}

@@ -30,7 +30,6 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -73,8 +72,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	private Dashboard dashboard;
 
 	@Override
-	public void init(Stage stage, Settings settings) {
-		super.init(stage, settings);
+	public PacManGames3dAssets assets() {
+		return (PacManGames3dAssets) super.assets();
 	}
 
 	@Override
@@ -153,23 +152,23 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(PacManGames3d.assets.wallpaper3D);
+				mainSceneRoot.setBackground(assets().wallpaper3D);
 			}
 		} else {
-			mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper);
+			mainSceneRoot.setBackground(assets().wallpaper);
 		}
 		var paused = clock().pausedPy.get();
-		var dimensionMsg = fmtMessage(PacManGames3d.assets.messages, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = fmtMessage(assets().messages, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(fmtMessage(PacManGames3d.assets.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(PacManGames2d.assets.iconMsPacMan);
+			stage.setTitle(fmtMessage(assets().messages, messageKey, dimensionMsg));
+			stage.getIcons().setAll(assets().iconMsPacMan);
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(fmtMessage(PacManGames3d.assets.messages, messageKey, dimensionMsg));
-			stage.getIcons().setAll(PacManGames2d.assets.iconPacMan);
+			stage.setTitle(fmtMessage(assets().messages, messageKey, dimensionMsg));
+			stage.getIcons().setAll(assets().iconPacMan);
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
 		}
@@ -215,8 +214,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
-			var message = fmtMessage(PacManGames3d.assets.messages,
-					PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
+			var message = fmtMessage(assets().messages, PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
 			showFlashMessage(message);
 		}
 	}
@@ -234,7 +232,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	public void togglePipOn() {
 		Ufx.toggle(PacManGames3d.PY_PIP_ON);
 		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
-		var message = fmtMessage(PacManGames3d.assets.messages, PacManGames3d.PY_PIP_ON.get() ? "pip_on" : "pip_off");
+		var message = fmtMessage(assets().messages, PacManGames3d.PY_PIP_ON.get() ? "pip_on" : "pip_off");
 		showFlashMessage(message);
 	}
 
@@ -245,15 +243,15 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	public void selectNextPerspective() {
 		var next = PacManGames3d.PY_3D_PERSPECTIVE.get().next();
 		PacManGames3d.PY_3D_PERSPECTIVE.set(next);
-		String perspectiveName = fmtMessage(PacManGames3d.assets.messages, next.name());
-		showFlashMessage(fmtMessage(PacManGames3d.assets.messages, "camera_perspective", perspectiveName));
+		String perspectiveName = fmtMessage(assets().messages, next.name());
+		showFlashMessage(fmtMessage(assets().messages, "camera_perspective", perspectiveName));
 	}
 
 	public void selectPrevPerspective() {
 		var prev = PacManGames3d.PY_3D_PERSPECTIVE.get().prev();
 		PacManGames3d.PY_3D_PERSPECTIVE.set(prev);
-		String perspectiveName = fmtMessage(PacManGames3d.assets.messages, prev.name());
-		showFlashMessage(fmtMessage(PacManGames3d.assets.messages, "camera_perspective", perspectiveName));
+		String perspectiveName = fmtMessage(assets().messages, prev.name());
+		showFlashMessage(fmtMessage(assets().messages, "camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {

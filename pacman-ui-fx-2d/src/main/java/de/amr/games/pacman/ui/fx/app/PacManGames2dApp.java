@@ -41,14 +41,14 @@ public class PacManGames2dApp extends Application {
 	@Override
 	public void init() {
 		settings.merge(getParameters().getNamed());
-		PacManGames2d.assets = new PacManGames2dAssets();
 		Logger.info("Game initialized: {}", settings);
 	}
 
 	@Override
 	public void start(Stage stage) {
+		var assets = new PacManGames2dAssets();
 		PacManGames2d.ui = new PacManGames2dUI();
-		PacManGames2d.ui.init(stage, settings);
+		PacManGames2d.ui.init(stage, settings, assets);
 		PacManGames2d.ui.gameController().changeState(GameState.BOOT);
 		PacManGames2d.ui.show();
 		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),

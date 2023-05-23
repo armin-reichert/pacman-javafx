@@ -51,15 +51,19 @@ public class SectionGeneral extends Section {
 	private final CheckBox cbPoliticallyCorrect;
 	private final CheckBox cbDebugUI;
 	private final CheckBox cbTimeMeasured;
-	private final ImageView iconPlay = new ImageView(PacManGames3d.assets.image("graphics/icons/play.png"));
-	private final ImageView iconStop = new ImageView(PacManGames3d.assets.image("graphics/icons/stop.png"));
-	private final ImageView iconStep = new ImageView(PacManGames3d.assets.image("graphics/icons/step.png"));
+	private final ImageView iconPlay;
+	private final ImageView iconStop;
+	private final ImageView iconStep;
 	private final Tooltip tooltipPlay = new Tooltip("Play");
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
 	public SectionGeneral(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+
+		iconPlay = new ImageView(ui.assets().iconPlay);
+		iconStop = new ImageView(ui.assets().iconStop);
+		iconStep = new ImageView(ui.assets().iconStep);
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
 		Button btnPlayPause = btnsSimulation[0];

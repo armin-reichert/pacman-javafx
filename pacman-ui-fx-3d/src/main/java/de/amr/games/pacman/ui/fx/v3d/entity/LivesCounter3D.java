@@ -1,5 +1,5 @@
 /*
-MIT License
+MIT License	
 
 Copyright (c) 2021-2023 Armin Reichert
 
@@ -59,12 +59,12 @@ import javafx.util.Duration;
  */
 public class LivesCounter3D {
 
-	public static LivesCounter3D of(PacManColoring colors) {
-		return new LivesCounter3D(() -> Pac3D.createPacManGroup(PacManGames3d.assets.pacModel3D, colors), false);
+	public static LivesCounter3D of(Model3D model3D, PacManColoring colors) {
+		return new LivesCounter3D(() -> Pac3D.createPacManGroup(model3D, colors), false);
 	}
 
-	public static LivesCounter3D of(MsPacManColoring colors) {
-		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(PacManGames3d.assets.pacModel3D, colors), true);
+	public static LivesCounter3D of(Model3D model3D, MsPacManColoring colors) {
+		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(model3D, colors), true);
 	}
 
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);

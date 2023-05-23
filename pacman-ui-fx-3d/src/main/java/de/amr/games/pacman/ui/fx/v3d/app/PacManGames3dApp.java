@@ -30,7 +30,6 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import javafx.stage.Stage;
 
 /**
@@ -41,15 +40,14 @@ public class PacManGames3dApp extends PacManGames2dApp {
 	@Override
 	public void init() {
 		settings.merge(getParameters().getNamed());
-		PacManGames2d.assets = new PacManGames2dAssets();
-		PacManGames3d.assets = new PacManGames3dAssets();
 		Logger.info("Game initialized: {}", settings);
 	}
 
 	@Override
 	public void start(Stage stage) {
+		var assets = new PacManGames3dAssets();
 		PacManGames2d.ui = PacManGames3d.ui = new PacManGames3dUI();
-		PacManGames3d.ui.init(stage, settings);
+		PacManGames3d.ui.init(stage, settings, assets);
 		PacManGames3d.ui.gameController().changeState(GameState.BOOT);
 		PacManGames3d.ui.show();
 		Logger.info("Game started. {} Hz language={}", PacManGames3d.ui.clock().targetFrameratePy.get(),

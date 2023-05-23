@@ -29,7 +29,6 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -94,9 +93,6 @@ public abstract class GameScene2D implements GameScene {
 		helpMenuAnimation.setFromValue(1);
 		helpMenuAnimation.setToValue(0);
 
-		// This avoids a vertical line on the left side of the embedded 2D game scene
-		root.setBackground(ResourceManager.coloredBackground(PacManGames2d.assets.wallpaperColor));
-
 		// scale overlay pane to cover subscene
 		fxSubScene.heightProperty().addListener((py, ov, nv) -> {
 			var scaling = nv.doubleValue() / HEIGHT;
@@ -148,24 +144,30 @@ public abstract class GameScene2D implements GameScene {
 	public void setContext(GameSceneContext context) {
 		checkNotNull(context);
 		this.context = context;
+		// This avoids a vertical line on the left side of the embedded 2D game scene
+		root.setBackground(ResourceManager.coloredBackground(context.ui().assets().wallpaperColor));
+
 	}
 
 	@Override
 	public void render() {
-		var g = canvas.getGraphicsContext2D();
-		g.setFill(PacManGames2d.assets.wallpaperColor);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
-		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
 		if (context == null) {
 			return;
 		}
+
+		var g = canvas.getGraphicsContext2D();
+		g.setFill(context.ui().assets().wallpaperColor);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.setFill(Color.BLACK);
+		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
+
+		var r = context.renderer();
 		if (context.isScoreVisible()) {
-			GameRenderer.drawScore(g, context.game().score(), "SCORE", t(1), t(1));
-			GameRenderer.drawScore(g, context.game().highScore(), "HIGH SCORE", t(16), t(1));
+			r.drawScore(g, context.game().score(), "SCORE", t(1), t(1));
+			r.drawScore(g, context.game().highScore(), "HIGH SCORE", t(16), t(1));
 		}
 		if (context.isCreditVisible()) {
-			GameRenderer.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
+			r.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent(g);
 		if (infoVisiblePy.get()) {

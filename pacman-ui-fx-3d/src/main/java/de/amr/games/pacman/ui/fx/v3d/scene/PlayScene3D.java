@@ -53,6 +53,7 @@ import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
 import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
@@ -124,6 +125,10 @@ public class PlayScene3D implements GameScene {
 		this.context = context;
 	}
 
+	private PacManGames3dAssets assets() {
+		return (PacManGames3dAssets) context.ui().assets();
+	}
+
 	@Override
 	public GameSceneContext context() {
 		return context;
@@ -185,7 +190,6 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
-
 		if (level.number() > 1 && level3D != null && level3D.level().number() == level.number()) {
 			Logger.info("3D game level up-to-date");
 			return;
@@ -193,6 +197,7 @@ public class PlayScene3D implements GameScene {
 
 		var mazeNumber = level.game().mazeNumber(level.number());
 		level3D = new GameLevel3D(level, //
+				assets(), //
 				context.renderer(), //
 				ArcadeTheme.mazeColors(level.game().variant(), mazeNumber), //
 				ArcadeTheme.PACMAN_COLORS, //
@@ -217,7 +222,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		if (PacManGames3d.PY_3D_FLOOR_TEXTURE_RND.get()) {
-			var names = PacManGames3d.assets.floorTexturesByName.keySet().toArray(String[]::new);
+			var names = assets().floorTexturesByName.keySet().toArray(String[]::new);
 			PacManGames3d.PY_3D_FLOOR_TEXTURE.set(names[randomInt(0, names.length)]);
 		}
 		Logger.info("3D game level {} created.", level.number());
@@ -227,7 +232,7 @@ public class PlayScene3D implements GameScene {
 		readyMessageText3D.beginBatch();
 		readyMessageText3D.setBgColor(Color.CORNFLOWERBLUE);
 		readyMessageText3D.setTextColor(Color.YELLOW);
-		readyMessageText3D.setFont(PacManGames2d.assets.arcadeFont6);
+		readyMessageText3D.setFont(context.ui().assets().arcadeFont6);
 		readyMessageText3D.setText("");
 		readyMessageText3D.endBatch();
 		readyMessageText3D.translate(0, 16, -4.5);
@@ -347,8 +352,7 @@ public class PlayScene3D implements GameScene {
 //					level3D.world3D().foodOscillation().play();
 //				}
 				readyMessageText3D.setVisible(true);
-				var readyMessage = inPercentOfCases(40) ? PacManGames3d.assets.pickFunnyReadyMessage(context.gameVariant())
-						: "READY!";
+				var readyMessage = inPercentOfCases(40) ? assets().pickFunnyReadyMessage(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -405,7 +409,7 @@ public class PlayScene3D implements GameScene {
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
 							context.sounds().play(AudioClipID.LEVEL_COMPLETE);
-							PacManGames3d.ui.showFlashMessageSeconds(2, PacManGames3d.assets.pickLevelCompleteMessage(level.number()));
+							PacManGames3d.ui.showFlashMessageSeconds(2, assets().pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -418,7 +422,7 @@ public class PlayScene3D implements GameScene {
 		case GAME_OVER -> {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
-			PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.assets.pickGameOverMessage());
+			PacManGames3d.ui.showFlashMessageSeconds(3, assets().pickGameOverMessage());
 			context.sounds().play(AudioClipID.GAME_OVER);
 			waitSeconds(3);
 		}

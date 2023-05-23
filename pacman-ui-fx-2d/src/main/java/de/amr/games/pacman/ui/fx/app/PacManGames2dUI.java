@@ -90,6 +90,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final GameClock clock = new GameClock(GameModel.FPS);
+	protected PacManGames2dAssets assets;
 	protected Stage stage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
@@ -100,11 +101,13 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	private AudioClip currentVoice;
 
 	@Override
-	public void init(Stage stage, Settings settings) {
+	public void init(Stage stage, Settings settings, PacManGames2dAssets assets) {
 		checkNotNull(stage);
 		checkNotNull(settings);
+		checkNotNull(assets);
 		this.stage = stage;
 		stage.setFullScreen(settings.fullScreen);
+		this.assets = assets;
 		this.gameController = new GameController(settings.variant);
 		configureGameScenes();
 		createMainScene(stage, settings);
@@ -158,7 +161,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void createMainScene(Stage stage, Settings settings) {
 		mainSceneRoot = new StackPane();
 		// Without this, there appears an ugly vertical line right of the embedded subscene
-		mainSceneRoot.setBackground(ResourceManager.coloredBackground(PacManGames2d.assets.wallpaperColor));
+		mainSceneRoot.setBackground(ResourceManager.coloredBackground(assets.wallpaperColor));
 		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
 		mainSceneRoot.getChildren().add(flashMessageView);
 
@@ -175,8 +178,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void configureHelpMenus() {
-		helpMenus = new HelpMenus(PacManGames2d.assets.messages);
-		helpMenus.setFont(PacManGames2d.assets.inconsolataBold12);
+		helpMenus = new HelpMenus(assets.messages);
+		helpMenus.setFont(assets.inconsolataBold12);
 	}
 
 	protected void resizeStageToFitCurrentGameScene() {
@@ -202,18 +205,23 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		clock.start();
 	}
 
+	@Override
+	public PacManGames2dAssets assets() {
+		return assets;
+	}
+
 	protected void updateStage() {
-		mainSceneRoot.setBackground(PacManGames2d.assets.wallpaper);
+		mainSceneRoot.setBackground(assets.wallpaper);
 		switch (gameVariant()) {
 		case MS_PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(PacManGames2d.assets.iconMsPacMan);
+			stage.setTitle(ResourceManager.fmtMessage(assets.messages, messageKey, ""));
+			stage.getIcons().setAll(assets.iconMsPacMan);
 		}
 		case PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.assets.messages, messageKey, ""));
-			stage.getIcons().setAll(PacManGames2d.assets.iconPacMan);
+			stage.setTitle(ResourceManager.fmtMessage(assets.messages, messageKey, ""));
+			stage.getIcons().setAll(assets.iconPacMan);
 		}
 		default -> throw new IllegalGameVariantException(gameVariant());
 		}
@@ -279,9 +287,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		//@formatter:off
 		currentGameScene.setContext(
 			new GameSceneContext(gameController, this,
-				new MsPacManGameRenderer(PacManGames2d.assets.spritesMsPacMan),
-				new PacManGameRenderer(PacManGames2d.assets.spritesPacMan),
-				PacManGames2d.assets.gameSounds(game().variant())
+				new MsPacManGameRenderer(assets),
+				new PacManGameRenderer(assets),
+				assets.gameSounds(game().variant())
 		));
 		//@formatter:on
 		currentGameScene.init();
@@ -352,8 +360,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
 			var renderer = switch (level.game().variant()) {
-			case MS_PACMAN -> new MsPacManGameRenderer(PacManGames2d.assets.spritesMsPacMan);
-			case PACMAN -> new PacManGameRenderer(PacManGames2d.assets.spritesPacMan);
+			case MS_PACMAN -> new MsPacManGameRenderer(assets);
+			case PACMAN -> new PacManGameRenderer(assets);
 			default -> throw new IllegalGameVariantException(level.game().variant());
 			};
 			level.pac().setAnimations(renderer.createPacAnimations(level.pac()));
@@ -366,7 +374,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		SoundHandler.onSoundEvent(event);
+		SoundHandler.onSoundEvent(assets().gameSounds(gameVariant()), event);
 	}
 
 	public void showHelp() {
@@ -452,7 +460,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
+		playVoice(assets.voiceExplainKeys, 4);
 		gameController.restart(GameState.BOOT);
 	}
 
@@ -484,7 +492,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		Ufx.toggle(clock.pausedPy);
 		// TODO mute and unmute?
 		if (clock.pausedPy.get()) {
-			PacManGames2d.assets.gameSounds(gameVariant()).stopAll();
+			assets.gameSounds(gameVariant()).stopAll();
 		}
 	}
 
@@ -516,25 +524,25 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void selectNextGameVariant() {
 		gameController.selectGameVariant(gameVariant().next());
-		playVoice(PacManGames2d.assets.voiceExplainKeys, 4);
+		playVoice(assets.voiceExplainKeys, 4);
 	}
 
 	@Override
 	public void toggleAutopilot() {
 		gameController.toggleAutoControlled();
 		var auto = gameController.isAutoControlled();
-		String message = fmtMessage(PacManGames2d.assets.messages, auto ? "autopilot_on" : "autopilot_off");
+		String message = fmtMessage(assets.messages, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoice(auto ? PacManGames2d.assets.voiceAutopilotOn : PacManGames2d.assets.voiceAutopilotOff);
+		playVoice(auto ? assets.voiceAutopilotOn : assets.voiceAutopilotOff);
 	}
 
 	@Override
 	public void toggleImmunity() {
 		game().setImmune(!game().isImmune());
 		var immune = game().isImmune();
-		String message = fmtMessage(PacManGames2d.assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
+		String message = fmtMessage(assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoice(immune ? PacManGames2d.assets.voiceImmunityOn : PacManGames2d.assets.voiceImmunityOff);
+		playVoice(immune ? assets.voiceImmunityOn : assets.voiceImmunityOff);
 	}
 
 	public void startLevelTestMode() {
@@ -548,7 +556,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void cheatAddLives() {
 		int newLivesCount = game().lives() + 3;
 		game().setLives(newLivesCount);
-		showFlashMessage(fmtMessage(PacManGames2d.assets.messages, "cheat_add_lives", newLivesCount));
+		showFlashMessage(fmtMessage(assets.messages, "cheat_add_lives", newLivesCount));
 	}
 
 	@Override

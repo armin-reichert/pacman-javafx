@@ -59,7 +59,8 @@ public class SectionAppearance extends Section {
 	}
 
 	private String[] floorTextureComboBoxEntries() {
-		var names = PacManGames3d.assets.floorTexturesByName.keySet().toArray(String[]::new);
+		var assets = (PacManGames3dAssets) ui.assets();
+		var names = assets.floorTexturesByName.keySet().toArray(String[]::new);
 		var entries = new String[names.length + 1];
 		entries[0] = PacManGames3dAssets.KEY_NO_TEXTURE;
 		System.arraycopy(names, 0, entries, 1, names.length);

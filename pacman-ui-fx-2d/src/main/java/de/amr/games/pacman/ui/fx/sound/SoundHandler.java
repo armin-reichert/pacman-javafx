@@ -26,7 +26,6 @@ package de.amr.games.pacman.ui.fx.sound;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import javafx.scene.media.AudioClip;
 
 /**
@@ -37,8 +36,7 @@ public class SoundHandler {
 	private SoundHandler() {
 	}
 
-	public static void onSoundEvent(SoundEvent event) {
-		var sounds = PacManGames2d.assets.gameSounds(event.game.variant());
+	public static void onSoundEvent(GameSounds sounds, SoundEvent event) {
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN -> sounds.play(AudioClipID.BONUS_EATEN);
 		case GameModel.SE_CREDIT_ADDED -> sounds.play(AudioClipID.CREDIT);

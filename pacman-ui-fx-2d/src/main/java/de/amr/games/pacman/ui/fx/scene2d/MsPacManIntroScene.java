@@ -32,7 +32,6 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -113,23 +112,23 @@ public class MsPacManIntroScene extends GameScene2D {
 		var r = context.rendererMsPacMan();
 
 		drawMarquee(g);
-		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, PacManGames2d.assets.arcadeFont8, tx, ty);
+		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, context.ui().assets().arcadeFont8, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 			var color = ArcadeTheme.GHOST_COLORS[ghost.id()].dress();
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText(g, "WITH", ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont8, tx, y0 + t(3));
+				drawText(g, "WITH", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, tx, y0 + t(3));
 			}
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
-			drawText(g, text, color, PacManGames2d.assets.arcadeFont8, tx + t(3) + dx, y0 + t(6));
+			drawText(g, text, color, context.ui().assets().arcadeFont8, tx + t(3) + dx, y0 + t(6));
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText(g, "STARRING", ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont8, tx, y0 + t(3));
-			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, PacManGames2d.assets.arcadeFont8, tx, y0 + t(6));
+			drawText(g, "STARRING", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, tx, y0 + t(3));
+			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, context.ui().assets().arcadeFont8, tx, y0 + t(6));
 		}
 		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
 		r.drawPac(g, ic.msPacMan);
-		MsPacManGameRenderer.drawCopyright(g, t(6), t(28));
+		r.drawCopyright(g, t(6), t(28));
 		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 

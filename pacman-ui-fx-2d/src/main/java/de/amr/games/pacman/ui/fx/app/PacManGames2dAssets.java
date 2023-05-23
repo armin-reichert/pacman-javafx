@@ -41,7 +41,11 @@ import javafx.scene.text.Font;
 /**
  * @author Armin Reichert
  */
-public class PacManGames2dAssets extends ResourceManager {
+public class PacManGames2dAssets {
+
+	public static final ResourceManager MGR = new ResourceManager("/de/amr/games/pacman/ui/fx/",
+			PacManGames2dAssets.class);
+
 	//@formatter:off
 	private static final Object[][] CLIPS_MS_PACMAN = { 
 		{ AudioClipID.BONUS_EATEN,     "sound/mspacman/Fruit.mp3", 1.0 }, 
@@ -87,37 +91,36 @@ public class PacManGames2dAssets extends ResourceManager {
 
 	public final ResourceBundle messages           = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
-	public final Font arcadeFont8                  = font("fonts/emulogic.ttf", 8);
-	public final Font arcadeFont6                  = font("fonts/emulogic.ttf", 6);
-	public final Font handwritingFont9             = font("fonts/RockSalt-Regular.ttf", 9);
-	public final Font inconsolataBold12            = font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
+	public final Font arcadeFont8                  = MGR.font("fonts/emulogic.ttf", 8);
+	public final Font arcadeFont6                  = MGR.font("fonts/emulogic.ttf", 6);
+	public final Font handwritingFont9             = MGR.font("fonts/RockSalt-Regular.ttf", 9);
+	public final Font inconsolataBold12            = MGR.font("fonts/Inconsolata_Condensed-Bold.ttf", 12);
 	
-	public final Background wallpaper              = imageBackground("graphics/pacman_wallpaper.png");
+	public final Background wallpaper              = MGR.imageBackground("graphics/pacman_wallpaper.png");
 	public final Color wallpaperColor              = Color.rgb(72, 78, 135);
 
-	public final Spritesheet spritesMsPacMan       = new Spritesheet(image("graphics/mspacman/sprites.png"), 16);
-	public final Image iconMsPacMan                = image("graphics/icons/mspacman.png");
-	public final Image flashingMazesMsPacMan       = image("graphics/mspacman/mazes-flashing.png");
-	public final Image logoMsPacMan                = image("graphics/mspacman/midway.png");
+	public final Spritesheet spritesMsPacMan       = new Spritesheet(MGR.image("graphics/mspacman/sprites.png"), 16);
+	public final Image iconMsPacMan                = MGR.image("graphics/icons/mspacman.png");
+	public final Image flashingMazesMsPacMan       = MGR.image("graphics/mspacman/mazes-flashing.png");
+	public final Image logoMsPacMan                = MGR.image("graphics/mspacman/midway.png");
 	
-	public final Spritesheet spritesPacMan         = new Spritesheet(image("graphics/pacman/sprites.png"), 16);
-	public final Image iconPacMan                  = image("graphics/icons/pacman.png");
-	public final Image fullMazePacMan              = image("graphics/pacman/maze_full.png");
-	public final Image emptyMazePacMan             = image("graphics/pacman/maze_empty.png");
-	public final Image flashingMazePacMan          = image("graphics/pacman/maze_empty_flashing.png");
+	public final Spritesheet spritesPacMan         = new Spritesheet(MGR.image("graphics/pacman/sprites.png"), 16);
+	public final Image iconPacMan                  = MGR.image("graphics/icons/pacman.png");
+	public final Image fullMazePacMan              = MGR.image("graphics/pacman/maze_full.png");
+	public final Image emptyMazePacMan             = MGR.image("graphics/pacman/maze_empty.png");
+	public final Image flashingMazePacMan          = MGR.image("graphics/pacman/maze_empty_flashing.png");
 
-	public final AudioClip voiceExplainKeys        = audioClip("sound/voice/press-key.mp3");
-	public final AudioClip voiceAutopilotOff       = audioClip("sound/voice/autopilot-off.mp3");
-	public final AudioClip voiceAutopilotOn        = audioClip("sound/voice/autopilot-on.mp3");
-	public final AudioClip voiceImmunityOff        = audioClip("sound/voice/immunity-off.mp3");
-	public final AudioClip voiceImmunityOn         = audioClip("sound/voice/immunity-on.mp3");
+	public final AudioClip voiceExplainKeys        = MGR.audioClip("sound/voice/press-key.mp3");
+	public final AudioClip voiceAutopilotOff       = MGR.audioClip("sound/voice/autopilot-off.mp3");
+	public final AudioClip voiceAutopilotOn        = MGR.audioClip("sound/voice/autopilot-on.mp3");
+	public final AudioClip voiceImmunityOff        = MGR.audioClip("sound/voice/immunity-off.mp3");
+	public final AudioClip voiceImmunityOn         = MGR.audioClip("sound/voice/immunity-on.mp3");
 	
 	private final GameSounds soundsMsPacMan        = new GameSounds();
 	private final GameSounds soundsPacMan          = new GameSounds();
 	//@formatter:on
 
 	public PacManGames2dAssets() {
-		super("/de/amr/games/pacman/ui/fx/", PacManGames2dAssets.class);
 		soundsMsPacMan.init(CLIPS_MS_PACMAN, false);
 		soundsPacMan.init(CLIPS_PACMAN, false);
 	}

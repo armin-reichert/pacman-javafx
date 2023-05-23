@@ -38,7 +38,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -52,11 +52,18 @@ public class PacManGameRenderer implements GameRenderer {
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
+	private final PacManGames2dAssets assets;
 	private final Spritesheet ss;
 
-	public PacManGameRenderer(Spritesheet ss) {
-		checkNotNull(ss);
-		this.ss = ss;
+	public PacManGameRenderer(PacManGames2dAssets assets) {
+		checkNotNull(assets);
+		this.assets = assets;
+		ss = assets.spritesPacMan;
+	}
+
+	@Override
+	public PacManGames2dAssets assets() {
+		return assets;
 	}
 
 	@Override
@@ -64,8 +71,8 @@ public class PacManGameRenderer implements GameRenderer {
 		return ss;
 	}
 
-	public static void drawMidwayCopyright(GraphicsContext g, double x, double y) {
-		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, PacManGames2d.assets.arcadeFont8, x, y);
+	public void drawMidwayCopyright(GraphicsContext g, double x, double y) {
+		drawText(g, "\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, assets.arcadeFont8, x, y);
 	}
 
 	@Override
@@ -119,9 +126,9 @@ public class PacManGameRenderer implements GameRenderer {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flashing ? PacManGames2d.assets.flashingMazePacMan : PacManGames2d.assets.emptyMazePacMan, x, y);
+			g.drawImage(flashing ? assets.flashingMazePacMan : assets.emptyMazePacMan, x, y);
 		} else {
-			g.drawImage(PacManGames2d.assets.fullMazePacMan, x, y);
+			g.drawImage(assets.fullMazePacMan, x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(tile -> GameRenderer.hideTileContent(g, tile));
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();

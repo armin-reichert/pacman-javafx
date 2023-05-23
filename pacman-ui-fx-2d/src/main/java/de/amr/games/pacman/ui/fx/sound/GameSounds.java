@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import javafx.animation.Animation;
 import javafx.scene.media.AudioClip;
 
@@ -61,7 +61,7 @@ public class GameSounds {
 	}
 
 	private static AudioClip makeAudioClip(AudioClipID id, String path, double volume) {
-		var clip = PacManGames2d.assets.audioClip(path); // TODO
+		var clip = PacManGames2dAssets.MGR.audioClip(path); // TODO check this
 		clip.setVolume(volume);
 		Logger.trace("Audio clip created, id={} volume={}, source={}", id, clip.getVolume(), clip.getSource());
 		return clip;

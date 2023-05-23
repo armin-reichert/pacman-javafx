@@ -23,8 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
@@ -41,22 +39,22 @@ public class SectionAbout extends Section {
 	public SectionAbout(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
-		var myPicture = new ImageView(PacManGames3d.assets.image("graphics/armin.jpg"));
-		myPicture.setFitWidth(286);
-		myPicture.setPreserveRatio(true);
+		var theAuthorInYoungerYears = new ImageView(ui.assets().armin1970);
+		theAuthorInYoungerYears.setFitWidth(286);
+		theAuthorInYoungerYears.setPreserveRatio(true);
 
 		var madeBy = new Text("Made by     ");
 		madeBy.setFont(Font.font("Helvetica", 16));
 		madeBy.setFill(Color.grayRgb(150));
 
 		var signature = new Text("Armin Reichert");
-		var font = Font.font(PacManGames2d.assets.handwritingFont9.getFamily(), 18.0);
+		var font = Font.font(ui.assets().handwritingFont9.getFamily(), 18.0);
 		signature.setFont(font);
 		signature.setFill(Color.grayRgb(225));
 
 		var tf = new TextFlow(madeBy, signature);
 		tf.setPadding(new Insets(5, 5, 5, 5));
-		content.add(myPicture, 0, 0);
+		content.add(theAuthorInYoungerYears, 0, 0);
 		content.add(tf, 0, 1);
 	}
 }

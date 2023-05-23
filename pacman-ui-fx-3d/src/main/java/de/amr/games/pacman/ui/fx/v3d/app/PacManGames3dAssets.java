@@ -30,9 +30,11 @@ import java.util.ResourceBundle;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -40,7 +42,10 @@ import javafx.scene.paint.PhongMaterial;
 /**
  * @author Armin Reichert
  */
-public class PacManGames3dAssets extends ResourceManager {
+public class PacManGames3dAssets extends PacManGames2dAssets {
+
+	public static final ResourceManager MGR = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/",
+			PacManGames3dAssets.class);
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
@@ -53,17 +58,21 @@ public class PacManGames3dAssets extends ResourceManager {
 	private final Picker<String> pickerLevelComplete = Picker.fromBundle(messages, "level.complete");
 	private final Picker<String> pickerGameOver      = Picker.fromBundle(messages, "game.over");
 
-	public final Model3D pacModel3D                  = new Model3D(url("model3D/pacman.obj"));
-	public final Model3D ghostModel3D                = new Model3D(url("model3D/ghost.obj"));
-	public final Model3D pelletModel3D               = new Model3D(url("model3D/12206_Fruit_v1_L3.obj"));
+	public final Model3D pacModel3D                  = new Model3D(MGR.url("model3D/pacman.obj"));
+	public final Model3D ghostModel3D                = new Model3D(MGR.url("model3D/ghost.obj"));
+	public final Model3D pelletModel3D               = new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj"));
 
-	public final Background wallpaper3D              = imageBackground("graphics/sky.png");
-	
+	public final Background wallpaper3D              = MGR.imageBackground("graphics/sky.png");
+	public final Image armin1970                     = MGR.image("graphics/armin.jpg");
+
+	public final Image iconPlay                      = MGR.image("graphics/icons/play.png");
+	public final Image iconStop                      = MGR.image("graphics/icons/stop.png");
+	public final Image iconStep                      = MGR.image("graphics/icons/step.png");
+
 	public final Map<String, PhongMaterial> floorTexturesByName = new LinkedHashMap<>();
 	//@formatter:on
 
 	public PacManGames3dAssets() {
-		super("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3dAssets.class);
 		floorTexturesByName.put("Hexagon", createFloorTexture("hexagon", "jpg"));
 		floorTexturesByName.put("Knobs & Bumps", createFloorTexture("knobs", "jpg"));
 		floorTexturesByName.put("Plastic", createFloorTexture("plastic", "jpg"));
@@ -87,7 +96,8 @@ public class PacManGames3dAssets extends ResourceManager {
 	}
 
 	public String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(pickerLevelComplete.next(), fmtMessage(messages, "level_complete", levelNumber));
+		return "%s%n%n%s".formatted(pickerLevelComplete.next(),
+				ResourceManager.fmtMessage(messages, "level_complete", levelNumber));
 	}
 
 	private PhongMaterial createFloorTexture(String textureBase, String ext) {
@@ -98,8 +108,8 @@ public class PacManGames3dAssets extends ResourceManager {
 
 	public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 		var texture = new PhongMaterial();
-		texture.setBumpMap(image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-		texture.setDiffuseMap(image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+		texture.setBumpMap(MGR.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+		texture.setDiffuseMap(MGR.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 		texture.setDiffuseColor(diffuseColor);
 		texture.setSpecularColor(specularColor);
 		return texture;

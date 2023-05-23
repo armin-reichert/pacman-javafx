@@ -49,9 +49,10 @@ public class PacManIntroScene extends GameScene2D {
 	private PacManGameRenderer r;
 	private PacManIntro intro;
 	private PacManIntro.Context ic;
-	private final Signature signature = new Signature();
+	private Signature signature;
 
 	public PacManIntroScene() {
+		signature = new Signature();
 		overlay.getChildren().add(signature.root());
 	}
 
@@ -62,6 +63,7 @@ public class PacManIntroScene extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
+		signature.setNameFont(context.ui().assets().handwritingFont9);
 		signature.hide();
 
 		intro = new PacManIntro(context().gameController());
@@ -115,17 +117,17 @@ public class PacManIntroScene extends GameScene2D {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
-			PacManGameRenderer.drawMidwayCopyright(g, t(4), t(32));
+			r.drawMidwayCopyright(g, t(4), t(32));
 		}
 		case CHASING_GHOSTS -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			PacManGameRenderer.drawMidwayCopyright(g, t(4), t(32));
+			r.drawMidwayCopyright(g, t(4), t(32));
 		}
 		case READY_TO_PLAY -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			PacManGameRenderer.drawMidwayCopyright(g, t(4), t(32));
+			r.drawMidwayCopyright(g, t(4), t(32));
 		}
 		default -> {
 			// nothing to do
@@ -147,7 +149,7 @@ public class PacManIntroScene extends GameScene2D {
 	private void drawGallery(GraphicsContext g) {
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, PacManGames2d.assets.arcadeFont8, t(tx + 3),
+			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, context.ui().assets().arcadeFont8, t(tx + 3),
 					t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
@@ -159,12 +161,12 @@ public class PacManIntroScene extends GameScene2D {
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = ArcadeTheme.GHOST_COLORS[id].dress();
-				GameRenderer.drawText(g, text, color, PacManGames2d.assets.arcadeFont8, t(tx + 3), t(ty + 1));
+				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
 				var color = ArcadeTheme.GHOST_COLORS[id].dress();
-				GameRenderer.drawText(g, text, color, PacManGames2d.assets.arcadeFont8, t(tx + 14), t(ty + 1));
+				GameRenderer.drawText(g, text, color, context.ui().assets().arcadeFont8, t(tx + 14), t(ty + 1));
 			}
 		}
 	}
@@ -201,13 +203,13 @@ public class PacManIntroScene extends GameScene2D {
 			g.fillOval(t(tx), t(ty + 1), TS, TS);
 		}
 		g.setFill(ArcadeTheme.PALE);
-		g.setFont(PacManGames2d.assets.arcadeFont8);
+		g.setFont(context.ui().assets().arcadeFont8);
 		g.fillText("10", t(tx + 2), t(ty));
-		g.setFont(PacManGames2d.assets.arcadeFont6); // TODO looks ugly
+		g.setFont(context.ui().assets().arcadeFont6); // TODO looks ugly
 		g.fillText("PTS", t(tx + 5), t(ty));
-		g.setFont(PacManGames2d.assets.arcadeFont8);
+		g.setFont(context.ui().assets().arcadeFont8);
 		g.fillText("50", t(tx + 2), t(ty + 2));
-		g.setFont(PacManGames2d.assets.arcadeFont6); // TODO still looks ugly
+		g.setFont(context.ui().assets().arcadeFont6); // TODO still looks ugly
 		g.fillText("PTS", t(tx + 5), t(ty + 2));
 	}
 }
