@@ -61,6 +61,8 @@ public interface PacManGamesUserInterface {
 
 	PacManGames2dAssets assets();
 
+	Theme theme();
+
 	void show();
 
 	void addCredit();
@@ -72,6 +74,20 @@ public interface PacManGamesUserInterface {
 	void enterLevel(int intValue);
 
 	void selectNextGameVariant();
+
+	void stopAllSounds();
+
+	void ensureSirenStarted(int sirenIndex);
+
+	void stopMunchingSound();
+
+	void loopGhostReturningSound();
+
+	void stopGhostReturningSound();
+
+	void playLevelCompleteSound();
+
+	void playGameOverSound();
 
 	void playVoice(AudioClip clip, float delaySeconds);
 

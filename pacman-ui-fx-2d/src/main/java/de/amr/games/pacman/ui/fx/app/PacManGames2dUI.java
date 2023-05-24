@@ -30,6 +30,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.tinylog.Logger;
 
@@ -67,7 +68,6 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -215,6 +215,11 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		return assets;
 	}
 
+	@Override
+	public Theme theme() {
+		return theme;
+	}
+
 	protected void updateStage() {
 		mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		switch (gameVariant()) {
@@ -293,8 +298,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		currentGameScene.setContext(
 			new GameSceneContext(gameController, this,
 				new MsPacManGameRenderer(assets, assets.arcadeTheme),
-				new PacManGameRenderer(assets, assets.arcadeTheme),
-				assets.gameSounds(game().variant())
+				new PacManGameRenderer(assets, assets.arcadeTheme)
 		));
 		//@formatter:on
 		currentGameScene.init();
@@ -377,9 +381,138 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		updateGameScene(true);
 	}
 
+	private String soundPrefix() {
+		return gameVariant() == GameVariant.MS_PACMAN ? "mspacman." : "pacman.";
+	}
+
 	@Override
 	public void onSoundEvent(SoundEvent event) {
-		SoundHandler.onSoundEvent(assets().gameSounds(gameVariant()), event);
+		var p = soundPrefix();
+		switch (event.id) {
+		case GameModel.SE_BONUS_EATEN -> theme.audioClip(p + "audio.bonus_eaten").play();
+		case GameModel.SE_CREDIT_ADDED -> theme.audioClip(p + "audio.credit").play();
+		case GameModel.SE_EXTRA_LIFE -> theme.audioClip(p + "audio.extra_life").play();
+		case GameModel.SE_GHOST_EATEN -> theme.audioClip(p + "audio.ghost_eaten").play();
+		case GameModel.SE_HUNTING_PHASE_STARTED_0 -> ensureSirenStarted(0);
+		case GameModel.SE_HUNTING_PHASE_STARTED_2 -> ensureSirenStarted(1);
+		case GameModel.SE_HUNTING_PHASE_STARTED_4 -> ensureSirenStarted(2);
+		case GameModel.SE_HUNTING_PHASE_STARTED_6 -> ensureSirenStarted(3);
+		case GameModel.SE_READY_TO_PLAY -> theme.audioClip(p + "audio.game_ready").play();
+		case GameModel.SE_PACMAN_DEATH -> theme.audioClip(p + "audio.pacman_death").play();
+		// TODO this does not sound as in the original game
+		case GameModel.SE_PACMAN_FOUND_FOOD -> ensureLoop(theme.audioClip(p + "audio.pacman_munch"), AudioClip.INDEFINITE);
+		case GameModel.SE_PACMAN_POWER_ENDS -> {
+			theme.audioClip(p + "audio.pacman_power").stop();
+			event.game.level().ifPresent(level -> ensureSirenStarted(level.huntingPhase() / 2));
+		}
+		case GameModel.SE_PACMAN_POWER_STARTS -> {
+			stopSirens();
+			theme.audioClip(p + "audio.pacman_power").stop();
+			theme.audioClip(p + "audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
+			theme.audioClip(p + "audio.pacman_power").play();
+		}
+		case GameModel.SE_START_INTERMISSION_1 -> {
+			switch (event.game.variant()) {
+			case MS_PACMAN -> theme.audioClip(p + "audio.intermission.1").play();
+			case PACMAN -> {
+				theme.audioClip(p + "audio.intermission").setCycleCount(2);
+				theme.audioClip(p + "audio.intermission").play();
+			}
+			default -> throw new IllegalGameVariantException(event.game.variant());
+			}
+		}
+		case GameModel.SE_START_INTERMISSION_2 -> {
+			switch (event.game.variant()) {
+			case MS_PACMAN -> theme.audioClip(p + "audio.intermission.2").play();
+			case PACMAN -> theme.audioClip(p + "audio.intermission").play();
+			default -> throw new IllegalGameVariantException(event.game.variant());
+			}
+		}
+		case GameModel.SE_START_INTERMISSION_3 -> {
+			switch (event.game.variant()) {
+			case MS_PACMAN -> theme.audioClip(p + "audio.intermission.3").play();
+			case PACMAN -> {
+				theme.audioClip(p + "audio.intermission").setCycleCount(2);
+				theme.audioClip(p + "audio.intermission").play();
+			}
+			default -> throw new IllegalGameVariantException(event.game.variant());
+			}
+		}
+		case GameModel.SE_STOP_ALL_SOUNDS -> stopAllSounds();
+		default -> {
+			// ignore
+		}
+		}
+	}
+
+	@Override
+	public void stopAllSounds() {
+		theme.audioClips().forEach(AudioClip::stop);
+	}
+
+	@Override
+	public void stopMunchingSound() {
+		var p = soundPrefix();
+		theme.audioClip(p + "audio.pacman_munch").stop();
+	}
+
+	@Override
+	public void loopGhostReturningSound() {
+		var p = soundPrefix();
+		ensureLoop(theme.audioClip(p + "audio.ghost_returning"), AudioClip.INDEFINITE);
+	}
+
+	@Override
+	public void playGameOverSound() {
+		var p = soundPrefix();
+		theme.audioClip(p + "audio.game_over").play();
+	}
+
+	@Override
+	public void playLevelCompleteSound() {
+		var p = soundPrefix();
+		theme.audioClip(p + "audio.level_complete").play();
+	}
+
+	@Override
+	public void stopGhostReturningSound() {
+		var p = soundPrefix();
+		theme.audioClip(p + "audio.ghost_returning").stop();
+	}
+
+	public void ensureLoop(AudioClip clip, int repetitions) {
+		if (!clip.isPlaying()) {
+			clip.setCycleCount(repetitions);
+			clip.play();
+		}
+	}
+
+	private void startSiren(int sirenIndex) {
+		var p = soundPrefix();
+		stopSirens();
+		var clip = theme.audioClip(p + "audio.siren." + String.valueOf(sirenIndex + 1));
+		clip.setCycleCount(AudioClip.INDEFINITE);
+		clip.play();
+	}
+
+	private Stream<AudioClip> sirens(GameVariant variant) {
+		var p = soundPrefix();
+		return Stream.of(p + "audio.siren.1", p + "audio.siren.2", p + "audio.siren.3", p + "audio.siren.4")
+				.map(key -> theme.audioClip(key));
+	}
+
+	/**
+	 * @param sirenIndex index of siren (0..3)
+	 */
+	@Override
+	public void ensureSirenStarted(int sirenIndex) {
+		if (sirens(gameVariant()).noneMatch(AudioClip::isPlaying)) {
+			startSiren(sirenIndex);
+		}
+	}
+
+	public void stopSirens() {
+		sirens(gameVariant()).forEach(AudioClip::stop);
 	}
 
 	public void showHelp() {
@@ -497,7 +630,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		Ufx.toggle(clock.pausedPy);
 		// TODO mute and unmute?
 		if (clock.pausedPy.get()) {
-			assets.gameSounds(gameVariant()).stopAll();
+			theme.audioClips().forEach(AudioClip::stop);
 		}
 	}
 

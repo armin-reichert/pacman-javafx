@@ -39,9 +39,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.sound.AudioClipID;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -95,7 +93,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void end() {
-		context.sounds().stopAll();
+		context.ui().stopAllSounds();
 	}
 
 	@Override
@@ -155,7 +153,7 @@ public class PlayScene2D extends GameScene2D {
 			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
 			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
 			if (!level.isDemoLevel()) {
-				context.sounds().ensureSirenStarted(level.huntingPhase() / 2);
+				context.ui().ensureSirenStarted(level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -165,13 +163,13 @@ public class PlayScene2D extends GameScene2D {
 			return;
 		}
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			context.sounds().stop(AudioClipID.PACMAN_MUNCH);
+			context.ui().stopMunchingSound();
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			context.sounds().ensureLoop(AudioClipID.GHOST_RETURNING, AudioClip.INDEFINITE);
+			context.ui().loopGhostReturningSound();
 		} else {
-			context.sounds().stop(AudioClipID.GHOST_RETURNING);
+			context.ui().stopGhostReturningSound();
 		}
 	}
 }

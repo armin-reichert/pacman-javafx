@@ -38,7 +38,6 @@ import de.amr.games.pacman.ui.fx.app.PacManGamesUserInterface;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import de.amr.games.pacman.ui.fx.sound.GameSounds;
 
 /**
  * @author Armin Reichert
@@ -49,22 +48,19 @@ public class GameSceneContext {
 	private final PacManGamesUserInterface ui;
 	private final PacManGameRenderer rendererPacMan;
 	private final MsPacManGameRenderer rendererMsPacMan;
-	private final GameSounds sounds;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 
 	public GameSceneContext(GameController gameController, PacManGamesUserInterface ui,
-			MsPacManGameRenderer rendererMsPacMan, PacManGameRenderer rendererPacMan, GameSounds sounds) {
+			MsPacManGameRenderer rendererMsPacMan, PacManGameRenderer rendererPacMan) {
 		checkNotNull(gameController);
 		checkNotNull(ui);
 		checkNotNull(rendererMsPacMan);
 		checkNotNull(rendererPacMan);
-		checkNotNull(sounds);
 		this.gameController = gameController;
 		this.ui = ui;
 		this.rendererMsPacMan = rendererMsPacMan;
 		this.rendererPacMan = rendererPacMan;
-		this.sounds = sounds;
 	}
 
 	public PacManGamesUserInterface ui() {
@@ -125,9 +121,5 @@ public class GameSceneContext {
 
 	public Optional<World> world() {
 		return level().map(GameLevel::world);
-	}
-
-	public GameSounds sounds() {
-		return sounds;
 	}
 }

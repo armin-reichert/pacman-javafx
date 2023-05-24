@@ -26,10 +26,12 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -79,5 +81,17 @@ public class Theme {
 
 	public Background background(String name) {
 		return (Background) namedThings.get(name);
+	}
+
+	public AudioClip audioClip(String name) {
+		return (AudioClip) namedThings.get(name);
+	}
+
+	public Stream<Map.Entry<String, Object>> audioClipEntries() {
+		return namedThings.entrySet().stream().filter(e -> e.getValue() instanceof AudioClip);
+	}
+
+	public Stream<AudioClip> audioClips() {
+		return namedThings.values().stream().filter(AudioClip.class::isInstance).map(AudioClip.class::cast);
 	}
 }

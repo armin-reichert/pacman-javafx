@@ -82,6 +82,25 @@ public class ArcadeTheme extends Theme {
 		set("mspacman.color.hairbow.pearls",   Color.rgb(33, 33, 255));
 		
 		set("mspacman.maze.doorColor",         Color.rgb(255, 183, 255));
+		
+		set("mspacman.audio.bonus_eaten",      rm.audioClip("sound/mspacman/Fruit.mp3"));
+		set("mspacman.audio.credit",           rm.audioClip("sound/mspacman/Credit.mp3"));
+		set("mspacman.audio.extra_life",       rm.audioClip("sound/mspacman/ExtraLife.mp3"));
+		set("mspacman.audio.game_ready",       rm.audioClip("sound/mspacman/Start.mp3"));
+		set("mspacman.audio.game_over",        rm.audioClip("sound/common/game-over.mp3"));
+		set("mspacman.audio.ghost_eaten",      rm.audioClip("sound/mspacman/Ghost.mp3"));
+		set("mspacman.audio.ghost_returning",  rm.audioClip("sound/mspacman/GhostEyes.mp3"));
+		set("mspacman.audio.intermission.1",   rm.audioClip("sound/mspacman/Act1TheyMeet.mp3"));
+		set("mspacman.audio.intermission.2",   rm.audioClip("sound/mspacman/Act2TheChase.mp3"));
+		set("mspacman.audio.intermission.3",   rm.audioClip("sound/mspacman/Act3Junior.mp3"));
+		set("mspacman.audio.level_complete",   rm.audioClip("sound/common/level-complete.mp3"));
+		set("mspacman.audio.pacman_death",     rm.audioClip("sound/mspacman/Died.mp3"));
+		set("mspacman.audio.pacman_munch",     rm.audioClip("sound/mspacman/Pill.wav"));
+		set("mspacman.audio.pacman_power",     rm.audioClip("sound/mspacman/ScaredGhost.mp3"));
+		set("mspacman.audio.siren.1",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));
+		set("mspacman.audio.siren.2",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+		set("mspacman.audio.siren.3",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+		set("mspacman.audio.siren.4",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
 
 		// Pac-Man game
 		
@@ -100,6 +119,23 @@ public class ArcadeTheme extends Theme {
 		set("pacman.color.palate",             Color.rgb(191, 79, 61));
 		set("pacman.color.eyes",               Color.rgb(33, 33, 33));
 		
+		set("pacman.audio.bonus_eaten",        rm.audioClip("sound/pacman/eat_fruit.mp3"));
+		set("pacman.audio.credit",             rm.audioClip("sound/pacman/credit.wav"));
+		set("pacman.audio.extra_life",         rm.audioClip("sound/pacman/extend.mp3"));
+		set("pacman.audio.game_ready",         rm.audioClip("sound/pacman/game_start.mp3"));
+		set("pacman.audio.game_over",          rm.audioClip("sound/common/game-over.mp3"));
+		set("pacman.audio.ghost_eaten",        rm.audioClip("sound/pacman/eat_ghost.mp3"));
+		set("pacman.audio.ghost_returning",    rm.audioClip("sound/pacman/retreating.mp3"));
+		set("pacman.audio.intermission",       rm.audioClip("sound/pacman/intermission.mp3"));
+		set("pacman.audio.level_complete",     rm.audioClip("sound/common/level-complete.mp3"));
+		set("pacman.audio.pacman_death",       rm.audioClip("sound/pacman/pacman_death.wav"));
+		set("pacman.audio.pacman_munch",       rm.audioClip("sound/pacman/doublemunch.wav"));
+		set("pacman.audio.pacman_power",       rm.audioClip("sound/pacman/ghost-turn-to-blue.mp3"));
+		set("pacman.audio.siren.1",            rm.audioClip("sound/pacman/siren_1.mp3"));
+		set("pacman.audio.siren.2",            rm.audioClip("sound/pacman/siren_2.mp3"));
+		set("pacman.audio.siren.3",            rm.audioClip("sound/pacman/siren_3.mp3"));
+		set("pacman.audio.siren.4",            rm.audioClip("sound/pacman/siren_4.mp3"));
+
 		// Common to both games
 
 		set("wallpaper.background",            rm.imageBackground("graphics/pacman_wallpaper.png"));
@@ -132,6 +168,9 @@ public class ArcadeTheme extends Theme {
 		set("ghost.color.flashing.dress",      PALE);
 		set("ghost.color.flashing.eyeballs",   ROSE);
 		set("ghost.color.flashing.pupils",     RED);
+		
+		set("audio.sweep",                     rm.audioClip("sound/common/sweep.mp3"));
+
 	}
 	//@formatter:on
 }
