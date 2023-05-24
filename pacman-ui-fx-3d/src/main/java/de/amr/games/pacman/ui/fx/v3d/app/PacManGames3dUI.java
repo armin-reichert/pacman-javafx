@@ -72,11 +72,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	private Dashboard dashboard;
 
 	@Override
-	public PacManGames3dAssets assets() {
-		return (PacManGames3dAssets) super.assets();
-	}
-
-	@Override
 	public void onRender() {
 		flashMessageView.update();
 		currentGameScene.render();
@@ -152,22 +147,22 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				mainSceneRoot.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(assets().wallpaper3D);
+				mainSceneRoot.setBackground(theme.background("model3D.wallpaper"));
 			}
 		} else {
-			mainSceneRoot.setBackground(assets().arcadeTheme.background("wallpaper.background"));
+			mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		}
 		var paused = clock().pausedPy.get();
-		var dimensionMsg = fmtMessage(assets().messages, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
+		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(fmtMessage(assets().messages, messageKey, dimensionMsg));
+			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, messageKey, dimensionMsg));
 			stage.getIcons().setAll(theme.image("mspacman.icon"));
 		}
 		case PACMAN -> {
 			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(fmtMessage(assets().messages, messageKey, dimensionMsg));
+			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, messageKey, dimensionMsg));
 			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
 		default -> throw new IllegalGameVariantException(gameController.game().variant());
@@ -214,7 +209,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			updateGameScene(true);
 			currentGameScene().onSceneVariantSwitch();
 		} else {
-			var message = fmtMessage(assets().messages, PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
+			var message = fmtMessage(PacManGames3d.TEXTS,
+					PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
 			showFlashMessage(message);
 		}
 	}
@@ -232,7 +228,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	public void togglePipOn() {
 		Ufx.toggle(PacManGames3d.PY_PIP_ON);
 		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
-		var message = fmtMessage(assets().messages, PacManGames3d.PY_PIP_ON.get() ? "pip_on" : "pip_off");
+		var message = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_PIP_ON.get() ? "pip_on" : "pip_off");
 		showFlashMessage(message);
 	}
 
@@ -243,15 +239,15 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	public void selectNextPerspective() {
 		var next = PacManGames3d.PY_3D_PERSPECTIVE.get().next();
 		PacManGames3d.PY_3D_PERSPECTIVE.set(next);
-		String perspectiveName = fmtMessage(assets().messages, next.name());
-		showFlashMessage(fmtMessage(assets().messages, "camera_perspective", perspectiveName));
+		String perspectiveName = fmtMessage(PacManGames3d.TEXTS, next.name());
+		showFlashMessage(fmtMessage(PacManGames3d.TEXTS, "camera_perspective", perspectiveName));
 	}
 
 	public void selectPrevPerspective() {
 		var prev = PacManGames3d.PY_3D_PERSPECTIVE.get().prev();
 		PacManGames3d.PY_3D_PERSPECTIVE.set(prev);
-		String perspectiveName = fmtMessage(assets().messages, prev.name());
-		showFlashMessage(fmtMessage(assets().messages, "camera_perspective", perspectiveName));
+		String perspectiveName = fmtMessage(PacManGames3d.TEXTS, prev.name());
+		showFlashMessage(fmtMessage(PacManGames3d.TEXTS, "camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {

@@ -27,8 +27,16 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
 import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 
+import java.util.ResourceBundle;
+
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
+import de.amr.games.pacman.ui.fx.util.Picker;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -41,14 +49,80 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 
 /**
  * @author Armin Reichert
  */
 public class PacManGames3d {
-	//@formatter:off
 
+	public static final ResourceManager MGR = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3d.class);
+
+	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
+
+	private static final Picker<String> pickerReadyPacMan = Picker.fromBundle(TEXTS, "pacman.ready");
+	private static final Picker<String> pickerReadyMsPacMan = Picker.fromBundle(TEXTS, "mspacman.ready");
+	private static final Picker<String> pickerCheating = Picker.fromBundle(TEXTS, "cheating");
+	private static final Picker<String> pickerLevelComplete = Picker.fromBundle(TEXTS, "level.complete");
+	private static final Picker<String> pickerGameOver = Picker.fromBundle(TEXTS, "game.over");
+
+	public static final String KEY_NO_TEXTURE = "No Texture";
+
+	//@formatter:off
+	public static void addThings(Theme theme) {
+		theme.set("model3D.pacman",            new Model3D(MGR.url("model3D/pacman.obj")));
+		theme.set("model3D.ghost",             new Model3D(MGR.url("model3D/ghost.obj")));
+		theme.set("model3D.pellet",            new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
+		theme.set("model3D.wallpaper",         MGR.imageBackground("graphics/sky.png"));
+		theme.set("image.armin1970",           MGR.image("graphics/armin.jpg"));
+		theme.set("icon.play",                 MGR.image("graphics/icons/play.png"));
+		theme.set("icon.stop",                 MGR.image("graphics/icons/stop.png"));
+		theme.set("icon.step",                 MGR.image("graphics/icons/step.png"));
+		
+		theme.set("texture.hexagon",           createFloorTexture("hexagon", "jpg"));
+		theme.set("texture.knobs",             createFloorTexture("knobs", "jpg"));
+		theme.set("texture.plastic",           createFloorTexture("plastic", "jpg"));
+		theme.set("texture.wood",              createFloorTexture("wood", "jpg"));
+	}
+
+	public static String pickFunnyReadyMessage(GameVariant gameVariant) {
+		return switch (gameVariant) {
+		case MS_PACMAN -> pickerReadyMsPacMan.next();
+		case PACMAN -> pickerReadyPacMan.next();
+		default -> throw new IllegalGameVariantException(gameVariant);
+		};
+	}
+
+	public static String pickCheatingMessage() {
+		return pickerCheating.next();
+	}
+
+	public static String pickGameOverMessage() {
+		return pickerGameOver.next();
+	}
+
+	public static String pickLevelCompleteMessage(int levelNumber) {
+		return "%s%n%n%s".formatted(pickerLevelComplete.next(),
+				ResourceManager.fmtMessage(TEXTS, "level_complete", levelNumber));
+	}
+
+	private static PhongMaterial createFloorTexture(String textureBase, String ext) {
+		var material = textureMaterial(textureBase, ext, null, null);
+		material.diffuseColorProperty().bind(PacManGames3d.PY_3D_FLOOR_COLOR);
+		return material;
+	}
+
+	public static PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
+		var texture = new PhongMaterial();
+		texture.setBumpMap(MGR.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+		texture.setDiffuseMap(MGR.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+		texture.setDiffuseColor(diffuseColor);
+		texture.setSpecularColor(specularColor);
+		return texture;
+	}
+
+	//@formatter:off
 	public static final float                       PIP_MIN_HEIGHT           = 36 * 8;
 	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
 
@@ -60,7 +134,7 @@ public class PacManGames3d {
 	public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x60));
-	public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("Knobs & Bumps");
+	public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
 	public static final BooleanProperty             PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
 	public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);

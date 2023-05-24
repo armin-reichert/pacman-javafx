@@ -43,15 +43,20 @@ public class Theme {
 	protected Map<String, Object> namedThings = new HashMap<>();
 	protected Map<String, ArrayList<Object>> namedArrays = new HashMap<>();
 
-	protected void set(String name, Object thing) {
+	public void set(String name, Object thing) {
 		namedThings.put(name, thing);
 	}
 
-	protected void add(String arrayName, Color color) {
+	public void add(String arrayName, Color color) {
 		if (!namedArrays.containsKey(arrayName)) {
 			namedArrays.put(arrayName, new ArrayList<>());
 		}
 		namedArrays.get(arrayName).add(color);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T get(String name) {
+		return (T) namedThings.get(name);
 	}
 
 	public Color color(String name, int i) {

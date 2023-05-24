@@ -174,7 +174,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawBlinkingEnergizer(GraphicsContext g) {
-		var theme = context.ui().assets().arcadeTheme; // TODO
+		var theme = context.ui().theme();
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
 			g.setFill(theme.color("pacman.maze.foodColor"));
 			g.fillOval(t(ic.leftTileX), t(20), TS, TS);

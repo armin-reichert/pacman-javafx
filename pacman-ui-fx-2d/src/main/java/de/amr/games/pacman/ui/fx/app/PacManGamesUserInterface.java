@@ -57,9 +57,7 @@ public interface PacManGamesUserInterface {
 
 	GameScene currentGameScene();
 
-	void init(Stage stage, Settings cfg, PacManGames2dAssets assets, Theme theme);
-
-	PacManGames2dAssets assets();
+	void init(Stage stage, Settings cfg, Theme theme);
 
 	Theme theme();
 

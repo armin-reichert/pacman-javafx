@@ -89,9 +89,17 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
+	//@formatter:off
+	
+	public final AudioClip voiceExplainKeys        = PacManGames2d.MGR.audioClip("sound/voice/press-key.mp3");
+	public final AudioClip voiceAutopilotOff       = PacManGames2d.MGR.audioClip("sound/voice/autopilot-off.mp3");
+	public final AudioClip voiceAutopilotOn        = PacManGames2d.MGR.audioClip("sound/voice/autopilot-on.mp3");
+	public final AudioClip voiceImmunityOff        = PacManGames2d.MGR.audioClip("sound/voice/immunity-off.mp3");
+	public final AudioClip voiceImmunityOn         = PacManGames2d.MGR.audioClip("sound/voice/immunity-on.mp3");
+	//@formatter:on
+
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected final GameClock clock = new GameClock(GameModel.FPS);
-	protected PacManGames2dAssets assets;
 	protected Theme theme;
 	protected Stage stage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
@@ -103,15 +111,13 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	private AudioClip currentVoice;
 
 	@Override
-	public void init(Stage stage, Settings settings, PacManGames2dAssets assets, Theme theme) {
+	public void init(Stage stage, Settings settings, Theme theme) {
 		checkNotNull(stage);
 		checkNotNull(settings);
-		checkNotNull(assets);
 		checkNotNull(theme);
 
 		this.stage = stage;
 		stage.setFullScreen(settings.fullScreen);
-		this.assets = assets;
 		this.theme = theme;
 		this.gameController = new GameController(settings.variant);
 		configureGameScenes();
@@ -183,8 +189,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void configureHelpMenus() {
-		helpMenus = new HelpMenus(assets.messages);
-		helpMenus.setFont(assets.arcadeTheme.font("font.monospaced", 12));
+		helpMenus = new HelpMenus(PacManGames2d.TEXTS);
+		helpMenus.setFont(theme.font("font.monospaced", 12));
 	}
 
 	protected void resizeStageToFitCurrentGameScene() {
@@ -211,11 +217,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	@Override
-	public PacManGames2dAssets assets() {
-		return assets;
-	}
-
-	@Override
 	public Theme theme() {
 		return theme;
 	}
@@ -225,12 +226,12 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		switch (gameVariant()) {
 		case MS_PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(ResourceManager.fmtMessage(assets.messages, messageKey, ""));
+			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("mspacman.icon"));
 		}
 		case PACMAN -> {
 			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(ResourceManager.fmtMessage(assets.messages, messageKey, ""));
+			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
 		default -> throw new IllegalGameVariantException(gameVariant());
@@ -297,8 +298,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		//@formatter:off
 		currentGameScene.setContext(
 			new GameSceneContext(gameController, this,
-				new MsPacManGameRenderer(assets, assets.arcadeTheme),
-				new PacManGameRenderer(assets, assets.arcadeTheme)
+				new MsPacManGameRenderer( theme),
+				new PacManGameRenderer( theme)
 		));
 		//@formatter:on
 		currentGameScene.init();
@@ -369,8 +370,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
 			var renderer = switch (level.game().variant()) {
-			case MS_PACMAN -> new MsPacManGameRenderer(assets, assets.arcadeTheme);
-			case PACMAN -> new PacManGameRenderer(assets, assets.arcadeTheme);
+			case MS_PACMAN -> new MsPacManGameRenderer(theme);
+			case PACMAN -> new PacManGameRenderer(theme);
 			default -> throw new IllegalGameVariantException(level.game().variant());
 			};
 			level.pac().setAnimations(renderer.createPacAnimations(level.pac()));
@@ -598,7 +599,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		playVoice(assets.voiceExplainKeys, 4);
+		playVoice(voiceExplainKeys, 4);
 		gameController.restart(GameState.BOOT);
 	}
 
@@ -662,25 +663,25 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void selectNextGameVariant() {
 		gameController.selectGameVariant(gameVariant().next());
-		playVoice(assets.voiceExplainKeys, 4);
+		playVoice(voiceExplainKeys, 4);
 	}
 
 	@Override
 	public void toggleAutopilot() {
 		gameController.toggleAutoControlled();
 		var auto = gameController.isAutoControlled();
-		String message = fmtMessage(assets.messages, auto ? "autopilot_on" : "autopilot_off");
+		String message = fmtMessage(PacManGames2d.TEXTS, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoice(auto ? assets.voiceAutopilotOn : assets.voiceAutopilotOff);
+		playVoice(auto ? voiceAutopilotOn : voiceAutopilotOff);
 	}
 
 	@Override
 	public void toggleImmunity() {
 		game().setImmune(!game().isImmune());
 		var immune = game().isImmune();
-		String message = fmtMessage(assets.messages, immune ? "player_immunity_on" : "player_immunity_off");
+		String message = fmtMessage(PacManGames2d.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoice(immune ? assets.voiceImmunityOn : assets.voiceImmunityOff);
+		playVoice(immune ? voiceImmunityOn : voiceImmunityOff);
 	}
 
 	public void startLevelTestMode() {
@@ -694,7 +695,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void cheatAddLives() {
 		int newLivesCount = game().lives() + 3;
 		game().setLives(newLivesCount);
-		showFlashMessage(fmtMessage(assets.messages, "cheat_add_lives", newLivesCount));
+		showFlashMessage(fmtMessage(PacManGames2d.TEXTS, "cheat_add_lives", newLivesCount));
 	}
 
 	@Override

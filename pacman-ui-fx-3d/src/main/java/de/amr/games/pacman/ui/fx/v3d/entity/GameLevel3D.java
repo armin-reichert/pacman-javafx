@@ -41,7 +41,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
@@ -76,33 +75,33 @@ public class GameLevel3D {
 	private Scores3D scores3D;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, PacManGames3dAssets assets, Theme theme, GameRenderer r2D) {
+	public GameLevel3D(GameLevel level, Theme theme, GameRenderer r2D) {
 		checkLevelNotNull(level);
 		checkNotNull(r2D);
 
 		this.level = level;
+		Model3D pelletModel3D = theme.get("model3D.pellet");
+		Model3D pacModel3D = theme.get("model3D.pacman");
+		Model3D ghostModel3D = theme.get("model3D.ghost");
 		if (level.game().variant() == GameVariant.MS_PACMAN) {
 			int mazeNumber = level.game().mazeNumber(level.number());
 			var foodColor = theme.color("mspacman.maze.foodColor", mazeNumber - 1);
 			var wallBaseColor = theme.color("mspacman.maze.wallBaseColor", mazeNumber - 1);
 			var wallTopColor = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
 			var doorColor = theme.color("mspacman.maze.doorColor");
-			world3D = new World3D(level.world(), assets, assets.pelletModel3D, foodColor, wallBaseColor, wallTopColor,
-					doorColor);
-			pac3D = Pac3D.createMsPacMan3D(assets.pacModel3D, theme, level.pac());
-			ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, assets.ghostModel3D, theme)).toArray(Ghost3D[]::new);
-			livesCounter3D = LivesCounter3D.counterMsPacManGame(assets.pacModel3D, theme);
-
+			world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
+			pac3D = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac());
+			ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
+			livesCounter3D = LivesCounter3D.counterMsPacManGame(pacModel3D, theme);
 		} else {
 			var foodColor = theme.color("pacman.maze.foodColor");
 			var wallBaseColor = theme.color("pacman.maze.wallBaseColor");
 			var wallTopColor = theme.color("pacman.maze.wallTopColor");
 			var doorColor = theme.color("pacman.maze.doorColor");
-			world3D = new World3D(level.world(), assets, assets.pelletModel3D, foodColor, wallBaseColor, wallTopColor,
-					doorColor);
-			pac3D = Pac3D.createPacMan3D(assets.pacModel3D, theme, level.pac());
-			ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, assets.ghostModel3D, theme)).toArray(Ghost3D[]::new);
-			livesCounter3D = LivesCounter3D.counterPacManGame(assets.pacModel3D, theme);
+			world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
+			pac3D = Pac3D.createPacMan3D(pacModel3D, theme, level.pac());
+			ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
+			livesCounter3D = LivesCounter3D.counterPacManGame(pacModel3D, theme);
 		}
 
 		pacLight = createPacLight(pac3D);

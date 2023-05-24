@@ -61,9 +61,9 @@ public class SectionGeneral extends Section {
 	public SectionGeneral(PacManGames3dUI ui, String title) {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
-		iconPlay = new ImageView(ui.assets().iconPlay);
-		iconStop = new ImageView(ui.assets().iconStop);
-		iconStep = new ImageView(ui.assets().iconStep);
+		iconPlay = new ImageView(ui.theme().image("icon.play"));
+		iconStop = new ImageView(ui.theme().image("icon.stop"));
+		iconStep = new ImageView(ui.theme().image("icon.step"));
 
 		btnsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
 		Button btnPlayPause = btnsSimulation[0];

@@ -40,7 +40,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import de.amr.games.pacman.ui.fx.util.Order;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -59,8 +58,8 @@ public class MsPacManGameRenderer extends GameRenderer {
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
-	public MsPacManGameRenderer(PacManGames2dAssets assets, Theme theme) {
-		super(assets, theme, theme.spritesheet("mspacman.spritesheet"));
+	public MsPacManGameRenderer(Theme theme) {
+		super(theme, theme.spritesheet("mspacman.spritesheet"));
 	}
 
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {

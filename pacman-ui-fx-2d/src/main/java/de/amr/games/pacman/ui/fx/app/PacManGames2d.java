@@ -28,6 +28,9 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
 import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 import static de.amr.games.pacman.ui.fx.util.Ufx.shift;
 
+import java.util.ResourceBundle;
+
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -39,6 +42,9 @@ import javafx.scene.input.KeyCodeCombination;
  * @author Armin Reichert
  */
 public class PacManGames2d {
+
+	public static final ResourceManager MGR = new ResourceManager("/de/amr/games/pacman/ui/fx/", PacManGames2d.class);
+	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
 	//@formatter:off
 	public static final BooleanProperty    PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);

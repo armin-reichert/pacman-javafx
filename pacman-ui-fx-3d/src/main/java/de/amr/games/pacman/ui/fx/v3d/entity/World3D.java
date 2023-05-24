@@ -38,10 +38,11 @@ import org.tinylog.Logger;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -83,7 +84,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			PacManGames3dAssets.KEY_NO_TEXTURE) {
+			PacManGames3d.KEY_NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			Logger.trace("Floor texture change detected");
@@ -101,7 +102,7 @@ public class World3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-	private final PacManGames3dAssets assets;
+	private final Theme theme;
 	private final Model3D pelletModel3D;
 	private final World world;
 	private final Group root = new Group();
@@ -118,19 +119,19 @@ public class World3D {
 	private Color wallTopColor;
 	private Color doorColor;
 
-	public World3D(World world, PacManGames3dAssets assets, Model3D pelletModel3D, Color foodColor, Color wallBaseColor,
+	public World3D(World world, Theme theme, Model3D pelletModel3D, Color foodColor, Color wallBaseColor,
 			Color wallTopColor, Color doorColor) {
 
+		checkNotNull(theme);
 		checkNotNull(world);
-		checkNotNull(assets);
 		checkNotNull(pelletModel3D);
 		checkNotNull(foodColor);
 		checkNotNull(wallBaseColor);
 		checkNotNull(wallTopColor);
 		checkNotNull(doorColor);
 
+		this.theme = theme;
 		this.world = world;
-		this.assets = assets;
 		this.pelletModel3D = pelletModel3D;
 		this.foodColor = foodColor;
 		this.wallBaseColor = wallBaseColor;
@@ -187,7 +188,7 @@ public class World3D {
 
 	private void updateFloorMaterial(Box floor) {
 		String key = floorTexturePy.get();
-		var texture = assets.floorTexturesByName.get(key);
+		PhongMaterial texture = theme.get("texture." + key);
 		if (texture == null) {
 			texture = ResourceManager.coloredMaterial(floorColorPy.get());
 		}

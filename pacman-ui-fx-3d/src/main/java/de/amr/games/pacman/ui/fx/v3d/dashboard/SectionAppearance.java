@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
@@ -59,10 +58,9 @@ public class SectionAppearance extends Section {
 	}
 
 	private String[] floorTextureComboBoxEntries() {
-		var assets = (PacManGames3dAssets) ui.assets();
-		var names = assets.floorTexturesByName.keySet().toArray(String[]::new);
+		var names = new String[] { "hexagon", "knobs", "plastic", "wood" };
 		var entries = new String[names.length + 1];
-		entries[0] = PacManGames3dAssets.KEY_NO_TEXTURE;
+		entries[0] = PacManGames3d.KEY_NO_TEXTURE;
 		System.arraycopy(names, 0, entries, 1, names.length);
 		return entries;
 	}

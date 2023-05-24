@@ -51,7 +51,6 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dAssets;
 import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
@@ -122,10 +121,6 @@ public class PlayScene3D implements GameScene {
 		this.context = context;
 	}
 
-	private PacManGames3dAssets assets() {
-		return (PacManGames3dAssets) context.ui().assets();
-	}
-
 	@Override
 	public GameSceneContext context() {
 		return context;
@@ -192,7 +187,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		level3D = new GameLevel3D(level, assets(), assets().arcadeTheme, context.renderer());
+		level3D = new GameLevel3D(level, context.ui().theme(), context.renderer());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;
@@ -212,7 +207,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		if (PacManGames3d.PY_3D_FLOOR_TEXTURE_RND.get()) {
-			var names = assets().floorTexturesByName.keySet().toArray(String[]::new);
+			var names = new String[] { "hexagon", "knobs", "plastic", "wood" };
 			PacManGames3d.PY_3D_FLOOR_TEXTURE.set(names[randomInt(0, names.length)]);
 		}
 		Logger.info("3D game level {} created.", level.number());
@@ -342,7 +337,7 @@ public class PlayScene3D implements GameScene {
 //					level3D.world3D().foodOscillation().play();
 //				}
 				readyMessageText3D.setVisible(true);
-				var readyMessage = inPercentOfCases(40) ? assets().pickFunnyReadyMessage(context.gameVariant()) : "READY!";
+				var readyMessage = inPercentOfCases(40) ? PacManGames3d.pickFunnyReadyMessage(context.gameVariant()) : "READY!";
 				readyMessageText3D.setText(readyMessage);
 			});
 		}
@@ -399,7 +394,7 @@ public class PlayScene3D implements GameScene {
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
 							context.ui().playLevelCompleteSound();
-							PacManGames3d.ui.showFlashMessageSeconds(2, assets().pickLevelCompleteMessage(level.number()));
+							PacManGames3d.ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -412,7 +407,7 @@ public class PlayScene3D implements GameScene {
 		case GAME_OVER -> {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
-			PacManGames3d.ui.showFlashMessageSeconds(3, assets().pickGameOverMessage());
+			PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
 			context.ui().playGameOverSound();
 			waitSeconds(3);
 		}

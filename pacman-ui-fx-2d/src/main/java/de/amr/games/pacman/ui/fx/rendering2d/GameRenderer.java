@@ -37,7 +37,6 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dAssets;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -84,21 +83,14 @@ public abstract class GameRenderer {
 		g.fillRect(TS * tile.x(), TS * tile.y(), TS, TS);
 	}
 
-	protected final PacManGames2dAssets assets;
 	protected final Theme theme;
 	protected final Spritesheet spritesheet;
 
-	protected GameRenderer(PacManGames2dAssets assets, Theme theme, Spritesheet spritesheet) {
-		checkNotNull(assets);
+	protected GameRenderer(Theme theme, Spritesheet spritesheet) {
 		checkNotNull(theme);
 		checkNotNull(spritesheet);
-		this.assets = assets;
 		this.theme = theme;
 		this.spritesheet = spritesheet;
-	}
-
-	public PacManGames2dAssets assets() {
-		return assets;
 	}
 
 	public Theme theme() {
