@@ -160,9 +160,9 @@ public abstract class GameScene2D implements GameScene {
 		var r = context.renderer();
 
 		g.setFill(r.theme().color("wallpaper.color"));
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, WIDTH, HEIGHT, 20, 20);
+		g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
 
 		if (context.isScoreVisible()) {
 			r.drawScore(g, context.game().score(), "SCORE", t(1), t(1));

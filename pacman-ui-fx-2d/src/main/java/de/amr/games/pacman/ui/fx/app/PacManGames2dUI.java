@@ -67,6 +67,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
+import de.amr.games.pacman.ui.fx.scene2d.PacManPlayScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
@@ -161,7 +162,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new GameSceneChoice(new BootScene()),
 			new GameSceneChoice(new PacManIntroScene()),
 			new GameSceneChoice(new PacManCreditScene()),
-			new GameSceneChoice(new PlayScene2D()),
+			new GameSceneChoice(new PacManPlayScene2D()),
 			new GameSceneChoice(new PacManCutscene1()), 
 			new GameSceneChoice(new PacManCutscene2()),
 			new GameSceneChoice(new PacManCutscene3())
