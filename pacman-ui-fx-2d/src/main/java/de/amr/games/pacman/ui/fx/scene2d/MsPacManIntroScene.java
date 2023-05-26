@@ -30,7 +30,6 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -115,12 +114,10 @@ public class MsPacManIntroScene extends GameScene2D {
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();
 		var y0 = ic.stopY;
-
-		drawMarquee(g);
+		drawMarquee();
 		drawText("\"MS PAC-MAN\"", ArcadeTheme.ORANGE, sceneFont(), tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
-
 			var color = context.ui().theme().color(String.format("ghost.%d.color.normal.dress", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText("WITH", ArcadeTheme.PALE, sceneFont(), tx, y0 + t(3));
@@ -138,7 +135,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 
-	private void drawMarquee(GraphicsContext g) {
+	private void drawMarquee() {
 		var on = intro.context().marqueeState();
 		for (int i = 0; i < intro.context().numBulbs; ++i) {
 			g.setFill(on.get(i) ? ArcadeTheme.PALE : ArcadeTheme.RED);

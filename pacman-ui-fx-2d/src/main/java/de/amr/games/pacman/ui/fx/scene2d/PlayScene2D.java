@@ -46,7 +46,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
- * 2D play scene that does not use scaled canvas.
+ * 2D play scene. Key <code>F12</code> toggles between scaled canvas and unscaled canvas.
  * 
  * @author Armin Reichert
  */
