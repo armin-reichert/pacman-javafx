@@ -251,7 +251,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	 */
 	protected Optional<GameScene> findGameScene(int dimension) {
 		if (dimension != 2 && dimension != 3) {
-			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
+			throw new IllegalArgumentException(String.format("Dimension must be 2 or 3, but is %d", dimension));
 		}
 		var choice = sceneChoiceMatchingCurrentGameState();
 		return Optional.of(choice.scene2D());
@@ -276,7 +276,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void updateGameScene(boolean reload) {
 		var nextGameScene = chooseGameScene(sceneChoiceMatchingCurrentGameState());
 		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found for game state %s.".formatted(gameState()));
+			throw new IllegalStateException(String.format("No game scene found for game state %s.", gameState()));
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			changeGameScene(nextGameScene);
@@ -661,13 +661,13 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		int newFramerate = clock.targetFrameratePy.get() + delta;
 		if (newFramerate > 0) {
 			clock.targetFrameratePy.set(newFramerate);
-			showFlashMessageSeconds(0.75, "%dHz".formatted(newFramerate));
+			showFlashMessageSeconds(0.75, String.format("%dHz", newFramerate));
 		}
 	}
 
 	public void resetSimulationSpeed() {
 		clock.targetFrameratePy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, "%dHz".formatted(clock.targetFrameratePy.get()));
+		showFlashMessageSeconds(0.75, String.format("%dHz", clock.targetFrameratePy.get()));
 	}
 
 	@Override

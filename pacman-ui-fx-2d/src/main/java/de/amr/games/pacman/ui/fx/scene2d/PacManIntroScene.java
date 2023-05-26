@@ -162,12 +162,12 @@ public class PacManIntroScene extends GameScene2D {
 			drawSpriteOverBoundingBox(sprite, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
-				var color = r().theme().color("ghost.%d.color.normal.dress".formatted(id));
+				var color = r().theme().color(String.format("ghost.%d.color.normal.dress", id));
 				drawText(text, color, sceneFont(), t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
-				var color = r().theme().color("ghost.%d.color.normal.dress".formatted(id));
+				var color = r().theme().color(String.format("ghost.%d.color.normal.dress", id));
 				drawText(text, color, sceneFont(), t(tx + 14), t(ty + 1));
 			}
 		}

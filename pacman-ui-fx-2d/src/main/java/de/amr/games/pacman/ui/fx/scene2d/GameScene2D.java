@@ -275,10 +275,10 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawScore(Score score, String title, double x, double y) {
 		drawText(title, ArcadeTheme.PALE, sceneFont(), x, y);
-		var pointsText = "%02d".formatted(score.points());
-		drawText("%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), x, (y + TS + 1));
+		var pointsText = String.format("%02d", score.points());
+		drawText(String.format("%7s", pointsText), ArcadeTheme.PALE, sceneFont(), x, (y + TS + 1));
 		if (score.points() != 0) {
-			drawText("L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), x + TS * 8, y + TS + 1);
+			drawText(String.format("L%d", score.levelNumber()), ArcadeTheme.PALE, sceneFont(), x + TS * 8, y + TS + 1);
 		}
 	}
 
@@ -373,7 +373,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
-		drawText("CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), x, y);
+		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALE, sceneFont(), x, y);
 	}
 
 	protected void drawClap(Clapperboard clap) {

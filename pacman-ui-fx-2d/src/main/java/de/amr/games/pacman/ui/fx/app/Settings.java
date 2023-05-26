@@ -89,6 +89,6 @@ public class Settings {
 
 	@Override
 	public String toString() {
-		return "{fullScreen=%s, variant=%s, zoom=%.2f, keyMap=%s}".formatted(fullScreen, variant, zoom, keyMap);
+		return String.format("{fullScreen=%s, variant=%s, zoom=%.2f, keyMap=%s}", fullScreen, variant, zoom, keyMap);
 	}
 }

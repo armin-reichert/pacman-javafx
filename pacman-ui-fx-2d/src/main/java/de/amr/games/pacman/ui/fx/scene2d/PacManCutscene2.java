@@ -157,7 +157,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
+		var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
 		drawText(text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}
 }
