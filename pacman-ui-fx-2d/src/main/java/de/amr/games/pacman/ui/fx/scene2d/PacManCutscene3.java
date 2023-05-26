@@ -94,21 +94,28 @@ public class PacManCutscene3 extends GameScene2D {
 		if (context.state().timer().hasExpired()) {
 			return;
 		}
+
 		switch (++frame) {
-		case 400 -> {
+		case 400: {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.selectAndRunAnimation(GameModel.AK_BLINKY_NAKED);
 		}
-		case 700 -> {
+			break;
+
+		case 700: {
 			context.state().timer().expire();
 		}
-		default -> {
+			break;
+
+		default: {
 			pac.move();
 			pac.animate();
 			blinky.move();
 			blinky.animate();
 		}
+			break;
+
 		}
 	}
 

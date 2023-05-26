@@ -129,9 +129,14 @@ public class HelpMenus {
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
 		switch (gameController.game().variant()) {
-		case MS_PACMAN -> pane.setBackground(ResourceManager.coloredBackground(Color.rgb(255, 0, 0, 0.9)));
-		case PACMAN -> pane.setBackground(ResourceManager.coloredBackground(Color.rgb(33, 33, 255, 0.9)));
-		default -> throw new IllegalGameVariantException(gameController.game().variant());
+		case MS_PACMAN:
+			pane.setBackground(ResourceManager.coloredBackground(Color.rgb(255, 0, 0, 0.9)));
+			break;
+		case PACMAN:
+			pane.setBackground(ResourceManager.coloredBackground(Color.rgb(33, 33, 255, 0.9)));
+			break;
+		default:
+			throw new IllegalGameVariantException(gameController.game().variant());
 		}
 		return pane;
 	}

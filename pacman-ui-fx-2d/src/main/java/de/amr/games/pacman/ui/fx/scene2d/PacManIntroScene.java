@@ -112,26 +112,34 @@ public class PacManIntroScene extends GameScene2D {
 		var timer = intro.state().timer();
 		drawGallery();
 		switch (intro.state()) {
-		case SHOWING_POINTS -> {
+		case SHOWING_POINTS: {
 			drawPoints();
 		}
-		case CHASING_PAC -> {
+			break;
+
+		case CHASING_PAC: {
 			drawPoints();
 			drawBlinkingEnergizer();
 			drawGuys(flutter(timer.tick()));
 			drawMidwayCopyright(t(4), t(32));
 		}
-		case CHASING_GHOSTS -> {
+			break;
+
+		case CHASING_GHOSTS: {
 			drawPoints();
 			drawGuys(0);
 			drawMidwayCopyright(t(4), t(32));
 		}
-		case READY_TO_PLAY -> {
+			break;
+
+		case READY_TO_PLAY: {
 			drawPoints();
 			drawGuys(0);
 			drawMidwayCopyright(t(4), t(32));
 		}
-		default -> {
+			break;
+
+		default: {
 			// nothing to do
 		}
 		}

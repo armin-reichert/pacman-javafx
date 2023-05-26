@@ -42,6 +42,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
@@ -188,12 +189,19 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawBonus(Bonus bonus) {
-		var sprite = switch (bonus.state()) {
-		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> r().bonusSymbolSprite(bonus.symbol());
-		case Bonus.STATE_EATEN -> r().bonusValueSprite(bonus.symbol());
-		default -> throw new IllegalArgumentException();
-		};
+		Rectangle2D sprite = null;
+		switch (bonus.state()) {
+		case Bonus.STATE_INACTIVE:
+			break;
+		case Bonus.STATE_EDIBLE:
+			sprite = r().bonusSymbolSprite(bonus.symbol());
+			break;
+		case Bonus.STATE_EATEN:
+			sprite = r().bonusValueSprite(bonus.symbol());
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
 		if (sprite == null) {
 			return;
 		}

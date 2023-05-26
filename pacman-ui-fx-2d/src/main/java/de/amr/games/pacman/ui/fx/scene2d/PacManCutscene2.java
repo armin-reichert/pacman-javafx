@@ -104,44 +104,65 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 
 		switch (++frame) {
-		case 110 -> {
+
+		case 110: {
 			blinky.setPixelSpeed(1.25f);
 			blinky.show();
 		}
-		case 196 -> {
+			break;
+
+		case 196: {
 			blinky.setPixelSpeed(0.17f);
 			stretchedDressAnimation.setFrameIndex(1);
 		}
-		case 226 -> {
+			break;
+
+		case 226: {
 			stretchedDressAnimation.setFrameIndex(2);
 		}
-		case 248 -> {
+			break;
+
+		case 248: {
 			blinky.setPixelSpeed(0);
 			blinky.animations().ifPresent(animations -> animations.selectedAnimation().get().stop());
 			stretchedDressAnimation.setFrameIndex(3);
 		}
-		case 328 -> {
+			break;
+
+		case 328: {
 			stretchedDressAnimation.setFrameIndex(4);
 		}
-		case 329 -> {
+			break;
+
+		case 329: {
 			blinky.animations().ifPresent(animations -> animations.select(GameModel.AK_BLINKY_DAMAGED));
 			damagedAnimation.setFrameIndex(0);
 		}
-		case 389 -> {
+			break;
+
+		case 389: {
 			damagedAnimation.setFrameIndex(1);
 		}
-		case 508 -> {
+			break;
+
+		case 508: {
 			stretchedDressAnimation = null;
 		}
-		case 509 -> {
+			break;
+
+		case 509: {
 			context.state().timer().expire();
 		}
-		default -> {
+			break;
+
+		default: {
 			pac.move();
 			pac.animate();
 			blinky.move();
 			blinky.animate();
 		}
+			break;
+
 		}
 	}
 

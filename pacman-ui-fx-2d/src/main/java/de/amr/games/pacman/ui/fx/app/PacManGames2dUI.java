@@ -47,6 +47,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
@@ -224,17 +225,20 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void updateStage() {
 		mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		switch (gameVariant()) {
-		case MS_PACMAN -> {
+		case MS_PACMAN: {
 			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("mspacman.icon"));
 		}
-		case PACMAN -> {
+			break;
+		case PACMAN: {
 			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
-		default -> throw new IllegalGameVariantException(gameVariant());
+			break;
+		default:
+			throw new IllegalGameVariantException(gameVariant());
 		}
 	}
 
@@ -259,14 +263,28 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
 		var config = gameSceneConfig.get(gameVariant());
-		return switch (gameState()) {
-		case BOOT -> config.bootSceneChoice();
-		case CREDIT -> config.creditSceneChoice();
-		case INTRO -> config.introSceneChoice();
-		case INTERMISSION -> config.cutSceneChoice(gameLevel().intermissionNumber);
-		case INTERMISSION_TEST -> config.cutSceneChoice(game().intermissionTestNumber);
-		default -> config.playSceneChoice();
-		};
+		GameSceneChoice choice = null;
+		switch (gameState()) {
+		case BOOT:
+			choice = config.bootSceneChoice();
+			break;
+		case CREDIT:
+			choice = config.creditSceneChoice();
+			break;
+		case INTRO:
+			choice = config.introSceneChoice();
+			break;
+		case INTERMISSION:
+			choice = config.cutSceneChoice(gameLevel().intermissionNumber);
+			break;
+		case INTERMISSION_TEST:
+			choice = config.cutSceneChoice(game().intermissionTestNumber);
+			break;
+		default:
+			choice = config.playSceneChoice();
+			break;
+		}
+		return choice;
 	}
 
 	private GameLevel gameLevel() {
@@ -378,13 +396,20 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
-			var renderer = switch (level.game().variant()) {
-			case MS_PACMAN -> new MsPacManGameRenderer(theme);
-			case PACMAN -> new PacManGameRenderer(theme);
-			default -> throw new IllegalGameVariantException(level.game().variant());
-			};
+			GameRenderer renderer = null;
+			switch (level.game().variant()) {
+			case MS_PACMAN:
+				renderer = new MsPacManGameRenderer(theme);
+				break;
+			case PACMAN:
+				renderer = new PacManGameRenderer(theme);
+				break;
+			default:
+				throw new IllegalGameVariantException(level.game().variant());
+			}
+			final GameRenderer r = renderer;
 			level.pac().setAnimations(renderer.createPacAnimations(level.pac()));
-			level.ghosts().forEach(ghost -> ghost.setAnimations(renderer.createGhostAnimations(ghost)));
+			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
 			level.world().setAnimations(renderer.createWorldAnimations(level.world()));
 			Logger.trace("Created creature and world animations for level #{}", level.number());
 		});
@@ -399,57 +424,99 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void onSoundEvent(SoundEvent event) {
 		var p = soundPrefix();
 		switch (event.id) {
-		case GameModel.SE_BONUS_EATEN -> theme.audioClip(p + "audio.bonus_eaten").play();
-		case GameModel.SE_CREDIT_ADDED -> theme.audioClip(p + "audio.credit").play();
-		case GameModel.SE_EXTRA_LIFE -> theme.audioClip(p + "audio.extra_life").play();
-		case GameModel.SE_GHOST_EATEN -> theme.audioClip(p + "audio.ghost_eaten").play();
-		case GameModel.SE_HUNTING_PHASE_STARTED_0 -> ensureSirenStarted(0);
-		case GameModel.SE_HUNTING_PHASE_STARTED_2 -> ensureSirenStarted(1);
-		case GameModel.SE_HUNTING_PHASE_STARTED_4 -> ensureSirenStarted(2);
-		case GameModel.SE_HUNTING_PHASE_STARTED_6 -> ensureSirenStarted(3);
-		case GameModel.SE_READY_TO_PLAY -> theme.audioClip(p + "audio.game_ready").play();
-		case GameModel.SE_PACMAN_DEATH -> theme.audioClip(p + "audio.pacman_death").play();
-		// TODO this does not sound as in the original game
-		case GameModel.SE_PACMAN_FOUND_FOOD -> ensureLoop(theme.audioClip(p + "audio.pacman_munch"), AudioClip.INDEFINITE);
-		case GameModel.SE_PACMAN_POWER_ENDS -> {
+		case GameModel.SE_BONUS_EATEN:
+			theme.audioClip(p + "audio.bonus_eaten").play();
+			break;
+		case GameModel.SE_CREDIT_ADDED:
+			theme.audioClip(p + "audio.credit").play();
+			break;
+		case GameModel.SE_EXTRA_LIFE:
+			theme.audioClip(p + "audio.extra_life").play();
+			break;
+		case GameModel.SE_GHOST_EATEN:
+			theme.audioClip(p + "audio.ghost_eaten").play();
+			break;
+		case GameModel.SE_HUNTING_PHASE_STARTED_0:
+			ensureSirenStarted(0);
+			break;
+		case GameModel.SE_HUNTING_PHASE_STARTED_2:
+			ensureSirenStarted(1);
+			break;
+		case GameModel.SE_HUNTING_PHASE_STARTED_4:
+			ensureSirenStarted(2);
+			break;
+		case GameModel.SE_HUNTING_PHASE_STARTED_6:
+			ensureSirenStarted(3);
+			break;
+		case GameModel.SE_READY_TO_PLAY:
+			theme.audioClip(p + "audio.game_ready").play();
+			break;
+		case GameModel.SE_PACMAN_DEATH:
+			theme.audioClip(p + "audio.pacman_death").play();
+			break;
+		case GameModel.SE_PACMAN_FOUND_FOOD:
+			// TODO this does not sound as in the original game
+			ensureLoop(theme.audioClip(p + "audio.pacman_munch"), AudioClip.INDEFINITE);
+			break;
+		case GameModel.SE_PACMAN_POWER_ENDS: {
 			theme.audioClip(p + "audio.pacman_power").stop();
 			event.game.level().ifPresent(level -> ensureSirenStarted(level.huntingPhase() / 2));
 		}
-		case GameModel.SE_PACMAN_POWER_STARTS -> {
+			break;
+		case GameModel.SE_PACMAN_POWER_STARTS: {
 			stopSirens();
 			theme.audioClip(p + "audio.pacman_power").stop();
 			theme.audioClip(p + "audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
 			theme.audioClip(p + "audio.pacman_power").play();
 		}
-		case GameModel.SE_START_INTERMISSION_1 -> {
+			break;
+		case GameModel.SE_START_INTERMISSION_1: {
 			switch (event.game.variant()) {
-			case MS_PACMAN -> theme.audioClip(p + "audio.intermission.1").play();
-			case PACMAN -> {
+			case MS_PACMAN:
+				theme.audioClip(p + "audio.intermission.1").play();
+				break;
+			case PACMAN: {
 				theme.audioClip(p + "audio.intermission").setCycleCount(2);
 				theme.audioClip(p + "audio.intermission").play();
 			}
-			default -> throw new IllegalGameVariantException(event.game.variant());
+				break;
+			default:
+				throw new IllegalGameVariantException(event.game.variant());
 			}
+			break;
 		}
-		case GameModel.SE_START_INTERMISSION_2 -> {
+		case GameModel.SE_START_INTERMISSION_2: {
 			switch (event.game.variant()) {
-			case MS_PACMAN -> theme.audioClip(p + "audio.intermission.2").play();
-			case PACMAN -> theme.audioClip(p + "audio.intermission").play();
-			default -> throw new IllegalGameVariantException(event.game.variant());
+			case MS_PACMAN:
+				theme.audioClip(p + "audio.intermission.2").play();
+				break;
+			case PACMAN:
+				theme.audioClip(p + "audio.intermission").play();
+				break;
+			default:
+				throw new IllegalGameVariantException(event.game.variant());
 			}
+			break;
 		}
-		case GameModel.SE_START_INTERMISSION_3 -> {
+		case GameModel.SE_START_INTERMISSION_3: {
 			switch (event.game.variant()) {
-			case MS_PACMAN -> theme.audioClip(p + "audio.intermission.3").play();
-			case PACMAN -> {
+			case MS_PACMAN:
+				theme.audioClip(p + "audio.intermission.3").play();
+				break;
+			case PACMAN: {
 				theme.audioClip(p + "audio.intermission").setCycleCount(2);
 				theme.audioClip(p + "audio.intermission").play();
 			}
-			default -> throw new IllegalGameVariantException(event.game.variant());
+				break;
+			default:
+				throw new IllegalGameVariantException(event.game.variant());
 			}
+			break;
 		}
-		case GameModel.SE_STOP_ALL_SOUNDS -> stopAllSounds();
-		default -> {
+		case GameModel.SE_STOP_ALL_SOUNDS:
+			stopAllSounds();
+			break;
+		default: {
 			// ignore
 		}
 		}

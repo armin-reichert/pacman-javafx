@@ -48,11 +48,14 @@ public class Settings {
 			Direction.RIGHT, KeyCode.RIGHT);
 
 	private static Map<Direction, KeyCode> keyMap(String name) {
-		return switch (name) {
-		case "numpad" -> KEYS_NUMPAD;
-		case "cursor" -> KEYS_CURSOR;
-		default -> throw new IllegalArgumentException("Unknown keymap name: " + name);
-		};
+		switch (name) {
+		case "numpad":
+			return KEYS_NUMPAD;
+		case "cursor":
+			return KEYS_CURSOR;
+		default:
+			throw new IllegalArgumentException("Unknown keymap name: " + name);
+		}
 	}
 
 	public boolean fullScreen;

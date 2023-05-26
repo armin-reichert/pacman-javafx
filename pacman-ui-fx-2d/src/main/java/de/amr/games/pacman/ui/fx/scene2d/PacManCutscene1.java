@@ -98,26 +98,34 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 
 		switch (++frame) {
-		case 260 -> {
+		case 260: {
 			blinky.placeAtTile(v2i(-2, 20), 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.setPixelSpeed(0.75f);
 			blinky.animations().ifPresent(animations -> animations.selectAndRestart(GameModel.AK_GHOST_BLUE));
 		}
-		case 400 -> {
+			break;
+
+		case 400: {
 			pac.placeAtTile(v2i(-3, 19), 0, 0);
 			pac.setMoveDir(Direction.RIGHT);
 			pac.animations().ifPresent(animations -> animations.selectAndRestart(GameModel.AK_PAC_BIG));
 		}
-		case 632 -> {
+			break;
+
+		case 632: {
 			context.state().timer().expire();
 		}
-		default -> {
+			break;
+
+		default: {
 			pac.move();
 			pac.animate();
 			blinky.move();
 			blinky.animate();
 		}
+			break;
+
 		}
 	}
 
