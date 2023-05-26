@@ -12,7 +12,7 @@
 		<mainClass>de.amr.games.pacman.ui.fx.app.Main</mainClass>
 		<mainModule>de.amr.games.pacman.ui.fx</mainModule>
 		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
-		<vs.java>13</vs.java>
+		<vs.java>11</vs.java>
 		<vs.javafx>18.0.2</vs.javafx>
 		<vs.tentackle>17.12.0.0</vs.tentackle>
 	</properties>
