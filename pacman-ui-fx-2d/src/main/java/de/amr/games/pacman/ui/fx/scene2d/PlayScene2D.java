@@ -57,7 +57,7 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class PlaySceneUnscaled extends GameScene2D {
+public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
@@ -78,7 +78,7 @@ public class PlaySceneUnscaled extends GameScene2D {
 
 	@Override
 	public void init() {
-		scaleGameSceneCanvas(false);
+		setSceneCanvasScaled(false);
 		context.setCreditVisible(!context.hasCredit());
 		context.setScoreVisible(true);
 	}
@@ -98,11 +98,7 @@ public class PlaySceneUnscaled extends GameScene2D {
 		if (context == null) {
 			return;
 		}
-		g.setFill(r().theme().color("wallpaper.color"));
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
-
+		drawSceneBackground();
 		if (context.isScoreVisible()) {
 			drawScore(context.game().score(), "SCORE", t(1), t(1));
 			drawScore(context.game().highScore(), "HIGH SCORE", t(16), t(1));

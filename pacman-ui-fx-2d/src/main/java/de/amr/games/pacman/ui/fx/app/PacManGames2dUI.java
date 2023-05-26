@@ -67,7 +67,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.PlaySceneUnscaled;
+import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -151,7 +151,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new GameSceneChoice(new BootScene()),
 			new GameSceneChoice(new MsPacManIntroScene()), 
 			new GameSceneChoice(new MsPacManCreditScene()),
-			new GameSceneChoice(new PlaySceneUnscaled()),
+			new GameSceneChoice(new PlayScene2D()),
 			new GameSceneChoice(new MsPacManIntermissionScene1()), 
 			new GameSceneChoice(new MsPacManIntermissionScene2()),
 			new GameSceneChoice(new MsPacManIntermissionScene3())
@@ -161,7 +161,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new GameSceneChoice(new BootScene()),
 			new GameSceneChoice(new PacManIntroScene()),
 			new GameSceneChoice(new PacManCreditScene()),
-			new GameSceneChoice(new PlaySceneUnscaled()),
+			new GameSceneChoice(new PlayScene2D()),
 			new GameSceneChoice(new PacManCutscene1()), 
 			new GameSceneChoice(new PacManCutscene2()),
 			new GameSceneChoice(new PacManCutscene3())
@@ -295,13 +295,15 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		}
 		currentGameScene = newGameScene;
 		currentGameScene.setParentScene(stage.getScene());
-		//@formatter:off
+		// TODO check this
+		if (currentGameScene instanceof GameScene2D scene2D) {
+			// This avoids a vertical line on the left side of the embedded 2D game scene
+			var wallpaperColor = theme().color("wallpaper.color");
+			scene2D.setWallpaperColor(wallpaperColor);
+			scene2D.root().setBackground(ResourceManager.coloredBackground(wallpaperColor));
+		}
 		currentGameScene.setContext(
-			new GameSceneContext(gameController, this,
-				new MsPacManGameRenderer( theme),
-				new PacManGameRenderer( theme)
-		));
-		//@formatter:on
+				new GameSceneContext(gameController, this, new MsPacManGameRenderer(theme), new PacManGameRenderer(theme)));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);

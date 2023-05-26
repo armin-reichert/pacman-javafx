@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
-import de.amr.games.pacman.ui.fx.scene2d.PlaySceneScaled;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
@@ -57,8 +56,8 @@ import javafx.stage.Stage;
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
  * <p>
- * The <strong>play scene</strong> is available in a {@link PlaySceneScaled 2D} and a {@link PlayScene3D 3D} version. All
- * others scenes are 2D only.
+ * The <strong>play scene</strong> is available in a {@link PlaySceneScaled 2D} and a {@link PlayScene3D 3D} version.
+ * All others scenes are 2D only.
  * <p>
  * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
  * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.

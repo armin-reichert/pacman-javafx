@@ -33,7 +33,6 @@ import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
@@ -80,6 +79,8 @@ public abstract class GameScene2D implements GameScene {
 	protected final FadeTransition helpMenuAnimation;
 	protected GameSceneContext context;
 	protected boolean canvasScaled;
+	private boolean roundedCorners = true;
+	private Color wallpaperColor = Color.BLACK;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, WIDTH_UNSCALED, HEIGHT_UNSCALED);
@@ -118,7 +119,7 @@ public abstract class GameScene2D implements GameScene {
 		return r().theme().font("font.arcade", s(8));
 	}
 
-	protected void scaleGameSceneCanvas(boolean scaled) {
+	public void setSceneCanvasScaled(boolean scaled) {
 		this.canvasScaled = scaled;
 		if (scaled) {
 			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
@@ -127,6 +128,18 @@ public abstract class GameScene2D implements GameScene {
 			canvas.widthProperty().bind(fxSubScene.widthProperty());
 			canvas.heightProperty().bind(fxSubScene.heightProperty());
 		}
+	}
+
+	public StackPane root() {
+		return root;
+	}
+
+	public void setRoundedCorners(boolean roundedCorners) {
+		this.roundedCorners = roundedCorners;
+	}
+
+	public void setWallpaperColor(Color wallpaperColor) {
+		this.wallpaperColor = wallpaperColor;
 	}
 
 	// TODO: not sure if this logic belongs here...
@@ -170,10 +183,6 @@ public abstract class GameScene2D implements GameScene {
 	public void setContext(GameSceneContext context) {
 		checkNotNull(context);
 		this.context = context;
-		// This avoids a vertical line on the left side of the embedded 2D game scene
-		var wallpaperColor = context.renderer().theme().color("wallpaper.color");
-		var background = ResourceManager.coloredBackground(wallpaperColor);
-		root.setBackground(background);
 	}
 
 	@Override
@@ -181,11 +190,7 @@ public abstract class GameScene2D implements GameScene {
 		if (context == null) {
 			return;
 		}
-		g.setFill(r().theme().color("wallpaper.color"));
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		g.setFill(Color.BLACK);
-		g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
-
+		drawSceneBackground();
 		if (context.isScoreVisible()) {
 			r().drawScore(g, context.game().score(), "SCORE", t(1), t(1));
 			r().drawScore(g, context.game().highScore(), "HIGH SCORE", t(16), t(1));
@@ -196,6 +201,18 @@ public abstract class GameScene2D implements GameScene {
 		drawSceneContent();
 		if (infoVisiblePy.get()) {
 			drawSceneInfo();
+		}
+	}
+
+	protected void drawSceneBackground() {
+		if (roundedCorners) {
+			g.setFill(wallpaperColor);
+			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			g.setFill(Color.BLACK);
+			g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), s(20), s(20));
+		} else {
+			g.setFill(Color.BLACK);
+			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		}
 	}
 

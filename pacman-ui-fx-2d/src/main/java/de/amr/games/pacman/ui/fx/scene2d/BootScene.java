@@ -53,7 +53,7 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		scaleGameSceneCanvas(true);
+		setSceneCanvasScaled(true);
 		context.setScoreVisible(false);
 		eraseContent();
 		updateSceneImage();
