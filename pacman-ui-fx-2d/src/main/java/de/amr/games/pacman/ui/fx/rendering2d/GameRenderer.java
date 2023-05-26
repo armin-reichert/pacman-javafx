@@ -27,8 +27,6 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-import java.util.List;
-
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -158,13 +156,6 @@ public abstract class GameRenderer {
 		}
 	}
 
-	public void drawPac(GraphicsContext g, Pac pac) {
-		pac.animation().ifPresent(animation -> drawEntitySprite(g, pac, (Rectangle2D) animation.frame()));
-		if (pac.moveDir() != pac.wishDir() && pac.wishDir() != null) {
-			// drawWishDirIndicator(g, pac);
-		}
-	}
-
 	public void drawWishDirIndicator(GraphicsContext g, Pac pac) {
 		g.setFill(Color.RED);
 		float r = 4;
@@ -179,35 +170,6 @@ public abstract class GameRenderer {
 	public abstract void drawBonus(GraphicsContext g, Bonus bonus);
 
 	public abstract void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world);
-
-	/**
-	 * @param g            graphics context
-	 * @param xr           x coordinate (right-upper corner, default: 24 * TS)
-	 * @param yr           y coordinate (right-upper corner, default: 34 * TS)
-	 * @param levelSymbols symbols to draw
-	 */
-	public void drawLevelCounter(GraphicsContext g, double xr, double yr, List<Byte> levelSymbols) {
-		double x = xr;
-		for (var symbol : levelSymbols) {
-			drawSprite(g, bonusSymbolSprite(symbol), x, yr);
-			x -= TS * 2;
-		}
-	}
-
-//	public void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-//		var font = theme.font("font.arcade", 8);
-//		drawText(g, title, ArcadeTheme.PALE, font, x, y);
-//		var pointsText = "%02d".formatted(score.points());
-//		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
-//		if (score.points() != 0) {
-//			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + TS * 8, y + TS + 1);
-//		}
-//	}
-//
-//	public void drawCredit(GraphicsContext g, int credit, double x, double y) {
-//		var font = theme.font("font.arcade", 8);
-//		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, font, x, y);
-//	}
 
 	public abstract void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 

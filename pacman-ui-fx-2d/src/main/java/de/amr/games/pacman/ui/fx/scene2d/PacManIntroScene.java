@@ -135,7 +135,7 @@ public class PacManIntroScene extends GameScene2D {
 			// nothing to do
 		}
 		}
-		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class PacManIntroScene extends GameScene2D {
 
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, font8, t(tx + 3), t(6));
+			drawText("CHARACTER / NICKNAME", ArcadeTheme.PALE, font8, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!ic.ghostInfo[id].pictureVisible) {
@@ -165,12 +165,12 @@ public class PacManIntroScene extends GameScene2D {
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				drawText(g, text, color, font8, t(tx + 3), t(ty + 1));
+				drawText(text, color, font8, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
 				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				drawText(g, text, color, font8, t(tx + 14), t(ty + 1));
+				drawText(text, color, font8, t(tx + 14), t(ty + 1));
 			}
 		}
 	}
@@ -196,7 +196,7 @@ public class PacManIntroScene extends GameScene2D {
 			r().drawGhost(g, ic.ghost(2));
 			g.restore();
 		}
-		r().drawPac(g, ic.pacMan);
+		drawPacSprite(ic.pacMan);
 	}
 
 	private void drawPoints(GraphicsContext g) {

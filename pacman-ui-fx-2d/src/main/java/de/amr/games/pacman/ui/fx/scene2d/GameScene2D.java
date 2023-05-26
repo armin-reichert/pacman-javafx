@@ -23,12 +23,17 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
 
+import java.util.List;
+
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -39,10 +44,12 @@ import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -244,20 +251,63 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
-		drawText(g, title, ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+		drawText(title, ArcadeTheme.PALE, sceneFont(), s(x), s(y));
 		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), s(x), s((y + TS + 1)));
+		drawText("%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), s(x), s((y + TS + 1)));
 		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), s((x + TS * 8)),
-					s((y + TS + 1)));
+			drawText("L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), s((x + TS * 8)), s((y + TS + 1)));
 		}
 	}
 
-	protected void drawCredit(int credit, double x, double y) {
-		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
+		double x = xr;
+		for (var symbol : levelSymbols) {
+			drawSprite(r().bonusSymbolSprite(symbol), x, yr);
+			x -= TS * 2;
+		}
 	}
 
-	protected void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+	protected void drawPacSprite(Pac pac) {
+		pac.animation().ifPresent(animation -> {
+			if (pac.isVisible()) {
+				var sprite = (Rectangle2D) animation.frame();
+				var x = pac.position().x() + HTS - sprite.getWidth() / 2;
+				var y = pac.position().y() + HTS - sprite.getHeight() / 2;
+				// TODO check the blitzer cause and remove -1 workaround
+				g.drawImage(r().spritesheet().source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1,
+						sprite.getHeight() - 1, s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+			}
+		});
+	}
+
+	protected void drawGhostSprite(Ghost ghost) {
+		ghost.animation().ifPresent(animation -> {
+			if (ghost.isVisible()) {
+				var sprite = (Rectangle2D) animation.frame();
+				var x = ghost.position().x() + HTS - sprite.getWidth() / 2;
+				var y = ghost.position().y() + HTS - sprite.getHeight() / 2;
+				drawSprite(sprite, x, y);
+			}
+		});
+	}
+
+	protected void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
+		if (sprite != null) {
+			g.drawImage(source, //
+					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
+					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+		}
+	}
+
+	protected void drawSprite(Rectangle2D sprite, double x, double y) {
+		drawSprite(r().spritesheet().source(), sprite, x, y);
+	}
+
+	protected void drawCredit(int credit, double x, double y) {
+		drawText("CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+	}
+
+	protected void drawText(String text, Color color, Font font, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
 		g.fillText(text, x, y);

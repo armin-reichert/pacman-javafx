@@ -26,8 +26,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
-import java.util.List;
-
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -39,14 +37,11 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -122,11 +117,11 @@ public class PlayScene2D extends GameScene2D {
 				drawPacManMaze(0, t(3), level.world());
 			}
 			if (context.state() == GameState.LEVEL_TEST) {
-				drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, sceneFont(), s(t(8.5)), s(t(21)));
+				drawText("TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, sceneFont(), s(t(8.5)), s(t(21)));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				drawText(g, "GAME  OVER", ArcadeTheme.RED, sceneFont(), s(t(9)), s(t(21)));
+				drawText("GAME  OVER", ArcadeTheme.RED, sceneFont(), s(t(9)), s(t(21)));
 			} else if (context.state() == GameState.READY) {
-				drawText(g, "READY!", ArcadeTheme.YELLOW, sceneFont(), s(t(11)), s(t(21)));
+				drawText("READY!", ArcadeTheme.YELLOW, sceneFont(), s(t(11)), s(t(21)));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());
@@ -215,30 +210,6 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawPacSprite(Pac pac) {
-		pac.animation().ifPresent(animation -> {
-			if (pac.isVisible()) {
-				var sprite = (Rectangle2D) animation.frame();
-				var x = pac.position().x() + HTS - sprite.getWidth() / 2;
-				var y = pac.position().y() + HTS - sprite.getHeight() / 2;
-				// TODO check the blitzer cause and remove -1 workaround
-				g.drawImage(r().spritesheet().source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1,
-						sprite.getHeight() - 1, s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
-			}
-		});
-	}
-
-	private void drawGhostSprite(Ghost ghost) {
-		ghost.animation().ifPresent(animation -> {
-			if (ghost.isVisible()) {
-				var sprite = (Rectangle2D) animation.frame();
-				var x = ghost.position().x() + HTS - sprite.getWidth() / 2;
-				var y = ghost.position().y() + HTS - sprite.getHeight() / 2;
-				drawSprite(sprite, x, y);
-			}
-		});
-	}
-
 	private void drawLivesCounter(int numLivesDisplayed) {
 		if (numLivesDisplayed <= 0) {
 			return;
@@ -253,29 +224,9 @@ public class PlayScene2D extends GameScene2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
+			drawText("+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
 					s(y + TS));
 		}
-	}
-
-	private void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
-		double x = xr;
-		for (var symbol : levelSymbols) {
-			drawSprite(r().bonusSymbolSprite(symbol), x, yr);
-			x -= TS * 2;
-		}
-	}
-
-	private void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			g.drawImage(source, //
-					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
-					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
-		}
-	}
-
-	private void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(r().spritesheet().source(), sprite, x, y);
 	}
 
 	@Override

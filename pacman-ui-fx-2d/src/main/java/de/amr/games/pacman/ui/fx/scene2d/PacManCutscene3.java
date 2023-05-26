@@ -113,14 +113,14 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		r().drawPac(g, pac);
+		drawPacSprite(pac);
 		r().drawGhost(g, blinky);
-		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 
 	@Override
 	protected void drawSceneInfo() {
 		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
-		drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
+		drawText(text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}
 }

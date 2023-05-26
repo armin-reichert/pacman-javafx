@@ -80,11 +80,11 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		r().drawClap(g, imc.clapperboard);
-		r().drawPac(g, imc.msPac);
-		r().drawPac(g, imc.pacMan);
+		drawPacSprite(imc.msPac);
+		drawPacSprite(imc.pacMan);
 		r().drawGhost(g, imc.inky);
 		r().drawGhost(g, imc.pinky);
 		r().drawEntitySprite(g, imc.heart, r().heartSprite());
-		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }
