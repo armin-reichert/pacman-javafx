@@ -88,25 +88,6 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void render() {
-		if (context == null) {
-			return;
-		}
-		drawSceneBackground();
-		if (context.isScoreVisible()) {
-			drawScore(context.game().score(), "SCORE", t(1), t(1));
-			drawScore(context.game().highScore(), "HIGH SCORE", t(16), t(1));
-		}
-		if (context.isCreditVisible()) {
-			drawCredit(context.game().credit(), t(2), t(36) - 1);
-		}
-		drawSceneContent();
-		if (infoVisiblePy.get()) {
-			drawSceneInfo();
-		}
-	}
-
-	@Override
 	protected void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			int levelNumber = level.number();
