@@ -77,9 +77,9 @@ public abstract class GameRenderer {
 	 */
 	public abstract Rectangle2D bonusValueSprite(int symbol);
 
-	public void drawSprite(GraphicsContext g, Image source, Rectangle2D r, double x, double y) {
-		if (r != null) {
-			g.drawImage(source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
+	public void drawSprite(GraphicsContext g, Image source, Rectangle2D sprite, double x, double y) {
+		if (sprite != null) {
+			g.drawImage(source, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y, sprite.getWidth(), sprite.getHeight());
 		}
 	}
 
@@ -87,12 +87,12 @@ public abstract class GameRenderer {
 	 * Draws a sprite at the given position. The position specifies the left-upper corner.
 	 * 
 	 * @param g graphics context
-	 * @param r sprite (may be null)
+	 * @param sprite sprite (may be null)
 	 * @param x x position
 	 * @param y y position
 	 */
-	public void drawSprite(GraphicsContext g, Rectangle2D r, double x, double y) {
-		drawSprite(g, spritesheet().source(), r, x, y);
+	public void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+		drawSprite(g, spritesheet().source(), sprite, x, y);
 	}
 
 	/**
@@ -101,13 +101,13 @@ public abstract class GameRenderer {
 	 * bounding box is only 8 pixels (one square tile) wide.
 	 * 
 	 * @param g graphics context
-	 * @param r spritesheet region (may be null)
+	 * @param sprite spritesheet region (may be null)
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
 	 */
-	public void drawSpriteOverBoundingBox(GraphicsContext g, Rectangle2D r, double x, double y) {
-		if (r != null) {
-			drawSprite(g, r, x + HTS - r.getWidth() / 2, y + HTS - r.getHeight() / 2);
+	public void drawSpriteOverBoundingBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+		if (sprite != null) {
+			drawSprite(g, sprite, x + HTS - sprite.getWidth() / 2, y + HTS - sprite.getHeight() / 2);
 		}
 	}
 
@@ -116,12 +116,12 @@ public abstract class GameRenderer {
 	 * 
 	 * @param g      graphics context
 	 * @param entity an entity like Pac-Man or a ghost
-	 * @param r      the sprite
+	 * @param sprite      the sprite
 	 */
-	protected void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
+	protected void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D sprite) {
 		checkNotNull(entity);
 		if (entity.isVisible()) {
-			drawSpriteOverBoundingBox(g, r, entity.position().x(), entity.position().y());
+			drawSpriteOverBoundingBox(g, sprite, entity.position().x(), entity.position().y());
 		}
 	}
 
