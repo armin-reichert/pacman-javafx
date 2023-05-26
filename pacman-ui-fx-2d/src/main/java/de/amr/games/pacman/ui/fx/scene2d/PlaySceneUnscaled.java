@@ -25,7 +25,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawTileGrid;
 
 import java.util.List;
 
@@ -46,7 +45,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -146,11 +144,11 @@ public class PlaySceneUnscaled extends GameScene2D {
 				drawPacManMaze(0, t(3), level.world());
 			}
 			if (context.state() == GameState.LEVEL_TEST) {
-				GameRenderer.drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, f8, s(t(8.5)), s(t(21)));
+				r().drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, f8, s(t(8.5)), s(t(21)));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				GameRenderer.drawText(g, "GAME  OVER", ArcadeTheme.RED, f8, s(t(9)), s(t(21)));
+				r().drawText(g, "GAME  OVER", ArcadeTheme.RED, f8, s(t(9)), s(t(21)));
 			} else if (context.state() == GameState.READY) {
-				GameRenderer.drawText(g, "READY!", ArcadeTheme.YELLOW, f8, s(t(11)), s(t(21)));
+				r().drawText(g, "READY!", ArcadeTheme.YELLOW, f8, s(t(11)), s(t(21)));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());
@@ -169,16 +167,16 @@ public class PlaySceneUnscaled extends GameScene2D {
 	}
 
 	private void drawScore(Score score, String title, double x, double y) {
-		GameRenderer.drawText(g, title, tc, f8, s(x), s(y));
+		r().drawText(g, title, tc, f8, s(x), s(y));
 		var pointsText = "%02d".formatted(score.points());
-		GameRenderer.drawText(g, "%7s".formatted(pointsText), tc, f8, s(x), s((y + TS + 1)));
+		r().drawText(g, "%7s".formatted(pointsText), tc, f8, s(x), s((y + TS + 1)));
 		if (score.points() != 0) {
-			GameRenderer.drawText(g, "L%d".formatted(score.levelNumber()), tc, f8, s((x + TS * 8)), s((y + TS + 1)));
+			r().drawText(g, "L%d".formatted(score.levelNumber()), tc, f8, s((x + TS * 8)), s((y + TS + 1)));
 		}
 	}
 
 	private void drawCredit(int credit, double x, double y) {
-		GameRenderer.drawText(g, "CREDIT %2d".formatted(credit), tc, f8, s(x), s(y));
+		r().drawText(g, "CREDIT %2d".formatted(credit), tc, f8, s(x), s(y));
 	}
 
 	private void drawPacManMaze(double x, double y, World world) {
@@ -290,8 +288,8 @@ public class PlaySceneUnscaled extends GameScene2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			GameRenderer.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)),
-					s(x + TS * 10), s(y + TS));
+			r().drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
+					s(y + TS));
 		}
 	}
 
@@ -317,7 +315,7 @@ public class PlaySceneUnscaled extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		drawTileGrid(g, TILES_X, TILES_Y);
+		r().drawTileGrid(g, TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
 				// "No Trespassing" symbol

@@ -52,37 +52,6 @@ import javafx.scene.text.FontWeight;
  */
 public abstract class GameRenderer {
 
-	public static void drawSprite(GraphicsContext g, Image source, Rectangle2D r, double x, double y) {
-		if (r != null) {
-			g.drawImage(source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
-		}
-	}
-
-	public static void drawTileGrid(GraphicsContext g, int tilesX, int tilesY) {
-		g.save();
-		g.translate(0.5, 0.5);
-		g.setStroke(ArcadeTheme.PALE);
-		g.setLineWidth(0.2);
-		for (int row = 0; row <= tilesY; ++row) {
-			g.strokeLine(0, TS * (row), tilesX * TS, TS * (row));
-		}
-		for (int col = 0; col <= tilesY; ++col) {
-			g.strokeLine(TS * (col), 0, TS * (col), tilesY * TS);
-		}
-		g.restore();
-	}
-
-	public static void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
-	}
-
-	public static void hideTileContent(GraphicsContext g, Vector2i tile) {
-		g.setFill(ArcadeTheme.BLACK);
-		g.fillRect(TS * tile.x(), TS * tile.y(), TS, TS);
-	}
-
 	protected final Theme theme;
 	protected final Spritesheet spritesheet;
 
@@ -122,6 +91,37 @@ public abstract class GameRenderer {
 	 * @return sprite showing bonus symbol value (100, 300, ...)
 	 */
 	public abstract Rectangle2D bonusValueSprite(int symbol);
+
+	public void drawSprite(GraphicsContext g, Image source, Rectangle2D r, double x, double y) {
+		if (r != null) {
+			g.drawImage(source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
+		}
+	}
+
+	public void drawTileGrid(GraphicsContext g, int tilesX, int tilesY) {
+		g.save();
+		g.translate(0.5, 0.5);
+		g.setStroke(ArcadeTheme.PALE);
+		g.setLineWidth(0.2);
+		for (int row = 0; row <= tilesY; ++row) {
+			g.strokeLine(0, TS * (row), tilesX * TS, TS * (row));
+		}
+		for (int col = 0; col <= tilesY; ++col) {
+			g.strokeLine(TS * (col), 0, TS * (col), tilesY * TS);
+		}
+		g.restore();
+	}
+
+	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
+	}
+
+	public void hideTileContent(GraphicsContext g, Vector2i tile) {
+		g.setFill(ArcadeTheme.BLACK);
+		g.fillRect(TS * tile.x(), TS * tile.y(), TS, TS);
+	}
 
 	/**
 	 * Draws a sprite at the given position. The position specifies the left-upper corner.
@@ -232,8 +232,8 @@ public abstract class GameRenderer {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			GameRenderer.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8),
-					x + TS * (10), y + TS * (1));
+			drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + TS * (10),
+					y + TS * (1));
 		}
 	}
 

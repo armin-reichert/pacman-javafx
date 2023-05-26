@@ -30,7 +30,6 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -141,7 +140,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		GameRenderer.drawTileGrid(g, TILES_X, TILES_Y);
+		r().drawTileGrid(g, TILES_X, TILES_Y);
 	}
 
 	// TODO inspect in MAME what's really going on here
@@ -155,7 +154,7 @@ public class PacManIntroScene extends GameScene2D {
 
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			GameRenderer.drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, font8, t(tx + 3), t(6));
+			r().drawText(g, "CHARACTER / NICKNAME", ArcadeTheme.PALE, font8, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!ic.ghostInfo[id].pictureVisible) {
@@ -166,12 +165,12 @@ public class PacManIntroScene extends GameScene2D {
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				GameRenderer.drawText(g, text, color, font8, t(tx + 3), t(ty + 1));
+				r().drawText(g, text, color, font8, t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
 				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				GameRenderer.drawText(g, text, color, font8, t(tx + 14), t(ty + 1));
+				r().drawText(g, text, color, font8, t(tx + 14), t(ty + 1));
 			}
 		}
 	}

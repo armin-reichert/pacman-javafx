@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawText;
-import static de.amr.games.pacman.ui.fx.rendering2d.GameRenderer.drawTileGrid;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -90,11 +88,11 @@ public class PlaySceneScaled extends GameScene2D {
 			int mazeNumber = level.game().mazeNumber(levelNumber);
 			r.drawMaze(g, 0, t(3), mazeNumber, level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
-				drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, font8, t(8.5), t(21));
+				r().drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, font8, t(8.5), t(21));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				drawText(g, "GAME  OVER", ArcadeTheme.RED, font8, t(9), t(21));
+				r().drawText(g, "GAME  OVER", ArcadeTheme.RED, font8, t(9), t(21));
 			} else if (context.state() == GameState.READY) {
-				drawText(g, "READY!", ArcadeTheme.YELLOW, font8, t(11), t(21));
+				r().drawText(g, "READY!", ArcadeTheme.YELLOW, font8, t(11), t(21));
 			}
 			level.bonusManagement().getBonus().ifPresent(bonus -> r.drawBonus(g, bonus));
 			r.drawPac(g, level.pac());
@@ -113,7 +111,7 @@ public class PlaySceneScaled extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		drawTileGrid(g, TILES_X, TILES_Y);
+		r().drawTileGrid(g, TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
 				// No trespassing symbol
