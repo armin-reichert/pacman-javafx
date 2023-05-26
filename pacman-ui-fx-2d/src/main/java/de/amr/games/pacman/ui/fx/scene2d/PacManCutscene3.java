@@ -33,7 +33,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import javafx.scene.canvas.GraphicsContext;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import javafx.scene.text.Font;
 
 /**
@@ -47,11 +47,15 @@ public class PacManCutscene3 extends GameScene2D {
 	private Ghost blinky;
 
 	@Override
+	protected PacManGameRenderer r() {
+		return (PacManGameRenderer) super.r();
+	}
+
+	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		var renderer = context.rendererPacMan();
 		frame = -1;
 		initialDelay = 120;
 
@@ -61,7 +65,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
-		pac.setAnimations(renderer.createPacAnimations(pac));
+		pac.setAnimations(r().createPacAnimations(pac));
 		pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
@@ -70,9 +74,9 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky.setPixelSpeed(1.25f);
 		blinky.show();
 
-		var blinkyAnimations = renderer.createGhostAnimations(blinky);
-		blinkyAnimations.put(GameModel.AK_BLINKY_PATCHED, renderer.createBlinkyPatchedAnimation());
-		blinkyAnimations.put(GameModel.AK_BLINKY_NAKED, renderer.createBlinkyNakedAnimation());
+		var blinkyAnimations = r().createGhostAnimations(blinky);
+		blinkyAnimations.put(GameModel.AK_BLINKY_PATCHED, r().createBlinkyPatchedAnimation());
+		blinkyAnimations.put(GameModel.AK_BLINKY_NAKED, r().createBlinkyNakedAnimation());
 		blinky.setAnimations(blinkyAnimations);
 		blinky.selectAndRunAnimation(GameModel.AK_BLINKY_PATCHED);
 	}
@@ -108,15 +112,14 @@ public class PacManCutscene3 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		var r = context.rendererPacMan();
-		r.drawPac(g, pac);
-		r.drawGhost(g, blinky);
-		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+	public void drawSceneContent() {
+		r().drawPac(g, pac);
+		r().drawGhost(g, blinky);
+		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
 		GameRenderer.drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}

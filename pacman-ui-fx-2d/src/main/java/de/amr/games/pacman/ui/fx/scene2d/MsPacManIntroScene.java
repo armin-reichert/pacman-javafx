@@ -32,6 +32,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -51,6 +52,11 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
+	protected MsPacManGameRenderer r() {
+		return (MsPacManGameRenderer) super.r();
+	}
+
+	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
@@ -63,11 +69,11 @@ public class MsPacManIntroScene extends GameScene2D {
 		});
 		intro.changeState(MsPacManIntro.State.START);
 
-		var msPacAnimations = context.rendererMsPacMan().createPacAnimations(intro.context().msPacMan);
+		var msPacAnimations = r().createPacAnimations(intro.context().msPacMan);
 		intro.context().msPacMan.setAnimations(msPacAnimations);
 		msPacAnimations.start();
 		intro.context().ghosts.forEach(ghost -> {
-			var ghostAnimations = context.rendererMsPacMan().createGhostAnimations(ghost);
+			var ghostAnimations = r().createGhostAnimations(ghost);
 			ghost.setAnimations(ghostAnimations);
 			ghostAnimations.start();
 		});
@@ -100,41 +106,37 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		GameRenderer.drawTileGrid(g, 28, 36);
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		var theme = context.renderer().theme();
-		var font8 = theme.font("font.arcade", 8);
-
+	public void drawSceneContent() {
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();
 		var y0 = ic.stopY;
-		var r = context.rendererMsPacMan();
 
 		drawMarquee(g);
-		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, font8, tx, ty);
+		drawText(g, "\"MS PAC-MAN\"", ArcadeTheme.ORANGE, f8, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 
-			var color = theme.color("ghost.%d.color.normal.dress".formatted(ghost.id()));
+			var color = r().theme().color("ghost.%d.color.normal.dress".formatted(ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText(g, "WITH", ArcadeTheme.PALE, font8, tx, y0 + t(3));
+				drawText(g, "WITH", ArcadeTheme.PALE, f8, tx, y0 + t(3));
 			}
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
-			drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
+			drawText(g, text, color, f8, tx + t(3) + dx, y0 + t(6));
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText(g, "STARRING", ArcadeTheme.PALE, font8, tx, y0 + t(3));
-			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, font8, tx, y0 + t(6));
+			drawText(g, "STARRING", ArcadeTheme.PALE, f8, tx, y0 + t(3));
+			drawText(g, "MS PAC-MAN", ArcadeTheme.YELLOW, f8, tx, y0 + t(6));
 		}
-		ic.ghosts.forEach(ghost -> r.drawGhost(g, ghost));
-		r.drawPac(g, ic.msPacMan);
-		r.drawCopyright(g, t(6), t(28));
-		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+		ic.ghosts.forEach(ghost -> r().drawGhost(g, ghost));
+		r().drawPac(g, ic.msPacMan);
+		r().drawCopyright(g, t(6), t(28));
+		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 
 	private void drawMarquee(GraphicsContext g) {

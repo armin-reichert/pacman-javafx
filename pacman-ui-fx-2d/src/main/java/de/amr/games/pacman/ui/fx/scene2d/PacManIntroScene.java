@@ -46,7 +46,6 @@ public class PacManIntroScene extends GameScene2D {
 
 	private static final String QUOTE = "\"";
 
-	private PacManGameRenderer r;
 	private PacManIntro intro;
 	private PacManIntro.Context ic;
 	private Signature signature;
@@ -57,13 +56,16 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void init() {
-		r = context.rendererPacMan();
+	protected PacManGameRenderer r() {
+		return (PacManGameRenderer) super.r();
+	}
 
+	@Override
+	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		signature.setNameFont(r.theme().font("font.handwriting", 9));
+		signature.setNameFont(context.renderer().theme().font("font.handwriting", 9));
 		signature.hide();
 
 		intro = new PacManIntro(context().gameController());
@@ -74,8 +76,8 @@ public class PacManIntroScene extends GameScene2D {
 		});
 		ic = intro.context();
 
-		ic.pacMan.setAnimations(r.createPacAnimations(ic.pacMan));
-		ic.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
+		ic.pacMan.setAnimations(context.renderer().createPacAnimations(ic.pacMan));
+		ic.ghosts().forEach(ghost -> ghost.setAnimations(context.renderer().createGhostAnimations(ghost)));
 		ic.blinking.reset();
 
 		intro.changeState(State.START);
@@ -106,7 +108,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void drawSceneContent() {
 		var timer = intro.state().timer();
 		drawGallery(g);
 		switch (intro.state()) {
@@ -117,27 +119,27 @@ public class PacManIntroScene extends GameScene2D {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
-			r.drawMidwayCopyright(g, t(4), t(32));
+			r().drawMidwayCopyright(g, t(4), t(32));
 		}
 		case CHASING_GHOSTS -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			r.drawMidwayCopyright(g, t(4), t(32));
+			r().drawMidwayCopyright(g, t(4), t(32));
 		}
 		case READY_TO_PLAY -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			r.drawMidwayCopyright(g, t(4), t(32));
+			r().drawMidwayCopyright(g, t(4), t(32));
 		}
 		default -> {
 			// nothing to do
 		}
 		}
-		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		GameRenderer.drawTileGrid(g, TILES_X, TILES_Y);
 	}
 
@@ -159,7 +161,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int ty = 7 + 3 * id;
-			r.drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
+			r().drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
@@ -183,18 +185,18 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGuys(GraphicsContext g, int shakingAmount) {
 		if (shakingAmount == 0) {
-			ic.ghosts().forEach(ghost -> r.drawGhost(g, ghost));
+			ic.ghosts().forEach(ghost -> r().drawGhost(g, ghost));
 		} else {
-			r.drawGhost(g, ic.ghost(0));
-			r.drawGhost(g, ic.ghost(3));
+			r().drawGhost(g, ic.ghost(0));
+			r().drawGhost(g, ic.ghost(3));
 			// shaking ghosts effect, not quite as in original game
 			g.save();
 			g.translate(shakingAmount, 0);
-			r.drawGhost(g, ic.ghost(1));
-			r.drawGhost(g, ic.ghost(2));
+			r().drawGhost(g, ic.ghost(1));
+			r().drawGhost(g, ic.ghost(2));
 			g.restore();
 		}
-		r.drawPac(g, ic.pacMan);
+		r().drawPac(g, ic.pacMan);
 	}
 
 	private void drawPoints(GraphicsContext g) {

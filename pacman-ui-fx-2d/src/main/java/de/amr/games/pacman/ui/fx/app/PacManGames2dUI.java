@@ -67,7 +67,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.UnscaledCanvasManPlayScene2D;
+import de.amr.games.pacman.ui.fx.scene2d.PlaySceneUnscaled;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -151,7 +151,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new GameSceneChoice(new BootScene()),
 			new GameSceneChoice(new MsPacManIntroScene()), 
 			new GameSceneChoice(new MsPacManCreditScene()),
-			new GameSceneChoice(new UnscaledCanvasManPlayScene2D()),
+			new GameSceneChoice(new PlaySceneUnscaled()),
 			new GameSceneChoice(new MsPacManIntermissionScene1()), 
 			new GameSceneChoice(new MsPacManIntermissionScene2()),
 			new GameSceneChoice(new MsPacManIntermissionScene3())
@@ -161,7 +161,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new GameSceneChoice(new BootScene()),
 			new GameSceneChoice(new PacManIntroScene()),
 			new GameSceneChoice(new PacManCreditScene()),
-			new GameSceneChoice(new UnscaledCanvasManPlayScene2D()),
+			new GameSceneChoice(new PlaySceneUnscaled()),
 			new GameSceneChoice(new PacManCutscene1()), 
 			new GameSceneChoice(new PacManCutscene2()),
 			new GameSceneChoice(new PacManCutscene3())

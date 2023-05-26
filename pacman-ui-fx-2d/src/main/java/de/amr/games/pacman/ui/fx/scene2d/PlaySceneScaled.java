@@ -38,15 +38,14 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * 2D scene displaying the maze and the game play.
+ * 2D scene displaying the maze and the game play. Uses scaled canvas.
  * 
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D {
+public class PlaySceneScaled extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
@@ -82,7 +81,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			var r = context.renderer();
 			var font8 = r.theme().font("font.arcade", 8);
@@ -112,7 +111,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		drawTileGrid(g, TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {

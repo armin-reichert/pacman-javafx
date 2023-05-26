@@ -28,7 +28,6 @@ import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 3: "Junior".
@@ -44,14 +43,15 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	private MsPacManIntermission3 im;
 	private MsPacManIntermission3.Context imc;
-	private MsPacManGameRenderer r;
-
 	private SimpleAnimation<Rectangle2D> storkAnimation;
 
 	@Override
-	public void init() {
-		r = context.rendererMsPacMan();
+	protected MsPacManGameRenderer r() {
+		return (MsPacManGameRenderer) super.r();
+	}
 
+	@Override
+	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
@@ -60,13 +60,13 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 		im.changeState(MsPacManIntermission3.State.FLAP);
 
-		imc.clapperboard.setAnimation(r.createClapperboardAnimation());
-		imc.msPacMan.setAnimations(r.createPacAnimations(imc.msPacMan));
-		imc.pacMan.setAnimations(r.createPacAnimations(imc.pacMan));
+		imc.clapperboard.setAnimation(r().createClapperboardAnimation());
+		imc.msPacMan.setAnimations(r().createPacAnimations(imc.msPacMan));
+		imc.pacMan.setAnimations(r().createPacAnimations(imc.pacMan));
 		imc.pacMan.animations()
-				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, r.createPacManMunchingAnimationMap(imc.pacMan)));
+				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, r().createPacManMunchingAnimationMap(imc.pacMan)));
 
-		storkAnimation = r.createStorkFlyingAnimation();
+		storkAnimation = r().createStorkFlyingAnimation();
 		storkAnimation.start();
 	}
 
@@ -77,12 +77,12 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		r.drawClap(g, imc.clapperboard);
-		r.drawPac(g, imc.msPacMan);
-		r.drawPac(g, imc.pacMan);
-		r.drawEntitySprite(g, imc.stork, storkAnimation.frame());
-		r.drawEntitySprite(g, imc.bag, imc.bagOpen ? r.juniorPacSprite() : r.blueBagSprite());
-		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+	public void drawSceneContent() {
+		r().drawClap(g, imc.clapperboard);
+		r().drawPac(g, imc.msPacMan);
+		r().drawPac(g, imc.pacMan);
+		r().drawEntitySprite(g, imc.stork, storkAnimation.frame());
+		r().drawEntitySprite(g, imc.bag, imc.bagOpen ? r().juniorPacSprite() : r().blueBagSprite());
+		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 }

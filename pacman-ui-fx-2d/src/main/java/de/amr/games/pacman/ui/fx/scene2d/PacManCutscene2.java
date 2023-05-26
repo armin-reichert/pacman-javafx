@@ -36,7 +36,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 
 /**
@@ -44,7 +43,6 @@ import javafx.scene.text.Font;
  */
 public class PacManCutscene2 extends GameScene2D {
 
-	private PacManGameRenderer r;
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
@@ -53,9 +51,12 @@ public class PacManCutscene2 extends GameScene2D {
 	private Animated damagedAnimation;
 
 	@Override
-	public void init() {
-		r = context.rendererPacMan();
+	protected PacManGameRenderer r() {
+		return (PacManGameRenderer) super.r();
+	}
 
+	@Override
+	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
@@ -68,11 +69,11 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.setPixelSpeed(1.15f);
 		pac.show();
 
-		var pacAnimations = r.createPacAnimations(pac);
+		var pacAnimations = r().createPacAnimations(pac);
 		pacAnimations.selectAndRestart(GameModel.AK_PAC_MUNCHING);
 		pac.setAnimations(pacAnimations);
 
-		stretchedDressAnimation = r.createBlinkyStretchedAnimation();
+		stretchedDressAnimation = r().createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.placeAtTile(v2i(28, 20), 0, 0);
@@ -80,8 +81,8 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.setPixelSpeed(0);
 		blinky.hide();
 
-		var blinkyAnimations = r.createGhostAnimations(blinky);
-		damagedAnimation = r.createBlinkyDamagedAnimation();
+		var blinkyAnimations = r().createGhostAnimations(blinky);
+		damagedAnimation = r().createBlinkyDamagedAnimation();
 		blinkyAnimations.put(GameModel.AK_BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.selectAndRestart(GameModel.AK_GHOST_COLOR);
 		blinky.setAnimations(blinkyAnimations);
@@ -144,17 +145,17 @@ public class PacManCutscene2 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
+	public void drawSceneContent() {
 		if (stretchedDressAnimation != null) {
-			r.drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+			r().drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 		}
-		r.drawGhost(g, blinky);
-		r.drawPac(g, pac);
-		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+		r().drawGhost(g, blinky);
+		r().drawPac(g, pac);
+		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
 		GameRenderer.drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}

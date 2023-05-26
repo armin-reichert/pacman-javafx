@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
+import de.amr.games.pacman.ui.fx.scene2d.PlaySceneScaled;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -44,7 +44,7 @@ public class PictureInPicture {
 	private final GameScene2D gameScene;
 
 	public PictureInPicture() {
-		gameScene = new PlayScene2D();
+		gameScene = new PlaySceneScaled();
 		gameScene.fxSubScene().heightProperty().bind(heightPy);
 		gameScene.fxSubScene().widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
 		gameScene.fxSubScene().opacityProperty().bind(opacityPy);

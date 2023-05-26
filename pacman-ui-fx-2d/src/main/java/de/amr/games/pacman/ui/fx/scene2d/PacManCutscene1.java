@@ -35,7 +35,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 
 /**
@@ -43,16 +42,18 @@ import javafx.scene.text.Font;
  */
 public class PacManCutscene1 extends GameScene2D {
 
-	private PacManGameRenderer r;
 	private int initialDelay;
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
 
 	@Override
-	public void init() {
-		r = context.rendererPacMan();
+	protected PacManGameRenderer r() {
+		return (PacManGameRenderer) super.r();
+	}
 
+	@Override
+	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
@@ -65,8 +66,8 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
-		var pacAnimations = r.createPacAnimations(pac);
-		pacAnimations.put(GameModel.AK_PAC_BIG, r.createBigPacManMunchingAnimation());
+		var pacAnimations = r().createPacAnimations(pac);
+		pacAnimations.put(GameModel.AK_PAC_BIG, r().createBigPacManMunchingAnimation());
 		pac.setAnimations(pacAnimations);
 		pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
 
@@ -76,7 +77,7 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setPixelSpeed(1.3f);
 		blinky.show();
 
-		var blinkyAnimations = r.createGhostAnimations(blinky);
+		var blinkyAnimations = r().createGhostAnimations(blinky);
 		blinky.setAnimations(blinkyAnimations);
 		blinkyAnimations.selectedAnimation().ifPresent(Animated::restart);
 	}
@@ -120,14 +121,14 @@ public class PacManCutscene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		r.drawPac(g, pac);
-		r.drawGhost(g, blinky);
-		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+	public void drawSceneContent() {
+		r().drawPac(g, pac);
+		r().drawGhost(g, blinky);
+		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		var text = initialDelay > 0 ? "Wait %d".formatted(initialDelay) : "Frame %d".formatted(frame);
 		GameRenderer.drawText(g, text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}

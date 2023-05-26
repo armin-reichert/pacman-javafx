@@ -67,14 +67,6 @@ public class GameSceneContext {
 		return ui;
 	}
 
-	public MsPacManGameRenderer rendererMsPacMan() {
-		return rendererMsPacMan;
-	}
-
-	public PacManGameRenderer rendererPacMan() {
-		return rendererPacMan;
-	}
-
 	public GameRenderer renderer() {
 		return gameVariant() == GameVariant.MS_PACMAN ? rendererMsPacMan : rendererPacMan;
 	}

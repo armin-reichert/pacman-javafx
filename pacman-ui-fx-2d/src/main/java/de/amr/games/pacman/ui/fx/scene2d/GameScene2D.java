@@ -30,9 +30,12 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
@@ -46,6 +49,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
@@ -71,11 +75,17 @@ public abstract class GameScene2D implements GameScene {
 	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene; // we probably could just use some pane instead
 	protected final Canvas canvas = new Canvas(WIDTH, HEIGHT);
+	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Pane overlay = new Pane();
 	protected final Scale overlayScale = new Scale();
 	protected final VBox helpRoot = new VBox();
 	protected final FadeTransition helpMenuAnimation;
 	protected GameSceneContext context;
+
+	// Used while rendering
+	protected Spritesheet ss;
+	protected Font f8;
+	protected Color tc;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
@@ -103,6 +113,10 @@ public abstract class GameScene2D implements GameScene {
 		});
 
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
+	}
+
+	protected GameRenderer r() {
+		return context.renderer();
 	}
 
 	// TODO: not sure if this logic belongs here...
@@ -158,24 +172,26 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 
-		var g = canvas.getGraphicsContext2D();
-		var r = context.renderer();
+		// set render context
+		ss = r().spritesheet();
+		f8 = r().theme().font("font.arcade", 8);
+		tc = ArcadeTheme.PALE;
 
-		g.setFill(r.theme().color("wallpaper.color"));
+		g.setFill(r().theme().color("wallpaper.color"));
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
 
 		if (context.isScoreVisible()) {
-			r.drawScore(g, context.game().score(), "SCORE", t(1), t(1));
-			r.drawScore(g, context.game().highScore(), "HIGH SCORE", t(16), t(1));
+			r().drawScore(g, context.game().score(), "SCORE", t(1), t(1));
+			r().drawScore(g, context.game().highScore(), "HIGH SCORE", t(16), t(1));
 		}
 		if (context.isCreditVisible()) {
-			r.drawCredit(g, context.game().credit(), t(2), t(36) - 1);
+			r().drawCredit(g, context.game().credit(), t(2), t(36) - 1);
 		}
-		drawSceneContent(g);
+		drawSceneContent();
 		if (infoVisiblePy.get()) {
-			drawSceneInfo(g);
+			drawSceneInfo();
 		}
 	}
 
@@ -209,14 +225,14 @@ public abstract class GameScene2D implements GameScene {
 	 * 
 	 * @param g graphics context
 	 */
-	protected abstract void drawSceneContent(GraphicsContext g);
+	protected abstract void drawSceneContent();
 
 	/**
 	 * Draws scene info, e.g. maze structure and special tiles
 	 * 
 	 * @param g graphics context
 	 */
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		// empty by default
 	}
 

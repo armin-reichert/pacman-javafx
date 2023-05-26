@@ -47,6 +47,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -60,10 +61,9 @@ import javafx.scene.text.FontWeight;
  * 
  * @author Armin Reichert
  */
-public class UnscaledCanvasManPlayScene2D extends GameScene2D {
+public class PlaySceneUnscaled extends GameScene2D {
 
 	private GraphicsContext g;
-	private GameRenderer r;
 	private Spritesheet ss;
 	private Font f8;
 	private Color tc;
@@ -72,7 +72,7 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 		return value * fxSubScene.getHeight() / HEIGHT;
 	}
 
-	public UnscaledCanvasManPlayScene2D() {
+	public PlaySceneUnscaled() {
 		canvas.scaleXProperty().unbind();
 		canvas.scaleYProperty().unbind();
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
@@ -119,12 +119,11 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 		}
 
 		g = canvas.getGraphicsContext2D();
-		r = context.gameVariant() == GameVariant.MS_PACMAN ? context.rendererMsPacMan() : context.rendererPacMan();
-		ss = r.spritesheet();
-		f8 = r.theme().font("font.arcade", s(8));
+		ss = r().spritesheet();
+		f8 = r().theme().font("font.arcade", s(8));
 		tc = ArcadeTheme.PALE;
 
-		g.setFill(r.theme().color("wallpaper.color"));
+		g.setFill(r().theme().color("wallpaper.color"));
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setFill(Color.BLACK);
 		g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
@@ -138,11 +137,12 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 		}
 		drawSceneContent();
 		if (infoVisiblePy.get()) {
-			drawSceneInfo(g);
+			drawSceneInfo();
 		}
 	}
 
-	private void drawSceneContent() {
+	@Override
+	protected void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			int levelNumber = level.number();
 			if (context.gameVariant() == GameVariant.MS_PACMAN) {
@@ -191,10 +191,10 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			var image = flashing ? r.theme().image("pacman.flashingMaze") : r.theme().image("pacman.emptyMaze");
+			var image = flashing ? r().theme().image("pacman.flashingMaze") : r().theme().image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
-			var image = r.theme().image("pacman.fullMaze");
+			var image = r().theme().image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
@@ -206,20 +206,20 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var msr = context.rendererMsPacMan();
+		var mpr = (MsPacManGameRenderer) r();
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				var source = r.theme().image("mspacman.flashingMazes");
-				var flashingMazeSprite = msr.highlightedMaze(mazeNumber);
+				var source = r().theme().image("mspacman.flashingMazes");
+				var flashingMazeSprite = mpr.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(ss.source(), msr.emptyMaze(mazeNumber), x, y);
+				drawSprite(ss.source(), mpr.emptyMaze(mazeNumber), x, y);
 			}
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
-			drawSprite(msr.filledMaze(mazeNumber), x, y);
+			drawSprite(mpr.filledMaze(mazeNumber), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
 			// energizer animation
 			world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING).ifPresent(blinking -> {
@@ -239,8 +239,8 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 	private void drawBonus(Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> r.bonusSymbolSprite(bonus.symbol());
-		case Bonus.STATE_EATEN -> r.bonusValueSprite(bonus.symbol());
+		case Bonus.STATE_EDIBLE -> r().bonusSymbolSprite(bonus.symbol());
+		case Bonus.STATE_EATEN -> r().bonusValueSprite(bonus.symbol());
 		default -> throw new IllegalArgumentException();
 		};
 		if (sprite == null) {
@@ -291,7 +291,7 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			// TODO check reason for blitzers
-			drawSprite(r.livesCounterSprite(), x + TS * (2 * i), y);
+			drawSprite(r().livesCounterSprite(), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -304,7 +304,7 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 	private void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
 		for (var symbol : levelSymbols) {
-			drawSprite(r.bonusSymbolSprite(symbol), x, yr);
+			drawSprite(r().bonusSymbolSprite(symbol), x, yr);
 			x -= TS * 2;
 		}
 	}
@@ -322,7 +322,7 @@ public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	protected void drawSceneContent(GraphicsContext g) {
+	protected void drawSceneInfo() {
 		drawTileGrid(g, TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {

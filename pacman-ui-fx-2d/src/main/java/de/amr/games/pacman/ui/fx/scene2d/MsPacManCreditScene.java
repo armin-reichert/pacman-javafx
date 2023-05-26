@@ -28,12 +28,17 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import javafx.scene.canvas.GraphicsContext;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 
 /**
  * @author Armin Reichert
  */
 public class MsPacManCreditScene extends GameScene2D {
+
+	@Override
+	protected MsPacManGameRenderer r() {
+		return (MsPacManGameRenderer) super.r();
+	}
 
 	@Override
 	public void init() {
@@ -51,15 +56,13 @@ public class MsPacManCreditScene extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		var r = context.rendererMsPacMan();
-		var font6 = r.theme().font("font.arcade", 6);
-		var font8 = r.theme().font("font.arcade", 8);
-		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, font8, t(6), t(16));
-		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, font8, t(8), t(18));
-		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, font8, t(2), t(25));
-		r.drawSprite(g, r.livesCounterSprite(), t(13), t(23) + 1);
+	public void drawSceneContent() {
+		var font6 = r().theme().font("font.arcade", 6);
+		GameRenderer.drawText(g, "PUSH START BUTTON", ArcadeTheme.ORANGE, f8, t(6), t(16));
+		GameRenderer.drawText(g, "1 PLAYER ONLY", ArcadeTheme.ORANGE, f8, t(8), t(18));
+		GameRenderer.drawText(g, "ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, f8, t(2), t(25));
+		r().drawSprite(g, r().livesCounterSprite(), t(13), t(23) + 1);
 		GameRenderer.drawText(g, "PTS", ArcadeTheme.ORANGE, font6, t(25), t(25));
-		r.drawCopyright(g, t(6), t(28));
+		r().drawCopyright(g, t(6), t(28));
 	}
 }

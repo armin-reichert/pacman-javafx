@@ -27,7 +27,6 @@ import de.amr.games.pacman.controller.MsPacManIntermission1;
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intermission scene 1: "They meet".
@@ -42,12 +41,14 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	private MsPacManIntermission1 im;
 	private MsPacManIntermission1.Context imc;
-	private MsPacManGameRenderer r;
+
+	@Override
+	protected MsPacManGameRenderer r() {
+		return (MsPacManGameRenderer) super.r();
+	}
 
 	@Override
 	public void init() {
-		r = context.rendererMsPacMan();
-
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
@@ -55,18 +56,18 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		imc = im.context();
 		im.changeState(MsPacManIntermission1.State.FLAP);
 
-		imc.clapperboard.setAnimation(r.createClapperboardAnimation());
-		imc.msPac.setAnimations(r.createPacAnimations(imc.msPac));
+		imc.clapperboard.setAnimation(r().createClapperboardAnimation());
+		imc.msPac.setAnimations(r().createPacAnimations(imc.msPac));
 		imc.msPac.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pacMan.setAnimations(r.createPacAnimations(imc.pacMan));
+		imc.pacMan.setAnimations(r().createPacAnimations(imc.pacMan));
 		imc.pacMan.animations().ifPresent(animations -> {
-			var munching = r.createPacManMunchingAnimationMap(imc.pacMan);
+			var munching = r().createPacManMunchingAnimationMap(imc.pacMan);
 			animations.put(GameModel.AK_PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		imc.inky.setAnimations(r.createGhostAnimations(imc.inky));
+		imc.inky.setAnimations(r().createGhostAnimations(imc.inky));
 		imc.inky.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pinky.setAnimations(r.createGhostAnimations(imc.pinky));
+		imc.pinky.setAnimations(r().createGhostAnimations(imc.pinky));
 		imc.pinky.animations().ifPresent(AnimationMap::ensureRunning);
 	}
 
@@ -76,13 +77,13 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	}
 
 	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		r.drawClap(g, imc.clapperboard);
-		r.drawPac(g, imc.msPac);
-		r.drawPac(g, imc.pacMan);
-		r.drawGhost(g, imc.inky);
-		r.drawGhost(g, imc.pinky);
-		r.drawEntitySprite(g, imc.heart, r.heartSprite());
-		r.drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
+	public void drawSceneContent() {
+		r().drawClap(g, imc.clapperboard);
+		r().drawPac(g, imc.msPac);
+		r().drawPac(g, imc.pacMan);
+		r().drawGhost(g, imc.inky);
+		r().drawGhost(g, imc.pinky);
+		r().drawEntitySprite(g, imc.heart, r().heartSprite());
+		r().drawLevelCounter(g, t(24), t(34), context.game().levelCounter());
 	}
 }
