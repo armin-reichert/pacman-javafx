@@ -69,7 +69,7 @@ public class PlaySceneUnscaled extends GameScene2D {
 	private Color tc;
 
 	private double s(double value) {
-		return value * fxSubScene.getHeight() / HEIGHT;
+		return value * fxSubScene.getHeight() / HEIGHT_UNSCALED;
 	}
 
 	@Override

@@ -46,9 +46,9 @@ public class BootScene extends GameScene2D {
 	private final WritableImage sceneImage;
 
 	public BootScene() {
-		contentCanvas = new Canvas(WIDTH, HEIGHT);
+		contentCanvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 		ctx = contentCanvas.getGraphicsContext2D();
-		sceneImage = new WritableImage(WIDTH, HEIGHT);
+		sceneImage = new WritableImage(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 	}
 
 	@Override
@@ -135,10 +135,10 @@ public class BootScene extends GameScene2D {
 		ctx.setStroke(ArcadeTheme.PALE);
 		ctx.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			ctx.strokeLine(0, row * cellSize, WIDTH, row * cellSize);
+			ctx.strokeLine(0, row * cellSize, WIDTH_UNSCALED, row * cellSize);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			ctx.strokeLine(col * cellSize, 0, col * cellSize, HEIGHT);
+			ctx.strokeLine(col * cellSize, 0, col * cellSize, HEIGHT_UNSCALED);
 		}
 		updateSceneImage();
 	}

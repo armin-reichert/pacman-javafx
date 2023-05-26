@@ -62,8 +62,8 @@ public abstract class GameScene2D implements GameScene {
 
 	public static final int TILES_X = 28;
 	public static final int TILES_Y = 36;
-	public static final int WIDTH = 224;
-	public static final int HEIGHT = 288;
+	public static final int WIDTH_UNSCALED = 224;
+	public static final int HEIGHT_UNSCALED = 288;
 	public static final float ASPECT_RATIO = 28f / 36f;
 
 	protected static float t(double tiles) {
@@ -74,7 +74,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene; // we probably could just use some pane instead
-	protected final Canvas canvas = new Canvas(WIDTH, HEIGHT);
+	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Pane overlay = new Pane();
 	protected final Scale overlayScale = new Scale();
@@ -88,7 +88,7 @@ public abstract class GameScene2D implements GameScene {
 	protected Color tc;
 
 	protected GameScene2D() {
-		fxSubScene = new SubScene(root, WIDTH, HEIGHT);
+		fxSubScene = new SubScene(root, WIDTH_UNSCALED, HEIGHT_UNSCALED);
 
 		root.getChildren().addAll(canvas, overlay);
 		overlay.getChildren().add(helpRoot);
@@ -96,7 +96,7 @@ public abstract class GameScene2D implements GameScene {
 		overlay.getTransforms().add(overlayScale);
 
 		helpRoot.setTranslateX(10);
-		helpRoot.setTranslateY(HEIGHT * 0.2);
+		helpRoot.setTranslateY(HEIGHT_UNSCALED * 0.2);
 
 		helpMenuAnimation = new FadeTransition(Duration.seconds(0.5), helpRoot);
 		helpMenuAnimation.setFromValue(1);
@@ -104,7 +104,7 @@ public abstract class GameScene2D implements GameScene {
 
 		// scale overlay pane to cover subscene
 		fxSubScene.heightProperty().addListener((py, ov, nv) -> {
-			var scaling = nv.doubleValue() / HEIGHT;
+			var scaling = nv.doubleValue() / HEIGHT_UNSCALED;
 			overlayScale.setX(scaling);
 			overlayScale.setY(scaling);
 		});
@@ -118,8 +118,8 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void scaleGameSceneCanvas(boolean scaled) {
 		if (scaled) {
-			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
-			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
+			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
+			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT_UNSCALED));
 		} else {
 			canvas.widthProperty().bind(fxSubScene.widthProperty());
 			canvas.heightProperty().bind(fxSubScene.heightProperty());
@@ -244,7 +244,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void addTouchSupport() {
-		var touchPad = new Rectangle(WIDTH, HEIGHT);
+		var touchPad = new Rectangle(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 		touchPad.setScaleX(0.9);
 		touchPad.setScaleY(0.9);
 		overlay.getChildren().add(touchPad);
