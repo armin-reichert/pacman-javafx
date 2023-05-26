@@ -85,7 +85,11 @@ public class Spritesheet {
 	 * @return region at given coordinates
 	 */
 	public Rectangle2D tile(int col, int row) {
-		return tiles(col, row, 1, 1);
+		return new Rectangle2D(col * raster, row * raster, raster, raster);
+	}
+
+	public Rectangle2D tile(int col, int row, double margin) {
+		return new Rectangle2D(col * raster + margin, row * raster + margin, raster - 2 * margin, raster - 2 * margin);
 	}
 
 	public Rectangle2D region(double x, double y, double w, double h) {
@@ -100,7 +104,7 @@ public class Spritesheet {
 	 * @return region at given grid coordinates
 	 */
 	public Rectangle2D tiles(int col, int row, int tilesX, int tilesY) {
-		return tilesFrom(0, 0, col, row, tilesX, tilesY);
+		return new Rectangle2D(col * raster, row * raster, tilesX * raster, tilesY * raster);
 	}
 
 	/**

@@ -125,7 +125,7 @@ public class PacManGameRenderer extends GameRenderer {
 
 	@Override
 	public Rectangle2D livesCounterSprite() {
-		return spritesheet().tile(8, 1);
+		return spritesheet().tile(8, 1, 1.0);
 	}
 
 	@Override
