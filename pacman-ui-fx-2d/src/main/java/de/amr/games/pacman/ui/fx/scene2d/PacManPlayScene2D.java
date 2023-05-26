@@ -45,10 +45,10 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -60,9 +60,21 @@ import javafx.scene.text.FontWeight;
  */
 public class PacManPlayScene2D extends GameScene2D {
 
+	private GraphicsContext g;
+	private PacManGameRenderer r;
+	private Spritesheet ss;
+	private Font f8;
+	private Color tc;
+
+	private double s(double value) {
+		return value * fxSubScene.getHeight() / HEIGHT;
+	}
+
 	public PacManPlayScene2D() {
 		canvas.scaleXProperty().unbind();
 		canvas.scaleYProperty().unbind();
+		canvas.widthProperty().bind(fxSubScene.widthProperty());
+		canvas.heightProperty().bind(fxSubScene.heightProperty());
 	}
 
 	@Override
@@ -90,7 +102,7 @@ public class PacManPlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		context.level().ifPresent(level -> updateSound(level));
+		context.level().ifPresent(this::updateSound);
 	}
 
 	@Override
@@ -103,9 +115,12 @@ public class PacManPlayScene2D extends GameScene2D {
 		if (context == null) {
 			return;
 		}
-		var g = canvas.getGraphicsContext2D();
-		var r = context.renderer();
-		var s = fxSubScene.getHeight() / HEIGHT;
+
+		g = canvas.getGraphicsContext2D();
+		r = context.rendererPacMan();
+		ss = r.spritesheet();
+		f8 = r.theme().font("font.arcade", s(8));
+		tc = ArcadeTheme.PALE;
 
 		g.setFill(r.theme().color("wallpaper.color"));
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -113,112 +128,97 @@ public class PacManPlayScene2D extends GameScene2D {
 		g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), 20, 20);
 
 		if (context.isScoreVisible()) {
-			drawScore(g, s, context.game().score(), "SCORE", t(1), t(1));
-			drawScore(g, s, context.game().highScore(), "HIGH SCORE", t(16), t(1));
+			drawScore(context.game().score(), "SCORE", t(1), t(1));
+			drawScore(context.game().highScore(), "HIGH SCORE", t(16), t(1));
 		}
 		if (context.isCreditVisible()) {
-			drawCredit(g, s, context.game().credit(), t(2), t(36) - 1);
+			drawCredit(context.game().credit(), t(2), t(36) - 1);
 		}
-		drawSceneContent(g);
+		drawSceneContent();
 		if (infoVisiblePy.get()) {
 			drawSceneInfo(g);
 		}
 	}
 
-	public void drawScore(GraphicsContext g, double s, Score score, String title, double x, double y) {
-		var theme = context.ui().theme();
-		var font = theme.font("font.arcade", 8 * s);
-		GameRenderer.drawText(g, title, ArcadeTheme.PALE, font, s * x, s * y);
+	private void drawScore(Score score, String title, double x, double y) {
+		GameRenderer.drawText(g, title, tc, f8, s(x), s(y));
 		var pointsText = "%02d".formatted(score.points());
-		GameRenderer.drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, s * x, s * (y + TS + 1));
+		GameRenderer.drawText(g, "%7s".formatted(pointsText), tc, f8, s(x), s((y + TS + 1)));
 		if (score.points() != 0) {
-			GameRenderer.drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, s * (x + TS * 8),
-					s * (y + TS + 1));
+			GameRenderer.drawText(g, "L%d".formatted(score.levelNumber()), tc, f8, s((x + TS * 8)), s((y + TS + 1)));
 		}
 	}
 
-	public void drawCredit(GraphicsContext g, double s, int credit, double x, double y) {
-		var theme = context.ui().theme();
-		var font = theme.font("font.arcade", 8 * s);
-		GameRenderer.drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, font, s * x, s * y);
+	private void drawCredit(int credit, double x, double y) {
+		GameRenderer.drawText(g, "CREDIT %2d".formatted(credit), tc, f8, s(x), s(y));
 	}
 
-	@Override
-	public void drawSceneContent(GraphicsContext g) {
-		var s = fxSubScene.getHeight() / HEIGHT;
-		canvas.setWidth(s * WIDTH);
-		canvas.setHeight(s * HEIGHT);
-		var r = context.renderer();
+	private void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			int levelNumber = level.number();
-			int mazeNumber = level.game().mazeNumber(levelNumber);
-			drawMaze(g, s, 0, t(3), mazeNumber, level.world());
-			var font8 = r.theme().font("font.arcade", 8 * s);
+			drawMaze(0, t(3), level.world());
 			if (context.state() == GameState.LEVEL_TEST) {
-				GameRenderer.drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, font8, s * t(8.5),
-						s * t(21));
+				GameRenderer.drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, f8, s(t(8.5)), s(t(21)));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				GameRenderer.drawText(g, "GAME  OVER", ArcadeTheme.RED, font8, s * t(9), s * t(21));
+				GameRenderer.drawText(g, "GAME  OVER", ArcadeTheme.RED, f8, s(t(9)), s(t(21)));
 			} else if (context.state() == GameState.READY) {
-				GameRenderer.drawText(g, "READY!", ArcadeTheme.YELLOW, font8, s * t(11), s * t(21));
+				GameRenderer.drawText(g, "READY!", ArcadeTheme.YELLOW, f8, s(t(11)), s(t(21)));
 			}
-			level.bonusManagement().getBonus().ifPresent(bonus -> drawBonus(g, s, r.spritesheet(), bonus));
-
-			drawPacSprite(level.pac(), g, r.spritesheet(), s);
-			drawGhostSprite(level.ghost(GameModel.ORANGE_GHOST), g, r.spritesheet(), s);
-			drawGhostSprite(level.ghost(GameModel.CYAN_GHOST), g, r.spritesheet(), s);
-			drawGhostSprite(level.ghost(GameModel.PINK_GHOST), g, r.spritesheet(), s);
-			drawGhostSprite(level.ghost(GameModel.RED_GHOST), g, r.spritesheet(), s);
+			level.bonusManagement().getBonus().ifPresent(bonus -> drawBonus(bonus));
+			drawPacSprite(level.pac());
+			drawGhostSprite(level.ghost(GameModel.ORANGE_GHOST));
+			drawGhostSprite(level.ghost(GameModel.CYAN_GHOST));
+			drawGhostSprite(level.ghost(GameModel.PINK_GHOST));
+			drawGhostSprite(level.ghost(GameModel.RED_GHOST));
 
 			if (!context.isCreditVisible()) {
 				// TODO get rid of this crap:
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
-				drawLivesCounter(g, s, r.spritesheet(), lives);
+				drawLivesCounter(lives);
 			}
-			drawLevelCounter(g, s, t(24), t(34), context.game().levelCounter());
+			drawLevelCounter(t(24), t(34), context.game().levelCounter());
 		});
 	}
 
-	private void drawMaze(GraphicsContext g, double s, double x, double y, int mazeNumber, World world) {
-		var theme = context.ui().theme();
+	private void drawMaze(double x, double y, World world) {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			var image = flashing ? theme.image("pacman.flashingMaze") : theme.image("pacman.emptyMaze");
-			g.drawImage(image, s * x, s * y, s * image.getWidth(), s * image.getHeight());
+			var image = flashing ? r.theme().image("pacman.flashingMaze") : r.theme().image("pacman.emptyMaze");
+			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
-			var image = theme.image("pacman.fullMaze");
-			g.drawImage(image, 0, s * t(3), s * image.getWidth(), s * image.getHeight());
-			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, s, tile));
+			var image = r.theme().image("pacman.fullMaze");
+			g.drawImage(image, 0, s(t(3)), s(image.getWidth()), s(image.getHeight()));
+			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 			if (!energizerVisible) {
-				world.energizerTiles().forEach(tile -> hideTileContent(g, s, tile));
+				world.energizerTiles().forEach(this::hideTileContent);
 			}
 		}
 	}
 
-	private void hideTileContent(GraphicsContext g, double s, Vector2i tile) {
+	private void hideTileContent(Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		// TODO check reason for blitzers and remove the workaround
-		g.fillRect(s * TS * tile.x() - 1, s * TS * tile.y() - 1, s * TS + 2, s * TS + 2);
+		g.fillRect(s(TS * tile.x()) - 1, s(TS * tile.y()) - 1, s(TS) + 2, s(TS) + 2);
 	}
 
-	private void drawBonus(GraphicsContext g, double s, Spritesheet ss, Bonus bonus) {
+	private void drawBonus(Bonus bonus) {
 		var sprite = switch (bonus.state()) {
 		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> context.renderer().bonusSymbolSprite(bonus.symbol());
-		case Bonus.STATE_EATEN -> context.renderer().bonusValueSprite(bonus.symbol());
+		case Bonus.STATE_EDIBLE -> r.bonusSymbolSprite(bonus.symbol());
+		case Bonus.STATE_EATEN -> r.bonusValueSprite(bonus.symbol());
 		default -> throw new IllegalArgumentException();
 		};
 		if (sprite != null) {
 			var x = bonus.entity().position().x() + HTS - sprite.getWidth() / 2;
 			var y = bonus.entity().position().y() + HTS - sprite.getHeight() / 2;
-			drawSprite(g, s, ss.source(), sprite, x, y);
+			drawSprite(sprite, x, y);
 		}
 	}
 
-	private void drawPacSprite(Pac pac, GraphicsContext g, Spritesheet ss, double s) {
+	private void drawPacSprite(Pac pac) {
 		pac.animation().ifPresent(animation -> {
 			if (pac.isVisible()) {
 				var sprite = (Rectangle2D) animation.frame();
@@ -226,23 +226,23 @@ public class PacManPlayScene2D extends GameScene2D {
 				var y = pac.position().y() + HTS - sprite.getHeight() / 2;
 				// TODO check the blitzer cause and remove -1 workaround
 				g.drawImage(ss.source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1, sprite.getHeight() - 1,
-						s * x, s * y, s * sprite.getWidth(), s * sprite.getHeight());
+						s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
 			}
 		});
 	}
 
-	private void drawGhostSprite(Ghost ghost, GraphicsContext g, Spritesheet ss, double s) {
+	private void drawGhostSprite(Ghost ghost) {
 		ghost.animation().ifPresent(animation -> {
 			if (ghost.isVisible()) {
 				var sprite = (Rectangle2D) animation.frame();
 				var x = ghost.position().x() + HTS - sprite.getWidth() / 2;
 				var y = ghost.position().y() + HTS - sprite.getHeight() / 2;
-				drawSprite(g, s, ss.source(), sprite, x, y);
+				drawSprite(sprite, x, y);
 			}
 		});
 	}
 
-	private void drawLivesCounter(GraphicsContext g, double s, Spritesheet ss, int numLivesDisplayed) {
+	private void drawLivesCounter(int numLivesDisplayed) {
 		if (numLivesDisplayed <= 0) {
 			return;
 		}
@@ -251,41 +251,42 @@ public class PacManPlayScene2D extends GameScene2D {
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			// TODO check reason for blitzers
-			drawSprite(g, s, ss.source(), context.renderer().livesCounterSprite(), x + TS * (2 * i), y);
+			drawSprite(r.livesCounterSprite(), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			GameRenderer.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8 * s),
-					s * (x + TS * 10), s * (y + TS));
+			GameRenderer.drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)),
+					s(x + TS * 10), s(y + TS));
 		}
 	}
 
-	private void drawLevelCounter(GraphicsContext g, double s, double xr, double yr, List<Byte> levelSymbols) {
+	private void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
 		for (var symbol : levelSymbols) {
-			drawSprite(g, s, context.renderer().spritesheet().source(), context.renderer().bonusSymbolSprite(symbol), x, yr);
+			drawSprite(r.bonusSymbolSprite(symbol), x, yr);
 			x -= TS * 2;
 		}
 	}
 
-	private void drawSprite(GraphicsContext g, double s, Image source, Rectangle2D sprite, double x, double y) {
+	private void drawSprite(Rectangle2D sprite, double x, double y) {
 		if (sprite != null) {
-			g.drawImage(source, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), s * x, s * y,
-					s * sprite.getWidth(), s * sprite.getHeight());
+			g.drawImage(ss.source(), //
+					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
+					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
 		}
 	}
 
 	@Override
-	protected void drawSceneInfo(GraphicsContext g) {
+	protected void drawSceneContent(GraphicsContext g) {
 		drawTileGrid(g, TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
-				// No trespassing symbol
+				// "No Trespassing" symbol
 				g.setFill(Color.RED);
-				g.fillOval(t(tile.x()), t(tile.y() - 1), TS, TS);
+				g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
 				g.setFill(Color.WHITE);
-				g.fillRect(t(tile.x()) + 1, t(tile.y()) - HTS - 1, TS - 2, 2);
+				g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
 			});
 		});
 	}
