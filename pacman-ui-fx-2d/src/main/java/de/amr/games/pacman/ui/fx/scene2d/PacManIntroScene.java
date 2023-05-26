@@ -31,7 +31,6 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Intro scene of the PacMan game.
@@ -61,11 +60,12 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		setSceneCanvasScaled(true);
+		setSceneCanvasScaled(false);
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		signature.setNameFont(context.renderer().theme().font("font.handwriting", 9));
+		signature.setNameFont(r().theme().font("font.handwriting", 9));
 		signature.hide();
 
 		intro = new PacManIntro(context().gameController());
@@ -110,25 +110,25 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		var timer = intro.state().timer();
-		drawGallery(g);
+		drawGallery();
 		switch (intro.state()) {
 		case SHOWING_POINTS -> {
-			drawPoints(g);
+			drawPoints();
 		}
 		case CHASING_PAC -> {
-			drawPoints(g);
-			drawBlinkingEnergizer(g);
-			drawGuys(g, flutter(timer.tick()));
+			drawPoints();
+			drawBlinkingEnergizer();
+			drawGuys(flutter(timer.tick()));
 			drawMidwayCopyright(t(4), t(32));
 		}
 		case CHASING_GHOSTS -> {
-			drawPoints(g);
-			drawGuys(g, 0);
+			drawPoints();
+			drawGuys(0);
 			drawMidwayCopyright(t(4), t(32));
 		}
 		case READY_TO_PLAY -> {
-			drawPoints(g);
-			drawGuys(g, 0);
+			drawPoints();
+			drawGuys(0);
 			drawMidwayCopyright(t(4), t(32));
 		}
 		default -> {
@@ -148,42 +148,39 @@ public class PacManIntroScene extends GameScene2D {
 		return time % 5 < 2 ? 0 : -1;
 	}
 
-	private void drawGallery(GraphicsContext g) {
-		var theme = context.renderer().theme();
-		var font8 = theme.font("font.arcade", 8);
-
+	private void drawGallery() {
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
-			drawText("CHARACTER / NICKNAME", ArcadeTheme.PALE, font8, t(tx + 3), t(6));
+			drawText("CHARACTER / NICKNAME", ArcadeTheme.PALE, sceneFont(), t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			if (!ic.ghostInfo[id].pictureVisible) {
 				continue;
 			}
 			int ty = 7 + 3 * id;
-			r().drawGhostFacingRight(g, id, t(tx) + 4, t(ty));
+			var sprite = r().ghostFacingRight(id);
+			drawSpriteOverBoundingBox(sprite, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
-				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				drawText(text, color, font8, t(tx + 3), t(ty + 1));
+				var color = r().theme().color("ghost.%d.color.normal.dress".formatted(id));
+				drawText(text, color, sceneFont(), t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
-				var color = theme.color("ghost.%d.color.normal.dress".formatted(id));
-				drawText(text, color, font8, t(tx + 14), t(ty + 1));
+				var color = r().theme().color("ghost.%d.color.normal.dress".formatted(id));
+				drawText(text, color, sceneFont(), t(tx + 14), t(ty + 1));
 			}
 		}
 	}
 
-	private void drawBlinkingEnergizer(GraphicsContext g) {
-		var theme = context.ui().theme();
+	private void drawBlinkingEnergizer() {
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
-			g.setFill(theme.color("pacman.maze.foodColor"));
-			g.fillOval(t(ic.leftTileX), t(20), TS, TS);
+			g.setFill(r().theme().color("pacman.maze.foodColor"));
+			g.fillOval(s(t(ic.leftTileX)), s(t(20)), s(TS), s(TS));
 		}
 	}
 
-	private void drawGuys(GraphicsContext g, int shakingAmount) {
+	private void drawGuys(int shakingAmount) {
 		if (shakingAmount == 0) {
 			ic.ghosts().forEach(ghost -> drawGhostSprite(ghost));
 		} else {
@@ -199,26 +196,18 @@ public class PacManIntroScene extends GameScene2D {
 		drawPacSprite(ic.pacMan);
 	}
 
-	private void drawPoints(GraphicsContext g) {
-		var theme = context.renderer().theme();
-		var font6 = theme.font("font.arcade", 6);
-		var font8 = theme.font("font.arcade", 8);
-
+	private void drawPoints() {
+		var font6 = r().theme().font("font.arcade", s(6));
 		int tx = ic.leftTileX + 6;
 		int ty = 25;
-		g.setFill(theme.color("pacman.maze.foodColor"));
+		g.setFill(r().theme().color("pacman.maze.foodColor"));
 		g.fillRect(t(tx) + 4, t(ty - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
-			g.fillOval(t(tx), t(ty + 1), TS, TS);
+			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
 		}
-		g.setFill(ArcadeTheme.PALE);
-		g.setFont(font8);
-		g.fillText("10", t(tx + 2), t(ty));
-		g.setFont(font6); // TODO looks ugly
-		g.fillText("PTS", t(tx + 5), t(ty));
-		g.setFont(font8);
-		g.fillText("50", t(tx + 2), t(ty + 2));
-		g.setFont(font6); // TODO still looks ugly
-		g.fillText("PTS", t(tx + 5), t(ty + 2));
+		drawText("10", ArcadeTheme.PALE, sceneFont(), t(tx + 2), t(ty));
+		drawText("PTS", ArcadeTheme.PALE, font6, t(tx + 5), t(ty));
+		drawText("50", ArcadeTheme.PALE, sceneFont(), t(tx + 2), t(ty + 2));
+		drawText("PTS", ArcadeTheme.PALE, font6, t(tx + 5), t(ty + 2));
 	}
 }

@@ -36,7 +36,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
  * @author Armin Reichert
@@ -80,9 +79,8 @@ public class PacManGameRenderer extends GameRenderer {
 		return map;
 	}
 
-	public void drawGhostFacingRight(GraphicsContext g, int ghostID, double x, double y) {
-		var region = spritesheet().tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
-		drawSpriteOverBoundingBox(g, region, x, y);
+	public Rectangle2D ghostFacingRight(int ghostID) {
+		return spritesheet().tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
 	}
 
 	@Override
