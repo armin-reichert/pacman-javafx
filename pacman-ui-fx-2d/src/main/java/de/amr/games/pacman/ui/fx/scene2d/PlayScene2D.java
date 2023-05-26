@@ -199,7 +199,8 @@ public class PlayScene2D extends GameScene2D {
 		}
 		var x = bonus.entity().position().x() + HTS - sprite.getWidth() / 2;
 		var y = bonus.entity().position().y() + HTS - sprite.getHeight() / 2;
-		if (bonus instanceof MovingBonus movingBonus) {
+		if (bonus instanceof MovingBonus) {
+			var movingBonus = (MovingBonus) bonus;
 			g.save();
 			g.translate(0, movingBonus.dy());
 			drawSprite(sprite, x, y);

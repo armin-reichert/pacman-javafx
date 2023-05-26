@@ -296,7 +296,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		currentGameScene = newGameScene;
 		currentGameScene.setParentScene(stage.getScene());
 		// TODO check this
-		if (currentGameScene instanceof GameScene2D scene2D) {
+		if (currentGameScene instanceof GameScene2D) {
+			var scene2D = (GameScene2D) currentGameScene;
 			// This avoids a vertical line on the left side of the embedded 2D game scene
 			var wallpaperColor = theme().color("wallpaper.color");
 			scene2D.setWallpaperColor(wallpaperColor);
@@ -346,7 +347,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
 			stage.setFullScreen(true);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
-			if (currentGameScene != null && currentGameScene instanceof GameScene2D scene2D) {
+			if (currentGameScene instanceof GameScene2D) {
+				var scene2D = (GameScene2D) currentGameScene;
 				Ufx.toggle(scene2D.canvasScaledPy);
 				showFlashMessage(scene2D.canvasScaledPy.get() ? "Canvas scaled" : "Canvas unscaled");
 			}
@@ -524,8 +526,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	public void showHelp() {
-		if (currentGameScene instanceof GameScene2D gameScene2d) {
-			gameScene2d.showHelpMenu(helpMenus, Duration.seconds(2));
+		if (currentGameScene instanceof GameScene2D) {
+			var scene2D = (GameScene2D) currentGameScene;
+			scene2D.showHelpMenu(helpMenus, Duration.seconds(2));
 		}
 	}
 
