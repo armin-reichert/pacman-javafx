@@ -56,7 +56,8 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		setSceneCanvasScaled(true);
+		setSceneCanvasScaled(false);
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
