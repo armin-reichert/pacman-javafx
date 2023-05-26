@@ -30,12 +30,10 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
@@ -81,11 +79,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final VBox helpRoot = new VBox();
 	protected final FadeTransition helpMenuAnimation;
 	protected GameSceneContext context;
-
-	// Used while rendering
-	protected Spritesheet ss;
-	protected Font f8;
-	protected Color tc;
+	protected Font sceneFont;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, WIDTH_UNSCALED, HEIGHT_UNSCALED);
@@ -178,11 +172,7 @@ public abstract class GameScene2D implements GameScene {
 		if (context == null) {
 			return;
 		}
-
-		// set render context
-		ss = r().spritesheet();
-		f8 = r().theme().font("font.arcade", 8);
-		tc = ArcadeTheme.PALE;
+		sceneFont = r().theme().font("font.arcade", 8);
 
 		g.setFill(r().theme().color("wallpaper.color"));
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());

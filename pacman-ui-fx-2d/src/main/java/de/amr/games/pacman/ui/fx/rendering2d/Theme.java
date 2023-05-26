@@ -48,10 +48,7 @@ public class Theme {
 	}
 
 	public void add(String arrayName, Color color) {
-		if (!namedArrays.containsKey(arrayName)) {
-			namedArrays.put(arrayName, new ArrayList<>());
-		}
-		namedArrays.get(arrayName).add(color);
+		namedArrays.computeIfAbsent(arrayName, name -> new ArrayList<>()).add(color);
 	}
 
 	@SuppressWarnings("unchecked")
