@@ -36,12 +36,10 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 /**
  * 2D scene displaying the maze and the game play.
@@ -49,19 +47,6 @@ import javafx.scene.shape.Rectangle;
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
-
-	public void addTouchSupport() {
-		var touchPad = new Rectangle(WIDTH, HEIGHT);
-		touchPad.setScaleX(0.9);
-		touchPad.setScaleY(0.9);
-		overlay.getChildren().add(touchPad);
-		var gestureHandler = new GestureHandler(touchPad);
-		gestureHandler.setOnDirectionRecognized(dir -> {
-			context.game().level().ifPresent(level -> {
-				level.pac().setWishDir(dir);
-			});
-		});
-	}
 
 	@Override
 	public void handleKeyboardInput() {

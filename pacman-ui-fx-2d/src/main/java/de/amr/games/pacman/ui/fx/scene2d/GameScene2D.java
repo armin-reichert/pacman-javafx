@@ -29,6 +29,7 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -44,6 +45,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
@@ -216,5 +218,18 @@ public abstract class GameScene2D implements GameScene {
 	 */
 	protected void drawSceneInfo(GraphicsContext g) {
 		// empty by default
+	}
+
+	public void addTouchSupport() {
+		var touchPad = new Rectangle(WIDTH, HEIGHT);
+		touchPad.setScaleX(0.9);
+		touchPad.setScaleY(0.9);
+		overlay.getChildren().add(touchPad);
+		var gestureHandler = new GestureHandler(touchPad);
+		gestureHandler.setOnDirectionRecognized(dir -> {
+			context.game().level().ifPresent(level -> {
+				level.pac().setWishDir(dir);
+			});
+		});
 	}
 }
