@@ -79,7 +79,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final VBox helpRoot = new VBox();
 	protected final FadeTransition helpMenuAnimation;
 	protected GameSceneContext context;
-	protected Font sceneFont;
+	protected boolean canvasScaled;
 
 	protected GameScene2D() {
 		fxSubScene = new SubScene(root, WIDTH_UNSCALED, HEIGHT_UNSCALED);
@@ -106,11 +106,20 @@ public abstract class GameScene2D implements GameScene {
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
+	protected double s(double value) {
+		return canvasScaled ? value : value * fxSubScene.getHeight() / HEIGHT_UNSCALED;
+	}
+
 	protected GameRenderer r() {
 		return context.renderer();
 	}
 
+	protected Font sceneFont() {
+		return r().theme().font("font.arcade", s(8));
+	}
+
 	protected void scaleGameSceneCanvas(boolean scaled) {
+		this.canvasScaled = scaled;
 		if (scaled) {
 			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
 			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT_UNSCALED));
@@ -172,8 +181,6 @@ public abstract class GameScene2D implements GameScene {
 		if (context == null) {
 			return;
 		}
-		sceneFont = r().theme().font("font.arcade", 8);
-
 		g.setFill(r().theme().color("wallpaper.color"));
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setFill(Color.BLACK);

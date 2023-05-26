@@ -46,9 +46,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -60,15 +58,6 @@ import javafx.scene.text.FontWeight;
  * @author Armin Reichert
  */
 public class PlaySceneUnscaled extends GameScene2D {
-
-	private GraphicsContext g;
-	private Spritesheet ss;
-	private Font f8;
-	private Color tc;
-
-	private double s(double value) {
-		return value * fxSubScene.getHeight() / HEIGHT_UNSCALED;
-	}
 
 	@Override
 	public void handleKeyboardInput() {
@@ -109,12 +98,6 @@ public class PlaySceneUnscaled extends GameScene2D {
 		if (context == null) {
 			return;
 		}
-
-		g = canvas.getGraphicsContext2D();
-		ss = r().spritesheet();
-		f8 = r().theme().font("font.arcade", s(8));
-		tc = ArcadeTheme.PALE;
-
 		g.setFill(r().theme().color("wallpaper.color"));
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		g.setFill(Color.BLACK);
@@ -144,11 +127,11 @@ public class PlaySceneUnscaled extends GameScene2D {
 				drawPacManMaze(0, t(3), level.world());
 			}
 			if (context.state() == GameState.LEVEL_TEST) {
-				r().drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, f8, s(t(8.5)), s(t(21)));
+				r().drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, sceneFont(), s(t(8.5)), s(t(21)));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				r().drawText(g, "GAME  OVER", ArcadeTheme.RED, f8, s(t(9)), s(t(21)));
+				r().drawText(g, "GAME  OVER", ArcadeTheme.RED, sceneFont(), s(t(9)), s(t(21)));
 			} else if (context.state() == GameState.READY) {
-				r().drawText(g, "READY!", ArcadeTheme.YELLOW, f8, s(t(11)), s(t(21)));
+				r().drawText(g, "READY!", ArcadeTheme.YELLOW, sceneFont(), s(t(11)), s(t(21)));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());
@@ -167,16 +150,17 @@ public class PlaySceneUnscaled extends GameScene2D {
 	}
 
 	private void drawScore(Score score, String title, double x, double y) {
-		r().drawText(g, title, tc, f8, s(x), s(y));
+		r().drawText(g, title, ArcadeTheme.PALE, sceneFont(), s(x), s(y));
 		var pointsText = "%02d".formatted(score.points());
-		r().drawText(g, "%7s".formatted(pointsText), tc, f8, s(x), s((y + TS + 1)));
+		r().drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), s(x), s((y + TS + 1)));
 		if (score.points() != 0) {
-			r().drawText(g, "L%d".formatted(score.levelNumber()), tc, f8, s((x + TS * 8)), s((y + TS + 1)));
+			r().drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), s((x + TS * 8)),
+					s((y + TS + 1)));
 		}
 	}
 
 	private void drawCredit(int credit, double x, double y) {
-		r().drawText(g, "CREDIT %2d".formatted(credit), tc, f8, s(x), s(y));
+		r().drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), s(x), s(y));
 	}
 
 	private void drawPacManMaze(double x, double y, World world) {
@@ -207,7 +191,7 @@ public class PlaySceneUnscaled extends GameScene2D {
 				var flashingMazeSprite = mpr.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(ss.source(), mpr.emptyMaze(mazeNumber), x, y);
+				drawSprite(r().spritesheet().source(), mpr.emptyMaze(mazeNumber), x, y);
 			}
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
@@ -257,8 +241,8 @@ public class PlaySceneUnscaled extends GameScene2D {
 				var x = pac.position().x() + HTS - sprite.getWidth() / 2;
 				var y = pac.position().y() + HTS - sprite.getHeight() / 2;
 				// TODO check the blitzer cause and remove -1 workaround
-				g.drawImage(ss.source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1, sprite.getHeight() - 1,
-						s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+				g.drawImage(r().spritesheet().source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1,
+						sprite.getHeight() - 1, s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
 			}
 		});
 	}
@@ -310,7 +294,7 @@ public class PlaySceneUnscaled extends GameScene2D {
 	}
 
 	private void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(ss.source(), sprite, x, y);
+		drawSprite(r().spritesheet().source(), sprite, x, y);
 	}
 
 	@Override
