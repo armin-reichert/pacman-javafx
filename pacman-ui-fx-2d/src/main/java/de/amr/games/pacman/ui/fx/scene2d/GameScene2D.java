@@ -28,8 +28,10 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
@@ -186,37 +188,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void render() {
-		if (context == null) {
-			return;
-		}
-		drawSceneBackground();
-		if (context.isScoreVisible()) {
-			r().drawScore(g, context.game().score(), "SCORE", t(1), t(1));
-			r().drawScore(g, context.game().highScore(), "HIGH SCORE", t(16), t(1));
-		}
-		if (context.isCreditVisible()) {
-			r().drawCredit(g, context.game().credit(), t(2), t(36) - 1);
-		}
-		drawSceneContent();
-		if (infoVisiblePy.get()) {
-			drawSceneInfo();
-		}
-	}
-
-	protected void drawSceneBackground() {
-		if (roundedCorners) {
-			g.setFill(wallpaperColor);
-			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-			g.setFill(Color.BLACK);
-			g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), s(20), s(20));
-		} else {
-			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		}
-	}
-
-	@Override
 	public GameSceneContext context() {
 		return context;
 	}
@@ -239,6 +210,57 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public boolean is3D() {
 		return false;
+	}
+
+	@Override
+	public void render() {
+		if (context == null) {
+			return;
+		}
+		drawSceneBackground();
+		if (context.isScoreVisible()) {
+			drawScore(context.game().score(), "SCORE", t(1), t(1));
+			drawScore(context.game().highScore(), "HIGH SCORE", t(16), t(1));
+		}
+		if (context.isCreditVisible()) {
+			drawCredit(context.game().credit(), t(2), t(36) - 1);
+		}
+		drawSceneContent();
+		if (infoVisiblePy.get()) {
+			drawSceneInfo();
+		}
+	}
+
+	protected void drawSceneBackground() {
+		if (roundedCorners) {
+			g.setFill(wallpaperColor);
+			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			g.setFill(Color.BLACK);
+			g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), s(20), s(20));
+		} else {
+			g.setFill(Color.BLACK);
+			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		}
+	}
+
+	protected void drawScore(Score score, String title, double x, double y) {
+		drawText(g, title, ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+		var pointsText = "%02d".formatted(score.points());
+		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), s(x), s((y + TS + 1)));
+		if (score.points() != 0) {
+			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), s((x + TS * 8)),
+					s((y + TS + 1)));
+		}
+	}
+
+	protected void drawCredit(int credit, double x, double y) {
+		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+	}
+
+	protected void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+		g.setFont(font);
+		g.setFill(color);
+		g.fillText(text, x, y);
 	}
 
 	/**

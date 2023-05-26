@@ -35,7 +35,6 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -123,11 +122,11 @@ public class PlayScene2D extends GameScene2D {
 				drawPacManMaze(0, t(3), level.world());
 			}
 			if (context.state() == GameState.LEVEL_TEST) {
-				r().drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, sceneFont(), s(t(8.5)), s(t(21)));
+				drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, sceneFont(), s(t(8.5)), s(t(21)));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				r().drawText(g, "GAME  OVER", ArcadeTheme.RED, sceneFont(), s(t(9)), s(t(21)));
+				drawText(g, "GAME  OVER", ArcadeTheme.RED, sceneFont(), s(t(9)), s(t(21)));
 			} else if (context.state() == GameState.READY) {
-				r().drawText(g, "READY!", ArcadeTheme.YELLOW, sceneFont(), s(t(11)), s(t(21)));
+				drawText(g, "READY!", ArcadeTheme.YELLOW, sceneFont(), s(t(11)), s(t(21)));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());
@@ -143,20 +142,6 @@ public class PlayScene2D extends GameScene2D {
 			}
 			drawLevelCounter(t(24), t(34), context.game().levelCounter());
 		});
-	}
-
-	private void drawScore(Score score, String title, double x, double y) {
-		r().drawText(g, title, ArcadeTheme.PALE, sceneFont(), s(x), s(y));
-		var pointsText = "%02d".formatted(score.points());
-		r().drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), s(x), s((y + TS + 1)));
-		if (score.points() != 0) {
-			r().drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), s((x + TS * 8)),
-					s((y + TS + 1)));
-		}
-	}
-
-	private void drawCredit(int credit, double x, double y) {
-		r().drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), s(x), s(y));
 	}
 
 	private void drawPacManMaze(double x, double y, World world) {
@@ -268,7 +253,7 @@ public class PlayScene2D extends GameScene2D {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			r().drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
+			drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
 					s(y + TS));
 		}
 	}

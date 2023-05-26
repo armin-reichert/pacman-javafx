@@ -31,7 +31,6 @@ import java.util.List;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -110,12 +109,6 @@ public abstract class GameRenderer {
 			g.strokeLine(TS * (col), 0, TS * (col), tilesY * TS);
 		}
 		g.restore();
-	}
-
-	public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-		g.setFont(font);
-		g.setFill(color);
-		g.fillText(text, x, y);
 	}
 
 	public void hideTileContent(GraphicsContext g, Vector2i tile) {
@@ -201,20 +194,20 @@ public abstract class GameRenderer {
 		}
 	}
 
-	public void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
-		var font = theme.font("font.arcade", 8);
-		drawText(g, title, ArcadeTheme.PALE, font, x, y);
-		var pointsText = "%02d".formatted(score.points());
-		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
-		if (score.points() != 0) {
-			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + TS * 8, y + TS + 1);
-		}
-	}
-
-	public void drawCredit(GraphicsContext g, int credit, double x, double y) {
-		var font = theme.font("font.arcade", 8);
-		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, font, x, y);
-	}
+//	public void drawScore(GraphicsContext g, Score score, String title, double x, double y) {
+//		var font = theme.font("font.arcade", 8);
+//		drawText(g, title, ArcadeTheme.PALE, font, x, y);
+//		var pointsText = "%02d".formatted(score.points());
+//		drawText(g, "%7s".formatted(pointsText), ArcadeTheme.PALE, font, x, y + TS + 1);
+//		if (score.points() != 0) {
+//			drawText(g, "L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, font, x + TS * 8, y + TS + 1);
+//		}
+//	}
+//
+//	public void drawCredit(GraphicsContext g, int credit, double x, double y) {
+//		var font = theme.font("font.arcade", 8);
+//		drawText(g, "CREDIT %2d".formatted(credit), ArcadeTheme.PALE, font, x, y);
+//	}
 
 	public abstract void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
 
@@ -232,8 +225,9 @@ public abstract class GameRenderer {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText(g, "+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, 8), x + TS * (10),
-					y + TS * (1));
+			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
+			g.setFill(ArcadeTheme.YELLOW);
+			g.fillText("+" + excessLives, x + TS * (10), y + TS * (1));
 		}
 	}
 
