@@ -115,11 +115,11 @@ public class PlayScene2D extends GameScene2D {
 				drawPacManMaze(0, t(3), level.world());
 			}
 			if (context.state() == GameState.LEVEL_TEST) {
-				drawText("TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, sceneFont(), s(t(8.5)), s(t(21)));
+				drawText("TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, sceneFont(), t(8.5), t(21));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
-				drawText("GAME  OVER", ArcadeTheme.RED, sceneFont(), s(t(9)), s(t(21)));
+				drawText("GAME  OVER", ArcadeTheme.RED, sceneFont(), t(9), t(21));
 			} else if (context.state() == GameState.READY) {
-				drawText("READY!", ArcadeTheme.YELLOW, sceneFont(), s(t(11)), s(t(21)));
+				drawText("READY!", ArcadeTheme.YELLOW, sceneFont(), t(11), t(21));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());

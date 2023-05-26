@@ -55,7 +55,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		setSceneCanvasScaled(true);
+		setSceneCanvasScaled(false);
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
@@ -133,7 +133,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		}
 		ic.ghosts.forEach(ghost -> drawGhostSprite(ghost));
 		drawPacSprite(ic.msPacMan);
-		r().drawCopyright(g, t(6), t(28));
+		drawMsPacManCopyright(t(6), t(28));
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 
@@ -142,13 +142,13 @@ public class MsPacManIntroScene extends GameScene2D {
 		for (int i = 0; i < intro.context().numBulbs; ++i) {
 			g.setFill(on.get(i) ? ArcadeTheme.PALE : ArcadeTheme.RED);
 			if (i <= 33) {
-				g.fillRect(60 + 4 * i, 148, 2, 2);
+				g.fillRect(s(60 + 4 * i), s(148), s(2), s(2));
 			} else if (i <= 48) {
-				g.fillRect(192, 280 - 4 * i, 2, 2);
+				g.fillRect(s(192), s(280 - 4 * i), s(2), s(2));
 			} else if (i <= 81) {
-				g.fillRect(384 - 4 * i, 88, 2, 2);
+				g.fillRect(s(384 - 4 * i), s(88), s(2), s(2));
 			} else {
-				g.fillRect(60, 4 * i - 236, 2, 2);
+				g.fillRect(s(60), s(4 * i - 236), s(2), s(2));
 			}
 		}
 	}

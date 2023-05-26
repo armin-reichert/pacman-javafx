@@ -256,11 +256,11 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
-		drawText(title, ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+		drawText(title, ArcadeTheme.PALE, sceneFont(), x, y);
 		var pointsText = "%02d".formatted(score.points());
-		drawText("%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), s(x), s((y + TS + 1)));
+		drawText("%7s".formatted(pointsText), ArcadeTheme.PALE, sceneFont(), x, (y + TS + 1));
 		if (score.points() != 0) {
-			drawText("L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), s((x + TS * 8)), s((y + TS + 1)));
+			drawText("L%d".formatted(score.levelNumber()), ArcadeTheme.PALE, sceneFont(), x + TS * 8, y + TS + 1);
 		}
 	}
 
@@ -286,8 +286,7 @@ public abstract class GameScene2D implements GameScene {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText("+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
-					s(y + TS));
+			drawText("+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
 		}
 	}
 
@@ -356,7 +355,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
-		drawText("CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+		drawText("CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), x, y);
 	}
 
 	protected void drawClap(Clapperboard clap) {
@@ -368,16 +367,29 @@ public abstract class GameScene2D implements GameScene {
 				}
 				g.setFont(sceneFont());
 				g.setFill(ArcadeTheme.PALE);
-				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
-				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());
+				var numberX = s(clap.position().x() + sprite.getWidth() - 25);
+				var numberY = s(clap.position().y() + 18);
+				g.fillText(clap.number(), numberX, numberY);
+				var textX = s(clap.position().x() + sprite.getWidth());
+				g.fillText(clap.text(), textX, numberY);
 			});
 		}
+	}
+
+	protected void drawMsPacManCopyright(double x, double y) {
+		g.drawImage(r().theme().image("mspacman.logo.midway"), s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
+		g.setFill(ArcadeTheme.RED);
+		g.setFont(Font.font("Dialog", s(11)));
+		g.fillText("\u00a9", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
+		g.setFont(sceneFont());
+		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
+		g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
 	}
 
 	protected void drawText(String text, Color color, Font font, double x, double y) {
 		g.setFont(font);
 		g.setFill(color);
-		g.fillText(text, x, y);
+		g.fillText(text, s(x), s(y));
 	}
 
 	/**

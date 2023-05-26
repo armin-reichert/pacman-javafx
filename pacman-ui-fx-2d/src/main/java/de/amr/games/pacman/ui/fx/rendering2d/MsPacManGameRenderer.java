@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -38,8 +36,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.Font;
 
 /**
  * @author Armin Reichert
@@ -93,17 +89,6 @@ public class MsPacManGameRenderer extends GameRenderer {
 
 	public Rectangle2D filledMaze(int mazeNumber) {
 		return spritesheet().region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-	}
-
-	public void drawCopyright(GraphicsContext g, double x, double y) {
-		var font = theme.font("font.arcade", 8);
-		g.drawImage(theme.image("mspacman.logo.midway"), x, y + 2, TS * 4 - 2, TS * 4);
-		g.setFill(ArcadeTheme.RED);
-		g.setFont(Font.font("Dialog", 11));
-		g.fillText("\u00a9", x + TS * 5, y + TS * 2 + 2); // (c) symbol
-		g.setFont(font);
-		g.fillText("MIDWAY MFG CO", x + TS * 7, y + TS * 2);
-		g.fillText("1980/1981", x + TS * 8, y + TS * 4);
 	}
 
 	// Animations
