@@ -35,33 +35,35 @@ import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 /**
- * 2D play scene for Pac-Man that does not use scaled canvas.
+ * 2D play scene that does not use scaled canvas.
  * 
  * @author Armin Reichert
  */
-public class PacManPlayScene2D extends GameScene2D {
+public class UnscaledCanvasManPlayScene2D extends GameScene2D {
 
 	private GraphicsContext g;
-	private PacManGameRenderer r;
+	private GameRenderer r;
 	private Spritesheet ss;
 	private Font f8;
 	private Color tc;
@@ -70,7 +72,7 @@ public class PacManPlayScene2D extends GameScene2D {
 		return value * fxSubScene.getHeight() / HEIGHT;
 	}
 
-	public PacManPlayScene2D() {
+	public UnscaledCanvasManPlayScene2D() {
 		canvas.scaleXProperty().unbind();
 		canvas.scaleYProperty().unbind();
 		canvas.widthProperty().bind(fxSubScene.widthProperty());
@@ -117,7 +119,7 @@ public class PacManPlayScene2D extends GameScene2D {
 		}
 
 		g = canvas.getGraphicsContext2D();
-		r = context.rendererPacMan();
+		r = context.gameVariant() == GameVariant.MS_PACMAN ? context.rendererMsPacMan() : context.rendererPacMan();
 		ss = r.spritesheet();
 		f8 = r.theme().font("font.arcade", s(8));
 		tc = ArcadeTheme.PALE;
@@ -140,23 +142,15 @@ public class PacManPlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawScore(Score score, String title, double x, double y) {
-		GameRenderer.drawText(g, title, tc, f8, s(x), s(y));
-		var pointsText = "%02d".formatted(score.points());
-		GameRenderer.drawText(g, "%7s".formatted(pointsText), tc, f8, s(x), s((y + TS + 1)));
-		if (score.points() != 0) {
-			GameRenderer.drawText(g, "L%d".formatted(score.levelNumber()), tc, f8, s((x + TS * 8)), s((y + TS + 1)));
-		}
-	}
-
-	private void drawCredit(int credit, double x, double y) {
-		GameRenderer.drawText(g, "CREDIT %2d".formatted(credit), tc, f8, s(x), s(y));
-	}
-
 	private void drawSceneContent() {
 		context.level().ifPresent(level -> {
 			int levelNumber = level.number();
-			drawMaze(0, t(3), level.world());
+			if (context.gameVariant() == GameVariant.MS_PACMAN) {
+				int mazeNumber = level.game().mazeNumber(levelNumber);
+				drawMsPacManMaze(0, t(3), mazeNumber, level.world());
+			} else {
+				drawPacManMaze(0, t(3), level.world());
+			}
 			if (context.state() == GameState.LEVEL_TEST) {
 				GameRenderer.drawText(g, "TEST    L%d".formatted(levelNumber), ArcadeTheme.YELLOW, f8, s(t(8.5)), s(t(21)));
 			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
@@ -164,7 +158,7 @@ public class PacManPlayScene2D extends GameScene2D {
 			} else if (context.state() == GameState.READY) {
 				GameRenderer.drawText(g, "READY!", ArcadeTheme.YELLOW, f8, s(t(11)), s(t(21)));
 			}
-			level.bonusManagement().getBonus().ifPresent(bonus -> drawBonus(bonus));
+			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());
 			drawGhostSprite(level.ghost(GameModel.ORANGE_GHOST));
 			drawGhostSprite(level.ghost(GameModel.CYAN_GHOST));
@@ -180,7 +174,20 @@ public class PacManPlayScene2D extends GameScene2D {
 		});
 	}
 
-	private void drawMaze(double x, double y, World world) {
+	private void drawScore(Score score, String title, double x, double y) {
+		GameRenderer.drawText(g, title, tc, f8, s(x), s(y));
+		var pointsText = "%02d".formatted(score.points());
+		GameRenderer.drawText(g, "%7s".formatted(pointsText), tc, f8, s(x), s((y + TS + 1)));
+		if (score.points() != 0) {
+			GameRenderer.drawText(g, "L%d".formatted(score.levelNumber()), tc, f8, s((x + TS * 8)), s((y + TS + 1)));
+		}
+	}
+
+	private void drawCredit(int credit, double x, double y) {
+		GameRenderer.drawText(g, "CREDIT %2d".formatted(credit), tc, f8, s(x), s(y));
+	}
+
+	private void drawPacManMaze(double x, double y, World world) {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
@@ -188,13 +195,38 @@ public class PacManPlayScene2D extends GameScene2D {
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
 			var image = r.theme().image("pacman.fullMaze");
-			g.drawImage(image, 0, s(t(3)), s(image.getWidth()), s(image.getHeight()));
+			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
 			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
 			if (!energizerVisible) {
 				world.energizerTiles().forEach(this::hideTileContent);
 			}
+		}
+	}
+
+	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
+		var msr = context.rendererMsPacMan();
+		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
+		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
+			var flashing = (boolean) flashingAnimation.get().frame();
+			if (flashing) {
+				var source = r.theme().image("mspacman.flashingMazes");
+				var flashingMazeSprite = msr.highlightedMaze(mazeNumber);
+				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
+			} else {
+				drawSprite(ss.source(), msr.emptyMaze(mazeNumber), x, y);
+			}
+		} else {
+			// draw filled maze and hide eaten food (including energizers)
+			drawSprite(msr.filledMaze(mazeNumber), x, y);
+			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
+			// energizer animation
+			world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING).ifPresent(blinking -> {
+				if (Boolean.FALSE.equals(blinking.frame())) {
+					world.energizerTiles().forEach(this::hideTileContent);
+				}
+			});
 		}
 	}
 
@@ -211,9 +243,17 @@ public class PacManPlayScene2D extends GameScene2D {
 		case Bonus.STATE_EATEN -> r.bonusValueSprite(bonus.symbol());
 		default -> throw new IllegalArgumentException();
 		};
-		if (sprite != null) {
-			var x = bonus.entity().position().x() + HTS - sprite.getWidth() / 2;
-			var y = bonus.entity().position().y() + HTS - sprite.getHeight() / 2;
+		if (sprite == null) {
+			return;
+		}
+		var x = bonus.entity().position().x() + HTS - sprite.getWidth() / 2;
+		var y = bonus.entity().position().y() + HTS - sprite.getHeight() / 2;
+		if (bonus instanceof MovingBonus movingBonus) {
+			g.save();
+			g.translate(0, movingBonus.dy());
+			drawSprite(sprite, x, y);
+			g.restore();
+		} else {
 			drawSprite(sprite, x, y);
 		}
 	}
@@ -269,12 +309,16 @@ public class PacManPlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawSprite(Rectangle2D sprite, double x, double y) {
+	private void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
 		if (sprite != null) {
-			g.drawImage(ss.source(), //
+			g.drawImage(source, //
 					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
 					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
 		}
+	}
+
+	private void drawSprite(Rectangle2D sprite, double x, double y) {
+		drawSprite(ss.source(), sprite, x, y);
 	}
 
 	@Override

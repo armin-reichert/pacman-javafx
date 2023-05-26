@@ -73,7 +73,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		context.level().ifPresent(level -> updateSound(level));
+		context.level().ifPresent(this::updateSound);
 	}
 
 	@Override

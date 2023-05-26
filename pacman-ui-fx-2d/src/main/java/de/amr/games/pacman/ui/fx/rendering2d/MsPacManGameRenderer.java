@@ -100,16 +100,16 @@ public class MsPacManGameRenderer extends GameRenderer {
 		}
 	}
 
-	private Rectangle2D highlightedMaze(int mazeNumber) {
+	public Rectangle2D highlightedMaze(int mazeNumber) {
 		return new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 	}
 
-	private Rectangle2D emptyMaze(int mazeNumber) {
+	public Rectangle2D emptyMaze(int mazeNumber) {
 		return spritesheet().region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH,
 				MAZE_IMAGE_HEIGHT);
 	}
 
-	private Rectangle2D filledMaze(int mazeNumber) {
+	public Rectangle2D filledMaze(int mazeNumber) {
 		return spritesheet().region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 	}
 
