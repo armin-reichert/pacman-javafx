@@ -80,6 +80,7 @@ public class PacManGames2d {
 	public static final KeyCodeCombination KEY_SHOW_HELP         = just(KeyCode.H);
 	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
+	public static final KeyCodeCombination KEY_CANVAS_SCALED     = just(KeyCode.F12);
 
 	public static PacManGames2dUI     ui;
 	//@formatter:on

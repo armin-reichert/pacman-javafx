@@ -83,6 +83,13 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
+	public final BooleanProperty canvasScaledPy = new SimpleBooleanProperty(this, "canvasScaled", false) {
+		@Override
+		protected void invalidated() {
+			updateCanvasScaling();
+		}
+	};
+
 	protected final StackPane root = new StackPane();
 	protected final SubScene fxSubScene; // we probably could just use some pane instead
 	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
@@ -92,7 +99,6 @@ public abstract class GameScene2D implements GameScene {
 	protected final VBox helpRoot = new VBox();
 	protected final FadeTransition helpMenuAnimation;
 	protected GameSceneContext context;
-	protected boolean canvasScaled;
 	private boolean roundedCorners = true;
 	private Color wallpaperColor = Color.BLACK;
 
@@ -119,10 +125,29 @@ public abstract class GameScene2D implements GameScene {
 		});
 
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
+		updateCanvasScaling();
+	}
+
+	private void updateCanvasScaling() {
+		if (canvasScaledPy.get()) {
+			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
+			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT_UNSCALED));
+			canvas.widthProperty().unbind();
+			canvas.heightProperty().unbind();
+			canvas.setWidth(WIDTH_UNSCALED);
+			canvas.setHeight(HEIGHT_UNSCALED);
+		} else {
+			canvas.scaleXProperty().unbind();
+			canvas.scaleYProperty().unbind();
+			canvas.setScaleX(1);
+			canvas.setScaleY(1);
+			canvas.widthProperty().bind(fxSubScene.widthProperty());
+			canvas.heightProperty().bind(fxSubScene.heightProperty());
+		}
 	}
 
 	protected double s(double value) {
-		return canvasScaled ? value : value * fxSubScene.getHeight() / HEIGHT_UNSCALED;
+		return canvasScaledPy.get() ? value : value * fxSubScene.getHeight() / HEIGHT_UNSCALED;
 	}
 
 	protected GameRenderer r() {
@@ -134,14 +159,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void setSceneCanvasScaled(boolean scaled) {
-		this.canvasScaled = scaled;
-		if (scaled) {
-			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
-			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT_UNSCALED));
-		} else {
-			canvas.widthProperty().bind(fxSubScene.widthProperty());
-			canvas.heightProperty().bind(fxSubScene.heightProperty());
-		}
+		canvasScaledPy.set(scaled);
 	}
 
 	public StackPane root() {
@@ -374,6 +392,10 @@ public abstract class GameScene2D implements GameScene {
 				g.fillText(clap.text(), textX, numberY);
 			});
 		}
+	}
+
+	protected void drawMidwayCopyright(double x, double y) {
+		drawText("\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, sceneFont(), x, y);
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {

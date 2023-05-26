@@ -50,12 +50,6 @@ public class PacManGameRenderer extends GameRenderer {
 		super(theme, theme.spritesheet("pacman.spritesheet"));
 	}
 
-	public void drawMidwayCopyright(GraphicsContext g, double x, double y) {
-		g.setFont(theme.font("font.arcade", 8));
-		g.setFill(ArcadeTheme.PINK);
-		g.fillText("\u00A9 1980 MIDWAY MFG.CO.", x, y);
-	}
-
 	@Override
 	public Rectangle2D ghostValueSprite(int index) {
 		return spritesheet().tile(index, 8);

@@ -119,17 +119,17 @@ public class PacManIntroScene extends GameScene2D {
 			drawPoints(g);
 			drawBlinkingEnergizer(g);
 			drawGuys(g, flutter(timer.tick()));
-			r().drawMidwayCopyright(g, t(4), t(32));
+			drawMidwayCopyright(t(4), t(32));
 		}
 		case CHASING_GHOSTS -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			r().drawMidwayCopyright(g, t(4), t(32));
+			drawMidwayCopyright(t(4), t(32));
 		}
 		case READY_TO_PLAY -> {
 			drawPoints(g);
 			drawGuys(g, 0);
-			r().drawMidwayCopyright(g, t(4), t(32));
+			drawMidwayCopyright(t(4), t(32));
 		}
 		default -> {
 			// nothing to do

@@ -345,6 +345,11 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			startLevelTestMode();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
 			stage.setFullScreen(true);
+		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
+			if (currentGameScene != null && currentGameScene instanceof GameScene2D scene2D) {
+				Ufx.toggle(scene2D.canvasScaledPy);
+				showFlashMessage(scene2D.canvasScaledPy.get() ? "Canvas scaled" : "Canvas unscaled");
+			}
 		}
 	}
 
