@@ -131,7 +131,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			drawText("STARRING", ArcadeTheme.PALE, sceneFont(), tx, y0 + t(3));
 			drawText("MS PAC-MAN", ArcadeTheme.YELLOW, sceneFont(), tx, y0 + t(6));
 		}
-		ic.ghosts.forEach(ghost -> r().drawGhost(g, ghost));
+		ic.ghosts.forEach(ghost -> drawGhostSprite(ghost));
 		drawPacSprite(ic.msPacMan);
 		r().drawCopyright(g, t(6), t(28));
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());

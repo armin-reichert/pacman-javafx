@@ -149,7 +149,7 @@ public class PacManCutscene2 extends GameScene2D {
 		if (stretchedDressAnimation != null) {
 			r().drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 		}
-		r().drawGhost(g, blinky);
+		drawGhostSprite(blinky);
 		drawPacSprite(pac);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}

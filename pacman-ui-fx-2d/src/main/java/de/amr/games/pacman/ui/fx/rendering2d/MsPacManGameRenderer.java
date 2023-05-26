@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
@@ -34,10 +33,7 @@ import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Clapperboard;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
@@ -82,22 +78,8 @@ public class MsPacManGameRenderer extends GameRenderer {
 	}
 
 	@Override
-	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		checkNotNull(bonus);
-		var sprite = switch (bonus.state()) {
-		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> bonusSymbolSprite(bonus.symbol());
-		case Bonus.STATE_EATEN -> bonusValueSprite(bonus.symbol());
-		default -> throw new IllegalArgumentException("Illegal bonus state: '%s'".formatted(bonus.state()));
-		};
-		if (bonus instanceof MovingBonus movingBonus) {
-			g.save();
-			g.translate(0, movingBonus.dy());
-			drawEntitySprite(g, movingBonus.entity(), sprite);
-			g.restore();
-		} else {
-			drawEntitySprite(g, bonus.entity(), sprite);
-		}
+	public Rectangle2D livesCounterSprite() {
+		return tileFromThirdColumn(1, 0);
 	}
 
 	public Rectangle2D highlightedMaze(int mazeNumber) {
@@ -111,46 +93,6 @@ public class MsPacManGameRenderer extends GameRenderer {
 
 	public Rectangle2D filledMaze(int mazeNumber) {
 		return spritesheet().region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-	}
-
-	@Override
-	public void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world) {
-		checkNotNull(world);
-
-		// check if flashing animation is running
-		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
-		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			var flashing = (boolean) flashingAnimation.get().frame();
-			if (flashing) {
-				drawSprite(g, theme.image("mspacman.flashingMazes"), highlightedMaze(mazeNumber),
-						x - 3 /* don't tell your mommy */, y);
-			} else {
-				drawSprite(g, emptyMaze(mazeNumber), x, y);
-			}
-		}
-
-		else {
-			// draw filled maze and hide eaten food (including energizers)
-			drawSprite(g, filledMaze(mazeNumber), x, y);
-			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
-
-			// energizer animation
-			world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING).ifPresent(blinking -> {
-				if (Boolean.FALSE.equals(blinking.frame())) {
-					world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
-				}
-			});
-		}
-	}
-
-	@Override
-	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
-		drawLivesCounter(g, spritesheet(), numLivesDisplayed);
-	}
-
-	@Override
-	public Rectangle2D livesCounterSprite() {
-		return tileFromThirdColumn(1, 0);
 	}
 
 	public void drawCopyright(GraphicsContext g, double x, double y) {
@@ -262,22 +204,6 @@ public class MsPacManGameRenderer extends GameRenderer {
 	}
 
 	// Ms. Pac-Man specific:
-
-	public void drawClap(GraphicsContext g, Clapperboard clap) {
-		if (clap.isVisible()) {
-			clap.animation().map(Animated::animate).ifPresent(frame -> {
-				var sprite = (Rectangle2D) frame;
-				if (clap.isVisible()) {
-					drawSpriteOverBoundingBox(g, sprite, clap.position().x(), clap.position().y());
-				}
-				var font = theme.font("font.arcade", 8);
-				g.setFont(font);
-				g.setFill(ArcadeTheme.PALE);
-				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
-				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());
-			});
-		}
-	}
 
 	public Rectangle2D heartSprite() {
 		return tileFromThirdColumn(2, 10);

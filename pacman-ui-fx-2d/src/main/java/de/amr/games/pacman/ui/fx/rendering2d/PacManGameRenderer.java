@@ -31,7 +31,6 @@ import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
@@ -87,42 +86,9 @@ public class PacManGameRenderer extends GameRenderer {
 		return map;
 	}
 
-	@Override
-	public void drawBonus(GraphicsContext g, Bonus bonus) {
-		var sprite = switch (bonus.state()) {
-		case Bonus.STATE_INACTIVE -> null;
-		case Bonus.STATE_EDIBLE -> bonusSymbolSprite(bonus.symbol());
-		case Bonus.STATE_EATEN -> bonusValueSprite(bonus.symbol());
-		default -> throw new IllegalArgumentException();
-		};
-		drawEntitySprite(g, bonus.entity(), sprite);
-	}
-
 	public void drawGhostFacingRight(GraphicsContext g, int ghostID, double x, double y) {
 		var region = spritesheet().tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
 		drawSpriteOverBoundingBox(g, region, x, y);
-	}
-
-	@Override
-	public void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world) {
-		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
-		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			var flashing = (boolean) flashingAnimation.get().frame();
-			g.drawImage(flashing ? theme.image("pacman.flashingMaze") : theme.image("pacman.emptyMaze"), x, y);
-		} else {
-			g.drawImage(theme.image("pacman.fullMaze"), x, y);
-			world.tiles().filter(world::containsEatenFood).forEach(tile -> hideTileContent(g, tile));
-			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
-			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
-			if (!energizerVisible) {
-				world.energizerTiles().forEach(tile -> hideTileContent(g, tile));
-			}
-		}
-	}
-
-	@Override
-	public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
-		drawLivesCounter(g, spritesheet(), numLivesDisplayed);
 	}
 
 	@Override

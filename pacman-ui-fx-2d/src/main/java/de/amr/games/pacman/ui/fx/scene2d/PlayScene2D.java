@@ -43,8 +43,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * 2D play scene that does not use scaled canvas.
@@ -207,25 +205,6 @@ public class PlayScene2D extends GameScene2D {
 			g.restore();
 		} else {
 			drawSprite(sprite, x, y);
-		}
-	}
-
-	private void drawLivesCounter(int numLivesDisplayed) {
-		if (numLivesDisplayed <= 0) {
-			return;
-		}
-		var x = TS * 2;
-		var y = TS * (World.TILES_Y - 2);
-		int maxLives = 5;
-		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			// TODO check reason for blitzers
-			drawSprite(r().livesCounterSprite(), x + TS * (2 * i), y);
-		}
-		// text indicating that more lives are available than displayed
-		int excessLives = numLivesDisplayed - maxLives;
-		if (excessLives > 0) {
-			drawText("+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
-					s(y + TS));
 		}
 	}
 

@@ -185,15 +185,15 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGuys(GraphicsContext g, int shakingAmount) {
 		if (shakingAmount == 0) {
-			ic.ghosts().forEach(ghost -> r().drawGhost(g, ghost));
+			ic.ghosts().forEach(ghost -> drawGhostSprite(ghost));
 		} else {
-			r().drawGhost(g, ic.ghost(0));
-			r().drawGhost(g, ic.ghost(3));
+			drawGhostSprite(ic.ghost(0));
+			drawGhostSprite(ic.ghost(3));
 			// shaking ghosts effect, not quite as in original game
 			g.save();
 			g.translate(shakingAmount, 0);
-			r().drawGhost(g, ic.ghost(1));
-			r().drawGhost(g, ic.ghost(2));
+			drawGhostSprite(ic.ghost(1));
+			drawGhostSprite(ic.ghost(2));
 			g.restore();
 		}
 		drawPacSprite(ic.pacMan);

@@ -28,8 +28,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.math.Vector2i;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -39,8 +37,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 /**
  * Common interface for the Pac-Man and Ms. Pac-Man game renderers.
@@ -109,11 +105,6 @@ public abstract class GameRenderer {
 		g.restore();
 	}
 
-	public void hideTileContent(GraphicsContext g, Vector2i tile) {
-		g.setFill(ArcadeTheme.BLACK);
-		g.fillRect(TS * tile.x(), TS * tile.y(), TS, TS);
-	}
-
 	/**
 	 * Draws a sprite at the given position. The position specifies the left-upper corner.
 	 * 
@@ -149,7 +140,7 @@ public abstract class GameRenderer {
 	 * @param entity an entity like Pac-Man or a ghost
 	 * @param r      the sprite
 	 */
-	public void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
+	protected void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D r) {
 		checkNotNull(entity);
 		if (entity.isVisible()) {
 			drawSpriteOverBoundingBox(g, r, entity.position().x(), entity.position().y());
@@ -161,36 +152,6 @@ public abstract class GameRenderer {
 		float r = 4;
 		var center = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(8f)).minus(r, r);
 		g.fillOval(center.x(), center.y(), 2 * r, 2 * r);
-	}
-
-	public void drawGhost(GraphicsContext g, Ghost ghost) {
-		ghost.animation().ifPresent(animation -> drawEntitySprite(g, ghost, (Rectangle2D) animation.frame()));
-	}
-
-	public abstract void drawBonus(GraphicsContext g, Bonus bonus);
-
-	public abstract void drawMaze(GraphicsContext g, double x, double y, int mazeNumber, World world);
-
-	public abstract void drawLivesCounter(GraphicsContext g, int numLivesDisplayed);
-
-	// TODO this is not the last word on this
-	public void drawLivesCounter(GraphicsContext g, Spritesheet ss, int numLivesDisplayed) {
-		if (numLivesDisplayed <= 0) {
-			return;
-		}
-		int x = TS * (2);
-		int y = TS * (World.TILES_Y - 2);
-		int maxLives = 5;
-		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(g, livesCounterSprite(), x + TS * (2 * i), y);
-		}
-		// text indicating that more lives are available than displayed
-		int excessLives = numLivesDisplayed - maxLives;
-		if (excessLives > 0) {
-			g.setFont(Font.font("Serif", FontWeight.BOLD, 8));
-			g.setFill(ArcadeTheme.YELLOW);
-			g.fillText("+" + excessLives, x + TS * (10), y + TS * (1));
-		}
 	}
 
 	public abstract AnimationMap createPacAnimations(Pac pac);

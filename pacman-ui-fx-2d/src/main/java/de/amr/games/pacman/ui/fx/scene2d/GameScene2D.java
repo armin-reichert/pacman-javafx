@@ -31,9 +31,13 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 import java.util.List;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Clapperboard;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -56,6 +60,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
@@ -267,6 +272,25 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
+	protected void drawLivesCounter(int numLivesDisplayed) {
+		if (numLivesDisplayed <= 0) {
+			return;
+		}
+		var x = TS * 2;
+		var y = TS * (World.TILES_Y - 2);
+		int maxLives = 5;
+		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+			// TODO check reason for blitzers
+			drawSprite(r().livesCounterSprite(), x + TS * (2 * i), y);
+		}
+		// text indicating that more lives are available than displayed
+		int excessLives = numLivesDisplayed - maxLives;
+		if (excessLives > 0) {
+			drawText("+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), s(x + TS * 10),
+					s(y + TS));
+		}
+	}
+
 	protected void drawPacSprite(Pac pac) {
 		pac.animation().ifPresent(animation -> {
 			if (pac.isVisible()) {
@@ -303,8 +327,51 @@ public abstract class GameScene2D implements GameScene {
 		drawSprite(r().spritesheet().source(), sprite, x, y);
 	}
 
+	/**
+	 * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
+	 * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
+	 * bounding box is only 8 pixels (one square tile) wide.
+	 * 
+	 * @param r spritesheet region (may be null)
+	 * @param x x coordinate of left-upper corner of bounding box
+	 * @param y y coordinate of left-upper corner of bounding box
+	 */
+	public void drawSpriteOverBoundingBox(Rectangle2D r, double x, double y) {
+		if (r != null) {
+			drawSprite(r, x + HTS - r.getWidth() / 2, y + HTS - r.getHeight() / 2);
+		}
+	}
+
+	/**
+	 * Draws the sprite over the bounding box of the given entity (if visible).
+	 * 
+	 * @param entity an entity like Pac-Man or a ghost
+	 * @param r      the sprite
+	 */
+	public void drawEntitySprite(Entity entity, Rectangle2D r) {
+		checkNotNull(entity);
+		if (entity.isVisible()) {
+			drawSpriteOverBoundingBox(r, entity.position().x(), entity.position().y());
+		}
+	}
+
 	protected void drawCredit(int credit, double x, double y) {
 		drawText("CREDIT %2d".formatted(credit), ArcadeTheme.PALE, sceneFont(), s(x), s(y));
+	}
+
+	protected void drawClap(Clapperboard clap) {
+		if (clap.isVisible()) {
+			clap.animation().map(Animated::animate).ifPresent(frame -> {
+				var sprite = (Rectangle2D) frame;
+				if (clap.isVisible()) {
+					drawSpriteOverBoundingBox(sprite, clap.position().x(), clap.position().y());
+				}
+				g.setFont(sceneFont());
+				g.setFill(ArcadeTheme.PALE);
+				g.fillText(clap.number(), clap.position().x() + sprite.getWidth() - 25, clap.position().y() + 18);
+				g.fillText(clap.text(), clap.position().x() + sprite.getWidth(), clap.position().y());
+			});
+		}
 	}
 
 	protected void drawText(String text, Color color, Font font, double x, double y) {
