@@ -53,8 +53,9 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void init() {
+		scaleGameSceneCanvas(true);
 		context.setScoreVisible(false);
-		clearCanvas();
+		eraseContent();
 		updateSceneImage();
 	}
 
@@ -77,7 +78,7 @@ public class BootScene extends GameScene2D {
 		}
 	}
 
-	private void clearCanvas() {
+	private void eraseContent() {
 		ctx.setFill(ArcadeTheme.BLACK);
 		ctx.fillRect(0, 0, contentCanvas.getWidth(), contentCanvas.getHeight());
 	}
@@ -89,7 +90,7 @@ public class BootScene extends GameScene2D {
 	private void paintRandomHexCodes() {
 		var theme = context.renderer().theme();
 		var font8 = theme.font("font.arcade", 8);
-		clearCanvas();
+		eraseContent();
 		ctx.setFill(ArcadeTheme.PALE);
 		ctx.setFont(font8);
 		for (int row = 0; row < TILES_Y; ++row) {
@@ -103,7 +104,7 @@ public class BootScene extends GameScene2D {
 
 	private void paintRandomSprites() {
 		var ss = context.renderer().spritesheet();
-		clearCanvas();
+		eraseContent();
 		for (int row = 0; row < TILES_Y / 2; ++row) {
 			if (RND.nextInt(100) > 10) {
 				var region1 = randomSquare(ss);
@@ -127,7 +128,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void paintGrid() {
-		clearCanvas();
+		eraseContent();
 		var cellSize = 16;
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;

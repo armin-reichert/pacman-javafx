@@ -66,6 +66,7 @@ public class PlaySceneScaled extends GameScene2D {
 
 	@Override
 	public void init() {
+		scaleGameSceneCanvas(true);
 		context.setCreditVisible(!context.hasCredit());
 		context.setScoreVisible(true);
 	}

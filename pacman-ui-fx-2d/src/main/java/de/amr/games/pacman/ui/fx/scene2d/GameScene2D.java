@@ -93,9 +93,6 @@ public abstract class GameScene2D implements GameScene {
 		root.getChildren().addAll(canvas, overlay);
 		overlay.getChildren().add(helpRoot);
 
-		canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
-		canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
-
 		overlay.getTransforms().add(overlayScale);
 
 		helpRoot.setTranslateX(10);
@@ -117,6 +114,16 @@ public abstract class GameScene2D implements GameScene {
 
 	protected GameRenderer r() {
 		return context.renderer();
+	}
+
+	protected void scaleGameSceneCanvas(boolean scaled) {
+		if (scaled) {
+			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH));
+			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT));
+		} else {
+			canvas.widthProperty().bind(fxSubScene.widthProperty());
+			canvas.heightProperty().bind(fxSubScene.heightProperty());
+		}
 	}
 
 	// TODO: not sure if this logic belongs here...

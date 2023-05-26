@@ -72,13 +72,6 @@ public class PlaySceneUnscaled extends GameScene2D {
 		return value * fxSubScene.getHeight() / HEIGHT;
 	}
 
-	public PlaySceneUnscaled() {
-		canvas.scaleXProperty().unbind();
-		canvas.scaleYProperty().unbind();
-		canvas.widthProperty().bind(fxSubScene.widthProperty());
-		canvas.heightProperty().bind(fxSubScene.heightProperty());
-	}
-
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
@@ -98,6 +91,7 @@ public class PlaySceneUnscaled extends GameScene2D {
 
 	@Override
 	public void init() {
+		scaleGameSceneCanvas(false);
 		context.setCreditVisible(!context.hasCredit());
 		context.setScoreVisible(true);
 	}
