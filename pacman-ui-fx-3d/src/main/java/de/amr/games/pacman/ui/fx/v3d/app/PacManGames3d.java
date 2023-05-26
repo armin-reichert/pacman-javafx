@@ -48,6 +48,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -74,7 +77,11 @@ public class PacManGames3d {
 		theme.set("model3D.pacman",            new Model3D(MGR.url("model3D/pacman.obj")));
 		theme.set("model3D.ghost",             new Model3D(MGR.url("model3D/ghost.obj")));
 		theme.set("model3D.pellet",            new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
-		theme.set("model3D.wallpaper",         MGR.imageBackground("graphics/sky.png"));
+		theme.set("model3D.wallpaper",         MGR.imageBackground("graphics/sky.png", 
+				                                     BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+				                                     BackgroundPosition.CENTER, 
+				                                     new BackgroundSize(1, 1, true, true, false, true)
+				                                   ));
 		theme.set("image.armin1970",           MGR.image("graphics/armin.jpg"));
 		theme.set("icon.play",                 MGR.image("graphics/icons/play.png"));
 		theme.set("icon.stop",                 MGR.image("graphics/icons/stop.png"));

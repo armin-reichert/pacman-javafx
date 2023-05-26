@@ -37,6 +37,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -156,4 +159,14 @@ public class ResourceManager {
 	public Background imageBackground(String relPath) {
 		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
 	}
+
+	/**
+	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * @return background displaying image loaded from resource addressed by this path.
+	 */
+	public Background imageBackground(String relPath, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
+			BackgroundPosition position, BackgroundSize size) {
+		return new Background(new BackgroundImage(image(relPath), repeatX, repeatY, position, size));
+	}
+
 }
