@@ -45,18 +45,11 @@ import javafx.scene.paint.Color;
  */
 public abstract class GameRenderer {
 
-	protected final Theme theme;
 	protected final Spritesheet spritesheet;
 
-	protected GameRenderer(Theme theme, Spritesheet spritesheet) {
-		checkNotNull(theme);
+	protected GameRenderer(Spritesheet spritesheet) {
 		checkNotNull(spritesheet);
-		this.theme = theme;
 		this.spritesheet = spritesheet;
-	}
-
-	public Theme theme() {
-		return theme;
 	}
 
 	public Spritesheet spritesheet() {

@@ -35,6 +35,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -45,8 +46,8 @@ public class PacManGameRenderer extends GameRenderer {
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	public PacManGameRenderer(Theme theme) {
-		super(theme, theme.spritesheet("pacman.spritesheet"));
+	public PacManGameRenderer(Spritesheet ss) {
+		super(ss);
 	}
 
 	@Override

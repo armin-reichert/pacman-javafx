@@ -65,7 +65,7 @@ public class PacManIntroScene extends GameScene2D {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		signature.setNameFont(r().theme().font("font.handwriting", 9));
+		signature.setNameFont(context.ui().theme().font("font.handwriting", 9));
 		signature.hide();
 
 		intro = new PacManIntro(context().gameController());
@@ -170,12 +170,12 @@ public class PacManIntroScene extends GameScene2D {
 			drawSpriteOverBoundingBox(sprite, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
-				var color = r().theme().color(String.format("ghost.%d.color.normal.dress", id));
+				var color = context.ui().theme().color(String.format("ghost.%d.color.normal.dress", id));
 				drawText(text, color, sceneFont(), t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
-				var color = r().theme().color(String.format("ghost.%d.color.normal.dress", id));
+				var color = context.ui().theme().color(String.format("ghost.%d.color.normal.dress", id));
 				drawText(text, color, sceneFont(), t(tx + 14), t(ty + 1));
 			}
 		}
@@ -183,7 +183,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawBlinkingEnergizer() {
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
-			g.setFill(r().theme().color("pacman.maze.foodColor"));
+			g.setFill(context.ui().theme().color("pacman.maze.foodColor"));
 			g.fillOval(s(t(ic.leftTileX)), s(t(20)), s(TS), s(TS));
 		}
 	}
@@ -205,10 +205,10 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints() {
-		var font6 = r().theme().font("font.arcade", s(6));
+		var font6 = context.ui().theme().font("font.arcade", s(6));
 		int tx = ic.leftTileX + 6;
 		int ty = 25;
-		g.setFill(r().theme().color("pacman.maze.foodColor"));
+		g.setFill(context.ui().theme().color("pacman.maze.foodColor"));
 		g.fillRect(t(tx) + 4, t(ty - 1) + 4, 2, 2);
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));

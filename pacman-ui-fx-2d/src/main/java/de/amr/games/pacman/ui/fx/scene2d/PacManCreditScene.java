@@ -58,7 +58,7 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var font6 = r().theme().font("font.arcade", 6);
+		var font6 = context.ui().theme().font("font.arcade", 6);
 		drawText("PUSH START BUTTON", ArcadeTheme.ORANGE, sceneFont(), t(6), t(17));
 		drawText("1 PLAYER ONLY", ArcadeTheme.CYAN, sceneFont(), t(8), t(21));
 		drawText("BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, sceneFont(), t(1), t(25));

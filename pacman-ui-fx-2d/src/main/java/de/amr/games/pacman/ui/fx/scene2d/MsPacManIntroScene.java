@@ -77,7 +77,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghostAnimations.start();
 		});
 
-		signature.setNameFont(context.renderer().theme().font("font.handwriting", 9));
+		signature.setNameFont(context.ui().theme().font("font.handwriting", 9));
 		signature.hide();
 	}
 
@@ -121,7 +121,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 
-			var color = r().theme().color(String.format("ghost.%d.color.normal.dress", ghost.id()));
+			var color = context.ui().theme().color(String.format("ghost.%d.color.normal.dress", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText("WITH", ArcadeTheme.PALE, sceneFont(), tx, y0 + t(3));
 			}

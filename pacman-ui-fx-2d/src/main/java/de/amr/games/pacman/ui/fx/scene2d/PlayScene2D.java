@@ -143,10 +143,11 @@ public class PlayScene2D extends GameScene2D {
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
-			var image = flashing ? r().theme().image("pacman.flashingMaze") : r().theme().image("pacman.emptyMaze");
+			var image = flashing ? context.ui().theme().image("pacman.flashingMaze")
+					: context.ui().theme().image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
-			var image = r().theme().image("pacman.fullMaze");
+			var image = context.ui().theme().image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
 			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
@@ -163,7 +164,7 @@ public class PlayScene2D extends GameScene2D {
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
 			if (flashing) {
-				var source = r().theme().image("mspacman.flashingMazes");
+				var source = context.ui().theme().image("mspacman.flashingMazes");
 				var flashingMazeSprite = mpr.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {

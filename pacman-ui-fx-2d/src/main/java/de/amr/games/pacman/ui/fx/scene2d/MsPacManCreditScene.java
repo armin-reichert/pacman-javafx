@@ -58,7 +58,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var font6 = r().theme().font("font.arcade", s(6));
+		var font6 = context.ui().theme().font("font.arcade", s(6));
 		drawText("PUSH START BUTTON", ArcadeTheme.ORANGE, sceneFont(), t(6), t(16));
 		drawText("1 PLAYER ONLY", ArcadeTheme.ORANGE, sceneFont(), t(8), t(18));
 		drawText("ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, sceneFont(), t(2), t(25));

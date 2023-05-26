@@ -155,7 +155,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected Font sceneFont() {
-		return r().theme().font("font.arcade", s(8));
+		return context.ui().theme().font("font.arcade", s(8));
 	}
 
 	public void setSceneCanvasScaled(boolean scaled) {
@@ -399,7 +399,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
-		g.drawImage(r().theme().image("mspacman.logo.midway"), s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
+		g.drawImage(context.ui().theme().image("mspacman.logo.midway"), s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", s(11)));
 		g.fillText("\u00a9", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
