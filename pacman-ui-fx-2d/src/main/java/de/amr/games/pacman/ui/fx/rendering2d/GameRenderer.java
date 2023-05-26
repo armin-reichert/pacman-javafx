@@ -24,7 +24,6 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
@@ -82,20 +81,6 @@ public abstract class GameRenderer {
 		if (r != null) {
 			g.drawImage(source, r.getMinX(), r.getMinY(), r.getWidth(), r.getHeight(), x, y, r.getWidth(), r.getHeight());
 		}
-	}
-
-	public void drawTileGrid(GraphicsContext g, int tilesX, int tilesY) {
-		g.save();
-		g.translate(0.5, 0.5);
-		g.setStroke(ArcadeTheme.PALE);
-		g.setLineWidth(0.2);
-		for (int row = 0; row <= tilesY; ++row) {
-			g.strokeLine(0, TS * (row), tilesX * TS, TS * (row));
-		}
-		for (int col = 0; col <= tilesY; ++col) {
-			g.strokeLine(TS * (col), 0, TS * (col), tilesY * TS);
-		}
-		g.restore();
 	}
 
 	/**

@@ -221,7 +221,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		r().drawTileGrid(g, TILES_X, TILES_Y);
+		drawTileGrid(TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
 			level.upwardsBlockedTiles().forEach(tile -> {
 				// "No Trespassing" symbol

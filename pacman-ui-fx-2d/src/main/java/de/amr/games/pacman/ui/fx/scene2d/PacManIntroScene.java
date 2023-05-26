@@ -148,7 +148,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		r().drawTileGrid(g, TILES_X, TILES_Y);
+		drawTileGrid(TILES_X, TILES_Y);
 	}
 
 	// TODO inspect in MAME what's really going on here

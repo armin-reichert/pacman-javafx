@@ -414,6 +414,20 @@ public abstract class GameScene2D implements GameScene {
 		g.fillText(text, s(x), s(y));
 	}
 
+	protected void drawTileGrid(int tilesX, int tilesY) {
+		g.save();
+		g.translate(0.5, 0.5);
+		g.setStroke(ArcadeTheme.PALE);
+		g.setLineWidth(0.2);
+		for (int row = 0; row <= tilesY; ++row) {
+			g.strokeLine(0, s(TS * (row)), s(tilesX * TS), s(TS * (row)));
+		}
+		for (int col = 0; col <= tilesY; ++col) {
+			g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(tilesY * TS));
+		}
+		g.restore();
+	}
+
 	/**
 	 * Draws the scene content, e.g. the maze and the guys.
 	 * 
