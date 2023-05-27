@@ -27,8 +27,10 @@ public class PictureInPicture {
 		gameScene = new PlayScene2D();
 		gameScene.setSceneCanvasScaled(true);
 		gameScene.setRoundedCorners(false);
-		gameScene.fxSubScene().heightProperty().bind(heightPy);
-		gameScene.fxSubScene().widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+		gameScene.fxSubScene().minHeightProperty().bind(heightPy);
+		gameScene.fxSubScene().minWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+		gameScene.fxSubScene().maxHeightProperty().bind(heightPy);
+		gameScene.fxSubScene().maxWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
 		gameScene.fxSubScene().opacityProperty().bind(opacityPy);
 		gameScene.fxSubScene().setVisible(false);
 	}

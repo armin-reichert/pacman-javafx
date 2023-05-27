@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import javafx.scene.layout.BorderPane;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameState;
@@ -88,6 +89,7 @@ public class PlayScene3D implements GameScene {
 	};
 
 	private GameSceneContext context;
+	private final BorderPane subSceneContainer;
 	private final SubScene fxSubScene;
 	private final Group root;
 	private final Text3D readyMessageText3D = new Text3D();
@@ -113,6 +115,8 @@ public class PlayScene3D implements GameScene {
 		// initial scene size is irrelevant, will be bound to main scene size
 		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
+
+		subSceneContainer = new BorderPane(fxSubScene);
 	}
 
 	@Override
@@ -127,8 +131,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public SubScene fxSubScene() {
-		return fxSubScene;
+	public BorderPane fxSubScene() {
+		return subSceneContainer;
 	}
 
 	@Override
