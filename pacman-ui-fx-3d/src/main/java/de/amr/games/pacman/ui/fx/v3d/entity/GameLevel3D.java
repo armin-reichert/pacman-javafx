@@ -37,7 +37,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
@@ -75,9 +75,9 @@ public class GameLevel3D {
 	private Scores3D scores3D;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, Theme theme, GameRenderer r2D) {
+	public GameLevel3D(GameLevel level, Theme theme, GameSpritesheet gss) {
 		checkLevelNotNull(level);
-		checkNotNull(r2D);
+		checkNotNull(gss);
 
 		this.level = level;
 		Model3D pelletModel3D = theme.get("model3D.pellet");
@@ -105,7 +105,7 @@ public class GameLevel3D {
 		}
 
 		pacLight = createPacLight(pac3D);
-		levelCounter3D = createLevelCounter3D(r2D);
+		levelCounter3D = createLevelCounter3D(gss);
 		scores3D = new Scores3D(theme.font("font.arcade", 8));
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
@@ -137,11 +137,11 @@ public class GameLevel3D {
 		livesCounter3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
 	}
 
-	public void replaceBonus3D(Bonus bonus, GameRenderer r2D, boolean moving) {
+	public void replaceBonus3D(Bonus bonus, GameSpritesheet gss, boolean moving) {
 		if (bonus3D != null) {
 			root.getChildren().remove(bonus3D.getRoot());
 		}
-		bonus3D = createBonus3D(bonus, r2D, moving);
+		bonus3D = createBonus3D(bonus, gss, moving);
 		root.getChildren().add(bonus3D.getRoot());
 	}
 
@@ -149,14 +149,14 @@ public class GameLevel3D {
 		return new Ghost3D(ghost, ghostModel3D, theme, 8.5);
 	}
 
-	private Bonus3D createBonus3D(Bonus bonus, GameRenderer r2D, boolean moving) {
-		var symbolImage = r2D.spritesheet().subImage(r2D.bonusSymbolSprite(bonus.symbol()));
-		var pointsImage = r2D.spritesheet().subImage(r2D.bonusValueSprite(bonus.symbol()));
+	private Bonus3D createBonus3D(Bonus bonus, GameSpritesheet gss, boolean moving) {
+		var symbolImage = gss.spritesheet().subImage(gss.bonusSymbolSprite(bonus.symbol()));
+		var pointsImage = gss.spritesheet().subImage(gss.bonusValueSprite(bonus.symbol()));
 		return new Bonus3D(bonus, symbolImage, pointsImage, moving);
 	}
 
-	private LevelCounter3D createLevelCounter3D(GameRenderer r2D) {
-		var symbolImages = level.game().levelCounter().stream().map(r2D::bonusSymbolSprite).map(r2D.spritesheet()::subImage)
+	private LevelCounter3D createLevelCounter3D(GameSpritesheet gss) {
+		var symbolImages = level.game().levelCounter().stream().map(gss::bonusSymbolSprite).map(gss.spritesheet()::subImage)
 				.toArray(Image[]::new);
 		return new LevelCounter3D(symbolImages);
 	}

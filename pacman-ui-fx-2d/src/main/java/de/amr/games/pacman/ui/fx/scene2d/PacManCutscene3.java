@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
 import javafx.scene.text.Font;
 
 /**
@@ -26,8 +26,8 @@ public class PacManCutscene3 extends GameScene2D {
 	private Ghost blinky;
 
 	@Override
-	protected PacManGameRenderer r() {
-		return (PacManGameRenderer) super.r();
+	protected PacManGameSpritesheet r() {
+		return (PacManGameSpritesheet) super.r();
 	}
 
 	@Override

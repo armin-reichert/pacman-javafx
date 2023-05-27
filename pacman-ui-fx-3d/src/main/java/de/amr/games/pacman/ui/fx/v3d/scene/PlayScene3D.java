@@ -191,7 +191,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		level3D = new GameLevel3D(level, context.ui().theme(), context.renderer());
+		level3D = new GameLevel3D(level, context.ui().theme(), context.spritesheet());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;
@@ -299,7 +299,7 @@ public class PlayScene3D implements GameScene {
 		context.level().ifPresent(level -> {
 			boolean moving = context.gameVariant() == GameVariant.MS_PACMAN;
 			level.bonusManagement().getBonus().ifPresent(bonus -> {
-				level3D.replaceBonus3D(bonus, context.renderer(), moving);
+				level3D.replaceBonus3D(bonus, context.spritesheet(), moving);
 			});
 			level3D.bonus3D().showEdible();
 		});
@@ -364,7 +364,7 @@ public class PlayScene3D implements GameScene {
 				level.memo().killedGhosts.forEach(killedGhost -> {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					var r = context.renderer();
+					var r = context.spritesheet();
 					ghost3D.setNumberImage(r.spritesheet().subImage(r.ghostValueSprite(index)));
 				});
 			});

@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -27,8 +27,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	private SimpleAnimation<Rectangle2D> storkAnimation;
 
 	@Override
-	protected MsPacManGameRenderer r() {
-		return (MsPacManGameRenderer) super.r();
+	protected MsPacManGameSpritesheet r() {
+		return (MsPacManGameSpritesheet) super.r();
 	}
 
 	@Override

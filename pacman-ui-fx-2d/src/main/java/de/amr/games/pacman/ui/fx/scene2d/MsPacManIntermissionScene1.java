@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission1;
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 
 /**
  * Intermission scene 1: "They meet".
@@ -24,8 +24,8 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	private MsPacManIntermission1.Context imc;
 
 	@Override
-	protected MsPacManGameRenderer r() {
-		return (MsPacManGameRenderer) super.r();
+	protected MsPacManGameSpritesheet r() {
+		return (MsPacManGameSpritesheet) super.r();
 	}
 
 	@Override

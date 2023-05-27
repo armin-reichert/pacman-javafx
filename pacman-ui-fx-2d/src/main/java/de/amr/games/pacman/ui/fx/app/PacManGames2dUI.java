@@ -28,9 +28,9 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
@@ -303,8 +303,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			scene2D.root().setBackground(ResourceManager.coloredBackground(wallpaperColor));
 		}
 		currentGameScene.setContext(
-				new GameSceneContext(gameController, this, new MsPacManGameRenderer(theme.spritesheet("mspacman.spritesheet")),
-						new PacManGameRenderer(theme.spritesheet("pacman.spritesheet"))));
+				new GameSceneContext(gameController, this, new MsPacManGameSpritesheet(theme.spritesheet("mspacman.spritesheet")),
+						new PacManGameSpritesheet(theme.spritesheet("pacman.spritesheet"))));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
@@ -378,18 +378,18 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
-			GameRenderer renderer;
+			GameSpritesheet renderer;
 			switch (level.game().variant()) {
 			case MS_PACMAN:
-				renderer = new MsPacManGameRenderer(theme.spritesheet("mspacman.spritesheet"));
+				renderer = new MsPacManGameSpritesheet(theme.spritesheet("mspacman.spritesheet"));
 				break;
 			case PACMAN:
-				renderer = new PacManGameRenderer(theme.spritesheet("pacman.spritesheet"));
+				renderer = new PacManGameSpritesheet(theme.spritesheet("pacman.spritesheet"));
 				break;
 			default:
 				throw new IllegalGameVariantException(level.game().variant());
 			}
-			final GameRenderer r = renderer;
+			final GameSpritesheet r = renderer;
 			level.pac().setAnimations(renderer.createPacAnimations(level.pac()));
 			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
 			level.world().setAnimations(renderer.createWorldAnimations(level.world()));

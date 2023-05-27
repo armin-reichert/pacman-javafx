@@ -22,7 +22,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
@@ -119,7 +119,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var mpr = (MsPacManGameRenderer) r();
+		var mpr = (MsPacManGameSpritesheet) r();
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
@@ -183,6 +183,7 @@ public class PlayScene2D extends GameScene2D {
 	protected void drawSceneInfo() {
 		drawTileGrid(TILES_X, TILES_Y);
 		context.level().ifPresent(level -> {
+			drawWishDirIndicator(level.pac());
 			level.upwardsBlockedTiles().forEach(tile -> {
 				// "No Trespassing" symbol
 				g.setFill(Color.RED);

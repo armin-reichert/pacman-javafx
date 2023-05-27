@@ -12,19 +12,17 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
  * Common interface for the Pac-Man and Ms. Pac-Man game renderers.
  * 
  * @author Armin Reichert
  */
-public abstract class GameRenderer {
+public abstract class GameSpritesheet {
 
 	protected final Spritesheet spritesheet;
 
-	protected GameRenderer(Spritesheet spritesheet) {
+	protected GameSpritesheet(Spritesheet spritesheet) {
 		checkNotNull(spritesheet);
 		this.spritesheet = spritesheet;
 	}
@@ -54,13 +52,6 @@ public abstract class GameRenderer {
 	 * @return sprite showing bonus symbol value (100, 300, ...)
 	 */
 	public abstract Rectangle2D bonusValueSprite(int symbol);
-
-	public void drawWishDirIndicator(GraphicsContext g, Pac pac) {
-		g.setFill(Color.RED);
-		float r = 4;
-		var center = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(8f)).minus(r, r);
-		g.fillOval(center.x(), center.y(), 2 * r, 2 * r);
-	}
 
 	public abstract AnimationMap createPacAnimations(Pac pac);
 

@@ -22,7 +22,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.animation.Animation.Status;
@@ -117,8 +117,8 @@ public abstract class GameScene2D implements GameScene {
 		return canvasScaledPy.get() ? value : value * subSceneContainer.getHeight() / HEIGHT_UNSCALED;
 	}
 
-	protected GameRenderer r() {
-		return context.renderer();
+	protected GameSpritesheet r() {
+		return context.spritesheet();
 	}
 
 	protected Font sceneFont() {
@@ -413,6 +413,13 @@ public abstract class GameScene2D implements GameScene {
 			g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(tilesY * TS));
 		}
 		g.restore();
+	}
+
+	protected void drawWishDirIndicator(Pac pac) {
+		g.setFill(Color.RED);
+		float r = 4;
+		var center = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(8f)).minus(r, r);
+		g.fillOval(s(center.x()), s(center.y()), s(2 * r), s(2 * r));
 	}
 
 	/**

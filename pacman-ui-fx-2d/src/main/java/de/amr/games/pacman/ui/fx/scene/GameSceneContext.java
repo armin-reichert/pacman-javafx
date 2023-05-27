@@ -15,9 +15,9 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGamesUserInterface;
-import de.amr.games.pacman.ui.fx.rendering2d.GameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
 
 /**
  * @author Armin Reichert
@@ -26,29 +26,29 @@ public class GameSceneContext {
 
 	private final GameController gameController;
 	private final PacManGamesUserInterface ui;
-	private final PacManGameRenderer rendererPacMan;
-	private final MsPacManGameRenderer rendererMsPacMan;
+	private final PacManGameSpritesheet sheetPacMan;
+	private final MsPacManGameSpritesheet sheetMsPacMan;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 
 	public GameSceneContext(GameController gameController, PacManGamesUserInterface ui,
-			MsPacManGameRenderer rendererMsPacMan, PacManGameRenderer rendererPacMan) {
+			MsPacManGameSpritesheet sheetMsPacMan, PacManGameSpritesheet sheetPacMan) {
 		checkNotNull(gameController);
 		checkNotNull(ui);
-		checkNotNull(rendererMsPacMan);
-		checkNotNull(rendererPacMan);
+		checkNotNull(sheetMsPacMan);
+		checkNotNull(sheetPacMan);
 		this.gameController = gameController;
 		this.ui = ui;
-		this.rendererMsPacMan = rendererMsPacMan;
-		this.rendererPacMan = rendererPacMan;
+		this.sheetMsPacMan = sheetMsPacMan;
+		this.sheetPacMan = sheetPacMan;
 	}
 
 	public PacManGamesUserInterface ui() {
 		return ui;
 	}
 
-	public GameRenderer renderer() {
-		return gameVariant() == GameVariant.MS_PACMAN ? rendererMsPacMan : rendererPacMan;
+	public GameSpritesheet spritesheet() {
+		return gameVariant() == GameVariant.MS_PACMAN ? sheetMsPacMan : sheetPacMan;
 	}
 
 	public boolean isScoreVisible() {

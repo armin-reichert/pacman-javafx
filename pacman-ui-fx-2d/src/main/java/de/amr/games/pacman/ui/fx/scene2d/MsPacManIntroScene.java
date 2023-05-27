@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -29,8 +29,8 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected MsPacManGameRenderer r() {
-		return (MsPacManGameRenderer) super.r();
+	protected MsPacManGameSpritesheet r() {
+		return (MsPacManGameSpritesheet) super.r();
 	}
 
 	@Override
