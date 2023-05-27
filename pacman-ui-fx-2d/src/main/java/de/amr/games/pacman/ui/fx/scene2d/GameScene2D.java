@@ -31,10 +31,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -72,7 +72,7 @@ public abstract class GameScene2D implements GameScene {
 	};
 
 	protected final StackPane root = new StackPane();
-	protected final SubScene fxSubScene; // we probably could just use some pane instead
+	protected final BorderPane subSceneContainer;
 	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Pane overlay = new Pane();
@@ -84,7 +84,11 @@ public abstract class GameScene2D implements GameScene {
 	private Color wallpaperColor = Color.BLACK;
 
 	protected GameScene2D() {
-		fxSubScene = new SubScene(root, WIDTH_UNSCALED, HEIGHT_UNSCALED);
+		subSceneContainer = new BorderPane(root);
+		subSceneContainer.setMinWidth(WIDTH_UNSCALED);
+		subSceneContainer.setMinHeight(HEIGHT_UNSCALED);
+		subSceneContainer.setMaxWidth(WIDTH_UNSCALED);
+		subSceneContainer.setMaxHeight(HEIGHT_UNSCALED);
 
 		root.getChildren().addAll(canvas, overlay);
 		overlay.getChildren().add(helpRoot);
@@ -99,7 +103,7 @@ public abstract class GameScene2D implements GameScene {
 		helpMenuAnimation.setToValue(0);
 
 		// scale overlay pane to cover subscene
-		fxSubScene.heightProperty().addListener((py, ov, nv) -> {
+		subSceneContainer.heightProperty().addListener((py, ov, nv) -> {
 			var scaling = nv.doubleValue() / HEIGHT_UNSCALED;
 			overlayScale.setX(scaling);
 			overlayScale.setY(scaling);
@@ -110,7 +114,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected double s(double value) {
-		return canvasScaledPy.get() ? value : value * fxSubScene.getHeight() / HEIGHT_UNSCALED;
+		return canvasScaledPy.get() ? value : value * subSceneContainer.getHeight() / HEIGHT_UNSCALED;
 	}
 
 	protected GameRenderer r() {
@@ -139,8 +143,8 @@ public abstract class GameScene2D implements GameScene {
 
 	private void updateCanvasScaling(boolean scaled) {
 		if (scaled) {
-			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
-			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT_UNSCALED));
+			canvas.scaleXProperty().bind(subSceneContainer.widthProperty().divide(WIDTH_UNSCALED));
+			canvas.scaleYProperty().bind(subSceneContainer.heightProperty().divide(HEIGHT_UNSCALED));
 			canvas.widthProperty().unbind();
 			canvas.heightProperty().unbind();
 			canvas.setWidth(WIDTH_UNSCALED);
@@ -150,8 +154,8 @@ public abstract class GameScene2D implements GameScene {
 			canvas.scaleYProperty().unbind();
 			canvas.setScaleX(1);
 			canvas.setScaleY(1);
-			canvas.widthProperty().bind(fxSubScene.widthProperty());
-			canvas.heightProperty().bind(fxSubScene.heightProperty());
+			canvas.widthProperty().bind(subSceneContainer.widthProperty());
+			canvas.heightProperty().bind(subSceneContainer.heightProperty());
 		}
 	}
 
@@ -204,8 +208,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public SubScene fxSubScene() {
-		return fxSubScene;
+	public BorderPane sceneContainer() {
+		return subSceneContainer;
 	}
 
 	public Canvas getCanvas() {
@@ -214,8 +218,10 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void setParentScene(Scene parentScene) {
-		fxSubScene.widthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
-		fxSubScene.heightProperty().bind(parentScene.heightProperty());
+		subSceneContainer.minWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
+		subSceneContainer.minHeightProperty().bind(parentScene.heightProperty());
+		subSceneContainer.maxWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
+		subSceneContainer.maxHeightProperty().bind(parentScene.heightProperty());
 	}
 
 	@Override
@@ -411,15 +417,11 @@ public abstract class GameScene2D implements GameScene {
 
 	/**
 	 * Draws the scene content, e.g. the maze and the guys.
-	 * 
-	 * @param g graphics context
 	 */
 	protected abstract void drawSceneContent();
 
 	/**
 	 * Draws scene info, e.g. maze structure and special tiles
-	 * 
-	 * @param g graphics context
 	 */
 	protected void drawSceneInfo() {
 		// empty by default

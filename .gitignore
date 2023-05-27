@@ -3,7 +3,7 @@
 /.settings/
 /src/main/resources/META-INF
 
-dependency-reduced-pom.xml
+/.idea/
 
 *.ini
 

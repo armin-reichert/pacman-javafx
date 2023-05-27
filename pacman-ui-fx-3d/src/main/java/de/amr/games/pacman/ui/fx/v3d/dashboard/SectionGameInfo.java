@@ -40,7 +40,7 @@ public class SectionGameInfo extends Section {
 
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
 		addInfo("",
-				() -> "w=%.0f h=%.0f".formatted(gameScene().fxSubScene().getWidth(), gameScene().fxSubScene().getHeight()));
+				() -> "w=%.0f h=%.0f".formatted(gameScene().sceneContainer().getWidth(), gameScene().sceneContainer().getHeight()));
 		addInfo("Game State", () -> "%s".formatted(gc.state()));
 		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));

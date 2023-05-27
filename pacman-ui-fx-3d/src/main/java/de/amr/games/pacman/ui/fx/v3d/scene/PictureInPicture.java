@@ -27,14 +27,16 @@ public class PictureInPicture {
 		gameScene = new PlayScene2D();
 		gameScene.setSceneCanvasScaled(true);
 		gameScene.setRoundedCorners(false);
-		gameScene.fxSubScene().heightProperty().bind(heightPy);
-		gameScene.fxSubScene().widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
-		gameScene.fxSubScene().opacityProperty().bind(opacityPy);
-		gameScene.fxSubScene().setVisible(false);
+		gameScene.sceneContainer().minHeightProperty().bind(heightPy);
+		gameScene.sceneContainer().minWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+		gameScene.sceneContainer().maxHeightProperty().bind(heightPy);
+		gameScene.sceneContainer().maxWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+		gameScene.sceneContainer().opacityProperty().bind(opacityPy);
+		gameScene.sceneContainer().setVisible(false);
 	}
 
 	public Node root() {
-		return gameScene.fxSubScene();
+		return gameScene.sceneContainer();
 	}
 
 	public void render() {
@@ -44,9 +46,9 @@ public class PictureInPicture {
 	public void update(GameScene master, boolean on) {
 		if (master != null) {
 			gameScene.setContext(master.context());
-			gameScene.fxSubScene().setVisible(on && master.is3D());
+			gameScene.sceneContainer().setVisible(on && master.is3D());
 		} else {
-			gameScene.fxSubScene().setVisible(false);
+			gameScene.sceneContainer().setVisible(false);
 		}
 	}
 }

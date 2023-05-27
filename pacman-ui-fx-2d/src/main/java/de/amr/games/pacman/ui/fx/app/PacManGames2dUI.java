@@ -130,23 +130,23 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void configureGameScenes() {
 		//@formatter:off
 		gameSceneConfig.put(GameVariant.MS_PACMAN, new GameSceneConfiguration(
-			new GameSceneChoice(new BootScene()),
-			new GameSceneChoice(new MsPacManIntroScene()), 
-			new GameSceneChoice(new MsPacManCreditScene()),
-			new GameSceneChoice(new PlayScene2D()),
-			new GameSceneChoice(new MsPacManIntermissionScene1()), 
-			new GameSceneChoice(new MsPacManIntermissionScene2()),
-			new GameSceneChoice(new MsPacManIntermissionScene3())
+			GameSceneChoice.onlyScene2D(new BootScene()),
+			GameSceneChoice.onlyScene2D(new MsPacManIntroScene()),
+			GameSceneChoice.onlyScene2D(new MsPacManCreditScene()),
+			GameSceneChoice.onlyScene2D(new PlayScene2D()),
+			GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene1()),
+			GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene2()),
+			GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene3())
 		));
 
 		gameSceneConfig.put(GameVariant.PACMAN, new GameSceneConfiguration(
-			new GameSceneChoice(new BootScene()),
-			new GameSceneChoice(new PacManIntroScene()),
-			new GameSceneChoice(new PacManCreditScene()),
-			new GameSceneChoice(new PlayScene2D()),
-			new GameSceneChoice(new PacManCutscene1()), 
-			new GameSceneChoice(new PacManCutscene2()),
-			new GameSceneChoice(new PacManCutscene3())
+			GameSceneChoice.onlyScene2D(new BootScene()),
+			GameSceneChoice.onlyScene2D(new PacManIntroScene()),
+			GameSceneChoice.onlyScene2D(new PacManCreditScene()),
+			GameSceneChoice.onlyScene2D(new PlayScene2D()),
+			GameSceneChoice.onlyScene2D(new PacManCutscene1()),
+			GameSceneChoice.onlyScene2D(new PacManCutscene2()),
+			GameSceneChoice.onlyScene2D(new PacManCutscene3())
 		));
 	  //@formatter:on
 	}
@@ -177,7 +177,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void resizeStageToFitCurrentGameScene() {
 		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
+			stage.setWidth(currentGameScene.sceneContainer().getWidth() + 16); // don't ask me why
 		}
 	}
 
@@ -239,12 +239,12 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			throw new IllegalArgumentException(String.format("Dimension must be 2 or 3, but is %d", dimension));
 		}
 		var choice = sceneChoiceMatchingCurrentGameState();
-		return Optional.of(choice.scene2D());
+		return choice.scene2D();
 	}
 
 	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
 		var config = gameSceneConfig.get(gameVariant());
-		GameSceneChoice choice = null;
+		GameSceneChoice choice;
 		switch (gameState()) {
 		case BOOT:
 			choice = config.bootSceneChoice();
@@ -284,7 +284,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		return choice.scene2D();
+		return choice.scene2D().orElseThrow();
 	}
 
 	protected void changeGameScene(GameScene newGameScene) {
@@ -306,7 +306,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				new GameSceneContext(gameController, this, new MsPacManGameRenderer(theme.spritesheet("mspacman.spritesheet")),
 						new PacManGameRenderer(theme.spritesheet("pacman.spritesheet"))));
 		currentGameScene.init();
-		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
+		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
@@ -378,7 +378,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void onLevelStarting(GameEvent e) {
 		e.game.level().ifPresent(level -> {
-			GameRenderer renderer = null;
+			GameRenderer renderer;
 			switch (level.game().variant()) {
 			case MS_PACMAN:
 				renderer = new MsPacManGameRenderer(theme.spritesheet("mspacman.spritesheet"));
@@ -549,7 +549,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	private void startSiren(int sirenIndex) {
 		var p = soundPrefix();
 		stopSirens();
-		var clip = theme.audioClip(p + "audio.siren." + String.valueOf(sirenIndex + 1));
+		var clip = theme.audioClip(p + "audio.siren." + (sirenIndex + 1));
 		clip.setCycleCount(AudioClip.INDEFINITE);
 		clip.play();
 	}
@@ -622,10 +622,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public GameScene currentGameScene() {
 		return currentGameScene;
-	}
-
-	public FlashMessageView flashMessageView() {
-		return flashMessageView;
 	}
 
 	// Actions
