@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="pacman-ui-fx-2d" />
+        <module name="pacman-ui-fx-3d" />
+        <module name="pacman-ui-fx-3d-jlink" />
+        <module name="pacman-ui-fx-2d-jlink" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

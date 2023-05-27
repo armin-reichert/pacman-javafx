@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pacman-ui-fx-2d/pom.xml" />
+        <option value="$PROJECT_DIR$/pacman-ui-fx-3d/pom.xml" />
+        <option value="$PROJECT_DIR$/pacman-ui-fx-2d-jlink/pom.xml" />
+        <option value="$PROJECT_DIR$/pacman-ui-fx-3d-jlink/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_18" default="true" project-jdk-name="18" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>
