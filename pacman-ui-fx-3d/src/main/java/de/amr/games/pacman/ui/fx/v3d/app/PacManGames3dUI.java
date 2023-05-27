@@ -56,8 +56,7 @@ import javafx.stage.Stage;
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
  * <p>
- * The <strong>play scene</strong> is available in a {@link PlaySceneScaled 2D} and a {@link PlayScene3D 3D} version.
- * All others scenes are 2D only.
+ * The <strong>play scene</strong> is available in a 2D and a 3D version. All others scenes are 2D only.
  * <p>
  * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
  * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
@@ -174,13 +173,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
 		}
 		var choice = sceneChoiceMatchingCurrentGameState();
-		return Optional.ofNullable(dimension == 3 ? choice.scene3D() : choice.scene2D());
+		return dimension == 3 ? choice.scene3D() : choice.scene2D();
 	}
 
 	@Override
 	protected GameScene chooseGameScene(GameSceneChoice choice) {
 		var use3D = PacManGames3d.PY_3D_ENABLED.get();
-		return (use3D && choice.scene3D() != null) ? choice.scene3D() : choice.scene2D();
+		return use3D && choice.scene3D().isPresent() ? choice.scene3D().get() : choice.scene2D().orElseThrow();
 	}
 
 	@Override
@@ -216,10 +215,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	public Dashboard dashboard() {
 		return dashboard;
-	}
-
-	public PictureInPicture pip() {
-		return pip;
 	}
 
 	// --- Actions ---
