@@ -177,7 +177,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void resizeStageToFitCurrentGameScene() {
 		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-			stage.setWidth(currentGameScene.fxSubScene().getWidth() + 16); // don't ask me why
+			stage.setWidth(currentGameScene.sceneContainer().getWidth() + 16); // don't ask me why
 		}
 	}
 
@@ -306,7 +306,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				new GameSceneContext(gameController, this, new MsPacManGameRenderer(theme.spritesheet("mspacman.spritesheet")),
 						new PacManGameRenderer(theme.spritesheet("pacman.spritesheet"))));
 		currentGameScene.init();
-		mainSceneRoot.getChildren().set(0, currentGameScene.fxSubScene());
+		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 

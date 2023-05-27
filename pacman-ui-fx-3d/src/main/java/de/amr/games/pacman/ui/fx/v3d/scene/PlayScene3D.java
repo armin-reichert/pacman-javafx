@@ -131,7 +131,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public BorderPane fxSubScene() {
+	public BorderPane sceneContainer() {
 		return subSceneContainer;
 	}
 

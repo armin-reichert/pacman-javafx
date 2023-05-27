@@ -57,9 +57,9 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-     * @return the JavaFX subscene associated with this game scene
+     * @return the container of the game scene
      */
-	BorderPane fxSubScene();
+	BorderPane sceneContainer();
 
 	/**
 	 * @return if this is a scene with 3D content
