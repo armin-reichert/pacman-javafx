@@ -30,8 +30,8 @@ public class PacManCutscene2 extends GameScene2D {
 	private Animated damagedAnimation;
 
 	@Override
-	protected PacManGameSpritesheet r() {
-		return (PacManGameSpritesheet) super.r();
+	protected PacManGameSpritesheet gss() {
+		return (PacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -48,11 +48,11 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.setPixelSpeed(1.15f);
 		pac.show();
 
-		var pacAnimations = r().createPacAnimations(pac);
+		var pacAnimations = gss().createPacAnimations(pac);
 		pacAnimations.selectAndRestart(GameModel.AK_PAC_MUNCHING);
 		pac.setAnimations(pacAnimations);
 
-		stretchedDressAnimation = r().createBlinkyStretchedAnimation();
+		stretchedDressAnimation = gss().createBlinkyStretchedAnimation();
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.placeAtTile(v2i(28, 20), 0, 0);
@@ -60,8 +60,8 @@ public class PacManCutscene2 extends GameScene2D {
 		blinky.setPixelSpeed(0);
 		blinky.hide();
 
-		var blinkyAnimations = r().createGhostAnimations(blinky);
-		damagedAnimation = r().createBlinkyDamagedAnimation();
+		var blinkyAnimations = gss().createGhostAnimations(blinky);
+		damagedAnimation = gss().createBlinkyDamagedAnimation();
 		blinkyAnimations.put(GameModel.AK_BLINKY_DAMAGED, damagedAnimation);
 		blinkyAnimations.selectAndRestart(GameModel.AK_GHOST_COLOR);
 		blinky.setAnimations(blinkyAnimations);

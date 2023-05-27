@@ -27,8 +27,8 @@ public class PacManCutscene1 extends GameScene2D {
 	private Ghost blinky;
 
 	@Override
-	protected PacManGameSpritesheet r() {
-		return (PacManGameSpritesheet) super.r();
+	protected PacManGameSpritesheet gss() {
+		return (PacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -45,8 +45,8 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
-		var pacAnimations = r().createPacAnimations(pac);
-		pacAnimations.put(GameModel.AK_PAC_BIG, r().createBigPacManMunchingAnimation());
+		var pacAnimations = gss().createPacAnimations(pac);
+		pacAnimations.put(GameModel.AK_PAC_BIG, gss().createBigPacManMunchingAnimation());
 		pac.setAnimations(pacAnimations);
 		pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
 
@@ -56,7 +56,7 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setPixelSpeed(1.3f);
 		blinky.show();
 
-		var blinkyAnimations = r().createGhostAnimations(blinky);
+		var blinkyAnimations = gss().createGhostAnimations(blinky);
 		blinky.setAnimations(blinkyAnimations);
 		blinkyAnimations.selectedAnimation().ifPresent(Animated::restart);
 	}

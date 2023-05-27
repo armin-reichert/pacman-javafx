@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
@@ -56,10 +55,6 @@ public class Theme {
 
 	public Image image(String name) {
 		return (Image) namedThings.get(name);
-	}
-
-	public Spritesheet spritesheet(String name) {
-		return (Spritesheet) namedThings.get(name);
 	}
 
 	public Background background(String name) {

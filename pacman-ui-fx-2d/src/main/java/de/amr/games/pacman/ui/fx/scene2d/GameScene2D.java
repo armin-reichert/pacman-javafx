@@ -117,8 +117,8 @@ public abstract class GameScene2D implements GameScene {
 		return canvasScaledPy.get() ? value : value * subSceneContainer.getHeight() / HEIGHT_UNSCALED;
 	}
 
-	protected GameSpritesheet r() {
-		return context.spritesheet();
+	protected GameSpritesheet gss() {
+		return context.gss();
 	}
 
 	protected Font sceneFont() {
@@ -272,7 +272,7 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
 		for (var symbol : levelSymbols) {
-			drawSprite(r().bonusSymbolSprite(symbol), x, yr);
+			drawSprite(gss().bonusSymbolSprite(symbol), x, yr);
 			x -= TS * 2;
 		}
 	}
@@ -286,7 +286,7 @@ public abstract class GameScene2D implements GameScene {
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			// TODO check reason for blitzers
-			drawSprite(r().livesCounterSprite(), x + TS * (2 * i), y);
+			drawSprite(gss().livesCounterSprite(), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -302,8 +302,8 @@ public abstract class GameScene2D implements GameScene {
 				var x = pac.position().x() + HTS - sprite.getWidth() / 2;
 				var y = pac.position().y() + HTS - sprite.getHeight() / 2;
 				// TODO check the blitzer cause and remove -1 workaround
-				g.drawImage(r().spritesheet().source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1,
-						sprite.getHeight() - 1, s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+				g.drawImage(gss().source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1, sprite.getHeight() - 1,
+						s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
 			}
 		});
 	}
@@ -328,7 +328,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(r().spritesheet().source(), sprite, x, y);
+		drawSprite(gss().source(), sprite, x, y);
 	}
 
 	/**

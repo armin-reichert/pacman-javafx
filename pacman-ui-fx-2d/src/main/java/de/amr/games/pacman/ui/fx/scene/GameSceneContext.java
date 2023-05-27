@@ -47,7 +47,7 @@ public class GameSceneContext {
 		return ui;
 	}
 
-	public GameSpritesheet spritesheet() {
+	public GameSpritesheet gss() {
 		return gameVariant() == GameVariant.MS_PACMAN ? sheetMsPacMan : sheetPacMan;
 	}
 

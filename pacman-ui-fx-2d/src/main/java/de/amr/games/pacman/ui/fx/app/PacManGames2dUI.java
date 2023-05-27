@@ -303,8 +303,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			scene2D.root().setBackground(ResourceManager.coloredBackground(wallpaperColor));
 		}
 		currentGameScene.setContext(
-				new GameSceneContext(gameController, this, new MsPacManGameSpritesheet(theme.spritesheet("mspacman.spritesheet")),
-						new PacManGameSpritesheet(theme.spritesheet("pacman.spritesheet"))));
+				new GameSceneContext(gameController, this, new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16),
+						new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16)));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
@@ -381,10 +381,10 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			GameSpritesheet renderer;
 			switch (level.game().variant()) {
 			case MS_PACMAN:
-				renderer = new MsPacManGameSpritesheet(theme.spritesheet("mspacman.spritesheet"));
+				renderer = new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16);
 				break;
 			case PACMAN:
-				renderer = new PacManGameSpritesheet(theme.spritesheet("pacman.spritesheet"));
+				renderer = new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16);
 				break;
 			default:
 				throw new IllegalGameVariantException(level.game().variant());

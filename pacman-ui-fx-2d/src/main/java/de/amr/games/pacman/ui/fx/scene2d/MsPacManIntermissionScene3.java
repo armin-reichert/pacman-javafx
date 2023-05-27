@@ -27,8 +27,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	private SimpleAnimation<Rectangle2D> storkAnimation;
 
 	@Override
-	protected MsPacManGameSpritesheet r() {
-		return (MsPacManGameSpritesheet) super.r();
+	protected MsPacManGameSpritesheet gss() {
+		return (MsPacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -41,13 +41,13 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 		im.changeState(MsPacManIntermission3.State.FLAP);
 
-		imc.clapperboard.setAnimation(r().createClapperboardAnimation());
-		imc.msPacMan.setAnimations(r().createPacAnimations(imc.msPacMan));
-		imc.pacMan.setAnimations(r().createPacAnimations(imc.pacMan));
+		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
+		imc.msPacMan.setAnimations(gss().createPacAnimations(imc.msPacMan));
+		imc.pacMan.setAnimations(gss().createPacAnimations(imc.pacMan));
 		imc.pacMan.animations()
-				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, r().createPacManMunchingAnimationMap(imc.pacMan)));
+				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, gss().createPacManMunchingAnimationMap(imc.pacMan)));
 
-		storkAnimation = r().createStorkFlyingAnimation();
+		storkAnimation = gss().createStorkFlyingAnimation();
 		storkAnimation.start();
 	}
 
@@ -63,7 +63,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		drawPacSprite(imc.msPacMan);
 		drawPacSprite(imc.pacMan);
 		drawEntitySprite(imc.stork, storkAnimation.frame());
-		drawEntitySprite(imc.bag, imc.bagOpen ? r().juniorPacSprite() : r().blueBagSprite());
+		drawEntitySprite(imc.bag, imc.bagOpen ? gss().juniorPacSprite() : gss().blueBagSprite());
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }

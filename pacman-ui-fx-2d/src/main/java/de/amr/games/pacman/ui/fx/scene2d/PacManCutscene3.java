@@ -26,8 +26,8 @@ public class PacManCutscene3 extends GameScene2D {
 	private Ghost blinky;
 
 	@Override
-	protected PacManGameSpritesheet r() {
-		return (PacManGameSpritesheet) super.r();
+	protected PacManGameSpritesheet gss() {
+		return (PacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
-		pac.setAnimations(r().createPacAnimations(pac));
+		pac.setAnimations(gss().createPacAnimations(pac));
 		pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
@@ -53,9 +53,9 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky.setPixelSpeed(1.25f);
 		blinky.show();
 
-		var blinkyAnimations = r().createGhostAnimations(blinky);
-		blinkyAnimations.put(GameModel.AK_BLINKY_PATCHED, r().createBlinkyPatchedAnimation());
-		blinkyAnimations.put(GameModel.AK_BLINKY_NAKED, r().createBlinkyNakedAnimation());
+		var blinkyAnimations = gss().createGhostAnimations(blinky);
+		blinkyAnimations.put(GameModel.AK_BLINKY_PATCHED, gss().createBlinkyPatchedAnimation());
+		blinkyAnimations.put(GameModel.AK_BLINKY_NAKED, gss().createBlinkyNakedAnimation());
 		blinky.setAnimations(blinkyAnimations);
 		blinky.selectAndRunAnimation(GameModel.AK_BLINKY_PATCHED);
 	}

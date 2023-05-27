@@ -71,8 +71,8 @@ public class BootScene extends GameScene2D {
 	}
 
 	private Rectangle2D randomSpritesheetTile() {
-		var source = r().spritesheet().source();
-		var raster = r().spritesheet().raster();
+		var source = gss().source();
+		var raster = gss().raster();
 		double x = RND.nextDouble() * (source.getWidth() - raster);
 		double y = RND.nextDouble() * (source.getHeight() - raster);
 		return new Rectangle2D(x, y, raster, raster);

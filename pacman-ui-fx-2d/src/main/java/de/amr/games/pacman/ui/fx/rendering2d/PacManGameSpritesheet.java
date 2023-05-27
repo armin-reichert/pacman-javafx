@@ -18,39 +18,40 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
  */
-public class PacManGameSpritesheet extends GameSpritesheet {
+public class PacManGameSpritesheet extends Spritesheet implements GameSpritesheet {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	public PacManGameSpritesheet(Spritesheet ss) {
-		super(ss);
+	public PacManGameSpritesheet(Image source, int raster) {
+		super(source, raster);
 	}
 
 	@Override
 	public Rectangle2D ghostValueSprite(int index) {
-		return spritesheet().tile(index, 8);
+		return tile(index, 8);
 	}
 
 	@Override
 	public Rectangle2D bonusSymbolSprite(int symbol) {
-		return spritesheet().tile(2 + symbol, 3);
+		return tile(2 + symbol, 3);
 	}
 
 	@Override
 	public Rectangle2D bonusValueSprite(int symbol) {
 		if (symbol <= 3) {
-			return spritesheet().tile(symbol, 9);
+			return tile(symbol, 9);
 		}
 		if (symbol == 4) {
-			var region = spritesheet().tiles(4, 9, 2, 1);
-			return spritesheet().region(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
+			var region = tiles(4, 9, 2, 1);
+			return region(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
-		return spritesheet().tiles(3, 5 + symbol, 3, 1);
+		return tiles(3, 5 + symbol, 3, 1);
 	}
 
 	@Override
@@ -62,12 +63,12 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 	}
 
 	public Rectangle2D ghostFacingRight(int ghostID) {
-		return spritesheet().tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
+		return tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);
 	}
 
 	@Override
 	public Rectangle2D livesCounterSprite() {
-		return spritesheet().region(129, 16, 15, 15); // WTF
+		return region(129, 16, 15, 15); // WTF
 	}
 
 	@Override
@@ -83,9 +84,9 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 		var animationByDir = new AnimationByDirection(pac::moveDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var wide = spritesheet().tile(0, d);
-			var middle = spritesheet().region(16, d * 16, 16, 16); // WTF
-			var closed = spritesheet().tile(2, 0);
+			var wide = tile(0, d);
+			var middle = region(16, d * 16, 16, 16); // WTF
+			var closed = tile(2, 0);
 			var animation = new SimpleAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle);
 			animation.setFrameDuration(1);
 			animation.repeatForever();
@@ -95,7 +96,7 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 	}
 
 	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet().tilesRightOf(3, 0, 11));
+		var animation = new SimpleAnimation<>(tilesRightOf(3, 0, 11));
 		animation.setFrameDuration(8);
 		return animation;
 	}
@@ -116,7 +117,7 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			var animation = new SimpleAnimation<>(spritesheet().tilesRightOf(2 * d, 4 + ghost.id(), 2));
+			var animation = new SimpleAnimation<>(tilesRightOf(2 * d, 4 + ghost.id(), 2));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animationByDir.put(dir, animation);
@@ -125,14 +126,14 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 	}
 
 	private SimpleAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet().tile(8, 4), spritesheet().tile(9, 4));
+		var animation = new SimpleAnimation<>(tile(8, 4), tile(9, 4));
 		animation.setFrameDuration(8);
 		animation.repeatForever();
 		return animation;
 	}
 
 	private SimpleAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet().tilesRightOf(8, 4, 4));
+		var animation = new SimpleAnimation<>(tilesRightOf(8, 4, 4));
 		animation.setFrameDuration(6);
 		return animation;
 	}
@@ -141,7 +142,7 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 		var animationByDir = new AnimationByDirection(ghost::wishDir);
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
-			animationByDir.put(dir, new SimpleAnimation<>(spritesheet().tile(8 + d, 5)));
+			animationByDir.put(dir, new SimpleAnimation<>(tile(8 + d, 5)));
 		}
 		return animationByDir;
 	}
@@ -154,30 +155,29 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 
 	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
 		var animation = new SimpleAnimation<>(// WTF!
-				spritesheet().region(31, 15, 32, 34), spritesheet().region(63, 15, 32, 34),
-				spritesheet().region(95, 15, 34, 34));
+				region(31, 15, 32, 34), region(63, 15, 32, 34), region(95, 15, 34, 34));
 		animation.setFrameDuration(3);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public FrameSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new FrameSequence<>(spritesheet().tilesRightOf(8, 6, 5));
+		return new FrameSequence<>(tilesRightOf(8, 6, 5));
 	}
 
 	public FrameSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new FrameSequence<>(spritesheet().tile(8, 7), spritesheet().tile(9, 7));
+		return new FrameSequence<>(tile(8, 7), tile(9, 7));
 	}
 
 	public SimpleAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet().tile(10, 7), spritesheet().tile(11, 7));
+		var animation = new SimpleAnimation<>(tile(10, 7), tile(11, 7));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;
 	}
 
 	public SimpleAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet().tiles(8, 8, 2, 1), spritesheet().tiles(10, 8, 2, 1));
+		var animation = new SimpleAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
 		animation.setFrameDuration(4);
 		animation.repeatForever();
 		return animation;

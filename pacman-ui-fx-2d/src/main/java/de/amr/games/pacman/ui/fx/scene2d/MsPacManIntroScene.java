@@ -29,8 +29,8 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected MsPacManGameSpritesheet r() {
-		return (MsPacManGameSpritesheet) super.r();
+	protected MsPacManGameSpritesheet gss() {
+		return (MsPacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -46,11 +46,11 @@ public class MsPacManIntroScene extends GameScene2D {
 		});
 		intro.changeState(MsPacManIntro.State.START);
 
-		var msPacAnimations = r().createPacAnimations(intro.context().msPacMan);
+		var msPacAnimations = gss().createPacAnimations(intro.context().msPacMan);
 		intro.context().msPacMan.setAnimations(msPacAnimations);
 		msPacAnimations.start();
 		intro.context().ghosts.forEach(ghost -> {
-			var ghostAnimations = r().createGhostAnimations(ghost);
+			var ghostAnimations = gss().createGhostAnimations(ghost);
 			ghost.setAnimations(ghostAnimations);
 			ghostAnimations.start();
 		});

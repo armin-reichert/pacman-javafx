@@ -24,8 +24,8 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 	private MsPacManIntermission1.Context imc;
 
 	@Override
-	protected MsPacManGameSpritesheet r() {
-		return (MsPacManGameSpritesheet) super.r();
+	protected MsPacManGameSpritesheet gss() {
+		return (MsPacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -37,18 +37,18 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		imc = im.context();
 		im.changeState(MsPacManIntermission1.State.FLAP);
 
-		imc.clapperboard.setAnimation(r().createClapperboardAnimation());
-		imc.msPac.setAnimations(r().createPacAnimations(imc.msPac));
+		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
+		imc.msPac.setAnimations(gss().createPacAnimations(imc.msPac));
 		imc.msPac.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pacMan.setAnimations(r().createPacAnimations(imc.pacMan));
+		imc.pacMan.setAnimations(gss().createPacAnimations(imc.pacMan));
 		imc.pacMan.animations().ifPresent(animations -> {
-			var munching = r().createPacManMunchingAnimationMap(imc.pacMan);
+			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
 			animations.put(GameModel.AK_PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});
-		imc.inky.setAnimations(r().createGhostAnimations(imc.inky));
+		imc.inky.setAnimations(gss().createGhostAnimations(imc.inky));
 		imc.inky.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pinky.setAnimations(r().createGhostAnimations(imc.pinky));
+		imc.pinky.setAnimations(gss().createGhostAnimations(imc.pinky));
 		imc.pinky.animations().ifPresent(AnimationMap::ensureRunning);
 	}
 
@@ -64,7 +64,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		drawPacSprite(imc.pacMan);
 		drawGhostSprite(imc.inky);
 		drawGhostSprite(imc.pinky);
-		drawEntitySprite(imc.heart, r().heartSprite());
+		drawEntitySprite(imc.heart, gss().heartSprite());
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }

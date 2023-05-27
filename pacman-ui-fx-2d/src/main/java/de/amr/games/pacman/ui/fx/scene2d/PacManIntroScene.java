@@ -35,8 +35,8 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected PacManGameSpritesheet r() {
-		return (PacManGameSpritesheet) super.r();
+	protected PacManGameSpritesheet gss() {
+		return (PacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -55,8 +55,8 @@ public class PacManIntroScene extends GameScene2D {
 		});
 		ic = intro.context();
 
-		ic.pacMan.setAnimations(context.spritesheet().createPacAnimations(ic.pacMan));
-		ic.ghosts().forEach(ghost -> ghost.setAnimations(context.spritesheet().createGhostAnimations(ghost)));
+		ic.pacMan.setAnimations(context.gss().createPacAnimations(ic.pacMan));
+		ic.ghosts().forEach(ghost -> ghost.setAnimations(context.gss().createGhostAnimations(ghost)));
 		ic.blinking.reset();
 
 		intro.changeState(State.START);
@@ -145,7 +145,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int ty = 7 + 3 * id;
-			var sprite = r().ghostFacingRight(id);
+			var sprite = gss().ghostFacingRight(id);
 			drawSpriteOverBoundingBox(sprite, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;

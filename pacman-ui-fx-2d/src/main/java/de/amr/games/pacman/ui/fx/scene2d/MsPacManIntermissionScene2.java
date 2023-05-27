@@ -23,8 +23,8 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	private MsPacManIntermission2.Context imc;
 
 	@Override
-	protected MsPacManGameSpritesheet r() {
-		return (MsPacManGameSpritesheet) super.r();
+	protected MsPacManGameSpritesheet gss() {
+		return (MsPacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -37,12 +37,12 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 		im.changeState(MsPacManIntermission2.State.FLAP);
 
-		imc.clapperboard.setAnimation(r().createClapperboardAnimation());
-		imc.msPacMan.setAnimations(r().createPacAnimations(imc.msPacMan));
+		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
+		imc.msPacMan.setAnimations(gss().createPacAnimations(imc.msPacMan));
 		imc.msPacMan.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pacMan.setAnimations(r().createPacAnimations(imc.pacMan));
+		imc.pacMan.setAnimations(gss().createPacAnimations(imc.pacMan));
 		imc.pacMan.animations().ifPresent(animations -> {
-			var munching = r().createPacManMunchingAnimationMap(imc.pacMan);
+			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
 			animations.put(GameModel.AK_PAC_MUNCHING, munching);
 			animations.ensureRunning();
 		});

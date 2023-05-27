@@ -15,8 +15,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
-	protected MsPacManGameSpritesheet r() {
-		return (MsPacManGameSpritesheet) super.r();
+	protected MsPacManGameSpritesheet gss() {
+		return (MsPacManGameSpritesheet) super.gss();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class MsPacManCreditScene extends GameScene2D {
 		drawText("PUSH START BUTTON", ArcadeTheme.ORANGE, sceneFont(), t(6), t(16));
 		drawText("1 PLAYER ONLY", ArcadeTheme.ORANGE, sceneFont(), t(8), t(18));
 		drawText("ADDITIONAL    AT 10000", ArcadeTheme.ORANGE, sceneFont(), t(2), t(25));
-		drawSprite(r().livesCounterSprite(), t(13), t(23) + 1);
+		drawSprite(gss().livesCounterSprite(), t(13), t(23) + 1);
 		drawText("PTS", ArcadeTheme.ORANGE, font6, t(25), t(25));
 		drawMsPacManCopyright(t(6), t(28));
 	}

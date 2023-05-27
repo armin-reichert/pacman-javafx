@@ -119,7 +119,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var mpr = (MsPacManGameSpritesheet) r();
+		var mpr = (MsPacManGameSpritesheet) gss();
 		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
 		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
 			var flashing = (boolean) flashingAnimation.get().frame();
@@ -128,7 +128,7 @@ public class PlayScene2D extends GameScene2D {
 				var flashingMazeSprite = mpr.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(r().spritesheet().source(), mpr.emptyMaze(mazeNumber), x, y);
+				drawSprite(gss().source(), mpr.emptyMaze(mazeNumber), x, y);
 			}
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
@@ -155,10 +155,10 @@ public class PlayScene2D extends GameScene2D {
 		case Bonus.STATE_INACTIVE:
 			break;
 		case Bonus.STATE_EDIBLE:
-			sprite = r().bonusSymbolSprite(bonus.symbol());
+			sprite = gss().bonusSymbolSprite(bonus.symbol());
 			break;
 		case Bonus.STATE_EATEN:
-			sprite = r().bonusValueSprite(bonus.symbol());
+			sprite = gss().bonusValueSprite(bonus.symbol());
 			break;
 		default:
 			throw new IllegalArgumentException();

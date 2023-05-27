@@ -15,8 +15,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
 public class PacManCreditScene extends GameScene2D {
 
 	@Override
-	protected PacManGameSpritesheet r() {
-		return (PacManGameSpritesheet) super.r();
+	protected PacManGameSpritesheet gss() {
+		return (PacManGameSpritesheet) super.gss();
 	}
 
 	@Override

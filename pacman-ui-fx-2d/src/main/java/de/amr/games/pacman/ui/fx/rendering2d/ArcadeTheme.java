@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.scene.paint.Color;
 
 /**
@@ -30,7 +29,7 @@ public class ArcadeTheme extends Theme {
 		
 		set("mspacman.icon",                   rm.image("graphics/icons/mspacman.png"));
 		set("mspacman.logo.midway",            rm.image("graphics/mspacman/midway.png"));
-		set("mspacman.spritesheet",            new Spritesheet(rm.image("graphics/mspacman/sprites.png"), 16));
+		set("mspacman.spritesheet",            rm.image("graphics/mspacman/sprites.png"));
 		set("mspacman.flashingMazes",          rm.image("graphics/mspacman/mazes-flashing.png"));
 
 		add("mspacman.maze.foodColor",         Color.rgb(222, 222, 255));
@@ -85,7 +84,7 @@ public class ArcadeTheme extends Theme {
 		// Pac-Man game
 		
 		set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
-		set("pacman.spritesheet",              new Spritesheet(rm.image("graphics/pacman/sprites.png"), 16));
+		set("pacman.spritesheet",              rm.image("graphics/pacman/sprites.png"));
 		set("pacman.flashingMaze",             rm.image("graphics/pacman/maze_empty_flashing.png"));
 		set("pacman.fullMaze",                 rm.image("graphics/pacman/maze_full.png"));
 		set("pacman.emptyMaze",                rm.image("graphics/pacman/maze_empty.png"));
