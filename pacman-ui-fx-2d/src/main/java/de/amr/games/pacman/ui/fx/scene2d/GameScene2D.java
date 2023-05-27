@@ -83,7 +83,7 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	public final BooleanProperty canvasScaledPy = new SimpleBooleanProperty(this, "canvasScaled", false) {
+	public final BooleanProperty canvasScaledPy = new SimpleBooleanProperty(this, "canvasScaled", true) {
 		@Override
 		protected void invalidated() {
 			updateCanvasScaling(get());

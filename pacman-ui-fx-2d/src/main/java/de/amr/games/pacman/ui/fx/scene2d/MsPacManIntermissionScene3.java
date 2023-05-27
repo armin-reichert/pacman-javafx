@@ -52,8 +52,6 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		setSceneCanvasScaled(false);
-
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 

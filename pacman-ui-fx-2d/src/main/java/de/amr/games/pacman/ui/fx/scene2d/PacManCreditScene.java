@@ -41,8 +41,6 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		setSceneCanvasScaled(false);
-
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 	}

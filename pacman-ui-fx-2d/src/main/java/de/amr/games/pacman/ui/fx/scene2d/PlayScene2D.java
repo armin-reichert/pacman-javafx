@@ -53,6 +53,22 @@ import javafx.scene.paint.Color;
 public class PlayScene2D extends GameScene2D {
 
 	@Override
+	public void init() {
+		context.setCreditVisible(!context.hasCredit());
+		context.setScoreVisible(true);
+	}
+
+	@Override
+	public void update() {
+		context.level().ifPresent(this::updateSound);
+	}
+
+	@Override
+	public void end() {
+		context.ui().stopAllSounds();
+	}
+
+	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
 			if (!context.hasCredit()) {
@@ -67,24 +83,6 @@ public class PlayScene2D extends GameScene2D {
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
 			context.ui().cheatKillAllEatableGhosts();
 		}
-	}
-
-	@Override
-	public void init() {
-		setSceneCanvasScaled(false);
-
-		context.setCreditVisible(!context.hasCredit());
-		context.setScoreVisible(true);
-	}
-
-	@Override
-	public void update() {
-		context.level().ifPresent(this::updateSound);
-	}
-
-	@Override
-	public void end() {
-		context.ui().stopAllSounds();
 	}
 
 	@Override
