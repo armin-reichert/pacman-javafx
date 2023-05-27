@@ -209,7 +209,7 @@ public class PacManIntroScene extends GameScene2D {
 		int tx = ic.leftTileX + 6;
 		int ty = 25;
 		g.setFill(context.ui().theme().color("pacman.maze.foodColor"));
-		g.fillRect(t(tx) + 4, t(ty - 1) + 4, 2, 2);
+		g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
 		if (Boolean.TRUE.equals(ic.blinking.frame())) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
 		}
