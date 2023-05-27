@@ -3,7 +3,7 @@
 /.settings/
 /src/main/resources/META-INF
 
-/.idea
+/.idea/
 
 *.ini
 
