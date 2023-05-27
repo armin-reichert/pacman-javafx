@@ -64,7 +64,7 @@ public class BootScene extends GameScene2D {
 				var splitX = TILES_X / 8 + RND.nextInt(TILES_X / 4);
 				for (int col = 0; col < TILES_X / 2; ++col) {
 					var region = col < splitX ? region1 : region2;
-					r().drawSprite(g, region, region.getWidth() * col, region.getHeight() * row);
+					drawSprite(region, region.getWidth() * col, region.getHeight() * row);
 				}
 			}
 		}

@@ -4,18 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -57,54 +54,6 @@ public abstract class GameRenderer {
 	 * @return sprite showing bonus symbol value (100, 300, ...)
 	 */
 	public abstract Rectangle2D bonusValueSprite(int symbol);
-
-	public void drawSprite(GraphicsContext g, Image source, Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			g.drawImage(source, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x, y, sprite.getWidth(), sprite.getHeight());
-		}
-	}
-
-	/**
-	 * Draws a sprite at the given position. The position specifies the left-upper corner.
-	 * 
-	 * @param g graphics context
-	 * @param sprite sprite (may be null)
-	 * @param x x position
-	 * @param y y position
-	 */
-	public void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
-		drawSprite(g, spritesheet().source(), sprite, x, y);
-	}
-
-	/**
-	 * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
-	 * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
-	 * bounding box is only 8 pixels (one square tile) wide.
-	 * 
-	 * @param g graphics context
-	 * @param sprite spritesheet region (may be null)
-	 * @param x x coordinate of left-upper corner of bounding box
-	 * @param y y coordinate of left-upper corner of bounding box
-	 */
-	public void drawSpriteOverBoundingBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			drawSprite(g, sprite, x + HTS - sprite.getWidth() / 2, y + HTS - sprite.getHeight() / 2);
-		}
-	}
-
-	/**
-	 * Draws the sprite over the bounding box of the given entity (if visible).
-	 * 
-	 * @param g      graphics context
-	 * @param entity an entity like Pac-Man or a ghost
-	 * @param sprite      the sprite
-	 */
-	protected void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D sprite) {
-		checkNotNull(entity);
-		if (entity.isVisible()) {
-			drawSpriteOverBoundingBox(g, sprite, entity.position().x(), entity.position().y());
-		}
-	}
 
 	public void drawWishDirIndicator(GraphicsContext g, Pac pac) {
 		g.setFill(Color.RED);

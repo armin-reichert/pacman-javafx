@@ -147,7 +147,7 @@ public class PacManCutscene2 extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		if (stretchedDressAnimation != null) {
-			r().drawSprite(g, (Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+			drawSprite((Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 		}
 		drawGhostSprite(blinky);
 		drawPacSprite(pac);
