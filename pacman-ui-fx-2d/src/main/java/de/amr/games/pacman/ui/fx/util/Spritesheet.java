@@ -69,8 +69,8 @@ public class Spritesheet {
 		return new Rectangle2D(col * raster, row * raster, raster, raster);
 	}
 
-	public Rectangle2D tile(int col, int row, double margin) {
-		return new Rectangle2D(col * raster + margin, row * raster + margin, raster - 2 * margin, raster - 2 * margin);
+	public Rectangle2D tile(int col, int row, double width, double height) {
+		return new Rectangle2D(col * raster, row * raster, width, height);
 	}
 
 	public Rectangle2D region(double x, double y, double w, double h) {

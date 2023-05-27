@@ -67,7 +67,7 @@ public class PacManGameRenderer extends GameRenderer {
 
 	@Override
 	public Rectangle2D livesCounterSprite() {
-		return spritesheet().tile(8, 1, 1.0);
+		return spritesheet().region(129, 16, 15, 15); // WTF
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class PacManGameRenderer extends GameRenderer {
 		for (var dir : Direction.values()) {
 			int d = DIR_ORDER.index(dir);
 			var wide = spritesheet().tile(0, d);
-			var middle = spritesheet().tile(1, d);
+			var middle = spritesheet().region(16, d * 16, 16, 16); // WTF
 			var closed = spritesheet().tile(2, 0);
 			var animation = new SimpleAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle);
 			animation.setFrameDuration(1);
@@ -153,8 +153,9 @@ public class PacManGameRenderer extends GameRenderer {
 	// Pac-Man specific:
 
 	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new SimpleAnimation<>(spritesheet().tiles(2, 1, 2, 2), spritesheet().tiles(4, 1, 2, 2),
-				spritesheet().tiles(6, 1, 2, 2));
+		var animation = new SimpleAnimation<>(// WTF!
+				spritesheet().region(31, 15, 32, 34), spritesheet().region(63, 15, 32, 34),
+				spritesheet().region(95, 15, 34, 34));
 		animation.setFrameDuration(3);
 		animation.repeatForever();
 		return animation;
