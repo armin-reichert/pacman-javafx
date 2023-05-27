@@ -28,80 +28,54 @@ import static de.amr.games.pacman.lib.Globals.RND;
 
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
 
 /**
  * @author Armin Reichert
  */
 public class BootScene extends GameScene2D {
 
-	// canvas where next scene content is created
-	private final Canvas contentCanvas;
-	private final GraphicsContext ctx;
-
-	// current scene content
-	private final WritableImage sceneImage;
-
-	public BootScene() {
-		contentCanvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
-		ctx = contentCanvas.getGraphicsContext2D();
-		sceneImage = new WritableImage(WIDTH_UNSCALED, HEIGHT_UNSCALED);
-	}
-
 	@Override
 	public void init() {
 		setSceneCanvasScaled(true);
-
 		context.setScoreVisible(false);
-		eraseContent();
-		updateSceneImage();
 	}
 
 	@Override
-	public void drawSceneContent() {
-		g.drawImage(sceneImage, 0, 0);
-	}
-
-	@Override
-	public void update() {
+	public void render() {
 		var timer = context.state().timer();
-		if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 4 == 0) {
+		if (timer.tick() == 1) {
+			drawSceneBackground();
+		} else if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 4 == 0) {
+			drawSceneBackground();
 			paintRandomHexCodes();
 		} else if (timer.betweenSeconds(2.0, 3.5) && timer.tick() % 4 == 0) {
+			drawSceneBackground();
 			paintRandomSprites();
 		} else if (timer.atSecond(3.5)) {
-			paintGrid();
+			drawSceneBackground();
+			paintGrid(16);
 		} else if (timer.atSecond(4.0)) {
 			context.gameController().terminateCurrentState();
 		}
 	}
 
-	private void eraseContent() {
-		ctx.setFill(ArcadeTheme.BLACK);
-		ctx.fillRect(0, 0, contentCanvas.getWidth(), contentCanvas.getHeight());
-	}
-
-	private void updateSceneImage() {
-		contentCanvas.snapshot(null, sceneImage);
+	@Override
+	protected void drawSceneContent() {
+		// not used here
 	}
 
 	private void paintRandomHexCodes() {
-		eraseContent();
-		ctx.setFill(ArcadeTheme.PALE);
-		ctx.setFont(sceneFont());
+		g.setFill(ArcadeTheme.PALE);
+		g.setFont(sceneFont());
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));
-				ctx.fillText(hexCode, t(col), t(row + 1));
+				g.fillText(hexCode, t(col), t(row + 1));
 			}
 		}
-		updateSceneImage();
 	}
 
 	private void paintRandomSprites() {
-		eraseContent();
 		for (int row = 0; row < TILES_Y / 2; ++row) {
 			if (RND.nextInt(100) > 10) {
 				var region1 = randomSpritesheetTile();
@@ -109,11 +83,10 @@ public class BootScene extends GameScene2D {
 				var splitX = TILES_X / 8 + RND.nextInt(TILES_X / 4);
 				for (int col = 0; col < TILES_X / 2; ++col) {
 					var region = col < splitX ? region1 : region2;
-					r().drawSprite(ctx, region, region.getWidth() * col, region.getHeight() * row);
+					r().drawSprite(g, region, region.getWidth() * col, region.getHeight() * row);
 				}
 			}
 		}
-		updateSceneImage();
 	}
 
 	private Rectangle2D randomSpritesheetTile() {
@@ -124,19 +97,16 @@ public class BootScene extends GameScene2D {
 		return new Rectangle2D(x, y, raster, raster);
 	}
 
-	private void paintGrid() {
-		eraseContent();
-		var cellSize = 16;
+	private void paintGrid(int raster) {
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
-		ctx.setStroke(ArcadeTheme.PALE);
-		ctx.setLineWidth(2.0);
+		g.setStroke(ArcadeTheme.PALE);
+		g.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			ctx.strokeLine(0, row * cellSize, WIDTH_UNSCALED, row * cellSize);
+			g.strokeLine(0, row * raster, WIDTH_UNSCALED, row * raster);
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			ctx.strokeLine(col * cellSize, 0, col * cellSize, HEIGHT_UNSCALED);
+			g.strokeLine(col * raster, 0, col * raster, HEIGHT_UNSCALED);
 		}
-		updateSceneImage();
 	}
 }

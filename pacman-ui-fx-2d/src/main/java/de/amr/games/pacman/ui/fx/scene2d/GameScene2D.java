@@ -86,7 +86,7 @@ public abstract class GameScene2D implements GameScene {
 	public final BooleanProperty canvasScaledPy = new SimpleBooleanProperty(this, "canvasScaled", false) {
 		@Override
 		protected void invalidated() {
-			updateCanvasScaling();
+			updateCanvasScaling(get());
 		}
 	};
 
@@ -125,25 +125,7 @@ public abstract class GameScene2D implements GameScene {
 		});
 
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
-		updateCanvasScaling();
-	}
-
-	private void updateCanvasScaling() {
-		if (canvasScaledPy.get()) {
-			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
-			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT_UNSCALED));
-			canvas.widthProperty().unbind();
-			canvas.heightProperty().unbind();
-			canvas.setWidth(WIDTH_UNSCALED);
-			canvas.setHeight(HEIGHT_UNSCALED);
-		} else {
-			canvas.scaleXProperty().unbind();
-			canvas.scaleYProperty().unbind();
-			canvas.setScaleX(1);
-			canvas.setScaleY(1);
-			canvas.widthProperty().bind(fxSubScene.widthProperty());
-			canvas.heightProperty().bind(fxSubScene.heightProperty());
-		}
+		updateCanvasScaling(canvasScaledPy.get());
 	}
 
 	protected double s(double value) {
@@ -172,6 +154,24 @@ public abstract class GameScene2D implements GameScene {
 
 	public void setWallpaperColor(Color wallpaperColor) {
 		this.wallpaperColor = wallpaperColor;
+	}
+
+	private void updateCanvasScaling(boolean scaled) {
+		if (scaled) {
+			canvas.scaleXProperty().bind(fxSubScene.widthProperty().divide(WIDTH_UNSCALED));
+			canvas.scaleYProperty().bind(fxSubScene.heightProperty().divide(HEIGHT_UNSCALED));
+			canvas.widthProperty().unbind();
+			canvas.heightProperty().unbind();
+			canvas.setWidth(WIDTH_UNSCALED);
+			canvas.setHeight(HEIGHT_UNSCALED);
+		} else {
+			canvas.scaleXProperty().unbind();
+			canvas.scaleYProperty().unbind();
+			canvas.setScaleX(1);
+			canvas.setScaleY(1);
+			canvas.widthProperty().bind(fxSubScene.widthProperty());
+			canvas.heightProperty().bind(fxSubScene.heightProperty());
+		}
 	}
 
 	// TODO: not sure if this logic belongs here...
