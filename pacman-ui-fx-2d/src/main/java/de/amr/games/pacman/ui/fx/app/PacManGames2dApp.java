@@ -22,7 +22,9 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void init() {
-		settings.merge(getParameters().getNamed());
+		if (getParameters() != null) {
+			settings.merge(getParameters().getNamed());
+		}
 		Logger.info("Game initialized: {}", settings);
 	}
 
