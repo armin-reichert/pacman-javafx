@@ -1,5 +1,13 @@
 # A JavaFX UI (2D + 3D) for Pac-Man and Ms. Pac-Man
 
+## ℹ️ Online version available
+
+Both games (2D version) can now also be played online:
+- [Pac-Man](https://pacman.webfx.dev/)
+- [Ms. Pac-Man](https://mspacman.webfx.dev/)
+
+This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler technology (:+1: to Bruno Salmon).
+
 ## About this project
 
 JavaFX user interfaces for my UI-agnostic/faceless [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic). There is a 2D-only user interface and
