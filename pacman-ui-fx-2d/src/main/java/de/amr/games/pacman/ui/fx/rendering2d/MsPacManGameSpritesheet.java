@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -128,19 +126,6 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 		return region(509, 200, 8, 8);
 	}
 
-	public AnimationByDirection createPacManMunchingAnimationMap(Pac pac) {
-		var animationByDir = new AnimationByDirection(pac::moveDir);
-		for (var dir : Direction.values()) {
-			int d = DIR_ORDER.index(dir);
-			var animation = new SimpleAnimation<>(tileFromThirdColumn(0, 9 + d), tileFromThirdColumn(1, 9 + d),
-					tileFromThirdColumn(2, 9));
-			animation.setFrameDuration(2);
-			animation.repeatForever();
-			animationByDir.put(dir, animation);
-		}
-		return animationByDir;
-	}
-
 	public SpriteAnimation createClapperboardAnimation() {
 		var animation = new SpriteAnimation();
 		// TODO this is not 100% accurate yet
@@ -156,6 +141,7 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 		return animation;
 	}
 
+	// TODO convert to sprite animation
 	public SimpleAnimation<Rectangle2D> createStorkFlyingAnimation() {
 		var animation = new SimpleAnimation<>( //
 				region(489, 176, 32, 16), //
