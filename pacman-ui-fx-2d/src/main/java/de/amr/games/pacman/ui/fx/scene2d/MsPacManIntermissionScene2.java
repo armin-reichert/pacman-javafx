@@ -7,6 +7,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission2;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimation;
+import javafx.util.Duration;
 
 /**
  * Intermission scene 2: "The chase".
@@ -20,6 +22,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	private MsPacManIntermission2 im;
 	private MsPacManIntermission2.Context imc;
+	private SpriteAnimation clapAnimation;
 
 	@Override
 	protected MsPacManGameSpritesheet gss() {
@@ -36,8 +39,6 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 		im.changeState(MsPacManIntermission2.State.FLAP);
 
-		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
-
 		imc.msPacMan.setAnimations(new PacSpriteAnimations(imc.msPacMan, gss()));
 
 		imc.pacMan.setAnimations(new PacSpriteAnimations(imc.pacMan, gss()));
@@ -47,6 +48,9 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 //			animations.put(GameModel.AK_PAC_MUNCHING, munching);
 //			animations.ensureRunning();
 //		});
+		clapAnimation = gss().createClapperboardAnimation();
+		clapAnimation.setDelay(Duration.seconds(1));
+		clapAnimation.start();
 	}
 
 	@Override
@@ -56,7 +60,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawClap(imc.clapperboard);
+		drawClap(imc.clapperboard, clapAnimation);
 		drawPacSprite(imc.msPacMan);
 		drawPacSprite(imc.pacMan);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());

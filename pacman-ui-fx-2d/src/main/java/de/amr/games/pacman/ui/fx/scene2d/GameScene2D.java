@@ -12,7 +12,6 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 import java.util.List;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Clapperboard;
 import de.amr.games.pacman.model.actors.Entity;
@@ -25,6 +24,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.animation.Animation.Status;
@@ -357,21 +357,19 @@ public abstract class GameScene2D implements GameScene {
 		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALE, sceneFont(), x, y);
 	}
 
-	protected void drawClap(Clapperboard clap) {
+	protected void drawClap(Clapperboard clap, SpriteAnimation clapAnimation) {
 		if (clap.isVisible()) {
-			clap.animation().map(Animated::animate).ifPresent(frame -> {
-				var sprite = (Rectangle2D) frame;
-				if (clap.isVisible()) {
-					drawSpriteOverBoundingBox(sprite, clap.position().x(), clap.position().y());
-				}
-				g.setFont(sceneFont());
-				g.setFill(ArcadeTheme.PALE);
-				var numberX = s(clap.position().x() + sprite.getWidth() - 25);
-				var numberY = s(clap.position().y() + 18);
-				g.fillText(clap.number(), numberX, numberY);
+			var sprite = clapAnimation.frame();
+			drawSpriteOverBoundingBox(sprite, clap.position().x(), clap.position().y());
+			g.setFont(sceneFont());
+			g.setFill(ArcadeTheme.PALE);
+			var numberX = s(clap.position().x() + sprite.getWidth() - 25);
+			var numberY = s(clap.position().y() + 18);
+			g.fillText(clap.number(), numberX, numberY);
+			if (clapAnimation.isRunning()) {
 				var textX = s(clap.position().x() + sprite.getWidth());
 				g.fillText(clap.text(), textX, numberY);
-			});
+			}
 		}
 	}
 

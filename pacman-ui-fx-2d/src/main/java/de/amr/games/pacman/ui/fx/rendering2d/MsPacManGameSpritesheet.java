@@ -141,9 +141,10 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 		return animationByDir;
 	}
 
-	public SimpleAnimation<Rectangle2D> createClapperboardAnimation() {
+	public SpriteAnimation createClapperboardAnimation() {
+		var animation = new SpriteAnimation();
 		// TODO this is not 100% accurate yet
-		var animation = new SimpleAnimation<>( //
+		animation.setSprites( //
 				region(456, 208, 32, 32), //
 				region(488, 208, 32, 32), //
 				region(520, 208, 32, 32), //
@@ -151,6 +152,7 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 				region(456, 208, 32, 32)//
 		);
 		animation.setFrameDuration(4);
+		animation.build();
 		return animation;
 	}
 

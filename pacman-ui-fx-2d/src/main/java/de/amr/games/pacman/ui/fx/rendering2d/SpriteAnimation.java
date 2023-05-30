@@ -8,6 +8,7 @@ import org.tinylog.Logger;
 
 import de.amr.games.pacman.model.GameModel;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
@@ -57,8 +58,16 @@ public class SpriteAnimation {
 		transition.stop();
 	}
 
+	public boolean isRunning() {
+		return transition.getStatus() == Status.RUNNING;
+	}
+
 	public void setSprites(Rectangle2D... sprites) {
 		this.sprites = sprites;
+	}
+
+	public void setDelay(Duration delay) {
+		transition.setDelay(delay);
 	}
 
 	public void setFrameDuration(int ticks) {

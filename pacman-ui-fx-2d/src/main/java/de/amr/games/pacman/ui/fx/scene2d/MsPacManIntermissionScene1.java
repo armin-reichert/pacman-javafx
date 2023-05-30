@@ -9,6 +9,8 @@ import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimation;
+import javafx.util.Duration;
 
 /**
  * Intermission scene 1: "They meet".
@@ -23,6 +25,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	private MsPacManIntermission1 im;
 	private MsPacManIntermission1.Context imc;
+	private SpriteAnimation clapAnimation;
 
 	@Override
 	protected MsPacManGameSpritesheet gss() {
@@ -38,7 +41,6 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		imc = im.context();
 		im.changeState(MsPacManIntermission1.State.FLAP);
 
-		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
 		imc.msPac.setAnimations(new PacSpriteAnimations(imc.msPac, gss()));
 		imc.msPac.selectAnimation(PacAnimations.PAC_MUNCHING);
 
@@ -54,6 +56,10 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 		imc.inky.setAnimations(new GhostSpriteAnimations(imc.inky, gss()));
 		imc.pinky.setAnimations(new GhostSpriteAnimations(imc.pinky, gss()));
+
+		clapAnimation = gss().createClapperboardAnimation();
+		clapAnimation.setDelay(Duration.seconds(1));
+		clapAnimation.start();
 	}
 
 	@Override
@@ -63,7 +69,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawClap(imc.clapperboard);
+		drawClap(imc.clapperboard, clapAnimation);
 		drawPacSprite(imc.msPac);
 		drawPacSprite(imc.pacMan);
 		drawGhostSprite(imc.inky);
