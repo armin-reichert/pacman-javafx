@@ -123,7 +123,7 @@ public class PlayScene2D extends GameScene2D {
 				var flashingMazeSprite = mpr.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(gss().source(), mpr.emptyMaze(mazeNumber), x, y);
+				drawSprite(gss().sheet().source(), mpr.emptyMaze(mazeNumber), x, y);
 			}
 		} else {
 			// draw filled maze and hide eaten food (including energizers)

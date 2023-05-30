@@ -73,7 +73,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		normalAnimationByDir = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			var animation = new SpriteAnimation();
-			animation.setSprites(gss.normalGhostSprites(ghost.id(), dir));
+			animation.setSprites(gss.ghostNormalSprites(ghost.id(), dir));
 			animation.setFrameDuration(8);
 			animation.repeatForever();
 			animation.build();
@@ -83,7 +83,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
 	private void createFrightenedAnimation() {
 		frightenedAnimation = new SpriteAnimation();
-		frightenedAnimation.setSprites(gss.blueGhostSprites());
+		frightenedAnimation.setSprites(gss.ghostFrightenedSprites());
 		frightenedAnimation.setFrameDuration(8);
 		frightenedAnimation.repeatForever();
 		frightenedAnimation.build();
@@ -91,7 +91,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
 	private void createFlashingAnimation() {
 		flashingAnimation = new SpriteAnimation();
-		flashingAnimation.setSprites(gss.flashingGhostSprites());
+		flashingAnimation.setSprites(gss.ghostFlashingSprites());
 		flashingAnimation.setFrameDuration(6);
 		flashingAnimation.repeatForever();
 		flashingAnimation.build();
@@ -101,7 +101,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		eyesAnimationByDir = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			var animation = new SpriteAnimation();
-			animation.setSprites(gss.eyesGhostSprites(dir));
+			animation.setSprites(gss.ghostEyesSprites(dir));
 			animation.build();
 			eyesAnimationByDir.put(dir, animation);
 		}
@@ -109,7 +109,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
 	private void createNumberAnimation() {
 		numberAnimation = new SpriteAnimation();
-		numberAnimation.setSprites(gss.numberSprites());
+		numberAnimation.setSprites(gss.ghostNumberSprites());
 		numberAnimation.setFrameDuration(Integer.MAX_VALUE);
 		numberAnimation.build();
 	}
@@ -235,7 +235,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		var sprite = currentAnimation.frame();
 		var x = ghost.position().x() + HTS - sprite.getWidth() / 2;
 		var y = ghost.position().y() + HTS - sprite.getHeight() / 2;
-		drawSprite(g, gss.source(), sprite, x, y);
+		drawSprite(g, gss.sheet().source(), sprite, x, y);
 	}
 
 	private SpriteAnimation animationByName(String name) {

@@ -150,13 +150,13 @@ public class GameLevel3D {
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus, GameSpritesheet gss, boolean moving) {
-		var symbolImage = gss.subImage(gss.bonusSymbolSprite(bonus.symbol()));
-		var pointsImage = gss.subImage(gss.bonusValueSprite(bonus.symbol()));
+		var symbolImage = gss.sheet().subImage(gss.bonusSymbolSprite(bonus.symbol()));
+		var pointsImage = gss.sheet().subImage(gss.bonusValueSprite(bonus.symbol()));
 		return new Bonus3D(bonus, symbolImage, pointsImage, moving);
 	}
 
 	private LevelCounter3D createLevelCounter3D(GameSpritesheet gss) {
-		var symbolImages = level.game().levelCounter().stream().map(gss::bonusSymbolSprite).map(gss::subImage)
+		var symbolImages = level.game().levelCounter().stream().map(gss::bonusSymbolSprite).map(gss.sheet()::subImage)
 				.toArray(Image[]::new);
 		return new LevelCounter3D(symbolImages);
 	}

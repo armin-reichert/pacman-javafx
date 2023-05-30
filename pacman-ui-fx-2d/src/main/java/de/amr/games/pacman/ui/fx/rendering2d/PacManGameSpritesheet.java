@@ -28,7 +28,7 @@ public class PacManGameSpritesheet extends Spritesheet implements GameSpriteshee
 	}
 
 	@Override
-	public Rectangle2D[] numberSprites() {
+	public Rectangle2D[] ghostNumberSprites() {
 		return tilesRightOf(0, 8, 4);
 	}
 
@@ -73,23 +73,23 @@ public class PacManGameSpritesheet extends Spritesheet implements GameSpriteshee
 	}
 
 	@Override
-	public Rectangle2D[] normalGhostSprites(byte ghostID, Direction dir) {
+	public Rectangle2D[] ghostNormalSprites(byte ghostID, Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		return tilesRightOf(2 * d, 4 + ghostID, 2);
 	}
 
 	@Override
-	public Rectangle2D[] blueGhostSprites() {
+	public Rectangle2D[] ghostFrightenedSprites() {
 		return new Rectangle2D[] { tile(8, 4), tile(9, 4) };
 	}
 
 	@Override
-	public Rectangle2D[] flashingGhostSprites() {
+	public Rectangle2D[] ghostFlashingSprites() {
 		return tilesRightOf(8, 4, 4);
 	}
 
 	@Override
-	public Rectangle2D[] eyesGhostSprites(Direction dir) {
+	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		return new Rectangle2D[] { tile(8 + d, 5) };
 	}

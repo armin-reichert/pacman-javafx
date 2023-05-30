@@ -176,7 +176,7 @@ public class PacSpriteAnimations implements PacAnimations {
 		var sprite = currentAnimation.frame();
 		var x = pac.position().x() + HTS - sprite.getWidth() / 2;
 		var y = pac.position().y() + HTS - sprite.getHeight() / 2;
-		drawSprite(g, gss.source(), sprite, x, y);
+		drawSprite(g, gss.sheet().source(), sprite, x, y);
 	}
 
 	private SpriteAnimation animationByName(String name) {

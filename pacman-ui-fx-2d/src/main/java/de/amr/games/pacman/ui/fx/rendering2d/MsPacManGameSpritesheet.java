@@ -40,7 +40,7 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 	}
 
 	@Override
-	public Rectangle2D[] numberSprites() {
+	public Rectangle2D[] ghostNumberSprites() {
 		return new Rectangle2D[] { tileFromThirdColumn(0, 8), tileFromThirdColumn(1, 8), tileFromThirdColumn(2, 8),
 				tileFromThirdColumn(3, 8) };
 	}
@@ -92,24 +92,24 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 	}
 
 	@Override
-	public Rectangle2D[] normalGhostSprites(byte ghostID, Direction dir) {
+	public Rectangle2D[] ghostNormalSprites(byte ghostID, Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		return new Rectangle2D[] { tileFromThirdColumn(2 * d, 4 + ghostID), tileFromThirdColumn(2 * d + 1, 4 + ghostID) };
 	}
 
 	@Override
-	public Rectangle2D[] blueGhostSprites() {
+	public Rectangle2D[] ghostFrightenedSprites() {
 		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4) };
 	}
 
 	@Override
-	public Rectangle2D[] flashingGhostSprites() {
+	public Rectangle2D[] ghostFlashingSprites() {
 		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4), tileFromThirdColumn(10, 4),
 				tileFromThirdColumn(11, 4) };
 	}
 
 	@Override
-	public Rectangle2D[] eyesGhostSprites(Direction dir) {
+	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		return new Rectangle2D[] { tileFromThirdColumn(8 + d, 5) };
 	}
