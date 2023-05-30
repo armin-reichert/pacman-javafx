@@ -4,11 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -51,14 +47,6 @@ public class PacManGameSpritesheet extends Spritesheet implements GameSpriteshee
 			return region(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
 		}
 		return tiles(3, 5 + symbol, 3, 1);
-	}
-
-	@Override
-	public AnimationMap createWorldAnimations(World world) {
-		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
-		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
-		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
-		return map;
 	}
 
 	public Rectangle2D ghostFacingRight(int ghostID) {

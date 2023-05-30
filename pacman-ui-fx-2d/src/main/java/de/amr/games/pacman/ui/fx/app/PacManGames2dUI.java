@@ -393,7 +393,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			}
 			level.pac().setAnimations(new PacSpriteAnimations(level.pac(), spritesheet));
 			level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimations(ghost, spritesheet)));
-			level.world().setAnimations(spritesheet.createWorldAnimations(level.world()));
 			Logger.trace("Created creature and world animations for level #{}", level.number());
 		});
 		updateGameScene(true);

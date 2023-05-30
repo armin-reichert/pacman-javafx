@@ -4,9 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -42,8 +40,6 @@ public interface GameSpritesheet {
 	 * @return sprite showing bonus symbol value (100, 300, ...)
 	 */
 	Rectangle2D bonusValueSprite(int symbol);
-
-	AnimationMap createWorldAnimations(World world);
 
 	Rectangle2D[] pacMunchingSprites(Direction dir);
 

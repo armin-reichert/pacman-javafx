@@ -5,13 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
-import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -74,14 +70,6 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 
 	public Rectangle2D filledMaze(int mazeNumber) {
 		return region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-	}
-
-	@Override
-	public AnimationMap createWorldAnimations(World world) {
-		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
-		map.put(GameModel.AK_MAZE_ENERGIZER_BLINKING, new Pulse(10, true));
-		map.put(GameModel.AK_MAZE_FLASHING, new Pulse(10, true));
-		return map;
 	}
 
 	@Override

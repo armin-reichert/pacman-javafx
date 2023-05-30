@@ -101,19 +101,15 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawPacManMaze(double x, double y, World world) {
-		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
-		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			var flashing = (boolean) flashingAnimation.get().frame();
-			var image = flashing ? context.ui().theme().image("pacman.flashingMaze")
+		if (world.getMazeFlashing().isRunning()) {
+			var image = world.getMazeFlashing().frame() ? context.ui().theme().image("pacman.flashingMaze")
 					: context.ui().theme().image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
 			var image = context.ui().theme().image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
-			var energizerBlinking = world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING);
-			boolean energizerVisible = energizerBlinking.isPresent() && (boolean) energizerBlinking.get().frame();
-			if (!energizerVisible) {
+			if (!world.getEnergizerBlinking().frame()) {
 				world.energizerTiles().forEach(this::hideTileContent);
 			}
 		}
@@ -121,10 +117,8 @@ public class PlayScene2D extends GameScene2D {
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
 		var mpr = (MsPacManGameSpritesheet) gss();
-		var flashingAnimation = world.animation(GameModel.AK_MAZE_FLASHING);
-		if (flashingAnimation.isPresent() && flashingAnimation.get().isRunning()) {
-			var flashing = (boolean) flashingAnimation.get().frame();
-			if (flashing) {
+		if (world.getMazeFlashing().isRunning()) {
+			if (world.getMazeFlashing().frame()) {
 				var source = context.ui().theme().image("mspacman.flashingMazes");
 				var flashingMazeSprite = mpr.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
@@ -136,11 +130,9 @@ public class PlayScene2D extends GameScene2D {
 			drawSprite(mpr.filledMaze(mazeNumber), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
 			// energizer animation
-			world.animation(GameModel.AK_MAZE_ENERGIZER_BLINKING).ifPresent(blinking -> {
-				if (Boolean.FALSE.equals(blinking.frame())) {
-					world.energizerTiles().forEach(this::hideTileContent);
-				}
-			});
+			if (!world.getEnergizerBlinking().frame()) {
+				world.energizerTiles().forEach(this::hideTileContent);
+			}
 		}
 	}
 
