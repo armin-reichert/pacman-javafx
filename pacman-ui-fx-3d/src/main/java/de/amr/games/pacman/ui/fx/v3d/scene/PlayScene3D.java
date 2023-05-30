@@ -364,7 +364,7 @@ public class PlayScene3D implements GameScene {
 				level.memo().killedGhosts.forEach(killedGhost -> {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					ghost3D.setNumberImage(context.gss().subImage(context.gss().ghostValueSprite(index)));
+					ghost3D.setNumberImage(context.gss().subImage(context.gss().numberSprites()[index]));
 				});
 			});
 		}

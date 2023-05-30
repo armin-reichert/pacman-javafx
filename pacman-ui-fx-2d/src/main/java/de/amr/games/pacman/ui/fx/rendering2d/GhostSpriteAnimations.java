@@ -19,7 +19,7 @@ import javafx.scene.image.Image;
 /**
  * @author Armin Reichert
  */
-public class GhostSpriteAnimations implements GhostAnimations {
+public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
 	private final Ghost ghost;
 	private GameSpritesheet gss;
@@ -150,6 +150,16 @@ public class GhostSpriteAnimations implements GhostAnimations {
 				gss.sheet().region(95, 15, 34, 34));
 		bigPacManAnimation.setFrameDuration(3);
 		bigPacManAnimation.repeatForever();
+	}
+
+	@Override
+	public String selectedAnimationName() {
+		return currentAnimationName;
+	}
+
+	@Override
+	public SpriteAnimation selectedAnimation() {
+		return currentAnimation;
 	}
 
 	@Override
