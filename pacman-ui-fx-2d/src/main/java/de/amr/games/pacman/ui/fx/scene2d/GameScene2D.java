@@ -23,6 +23,8 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.animation.Animation.Status;
@@ -296,27 +298,19 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawPacSprite(Pac pac) {
-		pac.animation().ifPresent(animation -> {
-			if (pac.isVisible()) {
-				var sprite = (Rectangle2D) animation.frame();
-				var x = pac.position().x() + HTS - sprite.getWidth() / 2;
-				var y = pac.position().y() + HTS - sprite.getHeight() / 2;
-				// TODO check the blitzer cause and remove -1 workaround
-				g.drawImage(gss().source(), sprite.getMinX(), sprite.getMinY(), sprite.getWidth() - 1, sprite.getHeight() - 1,
-						s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
-			}
-		});
+		var anim = pac.animations();
+		if (anim.isPresent() && anim.get() instanceof PacSpriteAnimations) {
+			PacSpriteAnimations gsa = (PacSpriteAnimations) anim.get();
+			gsa.draw(g); // TODO check blitzers
+		}
 	}
 
 	protected void drawGhostSprite(Ghost ghost) {
-		ghost.animation().ifPresent(animation -> {
-			if (ghost.isVisible()) {
-				var sprite = (Rectangle2D) animation.frame();
-				var x = ghost.position().x() + HTS - sprite.getWidth() / 2;
-				var y = ghost.position().y() + HTS - sprite.getHeight() / 2;
-				drawSprite(sprite, x, y);
-			}
-		});
+		var anim = ghost.animations();
+		if (anim.isPresent() && anim.get() instanceof GhostSpriteAnimations) {
+			GhostSpriteAnimations gsa = (GhostSpriteAnimations) anim.get();
+			gsa.draw(g); // TODO check blitzers
+		}
 	}
 
 	protected void drawSprite(Image source, Rectangle2D sprite, double x, double y) {

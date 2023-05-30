@@ -5,9 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission2;
-import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 
 /**
  * Intermission scene 2: "The chase".
@@ -38,14 +37,16 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		im.changeState(MsPacManIntermission2.State.FLAP);
 
 		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
-		imc.msPacMan.setAnimations(gss().createPacAnimations(imc.msPacMan));
-		imc.msPacMan.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pacMan.setAnimations(gss().createPacAnimations(imc.pacMan));
-		imc.pacMan.animations().ifPresent(animations -> {
-			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
-			animations.put(GameModel.AK_PAC_MUNCHING, munching);
-			animations.ensureRunning();
-		});
+
+		imc.msPacMan.setAnimations(new PacSpriteAnimations(imc.msPacMan, gss()));
+
+		imc.pacMan.setAnimations(new PacSpriteAnimations(imc.pacMan, gss()));
+		// TODO take Pac-Man animations from Ms. Pac-Man spritesheet
+//		imc.pacMan.animations().ifPresent(animations -> {
+//			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
+//			animations.put(GameModel.AK_PAC_MUNCHING, munching);
+//			animations.ensureRunning();
+//		});
 	}
 
 	@Override

@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -42,10 +42,13 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		im.changeState(MsPacManIntermission3.State.FLAP);
 
 		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
-		imc.msPacMan.setAnimations(gss().createPacAnimations(imc.msPacMan));
-		imc.pacMan.setAnimations(gss().createPacAnimations(imc.pacMan));
-		imc.pacMan.animations()
-				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, gss().createPacManMunchingAnimationMap(imc.pacMan)));
+
+		imc.msPacMan.setAnimations(new PacSpriteAnimations(imc.msPacMan, gss()));
+
+		imc.pacMan.setAnimations(new PacSpriteAnimations(imc.pacMan, gss()));
+		// TODO take Pac-Man animations from Ms. Pac-Man spritesheet
+//		imc.pacMan.animations()
+//				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, gss().createPacManMunchingAnimationMap(imc.pacMan)));
 
 		storkAnimation = gss().createStorkFlyingAnimation();
 		storkAnimation.start();

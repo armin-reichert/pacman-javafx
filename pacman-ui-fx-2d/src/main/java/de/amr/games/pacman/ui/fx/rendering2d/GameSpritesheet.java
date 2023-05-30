@@ -5,9 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
@@ -17,6 +18,8 @@ import javafx.scene.image.Image;
  * @author Armin Reichert
  */
 public interface GameSpritesheet {
+
+	Spritesheet sheet();
 
 	Image source();
 
@@ -28,11 +31,6 @@ public interface GameSpritesheet {
 	 * @return sprite used in lives counter
 	 */
 	Rectangle2D livesCounterSprite();
-
-	/**
-	 * @return sprite showing ghost value (200, 400, 800, 1600)
-	 */
-	Rectangle2D ghostValueSprite(int index);
 
 	/**
 	 * @param symbol bonus symbol (index)
@@ -48,7 +46,20 @@ public interface GameSpritesheet {
 
 	AnimationMap createPacAnimations(Pac pac);
 
-	AnimationMap createGhostAnimations(Ghost ghost);
-
 	AnimationMap createWorldAnimations(World world);
+
+	Rectangle2D[] pacMunchingSprites(Direction dir);
+
+	Rectangle2D[] pacDyingSprites();
+
+	Rectangle2D[] normalGhostSprites(byte ghostID, Direction dir);
+
+	Rectangle2D[] blueGhostSprites();
+
+	Rectangle2D[] flashingGhostSprites();
+
+	Rectangle2D[] eyesGhostSprites(Direction dir);
+
+	Rectangle2D[] numberSprites();
+
 }

@@ -7,10 +7,14 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.GhostAnimations;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -46,13 +50,12 @@ public class MsPacManIntroScene extends GameScene2D {
 		});
 		intro.changeState(MsPacManIntro.State.START);
 
-		var msPacAnimations = gss().createPacAnimations(intro.context().msPacMan);
-		intro.context().msPacMan.setAnimations(msPacAnimations);
-		msPacAnimations.start();
+		var msPacMan = intro.context().msPacMan;
+		msPacMan.setAnimations(new PacSpriteAnimations(msPacMan, gss()));
+		msPacMan.selectAnimation(PacAnimations.PAC_MUNCHING);
 		intro.context().ghosts.forEach(ghost -> {
-			var ghostAnimations = gss().createGhostAnimations(ghost);
-			ghost.setAnimations(ghostAnimations);
-			ghostAnimations.start();
+			ghost.setAnimations(new GhostSpriteAnimations(ghost, gss()));
+			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
 		});
 
 		signature.setNameFont(context.ui().theme().font("font.handwriting", 9));

@@ -7,14 +7,16 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 import de.amr.games.pacman.event.GameEvents;
-import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
-import javafx.geometry.Rectangle2D;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import javafx.scene.text.Font;
 
 /**
@@ -26,8 +28,6 @@ public class PacManCutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
-	private Animated stretchedDressAnimation;
-	private Animated damagedAnimation;
 
 	@Override
 	protected PacManGameSpritesheet gss() {
@@ -43,28 +43,21 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
+		pac.setAnimations(new PacSpriteAnimations(pac, gss()));
+		pac.selectAnimation(PacAnimations.PAC_MUNCHING);
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setPixelSpeed(1.15f);
 		pac.show();
 
-		var pacAnimations = gss().createPacAnimations(pac);
-		pacAnimations.selectAndRestart(GameModel.AK_PAC_MUNCHING);
-		pac.setAnimations(pacAnimations);
-
-		stretchedDressAnimation = gss().createBlinkyStretchedAnimation();
-
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
+		var blinkyAnimations = new GhostSpriteAnimations(blinky, gss());
+		blinky.setAnimations(blinkyAnimations);
+		blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
 		blinky.placeAtTile(v2i(28, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(0);
 		blinky.hide();
-
-		var blinkyAnimations = gss().createGhostAnimations(blinky);
-		damagedAnimation = gss().createBlinkyDamagedAnimation();
-		blinkyAnimations.put(GameModel.AK_BLINKY_DAMAGED, damagedAnimation);
-		blinkyAnimations.selectAndRestart(GameModel.AK_GHOST_COLOR);
-		blinky.setAnimations(blinkyAnimations);
 	}
 
 	@Override
@@ -86,69 +79,77 @@ public class PacManCutscene2 extends GameScene2D {
 		case 110: {
 			blinky.setPixelSpeed(1.25f);
 			blinky.show();
-		}
 			break;
+		}
 
 		case 196: {
 			blinky.setPixelSpeed(0.17f);
-			stretchedDressAnimation.setFrameIndex(1);
-		}
+			blinky.animations().ifPresent(ani -> {
+				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
+				gsa.getStretchedAnimation().nextFrame();
+			});
 			break;
+		}
 
 		case 226: {
-			stretchedDressAnimation.setFrameIndex(2);
-		}
+			blinky.animations().ifPresent(ani -> {
+				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
+				gsa.getStretchedAnimation().nextFrame();
+			});
 			break;
+		}
 
 		case 248: {
 			blinky.setPixelSpeed(0);
-			blinky.animations().ifPresent(animations -> animations.selectedAnimation().get().stop());
-			stretchedDressAnimation.setFrameIndex(3);
-		}
+			blinky.animations().ifPresent(ani -> {
+				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
+				gsa.getStretchedAnimation().nextFrame();
+			});
 			break;
+		}
 
 		case 328: {
-			stretchedDressAnimation.setFrameIndex(4);
-		}
+			blinky.animations().ifPresent(ani -> {
+				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
+				gsa.getStretchedAnimation().nextFrame();
+			});
 			break;
+		}
 
 		case 329: {
-			blinky.animations().ifPresent(animations -> animations.select(GameModel.AK_BLINKY_DAMAGED));
-			damagedAnimation.setFrameIndex(0);
-		}
+			blinky.selectAnimation(GhostAnimations.BLINKY_DAMAGED);
 			break;
+		}
 
 		case 389: {
-			damagedAnimation.setFrameIndex(1);
-		}
+			blinky.selectAnimation(GhostAnimations.BLINKY_STRETCHED);
 			break;
+		}
 
 		case 508: {
-			stretchedDressAnimation = null;
-		}
+//TODO			stretchedDressAnimation = null;
 			break;
+		}
 
 		case 509: {
 			context.state().timer().expire();
-		}
 			break;
+		}
 
 		default: {
 			pac.move();
-			pac.animate();
 			blinky.move();
-			blinky.animate();
-		}
 			break;
+		}
 
 		}
 	}
 
 	@Override
 	public void drawSceneContent() {
-		if (stretchedDressAnimation != null) {
-			drawSprite((Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
-		}
+//		if (stretchedDressAnimation != null) {
+//			drawSprite((Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
+//		}
 		drawGhostSprite(blinky);
 		drawPacSprite(pac);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());

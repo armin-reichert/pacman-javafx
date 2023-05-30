@@ -4,15 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.anim.FrameSequence;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
@@ -25,7 +22,7 @@ import javafx.scene.image.Image;
  */
 public class PacManGameSpritesheet extends Spritesheet implements GameSpritesheet {
 
-	private static final Order<Direction> DIR_ORDER = new Order<>(//
+	public static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	public PacManGameSpritesheet(Image source, int raster) {
@@ -33,8 +30,13 @@ public class PacManGameSpritesheet extends Spritesheet implements GameSpriteshee
 	}
 
 	@Override
-	public Rectangle2D ghostValueSprite(int index) {
-		return tile(index, 8);
+	public Spritesheet sheet() {
+		return this;
+	}
+
+	@Override
+	public Rectangle2D[] numberSprites() {
+		return tilesRightOf(0, 8, 4);
 	}
 
 	@Override
@@ -95,6 +97,15 @@ public class PacManGameSpritesheet extends Spritesheet implements GameSpriteshee
 		return animationByDir;
 	}
 
+	@Override
+	public Rectangle2D[] pacMunchingSprites(Direction dir) {
+		int d = DIR_ORDER.index(dir);
+		var wide = tile(0, d);
+		var middle = region(16, d * 16, 16, 16); // WTF
+		var closed = tile(2, 0);
+		return new Rectangle2D[] { closed, closed, middle, middle, wide, wide, middle, middle };
+	}
+
 	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
 		var animation = new SimpleAnimation<>(tilesRightOf(3, 0, 11));
 		animation.setFrameDuration(8);
@@ -102,84 +113,61 @@ public class PacManGameSpritesheet extends Spritesheet implements GameSpriteshee
 	}
 
 	@Override
-	public AnimationMap createGhostAnimations(Ghost ghost) {
-		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
-		map.put(GameModel.AK_GHOST_COLOR, createGhostColorAnimation(ghost));
-		map.put(GameModel.AK_GHOST_BLUE, createGhostBlueAnimation());
-		map.put(GameModel.AK_GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(GameModel.AK_GHOST_FLASHING, createGhostFlashingAnimation());
-		map.put(GameModel.AK_GHOST_VALUE, createGhostValueSpriteList());
-		map.select(GameModel.AK_GHOST_COLOR);
-		return map;
+	public Rectangle2D[] pacDyingSprites() {
+		return tilesRightOf(3, 0, 11);
 	}
 
-	private AnimationByDirection createGhostColorAnimation(Ghost ghost) {
-		var animationByDir = new AnimationByDirection(ghost::wishDir);
-		for (var dir : Direction.values()) {
-			int d = DIR_ORDER.index(dir);
-			var animation = new SimpleAnimation<>(tilesRightOf(2 * d, 4 + ghost.id(), 2));
-			animation.setFrameDuration(8);
-			animation.repeatForever();
-			animationByDir.put(dir, animation);
-		}
-		return animationByDir;
+	@Override
+	public Rectangle2D[] normalGhostSprites(byte ghostID, Direction dir) {
+		int d = DIR_ORDER.index(dir);
+		return tilesRightOf(2 * d, 4 + ghostID, 2);
 	}
 
-	private SimpleAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SimpleAnimation<>(tile(8, 4), tile(9, 4));
-		animation.setFrameDuration(8);
-		animation.repeatForever();
-		return animation;
+	@Override
+	public Rectangle2D[] blueGhostSprites() {
+		return new Rectangle2D[] { tile(8, 4), tile(9, 4) };
 	}
 
-	private SimpleAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SimpleAnimation<>(tilesRightOf(8, 4, 4));
-		animation.setFrameDuration(6);
-		return animation;
+	@Override
+	public Rectangle2D[] flashingGhostSprites() {
+		return tilesRightOf(8, 4, 4);
 	}
 
-	private AnimationByDirection createGhostEyesAnimation(Ghost ghost) {
-		var animationByDir = new AnimationByDirection(ghost::wishDir);
-		for (var dir : Direction.values()) {
-			int d = DIR_ORDER.index(dir);
-			animationByDir.put(dir, new SimpleAnimation<>(tile(8 + d, 5)));
-		}
-		return animationByDir;
-	}
-
-	private Animated createGhostValueSpriteList() {
-		return new FrameSequence<>(ghostValueSprite(0), ghostValueSprite(1), ghostValueSprite(2), ghostValueSprite(3));
+	@Override
+	public Rectangle2D[] eyesGhostSprites(Direction dir) {
+		int d = DIR_ORDER.index(dir);
+		return new Rectangle2D[] { tile(8 + d, 5) };
 	}
 
 	// Pac-Man specific:
 
-	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-		var animation = new SimpleAnimation<>(// WTF!
-				region(31, 15, 32, 34), region(63, 15, 32, 34), region(95, 15, 34, 34));
-		animation.setFrameDuration(3);
-		animation.repeatForever();
-		return animation;
-	}
-
-	public FrameSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-		return new FrameSequence<>(tilesRightOf(8, 6, 5));
-	}
-
-	public FrameSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-		return new FrameSequence<>(tile(8, 7), tile(9, 7));
-	}
-
-	public SimpleAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-		var animation = new SimpleAnimation<>(tile(10, 7), tile(11, 7));
-		animation.setFrameDuration(4);
-		animation.repeatForever();
-		return animation;
-	}
-
-	public SimpleAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-		var animation = new SimpleAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
-		animation.setFrameDuration(4);
-		animation.repeatForever();
-		return animation;
-	}
+//	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
+//		var animation = new SimpleAnimation<>(// WTF!
+//				region(31, 15, 32, 34), region(63, 15, 32, 34), region(95, 15, 34, 34));
+//		animation.setFrameDuration(3);
+//		animation.repeatForever();
+//		return animation;
+//	}
+//
+//	public FrameSequence<Rectangle2D> createBlinkyStretchedAnimation() {
+//		return new FrameSequence<>(tilesRightOf(8, 6, 5));
+//	}
+//
+//	public FrameSequence<Rectangle2D> createBlinkyDamagedAnimation() {
+//		return new FrameSequence<>(tile(8, 7), tile(9, 7));
+//	}
+//
+//	public SimpleAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
+//		var animation = new SimpleAnimation<>(tile(10, 7), tile(11, 7));
+//		animation.setFrameDuration(4);
+//		animation.repeatForever();
+//		return animation;
+//	}
+//
+//	public SimpleAnimation<Rectangle2D> createBlinkyNakedAnimation() {
+//		var animation = new SimpleAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
+//		animation.setFrameDuration(4);
+//		animation.repeatForever();
+//		return animation;
+//	}
 }

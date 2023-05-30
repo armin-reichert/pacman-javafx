@@ -10,9 +10,13 @@ import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import javafx.scene.text.Font;
 
 /**
@@ -39,25 +43,20 @@ public class PacManCutscene3 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
+		pac.setAnimations(new PacSpriteAnimations(pac, gss()));
+		pac.selectAnimation(PacAnimations.PAC_MUNCHING);
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setPixelSpeed(1.25f);
 		pac.show();
 
-		pac.setAnimations(gss().createPacAnimations(pac));
-		pac.selectAndRunAnimation(GameModel.AK_PAC_MUNCHING);
-
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
+		blinky.setAnimations(new GhostSpriteAnimations(blinky, gss()));
+		blinky.selectAnimation(GhostAnimations.BLINKY_PATCHED);
 		blinky.placeAtTile(v2i(35, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(1.25f);
 		blinky.show();
-
-		var blinkyAnimations = gss().createGhostAnimations(blinky);
-		blinkyAnimations.put(GameModel.AK_BLINKY_PATCHED, gss().createBlinkyPatchedAnimation());
-		blinkyAnimations.put(GameModel.AK_BLINKY_NAKED, gss().createBlinkyNakedAnimation());
-		blinky.setAnimations(blinkyAnimations);
-		blinky.selectAndRunAnimation(GameModel.AK_BLINKY_PATCHED);
 	}
 
 	@Override
@@ -77,22 +76,20 @@ public class PacManCutscene3 extends GameScene2D {
 		case 400: {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.selectAndRunAnimation(GameModel.AK_BLINKY_NAKED);
-		}
+			blinky.selectAnimation(GhostAnimations.BLINKY_NAKED);
 			break;
+		}
 
 		case 700: {
 			context.state().timer().expire();
-		}
 			break;
+		}
 
 		default: {
 			pac.move();
-			pac.animate();
 			blinky.move();
-			blinky.animate();
-		}
 			break;
+		}
 
 		}
 	}

@@ -29,8 +29,10 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
@@ -376,23 +378,22 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	@Override
-	public void onLevelStarting(GameEvent e) {
+	public void onLevelBeforeStart(GameEvent e) {
 		e.game.level().ifPresent(level -> {
-			GameSpritesheet renderer;
+			GameSpritesheet spritesheet;
 			switch (level.game().variant()) {
 			case MS_PACMAN:
-				renderer = new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16);
+				spritesheet = new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16);
 				break;
 			case PACMAN:
-				renderer = new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16);
+				spritesheet = new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16);
 				break;
 			default:
 				throw new IllegalGameVariantException(level.game().variant());
 			}
-			final GameSpritesheet r = renderer;
-			level.pac().setAnimations(renderer.createPacAnimations(level.pac()));
-			level.ghosts().forEach(ghost -> ghost.setAnimations(r.createGhostAnimations(ghost)));
-			level.world().setAnimations(renderer.createWorldAnimations(level.world()));
+			level.pac().setAnimations(new PacSpriteAnimations(level.pac(), spritesheet));
+			level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimations(ghost, spritesheet)));
+			level.world().setAnimations(spritesheet.createWorldAnimations(level.world()));
 			Logger.trace("Created creature and world animations for level #{}", level.number());
 		});
 		updateGameScene(true);

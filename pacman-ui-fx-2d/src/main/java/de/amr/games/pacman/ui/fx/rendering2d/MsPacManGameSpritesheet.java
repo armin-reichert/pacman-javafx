@@ -4,15 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.Animated;
 import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.lib.anim.FrameSequence;
 import de.amr.games.pacman.lib.anim.Pulse;
 import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
@@ -37,13 +34,19 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 		super(source, raster);
 	}
 
+	@Override
+	public Spritesheet sheet() {
+		return this;
+	}
+
 	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
 		return tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
 	}
 
 	@Override
-	public Rectangle2D ghostValueSprite(int index) {
-		return tileFromThirdColumn(index, 8);
+	public Rectangle2D[] numberSprites() {
+		return new Rectangle2D[] { tileFromThirdColumn(0, 8), tileFromThirdColumn(1, 8), tileFromThirdColumn(2, 8),
+				tileFromThirdColumn(3, 8) };
 	}
 
 	@Override
@@ -107,6 +110,15 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 		return animationByDir;
 	}
 
+	@Override
+	public Rectangle2D[] pacMunchingSprites(Direction dir) {
+		int d = DIR_ORDER.index(dir);
+		var wide = tileFromThirdColumn(0, d);
+		var middle = tileFromThirdColumn(1, d);
+		var closed = tileFromThirdColumn(2, d);
+		return new Rectangle2D[] { middle, middle, wide, wide, middle, middle, middle, closed, closed };
+	}
+
 	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
 		var right = tileFromThirdColumn(1, 0);
 		var left = tileFromThirdColumn(1, 1);
@@ -119,55 +131,36 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 	}
 
 	@Override
-	public AnimationMap createGhostAnimations(Ghost ghost) {
-		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
-		map.put(GameModel.AK_GHOST_COLOR, createGhostColorAnimation(ghost));
-		map.put(GameModel.AK_GHOST_BLUE, createGhostBlueAnimation());
-		map.put(GameModel.AK_GHOST_EYES, createGhostEyesAnimation(ghost));
-		map.put(GameModel.AK_GHOST_FLASHING, createGhostFlashingAnimation());
-		map.put(GameModel.AK_GHOST_VALUE, createGhostValueSpriteList());
-		map.select(GameModel.AK_GHOST_COLOR);
-		return map;
+	public Rectangle2D[] pacDyingSprites() {
+		var right = tileFromThirdColumn(1, 0);
+		var left = tileFromThirdColumn(1, 1);
+		var up = tileFromThirdColumn(1, 2);
+		var down = tileFromThirdColumn(1, 3);
+		// TODO not yet 100% accurate
+		return new Rectangle2D[] { down, left, up, right, down, left, up, right, down, left, up };
 	}
 
-	private AnimationByDirection createGhostColorAnimation(Ghost ghost) {
-		var animationByDir = new AnimationByDirection(ghost::wishDir);
-		for (var dir : Direction.values()) {
-			int d = DIR_ORDER.index(dir);
-			var animation = new SimpleAnimation<>(tileFromThirdColumn(2 * d, 4 + ghost.id()),
-					tileFromThirdColumn(2 * d + 1, 4 + ghost.id()));
-			animation.setFrameDuration(8);
-			animation.repeatForever();
-			animationByDir.put(dir, animation);
-		}
-		return animationByDir;
+	@Override
+	public Rectangle2D[] normalGhostSprites(byte ghostID, Direction dir) {
+		int d = DIR_ORDER.index(dir);
+		return new Rectangle2D[] { tileFromThirdColumn(2 * d, 4 + ghostID), tileFromThirdColumn(2 * d + 1, 4 + ghostID) };
 	}
 
-	private SimpleAnimation<Rectangle2D> createGhostBlueAnimation() {
-		var animation = new SimpleAnimation<>(tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4));
-		animation.setFrameDuration(8);
-		animation.repeatForever();
-		return animation;
+	@Override
+	public Rectangle2D[] blueGhostSprites() {
+		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4) };
 	}
 
-	private SimpleAnimation<Rectangle2D> createGhostFlashingAnimation() {
-		var animation = new SimpleAnimation<>(tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4),
-				tileFromThirdColumn(10, 4), tileFromThirdColumn(11, 4));
-		animation.setFrameDuration(4);
-		return animation;
+	@Override
+	public Rectangle2D[] flashingGhostSprites() {
+		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4), tileFromThirdColumn(10, 4),
+				tileFromThirdColumn(11, 4) };
 	}
 
-	private AnimationByDirection createGhostEyesAnimation(Ghost ghost) {
-		var animationByDir = new AnimationByDirection(ghost::wishDir);
-		for (var dir : Direction.values()) {
-			int d = DIR_ORDER.index(dir);
-			animationByDir.put(dir, new SimpleAnimation<>(tileFromThirdColumn(8 + d, 5)));
-		}
-		return animationByDir;
-	}
-
-	private Animated createGhostValueSpriteList() {
-		return new FrameSequence<>(ghostValueSprite(0), ghostValueSprite(1), ghostValueSprite(2), ghostValueSprite(3));
+	@Override
+	public Rectangle2D[] eyesGhostSprites(Direction dir) {
+		int d = DIR_ORDER.index(dir);
+		return new Rectangle2D[] { tileFromThirdColumn(8 + d, 5) };
 	}
 
 	// Ms. Pac-Man specific:

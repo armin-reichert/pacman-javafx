@@ -5,9 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission1;
-import de.amr.games.pacman.lib.anim.AnimationMap;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 
 /**
  * Intermission scene 1: "They meet".
@@ -38,18 +39,21 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		im.changeState(MsPacManIntermission1.State.FLAP);
 
 		imc.clapperboard.setAnimation(gss().createClapperboardAnimation());
-		imc.msPac.setAnimations(gss().createPacAnimations(imc.msPac));
-		imc.msPac.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pacMan.setAnimations(gss().createPacAnimations(imc.pacMan));
-		imc.pacMan.animations().ifPresent(animations -> {
-			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
-			animations.put(GameModel.AK_PAC_MUNCHING, munching);
-			animations.ensureRunning();
-		});
-		imc.inky.setAnimations(gss().createGhostAnimations(imc.inky));
-		imc.inky.animations().ifPresent(AnimationMap::ensureRunning);
-		imc.pinky.setAnimations(gss().createGhostAnimations(imc.pinky));
-		imc.pinky.animations().ifPresent(AnimationMap::ensureRunning);
+		imc.msPac.setAnimations(new PacSpriteAnimations(imc.msPac, gss()));
+		imc.msPac.selectAnimation(PacAnimations.PAC_MUNCHING);
+
+		imc.pacMan.setAnimations(new PacSpriteAnimations(imc.pacMan, gss()));
+		imc.pacMan.selectAnimation(PacAnimations.PAC_MUNCHING);
+
+		// TODO take Pac-Man sprites from Ms. Pac-Man spritesheet
+//		imc.pacMan.animations().ifPresent(animations -> {
+//			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
+//			animations.put(GameModel.AK_PAC_MUNCHING, munching);
+//			animations.ensureRunning();
+//		});
+
+		imc.inky.setAnimations(new GhostSpriteAnimations(imc.inky, gss()));
+		imc.pinky.setAnimations(new GhostSpriteAnimations(imc.pinky, gss()));
 	}
 
 	@Override

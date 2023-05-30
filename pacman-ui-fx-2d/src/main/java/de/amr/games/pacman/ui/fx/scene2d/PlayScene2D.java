@@ -7,9 +7,10 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 
+import java.util.stream.Stream;
+
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -41,7 +42,9 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		context.level().ifPresent(this::updateSound);
+		context.level().ifPresent(level -> {
+			updateSound(level);
+		});
 	}
 
 	@Override
@@ -85,11 +88,8 @@ public class PlayScene2D extends GameScene2D {
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());
-			drawGhostSprite(level.ghost(GameModel.ORANGE_GHOST));
-			drawGhostSprite(level.ghost(GameModel.CYAN_GHOST));
-			drawGhostSprite(level.ghost(GameModel.PINK_GHOST));
-			drawGhostSprite(level.ghost(GameModel.RED_GHOST));
-
+			Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
+					.map(level::ghost).forEach(this::drawGhostSprite);
 			if (!context.isCreditVisible()) {
 				// TODO get rid of this crap:
 				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
@@ -97,6 +97,7 @@ public class PlayScene2D extends GameScene2D {
 			}
 			drawLevelCounter(t(24), t(34), context.game().levelCounter());
 		});
+
 	}
 
 	private void drawPacManMaze(double x, double y, World world) {
@@ -204,8 +205,8 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onSceneVariantSwitch() {
 		context.level().ifPresent(level -> {
-			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
-			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
+//TODO			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
+//TODO			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
 			if (!level.isDemoLevel()) {
 				context.ui().ensureSirenStarted(level.huntingPhase() / 2);
 			}
