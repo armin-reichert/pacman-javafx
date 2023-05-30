@@ -4,13 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.AnimationByDirection;
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.anim.Pulse;
-import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
@@ -74,42 +71,12 @@ public class PacManGameSpritesheet extends Spritesheet implements GameSpriteshee
 	}
 
 	@Override
-	public AnimationMap createPacAnimations(Pac pac) {
-		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
-		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
-		map.put(GameModel.AK_PAC_MUNCHING, createPacMunchingAnimation(pac));
-		map.select(GameModel.AK_PAC_MUNCHING);
-		return map;
-	}
-
-	private AnimationByDirection createPacMunchingAnimation(Pac pac) {
-		var animationByDir = new AnimationByDirection(pac::moveDir);
-		for (var dir : Direction.values()) {
-			int d = DIR_ORDER.index(dir);
-			var wide = tile(0, d);
-			var middle = region(16, d * 16, 16, 16); // WTF
-			var closed = tile(2, 0);
-			var animation = new SimpleAnimation<>(closed, closed, middle, middle, wide, wide, middle, middle);
-			animation.setFrameDuration(1);
-			animation.repeatForever();
-			animationByDir.put(dir, animation);
-		}
-		return animationByDir;
-	}
-
-	@Override
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		var wide = tile(0, d);
 		var middle = region(16, d * 16, 16, 16); // WTF
 		var closed = tile(2, 0);
 		return new Rectangle2D[] { closed, closed, middle, middle, wide, wide, middle, middle };
-	}
-
-	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
-		var animation = new SimpleAnimation<>(tilesRightOf(3, 0, 11));
-		animation.setFrameDuration(8);
-		return animation;
 	}
 
 	@Override

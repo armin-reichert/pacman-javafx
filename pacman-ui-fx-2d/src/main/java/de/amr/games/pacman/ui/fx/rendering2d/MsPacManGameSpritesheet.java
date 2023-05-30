@@ -76,8 +76,6 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 		return region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 	}
 
-	// Animations
-
 	@Override
 	public AnimationMap createWorldAnimations(World world) {
 		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
@@ -87,47 +85,12 @@ public class MsPacManGameSpritesheet extends Spritesheet implements GameSpritesh
 	}
 
 	@Override
-	public AnimationMap createPacAnimations(Pac pac) {
-		var map = new AnimationMap(GameModel.ANIMATION_MAP_CAPACITY);
-		map.put(GameModel.AK_PAC_DYING, createPacDyingAnimation());
-		map.put(GameModel.AK_PAC_MUNCHING, createPacMunchingAnimation(pac));
-		map.select(GameModel.AK_PAC_MUNCHING);
-		return map;
-	}
-
-	private AnimationByDirection createPacMunchingAnimation(Pac pac) {
-		var animationByDir = new AnimationByDirection(pac::moveDir);
-		for (var dir : Direction.values()) {
-			int d = DIR_ORDER.index(dir);
-			var wide = tileFromThirdColumn(0, d);
-			var middle = tileFromThirdColumn(1, d);
-			var closed = tileFromThirdColumn(2, d);
-			var munching = new SimpleAnimation<>(middle, middle, wide, wide, middle, middle, middle, closed, closed);
-			munching.setFrameDuration(1);
-			munching.repeatForever();
-			animationByDir.put(dir, munching);
-		}
-		return animationByDir;
-	}
-
-	@Override
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		var wide = tileFromThirdColumn(0, d);
 		var middle = tileFromThirdColumn(1, d);
 		var closed = tileFromThirdColumn(2, d);
 		return new Rectangle2D[] { middle, middle, wide, wide, middle, middle, middle, closed, closed };
-	}
-
-	private SimpleAnimation<Rectangle2D> createPacDyingAnimation() {
-		var right = tileFromThirdColumn(1, 0);
-		var left = tileFromThirdColumn(1, 1);
-		var up = tileFromThirdColumn(1, 2);
-		var down = tileFromThirdColumn(1, 3);
-		// TODO not yet 100% accurate
-		var animation = new SimpleAnimation<>(down, left, up, right, down, left, up, right, down, left, up);
-		animation.setFrameDuration(8);
-		return animation;
 	}
 
 	@Override

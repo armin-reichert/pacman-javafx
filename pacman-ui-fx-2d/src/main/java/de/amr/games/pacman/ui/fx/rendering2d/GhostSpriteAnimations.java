@@ -12,7 +12,6 @@ import java.util.Map;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

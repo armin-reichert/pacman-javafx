@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.anim.AnimationMap;
 import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -43,8 +42,6 @@ public interface GameSpritesheet {
 	 * @return sprite showing bonus symbol value (100, 300, ...)
 	 */
 	Rectangle2D bonusValueSprite(int symbol);
-
-	AnimationMap createPacAnimations(Pac pac);
 
 	AnimationMap createWorldAnimations(World world);
 
