@@ -7,34 +7,37 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 
 /**
- * Common interface for the Pac-Man and Ms. Pac-Man game spritesheets.
+ * Common base class for the Pac-Man and Ms. Pac-Man game spritesheets.
  * 
  * @author Armin Reichert
  */
-public interface GameSpritesheet {
+public abstract class GameSpritesheet extends Spritesheet {
 
-	Spritesheet sheet();
+	protected GameSpritesheet(Image image, int raster) {
+		super(image, raster);
+	}
 
-	Rectangle2D livesCounterSprite();
+	public abstract Rectangle2D livesCounterSprite();
 
-	Rectangle2D bonusSymbolSprite(int symbol);
+	public abstract Rectangle2D bonusSymbolSprite(int symbol);
 
-	Rectangle2D bonusValueSprite(int symbol);
+	public abstract Rectangle2D bonusValueSprite(int symbol);
 
-	Rectangle2D[] pacMunchingSprites(Direction dir);
+	public abstract Rectangle2D[] pacMunchingSprites(Direction dir);
 
-	Rectangle2D[] pacDyingSprites();
+	public abstract Rectangle2D[] pacDyingSprites();
 
-	Rectangle2D[] ghostNormalSprites(byte ghostID, Direction dir);
+	public abstract Rectangle2D[] ghostNormalSprites(byte ghostID, Direction dir);
 
-	Rectangle2D[] ghostFrightenedSprites();
+	public abstract Rectangle2D[] ghostFrightenedSprites();
 
-	Rectangle2D[] ghostFlashingSprites();
+	public abstract Rectangle2D[] ghostFlashingSprites();
 
-	Rectangle2D[] ghostEyesSprites(Direction dir);
+	public abstract Rectangle2D[] ghostEyesSprites(Direction dir);
 
-	Rectangle2D[] ghostNumberSprites();
+	public abstract Rectangle2D[] ghostNumberSprites();
 
 }

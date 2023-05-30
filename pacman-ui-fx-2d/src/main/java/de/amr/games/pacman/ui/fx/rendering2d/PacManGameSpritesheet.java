@@ -6,25 +6,19 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.ui.fx.util.Order;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
  */
-public class PacManGameSpritesheet extends Spritesheet implements GameSpritesheet {
+public class PacManGameSpritesheet extends GameSpritesheet {
 
 	public static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	public PacManGameSpritesheet(Image source, int raster) {
 		super(source, raster);
-	}
-
-	@Override
-	public Spritesheet sheet() {
-		return this;
 	}
 
 	@Override

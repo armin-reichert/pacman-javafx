@@ -118,36 +118,35 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
 	private void createBlinkyDamagedAnimation() {
 		damagedAnimation = new SpriteAnimation();
-		damagedAnimation.setSprites(gss.sheet().tile(8, 7), gss.sheet().tile(9, 7));
+		damagedAnimation.setSprites(gss.tile(8, 7), gss.tile(9, 7));
 		damagedAnimation.setFrameDuration(60);
 		damagedAnimation.build();
 	}
 
 	private void createBlinkyStretchedAnimation() {
 		stretchedAnimation = new SpriteAnimation();
-		stretchedAnimation.setSprites(gss.sheet().tilesRightOf(8, 6, 5));
+		stretchedAnimation.setSprites(gss.tilesRightOf(8, 6, 5));
 		stretchedAnimation.setFrameDuration(60);
 		stretchedAnimation.build();
 	}
 
 	private void createBlinkyPatchedAnimation() {
 		patchedAnimation = new SpriteAnimation();
-		patchedAnimation.setSprites(gss.sheet().tile(10, 7), gss.sheet().tile(11, 7));
+		patchedAnimation.setSprites(gss.tile(10, 7), gss.tile(11, 7));
 		patchedAnimation.setFrameDuration(4);
 		patchedAnimation.repeatForever();
 	}
 
 	private void createBlinkyNakedAnimation() {
 		nakedAnimation = new SpriteAnimation();
-		nakedAnimation.setSprites(gss.sheet().tiles(8, 8, 2, 1), gss.sheet().tiles(10, 8, 2, 1));
+		nakedAnimation.setSprites(gss.tiles(8, 8, 2, 1), gss.tiles(10, 8, 2, 1));
 		nakedAnimation.setFrameDuration(4);
 		nakedAnimation.repeatForever();
 	}
 
 	private void createBigPacManAnimation() {
 		bigPacManAnimation = new SpriteAnimation();
-		bigPacManAnimation.setSprites(gss.sheet().region(31, 15, 32, 34), gss.sheet().region(63, 15, 32, 34),
-				gss.sheet().region(95, 15, 34, 34));
+		bigPacManAnimation.setSprites(gss.region(31, 15, 32, 34), gss.region(63, 15, 32, 34), gss.region(95, 15, 34, 34));
 		bigPacManAnimation.setFrameDuration(3);
 		bigPacManAnimation.repeatForever();
 	}
@@ -235,7 +234,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		var sprite = currentAnimation.frame();
 		var x = ghost.position().x() + HTS - sprite.getWidth() / 2;
 		var y = ghost.position().y() + HTS - sprite.getHeight() / 2;
-		drawSprite(g, gss.sheet().source(), sprite, x, y);
+		drawSprite(g, gss.source(), sprite, x, y);
 	}
 
 	private SpriteAnimation animationByName(String name) {

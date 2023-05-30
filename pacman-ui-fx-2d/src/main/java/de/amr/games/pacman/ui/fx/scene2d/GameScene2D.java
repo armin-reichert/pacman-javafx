@@ -322,7 +322,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(gss().sheet().source(), sprite, x, y);
+		drawSprite(gss().source(), sprite, x, y);
 	}
 
 	/**
