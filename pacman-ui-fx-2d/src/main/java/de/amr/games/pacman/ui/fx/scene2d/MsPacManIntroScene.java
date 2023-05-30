@@ -48,7 +48,6 @@ public class MsPacManIntroScene extends GameScene2D {
 				signature.show(t(5.5), t(32.0));
 			}
 		});
-		intro.changeState(MsPacManIntro.State.START);
 
 		var msPacMan = intro.context().msPacMan;
 		msPacMan.setAnimations(new PacSpriteAnimations(msPacMan, gss()));
@@ -60,6 +59,8 @@ public class MsPacManIntroScene extends GameScene2D {
 
 		signature.setNameFont(context.ui().theme().font("font.handwriting", 9));
 		signature.hide();
+
+		intro.changeState(MsPacManIntro.State.START);
 	}
 
 	@Override
