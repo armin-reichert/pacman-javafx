@@ -163,11 +163,14 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 	}
 
 	@Override
-	public void select(String name) {
+	public void select(String name, Object... args) {
 		if (name != currentAnimationName) {
 			currentAnimationName = name;
 			currentAnimation = animationByName(name);
 			if (currentAnimation != null) {
+				if (currentAnimation == numberAnimation) {
+					numberAnimation.setFrame((Integer) args[0]);
+				}
 				currentAnimation.setFrame(0);
 			}
 		}
@@ -210,12 +213,6 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 				currentAnimation.reset();
 			}
 		}
-	}
-
-	@Override
-	public void selectNumber(int killedIndex) {
-		select(GHOST_NUMBER);
-		numberAnimation.setFrame(killedIndex);
 	}
 
 	public SpriteAnimation getStretchedAnimation() {
