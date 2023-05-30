@@ -81,7 +81,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	//@formatter:on
 
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
-	protected final GameClock clock = new GameClock(GameModel.FPS);
+	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
@@ -108,9 +108,10 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		configurePacSteering();
 		configureBindings(settings);
 		GameEvents.addListener(this);
+
+		clock = new GameClock(this::onTick, this::onRender);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
-		clock.setOnTick(this::onTick);
-		clock.setOnRender(this::onRender);
+		clock.targetFrameratePy.set(GameModel.FPS);
 	}
 
 	protected void onTick() {
