@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.MsPacManIntermission1;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
@@ -44,7 +42,6 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		intermission = new MsPacManIntermission1(context.gameController());
 		intermission.changeState(MsPacManIntermission1.State.INIT);
 
-		Logger.info("Creating sprite animations for intermission 1");
 		imc().msPac.setAnimations(new PacSpriteAnimations(imc().msPac, gss()));
 		imc().pacMan.setAnimations(new PacSpriteAnimations(imc().pacMan, gss()));
 		imc().inky.setAnimations(new GhostSpriteAnimations(imc().inky, gss()));

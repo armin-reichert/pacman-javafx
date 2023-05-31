@@ -350,7 +350,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
 			stage.setFullScreen(true);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
-			if (currentGameScene instanceof GameScene2D) {
+			if (currentGameScene instanceof GameScene2D && !(currentGameScene instanceof BootScene)) {
 				var scene2D = (GameScene2D) currentGameScene;
 				Ufx.toggle(scene2D.canvasScaledPy);
 				showFlashMessage(scene2D.canvasScaledPy.get() ? "Canvas scaled" : "Canvas unscaled");
