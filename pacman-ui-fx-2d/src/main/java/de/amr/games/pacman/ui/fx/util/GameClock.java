@@ -23,7 +23,11 @@ import javafx.util.Duration;
  */
 public class GameClock {
 
-	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
+	private static void snooze() {
+		// rest
+	}
+
+	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 30) {
 		@Override
 		protected void invalidated() {
 			updateClock();
@@ -32,21 +36,21 @@ public class GameClock {
 	public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
 	public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
-	private Runnable onTick;
-	private Runnable onRender;
-	private Timeline clock;
+	private Runnable onTick = GameClock::snooze;
+	private Runnable onRender = GameClock::snooze;
+	private Timeline timeline;
 	private long updateCount;
 	private long ticksPerSec;
 	private long countTicksStartTime;
 	private long ticks;
 
-	public GameClock(int fps) {
-		onTick = () -> {
-		};
-		onRender = () -> {
-		};
+	public GameClock() {
+	}
+
+	public GameClock(Runnable onTick, Runnable onRender) {
+		this.onTick = onTick;
+		this.onRender = onRender;
 		createClock();
-		targetFrameratePy.set(fps);
 	}
 
 	public void setOnTick(Runnable onTick) {
@@ -58,17 +62,16 @@ public class GameClock {
 	}
 
 	private void createClock() {
-		int fps = targetFrameratePy.get();
-		var tickDuration = Duration.millis(1000.0 / fps);
-		clock = new Timeline(fps, new KeyFrame(tickDuration, e -> executeSingleStep(!isPaused())));
-		clock.setCycleCount(Animation.INDEFINITE);
-		Logger.info("Clock created, target speed: {} fps", fps);
+		int targetFPS = targetFrameratePy.get();
+		var tick = new KeyFrame(Duration.seconds(1.0 / targetFPS), e -> executeSingleStep(!isPaused()));
+		timeline = new Timeline(targetFPS, tick);
+		timeline.setCycleCount(Animation.INDEFINITE);
 	}
 
 	private void updateClock() {
-		boolean running = clock.getStatus() == Status.RUNNING;
+		boolean running = timeline.getStatus() == Status.RUNNING;
 		if (running) {
-			clock.stop();
+			timeline.stop();
 		}
 		createClock();
 		if (running) {
@@ -77,15 +80,15 @@ public class GameClock {
 	}
 
 	public void start() {
-		clock.play();
+		timeline.play();
 	}
 
 	public void stop() {
-		clock.stop();
+		timeline.stop();
 	}
 
 	public boolean isRunning() {
-		return clock.getStatus() == Status.RUNNING;
+		return timeline.getStatus() == Status.RUNNING;
 	}
 
 	public boolean isPaused() {

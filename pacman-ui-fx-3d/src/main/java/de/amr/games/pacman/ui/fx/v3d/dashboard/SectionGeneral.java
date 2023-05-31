@@ -73,7 +73,7 @@ public class SectionGeneral extends Section {
 		addInfo("",
 				() -> String.format("Target %dHz Actual %dHz", ui.clock().targetFrameratePy.get(), ui.clock().getFPS()));
 
-		addInfo("Total Updates", ui.clock()::getUpdateCount);
+		addInfo("Total Updates", () -> ui.clock().getUpdateCount());
 
 		cbUsePlayScene3D = addCheckBox("3D Play Scene", ui::toggle2D3D);
 		cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode", () -> Ufx.toggle(PacManGames3d.PY_WOKE_PUSSY));
