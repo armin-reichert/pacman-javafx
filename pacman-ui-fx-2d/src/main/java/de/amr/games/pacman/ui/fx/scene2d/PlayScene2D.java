@@ -138,9 +138,7 @@ public class PlayScene2D extends GameScene2D {
 
 	private void hideTileContent(Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
-		// TODO check reason for blitzers and remove the workaround
-//		g.fillRect(s(TS * tile.x()) - 1, s(TS * tile.y()) - 1, s(TS) + 2, s(TS) + 2);
-		g.fillRect(s(TS * tile.x()), s(TS * tile.y()), s(TS), s(TS));
+		g.fillRect(s(TS * tile.x() - 1), s(TS * tile.y() - 1), s(TS + 2), s(TS + 2));
 	}
 
 	private void drawBonus(Bonus bonus) {
