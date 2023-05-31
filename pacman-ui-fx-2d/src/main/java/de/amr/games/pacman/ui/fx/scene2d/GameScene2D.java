@@ -287,7 +287,6 @@ public abstract class GameScene2D implements GameScene {
 		var y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			// TODO check reason for blitzers
 			drawSprite(gss().livesCounterSprite(), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed

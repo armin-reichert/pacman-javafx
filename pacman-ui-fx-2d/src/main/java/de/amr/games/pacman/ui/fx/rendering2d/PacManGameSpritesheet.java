@@ -49,21 +49,26 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 
 	@Override
 	public Rectangle2D livesCounterSprite() {
-		return region(129, 16, 15, 15); // WTF
+		return region(129, 15, 16, 16);
 	}
 
 	@Override
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		var wide = tile(0, d);
-		var middle = region(16, d * 16, 16, 16); // WTF
-		var closed = tile(2, 0);
+		var wide = region(0, d * 16, 14, 14);
+		var middle = region(16, d * 16, 14, 14);
+		var closed = region(32, 0, 14, 14);
 		return new Rectangle2D[] { closed, closed, middle, middle, wide, wide, middle, middle };
 	}
 
 	@Override
 	public Rectangle2D[] pacDyingSprites() {
-		return tilesRightOf(3, 0, 11);
+		var r = new Rectangle2D[11];
+		for (int i = 0; i < 11; ++i) {
+			r[i] = new Rectangle2D(48 + i * 16, 0, 15, 15);
+		}
+		return r;
+//		return tilesRightOf(3, 0, 11);
 	}
 
 	@Override
@@ -91,7 +96,7 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 	// Pac-Man specific:
 
 	public Rectangle2D[] bigPacManSprites() {
-		return new Rectangle2D[] { region(31, 15, 32, 34), region(63, 15, 32, 34), region(95, 15, 34, 34) };
+		return new Rectangle2D[] { region(32, 16, 32, 32), region(64, 16, 32, 32), region(96, 16, 32, 32) };
 	}
 
 	public Rectangle2D[] blinkyDamagedSprites() {
