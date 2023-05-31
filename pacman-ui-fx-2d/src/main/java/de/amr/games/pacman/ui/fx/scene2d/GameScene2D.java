@@ -300,8 +300,8 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawPacSprite(Pac pac) {
 		var anim = pac.animations();
 		if (anim.isPresent() && anim.get() instanceof PacSpriteAnimations) {
-			PacSpriteAnimations gsa = (PacSpriteAnimations) anim.get();
-			gsa.draw(g); // TODO check blitzers
+			PacSpriteAnimations psa = (PacSpriteAnimations) anim.get();
+			drawEntitySprite(pac, psa.currentSprite());
 		}
 	}
 
@@ -309,7 +309,7 @@ public abstract class GameScene2D implements GameScene {
 		var anim = ghost.animations();
 		if (anim.isPresent() && anim.get() instanceof GhostSpriteAnimations) {
 			GhostSpriteAnimations gsa = (GhostSpriteAnimations) anim.get();
-			gsa.draw(g); // TODO check blitzers
+			drawEntitySprite(ghost, gsa.currentSprite());
 		}
 	}
 

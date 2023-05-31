@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -13,8 +11,6 @@ import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
@@ -41,10 +37,6 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		this.ghost = ghost;
 		this.gss = gss;
 		setSpritesheet(gss);
-	}
-
-	private double s(double value) {
-		return value; // TODO
 	}
 
 	public void setSpritesheet(GameSpritesheet gss) {
@@ -219,19 +211,16 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		return damagedAnimation;
 	}
 
-	public void draw(GraphicsContext g) {
+	public Rectangle2D currentSprite() {
 		if (!ghost.isVisible() || currentAnimationName == null) {
-			return;
+			return null;
 		}
 		if (GHOST_NORMAL.equals(currentAnimationName)) {
 			currentAnimation = animationByName(GHOST_NORMAL); // update
 		} else if (GHOST_EYES.equals(currentAnimationName)) {
 			currentAnimation = animationByName(GHOST_EYES); // update
 		}
-		var sprite = currentAnimation.frame();
-		var x = ghost.position().x() + HTS - sprite.getWidth() / 2;
-		var y = ghost.position().y() + HTS - sprite.getHeight() / 2;
-		drawSprite(g, gss.source(), sprite, x, y);
+		return currentAnimation.frame();
 	}
 
 	private SpriteAnimation animationByName(String name) {
@@ -263,13 +252,5 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 			return stretchedAnimation;
 		}
 		throw new IllegalArgumentException("Illegal animation name: " + name);
-	}
-
-	protected void drawSprite(GraphicsContext g, Image source, Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			g.drawImage(source, //
-					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
-					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
-		}
 	}
 }

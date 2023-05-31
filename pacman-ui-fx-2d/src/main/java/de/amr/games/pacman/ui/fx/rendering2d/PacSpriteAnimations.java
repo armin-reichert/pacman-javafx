@@ -4,15 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-
 import java.util.EnumMap;
 import java.util.Map;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
@@ -38,10 +36,6 @@ public class PacSpriteAnimations implements PacAnimations {
 		this.pac = pac;
 		this.gss = gss;
 		setSpritesheet(gss);
-	}
-
-	private double s(double value) {
-		return value; // TODO
 	}
 
 	public void setSpritesheet(GameSpritesheet gss) {
@@ -144,9 +138,9 @@ public class PacSpriteAnimations implements PacAnimations {
 		}
 	}
 
-	public void draw(GraphicsContext g) {
+	public Rectangle2D currentSprite() {
 		if (!pac.isVisible() || currentAnimationName == null) {
-			return;
+			return null;
 		}
 		if (PAC_MUNCHING.equals(currentAnimationName)) {
 			currentAnimation = animation(PAC_MUNCHING, pac.moveDir()); // update
@@ -154,14 +148,7 @@ public class PacSpriteAnimations implements PacAnimations {
 		if (HUSBAND_MUNCHING.equals(currentAnimationName)) {
 			currentAnimation = animation(HUSBAND_MUNCHING, pac.moveDir()); // update
 		}
-		var sprite = currentAnimation.frame();
-		if (sprite != null) {
-			var x = pac.position().x() + HTS - sprite.getWidth() / 2;
-			var y = pac.position().y() + HTS - sprite.getHeight() / 2;
-			g.drawImage(gss.source(), //
-					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
-					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
-		}
+		return currentAnimation.frame();
 	}
 
 	private SpriteAnimation animation(String name, Direction dir) {

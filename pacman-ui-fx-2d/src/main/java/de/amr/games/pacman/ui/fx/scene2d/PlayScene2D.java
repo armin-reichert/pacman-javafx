@@ -139,7 +139,8 @@ public class PlayScene2D extends GameScene2D {
 	private void hideTileContent(Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		// TODO check reason for blitzers and remove the workaround
-		g.fillRect(s(TS * tile.x()) - 1, s(TS * tile.y()) - 1, s(TS) + 2, s(TS) + 2);
+//		g.fillRect(s(TS * tile.x()) - 1, s(TS * tile.y()) - 1, s(TS) + 2, s(TS) + 2);
+		g.fillRect(s(TS * tile.x()), s(TS * tile.y()), s(TS), s(TS));
 	}
 
 	private void drawBonus(Bonus bonus) {
@@ -197,8 +198,6 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onSceneVariantSwitch() {
 		context.level().ifPresent(level -> {
-//TODO			level.pac().animations().ifPresent(AnimationMap::ensureRunning);
-//TODO			level.ghosts().map(Ghost::animations).forEach(anim -> anim.ifPresent(AnimationMap::ensureRunning));
 			if (!level.isDemoLevel()) {
 				context.ui().ensureSirenStarted(level.huntingPhase() / 2);
 			}
