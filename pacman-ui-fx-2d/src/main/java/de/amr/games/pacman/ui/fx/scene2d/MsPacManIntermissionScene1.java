@@ -4,8 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import org.tinylog.Logger;
+
 import de.amr.games.pacman.controller.MsPacManIntermission1;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
@@ -23,8 +24,7 @@ import javafx.util.Duration;
  */
 public class MsPacManIntermissionScene1 extends GameScene2D {
 
-	private MsPacManIntermission1 im;
-	private MsPacManIntermission1.Context imc;
+	private MsPacManIntermission1 intermission;
 	private SpriteAnimation clapAnimation;
 
 	@Override
@@ -32,30 +32,23 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		return (MsPacManGameSpritesheet) super.gss();
 	}
 
+	private MsPacManIntermission1.Context imc() {
+		return intermission.context();
+	}
+
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		im = new MsPacManIntermission1(context.gameController());
-		imc = im.context();
-		im.changeState(MsPacManIntermission1.State.FLAP);
+		intermission = new MsPacManIntermission1(context.gameController());
+		intermission.changeState(MsPacManIntermission1.State.INIT);
 
-		imc.msPac.setAnimations(new PacSpriteAnimations(imc.msPac, gss()));
-		imc.msPac.selectAnimation(PacAnimations.PAC_MUNCHING);
-
-		imc.pacMan.setAnimations(new PacSpriteAnimations(imc.pacMan, gss()));
-		imc.pacMan.selectAnimation(PacAnimations.PAC_MUNCHING);
-
-		// TODO take Pac-Man sprites from Ms. Pac-Man spritesheet
-//		imc.pacMan.animations().ifPresent(animations -> {
-//			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
-//			animations.put(GameModel.AK_PAC_MUNCHING, munching);
-//			animations.ensureRunning();
-//		});
-
-		imc.inky.setAnimations(new GhostSpriteAnimations(imc.inky, gss()));
-		imc.pinky.setAnimations(new GhostSpriteAnimations(imc.pinky, gss()));
+		Logger.info("Creating sprite animations for intermission 1");
+		imc().msPac.setAnimations(new PacSpriteAnimations(imc().msPac, gss()));
+		imc().pacMan.setAnimations(new PacSpriteAnimations(imc().pacMan, gss()));
+		imc().inky.setAnimations(new GhostSpriteAnimations(imc().inky, gss()));
+		imc().pinky.setAnimations(new GhostSpriteAnimations(imc().pinky, gss()));
 
 		clapAnimation = gss().createClapperboardAnimation();
 		clapAnimation.setDelay(Duration.seconds(1));
@@ -64,17 +57,17 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void update() {
-		im.update();
+		intermission.update();
 	}
 
 	@Override
 	public void drawSceneContent() {
-		drawClap(imc.clapperboard, clapAnimation);
-		drawPacSprite(imc.msPac);
-		drawPacSprite(imc.pacMan);
-		drawGhostSprite(imc.inky);
-		drawGhostSprite(imc.pinky);
-		drawEntitySprite(imc.heart, gss().heartSprite());
+		drawClap(imc().clapperboard, clapAnimation);
+		drawPacSprite(imc().msPac);
+		drawPacSprite(imc().pacMan);
+		drawGhostSprite(imc().inky);
+		drawGhostSprite(imc().pinky);
+		drawEntitySprite(imc().heart, gss().heartSprite());
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }

@@ -90,33 +90,23 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 
 	// Pac-Man specific:
 
-//	public SimpleAnimation<Rectangle2D> createBigPacManMunchingAnimation() {
-//		var animation = new SimpleAnimation<>(// WTF!
-//				region(31, 15, 32, 34), region(63, 15, 32, 34), region(95, 15, 34, 34));
-//		animation.setFrameDuration(3);
-//		animation.repeatForever();
-//		return animation;
-//	}
-//
-//	public FrameSequence<Rectangle2D> createBlinkyStretchedAnimation() {
-//		return new FrameSequence<>(tilesRightOf(8, 6, 5));
-//	}
-//
-//	public FrameSequence<Rectangle2D> createBlinkyDamagedAnimation() {
-//		return new FrameSequence<>(tile(8, 7), tile(9, 7));
-//	}
-//
-//	public SimpleAnimation<Rectangle2D> createBlinkyPatchedAnimation() {
-//		var animation = new SimpleAnimation<>(tile(10, 7), tile(11, 7));
-//		animation.setFrameDuration(4);
-//		animation.repeatForever();
-//		return animation;
-//	}
-//
-//	public SimpleAnimation<Rectangle2D> createBlinkyNakedAnimation() {
-//		var animation = new SimpleAnimation<>(tiles(8, 8, 2, 1), tiles(10, 8, 2, 1));
-//		animation.setFrameDuration(4);
-//		animation.repeatForever();
-//		return animation;
-//	}
+	public Rectangle2D[] bigPacManSprites() {
+		return new Rectangle2D[] { region(31, 15, 32, 34), region(63, 15, 32, 34), region(95, 15, 34, 34) };
+	}
+
+	public Rectangle2D[] blinkyDamagedSprites() {
+		return new Rectangle2D[] { tile(8, 7), tile(9, 7) };
+	}
+
+	public Rectangle2D[] blinkyStretchedSprites() {
+		return tilesRightOf(8, 6, 5);
+	}
+
+	public Rectangle2D[] blinkyPatchedSprites() {
+		return tilesRightOf(10, 7, 2);
+	}
+
+	public Rectangle2D[] blinkyNakedSprites() {
+		return new Rectangle2D[] { tiles(8, 8, 2, 1), tiles(10, 8, 2, 1) };
+	}
 }

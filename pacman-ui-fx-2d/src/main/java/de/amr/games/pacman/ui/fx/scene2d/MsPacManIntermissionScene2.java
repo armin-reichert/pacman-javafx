@@ -20,8 +20,7 @@ import javafx.util.Duration;
  */
 public class MsPacManIntermissionScene2 extends GameScene2D {
 
-	private MsPacManIntermission2 im;
-	private MsPacManIntermission2.Context imc;
+	private MsPacManIntermission2 intermission;
 	private SpriteAnimation clapAnimation;
 
 	@Override
@@ -29,25 +28,21 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		return (MsPacManGameSpritesheet) super.gss();
 	}
 
+	private MsPacManIntermission2.Context imc() {
+		return intermission.context();
+	}
+
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		im = new MsPacManIntermission2(context.gameController());
-		imc = im.context();
+		intermission = new MsPacManIntermission2(context.gameController());
+		intermission.changeState(MsPacManIntermission2.State.INIT);
 
-		im.changeState(MsPacManIntermission2.State.FLAP);
+		imc().msPac.setAnimations(new PacSpriteAnimations(imc().msPac, gss()));
+		imc().pacMan.setAnimations(new PacSpriteAnimations(imc().pacMan, gss()));
 
-		imc.msPacMan.setAnimations(new PacSpriteAnimations(imc.msPacMan, gss()));
-
-		imc.pacMan.setAnimations(new PacSpriteAnimations(imc.pacMan, gss()));
-		// TODO take Pac-Man animations from Ms. Pac-Man spritesheet
-//		imc.pacMan.animations().ifPresent(animations -> {
-//			var munching = gss().createPacManMunchingAnimationMap(imc.pacMan);
-//			animations.put(GameModel.AK_PAC_MUNCHING, munching);
-//			animations.ensureRunning();
-//		});
 		clapAnimation = gss().createClapperboardAnimation();
 		clapAnimation.setDelay(Duration.seconds(1));
 		clapAnimation.start();
@@ -55,14 +50,14 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void update() {
-		im.update();
+		intermission.update();
 	}
 
 	@Override
 	public void drawSceneContent() {
-		drawClap(imc.clapperboard, clapAnimation);
-		drawPacSprite(imc.msPacMan);
-		drawPacSprite(imc.pacMan);
+		drawClap(imc().clapperboard, clapAnimation);
+		drawPacSprite(imc().msPac);
+		drawPacSprite(imc().pacMan);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }

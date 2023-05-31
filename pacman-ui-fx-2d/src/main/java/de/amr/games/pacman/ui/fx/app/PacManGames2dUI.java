@@ -474,6 +474,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				theme.audioClip(p + "audio.intermission.2").play();
 				break;
 			case PACMAN:
+				theme.audioClip(p + "audio.intermission").setCycleCount(1);
 				theme.audioClip(p + "audio.intermission").play();
 				break;
 			default:

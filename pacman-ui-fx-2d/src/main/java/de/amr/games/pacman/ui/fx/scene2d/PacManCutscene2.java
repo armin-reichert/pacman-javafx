@@ -28,6 +28,7 @@ public class PacManCutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
+	private GhostSpriteAnimations blinkyAnimations;
 
 	@Override
 	protected PacManGameSpritesheet gss() {
@@ -45,15 +46,17 @@ public class PacManCutscene2 extends GameScene2D {
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacSpriteAnimations(pac, gss()));
 		pac.selectAnimation(PacAnimations.PAC_MUNCHING);
+		pac.startAnimation();
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setPixelSpeed(1.15f);
 		pac.show();
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
-		var blinkyAnimations = new GhostSpriteAnimations(blinky, gss());
+		blinkyAnimations = new GhostSpriteAnimations(blinky, gss());
 		blinky.setAnimations(blinkyAnimations);
 		blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+		blinky.startAnimation();
 		blinky.placeAtTile(v2i(28, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(0);
@@ -84,45 +87,35 @@ public class PacManCutscene2 extends GameScene2D {
 
 		case 196: {
 			blinky.setPixelSpeed(0.17f);
-			blinky.animations().ifPresent(ani -> {
-				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
-				gsa.getStretchedAnimation().nextFrame();
-			});
+			blinkyAnimations.getStretchedAnimation().nextFrame();
 			break;
 		}
 
 		case 226: {
-			blinky.animations().ifPresent(ani -> {
-				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
-				gsa.getStretchedAnimation().nextFrame();
-			});
+			blinkyAnimations.getStretchedAnimation().nextFrame();
 			break;
 		}
 
 		case 248: {
 			blinky.setPixelSpeed(0);
-			blinky.animations().ifPresent(ani -> {
-				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
-				gsa.getStretchedAnimation().nextFrame();
-			});
+			blinkyAnimations.getStretchedAnimation().nextFrame();
 			break;
 		}
 
 		case 328: {
-			blinky.animations().ifPresent(ani -> {
-				GhostSpriteAnimations gsa = (GhostSpriteAnimations) ani;
-				gsa.getStretchedAnimation().nextFrame();
-			});
+			blinkyAnimations.getStretchedAnimation().nextFrame();
 			break;
 		}
 
 		case 329: {
 			blinky.selectAnimation(GhostAnimations.BLINKY_DAMAGED);
+			blinky.startAnimation();
 			break;
 		}
 
 		case 389: {
 			blinky.selectAnimation(GhostAnimations.BLINKY_STRETCHED);
+			blinky.startAnimation();
 			break;
 		}
 

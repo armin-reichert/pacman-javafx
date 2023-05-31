@@ -12,9 +12,7 @@ import java.util.Map;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
@@ -24,13 +22,14 @@ public class PacSpriteAnimations implements PacAnimations {
 	private final Pac pac;
 	private GameSpritesheet gss;
 
-	private Map<Direction, SpriteAnimation> munchingAnimationByDir;
+	private Map<Direction, SpriteAnimation> munchingMap;
 	private SpriteAnimation dyingAnimation;
-	private SpriteAnimation damagedAnimation;
-	private SpriteAnimation stretchedAnimation;
-	private SpriteAnimation patchedAnimation;
-	private SpriteAnimation nakedAnimation;
+
+	// Pac-Man specific
 	private SpriteAnimation bigPacManAnimation;
+
+	// Ms. Pac-Man specific
+	private Map<Direction, SpriteAnimation> husbandMunchingMap;
 
 	private String currentAnimationName;
 	private SpriteAnimation currentAnimation;
@@ -49,22 +48,34 @@ public class PacSpriteAnimations implements PacAnimations {
 		this.gss = gss;
 		createMunchingAnimation();
 		createDyingAnimation();
-		createBlinkyDamagedAnimation();
-		createBlinkyStretchedAnimation();
-		createBlinkyPatchedAnimation();
-		createBlinkyNakedAnimation();
-		createBigPacManAnimation();
+		if (gss instanceof MsPacManGameSpritesheet) {
+			createHusbandMunchingAnimation((MsPacManGameSpritesheet) gss);
+		} else {
+			createBigPacManAnimation((PacManGameSpritesheet) gss);
+		}
 	}
 
 	private void createMunchingAnimation() {
-		munchingAnimationByDir = new EnumMap<>(Direction.class);
+		munchingMap = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			var animation = new SpriteAnimation();
 			animation.setSprites(gss.pacMunchingSprites(dir));
 			animation.setFrameDuration(1);
 			animation.repeatForever();
 			animation.build();
-			munchingAnimationByDir.put(dir, animation);
+			munchingMap.put(dir, animation);
+		}
+	}
+
+	private void createHusbandMunchingAnimation(MsPacManGameSpritesheet gss) {
+		husbandMunchingMap = new EnumMap<>(Direction.class);
+		for (var dir : Direction.values()) {
+			var animation = new SpriteAnimation();
+			animation.setSprites(gss.pacManMunchingSprites(dir));
+			animation.setFrameDuration(2);
+			animation.repeatForever();
+			animation.build();
+			husbandMunchingMap.put(dir, animation);
 		}
 	}
 
@@ -75,39 +86,9 @@ public class PacSpriteAnimations implements PacAnimations {
 		dyingAnimation.build();
 	}
 
-	private void createBlinkyDamagedAnimation() {
-		damagedAnimation = new SpriteAnimation();
-		damagedAnimation.setSprites(gss.tile(8, 7), gss.tile(9, 7));
-		damagedAnimation.setFrameDuration(60);
-		damagedAnimation.build();
-	}
-
-	private void createBlinkyStretchedAnimation() {
-		stretchedAnimation = new SpriteAnimation();
-		stretchedAnimation.setSprites(gss.tilesRightOf(8, 6, 5));
-		stretchedAnimation.setFrameDuration(60);
-		stretchedAnimation.build();
-	}
-
-	private void createBlinkyPatchedAnimation() {
-		patchedAnimation = new SpriteAnimation();
-		patchedAnimation.setSprites(gss.tile(10, 7), gss.tile(11, 7));
-		patchedAnimation.setFrameDuration(4);
-		patchedAnimation.repeatForever();
-		patchedAnimation.build();
-	}
-
-	private void createBlinkyNakedAnimation() {
-		nakedAnimation = new SpriteAnimation();
-		nakedAnimation.setSprites(gss.tiles(8, 8, 2, 1), gss.tiles(10, 8, 2, 1));
-		nakedAnimation.setFrameDuration(4);
-		nakedAnimation.repeatForever();
-		nakedAnimation.build();
-	}
-
-	private void createBigPacManAnimation() {
+	private void createBigPacManAnimation(PacManGameSpritesheet gss) {
 		bigPacManAnimation = new SpriteAnimation();
-		bigPacManAnimation.setSprites(gss.region(31, 15, 32, 34), gss.region(63, 15, 32, 34), gss.region(95, 15, 34, 34));
+		bigPacManAnimation.setSprites(gss.bigPacManSprites());
 		bigPacManAnimation.setFrameDuration(3);
 		bigPacManAnimation.repeatForever();
 		bigPacManAnimation.build();
@@ -115,9 +96,9 @@ public class PacSpriteAnimations implements PacAnimations {
 
 	@Override
 	public void select(String name) {
-		if (name != currentAnimationName) {
+		if (!name.equals(currentAnimationName)) {
 			currentAnimationName = name;
-			currentAnimation = animationByName(name);
+			currentAnimation = animation(name, pac.moveDir());
 			if (currentAnimation != null) {
 				currentAnimation.setFrame(0);
 			}
@@ -128,7 +109,9 @@ public class PacSpriteAnimations implements PacAnimations {
 	public void startSelected() {
 		if (currentAnimation != null) {
 			if (currentAnimationName.equals(PacAnimations.PAC_MUNCHING)) {
-				munchingAnimationByDir.values().forEach(SpriteAnimation::start);
+				munchingMap.values().forEach(SpriteAnimation::start);
+			} else if (currentAnimationName.equals(PacAnimations.HUSBAND_MUNCHING)) {
+				husbandMunchingMap.values().forEach(SpriteAnimation::start);
 			} else {
 				currentAnimation.start();
 			}
@@ -139,7 +122,9 @@ public class PacSpriteAnimations implements PacAnimations {
 	public void stopSelected() {
 		if (currentAnimation != null) {
 			if (currentAnimationName.equals(PacAnimations.PAC_MUNCHING)) {
-				munchingAnimationByDir.values().forEach(SpriteAnimation::stop);
+				munchingMap.values().forEach(SpriteAnimation::stop);
+			} else if (currentAnimationName.equals(PacAnimations.HUSBAND_MUNCHING)) {
+				husbandMunchingMap.values().forEach(SpriteAnimation::stop);
 			} else {
 				currentAnimation.stop();
 			}
@@ -150,19 +135,13 @@ public class PacSpriteAnimations implements PacAnimations {
 	public void resetSelected() {
 		if (currentAnimation != null) {
 			if (currentAnimationName.equals(PacAnimations.PAC_MUNCHING)) {
-				munchingAnimationByDir.values().forEach(SpriteAnimation::reset);
+				munchingMap.values().forEach(SpriteAnimation::reset);
+			} else if (currentAnimationName.equals(PacAnimations.HUSBAND_MUNCHING)) {
+				husbandMunchingMap.values().forEach(SpriteAnimation::reset);
 			} else {
 				currentAnimation.reset();
 			}
 		}
-	}
-
-	public SpriteAnimation getStretchedAnimation() {
-		return stretchedAnimation;
-	}
-
-	public SpriteAnimation getDamagedAnimation() {
-		return damagedAnimation;
 	}
 
 	public void draw(GraphicsContext g) {
@@ -170,17 +149,24 @@ public class PacSpriteAnimations implements PacAnimations {
 			return;
 		}
 		if (PAC_MUNCHING.equals(currentAnimationName)) {
-			currentAnimation = animationByName(PAC_MUNCHING); // update
+			currentAnimation = animation(PAC_MUNCHING, pac.moveDir()); // update
+		}
+		if (HUSBAND_MUNCHING.equals(currentAnimationName)) {
+			currentAnimation = animation(HUSBAND_MUNCHING, pac.moveDir()); // update
 		}
 		var sprite = currentAnimation.frame();
-		var x = pac.position().x() + HTS - sprite.getWidth() / 2;
-		var y = pac.position().y() + HTS - sprite.getHeight() / 2;
-		drawSprite(g, gss.source(), sprite, x, y);
+		if (sprite != null) {
+			var x = pac.position().x() + HTS - sprite.getWidth() / 2;
+			var y = pac.position().y() + HTS - sprite.getHeight() / 2;
+			g.drawImage(gss.source(), //
+					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
+					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+		}
 	}
 
-	private SpriteAnimation animationByName(String name) {
+	private SpriteAnimation animation(String name, Direction dir) {
 		if (PAC_MUNCHING.equals(name)) {
-			return munchingAnimationByDir.get(pac.moveDir());
+			return munchingMap.get(dir);
 		}
 		if (PAC_DYING.equals(name)) {
 			return dyingAnimation;
@@ -188,14 +174,9 @@ public class PacSpriteAnimations implements PacAnimations {
 		if (BIG_PACMAN.equals(name)) {
 			return bigPacManAnimation;
 		}
-		throw new IllegalArgumentException("Illegal animation name: " + name);
-	}
-
-	protected void drawSprite(GraphicsContext g, Image source, Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			g.drawImage(source, //
-					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
-					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+		if (HUSBAND_MUNCHING.equals(name)) {
+			return husbandMunchingMap.get(dir);
 		}
+		throw new IllegalArgumentException("Illegal animation (name, dir) value: " + name + "," + dir);
 	}
 }

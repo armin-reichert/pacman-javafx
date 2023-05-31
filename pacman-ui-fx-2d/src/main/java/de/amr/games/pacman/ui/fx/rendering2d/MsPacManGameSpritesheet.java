@@ -52,18 +52,6 @@ public class MsPacManGameSpritesheet extends GameSpritesheet {
 		return tileFromThirdColumn(1, 0);
 	}
 
-	public Rectangle2D highlightedMaze(int mazeNumber) {
-		return new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-	}
-
-	public Rectangle2D emptyMaze(int mazeNumber) {
-		return region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-	}
-
-	public Rectangle2D filledMaze(int mazeNumber) {
-		return region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-	}
-
 	@Override
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
@@ -107,6 +95,24 @@ public class MsPacManGameSpritesheet extends GameSpritesheet {
 	}
 
 	// Ms. Pac-Man specific:
+
+	public Rectangle2D highlightedMaze(int mazeNumber) {
+		return new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+	}
+
+	public Rectangle2D emptyMaze(int mazeNumber) {
+		return region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+	}
+
+	public Rectangle2D filledMaze(int mazeNumber) {
+		return region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+	}
+
+	public Rectangle2D[] pacManMunchingSprites(Direction dir) {
+		int d = DIR_ORDER.index(dir);
+		return new Rectangle2D[] { tileFromThirdColumn(0, 9 + d), tileFromThirdColumn(1, 9 + d),
+				tileFromThirdColumn(2, 9) };
+	}
 
 	public Rectangle2D heartSprite() {
 		return tileFromThirdColumn(2, 10);

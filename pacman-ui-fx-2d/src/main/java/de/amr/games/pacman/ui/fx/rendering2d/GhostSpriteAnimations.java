@@ -33,7 +33,6 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 	private SpriteAnimation stretchedAnimation;
 	private SpriteAnimation patchedAnimation;
 	private SpriteAnimation nakedAnimation;
-	private SpriteAnimation bigPacManAnimation;
 
 	private String currentAnimationName;
 	private SpriteAnimation currentAnimation;
@@ -55,12 +54,15 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		createFlashingAnimation();
 		createEyesAnimation();
 		createNumberAnimation();
-		createBlinkyDamagedAnimation();
-		createBlinkyStretchedAnimation();
-		createBlinkyPatchedAnimation();
-		createBlinkyNakedAnimation();
-		createBigPacManAnimation();
 
+		if (gss instanceof PacManGameSpritesheet) {
+			createBlinkyDamagedAnimation((PacManGameSpritesheet) gss);
+			createBlinkyStretchedAnimation((PacManGameSpritesheet) gss);
+			createBlinkyPatchedAnimation((PacManGameSpritesheet) gss);
+			createBlinkyNakedAnimation((PacManGameSpritesheet) gss);
+		}
+
+		// TODO check this
 		for (var dir : Direction.values()) {
 			normalAnimationByDir.get(dir).start();
 			eyesAnimationByDir.get(dir).start();
@@ -116,39 +118,34 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
 	// Pac-Man only
 
-	private void createBlinkyDamagedAnimation() {
+	private void createBlinkyDamagedAnimation(PacManGameSpritesheet ss) {
 		damagedAnimation = new SpriteAnimation();
-		damagedAnimation.setSprites(gss.tile(8, 7), gss.tile(9, 7));
+		damagedAnimation.setSprites(ss.blinkyDamagedSprites());
 		damagedAnimation.setFrameDuration(60);
 		damagedAnimation.build();
 	}
 
-	private void createBlinkyStretchedAnimation() {
+	private void createBlinkyStretchedAnimation(PacManGameSpritesheet ss) {
 		stretchedAnimation = new SpriteAnimation();
-		stretchedAnimation.setSprites(gss.tilesRightOf(8, 6, 5));
+		stretchedAnimation.setSprites(ss.blinkyStretchedSprites());
 		stretchedAnimation.setFrameDuration(60);
 		stretchedAnimation.build();
 	}
 
-	private void createBlinkyPatchedAnimation() {
+	private void createBlinkyPatchedAnimation(PacManGameSpritesheet ss) {
 		patchedAnimation = new SpriteAnimation();
-		patchedAnimation.setSprites(gss.tile(10, 7), gss.tile(11, 7));
+		patchedAnimation.setSprites(ss.blinkyPatchedSprites());
 		patchedAnimation.setFrameDuration(4);
 		patchedAnimation.repeatForever();
+		patchedAnimation.build();
 	}
 
-	private void createBlinkyNakedAnimation() {
+	private void createBlinkyNakedAnimation(PacManGameSpritesheet ss) {
 		nakedAnimation = new SpriteAnimation();
-		nakedAnimation.setSprites(gss.tiles(8, 8, 2, 1), gss.tiles(10, 8, 2, 1));
+		nakedAnimation.setSprites(ss.blinkyNakedSprites());
 		nakedAnimation.setFrameDuration(4);
 		nakedAnimation.repeatForever();
-	}
-
-	private void createBigPacManAnimation() {
-		bigPacManAnimation = new SpriteAnimation();
-		bigPacManAnimation.setSprites(gss.region(31, 15, 32, 34), gss.region(63, 15, 32, 34), gss.region(95, 15, 34, 34));
-		bigPacManAnimation.setFrameDuration(3);
-		bigPacManAnimation.repeatForever();
+		nakedAnimation.build();
 	}
 
 	@Override
@@ -163,7 +160,7 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
 	@Override
 	public void select(String name, Object... args) {
-		if (name != currentAnimationName) {
+		if (!name.equals(currentAnimationName)) {
 			currentAnimationName = name;
 			currentAnimation = animationByName(name);
 			if (currentAnimation != null) {

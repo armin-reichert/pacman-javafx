@@ -24,8 +24,7 @@ import javafx.util.Duration;
  */
 public class MsPacManIntermissionScene3 extends GameScene2D {
 
-	private MsPacManIntermission3 im;
-	private MsPacManIntermission3.Context imc;
+	private MsPacManIntermission3 intermission;
 	private SpriteAnimation clapAnimation;
 	private SimpleAnimation<Rectangle2D> storkAnimation;
 
@@ -34,22 +33,20 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		return (MsPacManGameSpritesheet) super.gss();
 	}
 
+	private MsPacManIntermission3.Context imc() {
+		return intermission.context();
+	}
+
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
-		im = new MsPacManIntermission3(context.gameController());
-		imc = im.context();
+		intermission = new MsPacManIntermission3(context.gameController());
+		intermission.changeState(MsPacManIntermission3.State.INIT);
 
-		im.changeState(MsPacManIntermission3.State.FLAP);
-
-		imc.msPacMan.setAnimations(new PacSpriteAnimations(imc.msPacMan, gss()));
-
-		imc.pacMan.setAnimations(new PacSpriteAnimations(imc.pacMan, gss()));
-		// TODO take Pac-Man animations from Ms. Pac-Man spritesheet
-//		imc.pacMan.animations()
-//				.ifPresent(anims -> anims.put(GameModel.AK_PAC_MUNCHING, gss().createPacManMunchingAnimationMap(imc.pacMan)));
+		imc().msPacMan.setAnimations(new PacSpriteAnimations(imc().msPacMan, gss()));
+		imc().pacMan.setAnimations(new PacSpriteAnimations(imc().pacMan, gss()));
 
 		storkAnimation = gss().createStorkFlyingAnimation();
 		storkAnimation.start();
@@ -61,17 +58,17 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void update() {
-		im.update();
-		storkAnimation.animate();
+		intermission.update();
+		storkAnimation.animate(); // TODO use SpriteAnimation
 	}
 
 	@Override
 	public void drawSceneContent() {
-		drawClap(imc.clapperboard, clapAnimation);
-		drawPacSprite(imc.msPacMan);
-		drawPacSprite(imc.pacMan);
-		drawEntitySprite(imc.stork, storkAnimation.frame());
-		drawEntitySprite(imc.bag, imc.bagOpen ? gss().juniorPacSprite() : gss().blueBagSprite());
+		drawClap(imc().clapperboard, clapAnimation);
+		drawPacSprite(imc().msPacMan);
+		drawPacSprite(imc().pacMan);
+		drawEntitySprite(imc().stork, storkAnimation.frame());
+		drawEntitySprite(imc().bag, imc().bagOpen ? gss().juniorPacSprite() : gss().blueBagSprite());
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }

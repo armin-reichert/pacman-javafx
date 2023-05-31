@@ -45,6 +45,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacSpriteAnimations(pac, gss()));
 		pac.selectAnimation(PacAnimations.PAC_MUNCHING);
+		pac.startAnimation();
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setPixelSpeed(1.25f);
@@ -53,6 +54,7 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.setAnimations(new GhostSpriteAnimations(blinky, gss()));
 		blinky.selectAnimation(GhostAnimations.BLINKY_PATCHED);
+		blinky.startAnimation();
 		blinky.placeAtTile(v2i(35, 20), 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(1.25f);
@@ -77,6 +79,7 @@ public class PacManCutscene3 extends GameScene2D {
 			blinky.placeAtTile(v2i(-1, 20), 0, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.selectAnimation(GhostAnimations.BLINKY_NAKED);
+			blinky.startAnimation();
 			break;
 		}
 
