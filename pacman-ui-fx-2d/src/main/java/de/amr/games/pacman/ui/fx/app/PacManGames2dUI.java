@@ -638,7 +638,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void startCutscenesTest() {
-		gameController.startCutscenesTest(2);
+		gameController.startCutscenesTest(1);
 		showFlashMessage("Cut scenes");
 	}
 
