@@ -113,14 +113,14 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 	private void createBlinkyDamagedAnimation(PacManGameSpritesheet ss) {
 		damagedAnimation = new SpriteAnimation();
 		damagedAnimation.setSprites(ss.blinkyDamagedSprites());
-		damagedAnimation.setFrameDuration(60);
+		damagedAnimation.setFrameDuration(Integer.MAX_VALUE);
 		damagedAnimation.build();
 	}
 
 	private void createBlinkyStretchedAnimation(PacManGameSpritesheet ss) {
 		stretchedAnimation = new SpriteAnimation();
 		stretchedAnimation.setSprites(ss.blinkyStretchedSprites());
-		stretchedAnimation.setFrameDuration(60);
+		stretchedAnimation.setFrameDuration(Integer.MAX_VALUE);
 		stretchedAnimation.build();
 	}
 

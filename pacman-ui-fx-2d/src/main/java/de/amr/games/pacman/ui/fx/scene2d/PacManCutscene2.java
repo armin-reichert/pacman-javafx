@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.v2i;
-
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameModel;
@@ -45,20 +43,10 @@ public class PacManCutscene2 extends GameScene2D {
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacSpriteAnimations(pac, gss()));
-		pac.selectAnimation(PacAnimations.PAC_MUNCHING);
-		pac.startAnimation();
-		pac.placeAtTile(v2i(29, 20), 0, 0);
-		pac.setMoveDir(Direction.LEFT);
-		pac.setPixelSpeed(1.15f);
-		pac.show();
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinkyAnimations = new GhostSpriteAnimations(blinky, gss());
 		blinky.setAnimations(blinkyAnimations);
-		blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
-		blinky.startAnimation();
-		blinky.placeAtTile(v2i(28, 20), 0, 0);
-		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(0);
 		blinky.hide();
 	}
@@ -78,68 +66,88 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 
 		switch (++frame) {
+		case 1: {
+			blinkyAnimations.getStretchedAnimation().setFrame(0); // Nail
+			break;
+		}
 
-		case 110: {
+		case 25: {
+			pac.placeAtTile(28, 20, 0, 0);
+			pac.setMoveDir(Direction.LEFT);
+			pac.setPixelSpeed(1.15f);
+			pac.selectAnimation(PacAnimations.PAC_MUNCHING);
+			pac.startAnimation();
+			pac.show();
+			break;
+		}
+
+		case 111: {
+			blinky.placeAtTile(28, 20, -3, 0);
+			blinky.setMoveAndWishDir(Direction.LEFT);
 			blinky.setPixelSpeed(1.25f);
+			blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+			blinky.startAnimation();
 			blinky.show();
 			break;
 		}
 
-		case 196: {
-			blinky.setPixelSpeed(0.17f);
-			blinkyAnimations.getStretchedAnimation().nextFrame();
+		case 194: {
+			blinky.setPixelSpeed(0.1f);
+			blinkyAnimations.selectedAnimation().setFrameDuration(8);
+			break;
+		}
+
+		case 198: {
+			blinkyAnimations.getStretchedAnimation().nextFrame(); // Stretched S
 			break;
 		}
 
 		case 226: {
-			blinkyAnimations.getStretchedAnimation().nextFrame();
+			blinkyAnimations.getStretchedAnimation().nextFrame(); // Stretched M
 			break;
 		}
 
 		case 248: {
-			blinky.setPixelSpeed(0);
-			blinkyAnimations.getStretchedAnimation().nextFrame();
+			blinkyAnimations.getStretchedAnimation().nextFrame(); // Stretched L
 			break;
 		}
 
 		case 328: {
-			blinkyAnimations.getStretchedAnimation().nextFrame();
+			blinky.setPixelSpeed(0);
+			blinkyAnimations.getStretchedAnimation().nextFrame(); // Rapture
 			break;
 		}
 
 		case 329: {
-			blinky.selectAnimation(GhostAnimations.BLINKY_DAMAGED);
-			blinky.startAnimation();
+			blinky.selectAnimation(GhostAnimations.BLINKY_DAMAGED); // Eyes up
 			break;
 		}
 
 		case 389: {
-			blinky.selectAnimation(GhostAnimations.BLINKY_STRETCHED);
-			blinky.startAnimation();
+			blinkyAnimations.getDamagedAnimation().nextFrame(); // Eyes right-down
 			break;
 		}
 
 		case 508: {
-//TODO			stretchedDressAnimation = null;
-			break;
-		}
-
-		case 509: {
+			blinky.setVisible(false);
 			context.state().timer().expire();
 			break;
 		}
 
 		default: {
-			pac.move();
-			blinky.move();
 			break;
 		}
 
-		}
+		} // switch
+
+		blinky.move();
+		pac.move();
 	}
 
 	@Override
 	public void drawSceneContent() {
+		drawSprite(blinkyAnimations.getStretchedAnimation().frame(), s(t(14)), s(t(19) + 3));
+		blinkyAnimations.getStretchedAnimation().frame();
 //		if (stretchedDressAnimation != null) {
 //			drawSprite((Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
 //		}

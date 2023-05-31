@@ -71,7 +71,14 @@ public class SpriteAnimation {
 	}
 
 	public void setFrameDuration(int ticks) {
-		frameDurationTicks = ticks;
+		if (transition != null) {
+			transition.stop();
+			transition = null;
+			frameDurationTicks = ticks;
+			build();
+		} else {
+			frameDurationTicks = ticks;
+		}
 	}
 
 	public void repeatForever() {
