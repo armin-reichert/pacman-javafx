@@ -33,14 +33,26 @@ public class PacManGameSpritesheet extends GameSpritesheet {
 
 	@Override
 	public Rectangle2D bonusValueSprite(int symbol) {
-		if (symbol <= 3) {
-			return tile(symbol, 9);
+		switch (symbol) {
+		case 0:
+			return region(0, 148, 16, 8); // 100
+		case 1:
+			return region(16, 148, 16, 8); // 300
+		case 2:
+			return region(32, 148, 16, 8); // 500
+		case 3:
+			return region(48, 148, 16, 8); // 700
+		case 4:
+			return region(64, 148, 18, 8); // 1000
+		case 5:
+			return region(62, 164, 20, 8); // 2000
+		case 6:
+			return region(62, 180, 20, 8); // 3000
+		case 7:
+			return region(62, 196, 20, 8); // 5000
+		default:
+			return null;
 		}
-		if (symbol == 4) {
-			var region = tiles(4, 9, 2, 1);
-			return region(region.getMinX(), region.getMinY(), region.getWidth() - 13, region.getHeight()); // WTF
-		}
-		return tiles(3, 5 + symbol, 3, 1);
 	}
 
 	public Rectangle2D ghostFacingRight(int ghostID) {

@@ -5,11 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
-import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimation;
-import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
 
 /**
@@ -26,7 +24,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	private MsPacManIntermission3 intermission;
 	private SpriteAnimation clapAnimation;
-	private SimpleAnimation<Rectangle2D> storkAnimation;
+	private SpriteAnimation storkAnimation;
 
 	@Override
 	protected MsPacManGameSpritesheet gss() {
@@ -59,7 +57,6 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	@Override
 	public void update() {
 		intermission.update();
-		storkAnimation.animate(); // TODO use SpriteAnimation
 	}
 
 	@Override

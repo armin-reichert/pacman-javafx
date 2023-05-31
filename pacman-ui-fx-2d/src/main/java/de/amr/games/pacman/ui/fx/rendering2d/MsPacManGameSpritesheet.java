@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.anim.SimpleAnimation;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.ui.fx.util.Order;
 import javafx.geometry.Rectangle2D;
@@ -140,14 +139,13 @@ public class MsPacManGameSpritesheet extends GameSpritesheet {
 				.build();
 	}
 
-	// TODO convert to sprite animation
-	public SimpleAnimation<Rectangle2D> createStorkFlyingAnimation() {
-		var animation = new SimpleAnimation<>( //
-				region(489, 176, 32, 16), //
-				region(521, 176, 32, 16) //
-		);
-		animation.repeatForever();
-		animation.setFrameDuration(8);
-		return animation;
+	public SpriteAnimation createStorkFlyingAnimation() {
+		return new SpriteAnimation.Builder() //
+				.frameDurationTicks(8) //
+				.loop() //
+				.sprites(//
+						region(489, 176, 32, 16), //
+						region(521, 176, 32, 16) //
+				).build();
 	}
 }
