@@ -158,8 +158,9 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 			if (currentAnimation != null) {
 				if (currentAnimation == numberAnimation) {
 					numberAnimation.setFrame((Integer) args[0]);
+				} else {
+					currentAnimation.setFrame(0);
 				}
-				currentAnimation.setFrame(0);
 			}
 		}
 	}
