@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.model.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -19,30 +17,49 @@ import javafx.util.Duration;
  */
 public class SpriteAnimation {
 
-	public boolean debug = false;
+	public static class Builder {
 
-	private Transition transition;
-	private Rectangle2D[] sprites = new Rectangle2D[0];
-	private int frame;
-	private int frameDurationTicks;
-	private boolean loop;
+		private SpriteAnimation animation = new SpriteAnimation();
+		private int frameDurationTicks = 1;
+		private boolean loop = false;
 
-	public void build() {
-		transition = new Transition() {
-			{
-				setCycleDuration(Duration.seconds(1.0 / GameModel.FPS * frameDurationTicks));
-				setCycleCount(loop ? Animation.INDEFINITE : sprites.length);
-				setInterpolator(Interpolator.LINEAR);
-			}
+		public Builder frameDurationTicks(int ticks) {
+			this.frameDurationTicks = ticks;
+			return this;
+		}
 
-			@Override
-			protected void interpolate(double frac) {
-				if (frac == 1.0) {
-					nextFrame();
+		public Builder loop() {
+			loop = true;
+			return this;
+		}
+
+		public Builder sprites(Rectangle2D... sprites) {
+			animation.sprites = sprites;
+			return this;
+		}
+
+		public SpriteAnimation build() {
+			animation.transition = new Transition() {
+				{
+					setCycleDuration(Duration.seconds(1.0 / GameModel.FPS * frameDurationTicks));
+					setCycleCount(loop ? Animation.INDEFINITE : animation.sprites.length);
+					setInterpolator(Interpolator.LINEAR);
 				}
-			}
-		};
+
+				@Override
+				protected void interpolate(double frac) {
+					if (frac == 1.0) {
+						animation.nextFrame();
+					}
+				}
+			};
+			return animation;
+		}
 	}
+
+	private Rectangle2D[] sprites = new Rectangle2D[0];
+	private Transition transition;
+	private int frame;
 
 	public void reset() {
 		transition.stop();
@@ -62,27 +79,8 @@ public class SpriteAnimation {
 		return transition.getStatus() == Status.RUNNING;
 	}
 
-	public void setSprites(Rectangle2D... sprites) {
-		this.sprites = sprites;
-	}
-
 	public void setDelay(Duration delay) {
 		transition.setDelay(delay);
-	}
-
-	public void setFrameDuration(int ticks) {
-		if (transition != null) {
-			transition.stop();
-			transition = null;
-			frameDurationTicks = ticks;
-			build();
-		} else {
-			frameDurationTicks = ticks;
-		}
-	}
-
-	public void repeatForever() {
-		loop = true;
 	}
 
 	public void setFrame(int frame) {
@@ -94,15 +92,9 @@ public class SpriteAnimation {
 	}
 
 	public void nextFrame() {
-		if (debug) {
-			Logger.info("Begin next frame: current={}", frame);
-		}
 		frame++;
 		if (frame == sprites.length) {
-			frame = loop ? 0 : sprites.length - 1;
-		}
-		if (debug) {
-			Logger.info("End next frame: current={}", frame);
+			frame = transition.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
 		}
 	}
 }

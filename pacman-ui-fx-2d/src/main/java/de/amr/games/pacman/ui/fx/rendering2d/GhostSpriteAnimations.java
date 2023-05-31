@@ -66,78 +66,73 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 	private void createNormalAnimation() {
 		normalAnimationByDir = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation();
-			animation.setSprites(gss.ghostNormalSprites(ghost.id(), dir));
-			animation.setFrameDuration(8);
-			animation.repeatForever();
-			animation.build();
+			var animation = new SpriteAnimation.Builder() //
+					.frameDurationTicks(8) //
+					.loop() //
+					.sprites(gss.ghostNormalSprites(ghost.id(), dir)) //
+					.build();
 			normalAnimationByDir.put(dir, animation);
 		}
 	}
 
 	private void createFrightenedAnimation() {
-		frightenedAnimation = new SpriteAnimation();
-		frightenedAnimation.setSprites(gss.ghostFrightenedSprites());
-		frightenedAnimation.setFrameDuration(8);
-		frightenedAnimation.repeatForever();
-		frightenedAnimation.build();
+		frightenedAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(8) //
+				.loop() //
+				.sprites(gss.ghostFrightenedSprites()) //
+				.build();
 	}
 
 	private void createFlashingAnimation() {
-		flashingAnimation = new SpriteAnimation();
-		flashingAnimation.setSprites(gss.ghostFlashingSprites());
-		flashingAnimation.setFrameDuration(6);
-		flashingAnimation.repeatForever();
-		flashingAnimation.build();
+		flashingAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(6) //
+				.loop() //
+				.sprites(gss.ghostFlashingSprites()) //
+				.build();
 	}
 
 	private void createEyesAnimation() {
 		eyesAnimationByDir = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation();
-			animation.setSprites(gss.ghostEyesSprites(dir));
-			animation.build();
+			var animation = new SpriteAnimation.Builder().sprites(gss.ghostEyesSprites(dir)).build();
 			eyesAnimationByDir.put(dir, animation);
 		}
 	}
 
 	private void createNumberAnimation() {
-		numberAnimation = new SpriteAnimation();
-		numberAnimation.setSprites(gss.ghostNumberSprites());
-		numberAnimation.setFrameDuration(Integer.MAX_VALUE);
-		numberAnimation.build();
+		numberAnimation = new SpriteAnimation.Builder() //
+				.sprites(gss.ghostNumberSprites()) //
+				.build();
 	}
 
 	// Pac-Man only
 
 	private void createBlinkyDamagedAnimation(PacManGameSpritesheet ss) {
-		damagedAnimation = new SpriteAnimation();
-		damagedAnimation.setSprites(ss.blinkyDamagedSprites());
-		damagedAnimation.setFrameDuration(Integer.MAX_VALUE);
-		damagedAnimation.build();
+		damagedAnimation = new SpriteAnimation.Builder() //
+				.sprites(ss.blinkyDamagedSprites()) //
+				.build();
 	}
 
 	private void createBlinkyStretchedAnimation(PacManGameSpritesheet ss) {
-		stretchedAnimation = new SpriteAnimation();
-		stretchedAnimation.setSprites(ss.blinkyStretchedSprites());
-		stretchedAnimation.setFrameDuration(Integer.MAX_VALUE);
-		stretchedAnimation.build();
+		stretchedAnimation = new SpriteAnimation.Builder() //
+				.sprites(ss.blinkyStretchedSprites()) //
+				.build();
 	}
 
 	private void createBlinkyPatchedAnimation(PacManGameSpritesheet ss) {
-		patchedAnimation = new SpriteAnimation();
-		patchedAnimation.setSprites(ss.blinkyPatchedSprites());
-		patchedAnimation.setFrameDuration(4);
-		patchedAnimation.repeatForever();
-		patchedAnimation.build();
+		patchedAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(4) //
+				.loop() //
+				.sprites(ss.blinkyPatchedSprites()) //
+				.build();
 	}
 
 	private void createBlinkyNakedAnimation(PacManGameSpritesheet ss) {
-		nakedAnimation = new SpriteAnimation();
-		nakedAnimation.setSprites(ss.blinkyNakedSprites());
-		nakedAnimation.setFrameDuration(4);
-		nakedAnimation.repeatForever();
-		nakedAnimation.build();
+		nakedAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(4) //
+				.loop() //
+				.sprites(ss.blinkyNakedSprites()) //
+				.build();
 	}
 
 	@Override

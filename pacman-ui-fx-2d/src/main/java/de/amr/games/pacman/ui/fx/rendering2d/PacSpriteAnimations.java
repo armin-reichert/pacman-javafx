@@ -52,11 +52,10 @@ public class PacSpriteAnimations implements PacAnimations {
 	private void createMunchingAnimation() {
 		munchingMap = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation();
-			animation.setSprites(gss.pacMunchingSprites(dir));
-			animation.setFrameDuration(1);
-			animation.repeatForever();
-			animation.build();
+			var animation = new SpriteAnimation.Builder() //
+					.loop() //
+					.sprites(gss.pacMunchingSprites(dir)) //
+					.build();
 			munchingMap.put(dir, animation);
 		}
 	}
@@ -64,28 +63,28 @@ public class PacSpriteAnimations implements PacAnimations {
 	private void createHusbandMunchingAnimation(MsPacManGameSpritesheet gss) {
 		husbandMunchingMap = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation();
-			animation.setSprites(gss.pacManMunchingSprites(dir));
-			animation.setFrameDuration(2);
-			animation.repeatForever();
-			animation.build();
+			var animation = new SpriteAnimation.Builder() //
+					.frameDurationTicks(2) //
+					.loop() //
+					.sprites(gss.pacManMunchingSprites(dir)) //
+					.build();
 			husbandMunchingMap.put(dir, animation);
 		}
 	}
 
 	private void createDyingAnimation() {
-		dyingAnimation = new SpriteAnimation();
-		dyingAnimation.setSprites(gss.pacDyingSprites());
-		dyingAnimation.setFrameDuration(8);
-		dyingAnimation.build();
+		dyingAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(8) //
+				.sprites(gss.pacDyingSprites()) //
+				.build();
 	}
 
 	private void createBigPacManAnimation(PacManGameSpritesheet gss) {
-		bigPacManAnimation = new SpriteAnimation();
-		bigPacManAnimation.setSprites(gss.bigPacManSprites());
-		bigPacManAnimation.setFrameDuration(3);
-		bigPacManAnimation.repeatForever();
-		bigPacManAnimation.build();
+		bigPacManAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(3) //
+				.loop() //
+				.sprites(gss.bigPacManSprites()) //
+				.build();
 	}
 
 	@Override

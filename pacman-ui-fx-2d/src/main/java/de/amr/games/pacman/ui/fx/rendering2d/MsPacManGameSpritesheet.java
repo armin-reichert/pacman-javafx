@@ -126,19 +126,18 @@ public class MsPacManGameSpritesheet extends GameSpritesheet {
 		return region(509, 200, 8, 8);
 	}
 
+	// TODO this is not 100% accurate yet
 	public SpriteAnimation createClapperboardAnimation() {
-		var animation = new SpriteAnimation();
-		// TODO this is not 100% accurate yet
-		animation.setSprites( //
-				region(456, 208, 32, 32), //
-				region(488, 208, 32, 32), //
-				region(520, 208, 32, 32), //
-				region(488, 208, 32, 32), //
-				region(456, 208, 32, 32)//
-		);
-		animation.setFrameDuration(4);
-		animation.build();
-		return animation;
+		return new SpriteAnimation.Builder() //
+				.frameDurationTicks(4) //
+				.sprites(//
+						region(456, 208, 32, 32), //
+						region(488, 208, 32, 32), //
+						region(520, 208, 32, 32), //
+						region(488, 208, 32, 32), //
+						region(456, 208, 32, 32)//
+				) //
+				.build();
 	}
 
 	// TODO convert to sprite animation
