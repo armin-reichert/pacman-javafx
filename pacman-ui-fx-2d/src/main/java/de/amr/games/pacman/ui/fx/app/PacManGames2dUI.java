@@ -30,10 +30,10 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
@@ -75,13 +75,15 @@ import javafx.util.Duration;
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
 	//@formatter:off
-	
 	public final AudioClip voiceExplainKeys        = PacManGames2d.MGR.audioClip("sound/voice/press-key.mp3");
 	public final AudioClip voiceAutopilotOff       = PacManGames2d.MGR.audioClip("sound/voice/autopilot-off.mp3");
 	public final AudioClip voiceAutopilotOn        = PacManGames2d.MGR.audioClip("sound/voice/autopilot-on.mp3");
 	public final AudioClip voiceImmunityOff        = PacManGames2d.MGR.audioClip("sound/voice/immunity-off.mp3");
 	public final AudioClip voiceImmunityOn         = PacManGames2d.MGR.audioClip("sound/voice/immunity-on.mp3");
 	//@formatter:on
+
+	protected SpritesheetPacManGame spritesheetPacManGame;
+	protected SpritesheetMsPacManGame spritesheetMsPacManGame;
 
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected GameClock clock;
@@ -100,6 +102,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		checkNotNull(stage);
 		checkNotNull(settings);
 		checkNotNull(theme);
+
+		spritesheetMsPacManGame = new SpritesheetMsPacManGame(theme.image("mspacman.spritesheet"), 16);
+		spritesheetPacManGame = new SpritesheetPacManGame(theme.image("pacman.spritesheet"), 16);
 
 		this.stage = stage;
 		stage.setFullScreen(settings.fullScreen);
@@ -207,6 +212,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		return theme;
 	}
 
+	@Override
+	public SpritesheetMsPacManGame spritesheetMsPacManGame() {
+		return spritesheetMsPacManGame;
+	}
+
+	@Override
+	public SpritesheetPacManGame spritesheetPacManGame() {
+		return spritesheetPacManGame;
+	}
+
 	protected void updateStage() {
 		mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		switch (gameVariant()) {
@@ -306,9 +321,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			scene2D.setWallpaperColor(wallpaperColor);
 			scene2D.root().setBackground(ResourceManager.coloredBackground(wallpaperColor));
 		}
-		currentGameScene.setContext(
-				new GameSceneContext(gameController, this, new SpritesheetMsPacManGame(theme.image("mspacman.spritesheet"), 16),
-						new SpritesheetPacManGame(theme.image("pacman.spritesheet"), 16)));
+		currentGameScene.setContext(new GameSceneContext(gameController, this));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
@@ -384,15 +397,15 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		e.game.level().ifPresent(level -> {
 			switch (level.game().variant()) {
 			case MS_PACMAN: {
-				var spritesheet = new SpritesheetMsPacManGame(theme.image("mspacman.spritesheet"), 16);
-				level.pac().setAnimations(new PacSpriteAnimationsMsPacManGame(level.pac(), spritesheet));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsMsPacManGame(ghost, spritesheet)));
+				level.pac().setAnimations(new PacSpriteAnimationsMsPacManGame(level.pac(), spritesheetMsPacManGame));
+				level.ghosts().forEach(
+						ghost -> ghost.setAnimations(new GhostSpriteAnimationsMsPacManGame(ghost, spritesheetMsPacManGame)));
 				break;
 			}
 			case PACMAN: {
-				var spritesheet = new SpritesheetPacManGame(theme.image("pacman.spritesheet"), 16);
-				level.pac().setAnimations(new PacSpriteAnimationsPacManGame(level.pac(), spritesheet));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacManGame(ghost, spritesheet)));
+				level.pac().setAnimations(new PacSpriteAnimationsPacManGame(level.pac(), spritesheetPacManGame));
+				level.ghosts()
+						.forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacManGame(ghost, spritesheetPacManGame)));
 				break;
 			}
 			default:

@@ -37,13 +37,14 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		intermission = new MsPacManIntermission3(context.gameController());
 		intermission.changeState(MsPacManIntermission3.State.INIT);
 
-		imc().msPacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().msPacMan, context.spritesheetMsPacMan()));
-		imc().pacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().pacMan, context.spritesheetMsPacMan()));
+		var ss = context.ui().spritesheetMsPacManGame();
+		imc().msPacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().msPacMan, ss));
+		imc().pacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().pacMan, ss));
 
-		storkAnimation = context.spritesheetMsPacMan().createStorkFlyingAnimation();
+		storkAnimation = ss.createStorkFlyingAnimation();
 		storkAnimation.start();
 
-		clapAnimation = context.spritesheetMsPacMan().createClapperboardAnimation();
+		clapAnimation = ss.createClapperboardAnimation();
 		clapAnimation.setDelay(Duration.seconds(1));
 		clapAnimation.start();
 	}
@@ -55,12 +56,12 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
+		var ss = context.ui().spritesheetMsPacManGame();
 		drawClap(imc().clapperboard, clapAnimation);
 		drawPacSprite(imc().msPacMan);
 		drawPacSprite(imc().pacMan);
 		drawEntitySprite(imc().stork, storkAnimation.frame());
-		drawEntitySprite(imc().bag, imc().bagOpen ? context.spritesheetMsPacMan().juniorPacSprite()
-				: context.spritesheetMsPacMan().blueBagSprite());
+		drawEntitySprite(imc().bag, imc().bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }

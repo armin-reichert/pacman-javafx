@@ -36,10 +36,10 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacSpriteAnimationsPacManGame(pac, context.spritesheetPacMan()));
+		pac.setAnimations(new PacSpriteAnimationsPacManGame(pac, context.ui().spritesheetPacManGame()));
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
-		blinkyAnimations = new GhostSpriteAnimationsPacManGame(blinky, context.spritesheetPacMan());
+		blinkyAnimations = new GhostSpriteAnimationsPacManGame(blinky, context.ui().spritesheetPacManGame());
 		blinky.setAnimations(blinkyAnimations);
 		blinky.setPixelSpeed(0);
 		blinky.hide();

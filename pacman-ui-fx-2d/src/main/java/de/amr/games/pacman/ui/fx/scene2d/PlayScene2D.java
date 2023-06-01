@@ -112,14 +112,14 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var ss = context.spritesheetMsPacMan();
+		var ss = context.ui().spritesheetMsPacManGame();
 		if (world.getMazeFlashing().isRunning()) {
 			if (world.getMazeFlashing().frame()) {
 				var source = context.ui().theme().image("mspacman.flashingMazes");
 				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(context.spritesheet().source(), ss.emptyMaze(mazeNumber), x, y);
+				drawSprite(ss.source(), ss.emptyMaze(mazeNumber), x, y);
 			}
 		} else {
 			// draw filled maze and hide eaten food (including energizers)

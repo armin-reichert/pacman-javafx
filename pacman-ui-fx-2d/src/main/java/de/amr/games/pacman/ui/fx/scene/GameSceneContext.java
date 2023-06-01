@@ -13,12 +13,8 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGamesUserInterface;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetPacManGame;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 
 /**
  * @author Armin Reichert
@@ -27,44 +23,18 @@ public class GameSceneContext {
 
 	private final GameController gameController;
 	private final PacManGamesUserInterface ui;
-	private final SpritesheetPacManGame spritesheetPacMan;
-	private final SpritesheetMsPacManGame spritesheetMsPacMan;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 
-	public GameSceneContext(GameController gameController, PacManGamesUserInterface ui,
-			SpritesheetMsPacManGame sheetMsPacMan, SpritesheetPacManGame sheetPacMan) {
+	public GameSceneContext(GameController gameController, PacManGamesUserInterface ui) {
 		checkNotNull(gameController);
 		checkNotNull(ui);
-		checkNotNull(sheetMsPacMan);
-		checkNotNull(sheetPacMan);
 		this.gameController = gameController;
 		this.ui = ui;
-		this.spritesheetMsPacMan = sheetMsPacMan;
-		this.spritesheetPacMan = sheetPacMan;
 	}
 
 	public PacManGamesUserInterface ui() {
 		return ui;
-	}
-
-	public Spritesheet spritesheet() {
-		switch (gameVariant()) {
-		case MS_PACMAN:
-			return spritesheetMsPacMan;
-		case PACMAN:
-			return spritesheetPacMan;
-		default:
-			throw new IllegalGameVariantException(gameVariant());
-		}
-	}
-
-	public SpritesheetMsPacManGame spritesheetMsPacMan() {
-		return spritesheetMsPacMan;
-	}
-
-	public SpritesheetPacManGame spritesheetPacMan() {
-		return spritesheetPacMan;
 	}
 
 	public boolean isScoreVisible() {

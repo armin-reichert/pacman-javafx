@@ -274,13 +274,13 @@ public abstract class GameScene2D implements GameScene {
 		switch (context.gameVariant()) {
 		case MS_PACMAN:
 			for (var symbol : levelSymbols) {
-				drawSprite(context.spritesheetMsPacMan().bonusSymbolSprite(symbol), x, yr);
+				drawSprite(context.ui().spritesheetMsPacManGame().bonusSymbolSprite(symbol), x, yr);
 				x -= TS * 2;
 			}
 			break;
 		case PACMAN:
 			for (var symbol : levelSymbols) {
-				drawSprite(context.spritesheetPacMan().bonusSymbolSprite(symbol), x, yr);
+				drawSprite(context.ui().spritesheetPacManGame().bonusSymbolSprite(symbol), x, yr);
 				x -= TS * 2;
 			}
 			break;
@@ -299,13 +299,13 @@ public abstract class GameScene2D implements GameScene {
 		switch (context.gameVariant()) {
 		case MS_PACMAN: {
 			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-				drawSprite(context.spritesheetMsPacMan().livesCounterSprite(), x + TS * (2 * i), y);
+				drawSprite(context.ui().spritesheetMsPacManGame().livesCounterSprite(), x + TS * (2 * i), y);
 			}
 			break;
 		}
 		case PACMAN: {
 			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-				drawSprite(context.spritesheetPacMan().livesCounterSprite(), x + TS * (2 * i), y);
+				drawSprite(context.ui().spritesheetPacManGame().livesCounterSprite(), x + TS * (2 * i), y);
 			}
 			break;
 		}
@@ -324,12 +324,12 @@ public abstract class GameScene2D implements GameScene {
 		Rectangle2D valueSprite;
 		switch (context.gameVariant()) {
 		case MS_PACMAN:
-			symbolSprite = context.spritesheetMsPacMan().bonusSymbolSprite(bonus.symbol());
-			valueSprite = context.spritesheetMsPacMan().bonusValueSprite(bonus.symbol());
+			symbolSprite = context.ui().spritesheetMsPacManGame().bonusSymbolSprite(bonus.symbol());
+			valueSprite = context.ui().spritesheetMsPacManGame().bonusValueSprite(bonus.symbol());
 			break;
 		case PACMAN:
-			symbolSprite = context.spritesheetPacMan().bonusSymbolSprite(bonus.symbol());
-			valueSprite = context.spritesheetPacMan().bonusValueSprite(bonus.symbol());
+			symbolSprite = context.ui().spritesheetPacManGame().bonusSymbolSprite(bonus.symbol());
+			valueSprite = context.ui().spritesheetPacManGame().bonusValueSprite(bonus.symbol());
 			break;
 		default:
 			throw new IllegalGameVariantException(context.gameVariant());
@@ -387,7 +387,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(context.spritesheet().source(), sprite, x, y);
+		drawSprite(context.ui().spritesheet().source(), sprite, x, y);
 	}
 
 	/**
