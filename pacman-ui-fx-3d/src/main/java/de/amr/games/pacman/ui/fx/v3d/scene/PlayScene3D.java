@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import javafx.scene.layout.BorderPane;
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameState;
@@ -43,6 +42,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
@@ -68,6 +68,7 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -191,7 +192,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		level3D = new GameLevel3D(level, context.ui().theme(), context.gss());
+		level3D = new GameLevel3D(level, context.ui().theme(), context.spritesheet());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;
@@ -299,7 +300,7 @@ public class PlayScene3D implements GameScene {
 		context.level().ifPresent(level -> {
 			boolean moving = context.gameVariant() == GameVariant.MS_PACMAN;
 			level.bonusManagement().getBonus().ifPresent(bonus -> {
-				level3D.replaceBonus3D(bonus, context.gss(), moving);
+				level3D.replaceBonus3D(bonus, context.spritesheet(), moving);
 			});
 			level3D.bonus3D().showEdible();
 		});
@@ -364,7 +365,20 @@ public class PlayScene3D implements GameScene {
 				level.memo().killedGhosts.forEach(killedGhost -> {
 					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
 					int index = killedGhost.killedIndex();
-					ghost3D.setNumberImage(context.gss().subImage(context.gss().ghostNumberSprites()[index]));
+					switch (context.gameVariant()) {
+					case MS_PACMAN: {
+						var ss = context.spritesheetMsPacMan();
+						ghost3D.setNumberImage(ss.subImage(ss.ghostNumberSprites()[index]));
+						break;
+					}
+					case PACMAN: {
+						var ss = context.spritesheetPacMan();
+						ghost3D.setNumberImage(ss.subImage(ss.ghostNumberSprites()[index]));
+						break;
+					}
+					default:
+						throw new IllegalGameVariantException(context.gameVariant());
+					}
 				});
 			});
 		}

@@ -12,9 +12,8 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacMan;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacMan;
 import javafx.scene.text.Font;
 
 /**
@@ -26,12 +25,7 @@ public class PacManCutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
-	private GhostSpriteAnimations blinkyAnimations;
-
-	@Override
-	protected PacManGameSpritesheet gss() {
-		return (PacManGameSpritesheet) super.gss();
-	}
+	private GhostSpriteAnimationsPacMan blinkyAnimations;
 
 	@Override
 	public void init() {
@@ -42,10 +36,10 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacSpriteAnimations(pac, gss()));
+		pac.setAnimations(new PacSpriteAnimationsPacMan(pac, context.spritesheetPacMan()));
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
-		blinkyAnimations = new GhostSpriteAnimations(blinky, gss());
+		blinkyAnimations = new GhostSpriteAnimationsPacMan(blinky, context.spritesheetPacMan());
 		blinky.setAnimations(blinkyAnimations);
 		blinky.setPixelSpeed(0);
 		blinky.hide();
@@ -148,9 +142,6 @@ public class PacManCutscene2 extends GameScene2D {
 	public void drawSceneContent() {
 		drawSprite(blinkyAnimations.getStretchedAnimation().frame(), s(t(14)), s(t(19) + 3));
 		blinkyAnimations.getStretchedAnimation().frame();
-//		if (stretchedDressAnimation != null) {
-//			drawSprite((Rectangle2D) stretchedDressAnimation.frame(), t(14), t(19) + 3.0);
-//		}
 		drawGhostSprite(blinky);
 		drawPacSprite(pac);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());

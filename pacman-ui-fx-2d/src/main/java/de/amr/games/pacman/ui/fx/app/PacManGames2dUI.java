@@ -28,11 +28,12 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsMsPacMan;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacMan;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacMan;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacMan;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
@@ -381,19 +382,22 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void onLevelBeforeStart(GameEvent e) {
 		e.game.level().ifPresent(level -> {
-			GameSpritesheet spritesheet;
 			switch (level.game().variant()) {
-			case MS_PACMAN:
-				spritesheet = new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16);
+			case MS_PACMAN: {
+				var spritesheet = new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16);
+				level.pac().setAnimations(new PacSpriteAnimationsMsPacMan(level.pac(), spritesheet));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsMsPacMan(ghost, spritesheet)));
 				break;
-			case PACMAN:
-				spritesheet = new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16);
+			}
+			case PACMAN: {
+				var spritesheet = new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16);
+				level.pac().setAnimations(new PacSpriteAnimationsPacMan(level.pac(), spritesheet));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacMan(ghost, spritesheet)));
 				break;
+			}
 			default:
 				throw new IllegalGameVariantException(level.game().variant());
 			}
-			level.pac().setAnimations(new PacSpriteAnimations(level.pac(), spritesheet));
-			level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimations(ghost, spritesheet)));
 			Logger.trace("Created creature and world animations for level #{}", level.number());
 		});
 		updateGameScene(true);

@@ -33,12 +33,15 @@ import java.util.stream.Stream;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -75,9 +78,9 @@ public class GameLevel3D {
 	private Scores3D scores3D;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, Theme theme, GameSpritesheet gss) {
+	public GameLevel3D(GameLevel level, Theme theme, Spritesheet spritesheet) {
 		checkLevelNotNull(level);
-		checkNotNull(gss);
+		checkNotNull(spritesheet);
 
 		this.level = level;
 		Model3D pelletModel3D = theme.get("model3D.pellet");
@@ -105,7 +108,7 @@ public class GameLevel3D {
 		}
 
 		pacLight = createPacLight(pac3D);
-		levelCounter3D = createLevelCounter3D(gss);
+		levelCounter3D = createLevelCounter3D(spritesheet);
 		scores3D = new Scores3D(theme.font("font.arcade", 8));
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
@@ -137,11 +140,11 @@ public class GameLevel3D {
 		livesCounter3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
 	}
 
-	public void replaceBonus3D(Bonus bonus, GameSpritesheet gss, boolean moving) {
+	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet, boolean moving) {
 		if (bonus3D != null) {
 			root.getChildren().remove(bonus3D.getRoot());
 		}
-		bonus3D = createBonus3D(bonus, gss, moving);
+		bonus3D = createBonus3D(bonus, spritesheet, moving);
 		root.getChildren().add(bonus3D.getRoot());
 	}
 
@@ -149,16 +152,41 @@ public class GameLevel3D {
 		return new Ghost3D(ghost, ghostModel3D, theme, 8.5);
 	}
 
-	private Bonus3D createBonus3D(Bonus bonus, GameSpritesheet gss, boolean moving) {
-		var symbolImage = gss.subImage(gss.bonusSymbolSprite(bonus.symbol()));
-		var pointsImage = gss.subImage(gss.bonusValueSprite(bonus.symbol()));
-		return new Bonus3D(bonus, symbolImage, pointsImage, moving);
+	private Bonus3D createBonus3D(Bonus bonus, Spritesheet spritesheet, boolean moving) {
+		switch (level.game().variant()) {
+		case MS_PACMAN: {
+			var ss = (MsPacManGameSpritesheet) spritesheet;
+			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
+			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
+			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
+		}
+		case PACMAN: {
+			var ss = (PacManGameSpritesheet) spritesheet;
+			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
+			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
+			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
+		}
+		default:
+			throw new IllegalGameVariantException(level.game().variant());
+		}
 	}
 
-	private LevelCounter3D createLevelCounter3D(GameSpritesheet gss) {
-		var symbolImages = level.game().levelCounter().stream().map(gss::bonusSymbolSprite).map(gss::subImage)
-				.toArray(Image[]::new);
-		return new LevelCounter3D(symbolImages);
+	private LevelCounter3D createLevelCounter3D(Spritesheet spritesheet) {
+		var counter = level.game().levelCounter();
+		switch (level.game().variant()) {
+		case MS_PACMAN: {
+			var ss = (MsPacManGameSpritesheet) spritesheet;
+			var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+			return new LevelCounter3D(images);
+		}
+		case PACMAN: {
+			var ss = (PacManGameSpritesheet) spritesheet;
+			var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+			return new LevelCounter3D(images);
+		}
+		default:
+			throw new IllegalGameVariantException(level.game().variant());
+		}
 	}
 
 	private void updatePacLight() {

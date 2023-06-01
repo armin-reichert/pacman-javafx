@@ -12,16 +12,18 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 import java.util.List;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Clapperboard;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GameSpritesheet;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimation;
@@ -117,10 +119,6 @@ public abstract class GameScene2D implements GameScene {
 
 	protected double s(double value) {
 		return canvasScaledPy.get() ? value : value * subSceneContainer.getHeight() / HEIGHT_UNSCALED;
-	}
-
-	protected GameSpritesheet gss() {
-		return context.gss();
 	}
 
 	protected Font sceneFont() {
@@ -273,9 +271,21 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
-		for (var symbol : levelSymbols) {
-			drawSprite(gss().bonusSymbolSprite(symbol), x, yr);
-			x -= TS * 2;
+		switch (context.gameVariant()) {
+		case MS_PACMAN:
+			for (var symbol : levelSymbols) {
+				drawSprite(context.spritesheetMsPacMan().bonusSymbolSprite(symbol), x, yr);
+				x -= TS * 2;
+			}
+			break;
+		case PACMAN:
+			for (var symbol : levelSymbols) {
+				drawSprite(context.spritesheetPacMan().bonusSymbolSprite(symbol), x, yr);
+				x -= TS * 2;
+			}
+			break;
+		default:
+			throw new IllegalGameVariantException(context.gameVariant());
 		}
 	}
 
@@ -286,13 +296,69 @@ public abstract class GameScene2D implements GameScene {
 		var x = TS * 2;
 		var y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
-		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(gss().livesCounterSprite(), x + TS * (2 * i), y);
+		switch (context.gameVariant()) {
+		case MS_PACMAN: {
+			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+				drawSprite(context.spritesheetMsPacMan().livesCounterSprite(), x + TS * (2 * i), y);
+			}
+			break;
+		}
+		case PACMAN: {
+			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+				drawSprite(context.spritesheetPacMan().livesCounterSprite(), x + TS * (2 * i), y);
+			}
+			break;
+		}
+		default:
+			throw new IllegalGameVariantException(context.gameVariant());
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
 			drawText("+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
+		}
+	}
+
+	protected void drawBonus(Bonus bonus) {
+		Rectangle2D symbolSprite;
+		Rectangle2D valueSprite;
+		switch (context.gameVariant()) {
+		case MS_PACMAN:
+			symbolSprite = context.spritesheetMsPacMan().bonusSymbolSprite(bonus.symbol());
+			valueSprite = context.spritesheetMsPacMan().bonusValueSprite(bonus.symbol());
+			break;
+		case PACMAN:
+			symbolSprite = context.spritesheetPacMan().bonusSymbolSprite(bonus.symbol());
+			valueSprite = context.spritesheetPacMan().bonusValueSprite(bonus.symbol());
+			break;
+		default:
+			throw new IllegalGameVariantException(context.gameVariant());
+		}
+
+		Rectangle2D sprite = null;
+		switch (bonus.state()) {
+		case Bonus.STATE_INACTIVE:
+			break;
+		case Bonus.STATE_EDIBLE:
+			sprite = symbolSprite;
+			break;
+		case Bonus.STATE_EATEN:
+			sprite = valueSprite;
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+		if (sprite == null) {
+			return;
+		}
+		if (bonus instanceof MovingBonus) {
+			var movingBonus = (MovingBonus) bonus;
+			g.save();
+			g.translate(0, movingBonus.dy());
+			drawEntitySprite(movingBonus.entity(), sprite);
+			g.restore();
+		} else {
+			drawEntitySprite(bonus.entity(), sprite);
 		}
 	}
 
@@ -321,7 +387,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(gss().source(), sprite, x, y);
+		drawSprite(context.spritesheet().source(), sprite, x, y);
 	}
 
 	/**

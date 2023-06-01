@@ -1,0 +1,65 @@
+/**
+ * 
+ */
+package de.amr.games.pacman.ui.fx.rendering2d;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Optional;
+
+import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.PacAnimations;
+import javafx.geometry.Rectangle2D;
+
+/**
+ * @author Armin Reichert
+ */
+public class PacSpriteAnimationsMsPacMan extends PacSpriteAnimations {
+
+	protected Map<Direction, SpriteAnimation> husbandMunchingMap;
+
+	public PacSpriteAnimationsMsPacMan(Pac pac, MsPacManGameSpritesheet spritesheet) {
+		super(pac, spritesheet);
+		husbandMunchingMap = new EnumMap<>(Direction.class);
+		for (var dir : Direction.values()) {
+			var animation = new SpriteAnimation.Builder() //
+					.frameDurationTicks(2) //
+					.loop() //
+					.sprites(spritesheet.pacManMunchingSprites(dir)) //
+					.build();
+			husbandMunchingMap.put(dir, animation);
+		}
+	}
+
+	@Override
+	public MsPacManGameSpritesheet spritesheet() {
+		return (MsPacManGameSpritesheet) spritesheet;
+	}
+
+	@Override
+	protected Rectangle2D[] pacMunchingSprites(Direction dir) {
+		return spritesheet().pacMunchingSprites(dir);
+	}
+
+	@Override
+	protected Rectangle2D[] pacDyingSprites() {
+		return spritesheet().pacDyingSprites();
+	}
+
+	@Override
+	protected SpriteAnimation animation(String name, Direction dir) {
+		if (HUSBAND_MUNCHING.equals(name)) {
+			return husbandMunchingMap.get(dir);
+		}
+		return super.animation(name, dir);
+	}
+
+	@Override
+	protected Optional<Map<Direction, SpriteAnimation>> checkIfAnimationMap(String name) {
+		if (PacAnimations.HUSBAND_MUNCHING.equals(name)) {
+			return Optional.of(husbandMunchingMap);
+		}
+		return super.checkIfAnimationMap(name);
+	}
+}

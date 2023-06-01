@@ -6,13 +6,14 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.ui.fx.util.Order;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameSpritesheet extends GameSpritesheet {
+public class MsPacManGameSpritesheet extends Spritesheet {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -30,28 +31,23 @@ public class MsPacManGameSpritesheet extends GameSpritesheet {
 		return tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
 	}
 
-	@Override
 	public Rectangle2D[] ghostNumberSprites() {
 		return new Rectangle2D[] { tileFromThirdColumn(0, 8), tileFromThirdColumn(1, 8), tileFromThirdColumn(2, 8),
 				tileFromThirdColumn(3, 8) };
 	}
 
-	@Override
 	public Rectangle2D bonusSymbolSprite(int symbol) {
 		return tileFromThirdColumn(3 + symbol, 0);
 	}
 
-	@Override
 	public Rectangle2D bonusValueSprite(int symbol) {
 		return tileFromThirdColumn(3 + symbol, 1);
 	}
 
-	@Override
 	public Rectangle2D livesCounterSprite() {
 		return tileFromThirdColumn(1, 0);
 	}
 
-	@Override
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		var wide = tileFromThirdColumn(0, d);
@@ -60,7 +56,6 @@ public class MsPacManGameSpritesheet extends GameSpritesheet {
 		return new Rectangle2D[] { middle, middle, wide, wide, middle, middle, middle, closed, closed };
 	}
 
-	@Override
 	public Rectangle2D[] pacDyingSprites() {
 		var right = tileFromThirdColumn(1, 0);
 		var left = tileFromThirdColumn(1, 1);
@@ -70,24 +65,20 @@ public class MsPacManGameSpritesheet extends GameSpritesheet {
 		return new Rectangle2D[] { down, left, up, right, down, left, up, right, down, left, up };
 	}
 
-	@Override
 	public Rectangle2D[] ghostNormalSprites(byte ghostID, Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		return new Rectangle2D[] { tileFromThirdColumn(2 * d, 4 + ghostID), tileFromThirdColumn(2 * d + 1, 4 + ghostID) };
 	}
 
-	@Override
 	public Rectangle2D[] ghostFrightenedSprites() {
 		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4) };
 	}
 
-	@Override
 	public Rectangle2D[] ghostFlashingSprites() {
 		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4), tileFromThirdColumn(10, 4),
 				tileFromThirdColumn(11, 4) };
 	}
 
-	@Override
 	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		return new Rectangle2D[] { tileFromThirdColumn(8 + d, 5) };

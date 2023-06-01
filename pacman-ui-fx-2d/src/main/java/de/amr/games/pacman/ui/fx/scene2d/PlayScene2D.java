@@ -15,16 +15,12 @@ import de.amr.games.pacman.lib.math.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 /**
@@ -116,18 +112,18 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var mpr = (MsPacManGameSpritesheet) gss();
+		var ss = context.spritesheetMsPacMan();
 		if (world.getMazeFlashing().isRunning()) {
 			if (world.getMazeFlashing().frame()) {
 				var source = context.ui().theme().image("mspacman.flashingMazes");
-				var flashingMazeSprite = mpr.highlightedMaze(mazeNumber);
+				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(gss().source(), mpr.emptyMaze(mazeNumber), x, y);
+				drawSprite(context.spritesheet().source(), ss.emptyMaze(mazeNumber), x, y);
 			}
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
-			drawSprite(mpr.filledMaze(mazeNumber), x, y);
+			drawSprite(ss.filledMaze(mazeNumber), x, y);
 			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
 			// energizer animation
 			if (!world.getEnergizerBlinking().frame()) {
@@ -139,36 +135,6 @@ public class PlayScene2D extends GameScene2D {
 	private void hideTileContent(Vector2i tile) {
 		g.setFill(ArcadeTheme.BLACK);
 		g.fillRect(s(TS * tile.x() - 1), s(TS * tile.y() - 1), s(TS + 2), s(TS + 2));
-	}
-
-	private void drawBonus(Bonus bonus) {
-		Rectangle2D sprite = null;
-		switch (bonus.state()) {
-		case Bonus.STATE_INACTIVE:
-			break;
-		case Bonus.STATE_EDIBLE:
-			sprite = gss().bonusSymbolSprite(bonus.symbol());
-			break;
-		case Bonus.STATE_EATEN:
-			sprite = gss().bonusValueSprite(bonus.symbol());
-			break;
-		default:
-			throw new IllegalArgumentException();
-		}
-		if (sprite == null) {
-			return;
-		}
-		var x = bonus.entity().position().x() + HTS - sprite.getWidth() / 2;
-		var y = bonus.entity().position().y() + HTS - sprite.getHeight() / 2;
-		if (bonus instanceof MovingBonus) {
-			var movingBonus = (MovingBonus) bonus;
-			g.save();
-			g.translate(0, movingBonus.dy());
-			drawSprite(sprite, x, y);
-			g.restore();
-		} else {
-			drawSprite(sprite, x, y);
-		}
 	}
 
 	@Override

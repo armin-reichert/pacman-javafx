@@ -6,53 +6,41 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
+public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 
-	private final Ghost ghost;
-	private GameSpritesheet gss;
-	private Map<Direction, SpriteAnimation> normalAnimationByDir;
-	private SpriteAnimation frightenedAnimation;
-	private SpriteAnimation flashingAnimation;
-	private Map<Direction, SpriteAnimation> eyesAnimationByDir;
-	private SpriteAnimation numberAnimation;
+	protected static final Rectangle2D[] NO_SPRITES = new Rectangle2D[0];
 
-	private SpriteAnimation damagedAnimation;
-	private SpriteAnimation stretchedAnimation;
-	private SpriteAnimation patchedAnimation;
-	private SpriteAnimation nakedAnimation;
+	protected final Ghost ghost;
+	protected Spritesheet spritesheet;
 
-	private String currentAnimationName;
-	private SpriteAnimation currentAnimation;
+	protected Map<Direction, SpriteAnimation> eyesAnimationByDir;
+	protected Map<Direction, SpriteAnimation> normalAnimationByDir;
+	protected SpriteAnimation frightenedAnimation;
+	protected SpriteAnimation flashingAnimation;
+	protected SpriteAnimation numberAnimation;
 
-	public GhostSpriteAnimations(Ghost ghost, GameSpritesheet gss) {
+	protected String currentAnimationName;
+	protected SpriteAnimation currentAnimation;
+
+	protected GhostSpriteAnimations(Ghost ghost, Spritesheet sprites) {
 		this.ghost = ghost;
-		this.gss = gss;
-		setSpritesheet(gss);
-	}
-
-	public void setSpritesheet(GameSpritesheet gss) {
-		this.gss = gss;
+		this.spritesheet = sprites;
 		createNormalAnimation();
 		createFrightenedAnimation();
 		createFlashingAnimation();
 		createEyesAnimation();
 		createNumberAnimation();
-
-		if (gss instanceof PacManGameSpritesheet) {
-			createBlinkyDamagedAnimation((PacManGameSpritesheet) gss);
-			createBlinkyStretchedAnimation((PacManGameSpritesheet) gss);
-			createBlinkyPatchedAnimation((PacManGameSpritesheet) gss);
-			createBlinkyNakedAnimation((PacManGameSpritesheet) gss);
-		}
 
 		// TODO check this
 		for (var dir : Direction.values()) {
@@ -63,76 +51,70 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		flashingAnimation.start();
 	}
 
-	private void createNormalAnimation() {
+	public Spritesheet spritesheet() {
+		return spritesheet;
+	}
+
+	protected void createNormalAnimation() {
 		normalAnimationByDir = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			var animation = new SpriteAnimation.Builder() //
 					.frameDurationTicks(8) //
 					.loop() //
-					.sprites(gss.ghostNormalSprites(ghost.id(), dir)) //
+					.sprites(ghostNormalSprites(ghost.id(), dir)) //
 					.build();
 			normalAnimationByDir.put(dir, animation);
 		}
 	}
 
-	private void createFrightenedAnimation() {
+	protected Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
+		return NO_SPRITES;
+	}
+
+	protected void createFrightenedAnimation() {
 		frightenedAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
 				.loop() //
-				.sprites(gss.ghostFrightenedSprites()) //
+				.sprites(ghostFrightenedSprites()) //
 				.build();
 	}
 
-	private void createFlashingAnimation() {
+	protected Rectangle2D[] ghostFrightenedSprites() {
+		return NO_SPRITES;
+	}
+
+	protected void createFlashingAnimation() {
 		flashingAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(6) //
 				.loop() //
-				.sprites(gss.ghostFlashingSprites()) //
+				.sprites(ghostFlashingSprites()) //
 				.build();
 	}
 
-	private void createEyesAnimation() {
+	protected Rectangle2D[] ghostFlashingSprites() {
+		return NO_SPRITES;
+	}
+
+	protected void createEyesAnimation() {
 		eyesAnimationByDir = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation.Builder().sprites(gss.ghostEyesSprites(dir)).build();
+			var animation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(dir)).build();
 			eyesAnimationByDir.put(dir, animation);
 		}
 	}
 
-	private void createNumberAnimation() {
+	protected Rectangle2D[] ghostEyesSprites(Direction dir) {
+		return NO_SPRITES;
+	}
+
+	protected void createNumberAnimation() {
 		numberAnimation = new SpriteAnimation.Builder() //
-				.sprites(gss.ghostNumberSprites()) //
+				.sprites(ghostNumberSprites()) //
 				.build();
 	}
 
-	// Pac-Man only
-
-	private void createBlinkyDamagedAnimation(PacManGameSpritesheet ss) {
-		damagedAnimation = new SpriteAnimation.Builder() //
-				.sprites(ss.blinkyDamagedSprites()) //
-				.build();
-	}
-
-	private void createBlinkyStretchedAnimation(PacManGameSpritesheet ss) {
-		stretchedAnimation = new SpriteAnimation.Builder() //
-				.sprites(ss.blinkyStretchedSprites()) //
-				.build();
-	}
-
-	private void createBlinkyPatchedAnimation(PacManGameSpritesheet ss) {
-		patchedAnimation = new SpriteAnimation.Builder() //
-				.frameDurationTicks(4) //
-				.loop() //
-				.sprites(ss.blinkyPatchedSprites()) //
-				.build();
-	}
-
-	private void createBlinkyNakedAnimation(PacManGameSpritesheet ss) {
-		nakedAnimation = new SpriteAnimation.Builder() //
-				.frameDurationTicks(4) //
-				.loop() //
-				.sprites(ss.blinkyNakedSprites()) //
-				.build();
+	protected Rectangle2D[] ghostNumberSprites() {
+		return NO_SPRITES;
 	}
 
 	@Override
@@ -160,13 +142,22 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		}
 	}
 
+	protected Optional<Map<Direction, SpriteAnimation>> animationMap(String name) {
+		if (GhostAnimations.GHOST_EYES.equals(name)) {
+			return Optional.of(eyesAnimationByDir);
+		}
+		if (GhostAnimations.GHOST_NORMAL.equals(name)) {
+			return Optional.of(normalAnimationByDir);
+		}
+		return Optional.empty();
+	}
+
 	@Override
 	public void startSelected() {
 		if (currentAnimation != null) {
-			if (currentAnimationName.equals(GhostAnimations.GHOST_NORMAL)) {
-				normalAnimationByDir.values().forEach(SpriteAnimation::start);
-			} else if (currentAnimationName.equals(GhostAnimations.GHOST_EYES)) {
-				eyesAnimationByDir.values().forEach(SpriteAnimation::start);
+			var map = animationMap(currentAnimationName);
+			if (map.isPresent()) {
+				map.get().values().forEach(SpriteAnimation::start);
 			} else {
 				currentAnimation.start();
 			}
@@ -176,10 +167,9 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 	@Override
 	public void stopSelected() {
 		if (currentAnimation != null) {
-			if (currentAnimationName.equals(GhostAnimations.GHOST_NORMAL)) {
-				normalAnimationByDir.values().forEach(SpriteAnimation::stop);
-			} else if (currentAnimationName.equals(GhostAnimations.GHOST_EYES)) {
-				eyesAnimationByDir.values().forEach(SpriteAnimation::stop);
+			var map = animationMap(currentAnimationName);
+			if (map.isPresent()) {
+				map.get().values().forEach(SpriteAnimation::stop);
 			} else {
 				currentAnimation.stop();
 			}
@@ -189,37 +179,27 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 	@Override
 	public void resetSelected() {
 		if (currentAnimation != null) {
-			if (currentAnimationName.equals(GhostAnimations.GHOST_NORMAL)) {
-				normalAnimationByDir.values().forEach(SpriteAnimation::reset);
-			} else if (currentAnimationName.equals(GhostAnimations.GHOST_EYES)) {
-				eyesAnimationByDir.values().forEach(SpriteAnimation::reset);
+			var map = animationMap(currentAnimationName);
+			if (map.isPresent()) {
+				map.get().values().forEach(SpriteAnimation::reset);
 			} else {
 				currentAnimation.reset();
 			}
 		}
 	}
 
-	public SpriteAnimation getStretchedAnimation() {
-		return stretchedAnimation;
-	}
-
-	public SpriteAnimation getDamagedAnimation() {
-		return damagedAnimation;
-	}
-
 	public Rectangle2D currentSprite() {
 		if (!ghost.isVisible() || currentAnimationName == null) {
 			return null;
 		}
-		if (GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation = animationByName(GHOST_NORMAL); // update
-		} else if (GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation = animationByName(GHOST_EYES); // update
+		var map = animationMap(currentAnimationName);
+		if (map.isPresent()) {
+			currentAnimation = map.get().get(ghost.wishDir());
 		}
 		return currentAnimation.frame();
 	}
 
-	private SpriteAnimation animationByName(String name) {
+	protected SpriteAnimation animationByName(String name) {
 		if (GHOST_NORMAL.equals(name)) {
 			return normalAnimationByDir.get(ghost.wishDir());
 		}
@@ -234,18 +214,6 @@ public class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
 		}
 		if (GHOST_NUMBER.equals(name)) {
 			return numberAnimation;
-		}
-		if (BLINKY_DAMAGED.equals(name)) {
-			return damagedAnimation;
-		}
-		if (BLINKY_NAKED.equals(name)) {
-			return nakedAnimation;
-		}
-		if (BLINKY_PATCHED.equals(name)) {
-			return patchedAnimation;
-		}
-		if (BLINKY_STRETCHED.equals(name)) {
-			return stretchedAnimation;
 		}
 		throw new IllegalArgumentException("Illegal animation name: " + name);
 	}

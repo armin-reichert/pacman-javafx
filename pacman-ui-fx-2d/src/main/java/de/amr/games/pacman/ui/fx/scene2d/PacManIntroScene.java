@@ -11,9 +11,8 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacMan;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacMan;
 
 /**
  * Intro scene of the PacMan game.
@@ -37,11 +36,6 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected PacManGameSpritesheet gss() {
-		return (PacManGameSpritesheet) super.gss();
-	}
-
-	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
@@ -57,8 +51,9 @@ public class PacManIntroScene extends GameScene2D {
 		});
 		ic = intro.context();
 
-		ic.pacMan.setAnimations(new PacSpriteAnimations(ic.pacMan, gss()));
-		ic.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimations(ghost, gss())));
+		ic.pacMan.setAnimations(new PacSpriteAnimationsPacMan(ic.pacMan, context.spritesheetPacMan()));
+		ic.ghosts()
+				.forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacMan(ghost, context.spritesheetPacMan())));
 		ic.blinking.reset();
 
 		intro.changeState(State.START);
@@ -147,7 +142,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int ty = 7 + 3 * id;
-			var sprite = gss().ghostFacingRight(id);
+			var sprite = context.spritesheetPacMan().ghostFacingRight(id);
 			drawSpriteOverBoundingBox(sprite, t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
