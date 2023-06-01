@@ -2,9 +2,8 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.rendering2d;
+package de.amr.games.pacman.ui.fx.util;
 
-import de.amr.games.pacman.model.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -22,9 +21,15 @@ public class SpriteAnimation {
 		private SpriteAnimation animation = new SpriteAnimation();
 		private int frameDurationTicks = 1;
 		private boolean loop = false;
+		private int fps = 60;
 
 		public Builder frameDurationTicks(int ticks) {
 			this.frameDurationTicks = ticks;
+			return this;
+		}
+
+		public Builder fps(int fps) {
+			this.fps = fps;
 			return this;
 		}
 
@@ -41,7 +46,7 @@ public class SpriteAnimation {
 		public SpriteAnimation build() {
 			animation.transition = new Transition() {
 				{
-					setCycleDuration(Duration.seconds(1.0 / GameModel.FPS * frameDurationTicks));
+					setCycleDuration(Duration.seconds(1.0 / fps * frameDurationTicks));
 					setCycleCount(loop ? Animation.INDEFINITE : animation.sprites.length);
 					setInterpolator(Interpolator.LINEAR);
 				}

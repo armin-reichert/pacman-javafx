@@ -10,6 +10,7 @@ import java.util.Optional;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -19,7 +20,7 @@ public class PacSpriteAnimationsMsPacMan extends PacSpriteAnimations {
 
 	protected Map<Direction, SpriteAnimation> husbandMunchingMap;
 
-	public PacSpriteAnimationsMsPacMan(Pac pac, MsPacManGameSpritesheet spritesheet) {
+	public PacSpriteAnimationsMsPacMan(Pac pac, SpritesheetMsPacManGame spritesheet) {
 		super(pac, spritesheet);
 		husbandMunchingMap = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
@@ -33,8 +34,8 @@ public class PacSpriteAnimationsMsPacMan extends PacSpriteAnimations {
 	}
 
 	@Override
-	public MsPacManGameSpritesheet spritesheet() {
-		return (MsPacManGameSpritesheet) spritesheet;
+	public SpritesheetMsPacManGame spritesheet() {
+		return (SpritesheetMsPacManGame) spritesheet;
 	}
 
 	@Override

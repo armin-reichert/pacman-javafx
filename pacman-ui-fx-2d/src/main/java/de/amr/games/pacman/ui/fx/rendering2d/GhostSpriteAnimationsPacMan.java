@@ -5,6 +5,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -17,7 +18,7 @@ public class GhostSpriteAnimationsPacMan extends GhostSpriteAnimations {
 	private SpriteAnimation patchedAnimation;
 	private SpriteAnimation nakedAnimation;
 
-	public GhostSpriteAnimationsPacMan(Ghost ghost, PacManGameSpritesheet spritesheet) {
+	public GhostSpriteAnimationsPacMan(Ghost ghost, SpritesheetPacManGame spritesheet) {
 		super(ghost, spritesheet);
 		createBlinkyDamagedAnimation(spritesheet);
 		createBlinkyStretchedAnimation(spritesheet);
@@ -26,8 +27,8 @@ public class GhostSpriteAnimationsPacMan extends GhostSpriteAnimations {
 	}
 
 	@Override
-	public PacManGameSpritesheet spritesheet() {
-		return (PacManGameSpritesheet) spritesheet;
+	public SpritesheetPacManGame spritesheet() {
+		return (SpritesheetPacManGame) spritesheet;
 	}
 
 	@Override
@@ -80,19 +81,19 @@ public class GhostSpriteAnimationsPacMan extends GhostSpriteAnimations {
 		return spritesheet().ghostNumberSprites();
 	}
 
-	private void createBlinkyDamagedAnimation(PacManGameSpritesheet ss) {
+	private void createBlinkyDamagedAnimation(SpritesheetPacManGame ss) {
 		damagedAnimation = new SpriteAnimation.Builder() //
 				.sprites(ss.blinkyDamagedSprites()) //
 				.build();
 	}
 
-	private void createBlinkyStretchedAnimation(PacManGameSpritesheet ss) {
+	private void createBlinkyStretchedAnimation(SpritesheetPacManGame ss) {
 		stretchedAnimation = new SpriteAnimation.Builder() //
 				.sprites(ss.blinkyStretchedSprites()) //
 				.build();
 	}
 
-	private void createBlinkyPatchedAnimation(PacManGameSpritesheet ss) {
+	private void createBlinkyPatchedAnimation(SpritesheetPacManGame ss) {
 		patchedAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(4) //
 				.loop() //
@@ -100,7 +101,7 @@ public class GhostSpriteAnimationsPacMan extends GhostSpriteAnimations {
 				.build();
 	}
 
-	private void createBlinkyNakedAnimation(PacManGameSpritesheet ss) {
+	private void createBlinkyNakedAnimation(SpritesheetPacManGame ss) {
 		nakedAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(4) //
 				.loop() //

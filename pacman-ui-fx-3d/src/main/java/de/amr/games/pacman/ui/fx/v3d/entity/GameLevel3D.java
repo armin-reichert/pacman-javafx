@@ -38,8 +38,8 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -155,13 +155,13 @@ public class GameLevel3D {
 	private Bonus3D createBonus3D(Bonus bonus, Spritesheet spritesheet, boolean moving) {
 		switch (level.game().variant()) {
 		case MS_PACMAN: {
-			var ss = (MsPacManGameSpritesheet) spritesheet;
+			var ss = (SpritesheetMsPacManGame) spritesheet;
 			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
 			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
 			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
 		}
 		case PACMAN: {
-			var ss = (PacManGameSpritesheet) spritesheet;
+			var ss = (SpritesheetPacManGame) spritesheet;
 			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
 			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
 			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
@@ -175,12 +175,12 @@ public class GameLevel3D {
 		var counter = level.game().levelCounter();
 		switch (level.game().variant()) {
 		case MS_PACMAN: {
-			var ss = (MsPacManGameSpritesheet) spritesheet;
+			var ss = (SpritesheetMsPacManGame) spritesheet;
 			var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 			return new LevelCounter3D(images);
 		}
 		case PACMAN: {
-			var ss = (PacManGameSpritesheet) spritesheet;
+			var ss = (SpritesheetPacManGame) spritesheet;
 			var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 			return new LevelCounter3D(images);
 		}

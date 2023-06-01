@@ -12,13 +12,13 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostSpriteAnimationsMsPacMan extends GhostSpriteAnimations {
 
-	public GhostSpriteAnimationsMsPacMan(Ghost ghost, MsPacManGameSpritesheet spritesheet) {
+	public GhostSpriteAnimationsMsPacMan(Ghost ghost, SpritesheetMsPacManGame spritesheet) {
 		super(ghost, spritesheet);
 	}
 
 	@Override
-	public MsPacManGameSpritesheet spritesheet() {
-		return (MsPacManGameSpritesheet) super.spritesheet();
+	public SpritesheetMsPacManGame spritesheet() {
+		return (SpritesheetMsPacManGame) super.spritesheet();
 	}
 
 	@Override

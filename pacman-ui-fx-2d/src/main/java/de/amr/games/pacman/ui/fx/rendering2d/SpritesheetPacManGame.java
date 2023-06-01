@@ -13,12 +13,12 @@ import javafx.scene.image.Image;
 /**
  * @author Armin Reichert
  */
-public class PacManGameSpritesheet extends Spritesheet {
+public class SpritesheetPacManGame extends Spritesheet {
 
 	public static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	public PacManGameSpritesheet(Image source, int raster) {
+	public SpritesheetPacManGame(Image source, int raster) {
 		super(source, raster);
 	}
 

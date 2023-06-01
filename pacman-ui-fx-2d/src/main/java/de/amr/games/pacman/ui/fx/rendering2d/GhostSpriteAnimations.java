@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 

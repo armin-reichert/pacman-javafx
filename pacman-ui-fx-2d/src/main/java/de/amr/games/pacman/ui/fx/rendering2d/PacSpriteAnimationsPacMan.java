@@ -5,6 +5,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -14,7 +15,7 @@ public class PacSpriteAnimationsPacMan extends PacSpriteAnimations {
 
 	protected SpriteAnimation bigPacManAnimation;
 
-	public PacSpriteAnimationsPacMan(Pac pac, PacManGameSpritesheet spritesheet) {
+	public PacSpriteAnimationsPacMan(Pac pac, SpritesheetPacManGame spritesheet) {
 		super(pac, spritesheet);
 		bigPacManAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(3) //
@@ -24,8 +25,8 @@ public class PacSpriteAnimationsPacMan extends PacSpriteAnimations {
 	}
 
 	@Override
-	public PacManGameSpritesheet spritesheet() {
-		return (PacManGameSpritesheet) spritesheet;
+	public SpritesheetPacManGame spritesheet() {
+		return (SpritesheetPacManGame) spritesheet;
 	}
 
 	@Override

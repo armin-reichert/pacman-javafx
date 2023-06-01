@@ -30,8 +30,8 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsMsPacMan;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacMan;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpritesheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacMan;
 import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacMan;
 import de.amr.games.pacman.ui.fx.rendering2d.Theme;
@@ -307,8 +307,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			scene2D.root().setBackground(ResourceManager.coloredBackground(wallpaperColor));
 		}
 		currentGameScene.setContext(
-				new GameSceneContext(gameController, this, new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16),
-						new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16)));
+				new GameSceneContext(gameController, this, new SpritesheetMsPacManGame(theme.image("mspacman.spritesheet"), 16),
+						new SpritesheetPacManGame(theme.image("pacman.spritesheet"), 16)));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
@@ -384,13 +384,13 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		e.game.level().ifPresent(level -> {
 			switch (level.game().variant()) {
 			case MS_PACMAN: {
-				var spritesheet = new MsPacManGameSpritesheet(theme.image("mspacman.spritesheet"), 16);
+				var spritesheet = new SpritesheetMsPacManGame(theme.image("mspacman.spritesheet"), 16);
 				level.pac().setAnimations(new PacSpriteAnimationsMsPacMan(level.pac(), spritesheet));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsMsPacMan(ghost, spritesheet)));
 				break;
 			}
 			case PACMAN: {
-				var spritesheet = new PacManGameSpritesheet(theme.image("pacman.spritesheet"), 16);
+				var spritesheet = new SpritesheetPacManGame(theme.image("pacman.spritesheet"), 16);
 				level.pac().setAnimations(new PacSpriteAnimationsPacMan(level.pac(), spritesheet));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacMan(ghost, spritesheet)));
 				break;
