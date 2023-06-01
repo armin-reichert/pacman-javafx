@@ -95,9 +95,9 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 			currentAnimation = animationByName(name);
 			if (currentAnimation != null) {
 				if (currentAnimation == numberAnimation) {
-					numberAnimation.setFrame((Integer) args[0]);
+					numberAnimation.setFrameIndex((Integer) args[0]);
 				} else {
-					currentAnimation.setFrame(0);
+					currentAnimation.setFrameIndex(0);
 				}
 			}
 		}
@@ -130,8 +130,7 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		}
 		if (currentAnimation == normalAnimation) {
 			normalAnimation.setSprites(ghostNormalSprites(ghost.id(), ghost.wishDir()));
-		}
-		if (currentAnimation == eyesAnimation) {
+		} else if (currentAnimation == eyesAnimation) {
 			eyesAnimation.setSprites(ghostEyesSprites(ghost.wishDir()));
 		}
 		return currentAnimation.frame();

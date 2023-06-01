@@ -375,6 +375,10 @@ public abstract class GameScene2D implements GameScene {
 		if (anim.isPresent() && anim.get() instanceof GhostSpriteAnimationsCommon) {
 			GhostSpriteAnimationsCommon gsa = (GhostSpriteAnimationsCommon) anim.get();
 			drawEntitySprite(ghost, gsa.currentSprite());
+//			g.setFill(Color.WHITE);
+//			g.setFont(Font.font("Monospaced", s(8)));
+//			var text = String.format("%s %d", gsa.selectedAnimationName(), gsa.selectedAnimation().frameIndex());
+//			g.fillText(text, s(ghost.position().x() + 4), s(ghost.position().y()));
 		}
 	}
 

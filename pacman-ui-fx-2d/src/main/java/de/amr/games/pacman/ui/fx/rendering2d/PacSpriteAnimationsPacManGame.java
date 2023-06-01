@@ -30,12 +30,12 @@ public class PacSpriteAnimationsPacManGame extends PacSpriteAnimationsCommon {
 	}
 
 	@Override
-	protected Rectangle2D[] pacMunchingSprites(Direction dir) {
+	protected Rectangle2D[] munchingSprites(Direction dir) {
 		return spritesheet().pacMunchingSprites(dir);
 	}
 
 	@Override
-	protected Rectangle2D[] pacDyingSprites() {
+	protected Rectangle2D[] dyingSprites() {
 		return spritesheet().pacDyingSprites();
 	}
 

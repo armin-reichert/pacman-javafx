@@ -49,60 +49,117 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 		return tileFromThirdColumn(1, 0);
 	}
 
-	public Rectangle2D[] pacMunchingSprites(Direction dir) {
+	private Rectangle2D[][] msPacManMunchingSprites = new Rectangle2D[4][];
+
+	public Rectangle2D[] msPacManMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		var wide = tileFromThirdColumn(0, d);
-		var middle = tileFromThirdColumn(1, d);
-		var closed = tileFromThirdColumn(2, d);
-		return new Rectangle2D[] { middle, middle, wide, wide, middle, middle, middle, closed, closed };
+		if (msPacManMunchingSprites[d] == null) {
+			var wide = tileFromThirdColumn(0, d);
+			var middle = tileFromThirdColumn(1, d);
+			var closed = tileFromThirdColumn(2, d);
+			msPacManMunchingSprites[d] = new Rectangle2D[] { middle, middle, wide, wide, middle, middle, middle, closed,
+					closed };
+		}
+		return msPacManMunchingSprites[d];
 	}
 
-	public Rectangle2D[] pacDyingSprites() {
-		var right = tileFromThirdColumn(1, 0);
-		var left = tileFromThirdColumn(1, 1);
-		var up = tileFromThirdColumn(1, 2);
-		var down = tileFromThirdColumn(1, 3);
-		// TODO not yet 100% accurate
-		return new Rectangle2D[] { down, left, up, right, down, left, up, right, down, left, up };
+	private Rectangle2D[] msPacManDyingSprites;
+
+	public Rectangle2D[] msPacManDyingSprites() {
+		if (msPacManDyingSprites == null) {
+			var right = tileFromThirdColumn(1, 0);
+			var left = tileFromThirdColumn(1, 1);
+			var up = tileFromThirdColumn(1, 2);
+			var down = tileFromThirdColumn(1, 3);
+			// TODO not yet 100% accurate
+			msPacManDyingSprites = new Rectangle2D[] { down, left, up, right, down, left, up, right, down, left, up };
+		}
+		return msPacManDyingSprites;
 	}
 
-	public Rectangle2D[] ghostNormalSprites(byte ghostID, Direction dir) {
+	private Rectangle2D[][][] ghostNormalSprites = new Rectangle2D[4][4][];
+
+	public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		return new Rectangle2D[] { tileFromThirdColumn(2 * d, 4 + ghostID), tileFromThirdColumn(2 * d + 1, 4 + ghostID) };
+		if (ghostNormalSprites[id][d] == null) {
+			ghostNormalSprites[id][d] = new Rectangle2D[] { tileFromThirdColumn(2 * d, 4 + id),
+					tileFromThirdColumn(2 * d + 1, 4 + id) };
+		}
+		return ghostNormalSprites[id][d];
 	}
+
+	private Rectangle2D[] ghostFrightenedSprites;
 
 	public Rectangle2D[] ghostFrightenedSprites() {
-		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4) };
+		if (ghostFrightenedSprites == null) {
+			ghostFrightenedSprites = new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4) };
+		}
+		return ghostFrightenedSprites;
 	}
 
+	private Rectangle2D[] ghostFlashingSprites;
+
 	public Rectangle2D[] ghostFlashingSprites() {
-		return new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4), tileFromThirdColumn(10, 4),
-				tileFromThirdColumn(11, 4) };
+		if (ghostFlashingSprites == null) {
+			ghostFlashingSprites = new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4),
+					tileFromThirdColumn(10, 4), tileFromThirdColumn(11, 4) };
+		}
+		return ghostFlashingSprites;
 	}
+
+	private Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		return new Rectangle2D[] { tileFromThirdColumn(8 + d, 5) };
+		if (ghostEyesSprites[d] == null) {
+			ghostEyesSprites[d] = new Rectangle2D[] { tileFromThirdColumn(8 + d, 5) };
+		}
+		return ghostEyesSprites[d];
 	}
 
 	// Ms. Pac-Man specific:
 
+	private static final int MS_PACMAN_MAZE_COUNT = 6;
+
+	private Rectangle2D[] highlightedMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+
 	public Rectangle2D highlightedMaze(int mazeNumber) {
-		return new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		if (highlightedMazeSprites[mazeNumber - 1] == null) {
+			highlightedMazeSprites[mazeNumber - 1] = new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
+					MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		}
+		return highlightedMazeSprites[mazeNumber - 1];
 	}
+
+	private Rectangle2D[] emptyMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
 
 	public Rectangle2D emptyMaze(int mazeNumber) {
-		return region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		if (emptyMazeSprites[mazeNumber - 1] == null) {
+			emptyMazeSprites[mazeNumber - 1] = region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH,
+					MAZE_IMAGE_HEIGHT);
+		}
+		return emptyMazeSprites[mazeNumber - 1];
 	}
 
+	private Rectangle2D[] filledMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+
 	public Rectangle2D filledMaze(int mazeNumber) {
-		return region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		if (filledMazeSprites[mazeNumber - 1] == null) {
+			filledMazeSprites[mazeNumber - 1] = region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH,
+					MAZE_IMAGE_HEIGHT);
+		}
+		return filledMazeSprites[mazeNumber - 1];
 	}
+
+	private Rectangle2D[][] pacManMunchingSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] pacManMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		return new Rectangle2D[] { tileFromThirdColumn(0, 9 + d), tileFromThirdColumn(1, 9 + d),
-				tileFromThirdColumn(2, 9) };
+		if (pacManMunchingSprites[d] == null) {
+			pacManMunchingSprites[d] = new Rectangle2D[] { tileFromThirdColumn(0, 9 + d), tileFromThirdColumn(1, 9 + d),
+					tileFromThirdColumn(2, 9) };
+		}
+		return pacManMunchingSprites[d];
 	}
 
 	public Rectangle2D heartSprite() {

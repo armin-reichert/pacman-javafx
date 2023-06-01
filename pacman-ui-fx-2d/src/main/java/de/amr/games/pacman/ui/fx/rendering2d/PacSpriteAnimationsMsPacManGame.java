@@ -13,11 +13,11 @@ import javafx.geometry.Rectangle2D;
  */
 public class PacSpriteAnimationsMsPacManGame extends PacSpriteAnimationsCommon {
 
-	protected SpriteAnimation husbandMunching;
+	protected SpriteAnimation husbandMunchingAnimation;
 
 	public PacSpriteAnimationsMsPacManGame(Pac pac, SpritesheetMsPacManGame spritesheet) {
 		super(pac, spritesheet);
-		husbandMunching = new SpriteAnimation.Builder() //
+		husbandMunchingAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(2) //
 				.loop() //
 				.sprites(spritesheet.pacManMunchingSprites(Direction.LEFT)) //
@@ -30,12 +30,29 @@ public class PacSpriteAnimationsMsPacManGame extends PacSpriteAnimationsCommon {
 	}
 
 	@Override
-	protected Rectangle2D[] pacMunchingSprites(Direction dir) {
-		return spritesheet().pacMunchingSprites(dir);
+	protected Rectangle2D[] munchingSprites(Direction dir) {
+		return spritesheet().msPacManMunchingSprites(dir);
 	}
 
 	@Override
-	protected Rectangle2D[] pacDyingSprites() {
-		return spritesheet().pacDyingSprites();
+	protected Rectangle2D[] dyingSprites() {
+		return spritesheet().msPacManDyingSprites();
 	}
+
+	@Override
+	protected SpriteAnimation animation(String name, Direction dir) {
+		if (HUSBAND_MUNCHING.equals(name)) {
+			return husbandMunchingAnimation;
+		}
+		return super.animation(name, dir);
+	}
+
+	@Override
+	public Rectangle2D currentSprite() {
+		if (currentAnimation == husbandMunchingAnimation) {
+			husbandMunchingAnimation.setSprites(spritesheet().pacManMunchingSprites(pac.moveDir()));
+		}
+		return super.currentSprite();
+	}
+
 }

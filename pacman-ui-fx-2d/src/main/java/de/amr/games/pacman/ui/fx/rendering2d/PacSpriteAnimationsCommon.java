@@ -32,11 +32,11 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 		this.spritesheet = gss;
 		munchingAnimation = new SpriteAnimation.Builder() //
 				.loop() //
-				.sprites(pacMunchingSprites(Direction.LEFT)) //
+				.sprites(munchingSprites(Direction.LEFT)) //
 				.build();
 		dyingAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
-				.sprites(pacDyingSprites()) //
+				.sprites(dyingSprites()) //
 				.build();
 	}
 
@@ -44,9 +44,9 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 		return spritesheet;
 	}
 
-	protected abstract Rectangle2D[] pacMunchingSprites(Direction dir);
+	protected abstract Rectangle2D[] munchingSprites(Direction dir);
 
-	protected abstract Rectangle2D[] pacDyingSprites();
+	protected abstract Rectangle2D[] dyingSprites();
 
 	@Override
 	public void select(String name) {
@@ -54,7 +54,7 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 			currentAnimationName = name;
 			currentAnimation = animation(name, pac.moveDir());
 			if (currentAnimation != null) {
-				currentAnimation.setFrame(0);
+				currentAnimation.setFrameIndex(0);
 			}
 		}
 	}
@@ -95,7 +95,7 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 			return null;
 		}
 		if (currentAnimation == munchingAnimation) {
-			munchingAnimation.setSprites(pacMunchingSprites(pac.moveDir()));
+			munchingAnimation.setSprites(munchingSprites(pac.moveDir()));
 		}
 		return currentAnimation.frame();
 	}

@@ -61,7 +61,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		switch (++frame) {
 		case 1: {
-			blinkyAnimations.getStretchedAnimation().setFrame(0); // Nail
+			blinkyAnimations.getStretchedAnimation().setFrameIndex(0); // Nail
 			break;
 		}
 

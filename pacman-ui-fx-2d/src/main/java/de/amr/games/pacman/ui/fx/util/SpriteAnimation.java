@@ -64,7 +64,7 @@ public class SpriteAnimation {
 
 	private Rectangle2D[] sprites = new Rectangle2D[0];
 	private Transition transition;
-	private int frame;
+	private int frameIndex;
 
 	public void setSprites(Rectangle2D[] sprites) {
 		this.sprites = sprites;
@@ -74,7 +74,7 @@ public class SpriteAnimation {
 	public void reset() {
 		transition.stop();
 		transition.jumpTo(Duration.ZERO);
-		frame = 0;
+		frameIndex = 0;
 	}
 
 	public void start() {
@@ -93,18 +93,22 @@ public class SpriteAnimation {
 		transition.setDelay(delay);
 	}
 
-	public void setFrame(int frame) {
-		this.frame = frame;
+	public void setFrameIndex(int frame) {
+		this.frameIndex = frame;
+	}
+
+	public int frameIndex() {
+		return frameIndex;
 	}
 
 	public Rectangle2D frame() {
-		return sprites[frame];
+		return sprites[frameIndex];
 	}
 
 	public void nextFrame() {
-		frame++;
-		if (frame == sprites.length) {
-			frame = transition.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
+		frameIndex++;
+		if (frameIndex == sprites.length) {
+			frameIndex = transition.getCycleCount() == Animation.INDEFINITE ? 0 : sprites.length - 1;
 		}
 	}
 }
