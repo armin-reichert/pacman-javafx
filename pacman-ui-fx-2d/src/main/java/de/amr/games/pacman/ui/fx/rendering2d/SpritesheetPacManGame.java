@@ -22,8 +22,13 @@ public class SpritesheetPacManGame extends Spritesheet {
 		super(source, raster);
 	}
 
+	private Rectangle2D[] ghostNumberSprites;
+
 	public Rectangle2D[] ghostNumberSprites() {
-		return tilesRightOf(0, 8, 4);
+		if (ghostNumberSprites == null) {
+			ghostNumberSprites = tilesRightOf(0, 8, 4);
+		}
+		return ghostNumberSprites;
 	}
 
 	public Rectangle2D bonusSymbolSprite(int symbol) {
@@ -61,38 +66,67 @@ public class SpritesheetPacManGame extends Spritesheet {
 		return region(129, 15, 16, 16);
 	}
 
+	private Rectangle2D[][] pacMunchingSprites = new Rectangle2D[4][];
+
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		var wide = region(0, d * 16, 14, 14);
-		var middle = region(16, d * 16, 14, 14);
-		var closed = region(32, 0, 14, 14);
-		return new Rectangle2D[] { closed, closed, middle, middle, wide, wide, middle, middle };
+		if (pacMunchingSprites[d] == null) {
+			var wide = region(0, d * 16, 14, 14);
+			var middle = region(16, d * 16, 14, 14);
+			var closed = region(32, 0, 14, 14);
+			pacMunchingSprites[d] = new Rectangle2D[] { closed, closed, middle, middle, wide, wide, middle, middle };
+		}
+		return pacMunchingSprites[d];
 	}
+
+	private Rectangle2D[] pacDyingSprites;
 
 	public Rectangle2D[] pacDyingSprites() {
-		var r = new Rectangle2D[11];
-		for (int i = 0; i < 11; ++i) {
-			r[i] = new Rectangle2D(48 + i * 16, 0, 15, 15);
+		if (pacDyingSprites == null) {
+			pacDyingSprites = new Rectangle2D[11];
+			for (int i = 0; i < 11; ++i) {
+				pacDyingSprites[i] = new Rectangle2D(48 + i * 16, 0, 15, 15);
+			}
 		}
-		return r;
+		return pacDyingSprites;
 	}
 
-	public Rectangle2D[] ghostNormalSprites(byte ghostID, Direction dir) {
+	private Rectangle2D[][][] ghostNormalSprites = new Rectangle2D[4][4][];
+
+	public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		return tilesRightOf(2 * d, 4 + ghostID, 2);
+		if (ghostNormalSprites[id][d] == null) {
+			ghostNormalSprites[id][d] = tilesRightOf(2 * d, 4 + id, 2);
+		}
+		return ghostNormalSprites[id][d];
 	}
+
+	private Rectangle2D[] ghostFrightenedSprites;
 
 	public Rectangle2D[] ghostFrightenedSprites() {
-		return new Rectangle2D[] { tile(8, 4), tile(9, 4) };
+		if (ghostFrightenedSprites == null) {
+			ghostFrightenedSprites = new Rectangle2D[] { tile(8, 4), tile(9, 4) };
+		}
+		return ghostFrightenedSprites;
 	}
 
+	private Rectangle2D[] ghostFlashingSprites;
+
 	public Rectangle2D[] ghostFlashingSprites() {
-		return tilesRightOf(8, 4, 4);
+		if (ghostFlashingSprites == null) {
+			ghostFlashingSprites = tilesRightOf(8, 4, 4);
+		}
+		return ghostFlashingSprites;
 	}
+
+	private Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		return new Rectangle2D[] { tile(8 + d, 5) };
+		if (ghostEyesSprites[d] == null) {
+			ghostEyesSprites[d] = new Rectangle2D[] { tile(8 + d, 5) };
+		}
+		return ghostEyesSprites[d];
 	}
 
 	// Pac-Man specific:
