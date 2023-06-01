@@ -18,7 +18,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteAnimation> {
+public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteAnimation, Rectangle2D> {
 
 	protected final Pac pac;
 	protected Spritesheet spritesheet;
@@ -35,8 +35,8 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 		var munching = SpriteAnimation.begin().loop().sprites(munchingSprites(Direction.LEFT)).end();
 		var dying = SpriteAnimation.begin().frameTicks(8).sprites(dyingSprites()).end();
 
-		animationsByName.put(PacAnimations.PAC_MUNCHING, munching);
-		animationsByName.put(PacAnimations.PAC_DYING, dying);
+		animationsByName.put(PacAnimations.MUNCHING, munching);
+		animationsByName.put(PacAnimations.DYING, dying);
 	}
 
 	public Spritesheet spritesheet() {
@@ -98,10 +98,10 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 
 	@Override
 	public Rectangle2D currentSprite() {
-		if (!pac.isVisible() || currentAnimationName == null) {
+		if (currentAnimationName == null) {
 			return null;
 		}
-		if (PAC_MUNCHING.equals(currentAnimationName)) {
+		if (MUNCHING.equals(currentAnimationName)) {
 			currentAnimation.setSprites(munchingSprites(pac.moveDir()));
 		}
 		return currentAnimation.currentSprite();

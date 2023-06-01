@@ -18,7 +18,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<SpriteAnimation> {
+public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<SpriteAnimation, Rectangle2D> {
 
 	protected final Ghost ghost;
 	protected Spritesheet spritesheet;
@@ -96,7 +96,7 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		throw new IllegalArgumentException("Illegal animation name: " + name);
 	}
 
-	private void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
+	public void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
 		if (currentAnimation != null) {
 			operation.accept(currentAnimation);
 		}
@@ -119,7 +119,7 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 
 	@Override
 	public Rectangle2D currentSprite() {
-		if (!ghost.isVisible() || currentAnimationName == null) {
+		if (currentAnimationName == null) {
 			return null;
 		}
 		if (GHOST_NORMAL.equals(currentAnimationName)) {

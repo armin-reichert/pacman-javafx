@@ -69,7 +69,7 @@ public class PacManCutscene2 extends GameScene2D {
 			pac.placeAtTile(28, 20, 0, 0);
 			pac.setMoveDir(Direction.LEFT);
 			pac.setPixelSpeed(1.15f);
-			pac.selectAnimation(PacAnimations.PAC_MUNCHING);
+			pac.selectAnimation(PacAnimations.MUNCHING);
 			pac.startAnimation();
 			pac.show();
 			break;

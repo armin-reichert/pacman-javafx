@@ -46,7 +46,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		var msPacMan = intro.context().msPacMan;
 		var ss = context.ui().spritesheetMsPacManGame();
 		msPacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(msPacMan, ss));
-		msPacMan.selectAnimation(PacAnimations.PAC_MUNCHING);
+		msPacMan.selectAnimation(PacAnimations.MUNCHING);
 		intro.context().ghosts.forEach(ghost -> {
 			ghost.setAnimations(new GhostSpriteAnimationsMsPacManGame(ghost, ss));
 			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);

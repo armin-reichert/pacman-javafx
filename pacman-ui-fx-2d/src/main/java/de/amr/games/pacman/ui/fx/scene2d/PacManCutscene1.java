@@ -38,7 +38,7 @@ public class PacManCutscene1 extends GameScene2D {
 
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacSpriteAnimationsPacManGame(pac, context.ui().spritesheetPacManGame()));
-		pac.selectAnimation(PacAnimations.PAC_MUNCHING);
+		pac.selectAnimation(PacAnimations.MUNCHING);
 		pac.startAnimation();
 		pac.placeAtTile(v2i(29, 20), 0, 0);
 		pac.setMoveDir(Direction.LEFT);
