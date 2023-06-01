@@ -133,7 +133,7 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		} else if (currentAnimation == eyesAnimation) {
 			eyesAnimation.setSprites(ghostEyesSprites(ghost.wishDir()));
 		}
-		return currentAnimation.frame();
+		return currentAnimation.currentSprite();
 	}
 
 	protected SpriteAnimation animationByName(String name) {

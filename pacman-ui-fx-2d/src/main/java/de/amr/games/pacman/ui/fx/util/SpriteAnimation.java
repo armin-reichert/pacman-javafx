@@ -101,7 +101,7 @@ public class SpriteAnimation {
 		return frameIndex;
 	}
 
-	public Rectangle2D frame() {
+	public Rectangle2D currentSprite() {
 		return sprites[frameIndex];
 	}
 

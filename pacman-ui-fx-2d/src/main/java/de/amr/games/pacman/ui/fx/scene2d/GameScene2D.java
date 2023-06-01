@@ -428,7 +428,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawClap(Clapperboard clap, SpriteAnimation clapAnimation) {
 		if (clap.isVisible()) {
-			var sprite = clapAnimation.frame();
+			var sprite = clapAnimation.currentSprite();
 			drawSpriteOverBoundingBox(sprite, clap.position().x(), clap.position().y());
 			g.setFont(sceneFont());
 			g.setFill(ArcadeTheme.PALE);

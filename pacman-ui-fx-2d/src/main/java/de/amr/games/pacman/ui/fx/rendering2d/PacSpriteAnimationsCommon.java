@@ -97,6 +97,6 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 		if (currentAnimation == munchingAnimation) {
 			munchingAnimation.setSprites(munchingSprites(pac.moveDir()));
 		}
-		return currentAnimation.frame();
+		return currentAnimation.currentSprite();
 	}
 }

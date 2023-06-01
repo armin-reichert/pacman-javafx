@@ -60,7 +60,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		drawClap(imc().clapperboard, clapAnimation);
 		drawPacSprite(imc().msPacMan);
 		drawPacSprite(imc().pacMan);
-		drawEntitySprite(imc().stork, storkAnimation.frame());
+		drawEntitySprite(imc().stork, storkAnimation.currentSprite());
 		drawEntitySprite(imc().bag, imc().bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
