@@ -176,25 +176,24 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 
 	// TODO this is not 100% accurate yet
 	public SpriteAnimation createClapperboardAnimation() {
-		return SpriteAnimation.builder() //
-				.frameDurationTicks(4) //
+		return SpriteAnimation.begin() //
 				.sprites(//
 						region(456, 208, 32, 32), //
 						region(488, 208, 32, 32), //
 						region(520, 208, 32, 32), //
 						region(488, 208, 32, 32), //
-						region(456, 208, 32, 32)//
-				) //
-				.build();
+						region(456, 208, 32, 32))//
+				.frameTicks(4) //
+				.end();
 	}
 
 	public SpriteAnimation createStorkFlyingAnimation() {
-		return SpriteAnimation.builder() //
-				.frameDurationTicks(8) //
-				.loop() //
+		return SpriteAnimation.begin() //
 				.sprites(//
 						region(489, 176, 32, 16), //
-						region(521, 176, 32, 16) //
-				).build();
+						region(521, 176, 32, 16)) //
+				.frameTicks(8) //
+				.loop() //
+				.end();
 	}
 }

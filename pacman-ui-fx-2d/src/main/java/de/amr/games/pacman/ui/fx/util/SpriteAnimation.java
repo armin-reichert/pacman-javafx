@@ -23,12 +23,12 @@ public class SpriteAnimation {
 		}
 
 		private SpriteAnimation animation;
-		private int frameDurationTicks = 1;
+		private int frameTicks = 1;
 		private boolean loop = false;
 		private int fps = 60;
 
-		public Builder frameDurationTicks(int ticks) {
-			this.frameDurationTicks = ticks;
+		public Builder frameTicks(int ticks) {
+			this.frameTicks = ticks;
 			return this;
 		}
 
@@ -47,10 +47,10 @@ public class SpriteAnimation {
 			return this;
 		}
 
-		public SpriteAnimation build() {
+		public SpriteAnimation end() {
 			animation.transition = new Transition() {
 				{
-					setCycleDuration(Duration.seconds(1.0 / fps * frameDurationTicks));
+					setCycleDuration(Duration.seconds(1.0 / fps * frameTicks));
 					setCycleCount(loop ? Animation.INDEFINITE : animation.sprites.length);
 					setInterpolator(Interpolator.LINEAR);
 				}
@@ -66,7 +66,7 @@ public class SpriteAnimation {
 		}
 	}
 
-	public static Builder builder() {
+	public static Builder begin() {
 		return new Builder();
 	}
 

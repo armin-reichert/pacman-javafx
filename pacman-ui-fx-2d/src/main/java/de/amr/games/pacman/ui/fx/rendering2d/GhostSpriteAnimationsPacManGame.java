@@ -17,30 +17,15 @@ public class GhostSpriteAnimationsPacManGame extends GhostSpriteAnimationsCommon
 	public GhostSpriteAnimationsPacManGame(Ghost ghost, SpritesheetPacManGame spritesheet) {
 		super(ghost, spritesheet);
 
-		var damagedAnimation = SpriteAnimation.builder() //
-				.sprites(spritesheet.blinkyDamagedSprites()) //
-				.build();
+		var damaged = SpriteAnimation.begin().sprites(spritesheet.blinkyDamagedSprites()).end();
+		var stretched = SpriteAnimation.begin().sprites(spritesheet.blinkyStretchedSprites()).end();
+		var patched = SpriteAnimation.begin().frameTicks(4).loop().sprites(spritesheet.blinkyPatchedSprites()).end();
+		var naked = SpriteAnimation.begin().frameTicks(4).loop().sprites(spritesheet.blinkyNakedSprites()).end();
 
-		var stretchedAnimation = SpriteAnimation.builder() //
-				.sprites(spritesheet.blinkyStretchedSprites()) //
-				.build();
-
-		var patchedAnimation = SpriteAnimation.builder() //
-				.frameDurationTicks(4) //
-				.loop() //
-				.sprites(spritesheet.blinkyPatchedSprites()) //
-				.build();
-
-		var nakedAnimation = SpriteAnimation.builder() //
-				.frameDurationTicks(4) //
-				.loop() //
-				.sprites(spritesheet.blinkyNakedSprites()) //
-				.build();
-
-		animationsByName.put(GhostAnimations.BLINKY_DAMAGED, damagedAnimation);
-		animationsByName.put(GhostAnimations.BLINKY_STRETCHED, stretchedAnimation);
-		animationsByName.put(GhostAnimations.BLINKY_PATCHED, patchedAnimation);
-		animationsByName.put(GhostAnimations.BLINKY_NAKED, nakedAnimation);
+		animationsByName.put(GhostAnimations.BLINKY_DAMAGED, damaged);
+		animationsByName.put(GhostAnimations.BLINKY_STRETCHED, stretched);
+		animationsByName.put(GhostAnimations.BLINKY_PATCHED, patched);
+		animationsByName.put(GhostAnimations.BLINKY_NAKED, naked);
 	}
 
 	@Override

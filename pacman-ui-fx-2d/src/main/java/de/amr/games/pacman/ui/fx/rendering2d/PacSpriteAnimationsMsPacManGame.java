@@ -16,14 +16,9 @@ public class PacSpriteAnimationsMsPacManGame extends PacSpriteAnimationsCommon {
 
 	public PacSpriteAnimationsMsPacManGame(Pac pac, SpritesheetMsPacManGame spritesheet) {
 		super(pac, spritesheet);
-
-		var husbandMunchingAnimation = SpriteAnimation.builder() //
-				.frameDurationTicks(2) //
-				.loop() //
-				.sprites(spritesheet.pacManMunchingSprites(Direction.LEFT)) //
-				.build();
-
-		animationsByName.put(PacAnimations.HUSBAND_MUNCHING, husbandMunchingAnimation);
+		var husbandMunching = SpriteAnimation.begin().sprites(spritesheet.pacManMunchingSprites(Direction.LEFT))
+				.frameTicks(2).loop().end();
+		animationsByName.put(PacAnimations.HUSBAND_MUNCHING, husbandMunching);
 	}
 
 	@Override

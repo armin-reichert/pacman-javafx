@@ -31,40 +31,23 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		this.ghost = ghost;
 		this.spritesheet = sprites;
 
-		var normalAnimation = SpriteAnimation.builder() //
-				.frameDurationTicks(8) //
-				.loop() //
-				.sprites(ghostNormalSprites(ghost.id(), Direction.LEFT)) //
-				.build();
+		var normal = SpriteAnimation.begin().sprites(ghostNormalSprites(ghost.id(), Direction.LEFT)).frameTicks(8).loop()
+				.end();
+		var frightened = SpriteAnimation.begin().sprites(ghostFrightenedSprites()).frameTicks(8).loop().end();
+		var flashing = SpriteAnimation.begin().sprites(ghostFlashingSprites()).frameTicks(6).loop().end();
+		var eyesAnimation = SpriteAnimation.begin().sprites(ghostEyesSprites(Direction.LEFT)).end();
+		var numberAnimation = SpriteAnimation.begin().sprites(ghostNumberSprites()).end();
 
-		var frightenedAnimation = SpriteAnimation.builder() //
-				.frameDurationTicks(8) //
-				.loop() //
-				.sprites(ghostFrightenedSprites()) //
-				.build();
-
-		var flashingAnimation = SpriteAnimation.builder() //
-				.frameDurationTicks(6) //
-				.loop() //
-				.sprites(ghostFlashingSprites()) //
-				.build();
-
-		var eyesAnimation = SpriteAnimation.builder().sprites(ghostEyesSprites(Direction.LEFT)).build();
-
-		var numberAnimation = SpriteAnimation.builder() //
-				.sprites(ghostNumberSprites()) //
-				.build();
-
-		animationsByName.put(GHOST_NORMAL, normalAnimation);
-		animationsByName.put(GHOST_FRIGHTENED, frightenedAnimation);
-		animationsByName.put(GHOST_FLASHING, flashingAnimation);
+		animationsByName.put(GHOST_NORMAL, normal);
+		animationsByName.put(GHOST_FRIGHTENED, frightened);
+		animationsByName.put(GHOST_FLASHING, flashing);
 		animationsByName.put(GHOST_EYES, eyesAnimation);
 		animationsByName.put(GHOST_NUMBER, numberAnimation);
 
 		// TODO check this
 		eyesAnimation.start();
-		frightenedAnimation.start();
-		flashingAnimation.start();
+		frightened.start();
+		flashing.start();
 	}
 
 	public Spritesheet spritesheet() {
