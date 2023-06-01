@@ -124,6 +124,7 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		withCurrentAnimationDo(SpriteAnimation::reset);
 	}
 
+	@Override
 	public Rectangle2D currentSprite() {
 		if (!ghost.isVisible() || currentAnimationName == null) {
 			return null;

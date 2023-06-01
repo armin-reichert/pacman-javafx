@@ -90,6 +90,7 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 		withCurrentAnimationDo(SpriteAnimation::reset);
 	}
 
+	@Override
 	public Rectangle2D currentSprite() {
 		if (!pac.isVisible() || currentAnimationName == null) {
 			return null;

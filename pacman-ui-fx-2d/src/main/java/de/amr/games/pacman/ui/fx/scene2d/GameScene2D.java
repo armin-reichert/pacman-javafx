@@ -363,23 +363,24 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawPacSprite(Pac pac) {
-		var anim = pac.animations();
-		if (anim.isPresent() && anim.get() instanceof PacSpriteAnimationsCommon) {
-			PacSpriteAnimationsCommon psa = (PacSpriteAnimationsCommon) anim.get();
-			drawEntitySprite(pac, psa.currentSprite());
-		}
+		pac.animations().ifPresent(animations -> {
+			if (animations instanceof PacSpriteAnimationsCommon) {
+				drawEntitySprite(pac, (Rectangle2D) animations.currentSprite());
+			}
+		});
 	}
 
 	protected void drawGhostSprite(Ghost ghost) {
-		var anim = ghost.animations();
-		if (anim.isPresent() && anim.get() instanceof GhostSpriteAnimationsCommon) {
-			GhostSpriteAnimationsCommon gsa = (GhostSpriteAnimationsCommon) anim.get();
-			drawEntitySprite(ghost, gsa.currentSprite());
-//			g.setFill(Color.WHITE);
-//			g.setFont(Font.font("Monospaced", s(8)));
-//			var text = String.format("%s %d", gsa.selectedAnimationName(), gsa.selectedAnimation().frameIndex());
-//			g.fillText(text, s(ghost.position().x() + 4), s(ghost.position().y()));
-		}
+		ghost.animations().ifPresent(animations -> {
+			if (animations instanceof GhostSpriteAnimationsCommon) {
+				var sa = (GhostSpriteAnimationsCommon) animations;
+				drawEntitySprite(ghost, sa.currentSprite());
+				g.setFill(Color.WHITE);
+				g.setFont(Font.font("Monospaced", s(8)));
+				var text = String.format("%s %d", sa.selectedAnimationName(), sa.selectedAnimation().frameIndex());
+				g.fillText(text, s(ghost.position().x() + 4), s(ghost.position().y()));
+			}
+		});
 	}
 
 	protected void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
