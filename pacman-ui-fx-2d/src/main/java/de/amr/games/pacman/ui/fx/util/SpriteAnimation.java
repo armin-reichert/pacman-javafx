@@ -66,6 +66,11 @@ public class SpriteAnimation {
 	private Transition transition;
 	private int frame;
 
+	public void setSprites(Rectangle2D[] sprites) {
+		this.sprites = sprites;
+		// TODO what about frame index?
+	}
+
 	public void reset() {
 		transition.stop();
 		transition.jumpTo(Duration.ZERO);

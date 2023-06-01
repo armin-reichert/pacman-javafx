@@ -4,9 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.lib.steering.Direction;
@@ -24,8 +21,8 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 	protected final Ghost ghost;
 	protected Spritesheet spritesheet;
 
-	protected Map<Direction, SpriteAnimation> eyesAnimationByDir;
-	protected Map<Direction, SpriteAnimation> normalAnimationByDir;
+	protected SpriteAnimation eyesAnimation;
+	protected SpriteAnimation normalAnimation;
 	protected SpriteAnimation frightenedAnimation;
 	protected SpriteAnimation flashingAnimation;
 	protected SpriteAnimation numberAnimation;
@@ -37,15 +34,11 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		this.ghost = ghost;
 		this.spritesheet = sprites;
 
-		normalAnimationByDir = new EnumMap<>(Direction.class);
-		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation.Builder() //
-					.frameDurationTicks(8) //
-					.loop() //
-					.sprites(ghostNormalSprites(ghost.id(), dir)) //
-					.build();
-			normalAnimationByDir.put(dir, animation);
-		}
+		normalAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(8) //
+				.loop() //
+				.sprites(ghostNormalSprites(ghost.id(), Direction.RIGHT)) //
+				.build();
 
 		frightenedAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
@@ -59,21 +52,14 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 				.sprites(ghostFlashingSprites()) //
 				.build();
 
-		eyesAnimationByDir = new EnumMap<>(Direction.class);
-		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(dir)).build();
-			eyesAnimationByDir.put(dir, animation);
-		}
+		eyesAnimation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(Direction.LEFT)).build();
 
 		numberAnimation = new SpriteAnimation.Builder() //
 				.sprites(ghostNumberSprites()) //
 				.build();
 
 		// TODO check this
-		for (var dir : Direction.values()) {
-			normalAnimationByDir.get(dir).start();
-			eyesAnimationByDir.get(dir).start();
-		}
+		eyesAnimation.start();
 		frightenedAnimation.start();
 		flashingAnimation.start();
 	}
@@ -117,24 +103,9 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		}
 	}
 
-	protected Optional<Map<Direction, SpriteAnimation>> checkIfAnimationMap(String name) {
-		if (GhostAnimations.GHOST_EYES.equals(name)) {
-			return Optional.of(eyesAnimationByDir);
-		}
-		if (GhostAnimations.GHOST_NORMAL.equals(name)) {
-			return Optional.of(normalAnimationByDir);
-		}
-		return Optional.empty();
-	}
-
 	private void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
 		if (currentAnimation != null) {
-			var map = checkIfAnimationMap(currentAnimationName);
-			if (map.isPresent()) {
-				map.get().values().forEach(operation::accept);
-			} else {
-				operation.accept(currentAnimation);
-			}
+			operation.accept(currentAnimation);
 		}
 	}
 
@@ -157,16 +128,18 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		if (!ghost.isVisible() || currentAnimationName == null) {
 			return null;
 		}
-		var map = checkIfAnimationMap(currentAnimationName);
-		if (map.isPresent()) {
-			currentAnimation = map.get().get(ghost.wishDir());
+		if (currentAnimation == normalAnimation) {
+			normalAnimation.setSprites(ghostNormalSprites(ghost.id(), ghost.wishDir()));
+		}
+		if (currentAnimation == eyesAnimation) {
+			eyesAnimation.setSprites(ghostEyesSprites(ghost.wishDir()));
 		}
 		return currentAnimation.frame();
 	}
 
 	protected SpriteAnimation animationByName(String name) {
 		if (GHOST_NORMAL.equals(name)) {
-			return normalAnimationByDir.get(ghost.wishDir());
+			return normalAnimation;
 		}
 		if (GHOST_FRIGHTENED.equals(name)) {
 			return frightenedAnimation;
@@ -175,7 +148,7 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 			return flashingAnimation;
 		}
 		if (GHOST_EYES.equals(name)) {
-			return eyesAnimationByDir.get(ghost.wishDir());
+			return eyesAnimation;
 		}
 		if (GHOST_NUMBER.equals(name)) {
 			return numberAnimation;

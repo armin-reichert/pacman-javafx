@@ -4,9 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.lib.steering.Direction;
@@ -24,7 +21,7 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 	protected final Pac pac;
 	protected Spritesheet spritesheet;
 
-	protected Map<Direction, SpriteAnimation> munchingByDir;
+	protected SpriteAnimation munchingAnimation;
 	protected SpriteAnimation dyingAnimation;
 
 	protected String currentAnimationName;
@@ -33,14 +30,10 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 	protected PacSpriteAnimationsCommon(Pac pac, Spritesheet gss) {
 		this.pac = pac;
 		this.spritesheet = gss;
-		munchingByDir = new EnumMap<>(Direction.class);
-		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation.Builder() //
-					.loop() //
-					.sprites(pacMunchingSprites(dir)) //
-					.build();
-			munchingByDir.put(dir, animation);
-		}
+		munchingAnimation = new SpriteAnimation.Builder() //
+				.loop() //
+				.sprites(pacMunchingSprites(Direction.LEFT)) //
+				.build();
 		dyingAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
 				.sprites(pacDyingSprites()) //
@@ -68,7 +61,7 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 
 	protected SpriteAnimation animation(String name, Direction dir) {
 		if (PAC_MUNCHING.equals(name)) {
-			return munchingByDir.get(dir);
+			return munchingAnimation;
 		}
 		if (PAC_DYING.equals(name)) {
 			return dyingAnimation;
@@ -76,21 +69,9 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 		throw new IllegalArgumentException("Illegal animation (name, dir) value: " + name + "," + dir);
 	}
 
-	protected Optional<Map<Direction, SpriteAnimation>> checkIfAnimationMap(String name) {
-		if (PacAnimations.PAC_MUNCHING.equals(name)) {
-			return Optional.of(munchingByDir);
-		}
-		return Optional.empty();
-	}
-
 	private void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
 		if (currentAnimation != null) {
-			var map = checkIfAnimationMap(currentAnimationName);
-			if (map.isPresent()) {
-				map.get().values().forEach(operation::accept);
-			} else {
-				operation.accept(currentAnimation);
-			}
+			operation.accept(currentAnimation);
 		}
 	}
 
@@ -113,9 +94,8 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 		if (!pac.isVisible() || currentAnimationName == null) {
 			return null;
 		}
-		var map = checkIfAnimationMap(currentAnimationName);
-		if (map.isPresent()) {
-			currentAnimation = map.get().get(pac.moveDir());
+		if (currentAnimation == munchingAnimation) {
+			munchingAnimation.setSprites(pacMunchingSprites(pac.moveDir()));
 		}
 		return currentAnimation.frame();
 	}
