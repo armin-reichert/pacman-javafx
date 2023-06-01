@@ -11,14 +11,14 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostSpriteAnimationsPacMan extends GhostSpriteAnimations {
+public class GhostSpriteAnimationsPacManGame extends GhostSpriteAnimationsCommon {
 
 	private SpriteAnimation damagedAnimation;
 	private SpriteAnimation stretchedAnimation;
 	private SpriteAnimation patchedAnimation;
 	private SpriteAnimation nakedAnimation;
 
-	public GhostSpriteAnimationsPacMan(Ghost ghost, SpritesheetPacManGame spritesheet) {
+	public GhostSpriteAnimationsPacManGame(Ghost ghost, SpritesheetPacManGame spritesheet) {
 		super(ghost, spritesheet);
 		createBlinkyDamagedAnimation(spritesheet);
 		createBlinkyStretchedAnimation(spritesheet);

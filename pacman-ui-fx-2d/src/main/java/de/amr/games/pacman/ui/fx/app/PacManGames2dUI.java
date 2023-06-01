@@ -28,13 +28,12 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsMsPacMan;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacMan;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.SpritesheetPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacMan;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacMan;
-import de.amr.games.pacman.ui.fx.rendering2d.Theme;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
@@ -56,6 +55,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -385,14 +385,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			switch (level.game().variant()) {
 			case MS_PACMAN: {
 				var spritesheet = new SpritesheetMsPacManGame(theme.image("mspacman.spritesheet"), 16);
-				level.pac().setAnimations(new PacSpriteAnimationsMsPacMan(level.pac(), spritesheet));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsMsPacMan(ghost, spritesheet)));
+				level.pac().setAnimations(new PacSpriteAnimationsMsPacManGame(level.pac(), spritesheet));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsMsPacManGame(ghost, spritesheet)));
 				break;
 			}
 			case PACMAN: {
 				var spritesheet = new SpritesheetPacManGame(theme.image("pacman.spritesheet"), 16);
-				level.pac().setAnimations(new PacSpriteAnimationsPacMan(level.pac(), spritesheet));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacMan(ghost, spritesheet)));
+				level.pac().setAnimations(new PacSpriteAnimationsPacManGame(level.pac(), spritesheet));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacManGame(ghost, spritesheet)));
 				break;
 			}
 			default:

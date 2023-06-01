@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.paint.Color;
 
 /**
@@ -32,26 +33,26 @@ public class ArcadeTheme extends Theme {
 		set("mspacman.spritesheet",            rm.image("graphics/mspacman/sprites.png"));
 		set("mspacman.flashingMazes",          rm.image("graphics/mspacman/mazes-flashing.png"));
 
-		add("mspacman.maze.foodColor",         Color.rgb(222, 222, 255));
-		add("mspacman.maze.foodColor",         Color.rgb(255, 255, 0));
-		add("mspacman.maze.foodColor",         Color.rgb(255, 0, 0));
-		add("mspacman.maze.foodColor",         Color.rgb(222, 222, 255));
-		add("mspacman.maze.foodColor",         Color.rgb(0, 255, 255));
-		add("mspacman.maze.foodColor",         Color.rgb(222, 222, 255));
+		addAll("mspacman.maze.foodColor",      Color.rgb(222, 222, 255),
+		                                       Color.rgb(255, 255, 0),
+		                                       Color.rgb(255, 0, 0),
+		                                       Color.rgb(222, 222, 255),
+		                                       Color.rgb(0, 255, 255),
+		                                       Color.rgb(222, 222, 255));
 
-		add("mspacman.maze.wallBaseColor",     Color.rgb(255,   0,   0));
-		add("mspacman.maze.wallBaseColor",     Color.rgb(222, 222, 255));
-		add("mspacman.maze.wallBaseColor",     Color.rgb(222, 222, 255));
-		add("mspacman.maze.wallBaseColor",     Color.rgb(255, 183,  81));
-		add("mspacman.maze.wallBaseColor",     Color.rgb(255, 255,   0));
-		add("mspacman.maze.wallBaseColor",     Color.rgb(255,   0,   0));
+		addAll("mspacman.maze.wallBaseColor",  Color.rgb(255,   0,   0),
+		                                       Color.rgb(222, 222, 255),
+		                                       Color.rgb(222, 222, 255),
+		                                       Color.rgb(255, 183,  81),
+		                                       Color.rgb(255, 255,   0),
+		                                       Color.rgb(255,   0,   0));
 
-		add("mspacman.maze.wallTopColor",      Color.rgb(255, 183, 174));
-		add("mspacman.maze.wallTopColor",      Color.rgb( 71, 183, 255));
-		add("mspacman.maze.wallTopColor",      Color.rgb(222, 151,  81));
-		add("mspacman.maze.wallTopColor",      Color.rgb(222, 151,  81));
-		add("mspacman.maze.wallTopColor",      Color.rgb(222, 151,  81));
-		add("mspacman.maze.wallTopColor",      Color.rgb(222, 151,  81));
+		addAll("mspacman.maze.wallTopColor",   Color.rgb(255, 183, 174),
+		                                       Color.rgb( 71, 183, 255),
+		                                       Color.rgb(222, 151,  81),
+		                                       Color.rgb(222, 151,  81),
+		                                       Color.rgb(222, 151,  81),
+		                                       Color.rgb(222, 151,  81));
 
 		set("mspacman.color.head",             Color.rgb(255, 255, 0));
 		set("mspacman.color.palate",           Color.rgb(191, 79, 61));

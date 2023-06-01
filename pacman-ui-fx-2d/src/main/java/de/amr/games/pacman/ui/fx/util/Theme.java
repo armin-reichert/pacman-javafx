@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.rendering2d;
+package de.amr.games.pacman.ui.fx.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +29,12 @@ public class Theme {
 
 	public void add(String arrayName, Color color) {
 		namedArrays.computeIfAbsent(arrayName, name -> new ArrayList<>()).add(color);
+	}
+
+	public void addAll(String arrayName, Color... colors) {
+		for (var color : colors) {
+			add(arrayName, color);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

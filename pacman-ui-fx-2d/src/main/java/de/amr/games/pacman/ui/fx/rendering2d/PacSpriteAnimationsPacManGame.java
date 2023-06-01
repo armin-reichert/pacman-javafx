@@ -11,11 +11,11 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacSpriteAnimationsPacMan extends PacSpriteAnimations {
+public class PacSpriteAnimationsPacManGame extends PacSpriteAnimationsCommon {
 
 	protected SpriteAnimation bigPacManAnimation;
 
-	public PacSpriteAnimationsPacMan(Pac pac, SpritesheetPacManGame spritesheet) {
+	public PacSpriteAnimationsPacManGame(Pac pac, SpritesheetPacManGame spritesheet) {
 		super(pac, spritesheet);
 		bigPacManAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(3) //

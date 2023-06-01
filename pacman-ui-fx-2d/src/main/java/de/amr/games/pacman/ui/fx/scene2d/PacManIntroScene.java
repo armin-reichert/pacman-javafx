@@ -11,8 +11,8 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacMan;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacMan;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacManGame;
 
 /**
  * Intro scene of the PacMan game.
@@ -51,9 +51,9 @@ public class PacManIntroScene extends GameScene2D {
 		});
 		ic = intro.context();
 
-		ic.pacMan.setAnimations(new PacSpriteAnimationsPacMan(ic.pacMan, context.spritesheetPacMan()));
+		ic.pacMan.setAnimations(new PacSpriteAnimationsPacManGame(ic.pacMan, context.spritesheetPacMan()));
 		ic.ghosts()
-				.forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacMan(ghost, context.spritesheetPacMan())));
+				.forEach(ghost -> ghost.setAnimations(new GhostSpriteAnimationsPacManGame(ghost, context.spritesheetPacMan())));
 		ic.blinking.reset();
 
 		intro.changeState(State.START);

@@ -10,9 +10,9 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostSpriteAnimationsMsPacMan extends GhostSpriteAnimations {
+public class GhostSpriteAnimationsMsPacManGame extends GhostSpriteAnimationsCommon {
 
-	public GhostSpriteAnimationsMsPacMan(Ghost ghost, SpritesheetMsPacManGame spritesheet) {
+	public GhostSpriteAnimationsMsPacManGame(Ghost ghost, SpritesheetMsPacManGame spritesheet) {
 		super(ghost, spritesheet);
 	}
 

@@ -19,7 +19,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public abstract class PacSpriteAnimations implements PacAnimations {
+public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 
 	protected final Pac pac;
 	protected Spritesheet spritesheet;
@@ -30,7 +30,7 @@ public abstract class PacSpriteAnimations implements PacAnimations {
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
 
-	protected PacSpriteAnimations(Pac pac, Spritesheet gss) {
+	protected PacSpriteAnimationsCommon(Pac pac, Spritesheet gss) {
 		this.pac = pac;
 		this.spritesheet = gss;
 		munchingByDir = new EnumMap<>(Direction.class);

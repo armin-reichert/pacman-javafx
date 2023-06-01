@@ -24,8 +24,8 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsCommon;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsCommon;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
@@ -364,16 +364,16 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawPacSprite(Pac pac) {
 		var anim = pac.animations();
-		if (anim.isPresent() && anim.get() instanceof PacSpriteAnimations) {
-			PacSpriteAnimations psa = (PacSpriteAnimations) anim.get();
+		if (anim.isPresent() && anim.get() instanceof PacSpriteAnimationsCommon) {
+			PacSpriteAnimationsCommon psa = (PacSpriteAnimationsCommon) anim.get();
 			drawEntitySprite(pac, psa.currentSprite());
 		}
 	}
 
 	protected void drawGhostSprite(Ghost ghost) {
 		var anim = ghost.animations();
-		if (anim.isPresent() && anim.get() instanceof GhostSpriteAnimations) {
-			GhostSpriteAnimations gsa = (GhostSpriteAnimations) anim.get();
+		if (anim.isPresent() && anim.get() instanceof GhostSpriteAnimationsCommon) {
+			GhostSpriteAnimationsCommon gsa = (GhostSpriteAnimationsCommon) anim.get();
 			drawEntitySprite(ghost, gsa.currentSprite());
 		}
 	}

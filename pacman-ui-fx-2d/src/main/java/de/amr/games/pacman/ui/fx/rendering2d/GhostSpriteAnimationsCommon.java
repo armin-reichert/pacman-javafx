@@ -19,7 +19,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
+public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<SpriteAnimation> {
 
 	protected final Ghost ghost;
 	protected Spritesheet spritesheet;
@@ -33,7 +33,7 @@ public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAni
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
 
-	protected GhostSpriteAnimations(Ghost ghost, Spritesheet sprites) {
+	protected GhostSpriteAnimationsCommon(Ghost ghost, Spritesheet sprites) {
 		this.ghost = ghost;
 		this.spritesheet = sprites;
 

@@ -16,11 +16,11 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacSpriteAnimationsMsPacMan extends PacSpriteAnimations {
+public class PacSpriteAnimationsMsPacManGame extends PacSpriteAnimationsCommon {
 
 	protected Map<Direction, SpriteAnimation> husbandMunchingMap;
 
-	public PacSpriteAnimationsMsPacMan(Pac pac, SpritesheetMsPacManGame spritesheet) {
+	public PacSpriteAnimationsMsPacManGame(Pac pac, SpritesheetMsPacManGame spritesheet) {
 		super(pac, spritesheet);
 		husbandMunchingMap = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
