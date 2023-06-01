@@ -66,6 +66,8 @@ public abstract class GameScene2D implements GameScene {
 		return (float) tiles * TS;
 	}
 
+	public static boolean debug;
+
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	public final BooleanProperty canvasScaledPy = new SimpleBooleanProperty(this, "canvasScaled", true) {
@@ -365,7 +367,14 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawPacSprite(Pac pac) {
 		pac.animations().ifPresent(animations -> {
 			if (animations instanceof PacSpriteAnimationsCommon) {
-				drawEntitySprite(pac, (Rectangle2D) animations.currentSprite());
+				var sa = (PacSpriteAnimationsCommon) animations;
+				drawEntitySprite(pac, sa.currentSprite());
+				if (debug) {
+					g.setFill(Color.WHITE);
+					g.setFont(Font.font("Monospaced", s(8)));
+					var text = String.format("%s %d", sa.selectedAnimationName(), sa.selectedAnimation().frameIndex());
+					g.fillText(text, s(pac.position().x() + 4), s(pac.position().y()));
+				}
 			}
 		});
 	}
@@ -375,10 +384,12 @@ public abstract class GameScene2D implements GameScene {
 			if (animations instanceof GhostSpriteAnimationsCommon) {
 				var sa = (GhostSpriteAnimationsCommon) animations;
 				drawEntitySprite(ghost, sa.currentSprite());
-				g.setFill(Color.WHITE);
-				g.setFont(Font.font("Monospaced", s(8)));
-				var text = String.format("%s %d", sa.selectedAnimationName(), sa.selectedAnimation().frameIndex());
-				g.fillText(text, s(ghost.position().x() + 4), s(ghost.position().y()));
+				if (debug) {
+					g.setFill(Color.WHITE);
+					g.setFont(Font.font("Monospaced", s(8)));
+					var text = String.format("%s %d", sa.selectedAnimationName(), sa.selectedAnimation().frameIndex());
+					g.fillText(text, s(ghost.position().x() + 4), s(ghost.position().y()));
+				}
 			}
 		});
 	}

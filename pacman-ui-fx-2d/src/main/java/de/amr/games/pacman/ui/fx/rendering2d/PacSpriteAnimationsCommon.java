@@ -16,7 +16,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public abstract class PacSpriteAnimationsCommon implements PacAnimations {
+public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteAnimation> {
 
 	protected final Pac pac;
 	protected Spritesheet spritesheet;
@@ -57,6 +57,16 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations {
 				currentAnimation.setFrameIndex(0);
 			}
 		}
+	}
+
+	@Override
+	public SpriteAnimation selectedAnimation() {
+		return currentAnimation;
+	}
+
+	@Override
+	public String selectedAnimationName() {
+		return currentAnimationName;
 	}
 
 	protected SpriteAnimation animation(String name, Direction dir) {
