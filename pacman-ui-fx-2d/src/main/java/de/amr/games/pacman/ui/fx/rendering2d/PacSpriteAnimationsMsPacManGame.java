@@ -17,7 +17,7 @@ public class PacSpriteAnimationsMsPacManGame extends PacSpriteAnimationsCommon {
 	public PacSpriteAnimationsMsPacManGame(Pac pac, SpritesheetMsPacManGame spritesheet) {
 		super(pac, spritesheet);
 
-		var husbandMunchingAnimation = new SpriteAnimation.Builder() //
+		var husbandMunchingAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(2) //
 				.loop() //
 				.sprites(spritesheet.pacManMunchingSprites(Direction.LEFT)) //

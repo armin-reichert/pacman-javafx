@@ -18,7 +18,11 @@ public class SpriteAnimation {
 
 	public static class Builder {
 
-		private SpriteAnimation animation = new SpriteAnimation();
+		private Builder() {
+			animation = new SpriteAnimation();
+		}
+
+		private SpriteAnimation animation;
 		private int frameDurationTicks = 1;
 		private boolean loop = false;
 		private int fps = 60;
@@ -60,6 +64,10 @@ public class SpriteAnimation {
 			};
 			return animation;
 		}
+	}
+
+	public static Builder builder() {
+		return new Builder();
 	}
 
 	private Rectangle2D[] sprites = new Rectangle2D[0];

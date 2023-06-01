@@ -176,7 +176,7 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 
 	// TODO this is not 100% accurate yet
 	public SpriteAnimation createClapperboardAnimation() {
-		return new SpriteAnimation.Builder() //
+		return SpriteAnimation.builder() //
 				.frameDurationTicks(4) //
 				.sprites(//
 						region(456, 208, 32, 32), //
@@ -189,7 +189,7 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	}
 
 	public SpriteAnimation createStorkFlyingAnimation() {
-		return new SpriteAnimation.Builder() //
+		return SpriteAnimation.builder() //
 				.frameDurationTicks(8) //
 				.loop() //
 				.sprites(//

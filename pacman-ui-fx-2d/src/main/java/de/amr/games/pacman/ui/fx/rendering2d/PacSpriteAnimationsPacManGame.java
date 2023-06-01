@@ -17,7 +17,7 @@ public class PacSpriteAnimationsPacManGame extends PacSpriteAnimationsCommon {
 	public PacSpriteAnimationsPacManGame(Pac pac, SpritesheetPacManGame spritesheet) {
 		super(pac, spritesheet);
 
-		var bigPacManAnimation = new SpriteAnimation.Builder() //
+		var bigPacManAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(3) //
 				.loop() //
 				.sprites(spritesheet.bigPacManSprites()) //

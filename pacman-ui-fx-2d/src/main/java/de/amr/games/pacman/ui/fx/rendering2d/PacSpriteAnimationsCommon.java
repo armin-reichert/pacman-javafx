@@ -32,12 +32,12 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 		this.pac = pac;
 		this.spritesheet = gss;
 
-		var munchingAnimation = new SpriteAnimation.Builder() //
+		var munchingAnimation = SpriteAnimation.builder() //
 				.loop() //
 				.sprites(munchingSprites(Direction.LEFT)) //
 				.build();
 
-		var dyingAnimation = new SpriteAnimation.Builder() //
+		var dyingAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(8) //
 				.sprites(dyingSprites()) //
 				.build();

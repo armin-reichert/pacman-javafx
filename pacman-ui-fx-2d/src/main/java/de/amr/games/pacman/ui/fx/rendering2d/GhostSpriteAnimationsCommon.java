@@ -31,27 +31,27 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		this.ghost = ghost;
 		this.spritesheet = sprites;
 
-		var normalAnimation = new SpriteAnimation.Builder() //
+		var normalAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(8) //
 				.loop() //
 				.sprites(ghostNormalSprites(ghost.id(), Direction.LEFT)) //
 				.build();
 
-		var frightenedAnimation = new SpriteAnimation.Builder() //
+		var frightenedAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(8) //
 				.loop() //
 				.sprites(ghostFrightenedSprites()) //
 				.build();
 
-		var flashingAnimation = new SpriteAnimation.Builder() //
+		var flashingAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(6) //
 				.loop() //
 				.sprites(ghostFlashingSprites()) //
 				.build();
 
-		var eyesAnimation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(Direction.LEFT)).build();
+		var eyesAnimation = SpriteAnimation.builder().sprites(ghostEyesSprites(Direction.LEFT)).build();
 
-		var numberAnimation = new SpriteAnimation.Builder() //
+		var numberAnimation = SpriteAnimation.builder() //
 				.sprites(ghostNumberSprites()) //
 				.build();
 

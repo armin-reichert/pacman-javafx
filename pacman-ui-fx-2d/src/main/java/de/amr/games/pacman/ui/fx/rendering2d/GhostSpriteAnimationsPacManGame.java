@@ -17,21 +17,21 @@ public class GhostSpriteAnimationsPacManGame extends GhostSpriteAnimationsCommon
 	public GhostSpriteAnimationsPacManGame(Ghost ghost, SpritesheetPacManGame spritesheet) {
 		super(ghost, spritesheet);
 
-		var damagedAnimation = new SpriteAnimation.Builder() //
+		var damagedAnimation = SpriteAnimation.builder() //
 				.sprites(spritesheet.blinkyDamagedSprites()) //
 				.build();
 
-		var stretchedAnimation = new SpriteAnimation.Builder() //
+		var stretchedAnimation = SpriteAnimation.builder() //
 				.sprites(spritesheet.blinkyStretchedSprites()) //
 				.build();
 
-		var patchedAnimation = new SpriteAnimation.Builder() //
+		var patchedAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(4) //
 				.loop() //
 				.sprites(spritesheet.blinkyPatchedSprites()) //
 				.build();
 
-		var nakedAnimation = new SpriteAnimation.Builder() //
+		var nakedAnimation = SpriteAnimation.builder() //
 				.frameDurationTicks(4) //
 				.loop() //
 				.sprites(spritesheet.blinkyNakedSprites()) //
