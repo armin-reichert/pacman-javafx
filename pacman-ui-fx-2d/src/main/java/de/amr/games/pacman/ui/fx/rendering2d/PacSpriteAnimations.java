@@ -20,12 +20,10 @@ import javafx.geometry.Rectangle2D;
  */
 public abstract class PacSpriteAnimations implements PacAnimations {
 
-	protected static final Rectangle2D[] NO_SPRITES = new Rectangle2D[0];
-
 	protected final Pac pac;
 	protected Spritesheet spritesheet;
 
-	protected Map<Direction, SpriteAnimation> munchingMap;
+	protected Map<Direction, SpriteAnimation> munchingByDir;
 	protected SpriteAnimation dyingAnimation;
 
 	protected String currentAnimationName;
@@ -34,39 +32,27 @@ public abstract class PacSpriteAnimations implements PacAnimations {
 	protected PacSpriteAnimations(Pac pac, Spritesheet gss) {
 		this.pac = pac;
 		this.spritesheet = gss;
-		createMunchingAnimation();
-		createDyingAnimation();
-	}
-
-	public Spritesheet spritesheet() {
-		return spritesheet;
-	}
-
-	protected void createMunchingAnimation() {
-		munchingMap = new EnumMap<>(Direction.class);
+		munchingByDir = new EnumMap<>(Direction.class);
 		for (var dir : Direction.values()) {
 			var animation = new SpriteAnimation.Builder() //
 					.loop() //
 					.sprites(pacMunchingSprites(dir)) //
 					.build();
-			munchingMap.put(dir, animation);
+			munchingByDir.put(dir, animation);
 		}
-	}
-
-	protected Rectangle2D[] pacMunchingSprites(Direction dir) {
-		return NO_SPRITES;
-	}
-
-	protected void createDyingAnimation() {
 		dyingAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
 				.sprites(pacDyingSprites()) //
 				.build();
 	}
 
-	protected Rectangle2D[] pacDyingSprites() {
-		return NO_SPRITES;
+	public Spritesheet spritesheet() {
+		return spritesheet;
 	}
+
+	protected abstract Rectangle2D[] pacMunchingSprites(Direction dir);
+
+	protected abstract Rectangle2D[] pacDyingSprites();
 
 	@Override
 	public void select(String name) {
@@ -79,14 +65,24 @@ public abstract class PacSpriteAnimations implements PacAnimations {
 		}
 	}
 
+	protected SpriteAnimation animation(String name, Direction dir) {
+		if (PAC_MUNCHING.equals(name)) {
+			return munchingByDir.get(dir);
+		}
+		if (PAC_DYING.equals(name)) {
+			return dyingAnimation;
+		}
+		throw new IllegalArgumentException("Illegal animation (name, dir) value: " + name + "," + dir);
+	}
+
 	protected Optional<Map<Direction, SpriteAnimation>> checkIfAnimationMap(String name) {
 		if (PacAnimations.PAC_MUNCHING.equals(name)) {
-			return Optional.of(munchingMap);
+			return Optional.of(munchingByDir);
 		}
 		return Optional.empty();
 	}
 
-	protected void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
+	private void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
 		if (currentAnimation != null) {
 			var map = checkIfAnimationMap(currentAnimationName);
 			if (map.isPresent()) {
@@ -121,15 +117,5 @@ public abstract class PacSpriteAnimations implements PacAnimations {
 			currentAnimation = map.get().get(pac.moveDir());
 		}
 		return currentAnimation.frame();
-	}
-
-	protected SpriteAnimation animation(String name, Direction dir) {
-		if (PAC_MUNCHING.equals(name)) {
-			return munchingMap.get(dir);
-		}
-		if (PAC_DYING.equals(name)) {
-			return dyingAnimation;
-		}
-		throw new IllegalArgumentException("Illegal animation (name, dir) value: " + name + "," + dir);
 	}
 }

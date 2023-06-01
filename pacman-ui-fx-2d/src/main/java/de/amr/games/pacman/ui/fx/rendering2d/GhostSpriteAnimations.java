@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -18,8 +19,6 @@ import javafx.geometry.Rectangle2D;
  * @author Armin Reichert
  */
 public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAnimation> {
-
-	protected static final Rectangle2D[] NO_SPRITES = new Rectangle2D[0];
 
 	protected final Ghost ghost;
 	protected Spritesheet spritesheet;
@@ -36,11 +35,38 @@ public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAni
 	protected GhostSpriteAnimations(Ghost ghost, Spritesheet sprites) {
 		this.ghost = ghost;
 		this.spritesheet = sprites;
-		createNormalAnimation();
-		createFrightenedAnimation();
-		createFlashingAnimation();
-		createEyesAnimation();
-		createNumberAnimation();
+
+		normalAnimationByDir = new EnumMap<>(Direction.class);
+		for (var dir : Direction.values()) {
+			var animation = new SpriteAnimation.Builder() //
+					.frameDurationTicks(8) //
+					.loop() //
+					.sprites(ghostNormalSprites(ghost.id(), dir)) //
+					.build();
+			normalAnimationByDir.put(dir, animation);
+		}
+
+		frightenedAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(8) //
+				.loop() //
+				.sprites(ghostFrightenedSprites()) //
+				.build();
+
+		flashingAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(6) //
+				.loop() //
+				.sprites(ghostFlashingSprites()) //
+				.build();
+
+		eyesAnimationByDir = new EnumMap<>(Direction.class);
+		for (var dir : Direction.values()) {
+			var animation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(dir)).build();
+			eyesAnimationByDir.put(dir, animation);
+		}
+
+		numberAnimation = new SpriteAnimation.Builder() //
+				.sprites(ghostNumberSprites()) //
+				.build();
 
 		// TODO check this
 		for (var dir : Direction.values()) {
@@ -55,67 +81,15 @@ public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAni
 		return spritesheet;
 	}
 
-	protected void createNormalAnimation() {
-		normalAnimationByDir = new EnumMap<>(Direction.class);
-		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation.Builder() //
-					.frameDurationTicks(8) //
-					.loop() //
-					.sprites(ghostNormalSprites(ghost.id(), dir)) //
-					.build();
-			normalAnimationByDir.put(dir, animation);
-		}
-	}
+	protected abstract Rectangle2D[] ghostNormalSprites(byte id, Direction dir);
 
-	protected Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
-		return NO_SPRITES;
-	}
+	protected abstract Rectangle2D[] ghostFrightenedSprites();
 
-	protected void createFrightenedAnimation() {
-		frightenedAnimation = new SpriteAnimation.Builder() //
-				.frameDurationTicks(8) //
-				.loop() //
-				.sprites(ghostFrightenedSprites()) //
-				.build();
-	}
+	protected abstract Rectangle2D[] ghostFlashingSprites();
 
-	protected Rectangle2D[] ghostFrightenedSprites() {
-		return NO_SPRITES;
-	}
+	protected abstract Rectangle2D[] ghostEyesSprites(Direction dir);
 
-	protected void createFlashingAnimation() {
-		flashingAnimation = new SpriteAnimation.Builder() //
-				.frameDurationTicks(6) //
-				.loop() //
-				.sprites(ghostFlashingSprites()) //
-				.build();
-	}
-
-	protected Rectangle2D[] ghostFlashingSprites() {
-		return NO_SPRITES;
-	}
-
-	protected void createEyesAnimation() {
-		eyesAnimationByDir = new EnumMap<>(Direction.class);
-		for (var dir : Direction.values()) {
-			var animation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(dir)).build();
-			eyesAnimationByDir.put(dir, animation);
-		}
-	}
-
-	protected Rectangle2D[] ghostEyesSprites(Direction dir) {
-		return NO_SPRITES;
-	}
-
-	protected void createNumberAnimation() {
-		numberAnimation = new SpriteAnimation.Builder() //
-				.sprites(ghostNumberSprites()) //
-				.build();
-	}
-
-	protected Rectangle2D[] ghostNumberSprites() {
-		return NO_SPRITES;
-	}
+	protected abstract Rectangle2D[] ghostNumberSprites();
 
 	@Override
 	public String selectedAnimationName() {
@@ -142,7 +116,7 @@ public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAni
 		}
 	}
 
-	protected Optional<Map<Direction, SpriteAnimation>> animationMap(String name) {
+	protected Optional<Map<Direction, SpriteAnimation>> checkIfAnimationMap(String name) {
 		if (GhostAnimations.GHOST_EYES.equals(name)) {
 			return Optional.of(eyesAnimationByDir);
 		}
@@ -152,47 +126,37 @@ public abstract class GhostSpriteAnimations implements GhostAnimations<SpriteAni
 		return Optional.empty();
 	}
 
-	@Override
-	public void startSelected() {
+	private void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
 		if (currentAnimation != null) {
-			var map = animationMap(currentAnimationName);
+			var map = checkIfAnimationMap(currentAnimationName);
 			if (map.isPresent()) {
-				map.get().values().forEach(SpriteAnimation::start);
+				map.get().values().forEach(operation::accept);
 			} else {
-				currentAnimation.start();
+				operation.accept(currentAnimation);
 			}
 		}
+	}
+
+	@Override
+	public void startSelected() {
+		withCurrentAnimationDo(SpriteAnimation::start);
 	}
 
 	@Override
 	public void stopSelected() {
-		if (currentAnimation != null) {
-			var map = animationMap(currentAnimationName);
-			if (map.isPresent()) {
-				map.get().values().forEach(SpriteAnimation::stop);
-			} else {
-				currentAnimation.stop();
-			}
-		}
+		withCurrentAnimationDo(SpriteAnimation::stop);
 	}
 
 	@Override
 	public void resetSelected() {
-		if (currentAnimation != null) {
-			var map = animationMap(currentAnimationName);
-			if (map.isPresent()) {
-				map.get().values().forEach(SpriteAnimation::reset);
-			} else {
-				currentAnimation.reset();
-			}
-		}
+		withCurrentAnimationDo(SpriteAnimation::reset);
 	}
 
 	public Rectangle2D currentSprite() {
 		if (!ghost.isVisible() || currentAnimationName == null) {
 			return null;
 		}
-		var map = animationMap(currentAnimationName);
+		var map = checkIfAnimationMap(currentAnimationName);
 		if (map.isPresent()) {
 			currentAnimation = map.get().get(ghost.wishDir());
 		}
