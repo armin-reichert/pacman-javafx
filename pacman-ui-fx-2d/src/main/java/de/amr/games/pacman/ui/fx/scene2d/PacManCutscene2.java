@@ -61,7 +61,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		switch (++frame) {
 		case 1: {
-			blinkyAnimations.getStretchedAnimation().setFrameIndex(0); // Nail
+			blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).setFrameIndex(0); // Nail
 			break;
 		}
 
@@ -92,23 +92,23 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 
 		case 198: {
-			blinkyAnimations.getStretchedAnimation().nextFrame(); // Stretched S
+			blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).nextFrame(); // Stretched S
 			break;
 		}
 
 		case 226: {
-			blinkyAnimations.getStretchedAnimation().nextFrame(); // Stretched M
+			blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).nextFrame(); // Stretched M
 			break;
 		}
 
 		case 248: {
-			blinkyAnimations.getStretchedAnimation().nextFrame(); // Stretched L
+			blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).nextFrame(); // Stretched L
 			break;
 		}
 
 		case 328: {
 			blinky.setPixelSpeed(0);
-			blinkyAnimations.getStretchedAnimation().nextFrame(); // Rapture
+			blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).nextFrame(); // Rapture
 			break;
 		}
 
@@ -118,7 +118,7 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 
 		case 389: {
-			blinkyAnimations.getDamagedAnimation().nextFrame(); // Eyes right-down
+			blinkyAnimations.byName(GhostAnimations.BLINKY_DAMAGED).nextFrame(); // Eyes right-down
 			break;
 		}
 
@@ -140,8 +140,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawSprite(blinkyAnimations.getStretchedAnimation().currentSprite(), s(t(14)), s(t(19) + 3));
-		blinkyAnimations.getStretchedAnimation().currentSprite();
+		drawSprite(blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).currentSprite(), s(t(14)), s(t(19) + 3));
 		drawGhostSprite(blinky);
 		drawPacSprite(pac);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());

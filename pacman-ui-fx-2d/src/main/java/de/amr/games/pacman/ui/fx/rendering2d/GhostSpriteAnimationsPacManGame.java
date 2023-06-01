@@ -5,6 +5,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
@@ -13,47 +14,38 @@ import javafx.geometry.Rectangle2D;
  */
 public class GhostSpriteAnimationsPacManGame extends GhostSpriteAnimationsCommon {
 
-	private SpriteAnimation damagedAnimation;
-	private SpriteAnimation stretchedAnimation;
-	private SpriteAnimation patchedAnimation;
-	private SpriteAnimation nakedAnimation;
-
 	public GhostSpriteAnimationsPacManGame(Ghost ghost, SpritesheetPacManGame spritesheet) {
 		super(ghost, spritesheet);
-		createBlinkyDamagedAnimation(spritesheet);
-		createBlinkyStretchedAnimation(spritesheet);
-		createBlinkyPatchedAnimation(spritesheet);
-		createBlinkyNakedAnimation(spritesheet);
+
+		var damagedAnimation = new SpriteAnimation.Builder() //
+				.sprites(spritesheet.blinkyDamagedSprites()) //
+				.build();
+
+		var stretchedAnimation = new SpriteAnimation.Builder() //
+				.sprites(spritesheet.blinkyStretchedSprites()) //
+				.build();
+
+		var patchedAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(4) //
+				.loop() //
+				.sprites(spritesheet.blinkyPatchedSprites()) //
+				.build();
+
+		var nakedAnimation = new SpriteAnimation.Builder() //
+				.frameDurationTicks(4) //
+				.loop() //
+				.sprites(spritesheet.blinkyNakedSprites()) //
+				.build();
+
+		animationsByName.put(GhostAnimations.BLINKY_DAMAGED, damagedAnimation);
+		animationsByName.put(GhostAnimations.BLINKY_STRETCHED, stretchedAnimation);
+		animationsByName.put(GhostAnimations.BLINKY_PATCHED, patchedAnimation);
+		animationsByName.put(GhostAnimations.BLINKY_NAKED, nakedAnimation);
 	}
 
 	@Override
 	public SpritesheetPacManGame spritesheet() {
 		return (SpritesheetPacManGame) spritesheet;
-	}
-
-	@Override
-	protected SpriteAnimation animationByName(String name) {
-		if (BLINKY_DAMAGED.equals(name)) {
-			return damagedAnimation;
-		}
-		if (BLINKY_NAKED.equals(name)) {
-			return nakedAnimation;
-		}
-		if (BLINKY_PATCHED.equals(name)) {
-			return patchedAnimation;
-		}
-		if (BLINKY_STRETCHED.equals(name)) {
-			return stretchedAnimation;
-		}
-		return super.animationByName(name);
-	}
-
-	public SpriteAnimation getStretchedAnimation() {
-		return stretchedAnimation;
-	}
-
-	public SpriteAnimation getDamagedAnimation() {
-		return damagedAnimation;
 	}
 
 	@Override
@@ -81,31 +73,4 @@ public class GhostSpriteAnimationsPacManGame extends GhostSpriteAnimationsCommon
 		return spritesheet().ghostNumberSprites();
 	}
 
-	private void createBlinkyDamagedAnimation(SpritesheetPacManGame ss) {
-		damagedAnimation = new SpriteAnimation.Builder() //
-				.sprites(ss.blinkyDamagedSprites()) //
-				.build();
-	}
-
-	private void createBlinkyStretchedAnimation(SpritesheetPacManGame ss) {
-		stretchedAnimation = new SpriteAnimation.Builder() //
-				.sprites(ss.blinkyStretchedSprites()) //
-				.build();
-	}
-
-	private void createBlinkyPatchedAnimation(SpritesheetPacManGame ss) {
-		patchedAnimation = new SpriteAnimation.Builder() //
-				.frameDurationTicks(4) //
-				.loop() //
-				.sprites(ss.blinkyPatchedSprites()) //
-				.build();
-	}
-
-	private void createBlinkyNakedAnimation(SpritesheetPacManGame ss) {
-		nakedAnimation = new SpriteAnimation.Builder() //
-				.frameDurationTicks(4) //
-				.loop() //
-				.sprites(ss.blinkyNakedSprites()) //
-				.build();
-	}
 }

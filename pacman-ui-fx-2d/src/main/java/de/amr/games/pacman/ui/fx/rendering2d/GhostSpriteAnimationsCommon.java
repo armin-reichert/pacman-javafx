@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.lib.steering.Direction;
@@ -20,12 +22,7 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 
 	protected final Ghost ghost;
 	protected Spritesheet spritesheet;
-
-	protected SpriteAnimation eyesAnimation;
-	protected SpriteAnimation normalAnimation;
-	protected SpriteAnimation frightenedAnimation;
-	protected SpriteAnimation flashingAnimation;
-	protected SpriteAnimation numberAnimation;
+	protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
 
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
@@ -34,29 +31,35 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		this.ghost = ghost;
 		this.spritesheet = sprites;
 
-		normalAnimation = new SpriteAnimation.Builder() //
+		var normalAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
 				.loop() //
-				.sprites(ghostNormalSprites(ghost.id(), Direction.RIGHT)) //
+				.sprites(ghostNormalSprites(ghost.id(), Direction.LEFT)) //
 				.build();
 
-		frightenedAnimation = new SpriteAnimation.Builder() //
+		var frightenedAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
 				.loop() //
 				.sprites(ghostFrightenedSprites()) //
 				.build();
 
-		flashingAnimation = new SpriteAnimation.Builder() //
+		var flashingAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(6) //
 				.loop() //
 				.sprites(ghostFlashingSprites()) //
 				.build();
 
-		eyesAnimation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(Direction.LEFT)).build();
+		var eyesAnimation = new SpriteAnimation.Builder().sprites(ghostEyesSprites(Direction.LEFT)).build();
 
-		numberAnimation = new SpriteAnimation.Builder() //
+		var numberAnimation = new SpriteAnimation.Builder() //
 				.sprites(ghostNumberSprites()) //
 				.build();
+
+		animationsByName.put(GHOST_NORMAL, normalAnimation);
+		animationsByName.put(GHOST_FRIGHTENED, frightenedAnimation);
+		animationsByName.put(GHOST_FLASHING, flashingAnimation);
+		animationsByName.put(GHOST_EYES, eyesAnimation);
+		animationsByName.put(GHOST_NUMBER, numberAnimation);
 
 		// TODO check this
 		eyesAnimation.start();
@@ -92,15 +95,22 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 	public void select(String name, Object... args) {
 		if (!name.equals(currentAnimationName)) {
 			currentAnimationName = name;
-			currentAnimation = animationByName(name);
+			currentAnimation = byName(name);
 			if (currentAnimation != null) {
-				if (currentAnimation == numberAnimation) {
-					numberAnimation.setFrameIndex((Integer) args[0]);
+				if (currentAnimation == byName(GHOST_NUMBER)) {
+					currentAnimation.setFrameIndex((Integer) args[0]);
 				} else {
 					currentAnimation.setFrameIndex(0);
 				}
 			}
 		}
+	}
+
+	public SpriteAnimation byName(String name) {
+		if (animationsByName.containsKey(name)) {
+			return animationsByName.get(name);
+		}
+		throw new IllegalArgumentException("Illegal animation name: " + name);
 	}
 
 	private void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
@@ -129,30 +139,11 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		if (!ghost.isVisible() || currentAnimationName == null) {
 			return null;
 		}
-		if (currentAnimation == normalAnimation) {
-			normalAnimation.setSprites(ghostNormalSprites(ghost.id(), ghost.wishDir()));
-		} else if (currentAnimation == eyesAnimation) {
-			eyesAnimation.setSprites(ghostEyesSprites(ghost.wishDir()));
+		if (GHOST_NORMAL.equals(currentAnimationName)) {
+			currentAnimation.setSprites(ghostNormalSprites(ghost.id(), ghost.wishDir()));
+		} else if (GHOST_EYES.equals(currentAnimationName)) {
+			currentAnimation.setSprites(ghostEyesSprites(ghost.wishDir()));
 		}
 		return currentAnimation.currentSprite();
-	}
-
-	protected SpriteAnimation animationByName(String name) {
-		if (GHOST_NORMAL.equals(name)) {
-			return normalAnimation;
-		}
-		if (GHOST_FRIGHTENED.equals(name)) {
-			return frightenedAnimation;
-		}
-		if (GHOST_FLASHING.equals(name)) {
-			return flashingAnimation;
-		}
-		if (GHOST_EYES.equals(name)) {
-			return eyesAnimation;
-		}
-		if (GHOST_NUMBER.equals(name)) {
-			return numberAnimation;
-		}
-		throw new IllegalArgumentException("Illegal animation name: " + name);
 	}
 }

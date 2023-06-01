@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import de.amr.games.pacman.lib.steering.Direction;
@@ -21,8 +23,7 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 	protected final Pac pac;
 	protected Spritesheet spritesheet;
 
-	protected SpriteAnimation munchingAnimation;
-	protected SpriteAnimation dyingAnimation;
+	protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
 
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
@@ -30,14 +31,19 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 	protected PacSpriteAnimationsCommon(Pac pac, Spritesheet gss) {
 		this.pac = pac;
 		this.spritesheet = gss;
-		munchingAnimation = new SpriteAnimation.Builder() //
+
+		var munchingAnimation = new SpriteAnimation.Builder() //
 				.loop() //
 				.sprites(munchingSprites(Direction.LEFT)) //
 				.build();
-		dyingAnimation = new SpriteAnimation.Builder() //
+
+		var dyingAnimation = new SpriteAnimation.Builder() //
 				.frameDurationTicks(8) //
 				.sprites(dyingSprites()) //
 				.build();
+
+		animationsByName.put(PacAnimations.PAC_MUNCHING, munchingAnimation);
+		animationsByName.put(PacAnimations.PAC_DYING, dyingAnimation);
 	}
 
 	public Spritesheet spritesheet() {
@@ -52,11 +58,18 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 	public void select(String name) {
 		if (!name.equals(currentAnimationName)) {
 			currentAnimationName = name;
-			currentAnimation = animation(name, pac.moveDir());
+			currentAnimation = byName(name);
 			if (currentAnimation != null) {
 				currentAnimation.setFrameIndex(0);
 			}
 		}
+	}
+
+	public SpriteAnimation byName(String name) {
+		if (animationsByName.containsKey(name)) {
+			return animationsByName.get(name);
+		}
+		throw new IllegalArgumentException("Illegal animation name: " + name);
 	}
 
 	@Override
@@ -67,16 +80,6 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 	@Override
 	public String selectedAnimationName() {
 		return currentAnimationName;
-	}
-
-	protected SpriteAnimation animation(String name, Direction dir) {
-		if (PAC_MUNCHING.equals(name)) {
-			return munchingAnimation;
-		}
-		if (PAC_DYING.equals(name)) {
-			return dyingAnimation;
-		}
-		throw new IllegalArgumentException("Illegal animation (name, dir) value: " + name + "," + dir);
 	}
 
 	private void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
@@ -105,8 +108,8 @@ public abstract class PacSpriteAnimationsCommon implements PacAnimations<SpriteA
 		if (!pac.isVisible() || currentAnimationName == null) {
 			return null;
 		}
-		if (currentAnimation == munchingAnimation) {
-			munchingAnimation.setSprites(munchingSprites(pac.moveDir()));
+		if (PAC_MUNCHING.equals(currentAnimationName)) {
+			currentAnimation.setSprites(munchingSprites(pac.moveDir()));
 		}
 		return currentAnimation.currentSprite();
 	}
