@@ -31,12 +31,12 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		this.ghost = ghost;
 		this.spritesheet = sprites;
 
-		var normal = SpriteAnimation.begin().sprites(ghostNormalSprites(ghost.id(), Direction.LEFT)).frameTicks(8).loop()
+		var normal = SpriteAnimation.begin().sprites(normalSprites(ghost.id(), Direction.LEFT)).frameTicks(8).loop()
 				.end();
-		var frightened = SpriteAnimation.begin().sprites(ghostFrightenedSprites()).frameTicks(8).loop().end();
-		var flashing = SpriteAnimation.begin().sprites(ghostFlashingSprites()).frameTicks(6).loop().end();
-		var eyesAnimation = SpriteAnimation.begin().sprites(ghostEyesSprites(Direction.LEFT)).end();
-		var numberAnimation = SpriteAnimation.begin().sprites(ghostNumberSprites()).end();
+		var frightened = SpriteAnimation.begin().sprites(frightenedSprites()).frameTicks(8).loop().end();
+		var flashing = SpriteAnimation.begin().sprites(flashingSprites()).frameTicks(6).loop().end();
+		var eyesAnimation = SpriteAnimation.begin().sprites(eyesSprites(Direction.LEFT)).end();
+		var numberAnimation = SpriteAnimation.begin().sprites(numberSprites()).end();
 
 		animationsByName.put(GHOST_NORMAL, normal);
 		animationsByName.put(GHOST_FRIGHTENED, frightened);
@@ -54,15 +54,15 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		return spritesheet;
 	}
 
-	protected abstract Rectangle2D[] ghostNormalSprites(byte id, Direction dir);
+	protected abstract Rectangle2D[] normalSprites(byte id, Direction dir);
 
-	protected abstract Rectangle2D[] ghostFrightenedSprites();
+	protected abstract Rectangle2D[] frightenedSprites();
 
-	protected abstract Rectangle2D[] ghostFlashingSprites();
+	protected abstract Rectangle2D[] flashingSprites();
 
-	protected abstract Rectangle2D[] ghostEyesSprites(Direction dir);
+	protected abstract Rectangle2D[] eyesSprites(Direction dir);
 
-	protected abstract Rectangle2D[] ghostNumberSprites();
+	protected abstract Rectangle2D[] numberSprites();
 
 	@Override
 	public String selectedAnimationName() {
@@ -123,9 +123,9 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 			return null;
 		}
 		if (GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation.setSprites(ghostNormalSprites(ghost.id(), ghost.wishDir()));
+			currentAnimation.setSprites(normalSprites(ghost.id(), ghost.wishDir()));
 		} else if (GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation.setSprites(ghostEyesSprites(ghost.wishDir()));
+			currentAnimation.setSprites(eyesSprites(ghost.wishDir()));
 		}
 		return currentAnimation.currentSprite();
 	}

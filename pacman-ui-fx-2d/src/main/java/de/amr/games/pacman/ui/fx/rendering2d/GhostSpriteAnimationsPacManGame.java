@@ -34,27 +34,27 @@ public class GhostSpriteAnimationsPacManGame extends GhostSpriteAnimationsCommon
 	}
 
 	@Override
-	protected Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
+	protected Rectangle2D[] normalSprites(byte id, Direction dir) {
 		return spritesheet().ghostNormalSprites(id, dir);
 	}
 
 	@Override
-	protected Rectangle2D[] ghostFrightenedSprites() {
+	protected Rectangle2D[] frightenedSprites() {
 		return spritesheet().ghostFrightenedSprites();
 	}
 
 	@Override
-	protected Rectangle2D[] ghostFlashingSprites() {
+	protected Rectangle2D[] flashingSprites() {
 		return spritesheet().ghostFlashingSprites();
 	}
 
 	@Override
-	protected Rectangle2D[] ghostEyesSprites(Direction dir) {
+	protected Rectangle2D[] eyesSprites(Direction dir) {
 		return spritesheet().ghostEyesSprites(dir);
 	}
 
 	@Override
-	protected Rectangle2D[] ghostNumberSprites() {
+	protected Rectangle2D[] numberSprites() {
 		return spritesheet().ghostNumberSprites();
 	}
 
