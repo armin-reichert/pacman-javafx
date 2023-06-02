@@ -21,32 +21,42 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 
 	private static final int MAZE_IMAGE_WIDTH = 226;
 	private static final int MAZE_IMAGE_HEIGHT = 248;
+
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
+
+	private Rectangle2D[] array(Rectangle2D... sprites) {
+		return sprites;
+	}
 
 	public SpritesheetMsPacManGame(Image source, int raster) {
 		super(source, raster);
 	}
 
-	private Rectangle2D tileFromThirdColumn(int tileX, int tileY) {
-		return tilesFrom(THIRD_COLUMN, 0, tileX, tileY, 1, 1);
+	// third column contains the sprites (first two columns the maze images)
+	private Rectangle2D sprite(int rasterX, int rasterY) {
+		return tilesFrom(THIRD_COLUMN, 0, rasterX, rasterY, 1, 1);
 	}
 
+	private Rectangle2D[] ghostNumberSprites;
+
 	public Rectangle2D[] ghostNumberSprites() {
-		return new Rectangle2D[] { tileFromThirdColumn(0, 8), tileFromThirdColumn(1, 8), tileFromThirdColumn(2, 8),
-				tileFromThirdColumn(3, 8) };
+		if (ghostNumberSprites == null) {
+			ghostNumberSprites = array(sprite(0, 8), sprite(1, 8), sprite(2, 8), sprite(3, 8));
+		}
+		return ghostNumberSprites;
 	}
 
 	public Rectangle2D bonusSymbolSprite(int symbol) {
-		return tileFromThirdColumn(3 + symbol, 0);
+		return sprite(3 + symbol, 0);
 	}
 
 	public Rectangle2D bonusValueSprite(int symbol) {
-		return tileFromThirdColumn(3 + symbol, 1);
+		return sprite(3 + symbol, 1);
 	}
 
 	public Rectangle2D livesCounterSprite() {
-		return tileFromThirdColumn(1, 0);
+		return sprite(1, 0);
 	}
 
 	private Rectangle2D[][] msPacManMunchingSprites = new Rectangle2D[4][];
@@ -54,11 +64,10 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	public Rectangle2D[] msPacManMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		if (msPacManMunchingSprites[d] == null) {
-			var wide = tileFromThirdColumn(0, d);
-			var middle = tileFromThirdColumn(1, d);
-			var closed = tileFromThirdColumn(2, d);
-			msPacManMunchingSprites[d] = new Rectangle2D[] { middle, middle, wide, wide, middle, middle, middle, closed,
-					closed };
+			var wide = sprite(0, d);
+			var open = sprite(1, d);
+			var closed = sprite(2, d);
+			msPacManMunchingSprites[d] = array(open, open, wide, wide, open, open, open, closed, closed);
 		}
 		return msPacManMunchingSprites[d];
 	}
@@ -67,32 +76,31 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 
 	public Rectangle2D[] msPacManDyingSprites() {
 		if (msPacManDyingSprites == null) {
-			var right = tileFromThirdColumn(1, 0);
-			var left = tileFromThirdColumn(1, 1);
-			var up = tileFromThirdColumn(1, 2);
-			var down = tileFromThirdColumn(1, 3);
+			var right = sprite(1, 0);
+			var left = sprite(1, 1);
+			var up = sprite(1, 2);
+			var down = sprite(1, 3);
 			// TODO not yet 100% accurate
-			msPacManDyingSprites = new Rectangle2D[] { down, left, up, right, down, left, up, right, down, left, up };
+			msPacManDyingSprites = array(down, left, up, right, down, left, up, right, down, left, up);
 		}
 		return msPacManDyingSprites;
 	}
 
-	private Rectangle2D[][][] ghostNormalSprites = new Rectangle2D[4][4][];
+	private Rectangle2D[][][] ghostsNormalSprites = new Rectangle2D[4][4][];
 
 	public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
 		int d = DIR_ORDER.index(dir);
-		if (ghostNormalSprites[id][d] == null) {
-			ghostNormalSprites[id][d] = new Rectangle2D[] { tileFromThirdColumn(2 * d, 4 + id),
-					tileFromThirdColumn(2 * d + 1, 4 + id) };
+		if (ghostsNormalSprites[id][d] == null) {
+			ghostsNormalSprites[id][d] = array(sprite(2 * d, 4 + id), sprite(2 * d + 1, 4 + id));
 		}
-		return ghostNormalSprites[id][d];
+		return ghostsNormalSprites[id][d];
 	}
 
 	private Rectangle2D[] ghostFrightenedSprites;
 
 	public Rectangle2D[] ghostFrightenedSprites() {
 		if (ghostFrightenedSprites == null) {
-			ghostFrightenedSprites = new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4) };
+			ghostFrightenedSprites = array(sprite(8, 4), sprite(9, 4));
 		}
 		return ghostFrightenedSprites;
 	}
@@ -101,8 +109,7 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 
 	public Rectangle2D[] ghostFlashingSprites() {
 		if (ghostFlashingSprites == null) {
-			ghostFlashingSprites = new Rectangle2D[] { tileFromThirdColumn(8, 4), tileFromThirdColumn(9, 4),
-					tileFromThirdColumn(10, 4), tileFromThirdColumn(11, 4) };
+			ghostFlashingSprites = array(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
 		}
 		return ghostFlashingSprites;
 	}
@@ -112,7 +119,7 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		if (ghostEyesSprites[d] == null) {
-			ghostEyesSprites[d] = new Rectangle2D[] { tileFromThirdColumn(8 + d, 5) };
+			ghostEyesSprites[d] = array(sprite(8 + d, 5));
 		}
 		return ghostEyesSprites[d];
 	}
@@ -134,21 +141,21 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	private Rectangle2D[] emptyMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
 
 	public Rectangle2D emptyMaze(int mazeNumber) {
-		if (emptyMazeSprites[mazeNumber - 1] == null) {
-			emptyMazeSprites[mazeNumber - 1] = region(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH,
-					MAZE_IMAGE_HEIGHT);
+		int i = mazeNumber - 1;
+		if (emptyMazeSprites[i] == null) {
+			emptyMazeSprites[i] = region(SECOND_COLUMN, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 		}
-		return emptyMazeSprites[mazeNumber - 1];
+		return emptyMazeSprites[i];
 	}
 
 	private Rectangle2D[] filledMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
 
 	public Rectangle2D filledMaze(int mazeNumber) {
-		if (filledMazeSprites[mazeNumber - 1] == null) {
-			filledMazeSprites[mazeNumber - 1] = region(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH,
-					MAZE_IMAGE_HEIGHT);
+		int i = mazeNumber - 1;
+		if (filledMazeSprites[i] == null) {
+			filledMazeSprites[i] = region(0, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 		}
-		return filledMazeSprites[mazeNumber - 1];
+		return filledMazeSprites[i];
 	}
 
 	private Rectangle2D[][] pacManMunchingSprites = new Rectangle2D[4][];
@@ -156,14 +163,13 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	public Rectangle2D[] pacManMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		if (pacManMunchingSprites[d] == null) {
-			pacManMunchingSprites[d] = new Rectangle2D[] { tileFromThirdColumn(0, 9 + d), tileFromThirdColumn(1, 9 + d),
-					tileFromThirdColumn(2, 9) };
+			pacManMunchingSprites[d] = array(sprite(0, 9 + d), sprite(1, 9 + d), sprite(2, 9));
 		}
 		return pacManMunchingSprites[d];
 	}
 
 	public Rectangle2D heartSprite() {
-		return tileFromThirdColumn(2, 10);
+		return sprite(2, 10);
 	}
 
 	public Rectangle2D blueBagSprite() {
