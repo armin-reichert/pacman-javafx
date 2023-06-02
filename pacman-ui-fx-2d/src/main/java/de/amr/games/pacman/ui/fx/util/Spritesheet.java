@@ -39,6 +39,10 @@ public class Spritesheet {
 		return source;
 	}
 
+	public Rectangle2D[] array(Rectangle2D... sprites) {
+		return sprites;
+	}
+
 	/**
 	 * @param r spritesheet region
 	 * @return image (copy) of spritesheet region
@@ -60,57 +64,29 @@ public class Spritesheet {
 		return image;
 	}
 
+	public Rectangle2D rect(double x, double y, double width, double height) {
+		return new Rectangle2D(x, y, width, height);
+	}
+
 	/**
-	 * @param col grid column (x)
-	 * @param row grid row (y)
-	 * @return region at given coordinates
+	 * @param tileX grid column
+	 * @param tileY grid row
+	 * @return square tile at given grid position
 	 */
-	public Rectangle2D tile(int col, int row) {
-		return new Rectangle2D(col * raster, row * raster, raster, raster);
-	}
-
-	public Rectangle2D tile(int col, int row, double width, double height) {
-		return new Rectangle2D(col * raster, row * raster, width, height);
-	}
-
-	public Rectangle2D region(double x, double y, double w, double h) {
-		return new Rectangle2D(x, y, w, h);
+	public Rectangle2D tile(int tileX, int tileY) {
+		return rect(tileX * raster, tileY * raster, raster, raster);
 	}
 
 	/**
-	 * @param col    grid column (in tile coordinates)
-	 * @param row    grid row (in tile coordinates)
-	 * @param tilesX number of tiles horizontally
-	 * @param tilesY number of tiles vertically
-	 * @return region at given grid coordinates
-	 */
-	public Rectangle2D tiles(int col, int row, int tilesX, int tilesY) {
-		return new Rectangle2D(col * raster, row * raster, tilesX * raster, tilesY * raster);
-	}
-
-	/**
-	 * @param x      origin x-coordinate (in pixels)
-	 * @param y      origin y-coordinate (in pixels)
-	 * @param col    grid column (in tile coordinates)
-	 * @param row    grid row (in tile coordinates)
-	 * @param tilesX number of tiles horizontally
-	 * @param tilesY number of tiles vertically
-	 * @return region at given grid coordinates relative to given origin
-	 */
-	public Rectangle2D tilesFrom(int x, int y, int col, int row, int tilesX, int tilesY) {
-		return new Rectangle2D(x + col * raster, y + row * raster, tilesX * raster, tilesY * raster);
-	}
-
-	/**
-	 * @param col      grid column (in tile coordinates)
-	 * @param row      grid row (in tile coordinates)
+	 * @param tileX    grid column (in tile coordinates)
+	 * @param tileY    grid row (in tile coordinates)
 	 * @param numTiles number of tiles
-	 * @return horizontal stripe of regions at given grid coordinates
+	 * @return horizontal stripe of tiles at given grid position
 	 */
-	public Rectangle2D[] tilesRightOf(int col, int row, int numTiles) {
+	public Rectangle2D[] tilesRightOf(int tileX, int tileY, int numTiles) {
 		var tiles = new Rectangle2D[numTiles];
 		for (int i = 0; i < numTiles; ++i) {
-			tiles[i] = tile(col + i, row);
+			tiles[i] = tile(tileX + i, tileY);
 		}
 		return tiles;
 	}

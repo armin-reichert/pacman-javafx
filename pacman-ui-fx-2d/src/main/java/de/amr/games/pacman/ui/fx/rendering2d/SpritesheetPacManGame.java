@@ -38,21 +38,21 @@ public class SpritesheetPacManGame extends Spritesheet {
 	public Rectangle2D bonusValueSprite(int symbol) {
 		switch (symbol) {
 		case 0:
-			return region(0, 148, 16, 8); // 100
+			return rect(0, 148, 16, 8); // 100
 		case 1:
-			return region(16, 148, 16, 8); // 300
+			return rect(16, 148, 16, 8); // 300
 		case 2:
-			return region(32, 148, 16, 8); // 500
+			return rect(32, 148, 16, 8); // 500
 		case 3:
-			return region(48, 148, 16, 8); // 700
+			return rect(48, 148, 16, 8); // 700
 		case 4:
-			return region(64, 148, 18, 8); // 1000
+			return rect(64, 148, 18, 8); // 1000
 		case 5:
-			return region(62, 164, 20, 8); // 2000
+			return rect(62, 164, 20, 8); // 2000
 		case 6:
-			return region(62, 180, 20, 8); // 3000
+			return rect(62, 180, 20, 8); // 3000
 		case 7:
-			return region(62, 196, 20, 8); // 5000
+			return rect(62, 196, 20, 8); // 5000
 		default:
 			return null;
 		}
@@ -63,7 +63,7 @@ public class SpritesheetPacManGame extends Spritesheet {
 	}
 
 	public Rectangle2D livesCounterSprite() {
-		return region(129, 15, 16, 16);
+		return rect(129, 15, 16, 16);
 	}
 
 	private Rectangle2D[][] pacMunchingSprites = new Rectangle2D[4][];
@@ -71,10 +71,10 @@ public class SpritesheetPacManGame extends Spritesheet {
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		if (pacMunchingSprites[d] == null) {
-			var wide = region(0, d * 16, 14, 14);
-			var middle = region(16, d * 16, 14, 14);
-			var closed = region(32, 0, 14, 14);
-			pacMunchingSprites[d] = new Rectangle2D[] { closed, closed, middle, middle, wide, wide, middle, middle };
+			var wide = rect(0, d * 16, 14, 14);
+			var middle = rect(16, d * 16, 14, 14);
+			var closed = rect(32, 0, 14, 14);
+			pacMunchingSprites[d] = array(closed, closed, middle, middle, wide, wide, middle, middle);
 		}
 		return pacMunchingSprites[d];
 	}
@@ -105,7 +105,7 @@ public class SpritesheetPacManGame extends Spritesheet {
 
 	public Rectangle2D[] ghostFrightenedSprites() {
 		if (ghostFrightenedSprites == null) {
-			ghostFrightenedSprites = new Rectangle2D[] { tile(8, 4), tile(9, 4) };
+			ghostFrightenedSprites = array(tile(8, 4), tile(9, 4));
 		}
 		return ghostFrightenedSprites;
 	}
@@ -124,7 +124,7 @@ public class SpritesheetPacManGame extends Spritesheet {
 	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		if (ghostEyesSprites[d] == null) {
-			ghostEyesSprites[d] = new Rectangle2D[] { tile(8 + d, 5) };
+			ghostEyesSprites[d] = array(tile(8 + d, 5));
 		}
 		return ghostEyesSprites[d];
 	}
@@ -132,11 +132,11 @@ public class SpritesheetPacManGame extends Spritesheet {
 	// Pac-Man specific:
 
 	public Rectangle2D[] bigPacManSprites() {
-		return new Rectangle2D[] { region(32, 16, 32, 32), region(64, 16, 32, 32), region(96, 16, 32, 32) };
+		return array(rect(32, 16, 32, 32), rect(64, 16, 32, 32), rect(96, 16, 32, 32));
 	}
 
 	public Rectangle2D[] blinkyDamagedSprites() {
-		return new Rectangle2D[] { tile(8, 7), tile(9, 7) };
+		return array(tile(8, 7), tile(9, 7));
 	}
 
 	public Rectangle2D[] blinkyStretchedSprites() {
@@ -148,6 +148,7 @@ public class SpritesheetPacManGame extends Spritesheet {
 	}
 
 	public Rectangle2D[] blinkyNakedSprites() {
-		return new Rectangle2D[] { tiles(8, 8, 2, 1), tiles(10, 8, 2, 1) };
+		return array(rect(8 * raster, 8 * raster, 2 * raster, raster),
+				rect(10 * raster, 8 * raster, 2 * raster, raster));
 	}
 }

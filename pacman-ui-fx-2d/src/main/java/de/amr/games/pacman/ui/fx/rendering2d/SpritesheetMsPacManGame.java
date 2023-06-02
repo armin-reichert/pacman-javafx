@@ -25,17 +25,15 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
-	private Rectangle2D[] array(Rectangle2D... sprites) {
-		return sprites;
-	}
-
 	public SpritesheetMsPacManGame(Image source, int raster) {
 		super(source, raster);
 	}
 
 	// third column contains the sprites (first two columns the maze images)
-	private Rectangle2D sprite(int rasterX, int rasterY) {
-		return tilesFrom(THIRD_COLUMN, 0, rasterX, rasterY, 1, 1);
+	private Rectangle2D sprite(int tileX, int tileY) {
+		double offsetX = THIRD_COLUMN;
+		double offsetY = 0;
+		return new Rectangle2D(offsetX + tileX * raster, offsetY + tileY * raster, raster, raster);
 	}
 
 	private Rectangle2D[] ghostNumberSprites;
@@ -143,7 +141,7 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	public Rectangle2D emptyMaze(int mazeNumber) {
 		int i = mazeNumber - 1;
 		if (emptyMazeSprites[i] == null) {
-			emptyMazeSprites[i] = region(SECOND_COLUMN, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+			emptyMazeSprites[i] = rect(SECOND_COLUMN, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 		}
 		return emptyMazeSprites[i];
 	}
@@ -153,7 +151,7 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	public Rectangle2D filledMaze(int mazeNumber) {
 		int i = mazeNumber - 1;
 		if (filledMazeSprites[i] == null) {
-			filledMazeSprites[i] = region(0, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+			filledMazeSprites[i] = rect(0, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
 		}
 		return filledMazeSprites[i];
 	}
@@ -173,22 +171,22 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	}
 
 	public Rectangle2D blueBagSprite() {
-		return region(488, 199, 8, 8);
+		return rect(488, 199, 8, 8);
 	}
 
 	public Rectangle2D juniorPacSprite() {
-		return region(509, 200, 8, 8);
+		return rect(509, 200, 8, 8);
 	}
 
 	// TODO this is not 100% accurate yet
 	public SpriteAnimation createClapperboardAnimation() {
 		return SpriteAnimation.begin() //
 				.sprites(//
-						region(456, 208, 32, 32), //
-						region(488, 208, 32, 32), //
-						region(520, 208, 32, 32), //
-						region(488, 208, 32, 32), //
-						region(456, 208, 32, 32))//
+						rect(456, 208, 32, 32), //
+						rect(488, 208, 32, 32), //
+						rect(520, 208, 32, 32), //
+						rect(488, 208, 32, 32), //
+						rect(456, 208, 32, 32))//
 				.frameTicks(4) //
 				.end();
 	}
@@ -196,8 +194,8 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	public SpriteAnimation createStorkFlyingAnimation() {
 		return SpriteAnimation.begin() //
 				.sprites(//
-						region(489, 176, 32, 16), //
-						region(521, 176, 32, 16)) //
+						rect(489, 176, 32, 16), //
+						rect(521, 176, 32, 16)) //
 				.frameTicks(8) //
 				.loop() //
 				.end();
