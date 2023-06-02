@@ -72,6 +72,14 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 	}
 
 	@Override
+	public void select(String name, Object... args) {
+		super.select(name, args);
+		if (GHOST_NUMBER.equals(name)) {
+			byName(GHOST_NUMBER).setFrameIndex((int) args[0]);
+		}
+	}
+
+	@Override
 	public void updateCurrentAnimation() {
 		if (GHOST_NORMAL.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
