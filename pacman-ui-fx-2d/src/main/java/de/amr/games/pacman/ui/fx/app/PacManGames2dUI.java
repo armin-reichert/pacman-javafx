@@ -81,8 +81,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected Pane mainSceneRoot;
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
-	private AudioClip currentVoice;
-	private boolean canvasScaled;
+	protected AudioClip currentVoice;
+	protected boolean canvasScaled;
 
 	@Override
 	public void init(Stage stage, Settings settings, Theme theme) {
@@ -121,33 +121,28 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void configureGameScenes() {
-		{
-			//@formatter:off
-			gameSceneConfigMsPacMan = new GameSceneConfiguration(
-				new BootScene(),
-				new MsPacManIntroScene(),
-				new MsPacManCreditScene(),
-				new PlayScene2D(),
-				null,
-				new MsPacManIntermissionScene1(),
-				new MsPacManIntermissionScene2(),
-				new MsPacManIntermissionScene3()
-			);
-		}
-
-		{
-			gameSceneConfigPacMan= new GameSceneConfiguration(
-				new BootScene(),
-				new PacManIntroScene(),
-				new PacManCreditScene(),
-				new PlayScene2D(),
-				null,
-				new PacManCutscene1(),
-				new PacManCutscene2(),
-				new PacManCutscene3()
-			);
-	  	//@formatter:on
-		}
+		//@formatter:off
+		gameSceneConfigMsPacMan = new GameSceneConfiguration(
+			new BootScene(),
+			new MsPacManIntroScene(),
+			new MsPacManCreditScene(),
+			new PlayScene2D(),
+			null,
+			new MsPacManIntermissionScene1(),
+			new MsPacManIntermissionScene2(),
+			new MsPacManIntermissionScene3()
+		);
+		gameSceneConfigPacMan= new GameSceneConfiguration(
+			new BootScene(),
+			new PacManIntroScene(),
+			new PacManCreditScene(),
+			new PlayScene2D(),
+			null,
+			new PacManCutscene1(),
+			new PacManCutscene2(),
+			new PacManCutscene3()
+		);
+  	//@formatter:on
 	}
 
 	protected void createMainScene(Stage stage, Settings settings) {
@@ -296,7 +291,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
-	public void handleKeyPressed(KeyEvent keyEvent) {
+	protected void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
 		currentGameScene.handleKeyboardInput();
@@ -364,6 +359,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void onLevelBeforeStart(GameEvent e) {
+		// Found no better point in time to create and assign the sprite animations to the guys
 		e.game.level().ifPresent(level -> {
 			switch (level.game().variant()) {
 			case MS_PACMAN: {
@@ -393,6 +389,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void onSoundEvent(SoundEvent event) {
 		var p = soundPrefix();
+		var msPacMan = event.game.variant() == GameVariant.MS_PACMAN;
 		switch (event.id) {
 		case GameModel.SE_BONUS_EATEN:
 			theme.audioClip(p + "audio.bonus_eaten").play();
@@ -431,56 +428,39 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		case GameModel.SE_PACMAN_POWER_ENDS: {
 			theme.audioClip(p + "audio.pacman_power").stop();
 			event.game.level().ifPresent(level -> ensureSirenStarted(level.huntingPhase() / 2));
-		}
 			break;
+		}
 		case GameModel.SE_PACMAN_POWER_STARTS: {
 			stopSirens();
 			theme.audioClip(p + "audio.pacman_power").stop();
 			theme.audioClip(p + "audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
 			theme.audioClip(p + "audio.pacman_power").play();
-		}
 			break;
+		}
 		case GameModel.SE_START_INTERMISSION_1: {
-			switch (event.game.variant()) {
-			case MS_PACMAN:
+			if (msPacMan) {
 				theme.audioClip(p + "audio.intermission.1").play();
-				break;
-			case PACMAN: {
+			} else {
 				theme.audioClip(p + "audio.intermission").setCycleCount(2);
 				theme.audioClip(p + "audio.intermission").play();
-			}
-				break;
-			default:
-				throw new IllegalGameVariantException(event.game.variant());
 			}
 			break;
 		}
 		case GameModel.SE_START_INTERMISSION_2: {
-			switch (event.game.variant()) {
-			case MS_PACMAN:
+			if (msPacMan) {
 				theme.audioClip(p + "audio.intermission.2").play();
-				break;
-			case PACMAN:
+			} else {
 				theme.audioClip(p + "audio.intermission").setCycleCount(1);
 				theme.audioClip(p + "audio.intermission").play();
-				break;
-			default:
-				throw new IllegalGameVariantException(event.game.variant());
 			}
 			break;
 		}
 		case GameModel.SE_START_INTERMISSION_3: {
-			switch (event.game.variant()) {
-			case MS_PACMAN:
+			if (event.game.variant() == GameVariant.MS_PACMAN) {
 				theme.audioClip(p + "audio.intermission.3").play();
-				break;
-			case PACMAN: {
+			} else {
 				theme.audioClip(p + "audio.intermission").setCycleCount(2);
 				theme.audioClip(p + "audio.intermission").play();
-			}
-				break;
-			default:
-				throw new IllegalGameVariantException(event.game.variant());
 			}
 			break;
 		}
