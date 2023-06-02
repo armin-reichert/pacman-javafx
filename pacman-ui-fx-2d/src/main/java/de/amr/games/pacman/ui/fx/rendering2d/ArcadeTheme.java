@@ -151,6 +151,12 @@ public class ArcadeTheme extends Theme {
 		set("ghost.color.flashing.pupils",     RED);
 		
 		set("audio.sweep",                     rm.audioClip("sound/common/sweep.mp3"));
+		
+		set("voice.explain",                   rm.audioClip("sound/voice/press-key.mp3"));
+		set("voice.autopilot.off",             rm.audioClip("sound/voice/autopilot-off.mp3"));
+		set("voice.autopilot.on",              rm.audioClip("sound/voice/autopilot-on.mp3"));
+		set("voice.immunity.off",              rm.audioClip("sound/voice/immunity-off.mp3"));
+		set("voice.immunity.on",               rm.audioClip("sound/voice/immunity-on.mp3"));
 	}
 	//@formatter:on
 }

@@ -72,14 +72,6 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
-	//@formatter:off
-	public final AudioClip voiceExplainKeys        = PacManGames2d.MGR.audioClip("sound/voice/press-key.mp3");
-	public final AudioClip voiceAutopilotOff       = PacManGames2d.MGR.audioClip("sound/voice/autopilot-off.mp3");
-	public final AudioClip voiceAutopilotOn        = PacManGames2d.MGR.audioClip("sound/voice/autopilot-on.mp3");
-	public final AudioClip voiceImmunityOff        = PacManGames2d.MGR.audioClip("sound/voice/immunity-off.mp3");
-	public final AudioClip voiceImmunityOn         = PacManGames2d.MGR.audioClip("sound/voice/immunity-on.mp3");
-	//@formatter:on
-
 	protected SpritesheetPacManGame spritesheetPacManGame;
 	protected SpritesheetMsPacManGame spritesheetMsPacManGame;
 
@@ -368,6 +360,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
+		if (e.oldGameState == GameState.BOOT) {
+			playVoice(theme.audioClip("voice.explain"), 1);
+		}
 		updateGameScene(false);
 	}
 
@@ -657,7 +652,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		playVoice(voiceExplainKeys, 4);
 		gameController.restart(GameState.BOOT);
 	}
 
@@ -721,7 +715,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void selectNextGameVariant() {
 		gameController.selectGameVariant(gameVariant().next());
-		playVoice(voiceExplainKeys, 4);
 	}
 
 	@Override
@@ -730,7 +723,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		var auto = gameController.isAutoControlled();
 		String message = fmtMessage(PacManGames2d.TEXTS, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoice(auto ? voiceAutopilotOn : voiceAutopilotOff);
+		playVoice(theme.audioClip(auto ? "voice.autopilot.on" : "voice.autopilot.off"));
 	}
 
 	@Override
@@ -739,7 +732,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		var immune = game().isImmune();
 		String message = fmtMessage(PacManGames2d.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoice(immune ? voiceImmunityOn : voiceImmunityOff);
+		playVoice(theme.audioClip(immune ? "voice.immunity.on" : "voice.immunity.off"));
 	}
 
 	@Override
