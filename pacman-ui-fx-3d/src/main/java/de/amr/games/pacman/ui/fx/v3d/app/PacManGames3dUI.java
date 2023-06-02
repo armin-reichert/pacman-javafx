@@ -25,8 +25,6 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -35,7 +33,6 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
@@ -80,8 +77,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected void configureGameScenes() {
 		super.configureGameScenes();
-		gameSceneConfig.get(GameVariant.MS_PACMAN).playSceneChoice().setScene3D(new PlayScene3D());
-		gameSceneConfig.get(GameVariant.PACMAN).playSceneChoice().setScene3D(new PlayScene3D());
+		gameSceneConfig.get(GameVariant.MS_PACMAN).setPlayScene3D(new PlayScene3D());
+		gameSceneConfig.get(GameVariant.PACMAN).setPlayScene3D(new PlayScene3D());
 	}
 
 	@Override
@@ -168,18 +165,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	protected Optional<GameScene> findGameScene(int dimension) {
-		if (dimension != 2 && dimension != 3) {
-			throw new IllegalArgumentException("Dimension must be 2 or 3, but is %d".formatted(dimension));
+	protected GameScene sceneMatchingCurrentGameState() {
+		var scene = super.sceneMatchingCurrentGameState();
+		var config = gameSceneConfig.get(gameVariant());
+		if (PacManGames3d.PY_3D_ENABLED.get() && scene == config.playScene()) {
+			scene = config.playScene3D();
 		}
-		var choice = sceneChoiceMatchingCurrentGameState();
-		return dimension == 3 ? choice.scene3D() : choice.scene2D();
-	}
-
-	@Override
-	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		var use3D = PacManGames3d.PY_3D_ENABLED.get();
-		return use3D && choice.scene3D().isPresent() ? choice.scene3D().get() : choice.scene2D().orElseThrow();
+		return scene;
 	}
 
 	@Override
@@ -203,14 +195,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	public void toggle2D3D() {
 		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
-		if (findGameScene(3).isPresent()) {
-			updateGameScene(true);
-			currentGameScene().onSceneVariantSwitch();
-		} else {
-			var message = fmtMessage(PacManGames3d.TEXTS,
-					PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene");
-			showFlashMessage(message);
-		}
+		updateGameScene(true);
+		currentGameScene().onSceneVariantSwitch();
 	}
 
 	public Dashboard dashboard() {

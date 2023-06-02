@@ -35,7 +35,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneChoice;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.BootScene;
@@ -141,26 +140,28 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		{
 			//@formatter:off
 			var config = new GameSceneConfiguration(
-				GameSceneChoice.onlyScene2D(new BootScene()),
-				GameSceneChoice.onlyScene2D(new MsPacManIntroScene()),
-				GameSceneChoice.onlyScene2D(new MsPacManCreditScene()),
-				GameSceneChoice.onlyScene2D(new PlayScene2D()),
-				GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene1()),
-				GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene2()),
-				GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene3())
+				new BootScene(),
+				new MsPacManIntroScene(),
+				new MsPacManCreditScene(),
+				new PlayScene2D(),
+				null,
+				new MsPacManIntermissionScene1(),
+				new MsPacManIntermissionScene2(),
+				new MsPacManIntermissionScene3()
 			);
 			gameSceneConfig.put(GameVariant.MS_PACMAN, config);
 		}
 
 		{
 			var config = new GameSceneConfiguration(
-				GameSceneChoice.onlyScene2D(new BootScene()),
-				GameSceneChoice.onlyScene2D(new PacManIntroScene()),
-				GameSceneChoice.onlyScene2D(new PacManCreditScene()),
-				GameSceneChoice.onlyScene2D(new PlayScene2D()),
-				GameSceneChoice.onlyScene2D(new PacManCutscene1()),
-				GameSceneChoice.onlyScene2D(new PacManCutscene2()),
-				GameSceneChoice.onlyScene2D(new PacManCutscene3())
+				new BootScene(),
+				new PacManIntroScene(),
+				new PacManCreditScene(),
+				new PlayScene2D(),
+				null,
+				new PacManCutscene1(),
+				new PacManCutscene2(),
+				new PacManCutscene3()
 			);
 			gameSceneConfig.put(GameVariant.PACMAN, config);
 	  	//@formatter:on
@@ -256,42 +257,22 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		// snooze...
 	}
 
-	/**
-	 * @param dimension scene dimension (2 or 3)
-	 * @return (optional) game scene matching current game state and specified dimension
-	 */
-	protected Optional<GameScene> findGameScene(int dimension) {
-		if (dimension != 2 && dimension != 3) {
-			throw new IllegalArgumentException(String.format("Dimension must be 2 or 3, but is %d", dimension));
-		}
-		var choice = sceneChoiceMatchingCurrentGameState();
-		return choice.scene2D();
-	}
-
-	protected GameSceneChoice sceneChoiceMatchingCurrentGameState() {
+	protected GameScene sceneMatchingCurrentGameState() {
 		var config = gameSceneConfig.get(gameVariant());
-		GameSceneChoice choice;
 		switch (gameState()) {
 		case BOOT:
-			choice = config.bootSceneChoice();
-			break;
+			return config.bootScene();
 		case CREDIT:
-			choice = config.creditSceneChoice();
-			break;
+			return config.creditScene();
 		case INTRO:
-			choice = config.introSceneChoice();
-			break;
+			return config.introScene();
 		case INTERMISSION:
-			choice = config.cutSceneChoice(gameLevel().intermissionNumber);
-			break;
+			return config.cutScene(gameLevel().intermissionNumber);
 		case INTERMISSION_TEST:
-			choice = config.cutSceneChoice(game().intermissionTestNumber);
-			break;
+			return config.cutScene(game().intermissionTestNumber);
 		default:
-			choice = config.playSceneChoice();
-			break;
+			return config.playScene();
 		}
-		return choice;
 	}
 
 	private GameLevel gameLevel() {
@@ -299,7 +280,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void updateGameScene(boolean reload) {
-		var nextGameScene = chooseGameScene(sceneChoiceMatchingCurrentGameState());
+		var nextGameScene = sceneMatchingCurrentGameState();
 		if (nextGameScene == null) {
 			throw new IllegalStateException(String.format("No game scene found for game state %s.", gameState()));
 		}
@@ -307,10 +288,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			changeGameScene(nextGameScene);
 		}
 		updateStage();
-	}
-
-	protected GameScene chooseGameScene(GameSceneChoice choice) {
-		return choice.scene2D().orElseThrow();
 	}
 
 	protected void changeGameScene(GameScene newGameScene) {

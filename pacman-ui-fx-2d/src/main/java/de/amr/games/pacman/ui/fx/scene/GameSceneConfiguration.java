@@ -4,45 +4,55 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene;
 
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+
 /**
  * @author Armin Reichert
  */
 public class GameSceneConfiguration {
 
-	private final GameSceneChoice bootSceneChoice;
-	private final GameSceneChoice introSceneChoice;
-	private final GameSceneChoice creditSceneChoice;
-	private final GameSceneChoice playSceneChoice;
-	private final GameSceneChoice[] cutSceneChoices = new GameSceneChoice[3];
+	private final GameScene2D bootScene;
+	private final GameScene2D introScene;
+	private final GameScene2D creditScene;
+	private final GameScene2D playScene;
+	private GameScene playScene3D;
+	private final GameScene2D[] cutScenes;
 
-	public GameSceneConfiguration(GameSceneChoice boot, GameSceneChoice intro, GameSceneChoice credit,
-			GameSceneChoice play, GameSceneChoice cut1, GameSceneChoice cut2, GameSceneChoice cut3) {
-		bootSceneChoice = boot;
-		introSceneChoice = intro;
-		creditSceneChoice = credit;
-		playSceneChoice = play;
-		cutSceneChoices[0] = cut1;
-		cutSceneChoices[1] = cut2;
-		cutSceneChoices[2] = cut3;
+	public GameSceneConfiguration(GameScene2D bootScene, GameScene2D introScene, GameScene2D creditScene,
+			GameScene2D playScene, GameScene playScene3D, GameScene2D cut1, GameScene2D cut2, GameScene2D cut3) {
+		this.bootScene = bootScene;
+		this.introScene = introScene;
+		this.creditScene = creditScene;
+		this.playScene = playScene;
+		this.playScene3D = playScene3D;
+		this.cutScenes = new GameScene2D[] { cut1, cut2, cut3 };
 	}
 
-	public GameSceneChoice bootSceneChoice() {
-		return bootSceneChoice;
+	public GameScene2D bootScene() {
+		return bootScene;
 	}
 
-	public GameSceneChoice creditSceneChoice() {
-		return creditSceneChoice;
+	public GameScene2D creditScene() {
+		return creditScene;
 	}
 
-	public GameSceneChoice introSceneChoice() {
-		return introSceneChoice;
+	public GameScene2D introScene() {
+		return introScene;
 	}
 
-	public GameSceneChoice playSceneChoice() {
-		return playSceneChoice;
+	public GameScene2D playScene() {
+		return playScene;
 	}
 
-	public GameSceneChoice cutSceneChoice(int cutSceneNumber) {
-		return cutSceneChoices[cutSceneNumber - 1];
+	public GameScene playScene3D() {
+		return playScene3D;
+	}
+
+	public void setPlayScene3D(GameScene playScene3D) {
+		this.playScene3D = playScene3D;
+	}
+
+	public GameScene2D cutScene(int cutSceneNumber) {
+		return cutScenes[cutSceneNumber - 1];
 	}
 }
