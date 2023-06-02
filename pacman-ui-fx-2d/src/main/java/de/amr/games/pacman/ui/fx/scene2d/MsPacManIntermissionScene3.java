@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.util.Duration;
 
@@ -38,8 +38,8 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		intermission.changeState(MsPacManIntermission3.State.INIT);
 
 		var ss = context.ui().spritesheetMsPacManGame();
-		imc().msPacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().msPacMan, ss));
-		imc().pacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().pacMan, ss));
+		imc().msPacMan.setAnimations(new PacAnimationsMsPacManGame(imc().msPacMan, ss));
+		imc().pacMan.setAnimations(new PacAnimationsMsPacManGame(imc().pacMan, ss));
 
 		storkAnimation = ss.createStorkFlyingAnimation();
 		storkAnimation.start();

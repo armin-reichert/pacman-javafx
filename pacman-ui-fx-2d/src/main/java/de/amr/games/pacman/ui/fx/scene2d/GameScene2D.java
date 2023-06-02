@@ -24,8 +24,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsCommon;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
@@ -366,8 +365,8 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawPacSprite(Pac pac) {
 		pac.animations().ifPresent(animations -> {
-			if (animations instanceof PacSpriteAnimations) {
-				var sa = (PacSpriteAnimations) animations;
+			if (animations instanceof SpriteAnimations) {
+				var sa = (SpriteAnimations) animations;
 				drawEntitySprite(pac, sa.currentSprite());
 				if (debug) {
 					g.setFill(Color.WHITE);
@@ -381,8 +380,8 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawGhostSprite(Ghost ghost) {
 		ghost.animations().ifPresent(animations -> {
-			if (animations instanceof GhostSpriteAnimationsCommon) {
-				var sa = (GhostSpriteAnimationsCommon) animations;
+			if (animations instanceof SpriteAnimations) {
+				var sa = (SpriteAnimations) animations;
 				drawEntitySprite(ghost, sa.currentSprite());
 				if (debug) {
 					g.setFill(Color.WHITE);

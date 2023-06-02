@@ -7,21 +7,21 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public abstract class PacSpriteAnimations implements PacAnimations<SpriteAnimation, Rectangle2D> {
+public abstract class SpriteAnimations implements Animations<SpriteAnimation, Rectangle2D> {
 
 	protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
 
 	@Override
-	public void select(String name) {
+	public void select(String name, Object... args) {
 		if (!name.equals(currentAnimationName)) {
 			currentAnimationName = name;
 			currentAnimation = byName(name);

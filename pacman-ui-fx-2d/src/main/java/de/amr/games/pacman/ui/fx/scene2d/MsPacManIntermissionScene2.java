@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission2;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.util.Duration;
 
@@ -35,8 +35,8 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 		intermission.changeState(MsPacManIntermission2.State.INIT);
 
 		var ss = context.ui().spritesheetMsPacManGame();
-		imc().msPac.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().msPac, ss));
-		imc().pacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().pacMan, ss));
+		imc().msPac.setAnimations(new PacAnimationsMsPacManGame(imc().msPac, ss));
+		imc().pacMan.setAnimations(new PacAnimationsMsPacManGame(imc().pacMan, ss));
 
 		clapAnimation = ss.createClapperboardAnimation();
 		clapAnimation.setDelay(Duration.seconds(1));

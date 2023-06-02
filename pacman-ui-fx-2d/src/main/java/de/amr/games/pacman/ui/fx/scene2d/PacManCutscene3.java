@@ -14,8 +14,8 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.PacAnimationsPacManGame;
 import javafx.scene.text.Font;
 
 /**
@@ -37,7 +37,7 @@ public class PacManCutscene3 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacSpriteAnimationsPacManGame(pac, context.ui().spritesheetPacManGame()));
+		pac.setAnimations(new PacAnimationsPacManGame(pac, context.ui().spritesheetPacManGame()));
 		pac.selectAnimation(PacAnimations.MUNCHING);
 		pac.startAnimation();
 		pac.placeAtTile(v2i(29, 20), 0, 0);
@@ -46,7 +46,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.show();
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
-		blinky.setAnimations(new GhostSpriteAnimationsPacManGame(blinky, context.ui().spritesheetPacManGame()));
+		blinky.setAnimations(new GhostAnimationsPacManGame(blinky, context.ui().spritesheetPacManGame()));
 		blinky.selectAnimation(GhostAnimations.BLINKY_PATCHED);
 		blinky.startAnimation();
 		blinky.placeAtTile(v2i(35, 20), 0, 0);

@@ -13,12 +13,12 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacSpriteAnimationsPacManGame extends PacSpriteAnimations {
+public class PacAnimationsMsPacManGame extends SpriteAnimations implements PacAnimations<SpriteAnimation, Rectangle2D> {
 
 	private final Pac pac;
-	private final SpritesheetPacManGame spritesheet;
+	private final SpritesheetMsPacManGame spritesheet;
 
-	public PacSpriteAnimationsPacManGame(Pac pac, SpritesheetPacManGame spritesheet) {
+	public PacAnimationsMsPacManGame(Pac pac, SpritesheetMsPacManGame spritesheet) {
 		Globals.checkNotNull(pac);
 		Globals.checkNotNull(spritesheet);
 		this.pac = pac;
@@ -26,26 +26,26 @@ public class PacSpriteAnimationsPacManGame extends PacSpriteAnimations {
 		//@formatter:off
 		var munching = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.pacMunchingSprites(Direction.LEFT))
+				.sprites(spritesheet.msPacManMunchingSprites(Direction.LEFT))
 				.loop()
 			.end();
 		
 		var dying = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.pacDyingSprites())
+				.sprites(spritesheet.msPacManDyingSprites())
 				.frameTicks(8)
 			.end();
 		
-		var bigPacMan = SpriteAnimation
+		var husbandMunching = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.bigPacManSprites())
-				.frameTicks(3)
+				.sprites(spritesheet.pacManMunchingSprites(Direction.LEFT))
+				.frameTicks(2)
 				.loop()
 			.end();
 		//@formatter:on
 		animationsByName.put(PacAnimations.MUNCHING, munching);
 		animationsByName.put(PacAnimations.DYING, dying);
-		animationsByName.put(PacAnimations.BIG_PACMAN, bigPacMan);
+		animationsByName.put(PacAnimations.HUSBAND_MUNCHING, husbandMunching);
 	}
 
 	@Override
@@ -54,7 +54,10 @@ public class PacSpriteAnimationsPacManGame extends PacSpriteAnimations {
 			return null;
 		}
 		if (MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.pacMunchingSprites(pac.moveDir()));
+			currentAnimation.setSprites(spritesheet.msPacManMunchingSprites(pac.moveDir()));
+		}
+		if (HUSBAND_MUNCHING.equals(currentAnimationName)) {
+			currentAnimation.setSprites(spritesheet.pacManMunchingSprites(pac.moveDir()));
 		}
 		return currentAnimation.currentSprite();
 	}

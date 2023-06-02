@@ -13,12 +13,13 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostSpriteAnimationsPacManGame extends GhostSpriteAnimationsCommon {
+public class GhostAnimationsPacManGame extends SpriteAnimations
+		implements GhostAnimations<SpriteAnimation, Rectangle2D> {
 
 	private final Ghost ghost;
 	private final SpritesheetPacManGame spritesheet;
 
-	public GhostSpriteAnimationsPacManGame(Ghost ghost, SpritesheetPacManGame spritesheet) {
+	public GhostAnimationsPacManGame(Ghost ghost, SpritesheetPacManGame spritesheet) {
 		Globals.checkNotNull(ghost);
 		Globals.checkNotNull(spritesheet);
 		this.ghost = ghost;

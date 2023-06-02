@@ -6,18 +6,20 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class GhostSpriteAnimationsMsPacManGame extends GhostSpriteAnimationsCommon {
+public class GhostAnimationsMsPacManGame extends SpriteAnimations
+		implements GhostAnimations<SpriteAnimation, Rectangle2D> {
 
 	private final Ghost ghost;
 	private final SpritesheetMsPacManGame spritesheet;
 
-	public GhostSpriteAnimationsMsPacManGame(Ghost ghost, SpritesheetMsPacManGame spritesheet) {
+	public GhostAnimationsMsPacManGame(Ghost ghost, SpritesheetMsPacManGame spritesheet) {
 		Globals.checkNotNull(ghost);
 		Globals.checkNotNull(spritesheet);
 		this.ghost = ghost;

@@ -12,8 +12,8 @@ import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.PacAnimationsMsPacManGame;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -45,10 +45,10 @@ public class MsPacManIntroScene extends GameScene2D {
 
 		var msPacMan = intro.context().msPacMan;
 		var ss = context.ui().spritesheetMsPacManGame();
-		msPacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(msPacMan, ss));
+		msPacMan.setAnimations(new PacAnimationsMsPacManGame(msPacMan, ss));
 		msPacMan.selectAnimation(PacAnimations.MUNCHING);
 		intro.context().ghosts.forEach(ghost -> {
-			ghost.setAnimations(new GhostSpriteAnimationsMsPacManGame(ghost, ss));
+			ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss));
 			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
 		});
 

@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission1;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.GhostAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.util.Duration;
 
@@ -37,10 +37,10 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		intermission.changeState(MsPacManIntermission1.State.INIT);
 
 		var ss = context.ui().spritesheetMsPacManGame();
-		imc().msPac.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().msPac, ss));
-		imc().pacMan.setAnimations(new PacSpriteAnimationsMsPacManGame(imc().pacMan, ss));
-		imc().inky.setAnimations(new GhostSpriteAnimationsMsPacManGame(imc().inky, ss));
-		imc().pinky.setAnimations(new GhostSpriteAnimationsMsPacManGame(imc().pinky, ss));
+		imc().msPac.setAnimations(new PacAnimationsMsPacManGame(imc().msPac, ss));
+		imc().pacMan.setAnimations(new PacAnimationsMsPacManGame(imc().pacMan, ss));
+		imc().inky.setAnimations(new GhostAnimationsMsPacManGame(imc().inky, ss));
+		imc().pinky.setAnimations(new GhostAnimationsMsPacManGame(imc().pinky, ss));
 
 		clapAnimation = ss.createClapperboardAnimation();
 		clapAnimation.setDelay(Duration.seconds(1));
