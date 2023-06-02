@@ -26,21 +26,46 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 		this.spritesheet = spritesheet;
 
 		//@formatter:off
-		var normal = SpriteAnimation.begin().sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT)).frameTicks(8).loop().end();
-		var frightened = SpriteAnimation.begin().sprites(spritesheet.ghostFrightenedSprites()).frameTicks(8).loop().end();
-		var flashing = SpriteAnimation.begin().sprites(spritesheet.ghostFlashingSprites()).frameTicks(6).loop().end();
-		var eyesAnimation = SpriteAnimation.begin().sprites(spritesheet.ghostEyesSprites(Direction.LEFT)).end();
-		var numberAnimation = SpriteAnimation.begin().sprites(spritesheet.ghostNumberSprites()).end();
+		var normal = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+				.frameTicks(8)
+				.loop()
+			.end();
+		
+		var frightened = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostFrightenedSprites())
+				.frameTicks(8)
+				.loop()
+			.end();
+		
+		var flashing = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostFlashingSprites())
+				.frameTicks(6)
+				.loop()
+			.end();
+		
+		var eyes = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostEyesSprites(Direction.LEFT))
+			.end();
+		
+		var number = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostNumberSprites())
+			.end();
 		//@formatter:on
 
 		animationsByName.put(GHOST_NORMAL, normal);
 		animationsByName.put(GHOST_FRIGHTENED, frightened);
 		animationsByName.put(GHOST_FLASHING, flashing);
-		animationsByName.put(GHOST_EYES, eyesAnimation);
-		animationsByName.put(GHOST_NUMBER, numberAnimation);
+		animationsByName.put(GHOST_EYES, eyes);
+		animationsByName.put(GHOST_NUMBER, number);
 
 		// TODO check this
-		eyesAnimation.start();
+		eyes.start();
 		frightened.start();
 		flashing.start();
 	}
