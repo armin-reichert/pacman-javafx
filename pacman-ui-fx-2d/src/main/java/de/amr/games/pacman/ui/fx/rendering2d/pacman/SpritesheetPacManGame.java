@@ -38,7 +38,7 @@ public class SpritesheetPacManGame implements Spritesheet {
 
 	public Rectangle2D[] ghostNumberSprites() {
 		if (ghostNumberSprites == null) {
-			ghostNumberSprites = tilesRightOf(0, 8, 4);
+			ghostNumberSprites = array(rect(0, 132, 16, 8), rect(16, 132, 16, 8), rect(32, 132, 16, 8), rect(48, 132, 16, 8));
 		}
 		return ghostNumberSprites;
 	}

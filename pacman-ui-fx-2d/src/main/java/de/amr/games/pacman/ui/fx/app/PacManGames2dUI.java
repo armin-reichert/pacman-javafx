@@ -96,6 +96,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
 	private AudioClip currentVoice;
+	private boolean canvasScaled;
 
 	@Override
 	public void init(Stage stage, Settings settings, Theme theme) {
@@ -137,27 +138,33 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void configureGameScenes() {
-		//@formatter:off
-		gameSceneConfig.put(GameVariant.MS_PACMAN, new GameSceneConfiguration(
-			GameSceneChoice.onlyScene2D(new BootScene()),
-			GameSceneChoice.onlyScene2D(new MsPacManIntroScene()),
-			GameSceneChoice.onlyScene2D(new MsPacManCreditScene()),
-			GameSceneChoice.onlyScene2D(new PlayScene2D()),
-			GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene1()),
-			GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene2()),
-			GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene3())
-		));
+		{
+			//@formatter:off
+			var config = new GameSceneConfiguration(
+				GameSceneChoice.onlyScene2D(new BootScene()),
+				GameSceneChoice.onlyScene2D(new MsPacManIntroScene()),
+				GameSceneChoice.onlyScene2D(new MsPacManCreditScene()),
+				GameSceneChoice.onlyScene2D(new PlayScene2D()),
+				GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene1()),
+				GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene2()),
+				GameSceneChoice.onlyScene2D(new MsPacManIntermissionScene3())
+			);
+			gameSceneConfig.put(GameVariant.MS_PACMAN, config);
+		}
 
-		gameSceneConfig.put(GameVariant.PACMAN, new GameSceneConfiguration(
-			GameSceneChoice.onlyScene2D(new BootScene()),
-			GameSceneChoice.onlyScene2D(new PacManIntroScene()),
-			GameSceneChoice.onlyScene2D(new PacManCreditScene()),
-			GameSceneChoice.onlyScene2D(new PlayScene2D()),
-			GameSceneChoice.onlyScene2D(new PacManCutscene1()),
-			GameSceneChoice.onlyScene2D(new PacManCutscene2()),
-			GameSceneChoice.onlyScene2D(new PacManCutscene3())
-		));
-	  //@formatter:on
+		{
+			var config = new GameSceneConfiguration(
+				GameSceneChoice.onlyScene2D(new BootScene()),
+				GameSceneChoice.onlyScene2D(new PacManIntroScene()),
+				GameSceneChoice.onlyScene2D(new PacManCreditScene()),
+				GameSceneChoice.onlyScene2D(new PlayScene2D()),
+				GameSceneChoice.onlyScene2D(new PacManCutscene1()),
+				GameSceneChoice.onlyScene2D(new PacManCutscene2()),
+				GameSceneChoice.onlyScene2D(new PacManCutscene3())
+			);
+			gameSceneConfig.put(GameVariant.PACMAN, config);
+	  	//@formatter:on
+		}
 	}
 
 	protected void createMainScene(Stage stage, Settings settings) {
@@ -319,7 +326,10 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			// This avoids a vertical line on the left side of the embedded 2D game scene
 			var wallpaperColor = theme().color("wallpaper.color");
 			scene2D.setWallpaperColor(wallpaperColor);
-			scene2D.root().setBackground(ResourceManager.coloredBackground(wallpaperColor));
+			scene2D.root()
+					.setBackground(gameController.state() == GameState.BOOT ? ResourceManager.coloredBackground(Color.BLACK)
+							: ResourceManager.coloredBackground(wallpaperColor));
+			scene2D.setCanvasScaled(canvasScaled);
 		}
 		currentGameScene.setContext(new GameSceneContext(gameController, this));
 		currentGameScene.init();
@@ -340,7 +350,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		} else if (Keyboard.pressed(PacManGames2d.KEY_AUTOPILOT)) {
 			toggleAutopilot();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_BOOT)) {
-			reboot();
+			if (gameController().state() != GameState.BOOT) {
+				reboot();
+			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_DEBUG_INFO)) {
 			Ufx.toggle(PacManGames2d.PY_SHOW_DEBUG_INFO);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_IMMUNITIY)) {
@@ -364,11 +376,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
 			stage.setFullScreen(true);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
-			if (currentGameScene instanceof GameScene2D && !(currentGameScene instanceof BootScene)) {
-				var scene2D = (GameScene2D) currentGameScene;
-				Ufx.toggle(scene2D.canvasScaledPy);
-				showFlashMessage(scene2D.canvasScaledPy.get() ? "Canvas scaled" : "Canvas unscaled");
-			}
+			toggleCanvasScaled();
 		}
 	}
 
@@ -398,8 +406,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			switch (level.game().variant()) {
 			case MS_PACMAN: {
 				level.pac().setAnimations(new PacAnimationsMsPacManGame(level.pac(), spritesheetMsPacManGame));
-				level.ghosts().forEach(
-						ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, spritesheetMsPacManGame)));
+				level.ghosts()
+						.forEach(ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, spritesheetMsPacManGame)));
 				break;
 			}
 			case PACMAN: {
@@ -756,6 +764,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		String message = fmtMessage(PacManGames2d.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		playVoice(immune ? voiceImmunityOn : voiceImmunityOff);
+	}
+
+	@Override
+	public void toggleCanvasScaled() {
+		canvasScaled = !canvasScaled;
+		if (currentGameScene instanceof GameScene2D) {
+			GameScene2D scene2D = (GameScene2D) currentGameScene;
+			scene2D.setCanvasScaled(canvasScaled);
+			showFlashMessage(canvasScaled ? "Canvas SCALED" : "Canvas UNSCALED");
+		}
 	}
 
 	public void startLevelTestMode() {

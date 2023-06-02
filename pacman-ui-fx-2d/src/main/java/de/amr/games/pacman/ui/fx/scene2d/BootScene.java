@@ -8,6 +8,7 @@ import static de.amr.games.pacman.lib.Globals.RND;
 
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -16,7 +17,6 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		setSceneCanvasScaled(true);
 		setRoundedCorners(false);
 		context.setScoreVisible(false);
 	}
@@ -26,7 +26,7 @@ public class BootScene extends GameScene2D {
 		var timer = context.state().timer();
 		if (timer.tick() == 1) {
 			drawSceneBackground();
-		} else if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 4 == 0) {
+		} else if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 8 == 0) {
 			drawSceneBackground();
 			paintRandomHexCodes();
 		} else if (timer.betweenSeconds(2.0, 3.5) && timer.tick() % 4 == 0) {
@@ -41,6 +41,14 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
+	protected void drawSceneBackground() {
+		double w = s(canvas.getWidth());
+		double h = s(canvas.getHeight());
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, w, h);
+	}
+
+	@Override
 	protected void drawSceneContent() {
 		// not used here
 	}
@@ -51,7 +59,7 @@ public class BootScene extends GameScene2D {
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));
-				g.fillText(hexCode, t(col), t(row + 1));
+				g.fillText(hexCode, s(t(col)), s(t(row + 1)));
 			}
 		}
 	}
@@ -84,10 +92,10 @@ public class BootScene extends GameScene2D {
 		g.setStroke(ArcadeTheme.PALE);
 		g.setLineWidth(2.0);
 		for (int row = 0; row <= numRows; ++row) {
-			g.strokeLine(0, row * raster, WIDTH_UNSCALED, row * raster);
+			g.strokeLine(0, s(row * raster), s(WIDTH_UNSCALED), s(row * raster));
 		}
 		for (int col = 0; col <= numCols; ++col) {
-			g.strokeLine(col * raster, 0, col * raster, HEIGHT_UNSCALED);
+			g.strokeLine(s(col * raster), 0, s(col * raster), s(HEIGHT_UNSCALED));
 		}
 	}
 }

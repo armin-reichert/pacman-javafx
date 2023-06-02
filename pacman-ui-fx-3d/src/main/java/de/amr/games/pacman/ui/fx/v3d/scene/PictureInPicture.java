@@ -25,7 +25,7 @@ public class PictureInPicture {
 
 	public PictureInPicture() {
 		gameScene = new PlayScene2D();
-		gameScene.setSceneCanvasScaled(true);
+		gameScene.setCanvasScaled(true);
 		gameScene.setRoundedCorners(false);
 		gameScene.sceneContainer().minHeightProperty().bind(heightPy);
 		gameScene.sceneContainer().minWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));

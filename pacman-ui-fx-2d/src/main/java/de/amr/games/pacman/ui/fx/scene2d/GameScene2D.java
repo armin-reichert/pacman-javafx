@@ -69,13 +69,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	public final BooleanProperty canvasScaledPy = new SimpleBooleanProperty(this, "canvasScaled", true) {
-		@Override
-		protected void invalidated() {
-			updateCanvasScaling(get());
-		}
-	};
-
 	protected final StackPane root = new StackPane();
 	protected final BorderPane subSceneContainer;
 	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
@@ -87,6 +80,7 @@ public abstract class GameScene2D implements GameScene {
 	protected GameSceneContext context;
 	private boolean roundedCorners = true;
 	private Color wallpaperColor = Color.BLACK;
+	private boolean canvasScaled;
 
 	protected GameScene2D() {
 		subSceneContainer = new BorderPane(root);
@@ -115,34 +109,16 @@ public abstract class GameScene2D implements GameScene {
 		});
 
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
-		updateCanvasScaling(canvasScaledPy.get());
+
+		setCanvasScaled(false);
 	}
 
 	protected double s(double value) {
-		return canvasScaledPy.get() ? value : value * subSceneContainer.getHeight() / HEIGHT_UNSCALED;
+		return canvasScaled ? value : value * subSceneContainer.getHeight() / HEIGHT_UNSCALED;
 	}
 
-	protected Font sceneFont() {
-		return context.ui().theme().font("font.arcade", s(8));
-	}
-
-	public void setSceneCanvasScaled(boolean scaled) {
-		canvasScaledPy.set(scaled);
-	}
-
-	public StackPane root() {
-		return root;
-	}
-
-	public void setRoundedCorners(boolean roundedCorners) {
-		this.roundedCorners = roundedCorners;
-	}
-
-	public void setWallpaperColor(Color wallpaperColor) {
-		this.wallpaperColor = wallpaperColor;
-	}
-
-	private void updateCanvasScaling(boolean scaled) {
+	public void setCanvasScaled(boolean scaled) {
+		canvasScaled = scaled;
 		if (scaled) {
 			canvas.scaleXProperty().bind(subSceneContainer.widthProperty().divide(WIDTH_UNSCALED));
 			canvas.scaleYProperty().bind(subSceneContainer.heightProperty().divide(HEIGHT_UNSCALED));
@@ -158,6 +134,22 @@ public abstract class GameScene2D implements GameScene {
 			canvas.widthProperty().bind(subSceneContainer.widthProperty());
 			canvas.heightProperty().bind(subSceneContainer.heightProperty());
 		}
+	}
+
+	protected Font sceneFont() {
+		return context.ui().theme().font("font.arcade", s(8));
+	}
+
+	public StackPane root() {
+		return root;
+	}
+
+	public void setRoundedCorners(boolean roundedCorners) {
+		this.roundedCorners = roundedCorners;
+	}
+
+	public void setWallpaperColor(Color wallpaperColor) {
+		this.wallpaperColor = wallpaperColor;
 	}
 
 	// TODO: not sure if this logic belongs here...
@@ -250,14 +242,16 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSceneBackground() {
+		double w = s(canvas.getWidth());
+		double h = s(canvas.getHeight());
 		if (roundedCorners) {
 			g.setFill(wallpaperColor);
-			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			g.fillRect(0, 0, w, h);
 			g.setFill(Color.BLACK);
-			g.fillRoundRect(0, 0, canvas.getWidth(), canvas.getHeight(), s(20), s(20));
+			g.fillRoundRect(0, 0, w, h, s(20), s(20));
 		} else {
 			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+			g.fillRect(0, 0, w, h);
 		}
 	}
 

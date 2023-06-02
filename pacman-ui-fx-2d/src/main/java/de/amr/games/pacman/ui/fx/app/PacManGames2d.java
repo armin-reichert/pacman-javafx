@@ -28,6 +28,7 @@ public class PacManGames2d {
 
 	//@formatter:off
 	public static final BooleanProperty    PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);
+	public static final BooleanProperty    PY_CANVAS_SCALED      = new SimpleBooleanProperty(false);
 	public static final IntegerProperty    PY_SIMULATION_STEPS   = new SimpleIntegerProperty(1);
 
 	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
