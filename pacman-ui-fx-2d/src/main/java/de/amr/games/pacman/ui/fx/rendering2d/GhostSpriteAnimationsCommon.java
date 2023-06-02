@@ -6,13 +6,9 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
-import de.amr.games.pacman.lib.steering.Direction;
-import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -20,49 +16,9 @@ import javafx.geometry.Rectangle2D;
  */
 public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<SpriteAnimation, Rectangle2D> {
 
-	protected final Ghost ghost;
-	protected Spritesheet spritesheet;
 	protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
-
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
-
-	protected GhostSpriteAnimationsCommon(Ghost ghost, Spritesheet sprites) {
-		this.ghost = ghost;
-		this.spritesheet = sprites;
-
-		var normal = SpriteAnimation.begin().sprites(normalSprites(ghost.id(), Direction.LEFT)).frameTicks(8).loop()
-				.end();
-		var frightened = SpriteAnimation.begin().sprites(frightenedSprites()).frameTicks(8).loop().end();
-		var flashing = SpriteAnimation.begin().sprites(flashingSprites()).frameTicks(6).loop().end();
-		var eyesAnimation = SpriteAnimation.begin().sprites(eyesSprites(Direction.LEFT)).end();
-		var numberAnimation = SpriteAnimation.begin().sprites(numberSprites()).end();
-
-		animationsByName.put(GHOST_NORMAL, normal);
-		animationsByName.put(GHOST_FRIGHTENED, frightened);
-		animationsByName.put(GHOST_FLASHING, flashing);
-		animationsByName.put(GHOST_EYES, eyesAnimation);
-		animationsByName.put(GHOST_NUMBER, numberAnimation);
-
-		// TODO check this
-		eyesAnimation.start();
-		frightened.start();
-		flashing.start();
-	}
-
-	public Spritesheet spritesheet() {
-		return spritesheet;
-	}
-
-	protected abstract Rectangle2D[] normalSprites(byte id, Direction dir);
-
-	protected abstract Rectangle2D[] frightenedSprites();
-
-	protected abstract Rectangle2D[] flashingSprites();
-
-	protected abstract Rectangle2D[] eyesSprites(Direction dir);
-
-	protected abstract Rectangle2D[] numberSprites();
 
 	@Override
 	public String selectedAnimationName() {
@@ -96,37 +52,24 @@ public abstract class GhostSpriteAnimationsCommon implements GhostAnimations<Spr
 		throw new IllegalArgumentException("Illegal animation name: " + name);
 	}
 
-	public void withCurrentAnimationDo(Consumer<SpriteAnimation> operation) {
-		if (currentAnimation != null) {
-			operation.accept(currentAnimation);
-		}
-	}
-
 	@Override
 	public void startSelected() {
-		withCurrentAnimationDo(SpriteAnimation::start);
+		if (currentAnimation != null) {
+			currentAnimation.start();
+		}
 	}
 
 	@Override
 	public void stopSelected() {
-		withCurrentAnimationDo(SpriteAnimation::stop);
+		if (currentAnimation != null) {
+			currentAnimation.stop();
+		}
 	}
 
 	@Override
 	public void resetSelected() {
-		withCurrentAnimationDo(SpriteAnimation::reset);
-	}
-
-	@Override
-	public Rectangle2D currentSprite() {
-		if (currentAnimationName == null) {
-			return null;
+		if (currentAnimation != null) {
+			currentAnimation.reset();
 		}
-		if (GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation.setSprites(normalSprites(ghost.id(), ghost.wishDir()));
-		} else if (GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation.setSprites(eyesSprites(ghost.wishDir()));
-		}
-		return currentAnimation.currentSprite();
 	}
 }
