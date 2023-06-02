@@ -37,6 +37,17 @@ public class Theme {
 		}
 	}
 
+	/**
+	 * Generic getter. Example usage:
+	 * 
+	 * <pre>
+	 * AnyType value = theme.get("key.for.value");
+	 * </pre>
+	 * 
+	 * @param <T>  expected return type
+	 * @param name name of thing
+	 * @return stored value casted to return type
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(String name) {
 		return (T) namedThings.get(name);
@@ -48,11 +59,11 @@ public class Theme {
 	}
 
 	public Color color(String name) {
-		return (Color) namedThings.get(name);
+		return get(name);
 	}
 
 	public Font font(String name) {
-		return (Font) namedThings.get(name);
+		return get(name);
 	}
 
 	public Font font(String name, double size) {
@@ -60,15 +71,15 @@ public class Theme {
 	}
 
 	public Image image(String name) {
-		return (Image) namedThings.get(name);
+		return get(name);
 	}
 
 	public Background background(String name) {
-		return (Background) namedThings.get(name);
+		return get(name);
 	}
 
 	public AudioClip audioClip(String name) {
-		return (AudioClip) namedThings.get(name);
+		return get(name);
 	}
 
 	public Stream<Map.Entry<String, Object>> audioClipEntries() {

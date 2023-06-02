@@ -9,37 +9,25 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
 /**
- * A spritesheet. Diese Klasse bekommt kein Wunschkennzeichen.
+ * A spritesheet (bekommt kein Wunschkennzeichen!)
  * 
  * @author Armin Reichert
  */
-public class Spritesheet {
+public interface Spritesheet {
 
-	protected final Image source;
-	protected final int raster;
+	int raster();
 
-	/**
-	 * @param image  image containing the sprites
-	 * @param raster raster size of the image tiles
-	 * @param d0     first direction in a sequence of direction-dependent images, e.g. ghost looking towards direction
-	 * @param d1     second direction
-	 * @param d2     third direction
-	 * @param d3     fourth direction
-	 */
-	public Spritesheet(Image image, int raster) {
-		this.source = image;
-		this.raster = raster;
+	default double r(double n) {
+		return n * raster();
 	}
 
-	public int raster() {
-		return raster;
+	Image source();
+
+	default Rectangle2D rect(double x, double y, double width, double height) {
+		return new Rectangle2D(x, y, width, height);
 	}
 
-	public Image source() {
-		return source;
-	}
-
-	public Rectangle2D[] array(Rectangle2D... sprites) {
+	default Rectangle2D[] array(Rectangle2D... sprites) {
 		return sprites;
 	}
 
@@ -47,7 +35,7 @@ public class Spritesheet {
 	 * @param r spritesheet region
 	 * @return image (copy) of spritesheet region
 	 */
-	public Image subImage(Rectangle2D r) {
+	default Image subImage(Rectangle2D r) {
 		return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
 	}
 
@@ -58,14 +46,10 @@ public class Spritesheet {
 	 * @param height region height
 	 * @return image (copy) of spritesheet region
 	 */
-	public Image subImage(int x, int y, int width, int height) {
+	default Image subImage(int x, int y, int width, int height) {
 		var image = new WritableImage(width, height);
-		image.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
+		image.getPixelWriter().setPixels(0, 0, width, height, source().getPixelReader(), x, y);
 		return image;
-	}
-
-	public Rectangle2D rect(double x, double y, double width, double height) {
-		return new Rectangle2D(x, y, width, height);
 	}
 
 	/**
@@ -73,8 +57,8 @@ public class Spritesheet {
 	 * @param tileY grid row
 	 * @return square tile at given grid position
 	 */
-	public Rectangle2D tile(int tileX, int tileY) {
-		return rect(tileX * raster, tileY * raster, raster, raster);
+	default Rectangle2D tile(int tileX, int tileY) {
+		return rect(r(tileX), r(tileY), r(1), r(1));
 	}
 
 	/**
@@ -83,7 +67,7 @@ public class Spritesheet {
 	 * @param numTiles number of tiles
 	 * @return horizontal stripe of tiles at given grid position
 	 */
-	public Rectangle2D[] tilesRightOf(int tileX, int tileY, int numTiles) {
+	default Rectangle2D[] tilesRightOf(int tileX, int tileY, int numTiles) {
 		var tiles = new Rectangle2D[numTiles];
 		for (int i = 0; i < numTiles; ++i) {
 			tiles[i] = tile(tileX + i, tileY);

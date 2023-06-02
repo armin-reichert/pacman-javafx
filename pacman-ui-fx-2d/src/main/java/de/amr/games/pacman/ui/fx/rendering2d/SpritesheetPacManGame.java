@@ -13,13 +13,25 @@ import javafx.scene.image.Image;
 /**
  * @author Armin Reichert
  */
-public class SpritesheetPacManGame extends Spritesheet {
+public class SpritesheetPacManGame implements Spritesheet {
 
 	public static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
-	public SpritesheetPacManGame(Image source, int raster) {
-		super(source, raster);
+	private final Image source;
+
+	public SpritesheetPacManGame(Image source) {
+		this.source = source;
+	}
+
+	@Override
+	public Image source() {
+		return source;
+	}
+
+	@Override
+	public int raster() {
+		return 16;
 	}
 
 	private Rectangle2D[] ghostNumberSprites;
@@ -71,9 +83,11 @@ public class SpritesheetPacManGame extends Spritesheet {
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
 		if (pacMunchingSprites[d] == null) {
-			var wide = rect(0, d * 16, 14, 14);
-			var middle = rect(16, d * 16, 14, 14);
-			var closed = rect(32, 0, 14, 14);
+			double m = 0.5; // margin
+			double size = 16 - 2 * m;
+			var wide = rect(0 + m, d * 16 + m, size, size);
+			var middle = rect(16 + m, d * 16 + m, size, size);
+			var closed = rect(32 + m, 0 + m, size, size);
 			pacMunchingSprites[d] = array(closed, closed, middle, middle, wide, wide, middle, middle);
 		}
 		return pacMunchingSprites[d];
@@ -83,9 +97,11 @@ public class SpritesheetPacManGame extends Spritesheet {
 
 	public Rectangle2D[] pacDyingSprites() {
 		if (pacDyingSprites == null) {
+			double m = 0.5; // margin
+			double size = 16 - 2 * m;
 			pacDyingSprites = new Rectangle2D[11];
 			for (int i = 0; i < 11; ++i) {
-				pacDyingSprites[i] = new Rectangle2D(48 + i * 16, 0, 15, 15);
+				pacDyingSprites[i] = new Rectangle2D(48 + i * 16 + m, m, size, size);
 			}
 		}
 		return pacDyingSprites;
@@ -148,7 +164,6 @@ public class SpritesheetPacManGame extends Spritesheet {
 	}
 
 	public Rectangle2D[] blinkyNakedSprites() {
-		return array(rect(8 * raster, 8 * raster, 2 * raster, raster),
-				rect(10 * raster, 8 * raster, 2 * raster, raster));
+		return array(rect(r(8), r(8), r(2), r(1)), rect(r(10), r(8), r(2), r(1)));
 	}
 }

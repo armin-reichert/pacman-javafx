@@ -14,7 +14,7 @@ import javafx.scene.image.Image;
 /**
  * @author Armin Reichert
  */
-public class SpritesheetMsPacManGame extends Spritesheet {
+public class SpritesheetMsPacManGame implements Spritesheet {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
@@ -25,15 +25,27 @@ public class SpritesheetMsPacManGame extends Spritesheet {
 	private static final int SECOND_COLUMN = 228;
 	private static final int THIRD_COLUMN = 456;
 
-	public SpritesheetMsPacManGame(Image source, int raster) {
-		super(source, raster);
+	private final Image source;
+
+	public SpritesheetMsPacManGame(Image source) {
+		this.source = source;
+	}
+
+	@Override
+	public Image source() {
+		return source;
+	}
+
+	@Override
+	public int raster() {
+		return 16;
 	}
 
 	// third column contains the sprites (first two columns the maze images)
 	private Rectangle2D sprite(int tileX, int tileY) {
 		double offsetX = THIRD_COLUMN;
 		double offsetY = 0;
-		return new Rectangle2D(offsetX + tileX * raster, offsetY + tileY * raster, raster, raster);
+		return new Rectangle2D(offsetX + r(tileX), offsetY + r(tileY), raster(), raster());
 	}
 
 	private Rectangle2D[] ghostNumberSprites;

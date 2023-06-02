@@ -459,7 +459,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
-		g.drawImage(context.ui().theme().image("mspacman.logo.midway"), s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
+		Image logo = context.ui().theme().get("mspacman.logo.midway");
+		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", s(11)));
 		g.fillText("\u00a9", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol

@@ -103,8 +103,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		checkNotNull(settings);
 		checkNotNull(theme);
 
-		spritesheetMsPacManGame = new SpritesheetMsPacManGame(theme.image("mspacman.spritesheet"), 16);
-		spritesheetPacManGame = new SpritesheetPacManGame(theme.image("pacman.spritesheet"), 16);
+		spritesheetMsPacManGame = theme.get("mspacman.spritesheet");
+		spritesheetPacManGame = theme.get("pacman.spritesheet");
 
 		this.stage = stage;
 		stage.setFullScreen(settings.fullScreen);
