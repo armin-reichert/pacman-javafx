@@ -49,16 +49,12 @@ public class PacAnimationsMsPacManGame extends SpriteAnimations implements PacAn
 	}
 
 	@Override
-	public Rectangle2D currentSprite() {
-		if (currentAnimationName == null) {
-			return null;
-		}
+	public void updateCurrentAnimation() {
 		if (MUNCHING.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.msPacManMunchingSprites(pac.moveDir()));
 		}
 		if (HUSBAND_MUNCHING.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.pacManMunchingSprites(pac.moveDir()));
 		}
-		return currentAnimation.currentSprite();
 	}
 }

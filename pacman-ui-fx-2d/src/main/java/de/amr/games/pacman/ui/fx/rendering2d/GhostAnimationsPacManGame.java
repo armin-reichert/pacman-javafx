@@ -26,15 +26,60 @@ public class GhostAnimationsPacManGame extends SpriteAnimations
 		this.spritesheet = spritesheet;
 
 		//@formatter:off
-		var normal = SpriteAnimation.begin().sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT)).frameTicks(8).loop().end();
-		var frightened = SpriteAnimation.begin().sprites(spritesheet.ghostFrightenedSprites()).frameTicks(8).loop().end();
-		var flashing = SpriteAnimation.begin().sprites(spritesheet.ghostFlashingSprites()).frameTicks(6).loop().end();
-		var eyesAnimation = SpriteAnimation.begin().sprites(spritesheet.ghostEyesSprites(Direction.LEFT)).end();
-		var numberAnimation = SpriteAnimation.begin().sprites(spritesheet.ghostNumberSprites()).end();
-		var damaged = SpriteAnimation.begin().sprites(spritesheet.blinkyDamagedSprites()).end();
-		var stretched = SpriteAnimation.begin().sprites(spritesheet.blinkyStretchedSprites()).end();
-		var patched = SpriteAnimation.begin().frameTicks(4).loop().sprites(spritesheet.blinkyPatchedSprites()).end();
-		var naked = SpriteAnimation.begin().frameTicks(4).loop().sprites(spritesheet.blinkyNakedSprites()).end();
+		var normal = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+				.frameTicks(8)
+				.loop()
+			.end();
+
+		var frightened = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostFrightenedSprites())
+				.frameTicks(8)
+				.loop()
+			.end();
+		
+		var flashing = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostFlashingSprites())
+				.frameTicks(6)
+				.loop()
+			.end();
+		
+		var eyesAnimation = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostEyesSprites(Direction.LEFT))
+			.end();
+		
+		var numberAnimation = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.ghostNumberSprites())
+			.end();
+		
+		var damaged = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.blinkyDamagedSprites())
+			.end();
+		
+		var stretched = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.blinkyStretchedSprites())
+			.end();
+		
+		var patched = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.blinkyPatchedSprites())
+				.frameTicks(4)
+				.loop()
+			.end();
+		
+		var naked = SpriteAnimation
+			.begin()
+			.sprites(spritesheet.blinkyNakedSprites())
+				.frameTicks(4)
+				.loop()
+			.end();
 		//@formatter:on
 
 		animationsByName.put(GHOST_NORMAL, normal);
@@ -42,10 +87,10 @@ public class GhostAnimationsPacManGame extends SpriteAnimations
 		animationsByName.put(GHOST_FLASHING, flashing);
 		animationsByName.put(GHOST_EYES, eyesAnimation);
 		animationsByName.put(GHOST_NUMBER, numberAnimation);
-		animationsByName.put(GhostAnimations.BLINKY_DAMAGED, damaged);
-		animationsByName.put(GhostAnimations.BLINKY_STRETCHED, stretched);
-		animationsByName.put(GhostAnimations.BLINKY_PATCHED, patched);
-		animationsByName.put(GhostAnimations.BLINKY_NAKED, naked);
+		animationsByName.put(BLINKY_DAMAGED, damaged);
+		animationsByName.put(BLINKY_STRETCHED, stretched);
+		animationsByName.put(BLINKY_PATCHED, patched);
+		animationsByName.put(BLINKY_NAKED, naked);
 
 		// TODO check this
 		eyesAnimation.start();
@@ -54,15 +99,11 @@ public class GhostAnimationsPacManGame extends SpriteAnimations
 	}
 
 	@Override
-	public Rectangle2D currentSprite() {
-		if (currentAnimationName == null) {
-			return null;
-		}
+	public void updateCurrentAnimation() {
 		if (GHOST_NORMAL.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
 		} else if (GHOST_EYES.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostEyesSprites(ghost.wishDir()));
 		}
-		return currentAnimation.currentSprite();
 	}
 }

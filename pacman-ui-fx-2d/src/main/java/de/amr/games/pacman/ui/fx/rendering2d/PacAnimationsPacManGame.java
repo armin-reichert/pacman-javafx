@@ -49,13 +49,9 @@ public class PacAnimationsPacManGame extends SpriteAnimations implements PacAnim
 	}
 
 	@Override
-	public Rectangle2D currentSprite() {
-		if (currentAnimationName == null) {
-			return null;
-		}
+	public void updateCurrentAnimation() {
 		if (MUNCHING.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.pacMunchingSprites(pac.moveDir()));
 		}
-		return currentAnimation.currentSprite();
 	}
 }

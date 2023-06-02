@@ -68,4 +68,17 @@ public abstract class SpriteAnimations implements Animations<SpriteAnimation, Re
 			currentAnimation.reset();
 		}
 	}
+
+	@Override
+	public final Rectangle2D currentSprite() {
+		if (currentAnimationName != null) {
+			updateCurrentAnimation();
+			return currentAnimation.currentSprite();
+		}
+		return null;
+	}
+
+	protected void updateCurrentAnimation() {
+		// for example to adjust to current ghost direction
+	}
 }

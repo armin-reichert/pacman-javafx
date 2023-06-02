@@ -71,15 +71,11 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 	}
 
 	@Override
-	public Rectangle2D currentSprite() {
-		if (currentAnimationName == null) {
-			return null;
-		}
+	public void updateCurrentAnimation() {
 		if (GHOST_NORMAL.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
 		} else if (GHOST_EYES.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostEyesSprites(ghost.wishDir()));
 		}
-		return currentAnimation.currentSprite();
 	}
 }
