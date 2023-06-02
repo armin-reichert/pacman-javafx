@@ -410,7 +410,7 @@ public class PlayScene3D implements GameScene {
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
-							context.ui().playLevelCompleteSound();
+							context.ui().audioClip("audio.level_complete").play();
 							PacManGames3d.ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
 						}
 					}),
@@ -425,7 +425,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
-			context.ui().playGameOverSound();
+			context.ui().audioClip("audio.game_over").play();
 			waitSeconds(3);
 		}
 
@@ -496,14 +496,16 @@ public class PlayScene3D implements GameScene {
 		if (level.isDemoLevel()) {
 			return;
 		}
+		var ui = context.ui();
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			context.ui().stopMunchingSound();
+			ui.audioClip("audio.pacman_munch").stop();
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			context.ui().loopGhostReturningSound();
+			ui.ensureLoopEndless(ui.audioClip("audio.ghost_returning"));
+
 		} else {
-			context.ui().stopGhostReturningSound();
+			ui.audioClip("audio.ghost_returning").stop();
 		}
 	}
 }

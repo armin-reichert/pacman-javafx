@@ -72,19 +72,22 @@ public interface PacManGamesUserInterface {
 
 	void selectNextGameVariant();
 
+	AudioClip audioClip(String clipName);
+
 	void stopAllSounds();
 
+	default void ensureLoop(AudioClip clip, int repetitions) {
+		if (!clip.isPlaying()) {
+			clip.setCycleCount(repetitions);
+			clip.play();
+		}
+	}
+
+	default void ensureLoopEndless(AudioClip clip) {
+		ensureLoop(clip, AudioClip.INDEFINITE);
+	}
+
 	void ensureSirenStarted(int sirenIndex);
-
-	void stopMunchingSound();
-
-	void loopGhostReturningSound();
-
-	void stopGhostReturningSound();
-
-	void playLevelCompleteSound();
-
-	void playGameOverSound();
 
 	void playVoice(AudioClip clip, float delaySeconds);
 

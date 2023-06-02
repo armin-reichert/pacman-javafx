@@ -383,7 +383,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		updateGameScene(true);
 	}
 
-	private AudioClip audioClip(String clipName) {
+	@Override
+	public AudioClip audioClip(String clipName) {
 		var prefix = gameVariant() == GameVariant.MS_PACMAN ? "mspacman." : "pacman.";
 		return theme.audioClip(prefix + clipName);
 	}
@@ -477,38 +478,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void stopAllSounds() {
 		theme.audioClips().forEach(AudioClip::stop);
-	}
-
-	@Override
-	public void stopMunchingSound() {
-		audioClip("audio.pacman_munch").stop();
-	}
-
-	@Override
-	public void loopGhostReturningSound() {
-		ensureLoop(audioClip("audio.ghost_returning"), AudioClip.INDEFINITE);
-	}
-
-	@Override
-	public void playGameOverSound() {
-		audioClip("audio.game_over").play();
-	}
-
-	@Override
-	public void playLevelCompleteSound() {
-		audioClip("audio.level_complete").play();
-	}
-
-	@Override
-	public void stopGhostReturningSound() {
-		audioClip("audio.ghost_returning").stop();
-	}
-
-	public void ensureLoop(AudioClip clip, int repetitions) {
-		if (!clip.isPlaying()) {
-			clip.setCycleCount(repetitions);
-			clip.play();
-		}
 	}
 
 	private void startSiren(int sirenIndex) {
