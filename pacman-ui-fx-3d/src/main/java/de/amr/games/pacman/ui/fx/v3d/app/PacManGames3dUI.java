@@ -77,8 +77,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected void configureGameScenes() {
 		super.configureGameScenes();
-		gameSceneConfig.get(GameVariant.MS_PACMAN).setPlayScene3D(new PlayScene3D());
-		gameSceneConfig.get(GameVariant.PACMAN).setPlayScene3D(new PlayScene3D());
+		gameSceneConfigMsPacMan.setPlayScene3D(new PlayScene3D());
+		gameSceneConfigPacMan.setPlayScene3D(new PlayScene3D());
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
 		var scene = super.sceneMatchingCurrentGameState();
-		var config = gameSceneConfig.get(gameVariant());
+		var config = gameVariant() == GameVariant.MS_PACMAN ? gameSceneConfigMsPacMan : gameSceneConfigPacMan;
 		if (PacManGames3d.PY_3D_ENABLED.get() && scene == config.playScene()) {
 			scene = config.playScene3D();
 		}

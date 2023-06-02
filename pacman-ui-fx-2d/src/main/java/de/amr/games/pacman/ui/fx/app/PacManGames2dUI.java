@@ -8,8 +8,6 @@ import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import org.tinylog.Logger;
@@ -72,7 +70,8 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
-	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
+	protected GameSceneConfiguration gameSceneConfigMsPacMan;
+	protected GameSceneConfiguration gameSceneConfigPacMan;
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
@@ -124,7 +123,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void configureGameScenes() {
 		{
 			//@formatter:off
-			var config = new GameSceneConfiguration(
+			gameSceneConfigMsPacMan = new GameSceneConfiguration(
 				new BootScene(),
 				new MsPacManIntroScene(),
 				new MsPacManCreditScene(),
@@ -134,11 +133,10 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				new MsPacManIntermissionScene2(),
 				new MsPacManIntermissionScene3()
 			);
-			gameSceneConfig.put(GameVariant.MS_PACMAN, config);
 		}
 
 		{
-			var config = new GameSceneConfiguration(
+			gameSceneConfigPacMan= new GameSceneConfiguration(
 				new BootScene(),
 				new PacManIntroScene(),
 				new PacManCreditScene(),
@@ -148,7 +146,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				new PacManCutscene2(),
 				new PacManCutscene3()
 			);
-			gameSceneConfig.put(GameVariant.PACMAN, config);
 	  	//@formatter:on
 		}
 	}
@@ -243,7 +240,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected GameScene sceneMatchingCurrentGameState() {
-		var config = gameSceneConfig.get(gameVariant());
+		var config = gameVariant() == GameVariant.MS_PACMAN ? gameSceneConfigMsPacMan : gameSceneConfigPacMan;
 		switch (gameState()) {
 		case BOOT:
 			return config.bootScene();
