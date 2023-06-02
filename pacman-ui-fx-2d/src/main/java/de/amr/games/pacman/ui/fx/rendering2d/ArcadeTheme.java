@@ -14,15 +14,15 @@ import javafx.scene.paint.Color;
 public class ArcadeTheme extends Theme {
 
 	//@formatter:off
-	public static final Color RED = Color.rgb(255, 0, 0);
+	public static final Color RED    = Color.rgb(255, 0, 0);
 	public static final Color YELLOW = Color.rgb(255, 255, 0);
-	public static final Color PINK = Color.rgb(252, 181, 255);
-	public static final Color CYAN = Color.rgb(0, 255, 255);
+	public static final Color PINK   = Color.rgb(252, 181, 255);
+	public static final Color CYAN   = Color.rgb(0, 255, 255);
 	public static final Color ORANGE = Color.rgb(251, 190, 88);
-	public static final Color BLACK = Color.rgb(0, 0, 0);
-	public static final Color BLUE = Color.rgb(33, 33, 255);
-	public static final Color PALE = Color.rgb(222, 222, 255);
-	public static final Color ROSE = Color.rgb(252, 187, 179);
+	public static final Color BLACK  = Color.rgb(0, 0, 0);
+	public static final Color BLUE   = Color.rgb(33, 33, 255);
+	public static final Color PALE   = Color.rgb(222, 222, 255);
+	public static final Color ROSE   = Color.rgb(252, 187, 179);
 
 	public ArcadeTheme(ResourceManager rm) {
 		// Ms. Pac-Man game
@@ -39,19 +39,19 @@ public class ArcadeTheme extends Theme {
 		                                       Color.rgb(0, 255, 255),
 		                                       Color.rgb(222, 222, 255));
 
-		addAll("mspacman.maze.wallBaseColor",  Color.rgb(255,   0,   0),
+		addAll("mspacman.maze.wallBaseColor",  Color.rgb(255, 0, 0),
 		                                       Color.rgb(222, 222, 255),
 		                                       Color.rgb(222, 222, 255),
-		                                       Color.rgb(255, 183,  81),
-		                                       Color.rgb(255, 255,   0),
-		                                       Color.rgb(255,   0,   0));
+		                                       Color.rgb(255, 183, 81),
+		                                       Color.rgb(255, 255, 0),
+		                                       Color.rgb(255, 0, 0));
 
 		addAll("mspacman.maze.wallTopColor",   Color.rgb(255, 183, 174),
-		                                       Color.rgb( 71, 183, 255),
-		                                       Color.rgb(222, 151,  81),
-		                                       Color.rgb(222, 151,  81),
-		                                       Color.rgb(222, 151,  81),
-		                                       Color.rgb(222, 151,  81));
+		                                       Color.rgb(71, 183, 255),
+		                                       Color.rgb(222, 151, 81),
+		                                       Color.rgb(222, 151, 81),
+		                                       Color.rgb(222, 151, 81),
+		                                       Color.rgb(222, 151, 81));
 
 		set("mspacman.color.head",             Color.rgb(255, 255, 0));
 		set("mspacman.color.palate",           Color.rgb(191, 79, 61));
@@ -149,7 +149,6 @@ public class ArcadeTheme extends Theme {
 		set("ghost.color.flashing.pupils",     RED);
 		
 		set("audio.sweep",                     rm.audioClip("sound/common/sweep.mp3"));
-
 	}
 	//@formatter:on
 }
