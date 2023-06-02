@@ -133,7 +133,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new MsPacManIntermissionScene2(),
 			new MsPacManIntermissionScene3()
 		);
-		gameSceneConfigPacMan= new GameSceneConfiguration(
+		gameSceneConfigPacMan = new GameSceneConfiguration(
 			new BootScene(),
 			new PacManIntroScene(),
 			new PacManCreditScene(),

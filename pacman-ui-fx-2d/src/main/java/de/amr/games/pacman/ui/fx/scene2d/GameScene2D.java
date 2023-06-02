@@ -22,7 +22,6 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -42,7 +41,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Scale;
@@ -207,6 +205,10 @@ public abstract class GameScene2D implements GameScene {
 
 	public Canvas getCanvas() {
 		return canvas;
+	}
+
+	public Pane getOverlay() {
+		return overlay;
 	}
 
 	@Override
@@ -499,18 +501,5 @@ public abstract class GameScene2D implements GameScene {
 	 */
 	protected void drawSceneInfo() {
 		// empty by default
-	}
-
-	public void addTouchSupport() {
-		var touchPad = new Rectangle(WIDTH_UNSCALED, HEIGHT_UNSCALED);
-		touchPad.setScaleX(0.9);
-		touchPad.setScaleY(0.9);
-		overlay.getChildren().add(touchPad);
-		var gestureHandler = new GestureHandler(touchPad);
-		gestureHandler.setOnDirectionRecognized(dir -> {
-			context.game().level().ifPresent(level -> {
-				level.pac().setWishDir(dir);
-			});
-		});
 	}
 }
