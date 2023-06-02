@@ -3,6 +3,7 @@
  */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
@@ -12,26 +13,49 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacSpriteAnimationsPacManGame extends PacSpriteAnimationsCommon {
+public class PacSpriteAnimationsPacManGame extends PacSpriteAnimations {
+
+	private final Pac pac;
+	private final SpritesheetPacManGame spritesheet;
 
 	public PacSpriteAnimationsPacManGame(Pac pac, SpritesheetPacManGame spritesheet) {
-		super(pac, spritesheet);
-		var bigPacManAnimation = SpriteAnimation.begin().sprites(spritesheet.bigPacManSprites()).frameTicks(3).loop().end();
-		animationsByName.put(PacAnimations.BIG_PACMAN, bigPacManAnimation);
+		Globals.checkNotNull(pac);
+		Globals.checkNotNull(spritesheet);
+		this.pac = pac;
+		this.spritesheet = spritesheet;
+		//@formatter:off
+		var munching = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.pacMunchingSprites(Direction.LEFT))
+				.loop()
+			.end();
+		
+		var dying = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.pacDyingSprites())
+				.frameTicks(8)
+			.end();
+		
+		var bigPacMan = SpriteAnimation
+			.begin()
+				.sprites(spritesheet.bigPacManSprites())
+				.frameTicks(3)
+				.loop()
+			.end();
+		//@formatter:on
+		animationsByName.put(PacAnimations.MUNCHING, munching);
+		animationsByName.put(PacAnimations.DYING, dying);
+		animationsByName.put(PacAnimations.BIG_PACMAN, bigPacMan);
 	}
 
 	@Override
-	public SpritesheetPacManGame spritesheet() {
-		return (SpritesheetPacManGame) spritesheet;
-	}
-
-	@Override
-	protected Rectangle2D[] munchingSprites(Direction dir) {
-		return spritesheet().pacMunchingSprites(dir);
-	}
-
-	@Override
-	protected Rectangle2D[] dyingSprites() {
-		return spritesheet().pacDyingSprites();
+	public Rectangle2D currentSprite() {
+		if (currentAnimationName == null) {
+			return null;
+		}
+		if (MUNCHING.equals(currentAnimationName)) {
+			currentAnimation.setSprites(spritesheet.pacMunchingSprites(pac.moveDir()));
+		}
+		return currentAnimation.currentSprite();
 	}
 }

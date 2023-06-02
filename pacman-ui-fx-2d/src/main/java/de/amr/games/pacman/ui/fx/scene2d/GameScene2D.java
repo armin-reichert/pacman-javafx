@@ -25,7 +25,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.GestureHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.GhostSpriteAnimationsCommon;
-import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimationsCommon;
+import de.amr.games.pacman.ui.fx.rendering2d.PacSpriteAnimations;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
@@ -366,8 +366,8 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawPacSprite(Pac pac) {
 		pac.animations().ifPresent(animations -> {
-			if (animations instanceof PacSpriteAnimationsCommon) {
-				var sa = (PacSpriteAnimationsCommon) animations;
+			if (animations instanceof PacSpriteAnimations) {
+				var sa = (PacSpriteAnimations) animations;
 				drawEntitySprite(pac, sa.currentSprite());
 				if (debug) {
 					g.setFill(Color.WHITE);
