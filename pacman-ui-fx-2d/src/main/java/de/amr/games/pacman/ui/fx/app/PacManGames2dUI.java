@@ -72,9 +72,6 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
-	protected SpritesheetPacManGame spritesheetPacManGame;
-	protected SpritesheetMsPacManGame spritesheetMsPacManGame;
-
 	protected final Map<GameVariant, GameSceneConfiguration> gameSceneConfig = new EnumMap<>(GameVariant.class);
 	protected GameClock clock;
 	protected Theme theme;
@@ -93,9 +90,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		checkNotNull(stage);
 		checkNotNull(settings);
 		checkNotNull(theme);
-
-		spritesheetMsPacManGame = theme.get("mspacman.spritesheet");
-		spritesheetPacManGame = theme.get("pacman.spritesheet");
 
 		this.stage = stage;
 		stage.setFullScreen(settings.fullScreen);
@@ -213,12 +207,12 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public SpritesheetMsPacManGame spritesheetMsPacManGame() {
-		return spritesheetMsPacManGame;
+		return theme.get("mspacman.spritesheet");
 	}
 
 	@Override
 	public SpritesheetPacManGame spritesheetPacManGame() {
-		return spritesheetPacManGame;
+		return theme.get("pacman.spritesheet");
 	}
 
 	protected void updateStage() {
@@ -376,21 +370,21 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		e.game.level().ifPresent(level -> {
 			switch (level.game().variant()) {
 			case MS_PACMAN: {
-				level.pac().setAnimations(new PacAnimationsMsPacManGame(level.pac(), spritesheetMsPacManGame));
-				level.ghosts()
-						.forEach(ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, spritesheetMsPacManGame)));
+				var ss = spritesheetMsPacManGame();
+				level.pac().setAnimations(new PacAnimationsMsPacManGame(level.pac(), ss));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss)));
 				break;
 			}
 			case PACMAN: {
-				level.pac().setAnimations(new PacAnimationsPacManGame(level.pac(), spritesheetPacManGame));
-				level.ghosts()
-						.forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, spritesheetPacManGame)));
+				var ss = spritesheetPacManGame();
+				level.pac().setAnimations(new PacAnimationsPacManGame(level.pac(), ss));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
 				break;
 			}
 			default:
 				throw new IllegalGameVariantException(level.game().variant());
 			}
-			Logger.trace("Created creature and world animations for level #{}", level.number());
+			Logger.info("Created creature and world animations for level #{}", level.number());
 		});
 		updateGameScene(true);
 	}
