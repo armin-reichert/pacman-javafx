@@ -2,24 +2,25 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.rendering2d;
+package de.amr.games.pacman.ui.fx.rendering2d.pacman;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert
  */
-public class PacAnimationsMsPacManGame extends SpriteAnimations implements PacAnimations<SpriteAnimation, Rectangle2D> {
+public class PacAnimationsPacManGame extends SpriteAnimations implements PacAnimations<SpriteAnimation, Rectangle2D> {
 
 	private final Pac pac;
-	private final SpritesheetMsPacManGame spritesheet;
+	private final SpritesheetPacManGame spritesheet;
 
-	public PacAnimationsMsPacManGame(Pac pac, SpritesheetMsPacManGame spritesheet) {
+	public PacAnimationsPacManGame(Pac pac, SpritesheetPacManGame spritesheet) {
 		Globals.checkNotNull(pac);
 		Globals.checkNotNull(spritesheet);
 		this.pac = pac;
@@ -27,35 +28,32 @@ public class PacAnimationsMsPacManGame extends SpriteAnimations implements PacAn
 		//@formatter:off
 		var munching = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.msPacManMunchingSprites(Direction.LEFT))
+				.sprites(spritesheet.pacMunchingSprites(Direction.LEFT))
 				.loop()
 			.end();
 		
 		var dying = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.msPacManDyingSprites())
+				.sprites(spritesheet.pacDyingSprites())
 				.frameTicks(8)
 			.end();
 		
-		var husbandMunching = SpriteAnimation
+		var bigPacMan = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.pacManMunchingSprites(Direction.LEFT))
-				.frameTicks(2)
+				.sprites(spritesheet.bigPacManSprites())
+				.frameTicks(3)
 				.loop()
 			.end();
 		//@formatter:on
 		animationsByName.put(PacAnimations.MUNCHING, munching);
 		animationsByName.put(PacAnimations.DYING, dying);
-		animationsByName.put(PacAnimations.HUSBAND_MUNCHING, husbandMunching);
+		animationsByName.put(PacAnimations.BIG_PACMAN, bigPacMan);
 	}
 
 	@Override
 	public void updateCurrentAnimation() {
 		if (MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.msPacManMunchingSprites(pac.moveDir()));
-		}
-		if (HUSBAND_MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.pacManMunchingSprites(pac.moveDir()));
+			currentAnimation.setSprites(spritesheet.pacMunchingSprites(pac.moveDir()));
 		}
 	}
 }

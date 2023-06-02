@@ -11,8 +11,8 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.rendering2d.GhostAnimationsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.PacAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 
 /**
  * Intro scene of the PacMan game.
