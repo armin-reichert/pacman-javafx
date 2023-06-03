@@ -85,6 +85,18 @@ public class SpriteAnimation {
 		frameIndex = 0;
 	}
 
+	public void setFrameTicks(int ticks) {
+		if (ticks != frameTicks) {
+			boolean wasRunning = transition.getStatus() == Status.RUNNING;
+			transition.stop();
+			frameTicks = ticks;
+			transition = createTransition(this);
+			if (wasRunning) {
+				start();
+			}
+		}
+	}
+
 	public void start() {
 		transition.play();
 	}

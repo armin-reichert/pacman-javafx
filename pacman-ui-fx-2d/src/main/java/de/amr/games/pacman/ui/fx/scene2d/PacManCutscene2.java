@@ -26,6 +26,7 @@ public class PacManCutscene2 extends GameScene2D {
 	private int frame;
 	private Pac pac;
 	private Ghost blinky;
+	private SpriteAnimation blinkyNormal;
 	private SpriteAnimation blinkyStretching;
 	private SpriteAnimation blinkyDamaged;
 
@@ -42,6 +43,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		var blinkyAnimations = new GhostAnimationsPacManGame(blinky, context.ui().spritesheetPacManGame());
+		blinkyNormal = blinkyAnimations.byName(GhostAnimations.GHOST_NORMAL);
 		blinkyStretching = blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED);
 		blinkyDamaged = blinkyAnimations.byName(GhostAnimations.BLINKY_DAMAGED);
 		blinky.setAnimations(blinkyAnimations);
@@ -91,7 +93,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		case 194: {
 			blinky.setPixelSpeed(0.1f);
-//TODO			blinkyAnimations.selectedAnimation().setFrameDuration(8);
+			blinkyNormal.setFrameTicks(32);
 			break;
 		}
 
