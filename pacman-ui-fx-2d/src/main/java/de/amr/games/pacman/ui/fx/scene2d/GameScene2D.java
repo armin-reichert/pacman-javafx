@@ -244,13 +244,14 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSceneBackground() {
-		double w = s(canvas.getWidth());
-		double h = s(canvas.getHeight());
+		double w = canvas.getWidth();
+		double h = canvas.getHeight();
+		double arc = s(20);
 		if (roundedCorners) {
 			g.setFill(wallpaperColor);
 			g.fillRect(0, 0, w, h);
 			g.setFill(Color.BLACK);
-			g.fillRoundRect(0, 0, w, h, s(20), s(20));
+			g.fillRoundRect(0, 0, w, h, arc, arc);
 		} else {
 			g.setFill(Color.BLACK);
 			g.fillRect(0, 0, w, h);
