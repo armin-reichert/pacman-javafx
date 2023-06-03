@@ -68,7 +68,7 @@ public abstract class GameScene2D implements GameScene {
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	protected final StackPane root = new StackPane();
-	protected final BorderPane subSceneContainer;
+	protected final BorderPane gameSceneContainer;
 	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Pane overlay = new Pane();
@@ -81,11 +81,11 @@ public abstract class GameScene2D implements GameScene {
 	private boolean canvasScaled;
 
 	protected GameScene2D() {
-		subSceneContainer = new BorderPane(root);
-		subSceneContainer.setMinWidth(WIDTH_UNSCALED);
-		subSceneContainer.setMinHeight(HEIGHT_UNSCALED);
-		subSceneContainer.setMaxWidth(WIDTH_UNSCALED);
-		subSceneContainer.setMaxHeight(HEIGHT_UNSCALED);
+		gameSceneContainer = new BorderPane(root);
+		gameSceneContainer.setMinWidth(WIDTH_UNSCALED);
+		gameSceneContainer.setMinHeight(HEIGHT_UNSCALED);
+		gameSceneContainer.setMaxWidth(WIDTH_UNSCALED);
+		gameSceneContainer.setMaxHeight(HEIGHT_UNSCALED);
 
 		root.getChildren().addAll(canvas, overlay);
 		overlay.getChildren().add(helpRoot);
@@ -100,7 +100,7 @@ public abstract class GameScene2D implements GameScene {
 		helpMenuAnimation.setToValue(0);
 
 		// scale overlay pane to cover subscene
-		subSceneContainer.heightProperty().addListener((py, ov, nv) -> {
+		gameSceneContainer.heightProperty().addListener((py, ov, nv) -> {
 			var scaling = nv.doubleValue() / HEIGHT_UNSCALED;
 			overlayScale.setX(scaling);
 			overlayScale.setY(scaling);
@@ -112,14 +112,14 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected double s(double value) {
-		return canvasScaled ? value : value * subSceneContainer.getHeight() / HEIGHT_UNSCALED;
+		return canvasScaled ? value : value * gameSceneContainer.getHeight() / HEIGHT_UNSCALED;
 	}
 
 	public void setCanvasScaled(boolean scaled) {
 		canvasScaled = scaled;
 		if (scaled) {
-			canvas.scaleXProperty().bind(subSceneContainer.widthProperty().divide(WIDTH_UNSCALED));
-			canvas.scaleYProperty().bind(subSceneContainer.heightProperty().divide(HEIGHT_UNSCALED));
+			canvas.scaleXProperty().bind(gameSceneContainer.widthProperty().divide(WIDTH_UNSCALED));
+			canvas.scaleYProperty().bind(gameSceneContainer.heightProperty().divide(HEIGHT_UNSCALED));
 			canvas.widthProperty().unbind();
 			canvas.heightProperty().unbind();
 			canvas.setWidth(WIDTH_UNSCALED);
@@ -129,8 +129,8 @@ public abstract class GameScene2D implements GameScene {
 			canvas.scaleYProperty().unbind();
 			canvas.setScaleX(1);
 			canvas.setScaleY(1);
-			canvas.widthProperty().bind(subSceneContainer.widthProperty());
-			canvas.heightProperty().bind(subSceneContainer.heightProperty());
+			canvas.widthProperty().bind(gameSceneContainer.widthProperty());
+			canvas.heightProperty().bind(gameSceneContainer.heightProperty());
 		}
 	}
 
@@ -200,7 +200,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public BorderPane sceneContainer() {
-		return subSceneContainer;
+		return gameSceneContainer;
 	}
 
 	public Canvas getCanvas() {
@@ -213,10 +213,10 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void setParentScene(Scene parentScene) {
-		subSceneContainer.minWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
-		subSceneContainer.minHeightProperty().bind(parentScene.heightProperty());
-		subSceneContainer.maxWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
-		subSceneContainer.maxHeightProperty().bind(parentScene.heightProperty());
+		gameSceneContainer.minWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
+		gameSceneContainer.minHeightProperty().bind(parentScene.heightProperty());
+		gameSceneContainer.maxWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
+		gameSceneContainer.maxHeightProperty().bind(parentScene.heightProperty());
 	}
 
 	@Override
@@ -389,6 +389,14 @@ public abstract class GameScene2D implements GameScene {
 		});
 	}
 
+	/**
+	 * Draws a sprite and performs scaling if game scene has unscaled canvas
+	 * 
+	 * @param source spritesheet source
+	 * @param sprite spritesheet region ("sprite")
+	 * @param x      UNSCALED x position
+	 * @param y      UNSCALED y position
+	 */
 	protected void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
 		if (sprite != null) {
 			g.drawImage(source, //
