@@ -92,7 +92,7 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 
 		case 194: {
-			blinky.setPixelSpeed(0.1f);
+			blinky.setPixelSpeed(0.09f);
 			blinkyNormal.setFrameTicks(32);
 			break;
 		}
