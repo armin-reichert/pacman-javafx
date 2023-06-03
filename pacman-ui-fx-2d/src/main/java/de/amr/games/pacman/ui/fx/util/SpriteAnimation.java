@@ -18,27 +18,20 @@ public class SpriteAnimation {
 
 	public static class Builder {
 
-		private Builder() {
-			animation = new SpriteAnimation();
-		}
-
-		private SpriteAnimation animation;
-		private int frameTicks = 1;
-		private boolean loop = false;
-		private int fps = 60;
+		private SpriteAnimation animation = new SpriteAnimation();
 
 		public Builder frameTicks(int ticks) {
-			this.frameTicks = ticks;
+			animation.frameTicks = ticks;
 			return this;
 		}
 
 		public Builder fps(int fps) {
-			this.fps = fps;
+			animation.fps = fps;
 			return this;
 		}
 
 		public Builder loop() {
-			loop = true;
+			animation.loop = true;
 			return this;
 		}
 
@@ -48,20 +41,7 @@ public class SpriteAnimation {
 		}
 
 		public SpriteAnimation end() {
-			animation.transition = new Transition() {
-				{
-					setCycleDuration(Duration.seconds(1.0 / fps * frameTicks));
-					setCycleCount(loop ? Animation.INDEFINITE : animation.sprites.length);
-					setInterpolator(Interpolator.LINEAR);
-				}
-
-				@Override
-				protected void interpolate(double frac) {
-					if (frac == 1.0) {
-						animation.nextFrame();
-					}
-				}
-			};
+			animation.transition = createTransition(animation);
 			return animation;
 		}
 	}
@@ -70,7 +50,27 @@ public class SpriteAnimation {
 		return new Builder();
 	}
 
+	private static Transition createTransition(SpriteAnimation sa) {
+		return new Transition() {
+			{
+				setCycleDuration(Duration.seconds(1.0 / sa.fps * sa.frameTicks));
+				setCycleCount(sa.loop ? Animation.INDEFINITE : sa.sprites.length);
+				setInterpolator(Interpolator.LINEAR);
+			}
+
+			@Override
+			protected void interpolate(double frac) {
+				if (frac == 1.0) {
+					sa.nextFrame();
+				}
+			}
+		};
+	}
+
 	private Rectangle2D[] sprites = new Rectangle2D[0];
+	private boolean loop;
+	private int frameTicks = 1;
+	private int fps = 60;
 	private Transition transition;
 	private int frameIndex;
 
