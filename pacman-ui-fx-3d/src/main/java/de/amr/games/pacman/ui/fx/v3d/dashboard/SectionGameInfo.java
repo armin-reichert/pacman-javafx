@@ -39,8 +39,8 @@ public class SectionGameInfo extends Section {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
-		addInfo("",
-				() -> "w=%.0f h=%.0f".formatted(gameScene().sceneContainer().getWidth(), gameScene().sceneContainer().getHeight()));
+		addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().sceneContainer().getWidth(),
+				gameScene().sceneContainer().getHeight()));
 		addInfo("Game State", () -> "%s".formatted(gc.state()));
 		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
 				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
@@ -77,8 +77,8 @@ public class SectionGameInfo extends Section {
 
 	private String fmtPelletCount(GameLevel level) {
 		var world = level.world();
-		return String.format("%d of %d (%d energizers)", world.uneatenFoodCount(),
-				world.tiles().filter(world::isFoodTile).count(), world.energizerTiles().count());
+		return String.format("%d of %d (%d energizers)", world.foodStorage().uneatenCount(),
+				world.foodStorage().totalCount(), world.foodStorage().energizerTiles().count());
 	}
 
 	private String fmtGhostSpeed(GameLevel level) {

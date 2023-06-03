@@ -80,7 +80,7 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 
 		case 400: {
-			pac.placeAtTile(v2i(-3, 19), 0, 0);
+			pac.placeAtTile(v2i(-3, 18), 0, 6.5f);
 			pac.setMoveDir(Direction.RIGHT);
 			pac.selectAnimation(PacAnimations.BIG_PACMAN);
 			pac.startAnimation();

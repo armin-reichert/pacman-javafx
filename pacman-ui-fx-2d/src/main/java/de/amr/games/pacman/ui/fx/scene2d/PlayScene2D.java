@@ -97,24 +97,24 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawPacManMaze(double x, double y, World world) {
-		if (world.getMazeFlashing().isRunning()) {
-			var image = world.getMazeFlashing().on() ? context.ui().theme().image("pacman.flashingMaze")
+		if (world.mazeFlashing().isRunning()) {
+			var image = world.mazeFlashing().on() ? context.ui().theme().image("pacman.flashingMaze")
 					: context.ui().theme().image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
 			var image = context.ui().theme().image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
-			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
-			if (world.getEnergizerBlinking().off()) {
-				world.energizerTiles().forEach(this::hideTileContent);
+			world.tiles().filter(world.foodStorage()::hasEatenFoodAt).forEach(this::hideTileContent);
+			if (world.energizerBlinking().off()) {
+				world.foodStorage().energizerTiles().forEach(this::hideTileContent);
 			}
 		}
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
 		var ss = context.ui().spritesheetMsPacManGame();
-		if (world.getMazeFlashing().isRunning()) {
-			if (world.getMazeFlashing().on()) {
+		if (world.mazeFlashing().isRunning()) {
+			if (world.mazeFlashing().on()) {
 				var source = context.ui().theme().image("mspacman.flashingMazes");
 				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
@@ -124,10 +124,10 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
 			drawSprite(ss.filledMaze(mazeNumber), x, y);
-			world.tiles().filter(world::containsEatenFood).forEach(this::hideTileContent);
+			world.tiles().filter(world.foodStorage()::hasEatenFoodAt).forEach(this::hideTileContent);
 			// energizer animation
-			if (world.getEnergizerBlinking().off()) {
-				world.energizerTiles().forEach(this::hideTileContent);
+			if (world.energizerBlinking().off()) {
+				world.foodStorage().energizerTiles().forEach(this::hideTileContent);
 			}
 		}
 	}

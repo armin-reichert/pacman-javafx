@@ -401,7 +401,7 @@ public class World3D {
 
 	private void addFood() {
 		var foodMaterial = ResourceManager.coloredMaterial(foodColor);
-		world.tiles().filter(world::containsFood).forEach(tile -> {
+		world.tiles().filter(world.foodStorage()::hasFoodAt).forEach(tile -> {
 			var food3D = world.isEnergizerTile(tile)//
 					? createEnergizer3D(tile, foodMaterial)//
 					: createNormalPellet3D(tile, foodMaterial);
