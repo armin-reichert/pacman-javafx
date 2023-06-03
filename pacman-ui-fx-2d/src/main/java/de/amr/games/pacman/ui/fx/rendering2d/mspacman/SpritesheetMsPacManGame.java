@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d.mspacman;
 
-import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;

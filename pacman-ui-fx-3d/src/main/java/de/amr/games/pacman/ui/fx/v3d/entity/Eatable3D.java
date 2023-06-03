@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import java.util.Optional;
 
-import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.lib.Vector2i;
 import javafx.animation.Animation;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;

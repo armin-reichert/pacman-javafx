@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
-import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.lib.Direction;
 
 /**
  * @author Armin Reichert

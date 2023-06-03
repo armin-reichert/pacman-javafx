@@ -12,8 +12,8 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 import java.util.List;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Clapperboard;
 import de.amr.games.pacman.model.actors.Entity;

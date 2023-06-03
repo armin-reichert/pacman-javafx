@@ -25,7 +25,7 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
-import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;

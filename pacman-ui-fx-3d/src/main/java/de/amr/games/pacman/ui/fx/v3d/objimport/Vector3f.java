@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.objimport;
 
-import de.amr.games.pacman.lib.math.Vector2f;
+import de.amr.games.pacman.lib.Vector2f;
 
 /**
  * Immutable 3D vector with float precision. No full-fledged implementation, just the needed methods.

@@ -29,7 +29,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.util.stream.Stream;
 
-import de.amr.games.pacman.lib.steering.Direction;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;

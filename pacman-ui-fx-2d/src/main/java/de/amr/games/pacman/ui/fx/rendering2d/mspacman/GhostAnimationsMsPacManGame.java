@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d.mspacman;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.steering.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;

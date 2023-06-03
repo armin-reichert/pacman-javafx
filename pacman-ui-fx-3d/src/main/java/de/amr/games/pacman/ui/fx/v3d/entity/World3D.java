@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.lib.math.Vector2i;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
