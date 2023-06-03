@@ -140,7 +140,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawSprite(blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).currentSprite(), s(t(14)), s(t(19) + 3));
+		drawSprite(blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED).currentSprite(), t(14), t(19) + 3);
 		drawGhostSprite(blinky);
 		drawPacSprite(pac);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
