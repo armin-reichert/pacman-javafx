@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.v2i;
-
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
@@ -40,7 +38,7 @@ public class PacManCutscene1 extends GameScene2D {
 		pac.setAnimations(new PacAnimationsPacManGame(pac, context.ui().spritesheetPacManGame()));
 		pac.selectAnimation(PacAnimations.MUNCHING);
 		pac.startAnimation();
-		pac.placeAtTile(v2i(29, 20), 0, 0);
+		pac.placeAtTile(29, 20, 0, 0);
 		pac.setMoveDir(Direction.LEFT);
 		pac.setPixelSpeed(1.25f);
 		pac.show();
@@ -49,7 +47,7 @@ public class PacManCutscene1 extends GameScene2D {
 		blinky.setAnimations(new GhostAnimationsPacManGame(blinky, context.ui().spritesheetPacManGame()));
 		blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
 		blinky.startAnimation();
-		blinky.placeAtTile(v2i(32, 20), 0, 0);
+		blinky.placeAtTile(32, 20, 0, 0);
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(1.3f);
 		blinky.show();
@@ -71,7 +69,7 @@ public class PacManCutscene1 extends GameScene2D {
 
 		switch (++frame) {
 		case 260: {
-			blinky.placeAtTile(v2i(-2, 20), 4, 0);
+			blinky.placeAtTile(-2, 20, 4, 0);
 			blinky.setMoveAndWishDir(Direction.RIGHT);
 			blinky.setPixelSpeed(0.75f);
 			blinky.selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
@@ -80,7 +78,7 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 
 		case 400: {
-			pac.placeAtTile(v2i(-3, 18), 0, 6.5f);
+			pac.placeAtTile(-3, 18, 0, 6.5f);
 			pac.setMoveDir(Direction.RIGHT);
 			pac.selectAnimation(PacAnimations.BIG_PACMAN);
 			pac.startAnimation();
