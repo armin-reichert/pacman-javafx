@@ -36,7 +36,7 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 		intermission.inky.setAnimations(new GhostAnimationsMsPacManGame(intermission.inky, ss));
 		intermission.pinky.setAnimations(new GhostAnimationsMsPacManGame(intermission.pinky, ss));
 
-		clapAnimation = new ClapperBoardAnimation(ss.createClapperboardSprites(), "1", "THEY MEET");
+		clapAnimation = new ClapperBoardAnimation(ss.clapperboardSprites(), "1", "THEY MEET");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission1.STATE_FLAP, 2 * 60);
 	}

@@ -190,7 +190,7 @@ public class SpritesheetMsPacManGame implements Spritesheet {
 		return rect(509, 200, 8, 8);
 	}
 
-	public Rectangle2D[] createClapperboardSprites() {
+	public Rectangle2D[] clapperboardSprites() {
 		return array( //
 				rect(456, 208, 32, 32), // open
 				rect(488, 208, 32, 32), // middle
