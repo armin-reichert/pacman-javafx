@@ -8,7 +8,6 @@ import static de.amr.games.pacman.lib.Globals.RND;
 
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.paint.Color;
 
 /**
  * @author Armin Reichert
@@ -38,14 +37,6 @@ public class BootScene extends GameScene2D {
 		} else if (timer.atSecond(4.0)) {
 			context.gameController().terminateCurrentState();
 		}
-	}
-
-	@Override
-	protected void drawSceneBackground() {
-		double w = s(canvas.getWidth());
-		double h = s(canvas.getHeight());
-		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, w, h);
 	}
 
 	@Override
