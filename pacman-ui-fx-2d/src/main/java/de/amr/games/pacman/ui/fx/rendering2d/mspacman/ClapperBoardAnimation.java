@@ -53,6 +53,6 @@ public class ClapperBoardAnimation {
 		if (t <= 87) {
 			return 0;
 		}
-		return 2;
+		return -1; // no sprite
 	}
 }

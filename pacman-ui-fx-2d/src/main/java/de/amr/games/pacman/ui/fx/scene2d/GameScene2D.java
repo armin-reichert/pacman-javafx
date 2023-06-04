@@ -457,8 +457,9 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawClapperBoard(ClapperBoardAnimation animation, double x, double y) {
-		var sprite = context.ui().spritesheetMsPacManGame().clapperboardSprites()[animation.currentSpriteIndex()];
-		if (sprite != null) {
+		int spriteIndex = animation.currentSpriteIndex();
+		if (spriteIndex != -1) {
+			var sprite = context.ui().spritesheetMsPacManGame().clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont());
 			g.setFill(ArcadeTheme.PALE.darker());

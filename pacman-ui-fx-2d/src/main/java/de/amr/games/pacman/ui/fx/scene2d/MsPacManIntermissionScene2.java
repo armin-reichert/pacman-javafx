@@ -42,9 +42,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		if (intermission.clapVisible) {
-			drawClapperBoard(clapAnimation, t(3), t(10));
-		}
+		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPacSprite(intermission.msPac);
 		drawPacSprite(intermission.pacMan);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
