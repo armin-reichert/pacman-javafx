@@ -195,7 +195,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	public void toggle2D3D() {
 		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
-		updateGameScene(true);
+		updateOrReloadGameScene(true);
 		currentGameScene().onSceneVariantSwitch();
 	}
 

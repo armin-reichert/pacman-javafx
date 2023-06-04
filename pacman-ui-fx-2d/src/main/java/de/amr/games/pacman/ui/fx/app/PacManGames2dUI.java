@@ -20,7 +20,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -251,7 +250,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		case INTRO:
 			return config.introScene();
 		case INTERMISSION:
-			return config.cutScene(gameLevel().intermissionNumber);
+			return config.cutScene(game().level().get().intermissionNumber);
 		case INTERMISSION_TEST:
 			return config.cutScene(game().intermissionTestNumber);
 		default:
@@ -259,22 +258,18 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		}
 	}
 
-	private GameLevel gameLevel() {
-		return game().level().orElseThrow(IllegalStateException::new);
-	}
-
-	protected void updateGameScene(boolean reload) {
+	protected void updateOrReloadGameScene(boolean reload) {
 		var nextGameScene = sceneMatchingCurrentGameState();
 		if (nextGameScene == null) {
 			throw new IllegalStateException(String.format("No game scene found for game state %s.", gameState()));
 		}
 		if (reload || nextGameScene != currentGameScene) {
-			changeGameScene(nextGameScene);
+			setGameScene(nextGameScene);
 		}
 		updateStage();
 	}
 
-	protected void changeGameScene(GameScene newGameScene) {
+	protected void setGameScene(GameScene newGameScene) {
 		var prevGameScene = currentGameScene;
 		if (prevGameScene != null) {
 			prevGameScene.end();
@@ -364,19 +359,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		if (e.oldGameState == GameState.BOOT) {
-			playVoice(theme.audioClip("voice.explain"), 1.5f);
-		}
-		updateGameScene(false);
+		updateOrReloadGameScene(false);
 	}
 
 	@Override
 	public void onUnspecifiedChange(GameEvent e) {
-		updateGameScene(true);
+		updateOrReloadGameScene(true);
 	}
 
 	@Override
-	public void onLevelBeforeStart(GameEvent e) {
+	public void onLevelCreated(GameEvent e) {
 		// Found no better point in time to create and assign the sprite animations to the guys
 		e.game.level().ifPresent(level -> {
 			switch (level.game().variant()) {
@@ -384,20 +376,21 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				var ss = spritesheetMsPacManGame();
 				level.pac().setAnimations(new PacAnimationsMsPacManGame(level.pac(), ss));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss)));
+				Logger.trace("Created Ms. Pac-Man game creature animations for level #{}", level.number());
 				break;
 			}
 			case PACMAN: {
 				var ss = spritesheetPacManGame();
 				level.pac().setAnimations(new PacAnimationsPacManGame(level.pac(), ss));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
+				Logger.trace("Created Pac-Man game creature animations for level #{}", level.number());
 				break;
 			}
 			default:
 				throw new IllegalGameVariantException(level.game().variant());
 			}
-			Logger.info("Created creature and world animations for level #{}", level.number());
 		});
-		updateGameScene(true);
+		updateOrReloadGameScene(true);
 	}
 
 	@Override
