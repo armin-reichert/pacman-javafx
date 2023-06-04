@@ -79,6 +79,10 @@ public class SpriteAnimation {
 		// TODO what about frame index?
 	}
 
+	public Rectangle2D[] getSprites() {
+		return sprites;
+	}
+
 	public void reset() {
 		transition.stop();
 		transition.jumpTo(Duration.ZERO);

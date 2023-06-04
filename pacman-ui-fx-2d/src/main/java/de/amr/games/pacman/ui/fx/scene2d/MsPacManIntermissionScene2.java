@@ -5,9 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission2;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
-import javafx.util.Duration;
 
 /**
  * Intermission scene 2: "The chase".
@@ -20,18 +19,17 @@ import javafx.util.Duration;
 public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	private MsPacManIntermission2 intermission;
-	private SpriteAnimation clapAnimation;
+	private ClapperBoardAnimation clapAnimation;
 
 	@Override
 	public void init() {
+		var ss = context.ui().spritesheetMsPacManGame();
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 		intermission = new MsPacManIntermission2(context.gameController());
-		var ss = context.ui().spritesheetMsPacManGame();
 		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
-		clapAnimation = ss.createClapperboardAnimation();
-		clapAnimation.setDelay(Duration.seconds(1));
+		clapAnimation = new ClapperBoardAnimation(ss.createClapperboardSprites(), "2", "THE CHASE");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission2.STATE_FLAP, 2 * 60);
 	}
@@ -39,12 +37,13 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	@Override
 	public void update() {
 		intermission.tick();
+		clapAnimation.tick();
 	}
 
 	@Override
 	public void drawSceneContent() {
 		if (intermission.clapVisible) {
-			drawClap("2", "THE CHASE", t(3), t(10), clapAnimation);
+			drawClapperBoard(clapAnimation, t(3), t(10));
 		}
 		drawPacSprite(intermission.msPac);
 		drawPacSprite(intermission.pacMan);

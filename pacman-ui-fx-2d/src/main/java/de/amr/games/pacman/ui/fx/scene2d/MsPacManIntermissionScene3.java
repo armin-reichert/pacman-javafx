@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
-import javafx.util.Duration;
 
 /**
  * Intermission scene 3: "Junior".
@@ -23,7 +23,7 @@ import javafx.util.Duration;
 public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	private MsPacManIntermission3 intermission;
-	private SpriteAnimation clapAnimation;
+	private ClapperBoardAnimation clapAnimation;
 	private SpriteAnimation storkAnimation;
 
 	@Override
@@ -36,8 +36,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();
 		storkAnimation.start();
-		clapAnimation = ss.createClapperboardAnimation();
-		clapAnimation.setDelay(Duration.seconds(1));
+		clapAnimation = new ClapperBoardAnimation(ss.createClapperboardSprites(), "3", "JUNIOR");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission3.STATE_FLAP, TickTimer.INDEFINITE);
 	}
@@ -45,13 +44,14 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	@Override
 	public void update() {
 		intermission.tick();
+		clapAnimation.tick();
 	}
 
 	@Override
 	public void drawSceneContent() {
 		var ss = context.ui().spritesheetMsPacManGame();
 		if (intermission.clapVisible) {
-			drawClap("3", "JUNIOR", t(3), t(10), clapAnimation);
+			drawClapperBoard(clapAnimation, t(3), t(10));
 		}
 		drawPacSprite(intermission.msPacMan);
 		drawPacSprite(intermission.pacMan);

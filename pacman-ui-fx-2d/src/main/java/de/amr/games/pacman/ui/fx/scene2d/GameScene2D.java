@@ -23,9 +23,9 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
@@ -441,20 +441,6 @@ public abstract class GameScene2D implements GameScene {
 		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALE, sceneFont(), x, y);
 	}
 
-	protected void drawClap(String number, String title, double x, double y, SpriteAnimation clapAnimation) {
-		var sprite = clapAnimation.currentSprite();
-		drawSpriteOverBoundingBox(sprite, x, y);
-		g.setFont(sceneFont());
-		g.setFill(ArcadeTheme.PALE);
-		var numberX = s(x + sprite.getWidth() - 25);
-		var numberY = s(y + 18);
-		g.fillText(number, numberX, numberY);
-		if (clapAnimation.isRunning()) {
-			var textX = s(x + sprite.getWidth());
-			g.fillText(title, textX, numberY);
-		}
-	}
-
 	protected void drawMidwayCopyright(double x, double y) {
 		drawText("\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, sceneFont(), x, y);
 	}
@@ -468,6 +454,21 @@ public abstract class GameScene2D implements GameScene {
 		g.setFont(sceneFont());
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
 		g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
+	}
+
+	protected void drawClapperBoard(ClapperBoardAnimation animation, double x, double y) {
+		var sprite = animation.currentSprite();
+		if (sprite != null) {
+			drawSpriteOverBoundingBox(sprite, x, y);
+			g.setFont(sceneFont());
+			g.setFill(ArcadeTheme.PALE.darker());
+			var numberX = s(x + sprite.getWidth() - 25);
+			var numberY = s(y + 18);
+			g.setFill(ArcadeTheme.PALE);
+			g.fillText(animation.number(), numberX, numberY);
+			var textX = s(x + sprite.getWidth());
+			g.fillText(animation.text(), textX, numberY);
+		}
 	}
 
 	protected void drawText(String text, Color color, Font font, double x, double y) {
