@@ -83,7 +83,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected HelpMenus helpMenus;
 	protected GameController gameController;
 	protected Pane mainSceneRoot;
-	protected KeyboardSteering keyboardSteering;
+	protected KeyboardSteering keyboardPlayerSteering;
 	protected GameScene currentGameScene;
 	protected AudioClip voiceClip;
 	protected final Animation voiceClipExecution = new PauseTransition();
@@ -185,10 +185,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void configurePacSteering() {
-		keyboardSteering = new KeyboardSteering();
-		gameController.setManualPacSteering(keyboardSteering);
-		// TODO: maybe only play scene should handle steering keys?
-		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+		keyboardPlayerSteering = new KeyboardSteering();
+		gameController.setManualPacSteering(keyboardPlayerSteering);
 	}
 
 	@Override
@@ -297,7 +295,23 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		currentGameScene.setContext(new GameSceneContext(gameController, this));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
+		updatePlayerSteering(currentGameScene);
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
+	}
+
+	private void updatePlayerSteering(GameScene gameScene) {
+		boolean playScene = false;
+		if (gameVariant() == GameVariant.MS_PACMAN) {
+			playScene = gameScene == gameSceneConfigMsPacMan.playScene()
+					|| gameScene == gameSceneConfigMsPacMan.playScene3D();
+		} else {
+			playScene = gameScene == gameSceneConfigPacMan.playScene() || gameScene == gameSceneConfigPacMan.playScene3D();
+		}
+		if (playScene) {
+			stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
+		} else {
+			stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
+		}
 	}
 
 	protected void handleKeyPressed(KeyEvent keyEvent) {

@@ -113,14 +113,14 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected void configurePacSteering() {
 		// Steering with unmodified or with CONTROL+cursor key
-		keyboardSteering = new KeyboardSteering();
-		keyboardSteering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
-		keyboardSteering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
-		keyboardSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
-		keyboardSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
+		keyboardPlayerSteering = new KeyboardSteering();
+		keyboardPlayerSteering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
+		keyboardPlayerSteering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
+		keyboardPlayerSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
+		keyboardPlayerSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 
-		gameController.setManualPacSteering(keyboardSteering);
-		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+		gameController.setManualPacSteering(keyboardPlayerSteering);
+		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
 	}
 
 	@Override
