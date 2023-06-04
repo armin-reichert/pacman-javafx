@@ -396,53 +396,53 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void onSoundEvent(SoundEvent event) {
 		var msPacMan = event.game.variant() == GameVariant.MS_PACMAN;
 		switch (event.id) {
-		case GameModel.SE_BONUS_EATEN:
+		case SoundEvent.BONUS_EATEN:
 			audioClip("audio.bonus_eaten").play();
 			break;
-		case GameModel.SE_CREDIT_ADDED:
+		case SoundEvent.CREDIT_ADDED:
 			audioClip("audio.credit").play();
 			break;
-		case GameModel.SE_EXTRA_LIFE:
+		case SoundEvent.EXTRA_LIFE:
 			audioClip("audio.extra_life").play();
 			break;
-		case GameModel.SE_GHOST_EATEN:
+		case SoundEvent.GHOST_EATEN:
 			audioClip("audio.ghost_eaten").play();
 			break;
-		case GameModel.SE_HUNTING_PHASE_STARTED_0:
+		case SoundEvent.HUNTING_PHASE_STARTED_0:
 			ensureSirenStarted(0);
 			break;
-		case GameModel.SE_HUNTING_PHASE_STARTED_2:
+		case SoundEvent.HUNTING_PHASE_STARTED_2:
 			ensureSirenStarted(1);
 			break;
-		case GameModel.SE_HUNTING_PHASE_STARTED_4:
+		case SoundEvent.HUNTING_PHASE_STARTED_4:
 			ensureSirenStarted(2);
 			break;
-		case GameModel.SE_HUNTING_PHASE_STARTED_6:
+		case SoundEvent.HUNTING_PHASE_STARTED_6:
 			ensureSirenStarted(3);
 			break;
-		case GameModel.SE_READY_TO_PLAY:
+		case SoundEvent.READY_TO_PLAY:
 			audioClip("audio.game_ready").play();
 			break;
-		case GameModel.SE_PACMAN_DEATH:
+		case SoundEvent.PACMAN_DEATH:
 			audioClip("audio.pacman_death").play();
 			break;
-		case GameModel.SE_PACMAN_FOUND_FOOD:
+		case SoundEvent.PACMAN_FOUND_FOOD:
 			// TODO this does not sound as in the original game
 			ensureLoop(audioClip("audio.pacman_munch"), AudioClip.INDEFINITE);
 			break;
-		case GameModel.SE_PACMAN_POWER_ENDS: {
+		case SoundEvent.PACMAN_POWER_ENDS: {
 			audioClip("audio.pacman_power").stop();
 			event.game.level().ifPresent(level -> ensureSirenStarted(level.huntingPhase() / 2));
 			break;
 		}
-		case GameModel.SE_PACMAN_POWER_STARTS: {
+		case SoundEvent.PACMAN_POWER_STARTS: {
 			stopSirens();
 			audioClip("audio.pacman_power").stop();
 			audioClip("audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
 			audioClip("audio.pacman_power").play();
 			break;
 		}
-		case GameModel.SE_START_INTERMISSION_1: {
+		case SoundEvent.START_INTERMISSION_1: {
 			if (msPacMan) {
 				audioClip("audio.intermission.1").play();
 			} else {
@@ -451,7 +451,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			}
 			break;
 		}
-		case GameModel.SE_START_INTERMISSION_2: {
+		case SoundEvent.START_INTERMISSION_2: {
 			if (msPacMan) {
 				audioClip("audio.intermission.2").play();
 			} else {
@@ -460,7 +460,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			}
 			break;
 		}
-		case GameModel.SE_START_INTERMISSION_3: {
+		case SoundEvent.START_INTERMISSION_3: {
 			if (event.game.variant() == GameVariant.MS_PACMAN) {
 				audioClip("audio.intermission.3").play();
 			} else {
@@ -469,7 +469,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			}
 			break;
 		}
-		case GameModel.SE_STOP_ALL_SOUNDS:
+		case SoundEvent.STOP_ALL_SOUNDS:
 			stopAllSounds();
 			break;
 		default: {
