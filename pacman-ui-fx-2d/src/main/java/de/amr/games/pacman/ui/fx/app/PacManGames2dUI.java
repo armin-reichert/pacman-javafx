@@ -95,6 +95,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		stage.setFullScreen(settings.fullScreen);
 		this.theme = theme;
 		this.gameController = new GameController(settings.variant);
+
+		canvasScaled = true;
+
 		configureGameScenes();
 		createMainScene(stage, settings);
 		configureHelpMenus();

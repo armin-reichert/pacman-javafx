@@ -190,11 +190,16 @@ public class SpritesheetMsPacManGame implements Spritesheet {
 		return rect(509, 200, 8, 8);
 	}
 
+	private Rectangle2D[] clapperboardSprites;
+
 	public Rectangle2D[] clapperboardSprites() {
-		return array( //
-				rect(456, 208, 32, 32), // open
-				rect(488, 208, 32, 32), // middle
-				rect(520, 208, 32, 32)); // closed
+		if (clapperboardSprites == null) {
+			clapperboardSprites = array( //
+					rect(456, 208, 32, 32), // open
+					rect(488, 208, 32, 32), // middle
+					rect(520, 208, 32, 32)); // closed
+		}
+		return clapperboardSprites;
 	}
 
 	public SpriteAnimation createStorkFlyingAnimation() {

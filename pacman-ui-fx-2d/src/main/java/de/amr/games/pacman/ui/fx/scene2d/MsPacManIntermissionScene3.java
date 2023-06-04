@@ -36,7 +36,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();
 		storkAnimation.start();
-		clapAnimation = new ClapperBoardAnimation(ss.clapperboardSprites(), "3", "JUNIOR");
+		clapAnimation = new ClapperBoardAnimation("3", "JUNIOR");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission3.STATE_FLAP, TickTimer.INDEFINITE);
 	}
