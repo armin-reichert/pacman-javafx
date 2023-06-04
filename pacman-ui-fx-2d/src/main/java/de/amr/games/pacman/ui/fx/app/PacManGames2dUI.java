@@ -54,6 +54,9 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
+import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -82,7 +85,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected Pane mainSceneRoot;
 	protected KeyboardSteering keyboardSteering;
 	protected GameScene currentGameScene;
-	protected AudioClip currentVoice;
+	protected AudioClip voiceClip;
+	protected final Animation voiceClipExecution = new PauseTransition();
+
 	protected boolean canvasScaled;
 
 	@Override
@@ -351,7 +356,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		if (e.oldGameState == GameState.BOOT) {
-			playVoice(theme.audioClip("voice.explain"), 1);
+			playVoice(theme.audioClip("voice.explain"), 1.5f);
 		}
 		updateGameScene(false);
 	}
@@ -525,21 +530,28 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void playVoice(AudioClip clip, float delaySeconds) {
-		if (currentVoice != null && currentVoice.isPlaying()) {
+		if (voiceClip != null && voiceClip.isPlaying()) {
 			return; // don't interrupt voice
 		}
-		currentVoice = clip;
-		if (delaySeconds > 0) {
-			Ufx.actionAfterSeconds(delaySeconds, currentVoice::play).play();
-		} else {
-			currentVoice.play();
-		}
+		Logger.info("Voice will start in {} seconds", delaySeconds);
+		voiceClip = clip;
+		voiceClipExecution.setDelay(Duration.seconds(delaySeconds));
+		voiceClipExecution.setOnFinished(e -> {
+			voiceClip.play();
+			Logger.info("Voice started");
+		});
+		voiceClipExecution.play();
 	}
 
 	@Override
 	public void stopVoice() {
-		if (currentVoice != null) {
-			currentVoice.stop();
+		if (voiceClip != null && voiceClip.isPlaying()) {
+			voiceClip.stop();
+			Logger.info("Voice stopped");
+		}
+		if (voiceClipExecution.getStatus() == Status.RUNNING) {
+			voiceClipExecution.stop();
+			Logger.info("Scheduled voice clip stopped");
 		}
 	}
 
