@@ -15,7 +15,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Clapperboard;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -442,19 +441,17 @@ public abstract class GameScene2D implements GameScene {
 		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALE, sceneFont(), x, y);
 	}
 
-	protected void drawClap(Clapperboard clap, SpriteAnimation clapAnimation) {
-		if (clap.isVisible()) {
-			var sprite = clapAnimation.currentSprite();
-			drawSpriteOverBoundingBox(sprite, clap.position().x(), clap.position().y());
-			g.setFont(sceneFont());
-			g.setFill(ArcadeTheme.PALE);
-			var numberX = s(clap.position().x() + sprite.getWidth() - 25);
-			var numberY = s(clap.position().y() + 18);
-			g.fillText(clap.number(), numberX, numberY);
-			if (clapAnimation.isRunning()) {
-				var textX = s(clap.position().x() + sprite.getWidth());
-				g.fillText(clap.text(), textX, numberY);
-			}
+	protected void drawClap(String number, String title, double x, double y, SpriteAnimation clapAnimation) {
+		var sprite = clapAnimation.currentSprite();
+		drawSpriteOverBoundingBox(sprite, x, y);
+		g.setFont(sceneFont());
+		g.setFill(ArcadeTheme.PALE);
+		var numberX = s(x + sprite.getWidth() - 25);
+		var numberY = s(y + 18);
+		g.fillText(number, numberX, numberY);
+		if (clapAnimation.isRunning()) {
+			var textX = s(x + sprite.getWidth());
+			g.fillText(title, textX, numberY);
 		}
 	}
 

@@ -54,7 +54,9 @@ public class MsPacManIntermissionScene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawClap(imc().clapperboard, clapAnimation);
+		if (imc().clapVisible) {
+			drawClap("1", "THEY MEET", t(3), t(10), clapAnimation);
+		}
 		drawPacSprite(imc().msPac);
 		drawPacSprite(imc().pacMan);
 		drawGhostSprite(imc().inky);

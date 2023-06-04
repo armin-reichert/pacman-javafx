@@ -50,7 +50,9 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawClap(imc().clapperboard, clapAnimation);
+		if (imc().clapVisible) {
+			drawClap("2", "THE CHASE", t(3), t(10), clapAnimation);
+		}
 		drawPacSprite(imc().msPac);
 		drawPacSprite(imc().pacMan);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());

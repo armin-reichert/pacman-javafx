@@ -57,7 +57,9 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		var ss = context.ui().spritesheetMsPacManGame();
-		drawClap(imc().clapperboard, clapAnimation);
+		if (imc().clapVisible) {
+			drawClap("3", "JUNIOR", t(3), t(10), clapAnimation);
+		}
 		drawPacSprite(imc().msPacMan);
 		drawPacSprite(imc().pacMan);
 		drawEntitySprite(imc().stork, storkAnimation.currentSprite());
