@@ -281,21 +281,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		}
 		currentGameScene = newGameScene;
 		currentGameScene.setParentScene(stage.getScene());
-		// TODO check this
-		if (currentGameScene instanceof GameScene2D) {
-			var scene2D = (GameScene2D) currentGameScene;
-			// This avoids a vertical line on the left side of the embedded 2D game scene
-			var wallpaperColor = theme().color("wallpaper.color");
-			scene2D.setWallpaperColor(wallpaperColor);
-			scene2D.root()
-					.setBackground(gameController.state() == GameState.BOOT ? ResourceManager.coloredBackground(Color.BLACK)
-							: ResourceManager.coloredBackground(wallpaperColor));
-			scene2D.setCanvasScaled(canvasScaled);
-		}
 		currentGameScene.setContext(new GameSceneContext(gameController, this));
 		currentGameScene.init();
 		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		updatePlayerSteering(currentGameScene);
+		if (currentGameScene instanceof GameScene2D) {
+			var scene2D = (GameScene2D) currentGameScene;
+			scene2D.setCanvasScaled(canvasScaled);
+			// to draw rounded canvas corners, background color must be set
+			scene2D.setWallpaperColor(theme.color("wallpaper.color"));
+		}
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
