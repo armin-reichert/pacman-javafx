@@ -22,39 +22,32 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 	private MsPacManIntermission2 intermission;
 	private SpriteAnimation clapAnimation;
 
-	private MsPacManIntermission2.Context imc() {
-		return intermission.context();
-	}
-
 	@Override
 	public void init() {
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
-
 		intermission = new MsPacManIntermission2(context.gameController());
-		intermission.changeState(MsPacManIntermission2.State.INIT);
-
 		var ss = context.ui().spritesheetMsPacManGame();
-		imc().msPac.setAnimations(new PacAnimationsMsPacManGame(imc().msPac, ss));
-		imc().pacMan.setAnimations(new PacAnimationsMsPacManGame(imc().pacMan, ss));
-
+		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
+		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		clapAnimation = ss.createClapperboardAnimation();
 		clapAnimation.setDelay(Duration.seconds(1));
 		clapAnimation.start();
+		intermission.changeState(MsPacManIntermission2.STATE_FLAP, 2 * 60);
 	}
 
 	@Override
 	public void update() {
-		intermission.update();
+		intermission.tick();
 	}
 
 	@Override
 	public void drawSceneContent() {
-		if (imc().clapVisible) {
+		if (intermission.clapVisible) {
 			drawClap("2", "THE CHASE", t(3), t(10), clapAnimation);
 		}
-		drawPacSprite(imc().msPac);
-		drawPacSprite(imc().pacMan);
+		drawPacSprite(intermission.msPac);
+		drawPacSprite(intermission.pacMan);
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }

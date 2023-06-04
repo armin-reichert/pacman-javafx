@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.util.Duration;
@@ -25,45 +26,37 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 	private SpriteAnimation clapAnimation;
 	private SpriteAnimation storkAnimation;
 
-	private MsPacManIntermission3.Context imc() {
-		return intermission.context();
-	}
-
 	@Override
 	public void init() {
+		var ss = context.ui().spritesheetMsPacManGame();
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
-
 		intermission = new MsPacManIntermission3(context.gameController());
-		intermission.changeState(MsPacManIntermission3.State.INIT);
-
-		var ss = context.ui().spritesheetMsPacManGame();
-		imc().msPacMan.setAnimations(new PacAnimationsMsPacManGame(imc().msPacMan, ss));
-		imc().pacMan.setAnimations(new PacAnimationsMsPacManGame(imc().pacMan, ss));
-
+		intermission.msPacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.msPacMan, ss));
+		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();
 		storkAnimation.start();
-
 		clapAnimation = ss.createClapperboardAnimation();
 		clapAnimation.setDelay(Duration.seconds(1));
 		clapAnimation.start();
+		intermission.changeState(MsPacManIntermission3.STATE_FLAP, TickTimer.INDEFINITE);
 	}
 
 	@Override
 	public void update() {
-		intermission.update();
+		intermission.tick();
 	}
 
 	@Override
 	public void drawSceneContent() {
 		var ss = context.ui().spritesheetMsPacManGame();
-		if (imc().clapVisible) {
+		if (intermission.clapVisible) {
 			drawClap("3", "JUNIOR", t(3), t(10), clapAnimation);
 		}
-		drawPacSprite(imc().msPacMan);
-		drawPacSprite(imc().pacMan);
-		drawEntitySprite(imc().stork, storkAnimation.currentSprite());
-		drawEntitySprite(imc().bag, imc().bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
+		drawPacSprite(intermission.msPacMan);
+		drawPacSprite(intermission.pacMan);
+		drawEntitySprite(intermission.stork, storkAnimation.currentSprite());
+		drawEntitySprite(intermission.bag, intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
 		drawLevelCounter(t(24), t(34), context.game().levelCounter());
 	}
 }
