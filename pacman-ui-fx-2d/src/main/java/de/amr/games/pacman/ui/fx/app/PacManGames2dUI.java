@@ -693,15 +693,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void selectGameVariant(GameVariant gameVariant) {
-		if (gameVariant != gameVariant()) {
-			stopVoice();
-			if (clock.isRunning()) {
-				clock.stop();
-			} else {
-				mainSceneRoot.getChildren().remove(startPage);
-			}
-			addStartPage(gameVariant);
+		gameController.selectGameVariant(gameVariant);
+		stopVoice();
+		if (clock.isRunning()) {
+			clock.stop();
+		} else {
+			mainSceneRoot.getChildren().remove(startPage);
 		}
+		addStartPage(gameVariant);
 	}
 
 	@Override
