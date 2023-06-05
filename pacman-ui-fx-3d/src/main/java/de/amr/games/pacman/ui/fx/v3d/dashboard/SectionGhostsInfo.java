@@ -62,7 +62,7 @@ public class SectionGhostsInfo extends Section {
 			return InfoText.NO_INFO;
 		}
 
-		var key = anims.get().selectedAnimationName();
+		var key = anims.get().currentAnimationName();
 		return key != null ? key : InfoText.NO_INFO;
 	}
 

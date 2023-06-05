@@ -367,7 +367,7 @@ public abstract class GameScene2D implements GameScene {
 				if (debug) {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(8)));
-					var text = String.format("%s %d", sa.selectedAnimationName(), sa.selectedAnimation().frameIndex());
+					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
 					g.fillText(text, s(pac.position().x() + 4), s(pac.position().y()));
 				}
 			}
@@ -382,7 +382,7 @@ public abstract class GameScene2D implements GameScene {
 				if (debug) {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(8)));
-					var text = String.format("%s %d", sa.selectedAnimationName(), sa.selectedAnimation().frameIndex());
+					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
 					g.fillText(text, s(ghost.position().x() + 4), s(ghost.position().y()));
 				}
 			}

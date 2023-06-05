@@ -39,12 +39,12 @@ public abstract class SpriteAnimations implements Animations<SpriteAnimation, Re
 	}
 
 	@Override
-	public SpriteAnimation selectedAnimation() {
+	public SpriteAnimation currentAnimation() {
 		return currentAnimation;
 	}
 
 	@Override
-	public String selectedAnimationName() {
+	public String currentAnimationName() {
 		return currentAnimationName;
 	}
 
