@@ -100,7 +100,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		this.theme = theme;
 		gameController = new GameController(settings.variant);
 
-		startPage = new StartPage(theme);
+		startPage = new StartPage(this, theme);
 		startPage.setOnAction(this::onStartButtonPressed);
 
 		canvasScaled = true;
@@ -692,15 +692,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	@Override
-	public void selectNextGameVariant() {
-		stopVoice();
-		var nextVariant = gameVariant().next();
-		if (clock.isRunning()) {
-			clock.stop();
-		} else {
-			mainSceneRoot.getChildren().remove(startPage);
+	public void selectGameVariant(GameVariant gameVariant) {
+		if (gameVariant != gameVariant()) {
+			stopVoice();
+			if (clock.isRunning()) {
+				clock.stop();
+			} else {
+				mainSceneRoot.getChildren().remove(startPage);
+			}
+			addStartPage(gameVariant);
 		}
-		addStartPage(nextVariant);
 	}
 
 	@Override

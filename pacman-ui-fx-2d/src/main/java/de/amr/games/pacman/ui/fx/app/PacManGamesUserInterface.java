@@ -70,7 +70,7 @@ public interface PacManGamesUserInterface {
 
 	void enterLevel(int intValue);
 
-	void selectNextGameVariant();
+	void selectGameVariant(GameVariant variant);
 
 	AudioClip audioClip(String clipName);
 

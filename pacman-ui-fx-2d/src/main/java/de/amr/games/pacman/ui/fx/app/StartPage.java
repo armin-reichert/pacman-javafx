@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.ObjectProperty;
@@ -30,11 +31,13 @@ import javafx.scene.text.Text;
  */
 public class StartPage extends StackPane {
 
-	public ObjectProperty<Image> wallpaperPy = new SimpleObjectProperty<>();
+	private ObjectProperty<Image> wallpaperPy = new SimpleObjectProperty<>();
 
+	private final PacManGamesUserInterface ui;
 	private final BorderPane content = new BorderPane();
 	private final Pane button;
 	private Runnable action;
+	private GameVariant gameVariant;
 
 	private static Pane createButton(String text, Theme theme) {
 		var textView = new Text(text);
@@ -54,7 +57,8 @@ public class StartPage extends StackPane {
 		return button;
 	}
 
-	public StartPage(Theme theme) {
+	public StartPage(PacManGamesUserInterface ui, Theme theme) {
+		this.ui = ui;
 		setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		getChildren().add(content);
 		button = createButton("Play!", theme);
@@ -75,6 +79,10 @@ public class StartPage extends StackPane {
 		content.setBackground(new Background(bgImage));
 	}
 
+	public void setGameVariant(GameVariant gameVariant) {
+		this.gameVariant = gameVariant;
+	}
+
 	public void setOnAction(Runnable action) {
 		this.action = action;
 	}
@@ -82,6 +90,9 @@ public class StartPage extends StackPane {
 	public void handleKeyPressed(KeyEvent e) {
 		if (e.getCode() == KeyCode.ENTER) {
 			action.run();
+		}
+		if (e.getCode() == KeyCode.V) {
+			ui.selectGameVariant(ui.gameVariant().next());
 		}
 	}
 }
