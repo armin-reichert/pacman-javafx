@@ -23,7 +23,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
@@ -31,16 +30,16 @@ import javafx.scene.text.Text;
  */
 public class StartPage extends StackPane {
 
-	public ObjectProperty<Image> wallpaper = new SimpleObjectProperty<>();
+	public ObjectProperty<Image> wallpaperPy = new SimpleObjectProperty<>();
 
 	private final BorderPane content = new BorderPane();
 	private final Pane button;
 	private Runnable action;
 
-	private static Pane createButton(String text, Color bgColor, Color textColor, Font font) {
+	private static Pane createButton(String text, Theme theme) {
 		var textView = new Text(text);
-		textView.setFill(textColor);
-		textView.setFont(font);
+		textView.setFill(theme.color("startpage.button.color"));
+		textView.setFont(theme.font("startpage.button.font"));
 		var ds = new DropShadow();
 		ds.setOffsetY(3.0f);
 		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
@@ -50,7 +49,7 @@ public class StartPage extends StackPane {
 		button.setMaxSize(200, 100);
 		button.setPadding(new Insets(10));
 		button.setCursor(Cursor.HAND);
-		button.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 20));
+		button.setBackground(ResourceManager.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
 
 		return button;
 	}
@@ -58,7 +57,7 @@ public class StartPage extends StackPane {
 	public StartPage(Theme theme) {
 		setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		getChildren().add(content);
-		button = createButton("Play!", Color.rgb(0, 155, 252, 0.8), Color.WHITE, theme.font("font.arcade", 30));
+		button = createButton("Play!", theme);
 		button.setOnMouseClicked(e -> {
 			if (e.getButton().equals(MouseButton.PRIMARY)) {
 				action.run();
@@ -70,7 +69,7 @@ public class StartPage extends StackPane {
 	}
 
 	public void setWallpaper(Image image) {
-		wallpaper.set(image);
+		wallpaperPy.set(image);
 		var bgImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER, new BackgroundSize(AUTO, AUTO, false, false, true, false));
 		content.setBackground(new Background(bgImage));

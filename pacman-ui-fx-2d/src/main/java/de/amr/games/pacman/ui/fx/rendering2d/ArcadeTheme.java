@@ -28,8 +28,8 @@ public class ArcadeTheme extends Theme {
 
 	public ArcadeTheme(ResourceManager rm) {
 		// Ms. Pac-Man game
-		
 		set("mspacman.startpage.image",        rm.image("graphics/mspacman/wallpaper-midway.png"));
+		
 		set("mspacman.spritesheet",            new SpritesheetMsPacManGame(rm.image("graphics/mspacman/sprites.png")));
 		set("mspacman.icon",                   rm.image("graphics/icons/mspacman.png"));
 		set("mspacman.logo.midway",            rm.image("graphics/mspacman/midway.png"));
@@ -85,8 +85,8 @@ public class ArcadeTheme extends Theme {
 		set("mspacman.audio.siren.4",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
 
 		// Pac-Man game
-		
 		set("pacman.startpage.image",          rm.image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg"));
+		
 		set("pacman.spritesheet",              new SpritesheetPacManGame(rm.image("graphics/pacman/sprites.png")));
 		set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
 		set("pacman.flashingMaze",             rm.image("graphics/pacman/maze_empty_flashing.png"));
@@ -121,6 +121,10 @@ public class ArcadeTheme extends Theme {
 
 		// Common to both games
 
+		set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
+		set("startpage.button.color",          Color.WHITE);
+		set("startpage.button.font",           rm.font("fonts/emulogic.ttf", 30));
+		
 		set("wallpaper.background",            rm.imageBackground("graphics/pacman_wallpaper.png"));
 		set("wallpaper.color",                 Color.rgb(72, 78, 135));
 
