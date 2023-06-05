@@ -2,6 +2,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -18,8 +19,10 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
@@ -27,56 +30,60 @@ import javafx.scene.text.Text;
  */
 public class StartPage extends StackPane {
 
-	private BorderPane borderPane = new BorderPane();
-	private Runnable playAction;
+	private final BorderPane content = new BorderPane();
+	private final Pane button;
+	private Runnable action;
 
-	public StartPage(Theme theme, GameVariant gameVariant, Runnable playAction) {
-		this.playAction = playAction;
-
+	private static Pane createButton(String text, Color bgColor, Color textColor, Font font) {
+		var textView = new Text(text);
+		textView.setFill(textColor);
+		textView.setFont(font);
 		var ds = new DropShadow();
 		ds.setOffsetY(3.0f);
 		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
+		textView.setEffect(ds);
 
-		var buttonFont = theme.font("font.arcade", 30);
-		var playButtonText = new Text("Play!");
-		playButtonText.setEffect(ds);
-		playButtonText.setCache(true);
-		playButtonText.setFill(Color.WHITE);
-		playButtonText.setFont(buttonFont);
-		BorderPane.setAlignment(playButtonText, Pos.CENTER);
+		var button = new StackPane(textView);
+		button.setMaxSize(200, 100);
+		button.setPadding(new Insets(10));
+		button.setCursor(Cursor.HAND);
+		button.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 20));
 
-		// TODO that should be a graphical button, but GWT has its problems with those...
-		var color = Color.rgb(0, 155, 252, 0.9);
-		var playButton = new StackPane(playButtonText);
-		playButton.setMaxSize(200, 100);
-		playButton.setPadding(new Insets(10));
-		playButton.setCursor(Cursor.HAND);
-		playButton.setBackground(ResourceManager.coloredRoundedBackground(color, 20));
-		playButton.setOnMouseClicked(e -> {
+		return button;
+	}
+
+	public StartPage(Theme theme, GameVariant gameVariant, Runnable playAction) {
+		setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		getChildren().add(content);
+
+		Globals.checkNotNull(playAction);
+		this.action = playAction;
+
+		button = createButton("Play!", Color.rgb(0, 155, 252, 0.8), Color.WHITE, theme.font("font.arcade", 30));
+		button.setOnMouseClicked(e -> {
 			if (e.getButton().equals(MouseButton.PRIMARY)) {
-				playAction.run();
+				action.run();
 			}
 		});
 
-		borderPane.setBottom(playButton);
-		BorderPane.setAlignment(playButton, Pos.CENTER);
-		playButton.setTranslateY(-10);
+		content.setBottom(button);
+		BorderPane.setAlignment(button, Pos.CENTER);
+		button.setTranslateY(-10);
 
-		boolean msPacMan = gameVariant == GameVariant.MS_PACMAN;
-		var image = PacManGames2d.MGR
-				.image(msPacMan ? "graphics/mspacman/wallpaper-midway.png" : "graphics/pacman/1980-Flyer-USA-Midway-front.jpg");
-		var pageBackgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+		var image = PacManGames2d.MGR.image(gameVariant == GameVariant.MS_PACMAN ? "graphics/mspacman/wallpaper-midway.png"
+				: "graphics/pacman/1980-Flyer-USA-Midway-front.jpg");
+		var bgImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER, new BackgroundSize(AUTO, AUTO, false, false, true, false));
-		borderPane.setBackground(new Background(pageBackgroundImage));
+		content.setBackground(new Background(bgImage));
+	}
 
-		setBackground(ResourceManager.coloredBackground(Color.BLACK));
-
-		getChildren().add(borderPane);
+	public void setOnAction(Runnable action) {
+		this.action = action;
 	}
 
 	public void handleKeyPressed(KeyEvent e) {
 		if (e.getCode() == KeyCode.ENTER) {
-			playAction.run();
+			action.run();
 		}
 	}
 }
