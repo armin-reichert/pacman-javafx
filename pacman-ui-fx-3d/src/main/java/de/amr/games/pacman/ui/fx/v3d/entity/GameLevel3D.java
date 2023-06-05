@@ -30,6 +30,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -194,15 +195,14 @@ public class GameLevel3D {
 		boolean isVisible = pac.isVisible();
 		boolean isAlive = !pac.isDead();
 		boolean hasPower = pac.powerTimer().isRunning();
-		var maxRange = pac.isPowerFading(level) ? 4 : 8;
+		var maxRange = pac.isPowerFading() ? 4 : 8;
 		pacLight.setLightOn(pac3D.lightedPy.get() && isVisible && isAlive && hasPower);
 		pacLight.setMaxRange(hasPower ? maxRange * TS : 0);
 	}
 
 	public void update() {
-		pac3D.update(level);
-		updatePacLight();
-		Stream.of(ghosts3D).forEach(ghost3D -> ghost3D.update(level));
+		pac3D.update();
+		Stream.of(ghosts3D).forEach(Ghost3D::update);
 		if (bonus3D != null) {
 			bonus3D.update(level);
 		}
@@ -216,6 +216,7 @@ public class GameLevel3D {
 		} else {
 			scores3D.setShowText(Color.RED, "GAME OVER!");
 		}
+		updatePacLight();
 		updateHouseState();
 	}
 
@@ -272,6 +273,11 @@ public class GameLevel3D {
 
 	public Ghost3D[] ghosts3D() {
 		return ghosts3D;
+	}
+
+	public Ghost3D ghost3D(byte id) {
+		Globals.checkGhostID(id);
+		return ghosts3D[id];
 	}
 
 	public Bonus3D bonus3D() {

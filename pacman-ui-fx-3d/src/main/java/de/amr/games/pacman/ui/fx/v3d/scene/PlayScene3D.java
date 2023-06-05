@@ -55,6 +55,7 @@ import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.Ghost3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Text3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -266,8 +267,8 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onSceneVariantSwitch() {
 		context.level().ifPresent(level -> {
-			level3D.world3D().eatables3D().forEach(eatable3D -> eatable3D.getRoot()
-					.setVisible(!level.world().foodStorage().hasEatenFoodAt(eatable3D.tile())));
+			level3D.world3D().eatables3D().forEach(
+					eatable3D -> eatable3D.getRoot().setVisible(!level.world().foodStorage().hasEatenFoodAt(eatable3D.tile())));
 			if (oneOf(context.state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
@@ -335,16 +336,11 @@ public class PlayScene3D implements GameScene {
 		switch (e.newGameState) {
 
 		case READY -> {
-			context.level().ifPresent(level -> {
-				level3D.pac3D().init(level);
-				Stream.of(level3D.ghosts3D()).forEach(ghost3D -> ghost3D.init(level));
-//				if (Game3d.d3_foodOscillationPy.get()) {
-//					level3D.world3D().foodOscillation().play();
-//				}
-				readyMessageText3D.setVisible(true);
-				var readyMessage = inPercentOfCases(40) ? PacManGames3d.pickFunnyReadyMessage(context.gameVariant()) : "READY!";
-				readyMessageText3D.setText(readyMessage);
-			});
+			level3D.pac3D().init();
+			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+			var msg = inPercentOfCases(25) ? PacManGames3d.pickFunnyReadyMessage(context.gameVariant()) : "READY!";
+			readyMessageText3D.setText(msg);
+			readyMessageText3D.setVisible(true);
 		}
 
 		case HUNTING -> {
@@ -353,33 +349,32 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case PACMAN_DYING -> {
-			context.level().ifPresent(level -> {
-				level3D.world3D().foodOscillation().stop();
-				Logger.info("Play dying animation for {}", level3D.pac3D());
-				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation().animation());
-			});
+			level3D.world3D().foodOscillation().stop();
+			lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation().animation());
 		}
 
 		case GHOST_DYING -> {
-			context.level().ifPresent(level -> {
-				level.memo().killedGhosts.forEach(killedGhost -> {
-					var ghost3D = level3D.ghosts3D()[killedGhost.id()];
-					int index = killedGhost.killedIndex();
-					switch (context.gameVariant()) {
-					case MS_PACMAN: {
+			context.level().map(GameLevel::memo).ifPresent(memo -> {
+				switch (context.gameVariant()) {
+				case MS_PACMAN: {
+					memo.killedGhosts.forEach(ghost -> {
 						var ss = context.ui().spritesheetMsPacManGame();
-						ghost3D.setNumberImage(ss.subImage(ss.ghostNumberSprites()[index]));
-						break;
-					}
-					case PACMAN: {
+						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
+						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+					});
+					break;
+				}
+				case PACMAN: {
+					memo.killedGhosts.forEach(ghost -> {
 						var ss = context.ui().spritesheetPacManGame();
-						ghost3D.setNumberImage(ss.subImage(ss.ghostNumberSprites()[index]));
-						break;
-					}
-					default:
-						throw new IllegalGameVariantException(context.gameVariant());
-					}
-				});
+						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
+						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+					});
+					break;
+				}
+				default:
+					throw new IllegalGameVariantException(context.gameVariant());
+				}
 			});
 		}
 
@@ -496,16 +491,14 @@ public class PlayScene3D implements GameScene {
 		if (level.isDemoLevel()) {
 			return;
 		}
-		var ui = context.ui();
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			ui.audioClip("audio.pacman_munch").stop();
+			context.ui().audioClip("audio.pacman_munch").stop();
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			ui.ensureLoopEndless(ui.audioClip("audio.ghost_returning"));
-
+			context.ui().ensureLoopEndless(context.ui().audioClip("audio.ghost_returning"));
 		} else {
-			ui.audioClip("audio.ghost_returning").stop();
+			context.ui().audioClip("audio.ghost_returning").stop();
 		}
 	}
 }

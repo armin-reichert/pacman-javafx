@@ -28,7 +28,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -134,25 +133,25 @@ public class Ghost3D {
 		return root;
 	}
 
-	public void init(GameLevel level) {
+	public void init() {
 		brakeAnimation.stop();
 		dressAnimation.stop();
-		updateTransform(level.world());
-		updateLook(level);
+		updateTransform();
+		updateLook();
 	}
 
-	public void update(GameLevel level) {
-		updateTransform(level.world());
-		updateLook(level);
+	public void update() {
+		updateTransform();
+		updateLook();
 		updateAnimations();
 	}
 
-	private void updateTransform(World world) {
+	private void updateTransform() {
 		position.setX(ghost.center().x());
 		position.setY(ghost.center().y());
 		position.setZ(-5);
 		orientation.setAngle(Turn.angle(ghost.moveDir()));
-		root.setVisible(ghost.isVisible() && !outsideWorld(world));
+		root.setVisible(ghost.isVisible() && !outsideWorld(ghost.level().world()));
 	}
 
 	private void updateAnimations() {
@@ -178,16 +177,16 @@ public class Ghost3D {
 		}
 	}
 
-	private void updateLook(GameLevel level) {
+	private void updateLook() {
 		var newLook = switch (ghost.state()) {
-		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook(level);
-		case FRIGHTENED -> frightenedOrFlashingLook(level);
+		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
+		case FRIGHTENED -> frightenedOrFlashingLook();
 		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
 		case EATEN -> Look.NUMBER;
 		default -> Look.NORMAL;
 		};
 		if (currentLook != newLook) {
-			setLook(newLook, level.numFlashes);
+			setLook(newLook, ghost.level().numFlashes);
 		}
 	}
 
@@ -223,15 +222,15 @@ public class Ghost3D {
 		showAsGhost(look != Look.NUMBER);
 	}
 
-	private Look normalOrFrightenedOrFlashingLook(GameLevel level) {
-		if (level.pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
-			return frightenedOrFlashingLook(level);
+	private Look normalOrFrightenedOrFlashingLook() {
+		if (ghost.level().pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
+			return frightenedOrFlashingLook();
 		}
 		return Look.NORMAL;
 	}
 
-	private Look frightenedOrFlashingLook(GameLevel level) {
-		return level.pac().isPowerFading(level) ? Look.FLASHING : Look.FRIGHTENED;
+	private Look frightenedOrFlashingLook() {
+		return ghost.level().pac().isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
 	}
 
 	private boolean outsideWorld(World world) {

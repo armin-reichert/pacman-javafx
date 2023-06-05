@@ -30,9 +30,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import java.util.stream.Stream;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.DyingAnimation;
@@ -75,9 +73,9 @@ public class Pac3D {
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
 	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
-	private Pac pac;
-	private Group root;
-	private Color headColor;
+	private final Pac pac;
+	private final Group root;
+	private final Color headColor;
 	private Translate position = new Translate();
 	private Rotate orientation = new Rotate();
 	private WalkingAnimation walkingAnimation;
@@ -214,23 +212,23 @@ public class Pac3D {
 		return walkingAnimation;
 	}
 
-	public void init(GameLevel level) {
+	public void init() {
 		headColorPy.set(headColor);
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
 		updatePosition();
 		turnTo(pac.moveDir());
-		updateVisibility(level);
+		updateVisibility();
 		walkingAnimation.hold();
 	}
 
-	public void update(GameLevel level) {
+	public void update() {
 		if (pac.isDead()) {
 			walkingAnimation.hold();
 		} else {
 			updatePosition();
-			updateVisibility(level);
+			updateVisibility();
 			turnTo(pac.moveDir());
 			walkingAnimation.walk();
 		}
@@ -250,11 +248,11 @@ public class Pac3D {
 		}
 	}
 
-	private void updateVisibility(GameLevel level) {
-		root.setVisible(pac.isVisible() && !outsideWorld(level.world()));
+	private void updateVisibility() {
+		root.setVisible(pac.isVisible() && !outsideWorld());
 	}
 
-	private boolean outsideWorld(World world) {
-		return position.getX() < HTS || position.getX() > TS * world.numCols() - HTS;
+	private boolean outsideWorld() {
+		return position.getX() < HTS || position.getX() > TS * pac.level().world().numCols() - HTS;
 	}
 }
