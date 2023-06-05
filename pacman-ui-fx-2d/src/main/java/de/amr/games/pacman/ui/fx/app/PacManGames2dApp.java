@@ -8,7 +8,6 @@ import java.util.Locale;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -32,7 +31,6 @@ public class PacManGames2dApp extends Application {
 	public void start(Stage stage) {
 		PacManGames2d.ui = new PacManGames2dUI();
 		PacManGames2d.ui.init(stage, settings, new ArcadeTheme(PacManGames2d.MGR));
-		PacManGames2d.ui.gameController().changeState(GameState.BOOT);
 		PacManGames2d.ui.show();
 		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),
 				Locale.getDefault());

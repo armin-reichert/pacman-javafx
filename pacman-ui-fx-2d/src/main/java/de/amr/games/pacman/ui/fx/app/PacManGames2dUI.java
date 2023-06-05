@@ -62,7 +62,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -78,6 +77,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
+	protected StartPage startPage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
 	protected GameController gameController;
@@ -153,23 +153,31 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
   	//@formatter:on
 	}
 
+	protected void createStartPage(GameVariant gameVariant) {
+		startPage = new StartPage(theme, gameVariant, () -> {
+			currentGameScene = null;
+			mainSceneRoot.getChildren().remove(startPage);
+			stage.getScene().setOnKeyPressed(this::handleKeyPressed);
+			gameController.clearState();
+			gameController.changeState(GameState.BOOT);
+			clock.start();
+		});
+		stage.getScene().setOnKeyPressed(startPage::handleKeyPressed);
+	}
+
 	protected void createMainScene(Stage stage, Settings settings) {
 		mainSceneRoot = new StackPane();
-		// Without this, there appears an ugly vertical line right of the embedded subscene
-		mainSceneRoot.setBackground(ResourceManager.coloredBackground(theme.color("wallpaper.color")));
-		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
-		mainSceneRoot.getChildren().add(flashMessageView);
-
 		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
-
-		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-
 		stage.setScene(mainScene);
+		updateStage();
+		createStartPage(settings.variant);
+		mainSceneRoot.getChildren().add(flashMessageView);
+		mainSceneRoot.getChildren().add(startPage);
 	}
 
 	protected void configureHelpMenus() {
@@ -195,7 +203,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		stage.centerOnScreen();
 		stage.requestFocus();
 		stage.show();
-		clock.start();
 	}
 
 	@Override
@@ -217,13 +224,19 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		switch (gameVariant()) {
 		case MS_PACMAN: {
-			var messageKey = clock.pausedPy.get() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
+			String messageKey = "app.title.ms_pacman";
+			if (clock != null && clock.isPaused()) {
+				messageKey = "app.title.ms_pacman.paused";
+			}
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("mspacman.icon"));
 		}
 			break;
 		case PACMAN: {
-			var messageKey = clock.pausedPy.get() ? "app.title.pacman.paused" : "app.title.pacman";
+			String messageKey = "app.title.pacman";
+			if (clock != null && clock.isPaused()) {
+				messageKey = "app.title.pacman.paused";
+			}
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
@@ -307,7 +320,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
-		currentGameScene.handleKeyboardInput();
+		if (currentGameScene != null) {
+			currentGameScene.handleKeyboardInput();
+		}
 		Keyboard.clearState();
 	}
 
@@ -590,12 +605,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void restartIntro() {
-		currentGameScene.end();
-		GameEvents.setSoundEventsEnabled(true);
-		if (game().isPlaying()) {
-			game().changeCredit(-1);
+		if (currentGameScene != null) {
+			currentGameScene.end();
+			GameEvents.setSoundEventsEnabled(true);
+			if (game().isPlaying()) {
+				game().changeCredit(-1);
+			}
+			gameController.restart(INTRO);
 		}
-		gameController.restart(INTRO);
 	}
 
 	public void reboot() {
@@ -664,7 +681,15 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void selectNextGameVariant() {
-		gameController.selectGameVariant(gameVariant().next());
+		var nextVariant = gameVariant().next();
+		if (clock.isRunning()) {
+			clock.stop();
+		} else {
+			mainSceneRoot.getChildren().remove(startPage);
+		}
+		gameController.selectGameVariant(nextVariant);
+		createStartPage(nextVariant);
+		mainSceneRoot.getChildren().add(startPage);
 	}
 
 	@Override

@@ -57,8 +57,8 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-     * @return the container of the game scene
-     */
+	 * @return the container of the game scene
+	 */
 	BorderPane sceneContainer();
 
 	/**
