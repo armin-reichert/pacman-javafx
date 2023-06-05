@@ -98,7 +98,10 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		this.stage = stage;
 		stage.setFullScreen(settings.fullScreen);
 		this.theme = theme;
-		this.gameController = new GameController(settings.variant);
+		gameController = new GameController(settings.variant);
+
+		startPage = new StartPage(theme);
+		startPage.setOnAction(this::onStartButtonPressed);
 
 		canvasScaled = true;
 
@@ -153,20 +156,30 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
   	//@formatter:on
 	}
 
-	protected void createStartPage(GameVariant gameVariant) {
-		startPage = new StartPage(theme, gameVariant, () -> {
-			currentGameScene = null;
-			mainSceneRoot.getChildren().remove(startPage);
-			stage.getScene().setOnKeyPressed(this::handleKeyPressed);
-			gameController.clearState();
-			gameController.changeState(GameState.BOOT);
-			clock.start();
-		});
+	protected void onStartButtonPressed() {
+		currentGameScene = null;
+		removeStartPage();
+		gameController.clearState();
+		gameController.changeState(GameState.BOOT);
+		clock.start();
+	}
+
+	protected void addStartPage(GameVariant gameVariant) {
+		startPage.setWallpaper(gameVariant == GameVariant.MS_PACMAN ? theme.image("mspacman.startpage.image")
+				: theme.image("pacman.startpage.image"));
 		stage.getScene().setOnKeyPressed(startPage::handleKeyPressed);
+		mainSceneRoot.getChildren().add(startPage);
+	}
+
+	protected void removeStartPage() {
+		stage.getScene().setOnKeyPressed(this::handleKeyPressed);
+		mainSceneRoot.getChildren().remove(startPage);
 	}
 
 	protected void createMainScene(Stage stage, Settings settings) {
 		mainSceneRoot = new StackPane();
+		mainSceneRoot.getChildren().add(flashMessageView);
+
 		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
 		stage.setScene(mainScene);
 		mainScene.setOnMouseClicked(e -> {
@@ -174,11 +187,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-		createStartPage(settings.variant);
 
-		mainSceneRoot.getChildren().add(flashMessageView);
-		mainSceneRoot.getChildren().add(startPage);
-
+		addStartPage(settings.variant);
 		updateStage();
 	}
 
@@ -683,15 +693,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	@Override
 	public void selectNextGameVariant() {
+		stopVoice();
 		var nextVariant = gameVariant().next();
 		if (clock.isRunning()) {
 			clock.stop();
 		} else {
 			mainSceneRoot.getChildren().remove(startPage);
 		}
-		gameController.selectGameVariant(nextVariant);
-		createStartPage(nextVariant);
-		mainSceneRoot.getChildren().add(startPage);
+		addStartPage(nextVariant);
 	}
 
 	@Override

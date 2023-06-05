@@ -93,6 +93,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		dashboardLayer.setRight(pip.root());
 
 		mainSceneRoot = new StackPane();
+		mainSceneRoot.getChildren().add(flashMessageView);
+		mainSceneRoot.getChildren().add(dashboardLayer);
+
 		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
 		stage.setScene(mainScene);
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
@@ -101,12 +104,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-		createStartPage(settings.variant);
 
-		mainSceneRoot.getChildren().add(flashMessageView);
-		mainSceneRoot.getChildren().add(dashboardLayer);
-		mainSceneRoot.getChildren().add(startPage);
-
+		addStartPage(settings.variant);
 		updateStage();
 	}
 
