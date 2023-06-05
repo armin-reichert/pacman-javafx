@@ -168,16 +168,18 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected void createMainScene(Stage stage, Settings settings) {
 		mainSceneRoot = new StackPane();
 		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
+		stage.setScene(mainScene);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-		stage.setScene(mainScene);
-		updateStage();
 		createStartPage(settings.variant);
+
 		mainSceneRoot.getChildren().add(flashMessageView);
 		mainSceneRoot.getChildren().add(startPage);
+
+		updateStage();
 	}
 
 	protected void configureHelpMenus() {
@@ -230,8 +232,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			}
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("mspacman.icon"));
-		}
 			break;
+		}
 		case PACMAN: {
 			String messageKey = "app.title.pacman";
 			if (clock != null && clock.isPaused()) {
@@ -239,8 +241,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			}
 			stage.setTitle(ResourceManager.fmtMessage(PacManGames2d.TEXTS, messageKey, ""));
 			stage.getIcons().setAll(theme.image("pacman.icon"));
-		}
 			break;
+		}
 		default:
 			throw new IllegalGameVariantException(gameVariant());
 		}

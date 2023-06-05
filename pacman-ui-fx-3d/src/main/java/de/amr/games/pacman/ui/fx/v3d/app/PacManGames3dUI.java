@@ -94,20 +94,21 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		dashboardLayer.setRight(pip.root());
 
 		mainSceneRoot = new StackPane();
-		mainSceneRoot.getChildren().add(new Text("(Game scene)"));
-		mainSceneRoot.getChildren().add(flashMessageView);
-		mainSceneRoot.getChildren().add(dashboardLayer);
-
 		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
-
+		stage.setScene(mainScene);
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
+		createStartPage(settings.variant);
 
-		stage.setScene(mainScene);
+		mainSceneRoot.getChildren().add(flashMessageView);
+		mainSceneRoot.getChildren().add(dashboardLayer);
+		mainSceneRoot.getChildren().add(startPage);
+
+		updateStage();
 	}
 
 	@Override
@@ -147,7 +148,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		} else {
 			mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		}
-		var paused = clock().pausedPy.get();
+		var paused = clock != null ? clock().isPaused() : false;
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
