@@ -35,9 +35,9 @@ import de.amr.games.pacman.ui.fx.scene2d.BootScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.HelpMenus;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene1;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene2;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntermissionScene3;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene1;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene2;
+import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntroScene;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCreditScene;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
@@ -79,8 +79,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected GameScene currentGameScene;
 	protected SoundHandler soundHandler;
-
-	protected boolean canvasScaled;
+	protected boolean canvasScaled = true;
 
 	@Override
 	public void init(Stage stage, Settings settings, Theme theme) {
@@ -92,10 +91,11 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		stage.setFullScreen(settings.fullScreen);
 		this.theme = theme;
 		gameController = new GameController(settings.variant);
+		clock = new GameClock(this::onTick, this::onRender);
+		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
+		clock.targetFrameratePy.set(GameModel.FPS);
 		soundHandler = new SoundHandler(this);
 		startPage = new StartPage(this);
-
-		canvasScaled = true;
 
 		configureGameScenes();
 		createMainScene(stage, settings);
@@ -103,10 +103,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		configurePacSteering();
 		configureBindings(settings);
 		GameEvents.addListener(this);
-
-		clock = new GameClock(this::onTick, this::onRender);
-		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
-		clock.targetFrameratePy.set(GameModel.FPS);
 	}
 
 	protected void onTick() {
@@ -131,9 +127,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			new MsPacManCreditScene(),
 			new PlayScene2D(),
 			null,
-			new MsPacManIntermissionScene1(),
-			new MsPacManIntermissionScene2(),
-			new MsPacManIntermissionScene3()
+			new MsPacManCutscene1(),
+			new MsPacManCutscene2(),
+			new MsPacManCutscene3()
 		);
 		gameSceneConfigPacMan = new GameSceneConfiguration(
 			new BootScene(),

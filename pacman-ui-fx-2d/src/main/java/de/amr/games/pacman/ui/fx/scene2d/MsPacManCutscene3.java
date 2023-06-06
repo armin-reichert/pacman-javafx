@@ -21,7 +21,7 @@ import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
  * 
  * @author Armin Reichert
  */
-public class MsPacManIntermissionScene3 extends GameScene2D {
+public class MsPacManCutscene3 extends GameScene2D {
 
 	private MsPacManIntermission3 intermission;
 	private ClapperBoardAnimation clapAnimation;
