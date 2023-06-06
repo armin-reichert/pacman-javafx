@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 
 /**
  * Intro scene of the PacMan game.
@@ -37,6 +38,8 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
+		var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
@@ -51,9 +54,8 @@ public class PacManIntroScene extends GameScene2D {
 		});
 		ic = intro.context();
 
-		ic.pacMan.setAnimations(new PacAnimationsPacManGame(ic.pacMan, context.ui().spritesheetPacManGame()));
-		ic.ghosts().forEach(
-				ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, context.ui().spritesheetPacManGame())));
+		ic.pacMan.setAnimations(new PacAnimationsPacManGame(ic.pacMan, ss));
+		ic.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
 		ic.blinking.reset();
 
 		intro.changeState(State.START);
@@ -66,7 +68,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		context.ui().stopVoice();
+		context.ui().soundHandler().stopVoice();
 		signature.hide();
 	}
 
@@ -133,6 +135,8 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery() {
+		var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
 			drawText("CHARACTER / NICKNAME", ArcadeTheme.PALE, sceneFont(), t(tx + 3), t(6));
@@ -142,8 +146,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int ty = 7 + 3 * id;
-			var sprite = context.ui().spritesheetPacManGame().ghostFacingRight(id);
-			drawSpriteOverBoundingBox(sprite, t(tx) + 4, t(ty));
+			drawSpriteOverBoundingBox(ss.ghostFacingRight(id), t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
 				var color = context.ui().theme().color(String.format("ghost.%d.color.normal.dress", id));

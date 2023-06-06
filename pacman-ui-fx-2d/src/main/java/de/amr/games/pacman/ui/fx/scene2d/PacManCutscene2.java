@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.scene.text.Font;
 
@@ -33,6 +34,8 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
+		var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 
@@ -40,10 +43,10 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 
 		pac = new Pac("Pac-Man");
-		pac.setAnimations(new PacAnimationsPacManGame(pac, context.ui().spritesheetPacManGame()));
+		pac.setAnimations(new PacAnimationsPacManGame(pac, ss));
 
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
-		var blinkyAnimations = new GhostAnimationsPacManGame(blinky, context.ui().spritesheetPacManGame());
+		var blinkyAnimations = new GhostAnimationsPacManGame(blinky, ss);
 		blinkyNormal = blinkyAnimations.byName(GhostAnimations.GHOST_NORMAL);
 		blinkyStretching = blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED);
 		blinkyDamaged = blinkyAnimations.byName(GhostAnimations.BLINKY_DAMAGED);

@@ -21,6 +21,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import javafx.scene.paint.Color;
 
 /**
@@ -45,7 +46,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void end() {
-		context.ui().stopAllSounds();
+		context.ui().soundHandler().stopAllSounds();
 	}
 
 	@Override
@@ -112,7 +113,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var ss = context.ui().spritesheetMsPacManGame();
+		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
 				var source = context.ui().theme().image("mspacman.flashingMazes");
@@ -163,7 +164,7 @@ public class PlayScene2D extends GameScene2D {
 	public void onSceneVariantSwitch() {
 		context.level().ifPresent(level -> {
 			if (!level.isDemoLevel()) {
-				context.ui().ensureSirenStarted(level.huntingPhase() / 2);
+				context.ui().soundHandler().ensureSirenStarted(level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -174,14 +175,14 @@ public class PlayScene2D extends GameScene2D {
 		}
 		var ui = context.ui();
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			ui.audioClip("audio.pacman_munch").stop();
+			ui.soundHandler().audioClip("audio.pacman_munch").stop();
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			ui.ensureLoopEndless(ui.audioClip("audio.ghost_returning"));
+			ui.soundHandler().ensureLoopEndless(ui.soundHandler().audioClip("audio.ghost_returning"));
 
 		} else {
-			ui.audioClip("audio.ghost_returning").stop();
+			ui.soundHandler().audioClip("audio.ghost_returning").stop();
 		}
 	}
 }

@@ -22,7 +22,7 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		context.ui().playVoice(context.ui().theme().audioClip("voice.explain"), 1.5f);
+		context.ui().soundHandler().playVoice("voice.explain", 1.5f);
 	}
 
 	@Override

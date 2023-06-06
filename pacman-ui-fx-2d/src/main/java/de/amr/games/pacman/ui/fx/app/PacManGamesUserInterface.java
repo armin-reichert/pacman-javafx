@@ -9,13 +9,10 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 
 /**
@@ -45,20 +42,18 @@ public interface PacManGamesUserInterface {
 
 	Theme theme();
 
-	SpritesheetMsPacManGame spritesheetMsPacManGame();
-
-	SpritesheetPacManGame spritesheetPacManGame();
-
 	default Spritesheet spritesheet() {
 		switch (gameVariant()) {
 		case MS_PACMAN:
-			return spritesheetMsPacManGame();
+			return theme().get("mspacman.spritesheet");
 		case PACMAN:
-			return spritesheetPacManGame();
+			return theme().get("pacman.spritesheet");
 		default:
 			throw new IllegalGameVariantException(gameVariant());
 		}
 	}
+
+	SoundHandler soundHandler();
 
 	void show();
 
@@ -71,31 +66,6 @@ public interface PacManGamesUserInterface {
 	void enterLevel(int intValue);
 
 	void selectGameVariant(GameVariant variant);
-
-	AudioClip audioClip(String clipName);
-
-	void stopAllSounds();
-
-	default void ensureLoop(AudioClip clip, int repetitions) {
-		if (!clip.isPlaying()) {
-			clip.setCycleCount(repetitions);
-			clip.play();
-		}
-	}
-
-	default void ensureLoopEndless(AudioClip clip) {
-		ensureLoop(clip, AudioClip.INDEFINITE);
-	}
-
-	void ensureSirenStarted(int sirenIndex);
-
-	void playVoice(AudioClip clip, float delaySeconds);
-
-	default void playVoice(AudioClip clip) {
-		playVoice(clip, 0);
-	}
-
-	void stopVoice();
 
 	void startCutscenesTest();
 

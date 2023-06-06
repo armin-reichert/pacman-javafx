@@ -24,6 +24,8 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.animation.Animation.Status;
@@ -269,18 +271,22 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
 		switch (context.gameVariant()) {
-		case MS_PACMAN:
+		case MS_PACMAN: {
+			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
 			for (var symbol : levelSymbols) {
-				drawSprite(context.ui().spritesheetMsPacManGame().bonusSymbolSprite(symbol), x, yr);
+				drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
 				x -= TS * 2;
 			}
 			break;
-		case PACMAN:
+		}
+		case PACMAN: {
+			var ss = (SpritesheetPacManGame) context.ui().spritesheet();
 			for (var symbol : levelSymbols) {
-				drawSprite(context.ui().spritesheetPacManGame().bonusSymbolSprite(symbol), x, yr);
+				drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
 				x -= TS * 2;
 			}
 			break;
+		}
 		default:
 			throw new IllegalGameVariantException(context.gameVariant());
 		}
@@ -295,14 +301,16 @@ public abstract class GameScene2D implements GameScene {
 		int maxLives = 5;
 		switch (context.gameVariant()) {
 		case MS_PACMAN: {
+			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
 			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-				drawSprite(context.ui().spritesheetMsPacManGame().livesCounterSprite(), x + TS * (2 * i), y);
+				drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
 			}
 			break;
 		}
 		case PACMAN: {
+			var ss = (SpritesheetPacManGame) context.ui().spritesheet();
 			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-				drawSprite(context.ui().spritesheetPacManGame().livesCounterSprite(), x + TS * (2 * i), y);
+				drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
 			}
 			break;
 		}
@@ -320,14 +328,18 @@ public abstract class GameScene2D implements GameScene {
 		Rectangle2D symbolSprite;
 		Rectangle2D valueSprite;
 		switch (context.gameVariant()) {
-		case MS_PACMAN:
-			symbolSprite = context.ui().spritesheetMsPacManGame().bonusSymbolSprite(bonus.symbol());
-			valueSprite = context.ui().spritesheetMsPacManGame().bonusValueSprite(bonus.symbol());
+		case MS_PACMAN: {
+			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+			symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
+			valueSprite = ss.bonusValueSprite(bonus.symbol());
 			break;
-		case PACMAN:
-			symbolSprite = context.ui().spritesheetPacManGame().bonusSymbolSprite(bonus.symbol());
-			valueSprite = context.ui().spritesheetPacManGame().bonusValueSprite(bonus.symbol());
+		}
+		case PACMAN: {
+			var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+			symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
+			valueSprite = ss.bonusValueSprite(bonus.symbol());
 			break;
+		}
 		default:
 			throw new IllegalGameVariantException(context.gameVariant());
 		}
@@ -459,7 +471,8 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawClapperBoard(ClapperBoardAnimation animation, double x, double y) {
 		int spriteIndex = animation.currentSpriteIndex();
 		if (spriteIndex != -1) {
-			var sprite = context.ui().spritesheetMsPacManGame().clapperboardSprites()[spriteIndex];
+			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+			var sprite = ss.clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont());
 			g.setFill(ArcadeTheme.PALE.darker());

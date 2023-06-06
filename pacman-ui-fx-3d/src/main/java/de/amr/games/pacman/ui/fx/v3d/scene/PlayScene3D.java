@@ -47,6 +47,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -158,7 +160,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void end() {
-		context.ui().stopAllSounds();
+		context.ui().soundHandler().stopAllSounds();
 		perspectivePy.unbind();
 	}
 
@@ -273,7 +275,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 			if (!level.isDemoLevel()) {
-				context.ui().ensureSirenStarted(level.huntingPhase() / 2);
+				context.ui().soundHandler().ensureSirenStarted(level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -357,16 +359,16 @@ public class PlayScene3D implements GameScene {
 			context.level().map(GameLevel::memo).ifPresent(memo -> {
 				switch (context.gameVariant()) {
 				case MS_PACMAN: {
+					var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
 					memo.killedGhosts.forEach(ghost -> {
-						var ss = context.ui().spritesheetMsPacManGame();
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 					});
 					break;
 				}
 				case PACMAN: {
+					var ss = (SpritesheetPacManGame) context.ui().spritesheet();
 					memo.killedGhosts.forEach(ghost -> {
-						var ss = context.ui().spritesheetPacManGame();
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 					});
@@ -405,7 +407,7 @@ public class PlayScene3D implements GameScene {
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
-							context.ui().audioClip("audio.level_complete").play();
+							context.ui().theme().audioClip("audio.level_complete").play();
 							PacManGames3d.ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
 						}
 					}),
@@ -420,7 +422,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
-			context.ui().audioClip("audio.game_over").play();
+			context.ui().theme().audioClip("audio.game_over").play();
 			waitSeconds(3);
 		}
 
@@ -492,13 +494,13 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			context.ui().audioClip("audio.pacman_munch").stop();
+			context.ui().soundHandler().audioClip("audio.pacman_munch").stop();
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			context.ui().ensureLoopEndless(context.ui().audioClip("audio.ghost_returning"));
+			context.ui().soundHandler().ensureLoopEndless(context.ui().soundHandler().audioClip("audio.ghost_returning"));
 		} else {
-			context.ui().audioClip("audio.ghost_returning").stop();
+			context.ui().soundHandler().audioClip("audio.ghost_returning").stop();
 		}
 	}
 }

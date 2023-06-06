@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission2;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 
 /**
  * Intermission scene 2: "The chase".
@@ -23,7 +24,7 @@ public class MsPacManIntermissionScene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = context.ui().spritesheetMsPacManGame();
+		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 		intermission = new MsPacManIntermission2(context.gameController());

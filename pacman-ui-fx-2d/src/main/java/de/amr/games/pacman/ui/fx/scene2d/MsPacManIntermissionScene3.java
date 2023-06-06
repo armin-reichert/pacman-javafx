@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
 /**
@@ -28,7 +29,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = context.ui().spritesheetMsPacManGame();
+		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
 		context.setCreditVisible(true);
 		context.setScoreVisible(true);
 		intermission = new MsPacManIntermission3(context.gameController());
@@ -49,7 +50,7 @@ public class MsPacManIntermissionScene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = context.ui().spritesheetMsPacManGame();
+		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPacSprite(intermission.msPacMan);
 		drawPacSprite(intermission.pacMan);

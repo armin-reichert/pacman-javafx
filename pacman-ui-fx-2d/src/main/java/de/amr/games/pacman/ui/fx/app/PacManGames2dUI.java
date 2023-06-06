@@ -8,9 +8,6 @@ import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import org.tinylog.Logger;
 
 import de.amr.games.pacman.controller.GameController;
@@ -53,9 +50,6 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
-import javafx.animation.PauseTransition;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -84,8 +78,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected Pane mainSceneRoot;
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected GameScene currentGameScene;
-	protected AudioClip voiceClip;
-	protected final Animation voiceClipExecution = new PauseTransition();
+	protected SoundHandler soundHandler;
 
 	protected boolean canvasScaled;
 
@@ -99,7 +92,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		stage.setFullScreen(settings.fullScreen);
 		this.theme = theme;
 		gameController = new GameController(settings.variant);
-
+		soundHandler = new SoundHandler(this);
 		startPage = new StartPage(this);
 
 		canvasScaled = true;
@@ -224,13 +217,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	@Override
-	public SpritesheetMsPacManGame spritesheetMsPacManGame() {
-		return theme.get("mspacman.spritesheet");
-	}
-
-	@Override
-	public SpritesheetPacManGame spritesheetPacManGame() {
-		return theme.get("pacman.spritesheet");
+	public SoundHandler soundHandler() {
+		return soundHandler;
 	}
 
 	protected void updateStage() {
@@ -401,14 +389,14 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		e.game.level().ifPresent(level -> {
 			switch (level.game().variant()) {
 			case MS_PACMAN: {
-				var ss = spritesheetMsPacManGame();
+				var ss = (SpritesheetMsPacManGame) spritesheet();
 				level.pac().setAnimations(new PacAnimationsMsPacManGame(level.pac(), ss));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss)));
 				Logger.trace("Created Ms. Pac-Man game creature animations for level #{}", level.number());
 				break;
 			}
 			case PACMAN: {
-				var ss = spritesheetPacManGame();
+				var ss = (SpritesheetPacManGame) spritesheet();
 				level.pac().setAnimations(new PacAnimationsPacManGame(level.pac(), ss));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
 				Logger.trace("Created Pac-Man game creature animations for level #{}", level.number());
@@ -422,125 +410,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	@Override
-	public AudioClip audioClip(String clipName) {
-		var prefix = gameVariant() == GameVariant.MS_PACMAN ? "mspacman." : "pacman.";
-		return theme.audioClip(prefix + clipName);
-	}
-
-	@Override
-	public void onSoundEvent(SoundEvent event) {
-		var msPacMan = event.game.variant() == GameVariant.MS_PACMAN;
-		switch (event.id) {
-		case SoundEvent.BONUS_EATEN:
-			audioClip("audio.bonus_eaten").play();
-			break;
-		case SoundEvent.CREDIT_ADDED:
-			audioClip("audio.credit").play();
-			break;
-		case SoundEvent.EXTRA_LIFE:
-			audioClip("audio.extra_life").play();
-			break;
-		case SoundEvent.GHOST_EATEN:
-			audioClip("audio.ghost_eaten").play();
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_0:
-			ensureSirenStarted(0);
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_2:
-			ensureSirenStarted(1);
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_4:
-			ensureSirenStarted(2);
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_6:
-			ensureSirenStarted(3);
-			break;
-		case SoundEvent.READY_TO_PLAY:
-			audioClip("audio.game_ready").play();
-			break;
-		case SoundEvent.PACMAN_DEATH:
-			audioClip("audio.pacman_death").play();
-			break;
-		case SoundEvent.PACMAN_FOUND_FOOD:
-			// TODO this does not sound as in the original game
-			ensureLoop(audioClip("audio.pacman_munch"), AudioClip.INDEFINITE);
-			break;
-		case SoundEvent.PACMAN_POWER_ENDS: {
-			audioClip("audio.pacman_power").stop();
-			event.game.level().ifPresent(level -> ensureSirenStarted(level.huntingPhase() / 2));
-			break;
-		}
-		case SoundEvent.PACMAN_POWER_STARTS: {
-			stopSirens();
-			audioClip("audio.pacman_power").stop();
-			audioClip("audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
-			audioClip("audio.pacman_power").play();
-			break;
-		}
-		case SoundEvent.START_INTERMISSION_1: {
-			if (msPacMan) {
-				audioClip("audio.intermission.1").play();
-			} else {
-				audioClip("audio.intermission").setCycleCount(2);
-				audioClip("audio.intermission").play();
-			}
-			break;
-		}
-		case SoundEvent.START_INTERMISSION_2: {
-			if (msPacMan) {
-				audioClip("audio.intermission.2").play();
-			} else {
-				audioClip("audio.intermission").setCycleCount(1);
-				audioClip("audio.intermission").play();
-			}
-			break;
-		}
-		case SoundEvent.START_INTERMISSION_3: {
-			if (event.game.variant() == GameVariant.MS_PACMAN) {
-				audioClip("audio.intermission.3").play();
-			} else {
-				audioClip("audio.intermission").setCycleCount(2);
-				audioClip("audio.intermission").play();
-			}
-			break;
-		}
-		case SoundEvent.STOP_ALL_SOUNDS:
-			stopAllSounds();
-			break;
-		default: {
-			// ignore
-		}
-		}
-	}
-
-	@Override
-	public void stopAllSounds() {
-		theme.audioClips().forEach(AudioClip::stop);
-	}
-
-	private void startSiren(int sirenIndex) {
-		stopSirens();
-		var clip = audioClip("audio.siren." + (sirenIndex + 1));
-		clip.setCycleCount(AudioClip.INDEFINITE);
-		clip.play();
-	}
-
-	private Stream<AudioClip> sirens() {
-		return IntStream.rangeClosed(1, 4).mapToObj(i -> audioClip("audio.siren." + i));
-	}
-
-	/**
-	 * @param sirenIndex index of siren (0..3)
-	 */
-	@Override
-	public void ensureSirenStarted(int sirenIndex) {
-		if (sirens().noneMatch(AudioClip::isPlaying)) {
-			startSiren(sirenIndex);
-		}
-	}
-
-	public void stopSirens() {
-		sirens().forEach(AudioClip::stop);
+	public void onSoundEvent(SoundEvent e) {
+		soundHandler.onSoundEvent(e);
 	}
 
 	public void showHelp() {
@@ -556,33 +427,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
 		flashMessageView.showMessage(String.format(message, args), seconds);
-	}
-
-	@Override
-	public void playVoice(AudioClip clip, float delaySeconds) {
-		if (voiceClip != null && voiceClip.isPlaying()) {
-			return; // don't interrupt voice
-		}
-		Logger.info("Voice will start in {} seconds", delaySeconds);
-		voiceClip = clip;
-		voiceClipExecution.setDelay(Duration.seconds(delaySeconds));
-		voiceClipExecution.setOnFinished(e -> {
-			voiceClip.play();
-			Logger.info("Voice started");
-		});
-		voiceClipExecution.play();
-	}
-
-	@Override
-	public void stopVoice() {
-		if (voiceClip != null && voiceClip.isPlaying()) {
-			voiceClip.stop();
-			Logger.info("Voice stopped");
-		}
-		if (voiceClipExecution.getStatus() == Status.RUNNING) {
-			voiceClipExecution.stop();
-			Logger.info("Scheduled voice clip stopped");
-		}
 	}
 
 	@Override
@@ -605,7 +449,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void startGame() {
 		if (game().hasCredit()) {
-			stopVoice();
+			soundHandler.stopVoice();
 			gameController.startPlaying();
 		}
 	}
@@ -661,7 +505,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void togglePaused() {
 		Ufx.toggle(clock.pausedPy);
-		// TODO mute and unmute?
 		if (clock.pausedPy.get()) {
 			theme.audioClips().forEach(AudioClip::stop);
 		}
@@ -695,7 +538,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void selectGameVariant(GameVariant gameVariant) {
 		gameController.selectGameVariant(gameVariant);
-		stopVoice();
+		soundHandler.stopVoice();
 		if (clock.isRunning()) {
 			clock.stop();
 		} else {
@@ -710,7 +553,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		var auto = gameController.isAutoControlled();
 		String message = fmtMessage(PacManGames2d.TEXTS, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
-		playVoice(theme.audioClip(auto ? "voice.autopilot.on" : "voice.autopilot.off"));
+		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
 	}
 
 	@Override
@@ -719,7 +562,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		var immune = game().isImmune();
 		String message = fmtMessage(PacManGames2d.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
-		playVoice(theme.audioClip(immune ? "voice.immunity.on" : "voice.immunity.off"));
+		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}
 
 	@Override
