@@ -118,6 +118,12 @@ public class PacManGames2dUI implements GameEventListener {
 		GameEvents.addListener(this);
 
 		stage.setScene(scene);
+		stage.setMinWidth(241);
+		stage.setMinHeight(328);
+		stage.centerOnScreen();
+		stage.requestFocus();
+		stage.show();
+
 		showStartPage();
 	}
 
@@ -189,14 +195,6 @@ public class PacManGames2dUI implements GameEventListener {
 	protected void configurePacSteering() {
 		keyboardPlayerSteering = new KeyboardSteering();
 		gameController.setManualPacSteering(keyboardPlayerSteering);
-	}
-
-	public void show() {
-		stage.setMinWidth(241);
-		stage.setMinHeight(328);
-		stage.centerOnScreen();
-		stage.requestFocus();
-		stage.show();
 	}
 
 	public Theme theme() {

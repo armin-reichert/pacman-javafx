@@ -32,7 +32,6 @@ public class PacManGames3dApp extends PacManGames2dApp {
 
 		PacManGames2d.ui = PacManGames3d.ui = new PacManGames3dUI();
 		PacManGames3d.ui.init(stage, settings, theme);
-		PacManGames3d.ui.show();
 		Logger.info("Game started. {} Hz language={}", PacManGames3d.ui.clock().targetFrameratePy.get(),
 				Locale.getDefault());
 	}
