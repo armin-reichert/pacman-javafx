@@ -56,7 +56,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -75,8 +74,8 @@ public class PacManGames2dUI implements GameEventListener {
 	protected DoubleProperty widthPy = new SimpleDoubleProperty();
 	protected DoubleProperty heightPy = new SimpleDoubleProperty();
 
-	protected GameSceneConfiguration gameSceneConfigMsPacMan;
-	protected GameSceneConfiguration gameSceneConfigPacMan;
+	protected GameSceneConfiguration configMsPacMan;
+	protected GameSceneConfiguration configPacMan;
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
@@ -139,7 +138,7 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void configureGameScenes() {
 		//@formatter:off
-		gameSceneConfigMsPacMan = new GameSceneConfiguration(
+		configMsPacMan = new GameSceneConfiguration(
 			new BootScene(),
 			new MsPacManIntroScene(),
 			new MsPacManCreditScene(),
@@ -149,7 +148,7 @@ public class PacManGames2dUI implements GameEventListener {
 			new MsPacManCutscene2(),
 			new MsPacManCutscene3()
 		);
-		gameSceneConfigPacMan = new GameSceneConfiguration(
+		configPacMan = new GameSceneConfiguration(
 			new BootScene(),
 			new PacManIntroScene(),
 			new PacManCreditScene(),
@@ -230,7 +229,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected GameScene sceneMatchingCurrentGameState() {
-		var config = gameVariant() == GameVariant.MS_PACMAN ? gameSceneConfigMsPacMan : gameSceneConfigPacMan;
+		var config = gameVariant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
 		switch (gameController.state()) {
 		case BOOT:
 			return config.bootScene();
@@ -268,23 +267,7 @@ public class PacManGames2dUI implements GameEventListener {
 		currentGameScene.setContext(new GameSceneContext(gameController, this));
 		currentGameScene.init();
 		gamePage.setGameScene(currentGameScene);
-		updatePlayerSteering(currentGameScene);
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
-	}
-
-	private void updatePlayerSteering(GameScene gameScene) {
-		boolean playScene = false;
-		if (gameVariant() == GameVariant.MS_PACMAN) {
-			playScene = gameScene == gameSceneConfigMsPacMan.playScene()
-					|| gameScene == gameSceneConfigMsPacMan.playScene3D();
-		} else {
-			playScene = gameScene == gameSceneConfigPacMan.playScene() || gameScene == gameSceneConfigPacMan.playScene3D();
-		}
-		if (playScene) {
-			gamePage.root().addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
-		} else {
-			gamePage.root().removeEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
-		}
 	}
 
 	@Override

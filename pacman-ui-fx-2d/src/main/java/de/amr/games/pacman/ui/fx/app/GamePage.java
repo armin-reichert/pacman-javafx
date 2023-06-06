@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -58,6 +59,17 @@ public class GamePage {
 			scene2D.setCanvasScaled(canvasScaled);
 			// to draw rounded canvas corners, background color must be set
 			scene2D.setWallpaperColor(ui.theme().color("wallpaper.color"));
+		}
+		boolean playScene = false;
+		if (ui.gameVariant() == GameVariant.MS_PACMAN) {
+			playScene = gameScene == ui.configMsPacMan.playScene() || gameScene == ui.configMsPacMan.playScene3D();
+		} else {
+			playScene = gameScene == ui.configPacMan.playScene() || gameScene == ui.configPacMan.playScene3D();
+		}
+		if (playScene) {
+			root.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
+		} else {
+			root.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
 		}
 	}
 
