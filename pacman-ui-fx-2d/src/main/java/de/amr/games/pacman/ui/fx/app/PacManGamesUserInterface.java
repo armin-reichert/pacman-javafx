@@ -65,7 +65,7 @@ public interface PacManGamesUserInterface {
 
 	void enterLevel(int intValue);
 
-	void selectGameVariant(GameVariant variant);
+	void switchGameVariant();
 
 	void startCutscenesTest();
 

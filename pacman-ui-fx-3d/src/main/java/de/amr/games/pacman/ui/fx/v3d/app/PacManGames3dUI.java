@@ -80,7 +80,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	protected void createMainScene() {
+	protected void createGamePage() {
 		pip = new PictureInPicture();
 
 		dashboard = new Dashboard(this);
@@ -91,13 +91,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
 
-		mainSceneRoot = new StackPane();
-		mainSceneRoot.getChildren().add(flashMessageView);
-		mainSceneRoot.getChildren().add(dashboardLayer);
+		gamePageRoot = new StackPane();
+		gamePageRoot.getChildren().add(flashMessageView);
+		gamePageRoot.getChildren().add(dashboardLayer);
 
-		mainScene = new Scene(mainSceneRoot, widthPy.get(), heightPy.get(), Color.BLACK);
-		mainScene.setOnKeyPressed(this::handleKeyPressed);
-		mainScene.setOnMouseClicked(e -> {
+		scene = new Scene(gamePageRoot, widthPy.get(), heightPy.get(), Color.BLACK);
+		scene.setOnKeyPressed(this::handleKeyPressed);
+		scene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
@@ -114,7 +114,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		keyboardPlayerSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 
 		gameController.setManualPacSteering(keyboardPlayerSteering);
-		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
 	}
 
 	@Override
@@ -134,12 +134,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				mainSceneRoot.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+				gamePageRoot.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				mainSceneRoot.setBackground(theme.background("model3D.wallpaper"));
+				gamePageRoot.setBackground(theme.background("model3D.wallpaper"));
 			}
 		} else {
-			mainSceneRoot.setBackground(theme.background("wallpaper.background"));
+			gamePageRoot.setBackground(theme.background("wallpaper.background"));
 		}
 		var paused = clock != null ? clock().isPaused() : false;
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO

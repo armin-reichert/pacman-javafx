@@ -80,12 +80,12 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
-	protected Scene mainScene;
+	protected Scene scene;
 	protected StartPage startPage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
 	protected GameController gameController;
-	protected Pane mainSceneRoot;
+	protected Pane gamePageRoot;
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected GameScene currentGameScene;
 	protected SoundHandler soundHandler;
@@ -111,15 +111,16 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		heightPy.set(settings.zoom * 36 * TS);
 
 		configureGameScenes();
-		createMainScene();
+		createScene();
+		createGamePage();
 		createStartPage();
 		configureHelpMenus();
 		configurePacSteering();
 		configureBindings(settings);
 		GameEvents.addListener(this);
 
+		stage.setScene(scene);
 		showStartPage();
-		updateStage();
 	}
 
 	protected void onTick() {
@@ -163,25 +164,39 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void createStartPage() {
 		startPage = new StartPage(this, widthPy.get(), heightPy.get());
+		startPage.setGameVariant(gameVariant());
 	}
 
-	// TODO Probably a separate scene for the start page would make sense
 	protected void showStartPage() {
 		clock.stop();
 		startPage.setGameVariant(gameVariant());
-		stage.setScene(startPage.scene());
+		scene.setRoot(startPage.root());
+		startPage.root().requestFocus();
+		updateStage();
 	}
 
-	protected void createMainScene() {
-		mainSceneRoot = new StackPane();
-		mainSceneRoot.getChildren().add(flashMessageView);
-		mainScene = new Scene(mainSceneRoot, widthPy.get(), heightPy.get(), Color.BLACK);
-		mainScene.setOnMouseClicked(e -> {
+	protected void showGamePage() {
+		reboot();
+		scene.setRoot(gamePageRoot);
+		gamePageRoot.requestFocus();
+		updateStage();
+		clock.start();
+	}
+
+	protected void createGamePage() {
+		gamePageRoot = new StackPane();
+		gamePageRoot.setBackground(theme.background("wallpaper.background"));
+		gamePageRoot.getChildren().add(flashMessageView);
+		gamePageRoot.setOnKeyPressed(this::handleKeyPressed);
+		gamePageRoot.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-		mainScene.setOnKeyPressed(this::handleKeyPressed);
+	}
+
+	protected void createScene() {
+		scene = new Scene(new Pane(), widthPy.get(), heightPy.get(), Color.BLACK);
 	}
 
 	protected void configureHelpMenus() {
@@ -220,7 +235,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void updateStage() {
-		mainSceneRoot.setBackground(theme.background("wallpaper.background"));
 		switch (gameVariant()) {
 		case MS_PACMAN: {
 			String messageKey = "app.title.ms_pacman";
@@ -290,7 +304,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		currentGameScene.setParentScene(stage.getScene());
 		currentGameScene.setContext(new GameSceneContext(gameController, this));
 		currentGameScene.init();
-		mainSceneRoot.getChildren().set(0, currentGameScene.sceneContainer());
+		gamePageRoot.getChildren().set(0, currentGameScene.sceneContainer());
 		updatePlayerSteering(currentGameScene);
 		if (currentGameScene instanceof GameScene2D) {
 			var scene2D = (GameScene2D) currentGameScene;
@@ -475,6 +489,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
+		soundHandler().playVoice("voice.explain");
 		gameController.restart(GameState.BOOT);
 	}
 
@@ -535,11 +550,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	@Override
-	public void selectGameVariant(GameVariant gameVariant) {
-		gameController.selectGameVariant(gameVariant);
-		if (clock.isRunning()) {
-			clock.stop();
-		}
+	public void switchGameVariant() {
+		var variant = gameVariant().next();
+		gameController.selectGameVariant(variant);
 		showStartPage();
 	}
 

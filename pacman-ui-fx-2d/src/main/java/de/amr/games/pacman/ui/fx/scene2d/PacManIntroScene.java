@@ -79,7 +79,7 @@ public class PacManIntroScene extends GameScene2D {
 		} else if (Keyboard.anyPressed(PacManGames2d.KEY_START_GAME, PacManGames2d.KEY_START_GAME_NUMPAD)) {
 			context.ui().startGame();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_SELECT_VARIANT)) {
-			context.ui().selectGameVariant(context.gameVariant().next());
+			context.ui().switchGameVariant();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_PLAY_CUTSCENES)) {
 			context.ui().startCutscenesTest();
 		}

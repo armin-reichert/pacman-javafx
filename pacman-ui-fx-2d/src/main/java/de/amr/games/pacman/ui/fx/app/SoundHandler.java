@@ -121,7 +121,7 @@ public class SoundHandler {
 	}
 
 	public void stopAllSounds() {
-		ui.theme.audioClips().forEach(AudioClip::stop);
+		ui.theme.audioClips().filter(clip -> clip != voiceClip).forEach(AudioClip::stop);
 	}
 
 	private void startSiren(int sirenIndex) {
