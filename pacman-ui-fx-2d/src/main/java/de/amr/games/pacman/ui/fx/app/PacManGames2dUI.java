@@ -51,10 +51,6 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -69,10 +65,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public class PacManGames2dUI implements GameEventListener {
-
-	protected BooleanProperty fullscreenPy = new SimpleBooleanProperty();
-	protected DoubleProperty widthPy = new SimpleDoubleProperty();
-	protected DoubleProperty heightPy = new SimpleDoubleProperty();
 
 	protected GameSceneConfiguration configMsPacMan;
 	protected GameSceneConfiguration configPacMan;
@@ -95,7 +87,6 @@ public class PacManGames2dUI implements GameEventListener {
 		checkNotNull(theme);
 
 		this.stage = stage;
-		fullscreenPy.bind(stage.fullScreenProperty());
 
 		this.theme = theme;
 		gameController = new GameController(settings.variant);
@@ -104,9 +95,7 @@ public class PacManGames2dUI implements GameEventListener {
 		clock.targetFrameratePy.set(GameModel.FPS);
 		soundHandler = new SoundHandler(this);
 
-		widthPy.set(settings.zoom * 28 * TS);
-		heightPy.set(settings.zoom * 36 * TS);
-		scene = new Scene(new Region(), widthPy.get(), heightPy.get(), Color.BLACK);
+		scene = new Scene(new Region(), settings.zoom * 28 * TS, settings.zoom * 36 * TS, Color.BLACK);
 
 		configureGameScenes();
 		createGamePage();
@@ -117,6 +106,7 @@ public class PacManGames2dUI implements GameEventListener {
 		GameEvents.addListener(this);
 
 		stage.setScene(scene);
+		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth(241);
 		stage.setMinHeight(328);
 		stage.centerOnScreen();
