@@ -21,7 +21,6 @@ import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
@@ -46,7 +45,6 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -57,9 +55,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -83,14 +79,13 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected Stage stage;
 	protected Scene scene;
 	protected StartPage startPage;
-	protected FlashMessageView flashMessageView = new FlashMessageView();
+	protected GamePage gamePage;
 	protected HelpMenus helpMenus;
 	protected GameController gameController;
-	protected Pane gamePageRoot;
 	protected KeyboardSteering keyboardPlayerSteering;
-	protected GameScene currentGameScene;
 	protected SoundHandler soundHandler;
 	protected boolean canvasScaled = true;
+	protected GameScene currentGameScene;
 
 	@Override
 	public void init(Stage stage, Settings settings, Theme theme) {
@@ -126,16 +121,11 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void onTick() {
 		gameController.update();
-		if (currentGameScene != null) {
-			currentGameScene.update();
-		}
+		gamePage.update();
 	}
 
 	protected void onRender() {
-		flashMessageView.update();
-		if (currentGameScene != null) {
-			currentGameScene.render();
-		}
+		gamePage.render();
 	}
 
 	protected void configureGameScenes() {
@@ -175,35 +165,21 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		updateStage();
 	}
 
-	protected void showGamePage() {
-		reboot();
-		scene.setRoot(gamePageRoot);
-		gamePageRoot.requestFocus();
-		clock.start();
-		updateStage();
+	protected void createGamePage() {
+		gamePage = new GamePage(this);
 	}
 
-	protected void createGamePage() {
-		gamePageRoot = new StackPane();
-		gamePageRoot.setBackground(theme.background("wallpaper.background"));
-		gamePageRoot.getChildren().add(flashMessageView);
-		gamePageRoot.setOnKeyPressed(this::handleKeyPressed);
-		gamePageRoot.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
-				resizeStageToFitCurrentGameScene();
-			}
-		});
+	protected void showGamePage() {
+		reboot();
+		scene.setRoot(gamePage.root());
+		gamePage.root().requestFocus();
+		clock.start();
+		updateStage();
 	}
 
 	protected void configureHelpMenus() {
 		helpMenus = new HelpMenus(PacManGames2d.TEXTS);
 		helpMenus.setFont(theme.font("font.monospaced", 12));
-	}
-
-	protected void resizeStageToFitCurrentGameScene() {
-		if (currentGameScene != null && !currentGameScene.is3D() && !stage.isFullScreen()) {
-			stage.setWidth(currentGameScene.sceneContainer().getWidth() + 16); // don't ask me why
-		}
 	}
 
 	protected void configurePacSteering() {
@@ -300,7 +276,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		currentGameScene.setParentScene(stage.getScene());
 		currentGameScene.setContext(new GameSceneContext(gameController, this));
 		currentGameScene.init();
-		gamePageRoot.getChildren().set(0, currentGameScene.sceneContainer());
+		gamePage.setGameScene(currentGameScene);
 		updatePlayerSteering(currentGameScene);
 		if (currentGameScene instanceof GameScene2D) {
 			var scene2D = (GameScene2D) currentGameScene;
@@ -320,54 +296,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			playScene = gameScene == gameSceneConfigPacMan.playScene() || gameScene == gameSceneConfigPacMan.playScene3D();
 		}
 		if (playScene) {
-			stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
+			gamePage.root().addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
 		} else {
-			stage.getScene().removeEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
-		}
-	}
-
-	protected void handleKeyPressed(KeyEvent keyEvent) {
-		Keyboard.accept(keyEvent);
-		handleKeyboardInput();
-		if (currentGameScene != null) {
-			currentGameScene.handleKeyboardInput();
-		}
-		Keyboard.clearState();
-	}
-
-	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames2d.KEY_SHOW_HELP)) {
-			showHelp();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_AUTOPILOT)) {
-			toggleAutopilot();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_BOOT)) {
-			if (gameController().state() != GameState.BOOT) {
-				reboot();
-			}
-		} else if (Keyboard.pressed(PacManGames2d.KEY_DEBUG_INFO)) {
-			Ufx.toggle(PacManGames2d.PY_SHOW_DEBUG_INFO);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_IMMUNITIY)) {
-			toggleImmunity();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_PAUSE)) {
-			togglePaused();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_PAUSE_STEP) || Keyboard.pressed(PacManGames2d.KEY_SINGLE_STEP)) {
-			oneSimulationStep();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_TEN_STEPS)) {
-			tenSimulationSteps();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_SIMULATION_FASTER)) {
-			changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_SIMULATION_SLOWER)) {
-			changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_SIMULATION_NORMAL)) {
-			resetSimulationSpeed();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_QUIT)) {
-			restartIntro();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_TEST_LEVELS)) {
-			startLevelTestMode();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
-			stage.setFullScreen(true);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
-			toggleCanvasScaled();
+			gamePage.root().removeEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
 		}
 	}
 
@@ -434,7 +365,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		flashMessageView.showMessage(String.format(message, args), seconds);
+		gamePage.flashMessageView.showMessage(String.format(message, args), seconds);
 	}
 
 	@Override

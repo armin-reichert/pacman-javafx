@@ -28,6 +28,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -39,12 +40,10 @@ import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
-import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
@@ -66,7 +65,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	public void onRender() {
-		flashMessageView.update();
+		gamePage.flashMessageView().update();
 		currentGameScene.render();
 		dashboard.update();
 		pip.render();
@@ -91,17 +90,20 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
 
-		gamePageRoot = new StackPane();
-		gamePageRoot.getChildren().add(flashMessageView);
-		gamePageRoot.getChildren().add(dashboardLayer);
-
-		scene = new Scene(gamePageRoot, widthPy.get(), heightPy.get(), Color.BLACK);
-		scene.setOnKeyPressed(this::handleKeyPressed);
-		scene.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
-				resizeStageToFitCurrentGameScene();
+		gamePage = new GamePage(this) {
+			@Override
+			protected void handleKeyboardInput() {
+				super.handleKeyboardInput();
+				if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
+					toggle2D3D();
+				} else if (Keyboard.anyPressed(PacManGames3d.KEY_TOGGLE_DASHBOARD, PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
+					toggleDashboardVisible();
+				} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_PIP_VIEW)) {
+					togglePipOn();
+				}
 			}
-		});
+		};
+		gamePage.root().getChildren().add(dashboardLayer);
 	}
 
 	@Override
@@ -134,12 +136,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				gamePageRoot.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+				gamePage.root().setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				gamePageRoot.setBackground(theme.background("model3D.wallpaper"));
+				gamePage.root().setBackground(theme.background("model3D.wallpaper"));
 			}
 		} else {
-			gamePageRoot.setBackground(theme.background("wallpaper.background"));
+			gamePage.root().setBackground(theme.background("wallpaper.background"));
 		}
 		var paused = clock != null ? clock().isPaused() : false;
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
@@ -169,18 +171,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	protected void handleKeyboardInput() {
-		super.handleKeyboardInput();
-		if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
-			toggle2D3D();
-		} else if (Keyboard.anyPressed(PacManGames3d.KEY_TOGGLE_DASHBOARD, PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
-			toggleDashboardVisible();
-		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_PIP_VIEW)) {
-			togglePipOn();
-		}
-	}
-
-	@Override
 	public void showHelp() {
 		if (!currentGameScene.is3D()) {
 			super.showHelp();
@@ -188,9 +178,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	public void toggle2D3D() {
+		var config = gameVariant() == GameVariant.MS_PACMAN ? gameSceneConfigMsPacMan : gameSceneConfigPacMan;
 		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
-		updateOrReloadGameScene(true);
-		currentGameScene().onSceneVariantSwitch();
+		if (config.playScene() == currentGameScene || config.playScene3D() == currentGameScene) {
+			updateOrReloadGameScene(true);
+			currentGameScene().onSceneVariantSwitch();
+		}
 	}
 
 	public Dashboard dashboard() {
