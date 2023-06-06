@@ -47,7 +47,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.stage.Stage;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -81,7 +80,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	protected void createMainScene(Stage stage, Settings settings) {
+	protected void createMainScene() {
 		pip = new PictureInPicture();
 
 		dashboard = new Dashboard(this);
@@ -96,17 +95,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		mainSceneRoot.getChildren().add(flashMessageView);
 		mainSceneRoot.getChildren().add(dashboardLayer);
 
-		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
-		stage.setScene(mainScene);
+		mainScene = new Scene(mainSceneRoot, widthPy.get(), heightPy.get(), Color.BLACK);
 		mainScene.setOnKeyPressed(this::handleKeyPressed);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-
-		showStartPage();
-		updateStage();
 	}
 
 	@Override
@@ -119,7 +114,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		keyboardPlayerSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 
 		gameController.setManualPacSteering(keyboardPlayerSteering);
-		stage.getScene().addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
+		mainScene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
 	}
 
 	@Override

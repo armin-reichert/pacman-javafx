@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
@@ -50,6 +51,10 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -66,11 +71,16 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListener {
 
+	protected BooleanProperty fullscreenPy = new SimpleBooleanProperty();
+	protected DoubleProperty widthPy = new SimpleDoubleProperty();
+	protected DoubleProperty heightPy = new SimpleDoubleProperty();
+
 	protected GameSceneConfiguration gameSceneConfigMsPacMan;
 	protected GameSceneConfiguration gameSceneConfigPacMan;
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
+	protected Scene mainScene;
 	protected StartPage startPage;
 	protected FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
@@ -88,21 +98,28 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		checkNotNull(theme);
 
 		this.stage = stage;
-		stage.setFullScreen(settings.fullScreen);
+		fullscreenPy.bind(stage.fullScreenProperty());
+
 		this.theme = theme;
 		gameController = new GameController(settings.variant);
 		clock = new GameClock(this::onTick, this::onRender);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 		clock.targetFrameratePy.set(GameModel.FPS);
 		soundHandler = new SoundHandler(this);
-		startPage = new StartPage(this);
+
+		widthPy.set(settings.zoom * 28 * TS);
+		heightPy.set(settings.zoom * 36 * TS);
 
 		configureGameScenes();
-		createMainScene(stage, settings);
+		createMainScene();
+		createStartPage();
 		configureHelpMenus();
 		configurePacSteering();
 		configureBindings(settings);
 		GameEvents.addListener(this);
+
+		showStartPage();
+		updateStage();
 	}
 
 	protected void onTick() {
@@ -144,33 +161,27 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
   	//@formatter:on
 	}
 
+	protected void createStartPage() {
+		startPage = new StartPage(this, widthPy.get(), heightPy.get());
+	}
+
 	// TODO Probably a separate scene for the start page would make sense
 	protected void showStartPage() {
 		clock.stop();
 		startPage.setGameVariant(gameVariant());
-		stage.getScene().setOnKeyPressed(startPage::handleKeyPressed);
-		mainSceneRoot.getChildren().add(startPage.root());
+		stage.setScene(startPage.scene());
 	}
 
-	protected void removeStartPage() {
-		stage.getScene().setOnKeyPressed(this::handleKeyPressed);
-		mainSceneRoot.getChildren().remove(startPage.root());
-	}
-
-	protected void createMainScene(Stage stage, Settings settings) {
+	protected void createMainScene() {
 		mainSceneRoot = new StackPane();
 		mainSceneRoot.getChildren().add(flashMessageView);
-
-		var mainScene = new Scene(mainSceneRoot, settings.zoom * 28 * 8, settings.zoom * 36 * 8, Color.BLACK);
-		stage.setScene(mainScene);
+		mainScene = new Scene(mainSceneRoot, widthPy.get(), heightPy.get(), Color.BLACK);
 		mainScene.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-
-		showStartPage();
-		updateStage();
+		mainScene.setOnKeyPressed(this::handleKeyPressed);
 	}
 
 	protected void configureHelpMenus() {
@@ -528,8 +539,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		gameController.selectGameVariant(gameVariant);
 		if (clock.isRunning()) {
 			clock.stop();
-		} else {
-			mainSceneRoot.getChildren().remove(startPage.root());
 		}
 		showStartPage();
 	}

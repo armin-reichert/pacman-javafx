@@ -8,6 +8,7 @@ import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -27,6 +28,7 @@ import javafx.scene.text.Text;
  */
 public class StartPage {
 
+	private final Scene scene;
 	private final StackPane root = new StackPane();
 	private final BorderPane content = new BorderPane();
 	private final Pane button;
@@ -57,14 +59,23 @@ public class StartPage {
 		return button;
 	}
 
-	public StartPage(PacManGames2dUI ui) {
+	public StartPage(PacManGames2dUI ui, double width, double height) {
 		this.ui = ui;
+		scene = new Scene(root, width, height);
+		scene.setOnKeyPressed(this::handleKeyPressed);
+
 		root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		root.getChildren().add(content);
+
 		button = createButton("Play!", ui.theme(), this::startSelectedGame);
 		content.setBottom(button);
+
 		BorderPane.setAlignment(button, Pos.CENTER);
 		button.setTranslateY(-10);
+	}
+
+	public Scene scene() {
+		return scene;
 	}
 
 	public StackPane root() {
@@ -98,7 +109,7 @@ public class StartPage {
 
 	private void startSelectedGame() {
 		ui.reboot();
-		ui.removeStartPage();
+		ui.stage.setScene(ui.mainScene);
 		ui.clock.start();
 		ui.soundHandler().playVoice("voice.explain", 1.5f);
 	}
