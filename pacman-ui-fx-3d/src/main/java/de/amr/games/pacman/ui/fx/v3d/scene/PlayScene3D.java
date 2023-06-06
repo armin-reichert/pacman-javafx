@@ -407,7 +407,7 @@ public class PlayScene3D implements GameScene {
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
-							context.ui().theme().audioClip("audio.level_complete").play();
+							context.ui().soundHandler().audioClip("audio.level_complete").play();
 							PacManGames3d.ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
 						}
 					}),
@@ -422,7 +422,7 @@ public class PlayScene3D implements GameScene {
 			level3D.world3D().foodOscillation().stop();
 			level3D.livesCounter3D().stopAnimation();
 			PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
-			context.ui().theme().audioClip("audio.game_over").play();
+			context.ui().soundHandler().audioClip("audio.game_over").play();
 			waitSeconds(3);
 		}
 
@@ -467,7 +467,7 @@ public class PlayScene3D implements GameScene {
 				perspectivePy.set(Perspective.TOTAL);
 			}),
 			rotation,
-			Ufx.actionAfterSeconds(0.5, () -> context.ui().theme().audioClip("audio.sweep").play()),
+			Ufx.actionAfterSeconds(0.5, () -> context.ui().soundHandler().audioClip("audio.sweep").play()),
 			Ufx.actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3d.PY_3D_PERSPECTIVE))
 		);
 		//@formatter:on
