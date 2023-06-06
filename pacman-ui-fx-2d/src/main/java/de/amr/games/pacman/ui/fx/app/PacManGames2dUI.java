@@ -56,6 +56,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -95,7 +96,9 @@ public class PacManGames2dUI implements GameEventListener {
 		clock.targetFrameratePy.set(GameModel.FPS);
 		soundHandler = new SoundHandler(this);
 
-		scene = new Scene(new Region(), settings.zoom * 28 * TS, settings.zoom * 36 * TS, Color.BLACK);
+		var screenSize = Screen.getPrimary().getBounds();
+		double height = screenSize.getHeight() * 0.8;
+		scene = new Scene(new Region(), height * 4.0 / 3.0, height, Color.BLACK);
 
 		configureGameScenes();
 		createGamePage();

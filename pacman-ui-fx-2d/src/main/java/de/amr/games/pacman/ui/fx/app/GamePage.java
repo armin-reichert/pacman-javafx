@@ -34,7 +34,7 @@ public class GamePage {
 	protected final PacManGames2dUI ui;
 	protected final StackPane root;
 	protected final BorderPane frame;
-	protected boolean canvasScaled = true;
+	protected boolean canvasScaled = false;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
@@ -42,10 +42,10 @@ public class GamePage {
 		frame = new BorderPane();
 		frame.setScaleX(0.9);
 		frame.setScaleY(0.9);
-		var stroke = new BorderStroke(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, BorderStrokeStyle.SOLID,
+		var frameBorderStyle = new BorderStroke(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, BorderStrokeStyle.SOLID,
 				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(20),
 				new BorderWidths(20), null);
-		frame.setBorder(new Border(stroke));
+		frame.setBorder(new Border(frameBorderStyle));
 
 		root = new StackPane(new Region()); // placeholder
 		root.setBackground(ui.theme().background("wallpaper.background"));
@@ -86,12 +86,11 @@ public class GamePage {
 			var scene2D = (GameScene2D) gameScene;
 			scene2D.setCanvasScaled(canvasScaled);
 			scene2D.setRoundedCorners(false);
-//			scene2D.setWallpaperColor(ui.theme().color("wallpaper.color"));
-			frame.setMaxSize(1, 1);
 			var frameContent = new BorderPane(gameScene.sceneContainer());
 			frameContent.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+			frameContent.setPadding(new Insets(10, 20, 10, 20));
 			frame.setCenter(frameContent);
-			BorderPane.setMargin(frame, new Insets(10));
+			frame.setMaxSize(1, 1);
 			root.getChildren().set(0, frame);
 		} else {
 			root.getChildren().set(0, gameScene.sceneContainer());
