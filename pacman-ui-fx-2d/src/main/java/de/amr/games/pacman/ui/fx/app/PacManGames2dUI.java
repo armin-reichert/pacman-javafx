@@ -100,8 +100,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		this.theme = theme;
 		gameController = new GameController(settings.variant);
 
-		startPage = new StartPage(theme);
-		startPage.setOnAction(this::play);
+		startPage = new StartPage(this);
 
 		canvasScaled = true;
 
@@ -165,6 +164,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void showStartPage() {
+		if (clock != null) {
+			clock.stop();
+		}
 		startPage.setGameVariant(gameVariant());
 		stage.getScene().setOnKeyPressed(startPage::handleKeyPressed);
 		mainSceneRoot.getChildren().add(startPage);
