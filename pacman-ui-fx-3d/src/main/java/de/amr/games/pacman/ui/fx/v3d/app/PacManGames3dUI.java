@@ -181,6 +181,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
 		if (config.playScene() == currentGameScene || config.playScene3D() == currentGameScene) {
 			updateOrReloadGameScene(true);
+			gamePage.setGameScene(currentGameScene);
 			currentGameScene().onSceneVariantSwitch();
 		}
 	}

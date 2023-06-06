@@ -9,12 +9,21 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -24,10 +33,20 @@ public class GamePage {
 
 	protected final PacManGames2dUI ui;
 	protected final StackPane root;
+	protected final BorderPane frame;
 	protected boolean canvasScaled = true;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
+
+		frame = new BorderPane();
+		frame.setScaleX(0.9);
+		frame.setScaleY(0.9);
+		var stroke = new BorderStroke(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, BorderStrokeStyle.SOLID,
+				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(20),
+				new BorderWidths(20), null);
+		frame.setBorder(new Border(stroke));
+
 		root = new StackPane(new Region()); // placeholder
 		root.setBackground(ui.theme().background("wallpaper.background"));
 		root.setOnKeyPressed(this::handleKeyPressed);
@@ -63,12 +82,19 @@ public class GamePage {
 	}
 
 	public void setGameScene(GameScene gameScene) {
-		root.getChildren().set(0, gameScene.sceneContainer());
 		if (gameScene instanceof GameScene2D) {
 			var scene2D = (GameScene2D) gameScene;
 			scene2D.setCanvasScaled(canvasScaled);
-			// to draw rounded canvas corners, background color must be set
-			scene2D.setWallpaperColor(ui.theme().color("wallpaper.color"));
+			scene2D.setRoundedCorners(false);
+//			scene2D.setWallpaperColor(ui.theme().color("wallpaper.color"));
+			frame.setMaxSize(1, 1);
+			var frameContent = new BorderPane(gameScene.sceneContainer());
+			frameContent.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+			frame.setCenter(frameContent);
+			BorderPane.setMargin(frame, new Insets(10));
+			root.getChildren().set(0, frame);
+		} else {
+			root.getChildren().set(0, gameScene.sceneContainer());
 		}
 		boolean playScene = false;
 		if (ui.gameVariant() == GameVariant.MS_PACMAN) {
