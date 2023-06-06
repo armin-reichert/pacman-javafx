@@ -10,7 +10,9 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -36,7 +38,7 @@ public class GamePage {
 		});
 	}
 
-	public StackPane root() {
+	public Node root() {
 		return root;
 	}
 
@@ -50,6 +52,14 @@ public class GamePage {
 		if (ui.currentGameScene() != null) {
 			ui.currentGameScene().render();
 		}
+	}
+
+	public void setBackground(Background background) {
+		root.setBackground(background);
+	}
+
+	public void addLayer(Node layer) {
+		root.getChildren().add(layer);
 	}
 
 	public void setGameScene(GameScene gameScene) {

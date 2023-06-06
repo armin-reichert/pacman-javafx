@@ -26,14 +26,9 @@ public class Dashboard extends VBox {
 	public static final Font LABEL_FONT = Font.font("Tahoma", 12);
 	public static final Font TEXT_FONT = Font.font("Tahoma", 12);
 
-	private final PacManGames3dUI ui;
 	private final List<Section> sections = new ArrayList<>();
 
 	public Dashboard(PacManGames3dUI ui) {
-		this.ui = ui;
-	}
-
-	public void init() {
 		sections.add(new SectionGeneral(ui, "General"));
 		sections.add(new SectionKeys(ui, "Keyboard Shortcuts"));
 		sections.add(new SectionAppearance(ui, "Appearance"));

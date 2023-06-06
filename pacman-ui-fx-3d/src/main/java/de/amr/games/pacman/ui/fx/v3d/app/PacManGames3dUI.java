@@ -84,7 +84,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 		dashboard = new Dashboard(this);
 		dashboard.setVisible(false);
-		dashboard.init();
 
 		var dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
@@ -103,7 +102,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 				}
 			}
 		};
-		gamePage.root().getChildren().add(dashboardLayer);
+		gamePage.addLayer(dashboardLayer);
 	}
 
 	@Override
@@ -136,12 +135,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				gamePage.root().setBackground(ResourceManager.coloredBackground(Color.BLACK));
+				gamePage.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				gamePage.root().setBackground(theme.background("model3D.wallpaper"));
+				gamePage.setBackground(theme.background("model3D.wallpaper"));
 			}
 		} else {
-			gamePage.root().setBackground(theme.background("wallpaper.background"));
+			gamePage.setBackground(theme.background("wallpaper.background"));
 		}
 		var paused = clock != null ? clock().isPaused() : false;
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
