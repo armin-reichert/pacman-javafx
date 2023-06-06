@@ -85,10 +85,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		dashboard = new Dashboard(this);
 		dashboard.setVisible(false);
 
-		var dashboardLayer = new BorderPane();
-		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pip.root());
-
 		gamePage = new GamePage(this) {
 			@Override
 			protected void handleKeyboardInput() {
@@ -102,6 +98,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
 				}
 			}
 		};
+
+		var dashboardLayer = new BorderPane();
+		dashboardLayer.setLeft(dashboard);
+		dashboardLayer.setRight(pip.root());
 		gamePage.addLayer(dashboardLayer);
 	}
 
@@ -201,6 +201,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	public void toggleDashboardVisible() {
 		dashboard().setVisible(!dashboard().isVisible());
+		if (!dashboard.isVisible()) {
+			gamePage.root().requestFocus();
+		}
 	}
 
 	public void selectNextPerspective() {

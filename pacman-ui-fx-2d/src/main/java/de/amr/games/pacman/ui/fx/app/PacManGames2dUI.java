@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.app;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
