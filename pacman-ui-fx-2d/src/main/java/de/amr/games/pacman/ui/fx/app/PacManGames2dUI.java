@@ -197,14 +197,6 @@ public class PacManGames2dUI implements GameEventListener {
 		gameController.setManualPacSteering(keyboardPlayerSteering);
 	}
 
-	public Theme theme() {
-		return theme;
-	}
-
-	public SoundHandler soundHandler() {
-		return soundHandler;
-	}
-
 	protected void updateStage() {
 		switch (gameVariant()) {
 		case MS_PACMAN: {
@@ -359,6 +351,14 @@ public class PacManGames2dUI implements GameEventListener {
 
 	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
 		flashMessageView.showMessage(String.format(message, args), seconds);
+	}
+
+	public Theme theme() {
+		return theme;
+	}
+
+	public SoundHandler soundHandler() {
+		return soundHandler;
 	}
 
 	public GameClock clock() {
