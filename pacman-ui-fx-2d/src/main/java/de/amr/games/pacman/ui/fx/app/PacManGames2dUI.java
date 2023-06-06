@@ -148,14 +148,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
   	//@formatter:on
 	}
 
-	protected void play() {
-		currentGameScene = null;
-		removeStartPage();
-		gameController.clearState();
-		gameController.changeState(GameState.BOOT);
-		clock.start();
-	}
-
 	protected void showStartPage() {
 		if (clock != null) {
 			clock.stop();
@@ -464,6 +456,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	public void restartIntro() {
 		if (currentGameScene != null) {
 			currentGameScene.end();
+			soundHandler.stopAllSounds();
 			GameEvents.setSoundEventsEnabled(true);
 			if (game().isPlaying()) {
 				game().changeCredit(-1);
@@ -538,7 +531,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	@Override
 	public void selectGameVariant(GameVariant gameVariant) {
 		gameController.selectGameVariant(gameVariant);
-		soundHandler.stopVoice();
 		if (clock.isRunning()) {
 			clock.stop();
 		} else {

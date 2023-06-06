@@ -21,11 +21,6 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	public void end() {
-		context.ui().soundHandler().playVoice("voice.explain", 1.5f);
-	}
-
-	@Override
 	public void render() {
 		var timer = context.state().timer();
 		if (timer.tick() == 1) {

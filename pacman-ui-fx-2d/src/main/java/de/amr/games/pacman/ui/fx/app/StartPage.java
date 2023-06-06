@@ -9,7 +9,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
@@ -32,7 +31,8 @@ public class StartPage extends StackPane {
 	private final Pane button;
 	private PacManGames2dUI ui;
 
-	private static Pane createButton(String text, Theme theme) {
+	// This should be a Button but it seems WebFX/GWT has issues with graphic buttons
+	private static Pane createButton(String text, Theme theme, Runnable action) {
 		var textView = new Text(text);
 		textView.setFill(theme.color("startpage.button.color"));
 		textView.setFont(theme.font("startpage.button.font"));
@@ -47,6 +47,12 @@ public class StartPage extends StackPane {
 		button.setCursor(Cursor.HAND);
 		button.setBackground(ResourceManager.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
 
+		button.setOnMouseClicked(e -> {
+			if (e.getButton().equals(MouseButton.PRIMARY)) {
+				action.run();
+			}
+		});
+
 		return button;
 	}
 
@@ -54,12 +60,7 @@ public class StartPage extends StackPane {
 		this.ui = ui;
 		setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		getChildren().add(content);
-		button = createButton("Play!", ui.theme());
-		button.setOnMouseClicked(e -> {
-			if (e.getButton().equals(MouseButton.PRIMARY)) {
-				ui.play();
-			}
-		});
+		button = createButton("Play!", ui.theme(), this::startSelectedGame);
 		content.setBottom(button);
 		BorderPane.setAlignment(button, Pos.CENTER);
 		button.setTranslateY(-10);
@@ -74,14 +75,26 @@ public class StartPage extends StackPane {
 	}
 
 	public void handleKeyPressed(KeyEvent e) {
-		if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
-			ui.play();
-		}
-		if (e.getCode() == KeyCode.V) {
+		switch (e.getCode()) {
+		case ENTER:
+		case SPACE:
+			startSelectedGame();
+			break;
+		case V:
 			ui.selectGameVariant(ui.gameVariant().next());
-		}
-		if (PacManGames2d.KEY_FULLSCREEN.match(e)) {
+			break;
+		case F11:
 			ui.stage.setFullScreen(true);
+			break;
+		default:
+			break;
 		}
+	}
+
+	private void startSelectedGame() {
+		ui.reboot();
+		ui.removeStartPage();
+		ui.clock.start();
+		ui.soundHandler().playVoice("voice.explain", 1.5f);
 	}
 }
