@@ -65,7 +65,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	public void onRender() {
-		gamePage.flashMessageView().update();
+		flashMessageView.update();
 		currentGameScene.render();
 		dashboard.update();
 		pip.render();

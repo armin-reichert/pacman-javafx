@@ -81,7 +81,5 @@ public interface PacManGamesUserInterface {
 
 	void toggleImmunity();
 
-	void toggleCanvasScaled();
-
 	void togglePaused();
 }

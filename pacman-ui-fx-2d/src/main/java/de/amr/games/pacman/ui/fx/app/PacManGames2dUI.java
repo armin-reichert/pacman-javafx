@@ -45,6 +45,7 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
+import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -56,6 +57,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -80,11 +82,11 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	protected Scene scene;
 	protected StartPage startPage;
 	protected GamePage gamePage;
+	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
 	protected GameController gameController;
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected SoundHandler soundHandler;
-	protected boolean canvasScaled = true;
 	protected GameScene currentGameScene;
 
 	@Override
@@ -126,6 +128,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void onRender() {
 		gamePage.render();
+		flashMessageView.update();
 	}
 
 	protected void configureGameScenes() {
@@ -171,7 +174,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 	protected void showGamePage() {
 		reboot();
-		scene.setRoot(gamePage.root());
+		scene.setRoot(new StackPane(gamePage.root(), flashMessageView));
+		flashMessageView.clear();
 		gamePage.root().requestFocus();
 		clock.start();
 		updateStage();
@@ -278,12 +282,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		currentGameScene.init();
 		gamePage.setGameScene(currentGameScene);
 		updatePlayerSteering(currentGameScene);
-		if (currentGameScene instanceof GameScene2D) {
-			var scene2D = (GameScene2D) currentGameScene;
-			scene2D.setCanvasScaled(canvasScaled);
-			// to draw rounded canvas corners, background color must be set
-			scene2D.setWallpaperColor(theme.color("wallpaper.color"));
-		}
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
@@ -365,7 +363,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		gamePage.flashMessageView.showMessage(String.format(message, args), seconds);
+		flashMessageView.showMessage(String.format(message, args), seconds);
 	}
 
 	@Override
@@ -499,16 +497,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		String message = fmtMessage(PacManGames2d.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
-	}
-
-	@Override
-	public void toggleCanvasScaled() {
-		canvasScaled = !canvasScaled;
-		if (currentGameScene instanceof GameScene2D) {
-			GameScene2D scene2D = (GameScene2D) currentGameScene;
-			scene2D.setCanvasScaled(canvasScaled);
-			showFlashMessage(canvasScaled ? "Canvas SCALED" : "Canvas UNSCALED");
-		}
 	}
 
 	public void startLevelTestMode() {

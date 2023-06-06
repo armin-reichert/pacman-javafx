@@ -7,9 +7,10 @@ package de.amr.games.pacman.ui.fx.app;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.util.FlashMessageView;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -19,14 +20,13 @@ import javafx.stage.Stage;
 public class GamePage {
 
 	protected final PacManGames2dUI ui;
-	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final StackPane root;
+	protected boolean canvasScaled = true;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
-		root = new StackPane();
+		root = new StackPane(new Region()); // placeholder
 		root.setBackground(ui.theme().background("wallpaper.background"));
-		root.getChildren().add(flashMessageView);
 		root.setOnKeyPressed(this::handleKeyPressed);
 		root.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
@@ -39,10 +39,6 @@ public class GamePage {
 		return root;
 	}
 
-	public FlashMessageView flashMessageView() {
-		return flashMessageView;
-	}
-
 	public void update() {
 		if (ui.currentGameScene() != null) {
 			ui.currentGameScene().update();
@@ -50,7 +46,6 @@ public class GamePage {
 	}
 
 	public void render() {
-		flashMessageView.update();
 		if (ui.currentGameScene() != null) {
 			ui.currentGameScene().render();
 		}
@@ -58,7 +53,12 @@ public class GamePage {
 
 	public void setGameScene(GameScene gameScene) {
 		root.getChildren().set(0, gameScene.sceneContainer());
-
+		if (gameScene instanceof GameScene2D) {
+			var scene2D = (GameScene2D) gameScene;
+			scene2D.setCanvasScaled(canvasScaled);
+			// to draw rounded canvas corners, background color must be set
+			scene2D.setWallpaperColor(ui.theme().color("wallpaper.color"));
+		}
 	}
 
 	protected void resizeStageToFitCurrentGameScene(Stage stage) {
@@ -110,8 +110,16 @@ public class GamePage {
 		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
 			ui.stage.setFullScreen(true);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
-			ui.toggleCanvasScaled();
+			if (ui.currentGameScene instanceof GameScene2D) {
+				toggleCanvasScaled((GameScene2D) ui.currentGameScene);
+			}
 		}
+	}
+
+	private void toggleCanvasScaled(GameScene2D gameScene2D) {
+		canvasScaled = !canvasScaled;
+		gameScene2D.setCanvasScaled(canvasScaled);
+		ui.showFlashMessage(canvasScaled ? "Canvas SCALED" : "Canvas UNSCALED");
 	}
 
 }

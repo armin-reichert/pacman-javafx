@@ -62,6 +62,10 @@ public class FlashMessageView extends VBox {
 		getChildren().add(textView);
 	}
 
+	public void clear() {
+		activeMessages.clear();
+	}
+
 	public void showMessage(String messageText, double seconds) {
 		if (activeMessages.peek() != null && activeMessages.peek().text.equals(messageText)) {
 			activeMessages.poll();
