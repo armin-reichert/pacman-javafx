@@ -31,11 +31,11 @@ import javafx.scene.text.Text;
  */
 public class StartPage extends StackPane {
 
-	private ObjectProperty<Image> wallpaperPy = new SimpleObjectProperty<>();
-
 	private final BorderPane content = new BorderPane();
 	private final Pane button;
 	private Runnable action;
+	private Theme theme;
+
 	private static Pane createButton(String text, Theme theme) {
 		var textView = new Text(text);
 		textView.setFill(theme.color("startpage.button.color"));
@@ -54,7 +54,8 @@ public class StartPage extends StackPane {
 		return button;
 	}
 
-	public StartPage(PacManGamesUserInterface ui, Theme theme) {
+	public StartPage(Theme theme) {
+		this.theme = theme;
 		setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		getChildren().add(content);
 		button = createButton("Play!", theme);
@@ -68,14 +69,12 @@ public class StartPage extends StackPane {
 		button.setTranslateY(-10);
 	}
 
-	public void setWallpaper(Image image) {
-		wallpaperPy.set(image);
+	public void setGameVariant(GameVariant gameVariant) {
+		var image = gameVariant == GameVariant.MS_PACMAN ? theme.image("mspacman.startpage.image")
+				: theme.image("pacman.startpage.image");
 		var bgImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER, new BackgroundSize(AUTO, AUTO, false, false, true, false));
 		content.setBackground(new Background(bgImage));
-	}
-
-	public void setGameVariant(GameVariant gameVariant) {
 	}
 
 	public void setOnAction(Runnable action) {

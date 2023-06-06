@@ -100,8 +100,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		this.theme = theme;
 		gameController = new GameController(settings.variant);
 
-		startPage = new StartPage(this, theme);
-		startPage.setOnAction(this::onStartButtonPressed);
+		startPage = new StartPage(theme);
+		startPage.setOnAction(this::play);
 
 		canvasScaled = true;
 
@@ -156,7 +156,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
   	//@formatter:on
 	}
 
-	protected void onStartButtonPressed() {
+	protected void play() {
 		currentGameScene = null;
 		removeStartPage();
 		gameController.clearState();
@@ -164,9 +164,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		clock.start();
 	}
 
-	protected void addStartPage(GameVariant gameVariant) {
-		startPage.setWallpaper(gameVariant == GameVariant.MS_PACMAN ? theme.image("mspacman.startpage.image")
-				: theme.image("pacman.startpage.image"));
+	protected void showStartPage() {
+		startPage.setGameVariant(gameVariant());
 		stage.getScene().setOnKeyPressed(startPage::handleKeyPressed);
 		mainSceneRoot.getChildren().add(startPage);
 	}
@@ -188,7 +187,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 			}
 		});
 
-		addStartPage(settings.variant);
+		showStartPage();
 		updateStage();
 	}
 
@@ -700,7 +699,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		} else {
 			mainSceneRoot.getChildren().remove(startPage);
 		}
-		addStartPage(gameVariant);
+		showStartPage();
 	}
 
 	@Override

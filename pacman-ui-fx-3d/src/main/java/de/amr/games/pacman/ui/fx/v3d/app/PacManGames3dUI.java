@@ -105,7 +105,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			}
 		});
 
-		addStartPage(settings.variant);
+		showStartPage();
 		updateStage();
 	}
 
