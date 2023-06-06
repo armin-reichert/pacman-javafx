@@ -3,12 +3,14 @@ package de.amr.games.pacman.ui.fx.app;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
@@ -27,13 +29,13 @@ import javafx.scene.text.Text;
  */
 public class StartPage {
 
-	private final StackPane root = new StackPane();
-	private final BorderPane content = new BorderPane();
+	private final StackPane root;
+	private final BorderPane content;
 	private final Pane button;
 	private PacManGames2dUI ui;
 
-	// This should be a Button but it seems WebFX/GWT has issues with graphic buttons
-	private static Pane createButton(String text, Theme theme, Runnable action) {
+	// TODO This should be a real button but it seems WebFX/GWT has issues with graphic buttons
+	private static StackPane createButton(String text, Theme theme, Runnable action) {
 		var textView = new Text(text);
 		textView.setFill(theme.color("startpage.button.color"));
 		textView.setFont(theme.font("startpage.button.font"));
@@ -47,28 +49,24 @@ public class StartPage {
 		button.setPadding(new Insets(10));
 		button.setCursor(Cursor.HAND);
 		button.setBackground(ResourceManager.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
-
 		button.setOnMouseClicked(e -> {
 			if (e.getButton().equals(MouseButton.PRIMARY)) {
 				action.run();
 			}
 		});
-
 		return button;
 	}
 
-	public StartPage(PacManGames2dUI ui, double width, double height) {
+	public StartPage(PacManGames2dUI ui) {
 		this.ui = ui;
-
-		root.setOnKeyPressed(this::handleKeyPressed);
-		root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-		root.getChildren().add(content);
-
 		button = createButton("Play!", ui.theme(), ui::showGamePage);
+		content = new BorderPane();
 		content.setBottom(button);
-
 		BorderPane.setAlignment(button, Pos.CENTER);
 		button.setTranslateY(-10);
+		root = new StackPane(content);
+		root.setOnKeyPressed(this::handleKeyPressed);
+		root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 	}
 
 	public StackPane root() {
@@ -76,11 +74,28 @@ public class StartPage {
 	}
 
 	public void setGameVariant(GameVariant gameVariant) {
-		var image = gameVariant == GameVariant.MS_PACMAN ? ui.theme().image("mspacman.startpage.image")
-				: ui.theme().image("pacman.startpage.image");
-		var bgImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER, new BackgroundSize(AUTO, AUTO, false, false, true, false));
-		content.setBackground(new Background(bgImage));
+		Image image = null;
+		switch (gameVariant) {
+		case MS_PACMAN:
+			image = ui.theme().image("mspacman.startpage.image");
+			break;
+		case PACMAN:
+			image = ui.theme().image("pacman.startpage.image");
+			break;
+		default:
+			throw new IllegalGameVariantException(gameVariant);
+		}
+		//@formatter:off
+		var backgroundImage = new BackgroundImage(image, 
+				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
+				new BackgroundSize(
+						AUTO,	AUTO, // width, height
+						false, false, // as percentage
+						true, // contain
+						false // cover
+		));
+		//@formatter:on
+		content.setBackground(new Background(backgroundImage));
 	}
 
 	private void handleKeyPressed(KeyEvent e) {

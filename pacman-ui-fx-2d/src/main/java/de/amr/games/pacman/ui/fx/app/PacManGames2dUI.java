@@ -58,6 +58,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -109,9 +110,9 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 
 		widthPy.set(settings.zoom * 28 * TS);
 		heightPy.set(settings.zoom * 36 * TS);
+		scene = new Scene(new Region(), widthPy.get(), heightPy.get(), Color.BLACK);
 
 		configureGameScenes();
-		createScene();
 		createGamePage();
 		createStartPage();
 		configureHelpMenus();
@@ -163,8 +164,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 	}
 
 	protected void createStartPage() {
-		startPage = new StartPage(this, widthPy.get(), heightPy.get());
-		startPage.setGameVariant(gameVariant());
+		startPage = new StartPage(this);
 	}
 
 	protected void showStartPage() {
@@ -179,8 +179,8 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		reboot();
 		scene.setRoot(gamePageRoot);
 		gamePageRoot.requestFocus();
-		updateStage();
 		clock.start();
+		updateStage();
 	}
 
 	protected void createGamePage() {
@@ -193,10 +193,6 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 				resizeStageToFitCurrentGameScene();
 			}
 		});
-	}
-
-	protected void createScene() {
-		scene = new Scene(new Pane(), widthPy.get(), heightPy.get(), Color.BLACK);
 	}
 
 	protected void configureHelpMenus() {
