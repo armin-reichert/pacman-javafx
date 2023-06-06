@@ -25,8 +25,9 @@ import javafx.scene.text.Text;
 /**
  * @author Armin Reichert
  */
-public class StartPage extends StackPane {
+public class StartPage {
 
+	private final StackPane root = new StackPane();
 	private final BorderPane content = new BorderPane();
 	private final Pane button;
 	private PacManGames2dUI ui;
@@ -58,12 +59,16 @@ public class StartPage extends StackPane {
 
 	public StartPage(PacManGames2dUI ui) {
 		this.ui = ui;
-		setBackground(ResourceManager.coloredBackground(Color.BLACK));
-		getChildren().add(content);
+		root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		root.getChildren().add(content);
 		button = createButton("Play!", ui.theme(), this::startSelectedGame);
 		content.setBottom(button);
 		BorderPane.setAlignment(button, Pos.CENTER);
 		button.setTranslateY(-10);
+	}
+
+	public StackPane root() {
+		return root;
 	}
 
 	public void setGameVariant(GameVariant gameVariant) {

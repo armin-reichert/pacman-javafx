@@ -144,18 +144,17 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
   	//@formatter:on
 	}
 
+	// TODO Probably a separate scene for the start page would make sense
 	protected void showStartPage() {
-		if (clock != null) {
-			clock.stop();
-		}
+		clock.stop();
 		startPage.setGameVariant(gameVariant());
 		stage.getScene().setOnKeyPressed(startPage::handleKeyPressed);
-		mainSceneRoot.getChildren().add(startPage);
+		mainSceneRoot.getChildren().add(startPage.root());
 	}
 
 	protected void removeStartPage() {
 		stage.getScene().setOnKeyPressed(this::handleKeyPressed);
-		mainSceneRoot.getChildren().remove(startPage);
+		mainSceneRoot.getChildren().remove(startPage.root());
 	}
 
 	protected void createMainScene(Stage stage, Settings settings) {
@@ -530,7 +529,7 @@ public class PacManGames2dUI implements PacManGamesUserInterface, GameEventListe
 		if (clock.isRunning()) {
 			clock.stop();
 		} else {
-			mainSceneRoot.getChildren().remove(startPage);
+			mainSceneRoot.getChildren().remove(startPage.root());
 		}
 		showStartPage();
 	}
