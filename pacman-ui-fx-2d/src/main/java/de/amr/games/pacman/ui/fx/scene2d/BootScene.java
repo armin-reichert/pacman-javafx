@@ -22,19 +22,26 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void render() {
+		double start = 1.0; // seconds
 		var timer = context.state().timer();
+
 		if (timer.tick() == 1) {
 			drawSceneBackground();
-		} else if (timer.betweenSeconds(1.0, 2.0) && timer.tick() % 8 == 0) {
-			drawSceneBackground();
+		}
+
+		else if (timer.betweenSeconds(start, start + 1) && timer.tick() % 8 == 0) {
 			paintRandomHexCodes();
-		} else if (timer.betweenSeconds(2.0, 3.5) && timer.tick() % 4 == 0) {
-			drawSceneBackground();
+		}
+
+		else if (timer.betweenSeconds(start + 1, start + 2.5) && timer.tick() % 4 == 0) {
 			paintRandomSprites();
-		} else if (timer.atSecond(3.5)) {
-			drawSceneBackground();
+		}
+
+		else if (timer.atSecond(start + 2.5)) {
 			paintGrid(16);
-		} else if (timer.atSecond(4.0)) {
+		}
+
+		else if (timer.atSecond(start + 3)) {
 			context.gameController().terminateCurrentState();
 		}
 	}
@@ -45,6 +52,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void paintRandomHexCodes() {
+		drawSceneBackground();
 		g.setFill(ArcadeTheme.PALE);
 		g.setFont(sceneFont());
 		for (int row = 0; row < TILES_Y; ++row) {
@@ -56,6 +64,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void paintRandomSprites() {
+		drawSceneBackground();
 		for (int row = 0; row < TILES_Y / 2; ++row) {
 			if (RND.nextInt(100) > 10) {
 				var region1 = randomSpritesheetTile();
@@ -78,6 +87,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	private void paintGrid(int raster) {
+		drawSceneBackground();
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
 		g.setStroke(ArcadeTheme.PALE);
