@@ -121,5 +121,4 @@ public class GamePage {
 		gameScene2D.setCanvasScaled(canvasScaled);
 		ui.showFlashMessage(canvasScaled ? "Canvas SCALED" : "Canvas UNSCALED");
 	}
-
 }

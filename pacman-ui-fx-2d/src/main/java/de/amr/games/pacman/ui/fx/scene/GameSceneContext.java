@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.PacManGamesUserInterface;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 
 /**
  * @author Armin Reichert
@@ -22,18 +22,18 @@ import de.amr.games.pacman.ui.fx.app.PacManGamesUserInterface;
 public class GameSceneContext {
 
 	private final GameController gameController;
-	private final PacManGamesUserInterface ui;
+	private final PacManGames2dUI ui;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 
-	public GameSceneContext(GameController gameController, PacManGamesUserInterface ui) {
+	public GameSceneContext(GameController gameController, PacManGames2dUI ui) {
 		checkNotNull(gameController);
 		checkNotNull(ui);
 		this.gameController = gameController;
 		this.ui = ui;
 	}
 
-	public PacManGamesUserInterface ui() {
+	public PacManGames2dUI ui() {
 		return ui;
 	}
 
