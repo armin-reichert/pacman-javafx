@@ -102,6 +102,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
+
+		// TODO there is a problem wih adding the dashboard layer on top: it swallows the mouse events. Making
+		// it mouse transparent does not help because then, the dashboard cannot be interacted with.
 		gamePage.addLayer(dashboardLayer);
 	}
 
