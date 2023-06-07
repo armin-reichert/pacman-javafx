@@ -116,6 +116,7 @@ public class GamePage {
 		} else {
 			root.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
 		}
+		root.requestFocus();
 	}
 
 	protected void resizeStageToFitCurrentGameScene(Stage stage) {
