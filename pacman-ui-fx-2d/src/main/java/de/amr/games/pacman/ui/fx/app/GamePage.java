@@ -9,10 +9,12 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
@@ -33,6 +35,7 @@ public class GamePage {
 
 	protected final PacManGames2dUI ui;
 	protected final StackPane root;
+	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final BorderPane frame;
 	protected boolean canvasScaled = false;
 
@@ -47,7 +50,7 @@ public class GamePage {
 				new BorderWidths(20), null);
 		frame.setBorder(new Border(frameBorderStyle));
 
-		root = new StackPane(new Region()); // placeholder
+		root = new StackPane();
 		root.setBackground(ui.theme().background("wallpaper.background"));
 		root.setOnKeyPressed(this::handleKeyPressed);
 		root.setOnMouseClicked(e -> {
@@ -55,10 +58,16 @@ public class GamePage {
 				resizeStageToFitCurrentGameScene(ui.stage);
 			}
 		});
+
+		root.getChildren().setAll(new Region(), flashMessageView);
 	}
 
-	public Node root() {
+	public Parent root() {
 		return root;
+	}
+
+	public FlashMessageView flashMessageView() {
+		return flashMessageView;
 	}
 
 	public void update() {
@@ -71,6 +80,7 @@ public class GamePage {
 		if (ui.currentGameScene() != null) {
 			ui.currentGameScene().render();
 		}
+		flashMessageView.update();
 	}
 
 	public void setBackground(Background background) {

@@ -44,7 +44,6 @@ import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
 import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
 import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
@@ -52,7 +51,6 @@ import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -74,7 +72,6 @@ public class PacManGames2dUI implements GameEventListener {
 	protected Scene scene;
 	protected StartPage startPage;
 	protected GamePage gamePage;
-	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected HelpMenus helpMenus;
 	protected GameController gameController;
 	protected KeyboardSteering keyboardPlayerSteering;
@@ -125,7 +122,6 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void onRender() {
 		gamePage.render();
-		flashMessageView.update();
 	}
 
 	protected void configureGameScenes() {
@@ -171,8 +167,7 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void showGamePage() {
 		reboot();
-		scene.setRoot(new StackPane(gamePage.root(), flashMessageView));
-		flashMessageView.clear();
+		scene.setRoot(gamePage.root()); // TODO
 		gamePage.root().requestFocus();
 		clock.start();
 		updateStage();
@@ -325,7 +320,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		flashMessageView.showMessage(String.format(message, args), seconds);
+		gamePage.flashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
 	public Theme theme() {

@@ -60,13 +60,13 @@ import javafx.scene.shape.DrawMode;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
+	private BorderPane dashboardLayer;
 	private PictureInPicture pip;
 	private Dashboard dashboard;
 
 	@Override
 	public void onRender() {
-		flashMessageView.update();
-		currentGameScene.render();
+		gamePage.render();
 		dashboard.update();
 		pip.render();
 	}
@@ -99,7 +99,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			}
 		};
 
-		var dashboardLayer = new BorderPane();
+		dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
 		gamePage.addLayer(dashboardLayer);
