@@ -27,16 +27,16 @@ public class PictureInPicture {
 		gameScene = new PlayScene2D();
 		gameScene.setCanvasScaled(true);
 		gameScene.setRoundedCorners(false);
-		gameScene.sceneContainer().minHeightProperty().bind(heightPy);
-		gameScene.sceneContainer().minWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
-		gameScene.sceneContainer().maxHeightProperty().bind(heightPy);
-		gameScene.sceneContainer().maxWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
-		gameScene.sceneContainer().opacityProperty().bind(opacityPy);
-		gameScene.sceneContainer().setVisible(false);
+		gameScene.root().minHeightProperty().bind(heightPy);
+		gameScene.root().minWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+		gameScene.root().maxHeightProperty().bind(heightPy);
+		gameScene.root().maxWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+		gameScene.root().opacityProperty().bind(opacityPy);
+		gameScene.root().setVisible(false);
 	}
 
 	public Node root() {
-		return gameScene.sceneContainer();
+		return gameScene.root();
 	}
 
 	public void render() {
@@ -46,9 +46,9 @@ public class PictureInPicture {
 	public void update(GameScene master, boolean on) {
 		if (master != null) {
 			gameScene.setContext(master.context());
-			gameScene.sceneContainer().setVisible(on && master.is3D());
+			gameScene.root().setVisible(on && master.is3D());
 		} else {
-			gameScene.sceneContainer().setVisible(false);
+			gameScene.root().setVisible(false);
 		}
 	}
 }

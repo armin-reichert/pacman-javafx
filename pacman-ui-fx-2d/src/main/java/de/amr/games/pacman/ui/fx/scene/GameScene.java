@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 /**
@@ -57,9 +57,9 @@ public interface GameScene extends GameEventListener {
 	}
 
 	/**
-	 * @return the container of the game scene
+	 * @return the root of the game scene (used to embed the scene into the scene graph)
 	 */
-	BorderPane sceneContainer();
+	Region root();
 
 	/**
 	 * @return if this is a scene with 3D content

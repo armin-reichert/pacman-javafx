@@ -167,7 +167,7 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void showGamePage() {
 		reboot();
-		scene.setRoot(gamePage.root()); // TODO
+		scene.setRoot(gamePage.root());
 		gamePage.root().requestFocus();
 		clock.start();
 		updateStage();

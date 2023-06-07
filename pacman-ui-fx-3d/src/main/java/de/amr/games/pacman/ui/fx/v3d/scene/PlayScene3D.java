@@ -93,9 +93,9 @@ public class PlayScene3D implements GameScene {
 	};
 
 	private GameSceneContext context;
-	private final BorderPane subSceneContainer;
+	private final BorderPane root;
 	private final SubScene fxSubScene;
-	private final Group root;
+	private final Group group;
 	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
 
@@ -114,13 +114,13 @@ public class PlayScene3D implements GameScene {
 		var ambientLight = new AmbientLight();
 		ambientLight.colorProperty().bind(PacManGames3d.PY_3D_LIGHT_COLOR);
 
-		root = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
+		group = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 
 		// initial scene size is irrelevant, will be bound to main scene size
-		fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+		fxSubScene = new SubScene(group, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 
-		subSceneContainer = new BorderPane(fxSubScene);
+		root = new BorderPane(fxSubScene);
 	}
 
 	@Override
@@ -135,8 +135,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public BorderPane sceneContainer() {
-		return subSceneContainer;
+	public BorderPane root() {
+		return root;
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public class PlayScene3D implements GameScene {
 		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
 		// replace initial placeholder or previous 3D level
-		root.getChildren().set(0, level3D.getRoot());
+		group.getChildren().set(0, level3D.getRoot());
 
 		if (context.state() == GameState.LEVEL_TEST) {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));

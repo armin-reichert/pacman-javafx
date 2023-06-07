@@ -13,9 +13,13 @@ import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -23,7 +27,6 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -33,33 +36,102 @@ import javafx.stage.Stage;
  */
 public class GamePage {
 
+	private static final int FRAME_THICKNESS = 20;
+
 	protected final PacManGames2dUI ui;
 	protected final StackPane root;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final BorderPane frame;
+	protected final BorderPane scene2DBackPanel;
+	protected final BorderPane scene2DEmbedder;
+	protected final ImageView helpButton;
 	protected boolean canvasScaled = false;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
 
-		frame = new BorderPane();
-		frame.setScaleX(0.9);
-		frame.setScaleY(0.9);
-		var frameBorderStyle = new BorderStroke(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, BorderStrokeStyle.SOLID,
-				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(20),
-				new BorderWidths(20), null);
-		frame.setBorder(new Border(frameBorderStyle));
+		scene2DEmbedder = new BorderPane();
+		scene2DEmbedder.setMaxSize(1, 1);
+		scene2DEmbedder.setScaleX(0.88);
+		scene2DEmbedder.setScaleY(0.88);
 
-		root = new StackPane();
-		root.setBackground(ui.theme().background("wallpaper.background"));
-		root.setOnKeyPressed(this::handleKeyPressed);
-		root.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2) {
+		var borderStyle = new BorderStroke(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, BorderStrokeStyle.SOLID,
+				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(20),
+				new BorderWidths(FRAME_THICKNESS), null);
+		scene2DEmbedder.setBorder(new Border(borderStyle));
+		scene2DEmbedder.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 2 && e.getY() < scene2DEmbedder.getHeight() * 0.5) {
 				resizeStageToFitCurrentGameScene(ui.stage);
 			}
 		});
 
-		root.getChildren().setAll(new Region(), flashMessageView);
+		scene2DBackPanel = new BorderPane();
+		scene2DBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		scene2DBackPanel.setPadding(new Insets(5, 15, 5, 15));
+
+		helpButton = new ImageView();
+		helpButton.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
+				ui.showHelp();
+			}
+		});
+		helpButton.setTranslateY(scene2DEmbedder.getHeight() / 2);
+
+		root = new StackPane();
+		root.setBackground(ui.theme().background("wallpaper.background"));
+		root.setOnKeyPressed(this::handleKeyPressed);
+
+		scene2DEmbedder.setCenter(new StackPane(scene2DBackPanel, helpButton));
+		StackPane.setAlignment(helpButton, Pos.BOTTOM_CENTER);
+		helpButton.setTranslateY(FRAME_THICKNESS);
+
+		root.getChildren().setAll(scene2DEmbedder, flashMessageView);
+	}
+
+	private boolean isHelpAvailable(GameScene gameScene) {
+		var state = gameScene.context().gameController().state();
+		if (state == GameState.BOOT || state == GameState.INTERMISSION || state == GameState.INTERMISSION_TEST) {
+			return false;
+		}
+		return true;
+	}
+
+	private void updateHelpButton(GameScene gameScene) {
+		if (isHelpAvailable(gameScene)) {
+			boolean msPacManGame = gameScene.context().gameVariant() == GameVariant.MS_PACMAN;
+			helpButton.setImage(ui.theme().image(msPacManGame ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
+			helpButton.setFitWidth(FRAME_THICKNESS);
+			helpButton.setFitHeight(FRAME_THICKNESS);
+			helpButton.setSmooth(true);
+			helpButton.setCursor(Cursor.HAND);
+			helpButton.setVisible(true);
+		} else {
+			helpButton.setVisible(false); // or gray out etc.
+		}
+	}
+
+	public void setGameScene(GameScene gameScene) {
+		if (gameScene instanceof GameScene2D) {
+			var scene2D = (GameScene2D) gameScene;
+			scene2D.setCanvasScaled(canvasScaled);
+			scene2D.setRoundedCorners(false);
+			scene2DBackPanel.setCenter(scene2D.root());
+			root.getChildren().set(0, scene2DEmbedder);
+		} else {
+			root.getChildren().set(0, gameScene.root());
+		}
+		boolean playScene = false;
+		if (ui.gameVariant() == GameVariant.MS_PACMAN) {
+			playScene = gameScene == ui.configMsPacMan.playScene() || gameScene == ui.configMsPacMan.playScene3D();
+		} else {
+			playScene = gameScene == ui.configPacMan.playScene() || gameScene == ui.configPacMan.playScene3D();
+		}
+		if (playScene) {
+			root.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
+		} else {
+			root.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
+		}
+		updateHelpButton(gameScene);
+		root.requestFocus();
 	}
 
 	public Parent root() {
@@ -91,37 +163,9 @@ public class GamePage {
 		root.getChildren().add(layer);
 	}
 
-	public void setGameScene(GameScene gameScene) {
-		if (gameScene instanceof GameScene2D) {
-			var scene2D = (GameScene2D) gameScene;
-			scene2D.setCanvasScaled(canvasScaled);
-			scene2D.setRoundedCorners(false);
-			var frameContent = new BorderPane(gameScene.sceneContainer());
-			frameContent.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-			frameContent.setPadding(new Insets(10, 20, 10, 20));
-			frame.setCenter(frameContent);
-			frame.setMaxSize(1, 1);
-			root.getChildren().set(0, frame);
-		} else {
-			root.getChildren().set(0, gameScene.sceneContainer());
-		}
-		boolean playScene = false;
-		if (ui.gameVariant() == GameVariant.MS_PACMAN) {
-			playScene = gameScene == ui.configMsPacMan.playScene() || gameScene == ui.configMsPacMan.playScene3D();
-		} else {
-			playScene = gameScene == ui.configPacMan.playScene() || gameScene == ui.configPacMan.playScene3D();
-		}
-		if (playScene) {
-			root.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
-		} else {
-			root.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
-		}
-		root.requestFocus();
-	}
-
 	protected void resizeStageToFitCurrentGameScene(Stage stage) {
 		if (ui.currentGameScene() != null && !ui.currentGameScene().is3D() && !stage.isFullScreen()) {
-			stage.setWidth(ui.currentGameScene().sceneContainer().getWidth() + 16); // don't ask me why
+			stage.setWidth(ui.currentGameScene().root().getWidth() + 16); // don't ask me why
 		}
 	}
 

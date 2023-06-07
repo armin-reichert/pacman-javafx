@@ -27,8 +27,13 @@ public class ArcadeTheme extends Theme {
 	public static final Color ROSE   = Color.rgb(252, 187, 179);
 
 	public ArcadeTheme(ResourceManager rm) {
+
+		//
 		// Ms. Pac-Man game
+		//
+		
 		set("mspacman.startpage.image",        rm.image("graphics/mspacman/wallpaper-midway.png"));
+		set("mspacman.helpButton.icon",        rm.image("graphics/icons/help-red-64.png"));
 		
 		set("mspacman.spritesheet",            new SpritesheetMsPacManGame(rm.image("graphics/mspacman/sprites.png")));
 		set("mspacman.icon",                   rm.image("graphics/icons/mspacman.png"));
@@ -84,8 +89,12 @@ public class ArcadeTheme extends Theme {
 		set("mspacman.audio.siren.3",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
 		set("mspacman.audio.siren.4",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
 
+		//
 		// Pac-Man game
+		//
+		
 		set("pacman.startpage.image",          rm.image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg"));
+		set("pacman.helpButton.icon",          rm.image("graphics/icons/help-blue-64.png"));
 		
 		set("pacman.spritesheet",              new SpritesheetPacManGame(rm.image("graphics/pacman/sprites.png")));
 		set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
