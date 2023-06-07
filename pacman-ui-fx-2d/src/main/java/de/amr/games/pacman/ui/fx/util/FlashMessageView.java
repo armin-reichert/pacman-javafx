@@ -59,6 +59,7 @@ public class FlashMessageView extends VBox {
 		textView.setFont(textFont);
 		textView.setTextAlignment(TextAlignment.CENTER);
 		setAlignment(Pos.CENTER);
+		setMouseTransparent(true);
 		getChildren().add(textView);
 	}
 
