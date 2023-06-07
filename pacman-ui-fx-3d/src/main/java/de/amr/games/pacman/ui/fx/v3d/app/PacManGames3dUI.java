@@ -105,7 +105,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 		// TODO there is a problem wih adding the dashboard layer on top: it swallows the mouse events. Making
 		// it mouse transparent does not help because then, the dashboard cannot be interacted with.
-		gamePage.addLayer(dashboardLayer);
 	}
 
 	@Override
@@ -204,8 +203,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	public void toggleDashboardVisible() {
 		dashboard().setVisible(!dashboard().isVisible());
-		if (!dashboard.isVisible()) {
+		if (dashboard.isVisible()) {
+			gamePage.root().getChildren().add(dashboardLayer);
+			gamePage.helpButton().setVisible(false);
+		} else {
+			gamePage.root().getChildren().remove(dashboardLayer);
 			gamePage.root().requestFocus();
+			gamePage.helpButton().setVisible(true);
 		}
 	}
 
