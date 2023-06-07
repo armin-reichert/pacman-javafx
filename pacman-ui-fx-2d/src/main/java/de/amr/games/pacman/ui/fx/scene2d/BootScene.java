@@ -91,7 +91,7 @@ public class BootScene extends GameScene2D {
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
 		g.setStroke(ArcadeTheme.PALE);
-		g.setLineWidth(2.0);
+		g.setLineWidth(s(2.0));
 		for (int row = 0; row <= numRows; ++row) {
 			g.strokeLine(0, s(row * raster), s(WIDTH_UNSCALED), s(row * raster));
 		}
