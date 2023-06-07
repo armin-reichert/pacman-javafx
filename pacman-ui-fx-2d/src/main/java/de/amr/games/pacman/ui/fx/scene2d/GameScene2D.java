@@ -68,8 +68,8 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	protected final StackPane root = new StackPane();
-	protected final BorderPane gameSceneContainer;
+	protected final BorderPane root;
+	protected final StackPane stack = new StackPane();
 	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Pane overlay = new Pane();
@@ -82,13 +82,13 @@ public abstract class GameScene2D implements GameScene {
 	private boolean canvasScaled;
 
 	protected GameScene2D() {
-		gameSceneContainer = new BorderPane(root);
-		gameSceneContainer.setMinWidth(WIDTH_UNSCALED);
-		gameSceneContainer.setMinHeight(HEIGHT_UNSCALED);
-		gameSceneContainer.setMaxWidth(WIDTH_UNSCALED);
-		gameSceneContainer.setMaxHeight(HEIGHT_UNSCALED);
+		root = new BorderPane(stack);
+		root.setMinWidth(WIDTH_UNSCALED);
+		root.setMinHeight(HEIGHT_UNSCALED);
+		root.setMaxWidth(WIDTH_UNSCALED);
+		root.setMaxHeight(HEIGHT_UNSCALED);
 
-		root.getChildren().addAll(canvas, overlay);
+		stack.getChildren().addAll(canvas, overlay);
 		overlay.getChildren().add(helpRoot);
 
 		overlay.getTransforms().add(overlayScale);
@@ -101,7 +101,7 @@ public abstract class GameScene2D implements GameScene {
 		helpMenuAnimation.setToValue(0);
 
 		// scale overlay pane to cover subscene
-		gameSceneContainer.heightProperty().addListener((py, ov, nv) -> {
+		root.heightProperty().addListener((py, ov, nv) -> {
 			var scaling = nv.doubleValue() / HEIGHT_UNSCALED;
 			overlayScale.setX(scaling);
 			overlayScale.setY(scaling);
@@ -113,14 +113,14 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected double s(double value) {
-		return canvasScaled ? value : value * gameSceneContainer.getHeight() / HEIGHT_UNSCALED;
+		return canvasScaled ? value : value * root.getHeight() / HEIGHT_UNSCALED;
 	}
 
 	public void setCanvasScaled(boolean scaled) {
 		canvasScaled = scaled;
 		if (scaled) {
-			canvas.scaleXProperty().bind(gameSceneContainer.widthProperty().divide(WIDTH_UNSCALED));
-			canvas.scaleYProperty().bind(gameSceneContainer.heightProperty().divide(HEIGHT_UNSCALED));
+			canvas.scaleXProperty().bind(root.widthProperty().divide(WIDTH_UNSCALED));
+			canvas.scaleYProperty().bind(root.heightProperty().divide(HEIGHT_UNSCALED));
 			canvas.widthProperty().unbind();
 			canvas.heightProperty().unbind();
 			canvas.setWidth(WIDTH_UNSCALED);
@@ -130,17 +130,13 @@ public abstract class GameScene2D implements GameScene {
 			canvas.scaleYProperty().unbind();
 			canvas.setScaleX(1);
 			canvas.setScaleY(1);
-			canvas.widthProperty().bind(gameSceneContainer.widthProperty());
-			canvas.heightProperty().bind(gameSceneContainer.heightProperty());
+			canvas.widthProperty().bind(root.widthProperty());
+			canvas.heightProperty().bind(root.heightProperty());
 		}
 	}
 
 	protected Font sceneFont() {
 		return context.ui().theme().font("font.arcade", s(8));
-	}
-
-	public StackPane root() {
-		return root;
 	}
 
 	public void setRoundedCorners(boolean roundedCorners) {
@@ -201,7 +197,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public BorderPane sceneContainer() {
-		return gameSceneContainer;
+		return root;
 	}
 
 	public Canvas getCanvas() {
@@ -214,10 +210,10 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void setParentScene(Scene parentScene) {
-		gameSceneContainer.minWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
-		gameSceneContainer.minHeightProperty().bind(parentScene.heightProperty());
-		gameSceneContainer.maxWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
-		gameSceneContainer.maxHeightProperty().bind(parentScene.heightProperty());
+		root.minWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
+		root.minHeightProperty().bind(parentScene.heightProperty());
+		root.maxWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
+		root.maxHeightProperty().bind(parentScene.heightProperty());
 	}
 
 	@Override
