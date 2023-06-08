@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.app;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
@@ -37,50 +38,49 @@ import javafx.scene.paint.Color;
  */
 public class GamePage {
 
+	private static final Color FRAME_COLOR = ArcadeTheme.PALE;
 	private static final int FRAME_THICKNESS = 12; // TODO should be adapted to size of game scene
 	private static final int HELP_BUTTON_SIZE = 24;
 
 	protected final PacManGames2dUI ui;
 	protected final StackPane root;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final BorderPane scene2DBackPanel;
-	protected final BorderPane scene2DFrame;
+	protected final BorderPane sceneBackPanel;
+	protected final BorderPane sceneFrame;
 	protected final Pane helpButton;
 	protected boolean canvasScaled = false;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
 
-		scene2DFrame = new BorderPane();
-		scene2DFrame.setMaxSize(1, 1); // gets resized with content
-		scene2DFrame.setScaleX(0.9);
-		scene2DFrame.setScaleY(0.9);
-
 		var roundedBorderStroke = new BorderStroke( //
-				Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, //
+				FRAME_COLOR, FRAME_COLOR, FRAME_COLOR, FRAME_COLOR, //
 				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, //
 				new CornerRadii(10), new BorderWidths(FRAME_THICKNESS), null);
 
-		scene2DFrame.setBorder(new Border(roundedBorderStroke));
+		sceneFrame = new BorderPane();
+		sceneFrame.setMaxSize(1, 1); // gets resized with content
+		sceneFrame.setScaleX(0.9);
+		sceneFrame.setScaleY(0.9);
+		sceneFrame.setBorder(new Border(roundedBorderStroke));
 
-		scene2DBackPanel = new BorderPane();
-		scene2DBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		sceneBackPanel = new BorderPane();
+		sceneBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 
-		helpButton = new VBox();
+		helpButton = new VBox(createHelpButtonIcon(ui.game().variant()));
 		helpButton.setPadding(new Insets(4));
 		helpButton.setMaxSize(HELP_BUTTON_SIZE, HELP_BUTTON_SIZE);
 		helpButton.setCursor(Cursor.HAND);
-		StackPane.setAlignment(helpButton, Pos.TOP_RIGHT);
-		helpButton.getChildren().setAll(createHelpButtonIcon(ui.game().variant()));
 		helpButton.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
 				ui.showHelp();
 			}
 		});
 
-		scene2DFrame.setCenter(new StackPane(scene2DBackPanel, helpButton));
+		sceneFrame.setCenter(new StackPane(sceneBackPanel, helpButton));
+		StackPane.setAlignment(helpButton, Pos.TOP_RIGHT);
 
-		root = new StackPane(scene2DFrame, flashMessageView);
+		root = new StackPane(sceneFrame, flashMessageView);
 		root.setBackground(ui.theme().background("wallpaper.background"));
 		root.setOnKeyPressed(this::handleKeyPressed);
 	}
@@ -116,13 +116,13 @@ public class GamePage {
 			var scene2D = (GameScene2D) gameScene;
 			scene2D.setCanvasScaled(canvasScaled);
 			scene2D.setRoundedCorners(false);
-			scene2DBackPanel.setCenter(scene2D.root());
+			sceneBackPanel.setCenter(scene2D.root());
 			if (gameScene instanceof PlayScene2D) {
-				scene2DBackPanel.setPadding(new Insets(0, 12, 0, 12));
+				sceneBackPanel.setPadding(new Insets(0, 12, 0, 12));
 			} else {
-				scene2DBackPanel.setPadding(new Insets(0));
+				sceneBackPanel.setPadding(new Insets(0));
 			}
-			root.getChildren().set(0, scene2DFrame);
+			root.getChildren().set(0, sceneFrame);
 		} else {
 			root.getChildren().set(0, gameScene.root());
 		}
