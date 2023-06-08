@@ -28,6 +28,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
@@ -36,13 +37,14 @@ import javafx.scene.paint.Color;
 public class GamePage {
 
 	private static final int FRAME_THICKNESS = 15;
+	private static final int HELP_BUTTON_SIZE = 24;
 
 	protected final PacManGames2dUI ui;
 	protected final StackPane root;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final BorderPane scene2DBackPanel;
 	protected final BorderPane scene2DFrame;
-	protected ImageView helpButton;
+	protected final Pane helpButton;
 	protected boolean canvasScaled = false;
 
 	public GamePage(PacManGames2dUI ui) {
@@ -64,28 +66,23 @@ public class GamePage {
 		scene2DBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		scene2DBackPanel.setPadding(new Insets(2, 15, 2, 15));
 
-		createHelpButton();
+		helpButton = new VBox();
+		helpButton.setPadding(new Insets(4));
+		helpButton.setMaxSize(HELP_BUTTON_SIZE, HELP_BUTTON_SIZE);
+		helpButton.setCursor(Cursor.HAND);
+		StackPane.setAlignment(helpButton, Pos.TOP_RIGHT);
+		helpButton.getChildren().setAll(createHelpButtonIcon(ui.gameVariant()));
+		helpButton.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
+				ui.showHelp();
+			}
+		});
 
 		scene2DFrame.setCenter(new StackPane(scene2DBackPanel, helpButton));
 
 		root = new StackPane(scene2DFrame, flashMessageView);
 		root.setBackground(ui.theme().background("wallpaper.background"));
 		root.setOnKeyPressed(this::handleKeyPressed);
-	}
-
-	private void createHelpButton() {
-		helpButton = new ImageView();
-		StackPane.setAlignment(helpButton, Pos.TOP_RIGHT);
-		helpButton.setTranslateY(0);
-		helpButton.setFitWidth(32);
-		helpButton.setFitHeight(32);
-		helpButton.setSmooth(true);
-		helpButton.setCursor(Cursor.HAND);
-		helpButton.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
-				ui.showHelp();
-			}
-		});
 	}
 
 	private boolean isHelpAvailable(GameScene gameScene) {
@@ -96,10 +93,18 @@ public class GamePage {
 		return true;
 	}
 
+	private ImageView createHelpButtonIcon(GameVariant variant) {
+		var imageView = new ImageView(ui.theme()
+				.image(ui.gameVariant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
+		imageView.setFitWidth(HELP_BUTTON_SIZE);
+		imageView.setFitHeight(HELP_BUTTON_SIZE);
+		imageView.setSmooth(true);
+		return imageView;
+	}
+
 	private void updateHelpButton(GameScene gameScene) {
 		if (isHelpAvailable(gameScene)) {
-			boolean msPacManGame = gameScene.context().gameVariant() == GameVariant.MS_PACMAN;
-			helpButton.setImage(ui.theme().image(msPacManGame ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
+			helpButton.getChildren().setAll(createHelpButtonIcon(ui.gameVariant()));
 			helpButton.setVisible(true);
 		} else {
 			helpButton.setVisible(false); // or gray out etc.
