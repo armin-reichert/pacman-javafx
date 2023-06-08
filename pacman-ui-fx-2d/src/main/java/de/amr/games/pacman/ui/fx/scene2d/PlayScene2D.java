@@ -97,6 +97,7 @@ public class PlayScene2D extends GameScene2D {
 
 	}
 
+	// TODO put all images into a single spritesheet
 	private void drawPacManMaze(double x, double y, World world) {
 		if (world.mazeFlashing().isRunning()) {
 			var image = world.mazeFlashing().on() ? ui().theme().image("pacman.flashingMaze")
@@ -162,7 +163,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onSceneVariantSwitch() {
 		game().level().ifPresent(level -> {
-			if (!level.isDemoLevel()) {
+			if (!level.isDemoLevel() && ui().gameController().state() == GameState.HUNTING) {
 				ui().soundHandler().ensureSirenStarted(level.huntingPhase() / 2);
 			}
 		});

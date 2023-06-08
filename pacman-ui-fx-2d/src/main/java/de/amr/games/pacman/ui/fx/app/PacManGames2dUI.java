@@ -239,7 +239,7 @@ public class PacManGames2dUI implements GameEventListener {
 	protected void updateOrReloadGameScene(boolean reload) {
 		var nextGameScene = sceneMatchingCurrentGameState();
 		if (nextGameScene == null) {
-			throw new IllegalStateException(String.format("No game scene found for game state %s.", gameController.state()));
+			throw new IllegalStateException("No game scene found for game state " + gameController.state());
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			setGameScene(nextGameScene);
@@ -439,13 +439,13 @@ public class PacManGames2dUI implements GameEventListener {
 		int newFramerate = clock.targetFrameratePy.get() + delta;
 		if (newFramerate > 0) {
 			clock.targetFrameratePy.set(newFramerate);
-			showFlashMessageSeconds(0.75, String.format("%dHz", newFramerate));
+			showFlashMessageSeconds(0.75, newFramerate + "Hz");
 		}
 	}
 
 	public void resetSimulationSpeed() {
 		clock.targetFrameratePy.set(GameModel.FPS);
-		showFlashMessageSeconds(0.75, String.format("%dHz", clock.targetFrameratePy.get()));
+		showFlashMessageSeconds(0.75, clock.targetFrameratePy.get() + "Hz");
 	}
 
 	public void switchGameVariant() {
