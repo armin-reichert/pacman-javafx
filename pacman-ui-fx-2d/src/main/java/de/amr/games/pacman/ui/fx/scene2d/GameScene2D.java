@@ -54,6 +54,7 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public abstract class GameScene2D implements GameScene {
+
 	public static final int TILES_X = 28;
 	public static final int TILES_Y = 36;
 	public static final int WIDTH_UNSCALED = 224;
@@ -68,19 +69,19 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	protected final BorderPane root;
-	protected final StackPane stack = new StackPane();
+	private final BorderPane root;
+	private final StackPane stack = new StackPane();
 	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Pane overlay = new Pane();
-	protected final Scale overlayScale = new Scale();
-	protected final VBox helpRoot = new VBox();
-	protected final FadeTransition helpMenuAnimation;
+	private final Scale overlayScale = new Scale();
+	private final VBox helpRoot = new VBox();
+	private final FadeTransition helpMenuAnimation;
 
-	protected GameController gameController;
-	protected PacManGames2dUI ui;
-	protected boolean scoreVisible;
-	protected boolean creditVisible;
+	private GameController gameController;
+	private PacManGames2dUI ui;
+	private boolean scoreVisible;
+	private boolean creditVisible;
 
 	private boolean roundedCorners = true;
 	private Color wallpaperColor = Color.BLACK;
