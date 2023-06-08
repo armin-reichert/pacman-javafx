@@ -297,7 +297,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 			if (!level.isDemoLevel()) {
-				ui().soundHandler().ensureSirenStarted(level.huntingPhase() / 2);
+				ui().soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -420,7 +420,8 @@ public class PlayScene3D implements GameScene {
 				// level complete animation is always played
 				var levelCompleteAnimation = createLevelCompleteAnimation(level);
 				// level change animation is played only if no intermission scene follows
-				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation() : Ufx.pauseSeconds(0);
+				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation(level)
+						: Ufx.pauseSeconds(0);
 				//@formatter:off
 				lockStateAndPlayAfterSeconds(1.0, 
 					levelCompleteAnimation, 
@@ -429,7 +430,7 @@ public class PlayScene3D implements GameScene {
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
-							ui().soundHandler().audioClip("audio.level_complete").play();
+							ui().soundHandler().audioClip(level.game().variant(), "audio.level_complete").play();
 							PacManGames3d.ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
 						}
 					}),
@@ -441,11 +442,13 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case GAME_OVER -> {
-			level3D.world3D().foodOscillation().stop();
-			level3D.livesCounter3D().stopAnimation();
-			PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
-			ui().soundHandler().audioClip("audio.game_over").play();
-			waitSeconds(3);
+			game().level().ifPresent(level -> {
+				level3D.world3D().foodOscillation().stop();
+				level3D.livesCounter3D().stopAnimation();
+				PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
+				ui().soundHandler().audioClip(level.game().variant(), "audio.game_over").play();
+				waitSeconds(3);
+			});
 		}
 
 		default -> {
@@ -476,7 +479,7 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private Animation createLevelChangeAnimation() {
+	private Animation createLevelChangeAnimation(GameLevel level) {
 		var rotation = new RotateTransition(Duration.seconds(1.5), level3D.getRoot());
 		rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotation.setFromAngle(0);
@@ -489,7 +492,7 @@ public class PlayScene3D implements GameScene {
 				perspectivePy.set(Perspective.TOTAL);
 			}),
 			rotation,
-			Ufx.actionAfterSeconds(0.5, () -> ui().soundHandler().audioClip("audio.sweep").play()),
+			Ufx.actionAfterSeconds(0.5, () -> ui().soundHandler().audioClip(level.game().variant(), "audio.sweep").play()),
 			Ufx.actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3d.PY_3D_PERSPECTIVE))
 		);
 		//@formatter:on
@@ -512,17 +515,19 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateSound(GameLevel level) {
+		var gameVariant = level.game().variant();
 		if (level.isDemoLevel()) {
 			return;
 		}
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			ui().soundHandler().audioClip("audio.pacman_munch").stop();
+			ui().soundHandler().audioClip(gameVariant, "audio.pacman_munch").stop();
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			ui().soundHandler().ensureLoopEndless(ui().soundHandler().audioClip("audio.ghost_returning"));
+			ui().soundHandler().ensureLoopEndless(ui().soundHandler().audioClip(gameVariant, "audio.ghost_returning"));
+
 		} else {
-			ui().soundHandler().audioClip("audio.ghost_returning").stop();
+			ui().soundHandler().audioClip(gameVariant, "audio.ghost_returning").stop();
 		}
 	}
 

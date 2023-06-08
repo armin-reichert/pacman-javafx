@@ -93,7 +93,7 @@ public class PacManGames2dUI implements GameEventListener {
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 		clock.targetFrameratePy.set(GameModel.FPS);
 
-		soundHandler = new SoundHandler(this);
+		soundHandler = new SoundHandler(theme);
 
 		var screenSize = Screen.getPrimary().getBounds();
 		double height = screenSize.getHeight() * 0.8;
