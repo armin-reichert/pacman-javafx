@@ -122,7 +122,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	protected GameScene sceneMatchingCurrentGameState() {
 		var scene = super.sceneMatchingCurrentGameState();
 		if (PacManGames3d.PY_3D_ENABLED.get()) {
-			var config = gameVariant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+			var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
 			if (scene == config.playScene() && config.playScene3D() != null) {
 				scene = config.playScene3D();
 			}
@@ -138,7 +138,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	public void toggle2D3D() {
-		var config = gameVariant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+		var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
 		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
 		if (config.playScene() == currentGameScene || config.playScene3D() == currentGameScene) {
 			updateOrReloadGameScene(true);

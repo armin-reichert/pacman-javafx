@@ -158,7 +158,7 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void showStartPage() {
 		clock.stop();
-		startPage.setGameVariant(gameVariant());
+		startPage.setGameVariant(game().variant());
 		scene.setRoot(startPage.root());
 		startPage.root().requestFocus();
 		updateStage();
@@ -187,7 +187,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		switch (gameVariant()) {
+		switch (game().variant()) {
 		case MS_PACMAN: {
 			String messageKey = "app.title.ms_pacman";
 			if (clock != null && clock.isPaused()) {
@@ -207,7 +207,7 @@ public class PacManGames2dUI implements GameEventListener {
 			break;
 		}
 		default:
-			throw new IllegalGameVariantException(gameVariant());
+			throw new IllegalGameVariantException(game().variant());
 		}
 	}
 
@@ -219,7 +219,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected GameScene sceneMatchingCurrentGameState() {
-		var config = gameVariant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+		var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
 		switch (gameController.state()) {
 		case BOOT:
 			return config.bootScene();
@@ -350,18 +350,14 @@ public class PacManGames2dUI implements GameEventListener {
 		return gameController.game();
 	}
 
-	public GameVariant gameVariant() {
-		return gameController.game().variant();
-	}
-
 	public Spritesheet spritesheet() {
-		switch (gameVariant()) {
+		switch (game().variant()) {
 		case MS_PACMAN:
 			return theme().get("mspacman.spritesheet");
 		case PACMAN:
 			return theme().get("pacman.spritesheet");
 		default:
-			throw new IllegalGameVariantException(gameVariant());
+			throw new IllegalGameVariantException(game().variant());
 		}
 	}
 
@@ -453,7 +449,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	public void switchGameVariant() {
-		var variant = gameVariant().next();
+		var variant = game().variant().next();
 		gameController.selectGameVariant(variant);
 		showStartPage();
 	}

@@ -31,7 +31,7 @@ public class SoundHandler {
 	}
 
 	public AudioClip audioClip(String clipName) {
-		var prefix = ui.gameVariant() == GameVariant.MS_PACMAN ? "mspacman." : "pacman.";
+		var prefix = ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman." : "pacman.";
 		return ui.theme.audioClip(prefix + clipName);
 	}
 

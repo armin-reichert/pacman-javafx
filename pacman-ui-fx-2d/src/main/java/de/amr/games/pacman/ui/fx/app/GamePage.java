@@ -71,7 +71,7 @@ public class GamePage {
 		helpButton.setMaxSize(HELP_BUTTON_SIZE, HELP_BUTTON_SIZE);
 		helpButton.setCursor(Cursor.HAND);
 		StackPane.setAlignment(helpButton, Pos.TOP_RIGHT);
-		helpButton.getChildren().setAll(createHelpButtonIcon(ui.gameVariant()));
+		helpButton.getChildren().setAll(createHelpButtonIcon(ui.game().variant()));
 		helpButton.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
 				ui.showHelp();
@@ -95,7 +95,7 @@ public class GamePage {
 
 	private ImageView createHelpButtonIcon(GameVariant variant) {
 		var imageView = new ImageView(ui.theme()
-				.image(ui.gameVariant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
+				.image(ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
 		imageView.setFitWidth(HELP_BUTTON_SIZE);
 		imageView.setFitHeight(HELP_BUTTON_SIZE);
 		imageView.setSmooth(true);
@@ -104,7 +104,7 @@ public class GamePage {
 
 	private void updateHelpButton(GameScene gameScene) {
 		if (isHelpAvailable(gameScene)) {
-			helpButton.getChildren().setAll(createHelpButtonIcon(ui.gameVariant()));
+			helpButton.getChildren().setAll(createHelpButtonIcon(ui.game().variant()));
 			helpButton.setVisible(true);
 		} else {
 			helpButton.setVisible(false); // or gray out etc.
@@ -122,7 +122,7 @@ public class GamePage {
 			root.getChildren().set(0, gameScene.root());
 		}
 		boolean playScene = false;
-		if (ui.gameVariant() == GameVariant.MS_PACMAN) {
+		if (ui.game().variant() == GameVariant.MS_PACMAN) {
 			playScene = gameScene == ui.configMsPacMan.playScene() || gameScene == ui.configMsPacMan.playScene3D();
 		} else {
 			playScene = gameScene == ui.configPacMan.playScene() || gameScene == ui.configPacMan.playScene3D();
