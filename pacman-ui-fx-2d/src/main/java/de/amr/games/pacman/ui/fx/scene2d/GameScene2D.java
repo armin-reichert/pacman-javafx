@@ -59,17 +59,16 @@ public abstract class GameScene2D implements GameScene {
 		return (float) tiles * TS;
 	}
 
-	public static boolean debug;
-
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	private final BorderPane root;
-	private final StackPane stack = new StackPane();
-	protected final Canvas canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
-	protected final GraphicsContext g = canvas.getGraphicsContext2D();
-	protected final Pane overlay = new Pane();
+
+	protected final Canvas canvas;
+	protected final GraphicsContext g;
+	protected final Pane overlay;
+
 	private final Scale overlayScale = new Scale();
-	private final HelpMenu helpMenu = new HelpMenu();
+	private final HelpMenu helpMenu;
 
 	private GameController gameController;
 	private PacManGames2dUI ui;
@@ -81,21 +80,26 @@ public abstract class GameScene2D implements GameScene {
 	private boolean canvasScaled;
 
 	protected GameScene2D() {
-		root = new BorderPane(stack);
+		canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
+		g = canvas.getGraphicsContext2D();
+
+		helpMenu = new HelpMenu();
+		helpMenu.setTranslateX(10);
+		helpMenu.setTranslateY(HEIGHT_UNSCALED * 0.2);
+
+		overlay = new Pane();
+		overlay.getChildren().add(helpMenu);
+		overlay.getTransforms().add(overlayScale);
+
+		var layers = new StackPane(canvas, overlay);
+
+		root = new BorderPane(layers);
 		root.setMinWidth(WIDTH_UNSCALED);
 		root.setMinHeight(HEIGHT_UNSCALED);
 		root.setMaxWidth(WIDTH_UNSCALED);
 		root.setMaxHeight(HEIGHT_UNSCALED);
 
-		stack.getChildren().addAll(canvas, overlay);
-		overlay.getChildren().add(helpMenu);
-
-		overlay.getTransforms().add(overlayScale);
-
-		helpMenu.setTranslateX(10);
-		helpMenu.setTranslateY(HEIGHT_UNSCALED * 0.2);
-
-		// scale overlay pane to cover subscene
+		// always scale overlay pane to cover subscene
 		root.heightProperty().addListener((py, ov, nv) -> {
 			var scaling = nv.doubleValue() / HEIGHT_UNSCALED;
 			overlayScale.setX(scaling);
@@ -105,10 +109,6 @@ public abstract class GameScene2D implements GameScene {
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 
 		setCanvasScaled(false);
-	}
-
-	protected double s(double value) {
-		return canvasScaled ? value : value * root.getHeight() / HEIGHT_UNSCALED;
 	}
 
 	@Override
@@ -152,6 +152,10 @@ public abstract class GameScene2D implements GameScene {
 			canvas.widthProperty().bind(root.widthProperty());
 			canvas.heightProperty().bind(root.heightProperty());
 		}
+	}
+
+	protected double s(double value) {
+		return canvasScaled ? value : value * root.getHeight() / HEIGHT_UNSCALED;
 	}
 
 	protected Font sceneFont() {
@@ -363,11 +367,20 @@ public abstract class GameScene2D implements GameScene {
 			if (animations instanceof SpriteAnimations) {
 				var sa = (SpriteAnimations) animations;
 				drawEntitySprite(pac, sa.currentSprite());
-				if (debug) {
+				if (infoVisiblePy.get() && pac.isVisible()) {
 					g.setFill(Color.WHITE);
-					g.setFont(Font.font("Monospaced", s(8)));
+					g.setFont(Font.font("Monospaced", s(6)));
 					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
-					g.fillText(text, s(pac.position().x() + 4), s(pac.position().y()));
+					g.fillText(text, s(pac.position().x() + 8), s(pac.position().y()));
+					// indicate wish direction
+					float r = 2;
+					var pacCenter = pac.center();
+					var indicatorCenter = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(1.5f * TS));
+					var indicatorTopLeft = indicatorCenter.minus(r, r);
+					g.setStroke(Color.WHITE);
+					g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
+					g.setFill(Color.GREEN);
+					g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
 				}
 			}
 		});
@@ -378,11 +391,11 @@ public abstract class GameScene2D implements GameScene {
 			if (animations instanceof SpriteAnimations) {
 				var sa = (SpriteAnimations) animations;
 				drawEntitySprite(ghost, sa.currentSprite());
-				if (debug) {
+				if (infoVisiblePy.get() && ghost.isVisible()) {
 					g.setFill(Color.WHITE);
-					g.setFont(Font.font("Monospaced", s(8)));
+					g.setFont(Font.font("Monospaced", s(6)));
 					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
-					g.fillText(text, s(ghost.position().x() + 4), s(ghost.position().y()));
+					g.fillText(text, s(ghost.position().x() + 8), s(ghost.position().y()));
 				}
 			}
 		});
@@ -417,7 +430,7 @@ public abstract class GameScene2D implements GameScene {
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
 	 */
-	public void drawSpriteOverBoundingBox(Rectangle2D r, double x, double y) {
+	protected void drawSpriteOverBoundingBox(Rectangle2D r, double x, double y) {
 		if (r != null) {
 			drawSprite(r, x + HTS - r.getWidth() / 2, y + HTS - r.getHeight() / 2);
 		}
@@ -429,7 +442,7 @@ public abstract class GameScene2D implements GameScene {
 	 * @param entity an entity like Pac-Man or a ghost
 	 * @param r      the sprite
 	 */
-	public void drawEntitySprite(Entity entity, Rectangle2D r) {
+	protected void drawEntitySprite(Entity entity, Rectangle2D r) {
 		checkNotNull(entity);
 		if (entity.isVisible()) {
 			drawSpriteOverBoundingBox(r, entity.position().x(), entity.position().y());
@@ -490,13 +503,6 @@ public abstract class GameScene2D implements GameScene {
 			g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(tilesY * TS));
 		}
 		g.restore();
-	}
-
-	protected void drawWishDirIndicator(Pac pac) {
-		g.setFill(Color.RED);
-		float r = 4;
-		var center = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(8f)).minus(r, r);
-		g.fillOval(s(center.x()), s(center.y()), s(2 * r), s(2 * r));
 	}
 
 	/**
