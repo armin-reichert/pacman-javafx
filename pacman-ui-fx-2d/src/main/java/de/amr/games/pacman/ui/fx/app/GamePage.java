@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -36,7 +37,7 @@ import javafx.scene.paint.Color;
  */
 public class GamePage {
 
-	private static final int FRAME_THICKNESS = 15;
+	private static final int FRAME_THICKNESS = 12; // TODO should be adapted to size of game scene
 	private static final int HELP_BUTTON_SIZE = 24;
 
 	protected final PacManGames2dUI ui;
@@ -64,7 +65,6 @@ public class GamePage {
 
 		scene2DBackPanel = new BorderPane();
 		scene2DBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-		scene2DBackPanel.setPadding(new Insets(2, 15, 2, 15));
 
 		helpButton = new VBox();
 		helpButton.setPadding(new Insets(4));
@@ -117,6 +117,11 @@ public class GamePage {
 			scene2D.setCanvasScaled(canvasScaled);
 			scene2D.setRoundedCorners(false);
 			scene2DBackPanel.setCenter(scene2D.root());
+			if (gameScene instanceof PlayScene2D) {
+				scene2DBackPanel.setPadding(new Insets(0, 12, 0, 12));
+			} else {
+				scene2DBackPanel.setPadding(new Insets(0));
+			}
 			root.getChildren().set(0, scene2DFrame);
 		} else {
 			root.getChildren().set(0, gameScene.root());
