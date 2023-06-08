@@ -10,7 +10,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 import java.util.List;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -70,7 +69,6 @@ public abstract class GameScene2D implements GameScene {
 	private final Scale overlayScale = new Scale();
 	private final HelpMenu helpMenu;
 
-	private GameController gameController;
 	private PacManGames2dUI ui;
 	private boolean scoreVisible;
 	private boolean creditVisible;
@@ -171,19 +169,13 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void setContext(GameController gameController, PacManGames2dUI ui) {
-		this.gameController = gameController;
+	public void setUI(PacManGames2dUI ui) {
 		this.ui = ui;
 	}
 
 	@Override
 	public PacManGames2dUI ui() {
 		return ui;
-	}
-
-	@Override
-	public GameController gameController() {
-		return gameController;
 	}
 
 	@Override

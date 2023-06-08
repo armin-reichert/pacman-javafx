@@ -23,6 +23,14 @@ import javafx.scene.layout.Region;
  */
 public interface GameScene extends GameEventListener {
 
+	boolean isScoreVisible();
+
+	void setScoreVisible(boolean visible);
+
+	boolean isCreditVisible();
+
+	void setCreditVisible(boolean visible);
+
 	void setParentScene(Scene parentScene);
 
 	/**
@@ -77,19 +85,13 @@ public interface GameScene extends GameEventListener {
 		// empty default
 	}
 
-	void setContext(GameController gameController, PacManGames2dUI ui);
+	void setUI(PacManGames2dUI ui);
 
 	PacManGames2dUI ui();
 
-	boolean isScoreVisible();
-
-	void setScoreVisible(boolean visible);
-
-	boolean isCreditVisible();
-
-	void setCreditVisible(boolean visible);
-
-	GameController gameController();
+	default GameController gameController() {
+		return ui().gameController();
+	}
 
 	default GameModel game() {
 		return gameController().game();

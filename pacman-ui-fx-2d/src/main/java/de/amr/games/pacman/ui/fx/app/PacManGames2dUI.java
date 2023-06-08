@@ -254,7 +254,7 @@ public class PacManGames2dUI implements GameEventListener {
 		}
 		currentGameScene = newGameScene;
 		currentGameScene.setParentScene(stage.getScene());
-		currentGameScene.setContext(gameController, this);
+		currentGameScene.setUI(this);
 		currentGameScene.init();
 		gamePage.setGameScene(currentGameScene);
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);

@@ -35,7 +35,6 @@ import java.util.stream.Stream;
 
 import org.tinylog.Logger;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -93,7 +92,6 @@ public class PlayScene3D implements GameScene {
 		}
 	};
 
-	private GameController gameController;
 	private PacManGames3dUI ui;
 	protected boolean scoreVisible;
 	protected boolean creditVisible;
@@ -129,14 +127,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void setContext(GameController gameController, PacManGames2dUI ui) {
-		this.gameController = gameController;
+	public void setUI(PacManGames2dUI ui) {
 		this.ui = (PacManGames3dUI) ui;
-	}
-
-	@Override
-	public GameController gameController() {
-		return gameController;
 	}
 
 	@Override
