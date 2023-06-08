@@ -69,6 +69,10 @@ public class GamePage {
 		scene2DBackPanel.setPadding(new Insets(5, 15, 5, 15));
 
 		helpButton = new ImageView();
+		helpButton.setFitWidth(FRAME_THICKNESS);
+		helpButton.setFitHeight(FRAME_THICKNESS);
+		helpButton.setSmooth(true);
+		helpButton.setCursor(Cursor.HAND);
 		helpButton.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
 				ui.showHelp();
@@ -99,10 +103,6 @@ public class GamePage {
 		if (isHelpAvailable(gameScene)) {
 			boolean msPacManGame = gameScene.context().gameVariant() == GameVariant.MS_PACMAN;
 			helpButton.setImage(ui.theme().image(msPacManGame ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
-			helpButton.setFitWidth(FRAME_THICKNESS);
-			helpButton.setFitHeight(FRAME_THICKNESS);
-			helpButton.setSmooth(true);
-			helpButton.setCursor(Cursor.HAND);
 			helpButton.setVisible(true);
 		} else {
 			helpButton.setVisible(false); // or gray out etc.
@@ -216,15 +216,15 @@ public class GamePage {
 		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
 			ui.stage.setFullScreen(true);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
-			if (ui.currentGameScene instanceof GameScene2D) {
-				toggleCanvasScaled((GameScene2D) ui.currentGameScene);
-			}
+			toggleCanvasScaled(ui.currentGameScene);
 		}
 	}
 
-	private void toggleCanvasScaled(GameScene2D gameScene2D) {
-		canvasScaled = !canvasScaled;
-		gameScene2D.setCanvasScaled(canvasScaled);
-		ui.showFlashMessage(canvasScaled ? "Canvas SCALED" : "Canvas UNSCALED");
+	private void toggleCanvasScaled(GameScene gameScene) {
+		if (gameScene instanceof GameScene2D) {
+			canvasScaled = !canvasScaled;
+			((GameScene2D) gameScene).setCanvasScaled(canvasScaled);
+			ui.showFlashMessage(canvasScaled ? "Canvas SCALED" : "Canvas UNSCALED");
+		}
 	}
 }
