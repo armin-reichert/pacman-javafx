@@ -88,6 +88,7 @@ public class ArcadeTheme extends Theme {
 		set("mspacman.audio.siren.2",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
 		set("mspacman.audio.siren.3",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
 		set("mspacman.audio.siren.4",          rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+		set("mspacman.audio.sweep",            rm.audioClip("sound/common/sweep.mp3"));
 
 		//
 		// Pac-Man game
@@ -105,7 +106,7 @@ public class ArcadeTheme extends Theme {
 		set("pacman.maze.foodColor",           Color.rgb(254, 189, 180));
 		set("pacman.maze.wallBaseColor",       Color.rgb(33, 33, 255).brighter());
 		set("pacman.maze.wallTopColor",        Color.rgb(33, 33, 255).darker());
-		set("pacman.maze.doorColor",	         Color.rgb(252, 181, 255));
+		set("pacman.maze.doorColor",           Color.rgb(252, 181, 255));
 		
 		set("pacman.color.head",               Color.rgb(255, 255, 0));
 		set("pacman.color.palate",             Color.rgb(191, 79, 61));
@@ -127,6 +128,7 @@ public class ArcadeTheme extends Theme {
 		set("pacman.audio.siren.2",            rm.audioClip("sound/pacman/siren_2.mp3"));
 		set("pacman.audio.siren.3",            rm.audioClip("sound/pacman/siren_3.mp3"));
 		set("pacman.audio.siren.4",            rm.audioClip("sound/pacman/siren_4.mp3"));
+		set("pacman.audio.sweep",              rm.audioClip("sound/common/sweep.mp3"));
 
 		// Common to both games
 
@@ -164,8 +166,6 @@ public class ArcadeTheme extends Theme {
 		set("ghost.color.flashing.dress",      PALE);
 		set("ghost.color.flashing.eyeballs",   ROSE);
 		set("ghost.color.flashing.pupils",     RED);
-		
-		set("audio.sweep",                     rm.audioClip("sound/common/sweep.mp3"));
 		
 		set("voice.explain",                   rm.audioClip("sound/voice/press-key.mp3"));
 		set("voice.autopilot.off",             rm.audioClip("sound/voice/autopilot-off.mp3"));
