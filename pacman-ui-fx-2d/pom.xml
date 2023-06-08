@@ -80,6 +80,7 @@
 				<version>${vs.maven-shade-plugin}</version>
 				<executions>
 					<execution>
+						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
 						</goals>
