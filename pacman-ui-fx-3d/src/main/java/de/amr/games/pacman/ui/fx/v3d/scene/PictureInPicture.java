@@ -18,9 +18,7 @@ import javafx.scene.Node;
 public class PictureInPicture {
 
 	public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3d.PIP_MIN_HEIGHT);
-
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
-
 	private final GameScene2D gameScene;
 
 	public PictureInPicture() {

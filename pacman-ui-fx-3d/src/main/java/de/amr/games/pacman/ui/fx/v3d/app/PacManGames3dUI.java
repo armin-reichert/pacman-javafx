@@ -28,22 +28,17 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
-import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
@@ -60,17 +55,6 @@ import javafx.scene.shape.DrawMode;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-	private BorderPane dashboardLayer;
-	private PictureInPicture pip;
-	private Dashboard dashboard;
-
-	@Override
-	public void onRender() {
-		gamePage.render();
-		dashboard.update();
-		pip.render();
-	}
-
 	@Override
 	protected void configureGameScenes() {
 		super.configureGameScenes();
@@ -80,31 +64,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	protected void createGamePage() {
-		pip = new PictureInPicture();
-
-		dashboard = new Dashboard(this);
-		dashboard.setVisible(false);
-
-		gamePage = new GamePage(this) {
-			@Override
-			protected void handleKeyboardInput() {
-				super.handleKeyboardInput();
-				if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
-					toggle2D3D();
-				} else if (Keyboard.anyPressed(PacManGames3d.KEY_TOGGLE_DASHBOARD, PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
-					toggleDashboardVisible();
-				} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_PIP_VIEW)) {
-					togglePipOn();
-				}
-			}
-		};
-
-		dashboardLayer = new BorderPane();
-		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pip.root());
-
-		// TODO there is a problem wih adding the dashboard layer on top: it swallows the mouse events. Making
-		// it mouse transparent does not help because then, the dashboard cannot be interacted with.
+		gamePage = new GamePage3D(this);
 	}
 
 	@Override
@@ -123,10 +83,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected void configureBindings(Settings settings) {
 		super.configureBindings(settings);
-
-		pip.opacityPy.bind(PacManGames3d.PY_PIP_OPACITY);
-		pip.heightPy.bind(PacManGames3d.PY_PIP_HEIGHT);
-
 		PacManGames3d.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
 		PacManGames3d.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
 		PacManGames3d.PY_3D_PERSPECTIVE.set(Perspective.NEAR_PLAYER);
@@ -134,7 +90,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	protected void updateStage() {
-		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
+		var gamePage3D = (GamePage3D) gamePage;
+		gamePage3D.getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				gamePage.setBackground(ResourceManager.coloredBackground(Color.BLACK));
@@ -144,7 +101,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		} else {
 			gamePage.setBackground(theme.background("wallpaper.background"));
 		}
-		var paused = clock != null ? clock().isPaused() : false;
+		var paused = clock != null && clock().isPaused();
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
 		switch (gameController.game().variant()) {
 		case MS_PACMAN -> {
@@ -185,31 +142,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			updateOrReloadGameScene(true);
 			gamePage.setGameScene(currentGameScene);
 			currentGameScene().onSceneVariantSwitch();
-		}
-	}
-
-	public Dashboard dashboard() {
-		return dashboard;
-	}
-
-	// --- Actions ---
-
-	public void togglePipOn() {
-		Ufx.toggle(PacManGames3d.PY_PIP_ON);
-		pip.update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
-		var message = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_PIP_ON.get() ? "pip_on" : "pip_off");
-		showFlashMessage(message);
-	}
-
-	public void toggleDashboardVisible() {
-		dashboard().setVisible(!dashboard().isVisible());
-		if (dashboard.isVisible()) {
-			gamePage.root().getChildren().add(dashboardLayer);
-			gamePage.helpButton().setVisible(false);
-		} else {
-			gamePage.root().getChildren().remove(dashboardLayer);
-			gamePage.root().requestFocus();
-			gamePage.helpButton().setVisible(true);
 		}
 	}
 
