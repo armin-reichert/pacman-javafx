@@ -121,9 +121,11 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
 		var scene = super.sceneMatchingCurrentGameState();
-		var config = gameVariant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
-		if (PacManGames3d.PY_3D_ENABLED.get() && scene == config.playScene()) {
-			scene = config.playScene3D();
+		if (PacManGames3d.PY_3D_ENABLED.get()) {
+			var config = gameVariant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+			if (scene == config.playScene() && config.playScene3D() != null) {
+				scene = config.playScene3D();
+			}
 		}
 		return scene;
 	}
