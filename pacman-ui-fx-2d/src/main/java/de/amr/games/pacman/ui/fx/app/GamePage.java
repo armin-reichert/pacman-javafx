@@ -36,7 +36,7 @@ import javafx.stage.Stage;
  */
 public class GamePage {
 
-	private static final int FRAME_THICKNESS = 20;
+	private static final int FRAME_THICKNESS = 15;
 
 	protected final PacManGames2dUI ui;
 	protected final StackPane root;
@@ -51,12 +51,14 @@ public class GamePage {
 
 		scene2DEmbedder = new BorderPane();
 		scene2DEmbedder.setMaxSize(1, 1);
-		scene2DEmbedder.setScaleX(0.88);
-		scene2DEmbedder.setScaleY(0.88);
+		scene2DEmbedder.setScaleX(0.9);
+		scene2DEmbedder.setScaleY(0.9);
 
-		var borderStyle = new BorderStroke(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, BorderStrokeStyle.SOLID,
-				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(20),
-				new BorderWidths(FRAME_THICKNESS), null);
+		var borderStyle = new BorderStroke( //
+				Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, //
+				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, //
+				new CornerRadii(10), new BorderWidths(FRAME_THICKNESS), null);
+
 		scene2DEmbedder.setBorder(new Border(borderStyle));
 		scene2DEmbedder.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2 && e.getY() < scene2DEmbedder.getHeight() * 0.5) {
@@ -66,9 +68,11 @@ public class GamePage {
 
 		scene2DBackPanel = new BorderPane();
 		scene2DBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-		scene2DBackPanel.setPadding(new Insets(5, 15, 5, 15));
+		scene2DBackPanel.setPadding(new Insets(2, 15, 2, 15));
 
 		helpButton = new ImageView();
+		StackPane.setAlignment(helpButton, Pos.BOTTOM_CENTER);
+		helpButton.setTranslateY(FRAME_THICKNESS);
 		helpButton.setFitWidth(FRAME_THICKNESS);
 		helpButton.setFitHeight(FRAME_THICKNESS);
 		helpButton.setSmooth(true);
@@ -78,15 +82,14 @@ public class GamePage {
 				ui.showHelp();
 			}
 		});
-		helpButton.setTranslateY(scene2DEmbedder.getHeight() / 2);
 
 		root = new StackPane();
 		root.setBackground(ui.theme().background("wallpaper.background"));
 		root.setOnKeyPressed(this::handleKeyPressed);
 
-		scene2DEmbedder.setCenter(new StackPane(scene2DBackPanel, helpButton));
-		StackPane.setAlignment(helpButton, Pos.BOTTOM_CENTER);
-		helpButton.setTranslateY(FRAME_THICKNESS);
+		var stack = new StackPane(scene2DBackPanel, helpButton);
+		stack.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		scene2DEmbedder.setCenter(stack);
 
 		root.getChildren().setAll(scene2DEmbedder, flashMessageView);
 	}
