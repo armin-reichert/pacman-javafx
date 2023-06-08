@@ -75,10 +75,10 @@ public class GamePage {
 
 	private void createHelpButton() {
 		helpButton = new ImageView();
-		StackPane.setAlignment(helpButton, Pos.BOTTOM_CENTER);
-		helpButton.setTranslateY(FRAME_THICKNESS);
-		helpButton.setFitWidth(FRAME_THICKNESS);
-		helpButton.setFitHeight(FRAME_THICKNESS);
+		StackPane.setAlignment(helpButton, Pos.TOP_RIGHT);
+		helpButton.setTranslateY(0);
+		helpButton.setFitWidth(32);
+		helpButton.setFitHeight(32);
 		helpButton.setSmooth(true);
 		helpButton.setCursor(Cursor.HAND);
 		helpButton.setOnMouseClicked(e -> {
