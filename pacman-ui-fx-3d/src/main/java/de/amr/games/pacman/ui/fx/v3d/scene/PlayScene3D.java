@@ -175,13 +175,13 @@ public class PlayScene3D implements GameScene {
 		setScoreVisible(true);
 		resetReadyMessageText3D();
 		perspectivePy.bind(PacManGames3d.PY_3D_PERSPECTIVE);
-		level().ifPresent(this::replaceGameLevel3D);
+		game().level().ifPresent(this::replaceGameLevel3D);
 		Logger.info("Initialized 3D play scene");
 	}
 
 	@Override
 	public void update() {
-		level().ifPresent(level -> {
+		game().level().ifPresent(level -> {
 			level3D.update();
 			camController.update(fxSubScene.getCamera(), level3D.pac3D());
 			updateSound(level);
@@ -264,7 +264,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) && !hasCredit()) {
+		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) && !game().hasCredit()) {
 			PacManGames2d.ui.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(PacManGames3d.KEY_PREV_PERSPECTIVE)) {
 			PacManGames3d.ui.selectPrevPerspective();
@@ -298,7 +298,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		level().ifPresent(level -> {
+		game().level().ifPresent(level -> {
 			level3D.world3D().eatables3D().forEach(
 					eatable3D -> eatable3D.getRoot().setVisible(!level.world().foodStorage().hasEatenFoodAt(eatable3D.tile())));
 			if (Globals.oneOf(state(), GameState.HUNTING, GameState.GHOST_DYING)) {
@@ -330,8 +330,8 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusGetsActive(GameEvent e) {
-		level().ifPresent(level -> {
-			boolean moving = gameVariant() == GameVariant.MS_PACMAN;
+		game().level().ifPresent(level -> {
+			boolean moving = game().variant() == GameVariant.MS_PACMAN;
 			level.bonusManagement().getBonus().ifPresent(bonus -> {
 				level3D.replaceBonus3D(bonus, ui().spritesheet(), moving);
 			});
@@ -370,7 +370,7 @@ public class PlayScene3D implements GameScene {
 		case READY -> {
 			level3D.pac3D().init();
 			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
-			var msg = inPercentOfCases(25) ? PacManGames3d.pickFunnyReadyMessage(gameVariant()) : "READY!";
+			var msg = inPercentOfCases(25) ? PacManGames3d.pickFunnyReadyMessage(game().variant()) : "READY!";
 			readyMessageText3D.setText(msg);
 			readyMessageText3D.setVisible(true);
 		}
@@ -386,8 +386,8 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case GHOST_DYING -> {
-			level().map(GameLevel::memo).ifPresent(memo -> {
-				switch (gameVariant()) {
+			game().level().map(GameLevel::memo).ifPresent(memo -> {
+				switch (game().variant()) {
 				case MS_PACMAN: {
 					var ss = (SpritesheetMsPacManGame) ui().spritesheet();
 					memo.killedGhosts.forEach(ghost -> {
@@ -405,13 +405,13 @@ public class PlayScene3D implements GameScene {
 					break;
 				}
 				default:
-					throw new IllegalGameVariantException(gameVariant());
+					throw new IllegalGameVariantException(game().variant());
 				}
 			});
 		}
 
 		case CHANGING_TO_NEXT_LEVEL -> {
-			level().ifPresent(level -> {
+			game().level().ifPresent(level -> {
 				lockGameState();
 				replaceGameLevel3D(level);
 				updateCamera();
@@ -420,7 +420,7 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case LEVEL_COMPLETE -> {
-			level().ifPresent(level -> {
+			game().level().ifPresent(level -> {
 				level3D.livesCounter3D().stopAnimation();
 				level3D.world3D().foodOscillation().stop();
 				// if cheat has been used to complete level, 3D food might still exist
@@ -533,4 +533,45 @@ public class PlayScene3D implements GameScene {
 			ui().soundHandler().audioClip("audio.ghost_returning").stop();
 		}
 	}
+
+	/**
+	 * Locks the current game state by setting an indefinite timer duration.
+	 */
+	private void lockGameState() {
+		state().timer().resetIndefinitely();
+	}
+
+	/**
+	 * Unlocks the current game state by forcing the timer to expire.
+	 */
+	private void unlockGameState() {
+		state().timer().expire();
+	}
+
+	/**
+	 * Locks the current game state, waits given seconds, plays given animations and unlocks the state when the animations
+	 * have finished.
+	 */
+	private void lockStateAndPlayAfterSeconds(double afterSeconds, Animation... animations) {
+		lockGameState();
+		var animationSequence = new SequentialTransition(animations);
+		if (afterSeconds > 0) {
+			animationSequence.setDelay(Duration.seconds(afterSeconds));
+		}
+		animationSequence.setOnFinished(e -> unlockGameState());
+		animationSequence.play();
+	}
+
+	/**
+	 * Locks the current game states, waits given number of seconds and unlocks the state.
+	 * 
+	 * @param seconds seconds to wait before unlock
+	 */
+	private void waitSeconds(double seconds) {
+		lockGameState();
+		var pause = Ufx.pauseSeconds(seconds);
+		pause.setOnFinished(e -> unlockGameState());
+		pause.play();
+	}
+
 }

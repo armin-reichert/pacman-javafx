@@ -33,13 +33,13 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		setCreditVisible(!hasCredit());
+		setCreditVisible(!game().hasCredit());
 		setScoreVisible(true);
 	}
 
 	@Override
 	public void update() {
-		level().ifPresent(level -> {
+		game().level().ifPresent(level -> {
 			updateSound(level);
 		});
 	}
@@ -52,7 +52,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			if (!hasCredit()) {
+			if (!game().hasCredit()) {
 				ui().addCredit();
 			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
@@ -68,9 +68,9 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawSceneContent() {
-		level().ifPresent(level -> {
+		game().level().ifPresent(level -> {
 			int levelNumber = level.number();
-			if (gameVariant() == GameVariant.MS_PACMAN) {
+			if (game().variant() == GameVariant.MS_PACMAN) {
 				int mazeNumber = level.game().mazeNumber(levelNumber);
 				drawMsPacManMaze(0, t(3), mazeNumber, level.world());
 			} else {
@@ -78,7 +78,7 @@ public class PlayScene2D extends GameScene2D {
 			}
 			if (state() == GameState.LEVEL_TEST) {
 				drawText(String.format("TEST    L%d", levelNumber), ArcadeTheme.YELLOW, sceneFont(), t(8.5), t(21));
-			} else if (state() == GameState.GAME_OVER || !hasCredit()) {
+			} else if (state() == GameState.GAME_OVER || !game().hasCredit()) {
 				drawText("GAME  OVER", ArcadeTheme.RED, sceneFont(), t(9), t(21));
 			} else if (state() == GameState.READY) {
 				drawText("READY!", ArcadeTheme.YELLOW, sceneFont(), t(11), t(21));
@@ -141,7 +141,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawSceneInfo() {
 		drawTileGrid(TILES_X, TILES_Y);
-		level().ifPresent(level -> {
+		game().level().ifPresent(level -> {
 			drawWishDirIndicator(level.pac());
 			level.upwardsBlockedTiles().forEach(tile -> {
 				// "No Trespassing" symbol
@@ -162,7 +162,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		level().ifPresent(level -> {
+		game().level().ifPresent(level -> {
 			if (!level.isDemoLevel()) {
 				ui().soundHandler().ensureSirenStarted(level.huntingPhase() / 2);
 			}

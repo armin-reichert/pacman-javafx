@@ -185,9 +185,9 @@ public abstract class GameScene2D implements GameScene {
 		} else if (gameState == GameState.CREDIT) {
 			menu = help.menuCredit(gameController());
 		} else if (oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			var level = level();
-			if (level.isPresent()) {
-				menu = level.get().isDemoLevel() ? help.menuDemoLevel(gameController()) : help.menuPlaying(gameController());
+			if (game().level().isPresent()) {
+				menu = game().level().get().isDemoLevel() ? help.menuDemoLevel(gameController())
+						: help.menuPlaying(gameController());
 			}
 		}
 		if (menu == null) {
@@ -299,7 +299,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
-		switch (gameVariant()) {
+		switch (game().variant()) {
 		case MS_PACMAN: {
 			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
 			for (var symbol : levelSymbols) {
@@ -317,7 +317,7 @@ public abstract class GameScene2D implements GameScene {
 			break;
 		}
 		default:
-			throw new IllegalGameVariantException(gameVariant());
+			throw new IllegalGameVariantException(game().variant());
 		}
 	}
 
@@ -328,7 +328,7 @@ public abstract class GameScene2D implements GameScene {
 		var x = TS * 2;
 		var y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
-		switch (gameVariant()) {
+		switch (game().variant()) {
 		case MS_PACMAN: {
 			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
 			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
@@ -344,7 +344,7 @@ public abstract class GameScene2D implements GameScene {
 			break;
 		}
 		default:
-			throw new IllegalGameVariantException(gameVariant());
+			throw new IllegalGameVariantException(game().variant());
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -356,7 +356,7 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawBonus(Bonus bonus) {
 		Rectangle2D symbolSprite;
 		Rectangle2D valueSprite;
-		switch (gameVariant()) {
+		switch (game().variant()) {
 		case MS_PACMAN: {
 			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
 			symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
@@ -370,7 +370,7 @@ public abstract class GameScene2D implements GameScene {
 			break;
 		}
 		default:
-			throw new IllegalGameVariantException(gameVariant());
+			throw new IllegalGameVariantException(game().variant());
 		}
 
 		Rectangle2D sprite = null;
