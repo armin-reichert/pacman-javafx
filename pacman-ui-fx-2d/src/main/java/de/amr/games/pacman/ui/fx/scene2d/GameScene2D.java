@@ -7,12 +7,10 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import java.util.List;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -29,8 +27,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import javafx.animation.Animation.Status;
-import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
@@ -41,12 +37,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Scale;
-import javafx.util.Duration;
 
 /**
  * Base class of all 2D scenes. Each 2D scene has its own canvas.
@@ -75,8 +69,7 @@ public abstract class GameScene2D implements GameScene {
 	protected final GraphicsContext g = canvas.getGraphicsContext2D();
 	protected final Pane overlay = new Pane();
 	private final Scale overlayScale = new Scale();
-	private final VBox helpRoot = new VBox();
-	private final FadeTransition helpMenuAnimation;
+	private final HelpMenu helpMenu = new HelpMenu();
 
 	private GameController gameController;
 	private PacManGames2dUI ui;
@@ -95,16 +88,12 @@ public abstract class GameScene2D implements GameScene {
 		root.setMaxHeight(HEIGHT_UNSCALED);
 
 		stack.getChildren().addAll(canvas, overlay);
-		overlay.getChildren().add(helpRoot);
+		overlay.getChildren().add(helpMenu);
 
 		overlay.getTransforms().add(overlayScale);
 
-		helpRoot.setTranslateX(10);
-		helpRoot.setTranslateY(HEIGHT_UNSCALED * 0.2);
-
-		helpMenuAnimation = new FadeTransition(Duration.seconds(0.5), helpRoot);
-		helpMenuAnimation.setFromValue(1);
-		helpMenuAnimation.setToValue(0);
+		helpMenu.setTranslateX(10);
+		helpMenu.setTranslateY(HEIGHT_UNSCALED * 0.2);
 
 		// scale overlay pane to cover subscene
 		root.heightProperty().addListener((py, ov, nv) -> {
@@ -177,42 +166,6 @@ public abstract class GameScene2D implements GameScene {
 		this.wallpaperColor = wallpaperColor;
 	}
 
-	// TODO: not sure if this logic belongs here...
-	private void updateHelpMenu(HelpMenus help) {
-		var gameState = state();
-		Pane menu = null;
-		if (gameState == GameState.INTRO) {
-			menu = help.menuIntro(gameController());
-		} else if (gameState == GameState.CREDIT) {
-			menu = help.menuCredit(gameController());
-		} else if (oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			if (game().level().isPresent()) {
-				menu = game().level().get().isDemoLevel() ? help.menuDemoLevel(gameController())
-						: help.menuPlaying(gameController());
-			}
-		}
-		if (menu == null) {
-			helpRoot.getChildren().clear();
-		} else {
-			helpRoot.getChildren().setAll(menu);
-		}
-	}
-
-	/**
-	 * Makes the help root visible for given duration and then plays the close animation.
-	 * 
-	 * @param openDuration duration the menu stays open
-	 */
-	public void showHelpMenu(HelpMenus menus, Duration openDuration) {
-		updateHelpMenu(menus);
-		helpRoot.setOpacity(1);
-		if (helpMenuAnimation.getStatus() == Status.RUNNING) {
-			helpMenuAnimation.playFromStart();
-		}
-		helpMenuAnimation.setDelay(openDuration);
-		helpMenuAnimation.play();
-	}
-
 	@Override
 	public void setContext(GameController gameController, PacManGames2dUI ui) {
 		this.gameController = gameController;
@@ -240,6 +193,10 @@ public abstract class GameScene2D implements GameScene {
 
 	public Pane getOverlay() {
 		return overlay;
+	}
+
+	public HelpMenu getHelpMenu() {
+		return helpMenu;
 	}
 
 	@Override

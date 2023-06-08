@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
 /**
  * @author Armin Reichert
  */
-public class HelpMenus {
+public class HelpMenuFactory {
 
 	private static class Menu {
 		private final List<Node> column0 = new ArrayList<>();
@@ -44,7 +44,7 @@ public class HelpMenus {
 	private final ResourceBundle translations;
 	private Font font;
 
-	public HelpMenus(ResourceBundle translations) {
+	public HelpMenuFactory(ResourceBundle translations) {
 		this.translations = translations;
 		this.font = Font.font("Sans", 12);
 	}

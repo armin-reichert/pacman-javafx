@@ -31,7 +31,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.BootScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene2d.HelpMenus;
+import de.amr.games.pacman.ui.fx.scene2d.HelpMenuFactory;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene1;
 import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene2;
@@ -63,6 +63,8 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements GameEventListener {
 
+	public static final Duration MENU_OPEN_TIME = Duration.seconds(2);
+
 	protected GameSceneConfiguration configMsPacMan;
 	protected GameSceneConfiguration configPacMan;
 	protected GameClock clock;
@@ -71,7 +73,7 @@ public class PacManGames2dUI implements GameEventListener {
 	protected Scene scene;
 	protected StartPage startPage;
 	protected GamePage gamePage;
-	protected HelpMenus helpMenus;
+	protected HelpMenuFactory helpMenuFactory;
 	protected GameController gameController;
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected SoundHandler soundHandler;
@@ -175,8 +177,8 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void configureHelpMenus() {
-		helpMenus = new HelpMenus(PacManGames2d.TEXTS);
-		helpMenus.setFont(theme.font("font.monospaced", 12));
+		helpMenuFactory = new HelpMenuFactory(PacManGames2d.TEXTS);
+		helpMenuFactory.setFont(theme.font("font.monospaced", 12));
 	}
 
 	protected void configurePacSteering() {
@@ -312,7 +314,7 @@ public class PacManGames2dUI implements GameEventListener {
 	public void showHelp() {
 		if (currentGameScene instanceof GameScene2D) {
 			var scene2D = (GameScene2D) currentGameScene;
-			scene2D.showHelpMenu(helpMenus, Duration.seconds(2));
+			scene2D.getHelpMenu().show(helpMenuFactory, gameController, MENU_OPEN_TIME);
 		}
 	}
 
