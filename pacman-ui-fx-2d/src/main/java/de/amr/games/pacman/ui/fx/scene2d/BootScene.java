@@ -29,7 +29,7 @@ public class BootScene extends GameScene2D {
 			drawSceneBackground();
 		}
 
-		else if (timer.betweenSeconds(start, start + 1) && timer.tick() % 8 == 0) {
+		else if (timer.betweenSeconds(start, start + 1) && timer.tick() % 4 == 0) {
 			paintRandomHexCodes();
 		}
 
