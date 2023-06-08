@@ -15,27 +15,27 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		context.setCreditVisible(true);
-		context.setScoreVisible(true);
+		setCreditVisible(true);
+		setScoreVisible(true);
 	}
 
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			context.ui().addCredit();
+			ui().addCredit();
 		} else if (Keyboard.anyPressed(PacManGames2d.KEY_START_GAME, PacManGames2d.KEY_START_GAME_NUMPAD)) {
-			context.ui().startGame();
+			ui().startGame();
 		}
 	}
 
 	@Override
 	public void drawSceneContent() {
-		var font6 = context.ui().theme().font("font.arcade", s(6));
+		var font6 = ui().theme().font("font.arcade", s(6));
 		drawText("PUSH START BUTTON", ArcadeTheme.ORANGE, sceneFont(), t(6), t(17));
 		drawText("1 PLAYER ONLY", ArcadeTheme.CYAN, sceneFont(), t(8), t(21));
 		drawText("BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, sceneFont(), t(1), t(25));
 		drawText("PTS", ArcadeTheme.ROSE, font6, t(25), t(25));
 		drawMidwayCopyright(t(4), t(29));
-		drawLevelCounter(t(24), t(34), context.game().levelCounter());
+		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}
 }

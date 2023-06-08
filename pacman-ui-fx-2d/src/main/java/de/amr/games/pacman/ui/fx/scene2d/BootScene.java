@@ -17,13 +17,13 @@ public class BootScene extends GameScene2D {
 	@Override
 	public void init() {
 		setRoundedCorners(false);
-		context.setScoreVisible(false);
+		setScoreVisible(false);
 	}
 
 	@Override
 	public void render() {
 		double start = 1.0; // seconds
-		var timer = context.state().timer();
+		var timer = state().timer();
 
 		if (timer.tick() == 1) {
 			drawSceneBackground();
@@ -42,7 +42,7 @@ public class BootScene extends GameScene2D {
 		}
 
 		else if (timer.atSecond(start + 3)) {
-			context.gameController().terminateCurrentState();
+			gameController().terminateCurrentState();
 		}
 	}
 
@@ -79,8 +79,8 @@ public class BootScene extends GameScene2D {
 	}
 
 	private Rectangle2D randomSpritesheetTile() {
-		var source = context.ui().spritesheet().source();
-		var raster = context.ui().spritesheet().raster();
+		var source = ui().spritesheet().source();
+		var raster = ui().spritesheet().raster();
 		double x = RND.nextDouble() * (source.getWidth() - raster);
 		double y = RND.nextDouble() * (source.getHeight() - raster);
 		return new Rectangle2D(x, y, raster, raster);

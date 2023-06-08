@@ -86,7 +86,7 @@ public class GamePage {
 	}
 
 	private boolean isHelpAvailable(GameScene gameScene) {
-		var state = gameScene.context().gameController().state();
+		var state = gameScene.gameController().state();
 		if (state == GameState.BOOT || state == GameState.INTERMISSION || state == GameState.INTERMISSION_TEST) {
 			return false;
 		}

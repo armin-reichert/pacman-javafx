@@ -32,10 +32,10 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+		var ss = (SpritesheetPacManGame) ui().spritesheet();
 
-		context.setCreditVisible(true);
-		context.setScoreVisible(true);
+		setCreditVisible(true);
+		setScoreVisible(true);
 
 		frame = -1;
 		initialDelay = 120;
@@ -64,11 +64,11 @@ public class PacManCutscene3 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameEvents.publishSoundEvent(SoundEvent.START_INTERMISSION_3, context.game());
+				GameEvents.publishSoundEvent(SoundEvent.START_INTERMISSION_3, game());
 			}
 			return;
 		}
-		if (context.state().timer().hasExpired()) {
+		if (state().timer().hasExpired()) {
 			return;
 		}
 
@@ -82,7 +82,7 @@ public class PacManCutscene3 extends GameScene2D {
 		}
 
 		case 700: {
-			context.state().timer().expire();
+			state().timer().expire();
 			break;
 		}
 
@@ -99,7 +99,7 @@ public class PacManCutscene3 extends GameScene2D {
 	public void drawSceneContent() {
 		drawPacSprite(pac);
 		drawGhostSprite(blinky);
-		drawLevelCounter(t(24), t(34), context.game().levelCounter());
+		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}
 
 	@Override

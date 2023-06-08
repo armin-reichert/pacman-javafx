@@ -43,7 +43,7 @@ public class PictureInPicture {
 
 	public void update(GameScene master, boolean on) {
 		if (master != null) {
-			gameScene.setContext(master.context());
+			gameScene.setContext(master.gameController(), master.ui());
 			gameScene.root().setVisible(on && master.is3D());
 		} else {
 			gameScene.root().setVisible(false);

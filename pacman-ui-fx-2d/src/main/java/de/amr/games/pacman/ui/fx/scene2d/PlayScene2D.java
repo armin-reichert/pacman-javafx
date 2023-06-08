@@ -33,77 +33,77 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		context.setCreditVisible(!context.hasCredit());
-		context.setScoreVisible(true);
+		setCreditVisible(!hasCredit());
+		setScoreVisible(true);
 	}
 
 	@Override
 	public void update() {
-		context.level().ifPresent(level -> {
+		level().ifPresent(level -> {
 			updateSound(level);
 		});
 	}
 
 	@Override
 	public void end() {
-		context.ui().soundHandler().stopAllSounds();
+		ui().soundHandler().stopAllSounds();
 	}
 
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			if (!context.hasCredit()) {
-				context.ui().addCredit();
+			if (!hasCredit()) {
+				ui().addCredit();
 			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
-			context.ui().cheatEatAllPellets();
+			ui().cheatEatAllPellets();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {
-			context.ui().cheatAddLives();
+			ui().cheatAddLives();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_NEXT_LEVEL)) {
-			context.ui().cheatEnterNextLevel();
+			ui().cheatEnterNextLevel();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
-			context.ui().cheatKillAllEatableGhosts();
+			ui().cheatKillAllEatableGhosts();
 		}
 	}
 
 	@Override
 	protected void drawSceneContent() {
-		context.level().ifPresent(level -> {
+		level().ifPresent(level -> {
 			int levelNumber = level.number();
-			if (context.gameVariant() == GameVariant.MS_PACMAN) {
+			if (gameVariant() == GameVariant.MS_PACMAN) {
 				int mazeNumber = level.game().mazeNumber(levelNumber);
 				drawMsPacManMaze(0, t(3), mazeNumber, level.world());
 			} else {
 				drawPacManMaze(0, t(3), level.world());
 			}
-			if (context.state() == GameState.LEVEL_TEST) {
+			if (state() == GameState.LEVEL_TEST) {
 				drawText(String.format("TEST    L%d", levelNumber), ArcadeTheme.YELLOW, sceneFont(), t(8.5), t(21));
-			} else if (context.state() == GameState.GAME_OVER || !context.hasCredit()) {
+			} else if (state() == GameState.GAME_OVER || !hasCredit()) {
 				drawText("GAME  OVER", ArcadeTheme.RED, sceneFont(), t(9), t(21));
-			} else if (context.state() == GameState.READY) {
+			} else if (state() == GameState.READY) {
 				drawText("READY!", ArcadeTheme.YELLOW, sceneFont(), t(11), t(21));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPacSprite(level.pac());
 			Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
 					.map(level::ghost).forEach(this::drawGhostSprite);
-			if (!context.isCreditVisible()) {
+			if (!isCreditVisible()) {
 				// TODO get rid of this crap:
-				int lives = context.game().isOneLessLifeDisplayed() ? context.game().lives() - 1 : context.game().lives();
+				int lives = game().isOneLessLifeDisplayed() ? game().lives() - 1 : game().lives();
 				drawLivesCounter(lives);
 			}
-			drawLevelCounter(t(24), t(34), context.game().levelCounter());
+			drawLevelCounter(t(24), t(34), game().levelCounter());
 		});
 
 	}
 
 	private void drawPacManMaze(double x, double y, World world) {
 		if (world.mazeFlashing().isRunning()) {
-			var image = world.mazeFlashing().on() ? context.ui().theme().image("pacman.flashingMaze")
-					: context.ui().theme().image("pacman.emptyMaze");
+			var image = world.mazeFlashing().on() ? ui().theme().image("pacman.flashingMaze")
+					: ui().theme().image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
-			var image = context.ui().theme().image("pacman.fullMaze");
+			var image = ui().theme().image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 			world.tiles().filter(world.foodStorage()::hasEatenFoodAt).forEach(this::hideTileContent);
 			if (world.energizerBlinking().off()) {
@@ -113,10 +113,10 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
-				var source = context.ui().theme().image("mspacman.flashingMazes");
+				var source = ui().theme().image("mspacman.flashingMazes");
 				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
@@ -141,7 +141,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawSceneInfo() {
 		drawTileGrid(TILES_X, TILES_Y);
-		context.level().ifPresent(level -> {
+		level().ifPresent(level -> {
 			drawWishDirIndicator(level.pac());
 			level.upwardsBlockedTiles().forEach(tile -> {
 				// "No Trespassing" symbol
@@ -156,15 +156,15 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
 		if (e.newGameState == GameState.GAME_OVER) {
-			context.setCreditVisible(true);
+			setCreditVisible(true);
 		}
 	}
 
 	@Override
 	public void onSceneVariantSwitch() {
-		context.level().ifPresent(level -> {
+		level().ifPresent(level -> {
 			if (!level.isDemoLevel()) {
-				context.ui().soundHandler().ensureSirenStarted(level.huntingPhase() / 2);
+				ui().soundHandler().ensureSirenStarted(level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -173,7 +173,6 @@ public class PlayScene2D extends GameScene2D {
 		if (level.isDemoLevel()) {
 			return;
 		}
-		var ui = context.ui();
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
 			ui.soundHandler().audioClip("audio.pacman_munch").stop();
 		}

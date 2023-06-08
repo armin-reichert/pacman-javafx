@@ -4,7 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene;
 
+import java.util.Optional;
+
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -18,13 +27,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener {
-
-	/**
-	 * @return the scene context (game controller, game model, game level, rendering, sounds).
-	 */
-	GameSceneContext context();
-
-	void setContext(GameSceneContext context);
 
 	void setParentScene(Scene parentScene);
 
@@ -80,18 +82,56 @@ public interface GameScene extends GameEventListener {
 		// empty default
 	}
 
+	public void setContext(GameController gameController, PacManGames2dUI ui);
+
+	public PacManGames2dUI ui();
+
+	public boolean isScoreVisible();
+
+	public void setScoreVisible(boolean visible);
+
+	public boolean isCreditVisible();
+
+	public void setCreditVisible(boolean visible);
+
+	public GameController gameController();
+
+	default GameModel game() {
+		return gameController().game();
+	}
+
+	default GameVariant gameVariant() {
+		return game().variant();
+	}
+
+	default GameState state() {
+		return gameController().state();
+	}
+
+	default boolean hasCredit() {
+		return game().hasCredit();
+	}
+
+	default Optional<GameLevel> level() {
+		return game().level();
+	}
+
+	default Optional<World> world() {
+		return level().map(GameLevel::world);
+	}
+
 	/**
 	 * Locks the current game state by setting an indefinite timer duration.
 	 */
 	default void lockGameState() {
-		context().state().timer().resetIndefinitely();
+		state().timer().resetIndefinitely();
 	}
 
 	/**
 	 * Unlocks the current game state by forcing the timer to expire.
 	 */
 	default void unlockGameState() {
-		context().state().timer().expire();
+		state().timer().expire();
 	}
 
 	/**
@@ -119,4 +159,5 @@ public interface GameScene extends GameEventListener {
 		pause.setOnFinished(e -> unlockGameState());
 		pause.play();
 	}
+
 }

@@ -29,10 +29,10 @@ public class MsPacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
-		context.setCreditVisible(true);
-		context.setScoreVisible(true);
-		intermission = new MsPacManIntermission3(context.gameController());
+		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
+		setCreditVisible(true);
+		setScoreVisible(true);
+		intermission = new MsPacManIntermission3(gameController());
 		intermission.msPacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.msPacMan, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();
@@ -50,12 +50,12 @@ public class MsPacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPacSprite(intermission.msPacMan);
 		drawPacSprite(intermission.pacMan);
 		drawEntitySprite(intermission.stork, storkAnimation.currentSprite());
 		drawEntitySprite(intermission.bag, intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
-		drawLevelCounter(t(24), t(34), context.game().levelCounter());
+		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}
 }

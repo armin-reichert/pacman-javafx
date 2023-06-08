@@ -26,12 +26,12 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
 
-		context.setCreditVisible(true);
-		context.setScoreVisible(true);
+		setCreditVisible(true);
+		setScoreVisible(true);
 
-		intermission = new MsPacManIntermission1(context.gameController());
+		intermission = new MsPacManIntermission1(gameController());
 
 		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
@@ -51,14 +51,13 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPacSprite(intermission.msPac);
 		drawPacSprite(intermission.pacMan);
 		drawGhostSprite(intermission.inky);
 		drawGhostSprite(intermission.pinky);
 		drawEntitySprite(intermission.heart, ss.heartSprite());
-		drawLevelCounter(t(24), t(34), context.game().levelCounter());
+		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}
-
 }

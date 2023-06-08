@@ -11,6 +11,7 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
 
 import java.util.List;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -21,13 +22,13 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
@@ -53,7 +54,6 @@ import javafx.util.Duration;
  * @author Armin Reichert
  */
 public abstract class GameScene2D implements GameScene {
-
 	public static final int TILES_X = 28;
 	public static final int TILES_Y = 36;
 	public static final int WIDTH_UNSCALED = 224;
@@ -76,7 +76,12 @@ public abstract class GameScene2D implements GameScene {
 	protected final Scale overlayScale = new Scale();
 	protected final VBox helpRoot = new VBox();
 	protected final FadeTransition helpMenuAnimation;
-	protected GameSceneContext context;
+
+	protected GameController gameController;
+	protected PacManGames2dUI ui;
+	protected boolean scoreVisible;
+	protected boolean creditVisible;
+
 	private boolean roundedCorners = true;
 	private Color wallpaperColor = Color.BLACK;
 	private boolean canvasScaled;
@@ -116,6 +121,30 @@ public abstract class GameScene2D implements GameScene {
 		return canvasScaled ? value : value * root.getHeight() / HEIGHT_UNSCALED;
 	}
 
+	@Override
+	public boolean isCreditVisible() {
+		return creditVisible;
+	}
+
+	@Override
+	public void setCreditVisible(boolean creditVisible) {
+		this.creditVisible = creditVisible;
+	}
+
+	@Override
+	public boolean isScoreVisible() {
+		return scoreVisible;
+	}
+
+	@Override
+	public void setScoreVisible(boolean scoreVisible) {
+		this.scoreVisible = scoreVisible;
+	}
+
+	public boolean isCanvasScaled() {
+		return canvasScaled;
+	}
+
 	public void setCanvasScaled(boolean scaled) {
 		canvasScaled = scaled;
 		if (scaled) {
@@ -136,7 +165,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected Font sceneFont() {
-		return context.ui().theme().font("font.arcade", s(8));
+		return ui.theme().font("font.arcade", s(8));
 	}
 
 	public void setRoundedCorners(boolean roundedCorners) {
@@ -149,17 +178,16 @@ public abstract class GameScene2D implements GameScene {
 
 	// TODO: not sure if this logic belongs here...
 	private void updateHelpMenu(HelpMenus help) {
-		var gameState = context.state();
+		var gameState = state();
 		Pane menu = null;
 		if (gameState == GameState.INTRO) {
-			menu = help.menuIntro(context.gameController());
+			menu = help.menuIntro(gameController());
 		} else if (gameState == GameState.CREDIT) {
-			menu = help.menuCredit(context.gameController());
+			menu = help.menuCredit(gameController());
 		} else if (oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			var level = context.level();
+			var level = level();
 			if (level.isPresent()) {
-				menu = level.get().isDemoLevel() ? help.menuDemoLevel(context.gameController())
-						: help.menuPlaying(context.gameController());
+				menu = level.get().isDemoLevel() ? help.menuDemoLevel(gameController()) : help.menuPlaying(gameController());
 			}
 		}
 		if (menu == null) {
@@ -185,14 +213,19 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public void setContext(GameSceneContext context) {
-		checkNotNull(context);
-		this.context = context;
+	public void setContext(GameController gameController, PacManGames2dUI ui) {
+		this.gameController = gameController;
+		this.ui = ui;
 	}
 
 	@Override
-	public GameSceneContext context() {
-		return context;
+	public PacManGames2dUI ui() {
+		return ui;
+	}
+
+	@Override
+	public GameController gameController() {
+		return gameController;
 	}
 
 	@Override
@@ -223,16 +256,16 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void render() {
-		if (context == null) {
+		if (ui == null) {
 			return;
 		}
 		drawSceneBackground();
-		if (context.isScoreVisible()) {
-			drawScore(context.game().score(), "SCORE", t(1), t(1));
-			drawScore(context.game().highScore(), "HIGH SCORE", t(16), t(1));
+		if (isScoreVisible()) {
+			drawScore(game().score(), "SCORE", t(1), t(1));
+			drawScore(game().highScore(), "HIGH SCORE", t(16), t(1));
 		}
-		if (context.isCreditVisible()) {
-			drawCredit(context.game().credit(), t(2), t(36) - 1);
+		if (isCreditVisible()) {
+			drawCredit(game().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent();
 		if (infoVisiblePy.get()) {
@@ -266,9 +299,9 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
-		switch (context.gameVariant()) {
+		switch (gameVariant()) {
 		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
 			for (var symbol : levelSymbols) {
 				drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
 				x -= TS * 2;
@@ -276,7 +309,7 @@ public abstract class GameScene2D implements GameScene {
 			break;
 		}
 		case PACMAN: {
-			var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+			var ss = (SpritesheetPacManGame) ui.spritesheet();
 			for (var symbol : levelSymbols) {
 				drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
 				x -= TS * 2;
@@ -284,7 +317,7 @@ public abstract class GameScene2D implements GameScene {
 			break;
 		}
 		default:
-			throw new IllegalGameVariantException(context.gameVariant());
+			throw new IllegalGameVariantException(gameVariant());
 		}
 	}
 
@@ -295,23 +328,23 @@ public abstract class GameScene2D implements GameScene {
 		var x = TS * 2;
 		var y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
-		switch (context.gameVariant()) {
+		switch (gameVariant()) {
 		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
 			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 				drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
 			}
 			break;
 		}
 		case PACMAN: {
-			var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+			var ss = (SpritesheetPacManGame) ui.spritesheet();
 			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 				drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
 			}
 			break;
 		}
 		default:
-			throw new IllegalGameVariantException(context.gameVariant());
+			throw new IllegalGameVariantException(gameVariant());
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -323,21 +356,21 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawBonus(Bonus bonus) {
 		Rectangle2D symbolSprite;
 		Rectangle2D valueSprite;
-		switch (context.gameVariant()) {
+		switch (gameVariant()) {
 		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
 			symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
 			valueSprite = ss.bonusValueSprite(bonus.symbol());
 			break;
 		}
 		case PACMAN: {
-			var ss = (SpritesheetPacManGame) context.ui().spritesheet();
+			var ss = (SpritesheetPacManGame) ui.spritesheet();
 			symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
 			valueSprite = ss.bonusValueSprite(bonus.symbol());
 			break;
 		}
 		default:
-			throw new IllegalGameVariantException(context.gameVariant());
+			throw new IllegalGameVariantException(gameVariant());
 		}
 
 		Rectangle2D sprite = null;
@@ -414,7 +447,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(context.ui().spritesheet().source(), sprite, x, y);
+		drawSprite(ui.spritesheet().source(), sprite, x, y);
 	}
 
 	/**
@@ -454,7 +487,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
-		Image logo = context.ui().theme().get("mspacman.logo.midway");
+		Image logo = ui.theme().get("mspacman.logo.midway");
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", s(11)));
@@ -467,7 +500,7 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawClapperBoard(ClapperBoardAnimation animation, double x, double y) {
 		int spriteIndex = animation.currentSpriteIndex();
 		if (spriteIndex != -1) {
-			var ss = (SpritesheetMsPacManGame) context.ui().spritesheet();
+			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
 			var sprite = ss.clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont());
