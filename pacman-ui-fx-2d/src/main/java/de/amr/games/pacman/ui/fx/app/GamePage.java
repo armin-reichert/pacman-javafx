@@ -29,7 +29,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 /**
  * @author Armin Reichert
@@ -42,34 +41,39 @@ public class GamePage {
 	protected final StackPane root;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final BorderPane scene2DBackPanel;
-	protected final BorderPane scene2DEmbedder;
-	protected final ImageView helpButton;
+	protected final BorderPane scene2DFrame;
+	protected ImageView helpButton;
 	protected boolean canvasScaled = false;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
 
-		scene2DEmbedder = new BorderPane();
-		scene2DEmbedder.setMaxSize(1, 1);
-		scene2DEmbedder.setScaleX(0.9);
-		scene2DEmbedder.setScaleY(0.9);
+		scene2DFrame = new BorderPane();
+		scene2DFrame.setMaxSize(1, 1); // gets resized with content
+		scene2DFrame.setScaleX(0.9);
+		scene2DFrame.setScaleY(0.9);
 
-		var borderStyle = new BorderStroke( //
+		var roundedBorderStroke = new BorderStroke( //
 				Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, //
 				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, //
 				new CornerRadii(10), new BorderWidths(FRAME_THICKNESS), null);
 
-		scene2DEmbedder.setBorder(new Border(borderStyle));
-		scene2DEmbedder.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 2 && e.getY() < scene2DEmbedder.getHeight() * 0.5) {
-				resizeStageToFitCurrentGameScene(ui.stage);
-			}
-		});
+		scene2DFrame.setBorder(new Border(roundedBorderStroke));
 
 		scene2DBackPanel = new BorderPane();
 		scene2DBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		scene2DBackPanel.setPadding(new Insets(2, 15, 2, 15));
 
+		createHelpButton();
+
+		scene2DFrame.setCenter(new StackPane(scene2DBackPanel, helpButton));
+
+		root = new StackPane(scene2DFrame, flashMessageView);
+		root.setBackground(ui.theme().background("wallpaper.background"));
+		root.setOnKeyPressed(this::handleKeyPressed);
+	}
+
+	private void createHelpButton() {
 		helpButton = new ImageView();
 		StackPane.setAlignment(helpButton, Pos.BOTTOM_CENTER);
 		helpButton.setTranslateY(FRAME_THICKNESS);
@@ -82,16 +86,6 @@ public class GamePage {
 				ui.showHelp();
 			}
 		});
-
-		root = new StackPane();
-		root.setBackground(ui.theme().background("wallpaper.background"));
-		root.setOnKeyPressed(this::handleKeyPressed);
-
-		var stack = new StackPane(scene2DBackPanel, helpButton);
-		stack.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-		scene2DEmbedder.setCenter(stack);
-
-		root.getChildren().setAll(scene2DEmbedder, flashMessageView);
 	}
 
 	private boolean isHelpAvailable(GameScene gameScene) {
@@ -118,7 +112,7 @@ public class GamePage {
 			scene2D.setCanvasScaled(canvasScaled);
 			scene2D.setRoundedCorners(false);
 			scene2DBackPanel.setCenter(scene2D.root());
-			root.getChildren().set(0, scene2DEmbedder);
+			root.getChildren().set(0, scene2DFrame);
 		} else {
 			root.getChildren().set(0, gameScene.root());
 		}
@@ -168,12 +162,6 @@ public class GamePage {
 
 	public void addLayer(Node layer) {
 		root.getChildren().add(layer);
-	}
-
-	protected void resizeStageToFitCurrentGameScene(Stage stage) {
-		if (ui.currentGameScene() != null && !ui.currentGameScene().is3D() && !stage.isFullScreen()) {
-			stage.setWidth(ui.currentGameScene().root().getWidth() + 16); // don't ask me why
-		}
 	}
 
 	protected void handleKeyPressed(KeyEvent keyEvent) {
