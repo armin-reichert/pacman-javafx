@@ -158,7 +158,5 @@ public class PacManGames3d {
 	public static final KeyCodeCombination          KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
 	public static final KeyCodeCombination          KEY_PREV_PERSPECTIVE     = alt(KeyCode.LEFT);
 	public static final KeyCodeCombination          KEY_NEXT_PERSPECTIVE     = alt(KeyCode.RIGHT);
-
-	public static PacManGames3dUI     ui;
 	//@formatter:on
 }

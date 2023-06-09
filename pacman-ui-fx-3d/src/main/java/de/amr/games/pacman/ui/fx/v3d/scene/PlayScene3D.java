@@ -252,19 +252,19 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) && !game().hasCredit()) {
-			PacManGames2d.ui.addCredit(); // in demo mode, allow adding credit
+			ui.addCredit(); // in demo mode, allow adding credit
 		} else if (Keyboard.pressed(PacManGames3d.KEY_PREV_PERSPECTIVE)) {
-			PacManGames3d.ui.selectPrevPerspective();
+			ui.selectPrevPerspective();
 		} else if (Keyboard.pressed(PacManGames3d.KEY_NEXT_PERSPECTIVE)) {
-			PacManGames3d.ui.selectNextPerspective();
+			ui.selectNextPerspective();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
-			PacManGames2d.ui.cheatEatAllPellets();
+			ui.cheatEatAllPellets();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {
-			PacManGames2d.ui.cheatAddLives();
+			ui.cheatAddLives();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_NEXT_LEVEL)) {
-			PacManGames2d.ui.cheatEnterNextLevel();
+			ui.cheatEnterNextLevel();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
-			PacManGames2d.ui.cheatKillAllEatableGhosts();
+			ui.cheatKillAllEatableGhosts();
 		}
 	}
 
@@ -426,7 +426,7 @@ public class PlayScene3D implements GameScene {
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
 							ui().soundHandler().audioClip(level.game().variant(), "audio.level_complete").play();
-							PacManGames3d.ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
+							ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -440,7 +440,7 @@ public class PlayScene3D implements GameScene {
 			game().level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
 				level3D.livesCounter3D().stopAnimation();
-				PacManGames3d.ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
+				ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
 				ui().soundHandler().audioClip(level.game().variant(), "audio.game_over").play();
 				waitSeconds(3);
 			});

@@ -18,6 +18,8 @@ import javafx.stage.Stage;
  */
 public class PacManGames3dApp extends PacManGames2dApp {
 
+	private PacManGames3dUI ui;
+
 	@Override
 	public void init() {
 		settings.merge(getParameters().getNamed());
@@ -30,15 +32,14 @@ public class PacManGames3dApp extends PacManGames2dApp {
 		// TODO
 		PacManGames3d.addThings(theme);
 
-		PacManGames2d.ui = PacManGames3d.ui = new PacManGames3dUI();
-		PacManGames3d.ui.init(stage, settings, theme);
-		Logger.info("Game started. {} Hz language={}", PacManGames3d.ui.clock().targetFrameratePy.get(),
-				Locale.getDefault());
+		ui = new PacManGames3dUI();
+		ui.init(stage, settings, theme);
+		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override
 	public void stop() {
-		PacManGames3d.ui.clock().stop();
+		ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
 }

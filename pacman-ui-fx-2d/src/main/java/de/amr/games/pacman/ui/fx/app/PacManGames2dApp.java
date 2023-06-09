@@ -17,6 +17,7 @@ import javafx.stage.Stage;
  */
 public class PacManGames2dApp extends Application {
 
+	private PacManGames2dUI ui;
 	protected final Settings settings = new Settings();
 
 	@Override
@@ -29,15 +30,14 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		PacManGames2d.ui = new PacManGames2dUI();
-		PacManGames2d.ui.init(stage, settings, new ArcadeTheme(PacManGames2d.MGR));
-		Logger.info("Game started. {} Hz language={}", PacManGames2d.ui.clock().targetFrameratePy.get(),
-				Locale.getDefault());
+		ui = new PacManGames2dUI();
+		ui.init(stage, settings, new ArcadeTheme(PacManGames2d.MGR));
+		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override
 	public void stop() {
-		PacManGames2d.ui.clock().stop();
+		ui.clock().stop();
 		Logger.info("Game stopped.");
 	}
 }

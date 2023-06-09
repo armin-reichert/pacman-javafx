@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -57,8 +56,8 @@ public class SectionGameControl extends Section {
 		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> GameController.it().cheatEnterNextLevel());
 
 		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
-		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> PacManGames2d.ui.startCutscenesTest());
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> PacManGames2d.ui.restartIntro());
+		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> ui.startCutscenesTest());
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> ui.restartIntro());
 
 		spGameLevel = addSpinner("Level", 1, 100, 1);
 		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> ui.enterLevel(newVal.intValue()));
