@@ -14,7 +14,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.event.GameEvents;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.GameModel;
@@ -87,7 +86,8 @@ public class PacManGames2dUI implements GameEventListener {
 		this.stage = stage;
 		this.theme = theme;
 
-		gameController = new GameController(settings.variant);
+		GameController.create(settings.variant);
+		gameController = GameController.it();// TODO
 
 		clock = new GameClock(this::onTick, this::onRender);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
@@ -106,7 +106,7 @@ public class PacManGames2dUI implements GameEventListener {
 		configureHelpMenus();
 		configurePacSteering();
 		configureBindings(settings);
-		GameEvents.addListener(this);
+		GameController.addListener(this);
 
 		stage.setScene(scene);
 		stage.setFullScreen(settings.fullScreen);
@@ -379,7 +379,7 @@ public class PacManGames2dUI implements GameEventListener {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 			soundHandler.stopAllSounds();
-			GameEvents.setSoundEventsEnabled(true);
+			GameController.setSoundEventsEnabled(true);
 			if (game().isPlaying()) {
 				game().changeCredit(-1);
 			}
@@ -396,7 +396,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	public void addCredit() {
-		GameEvents.setSoundEventsEnabled(true);
+		GameController.setSoundEventsEnabled(true);
 		gameController.addCredit();
 	}
 

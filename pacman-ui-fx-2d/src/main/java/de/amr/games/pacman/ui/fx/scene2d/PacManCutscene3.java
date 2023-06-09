@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.v2i;
 
-import de.amr.games.pacman.event.GameEvents;
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
@@ -64,7 +64,7 @@ public class PacManCutscene3 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameEvents.publishSoundEvent(SoundEvent.START_INTERMISSION_3, game());
+				GameController.publishSoundEvent(SoundEvent.START_INTERMISSION_3);
 			}
 			return;
 		}
