@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
@@ -21,8 +22,8 @@ public class PictureInPicture {
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 	private final GameScene2D gameScene;
 
-	public PictureInPicture() {
-		gameScene = new PlayScene2D();
+	public PictureInPicture(PacManGames2dUI ui) {
+		gameScene = new PlayScene2D(ui);
 		gameScene.setCanvasScaled(true);
 		gameScene.setRoundedCorners(false);
 		gameScene.root().minHeightProperty().bind(heightPy);
@@ -43,8 +44,9 @@ public class PictureInPicture {
 
 	public void update(GameScene master, boolean on) {
 		if (master != null) {
-			gameScene.setUI(master.ui());
 			gameScene.root().setVisible(on && master.is3D());
+			gameScene.setScoreVisible(true);
+			gameScene.setCreditVisible(false);
 		} else {
 			gameScene.root().setVisible(false);
 		}

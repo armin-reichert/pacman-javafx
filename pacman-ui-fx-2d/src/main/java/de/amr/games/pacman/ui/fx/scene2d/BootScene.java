@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import static de.amr.games.pacman.lib.Globals.RND;
 
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
 
@@ -13,6 +14,10 @@ import javafx.geometry.Rectangle2D;
  * @author Armin Reichert
  */
 public class BootScene extends GameScene2D {
+
+	public BootScene(PacManGames2dUI ui) {
+		super(ui);
+	}
 
 	@Override
 	public void init() {

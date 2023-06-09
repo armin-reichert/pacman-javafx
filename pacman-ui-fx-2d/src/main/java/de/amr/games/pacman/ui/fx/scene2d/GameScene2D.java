@@ -58,26 +58,24 @@ public abstract class GameScene2D implements GameScene {
 		return (float) tiles * TS;
 	}
 
+	private final PacManGames2dUI ui;
+
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	private final BorderPane root;
-
 	protected final Canvas canvas;
 	protected final GraphicsContext g;
 	protected final Pane overlay;
-
 	private final Scale overlayScale = new Scale();
 	private final HelpMenu helpMenu;
-
-	private PacManGames2dUI ui;
 	private boolean scoreVisible;
 	private boolean creditVisible;
-
 	private boolean roundedCorners = true;
 	private Color wallpaperColor = Color.BLACK;
 	private boolean canvasScaled;
 
-	protected GameScene2D() {
+	protected GameScene2D(PacManGames2dUI ui) {
+		this.ui = ui;
 		canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
 		g = canvas.getGraphicsContext2D();
 
@@ -166,11 +164,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public void setWallpaperColor(Color wallpaperColor) {
 		this.wallpaperColor = wallpaperColor;
-	}
-
-	@Override
-	public void setUI(PacManGames2dUI ui) {
-		this.ui = ui;
 	}
 
 	@Override

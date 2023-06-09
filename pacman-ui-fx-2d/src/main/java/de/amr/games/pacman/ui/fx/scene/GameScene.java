@@ -85,8 +85,6 @@ public interface GameScene extends GameEventListener {
 		// empty default
 	}
 
-	void setUI(PacManGames2dUI ui);
-
 	PacManGames2dUI ui();
 
 	default GameController gameController() {

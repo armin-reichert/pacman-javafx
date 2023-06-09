@@ -20,6 +20,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -31,6 +32,10 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
+
+	public PlayScene2D(PacManGames2dUI ui) {
+		super(ui);
+	}
 
 	@Override
 	public void init() {

@@ -45,7 +45,6 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
@@ -92,7 +91,7 @@ public class PlayScene3D implements GameScene {
 		}
 	};
 
-	private PacManGames3dUI ui;
+	private final PacManGames3dUI ui;
 	protected boolean scoreVisible;
 	protected boolean creditVisible;
 
@@ -105,7 +104,8 @@ public class PlayScene3D implements GameScene {
 	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
 	private CameraController camController;
 
-	public PlayScene3D() {
+	public PlayScene3D(PacManGames3dUI ui) {
+		this.ui = ui;
 		camControllerMap.put(Perspective.DRONE, new CamDrone());
 		camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
 		camControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
@@ -124,11 +124,6 @@ public class PlayScene3D implements GameScene {
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 
 		root = new BorderPane(fxSubScene);
-	}
-
-	@Override
-	public void setUI(PacManGames2dUI ui) {
-		this.ui = (PacManGames3dUI) ui;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -26,6 +27,10 @@ public class MsPacManCutscene3 extends GameScene2D {
 	private MsPacManIntermission3 intermission;
 	private ClapperBoardAnimation clapAnimation;
 	private SpriteAnimation storkAnimation;
+
+	public MsPacManCutscene3(PacManGames2dUI ui) {
+		super(ui);
+	}
 
 	@Override
 	public void init() {

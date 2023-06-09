@@ -128,24 +128,24 @@ public class PacManGames2dUI implements GameEventListener {
 	protected void configureGameScenes() {
 		//@formatter:off
 		configMsPacMan = new GameSceneConfiguration(
-			new BootScene(),
-			new MsPacManIntroScene(),
-			new MsPacManCreditScene(),
-			new PlayScene2D(),
+			new BootScene(this),
+			new MsPacManIntroScene(this),
+			new MsPacManCreditScene(this),
+			new PlayScene2D(this),
 			null,
-			new MsPacManCutscene1(),
-			new MsPacManCutscene2(),
-			new MsPacManCutscene3()
+			new MsPacManCutscene1(this),
+			new MsPacManCutscene2(this),
+			new MsPacManCutscene3(this)
 		);
 		configPacMan = new GameSceneConfiguration(
-			new BootScene(),
-			new PacManIntroScene(),
-			new PacManCreditScene(),
-			new PlayScene2D(),
+			new BootScene(this),
+			new PacManIntroScene(this),
+			new PacManCreditScene(this),
+			new PlayScene2D(this),
 			null,
-			new PacManCutscene1(),
-			new PacManCutscene2(),
-			new PacManCutscene3()
+			new PacManCutscene1(this),
+			new PacManCutscene2(this),
+			new PacManCutscene3(this)
 		);
   	//@formatter:on
 	}
@@ -252,7 +252,6 @@ public class PacManGames2dUI implements GameEventListener {
 		}
 		currentGameScene = newGameScene;
 		currentGameScene.setParentScene(stage.getScene());
-		currentGameScene.setUI(this);
 		currentGameScene.init();
 		gamePage.setGameScene(currentGameScene);
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);

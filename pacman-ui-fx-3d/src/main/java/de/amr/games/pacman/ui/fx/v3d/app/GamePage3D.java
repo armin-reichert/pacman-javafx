@@ -24,7 +24,7 @@ class GamePage3D extends GamePage {
 	public GamePage3D(PacManGames3dUI ui) {
 		super(ui);
 
-		pip = new PictureInPicture();
+		pip = new PictureInPicture(ui);
 		pip.opacityPy.bind(PacManGames3d.PY_PIP_OPACITY);
 		pip.heightPy.bind(PacManGames3d.PY_PIP_HEIGHT);
 

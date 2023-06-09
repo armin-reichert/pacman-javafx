@@ -9,6 +9,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
@@ -31,7 +32,8 @@ public class PacManIntroScene extends GameScene2D {
 	private PacManIntro.Context ic;
 	private Signature signature;
 
-	public PacManIntroScene() {
+	public PacManIntroScene(PacManGames2dUI ui) {
+		super(ui);
 		signature = new Signature();
 		overlay.getChildren().add(signature.root());
 	}
