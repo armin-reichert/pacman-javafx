@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.app;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -189,7 +190,7 @@ public class GamePage {
 		} else if (Keyboard.pressed(PacManGames2d.KEY_AUTOPILOT)) {
 			ui.toggleAutopilot();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_BOOT)) {
-			if (ui.gameController().state() != GameState.BOOT) {
+			if (GameController.it().state() != GameState.BOOT) {
 				ui.reboot();
 			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_DEBUG_INFO)) {
@@ -209,7 +210,7 @@ public class GamePage {
 		} else if (Keyboard.pressed(PacManGames2d.KEY_SIMULATION_NORMAL)) {
 			ui.resetSimulationSpeed();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_QUIT)) {
-			if (ui.gameController.state() != GameState.BOOT && ui.gameController.state() != GameState.INTRO) {
+			if (GameController.it().state() != GameState.BOOT && GameController.it().state() != GameState.INTRO) {
 				ui.restartIntro();
 			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_TEST_LEVELS)) {

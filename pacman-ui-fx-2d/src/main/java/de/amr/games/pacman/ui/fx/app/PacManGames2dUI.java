@@ -73,7 +73,6 @@ public class PacManGames2dUI implements GameEventListener {
 	protected StartPage startPage;
 	protected GamePage gamePage;
 	protected HelpMenuFactory helpMenuFactory;
-	protected GameController gameController;
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected SoundHandler soundHandler;
 	protected GameScene currentGameScene;
@@ -87,7 +86,6 @@ public class PacManGames2dUI implements GameEventListener {
 		this.theme = theme;
 
 		GameController.create(settings.variant);
-		gameController = GameController.it();// TODO
 
 		clock = new GameClock(this::onTick, this::onRender);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
@@ -119,7 +117,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void onTick() {
-		gameController.update();
+		GameController.it().update();
 		gamePage.update();
 	}
 
@@ -183,7 +181,7 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void configurePacSteering() {
 		keyboardPlayerSteering = new KeyboardSteering();
-		gameController.setManualPacSteering(keyboardPlayerSteering);
+		GameController.it().setManualPacSteering(keyboardPlayerSteering);
 	}
 
 	protected void updateStage() {
@@ -220,7 +218,7 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected GameScene sceneMatchingCurrentGameState() {
 		var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
-		switch (gameController.state()) {
+		switch (GameController.it().state()) {
 		case BOOT:
 			return config.bootScene();
 		case CREDIT:
@@ -239,7 +237,7 @@ public class PacManGames2dUI implements GameEventListener {
 	protected void updateOrReloadGameScene(boolean reload) {
 		var nextGameScene = sceneMatchingCurrentGameState();
 		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found for game state " + gameController.state());
+			throw new IllegalStateException("No game scene found for game state " + GameController.it().state());
 		}
 		if (reload || nextGameScene != currentGameScene) {
 			setGameScene(nextGameScene);
@@ -314,7 +312,7 @@ public class PacManGames2dUI implements GameEventListener {
 	public void showHelp() {
 		if (currentGameScene instanceof GameScene2D) {
 			var scene2D = (GameScene2D) currentGameScene;
-			scene2D.getHelpMenu().show(helpMenuFactory, gameController, MENU_OPEN_TIME);
+			scene2D.getHelpMenu().show(helpMenuFactory, GameController.it(), MENU_OPEN_TIME);
 		}
 	}
 
@@ -338,16 +336,12 @@ public class PacManGames2dUI implements GameEventListener {
 		return clock;
 	}
 
-	public GameController gameController() {
-		return gameController;
-	}
-
 	public GameScene currentGameScene() {
 		return currentGameScene;
 	}
 
 	public GameModel game() {
-		return gameController.game();
+		return GameController.it().game();
 	}
 
 	public Spritesheet spritesheet() {
@@ -366,12 +360,12 @@ public class PacManGames2dUI implements GameEventListener {
 	public void startGame() {
 		if (game().hasCredit()) {
 			soundHandler.stopVoice();
-			gameController.startPlaying();
+			GameController.it().startPlaying();
 		}
 	}
 
 	public void startCutscenesTest() {
-		gameController.startCutscenesTest(1);
+		GameController.it().startCutscenesTest(1);
 		showFlashMessage("Cut scenes");
 	}
 
@@ -383,7 +377,7 @@ public class PacManGames2dUI implements GameEventListener {
 			if (game().isPlaying()) {
 				game().changeCredit(-1);
 			}
-			gameController.restart(INTRO);
+			GameController.it().restart(INTRO);
 		}
 	}
 
@@ -392,16 +386,16 @@ public class PacManGames2dUI implements GameEventListener {
 			currentGameScene.end();
 		}
 		soundHandler().playVoice("voice.explain");
-		gameController.restart(GameState.BOOT);
+		GameController.it().restart(GameState.BOOT);
 	}
 
 	public void addCredit() {
 		GameController.setSoundEventsEnabled(true);
-		gameController.addCredit();
+		GameController.it().addCredit();
 	}
 
 	public void enterLevel(int newLevelNumber) {
-		if (gameController.state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (GameController.it().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
 		game().level().ifPresent(level -> {
@@ -409,7 +403,7 @@ public class PacManGames2dUI implements GameEventListener {
 				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
 					game().nextLevel();
 				}
-				gameController.changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+				GameController.it().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			} else if (newLevelNumber < level.number()) {
 				// not implemented
 			}
@@ -450,13 +444,13 @@ public class PacManGames2dUI implements GameEventListener {
 
 	public void switchGameVariant() {
 		var variant = game().variant().next();
-		gameController.selectGameVariant(variant);
+		GameController.it().selectGameVariant(variant);
 		showStartPage();
 	}
 
 	public void toggleAutopilot() {
-		gameController.toggleAutoControlled();
-		var auto = gameController.isAutoControlled();
+		GameController.it().toggleAutoControlled();
+		var auto = GameController.it().isAutoControlled();
 		String message = fmtMessage(PacManGames2d.TEXTS, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
@@ -471,8 +465,8 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	public void startLevelTestMode() {
-		if (gameController.state() == GameState.INTRO) {
-			gameController.restart(GameState.LEVEL_TEST);
+		if (GameController.it().state() == GameState.INTRO) {
+			GameController.it().restart(GameState.LEVEL_TEST);
 			showFlashMessage("Level TEST MODE");
 		}
 	}
@@ -484,14 +478,14 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	public void cheatEatAllPellets() {
-		gameController.cheatEatAllPellets();
+		GameController.it().cheatEatAllPellets();
 	}
 
 	public void cheatEnterNextLevel() {
-		gameController.cheatEnterNextLevel();
+		GameController.it().cheatEnterNextLevel();
 	}
 
 	public void cheatKillAllEatableGhosts() {
-		gameController.cheatKillAllEatableGhosts();
+		GameController.it().cheatKillAllEatableGhosts();
 	}
 }

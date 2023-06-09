@@ -44,7 +44,6 @@ public abstract class Section {
 	}
 
 	protected final PacManGames2dUI ui;
-	protected final GameController gc;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final TitledPane root = new TitledPane();
 	protected final GridPane content = new GridPane();
@@ -59,7 +58,6 @@ public abstract class Section {
 	protected Section(PacManGames2dUI ui, String title, int minLabelWidth, Color textColor, Font textFont,
 			Font labelFont) {
 		this.ui = ui;
-		this.gc = ui.gameController();
 		this.minLabelWidth = minLabelWidth;
 		this.textColor = textColor;
 		this.textFont = textFont;
@@ -84,7 +82,7 @@ public abstract class Section {
 	}
 
 	protected GameModel game() {
-		return gc.game();
+		return GameController.it().game();
 	}
 
 	protected GameScene gameScene() {
@@ -93,10 +91,10 @@ public abstract class Section {
 
 	protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
 		return () -> {
-			if (gc.game().level().isEmpty()) {
+			if (game().level().isEmpty()) {
 				return InfoText.NO_INFO;
 			}
-			return infoSupplier.apply(gc.game().level().get());
+			return infoSupplier.apply(game().level().get());
 		};
 	}
 

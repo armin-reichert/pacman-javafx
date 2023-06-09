@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -76,7 +77,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		keyboardPlayerSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
 		keyboardPlayerSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 
-		gameController.setManualPacSteering(keyboardPlayerSteering);
+		GameController.it().setManualPacSteering(keyboardPlayerSteering);
 		scene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
 	}
 
@@ -103,7 +104,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		}
 		var paused = clock != null && clock().isPaused();
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
-		switch (gameController.game().variant()) {
+		switch (GameController.it().game().variant()) {
 		case MS_PACMAN -> {
 			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
 			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, messageKey, dimensionMsg));
@@ -114,7 +115,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, messageKey, dimensionMsg));
 			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
-		default -> throw new IllegalGameVariantException(gameController.game().variant());
+		default -> throw new IllegalGameVariantException(GameController.it().game().variant());
 		}
 	}
 

@@ -90,7 +90,7 @@ public interface GameScene extends GameEventListener {
 	PacManGames2dUI ui();
 
 	default GameController gameController() {
-		return ui().gameController();
+		return GameController.it();
 	}
 
 	default GameModel game() {

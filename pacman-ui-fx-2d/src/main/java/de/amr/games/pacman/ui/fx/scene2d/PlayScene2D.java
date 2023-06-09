@@ -9,6 +9,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 
 import java.util.stream.Stream;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Vector2i;
@@ -163,7 +164,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onSceneVariantSwitch() {
 		game().level().ifPresent(level -> {
-			if (!level.isDemoLevel() && ui().gameController().state() == GameState.HUNTING) {
+			if (!level.isDemoLevel() && GameController.it().state() == GameState.HUNTING) {
 				ui().soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}
 		});

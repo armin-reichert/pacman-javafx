@@ -25,6 +25,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 
@@ -40,10 +41,10 @@ public class SectionGameInfo extends Section {
 
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
 		addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().root().getWidth(), gameScene().root().getHeight()));
-		addInfo("Game State", () -> "%s".formatted(gc.state()));
-		addInfo("", () -> "Running:   %s%s".formatted(gc.state().timer().tick(),
-				gc.state().timer().isStopped() ? " (STOPPED)" : ""));
-		addInfo("", () -> "Remaining: %s".formatted(ticksToString(gc.state().timer().remaining())));
+		addInfo("Game State", () -> "%s".formatted(GameController.it().state()));
+		addInfo("", () -> "Running:   %s%s".formatted(GameController.it().state().timer().tick(),
+				GameController.it().state().timer().isStopped() ? " (STOPPED)" : ""));
+		addInfo("", () -> "Remaining: %s".formatted(ticksToString(GameController.it().state().timer().remaining())));
 
 		addInfo("Hunting Phase", ifLevelExists(this::fmtHuntingPhase));
 		addInfo("", ifLevelExists(this::fmtHuntingTicksRunning));
