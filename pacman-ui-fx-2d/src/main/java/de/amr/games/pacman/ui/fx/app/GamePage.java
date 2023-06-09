@@ -94,12 +94,12 @@ public class GamePage {
 	}
 
 	private ImageView createHelpButtonIcon(GameVariant variant) {
-		var imageView = new ImageView(ui.theme()
-				.image(ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
-		imageView.setFitWidth(HELP_BUTTON_SIZE);
-		imageView.setFitHeight(HELP_BUTTON_SIZE);
-		imageView.setSmooth(true);
-		return imageView;
+		var icon = new ImageView(
+				ui.theme().image(variant == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
+		icon.setFitWidth(HELP_BUTTON_SIZE);
+		icon.setFitHeight(HELP_BUTTON_SIZE);
+		icon.setSmooth(true);
+		return icon;
 	}
 
 	private void updateHelpButton(GameScene gameScene) {
