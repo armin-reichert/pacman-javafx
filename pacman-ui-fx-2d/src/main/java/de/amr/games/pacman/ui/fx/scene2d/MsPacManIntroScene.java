@@ -39,7 +39,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		setCreditVisible(true);
 		setScoreVisible(true);
 
-		intro = new MsPacManIntro(gameController());
+		intro = new MsPacManIntro();
 		intro.addStateChangeListener((oldState, newState) -> {
 			if (oldState == MsPacManIntro.State.START) {
 				signature.show(t(5.5), t(32.0));

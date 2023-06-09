@@ -30,22 +30,20 @@ public class HelpMenu extends VBox {
 	/**
 	 * Makes the help root visible for given duration and then plays the close animation.
 	 * 
-	 * @param menus          available menu collection
-	 * @param gameController the game controller
-	 * @param openDuration   duration the menu stays open
+	 * @param menus        available menu collection
+	 * @param openDuration duration the menu stays open
 	 */
-	public void show(HelpMenuFactory menus, GameController gameController, Duration openDuration) {
-		var game = gameController.game();
-		var gameState = gameController.state();
+	public void show(HelpMenuFactory menus, Duration openDuration) {
+		var game = GameController.it().game();
+		var gameState = GameController.it().state();
 		Pane menu = null;
 		if (gameState == GameState.INTRO) {
-			menu = menus.menuIntro(gameController);
+			menu = menus.menuIntro();
 		} else if (gameState == GameState.CREDIT) {
-			menu = menus.menuCredit(gameController);
+			menu = menus.menuCredit();
 		} else if (oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
 			if (game.level().isPresent()) {
-				menu = game.level().get().isDemoLevel() ? menus.menuDemoLevel(gameController)
-						: menus.menuPlaying(gameController);
+				menu = game.level().get().isDemoLevel() ? menus.menuDemoLevel() : menus.menuPlaying();
 			}
 		}
 		if (menu == null) {

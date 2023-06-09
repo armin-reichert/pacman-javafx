@@ -32,7 +32,7 @@ public class MsPacManCutscene3 extends GameScene2D {
 		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
 		setCreditVisible(true);
 		setScoreVisible(true);
-		intermission = new MsPacManIntermission3(gameController());
+		intermission = new MsPacManIntermission3();
 		intermission.msPacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.msPacMan, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();

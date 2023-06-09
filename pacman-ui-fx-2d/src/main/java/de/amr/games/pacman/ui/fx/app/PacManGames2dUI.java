@@ -312,7 +312,7 @@ public class PacManGames2dUI implements GameEventListener {
 	public void showHelp() {
 		if (currentGameScene instanceof GameScene2D) {
 			var scene2D = (GameScene2D) currentGameScene;
-			scene2D.getHelpMenu().show(helpMenuFactory, GameController.it(), MENU_OPEN_TIME);
+			scene2D.getHelpMenu().show(helpMenuFactory, MENU_OPEN_TIME);
 		}
 	}
 

@@ -27,7 +27,7 @@ public class MsPacManCutscene2 extends GameScene2D {
 		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
 		setCreditVisible(true);
 		setScoreVisible(true);
-		intermission = new MsPacManIntermission2(gameController());
+		intermission = new MsPacManIntermission2();
 		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		clapAnimation = new ClapperBoardAnimation("2", "THE CHASE");

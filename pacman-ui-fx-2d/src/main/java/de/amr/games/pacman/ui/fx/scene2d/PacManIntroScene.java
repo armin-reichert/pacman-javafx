@@ -46,7 +46,7 @@ public class PacManIntroScene extends GameScene2D {
 		signature.setNameFont(ui().theme().font("font.handwriting", 9));
 		signature.hide();
 
-		intro = new PacManIntro(gameController());
+		intro = new PacManIntro();
 		intro.addStateChangeListener((oldState, newState) -> {
 			if (oldState == PacManIntro.State.SHOWING_POINTS) {
 				signature.show(t(5.5), t(32.0));

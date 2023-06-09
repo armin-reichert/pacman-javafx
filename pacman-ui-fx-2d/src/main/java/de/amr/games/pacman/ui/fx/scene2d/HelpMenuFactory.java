@@ -49,44 +49,45 @@ public class HelpMenuFactory {
 		this.font = Font.font("Sans", 12);
 	}
 
-	public Pane menuIntro(GameController gameController) {
+	public Pane menuIntro() {
 		var menu = new Menu();
-		if (gameController.game().credit() > 0) {
+		if (GameController.it().game().credit() > 0) {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, gameController.game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
-		return createPane(gameController, menu);
+		addEntry(menu, GameController.it().game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman",
+				"V");
+		return createPane(menu);
 	}
 
-	public Pane menuCredit(GameController gameController) {
+	public Pane menuCredit() {
 		var menu = new Menu();
-		if (gameController.game().credit() > 0) {
+		if (GameController.it().game().credit() > 0) {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
 		addEntry(menu, "help.show_intro", "Q");
-		return createPane(gameController, menu);
+		return createPane(menu);
 	}
 
-	public Pane menuPlaying(GameController gameController) {
+	public Pane menuPlaying() {
 		var menu = new Menu();
 		addEntry(menu, "help.move_left", tt("help.cursor_left"));
 		addEntry(menu, "help.move_right", tt("help.cursor_right"));
 		addEntry(menu, "help.move_up", tt("help.cursor_up"));
 		addEntry(menu, "help.move_down", tt("help.cursor_down"));
 		addEntry(menu, "help.show_intro", "Q");
-		return createPane(gameController, menu);
+		return createPane(menu);
 	}
 
-	public Pane menuDemoLevel(GameController gameController) {
+	public Pane menuDemoLevel() {
 		var menu = new Menu();
 		addEntry(menu, "help.add_credit", "5");
 		addEntry(menu, "help.show_intro", "Q");
-		return createPane(gameController, menu);
+		return createPane(menu);
 	}
 
-	private Pane createPane(GameController gameController, Menu menu) {
+	private Pane createPane(Menu menu) {
 		var grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -95,12 +96,12 @@ public class HelpMenuFactory {
 			grid.add(menu.column1.get(row), 1, row);
 		}
 		int rowIndex = menu.size();
-		if (gameController.isAutoControlled()) {
+		if (GameController.it().isAutoControlled()) {
 			var text = text(tt("help.autopilot_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
 			grid.add(text, 0, rowIndex++);
 		}
-		if (gameController.game().isImmune()) {
+		if (GameController.it().game().isImmune()) {
 			var text = text(tt("help.immunity_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
 			grid.add(text, 0, rowIndex++);
@@ -108,7 +109,7 @@ public class HelpMenuFactory {
 
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
-		switch (gameController.game().variant()) {
+		switch (GameController.it().game().variant()) {
 		case MS_PACMAN:
 			pane.setBackground(ResourceManager.coloredBackground(Color.rgb(255, 0, 0, 0.9)));
 			break;
@@ -116,7 +117,7 @@ public class HelpMenuFactory {
 			pane.setBackground(ResourceManager.coloredBackground(Color.rgb(33, 33, 255, 0.9)));
 			break;
 		default:
-			throw new IllegalGameVariantException(gameController.game().variant());
+			throw new IllegalGameVariantException(GameController.it().game().variant());
 		}
 		return pane;
 	}

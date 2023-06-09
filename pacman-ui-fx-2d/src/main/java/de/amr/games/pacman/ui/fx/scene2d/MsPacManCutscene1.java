@@ -31,7 +31,7 @@ public class MsPacManCutscene1 extends GameScene2D {
 		setCreditVisible(true);
 		setScoreVisible(true);
 
-		intermission = new MsPacManIntermission1(gameController());
+		intermission = new MsPacManIntermission1();
 
 		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
