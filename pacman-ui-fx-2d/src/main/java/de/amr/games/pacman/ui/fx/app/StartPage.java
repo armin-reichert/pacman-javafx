@@ -5,7 +5,6 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -19,7 +18,6 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -29,41 +27,41 @@ import javafx.scene.text.Text;
  */
 public class StartPage {
 
+	private final PacManGames2dUI ui;
 	private final StackPane root;
 	private final BorderPane content;
-	private final Pane button;
-	private PacManGames2dUI ui;
+	private BorderPane playButton;
 
 	// TODO This should be a real button but it seems WebFX/GWT has issues with graphic buttons
-	private static StackPane createButton(String text, Theme theme, Runnable action) {
-		var textView = new Text(text);
-		textView.setFill(theme.color("startpage.button.color"));
-		textView.setFont(theme.font("startpage.button.font"));
+	private void createPlayButton() {
+		var label = new Text("Play!");
+		label.setFill(ui.theme.color("startpage.button.color"));
+		label.setFont(ui.theme.font("startpage.button.font"));
+
 		var ds = new DropShadow();
 		ds.setOffsetY(3.0f);
 		ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
-		textView.setEffect(ds);
+		label.setEffect(ds);
 
-		var button = new StackPane(textView);
-		button.setMaxSize(200, 100);
-		button.setPadding(new Insets(10));
-		button.setCursor(Cursor.HAND);
-		button.setBackground(ResourceManager.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
-		button.setOnMouseClicked(e -> {
+		playButton = new BorderPane(label);
+		playButton.setMaxSize(200, 100);
+		playButton.setPadding(new Insets(10));
+		playButton.setCursor(Cursor.HAND);
+		playButton.setBackground(ResourceManager.coloredRoundedBackground(ui.theme.color("startpage.button.bgColor"), 20));
+		playButton.setOnMouseClicked(e -> {
 			if (e.getButton().equals(MouseButton.PRIMARY)) {
-				action.run();
+				ui.showGamePage();
 			}
 		});
-		return button;
 	}
 
 	public StartPage(PacManGames2dUI ui) {
 		this.ui = ui;
-		button = createButton("Play!", ui.theme(), ui::showGamePage);
+		createPlayButton();
 		content = new BorderPane();
-		content.setBottom(button);
-		BorderPane.setAlignment(button, Pos.CENTER);
-		button.setTranslateY(-10);
+		content.setBottom(playButton);
+		BorderPane.setAlignment(playButton, Pos.CENTER);
+		playButton.setTranslateY(-10);
 		root = new StackPane(content);
 		root.setOnKeyPressed(this::handleKeyPressed);
 		root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
