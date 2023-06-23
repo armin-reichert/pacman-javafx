@@ -211,8 +211,12 @@ public class GamePage {
 		return flashMessageView;
 	}
 
-	public BorderPane getLayoutPane() {
+	public BorderPane layoutPane() {
 		return layoutPane;
+	}
+
+	public HelpButton helpButton() {
+		return helpButton;
 	}
 
 	public void update() {
