@@ -4,13 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.util.Locale;
-
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
+
+import java.util.Locale;
 
 /**
  * @author Armin Reichert

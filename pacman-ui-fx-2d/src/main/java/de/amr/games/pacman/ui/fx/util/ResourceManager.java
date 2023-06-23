@@ -4,21 +4,20 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import javafx.scene.layout.*;
-import org.tinylog.Logger;
-
-import javafx.geometry.Insets;
-import javafx.scene.image.Image;
-import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.text.Font;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert

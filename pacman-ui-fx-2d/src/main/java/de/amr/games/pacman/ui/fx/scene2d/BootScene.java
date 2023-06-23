@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.RND;
-
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
+
+import static de.amr.games.pacman.lib.Globals.RND;
 
 /**
  * @author Armin Reichert

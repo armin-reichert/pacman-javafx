@@ -4,12 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
-
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
@@ -28,32 +22,19 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
-import de.amr.games.pacman.ui.fx.scene2d.BootScene;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene2d.HelpMenuFactory;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManCreditScene;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene1;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene2;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManCutscene3;
-import de.amr.games.pacman.ui.fx.scene2d.MsPacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCreditScene;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene1;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene2;
-import de.amr.games.pacman.ui.fx.scene2d.PacManCutscene3;
-import de.amr.games.pacman.ui.fx.scene2d.PacManIntroScene;
-import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.util.GameClock;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.scene2d.*;
+import de.amr.games.pacman.ui.fx.util.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 /**
  * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No dashboard, no picture-in-picture view.

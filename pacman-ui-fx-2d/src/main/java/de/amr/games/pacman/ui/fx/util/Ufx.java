@@ -4,10 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import java.util.Map;
-
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
@@ -22,6 +18,10 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
+
+import java.util.Map;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Useful JavaFX helper methods.

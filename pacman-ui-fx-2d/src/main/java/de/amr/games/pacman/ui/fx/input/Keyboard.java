@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.input;
 
-import java.util.stream.Stream;
-
-import org.tinylog.Logger;
-
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
+import org.tinylog.Logger;
+
+import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert

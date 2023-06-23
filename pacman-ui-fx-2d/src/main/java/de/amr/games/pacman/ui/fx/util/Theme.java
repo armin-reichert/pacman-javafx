@@ -4,16 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert

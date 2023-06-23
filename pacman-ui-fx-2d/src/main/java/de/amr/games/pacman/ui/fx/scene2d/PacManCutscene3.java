@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.v2i;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.lib.Direction;
@@ -20,6 +18,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import javafx.scene.text.Font;
+
+import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
  * @author Armin Reichert

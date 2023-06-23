@@ -4,11 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.app;
 
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -17,6 +12,10 @@ import javafx.animation.Animation.Status;
 import javafx.animation.PauseTransition;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert

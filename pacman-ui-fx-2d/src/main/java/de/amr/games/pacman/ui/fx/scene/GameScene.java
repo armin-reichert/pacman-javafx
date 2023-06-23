@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventListener;
@@ -15,7 +13,8 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.Region;
+
+import java.util.Optional;
 
 /**
  * Common interface of all game scenes (2D and 3D).

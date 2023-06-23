@@ -4,19 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.app;
 
-import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
-import static de.amr.games.pacman.ui.fx.util.Ufx.just;
-import static de.amr.games.pacman.ui.fx.util.Ufx.shift;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 
 import java.util.ResourceBundle;
 
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
+import static de.amr.games.pacman.ui.fx.util.Ufx.*;
 
 /**
  * @author Armin Reichert
