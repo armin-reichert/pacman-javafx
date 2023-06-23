@@ -10,144 +10,201 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
+import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
+import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.image.ImageView;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import static de.amr.games.pacman.lib.Globals.oneOf;
 
 /**
  * @author Armin Reichert
  */
 public class GamePage {
 
-	private static final Color FRAME_COLOR = ArcadeTheme.PALE;
-	private static final int FRAME_THICKNESS = 12; // TODO should be adapted to size of game scene
-	private static final int HELP_BUTTON_SIZE = 24;
+	private static final Color  BORDER_COLOR         = ArcadeTheme.PALE;
+	private static final double BORDER_WIDTH         = 10;
+	private static final double BORDER_CORNER_RADIUS = 20;
 
-	protected final PacManGames2dUI ui;
-	protected final StackPane root;
-	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final BorderPane sceneBackPanel;
-	protected final BorderPane sceneFrame;
-	protected final Pane helpButton;
-	protected boolean canvasScaled = false;
+	private static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
+
+	private final PacManGames2dUI ui;
+	private final FlashMessageView flashMessageView = new FlashMessageView();
+	private final StackPane root = new StackPane();
+	private final BorderPane layoutPane = new BorderPane();
+	private final BorderPane rootPane = new BorderPane();
+	private final Rectangle rootPaneClipNode = new Rectangle();
+	private final Canvas canvas = new Canvas();
+	private final Pane popupLayer = new Pane();
+	private final HelpMenuFactory helpMenuFactory = new HelpMenuFactory();
+	private final HelpMenu helpMenu = new HelpMenu();
+	private final HelpButton helpButton = new HelpButton();
+	private final Signature signature = new Signature();
+
+	private GameScene2D gameScene2D;
+	private double scaling = 1.0;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
 
-		var roundedBorderStroke = new BorderStroke( //
-				FRAME_COLOR, FRAME_COLOR, FRAME_COLOR, FRAME_COLOR, //
-				BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, //
-				new CornerRadii(10), new BorderWidths(FRAME_THICKNESS), null);
+		root.getChildren().addAll(layoutPane, popupLayer, flashMessageView);
 
-		sceneFrame = new BorderPane();
-		sceneFrame.setMaxSize(1, 1); // gets resized with content
-		sceneFrame.setScaleX(0.9);
-		sceneFrame.setScaleY(0.9);
-		sceneFrame.setBorder(new Border(roundedBorderStroke));
+		rootPane.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		rootPane.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, BORDER_CORNER_RADIUS, BORDER_WIDTH));
+		rootPane.setClip(rootPaneClipNode);
+		rootPane.setCenter(canvas);
+		rootPane.heightProperty().addListener((py, ov, nv) -> resize(scaling));
 
-		sceneBackPanel = new BorderPane();
-		sceneBackPanel.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		layoutPane.setBackground(ui.theme().background("wallpaper.background"));
+		layoutPane.setCenter(rootPane);
 
-		helpButton = new VBox(createHelpButtonIcon(ui.game().variant()));
-		helpButton.setPadding(new Insets(4));
-		helpButton.setMaxSize(HELP_BUTTON_SIZE, HELP_BUTTON_SIZE);
-		helpButton.setCursor(Cursor.HAND);
+		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
+
 		helpButton.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 1 && e.getButton() == MouseButton.PRIMARY) {
-				ui.showHelp();
+			Logger.info("Mouse clicked: {}", e);
+			e.consume();
+			Logger.info("Mouse event consumed");
+			showHelpMenu();
+		});
+		root.setOnKeyPressed(this::handleKeyPressed);
+		//popupLayer.setOnMouseClicked(this::handleMouseClick);
+		//new PacMouseSteering(this, popupLayer, () -> ui.game().level().map(GameLevel::pac).orElse(null));
+
+		// For debugging draw borders
+		PacManGames2d.PY_SHOW_DEBUG_INFO.addListener((py, ov, debug) -> {
+			if (debug) {
+				root.setBorder(ResourceManager.border(Color.RED, 3));
+				layoutPane.setBorder(ResourceManager.border(Color.YELLOW, 3));
+				popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
+			} else {
+				root.setBorder(null);
+				layoutPane.setBorder(null);
+				popupLayer.setBorder(null);
 			}
 		});
-
-		sceneFrame.setCenter(new StackPane(sceneBackPanel, helpButton));
-		StackPane.setAlignment(helpButton, Pos.TOP_RIGHT);
-
-		root = new StackPane(sceneFrame, flashMessageView);
-		root.setBackground(ui.theme().background("wallpaper.background"));
-		root.setOnKeyPressed(this::handleKeyPressed);
 	}
 
-	private boolean isHelpAvailable(GameScene gameScene) {
-		var state = gameScene.gameController().state();
-		if (state == GameState.BOOT || state == GameState.INTERMISSION || state == GameState.INTERMISSION_TEST) {
-			return false;
+
+	private void updateHelpButton() {
+		String key = ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
+		helpButton.setImage(ui.theme().image(key), Math.ceil(10 * scaling));
+		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
+		helpButton.setTranslateY(8 * scaling);
+		helpButton.setVisible(sceneConfiguration().bootScene() != gameScene2D);
+	}
+
+
+	private void showHelpMenu() {
+		helpMenuFactory.setFont(ui.theme().font("font.monospaced", Math.max(6, 14 * scaling)));
+		helpMenu.show(currentHelpMenu(), MENU_FADING_DELAY);
+		helpMenu.setTranslateX(10 * scaling);
+		helpMenu.setTranslateY(30 * scaling);
+	}
+
+	private Pane currentHelpMenu() {
+		var gameState = GameController.it().state();
+		if (gameState == GameState.INTRO) {
+			return helpMenuFactory.menuIntro();
 		}
-		return true;
-	}
-
-	private ImageView createHelpButtonIcon(GameVariant variant) {
-		var icon = new ImageView(
-				ui.theme().image(variant == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon"));
-		icon.setFitWidth(HELP_BUTTON_SIZE);
-		icon.setFitHeight(HELP_BUTTON_SIZE);
-		icon.setSmooth(true);
-		return icon;
-	}
-
-	private void updateHelpButton(GameScene gameScene) {
-		if (isHelpAvailable(gameScene)) {
-			helpButton.getChildren().setAll(createHelpButtonIcon(ui.game().variant()));
-			helpButton.setVisible(true);
-		} else {
-			helpButton.setVisible(false); // or gray out etc.
+		if (gameState == GameState.CREDIT) {
+			return helpMenuFactory.menuCredit();
 		}
+		if (ui.game().level().isPresent()
+				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
+			return ui.game().level().get().isDemoLevel() ? helpMenuFactory.menuDemoLevel() : helpMenuFactory.menuPlaying();
+		}
+		return null;
 	}
+	private GameSceneConfiguration sceneConfiguration() {
+		return ui.game().variant() == GameVariant.MS_PACMAN ? ui.configMsPacMan : ui.configPacMan;
+	}
+
+	public void resize(double scaling) {
+		if (scaling < 0.8) {
+			Logger.info("Cannot scale down further");
+			return;
+		}
+
+		this.scaling = scaling;
+		double w = Math.round( (GameScene2D.WIDTH_UNSCALED  + 30) * scaling );
+		double h = Math.round( (GameScene2D.HEIGHT_UNSCALED + 15) * scaling );
+		double borderWidth  = Math.max(5, Math.ceil(h / 60));
+		double cornerRadius = Math.ceil(15 * scaling);
+
+		rootPane.setMinSize (w, h);
+		rootPane.setPrefSize(w, h);
+		rootPane.setMaxSize (w, h);
+
+		rootPaneClipNode.setWidth(w);
+		rootPaneClipNode.setHeight(h);
+
+		// Don't ask me why
+		rootPaneClipNode.setArcWidth(35*scaling);
+		rootPaneClipNode.setArcHeight(35*scaling);
+
+		popupLayer.setMinSize (w, h);
+		popupLayer.setPrefSize(w, h);
+		popupLayer.setMaxSize (w, h);
+
+		rootPane.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
+
+		if (gameScene2D != null) {
+			gameScene2D.setScaling(scaling);
+		}
+		updateHelpButton();
+		updateSignature();
+
+		Logger.info("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);
+	}
+
 
 	public void setGameScene(GameScene gameScene) {
-		if (gameScene instanceof GameScene2D) {
-			var scene2D = (GameScene2D) gameScene;
-			scene2D.setCanvasScaled(canvasScaled);
-			scene2D.setRoundedCorners(false);
-			sceneBackPanel.setCenter(scene2D.root());
-			if (gameScene instanceof PlayScene2D) {
-				sceneBackPanel.setPadding(new Insets(0, 12, 0, 12));
-			} else {
-				sceneBackPanel.setPadding(new Insets(0));
-			}
-			root.getChildren().set(0, sceneFrame);
-		} else {
-			root.getChildren().set(0, gameScene.root());
+		if (gameScene instanceof  GameScene2D) {
+			gameScene2D = (GameScene2D) gameScene;
+			gameScene2D.setCanvas(canvas);
+			resize(scaling);
+			updateHelpButton();
 		}
-		boolean playScene = false;
-		if (ui.game().variant() == GameVariant.MS_PACMAN) {
-			playScene = gameScene == ui.configMsPacMan.playScene() || gameScene == ui.configMsPacMan.playScene3D();
-		} else {
-			playScene = gameScene == ui.configPacMan.playScene() || gameScene == ui.configPacMan.playScene3D();
-		}
-		if (playScene) {
+		if (gameScene == sceneConfiguration().playScene()
+				|| gameScene == sceneConfiguration().playScene3D()) {
 			root.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
 		} else {
 			root.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
 		}
-		updateHelpButton(gameScene);
+		if (gameScene == sceneConfiguration().introScene()) {
+			signature.showAfterSeconds(3);
+		} else {
+			signature.hide();
+		}
 		root.requestFocus();
 	}
 
-	public Pane root() {
-		return root;
+	private void updateSignature() {
+		signature.setMadeByFont(Font.font("Helvetica", Math.floor(10 * scaling)));
+		signature.setNameFont(ui.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		if (ui.game().variant() == GameVariant.MS_PACMAN) {
+			signature.root().setTranslateX(50 * scaling);
+			signature.root().setTranslateY(40 * scaling);
+		} else {
+			signature.root().setTranslateX(50 * scaling);
+			signature.root().setTranslateY(28 * scaling);
+		}
 	}
 
-	public Node helpButton() {
-		return helpButton;
+
+	public Pane root() {
+		return root;
 	}
 
 	public FlashMessageView flashMessageView() {
@@ -167,14 +224,6 @@ public class GamePage {
 		flashMessageView.update();
 	}
 
-	public void setBackground(Background background) {
-		root.setBackground(background);
-	}
-
-	public void addLayer(Node layer) {
-		root.getChildren().add(layer);
-	}
-
 	protected void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
@@ -186,7 +235,7 @@ public class GamePage {
 
 	protected void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames2d.KEY_SHOW_HELP)) {
-			ui.showHelp();
+			showHelpMenu();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_AUTOPILOT)) {
 			ui.toggleAutopilot();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_BOOT)) {
@@ -217,16 +266,6 @@ public class GamePage {
 			ui.startLevelTestMode();
 		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
 			ui.stage.setFullScreen(true);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_CANVAS_SCALED)) {
-			toggleCanvasScaled(ui.currentGameScene);
-		}
-	}
-
-	private void toggleCanvasScaled(GameScene gameScene) {
-		if (gameScene instanceof GameScene2D) {
-			canvasScaled = !canvasScaled;
-			((GameScene2D) gameScene).setCanvasScaled(canvasScaled);
-			ui.showFlashMessage(canvasScaled ? "Canvas SCALED" : "Canvas UNSCALED");
 		}
 	}
 }

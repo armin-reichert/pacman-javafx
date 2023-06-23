@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
+import de.amr.games.pacman.ui.fx.app.Signature;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
@@ -31,7 +32,6 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	public MsPacManIntroScene(PacManGames2dUI ui) {
 		super(ui);
-		overlay.getChildren().add(signature.root());
 	}
 
 	@Override
@@ -42,12 +42,6 @@ public class MsPacManIntroScene extends GameScene2D {
 		setScoreVisible(true);
 
 		intro = new MsPacManIntro();
-		intro.addStateChangeListener((oldState, newState) -> {
-			if (oldState == MsPacManIntro.State.START) {
-				signature.show(t(5.5), t(32.0));
-			}
-		});
-
 		var msPacMan = intro.context().msPacMan;
 		msPacMan.setAnimations(new PacAnimationsMsPacManGame(msPacMan, ss));
 		msPacMan.selectAnimation(PacAnimations.MUNCHING);

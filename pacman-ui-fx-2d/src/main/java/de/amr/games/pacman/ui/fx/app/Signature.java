@@ -2,17 +2,18 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.scene2d;
+package de.amr.games.pacman.ui.fx.app;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 /**
@@ -22,21 +23,28 @@ public class Signature {
 
 	private Text remakeText;
 	private Text nameText;
-	private final TextFlow sentence;
+	// Does not work in GWT
+//	private final TextFlow sentence;
+	private final GridPane sentence;
 	private final FadeTransition fadeIn;
 	private final FadeTransition fadeOut;
 	private final Transition animation;
 
 	public Signature() {
-		remakeText = new Text("Remake (2023) by ");
+		remakeText = new Text("Remake (2023) by  ");
 		remakeText.setFill(Color.gray(0.6));
-		remakeText.setFont(Font.font("Helvetica", 9));
+		remakeText.setFont(Font.font("Helvetica", 14));
 
 		nameText = new Text("Armin Reichert");
 		nameText.setFill(Color.gray(0.6));
-		nameText.setFont(Font.font("Serif", 9));
+		nameText.setFont(Font.font("Serif", 14));
 
-		sentence = new TextFlow(remakeText, nameText);
+		sentence = new GridPane();
+		sentence.setHgap(4); // no effect in GWT
+		sentence.add(remakeText, 0, 0);
+		GridPane.setValignment(remakeText, VPos.BASELINE);
+		sentence.add(nameText, 1, 0);
+		GridPane.setValignment(nameText, VPos.BASELINE);
 
 		fadeIn = new FadeTransition(Duration.seconds(5), sentence);
 		fadeIn.setFromValue(0);
@@ -54,13 +62,19 @@ public class Signature {
 		nameText.setFont(font);
 	}
 
+	public void setMadeByFont(Font font)
+	{
+		remakeText.setFont(font);
+	}
+
 	public Node root() {
 		return sentence;
 	}
 
-	public void show(double x, double y) {
-		sentence.setTranslateX(x);
-		sentence.setTranslateY(y);
+	public void showAfterSeconds(double afterSeconds) {
+		if (afterSeconds > 0) {
+			animation.setDelay(Duration.seconds(afterSeconds));
+		}
 		animation.play();
 	}
 

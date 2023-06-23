@@ -62,8 +62,6 @@ import javafx.util.Duration;
  */
 public class PacManGames2dUI implements GameEventListener {
 
-	public static final Duration MENU_OPEN_TIME = Duration.seconds(2);
-
 	protected GameSceneConfiguration configMsPacMan;
 	protected GameSceneConfiguration configPacMan;
 	protected GameClock clock;
@@ -76,6 +74,7 @@ public class PacManGames2dUI implements GameEventListener {
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected SoundHandler soundHandler;
 	protected GameScene currentGameScene;
+	protected boolean showingStartPage;
 
 	public void init(Stage stage, Settings settings, Theme theme) {
 		checkNotNull(stage);
@@ -97,6 +96,10 @@ public class PacManGames2dUI implements GameEventListener {
 		double height = screenSize.getHeight() * 0.8;
 		double width = height * 4.0 / 3.0;
 		scene = new Scene(new Region(), width, height, Color.BLACK);
+		scene.heightProperty().addListener((py, ov, nv) -> {
+			if (!showingStartPage) {
+				resizeGamePage(nv.doubleValue());
+			}});
 
 		configureGameScenes();
 		createStartPage();
@@ -160,22 +163,33 @@ public class PacManGames2dUI implements GameEventListener {
 		scene.setRoot(startPage.root());
 		startPage.root().requestFocus();
 		updateStage();
+		showingStartPage = true;
 	}
 
 	protected void createGamePage() {
 		gamePage = new GamePage(this);
 	}
 
+	private void resizeGamePage(double sceneHeight) {
+		double ratio = sceneHeight / GameScene2D.HEIGHT_UNSCALED;
+		double s = ratio * 0.9; // use at most 90% of available height
+		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
+		gamePage.resize(s);
+	}
+
+
 	protected void showGamePage() {
 		reboot();
 		scene.setRoot(gamePage.root());
+		resizeGamePage(scene.getHeight());
+		updateStage();
+		showingStartPage = false;
 		gamePage.root().requestFocus();
 		clock.start();
-		updateStage();
 	}
 
 	protected void configureHelpMenus() {
-		helpMenuFactory = new HelpMenuFactory(PacManGames2d.TEXTS);
+		helpMenuFactory = new HelpMenuFactory();
 		helpMenuFactory.setFont(theme.font("font.monospaced", 12));
 	}
 
@@ -306,13 +320,6 @@ public class PacManGames2dUI implements GameEventListener {
 	@Override
 	public void onSoundEvent(SoundEvent e) {
 		soundHandler.onSoundEvent(e);
-	}
-
-	public void showHelp() {
-		if (currentGameScene instanceof GameScene2D) {
-			var scene2D = (GameScene2D) currentGameScene;
-			scene2D.getHelpMenu().show(helpMenuFactory, MENU_OPEN_TIME);
-		}
 	}
 
 	public void showFlashMessage(String message, Object... args) {

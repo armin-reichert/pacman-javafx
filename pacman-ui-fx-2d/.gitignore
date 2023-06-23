@@ -2,6 +2,7 @@
 /target/
 /.settings/
 /src/main/resources/META-INF
+/.idea
 
 dependency-reduced-pom.xml
 

@@ -140,7 +140,7 @@ public class ArcadeTheme extends Theme {
 		set("wallpaper.color",                 Color.rgb(72, 78, 135));
 
 		set("font.arcade",                     rm.font("fonts/emulogic.ttf", 8));
-		set("font.handwriting",                rm.font("fonts/RockSalt-Regular.ttf", 9));
+		set("font.handwriting",                rm.font("fonts/Molle-Italic.ttf", 9));
 		set("font.monospaced",                 rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 		
 		set("ghost.0.color.normal.dress",      RED);

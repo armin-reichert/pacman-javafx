@@ -4,13 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -21,6 +17,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Armin Reichert
@@ -41,12 +42,10 @@ public class HelpMenuFactory {
 		}
 	}
 
-	private final ResourceBundle translations;
 	private Font font;
 
-	public HelpMenuFactory(ResourceBundle translations) {
-		this.translations = translations;
-		this.font = Font.font("Sans", 12);
+	public HelpMenuFactory() {
+		this.font = Font.font("Sans", 24);
 	}
 
 	public Pane menuIntro() {
@@ -89,7 +88,7 @@ public class HelpMenuFactory {
 
 	private Pane createPane(Menu menu) {
 		var grid = new GridPane();
-		grid.setHgap(10);
+		grid.setHgap(20);
 		grid.setVgap(10);
 		for (int row = 0; row < menu.column0.size(); ++row) {
 			grid.add(menu.column0.get(row), 0, row);
@@ -109,16 +108,10 @@ public class HelpMenuFactory {
 
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
-		switch (GameController.it().game().variant()) {
-		case MS_PACMAN:
-			pane.setBackground(ResourceManager.coloredBackground(Color.rgb(255, 0, 0, 0.9)));
-			break;
-		case PACMAN:
-			pane.setBackground(ResourceManager.coloredBackground(Color.rgb(33, 33, 255, 0.9)));
-			break;
-		default:
-			throw new IllegalGameVariantException(GameController.it().game().variant());
-		}
+		var bgColor = GameController.it().game().variant() == GameVariant.MS_PACMAN
+				? Color.rgb(255, 0, 0, 0.8)
+				: Color.rgb(33, 33, 255, 0.8);
+		pane.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 10));
 		return pane;
 	}
 
@@ -127,7 +120,7 @@ public class HelpMenuFactory {
 	}
 
 	private String tt(String key) {
-		return translations.getString(key);
+		return PacManGames2d.TEXTS.getString(key);
 	}
 
 	private Label label(String s) {

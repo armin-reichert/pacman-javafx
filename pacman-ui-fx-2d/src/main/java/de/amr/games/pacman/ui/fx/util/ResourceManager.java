@@ -10,17 +10,11 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
+import javafx.scene.layout.*;
 import org.tinylog.Logger;
 
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -58,6 +52,15 @@ public class ResourceManager {
 	public static Background coloredRoundedBackground(Color color, int radius) {
 		checkNotNull(color);
 		return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
+	}
+
+	public static Border roundedBorder(Color color, double cornerRadius, double width) {
+		return new Border(
+				new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
+	}
+
+	public static Border border(Color color, double width) {
+		return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
 	}
 
 	public static PhongMaterial coloredMaterial(Color color) {

@@ -28,8 +28,6 @@ public class PacManGames2d {
 
 	//@formatter:off
 	public static final BooleanProperty    PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);
-	public static final BooleanProperty    PY_CANVAS_SCALED      = new SimpleBooleanProperty(false);
-	public static final IntegerProperty    PY_SIMULATION_STEPS   = new SimpleIntegerProperty(1);
 
 	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
 	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES   = alt(KeyCode.L);
@@ -56,11 +54,10 @@ public class PacManGames2d {
 	public static final KeyCodeCombination KEY_QUIT              = just(KeyCode.Q);
 	public static final KeyCodeCombination KEY_TEST_LEVELS       = alt(KeyCode.T);
 	public static final KeyCodeCombination KEY_SELECT_VARIANT    = just(KeyCode.V);
-	public static final KeyCodeCombination KEY_PLAY_CUTSCENES    = alt(KeyCode.Z);
+	public static final KeyCodeCombination KEY_PLAY_CUTSCENES    = alt(KeyCode.C);
 
 	public static final KeyCodeCombination KEY_SHOW_HELP         = just(KeyCode.H);
 	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
-	public static final KeyCodeCombination KEY_CANVAS_SCALED     = just(KeyCode.F12);
 	//@formatter:on
 }

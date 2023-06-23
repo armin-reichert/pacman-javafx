@@ -4,19 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import java.util.List;
-
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
@@ -33,17 +23,18 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.transform.Scale;
+
+import java.util.List;
+
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * Base class of all 2D scenes. Each 2D scene has its own canvas.
- * 
+ * Base class of all 2D scenes.
+ *
  * @author Armin Reichert
  */
 public abstract class GameScene2D implements GameScene {
@@ -62,49 +53,28 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	private final BorderPane root;
-	protected final Canvas canvas;
-	protected final GraphicsContext g;
-	protected final Pane overlay;
-	private final Scale overlayScale = new Scale();
-	private final HelpMenu helpMenu;
+	protected Canvas canvas;
+	protected GraphicsContext g;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 	private boolean roundedCorners = true;
 	private Color wallpaperColor = Color.BLACK;
-	private boolean canvasScaled;
+	protected double scaling = 1;
 
 	protected GameScene2D(PacManGames2dUI ui) {
 		this.ui = ui;
-		canvas = new Canvas(WIDTH_UNSCALED, HEIGHT_UNSCALED);
-		g = canvas.getGraphicsContext2D();
-
-		helpMenu = new HelpMenu();
-		helpMenu.setTranslateX(10);
-		helpMenu.setTranslateY(HEIGHT_UNSCALED * 0.2);
-
-		overlay = new Pane();
-		overlay.getChildren().add(helpMenu);
-		overlay.getTransforms().add(overlayScale);
-
-		var layers = new StackPane(canvas, overlay);
-
-		root = new BorderPane(layers);
-		root.setMinWidth(WIDTH_UNSCALED);
-		root.setMinHeight(HEIGHT_UNSCALED);
-		root.setMaxWidth(WIDTH_UNSCALED);
-		root.setMaxHeight(HEIGHT_UNSCALED);
-
-		// always scale overlay pane to cover subscene
-		root.heightProperty().addListener((py, ov, nv) -> {
-			var scaling = nv.doubleValue() / HEIGHT_UNSCALED;
-			overlayScale.setX(scaling);
-			overlayScale.setY(scaling);
-		});
-
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
+	}
 
-		setCanvasScaled(false);
+	public void setCanvas(Canvas canvas) {
+		this.canvas = canvas;
+		this.g = canvas.getGraphicsContext2D();
+	}
+
+	public void setScaling(double scaling) {
+		this.scaling = scaling;
+		canvas.setWidth(WIDTH_UNSCALED * scaling);
+		canvas.setHeight(HEIGHT_UNSCALED * scaling);
 	}
 
 	@Override
@@ -127,35 +97,17 @@ public abstract class GameScene2D implements GameScene {
 		this.scoreVisible = scoreVisible;
 	}
 
-	public boolean isCanvasScaled() {
-		return canvasScaled;
-	}
-
-	public void setCanvasScaled(boolean scaled) {
-		canvasScaled = scaled;
-		if (scaled) {
-			canvas.scaleXProperty().bind(root.widthProperty().divide(WIDTH_UNSCALED));
-			canvas.scaleYProperty().bind(root.heightProperty().divide(HEIGHT_UNSCALED));
-			canvas.widthProperty().unbind();
-			canvas.heightProperty().unbind();
-			canvas.setWidth(WIDTH_UNSCALED);
-			canvas.setHeight(HEIGHT_UNSCALED);
-		} else {
-			canvas.scaleXProperty().unbind();
-			canvas.scaleYProperty().unbind();
-			canvas.setScaleX(1);
-			canvas.setScaleY(1);
-			canvas.widthProperty().bind(root.widthProperty());
-			canvas.heightProperty().bind(root.heightProperty());
-		}
+	@Override
+	public void setParentScene(Scene parentScene) {
 	}
 
 	protected double s(double value) {
-		return canvasScaled ? value : value * root.getHeight() / HEIGHT_UNSCALED;
+		return value * scaling;
 	}
 
 	protected Font sceneFont() {
-		return ui.theme().font("font.arcade", s(8));
+		double size = Math.floor(TS * scaling);
+		return ui.theme().font("font.arcade", size);
 	}
 
 	public void setRoundedCorners(boolean roundedCorners) {
@@ -171,29 +123,13 @@ public abstract class GameScene2D implements GameScene {
 		return ui;
 	}
 
-	@Override
-	public BorderPane root() {
-		return root;
-	}
-
 	public Canvas getCanvas() {
 		return canvas;
 	}
 
-	public Pane getOverlay() {
-		return overlay;
-	}
-
-	public HelpMenu getHelpMenu() {
-		return helpMenu;
-	}
-
 	@Override
-	public void setParentScene(Scene parentScene) {
-		root.minWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
-		root.minHeightProperty().bind(parentScene.heightProperty());
-		root.maxWidthProperty().bind(parentScene.heightProperty().multiply(ASPECT_RATIO));
-		root.maxHeightProperty().bind(parentScene.heightProperty());
+	public Region root() {
+		return null;
 	}
 
 	@Override
@@ -209,7 +145,7 @@ public abstract class GameScene2D implements GameScene {
 		drawSceneBackground();
 		if (isScoreVisible()) {
 			drawScore(game().score(), "SCORE", t(1), t(1));
-			drawScore(game().highScore(), "HIGH SCORE", t(16), t(1));
+			drawScore(game().highScore(), "HIGH SCORE", t(14), t(1));
 		}
 		if (isCreditVisible()) {
 			drawCredit(game().credit(), t(2), t(36) - 1);
@@ -237,34 +173,37 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawScore(Score score, String title, double x, double y) {
 		drawText(title, ArcadeTheme.PALE, sceneFont(), x, y);
-		var pointsText = String.format("%02d", score.points());
-		drawText(String.format("%7s", pointsText), ArcadeTheme.PALE, sceneFont(), x, (y + TS + 1));
+//		var pointsText = String.format("%02d", score.points());
+		var pointsText = "" + score.points();
+//		drawText(String.format("%7s", pointsText), ArcadeTheme.PALE, sceneFont(), x, (y + TS + 1));
+		drawText("" + pointsText, ArcadeTheme.PALE, sceneFont(), x, (y + TS + 1));
 		if (score.points() != 0) {
-			drawText(String.format("L%d", score.levelNumber()), ArcadeTheme.PALE, sceneFont(), x + TS * 8, y + TS + 1);
+//			drawText(String.format("L%d", score.levelNumber()), ArcadeTheme.PALE, sceneFont(), x + TS * 8, y + TS + 1);
+			drawText("L" + score.levelNumber(), ArcadeTheme.PALE, sceneFont(), x + TS * 8, y + TS + 1);
 		}
 	}
 
 	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
 		double x = xr;
 		switch (game().variant()) {
-		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
-			for (var symbol : levelSymbols) {
-				drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
-				x -= TS * 2;
+			case MS_PACMAN: {
+				var ss = (SpritesheetMsPacManGame) ui.spritesheet();
+				for (var symbol : levelSymbols) {
+					drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
+					x -= TS * 2;
+				}
+				break;
 			}
-			break;
-		}
-		case PACMAN: {
-			var ss = (SpritesheetPacManGame) ui.spritesheet();
-			for (var symbol : levelSymbols) {
-				drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
-				x -= TS * 2;
+			case PACMAN: {
+				var ss = (SpritesheetPacManGame) ui.spritesheet();
+				for (var symbol : levelSymbols) {
+					drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
+					x -= TS * 2;
+				}
+				break;
 			}
-			break;
-		}
-		default:
-			throw new IllegalGameVariantException(game().variant());
+			default:
+				throw new IllegalGameVariantException(game().variant());
 		}
 	}
 
@@ -276,22 +215,22 @@ public abstract class GameScene2D implements GameScene {
 		var y = TS * (World.TILES_Y - 2);
 		int maxLives = 5;
 		switch (game().variant()) {
-		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
-			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-				drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
+			case MS_PACMAN: {
+				var ss = (SpritesheetMsPacManGame) ui.spritesheet();
+				for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+					drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
+				}
+				break;
 			}
-			break;
-		}
-		case PACMAN: {
-			var ss = (SpritesheetPacManGame) ui.spritesheet();
-			for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-				drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
+			case PACMAN: {
+				var ss = (SpritesheetPacManGame) ui.spritesheet();
+				for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+					drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
+				}
+				break;
 			}
-			break;
-		}
-		default:
-			throw new IllegalGameVariantException(game().variant());
+			default:
+				throw new IllegalGameVariantException(game().variant());
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -304,34 +243,34 @@ public abstract class GameScene2D implements GameScene {
 		Rectangle2D symbolSprite;
 		Rectangle2D valueSprite;
 		switch (game().variant()) {
-		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
-			symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
-			valueSprite = ss.bonusValueSprite(bonus.symbol());
-			break;
-		}
-		case PACMAN: {
-			var ss = (SpritesheetPacManGame) ui.spritesheet();
-			symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
-			valueSprite = ss.bonusValueSprite(bonus.symbol());
-			break;
-		}
-		default:
-			throw new IllegalGameVariantException(game().variant());
+			case MS_PACMAN: {
+				var ss = (SpritesheetMsPacManGame) ui.spritesheet();
+				symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
+				valueSprite = ss.bonusValueSprite(bonus.symbol());
+				break;
+			}
+			case PACMAN: {
+				var ss = (SpritesheetPacManGame) ui.spritesheet();
+				symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
+				valueSprite = ss.bonusValueSprite(bonus.symbol());
+				break;
+			}
+			default:
+				throw new IllegalGameVariantException(game().variant());
 		}
 
 		Rectangle2D sprite = null;
 		switch (bonus.state()) {
-		case Bonus.STATE_INACTIVE:
-			break;
-		case Bonus.STATE_EDIBLE:
-			sprite = symbolSprite;
-			break;
-		case Bonus.STATE_EATEN:
-			sprite = valueSprite;
-			break;
-		default:
-			throw new IllegalArgumentException();
+			case Bonus.STATE_INACTIVE:
+				break;
+			case Bonus.STATE_EDIBLE:
+				sprite = symbolSprite;
+				break;
+			case Bonus.STATE_EATEN:
+				sprite = valueSprite;
+				break;
+			default:
+				throw new IllegalArgumentException();
 		}
 		if (sprite == null) {
 			return;
@@ -355,7 +294,8 @@ public abstract class GameScene2D implements GameScene {
 				if (infoVisiblePy.get() && pac.isVisible()) {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(6)));
-					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
+//					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
+					var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
 					g.fillText(text, s(pac.position().x() + 8), s(pac.position().y()));
 					// indicate wish direction
 					float r = 2;
@@ -379,7 +319,8 @@ public abstract class GameScene2D implements GameScene {
 				if (infoVisiblePy.get() && ghost.isVisible()) {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(6)));
-					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
+//					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
+					var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
 					g.fillText(text, s(ghost.position().x() + 8), s(ghost.position().y()));
 				}
 			}
@@ -388,7 +329,7 @@ public abstract class GameScene2D implements GameScene {
 
 	/**
 	 * Draws a sprite and performs scaling if game scene has unscaled canvas
-	 * 
+	 *
 	 * @param source spritesheet source
 	 * @param sprite spritesheet region ("sprite")
 	 * @param x      UNSCALED x position
@@ -410,7 +351,7 @@ public abstract class GameScene2D implements GameScene {
 	 * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
 	 * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
 	 * bounding box is only 8 pixels (one square tile) wide.
-	 * 
+	 *
 	 * @param r spritesheet region (may be null)
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
@@ -423,7 +364,7 @@ public abstract class GameScene2D implements GameScene {
 
 	/**
 	 * Draws the sprite over the bounding box of the given entity (if visible).
-	 * 
+	 *
 	 * @param entity an entity like Pac-Man or a ghost
 	 * @param r      the sprite
 	 */
@@ -435,7 +376,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
-		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALE, sceneFont(), x, y);
+//		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALE, sceneFont(), x, y);
+		drawText("CREDIT " + credit, ArcadeTheme.PALE, sceneFont(), x, y);
 	}
 
 	protected void drawMidwayCopyright(double x, double y) {
@@ -477,8 +419,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawTileGrid(int tilesX, int tilesY) {
-		g.save();
-		g.translate(0.5, 0.5);
 		g.setStroke(ArcadeTheme.PALE);
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
@@ -487,7 +427,6 @@ public abstract class GameScene2D implements GameScene {
 		for (int col = 0; col <= tilesY; ++col) {
 			g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(tilesY * TS));
 		}
-		g.restore();
 	}
 
 	/**
