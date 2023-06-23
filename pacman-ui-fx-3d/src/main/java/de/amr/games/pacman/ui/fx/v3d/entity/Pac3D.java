@@ -23,23 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.animation.DyingAnimation;
-import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
-import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
-import de.amr.games.pacman.ui.fx.v3d.animation.MsPacManDyingAnimation;
-import de.amr.games.pacman.ui.fx.v3d.animation.PacManDyingAnimation;
-import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
-import de.amr.games.pacman.ui.fx.v3d.animation.WalkingAnimation;
+import de.amr.games.pacman.ui.fx.v3d.animation.*;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.BooleanProperty;
@@ -54,6 +42,10 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+
+import java.util.stream.Stream;
+
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * 3D-representation of Pac-Man and Ms. Pac-Man.

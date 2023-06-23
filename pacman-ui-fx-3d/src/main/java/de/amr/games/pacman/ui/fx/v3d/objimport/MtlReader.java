@@ -31,22 +31,17 @@
  */
 package de.amr.games.pacman.ui.fx.v3d.objimport;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.tinylog.Logger;
-
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
+import org.tinylog.Logger;
+
+import java.io.*;
+import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /** Reader for OBJ file MTL material files. */
 public class MtlReader {

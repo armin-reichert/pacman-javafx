@@ -24,11 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.requirePositive;
-import static java.util.Objects.requireNonNull;
-
-import org.tinylog.Logger;
-
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -36,6 +31,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
+
+import static de.amr.games.pacman.lib.Globals.requirePositive;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert

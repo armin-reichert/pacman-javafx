@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import javafx.scene.text.Text;
+
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-
-import javafx.scene.text.Text;
 
 /**
  * Text field whose text is conditionally computed.

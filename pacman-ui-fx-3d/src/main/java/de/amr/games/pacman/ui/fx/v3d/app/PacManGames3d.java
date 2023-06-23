@@ -24,11 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
-import static de.amr.games.pacman.ui.fx.util.Ufx.just;
-
-import java.util.ResourceBundle;
-
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -47,6 +42,11 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
+
+import java.util.ResourceBundle;
+
+import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
+import static de.amr.games.pacman.ui.fx.util.Ufx.just;
 
 /**
  * @author Armin Reichert

@@ -23,18 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.RND;
-import static de.amr.games.pacman.lib.Globals.inPercentOfCases;
-import static de.amr.games.pacman.lib.Globals.randomInt;
-
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -53,28 +41,27 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
-import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.Energizer3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.Ghost3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.Text3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.AmbientLight;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * 3D play scene with sound and animations.

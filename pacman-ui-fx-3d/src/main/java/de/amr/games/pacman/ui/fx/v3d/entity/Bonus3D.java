@@ -23,10 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
@@ -44,6 +40,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * 3D bonus symbol.

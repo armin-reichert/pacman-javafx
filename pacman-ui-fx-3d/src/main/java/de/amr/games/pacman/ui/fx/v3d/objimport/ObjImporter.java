@@ -31,19 +31,6 @@
  */
 package de.amr.games.pacman.ui.fx.v3d.objimport;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.tinylog.Logger;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableFloatArray;
 import javafx.collections.ObservableIntegerArray;
@@ -52,6 +39,14 @@ import javafx.scene.Parent;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import org.tinylog.Logger;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.*;
 
 /**
  * Stripped-down version of Oracle's OBJ importer from the 3DViewer sample project.

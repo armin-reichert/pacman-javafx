@@ -23,13 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static java.util.Objects.requireNonNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
@@ -50,6 +43,13 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+import static de.amr.games.pacman.lib.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Displays a Pac-Man shape for each live remaining.

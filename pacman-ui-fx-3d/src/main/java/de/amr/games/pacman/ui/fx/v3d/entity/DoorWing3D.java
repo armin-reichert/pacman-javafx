@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
-
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.beans.property.ObjectProperty;
@@ -37,6 +34,9 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 
 /**
  * Part a ghosthouse door.

@@ -31,17 +31,9 @@
  */
 package de.amr.games.pacman.ui.fx.v3d.objimport;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-
 import javafx.scene.shape.TriangleMesh;
+
+import java.util.*;
 
 /** Util for converting Normals to Smoothing Groups */
 public class SmoothingGroups {

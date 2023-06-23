@@ -24,9 +24,6 @@ SOFTWARE.
 
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.v2f;
-
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.v3d.entity.Pellet3D;
@@ -34,6 +31,9 @@ import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.util.Duration;
+
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2f;
 
 /**
  * @author Armin Reichert

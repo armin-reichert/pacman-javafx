@@ -23,14 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.requirePositive;
-import static de.amr.games.pacman.model.world.World.tileAt;
-import static java.util.Objects.requireNonNull;
-
-import java.util.Optional;
-
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
@@ -42,6 +34,12 @@ import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
+
+import java.util.Optional;
+
+import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.world.World.tileAt;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 3D energizer pellet.

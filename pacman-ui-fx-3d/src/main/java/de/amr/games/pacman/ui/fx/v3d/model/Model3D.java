@@ -1,14 +1,5 @@
 package de.amr.games.pacman.ui.fx.v3d.model;
 
-import static java.util.Objects.requireNonNull;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.ui.fx.v3d.objimport.ObjImporter;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
@@ -16,6 +7,14 @@ import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+import org.tinylog.Logger;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A 3D-model imported from a Wavefront .obj file.

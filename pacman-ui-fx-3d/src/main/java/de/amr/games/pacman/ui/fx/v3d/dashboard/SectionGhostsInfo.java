@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
+
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 /**
  * @author Armin Reichert

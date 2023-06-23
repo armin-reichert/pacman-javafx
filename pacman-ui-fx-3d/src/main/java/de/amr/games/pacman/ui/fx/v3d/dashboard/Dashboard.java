@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Dashboard with different sections showing info and allowing configuration.

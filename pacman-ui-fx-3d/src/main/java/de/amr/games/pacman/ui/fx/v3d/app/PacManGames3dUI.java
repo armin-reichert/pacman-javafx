@@ -23,8 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
@@ -42,6 +40,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.

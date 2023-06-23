@@ -4,10 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.objimport;
 
-import org.tinylog.Logger;
-
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert

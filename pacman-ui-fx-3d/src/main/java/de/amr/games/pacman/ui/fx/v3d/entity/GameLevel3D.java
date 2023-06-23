@@ -23,13 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkLevelNotNull;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
-import java.util.stream.Stream;
-
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -51,6 +44,10 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+
+import java.util.stream.Stream;
+
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * @author Armin Reichert

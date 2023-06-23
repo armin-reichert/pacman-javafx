@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static java.util.Objects.requireNonNull;
-
 import de.amr.games.pacman.model.GameLevel;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -33,6 +30,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import static de.amr.games.pacman.lib.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Displays the score and high score.

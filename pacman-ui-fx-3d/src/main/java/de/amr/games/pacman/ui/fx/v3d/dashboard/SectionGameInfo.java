@@ -23,11 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import static de.amr.games.pacman.lib.TickTimer.ticksToString;
-
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
+
+import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 
 /**
  * Game related settings.

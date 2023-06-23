@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import java.util.Optional;
-
 import de.amr.games.pacman.lib.Vector2i;
 import javafx.animation.Animation;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
+
+import java.util.Optional;
 
 /**
  * @author Armin Reichert

@@ -3,19 +3,17 @@
  */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
-
 import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import org.tinylog.Logger;
+
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 /**
  * @author Armin Reichert

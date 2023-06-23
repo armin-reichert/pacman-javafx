@@ -23,12 +23,6 @@ SOFTWARE.
 */
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
-import static de.amr.games.pacman.lib.Globals.randomDouble;
-import static de.amr.games.pacman.lib.Globals.randomFloat;
-import static de.amr.games.pacman.lib.Globals.randomInt;
-
-import org.tinylog.Logger;
-
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -36,6 +30,9 @@ import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * @author Armin Reichert

@@ -23,11 +23,11 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
-import static de.amr.games.pacman.lib.Globals.lerp;
-
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
+
+import static de.amr.games.pacman.lib.Globals.lerp;
 
 /**
  * @author Armin Reichert

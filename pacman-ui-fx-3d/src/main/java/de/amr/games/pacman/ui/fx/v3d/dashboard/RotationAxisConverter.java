@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import java.util.Objects;
-
 import javafx.geometry.Point3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.StringConverter;
+
+import java.util.Objects;
 
 /**
  * @author Armin Reichert

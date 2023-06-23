@@ -31,18 +31,7 @@
  */
 package de.amr.games.pacman.ui.fx.v3d.objimport;
 
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
-import java.util.RandomAccess;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Resizable-array implementation of the <tt>List&lt;Integer&gt;</tt> interface. Implements all optional list

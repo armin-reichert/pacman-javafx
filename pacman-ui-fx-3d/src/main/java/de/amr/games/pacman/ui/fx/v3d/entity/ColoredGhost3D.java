@@ -23,9 +23,6 @@ SOFTWARE.
  */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import static de.amr.games.pacman.lib.Globals.requirePositive;
-import static java.util.Objects.requireNonNull;
-
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.ColorFlashing;
@@ -40,6 +37,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+
+import static de.amr.games.pacman.lib.Globals.requirePositive;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
