@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2021-2023 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
- */
+Copyright (c) 2021-2023 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 open module de.amr.games.pacman.ui.fx3d {
 
 	requires javafx.graphics;
