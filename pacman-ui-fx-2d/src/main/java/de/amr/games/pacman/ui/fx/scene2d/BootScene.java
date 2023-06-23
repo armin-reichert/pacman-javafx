@@ -21,7 +21,6 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		setRoundedCorners(false);
 		setScoreVisible(false);
 	}
 

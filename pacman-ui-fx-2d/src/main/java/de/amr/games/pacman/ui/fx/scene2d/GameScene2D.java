@@ -44,7 +44,6 @@ public abstract class GameScene2D implements GameScene {
 	public static final int TILES_Y = 36;
 	public static final int WIDTH_UNSCALED = 224;
 	public static final int HEIGHT_UNSCALED = 288;
-	public static final float ASPECT_RATIO = 28f / 36f;
 
 	protected static float t(double tiles) {
 		return (float) tiles * TS;
@@ -58,7 +57,6 @@ public abstract class GameScene2D implements GameScene {
 	protected GraphicsContext g;
 	private boolean scoreVisible;
 	private boolean creditVisible;
-	private boolean roundedCorners = true;
 	private Color wallpaperColor = Color.BLACK;
 	protected double scaling = 1;
 
@@ -111,20 +109,12 @@ public abstract class GameScene2D implements GameScene {
 		return ui.theme().font("font.arcade", size);
 	}
 
-	public void setRoundedCorners(boolean roundedCorners) {
-		this.roundedCorners = roundedCorners;
-	}
-
-	public void setWallpaperColor(Color wallpaperColor) {
-		this.wallpaperColor = wallpaperColor;
-	}
-
 	@Override
 	public PacManGames2dUI ui() {
 		return ui;
 	}
 
-	public Canvas getCanvas() {
+	public Canvas canvas() {
 		return canvas;
 	}
 
@@ -160,16 +150,8 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawSceneBackground() {
 		double w = canvas.getWidth();
 		double h = canvas.getHeight();
-		double arc = s(20);
-		if (roundedCorners) {
-			g.setFill(wallpaperColor);
-			g.fillRect(0, 0, w, h);
-			g.setFill(Color.BLACK);
-			g.fillRoundRect(0, 0, w, h, arc, arc);
-		} else {
-			g.setFill(Color.BLACK);
-			g.fillRect(0, 0, w, h);
-		}
+		g.setFill(Color.BLACK);
+		g.fillRect(0, 0, w, h);
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
