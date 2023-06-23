@@ -169,16 +169,12 @@ public class GamePage {
 		Logger.trace("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);
 	}
 
-
 	public void setGameScene(GameScene gameScene) {
-		if (gameScene instanceof  GameScene2D) {
-			gameScene2D = (GameScene2D) gameScene;
-			gameScene2D.setCanvas(canvas);
-			resize(scaling);
-			updateHelpButton();
-		}
-		if (gameScene == sceneConfiguration().playScene()
-				|| gameScene == sceneConfiguration().playScene3D()) {
+		gameScene2D = (GameScene2D) gameScene;
+		gameScene2D.setCanvas(canvas);
+		resize(scaling);
+		updateHelpButton();
+		if (gameScene == sceneConfiguration().playScene()) {
 			root.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
 		} else {
 			root.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
