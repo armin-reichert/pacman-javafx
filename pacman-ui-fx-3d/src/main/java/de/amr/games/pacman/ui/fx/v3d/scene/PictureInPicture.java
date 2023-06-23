@@ -24,10 +24,9 @@ public class PictureInPicture {
 	private final GameScene2D gameScene;
 
 	public PictureInPicture(PacManGames2dUI ui) {
-		var canvas = new Canvas(heightPy.get() * GameScene2D.ASPECT_RATIO, heightPy.get());
+		var canvas = new Canvas(heightPy.get() * 28 / 36, heightPy.get());
 		gameScene = new PlayScene2D(ui);
 		gameScene.setCanvas(canvas);
-		gameScene.setRoundedCorners(false);
 		gameScene.root().opacityProperty().bind(opacityPy);
 		gameScene.root().setVisible(false);
 		heightPy.addListener((py, ov, nv) -> {

@@ -48,13 +48,13 @@ class GamePage3D extends GamePage {
 	@Override
 	public void setGameScene(GameScene gameScene) {
 		if (gameScene instanceof GameScene2D) {
-			root().getChildren().set(0, getLayoutPane());
+			root().getChildren().set(0, layoutPane());
 			super.setGameScene(gameScene);
 		} else {
-			// here we assume PlayScene3D is the only 3D game scene type
 			root().getChildren().set(0, gameScene.root());
 			root().setBackground(ui().theme().background("model3D.wallpaper"));
 			root().requestFocus();
+			helpButton().setVisible(false);
 		}
 	}
 
@@ -103,7 +103,7 @@ class GamePage3D extends GamePage {
 		if (dashboard.isVisible() || isPiPOn()) {
 			root().getChildren().add(topLayer);
 		}
-		//helpButton().setVisible(!root().getChildren().contains(topLayer));
+		helpButton().setVisible(!root().getChildren().contains(topLayer));
 		root().requestFocus();
 	}
 }

@@ -95,12 +95,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		gamePage3D.getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
 		if (currentGameScene != null && currentGameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				gamePage.getLayoutPane().setBackground(ResourceManager.coloredBackground(Color.BLACK));
+				gamePage.layoutPane().setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				gamePage.getLayoutPane().setBackground(theme.background("model3D.wallpaper"));
+				gamePage.layoutPane().setBackground(theme.background("model3D.wallpaper"));
 			}
 		} else {
-			gamePage.getLayoutPane().setBackground(theme.background("wallpaper.background"));
+			gamePage.layoutPane().setBackground(theme.background("wallpaper.background"));
 		}
 		var paused = clock != null && clock().isPaused();
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
