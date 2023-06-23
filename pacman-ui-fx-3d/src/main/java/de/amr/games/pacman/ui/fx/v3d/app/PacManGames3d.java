@@ -8,6 +8,8 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -37,53 +39,56 @@ public class PacManGames3d {
 
 	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 
-	private static final Picker<String> pickerReadyPacMan = Picker.fromBundle(TEXTS, "pacman.ready");
-	private static final Picker<String> pickerReadyMsPacMan = Picker.fromBundle(TEXTS, "mspacman.ready");
-	private static final Picker<String> pickerCheating = Picker.fromBundle(TEXTS, "cheating");
-	private static final Picker<String> pickerLevelComplete = Picker.fromBundle(TEXTS, "level.complete");
-	private static final Picker<String> pickerGameOver = Picker.fromBundle(TEXTS, "game.over");
+	private static final Picker<String> PICKER_READY_PAC_MAN    = Picker.fromBundle(TEXTS, "pacman.ready");
+	private static final Picker<String> PICKER_READY_MS_PAC_MAN = Picker.fromBundle(TEXTS, "mspacman.ready");
+	private static final Picker<String> PICKER_CHEATING         = Picker.fromBundle(TEXTS, "cheating");
+	private static final Picker<String> PICKER_LEVEL_COMPLETE   = Picker.fromBundle(TEXTS, "level.complete");
+	private static final Picker<String> PICKER_GAME_OVER        = Picker.fromBundle(TEXTS, "game.over");
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
-	//@formatter:off
-	public static void addThings(Theme theme) {
-		theme.set("model3D.pacman",            new Model3D(MGR.url("model3D/pacman.obj")));
-		theme.set("model3D.ghost",             new Model3D(MGR.url("model3D/ghost.obj")));
-		theme.set("model3D.pellet",            new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
-		theme.set("model3D.wallpaper",         MGR.imageBackground("graphics/sky.png", 
-				                                     BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				                                     BackgroundPosition.CENTER, 
-				                                     new BackgroundSize(1, 1, true, true, false, true)
-				                                   ));
-		theme.set("image.armin1970",           MGR.image("graphics/armin.jpg"));
-		theme.set("icon.play",                 MGR.image("graphics/icons/play.png"));
-		theme.set("icon.stop",                 MGR.image("graphics/icons/stop.png"));
-		theme.set("icon.step",                 MGR.image("graphics/icons/step.png"));
+	public static Theme createTheme() {
+		var theme = new ArcadeTheme(PacManGames2d.MGR);
+
+		theme.set("model3D.pacman",     new Model3D(MGR.url("model3D/pacman.obj")));
+		theme.set("model3D.ghost",      new Model3D(MGR.url("model3D/ghost.obj")));
+		theme.set("model3D.pellet",     new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
+		theme.set("model3D.wallpaper",  MGR.imageBackground("graphics/sky.png",
+				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+				BackgroundPosition.CENTER,
+				new BackgroundSize(1, 1, true, true, false, true)
+		));
+		theme.set("image.armin1970",    MGR.image("graphics/armin.jpg"));
+		theme.set("icon.play",          MGR.image("graphics/icons/play.png"));
+		theme.set("icon.stop",          MGR.image("graphics/icons/stop.png"));
+		theme.set("icon.step",          MGR.image("graphics/icons/step.png"));
 		
-		theme.set("texture.hexagon",           createFloorTexture("hexagon", "jpg"));
-		theme.set("texture.knobs",             createFloorTexture("knobs", "jpg"));
-		theme.set("texture.plastic",           createFloorTexture("plastic", "jpg"));
-		theme.set("texture.wood",              createFloorTexture("wood", "jpg"));
+		theme.set("texture.hexagon",    createFloorTexture("hexagon", "jpg"));
+		theme.set("texture.knobs",      createFloorTexture("knobs", "jpg"));
+		theme.set("texture.plastic",    createFloorTexture("plastic", "jpg"));
+		theme.set("texture.wood",       createFloorTexture("wood", "jpg"));
+
+		return theme;
 	}
 
 	public static String pickFunnyReadyMessage(GameVariant gameVariant) {
 		return switch (gameVariant) {
-		case MS_PACMAN -> pickerReadyMsPacMan.next();
-		case PACMAN -> pickerReadyPacMan.next();
+		case MS_PACMAN -> PICKER_READY_MS_PAC_MAN.next();
+		case PACMAN -> PICKER_READY_PAC_MAN.next();
 		default -> throw new IllegalGameVariantException(gameVariant);
 		};
 	}
 
 	public static String pickCheatingMessage() {
-		return pickerCheating.next();
+		return PICKER_CHEATING.next();
 	}
 
 	public static String pickGameOverMessage() {
-		return pickerGameOver.next();
+		return PICKER_GAME_OVER.next();
 	}
 
 	public static String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(pickerLevelComplete.next(),
+		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
 				ResourceManager.fmtMessage(TEXTS, "level_complete", levelNumber));
 	}
 
@@ -102,7 +107,6 @@ public class PacManGames3d {
 		return texture;
 	}
 
-	//@formatter:off
 	public static final float                       PIP_MIN_HEIGHT           = 36 * 8;
 	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
 
@@ -133,5 +137,4 @@ public class PacManGames3d {
 	public static final KeyCodeCombination          KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
 	public static final KeyCodeCombination          KEY_PREV_PERSPECTIVE     = alt(KeyCode.LEFT);
 	public static final KeyCodeCombination          KEY_NEXT_PERSPECTIVE     = alt(KeyCode.RIGHT);
-	//@formatter:on
 }

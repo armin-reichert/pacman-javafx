@@ -27,10 +27,7 @@ public class PacManGames3dApp extends PacManGames2dApp {
 
 	@Override
 	public void start(Stage stage) {
-		var theme = new ArcadeTheme(PacManGames2d.MGR);
-		// TODO
-		PacManGames3d.addThings(theme);
-
+		var theme = PacManGames3d.createTheme();
 		ui = new PacManGames3dUI();
 		ui.init(stage, settings, theme);
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
