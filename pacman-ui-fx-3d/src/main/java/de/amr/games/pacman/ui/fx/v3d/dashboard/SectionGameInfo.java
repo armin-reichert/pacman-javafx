@@ -40,7 +40,7 @@ public class SectionGameInfo extends Section {
 		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
-		addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().root().getWidth(), gameScene().root().getHeight()));
+		//addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().root().getWidth(), gameScene().root().getHeight()));
 		addInfo("Game State", () -> "%s".formatted(GameController.it().state()));
 		addInfo("", () -> "Running:   %s%s".formatted(GameController.it().state().timer().tick(),
 				GameController.it().state().timer().isStopped() ? " (STOPPED)" : ""));

@@ -58,11 +58,11 @@ public class SectionGeneral extends Section {
 		btnStep.setStyle("-fx-background-color: transparent");
 		btnStep.setText(null);
 		btnStep.setTooltip(tooltipStep);
-		btnStep.setOnAction(e -> ui.clock().executeSteps(PacManGames2d.PY_SIMULATION_STEPS.get(), true));
+		btnStep.setOnAction(e -> ui.clock().executeSteps(PacManGames3d.PY_SIMULATION_STEPS.get(), true));
 
-		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, PacManGames2d.PY_SIMULATION_STEPS.get());
+		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, PacManGames3d.PY_SIMULATION_STEPS.get());
 		spinnerSimulationSteps.valueProperty()
-				.addListener((obs, oldVal, newVal) -> PacManGames2d.PY_SIMULATION_STEPS.set(newVal.intValue()));
+				.addListener((obs, oldVal, newVal) -> PacManGames3d.PY_SIMULATION_STEPS.set(newVal.intValue()));
 
 		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAMERATE, MAX_FRAMERATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
@@ -87,7 +87,7 @@ public class SectionGeneral extends Section {
 		btnsSimulation[0].setGraphic(ui.clock().pausedPy.get() ? iconPlay : iconStop);
 		btnsSimulation[0].setTooltip(ui.clock().pausedPy.get() ? tooltipPlay : tooltipStop);
 		btnsSimulation[1].setDisable(!ui.clock().pausedPy.get());
-		spinnerSimulationSteps.getValueFactory().setValue(PacManGames2d.PY_SIMULATION_STEPS.get());
+		spinnerSimulationSteps.getValueFactory().setValue(PacManGames3d.PY_SIMULATION_STEPS.get());
 		sliderTargetFPS.setValue(ui.clock().targetFrameratePy.get());
 		cbUsePlayScene3D.setSelected(PacManGames3d.PY_3D_ENABLED.get());
 		cbPoliticallyCorrect.setSelected(PacManGames3d.PY_WOKE_PUSSY.get());

@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -128,8 +129,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	@Override
-	public Region root() {
-		return null;
+	public Node root() {
+		return canvas;
 	}
 
 	@Override

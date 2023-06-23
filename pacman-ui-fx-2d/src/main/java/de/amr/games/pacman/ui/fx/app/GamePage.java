@@ -126,7 +126,8 @@ public class GamePage {
 		}
 		return null;
 	}
-	private GameSceneConfiguration sceneConfiguration() {
+
+	public GameSceneConfiguration sceneConfiguration() {
 		return ui.game().variant() == GameVariant.MS_PACMAN ? ui.configMsPacMan : ui.configPacMan;
 	}
 
@@ -202,6 +203,9 @@ public class GamePage {
 		}
 	}
 
+	public PacManGames2dUI ui() {
+		return ui;
+	}
 
 	public Pane root() {
 		return root;
@@ -209,6 +213,10 @@ public class GamePage {
 
 	public FlashMessageView flashMessageView() {
 		return flashMessageView;
+	}
+
+	public BorderPane getLayoutPane() {
+		return layoutPane;
 	}
 
 	public void update() {

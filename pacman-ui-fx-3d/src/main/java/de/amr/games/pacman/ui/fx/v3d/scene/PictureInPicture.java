@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 
 /**
  * @author Armin Reichert
@@ -23,13 +24,12 @@ public class PictureInPicture {
 	private final GameScene2D gameScene;
 
 	public PictureInPicture(PacManGames2dUI ui) {
+		var canvas = new Canvas(heightPy.get()*GameScene2D.ASPECT_RATIO, heightPy.get());
 		gameScene = new PlayScene2D(ui);
-		gameScene.setCanvasScaled(true);
+		gameScene.setCanvas(canvas);
 		gameScene.setRoundedCorners(false);
-		gameScene.root().minHeightProperty().bind(heightPy);
-		gameScene.root().minWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
-		gameScene.root().maxHeightProperty().bind(heightPy);
-		gameScene.root().maxWidthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
+		canvas.heightProperty().bind(heightPy);
+		canvas.widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
 		gameScene.root().opacityProperty().bind(opacityPy);
 		gameScene.root().setVisible(false);
 	}

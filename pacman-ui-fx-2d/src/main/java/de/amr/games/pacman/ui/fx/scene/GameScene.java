@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 
@@ -64,7 +65,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * @return the root of the game scene (used to embed the scene into the scene graph)
 	 */
-	Region root();
+	Node root();
 
 	/**
 	 * @return if this is a scene with 3D content

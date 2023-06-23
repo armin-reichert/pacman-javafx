@@ -7,10 +7,15 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
 import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -41,6 +46,23 @@ class GamePage3D extends GamePage {
 	}
 
 	@Override
+	public void setGameScene(GameScene gameScene) {
+		if (gameScene instanceof GameScene2D) {
+			root().getChildren().set(0, getLayoutPane());
+			super.setGameScene(gameScene);
+			return;
+		}
+		if (gameScene != sceneConfiguration().playScene3D()) {
+			Logger.error("Don't know how to display game scene: {}", gameScene);
+			return;
+		}
+		root().getChildren().set(0, gameScene.root());
+		root().setBackground(ui().theme().background("model3D.wallpaper"));
+		root().addEventHandler(KeyEvent.KEY_PRESSED, ui().getKeyboardPlayerSteering());
+		root().requestFocus();
+	}
+
+	@Override
 	public void render() {
 		super.render();
 		dashboard.update();
@@ -49,7 +71,7 @@ class GamePage3D extends GamePage {
 
 	@Override
 	protected void handleKeyboardInput() {
-		var ui3D = (PacManGames3dUI) ui;
+		var ui3D = (PacManGames3dUI) ui();
 		super.handleKeyboardInput();
 		if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
 			ui3D.toggle2D3D();
@@ -69,9 +91,9 @@ class GamePage3D extends GamePage {
 
 	private void togglePipVisible() {
 		Ufx.toggle(PacManGames3d.PY_PIP_ON);
-		pip.update(ui.currentGameScene(), isPiPOn());
+		pip.update(ui().currentGameScene(), isPiPOn());
 		var message = fmtMessage(PacManGames3d.TEXTS, isPiPOn() ? "pip_on" : "pip_off");
-		ui.showFlashMessage(message);
+		ui().showFlashMessage(message);
 		updateTopLayer();
 	}
 
@@ -81,11 +103,11 @@ class GamePage3D extends GamePage {
 	}
 
 	private void updateTopLayer() {
-		root.getChildren().remove(topLayer);
+		root().getChildren().remove(topLayer);
 		if (dashboard.isVisible() || isPiPOn()) {
-			root.getChildren().add(topLayer);
+			root().getChildren().add(topLayer);
 		}
-		helpButton.setVisible(!root.getChildren().contains(topLayer));
-		root.requestFocus();
+		//helpButton().setVisible(!root().getChildren().contains(topLayer));
+		root().requestFocus();
 	}
 }

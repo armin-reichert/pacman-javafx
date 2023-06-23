@@ -350,6 +350,10 @@ public class PacManGames2dUI implements GameEventListener {
 		return GameController.it().game();
 	}
 
+	public KeyboardSteering getKeyboardPlayerSteering() {
+		return keyboardPlayerSteering;
+	}
+
 	public Spritesheet spritesheet() {
 		switch (game().variant()) {
 		case MS_PACMAN:
