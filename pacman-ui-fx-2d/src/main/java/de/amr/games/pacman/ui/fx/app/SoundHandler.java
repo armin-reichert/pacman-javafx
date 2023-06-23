@@ -168,12 +168,12 @@ public class SoundHandler {
 		if (voiceClip != null && voiceClip.isPlaying()) {
 			return; // don't interrupt voice
 		}
-		Logger.info("Voice will start in {} seconds", delaySeconds);
+		Logger.trace("Voice will start in {} seconds", delaySeconds);
 		voiceClip = theme.audioClip(name);
 		voiceClipExecution.setDelay(Duration.seconds(delaySeconds));
 		voiceClipExecution.setOnFinished(e -> {
 			voiceClip.play();
-			Logger.info("Voice started");
+			Logger.trace("Voice started");
 		});
 		voiceClipExecution.play();
 	}
@@ -181,11 +181,11 @@ public class SoundHandler {
 	public void stopVoice() {
 		if (voiceClip != null && voiceClip.isPlaying()) {
 			voiceClip.stop();
-			Logger.info("Voice stopped");
+			Logger.trace("Voice stopped");
 		}
 		if (voiceClipExecution.getStatus() == Status.RUNNING) {
 			voiceClipExecution.stop();
-			Logger.info("Scheduled voice clip stopped");
+			Logger.trace("Scheduled voice clip stopped");
 		}
 	}
 }

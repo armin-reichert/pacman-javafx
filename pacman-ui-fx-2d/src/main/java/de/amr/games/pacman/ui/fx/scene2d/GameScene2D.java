@@ -24,7 +24,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -57,7 +56,6 @@ public abstract class GameScene2D implements GameScene {
 	protected GraphicsContext g;
 	private boolean scoreVisible;
 	private boolean creditVisible;
-	private Color wallpaperColor = Color.BLACK;
 	protected double scaling = 1;
 
 	protected GameScene2D(PacManGames2dUI ui) {
@@ -133,12 +131,12 @@ public abstract class GameScene2D implements GameScene {
 		if (ui == null) {
 			return;
 		}
-		drawSceneBackground();
-		if (isScoreVisible()) {
+		clearSceneBackground();
+		if (scoreVisible) {
 			drawScore(game().score(), "SCORE", t(1), t(1));
 			drawScore(game().highScore(), "HIGH SCORE", t(14), t(1));
 		}
-		if (isCreditVisible()) {
+		if (creditVisible) {
 			drawCredit(game().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent();
@@ -147,11 +145,9 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	protected void drawSceneBackground() {
-		double w = canvas.getWidth();
-		double h = canvas.getHeight();
+	protected void clearSceneBackground() {
 		g.setFill(Color.BLACK);
-		g.fillRect(0, 0, w, h);
+		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
@@ -310,8 +306,8 @@ public abstract class GameScene2D implements GameScene {
 	/**
 	 * Draws a sprite and performs scaling if game scene has unscaled canvas
 	 *
-	 * @param source spritesheet source
-	 * @param sprite spritesheet region ("sprite")
+	 * @param source sprite sheet source
+	 * @param sprite sprite sheet region ("sprite")
 	 * @param x      UNSCALED x position
 	 * @param y      UNSCALED y position
 	 */
@@ -332,7 +328,7 @@ public abstract class GameScene2D implements GameScene {
 	 * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
 	 * bounding box is only 8 pixels (one square tile) wide.
 	 *
-	 * @param r spritesheet region (may be null)
+	 * @param r sprite sheet region (can be null)
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
 	 */
@@ -360,7 +356,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawMidwayCopyright(double x, double y) {
-		drawText("\u00A9 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, sceneFont(), x, y);
+		drawText("© 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, sceneFont(), x, y);
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
@@ -368,7 +364,7 @@ public abstract class GameScene2D implements GameScene {
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", s(11)));
-		g.fillText("\u00a9", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
+		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
 		g.setFont(sceneFont());
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
 		g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));

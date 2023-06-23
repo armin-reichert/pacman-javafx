@@ -166,7 +166,7 @@ public class GamePage {
 		updateHelpButton();
 		updateSignature();
 
-		Logger.info("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);
+		Logger.trace("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);
 	}
 
 
