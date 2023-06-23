@@ -24,14 +24,15 @@ public class PictureInPicture {
 	private final GameScene2D gameScene;
 
 	public PictureInPicture(PacManGames2dUI ui) {
-		var canvas = new Canvas(heightPy.get()*GameScene2D.ASPECT_RATIO, heightPy.get());
+		var canvas = new Canvas(heightPy.get() * GameScene2D.ASPECT_RATIO, heightPy.get());
 		gameScene = new PlayScene2D(ui);
 		gameScene.setCanvas(canvas);
 		gameScene.setRoundedCorners(false);
-		canvas.heightProperty().bind(heightPy);
-		canvas.widthProperty().bind(heightPy.multiply(GameScene2D.ASPECT_RATIO));
 		gameScene.root().opacityProperty().bind(opacityPy);
 		gameScene.root().setVisible(false);
+		heightPy.addListener((py, ov, nv) -> {
+			gameScene.setScaling(nv.doubleValue() / GameScene2D.HEIGHT_UNSCALED);
+		});
 	}
 
 	public Node root() {
