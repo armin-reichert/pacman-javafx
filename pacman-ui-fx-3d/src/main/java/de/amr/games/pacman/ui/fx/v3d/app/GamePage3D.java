@@ -50,16 +50,12 @@ class GamePage3D extends GamePage {
 		if (gameScene instanceof GameScene2D) {
 			root().getChildren().set(0, getLayoutPane());
 			super.setGameScene(gameScene);
-			return;
+		} else {
+			// here we assume PlayScene3D is the only 3D game scene type
+			root().getChildren().set(0, gameScene.root());
+			root().setBackground(ui().theme().background("model3D.wallpaper"));
+			root().requestFocus();
 		}
-		if (gameScene != sceneConfiguration().playScene3D()) {
-			Logger.error("Don't know how to display game scene: {}", gameScene);
-			return;
-		}
-		root().getChildren().set(0, gameScene.root());
-		root().setBackground(ui().theme().background("model3D.wallpaper"));
-		root().addEventHandler(KeyEvent.KEY_PRESSED, ui().getKeyboardPlayerSteering());
-		root().requestFocus();
 	}
 
 	@Override
