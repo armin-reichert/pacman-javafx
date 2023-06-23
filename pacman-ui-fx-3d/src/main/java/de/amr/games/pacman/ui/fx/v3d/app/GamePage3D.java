@@ -53,6 +53,8 @@ class GamePage3D extends GamePage {
 		} else {
 			root().getChildren().set(0, gameScene.root());
 			root().setBackground(ui().theme().background("model3D.wallpaper"));
+			// assume play scene 3D is only 3D scene
+			root().addEventHandler(KeyEvent.KEY_PRESSED, ui().getKeyboardPlayerSteering());
 			root().requestFocus();
 			helpButton().setVisible(false);
 		}
