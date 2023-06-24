@@ -66,6 +66,7 @@ public class PacManGames2dUI implements GameEventListener {
 		this.theme = theme;
 
 		GameController.create(settings.variant);
+		GameController.addListener(this);
 
 		clock = new GameClock(this::onTick, this::onRender);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
@@ -73,26 +74,14 @@ public class PacManGames2dUI implements GameEventListener {
 
 		soundHandler = new SoundHandler(theme);
 
-		var screenSize = Screen.getPrimary().getBounds();
-		double height = screenSize.getHeight() * 0.8;
-		double width = height * 4.0 / 3.0;
-		scene = new Scene(new Region(), width, height, Color.BLACK);
-		scene.heightProperty().addListener((py, ov, newSceneHeight) -> resizeGamePage(newSceneHeight.doubleValue()));
-
+		createMainScene();
 		configureGameScenes();
 		createStartPage();
 		createGamePage();
 		configureHelpMenus();
 		configurePacSteering();
 		configureBindings(settings);
-		GameController.addListener(this);
-
-		stage.setScene(scene);
-		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth(330);
-		stage.setMinHeight(400);
-		stage.centerOnScreen();
-		stage.show();
+		configureStage(settings);
 
 		showStartPage();
 	}
@@ -104,6 +93,23 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void onRender() {
 		gamePage.render();
+	}
+
+	protected void createMainScene() {
+		var screenSize = Screen.getPrimary().getBounds();
+		double height = screenSize.getHeight() * 0.8;
+		double width = height * 4.0 / 3.0;
+		scene = new Scene(new Region(), width, height, Color.BLACK);
+		scene.heightProperty().addListener((py, ov, newSceneHeight) -> resizeGamePage(newSceneHeight.doubleValue()));
+	}
+
+	protected void configureStage(Settings settings) {
+		stage.setScene(scene);
+		stage.setFullScreen(settings.fullScreen);
+		stage.setMinWidth(330);
+		stage.setMinHeight(400);
+		stage.centerOnScreen();
+		stage.show();
 	}
 
 	protected void configureGameScenes() {
