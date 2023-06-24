@@ -56,6 +56,8 @@ public class PacManGames2dUI implements GameEventListener {
 	protected GameScene currentGameScene;
 	protected boolean showingStartPage;
 
+	public PacManGames2dUI() {}
+
 	public void init(Stage stage, Settings settings, Theme theme) {
 		checkNotNull(stage);
 		checkNotNull(settings);

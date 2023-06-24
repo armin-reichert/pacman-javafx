@@ -16,8 +16,8 @@ import java.util.Locale;
  */
 public class PacManGames2dApp extends Application {
 
-	private PacManGames2dUI ui;
-	protected final Settings settings = new Settings();
+	private final PacManGames2dUI ui = new PacManGames2dUI();
+	private final Settings settings = new Settings();
 
 	@Override
 	public void init() {
@@ -29,7 +29,6 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		ui = new PacManGames2dUI();
 		ui.init(stage, settings, new ArcadeTheme(PacManGames2d.MGR));
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
