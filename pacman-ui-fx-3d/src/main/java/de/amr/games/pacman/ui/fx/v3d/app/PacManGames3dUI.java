@@ -6,21 +6,16 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
@@ -41,8 +36,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	public PacManGames3dUI() {}
 
 	@Override
-	protected void configureGameScenes() {
-		super.configureGameScenes();
+	protected void createGameScenes() {
+		super.createGameScenes();
 		configMsPacMan.setPlayScene3D(new PlayScene3D(this));
 		configPacMan.setPlayScene3D(new PlayScene3D(this));
 	}
@@ -56,7 +51,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected void configurePacSteering() {
 		// Steering with unmodified or with CONTROL+cursor key
-		keyboardPlayerSteering = new KeyboardSteering();
+		var keyboardPlayerSteering = new KeyboardSteering();
 		keyboardPlayerSteering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
 		keyboardPlayerSteering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
 		keyboardPlayerSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
@@ -111,7 +106,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			gamePage.setGameScene(currentGameScene);
 			currentGameScene().onSceneVariantSwitch();
 		}
-		onTick();
+		GameController.it().update();
 	}
 
 	public void selectNextPerspective() {

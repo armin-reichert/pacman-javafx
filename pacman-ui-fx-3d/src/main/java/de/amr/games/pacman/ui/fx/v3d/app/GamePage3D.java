@@ -4,8 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -51,7 +53,7 @@ class GamePage3D extends GamePage {
 	public void setGameScene(GameScene gameScene) {
 		if (gameScene.is3D()) {
 			root().getChildren().set(0, gameScene.root());
-			root().addEventHandler(KeyEvent.KEY_PRESSED, ui().getKeyboardPlayerSteering());
+			root().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 			root().requestFocus();
 			helpButton().setVisible(false);
 			updateBackground(gameScene);
