@@ -337,6 +337,10 @@ public class PacManGames2dUI implements GameEventListener {
 		return keyboardPlayerSteering;
 	}
 
+	public GameSceneConfiguration sceneConfig() {
+		return game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+	}
+
 	public Spritesheet spritesheet() {
 		switch (game().variant()) {
 		case MS_PACMAN:
