@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
@@ -29,8 +30,8 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
  * <p>
  * The <strong>play scene</strong> is available in a 2D and a 3D version. All others scenes are 2D only.
  * <p>
- * The picture-in-picture view shows the 2D version of the current game scene (in case this is the play scene). It is
- * activated/deactivated by pressing key F2. Size and transparency can be controlled using the dashboard.
+ * The picture-in-picture view shows the 2D version of the 3D play scene. It is activated/deactivated by pressing key F2.
+ * Size and transparency can be controlled using the dashboard.
  * <p>
  * 
  * @author Armin Reichert
@@ -59,7 +60,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		keyboardPlayerSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 
 		GameController.it().setManualPacSteering(keyboardPlayerSteering);
-		scene.addEventHandler(KeyEvent.KEY_PRESSED, keyboardPlayerSteering);
 	}
 
 	@Override
@@ -67,7 +67,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		super.configureBindings(settings);
 		PacManGames3d.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
 		PacManGames3d.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
-		PacManGames3d.PY_3D_PERSPECTIVE.set(Perspective.NEAR_PLAYER);
 	}
 
 	@Override
@@ -93,8 +92,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
+		var config = sceneConfig();
 		var scene = super.sceneMatchingCurrentGameState();
-		var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
 		if (PacManGames3d.PY_3D_ENABLED.get() && scene == config.playScene() && config.playScene3D() != null) {
 			return config.playScene3D();
 		}
@@ -102,7 +101,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	public void toggle2D3D() {
-		var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+		var config = sceneConfig();
 		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
 		if (config.playScene() == currentGameScene || config.playScene3D() == currentGameScene) {
 			updateOrReloadGameScene(true);
@@ -133,5 +132,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	private GamePage3D gamePage() {
 		return (GamePage3D) gamePage;
+	}
+
+	private GameSceneConfiguration sceneConfig() {
+		return game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
 	}
 }
