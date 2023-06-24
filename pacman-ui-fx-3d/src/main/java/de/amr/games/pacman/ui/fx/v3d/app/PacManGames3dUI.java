@@ -113,16 +113,16 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	public void selectNextPerspective() {
-		var next = PacManGames3d.PY_3D_PERSPECTIVE.get().next();
-		PacManGames3d.PY_3D_PERSPECTIVE.set(next);
-		String perspectiveName = fmtMessage(PacManGames3d.TEXTS, next.name());
-		showFlashMessage(fmtMessage(PacManGames3d.TEXTS, "camera_perspective", perspectiveName));
+		selectPerspective(PacManGames3d.PY_3D_PERSPECTIVE.get().next());
 	}
 
 	public void selectPrevPerspective() {
-		var prev = PacManGames3d.PY_3D_PERSPECTIVE.get().prev();
-		PacManGames3d.PY_3D_PERSPECTIVE.set(prev);
-		String perspectiveName = fmtMessage(PacManGames3d.TEXTS, prev.name());
+		selectPerspective(PacManGames3d.PY_3D_PERSPECTIVE.get().prev());
+	}
+
+	private void selectPerspective(Perspective perspective) {
+		PacManGames3d.PY_3D_PERSPECTIVE.set(perspective);
+		String perspectiveName = fmtMessage(PacManGames3d.TEXTS, perspective.name());
 		showFlashMessage(fmtMessage(PacManGames3d.TEXTS, "camera_perspective", perspectiveName));
 	}
 
@@ -135,7 +135,4 @@ public class PacManGames3dUI extends PacManGames2dUI {
 		return (GamePage3D) gamePage;
 	}
 
-	private GameSceneConfiguration sceneConfig() {
-		return game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
-	}
 }
