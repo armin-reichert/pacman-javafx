@@ -70,6 +70,7 @@ public class GamePage {
 		canvasContainer.setCenter(canvas);
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling));
 
+		helpMenuFactory.setFont(ui().theme().font("font.monospaced", 12));
 		helpButton.setOnMouseClicked(e -> {
 			e.consume();
 			showHelpMenu();

@@ -51,7 +51,6 @@ public class PacManGames2dUI implements GameEventListener {
 	protected Scene scene;
 	protected StartPage startPage;
 	protected GamePage gamePage;
-	protected HelpMenuFactory helpMenuFactory;
 	protected KeyboardSteering keyboardPlayerSteering;
 	protected SoundHandler soundHandler;
 	protected GameScene currentGameScene;
@@ -78,7 +77,6 @@ public class PacManGames2dUI implements GameEventListener {
 		configureGameScenes();
 		createStartPage();
 		createGamePage();
-		configureHelpMenus();
 		configurePacSteering();
 		configureBindings(settings);
 		configureStage(settings);
@@ -176,11 +174,6 @@ public class PacManGames2dUI implements GameEventListener {
 		gamePage.root().requestFocus();
 		scene.setRoot(gamePage.root());
 		clock.start();
-	}
-
-	protected void configureHelpMenus() {
-		helpMenuFactory = new HelpMenuFactory();
-		helpMenuFactory.setFont(theme.font("font.monospaced", 12));
 	}
 
 	protected void configurePacSteering() {
