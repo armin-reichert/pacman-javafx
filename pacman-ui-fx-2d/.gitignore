@@ -1,8 +1,7 @@
 /bin/
 /target/
 /.settings/
-/src/main/resources/META-INF
-/.idea
+/.idea/
 
 dependency-reduced-pom.xml
 
