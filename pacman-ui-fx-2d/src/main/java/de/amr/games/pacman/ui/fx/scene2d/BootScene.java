@@ -97,9 +97,11 @@ public class BootScene extends GameScene2D {
 		g.setStroke(ArcadeTheme.PALE);
 		g.setLineWidth(s(2.0));
 		for (int row = 0; row <= numRows; ++row) {
+			g.setLineWidth(row == 0 || row == numRows ? s(4.0) : s(2.0));
 			g.strokeLine(0, s(row * raster), s(WIDTH_UNSCALED), s(row * raster));
 		}
 		for (int col = 0; col <= numCols; ++col) {
+			g.setLineWidth(col == 0 || col == numCols ? s(4.0) : s(2.0));
 			g.strokeLine(s(col * raster), 0, s(col * raster), s(HEIGHT_UNSCALED));
 		}
 	}
