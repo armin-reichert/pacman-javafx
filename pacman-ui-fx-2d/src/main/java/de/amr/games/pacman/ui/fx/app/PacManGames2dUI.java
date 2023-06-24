@@ -106,8 +106,8 @@ public class PacManGames2dUI implements GameEventListener {
 	protected void configureStage(Settings settings) {
 		stage.setScene(scene);
 		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth(330);
-		stage.setMinHeight(400);
+		stage.setMinWidth(28*8);
+		stage.setMinHeight(36*8);
 		stage.centerOnScreen();
 		stage.show();
 	}
