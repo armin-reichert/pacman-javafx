@@ -72,34 +72,31 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	protected void updateStage() {
-		var gamePage3D = (GamePage3D) gamePage;
-		gamePage3D.getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
-		gamePage3D.updateBackground(currentGameScene);
-		var paused = clock != null && clock().isPaused();
-		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
 		switch (GameController.it().game().variant()) {
 		case MS_PACMAN -> {
-			var messageKey = paused ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, messageKey, dimensionMsg));
+			var key = clock().isPaused() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
+			var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD");
+			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, key, dimensionMsg));
 			stage.getIcons().setAll(theme.image("mspacman.icon"));
 		}
 		case PACMAN -> {
-			var messageKey = paused ? "app.title.pacman.paused" : "app.title.pacman";
-			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, messageKey, dimensionMsg));
+			var key = clock().isPaused() ? "app.title.pacman.paused" : "app.title.pacman";
+			var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD");
+			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, key, dimensionMsg));
 			stage.getIcons().setAll(theme.image("pacman.icon"));
 		}
 		default -> throw new IllegalGameVariantException(GameController.it().game().variant());
 		}
+		gamePage().getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
+		gamePage().updateBackground(currentGameScene);
 	}
 
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
 		var scene = super.sceneMatchingCurrentGameState();
-		if (PacManGames3d.PY_3D_ENABLED.get()) {
-			var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
-			if (scene == config.playScene() && config.playScene3D() != null) {
-				scene = config.playScene3D();
-			}
+		var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+		if (PacManGames3d.PY_3D_ENABLED.get() && scene == config.playScene() && config.playScene3D() != null) {
+			return config.playScene3D();
 		}
 		return scene;
 	}
@@ -112,6 +109,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			gamePage.setGameScene(currentGameScene);
 			currentGameScene().onSceneVariantSwitch();
 		}
+		onTick();
 	}
 
 	public void selectNextPerspective() {
@@ -131,5 +129,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	public void toggleDrawMode() {
 		PacManGames3d.PY_3D_DRAW_MODE
 				.set(PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+	}
+
+	private GamePage3D gamePage() {
+		return (GamePage3D) gamePage;
 	}
 }
