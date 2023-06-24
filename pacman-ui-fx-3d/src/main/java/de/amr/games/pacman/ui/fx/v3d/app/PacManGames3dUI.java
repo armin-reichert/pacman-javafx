@@ -48,6 +48,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected void createGamePage() {
 		gamePage = new GamePage3D(this);
+		resizeGamePage(scene.getHeight());
 	}
 
 	@Override

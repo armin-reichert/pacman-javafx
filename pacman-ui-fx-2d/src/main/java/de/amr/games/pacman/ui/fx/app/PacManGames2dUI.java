@@ -146,9 +146,10 @@ public class PacManGames2dUI implements GameEventListener {
 
 	protected void createGamePage() {
 		gamePage = new GamePage(this);
+		resizeGamePage(scene.getHeight());
 	}
 
-	private void resizeGamePage(double sceneHeight) {
+	protected void resizeGamePage(double sceneHeight) {
 		if (showingStartPage) {
 			return;
 		}
@@ -162,12 +163,12 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void showGamePage() {
-		reboot();
-		scene.setRoot(gamePage.root());
 		resizeGamePage(scene.getHeight());
+		reboot();
 		updateStage();
 		showingStartPage = false;
 		gamePage.root().requestFocus();
+		scene.setRoot(gamePage.root());
 		clock.start();
 	}
 
