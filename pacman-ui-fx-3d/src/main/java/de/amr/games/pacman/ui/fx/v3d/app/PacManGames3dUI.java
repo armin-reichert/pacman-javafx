@@ -38,6 +38,8 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
+	public PacManGames3dUI() {}
+
 	@Override
 	protected void configureGameScenes() {
 		super.configureGameScenes();

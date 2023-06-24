@@ -6,7 +6,9 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -15,21 +17,22 @@ import java.util.Locale;
 /**
  * @author Armin Reichert
  */
-public class PacManGames3dApp extends PacManGames2dApp {
+public class PacManGames3dApp extends Application {
 
-	private PacManGames3dUI ui;
+	private final PacManGames3dUI ui = new PacManGames3dUI();
+	private final Settings settings = new Settings();
 
 	@Override
 	public void init() {
-		settings.merge(getParameters().getNamed());
+		if (getParameters() != null) {
+			settings.merge(getParameters().getNamed());
+		}
 		Logger.info("Game initialized: {}", settings);
 	}
 
 	@Override
 	public void start(Stage stage) {
-		var theme = PacManGames3d.createTheme();
-		ui = new PacManGames3dUI();
-		ui.init(stage, settings, theme);
+		ui.init(stage, settings, PacManGames3d.createTheme());
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
