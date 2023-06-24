@@ -51,7 +51,6 @@ public class PacManGames2dUI implements GameEventListener {
 	protected Scene scene;
 	protected StartPage startPage;
 	protected GamePage gamePage;
-	protected KeyboardSteering keyboardPlayerSteering;
 	protected SoundHandler soundHandler;
 	protected GameScene currentGameScene;
 	protected boolean showingStartPage;
@@ -65,20 +64,17 @@ public class PacManGames2dUI implements GameEventListener {
 
 		this.stage = stage;
 		this.theme = theme;
+		soundHandler = new SoundHandler(theme);
 
 		GameController.create(settings.variant);
 		GameController.addListener(this);
 
-		clock = new GameClock(this::onTick, this::onRender);
-		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
-		clock.targetFrameratePy.set(GameModel.FPS);
-
-		soundHandler = new SoundHandler(theme);
-
+		createClock();
 		createMainScene();
-		configureGameScenes();
+		createGameScenes();
 		createStartPage();
 		createGamePage();
+
 		configurePacSteering();
 		configureBindings(settings);
 		configureStage(settings);
@@ -86,13 +82,13 @@ public class PacManGames2dUI implements GameEventListener {
 		showStartPage();
 	}
 
-	protected void onTick() {
-		GameController.it().update();
-		gamePage.update();
-	}
-
-	protected void onRender() {
-		gamePage.render();
+	protected void createClock() {
+		clock = new GameClock(() -> {
+			GameController.it().update();
+			gamePage.update();
+		}, () -> gamePage.render());
+		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
+		clock.targetFrameratePy.set(GameModel.FPS);
 	}
 
 	protected void createMainScene() {
@@ -112,7 +108,7 @@ public class PacManGames2dUI implements GameEventListener {
 		stage.show();
 	}
 
-	protected void configureGameScenes() {
+	protected void createGameScenes() {
 		//@formatter:off
 		configMsPacMan = new GameSceneConfiguration(
 			new BootScene(this),
@@ -179,8 +175,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void configurePacSteering() {
-		keyboardPlayerSteering = new KeyboardSteering();
-		GameController.it().setManualPacSteering(keyboardPlayerSteering);
+		GameController.it().setManualPacSteering(new KeyboardSteering());
 	}
 
 	protected void updateStage() {
@@ -216,7 +211,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected GameScene sceneMatchingCurrentGameState() {
-		var config = game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+		var config = sceneConfig();
 		switch (GameController.it().state()) {
 		case BOOT:
 			return config.bootScene();
@@ -335,10 +330,6 @@ public class PacManGames2dUI implements GameEventListener {
 		return GameController.it().game();
 	}
 
-	public KeyboardSteering getKeyboardPlayerSteering() {
-		return keyboardPlayerSteering;
-	}
-
 	public GameSceneConfiguration sceneConfig() {
 		return game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
 	}
@@ -393,37 +384,21 @@ public class PacManGames2dUI implements GameEventListener {
 		GameController.it().addCredit();
 	}
 
-	public void enterLevel(int newLevelNumber) {
-		if (GameController.it().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
-			return;
-		}
-		game().level().ifPresent(level -> {
-			if (newLevelNumber > level.number()) {
-				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-					game().nextLevel();
-				}
-				GameController.it().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
-			} else if (newLevelNumber < level.number()) {
-				// not implemented
-			}
-		});
-	}
-
 	public void togglePaused() {
 		Ufx.toggle(clock.pausedPy);
-		if (clock.pausedPy.get()) {
+		if (clock.isPaused()) {
 			theme.audioClips().forEach(AudioClip::stop);
 		}
 	}
 
 	public void oneSimulationStep() {
-		if (clock.pausedPy.get()) {
+		if (clock.isPaused()) {
 			clock.executeSingleStep(true);
 		}
 	}
 
 	public void tenSimulationSteps() {
-		if (clock.pausedPy.get()) {
+		if (clock.isPaused()) {
 			clock.executeSteps(10, true);
 		}
 	}

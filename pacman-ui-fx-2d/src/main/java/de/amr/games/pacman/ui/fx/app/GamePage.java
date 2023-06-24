@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
@@ -167,9 +168,11 @@ public class GamePage {
 		gameScene2D.setCanvas(canvas);
 		resize(scaling);
 		if (gameScene == sceneConfiguration().playScene()) {
-			layers.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
+			layers.addEventHandler(KeyEvent.KEY_PRESSED,
+					(KeyboardSteering) GameController.it().getManualPacSteering());
 		} else {
-			layers.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
+			layers.removeEventHandler(KeyEvent.KEY_PRESSED,
+					(KeyboardSteering) GameController.it().getManualPacSteering());
 		}
 		if (gameScene == sceneConfiguration().introScene()) {
 			signature.showAfterSeconds(3);
