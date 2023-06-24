@@ -8,11 +8,14 @@ import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
 
@@ -46,16 +49,27 @@ class GamePage3D extends GamePage {
 
 	@Override
 	public void setGameScene(GameScene gameScene) {
-		if (gameScene instanceof GameScene2D) {
-			root().getChildren().set(0, layoutPane());
-			super.setGameScene(gameScene);
-		} else {
+		if (gameScene.is3D()) {
 			root().getChildren().set(0, gameScene.root());
-			root().setBackground(ui().theme().background("model3D.wallpaper"));
-			// assume play scene 3D is only 3D scene
 			root().addEventHandler(KeyEvent.KEY_PRESSED, ui().getKeyboardPlayerSteering());
 			root().requestFocus();
 			helpButton().setVisible(false);
+			updateBackground(gameScene);
+		} else {
+			root().getChildren().set(0, layoutPane());
+			super.setGameScene(gameScene);
+		}
+	}
+
+	public void updateBackground(GameScene gameScene) {
+		if (gameScene != null && gameScene.is3D()) {
+			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+				root().setBackground(ResourceManager.coloredBackground(Color.BLACK));
+			} else {
+				root().setBackground(ui().theme().background("model3D.wallpaper"));
+			}
+		} else {
+			layoutPane().setBackground(ui().theme().background("wallpaper.background"));
 		}
 	}
 

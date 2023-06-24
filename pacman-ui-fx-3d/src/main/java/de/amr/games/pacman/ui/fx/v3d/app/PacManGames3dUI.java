@@ -74,15 +74,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	protected void updateStage() {
 		var gamePage3D = (GamePage3D) gamePage;
 		gamePage3D.getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
-		if (currentGameScene != null && currentGameScene.is3D()) {
-			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				gamePage.layoutPane().setBackground(ResourceManager.coloredBackground(Color.BLACK));
-			} else {
-				gamePage.layoutPane().setBackground(theme.background("model3D.wallpaper"));
-			}
-		} else {
-			gamePage.layoutPane().setBackground(theme.background("wallpaper.background"));
-		}
+		gamePage3D.updateBackground(currentGameScene);
 		var paused = clock != null && clock().isPaused();
 		var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD"); // TODO
 		switch (GameController.it().game().variant()) {
