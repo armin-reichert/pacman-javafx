@@ -44,10 +44,10 @@ public class GamePage {
 
 	private final PacManGames2dUI ui;
 	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final StackPane root = new StackPane();
-	private final BorderPane layoutPane = new BorderPane();
-	private final BorderPane rootPane = new BorderPane();
-	private final Rectangle rootPaneClipNode = new Rectangle();
+	private final StackPane layers = new StackPane();
+	private final BorderPane backgroundLayer = new BorderPane();
+	private final BorderPane canvasContainer = new BorderPane();
+	private final Rectangle canvasContainerClipNode = new Rectangle();
 	private final Canvas canvas = new Canvas();
 	private final Pane popupLayer = new Pane();
 	private final HelpMenuFactory helpMenuFactory = new HelpMenuFactory();
@@ -61,52 +61,41 @@ public class GamePage {
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
 
-		root.getChildren().addAll(layoutPane, popupLayer, flashMessageView);
+		backgroundLayer.setBackground(ui.theme().background("wallpaper.background"));
+		backgroundLayer.setCenter(canvasContainer);
 
-		rootPane.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-		rootPane.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, BORDER_CORNER_RADIUS, BORDER_WIDTH));
-		rootPane.setClip(rootPaneClipNode);
-		rootPane.setCenter(canvas);
-		rootPane.heightProperty().addListener((py, ov, nv) -> resize(scaling));
-
-		layoutPane.setBackground(ui.theme().background("wallpaper.background"));
-		layoutPane.setCenter(rootPane);
-
-		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
+		canvasContainer.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		canvasContainer.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, BORDER_CORNER_RADIUS, BORDER_WIDTH));
+		canvasContainer.setClip(canvasContainerClipNode);
+		canvasContainer.setCenter(canvas);
+		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling));
 
 		helpButton.setOnMouseClicked(e -> {
-			Logger.info("Mouse clicked: {}", e);
 			e.consume();
-			Logger.info("Mouse event consumed");
 			showHelpMenu();
 		});
-		root.setOnKeyPressed(this::handleKeyPressed);
+
+		layers.getChildren().addAll(backgroundLayer, popupLayer, flashMessageView);
+		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
+
+		layers.setOnKeyPressed(this::handleKeyPressed);
 		//popupLayer.setOnMouseClicked(this::handleMouseClick);
 		//new PacMouseSteering(this, popupLayer, () -> ui.game().level().map(GameLevel::pac).orElse(null));
 
-		// For debugging draw borders
 		PacManGames2d.PY_SHOW_DEBUG_INFO.addListener((py, ov, debug) -> {
-			if (debug) {
-				root.setBorder(ResourceManager.border(Color.RED, 3));
-				layoutPane.setBorder(ResourceManager.border(Color.YELLOW, 3));
-				popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
-			} else {
-				root.setBorder(null);
-				layoutPane.setBorder(null);
-				popupLayer.setBorder(null);
-			}
+			layers.setBorder(debug ? ResourceManager.border(Color.RED, 3) : null);
+			backgroundLayer.setBorder(debug ? ResourceManager.border(Color.YELLOW, 3) : null);
+			popupLayer.setBorder(debug ? ResourceManager.border(Color.GREENYELLOW, 3) : null);
 		});
 	}
 
-
-	private void updateHelpButton() {
+	private void updateHelpButton(double scaling) {
 		String key = ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
 		helpButton.setImage(ui.theme().image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
 		helpButton.setVisible(sceneConfiguration().bootScene() != gameScene2D);
 	}
-
 
 	private void showHelpMenu() {
 		helpMenuFactory.setFont(ui.theme().font("font.monospaced", Math.max(6, 14 * scaling)));
@@ -136,7 +125,7 @@ public class GamePage {
 
 	public void resize(double scaling) {
 		if (scaling < 0.8) {
-			Logger.info("Cannot scale down further");
+			Logger.info("Cannot scale down further. scaling={}", scaling);
 			return;
 		}
 
@@ -146,48 +135,47 @@ public class GamePage {
 		double borderWidth  = Math.max(5, Math.ceil(h / 60));
 		double cornerRadius = Math.ceil(15 * scaling);
 
-		rootPane.setMinSize (w, h);
-		rootPane.setPrefSize(w, h);
-		rootPane.setMaxSize (w, h);
+		canvasContainer.setMinSize (w, h);
+		canvasContainer.setPrefSize(w, h);
+		canvasContainer.setMaxSize (w, h);
 
-		rootPaneClipNode.setWidth(w);
-		rootPaneClipNode.setHeight(h);
+		canvasContainerClipNode.setWidth(w);
+		canvasContainerClipNode.setHeight(h);
 
 		// Don't ask me why
-		rootPaneClipNode.setArcWidth(35*scaling);
-		rootPaneClipNode.setArcHeight(35*scaling);
+		canvasContainerClipNode.setArcWidth(35*scaling);
+		canvasContainerClipNode.setArcHeight(35*scaling);
 
 		popupLayer.setMinSize (w, h);
 		popupLayer.setPrefSize(w, h);
 		popupLayer.setMaxSize (w, h);
 
-		rootPane.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
+		canvasContainer.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
 
 		if (gameScene2D != null) {
 			gameScene2D.setScaling(scaling);
 		}
-		updateHelpButton();
+		updateHelpButton(scaling);
 		updateSignature();
 
-		Logger.trace("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);
+		Logger.info("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);
 	}
 
 	public void setGameScene(GameScene gameScene) {
 		gameScene2D = (GameScene2D) gameScene;
 		gameScene2D.setCanvas(canvas);
 		resize(scaling);
-		updateHelpButton();
 		if (gameScene == sceneConfiguration().playScene()) {
-			root.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
+			layers.addEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
 		} else {
-			root.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
+			layers.removeEventHandler(KeyEvent.KEY_PRESSED, ui.keyboardPlayerSteering);
 		}
 		if (gameScene == sceneConfiguration().introScene()) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();
 		}
-		root.requestFocus();
+		layers.requestFocus();
 	}
 
 	private void updateSignature() {
@@ -207,7 +195,7 @@ public class GamePage {
 	}
 
 	public Pane root() {
-		return root;
+		return layers;
 	}
 
 	public FlashMessageView flashMessageView() {
@@ -215,7 +203,7 @@ public class GamePage {
 	}
 
 	public BorderPane layoutPane() {
-		return layoutPane;
+		return backgroundLayer;
 	}
 
 	public HelpButton helpButton() {
