@@ -89,7 +89,7 @@ public class PacManGames3d {
 
 	public static String pickLevelCompleteMessage(int levelNumber) {
 		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
-				ResourceManager.fmtMessage(TEXTS, "level_complete", levelNumber));
+				ResourceManager.message(TEXTS, "level_complete", levelNumber));
 	}
 
 	private static PhongMaterial createFloorTexture(String textureBase, String ext) {
