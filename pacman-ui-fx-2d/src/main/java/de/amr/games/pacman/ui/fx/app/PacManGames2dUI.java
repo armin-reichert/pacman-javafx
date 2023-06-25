@@ -66,9 +66,6 @@ public class PacManGames2dUI implements GameEventListener {
 		this.theme = theme;
 		soundHandler = new SoundHandler(theme);
 
-		GameController.create(settings.variant);
-		GameController.addListener(this);
-
 		createClock();
 		createMainScene();
 		createGameScenes();

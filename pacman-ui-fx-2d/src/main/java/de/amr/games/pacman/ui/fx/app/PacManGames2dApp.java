@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.app;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -24,12 +25,14 @@ public class PacManGames2dApp extends Application {
 		if (getParameters() != null) {
 			settings.merge(getParameters().getNamed());
 		}
+		GameController.create(settings.variant);
 		Logger.info("Game initialized: {}", settings);
 	}
 
 	@Override
 	public void start(Stage stage) {
 		ui.init(stage, settings, new ArcadeTheme(PacManGames2d.MGR));
+		GameController.addListener(ui);
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
