@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 /**
@@ -15,27 +15,29 @@ import javafx.util.Duration;
  */
 public class HelpMenu extends BorderPane {
 
-	private final FadeTransition fadingTransition;
+	private final FadeTransition fading;
 
 	public HelpMenu() {
-		fadingTransition = new FadeTransition(Duration.seconds(0.5), this);
-		fadingTransition.setFromValue(1);
-		fadingTransition.setToValue(0);
+		fading = new FadeTransition(Duration.seconds(0.5), this);
+		fading.setFromValue(1);
+		fading.setToValue(0);
+	}
+
+	public void setContent(Node content) {
+		setCenter(content);
 	}
 
 	/**
 	 * Makes the menu visible for given duration and then plays the close animation.
 	 * 
-	 * @param menu        menu pane
 	 * @param fadingDelay duration before menu starts fading out
 	 */
-	public void show(Pane menu, Duration fadingDelay) {
-		setCenter(menu);
-		setOpacity(1);
-		if (fadingTransition.getStatus() == Status.RUNNING) {
-			fadingTransition.playFromStart();
+	public void show(Duration fadingDelay) {
+		if (fading.getStatus() == Status.RUNNING) {
+			return;
 		}
-		fadingTransition.setDelay(fadingDelay);
-		fadingTransition.play();
+		setOpacity(1);
+		fading.setDelay(fadingDelay);
+		fading.play();
 	}
 }

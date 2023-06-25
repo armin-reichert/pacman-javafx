@@ -107,7 +107,8 @@ public class GamePage {
 		helpMenuFactory.currentHelpMenuContent().ifPresent(content -> {
 			helpMenu.setTranslateX(10 * scaling);
 			helpMenu.setTranslateY(30 * scaling);
-			helpMenu.show(content, MENU_FADING_DELAY);
+			helpMenu.setContent(content);
+			helpMenu.show(MENU_FADING_DELAY);
 		});
 	}
 

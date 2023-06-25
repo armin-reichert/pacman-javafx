@@ -25,7 +25,6 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.*;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -95,7 +94,11 @@ public class PacManGames2dUI implements GameEventListener {
 		double height = screenSize.getHeight() * 0.8;
 		double width = height * 4.0 / 3.0;
 		scene = new Scene(new Region(), width, height, Color.BLACK);
-		scene.heightProperty().addListener((py, ov, newSceneHeight) -> resizeGamePage(newSceneHeight.doubleValue()));
+		scene.heightProperty().addListener((py, ov, newSceneHeight) -> {
+			if (!showingStartPage) {
+				resizeGamePage(newSceneHeight.doubleValue());
+			}
+		});
 	}
 
 	protected void configureStage(Settings settings) {
@@ -157,9 +160,6 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void resizeGamePage(double sceneHeight) {
-		if (showingStartPage) {
-			return;
-		}
 		double ratio = sceneHeight / GameScene2D.HEIGHT_UNSCALED;
 		// let game page use around 90% of available scene height
 		gamePage.resize(truncate(ratio * 0.9));
@@ -171,22 +171,27 @@ public class PacManGames2dUI implements GameEventListener {
 
 	public void showStartPage() {
 		clock.stop();
+
 		startPage.setGameVariant(game().variant());
+
 		scene.setRoot(startPage.root());
-		startPage.root().requestFocus();
 		updateStage();
 		stage.show();
+		startPage.root().requestFocus();
 		showingStartPage = true;
 	}
 
 	public void showGamePage() {
-		resizeGamePage(scene.getHeight());
+		// call reboot() first such that current game scene is not null!
 		reboot();
-		gamePage.root().requestFocus();
-		scene.setRoot(gamePage.root());
 		clock.start();
+
+		resizeGamePage(scene.getHeight());
+
+		scene.setRoot(gamePage.root());
 		updateStage();
 		stage.show();
+		gamePage.root().requestFocus();
 		showingStartPage = false;
 	}
 
@@ -195,28 +200,14 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void updateStage() {
-		switch (game().variant()) {
-		case MS_PACMAN: {
-			String messageKey = "app.title.ms_pacman";
-			if (clock != null && clock.isPaused()) {
-				messageKey = "app.title.ms_pacman.paused";
-			}
-			stage.setTitle(ResourceManager.message(PacManGames2d.TEXTS, messageKey, ""));
-			stage.getIcons().setAll(theme.image("mspacman.icon"));
-			break;
+		var variant = GameController.it().game().variant();
+		var variantKey = variant == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
+		var titleKey = "app.title." + variantKey;
+		if (clock().isPaused()) {
+			titleKey += ".paused";
 		}
-		case PACMAN: {
-			String messageKey = "app.title.pacman";
-			if (clock != null && clock.isPaused()) {
-				messageKey = "app.title.pacman.paused";
-			}
-			stage.setTitle(ResourceManager.message(PacManGames2d.TEXTS, messageKey, ""));
-			stage.getIcons().setAll(theme.image("pacman.icon"));
-			break;
-		}
-		default:
-			throw new IllegalGameVariantException(game().variant());
-		}
+		stage.setTitle(message(PacManGames2d.TEXTS, titleKey));
+		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 	}
 
 	/**
