@@ -9,7 +9,6 @@ import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
@@ -26,9 +25,9 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
  */
 class GamePage3D extends GamePage {
 
-	private BorderPane topLayer;
-	private PictureInPicture pip;
-	private Dashboard dashboard;
+	private final BorderPane dashboardLayer = new BorderPane();
+	private final PictureInPicture pip;
+	private final Dashboard dashboard;
 
 	public GamePage3D(PacManGames3dUI ui) {
 		super(ui);
@@ -40,9 +39,8 @@ class GamePage3D extends GamePage {
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);
 
-		topLayer = new BorderPane();
-		topLayer.setLeft(dashboard);
-		topLayer.setRight(pip.root());
+		dashboardLayer.setLeft(dashboard);
+		dashboardLayer.setRight(pip.root());
 	}
 
 	public PictureInPicture getPip() {
@@ -52,26 +50,27 @@ class GamePage3D extends GamePage {
 	@Override
 	public void setGameScene(GameScene gameScene) {
 		if (gameScene.is3D()) {
-			root().getChildren().set(0, gameScene.root());
-			root().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
-			root().requestFocus();
-			helpButton().setVisible(false);
+			layers.getChildren().set(GAME_SCENE_LAYER, gameScene.root());
+			// Assume PlayScene3D is the only 3D scene
+			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
+			layers.requestFocus();
+			helpButton.setVisible(false);
 			updateBackground(gameScene);
 		} else {
-			root().getChildren().set(0, layoutPane());
+			layers.getChildren().set(GAME_SCENE_LAYER, gameSceneLayer);
 			super.setGameScene(gameScene);
 		}
 	}
 
 	public void updateBackground(GameScene gameScene) {
-		if (gameScene != null && gameScene.is3D()) {
+		if (gameScene.is3D()) {
 			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				root().setBackground(ResourceManager.coloredBackground(Color.BLACK));
+				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				root().setBackground(ui().theme().background("model3D.wallpaper"));
+				layers.setBackground(ui.theme().background("model3D.wallpaper"));
 			}
 		} else {
-			layoutPane().setBackground(ui().theme().background("wallpaper.background"));
+			gameSceneLayer.setBackground(ui.theme().background("wallpaper.background"));
 		}
 	}
 
@@ -84,7 +83,7 @@ class GamePage3D extends GamePage {
 
 	@Override
 	protected void handleKeyboardInput() {
-		var ui3D = (PacManGames3dUI) ui();
+		var ui3D = (PacManGames3dUI) ui;
 		super.handleKeyboardInput();
 		if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
 			ui3D.toggle2D3D();
@@ -104,9 +103,9 @@ class GamePage3D extends GamePage {
 
 	private void togglePipVisible() {
 		Ufx.toggle(PacManGames3d.PY_PIP_ON);
-		pip.update(ui().currentGameScene(), isPiPOn());
+		pip.update(ui.currentGameScene(), isPiPOn());
 		var message = fmtMessage(PacManGames3d.TEXTS, isPiPOn() ? "pip_on" : "pip_off");
-		ui().showFlashMessage(message);
+		ui.showFlashMessage(message);
 		updateTopLayer();
 	}
 
@@ -116,11 +115,11 @@ class GamePage3D extends GamePage {
 	}
 
 	private void updateTopLayer() {
-		root().getChildren().remove(topLayer);
+		layers.getChildren().remove(dashboardLayer);
 		if (dashboard.isVisible() || isPiPOn()) {
-			root().getChildren().add(topLayer);
+			layers.getChildren().add(dashboardLayer);
 		}
-		helpButton().setVisible(!root().getChildren().contains(topLayer));
-		root().requestFocus();
+		helpButton.setVisible(!layers.getChildren().contains(dashboardLayer));
+		layers.requestFocus();
 	}
 }

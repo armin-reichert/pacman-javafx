@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -18,7 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -69,23 +69,19 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	@Override
 	protected void updateStage() {
-		switch (GameController.it().game().variant()) {
-		case MS_PACMAN -> {
-			var key = clock().isPaused() ? "app.title.ms_pacman.paused" : "app.title.ms_pacman";
-			var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD");
-			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, key, dimensionMsg));
-			stage.getIcons().setAll(theme.image("mspacman.icon"));
+		var variant = GameController.it().game().variant();
+		var variantKey = variant == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
+		var titleKey = "app.title." + variantKey;
+		if (clock().isPaused()) {
+			titleKey += ".paused";
 		}
-		case PACMAN -> {
-			var key = clock().isPaused() ? "app.title.pacman.paused" : "app.title.pacman";
-			var dimensionMsg = fmtMessage(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD");
-			stage.setTitle(fmtMessage(PacManGames3d.TEXTS, key, dimensionMsg));
-			stage.getIcons().setAll(theme.image("pacman.icon"));
+		var dimension = message(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD");
+		stage.setTitle(message(PacManGames3d.TEXTS, titleKey, dimension));
+		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
+		if (currentGameScene != null) {
+			gamePage3D().getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
+			gamePage3D().updateBackground(currentGameScene);
 		}
-		default -> throw new IllegalGameVariantException(GameController.it().game().variant());
-		}
-		gamePage().getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
-		gamePage().updateBackground(currentGameScene);
 	}
 
 	@Override
@@ -107,6 +103,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 			currentGameScene().onSceneVariantSwitch();
 		}
 		GameController.it().update();
+		showFlashMessage(message(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
 	public void selectNextPerspective() {
@@ -119,17 +116,15 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
 	private void selectPerspective(Perspective perspective) {
 		PacManGames3d.PY_3D_PERSPECTIVE.set(perspective);
-		String perspectiveName = fmtMessage(PacManGames3d.TEXTS, perspective.name());
-		showFlashMessage(fmtMessage(PacManGames3d.TEXTS, "camera_perspective", perspectiveName));
+		String perspectiveName = message(PacManGames3d.TEXTS, perspective.name());
+		showFlashMessage(message(PacManGames3d.TEXTS, "camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {
-		PacManGames3d.PY_3D_DRAW_MODE
-				.set(PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		PacManGames3d.PY_3D_DRAW_MODE.set(PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
-	private GamePage3D gamePage() {
+	private GamePage3D gamePage3D() {
 		return (GamePage3D) gamePage;
 	}
-
 }
