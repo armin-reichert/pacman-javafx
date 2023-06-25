@@ -106,25 +106,9 @@ public class GamePage {
 
 	protected void showHelpMenu() {
 		helpMenuFactory.setFont(theme.font("font.monospaced", Math.max(6, 14 * scaling)));
-		helpMenu.show(currentHelpMenu(), MENU_FADING_DELAY);
+		helpMenu.show(helpMenuFactory.currentHelpMenu(), MENU_FADING_DELAY);
 		helpMenu.setTranslateX(10 * scaling);
 		helpMenu.setTranslateY(30 * scaling);
-	}
-
-	protected Pane currentHelpMenu() {
-		var gameState = GameController.it().state();
-		var game = GameController.it().game();
-		if (gameState == GameState.INTRO) {
-			return helpMenuFactory.menuIntro();
-		}
-		if (gameState == GameState.CREDIT) {
-			return helpMenuFactory.menuCredit();
-		}
-		if (game.level().isPresent()
-				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			return game.level().get().isDemoLevel() ? helpMenuFactory.menuDemoLevel() : helpMenuFactory.menuPlaying();
-		}
-		return null;
 	}
 
 	public GameSceneConfiguration sceneConfiguration() {

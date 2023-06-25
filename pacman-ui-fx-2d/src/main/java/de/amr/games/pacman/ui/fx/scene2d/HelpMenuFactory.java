@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -20,6 +21,8 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static de.amr.games.pacman.lib.Globals.oneOf;
 
 /**
  * @author Armin Reichert
@@ -44,6 +47,22 @@ public class HelpMenuFactory {
 
 	public HelpMenuFactory() {
 		this.font = Font.font("Sans", 24);
+	}
+
+	public Pane currentHelpMenu() {
+		var gameState = GameController.it().state();
+		var game = GameController.it().game();
+		if (gameState == GameState.INTRO) {
+			return menuIntro();
+		}
+		if (gameState == GameState.CREDIT) {
+			return menuCredit();
+		}
+		if (game.level().isPresent()
+				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
+			return game.level().get().isDemoLevel() ? menuDemoLevel() : menuPlaying();
+		}
+		return null;
 	}
 
 	public Pane menuIntro() {
