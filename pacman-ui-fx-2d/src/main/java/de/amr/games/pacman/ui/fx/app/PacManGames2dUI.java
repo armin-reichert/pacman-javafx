@@ -152,7 +152,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void createGamePage(Theme theme) {
-		gamePage = new GamePage(this);
+		gamePage = new GamePage(this, theme);
 		resizeGamePage(scene.getHeight());
 	}
 

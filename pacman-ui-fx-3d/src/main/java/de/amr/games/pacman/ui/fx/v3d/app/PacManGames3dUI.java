@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
@@ -43,8 +44,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	}
 
 	@Override
-	protected void createGamePage() {
-		gamePage = new GamePage3D(this);
+	protected void createGamePage(Theme theme) {
+		gamePage = new GamePage3D(this, theme);
 		resizeGamePage(scene.getHeight());
 	}
 

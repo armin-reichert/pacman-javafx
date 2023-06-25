@@ -18,6 +18,7 @@ import de.amr.games.pacman.ui.fx.scene2d.HelpMenu;
 import de.amr.games.pacman.ui.fx.scene2d.HelpMenuFactory;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyEvent;
@@ -46,6 +47,7 @@ public class GamePage {
 	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
 
 	protected final PacManGames2dUI ui;
+	protected final Theme theme;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final StackPane layers = new StackPane();
 	protected final BorderPane gameSceneLayer = new BorderPane();
@@ -61,10 +63,11 @@ public class GamePage {
 	protected GameScene2D gameScene2D;
 	protected double scaling = 1.0;
 
-	public GamePage(PacManGames2dUI ui) {
+	public GamePage(PacManGames2dUI ui, Theme theme) {
 		this.ui = ui;
+		this.theme = theme;
 
-		gameSceneLayer.setBackground(ui.theme().background("wallpaper.background"));
+		gameSceneLayer.setBackground(theme.background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
 
 		canvasContainer.setBackground(ResourceManager.coloredBackground(Color.BLACK));
@@ -73,7 +76,7 @@ public class GamePage {
 		canvasContainer.setCenter(canvas);
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling));
 
-		helpMenuFactory.setFont(ui().theme().font("font.monospaced", 12));
+		helpMenuFactory.setFont(theme.font("font.monospaced", 12));
 		helpButton.setOnMouseClicked(e -> {
 			e.consume();
 			showHelpMenu();
@@ -95,14 +98,14 @@ public class GamePage {
 
 	protected void updateHelpButton(double scaling) {
 		String key = ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
-		helpButton.setImage(ui.theme().image(key), Math.ceil(10 * scaling));
+		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
 		helpButton.setVisible(sceneConfiguration().bootScene() != gameScene2D);
 	}
 
 	protected void showHelpMenu() {
-		helpMenuFactory.setFont(ui.theme().font("font.monospaced", Math.max(6, 14 * scaling)));
+		helpMenuFactory.setFont(theme.font("font.monospaced", Math.max(6, 14 * scaling)));
 		helpMenu.show(currentHelpMenu(), MENU_FADING_DELAY);
 		helpMenu.setTranslateX(10 * scaling);
 		helpMenu.setTranslateY(30 * scaling);
@@ -110,15 +113,16 @@ public class GamePage {
 
 	protected Pane currentHelpMenu() {
 		var gameState = GameController.it().state();
+		var game = GameController.it().game();
 		if (gameState == GameState.INTRO) {
 			return helpMenuFactory.menuIntro();
 		}
 		if (gameState == GameState.CREDIT) {
 			return helpMenuFactory.menuCredit();
 		}
-		if (ui.game().level().isPresent()
+		if (game.level().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			return ui.game().level().get().isDemoLevel() ? helpMenuFactory.menuDemoLevel() : helpMenuFactory.menuPlaying();
+			return game.level().get().isDemoLevel() ? helpMenuFactory.menuDemoLevel() : helpMenuFactory.menuPlaying();
 		}
 		return null;
 	}
@@ -186,7 +190,7 @@ public class GamePage {
 
 	protected void updateSignature() {
 		signature.setMadeByFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		signature.setNameFont(ui.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		signature.setNameFont(theme.font("font.handwriting", Math.floor(12 * scaling)));
 		if (ui.game().variant() == GameVariant.MS_PACMAN) {
 			signature.root().setTranslateX(50 * scaling);
 			signature.root().setTranslateY(40 * scaling);
@@ -194,10 +198,6 @@ public class GamePage {
 			signature.root().setTranslateX(50 * scaling);
 			signature.root().setTranslateY(28 * scaling);
 		}
-	}
-
-	public PacManGames2dUI ui() {
-		return ui;
 	}
 
 	public Pane root() {

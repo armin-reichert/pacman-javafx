@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
@@ -29,8 +30,8 @@ class GamePage3D extends GamePage {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	public GamePage3D(PacManGames3dUI ui) {
-		super(ui);
+	public GamePage3D(PacManGames3dUI ui, Theme theme) {
+		super(ui, theme);
 
 		pip = new PictureInPicture(ui);
 		pip.opacityPy.bind(PacManGames3d.PY_PIP_OPACITY);
