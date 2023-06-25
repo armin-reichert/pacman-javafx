@@ -438,6 +438,22 @@ public class PacManGames2dUI implements GameEventListener {
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}
 
+	public void enterLevel(int newLevelNumber) {
+		if (GameController.it().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+			return;
+		}
+		game().level().ifPresent(level -> {
+			if (newLevelNumber > level.number()) {
+				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
+					game().nextLevel();
+				}
+				GameController.it().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+			} else if (newLevelNumber < level.number()) {
+				// not implemented
+			}
+		});
+	}
+
 	public void startLevelTestMode() {
 		if (GameController.it().state() == GameState.INTRO) {
 			GameController.it().restart(GameState.LEVEL_TEST);
