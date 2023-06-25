@@ -18,7 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.fmtMessage;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
 /**
  * @author Armin Reichert
@@ -104,7 +104,7 @@ class GamePage3D extends GamePage {
 	private void togglePipVisible() {
 		Ufx.toggle(PacManGames3d.PY_PIP_ON);
 		pip.update(ui.currentGameScene(), isPiPOn());
-		var message = fmtMessage(PacManGames3d.TEXTS, isPiPOn() ? "pip_on" : "pip_off");
+		var message = message(PacManGames3d.TEXTS, isPiPOn() ? "pip_on" : "pip_off");
 		ui.showFlashMessage(message);
 		updateTopLayer();
 	}
