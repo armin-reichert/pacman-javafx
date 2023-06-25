@@ -37,33 +37,35 @@ import static de.amr.games.pacman.lib.Globals.oneOf;
  */
 public class GamePage {
 
-	private static final Color  BORDER_COLOR         = ArcadeTheme.PALE;
-	private static final double BORDER_WIDTH         = 10;
-	private static final double BORDER_CORNER_RADIUS = 20;
+	protected static final int GAME_SCENE_LAYER = 0;
 
-	private static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
+	protected static final Color  BORDER_COLOR         = ArcadeTheme.PALE;
+	protected static final double BORDER_WIDTH         = 10;
+	protected static final double BORDER_CORNER_RADIUS = 20;
 
-	private final PacManGames2dUI ui;
-	private final FlashMessageView flashMessageView = new FlashMessageView();
-	private final StackPane layers = new StackPane();
-	private final BorderPane backgroundLayer = new BorderPane();
-	private final BorderPane canvasContainer = new BorderPane();
-	private final Rectangle canvasContainerClipNode = new Rectangle();
-	private final Canvas canvas = new Canvas();
-	private final Pane popupLayer = new Pane();
-	private final HelpMenuFactory helpMenuFactory = new HelpMenuFactory();
-	private final HelpMenu helpMenu = new HelpMenu();
-	private final HelpButton helpButton = new HelpButton();
-	private final Signature signature = new Signature();
+	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
 
-	private GameScene2D gameScene2D;
-	private double scaling = 1.0;
+	protected final PacManGames2dUI ui;
+	protected final FlashMessageView flashMessageView = new FlashMessageView();
+	protected final StackPane layers = new StackPane();
+	protected final BorderPane gameSceneLayer = new BorderPane();
+	protected final BorderPane canvasContainer = new BorderPane();
+	protected final Rectangle canvasContainerClipNode = new Rectangle();
+	protected final Canvas canvas = new Canvas();
+	protected final Pane popupLayer = new Pane();
+	protected final HelpMenuFactory helpMenuFactory = new HelpMenuFactory();
+	protected final HelpMenu helpMenu = new HelpMenu();
+	protected final HelpButton helpButton = new HelpButton();
+	protected final Signature signature = new Signature();
+
+	protected GameScene2D gameScene2D;
+	protected double scaling = 1.0;
 
 	public GamePage(PacManGames2dUI ui) {
 		this.ui = ui;
 
-		backgroundLayer.setBackground(ui.theme().background("wallpaper.background"));
-		backgroundLayer.setCenter(canvasContainer);
+		gameSceneLayer.setBackground(ui.theme().background("wallpaper.background"));
+		gameSceneLayer.setCenter(canvasContainer);
 
 		canvasContainer.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		canvasContainer.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, BORDER_CORNER_RADIUS, BORDER_WIDTH));
@@ -77,7 +79,7 @@ public class GamePage {
 			showHelpMenu();
 		});
 
-		layers.getChildren().addAll(backgroundLayer, popupLayer, flashMessageView);
+		layers.getChildren().addAll(gameSceneLayer, popupLayer, flashMessageView);
 		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
 
 		layers.setOnKeyPressed(this::handleKeyPressed);
@@ -86,12 +88,12 @@ public class GamePage {
 
 		PacManGames2d.PY_SHOW_DEBUG_INFO.addListener((py, ov, debug) -> {
 			layers.setBorder(debug ? ResourceManager.border(Color.RED, 3) : null);
-			backgroundLayer.setBorder(debug ? ResourceManager.border(Color.YELLOW, 3) : null);
+			gameSceneLayer.setBorder(debug ? ResourceManager.border(Color.YELLOW, 3) : null);
 			popupLayer.setBorder(debug ? ResourceManager.border(Color.GREENYELLOW, 3) : null);
 		});
 	}
 
-	private void updateHelpButton(double scaling) {
+	protected void updateHelpButton(double scaling) {
 		String key = ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
 		helpButton.setImage(ui.theme().image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
@@ -99,14 +101,14 @@ public class GamePage {
 		helpButton.setVisible(sceneConfiguration().bootScene() != gameScene2D);
 	}
 
-	private void showHelpMenu() {
+	protected void showHelpMenu() {
 		helpMenuFactory.setFont(ui.theme().font("font.monospaced", Math.max(6, 14 * scaling)));
 		helpMenu.show(currentHelpMenu(), MENU_FADING_DELAY);
 		helpMenu.setTranslateX(10 * scaling);
 		helpMenu.setTranslateY(30 * scaling);
 	}
 
-	private Pane currentHelpMenu() {
+	protected Pane currentHelpMenu() {
 		var gameState = GameController.it().state();
 		if (gameState == GameState.INTRO) {
 			return helpMenuFactory.menuIntro();
@@ -182,7 +184,7 @@ public class GamePage {
 		layers.requestFocus();
 	}
 
-	private void updateSignature() {
+	protected void updateSignature() {
 		signature.setMadeByFont(Font.font("Helvetica", Math.floor(10 * scaling)));
 		signature.setNameFont(ui.theme().font("font.handwriting", Math.floor(12 * scaling)));
 		if (ui.game().variant() == GameVariant.MS_PACMAN) {
@@ -204,14 +206,6 @@ public class GamePage {
 
 	public FlashMessageView flashMessageView() {
 		return flashMessageView;
-	}
-
-	public BorderPane layoutPane() {
-		return backgroundLayer;
-	}
-
-	public HelpButton helpButton() {
-		return helpButton;
 	}
 
 	public void update() {
