@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.oneOf;
 
@@ -49,20 +50,20 @@ public class HelpMenuFactory {
 		this.font = Font.font("Sans", 24);
 	}
 
-	public Pane currentHelpMenu() {
+	public Optional<Pane> currentHelpMenuContent() {
 		var gameState = GameController.it().state();
 		var game = GameController.it().game();
 		if (gameState == GameState.INTRO) {
-			return menuIntro();
+			return Optional.of(menuIntro());
 		}
 		if (gameState == GameState.CREDIT) {
-			return menuCredit();
+			return Optional.of(menuCredit());
 		}
 		if (game.level().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			return game.level().get().isDemoLevel() ? menuDemoLevel() : menuPlaying();
+			return game.level().get().isDemoLevel() ? Optional.of(menuDemoLevel()) : Optional.of(menuPlaying());
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public Pane menuIntro() {

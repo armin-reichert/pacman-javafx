@@ -31,8 +31,6 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.oneOf;
-
 /**
  * @author Armin Reichert
  */
@@ -96,7 +94,7 @@ public class GamePage {
 		});
 	}
 
-	protected void updateHelpButton(double scaling) {
+	protected void updateHelpButton() {
 		String key = ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
@@ -106,9 +104,11 @@ public class GamePage {
 
 	protected void showHelpMenu() {
 		helpMenuFactory.setFont(theme.font("font.monospaced", Math.max(6, 14 * scaling)));
-		helpMenu.show(helpMenuFactory.currentHelpMenu(), MENU_FADING_DELAY);
-		helpMenu.setTranslateX(10 * scaling);
-		helpMenu.setTranslateY(30 * scaling);
+		helpMenuFactory.currentHelpMenuContent().ifPresent(content -> {
+			helpMenu.setTranslateX(10 * scaling);
+			helpMenu.setTranslateY(30 * scaling);
+			helpMenu.show(content, MENU_FADING_DELAY);
+		});
 	}
 
 	public GameSceneConfiguration sceneConfiguration() {
@@ -147,7 +147,7 @@ public class GamePage {
 		if (gameScene2D != null) {
 			gameScene2D.setScaling(scaling);
 		}
-		updateHelpButton(scaling);
+		updateHelpButton();
 		updateSignature();
 
 		Logger.info("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);

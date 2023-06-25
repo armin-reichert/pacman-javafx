@@ -120,7 +120,7 @@ class GamePage3D extends GamePage {
 		if (dashboard.isVisible() || isPiPOn()) {
 			layers.getChildren().add(dashboardLayer);
 		}
-		helpButton.setVisible(!layers.getChildren().contains(dashboardLayer));
+		helpButton.setVisible(!ui.currentGameScene().is3D());
 		layers.requestFocus();
 	}
 }
