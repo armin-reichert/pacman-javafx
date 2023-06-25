@@ -31,8 +31,10 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		ui.init(stage, settings, new ArcadeTheme(PacManGames2d.MGR));
+		ui.init(stage, settings);
+		ui.setTheme(new ArcadeTheme(PacManGames2d.MGR));
 		GameController.addListener(ui);
+		ui.showStartPage();
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 

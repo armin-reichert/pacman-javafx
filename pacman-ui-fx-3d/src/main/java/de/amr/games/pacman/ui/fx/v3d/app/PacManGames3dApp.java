@@ -34,8 +34,10 @@ public class PacManGames3dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		ui.init(stage, settings, PacManGames3d.createTheme());
+		ui.init(stage, settings);
+		ui.setTheme(PacManGames3d.createTheme());
 		GameController.addListener(ui);
+		ui.showStartPage();
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 

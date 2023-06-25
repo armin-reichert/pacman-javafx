@@ -57,26 +57,27 @@ public class PacManGames2dUI implements GameEventListener {
 
 	public PacManGames2dUI() {}
 
-	public void init(Stage stage, Settings settings, Theme theme) {
+	public void init(Stage stage, Settings settings) {
 		checkNotNull(stage);
 		checkNotNull(settings);
-		checkNotNull(theme);
 
 		this.stage = stage;
-		this.theme = theme;
-		soundHandler = new SoundHandler(theme);
 
 		createClock();
 		createMainScene();
 		createGameScenes();
-		createStartPage();
-		createGamePage();
 
 		configurePacSteering();
 		configureBindings(settings);
 		configureStage(settings);
+	}
 
-		showStartPage();
+	public void setTheme(Theme theme) {
+		checkNotNull(theme);
+		this.theme = theme;
+		soundHandler = new SoundHandler(theme);
+		createStartPage();
+		createGamePage();
 	}
 
 	protected void createClock() {
@@ -102,7 +103,6 @@ public class PacManGames2dUI implements GameEventListener {
 		stage.setMinWidth(28*8);
 		stage.setMinHeight(36*8);
 		stage.centerOnScreen();
-		stage.show();
 	}
 
 	protected void createGameScenes() {
@@ -134,15 +134,6 @@ public class PacManGames2dUI implements GameEventListener {
 		startPage = new StartPage(this);
 	}
 
-	protected void showStartPage() {
-		clock.stop();
-		startPage.setGameVariant(game().variant());
-		scene.setRoot(startPage.root());
-		startPage.root().requestFocus();
-		updateStage();
-		showingStartPage = true;
-	}
-
 	protected void createGamePage() {
 		gamePage = new GamePage(this);
 		resizeGamePage(scene.getHeight());
@@ -161,14 +152,25 @@ public class PacManGames2dUI implements GameEventListener {
 		return Math.floor(value * 10) / 10; // e.g. 1.13 -> 11.3 -> 11.0 -> 1.1
 	}
 
-	protected void showGamePage() {
+	public void showStartPage() {
+		clock.stop();
+		startPage.setGameVariant(game().variant());
+		scene.setRoot(startPage.root());
+		startPage.root().requestFocus();
+		updateStage();
+		stage.show();
+		showingStartPage = true;
+	}
+
+	public void showGamePage() {
 		resizeGamePage(scene.getHeight());
 		reboot();
-		updateStage();
-		showingStartPage = false;
 		gamePage.root().requestFocus();
 		scene.setRoot(gamePage.root());
 		clock.start();
+		updateStage();
+		stage.show();
+		showingStartPage = false;
 	}
 
 	protected void configurePacSteering() {
