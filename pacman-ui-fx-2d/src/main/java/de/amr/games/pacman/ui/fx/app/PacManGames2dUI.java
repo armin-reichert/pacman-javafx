@@ -25,6 +25,7 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.*;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -76,8 +77,8 @@ public class PacManGames2dUI implements GameEventListener {
 		checkNotNull(theme);
 		this.theme = theme;
 		soundHandler = new SoundHandler(theme);
-		createStartPage();
-		createGamePage();
+		createStartPage(theme);
+		createGamePage(theme);
 	}
 
 	protected void createClock() {
@@ -130,11 +131,27 @@ public class PacManGames2dUI implements GameEventListener {
   	//@formatter:on
 	}
 
-	protected void createStartPage() {
-		startPage = new StartPage(this);
+	protected void createStartPage(Theme theme) {
+		startPage = new StartPage(theme);
+		startPage.setPlayButtonAction(this::showGamePage);
+		startPage.setOnKeyPressed(e -> {
+			switch (e.getCode()) {
+				case ENTER:	case SPACE:
+					showGamePage();
+					break;
+				case V:
+					switchGameVariant();
+					break;
+				case F11:
+					stage.setFullScreen(true);
+					break;
+				default:
+					break;
+			}
+		});
 	}
 
-	protected void createGamePage() {
+	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage(this);
 		resizeGamePage(scene.getHeight());
 	}
