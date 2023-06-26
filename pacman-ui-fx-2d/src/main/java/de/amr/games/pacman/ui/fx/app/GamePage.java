@@ -37,6 +37,7 @@ import org.tinylog.Logger;
 public class GamePage {
 
 	protected static final int GAME_SCENE_LAYER = 0;
+	protected static final double MIN_SCALING = 0.7;
 
 	protected static final Color  BORDER_COLOR         = ArcadeTheme.PALE;
 	protected static final double BORDER_WIDTH         = 10;
@@ -72,7 +73,7 @@ public class GamePage {
 		canvasContainer.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, BORDER_CORNER_RADIUS, BORDER_WIDTH));
 		canvasContainer.setClip(canvasContainerClipNode);
 		canvasContainer.setCenter(canvas);
-		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling));
+		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling, false));
 
 		helpMenuFactory.setFont(theme.font("font.monospaced", 12));
 		helpButton.setOnMouseClicked(e -> {
@@ -116,48 +117,52 @@ public class GamePage {
 		return ui.game().variant() == GameVariant.MS_PACMAN ? ui.configMsPacMan : ui.configPacMan;
 	}
 
-	public void resize(double scaling) {
-		if (scaling < 0.8) {
-			Logger.info("Cannot scale down further. scaling={}", scaling);
+	public void resize(double scaling, boolean always) {
+		if (scaling < MIN_SCALING) {
+			Logger.info("Cannot scale to {}, minimum scaling is {}", scaling, MIN_SCALING);
 			return;
 		}
 
+		updateHelpButton();
+
+		if (this.scaling == scaling && !always) {
+			return;
+		}
 		this.scaling = scaling;
-		double w = Math.round( (GameScene2D.WIDTH_UNSCALED  + 30) * scaling );
+
+		double w = Math.round( (GameScene2D.WIDTH_UNSCALED  + 25) * scaling );
 		double h = Math.round( (GameScene2D.HEIGHT_UNSCALED + 15) * scaling );
+
 		double borderWidth  = Math.max(5, Math.ceil(h / 60));
 		double cornerRadius = Math.ceil(15 * scaling);
 
+		canvasContainer.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
 		canvasContainer.setMinSize (w, h);
 		canvasContainer.setPrefSize(w, h);
 		canvasContainer.setMaxSize (w, h);
 
 		canvasContainerClipNode.setWidth(w);
 		canvasContainerClipNode.setHeight(h);
-
 		// Don't ask me why
-		canvasContainerClipNode.setArcWidth(35*scaling);
-		canvasContainerClipNode.setArcHeight(35*scaling);
+		canvasContainerClipNode.setArcWidth (35 * scaling);
+		canvasContainerClipNode.setArcHeight(35 * scaling);
 
 		popupLayer.setMinSize (w, h);
 		popupLayer.setPrefSize(w, h);
 		popupLayer.setMaxSize (w, h);
 
-		canvasContainer.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
-
 		if (gameScene2D != null) {
 			gameScene2D.setScaling(scaling);
 		}
-		updateHelpButton();
-		updateSignature();
+		updateSignatureSizeAndPosition();
 
-		Logger.info("Resized game page: scaling: {} height: {} border: {}", scaling, h, borderWidth);
+		Logger.info("Game page resized: scaling: {} height: {} border: {}", scaling, h, borderWidth);
 	}
 
 	public void setGameScene(GameScene gameScene) {
 		gameScene2D = (GameScene2D) gameScene;
 		gameScene2D.setCanvas(canvas);
-		resize(scaling);
+		resize(scaling, true);
 		if (gameScene == sceneConfiguration().playScene()) {
 			layers.addEventHandler(KeyEvent.KEY_PRESSED,
 					(KeyboardSteering) GameController.it().getManualPacSteering());
@@ -173,7 +178,7 @@ public class GamePage {
 		layers.requestFocus();
 	}
 
-	protected void updateSignature() {
+	protected void updateSignatureSizeAndPosition() {
 		signature.setMadeByFont(Font.font("Helvetica", Math.floor(10 * scaling)));
 		signature.setNameFont(theme.font("font.handwriting", Math.floor(12 * scaling)));
 		if (ui.game().variant() == GameVariant.MS_PACMAN) {
