@@ -94,17 +94,4 @@ public class Ufx {
 		}
 		return result;
 	}
-
-	public static KeyCodeCombination just(KeyCode code) {
-		return new KeyCodeCombination(code);
-	}
-
-	public static KeyCodeCombination alt(KeyCode code) {
-		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
-	}
-
-	public static KeyCodeCombination shift(KeyCode code) {
-		return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
-	}
-
 }

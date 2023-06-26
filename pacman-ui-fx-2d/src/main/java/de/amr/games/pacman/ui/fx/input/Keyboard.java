@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.input;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
@@ -14,6 +16,18 @@ import java.util.stream.Stream;
  * @author Armin Reichert
  */
 public class Keyboard {
+
+	public static KeyCodeCombination just(KeyCode code) {
+		return new KeyCodeCombination(code);
+	}
+
+	public static KeyCodeCombination alt(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.ALT_DOWN);
+	}
+
+	public static KeyCodeCombination shift(KeyCode code) {
+		return new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN);
+	}
 
 	private static KeyEvent currentKeyEvent;
 

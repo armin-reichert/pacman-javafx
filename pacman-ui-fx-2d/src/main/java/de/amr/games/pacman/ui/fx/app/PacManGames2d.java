@@ -12,7 +12,7 @@ import javafx.scene.input.KeyCodeCombination;
 
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.ui.fx.util.Ufx.*;
+import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
 
 /**
  * @author Armin Reichert
