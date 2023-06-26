@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.HelpButton;
 import de.amr.games.pacman.ui.fx.scene2d.HelpMenu;
@@ -100,7 +99,7 @@ public class GamePage {
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(sceneConfiguration().bootScene() != gameScene2D);
+		helpButton.setVisible(ui.sceneConfig().bootScene() != gameScene2D);
 	}
 
 	protected void showHelpMenu() {
@@ -111,10 +110,6 @@ public class GamePage {
 			helpMenu.setContent(content);
 			helpMenu.show(MENU_FADING_DELAY);
 		});
-	}
-
-	public GameSceneConfiguration sceneConfiguration() {
-		return ui.game().variant() == GameVariant.MS_PACMAN ? ui.configMsPacMan : ui.configPacMan;
 	}
 
 	public void resize(double scaling, boolean always) {
@@ -163,14 +158,14 @@ public class GamePage {
 		gameScene2D = (GameScene2D) gameScene;
 		gameScene2D.setCanvas(canvas);
 		resize(scaling, true);
-		if (gameScene == sceneConfiguration().playScene()) {
+		if (gameScene == ui.sceneConfig().playScene()) {
 			layers.addEventHandler(KeyEvent.KEY_PRESSED,
 					(KeyboardSteering) GameController.it().getManualPacSteering());
 		} else {
 			layers.removeEventHandler(KeyEvent.KEY_PRESSED,
 					(KeyboardSteering) GameController.it().getManualPacSteering());
 		}
-		if (gameScene == sceneConfiguration().introScene()) {
+		if (gameScene == ui.sceneConfig().introScene()) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();
