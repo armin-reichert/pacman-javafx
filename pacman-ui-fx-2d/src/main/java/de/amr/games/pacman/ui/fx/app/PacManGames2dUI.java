@@ -318,14 +318,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	public Spritesheet spritesheet() {
-		switch (game().variant()) {
-		case MS_PACMAN:
-			return theme().get("mspacman.spritesheet");
-		case PACMAN:
-			return theme().get("pacman.spritesheet");
-		default:
-			throw new IllegalGameVariantException(game().variant());
-		}
+		return game().variant() == GameVariant.MS_PACMAN ? theme.get("mspacman.spritesheet") : theme.get("pacman.spritesheet");
 	}
 
 	// Actions
