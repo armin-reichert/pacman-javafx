@@ -315,14 +315,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		soundHandler.onSoundEvent(e);
 	}
 
-	public void showFlashMessage(String message, Object... args) {
-		showFlashMessageSeconds(1, message, args);
-	}
-
-	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-		gamePage.flashMessageView().showMessage(String.format(message, args), seconds);
-	}
-
 	public Theme theme() {
 		return theme;
 	}
@@ -359,6 +351,14 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	// Actions
+
+	public void showFlashMessage(String message, Object... args) {
+		showFlashMessageSeconds(1, message, args);
+	}
+
+	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
+		gamePage.flashMessageView().showMessage(String.format(message, args), seconds);
+	}
 
 	public void startGame() {
 		if (game().hasCredit()) {
