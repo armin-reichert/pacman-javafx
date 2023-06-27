@@ -24,6 +24,7 @@ import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
+import de.amr.games.pacman.ui.fx.v3d.app.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
@@ -263,9 +264,9 @@ public class PlayScene3D implements GameScene {
 		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) && !game().hasCredit()) {
 			actionHandler().ifPresent(ActionHandler::addCredit);
 		} else if (Keyboard.pressed(PacManGames3d.KEY_PREV_PERSPECTIVE)) {
-			//TODO ui.selectPrevPerspective();
+			actionHandler().ifPresent(handler -> ((ActionHandler3D)handler).selectPrevPerspective());
 		} else if (Keyboard.pressed(PacManGames3d.KEY_NEXT_PERSPECTIVE)) {
-			//TODO ui.selectNextPerspective();
+			actionHandler().ifPresent(handler -> ((ActionHandler3D)handler).selectNextPerspective());
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
 			actionHandler().ifPresent(ActionHandler::cheatEatAllPellets);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {

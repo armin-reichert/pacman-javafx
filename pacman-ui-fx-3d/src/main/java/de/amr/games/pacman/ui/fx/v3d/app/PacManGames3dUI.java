@@ -32,7 +32,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
  * 
  * @author Armin Reichert
  */
-public class PacManGames3dUI extends PacManGames2dUI {
+public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D {
 
 	public PacManGames3dUI() {}
 
