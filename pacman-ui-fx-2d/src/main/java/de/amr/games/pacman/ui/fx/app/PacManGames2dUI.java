@@ -43,8 +43,8 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
  */
 public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
-	protected GameSceneConfiguration configMsPacMan;
-	protected GameSceneConfiguration configPacMan;
+	protected GameSceneConfiguration gameScenesMsPacMan;
+	protected GameSceneConfiguration gameScenesPacMan;
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
@@ -57,16 +57,21 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	public PacManGames2dUI() {}
 
-	public void init(Stage stage, Settings settings) {
+	public void init(Stage stage, Settings settings,
+					 GameSceneConfiguration gameScenesMsPacMan,
+					 GameSceneConfiguration gameScenesPacMan) {
+
 		checkNotNull(stage);
 		checkNotNull(settings);
+		checkNotNull(gameScenesMsPacMan);
+		checkNotNull(gameScenesPacMan);
 
 		this.stage = stage;
+		this.gameScenesMsPacMan = gameScenesMsPacMan;
+		this.gameScenesPacMan = gameScenesPacMan;
 
 		createClock();
 		createMainScene();
-		createGameScenes();
-
 		configurePacSteering();
 		configureBindings(settings);
 		configureStage(settings);
@@ -107,31 +112,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		stage.setMinWidth(28*8);
 		stage.setMinHeight(36*8);
 		stage.centerOnScreen();
-	}
-
-	protected void createGameScenes() {
-		//@formatter:off
-		configMsPacMan = new GameSceneConfiguration(
-			new BootScene(),
-			new MsPacManIntroScene(),
-			new MsPacManCreditScene(),
-			new PlayScene2D(),
-			null,
-			new MsPacManCutscene1(),
-			new MsPacManCutscene2(),
-			new MsPacManCutscene3()
-		);
-		configPacMan = new GameSceneConfiguration(
-			new BootScene(),
-			new PacManIntroScene(),
-			new PacManCreditScene(),
-			new PlayScene2D(),
-			null,
-			new PacManCutscene1(),
-			new PacManCutscene2(),
-			new PacManCutscene3()
-		);
-  	//@formatter:on
 	}
 
 	protected void createStartPage(Theme theme) {
@@ -336,7 +316,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	public GameSceneConfiguration sceneConfig() {
-		return game().variant() == GameVariant.MS_PACMAN ? configMsPacMan : configPacMan;
+		return game().variant() == GameVariant.MS_PACMAN ? gameScenesMsPacMan : gameScenesPacMan;
 	}
 
 	public Spritesheet spritesheet() {
