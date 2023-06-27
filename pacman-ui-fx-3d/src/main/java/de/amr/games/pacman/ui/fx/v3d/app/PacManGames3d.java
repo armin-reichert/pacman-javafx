@@ -27,8 +27,7 @@ import javafx.scene.shape.DrawMode;
 
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.ui.fx.util.Ufx.alt;
-import static de.amr.games.pacman.ui.fx.util.Ufx.just;
+import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
 
 /**
  * @author Armin Reichert
