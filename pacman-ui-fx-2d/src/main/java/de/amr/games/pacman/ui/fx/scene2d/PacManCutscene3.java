@@ -31,13 +31,9 @@ public class PacManCutscene3 extends GameScene2D {
 	private Pac pac;
 	private Ghost blinky;
 
-	public PacManCutscene3(PacManGames2dUI ui) {
-		super(ui);
-	}
-
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) ui().spritesheet();
+		var ss = (SpritesheetPacManGame) spritesheet;
 
 		setCreditVisible(true);
 		setScoreVisible(true);

@@ -41,7 +41,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
  * 
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener {
+public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	protected GameSceneConfiguration configMsPacMan;
 	protected GameSceneConfiguration configPacMan;
@@ -112,24 +112,24 @@ public class PacManGames2dUI implements GameEventListener {
 	protected void createGameScenes() {
 		//@formatter:off
 		configMsPacMan = new GameSceneConfiguration(
-			new BootScene(this),
-			new MsPacManIntroScene(this),
-			new MsPacManCreditScene(this),
-			new PlayScene2D(this),
+			new BootScene(),
+			new MsPacManIntroScene(),
+			new MsPacManCreditScene(),
+			new PlayScene2D(),
 			null,
-			new MsPacManCutscene1(this),
-			new MsPacManCutscene2(this),
-			new MsPacManCutscene3(this)
+			new MsPacManCutscene1(),
+			new MsPacManCutscene2(),
+			new MsPacManCutscene3()
 		);
 		configPacMan = new GameSceneConfiguration(
-			new BootScene(this),
-			new PacManIntroScene(this),
-			new PacManCreditScene(this),
-			new PlayScene2D(this),
+			new BootScene(),
+			new PacManIntroScene(),
+			new PacManCreditScene(),
+			new PlayScene2D(),
 			null,
-			new PacManCutscene1(this),
-			new PacManCutscene2(this),
-			new PacManCutscene3(this)
+			new PacManCutscene1(),
+			new PacManCutscene2(),
+			new PacManCutscene3()
 		);
   	//@formatter:on
 	}
@@ -250,9 +250,15 @@ public class PacManGames2dUI implements GameEventListener {
 		var prevGameScene = currentGameScene;
 		if (prevGameScene != null) {
 			prevGameScene.end();
+			soundHandler.stopVoice();
+			soundHandler.stopAllSounds();
 		}
 		currentGameScene = newGameScene;
 		currentGameScene.setParentScene(stage.getScene());
+		currentGameScene.setActionHandler(this);
+		currentGameScene.setTheme(theme);
+		currentGameScene.setSpritesheet(spritesheet());
+		currentGameScene.setSoundHandler(soundHandler());
 		currentGameScene.init();
 		gamePage.setGameScene(currentGameScene);
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);

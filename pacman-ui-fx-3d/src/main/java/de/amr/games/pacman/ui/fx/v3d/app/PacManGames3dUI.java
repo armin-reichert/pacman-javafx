@@ -39,8 +39,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 	@Override
 	protected void createGameScenes() {
 		super.createGameScenes();
-		configMsPacMan.setPlayScene3D(new PlayScene3D(this));
-		configPacMan.setPlayScene3D(new PlayScene3D(this));
+		configMsPacMan.setPlayScene3D(new PlayScene3D());
+		configPacMan.setPlayScene3D(new PlayScene3D());
 	}
 
 	@Override

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Signature;
@@ -31,22 +32,16 @@ public class PacManIntroScene extends GameScene2D {
 
 	private PacManIntro intro;
 	private PacManIntro.Context ic;
-	private Signature signature;
 
-	public PacManIntroScene(PacManGames2dUI ui) {
-		super(ui);
-		signature = new Signature();
+	public PacManIntroScene() {
 	}
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) ui().spritesheet();
+		var ss = (SpritesheetPacManGame) spritesheet;
 
 		setCreditVisible(true);
 		setScoreVisible(true);
-
-		signature.setNameFont(ui().theme().font("font.handwriting", 9));
-		signature.hide();
 
 		intro = new PacManIntro();
 		ic = intro.context();
@@ -65,20 +60,19 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void end() {
-		ui().soundHandler().stopVoice();
-		signature.hide();
+		//ui().soundHandler().stopVoice();
 	}
 
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			ui().addCredit();
+			actionHandler().ifPresent(ActionHandler::addCredit);
 		} else if (Keyboard.anyPressed(PacManGames2d.KEY_START_GAME, PacManGames2d.KEY_START_GAME_NUMPAD)) {
-			ui().startGame();
+			actionHandler().ifPresent(ActionHandler::startGame);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_SELECT_VARIANT)) {
-			ui().switchGameVariant();
+			actionHandler().ifPresent(ActionHandler::switchGameVariant);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_PLAY_CUTSCENES)) {
-			ui().startCutscenesTest();
+			actionHandler().ifPresent(ActionHandler::startCutscenesTest);
 		}
 	}
 
@@ -132,7 +126,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery() {
-		var ss = (SpritesheetPacManGame) ui().spritesheet();
+		var ss = (SpritesheetPacManGame) spritesheet;
 
 		int tx = ic.leftTileX;
 		if (ic.titleVisible) {
@@ -146,12 +140,12 @@ public class PacManIntroScene extends GameScene2D {
 			drawSpriteOverBoundingBox(ss.ghostFacingRight(id), t(tx) + 4, t(ty));
 			if (ic.ghostInfo[id].characterVisible) {
 				var text = "-" + ic.ghostInfo[id].character;
-				var color = ui().theme().color(String.format("ghost.%d.color.normal.dress", id));
+				var color = theme.color(String.format("ghost.%d.color.normal.dress", id));
 				drawText(text, color, sceneFont(), t(tx + 3), t(ty + 1));
 			}
 			if (ic.ghostInfo[id].nicknameVisible) {
 				var text = QUOTE + ic.ghostInfo[id].ghost.name() + QUOTE;
-				var color = ui().theme().color(String.format("ghost.%d.color.normal.dress", id));
+				var color = theme.color(String.format("ghost.%d.color.normal.dress", id));
 				drawText(text, color, sceneFont(), t(tx + 14), t(ty + 1));
 			}
 		}
@@ -159,7 +153,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawBlinkingEnergizer() {
 		if (ic.blinking.on()) {
-			g.setFill(ui().theme().color("pacman.maze.foodColor"));
+			g.setFill(theme.color("pacman.maze.foodColor"));
 			g.fillOval(s(t(ic.leftTileX)), s(t(20)), s(TS), s(TS));
 		}
 	}
@@ -181,10 +175,10 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints() {
-		var font6 = ui().theme().font("font.arcade", s(6));
+		var font6 = theme.font("font.arcade", s(6));
 		int tx = ic.leftTileX + 6;
 		int ty = 25;
-		g.setFill(ui().theme().color("pacman.maze.foodColor"));
+		g.setFill(theme.color("pacman.maze.foodColor"));
 		g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
 		if (ic.blinking.on()) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));

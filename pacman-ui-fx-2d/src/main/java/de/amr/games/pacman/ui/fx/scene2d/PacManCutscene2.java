@@ -33,13 +33,9 @@ public class PacManCutscene2 extends GameScene2D {
 	private SpriteAnimation blinkyStretching;
 	private SpriteAnimation blinkyDamaged;
 
-	public PacManCutscene2(PacManGames2dUI ui) {
-		super(ui);
-	}
-
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) ui().spritesheet();
+		var ss = (SpritesheetPacManGame) spritesheet;
 
 		setCreditVisible(true);
 		setScoreVisible(true);

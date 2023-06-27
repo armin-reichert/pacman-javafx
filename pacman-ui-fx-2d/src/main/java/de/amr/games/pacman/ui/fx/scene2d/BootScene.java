@@ -16,10 +16,6 @@ import static de.amr.games.pacman.lib.Globals.RND;
  */
 public class BootScene extends GameScene2D {
 
-	public BootScene(PacManGames2dUI ui) {
-		super(ui);
-	}
-
 	@Override
 	public void init() {
 		setScoreVisible(false);
@@ -84,8 +80,8 @@ public class BootScene extends GameScene2D {
 	}
 
 	private Rectangle2D randomSpritesheetTile() {
-		var source = ui().spritesheet().source();
-		var raster = ui().spritesheet().raster();
+		var source = spritesheet.source();
+		var raster = spritesheet.raster();
 		double x = RND.nextDouble() * (source.getWidth() - raster);
 		double y = RND.nextDouble() * (source.getHeight() - raster);
 		return new Rectangle2D(x, y, raster, raster);

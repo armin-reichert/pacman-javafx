@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -33,10 +34,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
  */
 public class PlayScene2D extends GameScene2D {
 
-	public PlayScene2D(PacManGames2dUI ui) {
-		super(ui);
-	}
-
 	@Override
 	public void init() {
 		setCreditVisible(!game().hasCredit());
@@ -51,24 +48,19 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void end() {
-		ui().soundHandler().stopAllSounds();
-	}
-
-	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
 			if (!game().hasCredit()) {
-				ui().addCredit();
+				actionHandler().ifPresent(ActionHandler::addCredit);
 			}
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
-			ui().cheatEatAllPellets();
+			actionHandler().ifPresent(ActionHandler::cheatEatAllPellets);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {
-			ui().cheatAddLives();
+			actionHandler().ifPresent(ActionHandler::cheatAddLives);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_NEXT_LEVEL)) {
-			ui().cheatEnterNextLevel();
+			actionHandler().ifPresent(ActionHandler::cheatEnterNextLevel);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
-			ui().cheatKillAllEatableGhosts();
+			actionHandler().ifPresent(ActionHandler::cheatKillAllEatableGhosts);
 		}
 	}
 
@@ -106,11 +98,11 @@ public class PlayScene2D extends GameScene2D {
 	// TODO put all images into a single spritesheet
 	private void drawPacManMaze(double x, double y, World world) {
 		if (world.mazeFlashing().isRunning()) {
-			var image = world.mazeFlashing().on() ? ui().theme().image("pacman.flashingMaze")
-					: ui().theme().image("pacman.emptyMaze");
+			var image = world.mazeFlashing().on() ? theme.image("pacman.flashingMaze")
+					: theme.image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
-			var image = ui().theme().image("pacman.fullMaze");
+			var image = theme.image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 			world.tiles().filter(world.foodStorage()::hasEatenFoodAt).forEach(this::hideTileContent);
 			if (world.energizerBlinking().off()) {
@@ -120,10 +112,10 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
-		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) spritesheet;
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
-				var source = ui().theme().image("mspacman.flashingMazes");
+				var source = theme.image("mspacman.flashingMazes");
 				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
@@ -170,7 +162,7 @@ public class PlayScene2D extends GameScene2D {
 	public void onSceneVariantSwitch() {
 		game().level().ifPresent(level -> {
 			if (!level.isDemoLevel() && GameController.it().state() == GameState.HUNTING) {
-				ui().soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
+				soundHandler.ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -181,14 +173,14 @@ public class PlayScene2D extends GameScene2D {
 			return;
 		}
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			ui().soundHandler().audioClip(gameVariant, "audio.pacman_munch").stop();
+			soundHandler.audioClip(gameVariant, "audio.pacman_munch").stop();
 		}
 		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 				.filter(Ghost::isVisible).count() > 0) {
-			ui().soundHandler().ensureLoopEndless(ui().soundHandler().audioClip(gameVariant, "audio.ghost_returning"));
+			soundHandler.ensureLoopEndless(soundHandler.audioClip(gameVariant, "audio.ghost_returning"));
 
 		} else {
-			ui().soundHandler().audioClip(gameVariant, "audio.ghost_returning").stop();
+			soundHandler.audioClip(gameVariant, "audio.ghost_returning").stop();
 		}
 	}
 }

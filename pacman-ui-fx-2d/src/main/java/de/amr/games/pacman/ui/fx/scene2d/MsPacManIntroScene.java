@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Signature;
@@ -28,15 +29,10 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 public class MsPacManIntroScene extends GameScene2D {
 
 	private MsPacManIntro intro;
-	private final Signature signature = new Signature();
-
-	public MsPacManIntroScene(PacManGames2dUI ui) {
-		super(ui);
-	}
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) spritesheet;
 
 		setCreditVisible(true);
 		setScoreVisible(true);
@@ -50,9 +46,6 @@ public class MsPacManIntroScene extends GameScene2D {
 			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
 		});
 
-		signature.setNameFont(ui().theme().font("font.handwriting", 9));
-		signature.hide();
-
 		intro.changeState(MsPacManIntro.State.START);
 	}
 
@@ -62,20 +55,15 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	public void end() {
-		ui().soundHandler().stopVoice();
-	}
-
-	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(PacManGames2d.KEY_ADD_CREDIT, PacManGames2d.KEY_ADD_CREDIT_NUMPAD)) {
-			ui().addCredit();
+			actionHandler().ifPresent(ActionHandler::addCredit);
 		} else if (Keyboard.anyPressed(PacManGames2d.KEY_START_GAME, PacManGames2d.KEY_START_GAME_NUMPAD)) {
-			ui().startGame();
+			actionHandler().ifPresent(ActionHandler::startGame);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_SELECT_VARIANT)) {
-			ui().switchGameVariant();
+			actionHandler().ifPresent(ActionHandler::switchGameVariant);
 		} else if (Keyboard.pressed(PacManGames2d.KEY_PLAY_CUTSCENES)) {
-			ui().startCutscenesTest();
+			actionHandler().ifPresent(ActionHandler::startCutscenesTest);
 		}
 	}
 
@@ -94,7 +82,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawText("\"MS PAC-MAN\"", ArcadeTheme.ORANGE, sceneFont(), tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
-			var color = ui().theme().color(String.format("ghost.%d.color.normal.dress", ghost.id()));
+			var color = theme.color(String.format("ghost.%d.color.normal.dress", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText("WITH", ArcadeTheme.PALE, sceneFont(), tx, y0 + t(3));
 			}

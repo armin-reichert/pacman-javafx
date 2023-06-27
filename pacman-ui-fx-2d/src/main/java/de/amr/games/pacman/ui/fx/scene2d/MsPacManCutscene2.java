@@ -23,13 +23,9 @@ public class MsPacManCutscene2 extends GameScene2D {
 	private MsPacManIntermission2 intermission;
 	private ClapperBoardAnimation clapAnimation;
 
-	public MsPacManCutscene2(PacManGames2dUI ui) {
-		super(ui);
-	}
-
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) spritesheet;
 		setCreditVisible(true);
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission2();

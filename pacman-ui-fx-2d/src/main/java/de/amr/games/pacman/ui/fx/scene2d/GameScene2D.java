@@ -8,14 +8,17 @@ import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
+import de.amr.games.pacman.ui.fx.app.SoundHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
@@ -29,6 +32,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
@@ -46,19 +50,62 @@ public abstract class GameScene2D implements GameScene {
 		return (float) tiles * TS;
 	}
 
-	private final PacManGames2dUI ui;
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
+	protected ActionHandler actionHandler;
+
+	protected Theme theme;
+
+	protected Spritesheet spritesheet;
+
+	protected SoundHandler soundHandler;
+
 	protected Canvas canvas;
+
 	protected GraphicsContext g;
+
 	private boolean scoreVisible;
+
 	private boolean creditVisible;
+
 	protected double scaling = 1;
 
-	protected GameScene2D(PacManGames2dUI ui) {
-		this.ui = ui;
+	protected GameScene2D() {
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
+	}
+
+	public void setActionHandler(ActionHandler actionHandler) {
+		this.actionHandler = actionHandler;
+	}
+
+	@Override
+	public Optional<ActionHandler> actionHandler() {
+		return Optional.ofNullable(actionHandler);
+	}
+
+	public void setTheme(Theme theme) {
+		this.theme = theme;
+	}
+
+	public Theme getTheme() {
+		return theme;
+	}
+
+	public void setSpritesheet(Spritesheet spritesheet) {
+		this.spritesheet = spritesheet;
+	}
+
+	public Spritesheet getSpritesheet() {
+		return spritesheet;
+	}
+
+	public void setSoundHandler(SoundHandler soundHandler) {
+		this.soundHandler = soundHandler;
+	}
+
+	public SoundHandler getSoundHandler() {
+		return soundHandler;
 	}
 
 	public void setCanvas(Canvas canvas) {
@@ -100,12 +147,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected Font sceneFont() {
 		double size = Math.floor(TS * scaling);
-		return ui.theme().font("font.arcade", size);
-	}
-
-	@Override
-	public PacManGames2dUI ui() {
-		return ui;
+		return theme.font("font.arcade", size);
 	}
 
 	public Canvas canvas() {
@@ -124,9 +166,6 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void render() {
-		if (ui == null) {
-			return;
-		}
 		clearSceneBackground();
 		if (scoreVisible) {
 			drawScore(game().score(), "SCORE", t(1), t(1));
@@ -159,7 +198,7 @@ public abstract class GameScene2D implements GameScene {
 		double x = xr;
 		switch (game().variant()) {
 			case MS_PACMAN: {
-				var ss = (SpritesheetMsPacManGame) ui.spritesheet();
+				var ss = (SpritesheetMsPacManGame) spritesheet;
 				for (var symbol : levelSymbols) {
 					drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
 					x -= TS * 2;
@@ -167,7 +206,7 @@ public abstract class GameScene2D implements GameScene {
 				break;
 			}
 			case PACMAN: {
-				var ss = (SpritesheetPacManGame) ui.spritesheet();
+				var ss = (SpritesheetPacManGame) spritesheet;
 				for (var symbol : levelSymbols) {
 					drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
 					x -= TS * 2;
@@ -188,14 +227,14 @@ public abstract class GameScene2D implements GameScene {
 		int maxLives = 5;
 		switch (game().variant()) {
 			case MS_PACMAN: {
-				var ss = (SpritesheetMsPacManGame) ui.spritesheet();
+				var ss = (SpritesheetMsPacManGame) spritesheet;
 				for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 					drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
 				}
 				break;
 			}
 			case PACMAN: {
-				var ss = (SpritesheetPacManGame) ui.spritesheet();
+				var ss = (SpritesheetPacManGame) spritesheet;
 				for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 					drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
 				}
@@ -216,13 +255,13 @@ public abstract class GameScene2D implements GameScene {
 		Rectangle2D valueSprite;
 		switch (game().variant()) {
 			case MS_PACMAN: {
-				var ss = (SpritesheetMsPacManGame) ui.spritesheet();
+				var ss = (SpritesheetMsPacManGame) spritesheet;
 				symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
 				valueSprite = ss.bonusValueSprite(bonus.symbol());
 				break;
 			}
 			case PACMAN: {
-				var ss = (SpritesheetPacManGame) ui.spritesheet();
+				var ss = (SpritesheetPacManGame) spritesheet;
 				symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
 				valueSprite = ss.bonusValueSprite(bonus.symbol());
 				break;
@@ -316,7 +355,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(ui.spritesheet().source(), sprite, x, y);
+		drawSprite(spritesheet.source(), sprite, x, y);
 	}
 
 	/**
@@ -356,7 +395,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
-		Image logo = ui.theme().get("mspacman.logo.midway");
+		Image logo = theme.get("mspacman.logo.midway");
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(ArcadeTheme.RED);
 		g.setFont(Font.font("Dialog", s(11)));
@@ -369,7 +408,7 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawClapperBoard(ClapperBoardAnimation animation, double x, double y) {
 		int spriteIndex = animation.currentSpriteIndex();
 		if (spriteIndex != -1) {
-			var ss = (SpritesheetMsPacManGame) ui.spritesheet();
+			var ss = (SpritesheetMsPacManGame) spritesheet;
 			var sprite = ss.clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont());

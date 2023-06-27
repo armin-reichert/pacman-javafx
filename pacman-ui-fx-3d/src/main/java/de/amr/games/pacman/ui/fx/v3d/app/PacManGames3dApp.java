@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.Settings;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;

@@ -25,13 +25,9 @@ public class MsPacManCutscene1 extends GameScene2D {
 	private MsPacManIntermission1 intermission;
 	private ClapperBoardAnimation clapAnimation;
 
-	public MsPacManCutscene1(PacManGames2dUI ui) {
-		super(ui);
-	}
-
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) spritesheet;
 
 		setCreditVisible(true);
 		setScoreVisible(true);
@@ -56,7 +52,7 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = (SpritesheetMsPacManGame) ui().spritesheet();
+		var ss = (SpritesheetMsPacManGame) spritesheet;
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPacSprite(intermission.msPac);
 		drawPacSprite(intermission.pacMan);

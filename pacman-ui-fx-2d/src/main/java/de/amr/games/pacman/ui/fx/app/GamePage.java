@@ -69,7 +69,6 @@ public class GamePage {
 		canvasContainer.setCenter(canvas);
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling, false));
 
-		helpMenuFactory.setFont(theme.font("font.monospaced", 12));
 		helpButton.setOnMouseClicked(e -> {
 			e.consume();
 			showHelpMenu();
@@ -114,6 +113,10 @@ public class GamePage {
 		}
 
 		updateHelpButton();
+		updateSignatureSizeAndPosition();
+		if (gameScene2D != null) {
+			gameScene2D.setScaling(scaling);
+		}
 
 		if (this.scaling == scaling && !always) {
 			return;
@@ -144,11 +147,6 @@ public class GamePage {
 		popupLayer.setPrefSize(w, h);
 		popupLayer.setMaxSize (w, h);
 
-		if (gameScene2D != null) {
-			gameScene2D.setScaling(scaling);
-		}
-		updateSignatureSizeAndPosition();
-
 		Logger.info("Game page resized: scaling: {} height: {} border: {}", scaling, h, borderWidth);
 	}
 
@@ -157,18 +155,16 @@ public class GamePage {
 		gameScene2D.setCanvas(canvas);
 		resize(scaling, true);
 		if (gameScene == ui.sceneConfig().playScene()) {
-			layers.addEventHandler(KeyEvent.KEY_PRESSED,
-					(KeyboardSteering) GameController.it().getManualPacSteering());
+			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 		} else {
-			layers.removeEventHandler(KeyEvent.KEY_PRESSED,
-					(KeyboardSteering) GameController.it().getManualPacSteering());
+			layers.removeEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 		}
 		if (gameScene == ui.sceneConfig().introScene()) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();
 		}
-		layers.requestFocus();
+		//layers.requestFocus();
 	}
 
 	protected void updateSignatureSizeAndPosition() {
