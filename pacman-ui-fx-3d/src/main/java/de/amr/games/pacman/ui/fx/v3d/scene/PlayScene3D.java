@@ -436,7 +436,8 @@ public class PlayScene3D implements GameScene {
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
 							soundHandler.audioClip(level.game().variant(), "audio.level_complete").play();
-							//TODO ui.showFlashMessageSeconds(2, PacManGames3d.pickLevelCompleteMessage(level.number()));
+							actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
+									2, PacManGames3d.pickLevelCompleteMessage(level.number())));
 						}
 					}),
 					levelChangeAnimation,
@@ -450,7 +451,8 @@ public class PlayScene3D implements GameScene {
 			game().level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
 				level3D.livesCounter3D().stopAnimation();
-				//TODO ui.showFlashMessageSeconds(3, PacManGames3d.pickGameOverMessage());
+				actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
+						3, PacManGames3d.pickGameOverMessage()));
 				soundHandler.audioClip(level.game().variant(), "audio.game_over").play();
 				waitSeconds(3);
 			});
