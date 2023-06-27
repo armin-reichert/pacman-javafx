@@ -38,9 +38,7 @@ public class GamePage {
 	protected static final int GAME_SCENE_LAYER = 0;
 	protected static final double MIN_SCALING = 0.7;
 
-	protected static final Color  BORDER_COLOR         = ArcadeTheme.PALE;
-	protected static final double BORDER_WIDTH         = 10;
-	protected static final double BORDER_CORNER_RADIUS = 20;
+	protected static final Color  BORDER_COLOR = ArcadeTheme.PALE;
 
 	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
 
@@ -50,7 +48,6 @@ public class GamePage {
 	protected final StackPane layers = new StackPane();
 	protected final BorderPane gameSceneLayer = new BorderPane();
 	protected final BorderPane canvasContainer = new BorderPane();
-	protected final Rectangle canvasContainerClipNode = new Rectangle();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane popupLayer = new Pane();
 	protected final HelpMenuFactory helpMenuFactory = new HelpMenuFactory();
@@ -69,8 +66,6 @@ public class GamePage {
 		gameSceneLayer.setCenter(canvasContainer);
 
 		canvasContainer.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-		canvasContainer.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, BORDER_CORNER_RADIUS, BORDER_WIDTH));
-		canvasContainer.setClip(canvasContainerClipNode);
 		canvasContainer.setCenter(canvas);
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling, false));
 
@@ -128,19 +123,20 @@ public class GamePage {
 		double w = Math.round( (GameScene2D.WIDTH_UNSCALED  + 25) * scaling );
 		double h = Math.round( (GameScene2D.HEIGHT_UNSCALED + 15) * scaling );
 
-		double borderWidth  = Math.max(5, Math.ceil(h / 60));
-		double cornerRadius = Math.ceil(15 * scaling);
 
-		canvasContainer.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
 		canvasContainer.setMinSize (w, h);
 		canvasContainer.setPrefSize(w, h);
 		canvasContainer.setMaxSize (w, h);
 
-		canvasContainerClipNode.setWidth(w);
-		canvasContainerClipNode.setHeight(h);
-		// Don't ask me why
-		canvasContainerClipNode.setArcWidth (35 * scaling);
-		canvasContainerClipNode.setArcHeight(35 * scaling);
+		var roundedRect = new Rectangle(w, h);
+		// Don't ask me why 35
+		roundedRect.setArcWidth (35 * scaling);
+		roundedRect.setArcHeight(35 * scaling);
+		canvasContainer.setClip(roundedRect);
+
+		double borderWidth  = Math.max(5, Math.ceil(h / 60));
+		double cornerRadius = Math.ceil(15 * scaling);
+		canvasContainer.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, cornerRadius, borderWidth));
 
 		popupLayer.setMinSize (w, h);
 		popupLayer.setPrefSize(w, h);
