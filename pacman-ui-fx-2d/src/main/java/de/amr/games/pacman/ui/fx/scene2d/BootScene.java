@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import javafx.geometry.Rectangle2D;
@@ -42,7 +43,7 @@ public class BootScene extends GameScene2D {
 		}
 
 		else if (timer.atSecond(start + 2.5)) {
-			paintGrid(16);
+			paintGrid(GamePage.CANVAS_WIDTH_UNSCALED, GamePage.CANVAS_HEIGHT_UNSCALED, 16);
 		}
 
 		else if (timer.atSecond(start + 3)) {
@@ -90,7 +91,7 @@ public class BootScene extends GameScene2D {
 		return new Rectangle2D(x, y, raster, raster);
 	}
 
-	private void paintGrid(int raster) {
+	private void paintGrid(double width, double height, int raster) {
 		clearSceneBackground();
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
@@ -98,11 +99,11 @@ public class BootScene extends GameScene2D {
 		g.setLineWidth(s(2.0));
 		for (int row = 0; row <= numRows; ++row) {
 			g.setLineWidth(row == 0 || row == numRows ? s(4.0) : s(2.0));
-			g.strokeLine(0, s(row * raster), s(WIDTH_UNSCALED), s(row * raster));
+			g.strokeLine(0, s(row * raster), s(width), s(row * raster));
 		}
 		for (int col = 0; col <= numCols; ++col) {
 			g.setLineWidth(col == 0 || col == numCols ? s(4.0) : s(2.0));
-			g.strokeLine(s(col * raster), 0, s(col * raster), s(HEIGHT_UNSCALED));
+			g.strokeLine(s(col * raster), 0, s(col * raster), s(height));
 		}
 	}
 }

@@ -35,11 +35,11 @@ import org.tinylog.Logger;
  */
 public class GamePage {
 
-	protected static final int GAME_SCENE_LAYER = 0;
+	public static final int CANVAS_WIDTH_UNSCALED = 224;
+	public static final int CANVAS_HEIGHT_UNSCALED = 288;
+
 	protected static final double MIN_SCALING = 0.7;
-
-	protected static final Color  BORDER_COLOR = ArcadeTheme.PALE;
-
+	protected static final int GAME_SCENE_LAYER = 0;
 	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
 
 	protected final PacManGames2dUI ui;
@@ -120,9 +120,11 @@ public class GamePage {
 		}
 		this.scaling = scaling;
 
-		double w = Math.round( (GameScene2D.WIDTH_UNSCALED  + 25) * scaling );
-		double h = Math.round( (GameScene2D.HEIGHT_UNSCALED + 15) * scaling );
+		double w = Math.round( (CANVAS_WIDTH_UNSCALED  + 25) * scaling );
+		double h = Math.round( (CANVAS_HEIGHT_UNSCALED + 15) * scaling );
 
+		canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
+		canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
 
 		canvasContainer.setMinSize (w, h);
 		canvasContainer.setPrefSize(w, h);
@@ -136,7 +138,7 @@ public class GamePage {
 
 		double borderWidth  = Math.max(5, Math.ceil(h / 60));
 		double cornerRadius = Math.ceil(15 * scaling);
-		canvasContainer.setBorder(ResourceManager.roundedBorder(BORDER_COLOR, cornerRadius, borderWidth));
+		canvasContainer.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
 
 		popupLayer.setMinSize (w, h);
 		popupLayer.setPrefSize(w, h);

@@ -41,8 +41,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public static final int TILES_X = 28;
 	public static final int TILES_Y = 36;
-	public static final int WIDTH_UNSCALED = 224;
-	public static final int HEIGHT_UNSCALED = 288;
 
 	protected static float t(double tiles) {
 		return (float) tiles * TS;
@@ -70,8 +68,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public void setScaling(double scaling) {
 		this.scaling = scaling;
-		canvas.setWidth(WIDTH_UNSCALED * scaling);
-		canvas.setHeight(HEIGHT_UNSCALED * scaling);
 	}
 
 	@Override

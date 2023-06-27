@@ -160,7 +160,7 @@ public class PacManGames2dUI implements GameEventListener {
 	}
 
 	protected void resizeGamePage(double sceneHeight) {
-		double ratio = sceneHeight / GameScene2D.HEIGHT_UNSCALED;
+		double ratio = sceneHeight / GamePage.CANVAS_HEIGHT_UNSCALED;
 		// let game page use around 90% of available scene height
 		gamePage.resize(truncate(ratio * 0.9), false);
 	}
