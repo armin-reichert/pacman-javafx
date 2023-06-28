@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
+import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -33,7 +34,7 @@ class GamePage3D extends GamePage {
 	public GamePage3D(PacManGames3dUI ui, Theme theme) {
 		super(ui, theme);
 
-		pip = new PictureInPicture(ui);
+		pip = new PictureInPicture((PlayScene3D) ui.sceneConfig().playScene3D());
 		pip.opacityPy.bind(PacManGames3d.PY_PIP_OPACITY);
 		pip.heightPy.bind(PacManGames3d.PY_PIP_HEIGHT);
 
@@ -79,6 +80,7 @@ class GamePage3D extends GamePage {
 	public void render() {
 		super.render();
 		dashboard.update();
+		pip.root().setVisible(isPiPOn() && ui.currentGameScene().is3D());
 		pip.render();
 	}
 
@@ -104,7 +106,6 @@ class GamePage3D extends GamePage {
 
 	private void togglePipVisible() {
 		Ufx.toggle(PacManGames3d.PY_PIP_ON);
-		pip.update(ui.currentGameScene(), isPiPOn());
 		var message = message(PacManGames3d.TEXTS, isPiPOn() ? "pip_on" : "pip_off");
 		ui.showFlashMessage(message);
 		updateTopLayer();

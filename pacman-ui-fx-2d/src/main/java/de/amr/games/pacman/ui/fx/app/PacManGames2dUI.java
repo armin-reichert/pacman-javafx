@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
-import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -138,7 +137,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	protected void resizeGamePage(double sceneHeight) {
-		double ratio = sceneHeight / GamePage.CANVAS_HEIGHT_UNSCALED;
+		double ratio = sceneHeight / PacManGames2d.CANVAS_HEIGHT_UNSCALED;
 		// let game page use around 90% of available scene height
 		gamePage.resize(truncate(ratio * 0.9), false);
 	}
@@ -228,8 +227,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		var prevGameScene = currentGameScene;
 		if (prevGameScene != null) {
 			prevGameScene.end();
-			soundHandler.stopVoice();
 			soundHandler.stopAllSounds();
+			if (prevGameScene != sceneConfig().bootScene()) {
+				soundHandler.stopVoice();
+			}
 		}
 		currentGameScene = newGameScene;
 		currentGameScene.setParentScene(stage.getScene());

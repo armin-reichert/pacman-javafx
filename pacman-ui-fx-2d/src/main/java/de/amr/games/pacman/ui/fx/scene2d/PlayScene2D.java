@@ -92,7 +92,6 @@ public class PlayScene2D extends GameScene2D {
 			}
 			drawLevelCounter(t(24), t(34), game().levelCounter());
 		});
-
 	}
 
 	// TODO put all images into a single spritesheet

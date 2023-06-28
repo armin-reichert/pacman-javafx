@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.ui.fx.app.GamePage;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import javafx.beans.property.DoubleProperty;
@@ -22,42 +20,35 @@ public class PictureInPicture {
 
 	public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3d.PIP_MIN_HEIGHT);
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
-	private final GameScene2D gameScene;
+	private final PlayScene2D playScene2D;
+	private final PlayScene3D master;
 
-	public PictureInPicture(PacManGames2dUI ui) {
+	public PictureInPicture(PlayScene3D master) {
+		Globals.checkNotNull(master);
+		this.master = master;
 		var canvas = new Canvas(heightPy.get() * 28 / 36, heightPy.get());
-		gameScene = new PlayScene2D();
-		gameScene.setTheme(ui.theme());
-		gameScene.setSpritesheet(ui.spritesheet());
-		gameScene.setCanvas(canvas);
-		gameScene.root().opacityProperty().bind(opacityPy);
-		gameScene.root().setVisible(false);
+		playScene2D = new PlayScene2D();
+		playScene2D.setCanvas(canvas);
+		playScene2D.setScoreVisible(true);
+		playScene2D.setCreditVisible(false);
+		playScene2D.root().opacityProperty().bind(opacityPy);
+		playScene2D.root().setVisible(false);
 		heightPy.addListener((py, ov, nv) -> {
 			double scaling = nv.doubleValue() / GamePage.CANVAS_HEIGHT_UNSCALED;
 			canvas.setWidth(GamePage.CANVAS_WIDTH_UNSCALED * scaling);
 			canvas.setHeight(GamePage.CANVAS_HEIGHT_UNSCALED * scaling);
-			gameScene.setScaling(scaling);
+			playScene2D.setScaling(scaling);
 		});
 	}
 
 	public Node root() {
-		return gameScene.root();
+		return playScene2D.root();
 	}
 
 	public void render() {
-		gameScene.render();
-	}
-
-	public void update(GameScene master, boolean on) {
-		if (master != null) {
-			gameScene.setTheme(master.getTheme());
-			gameScene.setSpritesheet(master.getSpritesheet());
-			gameScene.setSoundHandler(master.getSoundHandler());
-			gameScene.root().setVisible(on && master.is3D());
-			gameScene.setScoreVisible(true);
-			gameScene.setCreditVisible(false);
-		} else {
-			gameScene.root().setVisible(false);
-		}
+		playScene2D.setTheme(master.getTheme());
+		playScene2D.setSpritesheet(master.getSpritesheet());
+		playScene2D.setSoundHandler(master.getSoundHandler());
+		playScene2D.render();
 	}
 }

@@ -73,7 +73,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		stage.setTitle(message(PacManGames3d.TEXTS, titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 		if (currentGameScene != null) {
-			gamePage3D().getPip().update(currentGameScene, PacManGames3d.PY_PIP_ON.get());
 			gamePage3D().updateBackground(currentGameScene);
 		}
 	}

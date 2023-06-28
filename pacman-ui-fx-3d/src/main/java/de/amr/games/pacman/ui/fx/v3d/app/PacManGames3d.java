@@ -35,6 +35,37 @@ import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
  */
 public class PacManGames3d {
 
+	public static final float                       PIP_MIN_HEIGHT           = 36 * 8 * 0.75f;
+	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
+
+	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
+	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
+	public static final BooleanProperty             PY_PIP_ON                = new SimpleBooleanProperty(false);
+
+	public static final IntegerProperty             PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
+
+	public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x60));
+	public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
+	public static final BooleanProperty             PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+	public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);
+	public static final DoubleProperty              PY_3D_WALL_THICKNESS     = new SimpleDoubleProperty(1.25);
+	public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
+
+	public static final BooleanProperty             PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
+
+	public static final KeyCodeCombination          KEY_TOGGLE_DASHBOARD     = just(KeyCode.F1);
+	public static final KeyCodeCombination          KEY_TOGGLE_DASHBOARD_2   = alt(KeyCode.B);
+	public static final KeyCodeCombination          KEY_TOGGLE_PIP_VIEW      = just(KeyCode.F2);
+	public static final KeyCodeCombination          KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination          KEY_PREV_PERSPECTIVE     = alt(KeyCode.LEFT);
+	public static final KeyCodeCombination          KEY_NEXT_PERSPECTIVE     = alt(KeyCode.RIGHT);
+
 	public static final ResourceManager MGR = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3d.class);
 
 	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
@@ -106,35 +137,4 @@ public class PacManGames3d {
 		texture.setSpecularColor(specularColor);
 		return texture;
 	}
-
-	public static final float                       PIP_MIN_HEIGHT           = 36 * 8;
-	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
-
-	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
-	public static final BooleanProperty             PY_PIP_ON                = new SimpleBooleanProperty(false);
-
-	public static final IntegerProperty             PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
-
-	public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x60));
-	public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
-	public static final BooleanProperty             PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-	public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);
-	public static final DoubleProperty              PY_3D_WALL_THICKNESS     = new SimpleDoubleProperty(1.25);
-	public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
-
-	public static final BooleanProperty             PY_WOKE_PUSSY            = new SimpleBooleanProperty(false); 
-
-	public static final KeyCodeCombination          KEY_TOGGLE_DASHBOARD     = just(KeyCode.F1);
-	public static final KeyCodeCombination          KEY_TOGGLE_DASHBOARD_2   = alt(KeyCode.B);
-	public static final KeyCodeCombination          KEY_TOGGLE_PIP_VIEW      = just(KeyCode.F2);
-	public static final KeyCodeCombination          KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
-	public static final KeyCodeCombination          KEY_PREV_PERSPECTIVE     = alt(KeyCode.LEFT);
-	public static final KeyCodeCombination          KEY_NEXT_PERSPECTIVE     = alt(KeyCode.RIGHT);
 }

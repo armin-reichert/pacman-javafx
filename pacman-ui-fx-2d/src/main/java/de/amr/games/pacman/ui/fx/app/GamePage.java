@@ -35,9 +35,6 @@ import org.tinylog.Logger;
  */
 public class GamePage {
 
-	public static final int CANVAS_WIDTH_UNSCALED = 224;
-	public static final int CANVAS_HEIGHT_UNSCALED = 288;
-
 	protected static final double MIN_SCALING = 0.7;
 	protected static final int GAME_SCENE_LAYER = 0;
 	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
@@ -123,20 +120,20 @@ public class GamePage {
 		}
 		this.scaling = scaling;
 
-		double w = Math.round( (CANVAS_WIDTH_UNSCALED  + 25) * scaling );
-		double h = Math.round( (CANVAS_HEIGHT_UNSCALED + 15) * scaling );
+		double w = Math.round( (PacManGames2d.CANVAS_WIDTH_UNSCALED  + 25) * scaling );
+		double h = Math.round( (PacManGames2d.CANVAS_HEIGHT_UNSCALED + 15) * scaling );
 
-		canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
-		canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
+		canvas.setWidth(PacManGames2d.CANVAS_WIDTH_UNSCALED * scaling);
+		canvas.setHeight(PacManGames2d.CANVAS_HEIGHT_UNSCALED * scaling);
 
 		canvasContainer.setMinSize (w, h);
 		canvasContainer.setPrefSize(w, h);
 		canvasContainer.setMaxSize (w, h);
 
 		var roundedRect = new Rectangle(w, h);
-		// Don't ask me why 35
-		roundedRect.setArcWidth (35 * scaling);
-		roundedRect.setArcHeight(35 * scaling);
+		var arc = 35;
+		roundedRect.setArcWidth (arc * scaling);
+		roundedRect.setArcHeight(arc * scaling);
 		canvasContainer.setClip(roundedRect);
 
 		double borderWidth  = Math.max(5, Math.ceil(h / 60));

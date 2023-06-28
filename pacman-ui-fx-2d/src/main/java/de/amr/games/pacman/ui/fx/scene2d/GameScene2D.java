@@ -166,6 +166,9 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void render() {
+		if (theme == null || spritesheet == null) {
+			return;
+		}
 		clearSceneBackground();
 		if (scoreVisible) {
 			drawScore(game().score(), "SCORE", t(1), t(1));

@@ -22,7 +22,9 @@ public class PacManGames2d {
 	public static final ResourceManager MGR = new ResourceManager("/de/amr/games/pacman/ui/fx/", PacManGames2d.class);
 	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
-	//@formatter:off
+	public static final int CANVAS_WIDTH_UNSCALED = 224;
+	public static final int CANVAS_HEIGHT_UNSCALED = 288;
+
 	public static final BooleanProperty    PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);
 
 	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
@@ -55,5 +57,4 @@ public class PacManGames2d {
 	public static final KeyCodeCombination KEY_SHOW_HELP         = just(KeyCode.H);
 	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
-	//@formatter:on
 }
