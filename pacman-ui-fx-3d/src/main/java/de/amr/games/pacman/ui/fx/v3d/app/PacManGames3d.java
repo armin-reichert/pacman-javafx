@@ -99,6 +99,75 @@ public class PacManGames3d {
 		theme.set("texture.plastic",    createFloorTexture("plastic", "jpg"));
 		theme.set("texture.wood",       createFloorTexture("wood", "jpg"));
 
+		theme.set("ghost.0.color.normal.dress",      ArcadeTheme.RED);
+		theme.set("ghost.0.color.normal.eyeballs",   ArcadeTheme.PALE);
+		theme.set("ghost.0.color.normal.pupils",     ArcadeTheme.BLUE);
+
+		theme.set("ghost.1.color.normal.dress",      ArcadeTheme.PINK);
+		theme.set("ghost.1.color.normal.eyeballs",   ArcadeTheme.PALE);
+		theme.set("ghost.1.color.normal.pupils",     ArcadeTheme.BLUE);
+
+		theme.set("ghost.2.color.normal.dress",      ArcadeTheme.CYAN);
+		theme.set("ghost.2.color.normal.eyeballs",   ArcadeTheme.PALE);
+		theme.set("ghost.2.color.normal.pupils",     ArcadeTheme.BLUE);
+
+		theme.set("ghost.3.color.normal.dress",      ArcadeTheme.ORANGE);
+		theme.set("ghost.3.color.normal.eyeballs",   ArcadeTheme.PALE);
+		theme.set("ghost.3.color.normal.pupils",     ArcadeTheme.BLUE);
+
+		theme.set("ghost.color.frightened.dress",    ArcadeTheme.BLUE);
+		theme.set("ghost.color.frightened.eyeballs", ArcadeTheme.ROSE);
+		theme.set("ghost.color.frightened.pupils",   ArcadeTheme.ROSE);
+
+		theme.set("ghost.color.flashing.dress",      ArcadeTheme.PALE);
+		theme.set("ghost.color.flashing.eyeballs",   ArcadeTheme.ROSE);
+		theme.set("ghost.color.flashing.pupils",     ArcadeTheme.RED);
+
+		theme.addAll("mspacman.maze.foodColor",
+				Color.rgb(222, 222, 255),
+				Color.rgb(255, 255, 0),
+				Color.rgb(255, 0, 0),
+				Color.rgb(222, 222, 255),
+				Color.rgb(0, 255, 255),
+				Color.rgb(222, 222, 255)
+		);
+
+		theme.addAll("mspacman.maze.wallBaseColor",
+				Color.rgb(255, 0, 0),
+				Color.rgb(222, 222, 255),
+				Color.rgb(222, 222, 255),
+				Color.rgb(255, 183, 81),
+				Color.rgb(255, 255, 0),
+				Color.rgb(255, 0, 0)
+		);
+
+		theme.addAll("mspacman.maze.wallTopColor",
+				Color.rgb(255, 183, 174),
+				Color.rgb(71, 183, 255),
+				Color.rgb(222, 151, 81),
+				Color.rgb(222, 151, 81),
+				Color.rgb(222, 151, 81),
+				Color.rgb(222, 151, 81)
+		);
+
+		theme.set("mspacman.color.head",             Color.rgb(255, 255, 0));
+		theme.set("mspacman.color.palate",           Color.rgb(191, 79, 61));
+		theme.set("mspacman.color.eyes",             Color.rgb(33, 33, 33));
+		theme.set("mspacman.color.boobs",            Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+		theme.set("mspacman.color.hairbow",          Color.rgb(255, 0, 0));
+		theme.set("mspacman.color.hairbow.pearls",   Color.rgb(33, 33, 255));
+
+		theme.set("mspacman.maze.doorColor",         Color.rgb(255, 183, 255));
+
+		theme.set("pacman.maze.foodColor",           Color.rgb(254, 189, 180));
+		theme.set("pacman.maze.wallBaseColor",       Color.rgb(33, 33, 255).brighter());
+		theme.set("pacman.maze.wallTopColor",        Color.rgb(33, 33, 255).darker());
+		theme.set("pacman.maze.doorColor",           Color.rgb(252, 181, 255));
+
+		theme.set("pacman.color.head",               Color.rgb(255, 255, 0));
+		theme.set("pacman.color.palate",             Color.rgb(191, 79, 61));
+		theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
+
 		return theme;
 	}
 
