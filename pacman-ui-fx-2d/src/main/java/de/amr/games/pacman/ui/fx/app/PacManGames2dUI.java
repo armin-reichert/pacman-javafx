@@ -52,7 +52,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	protected GamePage gamePage;
 	protected SoundHandler soundHandler;
 	protected GameScene currentGameScene;
-	protected boolean showingStartPage;
+	protected Object currentPage;
 
 	public PacManGames2dUI() {}
 
@@ -92,12 +92,12 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	protected void createMainScene() {
-		var screenSize = Screen.getPrimary().getBounds();
-		double height = screenSize.getHeight() * 0.8;
+		var screenHeight = Screen.getPrimary().getBounds().getHeight();
+		double height = Math.min(screenHeight * 0.8, 800);
 		double width = height * 4.0 / 3.0;
 		scene = new Scene(new Region(), width, height, Color.BLACK);
 		scene.heightProperty().addListener((py, ov, newSceneHeight) -> {
-			if (!showingStartPage) {
+			if (currentPage == gamePage) {
 				resizeGamePage(newSceneHeight.doubleValue());
 			}
 		});
@@ -106,8 +106,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	protected void configureStage(Settings settings) {
 		stage.setScene(scene);
 		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth(28*8);
-		stage.setMinHeight(36*8);
+		stage.setMinWidth (28 * 8);
+		stage.setMinHeight(36 * 8);
 		stage.centerOnScreen();
 	}
 
@@ -148,28 +148,24 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	public void showStartPage() {
 		clock.stop();
-
-		startPage.setGameVariant(game().variant());
-
 		scene.setRoot(startPage.root());
 		updateStage();
-		stage.show();
+		startPage.setGameVariant(game().variant());
 		startPage.root().requestFocus();
-		showingStartPage = true;
+		stage.show();
+		currentPage = startPage;
 	}
 
 	public void showGamePage() {
-		// call reboot() first such that current game scene is not null!
+		// call reboot() first such that current game scene is set
 		reboot();
-		clock.start();
-
-		resizeGamePage(scene.getHeight());
-
 		scene.setRoot(gamePage.root());
+		gamePage.root().requestFocus();
+		resizeGamePage(scene.getHeight());
 		updateStage();
 		stage.show();
-		gamePage.root().requestFocus();
-		showingStartPage = false;
+		currentPage = gamePage;
+		clock.start();
 	}
 
 	protected void configurePacSteering() {
