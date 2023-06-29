@@ -233,7 +233,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		currentGameScene.setActionHandler(this);
 		currentGameScene.setTheme(theme);
 		currentGameScene.setSpritesheet(spritesheet());
-		currentGameScene.setSoundHandler(soundHandler());
+		currentGameScene.setSoundHandler(soundHandler);
 		currentGameScene.init();
 		gamePage.setGameScene(currentGameScene);
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
@@ -356,7 +356,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 		}
-		soundHandler().playVoice("voice.explain");
+		soundHandler.playVoice("voice.explain");
 		GameController.it().restart(GameState.BOOT);
 	}
 

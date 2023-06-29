@@ -1,5 +1,8 @@
 package de.amr.games.pacman.ui.fx.app;
 
+/**
+ * @author Armin Reichert
+ */
 public interface ActionHandler {
 
     void showFlashMessage(String message, Object... args);
