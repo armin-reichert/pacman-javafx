@@ -137,13 +137,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	protected void resizeGamePage(double sceneHeight) {
-		double ratio = sceneHeight / PacManGames2d.CANVAS_HEIGHT_UNSCALED;
-		// let game page use around 90% of available scene height
-		gamePage.resize(truncate(ratio * 0.9), false);
-	}
-
-	private static double truncate(double value) {
-		return Math.floor(value * 10) / 10; // e.g. 1.13 -> 11.3 -> 11.0 -> 1.1
+		// use 90% of available height, truncate scaling after first comma position
+		double scaling = 0.9 * (sceneHeight / PacManGames2d.CANVAS_HEIGHT_UNSCALED);
+		scaling = Math.floor(scaling * 10) / 10; // 1.13 -> 11.3 -> 11.0 -> 1.1
+		gamePage.resize(scaling, false);
 	}
 
 	public void showStartPage() {
