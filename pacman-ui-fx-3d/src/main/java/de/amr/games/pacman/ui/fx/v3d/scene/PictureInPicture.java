@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.ui.fx.app.GamePage;
+import de.amr.games.pacman.ui.fx.app.PacManGames2d;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
 import javafx.beans.property.DoubleProperty;
@@ -34,9 +35,9 @@ public class PictureInPicture {
 		playScene2D.root().opacityProperty().bind(opacityPy);
 		playScene2D.root().setVisible(false);
 		heightPy.addListener((py, ov, nv) -> {
-			double scaling = nv.doubleValue() / GamePage.CANVAS_HEIGHT_UNSCALED;
-			canvas.setWidth(GamePage.CANVAS_WIDTH_UNSCALED * scaling);
-			canvas.setHeight(GamePage.CANVAS_HEIGHT_UNSCALED * scaling);
+			double scaling = nv.doubleValue() / PacManGames2d.CANVAS_HEIGHT_UNSCALED;
+			canvas.setWidth(PacManGames2d.CANVAS_WIDTH_UNSCALED * scaling);
+			canvas.setHeight(PacManGames2d.CANVAS_HEIGHT_UNSCALED * scaling);
 			playScene2D.setScaling(scaling);
 		});
 	}

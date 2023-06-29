@@ -47,16 +47,7 @@ public interface GameScene extends GameEventListener {
 	/**
 	 * Called when the scene needs to be updated.
 	 */
-	default void update() {
-		// empty default
-	}
-
-	/**
-	 * Called when the scene needs to be rendered.
-	 */
-	default void render() {
-		// empty default
-	}
+	void update();
 
 	/**
 	 * Called when the scene ends and gets replaced by another scene.

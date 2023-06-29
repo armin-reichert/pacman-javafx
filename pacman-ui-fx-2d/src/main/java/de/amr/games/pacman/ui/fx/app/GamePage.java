@@ -191,8 +191,9 @@ public class GamePage {
 	}
 
 	public void render() {
-		if (ui.currentGameScene() != null) {
-			ui.currentGameScene().render();
+		if (ui.currentGameScene() instanceof GameScene2D) {
+			GameScene2D scene2D = (GameScene2D) ui.currentGameScene;
+			scene2D.render();
 		}
 		flashMessageView.update();
 	}

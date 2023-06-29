@@ -50,26 +50,17 @@ public abstract class GameScene2D implements GameScene {
 		return (float) tiles * TS;
 	}
 
-
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	protected ActionHandler actionHandler;
-
 	protected Theme theme;
-
 	protected Spritesheet spritesheet;
-
+	protected ActionHandler actionHandler;
 	protected SoundHandler soundHandler;
-
 	protected Canvas canvas;
-
 	protected GraphicsContext g;
-
-	private boolean scoreVisible;
-
-	private boolean creditVisible;
-
 	protected double scaling = 1;
+	protected boolean scoreVisible;
+	protected boolean creditVisible;
 
 	protected GameScene2D() {
 		infoVisiblePy.bind(PacManGames2d.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
@@ -164,12 +155,11 @@ public abstract class GameScene2D implements GameScene {
 		return false;
 	}
 
-	@Override
 	public void render() {
 		if (theme == null || spritesheet == null) {
 			return;
 		}
-		clearSceneBackground();
+		clearCanvas();
 		if (scoreVisible) {
 			drawScore(game().score(), "SCORE", t(1), t(1));
 			drawScore(game().highScore(), "HIGH SCORE", t(14), t(1));
@@ -183,7 +173,7 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	protected void clearSceneBackground() {
+	public void clearCanvas() {
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
