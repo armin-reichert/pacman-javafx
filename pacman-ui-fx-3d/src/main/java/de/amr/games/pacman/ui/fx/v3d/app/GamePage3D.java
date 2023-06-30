@@ -62,6 +62,7 @@ class GamePage3D extends GamePage {
 			layers.getChildren().set(GAME_SCENE_LAYER, gameSceneLayer);
 			super.setGameScene(gameScene);
 		}
+		updateTopLayer();
 	}
 
 	public void updateBackground(GameScene gameScene) {
