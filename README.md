@@ -15,39 +15,30 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 JavaFX user interfaces for my UI-agnostic/faceless [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic). There is a 2D-only user interface and
 a full version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>Alt+3</kbd>).
 
-## How to run the 2D-only version
+## How to run
 
-### With Java runtime 18+ installed on your computer (Windows):
-
-- Download `pacman-ui-fx-2d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
-
-### Without locally installed Java runtime (Windows):
-- Download `pacman-ui-fx-2d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
-
-## How to run the 2D+3D version
-
-### With Java runtime 18+ installed on your computer (Windows):
-
-- Download `pacman-ui-fx-3d-1.0-shaded.jar` from the [release folder](https://github.com/armin-reichert/pacman-javafx/releases). Start the application by double-clicking this file in the file explorer. 
-
-### Without locally installed Java runtime (Windows):
-- Download `pacman-ui-fx-3d-jlink-1.0-jlink.zip` from the release folder. Extract it somewhere and execute file `run.cmd` in folder `bin`.  
-
-Any help in creating executables for Mac-OS and Linux is appreciated!
+In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executable jar files and
+installers for Windows. If you have a Java runtime installed you can start the game(s) by double-clicking the jar file.
+Otherwise run the installer and double-click the new desktop icon(s).
 
 ## How to build locally
 
 - Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
 - Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
 - `cd \path\to\git\pacman-javafx`
-- `build_2d.bat` or `build_3d.bat`
+- `build.bat`
 
 This will
 - build the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) Maven project (game logic and model),
-- build the [pacman-ui-fx-2d](pacman-ui-fx-2d) Maven project (2D-only) or additionally the [pacman-ui-fx-3d](pacman-ui-fx-3d) Maven project (2D+3D),
-- create executable jar-file `pacman-ui-fx-2d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-2d\target`) and zip file `pacman-ui-fx-2d-jlink.1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-2d-jlink\target`), or
-- `pacman-ui-fx-3d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-3d\target`) and `pacman-ui-fx-3d-jlink-1.0-jlink.zip` (in `pacman-javafx\pacman-ui-fx-3d-jlink\target`).
+- build the [pacman-ui-fx-2d](pacman-ui-fx-2d) (2D) and the [pacman-ui-fx-3d](pacman-ui-fx-3d) project (2D+3D),
+- create (executable) jar-files 
+  - `pacman-ui-fx-2d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-2d\target`)
+  - `pacman-ui-fx-3d-1.0-shaded.jar` (in `pacman-javafx\pacman-ui-fx-3d\target`)
+- create Windows installers 
+  - `pacman-ui-fx-2d_1.0.exe` (in `pacman-javafx\pacman-ui-fx-2d\target`)
+  - `pacman-ui-fx-3d_1.0.exe` (in `pacman-javafx\pacman-ui-fx-3d\target`)
 
+To be able to create the installers you need the additional tools as described in the [JavaPackager documentation](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md).
 ## How to use
 
 Starting the game and switching game variant:
