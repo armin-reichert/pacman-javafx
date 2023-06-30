@@ -5,12 +5,12 @@ popd
 pushd pacman-ui-fx-2d
 call mvn clean install
 popd
-pushd pacman-ui-fx-2d-jlink
-call mvn clean install
-popd
+rem pushd pacman-ui-fx-2d-jlink
+rem call mvn clean install
+rem popd
 pushd pacman-ui-fx-3d
 call mvn clean install
 popd
-pushd pacman-ui-fx-3d-jlink
-call mvn clean install
-popd
+rem pushd pacman-ui-fx-3d-jlink
+rem call mvn clean install
+rem popd

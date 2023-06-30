@@ -96,7 +96,43 @@
 					</execution>
 				</executions>
 			</plugin>
+
+		<plugin>
+			<groupId>io.github.fvarrui</groupId>
+			<artifactId>javapackager</artifactId>
+			<version>1.7.2</version>
+			<executions>
+				<execution>
+					<phase>package</phase>
+					<goals>
+						<goal>package</goal>
+					</goals>
+					<configuration>
+						<!-- mandatory -->
+						<mainClass>${mainClass}</mainClass>
+						<!-- optional -->
+						<bundleJre>true</bundleJre>
+						<generateInstaller>true</generateInstaller>
+						<administratorRequired>false</administratorRequired>
+						<platform>windows</platform>
+						<!--
+						<additionalResources>
+							<additionalResource>file path</additionalResource>
+							<additionalResource>folder path</additionalResource>
+							<additionalResource>...</additionalResource>
+						</additionalResources>
+						<linuxConfig>...</linuxConfig>
+						<macConfig>...</macConfig>
+						<winConfig>...</winConfig>
+						[...]
+						-->
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+
 		</plugins>
+
 	</build>
 
 </project>
