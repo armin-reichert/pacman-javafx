@@ -92,6 +92,11 @@ public class ArcadeTheme extends Theme {
 
 		// Common to both games
 
+		set("ghost.0.color",                   RED);
+		set("ghost.1.color",                   PINK);
+		set("ghost.2.color",                   CYAN);
+		set("ghost.3.color",                   ORANGE);
+
 		set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
 		set("startpage.button.color",          Color.WHITE);
 		set("startpage.button.font",           rm.font("fonts/emulogic.ttf", 30));
