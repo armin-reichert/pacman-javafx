@@ -21,7 +21,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 /**
  * Intro scene of the PacMan game.
  * <p>
- * The ghost are presented one after another, then Pac-Man is chased by the ghosts, turns the card and hunts the ghost
+ * The ghosts are presented one after another, then Pac-Man is chased by the ghosts, turns the card and hunts the ghost
  * himself.
  * 
  * @author Armin Reichert
@@ -175,6 +175,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints() {
+		var font8 = sceneFont();
 		var font6 = theme.font("font.arcade", s(6));
 		int tx = ic.leftTileX + 6;
 		int ty = 25;
@@ -183,9 +184,9 @@ public class PacManIntroScene extends GameScene2D {
 		if (ic.blinking.on()) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
 		}
-		drawText("10", ArcadeTheme.PALE, sceneFont(), t(tx + 2), t(ty));
+		drawText("10",  ArcadeTheme.PALE, font8, t(tx + 2), t(ty));
 		drawText("PTS", ArcadeTheme.PALE, font6, t(tx + 5), t(ty));
-		drawText("50", ArcadeTheme.PALE, sceneFont(), t(tx + 2), t(ty + 2));
+		drawText("50",  ArcadeTheme.PALE, font8, t(tx + 2), t(ty + 2));
 		drawText("PTS", ArcadeTheme.PALE, font6, t(tx + 5), t(ty + 2));
 	}
 }
