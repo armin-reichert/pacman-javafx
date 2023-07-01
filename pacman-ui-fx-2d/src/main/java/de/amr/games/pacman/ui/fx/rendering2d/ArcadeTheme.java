@@ -71,7 +71,8 @@ public class ArcadeTheme extends Theme {
 		set("pacman.flashingMaze",             rm.image("graphics/pacman/maze_empty_flashing.png"));
 		set("pacman.fullMaze",                 rm.image("graphics/pacman/maze_full.png"));
 		set("pacman.emptyMaze",                rm.image("graphics/pacman/maze_empty.png"));
-	  
+		set("pacman.maze.foodColor",           Color.rgb(254, 189, 180));
+
 		set("pacman.audio.bonus_eaten",        rm.audioClip("sound/pacman/eat_fruit.mp3"));
 		set("pacman.audio.credit",             rm.audioClip("sound/pacman/credit.wav"));
 		set("pacman.audio.extra_life",         rm.audioClip("sound/pacman/extend.mp3"));

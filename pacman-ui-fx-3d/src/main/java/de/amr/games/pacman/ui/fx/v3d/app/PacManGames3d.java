@@ -159,7 +159,6 @@ public class PacManGames3d {
 
 		theme.set("mspacman.maze.doorColor",         Color.rgb(255, 183, 255));
 
-		theme.set("pacman.maze.foodColor",           Color.rgb(254, 189, 180));
 		theme.set("pacman.maze.wallBaseColor",       Color.rgb(33, 33, 255).brighter());
 		theme.set("pacman.maze.wallTopColor",        Color.rgb(33, 33, 255).darker());
 		theme.set("pacman.maze.doorColor",           Color.rgb(252, 181, 255));

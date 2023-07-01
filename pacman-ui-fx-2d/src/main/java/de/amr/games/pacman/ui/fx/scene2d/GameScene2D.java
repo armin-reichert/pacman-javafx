@@ -179,11 +179,12 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
-		drawText(title, ArcadeTheme.PALE, sceneFont(), x, y);
+		var font = sceneFont();
+		drawText(title, ArcadeTheme.PALE, font, x, y);
 		var pointsText = String.format("%02d", score.points());
-		drawText(String.format("%7s", pointsText), ArcadeTheme.PALE, sceneFont(), x, (y + TS + 1));
+		drawText(String.format("%7s", pointsText), ArcadeTheme.PALE, font, x, (y + TS + 1));
 		if (score.points() != 0) {
-			drawText(String.format("L%d", score.levelNumber()), ArcadeTheme.PALE, sceneFont(), x + TS * 8, y + TS + 1);
+			drawText(String.format("L%d", score.levelNumber()), ArcadeTheme.PALE, font, x + TS * 8, y + TS + 1);
 		}
 	}
 
@@ -298,7 +299,6 @@ public abstract class GameScene2D implements GameScene {
 				if (infoVisiblePy.get() && pac.isVisible()) {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(6)));
-//					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
 					var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
 					g.fillText(text, s(pac.position().x() + 8), s(pac.position().y()));
 					// indicate wish direction
@@ -323,7 +323,6 @@ public abstract class GameScene2D implements GameScene {
 				if (infoVisiblePy.get() && ghost.isVisible()) {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(6)));
-//					var text = String.format("%s %d", sa.currentAnimationName(), sa.currentAnimation().frameIndex());
 					var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
 					g.fillText(text, s(ghost.position().x() + 8), s(ghost.position().y()));
 				}
@@ -332,7 +331,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	/**
-	 * Draws a sprite and performs scaling if game scene has unscaled canvas
+	 * Draws a sprite using the current scene scaling.
 	 *
 	 * @param source sprite sheet source
 	 * @param sprite sprite sheet region ("sprite")
@@ -341,14 +340,10 @@ public abstract class GameScene2D implements GameScene {
 	 */
 	protected void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
 		if (sprite != null) {
-			g.drawImage(source, //
-					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), //
+			g.drawImage(source,
+					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
 					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
 		}
-	}
-
-	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(spritesheet.source(), sprite, x, y);
 	}
 
 	/**
@@ -356,26 +351,36 @@ public abstract class GameScene2D implements GameScene {
 	 * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
 	 * bounding box is only 8 pixels (one square tile) wide.
 	 *
-	 * @param r sprite sheet region (can be null)
+	 * @param sprite sprite sheet region (may be null)
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
 	 */
-	protected void drawSpriteOverBoundingBox(Rectangle2D r, double x, double y) {
-		if (r != null) {
-			drawSprite(r, x + HTS - r.getWidth() / 2, y + HTS - r.getHeight() / 2);
+	protected void drawSpriteOverBoundingBox(Rectangle2D sprite, double x, double y) {
+		if (sprite != null) {
+			drawSprite(sprite, x + HTS - sprite.getWidth() / 2, y + HTS - sprite.getHeight() / 2);
 		}
+	}
+
+	/**
+	 * Draws a sprite at the given position (upper left corner).
+	 * @param sprite spritesheet region ("sprite")
+	 * @param x x coordinate of upper left corner
+	 * @param y y coordinate of upper left corner
+	 */
+	protected void drawSprite(Rectangle2D sprite, double x, double y) {
+		drawSprite(spritesheet.source(), sprite, x, y);
 	}
 
 	/**
 	 * Draws the sprite over the bounding box of the given entity (if visible).
 	 *
 	 * @param entity an entity like Pac-Man or a ghost
-	 * @param r      the sprite
+	 * @param sprite the sprite
 	 */
-	protected void drawEntitySprite(Entity entity, Rectangle2D r) {
+	protected void drawEntitySprite(Entity entity, Rectangle2D sprite) {
 		checkNotNull(entity);
 		if (entity.isVisible()) {
-			drawSpriteOverBoundingBox(r, entity.position().x(), entity.position().y());
+			drawSpriteOverBoundingBox(sprite, entity.position().x(), entity.position().y());
 		}
 	}
 
@@ -391,7 +396,6 @@ public abstract class GameScene2D implements GameScene {
 		Image logo = theme.get("mspacman.logo.midway");
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(ArcadeTheme.RED);
-		g.setFont(Font.font("Dialog", s(11)));
 		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
 		g.setFont(sceneFont());
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
