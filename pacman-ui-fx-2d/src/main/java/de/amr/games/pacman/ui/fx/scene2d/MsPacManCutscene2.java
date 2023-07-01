@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission2;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -45,8 +44,8 @@ public class MsPacManCutscene2 extends GameScene2D {
 	@Override
 	public void drawSceneContent() {
 		drawClapperBoard(clapAnimation, t(3), t(10));
-		drawPacSprite(intermission.msPac);
-		drawPacSprite(intermission.pacMan);
+		drawPac(intermission.msPac);
+		drawPac(intermission.pacMan);
 		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}
 }

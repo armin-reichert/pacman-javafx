@@ -11,8 +11,6 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.app.Signature;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
@@ -93,8 +91,8 @@ public class MsPacManIntroScene extends GameScene2D {
 			drawText("STARRING", ArcadeTheme.PALE, sceneFont(), tx, y0 + t(3));
 			drawText("MS PAC-MAN", ArcadeTheme.YELLOW, sceneFont(), tx, y0 + t(6));
 		}
-		ic.ghosts.forEach(ghost -> drawGhostSprite(ghost));
-		drawPacSprite(ic.msPacMan);
+		ic.ghosts.forEach(ghost -> drawGhost(ghost));
+		drawPac(ic.msPacMan);
 		drawMsPacManCopyright(t(6), t(28));
 		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}

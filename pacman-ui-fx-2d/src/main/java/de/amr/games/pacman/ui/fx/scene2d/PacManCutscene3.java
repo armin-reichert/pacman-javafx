@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
@@ -98,8 +97,8 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawPacSprite(pac);
-		drawGhostSprite(blinky);
+		drawPac(pac);
+		drawGhost(blinky);
 		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}
 

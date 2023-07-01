@@ -291,43 +291,58 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	protected void drawPacSprite(Pac pac) {
-		pac.animations().ifPresent(animations -> {
-			if (animations instanceof SpriteAnimations) {
-				var sa = (SpriteAnimations) animations;
+	protected void drawPac(Pac pac) {
+		if (!pac.isVisible()) {
+			return;
+		}
+		pac.animations().ifPresent(pa -> {
+			if (pa instanceof SpriteAnimations) {
+				var sa = (SpriteAnimations) pa;
 				drawEntitySprite(pac, sa.currentSprite());
-				if (infoVisiblePy.get() && pac.isVisible()) {
-					g.setFill(Color.WHITE);
-					g.setFont(Font.font("Monospaced", s(6)));
-					var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-					g.fillText(text, s(pac.position().x() + 8), s(pac.position().y()));
-					// indicate wish direction
-					float r = 2;
-					var pacCenter = pac.center();
-					var indicatorCenter = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(1.5f * TS));
-					var indicatorTopLeft = indicatorCenter.minus(r, r);
-					g.setStroke(Color.WHITE);
-					g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
-					g.setFill(Color.GREEN);
-					g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
+				if (infoVisiblePy.get()) {
+					drawPacInfo(pac, sa);
 				}
 			}
 		});
 	}
 
-	protected void drawGhostSprite(Ghost ghost) {
-		ghost.animations().ifPresent(animations -> {
-			if (animations instanceof SpriteAnimations) {
-				var sa = (SpriteAnimations) animations;
+	private void drawPacInfo(Pac pac, SpriteAnimations animations) {
+		g.setFill(Color.WHITE);
+		g.setFont(Font.font("Monospaced", s(6)));
+		var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
+		g.fillText(text, s(pac.position().x() + 8), s(pac.position().y()));
+		// indicate wish direction
+		float r = 2;
+		var pacCenter = pac.center();
+		var indicatorCenter = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(1.5f * TS));
+		var indicatorTopLeft = indicatorCenter.minus(r, r);
+		g.setStroke(Color.WHITE);
+		g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
+		g.setFill(Color.GREEN);
+		g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
+
+	}
+
+	protected void drawGhost(Ghost ghost) {
+		if (!ghost.isVisible()) {
+			return;
+		}
+		ghost.animations().ifPresent(ga -> {
+			if (ga instanceof SpriteAnimations) {
+				var sa = (SpriteAnimations) ga;
 				drawEntitySprite(ghost, sa.currentSprite());
-				if (infoVisiblePy.get() && ghost.isVisible()) {
-					g.setFill(Color.WHITE);
-					g.setFont(Font.font("Monospaced", s(6)));
-					var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-					g.fillText(text, s(ghost.position().x() + 8), s(ghost.position().y()));
+				if (infoVisiblePy.get()) {
+					drawGhostInfo(ghost, sa);
 				}
 			}
 		});
+	}
+
+	private void drawGhostInfo(Ghost ghost, SpriteAnimations sa) {
+		g.setFill(Color.WHITE);
+		g.setFont(Font.font("Monospaced", s(6)));
+		var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+		g.fillText(text, s(ghost.position().x() + 8), s(ghost.position().y()));
 	}
 
 	/**

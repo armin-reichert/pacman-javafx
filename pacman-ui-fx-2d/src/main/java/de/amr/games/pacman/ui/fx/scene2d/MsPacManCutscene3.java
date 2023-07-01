@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -53,8 +52,8 @@ public class MsPacManCutscene3 extends GameScene2D {
 	public void drawSceneContent() {
 		var ss = (SpritesheetMsPacManGame) spritesheet;
 		drawClapperBoard(clapAnimation, t(3), t(10));
-		drawPacSprite(intermission.msPacMan);
-		drawPacSprite(intermission.pacMan);
+		drawPac(intermission.msPacMan);
+		drawPac(intermission.pacMan);
 		drawEntitySprite(intermission.stork, storkAnimation.currentSprite());
 		drawEntitySprite(intermission.bag, intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
 		drawLevelCounter(t(24), t(34), game().levelCounter());

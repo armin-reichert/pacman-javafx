@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -82,9 +81,9 @@ public class PlayScene2D extends GameScene2D {
 				drawText("READY!", ArcadeTheme.YELLOW, sceneFont(), t(11), t(21));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
-			drawPacSprite(level.pac());
+			drawPac(level.pac());
 			Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-					.map(level::ghost).forEach(this::drawGhostSprite);
+					.map(level::ghost).forEach(this::drawGhost);
 			if (!isCreditVisible()) {
 				// TODO get rid of this crap:
 				int lives = game().isOneLessLifeDisplayed() ? game().lives() - 1 : game().lives();
