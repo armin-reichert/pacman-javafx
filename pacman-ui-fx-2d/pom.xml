@@ -128,6 +128,38 @@
 						-->
 					</configuration>
 				</execution>
+				<execution>
+					<id>linux</id>
+					<phase>package</phase>
+					<goals>
+						<goal>package</goal>
+					</goals>
+					<configuration>
+						<!-- mandatory -->
+						<mainClass>${mainClass}</mainClass>
+						<!-- optional -->
+						<bundleJre>true</bundleJre>
+						<generateInstaller>true</generateInstaller>
+						<administratorRequired>false</administratorRequired>
+						<platform>linux</platform>
+					</configuration>
+				</execution>
+				<!-- does not work when running on Windows:
+				<execution>
+					<id>mac</id>
+					<phase>package</phase>
+					<goals>
+						<goal>package</goal>
+					</goals>
+					<configuration>
+						<mainClass>${mainClass}</mainClass>
+						<bundleJre>false</bundleJre>
+						<generateInstaller>true</generateInstaller>
+						<administratorRequired>false</administratorRequired>
+						<platform>mac</platform>
+					</configuration>
+				</execution>
+				-->
 			</executions>
 		</plugin>
 
