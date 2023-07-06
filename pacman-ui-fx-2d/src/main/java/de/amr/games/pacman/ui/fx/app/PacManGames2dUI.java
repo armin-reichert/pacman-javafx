@@ -96,11 +96,14 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		double height = Math.min(screenHeight * 0.8, 800);
 		double width = height * 4.0 / 3.0;
 		scene = new Scene(new Region(), width, height, Color.BLACK);
-		scene.heightProperty().addListener((py, ov, newSceneHeight) -> {
+		scene.widthProperty().addListener((py, ov, nv) -> {
 			if (currentPage == gamePage) {
-				resizeGamePage(newSceneHeight.doubleValue());
-			}
-		});
+				resizeGamePage(scene.getWidth(), scene.getHeight());
+			}});
+		scene.heightProperty().addListener((py, ov, nv) -> {
+			if (currentPage == gamePage) {
+				resizeGamePage(scene.getWidth(), scene.getHeight());
+			}});
 	}
 
 	protected void configureStage(Settings settings) {
@@ -133,14 +136,16 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage(this, theme);
-		resizeGamePage(scene.getHeight());
+		resizeGamePage(scene.getWidth(), scene.getHeight());
 	}
 
-	protected void resizeGamePage(double sceneHeight) {
-		// use 90% of available height, truncate scaling after first comma position
-		double scaling = 0.9 * (sceneHeight / PacManGames2d.CANVAS_HEIGHT_UNSCALED);
-		scaling = Math.floor(scaling * 10) / 10; // 1.13 -> 11.3 -> 11.0 -> 1.1
-		gamePage.resize(scaling, false);
+	private void resizeGamePage(double width, double height) {
+		double s = 0.9 * height / PacManGames2d.CANVAS_HEIGHT_UNSCALED;
+		if (s * PacManGames2d.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
+			s = 0.8 * width / PacManGames2d.CANVAS_WIDTH_UNSCALED;
+		}
+		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
+		gamePage.resize(s, false);
 	}
 
 	public void showStartPage() {
@@ -158,7 +163,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		reboot();
 		scene.setRoot(gamePage.root());
 		gamePage.root().requestFocus();
-		resizeGamePage(scene.getHeight());
+		resizeGamePage(scene.getWidth(), scene.getHeight());
 		updateStage();
 		stage.show();
 		currentPage = gamePage;
