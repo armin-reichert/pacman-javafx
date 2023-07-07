@@ -5,10 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.ui.fx.app.GamePage;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
@@ -19,7 +18,7 @@ import javafx.scene.canvas.Canvas;
  */
 public class PictureInPicture {
 
-	public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3d.PIP_MIN_HEIGHT);
+	public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3dApp.PIP_MIN_HEIGHT);
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 	private final PlayScene2D playScene2D;
 	private final PlayScene3D master;
@@ -35,9 +34,9 @@ public class PictureInPicture {
 		playScene2D.root().opacityProperty().bind(opacityPy);
 		playScene2D.root().setVisible(false);
 		heightPy.addListener((py, ov, nv) -> {
-			double scaling = nv.doubleValue() / PacManGames2d.CANVAS_HEIGHT_UNSCALED;
-			canvas.setWidth(PacManGames2d.CANVAS_WIDTH_UNSCALED * scaling);
-			canvas.setHeight(PacManGames2d.CANVAS_HEIGHT_UNSCALED * scaling);
+			double scaling = nv.doubleValue() / PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
+			canvas.setWidth(PacManGames2dApp.CANVAS_WIDTH_UNSCALED * scaling);
+			canvas.setHeight(PacManGames2dApp.CANVAS_HEIGHT_UNSCALED * scaling);
 			playScene2D.setScaling(scaling);
 		});
 	}

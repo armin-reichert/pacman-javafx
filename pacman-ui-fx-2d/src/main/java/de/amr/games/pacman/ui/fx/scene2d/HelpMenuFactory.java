@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -138,7 +138,7 @@ public class HelpMenuFactory {
 	}
 
 	private String tt(String key) {
-		return PacManGames2d.TEXTS.getString(key);
+		return PacManGames2dApp.TEXTS.getString(key);
 	}
 
 	private Label label(String s) {

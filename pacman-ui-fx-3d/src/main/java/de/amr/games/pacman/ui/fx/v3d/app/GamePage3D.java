@@ -35,8 +35,8 @@ class GamePage3D extends GamePage {
 		super(ui, theme);
 
 		pip = new PictureInPicture((PlayScene3D) ui.sceneConfig().playScene3D());
-		pip.opacityPy.bind(PacManGames3d.PY_PIP_OPACITY);
-		pip.heightPy.bind(PacManGames3d.PY_PIP_HEIGHT);
+		pip.opacityPy.bind(PacManGames3dApp.PY_PIP_OPACITY);
+		pip.heightPy.bind(PacManGames3dApp.PY_PIP_HEIGHT);
 
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);
@@ -67,7 +67,7 @@ class GamePage3D extends GamePage {
 
 	public void updateBackground(GameScene gameScene) {
 		if (gameScene.is3D()) {
-			if (PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+			if (PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
 				layers.setBackground(ui.theme().background("model3D.wallpaper"));
@@ -89,11 +89,11 @@ class GamePage3D extends GamePage {
 	protected void handleKeyboardInput() {
 		var ui3D = (PacManGames3dUI) ui;
 		super.handleKeyboardInput();
-		if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_2D_3D)) {
+		if (Keyboard.pressed(PacManGames3dApp.KEY_TOGGLE_2D_3D)) {
 			ui3D.toggle2D3D();
-		} else if (Keyboard.anyPressed(PacManGames3d.KEY_TOGGLE_DASHBOARD, PacManGames3d.KEY_TOGGLE_DASHBOARD_2)) {
+		} else if (Keyboard.anyPressed(PacManGames3dApp.KEY_TOGGLE_DASHBOARD, PacManGames3dApp.KEY_TOGGLE_DASHBOARD_2)) {
 			toggleDashboardVisible();
-		} else if (Keyboard.pressed(PacManGames3d.KEY_TOGGLE_PIP_VIEW)) {
+		} else if (Keyboard.pressed(PacManGames3dApp.KEY_TOGGLE_PIP_VIEW)) {
 			togglePipVisible();
 		}
 	}
@@ -102,12 +102,12 @@ class GamePage3D extends GamePage {
 	 * @return if the picture-in-picture view is enabled, it might be invisible nevertheless!
 	 */
 	private boolean isPiPOn() {
-		return PacManGames3d.PY_PIP_ON.get();
+		return PacManGames3dApp.PY_PIP_ON.get();
 	}
 
 	private void togglePipVisible() {
-		Ufx.toggle(PacManGames3d.PY_PIP_ON);
-		var message = message(PacManGames3d.TEXTS, isPiPOn() ? "pip_on" : "pip_off");
+		Ufx.toggle(PacManGames3dApp.PY_PIP_ON);
+		var message = message(PacManGames3dApp.TEXTS, isPiPOn() ? "pip_on" : "pip_off");
 		ui.showFlashMessage(message);
 		updateTopLayer();
 	}

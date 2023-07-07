@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
-import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.DrawMode;
@@ -39,7 +38,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage3D(this, theme);
-		resizeGamePage(scene.getHeight());
+		resizeGamePage(scene.getWidth(), scene.getHeight());
 	}
 
 	@Override
@@ -57,8 +56,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void configureBindings(Settings settings) {
 		super.configureBindings(settings);
-		PacManGames3d.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
-		PacManGames3d.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
+		PacManGames3dApp.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
+		PacManGames3dApp.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
 	}
 
 	@Override
@@ -69,8 +68,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		if (clock().isPaused()) {
 			titleKey += ".paused";
 		}
-		var dimension = message(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "threeD" : "twoD");
-		stage.setTitle(message(PacManGames3d.TEXTS, titleKey, dimension));
+		var dimension = message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "threeD" : "twoD");
+		stage.setTitle(message(PacManGames3dApp.TEXTS, titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 		if (currentGameScene != null) {
 			gamePage3D().updateBackground(currentGameScene);
@@ -81,7 +80,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected GameScene sceneMatchingCurrentGameState() {
 		var config = sceneConfig();
 		var scene = super.sceneMatchingCurrentGameState();
-		if (PacManGames3d.PY_3D_ENABLED.get() && scene == config.playScene() && config.playScene3D() != null) {
+		if (PacManGames3dApp.PY_3D_ENABLED.get() && scene == config.playScene() && config.playScene3D() != null) {
 			return config.playScene3D();
 		}
 		return scene;
@@ -89,32 +88,32 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	public void toggle2D3D() {
 		var config = sceneConfig();
-		Ufx.toggle(PacManGames3d.PY_3D_ENABLED);
+		Ufx.toggle(PacManGames3dApp.PY_3D_ENABLED);
 		if (config.playScene() == currentGameScene || config.playScene3D() == currentGameScene) {
 			updateOrReloadGameScene(true);
 			gamePage.setGameScene(currentGameScene);
 			currentGameScene().onSceneVariantSwitch();
 		}
 		GameController.it().update();
-		showFlashMessage(message(PacManGames3d.TEXTS, PacManGames3d.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+		showFlashMessage(message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
 	public void selectNextPerspective() {
-		selectPerspective(PacManGames3d.PY_3D_PERSPECTIVE.get().next());
+		selectPerspective(PacManGames3dApp.PY_3D_PERSPECTIVE.get().next());
 	}
 
 	public void selectPrevPerspective() {
-		selectPerspective(PacManGames3d.PY_3D_PERSPECTIVE.get().prev());
+		selectPerspective(PacManGames3dApp.PY_3D_PERSPECTIVE.get().prev());
 	}
 
 	private void selectPerspective(Perspective perspective) {
-		PacManGames3d.PY_3D_PERSPECTIVE.set(perspective);
-		String perspectiveName = message(PacManGames3d.TEXTS, perspective.name());
-		showFlashMessage(message(PacManGames3d.TEXTS, "camera_perspective", perspectiveName));
+		PacManGames3dApp.PY_3D_PERSPECTIVE.set(perspective);
+		String perspectiveName = message(PacManGames3dApp.TEXTS, perspective.name());
+		showFlashMessage(message(PacManGames3dApp.TEXTS, "camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {
-		PacManGames3d.PY_3D_DRAW_MODE.set(PacManGames3d.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		PacManGames3dApp.PY_3D_DRAW_MODE.set(PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 
 	private GamePage3D gamePage3D() {

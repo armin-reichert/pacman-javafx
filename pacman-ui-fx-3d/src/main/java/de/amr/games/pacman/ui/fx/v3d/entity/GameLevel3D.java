@@ -18,7 +18,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
@@ -106,17 +106,17 @@ public class GameLevel3D {
 		// Adding world (ghosthouse) *after* the guys if mandatory to get semi-transparent ghosthouse rendered correctly!
 		root.getChildren().add(world3D.getRoot());
 
-		pac3D.lightedPy.bind(PacManGames3d.PY_3D_PAC_LIGHT_ENABLED);
-		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
-		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
-		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
-		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
-		world3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
-		world3D.floorColorPy.bind(PacManGames3d.PY_3D_FLOOR_COLOR);
-		world3D.floorTexturePy.bind(PacManGames3d.PY_3D_FLOOR_TEXTURE);
-		world3D.wallHeightPy.bind(PacManGames3d.PY_3D_WALL_HEIGHT);
-		world3D.wallThicknessPy.bind(PacManGames3d.PY_3D_WALL_THICKNESS);
-		livesCounter3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
+		pac3D.lightedPy.bind(PacManGames3dApp.PY_3D_PAC_LIGHT_ENABLED);
+		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		world3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		world3D.floorColorPy.bind(PacManGames3dApp.PY_3D_FLOOR_COLOR);
+		world3D.floorTexturePy.bind(PacManGames3dApp.PY_3D_FLOOR_TEXTURE);
+		world3D.wallHeightPy.bind(PacManGames3dApp.PY_3D_WALL_HEIGHT);
+		world3D.wallThicknessPy.bind(PacManGames3dApp.PY_3D_WALL_THICKNESS);
+		livesCounter3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
 	}
 
 	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet, boolean moving) {
@@ -208,7 +208,7 @@ public class GameLevel3D {
 		// the pellet disappears too early (collision by same tile in game model is too simplistic).
 		var delayHiding = Ufx.actionAfterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
 		var eatenAnimation = eatable3D.getEatenAnimation();
-		if (eatenAnimation.isPresent() && PacManGames3d.PY_3D_ENERGIZER_EXPLODES.get()) {
+		if (eatenAnimation.isPresent() && PacManGames3dApp.PY_3D_ENERGIZER_EXPLODES.get()) {
 			new SequentialTransition(delayHiding, eatenAnimation.get()).play();
 		} else {
 			delayHiding.play();

@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import javafx.geometry.Rectangle2D;
 
 import static de.amr.games.pacman.lib.Globals.RND;
@@ -42,7 +41,7 @@ public class BootScene extends GameScene2D {
 		}
 
 		else if (timer.atSecond(start + 2.5)) {
-			paintGrid(PacManGames2d.CANVAS_WIDTH_UNSCALED, PacManGames2d.CANVAS_HEIGHT_UNSCALED, 16);
+			paintGrid(PacManGames2dApp.CANVAS_WIDTH_UNSCALED, PacManGames2dApp.CANVAS_HEIGHT_UNSCALED, 16);
 		}
 
 		else if (timer.atSecond(start + 3)) {

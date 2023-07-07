@@ -139,10 +139,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		resizeGamePage(scene.getWidth(), scene.getHeight());
 	}
 
-	private void resizeGamePage(double width, double height) {
-		double s = 0.9 * height / PacManGames2d.CANVAS_HEIGHT_UNSCALED;
-		if (s * PacManGames2d.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
-			s = 0.8 * width / PacManGames2d.CANVAS_WIDTH_UNSCALED;
+	protected void resizeGamePage(double width, double height) {
+		double s = 0.9 * height / PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
+		if (s * PacManGames2dApp.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
+			s = 0.8 * width / PacManGames2dApp.CANVAS_WIDTH_UNSCALED;
 		}
 		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
 		gamePage.resize(s, false);
@@ -181,7 +181,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		if (clock().isPaused()) {
 			titleKey += ".paused";
 		}
-		stage.setTitle(message(PacManGames2d.TEXTS, titleKey));
+		stage.setTitle(message(PacManGames2dApp.TEXTS, titleKey));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 	}
 
@@ -408,7 +408,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	public void toggleAutopilot() {
 		GameController.it().toggleAutoControlled();
 		var auto = GameController.it().isAutoControlled();
-		String message = message(PacManGames2d.TEXTS, auto ? "autopilot_on" : "autopilot_off");
+		String message = message(PacManGames2dApp.TEXTS, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
 	}
@@ -416,7 +416,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	public void toggleImmunity() {
 		game().setImmune(!game().isImmune());
 		var immune = game().isImmune();
-		String message = message(PacManGames2d.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
+		String message = message(PacManGames2dApp.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}
@@ -447,7 +447,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	public void cheatAddLives() {
 		int newLivesCount = game().lives() + 3;
 		game().setLives(newLivesCount);
-		showFlashMessage(message(PacManGames2d.TEXTS, "cheat_add_lives", newLivesCount));
+		showFlashMessage(message(PacManGames2dApp.TEXTS, "cheat_add_lives", newLivesCount));
 	}
 
 	public void cheatEatAllPellets() {

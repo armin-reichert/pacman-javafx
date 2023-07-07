@@ -78,7 +78,7 @@ public class GamePage {
 		//popupLayer.setOnMouseClicked(this::handleMouseClick);
 		//new PacMouseSteering(this, popupLayer, () -> ui.game().level().map(GameLevel::pac).orElse(null));
 
-		PacManGames2d.PY_SHOW_DEBUG_INFO.addListener((py, ov, debug) -> {
+		PacManGames2dApp.PY_SHOW_DEBUG_INFO.addListener((py, ov, debug) -> {
 			layers.setBorder(debug ? ResourceManager.border(Color.RED, 3) : null);
 			gameSceneLayer.setBorder(debug ? ResourceManager.border(Color.YELLOW, 3) : null);
 			popupLayer.setBorder(debug ? ResourceManager.border(Color.GREENYELLOW, 3) : null);
@@ -120,11 +120,11 @@ public class GamePage {
 		}
 		this.scaling = scaling;
 
-		double w = Math.round( (PacManGames2d.CANVAS_WIDTH_UNSCALED  + 25) * scaling );
-		double h = Math.round( (PacManGames2d.CANVAS_HEIGHT_UNSCALED + 15) * scaling );
+		double w = Math.round( (PacManGames2dApp.CANVAS_WIDTH_UNSCALED  + 25) * scaling );
+		double h = Math.round( (PacManGames2dApp.CANVAS_HEIGHT_UNSCALED + 15) * scaling );
 
-		canvas.setWidth(PacManGames2d.CANVAS_WIDTH_UNSCALED * scaling);
-		canvas.setHeight(PacManGames2d.CANVAS_HEIGHT_UNSCALED * scaling);
+		canvas.setWidth(PacManGames2dApp.CANVAS_WIDTH_UNSCALED * scaling);
+		canvas.setHeight(PacManGames2dApp.CANVAS_HEIGHT_UNSCALED * scaling);
 
 		canvasContainer.setMinSize (w, h);
 		canvasContainer.setPrefSize(w, h);
@@ -208,37 +208,37 @@ public class GamePage {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames2d.KEY_SHOW_HELP)) {
+		if (Keyboard.pressed(PacManGames2dApp.KEY_SHOW_HELP)) {
 			showHelpMenu();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_AUTOPILOT)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_AUTOPILOT)) {
 			ui.toggleAutopilot();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_BOOT)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_BOOT)) {
 			if (GameController.it().state() != GameState.BOOT) {
 				ui.reboot();
 			}
-		} else if (Keyboard.pressed(PacManGames2d.KEY_DEBUG_INFO)) {
-			Ufx.toggle(PacManGames2d.PY_SHOW_DEBUG_INFO);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_IMMUNITIY)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_DEBUG_INFO)) {
+			Ufx.toggle(PacManGames2dApp.PY_SHOW_DEBUG_INFO);
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_IMMUNITIY)) {
 			ui.toggleImmunity();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_PAUSE)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PAUSE)) {
 			ui.togglePaused();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_PAUSE_STEP) || Keyboard.pressed(PacManGames2d.KEY_SINGLE_STEP)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PAUSE_STEP) || Keyboard.pressed(PacManGames2dApp.KEY_SINGLE_STEP)) {
 			ui.oneSimulationStep();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_TEN_STEPS)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEN_STEPS)) {
 			ui.tenSimulationSteps();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_SIMULATION_FASTER)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SIMULATION_FASTER)) {
 			ui.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_SIMULATION_SLOWER)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SIMULATION_SLOWER)) {
 			ui.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_SIMULATION_NORMAL)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SIMULATION_NORMAL)) {
 			ui.resetSimulationSpeed();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_QUIT)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_QUIT)) {
 			if (GameController.it().state() != GameState.BOOT && GameController.it().state() != GameState.INTRO) {
 				ui.restartIntro();
 			}
-		} else if (Keyboard.pressed(PacManGames2d.KEY_TEST_LEVELS)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEST_LEVELS)) {
 			ui.startLevelTestMode();
-		} else if (Keyboard.pressed(PacManGames2d.KEY_FULLSCREEN)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_FULLSCREEN)) {
 			ui.stage.setFullScreen(true);
 		}
 	}

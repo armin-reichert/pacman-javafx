@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.*;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -73,7 +73,7 @@ public class Pac3D {
 		var pac3D = new Pac3D(createPacManGroup(model3D, theme), pacMan, theme.color("pacman.color.head"));
 		pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
 		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
-		pac3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
+		pac3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
 
 		return pac3D;
 	}
@@ -85,7 +85,7 @@ public class Pac3D {
 		var pac3D = new Pac3D(createMsPacManGroup(model3D, theme), msPacMan, theme.color("mspacman.color.head"));
 		pac3D.walkingAnimation = new HipSwaying(msPacMan, pac3D.root);
 		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
-		pac3D.drawModePy.bind(PacManGames3d.PY_3D_DRAW_MODE);
+		pac3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
 
 		return pac3D;
 	}

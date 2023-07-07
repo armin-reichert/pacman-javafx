@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
-import de.amr.games.pacman.ui.fx.app.PacManGames2d;
+import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.SoundHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -25,7 +25,7 @@ import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3d;
+import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -87,10 +87,10 @@ public class PlayScene3D implements GameScene {
 		camControllerMap.put(Perspective.TOTAL, new CamTotal());
 
 		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(PacManGames3d.PY_3D_AXES_VISIBLE);
+		coordSystem.visibleProperty().bind(PacManGames3dApp.PY_3D_AXES_VISIBLE);
 
 		var ambientLight = new AmbientLight();
-		ambientLight.colorProperty().bind(PacManGames3d.PY_3D_LIGHT_COLOR);
+		ambientLight.colorProperty().bind(PacManGames3dApp.PY_3D_LIGHT_COLOR);
 
 		group = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 
@@ -131,7 +131,7 @@ public class PlayScene3D implements GameScene {
 		setCreditVisible(false);
 		setScoreVisible(true);
 		resetReadyMessageText3D();
-		perspectivePy.bind(PacManGames3d.PY_3D_PERSPECTIVE);
+		perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE);
 		game().level().ifPresent(this::replaceGameLevel3D);
 		Logger.info("Initialized 3D play scene");
 	}
@@ -241,9 +241,9 @@ public class PlayScene3D implements GameScene {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
 		}
 
-		if (PacManGames3d.PY_3D_FLOOR_TEXTURE_RND.get()) {
+		if (PacManGames3dApp.PY_3D_FLOOR_TEXTURE_RND.get()) {
 			var names = new String[] { "hexagon", "knobs", "plastic", "wood" };
-			PacManGames3d.PY_3D_FLOOR_TEXTURE.set(names[randomInt(0, names.length)]);
+			PacManGames3dApp.PY_3D_FLOOR_TEXTURE.set(names[randomInt(0, names.length)]);
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}
@@ -261,19 +261,19 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames2d.KEY_ADD_CREDIT) && !game().hasCredit()) {
+		if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) && !game().hasCredit()) {
 			actionHandler().ifPresent(ActionHandler::addCredit);
-		} else if (Keyboard.pressed(PacManGames3d.KEY_PREV_PERSPECTIVE)) {
+		} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
 			actionHandler().ifPresent(handler -> ((ActionHandler3D)handler).selectPrevPerspective());
-		} else if (Keyboard.pressed(PacManGames3d.KEY_NEXT_PERSPECTIVE)) {
+		} else if (Keyboard.pressed(PacManGames3dApp.KEY_NEXT_PERSPECTIVE)) {
 			actionHandler().ifPresent(handler -> ((ActionHandler3D)handler).selectNextPerspective());
-		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
 			actionHandler().ifPresent(ActionHandler::cheatEatAllPellets);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
 			actionHandler().ifPresent(ActionHandler::cheatAddLives);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
 			actionHandler().ifPresent(ActionHandler::cheatEnterNextLevel);
-		} else if (Keyboard.pressed(PacManGames2d.KEY_CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
 			actionHandler().ifPresent(ActionHandler::cheatKillAllEatableGhosts);
 		}
 	}
@@ -367,7 +367,7 @@ public class PlayScene3D implements GameScene {
 		case READY -> {
 			level3D.pac3D().init();
 			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
-			var msg = inPercentOfCases(25) ? PacManGames3d.pickFunnyReadyMessage(game().variant()) : "READY!";
+			var msg = inPercentOfCases(25) ? PacManGames3dApp.pickFunnyReadyMessage(game().variant()) : "READY!";
 			readyMessageText3D.setText(msg);
 			readyMessageText3D.setVisible(true);
 		}
@@ -437,7 +437,7 @@ public class PlayScene3D implements GameScene {
 						if (level.intermissionNumber == 0) {
 							soundHandler.audioClip(level.game().variant(), "audio.level_complete").play();
 							actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
-									2, PacManGames3d.pickLevelCompleteMessage(level.number())));
+									2, PacManGames3dApp.pickLevelCompleteMessage(level.number())));
 						}
 					}),
 					levelChangeAnimation,
@@ -452,7 +452,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().foodOscillation().stop();
 				level3D.livesCounter3D().stopAnimation();
 				actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
-						3, PacManGames3d.pickGameOverMessage()));
+						3, PacManGames3dApp.pickGameOverMessage()));
 				soundHandler.audioClip(level.game().variant(), "audio.game_over").play();
 				waitSeconds(3);
 			});
@@ -500,7 +500,7 @@ public class PlayScene3D implements GameScene {
 			}),
 			rotation,
 			Ufx.actionAfterSeconds(0.5, () -> soundHandler.audioClip(level.game().variant(), "audio.sweep").play()),
-			Ufx.actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3d.PY_3D_PERSPECTIVE))
+			Ufx.actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE))
 		);
 		//@formatter:on
 	}
@@ -509,14 +509,14 @@ public class PlayScene3D implements GameScene {
 		if (level.numFlashes == 0) {
 			return Ufx.pauseSeconds(1.0);
 		}
-		double wallHeight = PacManGames3d.PY_3D_WALL_HEIGHT.get();
+		double wallHeight = PacManGames3dApp.PY_3D_WALL_HEIGHT.get();
 		var animation = new SinusCurveAnimation(level.numFlashes);
 		animation.setAmplitude(wallHeight);
 		animation.elongationPy.set(level3D.world3D().wallHeightPy.get());
 		level3D.world3D().wallHeightPy.bind(animation.elongationPy);
 		animation.setOnFinished(e -> {
-			level3D.world3D().wallHeightPy.bind(PacManGames3d.PY_3D_WALL_HEIGHT);
-			PacManGames3d.PY_3D_WALL_HEIGHT.set(wallHeight);
+			level3D.world3D().wallHeightPy.bind(PacManGames3dApp.PY_3D_WALL_HEIGHT);
+			PacManGames3dApp.PY_3D_WALL_HEIGHT.set(wallHeight);
 		});
 		return animation;
 	}
