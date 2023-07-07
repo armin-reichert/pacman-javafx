@@ -144,7 +144,7 @@ public class GamePage {
 		popupLayer.setPrefSize(w, h);
 		popupLayer.setMaxSize (w, h);
 
-		Logger.info("Game page resized: scaling: {} height: {} border: {}", scaling, h, borderWidth);
+		Logger.info("Game page resized: scaling: {}, width: {}, height: {}, border: {}", scaling, w, h, borderWidth);
 	}
 
 	public void setGameScene(GameScene gameScene) {
