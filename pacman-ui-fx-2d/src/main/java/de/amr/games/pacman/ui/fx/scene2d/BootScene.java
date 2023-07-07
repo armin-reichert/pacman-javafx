@@ -57,7 +57,7 @@ public class BootScene extends GameScene2D {
 
 	private void paintRandomHexCodes() {
 		clearCanvas();
-		g.setFill(ArcadeTheme.PALE);
+		g.setFill(theme.color("palette.pale"));
 		g.setFont(sceneFont());
 		for (int row = 0; row < TILES_Y; ++row) {
 			for (int col = 0; col < TILES_X; ++col) {
@@ -94,7 +94,7 @@ public class BootScene extends GameScene2D {
 		clearCanvas();
 		var numRows = TILES_Y / 2;
 		var numCols = TILES_X / 2;
-		g.setStroke(ArcadeTheme.PALE);
+		g.setStroke(theme.color("palette.pale"));
 		g.setLineWidth(s(2.0));
 		for (int row = 0; row <= numRows; ++row) {
 			g.setLineWidth(row == 0 || row == numRows ? s(4.0) : s(2.0));

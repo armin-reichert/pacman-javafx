@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
@@ -113,6 +114,6 @@ public class PacManCutscene1 extends GameScene2D {
 	@Override
 	protected void drawSceneInfo() {
 		var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
-		drawText(text, ArcadeTheme.YELLOW, Font.font("Sans", 16), t(1), t(5));
+		drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}
 }

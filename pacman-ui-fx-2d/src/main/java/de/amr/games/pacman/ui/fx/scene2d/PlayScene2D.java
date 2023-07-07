@@ -74,11 +74,11 @@ public class PlayScene2D extends GameScene2D {
 				drawPacManMaze(0, t(3), level.world());
 			}
 			if (state() == GameState.LEVEL_TEST) {
-				drawText(String.format("TEST    L%d", levelNumber), ArcadeTheme.YELLOW, sceneFont(), t(8.5), t(21));
+				drawText(String.format("TEST    L%d", levelNumber), theme.color("palette.yellow"), sceneFont(), t(8.5), t(21));
 			} else if (state() == GameState.GAME_OVER || !game().hasCredit()) {
-				drawText("GAME  OVER", ArcadeTheme.RED, sceneFont(), t(9), t(21));
+				drawText("GAME  OVER", theme.color("palette.red"), sceneFont(), t(9), t(21));
 			} else if (state() == GameState.READY) {
-				drawText("READY!", ArcadeTheme.YELLOW, sceneFont(), t(11), t(21));
+				drawText("READY!", theme.color("palette.yellow"), sceneFont(), t(11), t(21));
 			}
 			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
 			drawPac(level.pac());
@@ -131,7 +131,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void hideTileContent(Vector2i tile) {
-		g.setFill(ArcadeTheme.BLACK);
+		g.setFill(Color.BLACK);
 		g.fillRect(s(TS * tile.x() - 1), s(TS * tile.y() - 1), s(TS + 2), s(TS + 2));
 	}
 

@@ -113,7 +113,7 @@ public class PacManIntroScene extends GameScene2D {
 
 		int tx = context().leftTileX;
 		if (context().titleVisible) {
-			drawText("CHARACTER / NICKNAME", ArcadeTheme.PALE, font, t(tx + 3), t(6));
+			drawText("CHARACTER / NICKNAME", theme.color("palette.pale"), font, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			var ghostInfo = context().ghostInfo[id];
@@ -168,9 +168,9 @@ public class PacManIntroScene extends GameScene2D {
 		if (context().blinking.on()) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
 		}
-		drawText("10",  ArcadeTheme.PALE, font8, t(tx + 2), t(ty));
-		drawText("PTS", ArcadeTheme.PALE, font6, t(tx + 5), t(ty));
-		drawText("50",  ArcadeTheme.PALE, font8, t(tx + 2), t(ty + 2));
-		drawText("PTS", ArcadeTheme.PALE, font6, t(tx + 5), t(ty + 2));
+		drawText("10",  theme.color("palette.pale"), font8, t(tx + 2), t(ty));
+		drawText("PTS", theme.color("palette.pale"), font6, t(tx + 5), t(ty));
+		drawText("50",  theme.color("palette.pale"), font8, t(tx + 2), t(ty + 2));
+		drawText("PTS", theme.color("palette.pale"), font6, t(tx + 5), t(ty + 2));
 	}
 }

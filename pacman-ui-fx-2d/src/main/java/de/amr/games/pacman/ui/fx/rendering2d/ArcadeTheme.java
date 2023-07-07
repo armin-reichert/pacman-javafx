@@ -15,17 +15,40 @@ import javafx.scene.paint.Color;
  */
 public class ArcadeTheme extends Theme {
 
-	public static final Color RED    = Color.rgb(255, 0, 0);
-	public static final Color YELLOW = Color.rgb(255, 255, 0);
-	public static final Color PINK   = Color.rgb(252, 181, 255);
-	public static final Color CYAN   = Color.rgb(0, 255, 255);
-	public static final Color ORANGE = Color.rgb(251, 190, 88);
-	public static final Color BLACK  = Color.rgb(0, 0, 0);
-	public static final Color BLUE   = Color.rgb(33, 33, 255);
-	public static final Color PALE   = Color.rgb(222, 222, 255);
-	public static final Color ROSE   = Color.rgb(252, 187, 179);
-
 	public ArcadeTheme(ResourceManager rm) {
+
+		// Common to both games
+
+		set("palette.red",                     Color.rgb(255, 0, 0));
+		set("palette.yellow",                  Color.rgb(255, 255, 0));
+		set("palette.pink",                    Color.rgb(252, 181, 255));
+		set("palette.cyan",                    Color.rgb(0, 255, 255));
+		set("palette.orange",                  Color.rgb(251, 190, 88));
+		set("palette.blue",                    Color.rgb(33, 33, 255));
+		set("palette.pale",                    Color.rgb(222, 222, 255));
+		set("palette.rose",                    Color.rgb(252, 187, 179));
+
+		set("ghost.0.color",                   get("palette.red"));
+		set("ghost.1.color",                   get("palette.pink"));
+		set("ghost.2.color",                   get("palette.cyan"));
+		set("ghost.3.color",                   get("palette.orange"));
+
+		set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
+		set("startpage.button.color",          Color.WHITE);
+		set("startpage.button.font",           rm.font("fonts/emulogic.ttf", 30));
+
+		set("wallpaper.background",            rm.imageBackground("graphics/pacman_wallpaper.png"));
+		set("wallpaper.color",                 Color.rgb(72, 78, 135));
+
+		set("font.arcade",                     rm.font("fonts/emulogic.ttf", 8));
+		set("font.handwriting",                rm.font("fonts/Molle-Italic.ttf", 9));
+		set("font.monospaced",                 rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+
+		set("voice.explain",                   rm.audioClip("sound/voice/press-key.mp3"));
+		set("voice.autopilot.off",             rm.audioClip("sound/voice/autopilot-off.mp3"));
+		set("voice.autopilot.on",              rm.audioClip("sound/voice/autopilot-on.mp3"));
+		set("voice.immunity.off",              rm.audioClip("sound/voice/immunity-off.mp3"));
+		set("voice.immunity.on",               rm.audioClip("sound/voice/immunity-on.mp3"));
 
 		//
 		// Ms. Pac-Man game
@@ -91,28 +114,5 @@ public class ArcadeTheme extends Theme {
 		set("pacman.audio.siren.4",            rm.audioClip("sound/pacman/siren_4.mp3"));
 		set("pacman.audio.sweep",              rm.audioClip("sound/common/sweep.mp3"));
 
-		// Common to both games
-
-		set("ghost.0.color",                   RED);
-		set("ghost.1.color",                   PINK);
-		set("ghost.2.color",                   CYAN);
-		set("ghost.3.color",                   ORANGE);
-
-		set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
-		set("startpage.button.color",          Color.WHITE);
-		set("startpage.button.font",           rm.font("fonts/emulogic.ttf", 30));
-		
-		set("wallpaper.background",            rm.imageBackground("graphics/pacman_wallpaper.png"));
-		set("wallpaper.color",                 Color.rgb(72, 78, 135));
-
-		set("font.arcade",                     rm.font("fonts/emulogic.ttf", 8));
-		set("font.handwriting",                rm.font("fonts/Molle-Italic.ttf", 9));
-		set("font.monospaced",                 rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));
-		
-		set("voice.explain",                   rm.audioClip("sound/voice/press-key.mp3"));
-		set("voice.autopilot.off",             rm.audioClip("sound/voice/autopilot-off.mp3"));
-		set("voice.autopilot.on",              rm.audioClip("sound/voice/autopilot-on.mp3"));
-		set("voice.immunity.off",              rm.audioClip("sound/voice/immunity-off.mp3"));
-		set("voice.immunity.on",               rm.audioClip("sound/voice/immunity-on.mp3"));
 	}
 }

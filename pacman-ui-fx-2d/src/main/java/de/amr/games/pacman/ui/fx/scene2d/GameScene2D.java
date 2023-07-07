@@ -180,11 +180,11 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawScore(Score score, String title, double x, double y) {
 		var font = sceneFont();
-		drawText(title, ArcadeTheme.PALE, font, x, y);
+		drawText(title,  theme.color("palette.pale"), font, x, y);
 		var pointsText = String.format("%02d", score.points());
-		drawText(String.format("%7s", pointsText), ArcadeTheme.PALE, font, x, (y + TS + 1));
+		drawText(String.format("%7s", pointsText), theme.color("palette.pale"), font, x, (y + TS + 1));
 		if (score.points() != 0) {
-			drawText(String.format("L%d", score.levelNumber()), ArcadeTheme.PALE, font, x + TS * 8, y + TS + 1);
+			drawText(String.format("L%d", score.levelNumber()), theme.color("palette.pale"), font, x + TS * 8, y + TS + 1);
 		}
 	}
 
@@ -240,7 +240,7 @@ public abstract class GameScene2D implements GameScene {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText("+" + excessLives, ArcadeTheme.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
+			drawText("+" + excessLives, theme.color("palette.yellow"), Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
 		}
 	}
 
@@ -400,19 +400,19 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
- 		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALE, sceneFont(), x, y);
+ 		drawText(String.format("CREDIT %2d", credit), theme.color("palette.pale"), sceneFont(), x, y);
 	}
 
 	protected void drawMidwayCopyright(double x, double y) {
-		drawText("© 1980 MIDWAY MFG.CO.", ArcadeTheme.PINK, sceneFont(), x, y);
+		drawText("© 1980 MIDWAY MFG.CO.", theme.color("palette.pink"), sceneFont(), x, y);
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
 		Image logo = theme.get("mspacman.logo.midway");
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
-		g.setFill(ArcadeTheme.RED);
-		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
+		g.setFill(theme.color("palette.red"));
 		g.setFont(sceneFont());
+		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
 		g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
 	}
@@ -424,10 +424,10 @@ public abstract class GameScene2D implements GameScene {
 			var sprite = ss.clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont());
-			g.setFill(ArcadeTheme.PALE.darker());
+			g.setFill(theme.color("palette.pale").darker());
 			var numberX = s(x + sprite.getWidth() - 25);
 			var numberY = s(y + 18);
-			g.setFill(ArcadeTheme.PALE);
+			g.setFill(theme.color("palette.pale"));
 			g.fillText(animation.number(), numberX, numberY);
 			var textX = s(x + sprite.getWidth());
 			g.fillText(animation.text(), textX, numberY);
@@ -441,7 +441,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawTileGrid(int tilesX, int tilesY) {
-		g.setStroke(ArcadeTheme.PALE);
+		g.setStroke(theme.color("palette.pale"));
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
 			g.strokeLine(0, s(TS * (row)), s(tilesX * TS), s(TS * (row)));

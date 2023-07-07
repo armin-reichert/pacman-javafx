@@ -138,7 +138,7 @@ public class GamePage {
 
 		double borderWidth  = Math.max(5, Math.ceil(h / 60));
 		double cornerRadius = Math.ceil(15 * scaling);
-		canvasContainer.setBorder(ResourceManager.roundedBorder(ArcadeTheme.PALE, cornerRadius, borderWidth));
+		canvasContainer.setBorder(ResourceManager.roundedBorder(theme.color("palette.pale"), cornerRadius, borderWidth));
 
 		popupLayer.setMinSize (w, h);
 		popupLayer.setPrefSize(w, h);

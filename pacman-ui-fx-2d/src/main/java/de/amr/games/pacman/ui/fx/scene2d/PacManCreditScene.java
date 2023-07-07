@@ -36,11 +36,12 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
+		var font8 = sceneFont();
 		var font6 = theme.font("font.arcade", s(6));
-		drawText("PUSH START BUTTON", ArcadeTheme.ORANGE, sceneFont(), t(6), t(17));
-		drawText("1 PLAYER ONLY", ArcadeTheme.CYAN, sceneFont(), t(8), t(21));
-		drawText("BONUS PAC-MAN FOR 10000", ArcadeTheme.ROSE, sceneFont(), t(1), t(25));
-		drawText("PTS", ArcadeTheme.ROSE, font6, t(25), t(25));
+		drawText("PUSH START BUTTON", theme.color("palette.orange"), font8, t(6), t(17));
+		drawText("1 PLAYER ONLY", theme.color("palette.cyan"), font8, t(8), t(21));
+		drawText("BONUS PAC-MAN FOR 10000", theme.color("palette.rose"), font8, t(1), t(25));
+		drawText("PTS", theme.color("palette.rose"), font6, t(25), t(25));
 		drawMidwayCopyright(t(4), t(29));
 		drawLevelCounter(t(24), t(34), game().levelCounter());
 	}

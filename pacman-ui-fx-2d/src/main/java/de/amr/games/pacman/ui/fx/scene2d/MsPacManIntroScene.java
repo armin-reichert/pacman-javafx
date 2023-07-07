@@ -77,19 +77,19 @@ public class MsPacManIntroScene extends GameScene2D {
 		var ty = ic.titlePosition.y();
 		var y0 = ic.stopY;
 		drawMarquee();
-		drawText("\"MS PAC-MAN\"", ArcadeTheme.ORANGE, sceneFont(), tx, ty);
+		drawText("\"MS PAC-MAN\"", theme.color("palette.orange"), sceneFont(), tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts.get(ic.ghostIndex);
 			var color = theme.color(String.format("ghost.%d.color", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText("WITH", ArcadeTheme.PALE, sceneFont(), tx, y0 + t(3));
+				drawText("WITH", theme.color("palette.pale"), sceneFont(), tx, y0 + t(3));
 			}
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
 			drawText(text, color, sceneFont(), tx + t(3) + dx, y0 + t(6));
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText("STARRING", ArcadeTheme.PALE, sceneFont(), tx, y0 + t(3));
-			drawText("MS PAC-MAN", ArcadeTheme.YELLOW, sceneFont(), tx, y0 + t(6));
+			drawText("STARRING", theme.color("palette.pale"), sceneFont(), tx, y0 + t(3));
+			drawText("MS PAC-MAN", theme.color("palette.yellow"), sceneFont(), tx, y0 + t(6));
 		}
 		ic.ghosts.forEach(ghost -> drawGhost(ghost));
 		drawPac(ic.msPacMan);
@@ -100,7 +100,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	private void drawMarquee() {
 		var on = intro.context().marqueeState();
 		for (int i = 0; i < intro.context().numBulbs; ++i) {
-			g.setFill(on.get(i) ? ArcadeTheme.PALE : ArcadeTheme.RED);
+			g.setFill(on.get(i) ? theme.color("palette.pale") : theme.color("palette.red"));
 			if (i <= 33) {
 				g.fillRect(s(60 + 4 * i), s(148), s(2), s(2));
 			} else if (i <= 48) {
