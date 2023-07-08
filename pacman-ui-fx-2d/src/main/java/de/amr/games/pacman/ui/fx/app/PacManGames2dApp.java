@@ -103,15 +103,27 @@ public class PacManGames2dApp extends Application {
 			new PacManCutscene3()
 		);
 		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
-		ui.setTheme(new ArcadeTheme(PacManGames2dApp.MGR));
+		ui.setTheme(new ArcadeTheme(MGR));
 		GameController.addListener(ui);
 		ui.showStartPage();
-		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
+		Logger.info("Game started. {} Hz locale={}", ui.clock().targetFrameratePy.get(), localeInfo());
 	}
 
 	@Override
 	public void stop() {
 		ui.clock().stop();
 		Logger.info("Game stopped.");
+	}
+
+	private String localeInfo() {
+		var language = System.getProperty("user.language");
+		var country = System.getProperty("user.country");
+		if (language == null) {
+			return "no locale info";
+		}
+		if (country == null) {
+			return language;
+		}
+		return new Locale(language, country).toString();
 	}
 }
