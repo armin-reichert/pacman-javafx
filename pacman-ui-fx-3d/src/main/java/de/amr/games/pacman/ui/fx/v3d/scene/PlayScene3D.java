@@ -59,7 +59,7 @@ public class PlayScene3D implements GameScene {
 			Perspective.TOTAL) {
 		@Override
 		protected void invalidated() {
-			updateCamera();
+			updateCamera(get());
 		}
 	};
 
@@ -197,22 +197,21 @@ public class PlayScene3D implements GameScene {
 		fxSubScene.heightProperty().bind(parentScene.heightProperty());
 	}
 
-	private void updateCamera() {
-		var perspective = perspectivePy.get();
-		if (perspective == null) {
+	private void updateCamera(Perspective p) {
+		if (p == null) {
 			Logger.error("No camera perspective specified");
 			return;
 		}
-		var perspectiveController = camControllerMap.get(perspective);
+		var perspectiveController = camControllerMap.get(p);
 		if (perspectiveController == null) {
-			Logger.error("No camera found for perspective {}", perspective);
+			Logger.error("No camera found for perspective {}", p);
 			return;
 		}
 		if (perspectiveController != camController) {
 			camController = perspectiveController;
 			fxSubScene.requestFocus();
 			perspectiveController.reset(fxSubScene.getCamera());
-			Logger.info("Perspective changed to {} ({})", perspective, this);
+			Logger.info("Perspective changed to {} ({})", p, this);
 		}
 	}
 
@@ -411,7 +410,7 @@ public class PlayScene3D implements GameScene {
 			game().level().ifPresent(level -> {
 				lockGameState();
 				replaceGameLevel3D(level);
-				updateCamera();
+				updateCamera(perspectivePy.get());
 				waitSeconds(3.0);
 			});
 		}
