@@ -317,7 +317,7 @@ public class PlayScene3D implements GameScene {
 						.filter(world.foodStorage()::hasEatenFoodAt) //
 						.map(level3D.world3D()::eatableAt) //
 						.flatMap(Optional::stream) //
-						.forEach(Eatable3D::eat);
+						.forEach(Eatable3D::eaten);
 			});
 		} else {
 			var eatable = level3D.world3D().eatableAt(e.tile.get());

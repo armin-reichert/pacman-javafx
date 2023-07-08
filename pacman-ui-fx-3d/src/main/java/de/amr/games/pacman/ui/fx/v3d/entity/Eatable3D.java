@@ -18,7 +18,7 @@ public interface Eatable3D {
 
 	Node getRoot();
 
-	void eat();
+	void eaten();
 
 	Optional<Animation> getEatenAnimation();
 

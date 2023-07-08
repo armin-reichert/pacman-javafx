@@ -55,13 +55,17 @@ public class Pac3D {
 	private DyingAnimation dyingAnimation;
 
 	public static Group createPacManGroup(Model3D model3D, Theme theme) {
-		var body = createBody(model3D, 9, theme.color("pacman.color.head"), theme.color("pacman.color.eyes"),
+		var body = createBody(model3D, 9,
+				theme.color("pacman.color.head"),
+				theme.color("pacman.color.eyes"),
 				theme.color("pacman.color.palate"));
 		return new Group(body);
 	}
 
 	public static Group createMsPacManGroup(Model3D model3D, Theme theme) {
-		var body = createBody(model3D, 9, theme.color("mspacman.color.head"), theme.color("mspacman.color.eyes"),
+		var body = createBody(model3D, 9,
+				theme.color("mspacman.color.head"),
+				theme.color("mspacman.color.eyes"),
 				theme.color("mspacman.color.palate"));
 		return new Group(body, createFeminineParts(theme, 9));
 	}
