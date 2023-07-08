@@ -43,7 +43,7 @@ public class PacManGames2dApp extends Application {
 
 	public static final KeyCodeCombination KEY_AUTOPILOT         = alt(KeyCode.A);
 	public static final KeyCodeCombination KEY_DEBUG_INFO        = alt(KeyCode.D);
-	public static final KeyCodeCombination KEY_IMMUNITIY         = alt(KeyCode.I);
+	public static final KeyCodeCombination KEY_IMMUNITY           = alt(KeyCode.I);
 
 	public static final KeyCodeCombination KEY_PAUSE             = just(KeyCode.P);
 	public static final KeyCodeCombination KEY_PAUSE_STEP        = shift(KeyCode.P);

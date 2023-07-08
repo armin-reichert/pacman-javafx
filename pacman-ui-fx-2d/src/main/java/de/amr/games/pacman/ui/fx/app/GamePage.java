@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.HelpButton;
@@ -218,7 +217,7 @@ public class GamePage {
 			}
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_DEBUG_INFO)) {
 			Ufx.toggle(PacManGames2dApp.PY_SHOW_DEBUG_INFO);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_IMMUNITIY)) {
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_IMMUNITY)) {
 			ui.toggleImmunity();
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PAUSE)) {
 			ui.togglePaused();
