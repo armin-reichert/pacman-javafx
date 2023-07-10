@@ -2,11 +2,10 @@
 
 ## ℹ️ Online version available
 
-Both games (2D) can now also be played online [here](https://armin-reichert.github.io/webfx-pacman/)
-
-"Old" WebFX versions (will soon be updated by version above):
-- [Pac-Man](https://pacman.webfx.dev/)
-- [Ms. Pac-Man](https://mspacman.webfx.dev/)
+Both games (2D) can now also be played online:
+- [GitHub](https://armin-reichert.github.io/webfx-pacman/)
+- [WebFX Demo Pac-Man](https://pacman.webfx.dev/)
+- [WebFX Demo Ms. Pac-Man](https://mspacman.webfx.dev/)
 
 This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler technology (:+1: to Bruno Salmon).
 
@@ -18,7 +17,7 @@ a full version where the play scene can be switched between 2D and 3D, even duri
 ## How to run
 
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executable jar files and
-installers for Windows. If you have a Java runtime installed you can start the game(s) by double-clicking the jar file.
+installers for Windows and Linux (not tested by me). If you have a Java runtime installed you can also start the game(s) by double-clicking the "fat" jar file.
 Otherwise run the installer and double-click the new desktop icon(s).
 
 ## How to build locally
