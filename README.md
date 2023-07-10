@@ -36,6 +36,11 @@ This will
 - create Windows installers 
   - `pacman-ui-fx-2d_1.0.exe` (in `pacman-javafx\pacman-ui-fx-2d\target`)
   - `pacman-ui-fx-3d_1.0.exe` (in `pacman-javafx\pacman-ui-fx-3d\target`)
+- create Linux archives (untested, please check and let me know if they work!)
+  - `pacman-ui-fx-2d_1.0.deb` (in `pacman-javafx\pacman-ui-fx-2d\target`)
+  - `pacman-ui-fx-3d_1.0.deb` (in `pacman-javafx\pacman-ui-fx-3d\target`)
+  - `pacman-ui-fx-2d_1.0.rpm` (in `pacman-javafx\pacman-ui-fx-2d\target`)
+  - `pacman-ui-fx-3d_1.0.rpm` (in `pacman-javafx\pacman-ui-fx-3d\target`)
 
 To be able to create the installers you need to have [Inno Setup](https://jrsoftware.org/isinfo.php) and [WIX toolset](https://wixtoolset.org/) installed as described in the [JavaPackager documentation](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md). (I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.)
 
