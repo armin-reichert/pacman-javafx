@@ -35,6 +35,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -49,8 +50,10 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * 3D play scene. Provides different camera perspectives that can be selected sequentially using keys <code>Alt+LEFT</code>
- *  and <code>Alt+RIGHT</code>.
+ * 3D play scene.
+ *
+ * <p>Provides different camera perspectives that can be selected sequentially using keys <code>Alt+LEFT</code>
+ *  and <code>Alt+RIGHT</code>.</p>
  * 
  * @author Armin Reichert
  */
@@ -108,11 +111,12 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void update() {
-		game().level().ifPresent(level -> {
-			level3D.update();
-			currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
-			updateSound(level);
-		});
+		if (level3D == null) {
+			return;
+		}
+		level3D.update();
+		currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
+		updateSound();
 	}
 
 	@Override
@@ -139,7 +143,6 @@ public class PlayScene3D implements GameScene {
 	public BorderPane root() {
 		return root;
 	}
-
 
 	public CameraController currentCamController() {
 		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
@@ -505,21 +508,26 @@ public class PlayScene3D implements GameScene {
 		return animation;
 	}
 
-	private void updateSound(GameLevel level) {
-		var gameVariant = level.game().variant();
-		if (level.isDemoLevel()) {
-			return;
-		}
-		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			soundHandler.audioClip(gameVariant, "audio.pacman_munch").stop();
-		}
-		if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
-				.filter(Ghost::isVisible).count() > 0) {
-			soundHandler.ensureLoopEndless(soundHandler.audioClip(gameVariant, "audio.ghost_returning"));
+	private void updateSound() {
+		game().level().ifPresent(level -> {
+			if (level.isDemoLevel()) {
+				return;
+			}
+			if (level.pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
+				clip("audio.pacman_munch").stop();
+			}
+			if (!level.pacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
+					.anyMatch(Ghost::isVisible)) {
+				soundHandler.ensureLoopEndless(clip("audio.ghost_returning"));
 
-		} else {
-			soundHandler.audioClip(gameVariant, "audio.ghost_returning").stop();
-		}
+			} else {
+				clip("audio.ghost_returning").stop();
+			}
+		});
+	}
+
+	private AudioClip clip(String key) {
+		return soundHandler.audioClip(game().variant(), key);
 	}
 
 	/**
