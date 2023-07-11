@@ -97,71 +97,40 @@
 				</executions>
 			</plugin>
 
-		<plugin>
-			<groupId>io.github.fvarrui</groupId>
-			<artifactId>javapackager</artifactId>
-			<version>1.7.2</version>
-			<executions>
-				<execution>
-					<phase>package</phase>
-					<goals>
-						<goal>package</goal>
-					</goals>
-					<configuration>
-						<!-- mandatory -->
-						<mainClass>${mainClass}</mainClass>
-						<!-- optional -->
-						<bundleJre>true</bundleJre>
-						<generateInstaller>true</generateInstaller>
-						<administratorRequired>false</administratorRequired>
-						<platform>windows</platform>
-						<!--
-						<additionalResources>
-							<additionalResource>file path</additionalResource>
-							<additionalResource>folder path</additionalResource>
-							<additionalResource>...</additionalResource>
-						</additionalResources>
-						<linuxConfig>...</linuxConfig>
-						<macConfig>...</macConfig>
-						<winConfig>...</winConfig>
-						[...]
-						-->
-					</configuration>
-				</execution>
-				<execution>
-					<id>linux</id>
-					<phase>package</phase>
-					<goals>
-						<goal>package</goal>
-					</goals>
-					<configuration>
-						<!-- mandatory -->
-						<mainClass>${mainClass}</mainClass>
-						<!-- optional -->
-						<bundleJre>true</bundleJre>
-						<generateInstaller>true</generateInstaller>
-						<administratorRequired>false</administratorRequired>
-						<platform>linux</platform>
-					</configuration>
-				</execution>
-				<!-- does not work when running on Windows:
-				<execution>
-					<id>mac</id>
-					<phase>package</phase>
-					<goals>
-						<goal>package</goal>
-					</goals>
-					<configuration>
-						<mainClass>${mainClass}</mainClass>
-						<bundleJre>false</bundleJre>
-						<generateInstaller>true</generateInstaller>
-						<administratorRequired>false</administratorRequired>
-						<platform>mac</platform>
-					</configuration>
-				</execution>
-				-->
-			</executions>
-		</plugin>
+			<plugin>
+				<groupId>io.github.fvarrui</groupId>
+				<artifactId>javapackager</artifactId>
+				<version>1.7.2</version>
+				<configuration>
+					<mainClass>${mainClass}</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<id>windows-installer-with-jre</id>
+						<phase>package</phase>
+						<goals>
+							<goal>package</goal>
+						</goals>
+						<configuration>
+							<platform>windows</platform>
+							<bundleJre>true</bundleJre>
+							<generateInstaller>true</generateInstaller>
+						</configuration>
+					</execution>
+					<execution>
+						<id>linux</id>
+						<phase>package</phase>
+						<goals>
+							<goal>package</goal>
+						</goals>
+						<configuration>
+							<platform>linux</platform>
+							<createTarball>true</createTarball>
+							<jdkPath>C:\\dev\linux\jdk-17.0.7</jdkPath>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
 		</plugins>
 
