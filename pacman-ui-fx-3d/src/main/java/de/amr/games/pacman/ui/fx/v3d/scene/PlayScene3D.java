@@ -49,42 +49,38 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * 3D play scene with sound and animations.
+ * 3D play scene. Provides different camera perspectives that can be selected sequentially using keys <code>Alt+LEFT</code>
+ *  and <code>Alt+RIGHT</code>.
  * 
  * @author Armin Reichert
  */
 public class PlayScene3D implements GameScene {
 
-	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective",
-			Perspective.TOTAL) {
+	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
 		@Override
 		protected void invalidated() {
 			updateCamera(get());
 		}
 	};
 
+	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
 	private ActionHandler actionHandler;
 	private SoundHandler soundHandler;
 	private Theme theme;
 	private Spritesheet spritesheet;
-
-	protected boolean scoreVisible;
-	protected boolean creditVisible;
-
+	private boolean scoreVisible;
+	private boolean creditVisible;
 	private final BorderPane root;
 	private final SubScene fxSubScene;
-	private final Group group;
+	private final Group subSceneRoot;
 	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
 
-	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
-	private CameraController camController;
-
 	public PlayScene3D() {
-		camControllerMap.put(Perspective.DRONE, new CamDrone());
+		camControllerMap.put(Perspective.DRONE,            new CamDrone());
 		camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
-		camControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
-		camControllerMap.put(Perspective.TOTAL, new CamTotal());
+		camControllerMap.put(Perspective.NEAR_PLAYER,      new CamNearPlayer());
+		camControllerMap.put(Perspective.TOTAL,            new CamTotal());
 
 		var coordSystem = new CoordSystem();
 		coordSystem.visibleProperty().bind(PacManGames3dApp.PY_3D_AXES_VISIBLE);
@@ -92,13 +88,31 @@ public class PlayScene3D implements GameScene {
 		var ambientLight = new AmbientLight();
 		ambientLight.colorProperty().bind(PacManGames3dApp.PY_3D_LIGHT_COLOR);
 
-		group = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
-
-		// initial scene size is irrelevant, will be bound to main scene size
-		fxSubScene = new SubScene(group, 42, 42, true, SceneAntialiasing.BALANCED);
+		// initial sub-scene size is irrelevant, gets bound to main scene size in init method
+		subSceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
+		fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 
 		root = new BorderPane(fxSubScene);
+	}
+
+	@Override
+	public void init() {
+		setCreditVisible(false);
+		setScoreVisible(true);
+		resetReadyMessageText3D();
+		perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE);
+		game().level().ifPresent(this::replaceGameLevel3D);
+		Logger.info("3D play scene initialized.");
+	}
+
+	@Override
+	public void update() {
+		game().level().ifPresent(level -> {
+			level3D.update();
+			currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
+			updateSound(level);
+		});
 	}
 
 	@Override
@@ -126,23 +140,9 @@ public class PlayScene3D implements GameScene {
 		return root;
 	}
 
-	@Override
-	public void init() {
-		setCreditVisible(false);
-		setScoreVisible(true);
-		resetReadyMessageText3D();
-		perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE);
-		game().level().ifPresent(this::replaceGameLevel3D);
-		Logger.info("Initialized 3D play scene");
-	}
 
-	@Override
-	public void update() {
-		game().level().ifPresent(level -> {
-			level3D.update();
-			camController.update(fxSubScene.getCamera(), level3D.pac3D());
-			updateSound(level);
-		});
+	public CameraController currentCamController() {
+		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
 	}
 
 	public Optional<ActionHandler> actionHandler() {
@@ -189,30 +189,16 @@ public class PlayScene3D implements GameScene {
 		perspectivePy.unbind();
 	}
 
-
-
 	@Override
 	public void setParentScene(Scene parentScene) {
 		fxSubScene.widthProperty().bind(parentScene.widthProperty());
 		fxSubScene.heightProperty().bind(parentScene.heightProperty());
 	}
 
-	private void updateCamera(Perspective p) {
-		if (p == null) {
-			Logger.error("No camera perspective specified");
-			return;
-		}
-		var perspectiveController = camControllerMap.get(p);
-		if (perspectiveController == null) {
-			Logger.error("No camera found for perspective {}", p);
-			return;
-		}
-		if (perspectiveController != camController) {
-			camController = perspectiveController;
-			fxSubScene.requestFocus();
-			perspectiveController.reset(fxSubScene.getCamera());
-			Logger.info("Perspective changed to {} ({})", p, this);
-		}
+	private void updateCamera(Perspective perspective) {
+		currentCamController().reset(fxSubScene.getCamera());
+		fxSubScene.requestFocus();
+		Logger.info("Perspective is {} ({})", perspective, this);
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
@@ -234,7 +220,7 @@ public class PlayScene3D implements GameScene {
 		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
 		// replace initial placeholder or previous 3D level
-		group.getChildren().set(0, level3D.getRoot());
+		subSceneRoot.getChildren().set(0, level3D.getRoot());
 
 		if (state() == GameState.LEVEL_TEST) {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
@@ -260,30 +246,29 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) && !game().hasCredit()) {
-			actionHandler().ifPresent(ActionHandler::addCredit);
-		} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
-			actionHandler().ifPresent(handler -> ((ActionHandler3D)handler).selectPrevPerspective());
-		} else if (Keyboard.pressed(PacManGames3dApp.KEY_NEXT_PERSPECTIVE)) {
-			actionHandler().ifPresent(handler -> ((ActionHandler3D)handler).selectNextPerspective());
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
-			actionHandler().ifPresent(ActionHandler::cheatEatAllPellets);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
-			actionHandler().ifPresent(ActionHandler::cheatAddLives);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
-			actionHandler().ifPresent(ActionHandler::cheatEnterNextLevel);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
-			actionHandler().ifPresent(ActionHandler::cheatKillAllEatableGhosts);
-		}
+		actionHandler().ifPresent(handler -> {
+			ActionHandler3D actionHandler = (ActionHandler3D) handler;
+			if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) && !game().hasCredit()) {
+				actionHandler.addCredit();
+			} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
+				actionHandler.selectPrevPerspective();
+			} else if (Keyboard.pressed(PacManGames3dApp.KEY_NEXT_PERSPECTIVE)) {
+				actionHandler.selectNextPerspective();
+			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
+				actionHandler.cheatEatAllPellets();
+			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
+				actionHandler.cheatAddLives();
+			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
+				actionHandler.cheatEnterNextLevel();
+			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
+				actionHandler.cheatKillAllEatableGhosts();
+			}
+		});
 	}
 
 	@Override
 	public boolean is3D() {
 		return true;
-	}
-
-	public CameraController currentCamController() {
-		return camController;
 	}
 
 	public String camInfo() {
@@ -309,14 +294,14 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onPlayerFindsFood(GameEvent e) {
 		if (e.tile.isEmpty()) {
-			// when cheat "eat all pellets" is used, no tile is present in the event.
-			// In that case, bring 3D pellets to be in synch with model:
+			// When cheat "eat all pellets" has been used, no tile is present in the event.
+			// In that case, ensure the 3D pellets to be in sync with the model:
 			world().ifPresent(world -> {
-				world.tiles() //
-						.filter(world.foodStorage()::hasEatenFoodAt) //
-						.map(level3D.world3D()::eatableAt) //
-						.flatMap(Optional::stream) //
-						.forEach(Eatable3D::eaten);
+				world.tiles()
+					.filter(world.foodStorage()::hasEatenFoodAt)
+					.map(level3D.world3D()::eatableAt)
+					.flatMap(Optional::stream)
+					.forEach(Eatable3D::eaten);
 			});
 		} else {
 			var eatable = level3D.world3D().eatableAt(e.tile.get());
@@ -408,10 +393,10 @@ public class PlayScene3D implements GameScene {
 
 		case CHANGING_TO_NEXT_LEVEL -> {
 			game().level().ifPresent(level -> {
-				lockGameState();
+				lockGameState(); //TODO check this
 				replaceGameLevel3D(level);
 				updateCamera(perspectivePy.get());
-				waitSeconds(3.0);
+				pauseSeconds(3.0);
 			});
 		}
 
@@ -453,7 +438,7 @@ public class PlayScene3D implements GameScene {
 				actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
 						3, PacManGames3dApp.pickGameOverMessage()));
 				soundHandler.audioClip(level.game().variant(), "audio.game_over").play();
-				waitSeconds(3);
+				pauseSeconds(3);
 			});
 		}
 
@@ -566,14 +551,14 @@ public class PlayScene3D implements GameScene {
 	}
 
 	/**
-	 * Locks the current game states, waits given number of seconds and unlocks the state.
+	 * Locks the current game states, pauses for given number of seconds and then unlocks the state.
 	 * 
-	 * @param seconds seconds to wait before unlock
+	 * @param seconds seconds to pause
 	 */
-	private void waitSeconds(double seconds) {
-		lockGameState();
+	private void pauseSeconds(double seconds) {
 		var pause = Ufx.pauseSeconds(seconds);
 		pause.setOnFinished(e -> unlockGameState());
+		lockGameState();
 		pause.play();
 	}
 }
