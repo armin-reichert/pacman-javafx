@@ -31,6 +31,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
@@ -42,8 +45,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
  */
 public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
-	protected GameSceneConfiguration gameScenesMsPacMan;
-	protected GameSceneConfiguration gameScenesPacMan;
+	protected final Map<GameVariant, GameSceneConfiguration> gameScenes = new EnumMap<>(GameVariant.class);
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
@@ -64,8 +66,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		checkNotNull(gameScenesPacMan);
 
 		this.stage = stage;
-		this.gameScenesMsPacMan = gameScenesMsPacMan;
-		this.gameScenesPacMan = gameScenesPacMan;
+		gameScenes.put(GameVariant.MS_PACMAN, gameScenesMsPacMan);
+		gameScenes.put(GameVariant.PACMAN, gameScenesPacMan);
 
 		createClock();
 		createMainScene();
@@ -313,7 +315,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	public GameSceneConfiguration sceneConfig() {
-		return game().variant() == GameVariant.MS_PACMAN ? gameScenesMsPacMan : gameScenesPacMan;
+		return gameScenes.get(game().variant());
 	}
 
 	public Spritesheet spritesheet() {
