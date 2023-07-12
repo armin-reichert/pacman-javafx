@@ -105,6 +105,7 @@
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
 				<executions>
+
 					<execution>
 						<id>windows-installer-with-jre</id>
 						<phase>package</phase>
@@ -115,6 +116,11 @@
 							<platform>windows</platform>
 							<bundleJre>true</bundleJre>
 							<generateInstaller>true</generateInstaller>
+							<winConfig>
+								<generateSetup>true</generateSetup>
+								<generateMsi>false</generateMsi>
+								<generateMsm>false</generateMsm>
+							</winConfig>
 						</configuration>
 					</execution>
 

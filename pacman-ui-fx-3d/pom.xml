@@ -123,6 +123,11 @@
 							<platform>windows</platform>
 							<bundleJre>true</bundleJre>
 							<generateInstaller>true</generateInstaller>
+							<winConfig>
+								<generateSetup>true</generateSetup>
+								<generateMsi>false</generateMsi>
+								<generateMsm>false</generateMsm>
+							</winConfig>
 						</configuration>
 					</execution>
 					<execution>
