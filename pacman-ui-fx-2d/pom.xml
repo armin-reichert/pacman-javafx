@@ -117,9 +117,11 @@
 							<generateInstaller>true</generateInstaller>
 						</configuration>
 					</execution>
+
 					<execution>
 						<id>linux</id>
-						<phase>package</phase>
+						<!-- replace "none" by "package" to activate -->
+						<phase>none</phase>
 						<goals>
 							<goal>package</goal>
 						</goals>
@@ -129,6 +131,7 @@
 							<jdkPath>C:\\dev\linux\jdk-17.0.7</jdkPath>
 						</configuration>
 					</execution>
+
 				</executions>
 			</plugin>
 
