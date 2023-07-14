@@ -92,20 +92,22 @@ public class PacManGames3dApp extends Application {
 		theme.set("model3D.pacman",     new Model3D(MGR.url("model3D/pacman.obj")));
 		theme.set("model3D.ghost",      new Model3D(MGR.url("model3D/ghost.obj")));
 		theme.set("model3D.pellet",     new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
+
 		theme.set("model3D.wallpaper",  MGR.imageBackground("graphics/sky.png",
 				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER,
 				new BackgroundSize(1, 1, true, true, false, true)
 		));
-		theme.set("image.armin1970",    MGR.image("graphics/armin.jpg"));
-		theme.set("icon.play",          MGR.image("graphics/icons/play.png"));
-		theme.set("icon.stop",          MGR.image("graphics/icons/stop.png"));
-		theme.set("icon.step",          MGR.image("graphics/icons/step.png"));
 
-		theme.set("texture.hexagon",    createFloorTexture("hexagon", "jpg"));
-		theme.set("texture.knobs",      createFloorTexture("knobs", "jpg"));
-		theme.set("texture.plastic",    createFloorTexture("plastic", "jpg"));
-		theme.set("texture.wood",       createFloorTexture("wood", "jpg"));
+		theme.set("image.armin1970",                 MGR.image("graphics/armin.jpg"));
+		theme.set("icon.play",                       MGR.image("graphics/icons/play.png"));
+		theme.set("icon.stop",                       MGR.image("graphics/icons/stop.png"));
+		theme.set("icon.step",                       MGR.image("graphics/icons/step.png"));
+
+		theme.set("texture.hexagon",                 createFloorTexture("hexagon", "jpg"));
+		theme.set("texture.knobs",                   createFloorTexture("knobs", "jpg"));
+		theme.set("texture.plastic",                 createFloorTexture("plastic", "jpg"));
+		theme.set("texture.wood",                    createFloorTexture("wood", "jpg"));
 
 		theme.set("ghost.0.color.normal.dress",      theme.color("palette.red"));
 		theme.set("ghost.0.color.normal.eyeballs",   theme.color("palette.pale"));
@@ -181,8 +183,7 @@ public class PacManGames3dApp extends Application {
 	public static String pickFunnyReadyMessage(GameVariant gameVariant) {
 		return switch (gameVariant) {
 			case MS_PACMAN -> PICKER_READY_MS_PAC_MAN.next();
-			case PACMAN -> PICKER_READY_PAC_MAN.next();
-			default -> throw new IllegalGameVariantException(gameVariant);
+			case PACMAN    -> PICKER_READY_PAC_MAN.next();
 		};
 	}
 
@@ -215,6 +216,7 @@ public class PacManGames3dApp extends Application {
 	}
 
 	private final PacManGames3dUI ui = new PacManGames3dUI();
+	private Theme theme;
 	private final Settings settings = new Settings();
 
 	@Override
@@ -222,6 +224,8 @@ public class PacManGames3dApp extends Application {
 		if (getParameters() != null) {
 			settings.merge(getParameters().getNamed());
 		}
+		theme = createTheme();
+		Logger.info("Theme created: {}", theme);
 		GameController.create(settings.variant);
 		Logger.info("Game initialized: {}", settings);
 	}
@@ -249,7 +253,7 @@ public class PacManGames3dApp extends Application {
 				new PacManCutscene3()
 		);
 		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
-		ui.setTheme(createTheme());
+		ui.setTheme(theme);
 		GameController.addListener(ui);
 		ui.showStartPage();
 		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
