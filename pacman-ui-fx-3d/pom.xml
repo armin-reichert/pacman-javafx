@@ -111,8 +111,10 @@
 				<version>1.7.2</version>
 				<configuration>
 					<mainClass>${mainClass}</mainClass>
+					<generateInstaller>false</generateInstaller>
 				</configuration>
 				<executions>
+
 					<execution>
 						<id>windows-installer-with-jre</id>
 						<phase>package</phase>
@@ -130,8 +132,27 @@
 							</winConfig>
 						</configuration>
 					</execution>
+
 					<execution>
-						<id>linux</id>
+						<id>linux-tarball-with-jre</id>
+						<!-- replace "none" by "package" to activate -->
+						<phase>package</phase>
+						<goals>
+							<goal>package</goal>
+						</goals>
+						<configuration>
+							<platform>linux</platform>
+							<createTarball>true</createTarball>
+							<jdkPath>C:\dev\linux\jdk-17.0.7</jdkPath>
+							<bundleJre>true</bundleJre>
+							<runnableJar>${project.build.directory}/pacman-ui-fx-3d-1.0-shaded.jar</runnableJar>
+						</configuration>
+					</execution>
+
+					<!-- How to create .deb and .rpm archives? -->
+					<!-- The following does not work. Why? -->
+					<execution>
+						<id>linux-deb-with-jre</id>
 						<!-- replace "none" by "package" to activate -->
 						<phase>none</phase>
 						<goals>
@@ -139,12 +160,20 @@
 						</goals>
 						<configuration>
 							<platform>linux</platform>
-							<createTarball>true</createTarball>
-							<jdkPath>C:\\dev\linux\jdk-17.0.7</jdkPath>
+							<createTarball>false</createTarball>
+							<jdkPath>C:\dev\linux\jdk-17.0.7</jdkPath>
+							<bundleJre>true</bundleJre>
+							<runnableJar>${project.build.directory}/pacman-ui-fx-3d-1.0-shaded.jar</runnableJar>
+							<linuxConfig>
+								<generateDeb>true</generateDeb>
+							</linuxConfig>
 						</configuration>
 					</execution>
+
+
 				</executions>
 			</plugin>
+
 
 		</plugins>
 	</build>
