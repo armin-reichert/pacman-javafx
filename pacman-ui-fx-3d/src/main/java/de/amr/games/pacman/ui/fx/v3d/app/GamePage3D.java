@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -122,7 +123,15 @@ class GamePage3D extends GamePage {
 		if (dashboard.isVisible() || isPiPOn()) {
 			layers.getChildren().add(dashboardLayer);
 		}
-		helpButton.setVisible(!ui.currentGameScene().is3D());
 		layers.requestFocus();
 	}
+
+	protected void updateHelpButton() {
+		if (ui.currentGameScene() != null && ui.currentGameScene().is3D()) {
+			helpButton.setVisible(false);
+		} else {
+			super.updateHelpButton();
+		}
+	}
+
 }
