@@ -23,6 +23,25 @@ public class Theme {
 	protected Map<String, Object> namedThings = new HashMap<>();
 	protected Map<String, ArrayList<Object>> namedArrays = new HashMap<>();
 
+	private long countEntriesOfType(Class<?> clazz) {
+		var count = namedThings.values().stream().filter(thing -> thing.getClass().isAssignableFrom(clazz)).count();
+		for (var array: namedArrays.values()) {
+			if (!array.isEmpty() && array.get(0).getClass().isAssignableFrom(clazz)) {
+				count += array.size();
+			}
+		}
+		return count;
+	}
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName()).append(": ");
+		sb.append(countEntriesOfType(Image.class)).append(" images").append(", ");
+		sb.append(countEntriesOfType(Font.class)).append(" fonts").append(", ");
+		sb.append(countEntriesOfType(Color.class)).append(" colors").append(", ");
+		sb.append(countEntriesOfType(AudioClip.class)).append(" audio clips").append(", ");
+		return sb.toString();
+	}
+
 	public void set(String name, Object thing) {
 		namedThings.put(name, thing);
 	}

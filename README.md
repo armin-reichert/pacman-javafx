@@ -101,6 +101,4 @@ Cheats:
 
 ![Dashboard](doc/dashboard-about.png)
 
-YouTube:
-
-[![YouTube](doc/thumbnail.jpg)](https://www.youtube.com/watch?v=_3iQ-PKXX6Y)
+YouTube: (YouTube is scum).

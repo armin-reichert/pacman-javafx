@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -69,6 +70,7 @@ public class PacManGames2dApp extends Application {
 
 
 	private final PacManGames2dUI ui = new PacManGames2dUI();
+	private Theme theme;
 	private final Settings settings = new Settings();
 
 	@Override
@@ -76,6 +78,8 @@ public class PacManGames2dApp extends Application {
 		if (getParameters() != null) {
 			settings.merge(getParameters().getNamed());
 		}
+		theme = new ArcadeTheme(MGR);
+		Logger.info("Theme created: {}", theme);
 		GameController.create(settings.variant);
 		Logger.info("Game initialized: {}", settings);
 	}
@@ -103,7 +107,7 @@ public class PacManGames2dApp extends Application {
 			new PacManCutscene3()
 		);
 		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
-		ui.setTheme(new ArcadeTheme(MGR));
+		ui.setTheme(theme);
 		GameController.addListener(ui);
 		ui.showStartPage();
 		Logger.info("Game started. {} Hz locale={}", ui.clock().targetFrameratePy.get(), localeInfo());
