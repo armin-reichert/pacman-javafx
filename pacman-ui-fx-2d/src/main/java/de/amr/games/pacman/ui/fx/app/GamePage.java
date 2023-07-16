@@ -51,7 +51,7 @@ public class GamePage {
 	protected final HelpButton helpButton = new HelpButton();
 	protected final Signature signature = new Signature();
 
-	protected GameScene2D gameScene2D;
+	protected GameScene gameScene;
 	protected double scaling = 1.0;
 
 	public GamePage(PacManGames2dUI ui, Theme theme) {
@@ -89,7 +89,7 @@ public class GamePage {
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(ui.sceneConfig().bootScene() != gameScene2D);
+		helpButton.setVisible(ui.sceneConfig().bootScene() != gameScene);
 	}
 
 	protected void showHelpMenu() {
@@ -110,7 +110,8 @@ public class GamePage {
 
 		updateHelpButton();
 		updateSignatureSizeAndPosition();
-		if (gameScene2D != null) {
+		if (gameScene != null && gameScene instanceof GameScene2D) {
+			GameScene2D gameScene2D = (GameScene2D) gameScene;
 			gameScene2D.setScaling(scaling);
 		}
 
@@ -147,8 +148,11 @@ public class GamePage {
 	}
 
 	public void setGameScene(GameScene gameScene) {
-		gameScene2D = (GameScene2D) gameScene;
-		gameScene2D.setCanvas(canvas);
+		this.gameScene = gameScene;
+		if (gameScene instanceof GameScene2D) {
+			GameScene2D gameScene2D = (GameScene2D) gameScene;
+			gameScene2D.setCanvas(canvas);
+		}
 		resize(scaling, true);
 		if (gameScene == ui.sceneConfig().playScene()) {
 			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
