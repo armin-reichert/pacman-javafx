@@ -51,7 +51,6 @@ public class GamePage {
 	protected final HelpButton helpButton = new HelpButton();
 	protected final Signature signature = new Signature();
 
-	protected GameScene gameScene;
 	protected double scaling = 1.0;
 
 	public GamePage(PacManGames2dUI ui, Theme theme) {
@@ -89,7 +88,7 @@ public class GamePage {
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(ui.sceneConfig().bootScene() != gameScene);
+		helpButton.setVisible(ui.sceneConfig().bootScene() != ui.currentGameScene());
 	}
 
 	protected void showHelpMenu() {
@@ -110,8 +109,8 @@ public class GamePage {
 
 		updateHelpButton();
 		updateSignatureSizeAndPosition();
-		if (gameScene != null && gameScene instanceof GameScene2D) {
-			GameScene2D gameScene2D = (GameScene2D) gameScene;
+		if (ui.currentGameScene() != null && ui.currentGameScene() instanceof GameScene2D) {
+			GameScene2D gameScene2D = (GameScene2D) ui.currentGameScene();
 			gameScene2D.setScaling(scaling);
 		}
 
@@ -147,19 +146,18 @@ public class GamePage {
 		Logger.info("Game page resized: scaling: {}, width: {}, height: {}, border: {}", scaling, w, h, borderWidth);
 	}
 
-	public void setGameScene(GameScene gameScene) {
-		this.gameScene = gameScene;
-		if (gameScene instanceof GameScene2D) {
-			GameScene2D gameScene2D = (GameScene2D) gameScene;
+	public void onGameSceneChanged() {
+		if (ui.currentGameScene() instanceof GameScene2D) {
+			GameScene2D gameScene2D = (GameScene2D) ui.currentGameScene();
 			gameScene2D.setCanvas(canvas);
 		}
 		resize(scaling, true);
-		if (gameScene == ui.sceneConfig().playScene()) {
+		if (ui.currentGameScene() == ui.sceneConfig().playScene()) {
 			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 		} else {
 			layers.removeEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 		}
-		if (gameScene == ui.sceneConfig().introScene()) {
+		if (ui.currentGameScene() == ui.sceneConfig().introScene()) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();

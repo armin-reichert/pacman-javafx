@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.app.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -26,7 +25,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 /**
  * @author Armin Reichert
  */
-class GamePage3D extends GamePage {
+public class GamePage3D extends GamePage {
 
 	private final BorderPane dashboardLayer = new BorderPane();
 	private final PictureInPicture pip;
@@ -46,22 +45,18 @@ class GamePage3D extends GamePage {
 		dashboardLayer.setRight(pip.root());
 	}
 
-	public PictureInPicture getPip() {
-		return pip;
-	}
-
 	@Override
-	public void setGameScene(GameScene gameScene) {
-		if (gameScene.is3D()) {
-			layers.getChildren().set(GAME_SCENE_LAYER, gameScene.root());
+	public void onGameSceneChanged() {
+		if (ui.currentGameScene().is3D()) {
+			layers.getChildren().set(GAME_SCENE_LAYER, ui.currentGameScene().root());
 			// Assume PlayScene3D is the only 3D scene
 			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 			layers.requestFocus();
 			helpButton.setVisible(false);
-			updateBackground(gameScene);
+			updateBackground(ui.currentGameScene());
 		} else {
 			layers.getChildren().set(GAME_SCENE_LAYER, gameSceneLayer);
-			super.setGameScene(gameScene);
+			super.onGameSceneChanged();
 		}
 		updateTopLayer();
 	}
@@ -133,5 +128,4 @@ class GamePage3D extends GamePage {
 			super.updateHelpButton();
 		}
 	}
-
 }

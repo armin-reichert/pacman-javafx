@@ -239,7 +239,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		currentGameScene.setSpritesheet(spritesheet());
 		currentGameScene.setSoundHandler(soundHandler);
 		currentGameScene.init();
-		gamePage.setGameScene(currentGameScene);
+		gamePage.onGameSceneChanged();
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 

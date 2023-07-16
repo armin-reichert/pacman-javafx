@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.Settings;
