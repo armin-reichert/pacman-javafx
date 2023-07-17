@@ -128,7 +128,7 @@
 					<execution>
 						<id>linux-tarball-with-jre</id>
 						<!-- replace "none" by "package" to activate -->
-						<phase>package</phase>
+						<phase>none</phase>
 						<goals>
 							<goal>package</goal>
 						</goals>
@@ -162,10 +162,8 @@
 						</configuration>
 					</execution>
 
-
 				</executions>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>
