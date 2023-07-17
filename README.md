@@ -20,7 +20,7 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 installers for Windows and Linux (not tested by me). If you have a Java runtime installed you can also start the game(s) by double-clicking the "fat" jar file.
 Otherwise run the installer and double-click the new desktop icon(s).
 
-## How to build locally
+## How to build
 
 - Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
 - Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
