@@ -24,9 +24,8 @@ Otherwise run the installer and double-click the new desktop icon(s).
 
 - Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
 - Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
-- `cd \path\to\git\pacman-javafx`
-- `build_core.bat`:
-  - Builds the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) Maven project (game logic and model),
+- In folder `pacman-javafx` call
+  - `build_core.bat` (builds the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project)
 - In folder `pacman-ui-fx-2d` call 
   - `mvn install -Djavafx.platform=win` (builds Windows executables of 2D game) 
   - `mvn install -Djavafx.platform=linux` (builds Linux executables of 2D game)
