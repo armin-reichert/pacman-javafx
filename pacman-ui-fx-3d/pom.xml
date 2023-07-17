@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.amr.games.pacman</groupId>
@@ -9,8 +9,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<mainModule>de.amr.games.pacman.ui.fx3d</mainModule>
-		<mainClass>de.amr.games.pacman.ui.fx.v3d.app.Main</mainClass>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<exec.mainClass>de.amr.games.pacman.ui.fx.v3d.app.Main</exec.mainClass>
 		<vs.java>17</vs.java>
 		<vs.javafx>17.0.7</vs.javafx>
 		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
@@ -19,6 +20,98 @@
 		<vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
 		<vs.tinylog>2.6.1</vs.tinylog>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>build-for-windows</id>
+			<activation>
+				<property>
+					<name>javafx.platform</name>
+					<value>win</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.github.fvarrui</groupId>
+						<artifactId>javapackager</artifactId>
+						<version>1.7.2</version>
+						<configuration>
+							<generateInstaller>true</generateInstaller>
+							<winConfig>
+								<generateSetup>true</generateSetup>
+								<generateMsi>false</generateMsi>
+								<generateMsm>false</generateMsm>
+							</winConfig>
+						</configuration>
+						<executions>
+							<execution>
+								<id>windows-installer-with-jre</id>
+								<phase>package</phase>
+								<goals>
+									<goal>package</goal>
+								</goals>
+								<configuration>
+									<name>${project.name}-jre</name>
+									<bundleJre>true</bundleJre>
+								</configuration>
+							</execution>
+							<execution>
+								<id>windows-installer-without-jre</id>
+								<phase>package</phase>
+								<goals>
+									<goal>package</goal>
+								</goals>
+								<configuration>
+									<name>${project.name}-no-jre</name>
+									<bundleJre>false</bundleJre>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>build-for-linux</id>
+			<activation>
+				<property>
+					<name>javafx.platform</name>
+					<value>linux</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.github.fvarrui</groupId>
+						<artifactId>javapackager</artifactId>
+						<version>1.7.2</version>
+						<configuration>
+							<platform>linux</platform>
+							<createTarball>true</createTarball>
+							<jdkPath>C:\dev\linux\jdk-17.0.7</jdkPath>
+							<bundleJre>true</bundleJre>
+							<runnableJar>${project.build.directory}/${project.name}-${project.version}-shaded.jar</runnableJar>
+							<copyDependencies>false</copyDependencies>
+							<linuxConfig>
+								<generateDeb>true</generateDeb>
+								<generateRpm>true</generateRpm>
+								<generateAppImage>false</generateAppImage>
+							</linuxConfig>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>package</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 
@@ -72,7 +165,6 @@
 				</configuration>
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
@@ -96,8 +188,8 @@
 							<shadedArtifactAttached>true</shadedArtifactAttached>
 							<transformers>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>${mainClass}</mainClass>
+										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${exec.mainClass}</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>
@@ -105,77 +197,8 @@
 				</executions>
 			</plugin>
 
-			<plugin>
-				<groupId>io.github.fvarrui</groupId>
-				<artifactId>javapackager</artifactId>
-				<version>1.7.2</version>
-				<configuration>
-					<mainClass>${mainClass}</mainClass>
-					<generateInstaller>false</generateInstaller>
-				</configuration>
-				<executions>
-
-					<execution>
-						<id>windows-installer-with-jre</id>
-						<phase>package</phase>
-						<goals>
-							<goal>package</goal>
-						</goals>
-						<configuration>
-							<platform>windows</platform>
-							<bundleJre>true</bundleJre>
-							<generateInstaller>true</generateInstaller>
-							<winConfig>
-								<generateSetup>true</generateSetup>
-								<generateMsi>false</generateMsi>
-								<generateMsm>false</generateMsm>
-							</winConfig>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>linux-tarball-with-jre</id>
-						<!-- replace "none" by "package" to activate -->
-						<phase>none</phase>
-						<goals>
-							<goal>package</goal>
-						</goals>
-						<configuration>
-							<platform>linux</platform>
-							<createTarball>true</createTarball>
-							<jdkPath>C:\dev\linux\jdk-17.0.7</jdkPath>
-							<bundleJre>true</bundleJre>
-							<runnableJar>${project.build.directory}/pacman-ui-fx-3d-1.0-shaded.jar</runnableJar>
-						</configuration>
-					</execution>
-
-					<!-- How to create .deb and .rpm archives? -->
-					<!-- The following does not work. Why? -->
-					<execution>
-						<id>linux-deb-with-jre</id>
-						<!-- replace "none" by "package" to activate -->
-						<phase>none</phase>
-						<goals>
-							<goal>package</goal>
-						</goals>
-						<configuration>
-							<platform>linux</platform>
-							<createTarball>false</createTarball>
-							<jdkPath>C:\dev\linux\jdk-17.0.7</jdkPath>
-							<bundleJre>true</bundleJre>
-							<runnableJar>${project.build.directory}/pacman-ui-fx-3d-1.0-shaded.jar</runnableJar>
-							<linuxConfig>
-								<generateDeb>true</generateDeb>
-							</linuxConfig>
-						</configuration>
-					</execution>
-
-
-				</executions>
-			</plugin>
-
-
 		</plugins>
+
 	</build>
 
 </project>
