@@ -19,6 +19,7 @@
 		<vs.maven-shade-plugin>3.4.1</vs.maven-shade-plugin>
 		<vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
 		<vs.tinylog>2.6.1</vs.tinylog>
+		<linux.jdk.path>C:\dev\linux\jdk-17.0.7</linux.jdk.path>
 	</properties>
 
 	<profiles>
@@ -89,7 +90,7 @@
 						<configuration>
 							<platform>linux</platform>
 							<createTarball>true</createTarball>
-							<jdkPath>C:\dev\linux\jdk-17.0.7</jdkPath>
+							<jdkPath>${linux.jdk.path}</jdkPath>
 							<bundleJre>true</bundleJre>
 							<runnableJar>${project.build.directory}/${project.name}-${project.version}-shaded.jar</runnableJar>
 							<copyDependencies>false</copyDependencies>
