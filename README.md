@@ -35,6 +35,8 @@ Otherwise run the installer and double-click the new desktop icon(s).
 
 To be able to create these executables you need to have [Inno Setup](https://jrsoftware.org/isinfo.php) and [WIX toolset](https://wixtoolset.org/) installed as described in the [JavaPackager documentation](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md). (I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.)
 
+To build the Linux executables, you need to have a Linux JDK on your computer. Edit the variable `linux.jdk.path` in the `pom.xml`files to point to your local path.
+
 ## How to use
 
 Starting the game and switching game variant:
