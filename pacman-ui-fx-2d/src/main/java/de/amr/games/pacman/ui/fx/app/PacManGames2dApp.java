@@ -44,7 +44,7 @@ public class PacManGames2dApp extends Application {
 
 	public static final KeyCodeCombination KEY_AUTOPILOT         = alt(KeyCode.A);
 	public static final KeyCodeCombination KEY_DEBUG_INFO        = alt(KeyCode.D);
-	public static final KeyCodeCombination KEY_IMMUNITY           = alt(KeyCode.I);
+	public static final KeyCodeCombination KEY_IMMUNITY          = alt(KeyCode.I);
 
 	public static final KeyCodeCombination KEY_PAUSE             = just(KeyCode.P);
 	public static final KeyCodeCombination KEY_PAUSE_STEP        = shift(KeyCode.P);
@@ -68,18 +68,15 @@ public class PacManGames2dApp extends Application {
 	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
 
-
-	private final PacManGames2dUI ui = new PacManGames2dUI();
-	private Theme theme;
-	private final Settings settings = new Settings();
+	private PacManGames2dUI ui;
+	private Settings settings;
 
 	@Override
 	public void init() {
+		settings = new Settings();
 		if (getParameters() != null) {
 			settings.merge(getParameters().getNamed());
 		}
-		theme = new ArcadeTheme(MGR);
-		Logger.info("Theme created: {}", theme);
 		GameController.create(settings.variant);
 		Logger.info("Game initialized: {}", settings);
 	}
@@ -106,10 +103,13 @@ public class PacManGames2dApp extends Application {
 			new PacManCutscene2(),
 			new PacManCutscene3()
 		);
+		ui = new PacManGames2dUI();
 		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
-		ui.setTheme(theme);
+		ui.setTheme(new ArcadeTheme(MGR));
+		Logger.info("Theme created: {}", ui.theme());
 		GameController.addListener(ui);
 		ui.showStartPage();
+		Logger.info("UI initialized. Stage size: {000} x {000} px", stage.getWidth(), stage.getHeight());
 		Logger.info("Game started. {} Hz locale={}", ui.clock().targetFrameratePy.get(), localeInfo());
 	}
 
