@@ -22,6 +22,8 @@ Otherwise run the installer and double-click the new desktop icon(s).
 
 ## How to build locally
 
+You need to have a JDK 17 installed and ensure that this version is used by the following build steps.
+
 1. Clone repositories (only first time)
 - `cd <repository-root>`
 - `git clone https://github.com/armin-reichert/pacman-basic.git`
