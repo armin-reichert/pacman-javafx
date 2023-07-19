@@ -44,7 +44,7 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 To be able to create these executables you need to first install the following tools
 
 - [Inno Setup](https://jrsoftware.org/isinfo.php)
-- [WIX toolset](https://wixtoolset.org/)
+- [WiX toolset](https://wixtoolset.org/)
 
 as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md) (:+1: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
 
