@@ -20,20 +20,33 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 installers for Windows and Linux (not tested by me). If you have a Java runtime installed you can also start the game(s) by double-clicking the "fat" jar file.
 Otherwise run the installer and double-click the new desktop icon(s).
 
-## How to build
+## How to build locally
 
-- Clone repository [pacman-basic](https://github.com/armin-reichert/pacman-basic).
-- Clone repository [pacman-javafx](https://github.com/armin-reichert/pacman-javafx).
-- In folder `pacman-javafx` call
-  - `build_core.bat` (builds the [pacman-core](https://github.com/armin-reichert/pacman-basic/tree/main/pacman-core) project)
-- In folder `pacman-ui-fx-2d` call 
-  - `mvn install -Djavafx.platform=win` (builds Windows executables of 2D game) 
-  - `mvn install -Djavafx.platform=linux` (builds Linux executables of 2D game)
-- In folder `pacman-ui-fx-3d` call 
-  - `mvn install -Djavafx.platform=win` (builds Windows executables of 2D+3D game) 
-  - `mvn install -Djavafx.platform=linux` (builds Linux executables of 2D+3D game)
+1. Clone repositories (only first time)
+- `cd <repository-root>`
+- `git clone https://github.com/armin-reichert/pacman-basic.git`
+- `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
-To be able to create these executables you need to have [Inno Setup](https://jrsoftware.org/isinfo.php) and [WIX toolset](https://wixtoolset.org/) installed as described in the [JavaPackager documentation](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md). (I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.)
+2. Build core game (model and logic)
+- `cd <repository-root>\pacman-basic\pacman-core`
+- `mvn clean install` (builds game model and logic and runs unit tests)
+
+2. Build JavaFX user interface variants
+- `cd <repository-root>\pacman-javafx\pacman-ui-fx-2d`
+- `mvn install -Djavafx.platform=win` (builds Windows executables of 2D game) 
+- `mvn install -Djavafx.platform=linux` (builds Linux executables of 2D game)
+- `cd <repository-root>\\pacman-javafx\pacman-ui-fx-3d`
+- `mvn install -Djavafx.platform=win` (builds Windows executables of 2D+3D game) 
+- `mvn install -Djavafx.platform=linux` (builds Linux executables of 2D+3D game)
+
+To be able to create these executables you need to first install the following tools
+
+- [Inno Setup](https://jrsoftware.org/isinfo.php)
+- [WIX toolset](https://wixtoolset.org/)
+
+as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md) (:+1: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
+
+I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
 
 To build the Linux executables, you need to have a Linux JDK on your computer. Edit the variable `linux.jdk.path` in the `pom.xml`files to point to your local path.
 
