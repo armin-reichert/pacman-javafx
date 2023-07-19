@@ -22,7 +22,7 @@ Otherwise run the installer and double-click the new desktop icon(s).
 
 ## How to build locally
 
-You need to have a [JDK 17}(https://www.oracle.com/java/technologies/downloads/#java17) installed and ensure that this version is used by the following build steps.
+You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) installed and ensure that this version is used by the following build steps.
 
 1. Clone repositories (only first time)
 - `cd <repository-root>`
