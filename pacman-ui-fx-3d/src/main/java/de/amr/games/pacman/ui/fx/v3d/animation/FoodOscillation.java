@@ -40,7 +40,8 @@ import static de.amr.games.pacman.lib.Globals.v2f;
  */
 public class FoodOscillation extends Transition {
 
-	private static final Vector2f CENTER = v2f(0.5f * TS * World.TILES_X, 0.5f * TS * World.TILES_Y);
+	private static final Vector2f CENTER = v2f(0.5f * TS * World.ARCADE_TILES_X, 0.5f * TS * World.ARCADE_TILES_Y);
+
 	private final Group foodGroup;
 
 	public FoodOscillation(Group foodGroup) {

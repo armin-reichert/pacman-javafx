@@ -47,7 +47,7 @@ public class PacManGames3dApp extends Application {
 	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
 
 	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.TILES_Y * Globals.TS);
+	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.ARCADE_TILES_Y * Globals.TS);
 	public static final BooleanProperty             PY_PIP_ON                = new SimpleBooleanProperty(false);
 
 	public static final IntegerProperty             PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);

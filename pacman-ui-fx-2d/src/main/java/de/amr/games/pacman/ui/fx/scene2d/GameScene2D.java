@@ -216,7 +216,7 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		var x = TS * 2;
-		var y = TS * (World.TILES_Y - 2);
+		var y = TS * (World.ARCADE_TILES_Y - 2);
 		int maxLives = 5;
 		switch (game().variant()) {
 			case MS_PACMAN: {
