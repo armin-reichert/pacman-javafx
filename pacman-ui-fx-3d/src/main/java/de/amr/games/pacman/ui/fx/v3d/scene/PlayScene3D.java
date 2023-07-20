@@ -284,7 +284,7 @@ public class PlayScene3D implements GameScene {
 	public void onSceneVariantSwitch() {
 		game().level().ifPresent(level -> {
 			level3D.world3D().eatables3D().forEach(
-					eatable3D -> eatable3D.getRoot().setVisible(!level.world().foodStorage().hasEatenFoodAt(eatable3D.tile())));
+					eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
 			if (Globals.oneOf(state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
@@ -301,7 +301,7 @@ public class PlayScene3D implements GameScene {
 			// In that case, ensure the 3D pellets to be in sync with the model:
 			world().ifPresent(world -> {
 				world.tiles()
-					.filter(world.foodStorage()::hasEatenFoodAt)
+					.filter(world::hasEatenFoodAt)
 					.map(level3D.world3D()::eatableAt)
 					.flatMap(Optional::stream)
 					.forEach(Eatable3D::eaten);

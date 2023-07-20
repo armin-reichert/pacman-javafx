@@ -101,9 +101,9 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			var image = theme.image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
-			world.tiles().filter(world.foodStorage()::hasEatenFoodAt).forEach(this::hideTileContent);
+			world.tiles().filter(world::hasEatenFoodAt).forEach(this::hideTileContent);
 			if (world.energizerBlinking().off()) {
-				world.foodStorage().energizerTiles().forEach(this::hideTileContent);
+				world.energizerTiles().forEach(this::hideTileContent);
 			}
 		}
 	}
@@ -121,10 +121,10 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
 			drawSprite(ss.filledMaze(mazeNumber), x, y);
-			world.tiles().filter(world.foodStorage()::hasEatenFoodAt).forEach(this::hideTileContent);
+			world.tiles().filter(world::hasEatenFoodAt).forEach(this::hideTileContent);
 			// energizer animation
 			if (world.energizerBlinking().off()) {
-				world.foodStorage().energizerTiles().forEach(this::hideTileContent);
+				world.energizerTiles().forEach(this::hideTileContent);
 			}
 		}
 	}

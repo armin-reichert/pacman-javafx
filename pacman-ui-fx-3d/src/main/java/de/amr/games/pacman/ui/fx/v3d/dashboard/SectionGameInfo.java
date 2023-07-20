@@ -58,8 +58,8 @@ public class SectionGameInfo extends Section {
 
 	private String fmtPelletCount(GameLevel level) {
 		var world = level.world();
-		return String.format("%d of %d (%d energizers)", world.foodStorage().uneatenCount(),
-				world.foodStorage().totalCount(), world.foodStorage().energizerTiles().count());
+		return String.format("%d of %d (%d energizers)", world.uneatenFoodCount(),
+				world.totalFoodCount(), world.energizerTiles().count());
 	}
 
 	private String fmtGhostSpeed(GameLevel level) {
