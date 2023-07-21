@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
-import javafx.geometry.Rectangle2D;
 
 /**
  * @author Armin Reichert

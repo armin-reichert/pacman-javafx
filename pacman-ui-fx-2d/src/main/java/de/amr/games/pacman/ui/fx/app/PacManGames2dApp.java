@@ -9,7 +9,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,7 +21,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
-import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
 
 /**
  * @author Armin Reichert
