@@ -69,7 +69,7 @@ General shortcuts:
 - <kbd>Esc</kbd> Exit fullscreen mode
 - <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggle dashboard
 - <kbd>F2</kbd> Toggle picture-in-picture view
-- <kbd>Alt+Z</kbd> Play all intermission scenes
+- <kbd>Alt+C</kbd> Play all intermission/cut scenes
 - <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
 
 Play screen shortcuts:
