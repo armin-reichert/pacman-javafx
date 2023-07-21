@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.rendering2d.mspacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
@@ -16,7 +17,7 @@ import javafx.geometry.Rectangle2D;
  * @author Armin Reichert
  */
 public class GhostAnimationsMsPacManGame extends SpriteAnimations
-		implements GhostAnimations<SpriteAnimation, Rectangle2D> {
+		implements Animations<SpriteAnimation, Rectangle2D> {
 
 	private final Ghost ghost;
 	private final SpritesheetMsPacManGame spritesheet;
@@ -60,11 +61,11 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 			.end();
 		//@formatter:on
 
-		animationsByName.put(GHOST_NORMAL, normal);
-		animationsByName.put(GHOST_FRIGHTENED, frightened);
-		animationsByName.put(GHOST_FLASHING, flashing);
-		animationsByName.put(GHOST_EYES, eyes);
-		animationsByName.put(GHOST_NUMBER, number);
+		animationsByName.put(GhostAnimations.GHOST_NORMAL, normal);
+		animationsByName.put(GhostAnimations.GHOST_FRIGHTENED, frightened);
+		animationsByName.put(GhostAnimations.GHOST_FLASHING, flashing);
+		animationsByName.put(GhostAnimations.GHOST_EYES, eyes);
+		animationsByName.put(GhostAnimations.GHOST_NUMBER, number);
 
 		// TODO check this
 		eyes.start();
@@ -75,16 +76,16 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 	@Override
 	public void select(String name, Object... args) {
 		super.select(name, args);
-		if (GHOST_NUMBER.equals(name)) {
-			byName(GHOST_NUMBER).setFrameIndex((int) args[0]);
+		if (GhostAnimations.GHOST_NUMBER.equals(name)) {
+			byName(GhostAnimations.GHOST_NUMBER).setFrameIndex((int) args[0]);
 		}
 	}
 
 	@Override
 	public void updateCurrentAnimation() {
-		if (GHOST_NORMAL.equals(currentAnimationName)) {
+		if (GhostAnimations.GHOST_NORMAL.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
-		} else if (GHOST_EYES.equals(currentAnimationName)) {
+		} else if (GhostAnimations.GHOST_EYES.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostEyesSprites(ghost.wishDir()));
 		}
 	}

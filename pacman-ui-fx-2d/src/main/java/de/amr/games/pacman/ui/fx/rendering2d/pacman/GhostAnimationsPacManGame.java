@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.rendering2d.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
@@ -15,8 +16,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class GhostAnimationsPacManGame extends SpriteAnimations
-		implements GhostAnimations<SpriteAnimation, Rectangle2D> {
+public class GhostAnimationsPacManGame extends SpriteAnimations {
 
 	private final Ghost ghost;
 	private final SpritesheetPacManGame spritesheet;
@@ -84,15 +84,15 @@ public class GhostAnimationsPacManGame extends SpriteAnimations
 			.end();
 		//@formatter:on
 
-		animationsByName.put(GHOST_NORMAL, normal);
-		animationsByName.put(GHOST_FRIGHTENED, frightened);
-		animationsByName.put(GHOST_FLASHING, flashing);
-		animationsByName.put(GHOST_EYES, eyesAnimation);
-		animationsByName.put(GHOST_NUMBER, numberAnimation);
-		animationsByName.put(BLINKY_DAMAGED, damaged);
-		animationsByName.put(BLINKY_STRETCHED, stretched);
-		animationsByName.put(BLINKY_PATCHED, patched);
-		animationsByName.put(BLINKY_NAKED, naked);
+		animationsByName.put(GhostAnimations.GHOST_NORMAL, normal);
+		animationsByName.put(GhostAnimations.GHOST_FRIGHTENED, frightened);
+		animationsByName.put(GhostAnimations.GHOST_FLASHING, flashing);
+		animationsByName.put(GhostAnimations.GHOST_EYES, eyesAnimation);
+		animationsByName.put(GhostAnimations.GHOST_NUMBER, numberAnimation);
+		animationsByName.put(GhostAnimations.BLINKY_DAMAGED, damaged);
+		animationsByName.put(GhostAnimations.BLINKY_STRETCHED, stretched);
+		animationsByName.put(GhostAnimations.BLINKY_PATCHED, patched);
+		animationsByName.put(GhostAnimations.BLINKY_NAKED, naked);
 
 		// TODO check this
 		eyesAnimation.start();
@@ -103,16 +103,16 @@ public class GhostAnimationsPacManGame extends SpriteAnimations
 	@Override
 	public void select(String name, Object... args) {
 		super.select(name, args);
-		if (GHOST_NUMBER.equals(name)) {
-			byName(GHOST_NUMBER).setFrameIndex((int) args[0]);
+		if (GhostAnimations.GHOST_NUMBER.equals(name)) {
+			byName(GhostAnimations.GHOST_NUMBER).setFrameIndex((int) args[0]);
 		}
 	}
 
 	@Override
 	public void updateCurrentAnimation() {
-		if (GHOST_NORMAL.equals(currentAnimationName)) {
+		if (GhostAnimations.GHOST_NORMAL.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
-		} else if (GHOST_EYES.equals(currentAnimationName)) {
+		} else if (GhostAnimations.GHOST_EYES.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.ghostEyesSprites(ghost.wishDir()));
 		}
 	}

@@ -15,7 +15,7 @@ import javafx.geometry.Rectangle2D;
 /**
  * @author Armin Reichert
  */
-public class PacAnimationsMsPacManGame extends SpriteAnimations implements PacAnimations<SpriteAnimation, Rectangle2D> {
+public class PacAnimationsMsPacManGame extends SpriteAnimations {
 
 	private final Pac pac;
 	private final SpritesheetMsPacManGame spritesheet;
@@ -52,10 +52,10 @@ public class PacAnimationsMsPacManGame extends SpriteAnimations implements PacAn
 
 	@Override
 	public void updateCurrentAnimation() {
-		if (MUNCHING.equals(currentAnimationName)) {
+		if (PacAnimations.MUNCHING.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.msPacManMunchingSprites(pac.moveDir()));
 		}
-		if (HUSBAND_MUNCHING.equals(currentAnimationName)) {
+		if (PacAnimations.HUSBAND_MUNCHING.equals(currentAnimationName)) {
 			currentAnimation.setSprites(spritesheet.pacManMunchingSprites(pac.moveDir()));
 		}
 	}
