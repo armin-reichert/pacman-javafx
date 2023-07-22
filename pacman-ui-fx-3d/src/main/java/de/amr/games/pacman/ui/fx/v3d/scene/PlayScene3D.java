@@ -354,7 +354,10 @@ public class PlayScene3D implements GameScene {
 		case READY -> {
 			level3D.pac3D().init();
 			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
-			var msg = inPercentOfCases(25) ? PacManGames3dApp.pickFunnyReadyMessage(game().variant()) : "READY!";
+			var msg = "READY!";
+			if (!PacManGames3dApp.PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
+				msg = PacManGames3dApp.pickFunnyReadyMessage(game().variant());
+			}
 			readyMessageText3D.setText(msg);
 			readyMessageText3D.setVisible(true);
 		}
