@@ -55,7 +55,7 @@ public class PacManGames3dApp extends Application {
 	public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x60));
+	public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x33));
 	public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
 	public static final BooleanProperty             PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
@@ -92,7 +92,7 @@ public class PacManGames3dApp extends Application {
 		theme.set("model3D.ghost",      new Model3D(MGR.url("model3D/ghost.obj")));
 		theme.set("model3D.pellet",     new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
 
-		theme.set("model3D.wallpaper",  MGR.imageBackground("graphics/sky.png",
+		theme.set("model3D.wallpaper",  MGR.imageBackground("graphics/sea-wallpaper.jpg",
 				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER,
 				new BackgroundSize(1, 1, true, true, false, true)
