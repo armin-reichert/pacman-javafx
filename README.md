@@ -113,4 +113,4 @@ Cheats:
 
 ![Dashboard](doc/dashboard-about.png)
 
-YouTube: (YouTube is scum).
+
