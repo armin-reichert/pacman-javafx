@@ -9,6 +9,10 @@ Both games (2D) can now also be played online:
 
 This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler technology (:+1: to Bruno Salmon).
 
+## Video
+
+[Pac-Man 3D Video](https://magentacloud.de/s/qYDg6BKK7G6TxpB)
+
 ## About this project
 
 JavaFX user interfaces for my UI-agnostic/faceless [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic). There is a 2D-only user interface and
@@ -109,4 +113,4 @@ Cheats:
 
 ![Dashboard](doc/dashboard-about.png)
 
-YouTube: (YouTube is scum).
+
