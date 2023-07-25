@@ -316,7 +316,7 @@ public class PlayScene3D implements GameScene {
 	public void onBonusGetsActive(GameEvent e) {
 		game().level().ifPresent(level -> {
 			boolean moving = game().variant() == GameVariant.MS_PACMAN;
-			level.bonusManagement().getBonus().ifPresent(bonus -> {
+			level.getBonus().ifPresent(bonus -> {
 				level3D.replaceBonus3D(bonus, spritesheet, moving);
 			});
 			level3D.bonus3D().showEdible();

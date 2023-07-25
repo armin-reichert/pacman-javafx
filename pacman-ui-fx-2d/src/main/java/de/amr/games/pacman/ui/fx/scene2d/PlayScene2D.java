@@ -79,7 +79,7 @@ public class PlayScene2D extends GameScene2D {
 			} else if (state() == GameState.READY) {
 				drawText("READY!", theme.color("palette.yellow"), sceneFont(), t(11), t(21));
 			}
-			level.bonusManagement().getBonus().ifPresent(this::drawBonus);
+			level.getBonus().ifPresent(this::drawBonus);
 			drawPac(level.pac());
 			Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
 					.map(level::ghost).forEach(this::drawGhost);
