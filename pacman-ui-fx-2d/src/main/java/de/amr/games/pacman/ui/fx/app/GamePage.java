@@ -129,14 +129,14 @@ public class GamePage {
 		canvasContainer.setMaxSize (w, h);
 
 		var roundedRect = new Rectangle(w, h);
-		var arc = 35;
-		roundedRect.setArcWidth (arc * scaling);
-		roundedRect.setArcHeight(arc * scaling);
+		roundedRect.setArcWidth (26 * scaling);
+		roundedRect.setArcHeight(26 * scaling);
 		canvasContainer.setClip(roundedRect);
 
-		double borderWidth  = Math.max(5, Math.ceil(h / 60));
-		double cornerRadius = Math.ceil(15 * scaling);
-		canvasContainer.setBorder(ResourceManager.roundedBorder(theme.color("palette.pale"), cornerRadius, borderWidth));
+		double borderWidth  = Math.max(5, Math.ceil(h / 55));
+		double cornerRadius = Math.ceil(10 * scaling);
+		var roundedBorder = ResourceManager.roundedBorder(theme.color("palette.pale"), cornerRadius, borderWidth);
+		canvasContainer.setBorder(roundedBorder);
 
 		popupLayer.setMinSize (w, h);
 		popupLayer.setPrefSize(w, h);
