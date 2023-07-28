@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
@@ -243,39 +245,29 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	protected void drawBonus(Bonus bonus) {
-		Rectangle2D symbolSprite;
-		Rectangle2D valueSprite;
-		switch (game().variant()) {
-			case MS_PACMAN: {
-				var ss = (SpritesheetMsPacManGame) spritesheet;
-				symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
-				valueSprite = ss.bonusValueSprite(bonus.symbol());
-				break;
+	private Rectangle2D bonusSprite(Bonus bonus, GameVariant variant) {
+		if (variant == GameVariant.MS_PACMAN) {
+			var ss = (SpritesheetMsPacManGame) spritesheet;
+			if (bonus.state() == Bonus.STATE_EDIBLE) {
+				return ss.bonusSymbolSprite(bonus.symbol());
 			}
-			case PACMAN: {
-				var ss = (SpritesheetPacManGame) spritesheet;
-				symbolSprite = ss.bonusSymbolSprite(bonus.symbol());
-				valueSprite = ss.bonusValueSprite(bonus.symbol());
-				break;
+			if (bonus.state() == Bonus.STATE_EATEN) {
+				return ss.bonusValueSprite(bonus.symbol());
 			}
-			default:
-				throw new IllegalGameVariantException(game().variant());
+		} else if (variant == GameVariant.PACMAN) {
+			var ss = (SpritesheetPacManGame) spritesheet;
+			if (bonus.state() == Bonus.STATE_EDIBLE) {
+				return ss.bonusSymbolSprite(bonus.symbol());
+			}
+			if (bonus.state() == Bonus.STATE_EATEN) {
+				return ss.bonusValueSprite(bonus.symbol());
+			}
 		}
+		return null;
+	}
 
-		Rectangle2D sprite = null;
-		switch (bonus.state()) {
-			case Bonus.STATE_INACTIVE:
-				break;
-			case Bonus.STATE_EDIBLE:
-				sprite = symbolSprite;
-				break;
-			case Bonus.STATE_EATEN:
-				sprite = valueSprite;
-				break;
-			default:
-				throw new IllegalArgumentException();
-		}
+	protected void drawBonus(Bonus bonus) {
+		var sprite = bonusSprite(bonus, game().variant());
 		if (sprite == null) {
 			return;
 		}
