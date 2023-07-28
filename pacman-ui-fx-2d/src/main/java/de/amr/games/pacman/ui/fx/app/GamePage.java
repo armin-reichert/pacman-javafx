@@ -106,6 +106,7 @@ public class GamePage {
 			return;
 		}
 
+		//TODO check if this has to be done also when scaling value did not change
 		updateHelpButton();
 		updateSignatureSizeAndPosition();
 		if (ui.currentGameScene() != null && ui.currentGameScene() instanceof GameScene2D) {
@@ -142,7 +143,7 @@ public class GamePage {
 		popupLayer.setPrefSize(w, h);
 		popupLayer.setMaxSize (w, h);
 
-		Logger.info("Game page: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
+		Logger.info("Game page resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
 				canvas.getWidth(), canvas.getHeight(), borderWidth);
 	}
 

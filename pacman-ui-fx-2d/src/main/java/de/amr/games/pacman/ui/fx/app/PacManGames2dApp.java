@@ -108,7 +108,7 @@ public class PacManGames2dApp extends Application {
 		GameController.addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI initialized. Stage size: {000} x {000} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Game started. {} Hz locale={}", ui.clock().targetFrameratePy.get(), localeInfo());
+		Logger.info("Game app started. {} Hz locale={}", ui.clock().targetFrameratePy.get(), localeInfo());
 	}
 
 	@Override
