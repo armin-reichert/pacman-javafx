@@ -129,7 +129,7 @@ public class World3D {
 		var light = new PointLight();
 		light.setColor(wallBaseColor);
 		light.setMaxRange(3 * TS);
-		var center = world.house().seatPositions().get(1);
+		var center = world.house().getSeat("middle");
 		light.setTranslateX(center.x() + HTS);
 		light.setTranslateY(center.y());
 		light.setTranslateZ(-TS);
