@@ -210,21 +210,24 @@ public class GamePage {
 	}
 
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames2dApp.KEY_SHOW_HELP)) {
-			showHelpMenu();
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_AUTOPILOT)) {
+		var gameState = GameController.it().state();
+		if (Keyboard.pressed(PacManGames2dApp.KEY_AUTOPILOT)) {
 			ui.toggleAutopilot();
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_BOOT)) {
-			if (GameController.it().state() != GameState.BOOT) {
+			if (gameState != GameState.BOOT) {
 				ui.reboot();
 			}
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_DEBUG_INFO)) {
 			Ufx.toggle(PacManGames2dApp.PY_SHOW_DEBUG_INFO);
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_FULLSCREEN)) {
+			ui.stage.setFullScreen(true);
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_IMMUNITY)) {
 			ui.toggleImmunity();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SHOW_HELP)) {
+			showHelpMenu();
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PAUSE)) {
 			ui.togglePaused();
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PAUSE_STEP) || Keyboard.pressed(PacManGames2dApp.KEY_SINGLE_STEP)) {
+		} else if (Keyboard.anyPressed(PacManGames2dApp.KEY_PAUSE_STEP, PacManGames2dApp.KEY_SINGLE_STEP)) {
 			ui.oneSimulationStep();
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEN_STEPS)) {
 			ui.tenSimulationSteps();
@@ -235,13 +238,11 @@ public class GamePage {
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SIMULATION_NORMAL)) {
 			ui.resetSimulationSpeed();
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_QUIT)) {
-			if (GameController.it().state() != GameState.BOOT && GameController.it().state() != GameState.INTRO) {
+			if (gameState != GameState.BOOT && gameState != GameState.INTRO) {
 				ui.restartIntro();
 			}
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEST_LEVELS)) {
 			ui.startLevelTestMode();
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_FULLSCREEN)) {
-			ui.stage.setFullScreen(true);
 		}
 	}
 }
