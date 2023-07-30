@@ -39,11 +39,11 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 
 2. Build JavaFX user interface variants
 - `cd <repository-root>\pacman-javafx\pacman-ui-fx-2d`
-- `mvn install -Djavafx.platform=win` (builds Windows executables of 2D game) 
-- `mvn install -Djavafx.platform=linux` (builds Linux executables of 2D game)
+- `mvn install -Djavafx.platform=win` or `mvn install -P build-for-windows` (builds Windows executables of 2D game) 
+- `mvn install -Djavafx.platform=linux`  or `mvn install -P build-for-linux` (builds Linux executables of 2D game)
 - `cd <repository-root>\\pacman-javafx\pacman-ui-fx-3d`
-- `mvn install -Djavafx.platform=win` (builds Windows executables of 2D+3D game) 
-- `mvn install -Djavafx.platform=linux` (builds Linux executables of 2D+3D game)
+- `mvn install -Djavafx.platform=win` or `mvn install -P build-for-windows` (builds Windows executables of 2D+3D game) 
+- `mvn install -Djavafx.platform=linux`  or `mvn install -P build-for-linux` (builds Linux executables of 2D+3D game)
 
 To be able to create these executables you need to first install the following tools
 
