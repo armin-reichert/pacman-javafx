@@ -76,6 +76,8 @@ public class PacManGames2dApp extends Application {
 			settings.merge(getParameters().getNamed());
 		}
 		GameController.create(settings.variant);
+		ui = new PacManGames2dUI();
+		GameController.addListener(ui);
 		Logger.info("Game initialized: {}", settings);
 	}
 
@@ -101,11 +103,9 @@ public class PacManGames2dApp extends Application {
 			new PacManCutscene2(),
 			new PacManCutscene3()
 		);
-		ui = new PacManGames2dUI();
 		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
 		ui.setTheme(new ArcadeTheme(MGR));
 		Logger.info("Theme created: {}", ui.theme());
-		GameController.addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI initialized. Stage size: {000} x {000} px", stage.getWidth(), stage.getHeight());
 		Logger.info("Game app started. {} Hz locale={}", ui.clock().targetFrameratePy.get(), localeInfo());

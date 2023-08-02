@@ -59,8 +59,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	protected GameScene currentGameScene;
 	protected Object currentPage;
 
-	public PacManGames2dUI() {}
-
 	public void init(Stage stage, Settings settings, GameSceneConfiguration gameScenesMsPacMan, GameSceneConfiguration gameScenesPacMan) {
 
 		checkNotNull(stage);
