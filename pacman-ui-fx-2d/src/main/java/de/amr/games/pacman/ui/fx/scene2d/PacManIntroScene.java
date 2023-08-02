@@ -93,7 +93,7 @@ public class PacManIntroScene extends GameScene2D {
 		default:
 			break;
 		}
-		drawLevelCounter(t(24), t(34), game().levelCounter());
+		drawLevelCounter();
 	}
 
 	@Override

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -189,7 +188,11 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	protected void drawLevelCounter(double xr, double yr, List<Byte> levelSymbols) {
+	protected void drawLevelCounter() {
+		drawLevelCounter(game().levelCounter(), t(24), t(34));
+	}
+
+	private void drawLevelCounter(List<Byte> levelSymbols, double xr, double yr) {
 		double x = xr;
 		switch (game().variant()) {
 			case MS_PACMAN: {
@@ -357,7 +360,7 @@ public abstract class GameScene2D implements GameScene {
 	 * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
 	 * bounding box is only 8 pixels (one square tile) wide.
 	 *
-	 * @param sprite sprite sheet region (may be null)
+	 * @param sprite sprite sheet region (can be null)
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
 	 */

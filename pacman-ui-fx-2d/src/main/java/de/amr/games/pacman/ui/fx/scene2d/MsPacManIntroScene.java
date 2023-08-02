@@ -93,7 +93,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		ic.ghosts.forEach(ghost -> drawGhost(ghost));
 		drawPac(ic.msPacMan);
 		drawMsPacManCopyright(t(6), t(28));
-		drawLevelCounter(t(24), t(34), game().levelCounter());
+		drawLevelCounter();
 	}
 
 	private void drawMarquee() {

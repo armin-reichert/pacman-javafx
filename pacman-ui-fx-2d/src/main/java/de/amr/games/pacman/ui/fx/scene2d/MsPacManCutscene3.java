@@ -56,6 +56,6 @@ public class MsPacManCutscene3 extends GameScene2D {
 		drawPac(intermission.pacMan);
 		drawEntitySprite(intermission.stork, storkAnimation.currentSprite());
 		drawEntitySprite(intermission.bag, intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
-		drawLevelCounter(t(24), t(34), game().levelCounter());
+		drawLevelCounter();
 	}
 }

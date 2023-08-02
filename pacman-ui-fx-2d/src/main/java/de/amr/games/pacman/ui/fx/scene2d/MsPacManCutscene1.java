@@ -58,6 +58,6 @@ public class MsPacManCutscene1 extends GameScene2D {
 		drawGhost(intermission.inky);
 		drawGhost(intermission.pinky);
 		drawEntitySprite(intermission.heart, ss.heartSprite());
-		drawLevelCounter(t(24), t(34), game().levelCounter());
+		drawLevelCounter();
 	}
 }

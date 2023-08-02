@@ -12,10 +12,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import javafx.scene.paint.Color;
@@ -24,10 +21,13 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
+import static de.amr.games.pacman.model.actors.GhostState.RETURNING_TO_HOUSE;
+import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
 
 /**
- * 2D play scene. Key <code>F12</code> toggles between scaled canvas and unscaled canvas.
- * 
+ * 2D play scene.
+ *
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
@@ -40,24 +40,22 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		game().level().ifPresent(level -> {
-			updateSound(level);
-		});
+		game().level().ifPresent(this::updateSound);
 	}
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(PacManGames2dApp.KEY_ADD_CREDIT, PacManGames2dApp.KEY_ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
 			if (!game().hasCredit()) {
 				actionHandler().ifPresent(ActionHandler::addCredit);
 			}
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
 			actionHandler().ifPresent(ActionHandler::cheatEatAllPellets);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_ADD_LIVES)) {
 			actionHandler().ifPresent(ActionHandler::cheatAddLives);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_NEXT_LEVEL)) {
 			actionHandler().ifPresent(ActionHandler::cheatEnterNextLevel);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
 			actionHandler().ifPresent(ActionHandler::cheatKillAllEatableGhosts);
 		}
 	}
@@ -65,15 +63,15 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawSceneContent() {
 		game().level().ifPresent(level -> {
-			int levelNumber = level.number();
 			if (game().variant() == GameVariant.MS_PACMAN) {
-				int mazeNumber = level.game().mazeNumber(levelNumber);
-				drawMsPacManMaze(0, t(3), mazeNumber, level.world());
+				int mazeNumber = level.game().mazeNumber(level.number());
+				drawMsPacManMaze(level, mazeNumber);
 			} else {
-				drawPacManMaze(0, t(3), level.world());
+				drawPacManMaze(level);
 			}
 			if (state() == GameState.LEVEL_TEST) {
-				drawText(String.format("TEST    L%d", levelNumber), theme.color("palette.yellow"), sceneFont(), t(8.5), t(21));
+				drawText(String.format("TEST    L%d", level.number()), theme.color("palette.yellow"), sceneFont()
+						, t(8.5), t(21));
 			} else if (state() == GameState.GAME_OVER || !game().hasCredit()) {
 				drawText("GAME  OVER", theme.color("palette.red"), sceneFont(), t(9), t(21));
 			} else if (state() == GameState.READY) {
@@ -88,30 +86,32 @@ public class PlayScene2D extends GameScene2D {
 				int lives = game().isOneLessLifeDisplayed() ? game().lives() - 1 : game().lives();
 				drawLivesCounter(lives);
 			}
-			drawLevelCounter(t(24), t(34), game().levelCounter());
+			drawLevelCounter();
 		});
 	}
 
 	// TODO put all images into a single spritesheet
-	private void drawPacManMaze(double x, double y, World world) {
-		if (world.mazeFlashing().isRunning()) {
-			var image = world.mazeFlashing().on() ? theme.image("pacman.flashingMaze")
+	private void drawPacManMaze(GameLevel level) {
+		double x = 0, y = t(3);
+		if (level.world().mazeFlashing().isRunning()) {
+			var image = level.world().mazeFlashing().on() ? theme.image("pacman.flashingMaze")
 					: theme.image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
 			var image = theme.image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
-			world.tiles().filter(world::hasEatenFoodAt).forEach(this::hideTileContent);
-			if (world.energizerBlinking().off()) {
-				world.energizerTiles().forEach(this::hideTileContent);
+			level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(this::hideTileContent);
+			if (level.world().energizerBlinking().off()) {
+				level.world().energizerTiles().forEach(this::hideTileContent);
 			}
 		}
 	}
 
-	private void drawMsPacManMaze(double x, double y, int mazeNumber, World world) {
+	private void drawMsPacManMaze(GameLevel level, int mazeNumber) {
+		double x = 0, y = t(3);
 		var ss = (SpritesheetMsPacManGame) spritesheet;
-		if (world.mazeFlashing().isRunning()) {
-			if (world.mazeFlashing().on()) {
+		if (level.world().mazeFlashing().isRunning()) {
+			if (level.world().mazeFlashing().on()) {
 				var source = theme.image("mspacman.flashingMazes");
 				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
@@ -121,10 +121,10 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
 			drawSprite(ss.filledMaze(mazeNumber), x, y);
-			world.tiles().filter(world::hasEatenFoodAt).forEach(this::hideTileContent);
+			level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(this::hideTileContent);
 			// energizer animation
-			if (world.energizerBlinking().off()) {
-				world.energizerTiles().forEach(this::hideTileContent);
+			if (level.world().energizerBlinking().off()) {
+				level.world().energizerTiles().forEach(this::hideTileContent);
 			}
 		}
 	}
@@ -137,15 +137,13 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawSceneInfo() {
 		drawTileGrid(TILES_X, TILES_Y);
-		game().level().ifPresent(level -> {
-			level.upwardsBlockedTiles().forEach(tile -> {
-				// "No Trespassing" symbol
-				g.setFill(Color.RED);
-				g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
-				g.setFill(Color.WHITE);
-				g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
-			});
-		});
+		game().level().ifPresent(level -> level.upwardsBlockedTiles().forEach(tile -> {
+			// "No Trespassing" symbol
+			g.setFill(Color.RED);
+			g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
+			g.setFill(Color.WHITE);
+			g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
+		}));
 	}
 
 	@Override
@@ -165,17 +163,15 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void updateSound(GameLevel level) {
-		var gameVariant = level.game().variant();
 		if (level.isDemoLevel()) {
 			return;
 		}
+		var gameVariant = level.game().variant();
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
 			soundHandler.audioClip(gameVariant, "audio.pacman_munch").stop();
 		}
-		if (!level.isPacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
-				.filter(Ghost::isVisible).count() > 0) {
+		if (!level.isPacKilled() && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
 			soundHandler.ensureLoopEndless(soundHandler.audioClip(gameVariant, "audio.ghost_returning"));
-
 		} else {
 			soundHandler.audioClip(gameVariant, "audio.ghost_returning").stop();
 		}
