@@ -7,13 +7,13 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
 
 /**
  * Intro scene of the PacMan game.
@@ -56,13 +56,13 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(PacManGames2dApp.KEY_ADD_CREDIT, PacManGames2dApp.KEY_ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
 			actionHandler().ifPresent(ActionHandler::addCredit);
-		} else if (Keyboard.anyPressed(PacManGames2dApp.KEY_START_GAME, PacManGames2dApp.KEY_START_GAME_NUMPAD)) {
+		} else if (Keyboard.anyPressed(KEY_START_GAME, KEY_START_GAME_NUMPAD)) {
 			actionHandler().ifPresent(ActionHandler::startGame);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SELECT_VARIANT)) {
+		} else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
 			actionHandler().ifPresent(ActionHandler::switchGameVariant);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PLAY_CUTSCENES)) {
+		} else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
 			actionHandler().ifPresent(ActionHandler::startCutscenesTest);
 		}
 	}
@@ -143,7 +143,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGuys(int shakingAmount) {
 		if (shakingAmount == 0) {
-			context().ghosts().forEach(ghost -> drawGhost(ghost));
+			context().ghosts().forEach(this::drawGhost);
 		} else {
 			drawGhost(context().ghost(0));
 			drawGhost(context().ghost(3));

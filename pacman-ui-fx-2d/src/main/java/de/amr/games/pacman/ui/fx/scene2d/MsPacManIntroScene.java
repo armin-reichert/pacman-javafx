@@ -10,11 +10,12 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+
+import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -53,13 +54,13 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(PacManGames2dApp.KEY_ADD_CREDIT, PacManGames2dApp.KEY_ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
 			actionHandler().ifPresent(ActionHandler::addCredit);
-		} else if (Keyboard.anyPressed(PacManGames2dApp.KEY_START_GAME, PacManGames2dApp.KEY_START_GAME_NUMPAD)) {
+		} else if (Keyboard.anyPressed(KEY_START_GAME, KEY_START_GAME_NUMPAD)) {
 			actionHandler().ifPresent(ActionHandler::startGame);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_SELECT_VARIANT)) {
+		} else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
 			actionHandler().ifPresent(ActionHandler::switchGameVariant);
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_PLAY_CUTSCENES)) {
+		} else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
 			actionHandler().ifPresent(ActionHandler::startCutscenesTest);
 		}
 	}
@@ -90,7 +91,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			drawText("STARRING", theme.color("palette.pale"), sceneFont(), tx, y0 + t(3));
 			drawText("MS PAC-MAN", theme.color("palette.yellow"), sceneFont(), tx, y0 + t(6));
 		}
-		ic.ghosts.forEach(ghost -> drawGhost(ghost));
+		ic.ghosts.forEach(this::drawGhost);
 		drawPac(ic.msPacMan);
 		drawMsPacManCopyright(t(6), t(28));
 		drawLevelCounter();

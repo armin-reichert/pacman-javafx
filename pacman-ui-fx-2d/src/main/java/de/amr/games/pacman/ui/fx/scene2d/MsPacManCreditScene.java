@@ -9,6 +9,8 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 
+import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
+
 /**
  * @author Armin Reichert
  */
@@ -26,9 +28,9 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(PacManGames2dApp.KEY_ADD_CREDIT, PacManGames2dApp.KEY_ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
 			actionHandler().ifPresent(ActionHandler::addCredit);
-		} else if (Keyboard.anyPressed(PacManGames2dApp.KEY_START_GAME, PacManGames2dApp.KEY_START_GAME_NUMPAD)) {
+		} else if (Keyboard.anyPressed(KEY_START_GAME, KEY_START_GAME_NUMPAD)) {
 			actionHandler().ifPresent(ActionHandler::startGame);
 		}
 	}
