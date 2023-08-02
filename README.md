@@ -11,7 +11,7 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 
 ## Video
 
-[![Pac-Man 3D Video](doc/pacman-maze.png)](https://magentacloud.de/s/qYDg6BKK7G6TxpB))
+[![Pac-Man 3D Video](doc/pacman-maze.png)](https://magentacloud.de/s/qYDg6BKK7G6TxpB)
 
 ## About this project
 
