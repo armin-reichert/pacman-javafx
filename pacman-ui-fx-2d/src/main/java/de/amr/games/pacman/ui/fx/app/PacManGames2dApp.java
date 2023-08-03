@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
+import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.application.Application;
@@ -83,7 +83,7 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		var gameScenesMsPacMan = new GameSceneConfiguration(
+		var gameScenesMsPacMan = new GameSceneConfig(
 			new BootScene(),
 			new MsPacManIntroScene(),
 			new MsPacManCreditScene(),
@@ -93,7 +93,7 @@ public class PacManGames2dApp extends Application {
 			new MsPacManCutscene2(),
 			new MsPacManCutscene3()
 		);
-		var gameScenesPacMan = new GameSceneConfiguration(
+		var gameScenesPacMan = new GameSceneConfig(
 			new BootScene(),
 			new PacManIntroScene(),
 			new PacManCreditScene(),

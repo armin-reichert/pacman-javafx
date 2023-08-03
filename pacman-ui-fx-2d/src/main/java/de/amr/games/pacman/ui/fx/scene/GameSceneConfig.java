@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 /**
  * @author Armin Reichert
  */
-public class GameSceneConfiguration {
+public class GameSceneConfig {
 
 	private final GameScene2D bootScene;
 	private final GameScene2D introScene;
@@ -18,8 +18,8 @@ public class GameSceneConfiguration {
 	private GameScene playScene3D;
 	private final GameScene2D[] cutScenes;
 
-	public GameSceneConfiguration(GameScene2D bootScene, GameScene2D introScene, GameScene2D creditScene,
-			GameScene2D playScene, GameScene playScene3D, GameScene2D cut1, GameScene2D cut2, GameScene2D cut3) {
+	public GameSceneConfig(GameScene2D bootScene, GameScene2D introScene, GameScene2D creditScene,
+												 GameScene2D playScene, GameScene playScene3D, GameScene2D cut1, GameScene2D cut2, GameScene2D cut3) {
 		this.bootScene = bootScene;
 		this.introScene = introScene;
 		this.creditScene = creditScene;
