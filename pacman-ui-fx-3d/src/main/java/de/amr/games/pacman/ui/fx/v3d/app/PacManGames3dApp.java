@@ -8,11 +8,10 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.scene.GameSceneConfiguration;
+import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -233,7 +232,7 @@ public class PacManGames3dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		var gameScenesMsPacMan = new GameSceneConfiguration(
+		var gameScenesMsPacMan = new GameSceneConfig(
 			new BootScene(),
 			new MsPacManIntroScene(),
 			new MsPacManCreditScene(),
@@ -243,7 +242,7 @@ public class PacManGames3dApp extends Application {
 			new MsPacManCutscene2(),
 			new MsPacManCutscene3()
 		);
-		var gameScenesPacMan = new GameSceneConfiguration(
+		var gameScenesPacMan = new GameSceneConfig(
 			new BootScene(),
 			new PacManIntroScene(),
 			new PacManCreditScene(),
