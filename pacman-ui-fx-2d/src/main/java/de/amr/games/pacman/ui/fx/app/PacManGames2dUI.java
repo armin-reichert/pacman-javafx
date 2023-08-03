@@ -207,7 +207,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		case INTERMISSION:
 			return config.cutScene(game().level().get().intermissionNumber);
 		case INTERMISSION_TEST:
-			return config.cutScene(game().intermissionTestNumber);
+			return config.cutScene(GameController.it().intermissionTestNumber);
 		default:
 			return config.playScene();
 		}
