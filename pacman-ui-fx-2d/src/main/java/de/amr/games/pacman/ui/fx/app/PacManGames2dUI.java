@@ -13,6 +13,7 @@ import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
@@ -111,8 +112,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	protected void configureStage(Settings settings) {
 		stage.setScene(scene);
 		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth (28 * 8);
-		stage.setMinHeight(36 * 8);
+		stage.setMinWidth (ArcadeWorld.TILES_X * 8);
+		stage.setMinHeight(ArcadeWorld.TILES_Y * 8);
 		stage.centerOnScreen();
 	}
 
