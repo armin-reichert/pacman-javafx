@@ -404,7 +404,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	public void switchGameVariant() {
 		var variant = game().variant().next();
-		GameController.it().selectGameVariant(variant);
+		GameController.it().startNewGame(variant);
 		showStartPage();
 	}
 
