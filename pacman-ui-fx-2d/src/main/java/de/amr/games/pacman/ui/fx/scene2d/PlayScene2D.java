@@ -34,7 +34,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		setCreditVisible(!game().hasCredit());
+		setCreditVisible(!GameController.it().hasCredit());
 		setScoreVisible(true);
 	}
 
@@ -46,7 +46,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
-			if (!game().hasCredit()) {
+			if (!GameController.it().hasCredit()) {
 				actionHandler().ifPresent(ActionHandler::addCredit);
 			}
 		} else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
@@ -72,7 +72,7 @@ public class PlayScene2D extends GameScene2D {
 			if (state() == GameState.LEVEL_TEST) {
 				drawText(String.format("TEST    L%d", level.number()), theme.color("palette.yellow"), sceneFont()
 						, t(8.5), t(21));
-			} else if (state() == GameState.GAME_OVER || !game().hasCredit()) {
+			} else if (state() == GameState.GAME_OVER || !GameController.it().hasCredit()) {
 				drawText("GAME  OVER", theme.color("palette.red"), sceneFont(), t(9), t(21));
 			} else if (state() == GameState.READY) {
 				drawText("READY!", theme.color("palette.yellow"), sceneFont(), t(11), t(21));

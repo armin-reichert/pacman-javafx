@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.scene.Camera;
@@ -41,8 +42,8 @@ public class CamFirstPerson implements CameraController {
 	@Override
 	public void update(Camera cam, Pac3D pac3D) {
 		var ref = pac.position().plus(pac.moveDir().vector().toFloatVec().scaled(6));
-		cam.setTranslateX(ref.x() - World.ARCADE_TILES_X * HTS);
-		cam.setTranslateY(ref.y() - World.ARCADE_TILES_Y * HTS);
+		cam.setTranslateX(ref.x() - ArcadeWorld.TILES_X * HTS);
+		cam.setTranslateY(ref.y() - ArcadeWorld.TILES_Y * HTS);
 		cam.setTranslateZ(-6);
 		cam.setRotationAxis(Rotate.Z_AXIS);
 		cam.setRotate(rotate(pac.moveDir()));

@@ -334,7 +334,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	public void startGame() {
-		if (game().hasCredit()) {
+		if (GameController.it().hasCredit()) {
 			soundHandler.stopVoice();
 			GameController.it().startPlaying();
 		}
@@ -351,7 +351,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 			soundHandler.stopAllSounds();
 			GameController.setSoundEventsEnabled(true);
 			if (game().isPlaying()) {
-				game().changeCredit(-1);
+				GameController.it().changeCredit(-1);
 			}
 			GameController.it().restart(INTRO);
 		}
@@ -417,8 +417,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	public void toggleImmunity() {
-		game().setImmune(!game().isImmune());
-		var immune = game().isImmune();
+		GameController.it().setImmune(!GameController.it().isImmune());
+		var immune = GameController.it().isImmune();
 		String message = message(PacManGames2dApp.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");

@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.v3d.entity.Pellet3D;
 import javafx.animation.Interpolator;
@@ -40,7 +41,7 @@ import static de.amr.games.pacman.lib.Globals.v2f;
  */
 public class FoodOscillation extends Transition {
 
-	private static final Vector2f CENTER = v2f(0.5f * TS * World.ARCADE_TILES_X, 0.5f * TS * World.ARCADE_TILES_Y);
+	private static final Vector2f CENTER = v2f(0.5f * TS * ArcadeWorld.TILES_X, 0.5f * TS * ArcadeWorld.TILES_Y);
 
 	private final Group foodGroup;
 

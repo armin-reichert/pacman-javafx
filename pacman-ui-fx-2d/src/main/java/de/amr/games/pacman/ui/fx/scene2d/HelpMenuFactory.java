@@ -68,7 +68,7 @@ public class HelpMenuFactory {
 
 	public Pane menuIntro() {
 		var menu = new Menu();
-		if (GameController.it().game().credit() > 0) {
+		if (GameController.it().hasCredit()) {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
@@ -79,7 +79,7 @@ public class HelpMenuFactory {
 
 	public Pane menuCredit() {
 		var menu = new Menu();
-		if (GameController.it().game().credit() > 0) {
+		if (GameController.it().hasCredit()) {
 			addEntry(menu, "help.start_game", "1");
 		}
 		addEntry(menu, "help.add_credit", "5");
@@ -118,7 +118,7 @@ public class HelpMenuFactory {
 			GridPane.setColumnSpan(text, 2);
 			grid.add(text, 0, rowIndex++);
 		}
-		if (GameController.it().game().isImmune()) {
+		if (GameController.it().isImmune()) {
 			var text = text(tt("help.immunity_on"), Color.ORANGE);
 			GridPane.setColumnSpan(text, 2);
 			grid.add(text, 0, rowIndex++);

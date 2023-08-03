@@ -4,10 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
@@ -165,7 +167,7 @@ public abstract class GameScene2D implements GameScene {
 			drawScore(game().highScore(), "HIGH SCORE", t(14), t(1));
 		}
 		if (creditVisible) {
-			drawCredit(game().credit(), t(2), t(36) - 1);
+			drawCredit(GameController.it().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent();
 		if (infoVisiblePy.get()) {
@@ -221,7 +223,7 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		var x = TS * 2;
-		var y = TS * (World.ARCADE_TILES_Y - 2);
+		var y = TS * (ArcadeWorld.TILES_Y - 2);
 		int maxLives = 5;
 		switch (game().variant()) {
 			case MS_PACMAN: {

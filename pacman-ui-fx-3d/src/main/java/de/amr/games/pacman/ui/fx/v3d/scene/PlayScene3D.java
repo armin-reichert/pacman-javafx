@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -251,7 +252,7 @@ public class PlayScene3D implements GameScene {
 	public void handleKeyboardInput() {
 		actionHandler().ifPresent(handler -> {
 			ActionHandler3D actionHandler = (ActionHandler3D) handler;
-			if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) && !game().hasCredit()) {
+			if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) && !GameController.it().hasCredit()) {
 				actionHandler.addCredit();
 			} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
 				actionHandler.selectPrevPerspective();

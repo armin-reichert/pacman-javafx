@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -187,9 +188,9 @@ public class GameLevel3D {
 		// TODO get rid of this
 		int numLivesShown = level.game().isOneLessLifeDisplayed() ? level.game().lives() - 1 : level.game().lives();
 		livesCounter3D.update(numLivesShown);
-		livesCounter3D.getRoot().setVisible(level.game().hasCredit());
+		livesCounter3D.getRoot().setVisible(GameController.it().hasCredit());
 		scores3D.update(level);
-		if (level.game().hasCredit()) {
+		if (GameController.it().hasCredit()) {
 			scores3D.setShowPoints(true);
 		} else {
 			scores3D.setShowText(Color.RED, "GAME OVER!");

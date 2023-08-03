@@ -62,8 +62,8 @@ public class SectionGameControl extends Section {
 		spGameLevel = addSpinner("Level", 1, 100, 1);
 		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> ui.enterLevel(newVal.intValue()));
 
-		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, game().credit());
-		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> game().setCredit(newVal.intValue()));
+		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, GameController.it().credit());
+		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> GameController.it().setCredit(newVal.intValue()));
 
 		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
 		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
@@ -79,9 +79,9 @@ public class SectionGameControl extends Section {
 		comboInitialLives.setValue(game().getInitialLives());
 
 		cbAutopilot.setSelected(GameController.it().isAutoControlled());
-		cbImmunity.setSelected(game().isImmune());
+		cbImmunity.setSelected(GameController.it().isImmune());
 
-		blGameLevel[GAME_LEVEL_START].setDisable(!(game().hasCredit() && game().level().isEmpty()));
+		blGameLevel[GAME_LEVEL_START].setDisable(!(GameController.it().hasCredit() && game().level().isEmpty()));
 
 		blGameLevel[GAME_LEVEL_QUIT].setDisable(game().level().isEmpty());
 
@@ -104,6 +104,6 @@ public class SectionGameControl extends Section {
 							&& GameController.it().state() != GameState.CHANGING_TO_NEXT_LEVEL);
 		}
 
-		spGameCredit.getValueFactory().setValue(game().credit());
+		spGameCredit.getValueFactory().setValue(GameController.it().credit());
 	}
 }

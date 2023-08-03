@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.Settings;
@@ -47,7 +48,7 @@ public class PacManGames3dApp extends Application {
 	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
 
 	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(World.ARCADE_TILES_Y * Globals.TS);
+	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * Globals.TS);
 	public static final BooleanProperty             PY_PIP_ON                = new SimpleBooleanProperty(false);
 
 	public static final IntegerProperty             PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
