@@ -77,7 +77,7 @@ public class PacManGames2dApp extends Application {
 		}
 		GameController.create(settings.variant);
 		ui = new PacManGames2dUI();
-		GameController.addListener(ui);
+		GameController.it().addListener(ui);
 		Logger.info("Game initialized: {}", settings);
 	}
 

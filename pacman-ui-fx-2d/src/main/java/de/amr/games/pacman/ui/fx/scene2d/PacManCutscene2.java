@@ -60,7 +60,7 @@ public class PacManCutscene2 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameController.publishSoundEvent(SoundEvent.START_INTERMISSION_2);
+				GameController.it().publishSoundEvent(SoundEvent.START_INTERMISSION_2);
 			}
 			return;
 		}

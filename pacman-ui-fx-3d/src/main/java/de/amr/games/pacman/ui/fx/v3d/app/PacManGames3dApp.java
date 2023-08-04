@@ -226,7 +226,7 @@ public class PacManGames3dApp extends Application {
 		theme = createTheme();
 		Logger.info("Theme created: {}", theme);
 		GameController.create(settings.variant);
-		GameController.addListener(ui);
+		GameController.it().addListener(ui);
 		Logger.info("Game initialized: {}", settings);
 	}
 

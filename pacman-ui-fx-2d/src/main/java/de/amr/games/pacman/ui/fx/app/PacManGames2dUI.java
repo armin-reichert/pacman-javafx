@@ -349,7 +349,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 			soundHandler.stopAllSounds();
-			GameController.setSoundEventsEnabled(true);
+			GameController.it().setSoundEventsEnabled(true);
 			if (game().isPlaying()) {
 				GameController.it().changeCredit(-1);
 			}
@@ -366,7 +366,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	public void addCredit() {
-		GameController.setSoundEventsEnabled(true);
+		GameController.it().setSoundEventsEnabled(true);
 		GameController.it().addCredit();
 	}
 
