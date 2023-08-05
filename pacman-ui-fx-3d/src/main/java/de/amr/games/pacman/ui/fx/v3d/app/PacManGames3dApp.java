@@ -43,54 +43,54 @@ import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
  */
 public class PacManGames3dApp extends Application {
 
-	public static final float                       PIP_MIN_HEIGHT           = 36 * 8 * 0.75f;
-	public static final float                       PIP_MAX_HEIGHT           = 2.5f * PIP_MIN_HEIGHT;
+	public static final ResourceManager MGR  = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3dApp.class);
+	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 
-	public static final DoubleProperty              PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty              PY_PIP_HEIGHT            = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * Globals.TS);
-	public static final BooleanProperty             PY_PIP_ON                = new SimpleBooleanProperty(false);
+	public static final float           PIP_MIN_HEIGHT           = 0.75f * ArcadeWorld.TILES_Y * Globals.TS;
+	public static final float           PIP_MAX_HEIGHT           = 2.00f * ArcadeWorld.TILES_Y * Globals.TS;
 
-	public static final IntegerProperty             PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
+	public static final DoubleProperty  PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
+	public static final DoubleProperty  PY_PIP_HEIGHT            = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * Globals.TS);
+	public static final BooleanProperty PY_PIP_ON                = new SimpleBooleanProperty(false);
 
-	public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
-	public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x33));
-	public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
-	public static final BooleanProperty             PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
-	public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-	public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);
-	public static final DoubleProperty              PY_3D_WALL_THICKNESS     = new SimpleDoubleProperty(1.25);
-	public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
-	public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
+	public static final IntegerProperty PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
 
-	public static final BooleanProperty             PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
+	public static final BooleanProperty PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty PY_3D_ENABLED            = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR  = new SimpleObjectProperty<>(Color.grayRgb(0x33));
+	public static final StringProperty  PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
+	public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR  = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+	public static final DoubleProperty  PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);
+	public static final DoubleProperty  PY_3D_WALL_THICKNESS     = new SimpleDoubleProperty(1.25);
+	public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
 
-	public static final KeyCodeCombination          KEY_TOGGLE_DASHBOARD     = just(KeyCode.F1);
-	public static final KeyCodeCombination          KEY_TOGGLE_DASHBOARD_2   = alt(KeyCode.B);
-	public static final KeyCodeCombination          KEY_TOGGLE_PIP_VIEW      = just(KeyCode.F2);
-	public static final KeyCodeCombination          KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
-	public static final KeyCodeCombination          KEY_PREV_PERSPECTIVE     = alt(KeyCode.LEFT);
-	public static final KeyCodeCombination          KEY_NEXT_PERSPECTIVE     = alt(KeyCode.RIGHT);
+	public static final BooleanProperty PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
 
-	public static final ResourceManager             MGR   = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3dApp.class);
-	public static final ResourceBundle              TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
+	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD   = just(KeyCode.F1);
+	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD_2 = alt(KeyCode.B);
+	public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW    = just(KeyCode.F2);
+	public static final KeyCodeCombination KEY_TOGGLE_2D_3D       = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination KEY_PREV_PERSPECTIVE   = alt(KeyCode.LEFT);
+	public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE   = alt(KeyCode.RIGHT);
 
-	private static final Picker<String> PICKER_READY_PAC_MAN    = Picker.fromBundle(TEXTS, "pacman.ready");
-	private static final Picker<String> PICKER_READY_MS_PAC_MAN = Picker.fromBundle(TEXTS, "mspacman.ready");
-	private static final Picker<String> PICKER_CHEATING         = Picker.fromBundle(TEXTS, "cheating");
-	private static final Picker<String> PICKER_LEVEL_COMPLETE   = Picker.fromBundle(TEXTS, "level.complete");
-	private static final Picker<String> PICKER_GAME_OVER        = Picker.fromBundle(TEXTS, "game.over");
+	private static final Picker<String> PICKER_READY_PACMAN    = Picker.fromBundle(TEXTS, "pacman.ready");
+	private static final Picker<String> PICKER_READY_MS_PACMAN = Picker.fromBundle(TEXTS, "mspacman.ready");
+	private static final Picker<String> PICKER_CHEATING        = Picker.fromBundle(TEXTS, "cheating");
+	private static final Picker<String> PICKER_LEVEL_COMPLETE  = Picker.fromBundle(TEXTS, "level.complete");
+	private static final Picker<String> PICKER_GAME_OVER       = Picker.fromBundle(TEXTS, "game.over");
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
 	public static Theme createTheme() {
 		var theme = new ArcadeTheme(PacManGames2dApp.MGR);
 
-		theme.set("model3D.pacman",     new Model3D(MGR.url("model3D/pacman.obj")));
-		theme.set("model3D.ghost",      new Model3D(MGR.url("model3D/ghost.obj")));
-		theme.set("model3D.pellet",     new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
+		theme.set("model3D.pacman",                  new Model3D(MGR.url("model3D/pacman.obj")));
+		theme.set("model3D.ghost",                   new Model3D(MGR.url("model3D/ghost.obj")));
+		theme.set("model3D.pellet",                  new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
 
 		theme.set("model3D.wallpaper",  MGR.imageBackground("graphics/sea-wallpaper.jpg",
 				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
@@ -181,8 +181,8 @@ public class PacManGames3dApp extends Application {
 
 	public static String pickFunnyReadyMessage(GameVariant gameVariant) {
 		return switch (gameVariant) {
-			case MS_PACMAN -> PICKER_READY_MS_PAC_MAN.next();
-			case PACMAN    -> PICKER_READY_PAC_MAN.next();
+			case MS_PACMAN -> PICKER_READY_MS_PACMAN.next();
+			case PACMAN    -> PICKER_READY_PACMAN.next();
 		};
 	}
 
@@ -214,19 +214,15 @@ public class PacManGames3dApp extends Application {
 		return texture;
 	}
 
-	private final PacManGames3dUI ui = new PacManGames3dUI();
-	private Theme theme;
 	private final Settings settings = new Settings();
+	private PacManGames3dUI ui;
 
 	@Override
 	public void init() {
 		if (getParameters() != null) {
 			settings.merge(getParameters().getNamed());
 		}
-		theme = createTheme();
-		Logger.info("Theme created: {}", theme);
 		GameController.create(settings.variant);
-		GameController.it().addListener(ui);
 		Logger.info("Game initialized: {}", settings);
 	}
 
@@ -252,10 +248,14 @@ public class PacManGames3dApp extends Application {
 			new PacManCutscene2(),
 			new PacManCutscene3()
 		);
+		ui = new PacManGames3dUI();
+		var theme = createTheme();
+		Logger.info("UI created: {} Theme: {}", ui.getClass().getSimpleName(), theme);
 		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
 		ui.setTheme(theme);
 		ui.showStartPage();
-		Logger.info("Game started. {} Hz language={}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
+		GameController.it().addListener(ui);
+		Logger.info("Game started: {} Hz Language: {}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
 	}
 
 	@Override
