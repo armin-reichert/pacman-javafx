@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.app;
 
-import de.amr.games.pacman.event.SoundEvent;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.animation.Animation;
@@ -35,89 +36,108 @@ public class SoundHandler {
 		return theme.audioClip(prefix + clipName);
 	}
 
-	public void onSoundEvent(SoundEvent event) {
+	public void onGameEvent(GameEvent event) {
+		boolean demoLevel = event.game.level().isPresent() && event.game.level().get().isDemoLevel();
 		var gameVariant = event.game.variant();
-		switch (event.id) {
-		case SoundEvent.BONUS_EATEN:
-			audioClip(gameVariant, "audio.bonus_eaten").play();
-			break;
-		case SoundEvent.CREDIT_ADDED:
-			audioClip(gameVariant, "audio.credit").play();
-			break;
-		case SoundEvent.EXTRA_LIFE:
-			audioClip(gameVariant, "audio.extra_life").play();
-			break;
-		case SoundEvent.GHOST_EATEN:
-			audioClip(gameVariant, "audio.ghost_eaten").play();
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_0:
-			ensureSirenStarted(gameVariant, 0);
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_2:
-			ensureSirenStarted(gameVariant, 1);
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_4:
-			ensureSirenStarted(gameVariant, 2);
-			break;
-		case SoundEvent.HUNTING_PHASE_STARTED_6:
-			ensureSirenStarted(gameVariant, 3);
-			break;
-		case SoundEvent.READY_TO_PLAY:
-			audioClip(gameVariant, "audio.game_ready").play();
-			break;
-		case SoundEvent.PACMAN_DEATH:
-			audioClip(gameVariant, "audio.pacman_death").play();
-			break;
-		case SoundEvent.PACMAN_FOUND_FOOD:
-			// TODO this does not sound as in the original game
-			ensureLoop(audioClip(gameVariant, "audio.pacman_munch"), AudioClip.INDEFINITE);
-			break;
-		case SoundEvent.PACMAN_POWER_ENDS: {
-			audioClip(gameVariant, "audio.pacman_power").stop();
-			event.game.level().ifPresent(level -> ensureSirenStarted(gameVariant, level.huntingPhase() / 2));
-			break;
-		}
-		case SoundEvent.PACMAN_POWER_STARTS: {
-			stopSirens(gameVariant);
-			audioClip(gameVariant, "audio.pacman_power").stop();
-			audioClip(gameVariant, "audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
-			audioClip(gameVariant, "audio.pacman_power").play();
-			break;
-		}
-		case SoundEvent.START_INTERMISSION_1: {
-			if (gameVariant == GameVariant.MS_PACMAN) {
-				audioClip(gameVariant, "audio.intermission.1").play();
-			} else {
-				audioClip(gameVariant, "audio.intermission").setCycleCount(2);
-				audioClip(gameVariant, "audio.intermission").play();
+		switch (event.type) {
+			case BONUS_EATEN:
+				if (!demoLevel) {
+					audioClip(gameVariant, "audio.bonus_eaten").play();
+				}
+				break;
+			case CREDIT_ADDED:
+				audioClip(gameVariant, "audio.credit").play();
+				break;
+			case EXTRA_LIFE_WON:
+				if (!demoLevel) {
+					audioClip(gameVariant, "audio.extra_life").play();
+				}
+				break;
+			case GHOST_EATEN:
+				if (!demoLevel) {
+					audioClip(gameVariant, "audio.ghost_eaten").play();
+				}
+				break;
+			case HUNTING_PHASE_0_STARTED:
+				if (!demoLevel) {
+					ensureSirenStarted(gameVariant, 0);
+				}
+				break;
+			case HUNTING_PHASE_2_STARTED:
+				if (!demoLevel) {
+					ensureSirenStarted(gameVariant, 1);
+				}
+				break;
+			case HUNTING_PHASE_4_STARTED:
+				if (!demoLevel) {
+					ensureSirenStarted(gameVariant, 2);
+				}
+				break;
+			case HUNTING_PHASE_6_STARTED:
+				if (!demoLevel) {
+					ensureSirenStarted(gameVariant, 3);
+				}
+				break;
+			case INTERMISSION_1_STARTS:
+				if (gameVariant == GameVariant.MS_PACMAN) {
+					audioClip(gameVariant, "audio.intermission.1").play();
+				} else {
+					audioClip(gameVariant, "audio.intermission").setCycleCount(2);
+					audioClip(gameVariant, "audio.intermission").play();
+				}
+				break;
+			case INTERMISSION_2_STARTS:
+				if (gameVariant == GameVariant.MS_PACMAN) {
+					audioClip(gameVariant, "audio.intermission.2").play();
+				} else {
+					audioClip(gameVariant, "audio.intermission").setCycleCount(1);
+					audioClip(gameVariant, "audio.intermission").play();
+				}
+				break;
+			case INTERMISSION_3_STARTS:
+				if (gameVariant == GameVariant.MS_PACMAN) {
+					audioClip(gameVariant, "audio.intermission.3").play();
+				} else {
+					audioClip(gameVariant, "audio.intermission").setCycleCount(2);
+					audioClip(gameVariant, "audio.intermission").play();
+				}
+				break;
+			case READY_TO_PLAY:
+				if (!demoLevel) {
+					audioClip(gameVariant, "audio.game_ready").play();
+				}
+				break;
+			case PAC_DIED:
+				if (!demoLevel) {
+					audioClip(gameVariant, "audio.pacman_death").play();
+				}
+				break;
+			case PAC_FOUND_FOOD:
+				if (!demoLevel) {
+					// TODO this does not sound as in the original game
+					ensureLoop(audioClip(gameVariant, "audio.pacman_munch"), AudioClip.INDEFINITE);
+				}
+				break;
+			case PAC_LOST_POWER:
+					if (!demoLevel) {
+						audioClip(gameVariant, "audio.pacman_power").stop();
+						event.game.level().ifPresent(level -> ensureSirenStarted(gameVariant, level.huntingPhase() / 2));
+					}
+				break;
+			case PAC_GETS_POWER:
+				if (!demoLevel) {
+					stopSirens(gameVariant);
+					audioClip(gameVariant, "audio.pacman_power").stop();
+					audioClip(gameVariant, "audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
+					audioClip(gameVariant, "audio.pacman_power").play();
+				}
+				break;
+			case STOP_ALL_SOUNDS:
+				stopAllSounds();
+				break;
+			default:
+				break;
 			}
-			break;
-		}
-		case SoundEvent.START_INTERMISSION_2: {
-			if (gameVariant == GameVariant.MS_PACMAN) {
-				audioClip(gameVariant, "audio.intermission.2").play();
-			} else {
-				audioClip(gameVariant, "audio.intermission").setCycleCount(1);
-				audioClip(gameVariant, "audio.intermission").play();
-			}
-			break;
-		}
-		case SoundEvent.START_INTERMISSION_3: {
-			if (gameVariant == GameVariant.MS_PACMAN) {
-				audioClip(gameVariant, "audio.intermission.3").play();
-			} else {
-				audioClip(gameVariant, "audio.intermission").setCycleCount(2);
-				audioClip(gameVariant, "audio.intermission").play();
-			}
-			break;
-		}
-		case SoundEvent.STOP_ALL_SOUNDS:
-			stopAllSounds();
-			break;
-		default: {
-			// ignore
-		}
-		}
 	}
 
 	public void stopAllSounds() {

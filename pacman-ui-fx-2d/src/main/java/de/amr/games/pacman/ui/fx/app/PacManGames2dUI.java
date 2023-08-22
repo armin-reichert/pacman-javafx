@@ -8,8 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.event.SoundEvent;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -252,10 +250,11 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		if (currentGameScene != null) {
 			currentGameScene.onGameEvent(e);
 		}
+		soundHandler.onGameEvent(e);
 	}
 
 	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
+	public void onGameStateChange(GameEvent e) {
 		updateOrReloadGameScene(false);
 	}
 
@@ -290,11 +289,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		updateOrReloadGameScene(true);
 	}
 
-	@Override
-	public void onSoundEvent(SoundEvent e) {
-		soundHandler.onSoundEvent(e);
-	}
-
 	public Theme theme() {
 		return theme;
 	}
@@ -325,14 +319,17 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	// Actions
 
+	@Override
 	public void showFlashMessage(String message, Object... args) {
 		showFlashMessageSeconds(1, message, args);
 	}
 
+	@Override
 	public void showFlashMessageSeconds(double seconds, String message, Object... args) {
 		gamePage.flashMessageView().showMessage(String.format(message, args), seconds);
 	}
 
+	@Override
 	public void startGame() {
 		if (GameController.it().hasCredit()) {
 			soundHandler.stopVoice();
@@ -340,16 +337,17 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		}
 	}
 
+	@Override
 	public void startCutscenesTest() {
 		GameController.it().startCutscenesTest(1);
 		showFlashMessage("Cut scenes");
 	}
 
+	@Override
 	public void restartIntro() {
 		if (currentGameScene != null) {
 			currentGameScene.end();
 			soundHandler.stopAllSounds();
-			GameController.it().setSoundEventsEnabled(true);
 			if (game().isPlaying()) {
 				GameController.it().changeCredit(-1);
 			}
@@ -357,6 +355,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		}
 	}
 
+	@Override
 	public void reboot() {
 		if (currentGameScene != null) {
 			currentGameScene.end();
@@ -365,11 +364,12 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		GameController.it().restart(GameState.BOOT);
 	}
 
+	@Override
 	public void addCredit() {
-		GameController.it().setSoundEventsEnabled(true);
 		GameController.it().addCredit();
 	}
 
+	@Override
 	public void togglePaused() {
 		Ufx.toggle(clock.pausedPy);
 		if (clock.isPaused()) {
@@ -377,37 +377,43 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		}
 	}
 
+	@Override
 	public void oneSimulationStep() {
 		if (clock.isPaused()) {
 			clock.executeSingleStep(true);
 		}
 	}
 
+	@Override
 	public void tenSimulationSteps() {
 		if (clock.isPaused()) {
 			clock.executeSteps(10, true);
 		}
 	}
 
+	@Override
 	public void changeSimulationSpeed(int delta) {
-		int newFramerate = clock.targetFrameratePy.get() + delta;
-		if (newFramerate > 0) {
-			clock.targetFrameratePy.set(newFramerate);
-			showFlashMessageSeconds(0.75, newFramerate + "Hz");
+		int newRate = clock.targetFrameratePy.get() + delta;
+		if (newRate > 0) {
+			clock.targetFrameratePy.set(newRate);
+			showFlashMessageSeconds(0.75, newRate + "Hz");
 		}
 	}
 
+	@Override
 	public void resetSimulationSpeed() {
 		clock.targetFrameratePy.set(GameModel.FPS);
 		showFlashMessageSeconds(0.75, clock.targetFrameratePy.get() + "Hz");
 	}
 
+	@Override
 	public void switchGameVariant() {
 		var variant = game().variant().next();
 		GameController.it().startNewGame(variant);
 		showStartPage();
 	}
 
+	@Override
 	public void toggleAutopilot() {
 		GameController.it().toggleAutoControlled();
 		var auto = GameController.it().isAutoControlled();
@@ -416,6 +422,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
 	}
 
+	@Override
 	public void toggleImmunity() {
 		GameController.it().setImmune(!GameController.it().isImmune());
 		var immune = GameController.it().isImmune();
@@ -424,6 +431,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}
 
+	@Override
 	public void enterLevel(int newLevelNumber) {
 		if (GameController.it().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
@@ -440,6 +448,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		});
 	}
 
+	@Override
 	public void startLevelTestMode() {
 		if (GameController.it().state() == GameState.INTRO) {
 			GameController.it().restart(GameState.LEVEL_TEST);
@@ -447,20 +456,23 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		}
 	}
 
+	@Override
 	public void cheatAddLives() {
-		int newLivesCount = game().lives() + 3;
-		game().setLives(newLivesCount);
-		showFlashMessage(message(PacManGames2dApp.TEXTS, "cheat_add_lives", newLivesCount));
+		game().setLives(game().lives() + 3);
+		showFlashMessage(message(PacManGames2dApp.TEXTS, "cheat_add_lives", game().lives()));
 	}
 
+	@Override
 	public void cheatEatAllPellets() {
 		GameController.it().cheatEatAllPellets();
 	}
 
+	@Override
 	public void cheatEnterNextLevel() {
 		GameController.it().cheatEnterNextLevel();
 	}
 
+	@Override
 	public void cheatKillAllEatableGhosts() {
 		GameController.it().cheatKillAllEatableGhosts();
 	}

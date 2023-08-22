@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
@@ -296,8 +295,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void onPlayerFindsFood(GameEvent e) {
-		if (e.tile.isEmpty()) {
+	public void onPacFoundFood(GameEvent e) {
+		if (e.tile().isEmpty()) {
 			// When cheat "eat all pellets" has been used, no tile is present in the event.
 			// In that case, ensure the 3D pellets to be in sync with the model:
 			world().ifPresent(world -> {
@@ -308,13 +307,13 @@ public class PlayScene3D implements GameScene {
 					.forEach(Eatable3D::eaten);
 			});
 		} else {
-			var eatable = level3D.world3D().eatableAt(e.tile.get());
+			var eatable = level3D.world3D().eatableAt(e.tile().get());
 			eatable.ifPresent(level3D::eat);
 		}
 	}
 
 	@Override
-	public void onBonusGetsActive(GameEvent e) {
+	public void onBonusActivated(GameEvent e) {
 		game().level().ifPresent(level -> {
 			boolean moving = game().variant() == GameVariant.MS_PACMAN;
 			level.getBonus().ifPresent(bonus -> {
@@ -325,32 +324,32 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void onBonusGetsEaten(GameEvent e) {
+	public void onBonusEaten(GameEvent e) {
 		if (level3D.bonus3D() != null) {
 			level3D.bonus3D().showEaten();
 		}
 	}
 
 	@Override
-	public void onBonusExpires(GameEvent e) {
+	public void onBonusExpired(GameEvent e) {
 		if (level3D.bonus3D() != null) {
 			level3D.bonus3D().hide();
 		}
 	}
 
 	@Override
-	public void onPlayerGetsPower(GameEvent e) {
+	public void onPacGetsPower(GameEvent e) {
 		level3D.pac3D().walkingAnimation().setPowerWalking(true);
 	}
 
 	@Override
-	public void onPlayerLosesPower(GameEvent e) {
+	public void onPacLostPower(GameEvent e) {
 		level3D.pac3D().walkingAnimation().setPowerWalking(false);
 	}
 
 	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		switch (e.newGameState) {
+	public void onGameStateChange(GameEvent e) {
+		switch (e.newState) {
 
 		case READY -> {
 			level3D.pac3D().init();
@@ -456,15 +455,15 @@ public class PlayScene3D implements GameScene {
 		}
 
 		// on state exit
-		if (e.oldGameState == null) {
+		if (e.oldState == null) {
 			return;
 		}
-		switch (e.oldGameState) {
+		switch (e.oldState) {
 		case READY -> {
 			readyMessageText3D.setVisible(false);
 		}
 		case HUNTING -> {
-			if (e.newGameState != GameState.GHOST_DYING) {
+			if (e.newState != GameState.GHOST_DYING) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
 				if (level3D.bonus3D() != null) {
 					level3D.bonus3D().hide();

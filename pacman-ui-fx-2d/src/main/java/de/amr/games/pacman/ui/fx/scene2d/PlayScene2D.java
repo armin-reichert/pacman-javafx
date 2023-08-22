@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.event.GameStateChangeEvent;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -147,8 +147,8 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		if (e.newGameState == GameState.GAME_OVER) {
+	public void onGameStateChange(GameEvent e) {
+		if (e.newState == GameState.GAME_OVER) {
 			setCreditVisible(true);
 		}
 	}
