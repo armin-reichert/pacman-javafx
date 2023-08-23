@@ -113,9 +113,10 @@ public class SoundHandler {
 			case PAC_GETS_POWER:
 				if (!demoLevel) {
 					stopSirens(gameVariant);
-					audioClip(gameVariant, "audio.pacman_power").stop();
-					audioClip(gameVariant, "audio.pacman_power").setCycleCount(AudioClip.INDEFINITE);
-					audioClip(gameVariant, "audio.pacman_power").play();
+					var clip = audioClip(gameVariant, "audio.pacman_power");
+					clip.stop();
+					clip.setCycleCount(AudioClip.INDEFINITE);
+					clip.play();
 				}
 				break;
 			case STOP_ALL_SOUNDS:
