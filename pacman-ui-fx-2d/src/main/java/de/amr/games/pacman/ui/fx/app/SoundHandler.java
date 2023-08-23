@@ -58,24 +58,10 @@ public class SoundHandler {
 					audioClip(gameVariant, "audio.ghost_eaten").play();
 				}
 				break;
-			case HUNTING_PHASE_0_STARTED:
-				if (!demoLevel) {
-					ensureSirenStarted(gameVariant, 0);
-				}
-				break;
-			case HUNTING_PHASE_2_STARTED:
-				if (!demoLevel) {
-					ensureSirenStarted(gameVariant, 1);
-				}
-				break;
-			case HUNTING_PHASE_4_STARTED:
-				if (!demoLevel) {
-					ensureSirenStarted(gameVariant, 2);
-				}
-				break;
-			case HUNTING_PHASE_6_STARTED:
-				if (!demoLevel) {
-					ensureSirenStarted(gameVariant, 3);
+			case HUNTING_PHASE_STARTED:
+				if (event.game.level().isPresent() && !demoLevel) {
+					var level = event.game.level().get();
+					level.scatterPhase().ifPresent(phase -> ensureSirenStarted(gameVariant, phase));
 				}
 				break;
 			case INTERMISSION_1_STARTS:
