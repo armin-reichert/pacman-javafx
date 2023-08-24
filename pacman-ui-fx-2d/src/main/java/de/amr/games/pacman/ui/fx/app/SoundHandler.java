@@ -48,8 +48,8 @@ public class SoundHandler {
 				break;
 			case CREDIT_ADDED: {
 				//TODO this does not work on the first event. Why?
-//				var clip = audioClip(gameVariant, "audio.credit");
-//				clip.play();
+				var clip = audioClip(gameVariant, "audio.credit");
+				clip.play();
 				break;
 			}
 			case EXTRA_LIFE_WON:
@@ -127,6 +127,7 @@ public class SoundHandler {
 
 	public void stopAllSounds() {
 		theme.audioClips().filter(clip -> clip != voiceClip).forEach(AudioClip::stop);
+		Logger.info("All sounds stopped");
 	}
 
 	private void startSiren(GameVariant gameVariant, int sirenIndex) {
@@ -191,9 +192,5 @@ public class SoundHandler {
 			voiceClipExecution.stop();
 			Logger.trace("Scheduled voice clip stopped");
 		}
-	}
-
-	public void playAddCreditSound(GameVariant gameVariant) {
-		audioClip(gameVariant, "audio.credit").play();
 	}
 }

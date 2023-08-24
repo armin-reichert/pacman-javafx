@@ -226,7 +226,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		var prevGameScene = currentGameScene;
 		if (prevGameScene != null) {
 			prevGameScene.end();
-			soundHandler.stopAllSounds();
+			//soundHandler.stopAllSounds();
 			if (prevGameScene != sceneConfig().bootScene()) {
 				soundHandler.stopVoice();
 			}
@@ -367,7 +367,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	@Override
 	public void addCredit() {
 		GameController.it().addCredit();
-		soundHandler.playAddCreditSound(game().variant());
 	}
 
 	@Override
