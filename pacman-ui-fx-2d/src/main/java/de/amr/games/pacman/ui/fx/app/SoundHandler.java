@@ -46,12 +46,9 @@ public class SoundHandler {
 					audioClip(gameVariant, "audio.bonus_eaten").play();
 				}
 				break;
-			case CREDIT_ADDED: {
-				//TODO this does not work on the first event. Why?
-				var clip = audioClip(gameVariant, "audio.credit");
-				clip.play();
+			case CREDIT_ADDED:
+				audioClip(gameVariant, "audio.credit").play();
 				break;
-			}
 			case EXTRA_LIFE_WON:
 				if (!demoLevel) {
 					audioClip(gameVariant, "audio.extra_life").play();
@@ -68,7 +65,7 @@ public class SoundHandler {
 					level.scatterPhase().ifPresent(phase -> ensureSirenStarted(gameVariant, phase));
 				}
 				break;
-			case INTERMISSION_STARTED:
+			case INTERMISSION_STARTED: {
 				int intermissionNumber = 0;
 				if (GameController.it().state() == GameState.INTERMISSION_TEST) {
 					intermissionNumber = GameController.it().intermissionTestNumber;
@@ -84,8 +81,9 @@ public class SoundHandler {
 						clip.setCycleCount(cycleCount);
 						clip.play();
 					}
-				};
+				}
 				break;
+			}
 			case READY_TO_PLAY:
 				if (!demoLevel) {
 					audioClip(gameVariant, "audio.game_ready").play();
