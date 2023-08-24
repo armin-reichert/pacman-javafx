@@ -367,6 +367,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	@Override
 	public void addCredit() {
 		GameController.it().addCredit();
+		soundHandler.playAddCreditSound(game().variant());
 	}
 
 	@Override

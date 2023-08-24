@@ -46,9 +46,12 @@ public class SoundHandler {
 					audioClip(gameVariant, "audio.bonus_eaten").play();
 				}
 				break;
-			case CREDIT_ADDED:
-				audioClip(gameVariant, "audio.credit").play();
+			case CREDIT_ADDED: {
+				//TODO this does not work on the first event. Why?
+//				var clip = audioClip(gameVariant, "audio.credit");
+//				clip.play();
 				break;
+			}
 			case EXTRA_LIFE_WON:
 				if (!demoLevel) {
 					audioClip(gameVariant, "audio.extra_life").play();
@@ -188,5 +191,9 @@ public class SoundHandler {
 			voiceClipExecution.stop();
 			Logger.trace("Scheduled voice clip stopped");
 		}
+	}
+
+	public void playAddCreditSound(GameVariant gameVariant) {
+		audioClip(gameVariant, "audio.credit").play();
 	}
 }
