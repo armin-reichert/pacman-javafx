@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -64,29 +65,23 @@ public class SoundHandler {
 					level.scatterPhase().ifPresent(phase -> ensureSirenStarted(gameVariant, phase));
 				}
 				break;
-			case INTERMISSION_1_STARTS:
-				if (gameVariant == GameVariant.MS_PACMAN) {
-					audioClip(gameVariant, "audio.intermission.1").play();
-				} else {
-					audioClip(gameVariant, "audio.intermission").setCycleCount(2);
-					audioClip(gameVariant, "audio.intermission").play();
+			case INTERMISSION_STARTED:
+				int intermissionNumber = 0;
+				if (GameController.it().state() == GameState.INTERMISSION_TEST) {
+					intermissionNumber = GameController.it().intermissionTestNumber;
+				} else if (event.game.level().isPresent()) {
+					intermissionNumber = event.game.level().get().intermissionNumber;
 				}
-				break;
-			case INTERMISSION_2_STARTS:
-				if (gameVariant == GameVariant.MS_PACMAN) {
-					audioClip(gameVariant, "audio.intermission.2").play();
-				} else {
-					audioClip(gameVariant, "audio.intermission").setCycleCount(1);
-					audioClip(gameVariant, "audio.intermission").play();
-				}
-				break;
-			case INTERMISSION_3_STARTS:
-				if (gameVariant == GameVariant.MS_PACMAN) {
-					audioClip(gameVariant, "audio.intermission.3").play();
-				} else {
-					audioClip(gameVariant, "audio.intermission").setCycleCount(2);
-					audioClip(gameVariant, "audio.intermission").play();
-				}
+				if (intermissionNumber > 0) {
+					if (gameVariant == GameVariant.MS_PACMAN) {
+						audioClip(gameVariant, "audio.intermission." + intermissionNumber).play();
+					} else {
+						var clip = audioClip(gameVariant, "audio.intermission");
+						int cycleCount = intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1;
+						clip.setCycleCount(cycleCount);
+						clip.play();
+					}
+				};
 				break;
 			case READY_TO_PLAY:
 				if (!demoLevel) {

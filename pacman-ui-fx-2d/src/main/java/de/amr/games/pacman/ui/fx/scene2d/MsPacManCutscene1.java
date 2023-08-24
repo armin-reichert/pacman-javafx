@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntermission1;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
@@ -28,7 +29,7 @@ public class MsPacManCutscene1 extends GameScene2D {
 	public void init() {
 		var ss = (SpritesheetMsPacManGame) spritesheet;
 
-		setCreditVisible(true);
+		setCreditVisible(!GameController.it().hasCredit());
 		setScoreVisible(true);
 
 		intermission = new MsPacManIntermission1();

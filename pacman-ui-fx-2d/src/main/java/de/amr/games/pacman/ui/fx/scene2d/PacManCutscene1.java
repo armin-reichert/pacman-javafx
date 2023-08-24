@@ -33,7 +33,7 @@ public class PacManCutscene1 extends GameScene2D {
 	public void init() {
 		var ss = (SpritesheetPacManGame) spritesheet;
 
-		setCreditVisible(true);
+		setCreditVisible(!GameController.it().hasCredit());
 		setScoreVisible(true);
 
 		frame = -1;
@@ -63,7 +63,7 @@ public class PacManCutscene1 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameController.it().publishGameEvent(GameEventType.INTERMISSION_1_STARTS);
+				GameController.it().publishGameEvent(GameEventType.INTERMISSION_STARTED);
 			}
 			return;
 		}

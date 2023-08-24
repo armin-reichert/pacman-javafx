@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
@@ -30,8 +31,10 @@ public class MsPacManCutscene3 extends GameScene2D {
 	@Override
 	public void init() {
 		var ss = (SpritesheetMsPacManGame) spritesheet;
-		setCreditVisible(true);
+
+		setCreditVisible(!GameController.it().hasCredit());
 		setScoreVisible(true);
+
 		intermission = new MsPacManIntermission3();
 		intermission.msPacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.msPacMan, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
