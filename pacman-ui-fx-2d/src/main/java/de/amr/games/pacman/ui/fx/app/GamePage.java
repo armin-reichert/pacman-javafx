@@ -17,8 +17,11 @@ import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -75,11 +78,15 @@ public class GamePage {
 		//popupLayer.setOnMouseClicked(this::handleMouseClick);
 		//new PacMouseSteering(this, popupLayer, () -> ui.game().level().map(GameLevel::pac).orElse(null));
 
-		PacManGames2dApp.PY_SHOW_DEBUG_INFO.addListener((py, ov, debug) -> {
-			layers.setBorder(debug ? ResourceManager.border(Color.RED, 3) : null);
-			gameSceneLayer.setBorder(debug ? ResourceManager.border(Color.YELLOW, 3) : null);
-			popupLayer.setBorder(debug ? ResourceManager.border(Color.GREENYELLOW, 3) : null);
-		});
+		// debug border decoration
+		layers.borderProperty().bind(debugBorderBinding(Color.RED, 3));
+		gameSceneLayer.borderProperty().bind(debugBorderBinding(Color.YELLOW, 3));
+		popupLayer.borderProperty().bind(debugBorderBinding(Color.GREENYELLOW, 3));
+	}
+
+	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
+		return Bindings.createObjectBinding(() -> PacManGames2dApp.PY_SHOW_DEBUG_INFO.get() && ui.currentGameScene instanceof GameScene2D ?
+				ResourceManager.border(color, width) : null, PacManGames2dApp.PY_SHOW_DEBUG_INFO);
 	}
 
 	protected void updateHelpButton() {
@@ -198,6 +205,7 @@ public class GamePage {
 			scene2D.render();
 		}
 		flashMessageView.update();
+		popupLayer.setVisible(true);
 	}
 
 	protected void handleKeyPressed(KeyEvent keyEvent) {
