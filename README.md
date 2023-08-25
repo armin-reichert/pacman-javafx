@@ -56,6 +56,8 @@ I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "
 
 To build the Linux executables, you need to have a Linux JDK on your computer. Edit the variable `linux.jdk.path` in the `pom.xml`files to point to your local path.
 
+After having build the executable it can be started via the command line by calling `mvn javafx:run`.
+
 ## How to use
 
 Starting the game and switching game variant:
