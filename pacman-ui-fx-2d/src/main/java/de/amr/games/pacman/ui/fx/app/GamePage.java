@@ -195,6 +195,7 @@ public class GamePage implements Page {
 		}
 	}
 
+	@Override
 	public Pane root() {
 		return layers;
 	}

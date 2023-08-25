@@ -18,6 +18,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import static de.amr.games.pacman.lib.Globals.checkGameVariant;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -31,15 +33,12 @@ public class StartPage implements Page {
 	private final Node playButton;
 
 	public StartPage(Theme theme) {
-		Globals.checkNotNull(theme);
+		checkNotNull(theme);
 		this.theme = theme;
-
 		playButton = createPlayButton();
-
 		content.setBottom(playButton);
 		BorderPane.setAlignment(playButton, Pos.CENTER);
 		playButton.setTranslateY(-10);
-
 		root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		root.getChildren().add(content);
 	}
@@ -48,24 +47,17 @@ public class StartPage implements Page {
 	public void setSize(double width, double height) {
 	}
 
+	@Override
 	public StackPane root() {
 		return root;
 	}
 
 	public void setGameVariant(GameVariant gameVariant) {
-		Image image;
-		switch (gameVariant) {
-		case MS_PACMAN:
-			image = theme.image("mspacman.startpage.image");
-			break;
-		case PACMAN:
-			image = theme.image("pacman.startpage.image");
-			break;
-		default:
-			throw new IllegalGameVariantException(gameVariant);
-		}
-		//@formatter:off
-		var backgroundImage = new BackgroundImage(image, 
+		checkGameVariant(gameVariant);
+		var image = gameVariant == GameVariant.MS_PACMAN
+				? theme.image("mspacman.startpage.image")
+				: theme.image("pacman.startpage.image");
+		var backgroundImage = new BackgroundImage(image,
 			BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
 			new BackgroundSize(
 				AUTO,	AUTO, // width, height
@@ -73,7 +65,6 @@ public class StartPage implements Page {
 				true, // contain
 				false // cover
 		));
-		//@formatter:on
 		content.setBackground(new Background(backgroundImage));
 	}
 
