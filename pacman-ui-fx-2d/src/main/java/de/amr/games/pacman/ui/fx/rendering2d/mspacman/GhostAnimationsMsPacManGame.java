@@ -13,6 +13,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
@@ -23,8 +25,8 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 	private final SpritesheetMsPacManGame spritesheet;
 
 	public GhostAnimationsMsPacManGame(Ghost ghost, SpritesheetMsPacManGame spritesheet) {
-		Globals.checkNotNull(ghost);
-		Globals.checkNotNull(spritesheet);
+		checkNotNull(ghost);
+		checkNotNull(spritesheet);
 		this.ghost = ghost;
 		this.spritesheet = spritesheet;
 

@@ -11,6 +11,8 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
@@ -20,8 +22,8 @@ public class GhostAnimationsPacManGame extends SpriteAnimations {
 	private final SpritesheetPacManGame spritesheet;
 
 	public GhostAnimationsPacManGame(Ghost ghost, SpritesheetPacManGame spritesheet) {
-		Globals.checkNotNull(ghost);
-		Globals.checkNotNull(spritesheet);
+		checkNotNull(ghost);
+		checkNotNull(spritesheet);
 		this.ghost = ghost;
 		this.spritesheet = spritesheet;
 

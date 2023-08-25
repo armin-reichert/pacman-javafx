@@ -11,6 +11,8 @@ import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
@@ -20,8 +22,8 @@ public class PacAnimationsPacManGame extends SpriteAnimations {
 	private final SpritesheetPacManGame spritesheet;
 
 	public PacAnimationsPacManGame(Pac pac, SpritesheetPacManGame spritesheet) {
-		Globals.checkNotNull(pac);
-		Globals.checkNotNull(spritesheet);
+		checkNotNull(pac);
+		checkNotNull(spritesheet);
 		this.pac = pac;
 		this.spritesheet = spritesheet;
 		//@formatter:off
