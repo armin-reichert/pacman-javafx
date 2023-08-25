@@ -23,7 +23,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
 /**
  * @author Armin Reichert
  */
-public class StartPage {
+public class StartPage implements Page {
 
 	private final StackPane root = new StackPane();
 	private final BorderPane content = new BorderPane();
@@ -42,6 +42,10 @@ public class StartPage {
 
 		root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 		root.getChildren().add(content);
+	}
+
+	@Override
+	public void setSize(double width, double height) {
 	}
 
 	public StackPane root() {

@@ -56,7 +56,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	protected GamePage gamePage;
 	protected SoundHandler soundHandler;
 	protected GameScene currentGameScene;
-	protected Object currentPage;
+	protected Page currentPage;
 
 	public void init(Stage stage, Settings settings, GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
 		checkNotNull(stage);
@@ -97,14 +97,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		double height = Math.min(screenHeight * 0.8, 800);
 		double width = height * 4.0 / 3.0;
 		scene = new Scene(new Region(), width, height, Color.BLACK);
-		scene.widthProperty().addListener((py, ov, nv) -> {
-			if (currentPage == gamePage) {
-				gamePage.setSize(scene.getWidth(), scene.getHeight());
-			}});
-		scene.heightProperty().addListener((py, ov, nv) -> {
-			if (currentPage == gamePage) {
-				gamePage.setSize(scene.getWidth(), scene.getHeight());
-			}});
+		scene.widthProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
+		scene.heightProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
 	}
 
 	protected void configureStage(Settings settings) {
@@ -141,16 +135,17 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	public void showStartPage() {
+		currentPage = startPage;
 		clock.stop();
 		scene.setRoot(startPage.root());
 		updateStage();
 		startPage.setGameVariant(game().variant());
 		startPage.root().requestFocus();
 		stage.show();
-		currentPage = startPage;
 	}
 
 	public void showGamePage() {
+		currentPage = gamePage;
 		// call reboot() first such that current game scene is set
 		reboot();
 		scene.setRoot(gamePage.root());
@@ -158,7 +153,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		gamePage.setSize(scene.getWidth(), scene.getHeight());
 		updateStage();
 		stage.show();
-		currentPage = gamePage;
 		clock.start();
 	}
 

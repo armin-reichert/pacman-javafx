@@ -34,7 +34,7 @@ import org.tinylog.Logger;
 /**
  * @author Armin Reichert
  */
-public class GamePage {
+public class GamePage implements Page {
 
 	protected static final double MIN_SCALING = 0.7;
 	protected static final int GAME_SCENE_LAYER = 0;
@@ -107,6 +107,7 @@ public class GamePage {
 		});
 	}
 
+	@Override
 	public void setSize(double width, double height) {
 		double s = 0.9 * height / PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
 		if (s * PacManGames2dApp.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
