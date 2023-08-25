@@ -14,38 +14,35 @@ import static de.amr.games.pacman.lib.Globals.RND;
  */
 public class BootScene extends GameScene2D {
 
+	private double start; // seconds
+
 	@Override
 	public void init() {
+		start = 1.0;
 		setScoreVisible(false);
 	}
 
 	@Override
 	public void update() {
+		if (state().timer().atSecond(start + 3)) {
+			gameController().terminateCurrentState();
+		}
 	}
 
 	@Override
 	public void render() {
-		double start = 1.0; // seconds
 		var timer = state().timer();
-
 		if (timer.tick() == 1) {
 			clearCanvas();
 		}
-
 		else if (timer.betweenSeconds(start, start + 1) && timer.tick() % 4 == 0) {
 			paintRandomHexCodes();
 		}
-
 		else if (timer.betweenSeconds(start + 1, start + 2.5) && timer.tick() % 4 == 0) {
 			paintRandomSprites();
 		}
-
 		else if (timer.atSecond(start + 2.5)) {
 			paintGrid(PacManGames2dApp.CANVAS_WIDTH_UNSCALED, PacManGames2dApp.CANVAS_HEIGHT_UNSCALED, 16);
-		}
-
-		else if (timer.atSecond(start + 3)) {
-			gameController().terminateCurrentState();
 		}
 	}
 
