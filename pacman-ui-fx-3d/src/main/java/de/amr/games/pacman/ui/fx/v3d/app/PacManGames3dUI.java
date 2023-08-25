@@ -36,7 +36,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage3D(this, theme);
-		resizeGamePage(scene.getWidth(), scene.getHeight());
+		gamePage.setSize(scene.getWidth(), scene.getHeight());
 	}
 
 	@Override

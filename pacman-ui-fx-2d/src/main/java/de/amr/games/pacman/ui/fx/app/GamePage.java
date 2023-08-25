@@ -107,6 +107,15 @@ public class GamePage {
 		});
 	}
 
+	public void setSize(double width, double height) {
+		double s = 0.9 * height / PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
+		if (s * PacManGames2dApp.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
+			s = 0.8 * width / PacManGames2dApp.CANVAS_WIDTH_UNSCALED;
+		}
+		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
+		resize(s, false);
+	}
+
 	public void resize(double scaling, boolean always) {
 		if (scaling < MIN_SCALING) {
 			Logger.info("Cannot scale to {}, minimum scaling is {}", scaling, MIN_SCALING);

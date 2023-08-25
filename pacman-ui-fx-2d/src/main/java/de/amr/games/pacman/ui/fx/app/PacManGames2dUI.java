@@ -99,11 +99,11 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		scene = new Scene(new Region(), width, height, Color.BLACK);
 		scene.widthProperty().addListener((py, ov, nv) -> {
 			if (currentPage == gamePage) {
-				resizeGamePage(scene.getWidth(), scene.getHeight());
+				gamePage.setSize(scene.getWidth(), scene.getHeight());
 			}});
 		scene.heightProperty().addListener((py, ov, nv) -> {
 			if (currentPage == gamePage) {
-				resizeGamePage(scene.getWidth(), scene.getHeight());
+				gamePage.setSize(scene.getWidth(), scene.getHeight());
 			}});
 	}
 
@@ -137,16 +137,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage(this, theme);
-		resizeGamePage(scene.getWidth(), scene.getHeight());
-	}
-
-	protected void resizeGamePage(double width, double height) {
-		double s = 0.9 * height / PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
-		if (s * PacManGames2dApp.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
-			s = 0.8 * width / PacManGames2dApp.CANVAS_WIDTH_UNSCALED;
-		}
-		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
-		gamePage.resize(s, false);
+		gamePage.setSize(scene.getWidth(), scene.getHeight());
 	}
 
 	public void showStartPage() {
@@ -164,7 +155,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		reboot();
 		scene.setRoot(gamePage.root());
 		gamePage.root().requestFocus();
-		resizeGamePage(scene.getWidth(), scene.getHeight());
+		gamePage.setSize(scene.getWidth(), scene.getHeight());
 		updateStage();
 		stage.show();
 		currentPage = gamePage;
