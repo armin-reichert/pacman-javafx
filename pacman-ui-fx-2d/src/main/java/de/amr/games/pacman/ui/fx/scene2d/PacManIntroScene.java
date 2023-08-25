@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
@@ -98,7 +99,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		drawTileGrid(TILES_X, TILES_Y);
+		drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 	}
 
 	// TODO inspect in MAME what's really going on here

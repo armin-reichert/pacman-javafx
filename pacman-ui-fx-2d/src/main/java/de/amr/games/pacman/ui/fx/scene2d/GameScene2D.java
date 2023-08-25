@@ -45,9 +45,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class GameScene2D implements GameScene {
 
-	public static final int TILES_X = 28;
-	public static final int TILES_Y = 36;
-
 	protected static float t(double tiles) {
 		return (float) tiles * TS;
 	}
