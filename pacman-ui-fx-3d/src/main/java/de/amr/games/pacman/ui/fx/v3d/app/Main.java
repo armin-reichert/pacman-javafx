@@ -4,14 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.app;
 
-import javafx.application.Application;
+import static javafx.application.Application.launch;
 
 /**
  * @author Armin Reichert
  */
 public class Main {
-
 	public static void main(String[] args) {
-		Application.launch(PacManGames3dApp.class, args);
+		launch(PacManGames3dApp.class, args);
 	}
 }
