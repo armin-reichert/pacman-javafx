@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -104,8 +105,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	protected void configureStage(Settings settings) {
 		stage.setScene(scene);
 		stage.setFullScreen(settings.fullScreen);
-		stage.setMinWidth (ArcadeWorld.TILES_X * 8);
-		stage.setMinHeight(ArcadeWorld.TILES_Y * 8);
+		stage.setMinWidth (ArcadeWorld.TILES_X * Globals.TS);
+		stage.setMinHeight(ArcadeWorld.TILES_Y * Globals.TS);
 		stage.centerOnScreen();
 	}
 
