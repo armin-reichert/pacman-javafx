@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
@@ -348,7 +349,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public void onGameStateChange(GameEvent e) {
+	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newState) {
 
 		case READY -> {

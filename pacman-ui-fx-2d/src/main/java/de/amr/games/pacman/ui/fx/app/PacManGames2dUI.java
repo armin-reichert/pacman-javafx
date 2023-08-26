@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -240,7 +241,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	}
 
 	@Override
-	public void onGameStateChange(GameEvent e) {
+	public void onGameStateChange(GameStateChangeEvent e) {
 		updateOrReloadGameScene(false);
 	}
 
