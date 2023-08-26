@@ -39,10 +39,10 @@ public class MsPacManIntroScene extends GameScene2D {
 		var msPacMan = intro.context().msPacMan;
 		msPacMan.setAnimations(new PacAnimationsMsPacManGame(msPacMan, ss));
 		msPacMan.selectAnimation(PacAnimations.MUNCHING);
-		intro.context().ghosts.forEach(ghost -> {
+		for (var ghost : intro.context().ghosts) {
 			ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss));
 			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
-		});
+		};
 
 		intro.changeState(MsPacManIntro.State.START);
 	}
@@ -79,7 +79,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		drawMarquee();
 		drawText("\"MS PAC-MAN\"", theme.color("palette.orange"), sceneFont(), tx, ty);
 		if (intro.state() == State.GHOSTS) {
-			var ghost = ic.ghosts.get(ic.ghostIndex);
+			var ghost = ic.ghosts[ic.ghostIndex];
 			var color = theme.color(String.format("ghost.%d.color", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText("WITH", theme.color("palette.pale"), sceneFont(), tx, y0 + t(3));
@@ -91,7 +91,9 @@ public class MsPacManIntroScene extends GameScene2D {
 			drawText("STARRING", theme.color("palette.pale"), sceneFont(), tx, y0 + t(3));
 			drawText("MS PAC-MAN", theme.color("palette.yellow"), sceneFont(), tx, y0 + t(6));
 		}
-		ic.ghosts.forEach(this::drawGhost);
+		for (var ghost : ic.ghosts) {
+			drawGhost(ghost);
+		}
 		drawPac(ic.msPacMan);
 		drawMsPacManCopyright(t(6), t(28));
 		drawLevelCounter();
