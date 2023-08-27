@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
