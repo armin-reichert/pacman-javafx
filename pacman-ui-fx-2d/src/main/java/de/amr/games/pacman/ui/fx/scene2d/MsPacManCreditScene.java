@@ -47,5 +47,6 @@ public class MsPacManCreditScene extends GameScene2D {
 		drawSprite(ss.livesCounterSprite(), t(13), t(23) + 1);
 		drawText("PTS", color, font6, t(25), t(25));
 		drawMsPacManCopyright(t(6), t(28));
+		drawLevelCounter();
 	}
 }
