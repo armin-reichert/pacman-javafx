@@ -445,7 +445,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	@Override
 	public void cheatAddLives() {
-		game().setLives(game().lives() + 3);
+		game().addLives((short) 3);
 		showFlashMessage(message(PacManGames2dApp.TEXTS, "cheat_add_lives", game().lives()));
 	}
 
