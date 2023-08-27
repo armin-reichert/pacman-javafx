@@ -229,6 +229,38 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
 	}
 
+	// Accessors
+
+	public Theme theme() {
+		return theme;
+	}
+
+	public SoundHandler soundHandler() {
+		return soundHandler;
+	}
+
+	public GameClock clock() {
+		return clock;
+	}
+
+	public GameScene currentGameScene() {
+		return currentGameScene;
+	}
+
+	public GameModel game() {
+		return GameController.it().game();
+	}
+
+	public GameSceneConfig sceneConfig() {
+		return gameScenes.get(game().variant());
+	}
+
+	public Spritesheet spritesheet() {
+		return game().variant() == GameVariant.MS_PACMAN ? theme.get("mspacman.spritesheet") : theme.get("pacman.spritesheet");
+	}
+
+	// GameEventListener implementation part
+
 	@Override
 	public void onGameEvent(GameEvent e) {
 		Logger.trace("Event received: {}", e);
@@ -276,35 +308,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		updateOrReloadGameScene(true);
 	}
 
-	public Theme theme() {
-		return theme;
-	}
-
-	public SoundHandler soundHandler() {
-		return soundHandler;
-	}
-
-	public GameClock clock() {
-		return clock;
-	}
-
-	public GameScene currentGameScene() {
-		return currentGameScene;
-	}
-
-	public GameModel game() {
-		return GameController.it().game();
-	}
-
-	public GameSceneConfig sceneConfig() {
-		return gameScenes.get(game().variant());
-	}
-
-	public Spritesheet spritesheet() {
-		return game().variant() == GameVariant.MS_PACMAN ? theme.get("mspacman.spritesheet") : theme.get("pacman.spritesheet");
-	}
-
-	// Actions
+	// ActionHandler implementation part
 
 	@Override
 	public void showFlashMessage(String message, Object... args) {
