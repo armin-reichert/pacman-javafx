@@ -187,30 +187,22 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawLevelCounter() {
-		drawLevelCounter(game().levelCounter(), t(24), t(34));
+		drawLevelCounter(game().variant(), game().levelCounter(), t(24), t(34));
 	}
 
-	private void drawLevelCounter(List<Byte> levelSymbols, double xr, double yr) {
+	private void drawLevelCounter(GameVariant variant, Iterable<Byte> levelSymbols, double xr, double yr) {
 		double x = xr;
-		switch (game().variant()) {
-			case MS_PACMAN: {
-				var ss = (SpritesheetMsPacManGame) spritesheet;
-				for (var symbol : levelSymbols) {
-					drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
-					x -= TS * 2;
-				}
-				break;
-			}
-			case PACMAN: {
-				var ss = (SpritesheetPacManGame) spritesheet;
-				for (var symbol : levelSymbols) {
-					drawSprite(ss.bonusSymbolSprite(symbol), x, yr);
-					x -= TS * 2;
-				}
-				break;
-			}
-			default:
-				throw new IllegalGameVariantException(game().variant());
+		for (var symbol : levelSymbols) {
+			drawSprite(bonusSymbolSprite(symbol, variant), x, yr);
+			x -= TS * 2;
+		}
+	}
+
+	private Rectangle2D bonusSymbolSprite(byte symbol, GameVariant variant) {
+		switch (variant) {
+			case MS_PACMAN: return ((SpritesheetMsPacManGame) spritesheet).bonusSymbolSprite(symbol);
+			case PACMAN:    return ((SpritesheetPacManGame)   spritesheet).bonusSymbolSprite(symbol);
+			default:        throw new IllegalGameVariantException(variant);
 		}
 	}
 
