@@ -206,6 +206,14 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
+	private Rectangle2D livesCounterSprite(GameVariant variant) {
+		switch (variant) {
+			case MS_PACMAN: return ((SpritesheetMsPacManGame) spritesheet).livesCounterSprite();
+			case PACMAN:    return ((SpritesheetPacManGame)   spritesheet).livesCounterSprite();
+			default:        throw new IllegalGameVariantException(variant);
+		}
+	}
+
 	protected void drawLivesCounter(int numLivesDisplayed) {
 		if (numLivesDisplayed <= 0) {
 			return;
@@ -213,28 +221,14 @@ public abstract class GameScene2D implements GameScene {
 		var x = TS * 2;
 		var y = TS * (ArcadeWorld.TILES_Y - 2);
 		int maxLives = 5;
-		switch (game().variant()) {
-			case MS_PACMAN: {
-				var ss = (SpritesheetMsPacManGame) spritesheet;
-				for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-					drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
-				}
-				break;
-			}
-			case PACMAN: {
-				var ss = (SpritesheetPacManGame) spritesheet;
-				for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-					drawSprite(ss.livesCounterSprite(), x + TS * (2 * i), y);
-				}
-				break;
-			}
-			default:
-				throw new IllegalGameVariantException(game().variant());
+		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+			drawSprite(livesCounterSprite(game().variant()), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText("+" + excessLives, theme.color("palette.yellow"), Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
+			drawText("+" + excessLives, theme.color("palette.yellow"),
+					Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
 		}
 	}
 
