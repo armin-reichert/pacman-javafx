@@ -41,6 +41,7 @@ import java.util.Map;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
+import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
 /**
  * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No 3D play scene, no dashboard, no picture-in-picture view.
@@ -89,7 +90,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		clock = new GameClock(() -> {
 			GameController.it().update();
 			gamePage.update();
-		}, () -> gamePage.render());
+		}, gamePage::render);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 		clock.targetFrameratePy.set(GameModel.FPS);
 	}
@@ -213,7 +214,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		var prevGameScene = currentGameScene;
 		if (prevGameScene != null) {
 			prevGameScene.end();
-			//soundHandler.stopAllSounds();
 			if (prevGameScene != sceneConfig().bootScene()) {
 				soundHandler.stopVoice();
 			}
@@ -362,7 +362,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	@Override
 	public void togglePaused() {
-		Ufx.toggle(clock.pausedPy);
+		toggle(clock.pausedPy);
 		if (clock.isPaused()) {
 			theme.audioClips().forEach(AudioClip::stop);
 		}
@@ -449,7 +449,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	@Override
 	public void cheatAddLives() {
-		game().addLives( (short) 3);
+		game().addLives((short) 3);
 		showFlashMessage(message(PacManGames2dApp.TEXTS, "cheat_add_lives", game().lives()));
 	}
 
