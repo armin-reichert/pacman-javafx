@@ -49,7 +49,7 @@ public class SectionGameControl extends Section {
 		});
 
 		comboInitialLives = addComboBox("Initial Lives", 3, 5);
-		comboInitialLives.setOnAction(e -> game().setInitialLives(comboInitialLives.getValue()));
+		comboInitialLives.setOnAction(e -> game().setInitialLives((comboInitialLives.getValue().shortValue())));
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> GameController.it().startPlaying());

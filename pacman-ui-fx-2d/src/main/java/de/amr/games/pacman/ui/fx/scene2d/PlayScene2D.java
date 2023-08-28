@@ -83,8 +83,8 @@ public class PlayScene2D extends GameScene2D {
 			Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
 					.map(level::ghost).forEach(this::drawGhost);
 			if (!isCreditVisible()) {
-				// TODO get rid of this crap:
-				int lives = game().isOneLessLifeDisplayed() ? game().lives() - 1 : game().lives();
+				boolean hideOne = level.pac().isVisible() || GameController.it().state() == GameState.GHOST_DYING;
+				int lives = hideOne ? game().lives() - 1 : game().lives();
 				drawLivesCounter(lives);
 			}
 			drawLevelCounter();
