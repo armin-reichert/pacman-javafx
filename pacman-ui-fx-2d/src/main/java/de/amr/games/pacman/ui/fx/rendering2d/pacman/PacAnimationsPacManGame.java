@@ -25,7 +25,7 @@ public class PacAnimationsPacManGame extends SpriteAnimations {
 		checkNotNull(spritesheet);
 		this.pac = pac;
 		this.spritesheet = spritesheet;
-		//@formatter:off
+
 		var munching = SpriteAnimation
 			.begin()
 				.sprites(spritesheet.pacMunchingSprites(Direction.LEFT))
@@ -44,9 +44,9 @@ public class PacAnimationsPacManGame extends SpriteAnimations {
 				.frameTicks(3)
 				.loop()
 			.end();
-		//@formatter:on
-		animationsByName.put(PacAnimations.MUNCHING, munching);
-		animationsByName.put(PacAnimations.DYING, dying);
+
+		animationsByName.put(PacAnimations.MUNCHING,   munching);
+		animationsByName.put(PacAnimations.DYING,      dying);
 		animationsByName.put(PacAnimations.BIG_PACMAN, bigPacMan);
 	}
 

@@ -29,7 +29,6 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 		this.ghost = ghost;
 		this.spritesheet = spritesheet;
 
-		//@formatter:off
 		var normal = SpriteAnimation
 			.begin()
 				.sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
@@ -60,13 +59,12 @@ public class GhostAnimationsMsPacManGame extends SpriteAnimations
 			.begin()
 				.sprites(spritesheet.ghostNumberSprites())
 			.end();
-		//@formatter:on
 
-		animationsByName.put(GhostAnimations.GHOST_NORMAL, normal);
+		animationsByName.put(GhostAnimations.GHOST_NORMAL,     normal);
 		animationsByName.put(GhostAnimations.GHOST_FRIGHTENED, frightened);
-		animationsByName.put(GhostAnimations.GHOST_FLASHING, flashing);
-		animationsByName.put(GhostAnimations.GHOST_EYES, eyes);
-		animationsByName.put(GhostAnimations.GHOST_NUMBER, number);
+		animationsByName.put(GhostAnimations.GHOST_FLASHING,   flashing);
+		animationsByName.put(GhostAnimations.GHOST_EYES,       eyes);
+		animationsByName.put(GhostAnimations.GHOST_NUMBER,     number);
 
 		// TODO check this
 		eyes.start();

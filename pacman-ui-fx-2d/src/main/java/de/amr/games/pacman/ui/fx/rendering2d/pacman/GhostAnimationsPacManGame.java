@@ -26,7 +26,6 @@ public class GhostAnimationsPacManGame extends SpriteAnimations {
 		this.ghost = ghost;
 		this.spritesheet = spritesheet;
 
-		//@formatter:off
 		var normal = SpriteAnimation
 			.begin()
 				.sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
@@ -77,21 +76,20 @@ public class GhostAnimationsPacManGame extends SpriteAnimations {
 		
 		var naked = SpriteAnimation
 			.begin()
-			.sprites(spritesheet.blinkyNakedSprites())
+				.sprites(spritesheet.blinkyNakedSprites())
 				.frameTicks(4)
 				.loop()
 			.end();
-		//@formatter:on
 
-		animationsByName.put(GhostAnimations.GHOST_NORMAL, normal);
+		animationsByName.put(GhostAnimations.GHOST_NORMAL,     normal);
 		animationsByName.put(GhostAnimations.GHOST_FRIGHTENED, frightened);
-		animationsByName.put(GhostAnimations.GHOST_FLASHING, flashing);
-		animationsByName.put(GhostAnimations.GHOST_EYES, eyesAnimation);
-		animationsByName.put(GhostAnimations.GHOST_NUMBER, numberAnimation);
-		animationsByName.put(GhostAnimations.BLINKY_DAMAGED, damaged);
+		animationsByName.put(GhostAnimations.GHOST_FLASHING,   flashing);
+		animationsByName.put(GhostAnimations.GHOST_EYES,       eyesAnimation);
+		animationsByName.put(GhostAnimations.GHOST_NUMBER,     numberAnimation);
+		animationsByName.put(GhostAnimations.BLINKY_DAMAGED,   damaged);
 		animationsByName.put(GhostAnimations.BLINKY_STRETCHED, stretched);
-		animationsByName.put(GhostAnimations.BLINKY_PATCHED, patched);
-		animationsByName.put(GhostAnimations.BLINKY_NAKED, naked);
+		animationsByName.put(GhostAnimations.BLINKY_PATCHED,   patched);
+		animationsByName.put(GhostAnimations.BLINKY_NAKED,     naked);
 
 		// TODO check this
 		eyesAnimation.start();
