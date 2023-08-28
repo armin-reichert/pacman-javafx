@@ -89,10 +89,10 @@ public class HelpMenuFactory {
 
 	public Pane menuPlaying() {
 		var menu = new Menu();
-		addEntry(menu, "help.move_left", tt("help.cursor_left"));
+		addEntry(menu, "help.move_left",  tt("help.cursor_left"));
 		addEntry(menu, "help.move_right", tt("help.cursor_right"));
-		addEntry(menu, "help.move_up", tt("help.cursor_up"));
-		addEntry(menu, "help.move_down", tt("help.cursor_down"));
+		addEntry(menu, "help.move_up",    tt("help.cursor_up"));
+		addEntry(menu, "help.move_down",  tt("help.cursor_down"));
 		addEntry(menu, "help.show_intro", "Q");
 		return createPane(menu);
 	}
