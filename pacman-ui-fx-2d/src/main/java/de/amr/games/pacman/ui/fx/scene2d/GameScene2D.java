@@ -274,8 +274,7 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		pac.animations().ifPresent(pa -> {
-			if (pa instanceof SpriteAnimations) {
-				var sa = (SpriteAnimations) pa;
+			if (pa instanceof SpriteAnimations sa) {
 				drawEntitySprite(pac, sa.currentSprite());
 				if (infoVisiblePy.get()) {
 					drawPacInfo(pac, sa);
@@ -306,8 +305,8 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		ghost.animations().ifPresent(ga -> {
-			if (ga instanceof SpriteAnimations) {
-				var sa = (SpriteAnimations) ga;
+			// WebFX does not allow Class::isInstance and Class::cast, so we do it the old way.
+			if (ga instanceof SpriteAnimations sa) {
 				drawEntitySprite(ghost, sa.currentSprite());
 				if (infoVisiblePy.get()) {
 					drawGhostInfo(ghost, sa);
