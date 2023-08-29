@@ -579,17 +579,16 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onLevelStarted(GameEvent e) {
 		game().level().ifPresent(level -> {
-			var counter = game().levelCounter();
 			switch (game().variant()) {
 				case MS_PACMAN: {
 					var ss = (SpritesheetMsPacManGame) spritesheet;
-					var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
 					break;
 				}
 				case PACMAN: {
 					var ss = (SpritesheetPacManGame) spritesheet;
-					var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
 					break;
 				}
