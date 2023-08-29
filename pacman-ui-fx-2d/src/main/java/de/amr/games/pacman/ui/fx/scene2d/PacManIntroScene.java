@@ -109,7 +109,7 @@ public class PacManIntroScene extends GameScene2D {
 
 	private void drawGallery() {
 		var ss = (SpritesheetPacManGame) spritesheet;
-		var font = sceneFont();
+		var font = sceneFont(8);
 
 		int tx = context().leftTileX;
 		if (context().titleVisible) {
@@ -159,8 +159,8 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints() {
-		var font8 = sceneFont();
-		var font6 = theme.font("font.arcade", s(6));
+		var font8 = sceneFont(8);
+		var font6 = sceneFont(6);
 		int tx = context().leftTileX + 6;
 		int ty = 25;
 		g.setFill(theme.color("pacman.maze.foodColor"));

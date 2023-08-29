@@ -72,24 +72,25 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
+		var font8 = sceneFont(8);
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();
 		var ty = ic.titlePosition.y();
 		var y0 = ic.stopY;
 		drawMarquee();
-		drawText("\"MS PAC-MAN\"", theme.color("palette.orange"), sceneFont(), tx, ty);
+		drawText("\"MS PAC-MAN\"", theme.color("palette.orange"), font8, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts[ic.ghostIndex];
 			var color = theme.color(String.format("ghost.%d.color", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText("WITH", theme.color("palette.pale"), sceneFont(), tx, y0 + t(3));
+				drawText("WITH", theme.color("palette.pale"), font8, tx, y0 + t(3));
 			}
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
-			drawText(text, color, sceneFont(), tx + t(3) + dx, y0 + t(6));
+			drawText(text, color, font8, tx + t(3) + dx, y0 + t(6));
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText("STARRING", theme.color("palette.pale"), sceneFont(), tx, y0 + t(3));
-			drawText("MS PAC-MAN", theme.color("palette.yellow"), sceneFont(), tx, y0 + t(6));
+			drawText("STARRING", theme.color("palette.pale"), font8, tx, y0 + t(3));
+			drawText("MS PAC-MAN", theme.color("palette.yellow"), font8, tx, y0 + t(6));
 		}
 		for (var ghost : ic.ghosts) {
 			drawGhost(ghost);

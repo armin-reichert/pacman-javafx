@@ -55,7 +55,7 @@ public class BootScene extends GameScene2D {
 	private void paintRandomHexCodes() {
 		clearCanvas();
 		g.setFill(theme.color("palette.pale"));
-		g.setFont(sceneFont());
+		g.setFont(sceneFont(8));
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
 				var hexCode = Integer.toHexString(RND.nextInt(16));

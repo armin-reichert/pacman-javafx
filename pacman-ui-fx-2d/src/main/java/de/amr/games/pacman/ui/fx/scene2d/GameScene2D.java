@@ -133,9 +133,8 @@ public abstract class GameScene2D implements GameScene {
 		return value * scaling;
 	}
 
-	protected Font sceneFont() {
-		double size = Math.floor(TS * scaling);
-		return theme.font("font.arcade", size);
+	protected Font sceneFont(double size) {
+		return theme.font("font.arcade", s(size));
 	}
 
 	public Canvas canvas() {
@@ -176,7 +175,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
-		var font = sceneFont();
+		var font = sceneFont(8);
 		drawText(title,  theme.color("palette.pale"), font, x, y);
 		var pointsText = String.format("%02d", score.points());
 		drawText(String.format("%7s", pointsText), theme.color("palette.pale"), font, x, (y + TS + 1));
@@ -376,18 +375,18 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
- 		drawText(String.format("CREDIT %2d", credit), theme.color("palette.pale"), sceneFont(), x, y);
+ 		drawText(String.format("CREDIT %2d", credit), theme.color("palette.pale"), sceneFont(8), x, y);
 	}
 
 	protected void drawMidwayCopyright(double x, double y) {
-		drawText("© 1980 MIDWAY MFG.CO.", theme.color("palette.pink"), sceneFont(), x, y);
+		drawText("© 1980 MIDWAY MFG.CO.", theme.color("palette.pink"), sceneFont(8), x, y);
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
 		Image logo = theme.get("mspacman.logo.midway");
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(theme.color("palette.red"));
-		g.setFont(sceneFont());
+		g.setFont(sceneFont(8));
 		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
 		g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
@@ -399,7 +398,7 @@ public abstract class GameScene2D implements GameScene {
 			var ss = (SpritesheetMsPacManGame) spritesheet;
 			var sprite = ss.clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
-			g.setFont(sceneFont());
+			g.setFont(sceneFont(8));
 			g.setFill(theme.color("palette.pale").darker());
 			var numberX = s(x + sprite.getWidth() - 25);
 			var numberY = s(y + 18);
