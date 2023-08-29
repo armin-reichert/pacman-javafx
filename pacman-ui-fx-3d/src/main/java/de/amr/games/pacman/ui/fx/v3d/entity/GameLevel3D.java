@@ -89,7 +89,7 @@ public class GameLevel3D {
 		}
 
 		pacLight = createPacLight(pac3D);
-		levelCounter3D = createLevelCounter3D(spritesheet);
+		levelCounter3D = new LevelCounter3D();
 		scores3D = new Scores3D(theme.font("font.arcade", 8));
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
@@ -146,24 +146,6 @@ public class GameLevel3D {
 			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
 			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
 			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
-		}
-		default:
-			throw new IllegalGameVariantException(level.game().variant());
-		}
-	}
-
-	private LevelCounter3D createLevelCounter3D(Spritesheet spritesheet) {
-		var counter = level.game().levelCounter();
-		switch (level.game().variant()) {
-		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) spritesheet;
-			var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
-			return new LevelCounter3D(images);
-		}
-		case PACMAN: {
-			var ss = (SpritesheetPacManGame) spritesheet;
-			var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
-			return new LevelCounter3D(images);
 		}
 		default:
 			throw new IllegalGameVariantException(level.game().variant());
@@ -241,6 +223,10 @@ public class GameLevel3D {
 
 	public LivesCounter3D livesCounter3D() {
 		return livesCounter3D;
+	}
+
+	public LevelCounter3D levelCounter3D() {
+		return levelCounter3D;
 	}
 
 	public World3D world3D() {

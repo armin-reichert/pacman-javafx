@@ -35,6 +35,7 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -572,5 +573,28 @@ public class PlayScene3D implements GameScene {
 		pause.setOnFinished(e -> unlockGameState());
 		lockGameState();
 		pause.play();
+	}
+
+
+	@Override
+	public void onLevelStarted(GameEvent e) {
+		game().level().ifPresent(level -> {
+			var counter = game().levelCounter();
+			switch (game().variant()) {
+				case MS_PACMAN: {
+					var ss = (SpritesheetMsPacManGame) spritesheet;
+					var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+					level3D.levelCounter3D().update(images);
+					break;
+				}
+				case PACMAN: {
+					var ss = (SpritesheetPacManGame) spritesheet;
+					var images = counter.stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+					level3D.levelCounter3D().update(images);
+					break;
+				}
+				default: throw new IllegalGameVariantException(game().variant());
+			}
+		});
 	}
 }

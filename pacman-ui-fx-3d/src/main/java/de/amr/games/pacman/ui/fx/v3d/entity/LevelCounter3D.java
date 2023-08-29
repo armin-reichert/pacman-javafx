@@ -4,6 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
+import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -28,8 +32,13 @@ public class LevelCounter3D {
 
 	private final Group root = new Group();
 
-	public LevelCounter3D(Image[] symbolImages) {
+	public Node getRoot() {
+		return root;
+	}
+
+	public void update(Image[] symbolImages) {
 		requireNonNull(symbolImages);
+		root.getChildren().clear();
 		for (int i = 0; i < symbolImages.length; ++i) {
 			var symbolImage = symbolImages[i];
 			Box cube = createSpinningCube(TS, symbolImage, isEven(i));
@@ -38,10 +47,6 @@ public class LevelCounter3D {
 			cube.setTranslateZ(-HTS);
 			root.getChildren().add(cube);
 		}
-	}
-
-	public Node getRoot() {
-		return root;
 	}
 
 	public void setRightPosition(double x, double y, double z) {
