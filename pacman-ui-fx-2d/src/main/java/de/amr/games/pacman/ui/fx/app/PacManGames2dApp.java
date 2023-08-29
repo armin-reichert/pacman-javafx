@@ -17,7 +17,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
@@ -76,56 +75,43 @@ public class PacManGames2dApp extends Application {
 			settings.merge(getParameters().getNamed());
 		}
 		GameController.create(settings.variant);
-		ui = new PacManGames2dUI();
-		GameController.it().addListener(ui);
 		Logger.info("Game initialized: {}", settings);
 	}
 
 	@Override
 	public void start(Stage stage) {
 		var gameScenesMsPacMan = new GameSceneConfig(
-			new BootScene(),
-			new MsPacManIntroScene(),
-			new MsPacManCreditScene(),
-			new PlayScene2D(),
-			null,
-			new MsPacManCutscene1(),
-			new MsPacManCutscene2(),
-			new MsPacManCutscene3()
+				new BootScene(),
+				new MsPacManIntroScene(),
+				new MsPacManCreditScene(),
+				new PlayScene2D(),
+				null,
+				new MsPacManCutscene1(),
+				new MsPacManCutscene2(),
+				new MsPacManCutscene3()
 		);
 		var gameScenesPacMan = new GameSceneConfig(
-			new BootScene(),
-			new PacManIntroScene(),
-			new PacManCreditScene(),
-			new PlayScene2D(),
-			null,
-			new PacManCutscene1(),
-			new PacManCutscene2(),
-			new PacManCutscene3()
+				new BootScene(),
+				new PacManIntroScene(),
+				new PacManCreditScene(),
+				new PlayScene2D(),
+				null,
+				new PacManCutscene1(),
+				new PacManCutscene2(),
+				new PacManCutscene3()
 		);
-		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
-		ui.setTheme(new ArcadeTheme(MGR));
-		Logger.info("Theme created: {}", ui.theme());
+		var theme = new ArcadeTheme(MGR);
+		Logger.info("Theme created: {}", theme);
+		ui = new PacManGames2dUI(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+		GameController.it().addListener(ui);
 		ui.showStartPage();
-		Logger.info("UI initialized. Stage size: {000} x {000} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Game app started. {} Hz locale={}", ui.clock().targetFrameratePy.get(), localeInfo());
+		Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+		Logger.info("Game started. Clock speed={} Hz", ui.clock().targetFrameratePy.get());
 	}
 
 	@Override
 	public void stop() {
 		ui.clock().stop();
 		Logger.info("Game stopped.");
-	}
-
-	private String localeInfo() {
-		var language = System.getProperty("user.language");
-		var country = System.getProperty("user.country");
-		if (language == null) {
-			return "no locale info";
-		}
-		if (country == null) {
-			return language;
-		}
-		return new Locale(language, country).toString();
 	}
 }

@@ -32,7 +32,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;

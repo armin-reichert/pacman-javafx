@@ -32,7 +32,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
@@ -229,33 +228,31 @@ public class PacManGames3dApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		var gameScenesMsPacMan = new GameSceneConfig(
-			new BootScene(),
-			new MsPacManIntroScene(),
-			new MsPacManCreditScene(),
-			new PlayScene2D(),
-			new PlayScene3D(),
-			new MsPacManCutscene1(),
-			new MsPacManCutscene2(),
-			new MsPacManCutscene3()
+				new BootScene(),
+				new MsPacManIntroScene(),
+				new MsPacManCreditScene(),
+				new PlayScene2D(),
+				new PlayScene3D(),
+				new MsPacManCutscene1(),
+				new MsPacManCutscene2(),
+				new MsPacManCutscene3()
 		);
 		var gameScenesPacMan = new GameSceneConfig(
-			new BootScene(),
-			new PacManIntroScene(),
-			new PacManCreditScene(),
-			new PlayScene2D(),
-			new PlayScene3D(),
-			new PacManCutscene1(),
-			new PacManCutscene2(),
-			new PacManCutscene3()
+				new BootScene(),
+				new PacManIntroScene(),
+				new PacManCreditScene(),
+				new PlayScene2D(),
+				new PlayScene3D(),
+				new PacManCutscene1(),
+				new PacManCutscene2(),
+				new PacManCutscene3()
 		);
-		ui = new PacManGames3dUI();
-		var theme = createTheme();
-		Logger.info("UI created: {} Theme: {}", ui.getClass().getSimpleName(), theme);
-		ui.init(stage, settings, gameScenesMsPacMan, gameScenesPacMan);
-		ui.setTheme(theme);
+		ui = new PacManGames3dUI(stage, settings, createTheme(), gameScenesMsPacMan, gameScenesPacMan);
+		Logger.info("UI created: {} Theme: {}", ui.getClass().getSimpleName(), ui.theme());
 		ui.showStartPage();
 		GameController.it().addListener(ui);
-		Logger.info("Game started: {} Hz Language: {}", ui.clock().targetFrameratePy.get(), Locale.getDefault());
+		Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+		Logger.info("Game started. Clock speed={} Hz", ui.clock().targetFrameratePy.get());
 	}
 
 	@Override

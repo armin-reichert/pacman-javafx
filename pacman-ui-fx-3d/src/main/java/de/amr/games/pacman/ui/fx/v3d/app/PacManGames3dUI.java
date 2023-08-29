@@ -11,12 +11,14 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.DrawMode;
+import javafx.stage.Stage;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
@@ -32,6 +34,11 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
  * @author Armin Reichert
  */
 public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D {
+
+	public PacManGames3dUI(Stage stage, Settings settings, Theme theme,
+												 GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
+		super(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+	}
 
 	@Override
 	protected void createGamePage(Theme theme) {

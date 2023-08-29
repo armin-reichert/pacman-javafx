@@ -26,7 +26,6 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
@@ -61,13 +60,18 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 	protected GameScene currentGameScene;
 	protected Page currentPage;
 
-	public void init(Stage stage, Settings settings, GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
+	public PacManGames2dUI(Stage stage, Settings settings, Theme theme,
+												 GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
 		checkNotNull(stage);
 		checkNotNull(settings);
+		checkNotNull(theme);
 		checkNotNull(gameScenesMsPacMan);
 		checkNotNull(gameScenesPacMan);
 
 		this.stage = stage;
+		this.theme = theme;
+		soundHandler = new SoundHandler(theme);
+
 		gameScenes.put(GameVariant.MS_PACMAN, gameScenesMsPacMan);
 		gameScenes.put(GameVariant.PACMAN, gameScenesPacMan);
 
@@ -76,12 +80,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 		configurePacSteering();
 		configureBindings(settings);
 		configureStage(settings);
-	}
-
-	public void setTheme(Theme theme) {
-		checkNotNull(theme);
-		this.theme = theme;
-		soundHandler = new SoundHandler(theme);
 		createStartPage(theme);
 		createGamePage(theme);
 	}
