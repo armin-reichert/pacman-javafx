@@ -377,24 +377,21 @@ public class PlayScene3D implements GameScene {
 		case GHOST_DYING -> {
 			game().level().map(GameLevel::memo).ifPresent(memo -> {
 				switch (game().variant()) {
-				case MS_PACMAN: {
+				case MS_PACMAN -> {
 					var ss = (SpritesheetMsPacManGame) spritesheet;
 					memo.killedGhosts.forEach(ghost -> {
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 					});
-					break;
 				}
-				case PACMAN: {
+				case PACMAN -> {
 					var ss = (SpritesheetPacManGame) spritesheet;
 					memo.killedGhosts.forEach(ghost -> {
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 					});
-					break;
 				}
-				default:
-					throw new IllegalGameVariantException(game().variant());
+				default -> throw new IllegalGameVariantException(game().variant());
 				}
 			});
 		}
@@ -484,7 +481,6 @@ public class PlayScene3D implements GameScene {
 		rotation.setFromAngle(0);
 		rotation.setToAngle(360);
 		rotation.setInterpolator(Interpolator.LINEAR);
-		//@formatter:off
 		return new SequentialTransition(
 			Ufx.actionAfterSeconds(1.0, () -> {
 				perspectivePy.unbind();
@@ -494,7 +490,6 @@ public class PlayScene3D implements GameScene {
 			Ufx.actionAfterSeconds(0.5, () -> soundHandler.audioClip(level.game().variant(), "audio.sweep").play()),
 			Ufx.actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE))
 		);
-		//@formatter:on
 	}
 
 	private Animation createLevelCompleteAnimation(GameLevel level) {
@@ -580,19 +575,17 @@ public class PlayScene3D implements GameScene {
 	public void onLevelStarted(GameEvent e) {
 		game().level().ifPresent(level -> {
 			switch (game().variant()) {
-				case MS_PACMAN: {
+				case MS_PACMAN -> {
 					var ss = (SpritesheetMsPacManGame) spritesheet;
 					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
-					break;
 				}
-				case PACMAN: {
+				case PACMAN -> {
 					var ss = (SpritesheetPacManGame) spritesheet;
 					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
-					break;
 				}
-				default: throw new IllegalGameVariantException(game().variant());
+				default -> throw new IllegalGameVariantException(game().variant());
 			}
 		});
 	}
