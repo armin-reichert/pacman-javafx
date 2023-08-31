@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -101,9 +102,9 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			var image = theme.image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
-			level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(this::hideTileContent);
+			level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(tile -> hideTileContent(level.world(), tile));
 			if (level.world().energizerBlinking().off()) {
-				level.world().energizerTiles().forEach(this::hideTileContent);
+				level.world().energizerTiles().forEach(tile -> hideTileContent(level.world(), tile));
 			}
 		}
 	}
@@ -122,17 +123,20 @@ public class PlayScene2D extends GameScene2D {
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
 			drawSprite(ss.filledMaze(mazeNumber), x, y);
-			level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(this::hideTileContent);
+			level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(tile -> hideTileContent(level.world(), tile));
 			// energizer animation
 			if (level.world().energizerBlinking().off()) {
-				level.world().energizerTiles().forEach(this::hideTileContent);
+				level.world().energizerTiles().forEach(tile -> hideTileContent(level.world(), tile));
 			}
 		}
 	}
 
-	private void hideTileContent(Vector2i tile) {
+	private void hideTileContent(World world, Vector2i tile) {
 		g.setFill(Color.BLACK);
-		g.fillRect(s(TS * tile.x() - 1), s(TS * tile.y() - 1), s(TS + 2), s(TS + 2));
+		double r = world.isEnergizerTile(tile) ? 4.5 : 2;
+		double cx = t(tile.x()) + HTS;
+		double cy = t(tile.y()) + HTS ;
+		g.fillRect(s(cx-r), s(cy-r), s(2*r), s(2*r));
 	}
 
 	@Override
