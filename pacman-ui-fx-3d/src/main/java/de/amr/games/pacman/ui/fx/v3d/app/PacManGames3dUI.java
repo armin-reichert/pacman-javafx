@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
+import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.DrawMode;

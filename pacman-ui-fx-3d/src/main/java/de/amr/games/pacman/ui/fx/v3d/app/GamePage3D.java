@@ -15,10 +15,14 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
@@ -43,6 +47,12 @@ public class GamePage3D extends GamePage {
 
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
+
+	  ui.mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+			if (ui.currentGameScene() instanceof PlayScene3D playScene3D) {
+				playScene3D.handleMouseClick(e);
+			}
+		});
 	}
 
 	@Override

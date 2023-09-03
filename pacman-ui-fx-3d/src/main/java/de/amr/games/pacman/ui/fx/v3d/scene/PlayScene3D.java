@@ -35,10 +35,18 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -50,6 +58,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
 /**
  * 3D play scene.
@@ -64,7 +73,9 @@ public class PlayScene3D implements GameScene {
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
 		@Override
 		protected void invalidated() {
-			updateCamera(get());
+			var perspective = get();
+			updateCamera(perspective);
+			updatePerspectiveMenuSelection(perspective);
 		}
 	};
 
@@ -80,6 +91,9 @@ public class PlayScene3D implements GameScene {
 	private final Group subSceneRoot;
 	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
+
+	private ContextMenu perspectiveMenu;
+	private ToggleGroup perspectiveMenuToggleGroup = new ToggleGroup();
 
 	public PlayScene3D() {
 		camControllerMap.put(Perspective.DRONE,            new CamDrone());
@@ -97,8 +111,36 @@ public class PlayScene3D implements GameScene {
 		subSceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 		fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
-
 		root = new BorderPane(fxSubScene);
+
+		createPerspectiveMenu();
+	}
+
+	private void createPerspectiveMenu() {
+		perspectiveMenu = new ContextMenu();
+		var text = new Text(message(PacManGames3dApp.TEXTS, "select_perspective"));
+		text.setFont(Font.font("Sans", FontWeight.BOLD, 14));
+		var title = new CustomMenuItem(text);
+		perspectiveMenu.getItems().add(title);
+		for (var p : Perspective.values()) {
+			var item = new RadioMenuItem();
+			var perspectiveName = message(PacManGames3dApp.TEXTS, p.name());
+			item.setText(perspectiveName);
+			item.setUserData(p);
+			item.setToggleGroup(perspectiveMenuToggleGroup);
+			perspectiveMenu.getItems().add(item);
+		}
+		perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
+			if (nv != null) {
+				PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+			}
+		});
+	}
+
+	private void updatePerspectiveMenuSelection(Perspective p) {
+		for (var toggle : perspectiveMenuToggleGroup.getToggles()) {
+			toggle.setSelected(p.equals(toggle.getUserData()));
+		}
 	}
 
 	@Override
@@ -148,6 +190,16 @@ public class PlayScene3D implements GameScene {
 
 	public CameraController currentCamController() {
 		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
+	}
+
+	public ContextMenu perspectiveMenu() {
+		return perspectiveMenu;
+	}
+
+	public void handleMouseClick(MouseEvent e) {
+		if (e.getButton() == MouseButton.SECONDARY) {
+			perspectiveMenu.show(root, e.getScreenX(), e.getScreenY());
+		}
 	}
 
 	public Optional<ActionHandler> actionHandler() {
@@ -589,4 +641,5 @@ public class PlayScene3D implements GameScene {
 			}
 		});
 	}
+
 }

@@ -229,6 +229,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	// Accessors
 
+	public Scene mainScene() {
+		return scene;
+	}
+
 	public Theme theme() {
 		return theme;
 	}

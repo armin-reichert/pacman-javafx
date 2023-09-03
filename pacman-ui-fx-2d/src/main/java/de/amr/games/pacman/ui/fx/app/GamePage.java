@@ -180,7 +180,6 @@ public class GamePage implements Page {
 		} else {
 			signature.hide();
 		}
-		//layers.requestFocus();
 	}
 
 	protected void updateSignatureSizeAndPosition() {
