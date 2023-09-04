@@ -43,8 +43,8 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class GameScene2D implements GameScene {
 
-	protected static float t(double tiles) {
-		return (float) tiles * TS;
+	protected static double t(double tiles) {
+		return tiles * TS;
 	}
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
@@ -151,11 +151,11 @@ public abstract class GameScene2D implements GameScene {
 		return false;
 	}
 
-	public void render() {
+	public void draw() {
+		clearCanvas();
 		if (theme == null || spritesheet == null) {
 			return;
 		}
-		clearCanvas();
 		if (scoreVisible) {
 			drawScore(game().score(), "SCORE", t(1), t(1));
 			drawScore(game().highScore(), "HIGH SCORE", t(14), t(1));
@@ -169,18 +169,29 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
+	/**
+	 * Draws the scene content, e.g. the maze and the guys.
+	 */
+	protected abstract void drawSceneContent();
+
+	/**
+	 * Draws additional scene info, e.g. tile structure or debug info.
+	 */
+	protected void drawSceneInfo() {
+	}
+
 	public void clearCanvas() {
 		g.setFill(Color.BLACK);
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
-		var font = sceneFont(8);
-		drawText(title,  theme.color("palette.pale"), font, x, y);
 		var pointsText = String.format("%02d", score.points());
-		drawText(String.format("%7s", pointsText), theme.color("palette.pale"), font, x, (y + TS + 1));
+		var font = sceneFont(8);
+		drawText(title, theme.color("palette.pale"), font, x, y);
+		drawText(String.format("%7s", pointsText), theme.color("palette.pale"), font, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText(String.format("L%d", score.levelNumber()), theme.color("palette.pale"), font, x + TS * 8, y + TS + 1);
+			drawText("L" + score.levelNumber(), theme.color("palette.pale"), font,x + t(8),y + TS + 1);
 		}
 	}
 
@@ -353,7 +364,7 @@ public abstract class GameScene2D implements GameScene {
 
 	/**
 	 * Draws a sprite at the given position (upper left corner).
-	 * @param sprite spritesheet region ("sprite")
+	 * @param sprite sprite sheet region ("sprite")
 	 * @param x x coordinate of upper left corner
 	 * @param y y coordinate of upper left corner
 	 */
@@ -368,7 +379,6 @@ public abstract class GameScene2D implements GameScene {
 	 * @param sprite the sprite
 	 */
 	protected void drawEntitySprite(Entity entity, Rectangle2D sprite) {
-		checkNotNull(entity);
 		if (entity.isVisible()) {
 			drawSpriteOverBoundingBox(sprite, entity.position().x(), entity.position().y());
 		}
@@ -424,17 +434,5 @@ public abstract class GameScene2D implements GameScene {
 		for (int col = 0; col <= tilesY; ++col) {
 			g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(tilesY * TS));
 		}
-	}
-
-	/**
-	 * Draws the scene content, e.g. the maze and the guys.
-	 */
-	protected abstract void drawSceneContent();
-
-	/**
-	 * Draws scene info, e.g. maze structure and special tiles
-	 */
-	protected void drawSceneInfo() {
-		// empty by default
 	}
 }

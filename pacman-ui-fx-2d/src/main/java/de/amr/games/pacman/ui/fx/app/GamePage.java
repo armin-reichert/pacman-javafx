@@ -212,7 +212,7 @@ public class GamePage implements Page {
 	public void render() {
 		if (ui.currentGameScene() instanceof GameScene2D) {
 			GameScene2D scene2D = (GameScene2D) ui.currentGameScene;
-			scene2D.render();
+			scene2D.draw();
 		}
 		flashMessageView.update();
 		popupLayer.setVisible(true);

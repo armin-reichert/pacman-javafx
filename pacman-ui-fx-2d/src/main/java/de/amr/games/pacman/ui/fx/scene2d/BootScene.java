@@ -31,7 +31,7 @@ public class BootScene extends GameScene2D {
 	}
 
 	@Override
-	public void render() {
+	public void draw() {
 		var timer = state().timer();
 		if (timer.tick() == 1) {
 			clearCanvas();
