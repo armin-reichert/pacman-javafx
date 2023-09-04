@@ -25,9 +25,7 @@ import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -62,6 +60,7 @@ public class GameLevel3D {
 
 	public GameLevel3D(GameLevel level, Theme theme, Spritesheet spritesheet) {
 		checkLevelNotNull(level);
+		checkNotNull(theme);
 		checkNotNull(spritesheet);
 
 		this.level = level;
@@ -123,6 +122,9 @@ public class GameLevel3D {
 	}
 
 	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet, boolean moving) {
+		checkNotNull(bonus);
+		checkNotNull(spritesheet);
+
 		if (bonus3D != null) {
 			root.getChildren().remove(bonus3D.getRoot());
 		}
@@ -222,7 +224,7 @@ public class GameLevel3D {
 		return level;
 	}
 
-	public Group getRoot() {
+	public Group root() {
 		return root;
 	}
 

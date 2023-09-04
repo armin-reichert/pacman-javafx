@@ -269,15 +269,15 @@ public class PlayScene3D implements GameScene {
 		// center over origin
 		var centerX = level.world().numCols() * HTS;
 		var centerY = level.world().numRows() * HTS;
-		level3D.getRoot().setTranslateX(-centerX);
-		level3D.getRoot().setTranslateY(-centerY);
+		level3D.root().setTranslateX(-centerX);
+		level3D.root().setTranslateY(-centerY);
 
 		// keep the scores rotated such that the viewer always sees them frontally
 		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
 		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
 		// replace initial placeholder or previous 3D level
-		subSceneRoot.getChildren().set(0, level3D.getRoot());
+		subSceneRoot.getChildren().set(0, level3D.root());
 
 		if (state() == GameState.LEVEL_TEST) {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
@@ -528,7 +528,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Animation createLevelChangeAnimation(GameLevel level) {
-		var rotation = new RotateTransition(Duration.seconds(1.5), level3D.getRoot());
+		var rotation = new RotateTransition(Duration.seconds(1.5), level3D.root());
 		rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotation.setFromAngle(0);
 		rotation.setToAngle(360);
