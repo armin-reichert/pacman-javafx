@@ -104,6 +104,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		showFlashMessage(message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 	}
 
+	@Override
+	protected void setGameScene(GameScene newGameScene) {
+		super.setGameScene(newGameScene);
+		if (newGameScene.is3D()) {
+			var config = sceneConfig();
+			gamePage().getPip().setMaster((PlayScene3D) config.playScene3D());
+		}
+	}
+
 	public void selectNextPerspective() {
 		selectPerspective(PacManGames3dApp.PY_3D_PERSPECTIVE.get().next());
 	}

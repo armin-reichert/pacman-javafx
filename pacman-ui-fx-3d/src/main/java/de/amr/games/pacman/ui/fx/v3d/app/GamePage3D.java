@@ -38,7 +38,7 @@ public class GamePage3D extends GamePage {
 	public GamePage3D(PacManGames3dUI ui, Theme theme) {
 		super(ui, theme);
 
-		pip = new PictureInPicture((PlayScene3D) ui.sceneConfig().playScene3D());
+		pip = new PictureInPicture();
 		pip.opacityPy.bind(PacManGames3dApp.PY_PIP_OPACITY);
 		pip.heightPy.bind(PacManGames3dApp.PY_PIP_HEIGHT);
 
@@ -53,6 +53,10 @@ public class GamePage3D extends GamePage {
 				playScene3D.handleMouseClick(e);
 			}
 		});
+	}
+
+	public PictureInPicture getPip() {
+		return pip;
 	}
 
 	@Override

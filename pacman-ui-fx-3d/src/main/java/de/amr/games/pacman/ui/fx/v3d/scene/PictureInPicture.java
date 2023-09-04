@@ -21,11 +21,9 @@ public class PictureInPicture {
 	public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3dApp.PIP_MIN_HEIGHT);
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 	private final PlayScene2D playScene2D;
-	private final PlayScene3D master;
+	private PlayScene3D master;
 
-	public PictureInPicture(PlayScene3D master) {
-		Globals.checkNotNull(master);
-		this.master = master;
+	public PictureInPicture() {
 		var canvas = new Canvas(heightPy.get() * 28 / 36, heightPy.get());
 		playScene2D = new PlayScene2D();
 		playScene2D.setCanvas(canvas);
@@ -41,14 +39,19 @@ public class PictureInPicture {
 		});
 	}
 
+	public void setMaster(PlayScene3D master) {
+		Globals.checkNotNull(master);
+		this.master = master;
+		playScene2D.setTheme(master.getTheme());
+		playScene2D.setSpritesheet(master.getSpritesheet());
+		playScene2D.setSoundHandler(master.getSoundHandler());
+	}
+
 	public Node root() {
 		return playScene2D.root();
 	}
 
 	public void render() {
-		playScene2D.setTheme(master.getTheme());
-		playScene2D.setSpritesheet(master.getSpritesheet());
-		playScene2D.setSoundHandler(master.getSoundHandler());
-		playScene2D.render();
+		playScene2D.draw();
 	}
 }
