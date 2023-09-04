@@ -27,6 +27,7 @@ import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -39,7 +40,7 @@ public class GameLevel3D {
 
 	private static PointLight createPacLight(Pac3D pac3D) {
 		var light = new PointLight();
-		light.setColor(Color.rgb(255, 255, 0, 0.25));
+		light.setColor(Color.rgb(255, 255, 0, 0.75));
 		light.setMaxRange(2 * TS);
 		light.translateXProperty().bind(pac3D.position().xProperty());
 		light.translateYProperty().bind(pac3D.position().yProperty());
@@ -157,9 +158,13 @@ public class GameLevel3D {
 		boolean isVisible = pac.isVisible();
 		boolean isAlive = !pac.isDead();
 		boolean hasPower = pac.powerTimer().isRunning();
-		var maxRange = pac.isPowerFading() ? 4 : 8;
+		double radius = 0;
+		if (pac.powerTimer().duration() > 0) {
+			double t = ((double) pac.powerTimer().remaining() / pac.powerTimer().duration());
+			radius = t * 6 * TS;
+		}
+		pacLight.setMaxRange(hasPower ? 2 * TS + radius : 0);
 		pacLight.setLightOn(pac3D.lightedPy.get() && isVisible && isAlive && hasPower);
-		pacLight.setMaxRange(hasPower ? maxRange * TS : 0);
 	}
 
 	public void update() {
