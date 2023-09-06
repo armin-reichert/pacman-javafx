@@ -5,9 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.GamePage;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -19,7 +17,6 @@ import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -30,7 +27,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
@@ -90,7 +86,7 @@ public class GamePage3D extends GamePage {
 			item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
 			contextMenu.getItems().add(item);
 		}
-		if (ui.currentGameScene() instanceof PlayScene3D) {
+		else if (ui.currentGameScene() instanceof PlayScene3D) {
 			var item = new MenuItem(message(PacManGames3dApp.TEXTS,"use_2D_scene"));
 			item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
 			contextMenu.getItems().add(item);
@@ -100,10 +96,9 @@ public class GamePage3D extends GamePage {
 	}
 
 	private void createPerspectiveMenuEntries(ContextMenu menu) {
-		menu.getItems().add(createMenuTitle(message(PacManGames3dApp.TEXTS,"select_perspective")));
+		menu.getItems().add(createTitleItem(message(PacManGames3dApp.TEXTS,"select_perspective")));
 		for (var p : Perspective.values()) {
-			var item = new RadioMenuItem();
-			item.setText(message(PacManGames3dApp.TEXTS, p.name()));
+			var item = new RadioMenuItem(message(PacManGames3dApp.TEXTS, p.name()));
 			item.setUserData(p);
 			item.setToggleGroup(perspectiveMenuToggleGroup);
 			menu.getItems().add(item);
@@ -116,24 +111,19 @@ public class GamePage3D extends GamePage {
 	}
 
 	private void createPacManMenuEntries(ContextMenu menu) {
-		menu.getItems().add(createMenuTitle("Pac-Man"));
-		{
-			autopilotItem = new CheckMenuItem("Autopilot");
-			autopilotItem.setOnAction(e -> ui.toggleAutopilot());
-			menu.getItems().add(autopilotItem);
-		}
-		{
-			immunityItem = new CheckMenuItem("Immunity");
-			immunityItem.setOnAction(e -> ui.toggleImmunity());
-			menu.getItems().add(immunityItem);
-		}
+		menu.getItems().add(createTitleItem("Pac-Man"));
+		autopilotItem = new CheckMenuItem("Autopilot");
+		autopilotItem.setOnAction(e -> ui.toggleAutopilot());
+		menu.getItems().add(autopilotItem);
+		immunityItem = new CheckMenuItem("Immunity");
+		immunityItem.setOnAction(e -> ui.toggleImmunity());
+		menu.getItems().add(immunityItem);
 	}
 
-	private MenuItem createMenuTitle(String title) {
+	private MenuItem createTitleItem(String title) {
 		var text = new Text(title);
 		text.setFont(Font.font("Sans", FontWeight.BOLD, 14));
-		var item = new CustomMenuItem(text);
-		return item;
+		return new CustomMenuItem(text);
 	}
 
 	public PictureInPicture getPip() {
