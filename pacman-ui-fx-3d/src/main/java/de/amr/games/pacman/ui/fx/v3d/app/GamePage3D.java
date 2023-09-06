@@ -86,12 +86,12 @@ public class GamePage3D extends GamePage {
 	private void createContextMenu() {
 		contextMenu = new ContextMenu();
 		if (ui.currentGameScene() instanceof PlayScene2D) {
-			var item = new MenuItem("Show in 3D");
+			var item = new MenuItem(message(PacManGames3dApp.TEXTS,"use_3D_scene"));
 			item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
 			contextMenu.getItems().add(item);
 		}
 		if (ui.currentGameScene() instanceof PlayScene3D) {
-			var item = new MenuItem("Show in 2D");
+			var item = new MenuItem(message(PacManGames3dApp.TEXTS,"use_2D_scene"));
 			item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
 			contextMenu.getItems().add(item);
 			createPerspectiveMenuEntries(contextMenu);
