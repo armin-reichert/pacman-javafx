@@ -90,6 +90,8 @@ public class PlayScene3D implements GameScene {
 	private GameLevel3D level3D;
 
 	private ContextMenu contextMenu;
+	private CheckMenuItem autopilotItem;
+	private CheckMenuItem immunityItem;
 	private ToggleGroup perspectiveMenuToggleGroup = new ToggleGroup();
 
 	public PlayScene3D() {
@@ -122,6 +124,21 @@ public class PlayScene3D implements GameScene {
 			item.setUserData(p);
 			item.setToggleGroup(perspectiveMenuToggleGroup);
 			contextMenu.getItems().add(item);
+		}
+		contextMenu.getItems().add(createMenuTitle("Pac-Man"));
+		{
+			autopilotItem = new CheckMenuItem("Autopilot");
+			autopilotItem.setOnAction(e -> {
+				actionHandler().ifPresent(ActionHandler::toggleAutopilot);
+			});
+			contextMenu.getItems().add(autopilotItem);
+		}
+		{
+			immunityItem = new CheckMenuItem("Immunity");
+			immunityItem.setOnAction(e -> {
+				actionHandler().ifPresent(ActionHandler::toggleImmunity);
+			});
+			contextMenu.getItems().add(immunityItem);
 		}
 		perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
 			if (nv != null) {
@@ -161,6 +178,10 @@ public class PlayScene3D implements GameScene {
 		level3D.update();
 		currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
 		updateSound();
+
+		//TODO should be done via binding or something:
+		autopilotItem.setSelected(GameController.it().isAutoControlled());
+		immunityItem.setSelected(GameController.it().isImmune());
 	}
 
 	@Override
