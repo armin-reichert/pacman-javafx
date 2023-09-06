@@ -117,6 +117,7 @@ public class PlayScene3D implements GameScene {
 
 	private void createContextMenu() {
 		contextMenu = new ContextMenu();
+
 		contextMenu.getItems().add(createMenuTitle(message(PacManGames3dApp.TEXTS,"select_perspective")));
 		for (var p : Perspective.values()) {
 			var item = new RadioMenuItem();
@@ -125,26 +126,23 @@ public class PlayScene3D implements GameScene {
 			item.setToggleGroup(perspectiveMenuToggleGroup);
 			contextMenu.getItems().add(item);
 		}
-		contextMenu.getItems().add(createMenuTitle("Pac-Man"));
-		{
-			autopilotItem = new CheckMenuItem("Autopilot");
-			autopilotItem.setOnAction(e -> {
-				actionHandler().ifPresent(ActionHandler::toggleAutopilot);
-			});
-			contextMenu.getItems().add(autopilotItem);
-		}
-		{
-			immunityItem = new CheckMenuItem("Immunity");
-			immunityItem.setOnAction(e -> {
-				actionHandler().ifPresent(ActionHandler::toggleImmunity);
-			});
-			contextMenu.getItems().add(immunityItem);
-		}
 		perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
 			if (nv != null) {
 				PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
 			}
 		});
+
+		contextMenu.getItems().add(createMenuTitle("Pac-Man"));
+		{
+			autopilotItem = new CheckMenuItem("Autopilot");
+			autopilotItem.setOnAction(e -> actionHandler().ifPresent(ActionHandler::toggleAutopilot));
+			contextMenu.getItems().add(autopilotItem);
+		}
+		{
+			immunityItem = new CheckMenuItem("Immunity");
+			immunityItem.setOnAction(e -> actionHandler().ifPresent(ActionHandler::toggleImmunity));
+			contextMenu.getItems().add(immunityItem);
+		}
 	}
 
 	private MenuItem createMenuTitle(String title) {
