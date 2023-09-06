@@ -218,6 +218,8 @@ public class PlayScene3D implements GameScene {
 	public void handleMouseClick(MouseEvent e) {
 		if (e.getButton() == MouseButton.SECONDARY) {
 			contextMenu.show(root, e.getScreenX(), e.getScreenY());
+		} else {
+			contextMenu.hide();
 		}
 	}
 
