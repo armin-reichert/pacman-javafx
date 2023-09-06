@@ -72,7 +72,6 @@ public class PlayScene3D implements GameScene {
 		protected void invalidated() {
 			var perspective = get();
 			updateCamera(perspective);
-			updatePerspectiveMenuSelection(perspective);
 		}
 	};
 
@@ -89,10 +88,6 @@ public class PlayScene3D implements GameScene {
 	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
 
-	private ContextMenu contextMenu;
-	private CheckMenuItem autopilotItem;
-	private CheckMenuItem immunityItem;
-	private ToggleGroup perspectiveMenuToggleGroup = new ToggleGroup();
 
 	public PlayScene3D() {
 		camControllerMap.put(Perspective.DRONE,            new CamDrone());
@@ -111,52 +106,8 @@ public class PlayScene3D implements GameScene {
 		fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 		root = new BorderPane(fxSubScene);
-
-		createContextMenu();
 	}
 
-	private void createContextMenu() {
-		contextMenu = new ContextMenu();
-
-		contextMenu.getItems().add(createMenuTitle(message(PacManGames3dApp.TEXTS,"select_perspective")));
-		for (var p : Perspective.values()) {
-			var item = new RadioMenuItem();
-			item.setText(message(PacManGames3dApp.TEXTS, p.name()));
-			item.setUserData(p);
-			item.setToggleGroup(perspectiveMenuToggleGroup);
-			contextMenu.getItems().add(item);
-		}
-		perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
-			if (nv != null) {
-				PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
-			}
-		});
-
-		contextMenu.getItems().add(createMenuTitle("Pac-Man"));
-		{
-			autopilotItem = new CheckMenuItem("Autopilot");
-			autopilotItem.setOnAction(e -> actionHandler().ifPresent(ActionHandler::toggleAutopilot));
-			contextMenu.getItems().add(autopilotItem);
-		}
-		{
-			immunityItem = new CheckMenuItem("Immunity");
-			immunityItem.setOnAction(e -> actionHandler().ifPresent(ActionHandler::toggleImmunity));
-			contextMenu.getItems().add(immunityItem);
-		}
-	}
-
-	private MenuItem createMenuTitle(String title) {
-		var text = new Text(title);
-		text.setFont(Font.font("Sans", FontWeight.BOLD, 14));
-		var item = new CustomMenuItem(text);
-		return item;
-	}
-
-	private void updatePerspectiveMenuSelection(Perspective p) {
-		for (var toggle : perspectiveMenuToggleGroup.getToggles()) {
-			toggle.setSelected(p.equals(toggle.getUserData()));
-		}
-	}
 
 	@Override
 	public void init() {
@@ -176,10 +127,6 @@ public class PlayScene3D implements GameScene {
 		level3D.update();
 		currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
 		updateSound();
-
-		//TODO should be done via binding or something:
-		autopilotItem.setSelected(GameController.it().isAutoControlled());
-		immunityItem.setSelected(GameController.it().isImmune());
 	}
 
 	@Override
@@ -211,17 +158,6 @@ public class PlayScene3D implements GameScene {
 		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
 	}
 
-	public ContextMenu contextMenu() {
-		return contextMenu;
-	}
-
-	public void handleMouseClick(MouseEvent e) {
-		if (e.getButton() == MouseButton.SECONDARY) {
-			contextMenu.show(root, e.getScreenX(), e.getScreenY());
-		} else {
-			contextMenu.hide();
-		}
-	}
 
 	public Optional<ActionHandler> actionHandler() {
 		return Optional.ofNullable(actionHandler);
