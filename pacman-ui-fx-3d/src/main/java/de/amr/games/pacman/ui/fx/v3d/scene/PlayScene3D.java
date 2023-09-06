@@ -35,10 +35,7 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.CustomMenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -92,7 +89,7 @@ public class PlayScene3D implements GameScene {
 	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
 
-	private ContextMenu perspectiveMenu;
+	private ContextMenu contextMenu;
 	private ToggleGroup perspectiveMenuToggleGroup = new ToggleGroup();
 
 	public PlayScene3D() {
@@ -113,28 +110,31 @@ public class PlayScene3D implements GameScene {
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 		root = new BorderPane(fxSubScene);
 
-		createPerspectiveMenu();
+		createContextMenu();
 	}
 
-	private void createPerspectiveMenu() {
-		perspectiveMenu = new ContextMenu();
-		var text = new Text(message(PacManGames3dApp.TEXTS, "select_perspective"));
-		text.setFont(Font.font("Sans", FontWeight.BOLD, 14));
-		var title = new CustomMenuItem(text);
-		perspectiveMenu.getItems().add(title);
+	private void createContextMenu() {
+		contextMenu = new ContextMenu();
+		contextMenu.getItems().add(createMenuTitle(message(PacManGames3dApp.TEXTS,"select_perspective")));
 		for (var p : Perspective.values()) {
 			var item = new RadioMenuItem();
-			var perspectiveName = message(PacManGames3dApp.TEXTS, p.name());
-			item.setText(perspectiveName);
+			item.setText(message(PacManGames3dApp.TEXTS, p.name()));
 			item.setUserData(p);
 			item.setToggleGroup(perspectiveMenuToggleGroup);
-			perspectiveMenu.getItems().add(item);
+			contextMenu.getItems().add(item);
 		}
 		perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
 			if (nv != null) {
 				PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
 			}
 		});
+	}
+
+	private MenuItem createMenuTitle(String title) {
+		var text = new Text(title);
+		text.setFont(Font.font("Sans", FontWeight.BOLD, 14));
+		var item = new CustomMenuItem(text);
+		return item;
 	}
 
 	private void updatePerspectiveMenuSelection(Perspective p) {
@@ -192,13 +192,13 @@ public class PlayScene3D implements GameScene {
 		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
 	}
 
-	public ContextMenu perspectiveMenu() {
-		return perspectiveMenu;
+	public ContextMenu contextMenu() {
+		return contextMenu;
 	}
 
 	public void handleMouseClick(MouseEvent e) {
 		if (e.getButton() == MouseButton.SECONDARY) {
-			perspectiveMenu.show(root, e.getScreenX(), e.getScreenY());
+			contextMenu.show(root, e.getScreenX(), e.getScreenY());
 		}
 	}
 
