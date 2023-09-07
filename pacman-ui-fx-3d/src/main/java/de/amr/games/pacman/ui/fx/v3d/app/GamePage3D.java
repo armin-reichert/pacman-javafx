@@ -86,10 +86,10 @@ public class GamePage3D extends GamePage {
 
 		private void createPacManMenuEntries() {
 			getItems().add(createTitleItem("Pac-Man"));
-			autopilotItem = new CheckMenuItem("Autopilot");
+			autopilotItem = new CheckMenuItem((message(PacManGames3dApp.TEXTS,"autopilot")));
 			autopilotItem.setOnAction(e -> ui.toggleAutopilot());
 			getItems().add(autopilotItem);
-			immunityItem = new CheckMenuItem("Immunity");
+			immunityItem = new CheckMenuItem((message(PacManGames3dApp.TEXTS,"immunity")));
 			immunityItem.setOnAction(e -> ui.toggleImmunity());
 			getItems().add(immunityItem);
 		}
