@@ -38,66 +38,61 @@ public class GamePage3D extends GamePage {
 	private final BorderPane dashboardLayer = new BorderPane();
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
+	private GamePageContextMenu contextMenu;
 
-	private class GamePageContextMenu extends ContextMenu {
+	public class GamePageContextMenu extends ContextMenu {
+		private Font          titleFont = Font.font("Sans", FontWeight.BOLD, 14);
 		private CheckMenuItem autopilotItem;
 		private CheckMenuItem immunityItem;
 		private CheckMenuItem pipItem;
 		private ToggleGroup   perspectiveMenuToggleGroup = new ToggleGroup();
 
-		public GamePageContextMenu() {
-			createSceneDisplayEntries();
-			createPacManMenuEntries();
-		}
 
-		private void createSceneDisplayEntries() {
-			MenuItem item = createTitleItem(message(PacManGames3dApp.TEXTS,"scene_display"));
-			getItems().add(item);
+		public GamePageContextMenu() {
+			addTitleItem(message(PacManGames3dApp.TEXTS,"scene_display"));
 			if (ui.currentGameScene() instanceof PlayScene2D) {
-				item = new MenuItem(message(PacManGames3dApp.TEXTS,"use_3D_scene"));
-				item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
-				getItems().add(item);
+				var mi = new MenuItem(message(PacManGames3dApp.TEXTS,"use_3D_scene"));
+				mi.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
+				getItems().add(mi);
 			}
 			else if (ui.currentGameScene() instanceof PlayScene3D) {
-				item = new MenuItem(message(PacManGames3dApp.TEXTS,"use_2D_scene"));
-				item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
-				getItems().add(item);
+				var mi = new MenuItem(message(PacManGames3dApp.TEXTS,"use_2D_scene"));
+				mi.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
+				getItems().add(mi);
+
 				pipItem = new CheckMenuItem(message(PacManGames3dApp.TEXTS,"pip"));
 				pipItem.setOnAction(e -> togglePipVisible());
 				getItems().add(pipItem);
-				createPerspectiveMenuEntries();
-			}
-		}
 
-		private void createPerspectiveMenuEntries() {
-			getItems().add(createTitleItem(message(PacManGames3dApp.TEXTS,"select_perspective")));
-			for (var p : Perspective.values()) {
-				var item = new RadioMenuItem(message(PacManGames3dApp.TEXTS, p.name()));
-				item.setUserData(p);
-				item.setToggleGroup(perspectiveMenuToggleGroup);
-				getItems().add(item);
-			}
-			perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
-				if (nv != null) {
-					PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+				addTitleItem(message(PacManGames3dApp.TEXTS,"select_perspective"));
+				for (var p : Perspective.values()) {
+					RadioMenuItem rmi = new RadioMenuItem(message(PacManGames3dApp.TEXTS, p.name()));
+					rmi.setUserData(p);
+					rmi.setToggleGroup(perspectiveMenuToggleGroup);
+					getItems().add(rmi);
 				}
-			});
-		}
+				perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
+					if (nv != null) {
+						PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+					}
+				});
+			}
 
-		private void createPacManMenuEntries() {
-			getItems().add(createTitleItem("Pac-Man"));
+			addTitleItem("Pac-Man");
+
 			autopilotItem = new CheckMenuItem((message(PacManGames3dApp.TEXTS,"autopilot")));
 			autopilotItem.setOnAction(e -> ui.toggleAutopilot());
 			getItems().add(autopilotItem);
+
 			immunityItem = new CheckMenuItem((message(PacManGames3dApp.TEXTS,"immunity")));
 			immunityItem.setOnAction(e -> ui.toggleImmunity());
 			getItems().add(immunityItem);
 		}
 
-		private MenuItem createTitleItem(String title) {
+		private void addTitleItem(String title) {
 			var text = new Text(title);
-			text.setFont(Font.font("Sans", FontWeight.BOLD, 14));
-			return new CustomMenuItem(text);
+			text.setFont(titleFont);
+			getItems().add(new CustomMenuItem(text));
 		}
 
 		public void updateState() {
@@ -113,8 +108,6 @@ public class GamePage3D extends GamePage {
 		}
 	}
 
-	private GamePageContextMenu contextMenu;
-
 	public GamePage3D(PacManGames3dUI ui, Theme theme) {
 		super(ui, theme);
 
@@ -127,20 +120,15 @@ public class GamePage3D extends GamePage {
 
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
+		createContextMenu();
+	}
 
+	public GamePageContextMenu contextMenu() {
+		return contextMenu;
+	}
+
+	public void createContextMenu() {
 		contextMenu = new GamePageContextMenu();
-		ui.mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-			if (e.getButton() == MouseButton.SECONDARY &&
-					(ui.currentGameScene() instanceof PlayScene2D || ui.currentGameScene() instanceof PlayScene3D)) {
-				if (contextMenu != null) {
-					contextMenu.hide();
-				}
-				contextMenu = new GamePageContextMenu();
-				contextMenu.show(ui.mainScene().getRoot(), e.getScreenX(), e.getScreenY());
-			} else {
-				contextMenu.hide();
-			}
-		});
 	}
 
 	public PictureInPicture getPip() {
