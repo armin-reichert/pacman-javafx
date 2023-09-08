@@ -12,12 +12,15 @@ import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
+import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
@@ -45,6 +48,22 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage3D(this, theme);
 		gamePage.setSize(scene.getWidth(), scene.getHeight());
+		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+			if (e.getButton() == MouseButton.SECONDARY &&
+					(currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D)) {
+				if (gamePage3D().contextMenu() != null) {
+					gamePage3D().contextMenu().hide();
+				}
+				gamePage3D().createContextMenu();
+				gamePage3D().contextMenu().show(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
+			} else {
+				gamePage3D().contextMenu().hide();
+			}
+		});
+	}
+
+	public GamePage3D gamePage3D() {
+		return (GamePage3D) gamePage;
 	}
 
 	@Override
@@ -78,7 +97,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		stage.setTitle(message(PacManGames3dApp.TEXTS, titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 		if (currentGameScene != null) {
-			gamePage().updateBackground(currentGameScene);
+			gamePage3D().updateBackground(currentGameScene);
 		}
 	}
 
@@ -109,7 +128,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		super.setGameScene(newGameScene);
 		if (newGameScene.is3D()) {
 			var config = sceneConfig();
-			gamePage().getPip().setMaster((PlayScene3D) config.playScene3D());
+			gamePage3D().getPip().setMaster((PlayScene3D) config.playScene3D());
 		}
 	}
 
@@ -130,9 +149,5 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	public void toggleDrawMode() {
 		PacManGames3dApp.PY_3D_DRAW_MODE.set(
 				PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-	}
-
-	private GamePage3D gamePage() {
-		return (GamePage3D) gamePage;
 	}
 }
