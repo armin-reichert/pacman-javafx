@@ -46,11 +46,6 @@ public class GamePage3D extends GamePage {
 		private ToggleGroup   perspectiveMenuToggleGroup = new ToggleGroup();
 
 		public GamePageContextMenu() {
-			createSceneDisplayEntries();
-			createPacManMenuEntries();
-		}
-
-		private void createSceneDisplayEntries() {
 			getItems().add(createTitleItem(tt("scene_display")));
 			if (ui.currentGameScene() instanceof PlayScene2D) {
 				var item = new MenuItem(tt("use_3D_scene"));
@@ -64,26 +59,19 @@ public class GamePage3D extends GamePage {
 				pipItem = new CheckMenuItem(tt("pip"));
 				pipItem.setOnAction(e -> togglePipVisible());
 				getItems().add(pipItem);
-				createPerspectiveMenuEntries();
-			}
-		}
-
-		private void createPerspectiveMenuEntries() {
-			getItems().add(createTitleItem(tt("select_perspective")));
-			for (var p : Perspective.values()) {
-				var item = new RadioMenuItem(message(PacManGames3dApp.TEXTS, p.name()));
-				item.setUserData(p);
-				item.setToggleGroup(perspectiveMenuToggleGroup);
-				getItems().add(item);
-			}
-			perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
-				if (nv != null) {
-					PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+				getItems().add(createTitleItem(tt("select_perspective")));
+				for (var p : Perspective.values()) {
+					var rmi = new RadioMenuItem(message(PacManGames3dApp.TEXTS, p.name()));
+					rmi.setUserData(p);
+					rmi.setToggleGroup(perspectiveMenuToggleGroup);
+					getItems().add(rmi);
 				}
-			});
-		}
-
-		private void createPacManMenuEntries() {
+				perspectiveMenuToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
+					if (nv != null) {
+						PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+					}
+				});
+			}
 			getItems().add(createTitleItem(tt("pacman")));
 			autopilotItem = new CheckMenuItem(tt("autopilot"));
 			autopilotItem.setOnAction(e -> ui.toggleAutopilot());
