@@ -39,7 +39,7 @@ public class GamePage3D extends GamePage {
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
 
-	private class GamePageContextMenu extends ContextMenu {
+	public class GamePageContextMenu extends ContextMenu {
 		private CheckMenuItem autopilotItem;
 		private CheckMenuItem immunityItem;
 		private CheckMenuItem pipItem;
@@ -131,19 +131,15 @@ public class GamePage3D extends GamePage {
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
 
+		createContextMenu();
+	}
+
+	public void createContextMenu() {
 		contextMenu = new GamePageContextMenu();
-		ui.mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-			if (e.getButton() == MouseButton.SECONDARY &&
-					(ui.currentGameScene() instanceof PlayScene2D || ui.currentGameScene() instanceof PlayScene3D)) {
-				if (contextMenu != null) {
-					contextMenu.hide();
-				}
-				contextMenu = new GamePageContextMenu();
-				contextMenu.show(ui.mainScene().getRoot(), e.getScreenX(), e.getScreenY());
-			} else {
-				contextMenu.hide();
-			}
-		});
+	}
+
+	public GamePageContextMenu contextMenu() {
+		return contextMenu;
 	}
 
 	public PictureInPicture getPip() {
