@@ -51,18 +51,17 @@ public class GamePage3D extends GamePage {
 		}
 
 		private void createSceneDisplayEntries() {
-			MenuItem item = createTitleItem(message(PacManGames3dApp.TEXTS,"scene_display"));
-			getItems().add(item);
+			getItems().add(createTitleItem(tt("scene_display")));
 			if (ui.currentGameScene() instanceof PlayScene2D) {
-				item = new MenuItem(message(PacManGames3dApp.TEXTS,"use_3D_scene"));
+				var item = new MenuItem(tt("use_3D_scene"));
 				item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
 				getItems().add(item);
 			}
 			else if (ui.currentGameScene() instanceof PlayScene3D) {
-				item = new MenuItem(message(PacManGames3dApp.TEXTS,"use_2D_scene"));
+				var item = new MenuItem(tt("use_2D_scene"));
 				item.setOnAction(e -> ((PacManGames3dUI) ui).toggle2D3D());
 				getItems().add(item);
-				pipItem = new CheckMenuItem(message(PacManGames3dApp.TEXTS,"pip"));
+				pipItem = new CheckMenuItem(tt("pip"));
 				pipItem.setOnAction(e -> togglePipVisible());
 				getItems().add(pipItem);
 				createPerspectiveMenuEntries();
@@ -70,7 +69,7 @@ public class GamePage3D extends GamePage {
 		}
 
 		private void createPerspectiveMenuEntries() {
-			getItems().add(createTitleItem(message(PacManGames3dApp.TEXTS,"select_perspective")));
+			getItems().add(createTitleItem(tt("select_perspective")));
 			for (var p : Perspective.values()) {
 				var item = new RadioMenuItem(message(PacManGames3dApp.TEXTS, p.name()));
 				item.setUserData(p);
@@ -85,13 +84,17 @@ public class GamePage3D extends GamePage {
 		}
 
 		private void createPacManMenuEntries() {
-			getItems().add(createTitleItem("Pac-Man"));
-			autopilotItem = new CheckMenuItem((message(PacManGames3dApp.TEXTS,"autopilot")));
+			getItems().add(createTitleItem(tt("pacman")));
+			autopilotItem = new CheckMenuItem(tt("autopilot"));
 			autopilotItem.setOnAction(e -> ui.toggleAutopilot());
 			getItems().add(autopilotItem);
-			immunityItem = new CheckMenuItem((message(PacManGames3dApp.TEXTS,"immunity")));
+			immunityItem = new CheckMenuItem(tt("immunity"));
 			immunityItem.setOnAction(e -> ui.toggleImmunity());
 			getItems().add(immunityItem);
+		}
+
+		private String tt(String key) {
+			return message(PacManGames3dApp.TEXTS, key);
 		}
 
 		private MenuItem createTitleItem(String title) {
