@@ -83,24 +83,24 @@ public class PacManGames2dApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		var gameScenesMsPacMan = new GameSceneConfig(
-				new BootScene(),
-				new MsPacManIntroScene(),
-				new MsPacManCreditScene(),
-				new PlayScene2D(),
-				null,
-				new MsPacManCutscene1(),
-				new MsPacManCutscene2(),
-				new MsPacManCutscene3()
+			new BootScene(),
+			new MsPacManIntroScene(),
+			new MsPacManCreditScene(),
+			new PlayScene2D(),
+			null,
+			new MsPacManCutscene1(),
+			new MsPacManCutscene2(),
+			new MsPacManCutscene3()
 		);
 		var gameScenesPacMan = new GameSceneConfig(
-				new BootScene(),
-				new PacManIntroScene(),
-				new PacManCreditScene(),
-				new PlayScene2D(),
-				null,
-				new PacManCutscene1(),
-				new PacManCutscene2(),
-				new PacManCutscene3()
+			new BootScene(),
+			new PacManIntroScene(),
+			new PacManCreditScene(),
+			new PlayScene2D(),
+			null,
+			new PacManCutscene1(),
+			new PacManCutscene2(),
+			new PacManCutscene3()
 		);
 		var theme = new ArcadeTheme(MGR);
 		Logger.info("Theme created: {}", theme);
