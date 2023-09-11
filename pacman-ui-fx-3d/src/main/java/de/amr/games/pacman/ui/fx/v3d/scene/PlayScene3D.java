@@ -525,7 +525,7 @@ public class PlayScene3D implements GameScene {
 			if (level.pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
 				clip("audio.pacman_munch").stop();
 			}
-			if (!level.isPacKilled() && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
+			if (!level.memo().pacKilled && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 					.anyMatch(Ghost::isVisible)) {
 				soundHandler.ensureLoopEndless(clip("audio.ghost_returning"));
 

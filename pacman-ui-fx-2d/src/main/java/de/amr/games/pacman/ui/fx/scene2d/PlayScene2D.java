@@ -178,7 +178,7 @@ public class PlayScene2D extends GameScene2D {
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
 			soundHandler.audioClip(gameVariant, "audio.pacman_munch").stop();
 		}
-		if (!level.isPacKilled() && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
+		if (!level.memo().pacKilled && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
 			soundHandler.ensureLoopEndless(soundHandler.audioClip(gameVariant, "audio.ghost_returning"));
 		} else {
 			soundHandler.audioClip(gameVariant, "audio.ghost_returning").stop();
