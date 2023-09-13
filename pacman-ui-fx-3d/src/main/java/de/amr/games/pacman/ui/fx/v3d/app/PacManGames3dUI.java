@@ -128,7 +128,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		super.setGameScene(newGameScene);
 		if (newGameScene.is3D()) {
 			var config = sceneConfig();
-			gamePage3D().getPip().setMaster((PlayScene3D) config.playScene3D());
+			gamePage3D().pip().setMaster((PlayScene3D) config.playScene3D());
 		}
 	}
 

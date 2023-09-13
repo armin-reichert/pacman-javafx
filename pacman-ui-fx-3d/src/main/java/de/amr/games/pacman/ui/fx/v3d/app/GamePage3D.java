@@ -116,10 +116,10 @@ public class GamePage3D extends GamePage {
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);
 
+		createContextMenu();
+
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
-
-		createContextMenu();
 	}
 
 	public void createContextMenu() {
@@ -130,7 +130,7 @@ public class GamePage3D extends GamePage {
 		return contextMenu;
 	}
 
-	public PictureInPicture getPip() {
+	public PictureInPicture pip() {
 		return pip;
 	}
 
