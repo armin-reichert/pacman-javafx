@@ -121,14 +121,14 @@ public class GameLevel3D {
 		livesCounter3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
 	}
 
-	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet, boolean moving) {
+	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet) {
 		checkNotNull(bonus);
 		checkNotNull(spritesheet);
 
 		if (bonus3D != null) {
 			root.getChildren().remove(bonus3D.getRoot());
 		}
-		bonus3D = createBonus3D(bonus, spritesheet, moving);
+		bonus3D = createBonus3D(bonus, spritesheet);
 		root.getChildren().add(bonus3D.getRoot());
 	}
 
@@ -136,19 +136,19 @@ public class GameLevel3D {
 		return new Ghost3D(ghost, ghostModel3D, theme, 8.5);
 	}
 
-	private Bonus3D createBonus3D(Bonus bonus, Spritesheet spritesheet, boolean moving) {
+	private Bonus3D createBonus3D(Bonus bonus, Spritesheet spritesheet) {
 		switch (level.game().variant()) {
 		case MS_PACMAN: {
 			var ss = (SpritesheetMsPacManGame) spritesheet;
 			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
 			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
-			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
+			return new Bonus3D(bonus, symbolImage, pointsImage);
 		}
 		case PACMAN: {
 			var ss = (SpritesheetPacManGame) spritesheet;
 			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
 			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
-			return new Bonus3D(bonus, symbolImage, pointsImage, moving);
+			return new Bonus3D(bonus, symbolImage, pointsImage);
 		}
 		default:
 			throw new IllegalGameVariantException(level.game().variant());

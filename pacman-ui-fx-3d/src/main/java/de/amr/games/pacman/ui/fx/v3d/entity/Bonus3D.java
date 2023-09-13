@@ -38,9 +38,8 @@ public class Bonus3D {
 
 	private RotateTransition eatenAnimation;
 	private RotateTransition edibleAnimation;
-	private boolean moving;
 
-	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage, boolean moving) {
+	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
 		checkNotNull(bonus);
 		checkNotNull(symbolImage);
 		checkNotNull(pointsImage);
@@ -49,7 +48,6 @@ public class Bonus3D {
 		this.symbolImage = symbolImage;
 		this.pointsImage = pointsImage;
 		this.shape = new Box(TS, TS, TS);
-		this.moving = moving;
 
 		edibleAnimation = new RotateTransition(Duration.seconds(1), shape);
 		edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
@@ -74,22 +72,18 @@ public class Bonus3D {
 	}
 
 	private void updateEdibleAnimation() {
-		if (moving) {
-			var movingBonus = (MovingBonus) bonus;
-			var axis = movingBonus.entity().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-			if (!axis.equals(edibleAnimation.getAxis())) {
-				edibleAnimation.stop();
-				edibleAnimation.setAxis(axis);
-				if (movingBonus.entity().moveDir() == Direction.UP || movingBonus.entity().moveDir() == Direction.RIGHT) {
-					edibleAnimation.setRate(-1);
-				} else {
-					edibleAnimation.setRate(1);
-				}
-				edibleAnimation.play();
+		var rotationAxis = Rotate.X_AXIS; // default for static bonus
+		if (bonus instanceof MovingBonus movingBonus) {
+			rotationAxis = movingBonus.entity().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+			if (movingBonus.entity().moveDir() == Direction.UP || movingBonus.entity().moveDir() == Direction.RIGHT) {
+				edibleAnimation.setRate(-1);
+			} else {
+				edibleAnimation.setRate(1);
 			}
-		} else if (edibleAnimation.getAxis() != Rotate.X_AXIS) {
+		}
+		if (!edibleAnimation.getAxis().equals(rotationAxis)) {
 			edibleAnimation.stop();
-			edibleAnimation.setAxis(Rotate.X_AXIS);
+			edibleAnimation.setAxis(rotationAxis);
 			edibleAnimation.play();
 		}
 	}
