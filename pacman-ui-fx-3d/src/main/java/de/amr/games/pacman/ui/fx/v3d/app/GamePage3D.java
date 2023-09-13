@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -116,18 +117,20 @@ public class GamePage3D extends GamePage {
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);
 
-		createContextMenu();
+		contextMenu = new GamePageContextMenu();
 
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
 	}
 
-	public void createContextMenu() {
+	public void openContextMenu(Node node, double x, double y) {
+		contextMenu.hide();
 		contextMenu = new GamePageContextMenu();
+		contextMenu.show(node, x, y);
 	}
 
-	public GamePageContextMenu contextMenu() {
-		return contextMenu;
+	public void closeContextMenu() {
+		contextMenu.hide();
 	}
 
 	public PictureInPicture pip() {

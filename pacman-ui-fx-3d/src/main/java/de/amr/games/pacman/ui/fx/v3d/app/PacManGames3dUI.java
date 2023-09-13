@@ -48,16 +48,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage3D(this, theme);
 		gamePage.setSize(scene.getWidth(), scene.getHeight());
+		// register event handler for opening play scene context menu
 		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 			if (e.getButton() == MouseButton.SECONDARY &&
 					(currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D)) {
-				if (gamePage3D().contextMenu() != null) {
-					gamePage3D().contextMenu().hide();
-				}
-				gamePage3D().createContextMenu();
-				gamePage3D().contextMenu().show(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
+				gamePage3D().openContextMenu(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
 			} else {
-				gamePage3D().contextMenu().hide();
+				gamePage3D().closeContextMenu();
 			}
 		});
 	}
@@ -68,11 +65,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected void configurePacSteering() {
-		// Steering with unmodified or with CONTROL+cursor key
+		// Steer with unmodified or with CONTROL + cursor key
 		var keyboardPlayerSteering = new KeyboardSteering();
-		keyboardPlayerSteering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
-		keyboardPlayerSteering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
-		keyboardPlayerSteering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
+		keyboardPlayerSteering.define(Direction.UP,    KeyCode.UP,    KeyCombination.CONTROL_DOWN);
+		keyboardPlayerSteering.define(Direction.DOWN,  KeyCode.DOWN,  KeyCombination.CONTROL_DOWN);
+		keyboardPlayerSteering.define(Direction.LEFT,  KeyCode.LEFT,  KeyCombination.CONTROL_DOWN);
 		keyboardPlayerSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 
 		GameController.it().setManualPacSteering(keyboardPlayerSteering);
