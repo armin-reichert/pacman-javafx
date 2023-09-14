@@ -64,33 +64,39 @@ public class GameLevel3D {
 		checkNotNull(spritesheet);
 
 		this.level = level;
+
 		Model3D pelletModel3D = theme.get("model3D.pellet");
-		Model3D pacModel3D = theme.get("model3D.pacman");
-		Model3D ghostModel3D = theme.get("model3D.ghost");
-		if (level.game().variant() == GameVariant.MS_PACMAN) {
-			int mazeNumber = level.game().mazeNumber(level.number());
-			var foodColor = theme.color("mspacman.maze.foodColor", mazeNumber - 1);
-			var wallBaseColor = theme.color("mspacman.maze.wallBaseColor", mazeNumber - 1);
-			var wallTopColor = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
-			var doorColor = theme.color("mspacman.maze.doorColor");
-			world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
-			pac3D = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac());
-			ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
-			livesCounter3D = LivesCounter3D.counterMsPacManGame(pacModel3D, theme);
-		} else {
-			var foodColor = theme.color("pacman.maze.foodColor");
-			var wallBaseColor = theme.color("pacman.maze.wallBaseColor");
-			var wallTopColor = theme.color("pacman.maze.wallTopColor");
-			var doorColor = theme.color("pacman.maze.doorColor");
-			world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
-			pac3D = Pac3D.createPacMan3D(pacModel3D, theme, level.pac());
-			ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
-			livesCounter3D = LivesCounter3D.counterPacManGame(pacModel3D, theme);
+		Model3D pacModel3D    = theme.get("model3D.pacman");
+		Model3D ghostModel3D  = theme.get("model3D.ghost");
+
+		switch (level.game().variant()) {
+			case MS_PACMAN -> {
+				int mazeNumber    = level.game().mazeNumber(level.number());
+				var foodColor     = theme.color("mspacman.maze.foodColor",     mazeNumber - 1);
+				var wallBaseColor = theme.color("mspacman.maze.wallBaseColor", mazeNumber - 1);
+				var wallTopColor  = theme.color("mspacman.maze.wallTopColor",  mazeNumber - 1);
+				var doorColor     = theme.color("mspacman.maze.doorColor");
+				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
+				pac3D             = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac());
+				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
+				livesCounter3D    = LivesCounter3D.counterMsPacManGame(pacModel3D, theme);
+			}
+			case PACMAN -> {
+				var foodColor     = theme.color("pacman.maze.foodColor");
+				var wallBaseColor = theme.color("pacman.maze.wallBaseColor");
+				var wallTopColor  = theme.color("pacman.maze.wallTopColor");
+				var doorColor     = theme.color("pacman.maze.doorColor");
+				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
+				pac3D             = Pac3D.createPacMan3D(pacModel3D, theme, level.pac());
+				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
+				livesCounter3D    = LivesCounter3D.counterPacManGame(pacModel3D, theme);
+			}
+			default -> throw new IllegalGameVariantException(level.game().variant());
 		}
 
-		pacLight = createPacLight(pac3D);
+		pacLight       = createPacLight(pac3D);
 		levelCounter3D = new LevelCounter3D();
-		scores3D = new Scores3D(theme.font("font.arcade", 8));
+		scores3D       = new Scores3D(theme.font("font.arcade", 8));
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
 		livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
@@ -105,7 +111,7 @@ public class GameLevel3D {
 		root.getChildren().add(ghosts3D[1].getRoot());
 		root.getChildren().add(ghosts3D[2].getRoot());
 		root.getChildren().add(ghosts3D[3].getRoot());
-		// Adding world (ghosthouse) *after* the guys if mandatory to get semi-transparent ghosthouse rendered correctly!
+		// World must be added *after* the guys. Otherwise, a semi-transparent house is not rendered correctly!
 		root.getChildren().add(world3D.getRoot());
 
 		pac3D.lightedPy.bind(PacManGames3dApp.PY_3D_PAC_LIGHT_ENABLED);
