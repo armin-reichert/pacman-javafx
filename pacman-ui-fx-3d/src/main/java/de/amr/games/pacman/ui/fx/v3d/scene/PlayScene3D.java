@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -35,15 +34,10 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
-import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -55,7 +49,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
+import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 
 /**
  * 3D play scene.
@@ -406,7 +400,7 @@ public class PlayScene3D implements GameScene {
 				lockGameState(); //TODO check this
 				replaceGameLevel3D(level);
 				updateCamera(perspectivePy.get());
-				pauseSeconds(3.0);
+				lockStateForSeconds(3);
 			});
 		}
 
@@ -424,7 +418,7 @@ public class PlayScene3D implements GameScene {
 				//@formatter:off
 				lockStateAndPlayAfterSeconds(1.0, 
 					levelCompleteAnimation, 
-					Ufx.actionAfterSeconds(1.0, () -> {
+					actionAfterSeconds(1.0, () -> {
 						level.pac().hide();
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
@@ -435,7 +429,7 @@ public class PlayScene3D implements GameScene {
 						}
 					}),
 					levelChangeAnimation,
-					Ufx.actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
+					actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
 				);
 				//@formatter:on
 			});
@@ -448,7 +442,7 @@ public class PlayScene3D implements GameScene {
 				actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
 						3, PacManGames3dApp.pickGameOverMessage()));
 				soundHandler.audioClip(level.game().variant(), "audio.game_over").play();
-				pauseSeconds(3);
+				lockStateForSeconds(3);
 			});
 		}
 
@@ -486,14 +480,15 @@ public class PlayScene3D implements GameScene {
 		rotation.setFromAngle(0);
 		rotation.setToAngle(360);
 		rotation.setInterpolator(Interpolator.LINEAR);
+
 		return new SequentialTransition(
-			Ufx.actionAfterSeconds(1.0, () -> {
+			actionAfterSeconds(1.0, () -> {
 				perspectivePy.unbind();
 				perspectivePy.set(Perspective.TOTAL);
 			}),
 			rotation,
-			Ufx.actionAfterSeconds(0.5, () -> soundHandler.audioClip(level.game().variant(), "audio.sweep").play()),
-			Ufx.actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE))
+			actionAfterSeconds(0.5, () -> clip("audio.sweep").play()),
+			actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE))
 		);
 	}
 
@@ -564,17 +559,14 @@ public class PlayScene3D implements GameScene {
 	}
 
 	/**
-	 * Locks the current game states, pauses for given number of seconds and then unlocks the state.
+	 * "Locks" the current game state for given number of seconds, then unlocks the state again.
 	 * 
 	 * @param seconds seconds to pause
 	 */
-	private void pauseSeconds(double seconds) {
-		var pause = Ufx.pauseSeconds(seconds);
-		pause.setOnFinished(e -> unlockGameState());
+	private void lockStateForSeconds(double seconds) {
 		lockGameState();
-		pause.play();
+		actionAfterSeconds(seconds, () -> unlockGameState()).play();
 	}
-
 
 	@Override
 	public void onLevelStarted(GameEvent e) {
@@ -594,5 +586,4 @@ public class PlayScene3D implements GameScene {
 			}
 		});
 	}
-
 }
