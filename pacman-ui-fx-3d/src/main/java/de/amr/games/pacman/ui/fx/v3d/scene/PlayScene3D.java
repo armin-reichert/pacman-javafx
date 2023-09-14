@@ -395,10 +395,10 @@ public class PlayScene3D implements GameScene {
 
 		case CHANGING_TO_NEXT_LEVEL -> {
 			game().level().ifPresent(level -> {
-				lockGameState(); //TODO check this
+				state().timer().resetIndefinitely();
 				replaceGameLevel3D(level);
 				updateCamera(perspectivePy.get());
-				lockStateForSeconds(3);
+				keepGameStateForSeconds(3);
 			});
 		}
 
@@ -439,7 +439,7 @@ public class PlayScene3D implements GameScene {
 				actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
 						3, PacManGames3dApp.pickGameOverMessage()));
 				soundHandler.audioClip(level.game().variant(), "audio.game_over").play();
-				lockStateForSeconds(3);
+				keepGameStateForSeconds(3);
 			});
 		}
 
@@ -528,41 +528,27 @@ public class PlayScene3D implements GameScene {
 	}
 
 	/**
-	 * Locks the current game state by setting an indefinite timer duration.
-	 */
-	private void lockGameState() {
-		state().timer().resetIndefinitely();
-	}
-
-	/**
-	 * Unlocks the current game state by forcing the timer to expire.
-	 */
-	private void unlockGameState() {
-		state().timer().expire();
-	}
-
-	/**
 	 * Locks the current game state, waits given seconds, plays given animations and unlocks the state when the animations
 	 * have finished.
 	 */
 	private void lockStateAndPlayAfterSeconds(double afterSeconds, Animation... animations) {
-		lockGameState();
+		state().timer().resetIndefinitely();
 		var animationSequence = new SequentialTransition(animations);
 		if (afterSeconds > 0) {
 			animationSequence.setDelay(Duration.seconds(afterSeconds));
 		}
-		animationSequence.setOnFinished(e -> unlockGameState());
+		animationSequence.setOnFinished(e -> state().timer().expire());
 		animationSequence.play();
 	}
 
 	/**
-	 * "Locks" the current game state for given number of seconds, then unlocks the state again.
+	 * Keeps the current game state for given number of seconds, then forces the state timer to expire.
 	 * 
-	 * @param seconds seconds to pause
+	 * @param seconds seconds to keep game state
 	 */
-	private void lockStateForSeconds(double seconds) {
-		lockGameState();
-		actionAfterSeconds(seconds, this::unlockGameState).play();
+	private void keepGameStateForSeconds(double seconds) {
+		state().timer().resetIndefinitely();
+		actionAfterSeconds(seconds, () -> state().timer().expire()).play();
 	}
 
 	@Override
