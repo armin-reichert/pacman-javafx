@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
@@ -50,6 +49,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 
 /**
  * 3D play scene.
@@ -300,19 +300,17 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onPacFoundFood(GameEvent e) {
+		// When cheat "eat all pellets" has been used, no tile is present in the event.
+		// In that case, ensure that the 3D pellets are in sync with the model.
 		if (e.tile().isEmpty()) {
-			// When cheat "eat all pellets" has been used, no tile is present in the event.
-			// In that case, ensure the 3D pellets to be in sync with the model:
-			world().ifPresent(world -> {
-				world.tiles()
+			world().ifPresent(world -> world.tiles()
 					.filter(world::hasEatenFoodAt)
 					.map(level3D.world3D()::eatableAt)
 					.flatMap(Optional::stream)
-					.forEach(Eatable3D::eaten);
-			});
+					.forEach(Eatable3D::eaten));
 		} else {
-			var eatable = level3D.world3D().eatableAt(e.tile().get());
-			eatable.ifPresent(level3D::eat);
+			var tile = e.tile().get();
+			level3D.world3D().eatableAt(tile).ifPresent(level3D::eat);
 		}
 	}
 
@@ -413,8 +411,7 @@ public class PlayScene3D implements GameScene {
 				// level complete animation is always played
 				var levelCompleteAnimation = createLevelCompleteAnimation(level);
 				// level change animation is played only if no intermission scene follows
-				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation(level)
-						: Ufx.pauseSeconds(0);
+				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation()	: pauseSeconds(0);
 				//@formatter:off
 				lockStateAndPlayAfterSeconds(1.0, 
 					levelCompleteAnimation, 
@@ -474,7 +471,7 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	private Animation createLevelChangeAnimation(GameLevel level) {
+	private Animation createLevelChangeAnimation() {
 		var rotation = new RotateTransition(Duration.seconds(1.5), level3D.root());
 		rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
 		rotation.setFromAngle(0);
@@ -494,7 +491,7 @@ public class PlayScene3D implements GameScene {
 
 	private Animation createLevelCompleteAnimation(GameLevel level) {
 		if (level.numFlashes == 0) {
-			return Ufx.pauseSeconds(1.0);
+			return pauseSeconds(1.0);
 		}
 		double wallHeight = PacManGames3dApp.PY_3D_WALL_HEIGHT.get();
 		var animation = new SinusCurveAnimation(level.numFlashes);
@@ -565,7 +562,7 @@ public class PlayScene3D implements GameScene {
 	 */
 	private void lockStateForSeconds(double seconds) {
 		lockGameState();
-		actionAfterSeconds(seconds, () -> unlockGameState()).play();
+		actionAfterSeconds(seconds, this::unlockGameState).play();
 	}
 
 	@Override
