@@ -42,6 +42,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	public PacManGames3dUI(Stage stage, Settings settings, Theme theme,
 												 GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
 		super(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+
+		if (gameScenesMsPacMan.playScene3D() instanceof PlayScene3D playScene3D) {
+			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+		}
+		if (gameScenesPacMan.playScene3D() instanceof PlayScene3D playScene3D) {
+			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+		}
 	}
 
 	@Override

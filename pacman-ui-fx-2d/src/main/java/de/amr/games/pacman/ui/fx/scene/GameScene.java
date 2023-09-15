@@ -34,8 +34,6 @@ public interface GameScene extends GameEventListener {
 
 	void setCreditVisible(boolean visible);
 
-	void setParentScene(Scene parentScene);
-
 	/**
 	 * Called when the scene becomes the current one.
 	 */

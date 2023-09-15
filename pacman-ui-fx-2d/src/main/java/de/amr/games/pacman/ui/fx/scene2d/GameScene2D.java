@@ -64,6 +64,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void setActionHandler(ActionHandler actionHandler) {
+		checkNotNull(actionHandler);
 		this.actionHandler = actionHandler;
 	}
 
@@ -73,6 +74,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void setTheme(Theme theme) {
+		checkNotNull(theme);
 		this.theme = theme;
 	}
 
@@ -81,6 +83,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void setSpritesheet(Spritesheet spritesheet) {
+		checkNotNull(spritesheet);
 		this.spritesheet = spritesheet;
 	}
 
@@ -89,6 +92,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void setSoundHandler(SoundHandler soundHandler) {
+		checkNotNull(soundHandler);
 		this.soundHandler = soundHandler;
 	}
 
@@ -97,11 +101,15 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void setCanvas(Canvas canvas) {
+		checkNotNull(canvas);
 		this.canvas = canvas;
 		this.g = canvas.getGraphicsContext2D();
 	}
 
 	public void setScaling(double scaling) {
+		if (scaling <= 0) {
+			throw new IllegalArgumentException("Scaling value must be positive but is " + scaling);
+		}
 		this.scaling = scaling;
 	}
 
@@ -123,10 +131,6 @@ public abstract class GameScene2D implements GameScene {
 	@Override
 	public void setScoreVisible(boolean scoreVisible) {
 		this.scoreVisible = scoreVisible;
-	}
-
-	@Override
-	public void setParentScene(Scene parentScene) {
 	}
 
 	protected double s(double value) {

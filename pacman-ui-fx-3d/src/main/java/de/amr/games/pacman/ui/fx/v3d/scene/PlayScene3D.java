@@ -30,7 +30,9 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.image.Image;
@@ -196,10 +198,9 @@ public class PlayScene3D implements GameScene {
 		perspectivePy.unbind();
 	}
 
-	@Override
-	public void setParentScene(Scene parentScene) {
-		fxSubScene.widthProperty().bind(parentScene.widthProperty());
-		fxSubScene.heightProperty().bind(parentScene.heightProperty());
+	public void bindSize(ReadOnlyDoubleProperty widthPy, ReadOnlyDoubleProperty heightPy) {
+		fxSubScene.widthProperty().bind(widthPy);
+		fxSubScene.heightProperty().bind(heightPy);
 	}
 
 	private void updateCamera(Perspective perspective) {
