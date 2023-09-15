@@ -4,10 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

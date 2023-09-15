@@ -228,24 +228,24 @@ public class PacManGames3dApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		var gameScenesMsPacMan = new GameSceneConfig(
-				new BootScene(),
-				new MsPacManIntroScene(),
-				new MsPacManCreditScene(),
-				new PlayScene2D(),
-				new PlayScene3D(),
-				new MsPacManCutscene1(),
-				new MsPacManCutscene2(),
-				new MsPacManCutscene3()
+			new BootScene(),
+			new MsPacManIntroScene(),
+			new MsPacManCreditScene(),
+			new PlayScene2D(),
+			new PlayScene3D(),
+			new MsPacManCutscene1(),
+			new MsPacManCutscene2(),
+			new MsPacManCutscene3()
 		);
 		var gameScenesPacMan = new GameSceneConfig(
-				new BootScene(),
-				new PacManIntroScene(),
-				new PacManCreditScene(),
-				new PlayScene2D(),
-				new PlayScene3D(),
-				new PacManCutscene1(),
-				new PacManCutscene2(),
-				new PacManCutscene3()
+			new BootScene(),
+			new PacManIntroScene(),
+			new PacManCreditScene(),
+			new PlayScene2D(),
+			new PlayScene3D(),
+			new PacManCutscene1(),
+			new PacManCutscene2(),
+			new PacManCutscene3()
 		);
 		ui = new PacManGames3dUI(stage, settings, createTheme(), gameScenesMsPacMan, gameScenesPacMan);
 		Logger.info("UI created: {} Theme: {}", ui.getClass().getSimpleName(), ui.theme());
