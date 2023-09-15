@@ -30,7 +30,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) spritesheet;
+		var ss = (SpritesheetMsPacManGame) context.spritesheet();
 
 		setCreditVisible(true);
 		setScoreVisible(true);
@@ -55,13 +55,13 @@ public class MsPacManIntroScene extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
-			actionHandler().ifPresent(ActionHandler::addCredit);
+			context.actionHandler().addCredit();
 		} else if (Keyboard.anyPressed(KEY_START_GAME, KEY_START_GAME_NUMPAD)) {
-			actionHandler().ifPresent(ActionHandler::startGame);
+			context.actionHandler().startGame();
 		} else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
-			actionHandler().ifPresent(ActionHandler::switchGameVariant);
+			context.actionHandler().switchGameVariant();
 		} else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
-			actionHandler().ifPresent(ActionHandler::startCutscenesTest);
+			context.actionHandler().startCutscenesTest();
 		}
 	}
 
@@ -72,6 +72,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
+		var theme = context.theme();
 		var font8 = sceneFont(8);
 		var ic = intro.context();
 		var tx = ic.titlePosition.x();
@@ -101,6 +102,7 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawMarquee() {
+		var theme = context.theme();
 		var on = intro.context().marqueeState();
 		for (int i = 0; i < intro.context().numBulbs; ++i) {
 			g.setFill(on.get(i) ? theme.color("palette.pale") : theme.color("palette.red"));

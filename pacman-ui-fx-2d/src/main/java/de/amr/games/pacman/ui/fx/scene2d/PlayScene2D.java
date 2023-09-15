@@ -49,21 +49,22 @@ public class PlayScene2D extends GameScene2D {
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
 			if (!GameController.it().hasCredit()) {
-				actionHandler().ifPresent(ActionHandler::addCredit);
+				context.actionHandler().addCredit();
 			}
 		} else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
-			actionHandler().ifPresent(ActionHandler::cheatEatAllPellets);
+			context.actionHandler().cheatEatAllPellets();
 		} else if (Keyboard.pressed(KEY_CHEAT_ADD_LIVES)) {
-			actionHandler().ifPresent(ActionHandler::cheatAddLives);
+			context.actionHandler().cheatAddLives();
 		} else if (Keyboard.pressed(KEY_CHEAT_NEXT_LEVEL)) {
-			actionHandler().ifPresent(ActionHandler::cheatEnterNextLevel);
+			context.actionHandler().cheatEnterNextLevel();
 		} else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
-			actionHandler().ifPresent(ActionHandler::cheatKillAllEatableGhosts);
+			context.actionHandler().cheatKillAllEatableGhosts();
 		}
 	}
 
 	@Override
 	protected void drawSceneContent() {
+		var theme = context.theme();
 		game().level().ifPresent(level -> {
 			if (game().variant() == GameVariant.MS_PACMAN) {
 				int mazeNumber = game().mazeNumber(level.number());
@@ -94,6 +95,7 @@ public class PlayScene2D extends GameScene2D {
 
 	// TODO put all images into a single sprite sheet
 	private void drawPacManMaze(GameLevel level) {
+		var theme = context.theme();
 		var world = level.world();
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
@@ -112,9 +114,10 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(GameLevel level, int mazeNumber) {
+		var theme = context.theme();
 		var world = level.world();
 		double x = 0, y = t(3);
-		var ss = (SpritesheetMsPacManGame) spritesheet;
+		var ss = (SpritesheetMsPacManGame) context.spritesheet();
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
 				var source = theme.image("mspacman.flashingMazes");
@@ -165,7 +168,7 @@ public class PlayScene2D extends GameScene2D {
 	public void onSceneVariantSwitch() {
 		game().level().ifPresent(level -> {
 			if (!level.isDemoLevel() && GameController.it().state() == GameState.HUNTING) {
-				soundHandler.ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
+				context.soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -176,12 +179,12 @@ public class PlayScene2D extends GameScene2D {
 		}
 		var gameVariant = level.game().variant();
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			soundHandler.audioClip(gameVariant, "audio.pacman_munch").stop();
+			context.soundHandler().audioClip(gameVariant, "audio.pacman_munch").stop();
 		}
 		if (!level.memo().pacKilled && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-			soundHandler.ensureLoopEndless(soundHandler.audioClip(gameVariant, "audio.ghost_returning"));
+			context.soundHandler().ensureLoopEndless(context.soundHandler().audioClip(gameVariant, "audio.ghost_returning"));
 		} else {
-			soundHandler.audioClip(gameVariant, "audio.ghost_returning").stop();
+			context.soundHandler().audioClip(gameVariant, "audio.ghost_returning").stop();
 		}
 	}
 }

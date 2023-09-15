@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -42,6 +43,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	public PacManGames3dUI(Stage stage, Settings settings, Theme theme,
 												 GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
 		super(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+
+		if (gameScenesMsPacMan.playScene3D() instanceof PlayScene3D playScene3D) {
+			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+		}
+		if (gameScenesPacMan.playScene3D() instanceof PlayScene3D playScene3D) {
+			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+		}
 	}
 
 	@Override
@@ -61,6 +69,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	public GamePage3D gamePage3D() {
 		return (GamePage3D) gamePage;
+	}
+
+	@Override
+	public ActionHandler3D actionHandler() {
+		return this;
 	}
 
 	@Override

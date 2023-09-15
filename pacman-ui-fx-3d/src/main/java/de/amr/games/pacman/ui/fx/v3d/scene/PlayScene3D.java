@@ -13,15 +13,12 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
-import de.amr.games.pacman.ui.fx.app.SoundHandler;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.app.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
@@ -31,6 +28,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.image.Image;
@@ -69,10 +67,7 @@ public class PlayScene3D implements GameScene {
 	};
 
 	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
-	private ActionHandler actionHandler;
-	private SoundHandler soundHandler;
-	private Theme theme;
-	private Spritesheet spritesheet;
+	private GameSceneContext context;
 	private boolean scoreVisible;
 	private boolean creditVisible;
 	private final BorderPane root;
@@ -101,6 +96,15 @@ public class PlayScene3D implements GameScene {
 		root = new BorderPane(fxSubScene);
 	}
 
+	@Override
+	public void setContext(GameSceneContext context) {
+		this.context = context;
+	}
+
+	@Override
+	public GameSceneContext context() {
+		return context;
+	}
 
 	@Override
 	public void init() {
@@ -151,55 +155,14 @@ public class PlayScene3D implements GameScene {
 		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
 	}
 
-
-	public Optional<ActionHandler> actionHandler() {
-		return Optional.ofNullable(actionHandler);
-	}
-
-	@Override
-	public void setActionHandler(ActionHandler actionHandler) {
-		this.actionHandler = actionHandler;
-	}
-
-	@Override
-	public SoundHandler getSoundHandler() {
-		return soundHandler;
-	}
-
-	@Override
-	public void setSoundHandler(SoundHandler soundHandler) {
-		this.soundHandler = soundHandler;
-	}
-
-	@Override
-	public Theme getTheme() {
-		return theme;
-	}
-
-	@Override
-	public void setTheme(Theme theme) {
-		this.theme = theme;
-	}
-
-	@Override
-	public Spritesheet getSpritesheet() {
-		return spritesheet;
-	}
-
-	@Override
-	public void setSpritesheet(Spritesheet spritesheet) {
-		this.spritesheet = spritesheet;
-	}
-
 	@Override
 	public void end() {
 		perspectivePy.unbind();
 	}
 
-	@Override
-	public void setParentScene(Scene parentScene) {
-		fxSubScene.widthProperty().bind(parentScene.widthProperty());
-		fxSubScene.heightProperty().bind(parentScene.heightProperty());
+	public void bindSize(ReadOnlyDoubleProperty widthPy, ReadOnlyDoubleProperty heightPy) {
+		fxSubScene.widthProperty().bind(widthPy);
+		fxSubScene.heightProperty().bind(heightPy);
 	}
 
 	private void updateCamera(Perspective perspective) {
@@ -214,7 +177,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		level3D = new GameLevel3D(level, theme, spritesheet);
+		level3D = new GameLevel3D(level, context.theme(), context.spritesheet());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;
@@ -244,7 +207,7 @@ public class PlayScene3D implements GameScene {
 		readyMessageText3D.beginBatch();
 		readyMessageText3D.setBgColor(Color.CORNFLOWERBLUE);
 		readyMessageText3D.setTextColor(Color.YELLOW);
-		readyMessageText3D.setFont(theme.font("font.arcade", 6));
+		readyMessageText3D.setFont(context.theme().font("font.arcade", 6));
 		readyMessageText3D.setText("");
 		readyMessageText3D.endBatch();
 		readyMessageText3D.translate(0, 16, -4.5);
@@ -253,24 +216,21 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-		actionHandler().ifPresent(handler -> {
-			ActionHandler3D actionHandler = (ActionHandler3D) handler;
 			if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) && !GameController.it().hasCredit()) {
-				actionHandler.addCredit();
+				context.actionHandler().addCredit();
 			} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
-				actionHandler.selectPrevPerspective();
+				((ActionHandler3D) context.actionHandler()).selectPrevPerspective();
 			} else if (Keyboard.pressed(PacManGames3dApp.KEY_NEXT_PERSPECTIVE)) {
-				actionHandler.selectNextPerspective();
+				((ActionHandler3D) context.actionHandler()).selectNextPerspective();
 			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
-				actionHandler.cheatEatAllPellets();
+				context.actionHandler().cheatEatAllPellets();
 			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
-				actionHandler.cheatAddLives();
+				context.actionHandler().cheatAddLives();
 			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
-				actionHandler.cheatEnterNextLevel();
+				context.actionHandler().cheatEnterNextLevel();
 			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
-				actionHandler.cheatKillAllEatableGhosts();
+				context.actionHandler().cheatKillAllEatableGhosts();
 			}
-		});
 	}
 
 	@Override
@@ -293,7 +253,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 			if (!level.isDemoLevel()) {
-				soundHandler.ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
+				context.soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -317,7 +277,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onBonusActivated(GameEvent e) {
 		game().level().ifPresent(level -> {
-			level.bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, spritesheet));
+			level.bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.spritesheet()));
 			level3D.bonus3D().showEdible();
 		});
 	}
@@ -375,14 +335,14 @@ public class PlayScene3D implements GameScene {
 			game().level().map(GameLevel::memo).ifPresent(memo -> {
 				switch (game().variant()) {
 				case MS_PACMAN -> {
-					var ss = (SpritesheetMsPacManGame) spritesheet;
+					var ss = (SpritesheetMsPacManGame) context.spritesheet();
 					memo.killedGhosts.forEach(ghost -> {
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 					});
 				}
 				case PACMAN -> {
-					var ss = (SpritesheetPacManGame) spritesheet;
+					var ss = (SpritesheetPacManGame) context.spritesheet();
 					memo.killedGhosts.forEach(ghost -> {
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
@@ -420,9 +380,9 @@ public class PlayScene3D implements GameScene {
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
 						if (level.intermissionNumber == 0) {
-							soundHandler.audioClip(level.game().variant(), "audio.level_complete").play();
-							actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
-									2, PacManGames3dApp.pickLevelCompleteMessage(level.number())));
+							context.soundHandler().audioClip(level.game().variant(), "audio.level_complete").play();
+							context.actionHandler().showFlashMessageSeconds(2,
+									PacManGames3dApp.pickLevelCompleteMessage(level.number()));
 						}
 					}),
 					levelChangeAnimation,
@@ -436,9 +396,8 @@ public class PlayScene3D implements GameScene {
 			game().level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
 				level3D.livesCounter3D().stopAnimation();
-				actionHandler().ifPresent(actionHandler -> actionHandler.showFlashMessageSeconds(
-						3, PacManGames3dApp.pickGameOverMessage()));
-				soundHandler.audioClip(level.game().variant(), "audio.game_over").play();
+				context.actionHandler().showFlashMessageSeconds(3, PacManGames3dApp.pickGameOverMessage());
+				context.soundHandler().audioClip(level.game().variant(), "audio.game_over").play();
 				keepGameStateForSeconds(3);
 			});
 		}
@@ -515,8 +474,7 @@ public class PlayScene3D implements GameScene {
 			}
 			if (!level.memo().pacKilled && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 					.anyMatch(Ghost::isVisible)) {
-				soundHandler.ensureLoopEndless(clip("audio.ghost_returning"));
-
+				context.soundHandler().ensureLoopEndless(clip("audio.ghost_returning"));
 			} else {
 				clip("audio.ghost_returning").stop();
 			}
@@ -524,7 +482,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private AudioClip clip(String key) {
-		return soundHandler.audioClip(game().variant(), key);
+		return context.soundHandler().audioClip(game().variant(), key);
 	}
 
 	/**
@@ -556,12 +514,12 @@ public class PlayScene3D implements GameScene {
 		game().level().ifPresent(level -> {
 			switch (game().variant()) {
 				case MS_PACMAN -> {
-					var ss = (SpritesheetMsPacManGame) spritesheet;
+					var ss = (SpritesheetMsPacManGame) context.spritesheet();
 					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
 				}
 				case PACMAN -> {
-					var ss = (SpritesheetPacManGame) spritesheet;
+					var ss = (SpritesheetPacManGame) context.spritesheet();
 					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
 				}
