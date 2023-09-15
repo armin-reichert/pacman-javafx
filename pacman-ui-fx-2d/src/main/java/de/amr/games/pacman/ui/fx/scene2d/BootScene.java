@@ -54,7 +54,7 @@ public class BootScene extends GameScene2D {
 
 	private void paintRandomHexCodes() {
 		clearCanvas();
-		g.setFill(theme.color("palette.pale"));
+		g.setFill(context.theme().color("palette.pale"));
 		g.setFont(sceneFont(8));
 		for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
 			for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
@@ -80,8 +80,8 @@ public class BootScene extends GameScene2D {
 	}
 
 	private Rectangle2D randomSpritesheetTile() {
-		var source = spritesheet.source();
-		var raster = spritesheet.raster();
+		var source = context.spritesheet().source();
+		var raster = context.spritesheet().raster();
 		double x = RND.nextDouble() * (source.getWidth() - raster);
 		double y = RND.nextDouble() * (source.getHeight() - raster);
 		return new Rectangle2D(x, y, raster, raster);
@@ -91,7 +91,7 @@ public class BootScene extends GameScene2D {
 		clearCanvas();
 		var numRows = ArcadeWorld.TILES_Y / 2;
 		var numCols = ArcadeWorld.TILES_X / 2;
-		g.setStroke(theme.color("palette.pale"));
+		g.setStroke(context.theme().color("palette.pale"));
 		g.setLineWidth(s(2.0));
 		for (int row = 0; row <= numRows; ++row) {
 			g.setLineWidth(row == 0 || row == numRows ? s(4.0) : s(2.0));

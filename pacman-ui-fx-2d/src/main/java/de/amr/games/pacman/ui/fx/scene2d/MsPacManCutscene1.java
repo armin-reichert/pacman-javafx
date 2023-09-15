@@ -28,7 +28,7 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) spritesheet;
+		var ss = (SpritesheetMsPacManGame) context.spritesheet();
 
 		setCreditVisible(!GameController.it().hasCredit());
 		setScoreVisible(true);
@@ -53,7 +53,7 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = (SpritesheetMsPacManGame) spritesheet;
+		var ss = (SpritesheetMsPacManGame) context.spritesheet();
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPac(intermission.msPac);
 		drawPac(intermission.pacMan);

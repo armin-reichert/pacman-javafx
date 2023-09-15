@@ -77,21 +77,9 @@ public interface GameScene extends GameEventListener {
 		// empty default
 	}
 
-	Theme getTheme();
+	GameSceneContext context();
 
-	void setTheme(Theme theme);
-
-	Spritesheet getSpritesheet();
-
-	void setSpritesheet(Spritesheet spritesheet);
-
-	SoundHandler getSoundHandler();
-
-	void setSoundHandler(SoundHandler soundHandler);
-
-	Optional<ActionHandler> actionHandler();
-
-	void setActionHandler(ActionHandler actionHandler);
+	void setContext(GameSceneContext context);
 
 	default GameController gameController() {
 		return GameController.it();

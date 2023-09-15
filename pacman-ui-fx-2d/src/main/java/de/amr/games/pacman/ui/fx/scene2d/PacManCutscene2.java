@@ -34,7 +34,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) spritesheet;
+		var ss = (SpritesheetPacManGame) context.spritesheet();
 
 		setCreditVisible(!GameController.it().hasCredit());
 		setScoreVisible(true);

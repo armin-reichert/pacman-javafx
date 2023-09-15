@@ -42,9 +42,7 @@ public class PictureInPicture {
 	public void setMaster(PlayScene3D master) {
 		Globals.checkNotNull(master);
 		this.master = master;
-		playScene2D.setTheme(master.getTheme());
-		playScene2D.setSpritesheet(master.getSpritesheet());
-		playScene2D.setSoundHandler(master.getSoundHandler());
+		playScene2D.setContext(master.context());
 	}
 
 	public Node root() {

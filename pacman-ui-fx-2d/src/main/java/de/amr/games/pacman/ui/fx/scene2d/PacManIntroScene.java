@@ -30,22 +30,18 @@ public class PacManIntroScene extends GameScene2D {
 
 	private PacManIntro intro;
 
-	private PacManIntro.Context context() {
-		return intro.context();
-	}
-
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) spritesheet;
+		var ss = (SpritesheetPacManGame) context.spritesheet();
 
 		setCreditVisible(true);
 		setScoreVisible(true);
 
 		intro = new PacManIntro();
 
-		context().pacMan.setAnimations(new PacAnimationsPacManGame(context().pacMan, ss));
-		context().ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
-		context().blinking.reset();
+		intro.context().pacMan.setAnimations(new PacAnimationsPacManGame(intro.context().pacMan, ss));
+		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
+		intro.context().blinking.reset();
 
 		intro.changeState(State.START);
 	}
@@ -58,13 +54,13 @@ public class PacManIntroScene extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
-			actionHandler().ifPresent(ActionHandler::addCredit);
+			context.actionHandler().addCredit();
 		} else if (Keyboard.anyPressed(KEY_START_GAME, KEY_START_GAME_NUMPAD)) {
-			actionHandler().ifPresent(ActionHandler::startGame);
+			context.actionHandler().startGame();
 		} else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
-			actionHandler().ifPresent(ActionHandler::switchGameVariant);
+			context.actionHandler().switchGameVariant();
 		} else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
-			actionHandler().ifPresent(ActionHandler::startCutscenesTest);
+			context.actionHandler().startCutscenesTest();
 		}
 	}
 
@@ -108,15 +104,15 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery() {
-		var ss = (SpritesheetPacManGame) spritesheet;
+		var ss = (SpritesheetPacManGame) context.spritesheet();
 		var font = sceneFont(8);
 
-		int tx = context().leftTileX;
-		if (context().titleVisible) {
-			drawText("CHARACTER / NICKNAME", theme.color("palette.pale"), font, t(tx + 3), t(6));
+		int tx = intro.context().leftTileX;
+		if (intro.context().titleVisible) {
+			drawText("CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
-			var ghostInfo = context().ghostInfo[id];
+			var ghostInfo = intro.context().ghostInfo[id];
 			if (!ghostInfo.pictureVisible) {
 				continue;
 			}
@@ -124,53 +120,53 @@ public class PacManIntroScene extends GameScene2D {
 			drawSpriteOverBoundingBox(ss.ghostFacingRight(id), t(tx) + 4, t(ty));
 			if (ghostInfo.characterVisible) {
 				var text = "-" + ghostInfo.character;
-				var color = theme.color("ghost." + id + ".color");
+				var color = context.theme().color("ghost." + id + ".color");
 				drawText(text, color, font, t(tx + 3), t(ty + 1));
 			}
 			if (ghostInfo.nicknameVisible) {
 				var text = QUOTE + ghostInfo.ghost.name() + QUOTE;
-				var color = theme.color("ghost." + id + ".color");
+				var color = context.theme().color("ghost." + id + ".color");
 				drawText(text, color, font, t(tx + 14), t(ty + 1));
 			}
 		}
 	}
 
 	private void drawBlinkingEnergizer() {
-		if (context().blinking.on()) {
-			g.setFill(theme.color("pacman.maze.foodColor"));
-			g.fillOval(s(t(context().leftTileX)), s(t(20)), s(TS), s(TS));
+		if (intro.context().blinking.on()) {
+			g.setFill(context.theme().color("pacman.maze.foodColor"));
+			g.fillOval(s(t(intro.context().leftTileX)), s(t(20)), s(TS), s(TS));
 		}
 	}
 
 	private void drawGuys(int shakingAmount) {
 		if (shakingAmount == 0) {
-			context().ghosts().forEach(this::drawGhost);
+			intro.context().ghosts().forEach(this::drawGhost);
 		} else {
-			drawGhost(context().ghost(0));
-			drawGhost(context().ghost(3));
+			drawGhost(intro.context().ghost(0));
+			drawGhost(intro.context().ghost(3));
 			// shaking ghosts effect, not quite as in original game
 			g.save();
 			g.translate(shakingAmount, 0);
-			drawGhost(context().ghost(1));
-			drawGhost(context().ghost(2));
+			drawGhost(intro.context().ghost(1));
+			drawGhost(intro.context().ghost(2));
 			g.restore();
 		}
-		drawPac(context().pacMan);
+		drawPac(intro.context().pacMan);
 	}
 
 	private void drawPoints() {
 		var font8 = sceneFont(8);
 		var font6 = sceneFont(6);
-		int tx = context().leftTileX + 6;
+		int tx = intro.context().leftTileX + 6;
 		int ty = 25;
-		g.setFill(theme.color("pacman.maze.foodColor"));
+		g.setFill(context.theme().color("pacman.maze.foodColor"));
 		g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
-		if (context().blinking.on()) {
+		if (intro.context().blinking.on()) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
 		}
-		drawText("10",  theme.color("palette.pale"), font8, t(tx + 2), t(ty));
-		drawText("PTS", theme.color("palette.pale"), font6, t(tx + 5), t(ty));
-		drawText("50",  theme.color("palette.pale"), font8, t(tx + 2), t(ty + 2));
-		drawText("PTS", theme.color("palette.pale"), font6, t(tx + 5), t(ty + 2));
+		drawText("10",  context.theme().color("palette.pale"), font8, t(tx + 2), t(ty));
+		drawText("PTS", context.theme().color("palette.pale"), font6, t(tx + 5), t(ty));
+		drawText("50",  context.theme().color("palette.pale"), font8, t(tx + 2), t(ty + 2));
+		drawText("PTS", context.theme().color("palette.pale"), font6, t(tx + 5), t(ty + 2));
 	}
 }

@@ -18,6 +18,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.BooleanProperty;
@@ -49,10 +50,7 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
-	protected Theme theme;
-	protected Spritesheet spritesheet;
-	protected ActionHandler actionHandler;
-	protected SoundHandler soundHandler;
+	protected GameSceneContext context;
 	protected Canvas canvas;
 	protected GraphicsContext g;
 	protected double scaling = 1;
@@ -63,41 +61,14 @@ public abstract class GameScene2D implements GameScene {
 		infoVisiblePy.bind(PacManGames2dApp.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
-	public void setActionHandler(ActionHandler actionHandler) {
-		checkNotNull(actionHandler);
-		this.actionHandler = actionHandler;
+	@Override
+	public GameSceneContext context() {
+		return context;
 	}
 
 	@Override
-	public Optional<ActionHandler> actionHandler() {
-		return Optional.ofNullable(actionHandler);
-	}
-
-	public void setTheme(Theme theme) {
-		checkNotNull(theme);
-		this.theme = theme;
-	}
-
-	public Theme getTheme() {
-		return theme;
-	}
-
-	public void setSpritesheet(Spritesheet spritesheet) {
-		checkNotNull(spritesheet);
-		this.spritesheet = spritesheet;
-	}
-
-	public Spritesheet getSpritesheet() {
-		return spritesheet;
-	}
-
-	public void setSoundHandler(SoundHandler soundHandler) {
-		checkNotNull(soundHandler);
-		this.soundHandler = soundHandler;
-	}
-
-	public SoundHandler getSoundHandler() {
-		return soundHandler;
+	public void setContext(GameSceneContext context) {
+		this.context = context;
 	}
 
 	public void setCanvas(Canvas canvas) {
@@ -138,7 +109,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected Font sceneFont(double size) {
-		return theme.font("font.arcade", s(size));
+		return context.theme().font("font.arcade", s(size));
 	}
 
 	public Canvas canvas() {
@@ -157,8 +128,8 @@ public abstract class GameScene2D implements GameScene {
 
 	public void draw() {
 		clearCanvas();
-		if (theme == null || spritesheet == null) {
-			return;
+		if (context == null) {
+			return; // TODO may this happen?
 		}
 		if (scoreVisible) {
 			drawScore(game().score(), "SCORE", t(1), t(1));
@@ -190,6 +161,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
+		var theme = context.theme();
 		var pointsText = String.format("%02d", score.points());
 		var font = sceneFont(8);
 		drawText(title, theme.color("palette.pale"), font, x, y);
@@ -213,16 +185,16 @@ public abstract class GameScene2D implements GameScene {
 
 	private Rectangle2D bonusSymbolSprite(byte symbol, GameVariant variant) {
 		switch (variant) {
-			case MS_PACMAN: return ((SpritesheetMsPacManGame) spritesheet).bonusSymbolSprite(symbol);
-			case PACMAN:    return ((SpritesheetPacManGame)   spritesheet).bonusSymbolSprite(symbol);
+			case MS_PACMAN: return ((SpritesheetMsPacManGame) context.spritesheet()).bonusSymbolSprite(symbol);
+			case PACMAN:    return ((SpritesheetPacManGame)   context.spritesheet()).bonusSymbolSprite(symbol);
 			default:        throw new IllegalGameVariantException(variant);
 		}
 	}
 
 	private Rectangle2D livesCounterSprite(GameVariant variant) {
 		switch (variant) {
-			case MS_PACMAN: return ((SpritesheetMsPacManGame) spritesheet).livesCounterSprite();
-			case PACMAN:    return ((SpritesheetPacManGame)   spritesheet).livesCounterSprite();
+			case MS_PACMAN: return ((SpritesheetMsPacManGame) context.spritesheet()).livesCounterSprite();
+			case PACMAN:    return ((SpritesheetPacManGame)   context.spritesheet()).livesCounterSprite();
 			default:        throw new IllegalGameVariantException(variant);
 		}
 	}
@@ -240,14 +212,14 @@ public abstract class GameScene2D implements GameScene {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText("+" + excessLives, theme.color("palette.yellow"),
+			drawText("+" + excessLives, context.theme().color("palette.yellow"),
 					Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
 		}
 	}
 
 	private Rectangle2D bonusSprite(Bonus bonus, GameVariant variant) {
 		if (variant == GameVariant.MS_PACMAN) {
-			var ss = (SpritesheetMsPacManGame) spritesheet;
+			var ss = (SpritesheetMsPacManGame) context.spritesheet();
 			if (bonus.state() == Bonus.STATE_EDIBLE) {
 				return ss.bonusSymbolSprite(bonus.symbol());
 			}
@@ -255,7 +227,7 @@ public abstract class GameScene2D implements GameScene {
 				return ss.bonusValueSprite(bonus.symbol());
 			}
 		} else if (variant == GameVariant.PACMAN) {
-			var ss = (SpritesheetPacManGame) spritesheet;
+			var ss = (SpritesheetPacManGame)  context.spritesheet();
 			if (bonus.state() == Bonus.STATE_EDIBLE) {
 				return ss.bonusSymbolSprite(bonus.symbol());
 			}
@@ -373,7 +345,7 @@ public abstract class GameScene2D implements GameScene {
 	 * @param y y coordinate of upper left corner
 	 */
 	protected void drawSprite(Rectangle2D sprite, double x, double y) {
-		drawSprite(spritesheet.source(), sprite, x, y);
+		drawSprite(context.spritesheet().source(), sprite, x, y);
 	}
 
 	/**
@@ -389,17 +361,17 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
- 		drawText(String.format("CREDIT %2d", credit), theme.color("palette.pale"), sceneFont(8), x, y);
+ 		drawText(String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
 	}
 
 	protected void drawMidwayCopyright(double x, double y) {
-		drawText("© 1980 MIDWAY MFG.CO.", theme.color("palette.pink"), sceneFont(8), x, y);
+		drawText("© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
-		Image logo = theme.get("mspacman.logo.midway");
+		Image logo = context.theme().get("mspacman.logo.midway");
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
-		g.setFill(theme.color("palette.red"));
+		g.setFill(context.theme().color("palette.red"));
 		g.setFont(sceneFont(8));
 		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
@@ -409,14 +381,14 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawClapperBoard(ClapperBoardAnimation animation, double x, double y) {
 		int spriteIndex = animation.currentSpriteIndex();
 		if (spriteIndex != -1) {
-			var ss = (SpritesheetMsPacManGame) spritesheet;
+			var ss = (SpritesheetMsPacManGame) context.spritesheet();
 			var sprite = ss.clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont(8));
-			g.setFill(theme.color("palette.pale").darker());
+			g.setFill(context.theme().color("palette.pale").darker());
 			var numberX = s(x + sprite.getWidth() - 25);
 			var numberY = s(y + 18);
-			g.setFill(theme.color("palette.pale"));
+			g.setFill(context.theme().color("palette.pale"));
 			g.fillText(animation.number(), numberX, numberY);
 			var textX = s(x + sprite.getWidth());
 			g.fillText(animation.text(), textX, numberY);
@@ -430,7 +402,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawTileGrid(int tilesX, int tilesY) {
-		g.setStroke(theme.color("palette.pale"));
+		g.setStroke(context.theme().color("palette.pale"));
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
 			g.strokeLine(0, s(TS * (row)), s(tilesX * TS), s(TS * (row)));

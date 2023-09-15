@@ -23,6 +23,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -47,7 +48,7 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
  * 
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, ActionHandler {
+public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSceneContext {
 
 	protected final Map<GameVariant, GameSceneConfig> gameScenes = new EnumMap<>(GameVariant.class);
 	protected GameClock clock;
@@ -217,27 +218,38 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 			}
 		}
 		currentGameScene = newGameScene;
-		currentGameScene.setActionHandler(this);
-		currentGameScene.setTheme(theme);
-		currentGameScene.setSpritesheet(spritesheet());
-		currentGameScene.setSoundHandler(soundHandler);
+		currentGameScene.setContext(this);
 		currentGameScene.init();
 		gamePage.onGameSceneChanged();
 		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
+	}
+
+	// GameSceneContext
+
+	@Override
+	public ActionHandler actionHandler() {
+		return this;
+	}
+
+	@Override
+	public Theme theme() {
+		return theme;
+	}
+
+	@Override
+	public Spritesheet spritesheet() {
+		return game().variant() == GameVariant.MS_PACMAN ? theme.get("mspacman.spritesheet") : theme.get("pacman.spritesheet");
+	}
+
+	@Override
+	public SoundHandler soundHandler() {
+		return soundHandler;
 	}
 
 	// Accessors
 
 	public Scene mainScene() {
 		return scene;
-	}
-
-	public Theme theme() {
-		return theme;
-	}
-
-	public SoundHandler soundHandler() {
-		return soundHandler;
 	}
 
 	public GameClock clock() {
@@ -254,10 +266,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler {
 
 	public GameSceneConfig sceneConfig() {
 		return gameScenes.get(game().variant());
-	}
-
-	public Spritesheet spritesheet() {
-		return game().variant() == GameVariant.MS_PACMAN ? theme.get("mspacman.spritesheet") : theme.get("pacman.spritesheet");
 	}
 
 	// GameEventListener implementation part
