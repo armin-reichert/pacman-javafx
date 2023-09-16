@@ -5,6 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d.pacman;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;
@@ -69,6 +72,17 @@ public class SpritesheetPacManGame implements Spritesheet {
 			return null;
 		}
 	}
+
+	public Rectangle2D bonusSprite(Bonus bonus) {
+		if (bonus.state() == Bonus.STATE_EDIBLE) {
+			return bonusSymbolSprite(bonus.symbol());
+		}
+		if (bonus.state() == Bonus.STATE_EATEN) {
+			return bonusValueSprite(bonus.symbol());
+		}
+		return null; // TODO may this happen?
+	}
+
 
 	public Rectangle2D ghostFacingRight(int ghostID) {
 		return tile(2 * DIR_ORDER.index(Direction.RIGHT), 4 + ghostID);

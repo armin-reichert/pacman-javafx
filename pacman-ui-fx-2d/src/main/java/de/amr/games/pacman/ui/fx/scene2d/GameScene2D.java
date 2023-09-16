@@ -68,7 +68,12 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public void setContext(GameSceneContext context) {
+		checkNotNull(context);
 		this.context = context;
+	}
+
+	public Canvas canvas() {
+		return canvas;
 	}
 
 	public void setCanvas(Canvas canvas) {
@@ -110,10 +115,6 @@ public abstract class GameScene2D implements GameScene {
 
 	protected Font sceneFont(double size) {
 		return context.theme().font("font.arcade", s(size));
-	}
-
-	public Canvas canvas() {
-		return canvas;
 	}
 
 	@Override
@@ -217,35 +218,23 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	private Rectangle2D bonusSprite(Bonus bonus, GameVariant variant) {
-		if (variant == GameVariant.MS_PACMAN) {
-			var ss = (SpritesheetMsPacManGame) context.spritesheet();
-			if (bonus.state() == Bonus.STATE_EDIBLE) {
-				return ss.bonusSymbolSprite(bonus.symbol());
-			}
-			if (bonus.state() == Bonus.STATE_EATEN) {
-				return ss.bonusValueSprite(bonus.symbol());
-			}
-		} else if (variant == GameVariant.PACMAN) {
-			var ss = (SpritesheetPacManGame)  context.spritesheet();
-			if (bonus.state() == Bonus.STATE_EDIBLE) {
-				return ss.bonusSymbolSprite(bonus.symbol());
-			}
-			if (bonus.state() == Bonus.STATE_EATEN) {
-				return ss.bonusValueSprite(bonus.symbol());
-			}
-		}
-		return null;
-	}
-
 	protected void drawBonus(Bonus bonus) {
-		var sprite = bonusSprite(bonus, game().variant());
-		if (sprite == null) {
-			return;
+		Rectangle2D sprite = null;
+		switch (game().variant()) {
+			case MS_PACMAN -> {
+				var ss = (SpritesheetMsPacManGame) context.spritesheet();
+				sprite = ss.bonusSprite(bonus);
+			}
+			case PACMAN -> {
+				var ss = (SpritesheetPacManGame) context.spritesheet();
+				sprite = ss.bonusSprite(bonus);
+			}
+			default -> throw new IllegalGameVariantException(game().variant());
 		}
 		if (bonus instanceof MovingBonus) {
 			var movingBonus = (MovingBonus) bonus;
 			g.save();
+			//TODO reconsider this
 			g.translate(0, movingBonus.dy());
 			drawEntitySprite(movingBonus.entity(), sprite);
 			g.restore();

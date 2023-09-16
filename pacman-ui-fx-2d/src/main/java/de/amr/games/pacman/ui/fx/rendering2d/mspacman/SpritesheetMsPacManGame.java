@@ -5,6 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d.mspacman;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
@@ -63,6 +66,16 @@ public class SpritesheetMsPacManGame implements Spritesheet {
 
 	public Rectangle2D bonusValueSprite(int symbol) {
 		return sprite(3 + symbol, 1);
+	}
+
+	public Rectangle2D bonusSprite(Bonus bonus) {
+		if (bonus.state() == Bonus.STATE_EDIBLE) {
+			return bonusSymbolSprite(bonus.symbol());
+		}
+		if (bonus.state() == Bonus.STATE_EATEN) {
+			return bonusValueSprite(bonus.symbol());
+		}
+		return null;
 	}
 
 	public Rectangle2D livesCounterSprite() {
