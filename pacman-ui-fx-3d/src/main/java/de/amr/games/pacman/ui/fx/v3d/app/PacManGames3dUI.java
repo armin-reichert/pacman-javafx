@@ -7,12 +7,10 @@ package de.amr.games.pacman.ui.fx.v3d.app;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -24,6 +22,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
@@ -41,13 +41,13 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D {
 
 	public PacManGames3dUI(Stage stage, Settings settings, Theme theme,
-												 GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
+												 Map<String, GameScene> gameScenesMsPacMan, Map<String, GameScene> gameScenesPacMan) {
 		super(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
 
-		if (gameScenesMsPacMan.gameScene("play3D") instanceof PlayScene3D playScene3D) {
+		if (gameScenesMsPacMan.get("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
 		}
-		if (gameScenesPacMan.gameScene("play3D") instanceof PlayScene3D playScene3D) {
+		if (gameScenesPacMan.get("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
 		}
 	}
@@ -114,8 +114,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
 		var config = sceneConfig();
-		var playScene2D = config.gameScene("play");
-		var playScene3D = config.gameScene("play3D");
+		var playScene2D = config.get("play");
+		var playScene3D = config.get("play3D");
 		var scene = super.sceneMatchingCurrentGameState();
 		if (scene == playScene2D && PacManGames3dApp.PY_3D_ENABLED.get() && playScene3D != null) {
 			return playScene3D;
@@ -126,7 +126,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	public void toggle2D3D() {
 		var config = sceneConfig();
 		Ufx.toggle(PacManGames3dApp.PY_3D_ENABLED);
-		if (config.gameScene("play") == currentGameScene || config.gameScene("play3D") == currentGameScene) {
+		if (config.get("play") == currentGameScene || config.get("play3D") == currentGameScene) {
 			updateOrReloadGameScene(true);
 			gamePage.onGameSceneChanged();
 			currentGameScene().onSceneVariantSwitch();
@@ -139,7 +139,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected void setGameScene(GameScene newGameScene) {
 		super.setGameScene(newGameScene);
 		var config = sceneConfig();
-		if (newGameScene == config.gameScene("play3D")) {
+		if (newGameScene == config.get("play3D")) {
 			gamePage3D().pip().setGameSceneContext(newGameScene.context());
 		}
 	}

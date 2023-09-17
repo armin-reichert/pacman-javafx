@@ -22,7 +22,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
@@ -50,7 +49,7 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
  */
 public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSceneContext {
 
-	protected final Map<GameVariant, GameSceneConfig> gameScenes = new EnumMap<>(GameVariant.class);
+	protected final Map<GameVariant, Map<String, GameScene>> gameScenes = new EnumMap<>(GameVariant.class);
 	protected GameClock clock;
 	protected Theme theme;
 	protected Stage stage;
@@ -62,7 +61,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected Page currentPage;
 
 	public PacManGames2dUI(Stage stage, Settings settings, Theme theme,
-												 GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
+												 Map<String, GameScene> gameScenesMsPacMan, Map<String, GameScene> gameScenesPacMan) {
 		checkNotNull(stage);
 		checkNotNull(settings);
 		checkNotNull(theme);
@@ -116,17 +115,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		startPage.setPlayButtonAction(this::showGamePage);
 		startPage.setOnKeyPressed(e -> {
 			switch (e.getCode()) {
-				case ENTER:	case SPACE:
-					showGamePage();
-					break;
-				case V:
-					switchGameVariant();
-					break;
-				case F11:
-					stage.setFullScreen(true);
-					break;
-				default:
-					break;
+				case ENTER, SPACE -> showGamePage();
+				case V            -> switchGameVariant();
+				case F11          -> stage.setFullScreen(true);
+				default           -> {}
 			}
 		});
 	}
@@ -182,14 +174,14 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	protected GameScene sceneMatchingCurrentGameState() {
 		var config = sceneConfig();
-		switch (GameController.it().state()) {
-		case BOOT:              return config.gameScene("boot");
-		case CREDIT:	          return config.gameScene("credit");
-		case INTRO:	            return config.gameScene("intro");
-		case INTERMISSION:      return config.gameScene("cut" + game().level().get().intermissionNumber);
-		case INTERMISSION_TEST: return config.gameScene("cut" + GameController.it().intermissionTestNumber);
-		default:                return config.gameScene("play");
-		}
+		return switch (GameController.it().state()) {
+			case BOOT              -> config.get("boot");
+			case CREDIT            -> config.get("credit");
+			case INTRO             -> config.get("intro");
+			case INTERMISSION      -> config.get("cut" + game().level().get().intermissionNumber);
+			case INTERMISSION_TEST -> config.get("cut" + GameController.it().intermissionTestNumber);
+			default                -> config.get("play");
+		};
 	}
 
 	protected void updateOrReloadGameScene(boolean reload) {
@@ -207,7 +199,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		var prevGameScene = currentGameScene;
 		if (prevGameScene != null) {
 			prevGameScene.end();
-			if (prevGameScene != sceneConfig().gameScene("boot")) {
+			if (prevGameScene != sceneConfig().get("boot")) {
 				soundHandler.stopVoice();
 			}
 		}
@@ -258,7 +250,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		return GameController.it().game();
 	}
 
-	public GameSceneConfig sceneConfig() {
+	public Map<String, GameScene> sceneConfig() {
 		return gameScenes.get(game().variant());
 	}
 
@@ -290,22 +282,19 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		// Found no better point in time to create and assign the sprite animations to the guys
 		e.game.level().ifPresent(level -> {
 			switch (e.game.variant()) {
-			case MS_PACMAN: {
+			case MS_PACMAN -> {
 				var ss = (SpritesheetMsPacManGame) spritesheet();
 				level.pac().setAnimations(new PacAnimationsMsPacManGame(level.pac(), ss));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss)));
 				Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
-				break;
 			}
-			case PACMAN: {
+			case PACMAN -> {
 				var ss = (SpritesheetPacManGame) spritesheet();
 				level.pac().setAnimations(new PacAnimationsPacManGame(level.pac(), ss));
 				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
 				Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
-				break;
 			}
-			default:
-				throw new IllegalGameVariantException(e.game.variant());
+			default -> throw new IllegalGameVariantException(e.game.variant());
 			}
 		});
 		updateOrReloadGameScene(true);

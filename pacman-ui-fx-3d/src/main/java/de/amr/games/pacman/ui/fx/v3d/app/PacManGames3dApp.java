@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
-import de.amr.games.pacman.ui.fx.scene.GameSceneConfig;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -32,6 +32,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
@@ -227,27 +228,25 @@ public class PacManGames3dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		var gameScenesMsPacMan = new GameSceneConfig(
-			new BootScene(),
-			new MsPacManIntroScene(),
-			new MsPacManCreditScene(),
-			new PlayScene2D(),
-			new MsPacManCutscene1(),
-			new MsPacManCutscene2(),
-			new MsPacManCutscene3()
-		);
-		gameScenesMsPacMan.setGameScene("play3D", new PlayScene3D());
+		var gameScenesMsPacMan = new HashMap<String, GameScene>();
+		gameScenesMsPacMan.put("boot",   new BootScene());
+		gameScenesMsPacMan.put("intro",  new MsPacManIntroScene());
+		gameScenesMsPacMan.put("credit", new MsPacManCreditScene());
+		gameScenesMsPacMan.put("play",   new PlayScene2D());
+		gameScenesMsPacMan.put("play3D", new PlayScene3D());
+		gameScenesMsPacMan.put("cut1",   new MsPacManCutscene1());
+		gameScenesMsPacMan.put("cut2",   new MsPacManCutscene2());
+		gameScenesMsPacMan.put("cut3",   new MsPacManCutscene3());
 
-		var gameScenesPacMan = new GameSceneConfig(
-			new BootScene(),
-			new PacManIntroScene(),
-			new PacManCreditScene(),
-			new PlayScene2D(),
-			new PacManCutscene1(),
-			new PacManCutscene2(),
-			new PacManCutscene3()
-		);
-		gameScenesPacMan.setGameScene("play3D", new PlayScene3D());
+		var gameScenesPacMan = new HashMap<String, GameScene>();
+		gameScenesPacMan.put("boot",   new BootScene());
+		gameScenesPacMan.put("intro",  new PacManIntroScene());
+		gameScenesPacMan.put("credit", new PacManCreditScene());
+		gameScenesPacMan.put("play",   new PlayScene2D());
+		gameScenesPacMan.put("play3D", new PlayScene3D());
+		gameScenesPacMan.put("cut1",   new PacManCutscene1());
+		gameScenesPacMan.put("cut2",   new PacManCutscene2());
+		gameScenesPacMan.put("cut3",   new PacManCutscene3());
 
 		ui = new PacManGames3dUI(stage, settings, createTheme(), gameScenesMsPacMan, gameScenesPacMan);
 		Logger.info("UI created: {} Theme: {}", ui.getClass().getSimpleName(), ui.theme());
