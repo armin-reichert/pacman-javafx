@@ -232,21 +232,23 @@ public class PacManGames3dApp extends Application {
 			new MsPacManIntroScene(),
 			new MsPacManCreditScene(),
 			new PlayScene2D(),
-			new PlayScene3D(),
 			new MsPacManCutscene1(),
 			new MsPacManCutscene2(),
 			new MsPacManCutscene3()
 		);
+		gameScenesMsPacMan.setGameScene("play3D", new PlayScene3D());
+
 		var gameScenesPacMan = new GameSceneConfig(
 			new BootScene(),
 			new PacManIntroScene(),
 			new PacManCreditScene(),
 			new PlayScene2D(),
-			new PlayScene3D(),
 			new PacManCutscene1(),
 			new PacManCutscene2(),
 			new PacManCutscene3()
 		);
+		gameScenesPacMan.setGameScene("play3D", new PlayScene3D());
+
 		ui = new PacManGames3dUI(stage, settings, createTheme(), gameScenesMsPacMan, gameScenesPacMan);
 		Logger.info("UI created: {} Theme: {}", ui.getClass().getSimpleName(), ui.theme());
 		ui.showStartPage();

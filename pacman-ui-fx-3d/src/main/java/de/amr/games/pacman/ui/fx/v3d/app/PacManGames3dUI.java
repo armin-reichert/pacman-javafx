@@ -44,10 +44,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 												 GameSceneConfig gameScenesMsPacMan, GameSceneConfig gameScenesPacMan) {
 		super(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
 
-		if (gameScenesMsPacMan.playScene3D() instanceof PlayScene3D playScene3D) {
+		if (gameScenesMsPacMan.gameScene("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
 		}
-		if (gameScenesPacMan.playScene3D() instanceof PlayScene3D playScene3D) {
+		if (gameScenesPacMan.gameScene("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
 		}
 	}
@@ -114,9 +114,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
 		var config = sceneConfig();
+		var playScene2D = config.gameScene("play");
+		var playScene3D = config.gameScene("play3D");
 		var scene = super.sceneMatchingCurrentGameState();
-		if (PacManGames3dApp.PY_3D_ENABLED.get() && scene == config.playScene() && config.playScene3D() != null) {
-			return config.playScene3D();
+		if (scene == playScene2D && PacManGames3dApp.PY_3D_ENABLED.get() && playScene3D != null) {
+			return playScene3D;
 		}
 		return scene;
 	}
@@ -124,7 +126,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	public void toggle2D3D() {
 		var config = sceneConfig();
 		Ufx.toggle(PacManGames3dApp.PY_3D_ENABLED);
-		if (config.playScene() == currentGameScene || config.playScene3D() == currentGameScene) {
+		if (config.gameScene("play") == currentGameScene || config.gameScene("play3D") == currentGameScene) {
 			updateOrReloadGameScene(true);
 			gamePage.onGameSceneChanged();
 			currentGameScene().onSceneVariantSwitch();
@@ -138,7 +140,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		super.setGameScene(newGameScene);
 		if (newGameScene.is3D()) {
 			var config = sceneConfig();
-			gamePage3D().pip().setMaster((PlayScene3D) config.playScene3D());
+			gamePage3D().pip().setMaster(config.gameScene("play3D"));
 		}
 	}
 
