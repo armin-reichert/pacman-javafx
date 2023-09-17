@@ -332,18 +332,18 @@ public class PlayScene3D implements GameScene {
 		}
 
 		case GHOST_DYING -> {
-			game().level().map(GameLevel::memo).ifPresent(memo -> {
+			game().level().map(GameLevel::thisFrame).ifPresent(thisFrame -> {
 				switch (game().variant()) {
 				case MS_PACMAN -> {
 					var ss = (SpritesheetMsPacManGame) context.spritesheet();
-					memo.killedGhosts.forEach(ghost -> {
+					thisFrame.killedGhosts.forEach(ghost -> {
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 					});
 				}
 				case PACMAN -> {
 					var ss = (SpritesheetPacManGame) context.spritesheet();
-					memo.killedGhosts.forEach(ghost -> {
+					thisFrame.killedGhosts.forEach(ghost -> {
 						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 					});
@@ -472,7 +472,7 @@ public class PlayScene3D implements GameScene {
 			if (level.pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
 				clip("audio.pacman_munch").stop();
 			}
-			if (!level.memo().pacKilled && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
+			if (!level.thisFrame().pacKilled && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 					.anyMatch(Ghost::isVisible)) {
 				context.soundHandler().ensureLoopEndless(clip("audio.ghost_returning"));
 			} else {
