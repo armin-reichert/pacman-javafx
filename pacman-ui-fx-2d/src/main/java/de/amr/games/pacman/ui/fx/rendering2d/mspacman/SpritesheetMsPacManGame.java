@@ -68,16 +68,6 @@ public class SpritesheetMsPacManGame implements Spritesheet {
 		return sprite(3 + symbol, 1);
 	}
 
-	public Rectangle2D bonusSprite(Bonus bonus) {
-		if (bonus.state() == Bonus.STATE_EDIBLE) {
-			return bonusSymbolSprite(bonus.symbol());
-		}
-		if (bonus.state() == Bonus.STATE_EATEN) {
-			return bonusValueSprite(bonus.symbol());
-		}
-		return null;
-	}
-
 	public Rectangle2D livesCounterSprite() {
 		return sprite(1, 0);
 	}

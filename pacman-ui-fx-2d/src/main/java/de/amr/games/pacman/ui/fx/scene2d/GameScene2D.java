@@ -219,27 +219,30 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawBonus(Bonus bonus) {
-		Rectangle2D sprite = null;
 		switch (game().variant()) {
 			case MS_PACMAN -> {
 				var ss = (SpritesheetMsPacManGame) context.spritesheet();
-				sprite = ss.bonusSprite(bonus);
+				if (bonus instanceof MovingBonus movingBonus) {
+					//TODO reconsider this way of implementing the jumping bonus
+					g.save();
+					g.translate(0, movingBonus.dy());
+					if (bonus.state() == Bonus.STATE_EDIBLE) {
+						drawEntitySprite(bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+					} else if (bonus.state() == Bonus.STATE_EATEN) {
+						drawEntitySprite(bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
+					}
+					g.restore();
+				}
 			}
 			case PACMAN -> {
 				var ss = (SpritesheetPacManGame) context.spritesheet();
-				sprite = ss.bonusSprite(bonus);
+				if (bonus.state() == Bonus.STATE_EDIBLE) {
+					drawEntitySprite(bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+				} else if (bonus.state() == Bonus.STATE_EATEN) {
+					drawEntitySprite(bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
+				}
 			}
 			default -> throw new IllegalGameVariantException(game().variant());
-		}
-		if (bonus instanceof MovingBonus) {
-			var movingBonus = (MovingBonus) bonus;
-			g.save();
-			//TODO reconsider this
-			g.translate(0, movingBonus.dy());
-			drawEntitySprite(movingBonus.entity(), sprite);
-			g.restore();
-		} else {
-			drawEntitySprite(bonus.entity(), sprite);
 		}
 	}
 
