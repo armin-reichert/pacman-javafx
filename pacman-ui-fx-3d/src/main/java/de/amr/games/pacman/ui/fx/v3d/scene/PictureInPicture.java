@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
@@ -24,7 +25,9 @@ public class PictureInPicture {
 	private final PlayScene2D playScene2D;
 
 	public PictureInPicture() {
-		var canvas = new Canvas(heightPy.get() * 28 / 36, heightPy.get());
+		double h = heightPy.doubleValue();
+		double aspectRatio = (double) ArcadeWorld.TILES_X / ArcadeWorld.TILES_Y;
+		var canvas = new Canvas(h * aspectRatio, h);
 		playScene2D = new PlayScene2D();
 		playScene2D.setCanvas(canvas);
 		playScene2D.setScoreVisible(true);
