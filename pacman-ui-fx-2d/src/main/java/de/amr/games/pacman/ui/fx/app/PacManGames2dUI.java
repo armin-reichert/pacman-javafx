@@ -183,18 +183,12 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected GameScene sceneMatchingCurrentGameState() {
 		var config = sceneConfig();
 		switch (GameController.it().state()) {
-		case BOOT:
-			return config.bootScene();
-		case CREDIT:
-			return config.creditScene();
-		case INTRO:
-			return config.introScene();
-		case INTERMISSION:
-			return config.cutScene(game().level().get().intermissionNumber);
-		case INTERMISSION_TEST:
-			return config.cutScene(GameController.it().intermissionTestNumber);
-		default:
-			return config.playScene();
+		case BOOT:              return config.gameScene("boot");
+		case CREDIT:	          return config.gameScene("credit");
+		case INTRO:	            return config.gameScene("intro");
+		case INTERMISSION:      return config.gameScene("cut" + game().level().get().intermissionNumber);
+		case INTERMISSION_TEST: return config.gameScene("cut" + GameController.it().intermissionTestNumber);
+		default:                return config.gameScene("play");
 		}
 	}
 
@@ -213,7 +207,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		var prevGameScene = currentGameScene;
 		if (prevGameScene != null) {
 			prevGameScene.end();
-			if (prevGameScene != sceneConfig().bootScene()) {
+			if (prevGameScene != sceneConfig().gameScene("boot")) {
 				soundHandler.stopVoice();
 			}
 		}

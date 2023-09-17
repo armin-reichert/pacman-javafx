@@ -87,7 +87,6 @@ public class PacManGames2dApp extends Application {
 			new MsPacManIntroScene(),
 			new MsPacManCreditScene(),
 			new PlayScene2D(),
-			null,
 			new MsPacManCutscene1(),
 			new MsPacManCutscene2(),
 			new MsPacManCutscene3()
@@ -97,7 +96,6 @@ public class PacManGames2dApp extends Application {
 			new PacManIntroScene(),
 			new PacManCreditScene(),
 			new PlayScene2D(),
-			null,
 			new PacManCutscene1(),
 			new PacManCutscene2(),
 			new PacManCutscene3()

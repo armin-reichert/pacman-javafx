@@ -94,7 +94,7 @@ public class GamePage implements Page {
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(ui.sceneConfig().bootScene() != ui.currentGameScene());
+		helpButton.setVisible(ui.sceneConfig().gameScene("boot") != ui.currentGameScene());
 	}
 
 	protected void showHelpMenu() {
@@ -170,12 +170,12 @@ public class GamePage implements Page {
 			gameScene2D.setCanvas(canvas);
 		}
 		resize(scaling, true);
-		if (ui.currentGameScene() == ui.sceneConfig().playScene()) {
+		if (ui.currentGameScene() == ui.sceneConfig().gameScene("play")) {
 			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 		} else {
 			layers.removeEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 		}
-		if (ui.currentGameScene() == ui.sceneConfig().introScene()) {
+		if (ui.currentGameScene() == ui.sceneConfig().gameScene("intro")) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();
