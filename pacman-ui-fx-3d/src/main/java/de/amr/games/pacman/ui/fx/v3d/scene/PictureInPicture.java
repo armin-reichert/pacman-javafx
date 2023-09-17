@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
 import javafx.beans.property.DoubleProperty;
@@ -21,7 +22,6 @@ public class PictureInPicture {
 	public final DoubleProperty heightPy = new SimpleDoubleProperty(PacManGames3dApp.PIP_MIN_HEIGHT);
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 	private final PlayScene2D playScene2D;
-	private PlayScene3D master;
 
 	public PictureInPicture() {
 		var canvas = new Canvas(heightPy.get() * 28 / 36, heightPy.get());
@@ -39,10 +39,9 @@ public class PictureInPicture {
 		});
 	}
 
-	public void setMaster(PlayScene3D master) {
-		Globals.checkNotNull(master);
-		this.master = master;
-		playScene2D.setContext(master.context());
+	public void setGameSceneContext(GameSceneContext context) {
+		Globals.checkNotNull(context);
+		playScene2D.setContext(context);
 	}
 
 	public Node root() {
