@@ -177,14 +177,13 @@ public class PlayScene2D extends GameScene2D {
 		if (level.isDemoLevel()) {
 			return;
 		}
-		var gameVariant = level.game().variant();
 		if (level.pac().starvingTicks() > 8) { // TODO not sure
-			context.soundHandler().audioClip(gameVariant, "audio.pacman_munch").stop();
+			context.clip("audio.pacman_munch").stop();
 		}
 		if (!level.thisFrame().pacKilled && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-			context.soundHandler().ensureLoopEndless(context.soundHandler().audioClip(gameVariant, "audio.ghost_returning"));
+			context.soundHandler().ensureLoopEndless(context.clip("audio.ghost_returning"));
 		} else {
-			context.soundHandler().audioClip(gameVariant, "audio.ghost_returning").stop();
+			context.clip("audio.ghost_returning").stop();
 		}
 	}
 }
