@@ -165,21 +165,26 @@ public class GamePage implements Page {
 	}
 
 	public void onGameSceneChanged() {
+		var config = ui.sceneConfig();
+		// if play scene gets active/inactive, add/remove key handler
+		if (GameController.it().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
+			if (ui.currentGameScene() == config.get("play")) {
+				layers.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+			} else {
+				layers.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+			}
+		}
+		// if intro scene gets active/inactive, show/hide signature
+		if (ui.currentGameScene() == config.get("intro")) {
+			signature.showAfterSeconds(3);
+		} else {
+			signature.hide();
+		}
 		if (ui.currentGameScene() instanceof GameScene2D) {
 			GameScene2D gameScene2D = (GameScene2D) ui.currentGameScene();
 			gameScene2D.setCanvas(canvas);
 		}
 		resize(scaling, true);
-		if (ui.currentGameScene() == ui.sceneConfig().get("play")) {
-			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
-		} else {
-			layers.removeEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
-		}
-		if (ui.currentGameScene() == ui.sceneConfig().get("intro")) {
-			signature.showAfterSeconds(3);
-		} else {
-			signature.hide();
-		}
 	}
 
 	protected void updateSignatureSizeAndPosition() {
