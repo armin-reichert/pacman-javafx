@@ -6,34 +6,27 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx.app.ActionHandler;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
-import de.amr.games.pacman.ui.fx.app.SoundHandler;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
@@ -205,7 +198,7 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		var x = TS * 2;
-		var y = TS * (ArcadeWorld.TILES_Y - 2);
+		var y = TS * (GameModel.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			drawSprite(livesCounterSprite(game().variant()), x + TS * (2 * i), y);

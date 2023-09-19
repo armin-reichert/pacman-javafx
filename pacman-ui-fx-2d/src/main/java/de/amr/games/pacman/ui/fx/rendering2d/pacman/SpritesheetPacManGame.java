@@ -5,9 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d.pacman;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import javafx.geometry.Rectangle2D;

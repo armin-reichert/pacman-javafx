@@ -10,12 +10,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.app.ActionHandler;
-import de.amr.games.pacman.ui.fx.app.SoundHandler;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 
 import java.util.Optional;
 

@@ -5,9 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.app;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
@@ -35,6 +34,7 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
 
@@ -46,11 +46,11 @@ public class PacManGames3dApp extends Application {
 	public static final ResourceManager MGR  = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3dApp.class);
 	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 
-	public static final float           PIP_MIN_HEIGHT           = 0.75f * ArcadeWorld.TILES_Y * Globals.TS;
-	public static final float           PIP_MAX_HEIGHT           = 2.00f * ArcadeWorld.TILES_Y * Globals.TS;
+	public static final float           PIP_MIN_HEIGHT           = 0.75f * GameModel.TILES_Y * TS;
+	public static final float           PIP_MAX_HEIGHT           = 2.00f * GameModel.TILES_Y * TS;
 
 	public static final DoubleProperty  PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
-	public static final DoubleProperty  PY_PIP_HEIGHT            = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * Globals.TS);
+	public static final DoubleProperty  PY_PIP_HEIGHT            = new SimpleDoubleProperty(GameModel.TILES_Y * TS);
 	public static final BooleanProperty PY_PIP_ON                = new SimpleBooleanProperty(false);
 
 	public static final IntegerProperty PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);

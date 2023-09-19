@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.app;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.*;
@@ -32,8 +32,8 @@ public class PacManGames2dApp extends Application {
 	public static final ResourceManager MGR  = new ResourceManager("/de/amr/games/pacman/ui/fx/", PacManGames2dApp.class);
 	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
 
-	public static final int CANVAS_WIDTH_UNSCALED  = ArcadeWorld.TILES_X * Globals.TS; // 224
-	public static final int CANVAS_HEIGHT_UNSCALED = ArcadeWorld.TILES_Y * Globals.TS; // 288
+	public static final int CANVAS_WIDTH_UNSCALED  = GameModel.TILES_X * Globals.TS; // 224
+	public static final int CANVAS_HEIGHT_UNSCALED = GameModel.TILES_Y * Globals.TS; // 288
 
 	public static final BooleanProperty PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);
 
