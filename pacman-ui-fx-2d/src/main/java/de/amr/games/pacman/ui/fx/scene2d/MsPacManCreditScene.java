@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 
 import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
@@ -38,7 +39,7 @@ public class MsPacManCreditScene extends GameScene2D {
 		var ss = (SpritesheetMsPacManGame) context.spritesheet();
 		var font6 = sceneFont(6); // TODO looks bad
 		var font8 = sceneFont(8);
-		var color = context.theme().color("palette.orange");
+		var color = ArcadeTheme.PALETTE_ORANGE;
 		drawText("PUSH START BUTTON", color, font8, t(6), t(16));
 		drawText("1 PLAYER ONLY", color, font8, t(8), t(18));
 		drawText("ADDITIONAL    AT 10000", color, font8, t(2), t(25));

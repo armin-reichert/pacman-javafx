@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -158,10 +159,10 @@ public abstract class GameScene2D implements GameScene {
 		var theme = context.theme();
 		var pointsText = String.format("%02d", score.points());
 		var font = sceneFont(8);
-		drawText(title, theme.color("palette.pale"), font, x, y);
-		drawText(String.format("%7s", pointsText), theme.color("palette.pale"), font, x, y + TS + 1);
+		drawText(title, ArcadeTheme.PALETTE_PALE, font, x, y);
+		drawText(String.format("%7s", pointsText), ArcadeTheme.PALETTE_PALE, font, x, y + TS + 1);
 		if (score.points() != 0) {
-			drawText("L" + score.levelNumber(), theme.color("palette.pale"), font,x + t(8),y + TS + 1);
+			drawText("L" + score.levelNumber(), ArcadeTheme.PALETTE_PALE, font,x + t(8),y + TS + 1);
 		}
 	}
 
@@ -206,7 +207,7 @@ public abstract class GameScene2D implements GameScene {
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
 		if (excessLives > 0) {
-			drawText("+" + excessLives, context.theme().color("palette.yellow"),
+			drawText("+" + excessLives, ArcadeTheme.PALETTE_YELLOW,
 					Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
 		}
 	}
@@ -346,17 +347,17 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
- 		drawText(String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
+ 		drawText(String.format("CREDIT %2d", credit), ArcadeTheme.PALETTE_PALE, sceneFont(8), x, y);
 	}
 
 	protected void drawMidwayCopyright(double x, double y) {
-		drawText("© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
+		drawText("© 1980 MIDWAY MFG.CO.", ArcadeTheme.PALETTE_PINK, sceneFont(8), x, y);
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
 		Image logo = context.theme().get("mspacman.logo.midway");
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
-		g.setFill(context.theme().color("palette.red"));
+		g.setFill(ArcadeTheme.PALETTE_RED);
 		g.setFont(sceneFont(8));
 		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
@@ -370,10 +371,10 @@ public abstract class GameScene2D implements GameScene {
 			var sprite = ss.clapperboardSprites()[spriteIndex];
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont(8));
-			g.setFill(context.theme().color("palette.pale").darker());
+			g.setFill(ArcadeTheme.PALETTE_PALE.darker());
 			var numberX = s(x + sprite.getWidth() - 25);
 			var numberY = s(y + 18);
-			g.setFill(context.theme().color("palette.pale"));
+			g.setFill(ArcadeTheme.PALETTE_PALE);
 			g.fillText(animation.number(), numberX, numberY);
 			var textX = s(x + sprite.getWidth());
 			g.fillText(animation.text(), textX, numberY);
@@ -387,7 +388,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawTileGrid(int tilesX, int tilesY) {
-		g.setStroke(context.theme().color("palette.pale"));
+		g.setStroke(ArcadeTheme.PALETTE_PALE);
 		g.setLineWidth(0.2);
 		for (int row = 0; row <= tilesY; ++row) {
 			g.strokeLine(0, s(TS * (row)), s(tilesX * TS), s(TS * (row)));

@@ -15,23 +15,23 @@ import javafx.scene.paint.Color;
  */
 public class ArcadeTheme extends Theme {
 
+	public static final Color PALETTE_RED    = Color.rgb(255, 0, 0);
+	public static final Color PALETTE_YELLOW = Color.rgb(255, 255, 0);
+	public static final Color PALETTE_PINK   = Color.rgb(252, 181, 255);
+	public static final Color PALETTE_CYAN   = Color.rgb(0, 255, 255);
+	public static final Color PALETTE_ORANGE = Color.rgb(251, 190, 88);
+	public static final Color PALETTE_BLUE   = Color.rgb(33, 33, 255);
+	public static final Color PALETTE_PALE   = Color.rgb(222, 222, 255);
+	public static final Color PALETTE_ROSE   = Color.rgb(252, 187, 179);
+
 	public ArcadeTheme(ResourceManager rm) {
 
 		// Common to both games
 
-		set("palette.red",                     Color.rgb(255, 0, 0));
-		set("palette.yellow",                  Color.rgb(255, 255, 0));
-		set("palette.pink",                    Color.rgb(252, 181, 255));
-		set("palette.cyan",                    Color.rgb(0, 255, 255));
-		set("palette.orange",                  Color.rgb(251, 190, 88));
-		set("palette.blue",                    Color.rgb(33, 33, 255));
-		set("palette.pale",                    Color.rgb(222, 222, 255));
-		set("palette.rose",                    Color.rgb(252, 187, 179));
-
-		set("ghost.0.color",                   get("palette.red"));
-		set("ghost.1.color",                   get("palette.pink"));
-		set("ghost.2.color",                   get("palette.cyan"));
-		set("ghost.3.color",                   get("palette.orange"));
+		set("ghost.0.color",                   PALETTE_RED);
+		set("ghost.1.color",                   PALETTE_PINK);
+		set("ghost.2.color",                   PALETTE_CYAN);
+		set("ghost.3.color",                   PALETTE_ORANGE);
 
 		set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
 		set("startpage.button.color",          Color.WHITE);
@@ -113,6 +113,5 @@ public class ArcadeTheme extends Theme {
 		set("pacman.audio.siren.3",            rm.audioClip("sound/pacman/siren_3.mp3"));
 		set("pacman.audio.siren.4",            rm.audioClip("sound/pacman/siren_4.mp3"));
 		set("pacman.audio.sweep",              rm.audioClip("sound/common/sweep.mp3"));
-
 	}
 }
