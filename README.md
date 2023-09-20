@@ -35,9 +35,9 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 
 ### Build everything in one step
 - `cd <repository-root>\pacman-javafx`
-- build.bat  
+- `build.bat`  
 
-or build separately
+or build separately:
 
 ### Build core game (model and logic)
 - `cd <repository-root>\pacman-basic\pacman-core`
