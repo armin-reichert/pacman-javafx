@@ -33,7 +33,7 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 - `git clone https://github.com/armin-reichert/pacman-basic.git`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
-### Build everything in one step
+### Build all Windows executables in one step
 - `cd <repository-root>\pacman-javafx`
 - `build.bat`  
 
