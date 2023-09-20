@@ -28,16 +28,22 @@ Otherwise run the installer and double-click the new desktop icon(s).
 
 You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) installed and ensure that this version is used by the following build steps.
 
-1. Clone repositories (only first time)
+### Clone repositories (only first time)
 - `cd <repository-root>`
 - `git clone https://github.com/armin-reichert/pacman-basic.git`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
-2. Build core game (model and logic)
+### Build everything in one step
+- `cd <repository-root>\pacman-javafx`
+- build.bat  
+
+or build separately
+
+### Build core game (model and logic)
 - `cd <repository-root>\pacman-basic\pacman-core`
 - `mvn clean install` (builds game model and logic and runs unit tests)
 
-2. Build JavaFX user interface variants
+### Build JavaFX user interface variants
 - `cd <repository-root>\pacman-javafx\pacman-ui-fx-2d`
 - `mvn install -Djavafx.platform=win` or `mvn install -P build-for-windows` (builds Windows executables of 2D game) 
 - `mvn install -Djavafx.platform=linux`  or `mvn install -P build-for-linux` (builds Linux executables of 2D game)
