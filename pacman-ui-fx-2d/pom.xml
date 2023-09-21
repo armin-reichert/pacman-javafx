@@ -11,7 +11,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.source>17</maven.compiler.source>
-		<exec.mainClass>de.amr.games.pacman.ui.fx.app.Main</exec.mainClass>
+		<exec.mainClass>de.amr.games.pacman.ui.fx/de.amr.games.pacman.ui.fx.app.Main</exec.mainClass>
 		<vs.java>17</vs.java>
 		<vs.javafx>17.0.8</vs.javafx>
 		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>

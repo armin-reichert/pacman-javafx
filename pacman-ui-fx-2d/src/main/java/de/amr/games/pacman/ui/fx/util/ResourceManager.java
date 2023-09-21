@@ -15,6 +15,7 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -93,10 +94,14 @@ public class ResourceManager {
 	 */
 	public URL url(String path) {
 		checkNotNull(path);
-		if (path.startsWith("/")) {
-			return callerClass.getResource(path);
+		var completePath = path.startsWith("/") ? path : rootDir + path;
+		URL url = callerClass.getResource(completePath);
+		if (url == null) {
+			throw new MissingResourceException(
+					String.format("Resource '%s' not found for class '%s'", completePath, callerClass),
+					callerClass.getName(), completePath);
 		}
-		return callerClass.getResource(rootDir + path);
+		return url;
 	}
 
 	/**

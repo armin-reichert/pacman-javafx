@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-open module de.amr.games.pacman.ui.fx3d {
+module de.amr.games.pacman.ui.fx3d {
 
 	requires javafx.graphics;
 	requires transitive javafx.controls;
@@ -17,4 +17,10 @@ open module de.amr.games.pacman.ui.fx3d {
 	exports de.amr.games.pacman.ui.fx.v3d.entity;
 	exports de.amr.games.pacman.ui.fx.v3d.model;
 	exports de.amr.games.pacman.ui.fx.v3d.scene;
+
+	// give access for loading module (non-class) resources, see Class.getResource()
+	opens de.amr.games.pacman.ui.fx.v3d.graphics;
+	opens de.amr.games.pacman.ui.fx.v3d.graphics.icons;
+	opens de.amr.games.pacman.ui.fx.v3d.graphics.textures;
+	opens de.amr.games.pacman.ui.fx.v3d.model3D;
 }
