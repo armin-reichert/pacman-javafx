@@ -30,18 +30,14 @@ public class ResourceManager {
 	 * resource bundle.
 	 * 
 	 * @param bundle	resource bundle
-	 * @param key 		resource bundle key
-	 * @param args		arguments merged into key pattern
-	 * @return localized text or string indicating missing text
+	 * @param key 		key in resource bundle
+	 * @param args		optional arguments merged into the message (if pattern)
+	 * @return localized text with arguments merged or a string indicating a missing text
 	 */
 	public static String message(ResourceBundle bundle, String key, Object... args) {
-		try {
-			var pattern = bundle.getString(key);
-			return MessageFormat.format(pattern, args);
-		} catch (Exception x) {
-			Logger.error("No text resource found for key '{}'", key);
-			return String.format("noresfound{%s}", key);
-		}
+		checkNotNull(bundle);
+		checkNotNull(key);
+		return MessageFormat.format(bundle.getString(key), args);
 	}
 
 	public static Background coloredBackground(Color color) {
@@ -55,11 +51,13 @@ public class ResourceManager {
 	}
 
 	public static Border roundedBorder(Color color, double cornerRadius, double width) {
+		checkNotNull(color);
 		return new Border(
 				new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
 	}
 
 	public static Border border(Color color, double width) {
+		checkNotNull(color);
 		return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
 	}
 
@@ -86,8 +84,8 @@ public class ResourceManager {
 	}
 
 	/**
-	 * Creates an URL from a resource path. If the path does not start with a slash, the path to the asset root directory
-	 * is prepended.
+	 * Creates a URL from a resource path. If the path does not start with a slash, the path to the resource
+	 * root directory is prepended.
 	 * 
 	 * @param path path of resource
 	 * @return URL of resource addressed by this path
@@ -109,7 +107,8 @@ public class ResourceManager {
 	 * @return audio clip from resource addressed by this path
 	 */
 	public AudioClip audioClip(String relPath) {
-		return new AudioClip(url(relPath).toExternalForm());
+		var url = url(relPath);
+		return new AudioClip(url.toExternalForm());
 	}
 
 	/**
@@ -131,7 +130,7 @@ public class ResourceManager {
 	}
 
 	/**
-	 * @param relPath relative path (without leading slash) starting from resource root directory
+	 * @param relPath relative path to image (without leading slash) starting from resource root directory
 	 * @return image loaded from resource addressed by this path.
 	 */
 	public Image image(String relPath) {
@@ -140,20 +139,21 @@ public class ResourceManager {
 	}
 
 	/**
-	 * @param relPath relative path (without leading slash) starting from resource root directory
-	 * @return background displaying image loaded from resource addressed by this path.
+	 * @param relPath relative path to image (without leading slash) starting from resource root directory
+	 * @return image background with default properties, see {@link BackgroundImage}
 	 */
 	public Background imageBackground(String relPath) {
-		return new Background(new BackgroundImage(image(relPath), null, null, null, null));
+		var image = image(relPath);
+		return new Background(new BackgroundImage(image, null, null, null, null));
 	}
 
 	/**
-	 * @param relPath relative path (without leading slash) starting from resource root directory
-	 * @return background displaying image loaded from resource addressed by this path.
+	 * @param relPath relative path to image (without leading slash) starting from resource root directory
+	 * @return image background with specified attributes
 	 */
 	public Background imageBackground(String relPath, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
 			BackgroundPosition position, BackgroundSize size) {
-		return new Background(new BackgroundImage(image(relPath), repeatX, repeatY, position, size));
+		var image = image(relPath);
+		return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
 	}
-
 }
