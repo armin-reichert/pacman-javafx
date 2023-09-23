@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.scene2d;
+package de.amr.games.pacman.ui.fx.util;
 
 import javafx.animation.Animation.Status;
 import javafx.animation.FadeTransition;
@@ -13,11 +13,11 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class GameSceneMenu extends BorderPane {
+public class FadingPane extends BorderPane {
 
 	private final FadeTransition fading;
 
-	public GameSceneMenu() {
+	public FadingPane() {
 		fading = new FadeTransition(Duration.seconds(0.5), this);
 		fading.setFromValue(1);
 		fading.setToValue(0);
@@ -28,9 +28,9 @@ public class GameSceneMenu extends BorderPane {
 	}
 
 	/**
-	 * Makes the menu visible for given duration and then plays the close animation.
+	 * Makes the pane visible for given duration and then plays the fading animation.
 	 * 
-	 * @param fadingDelay duration before menu starts fading out
+	 * @param fadingDelay duration before pane starts fading out
 	 */
 	public void show(Duration fadingDelay) {
 		if (fading.getStatus() == Status.RUNNING) {

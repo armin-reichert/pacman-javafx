@@ -12,7 +12,7 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.HelpButton;
-import de.amr.games.pacman.ui.fx.scene2d.GameSceneMenu;
+import de.amr.games.pacman.ui.fx.util.FadingPane;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -55,7 +55,7 @@ public class GamePage implements Page {
 	protected final BorderPane canvasContainer = new BorderPane();
 	protected final Canvas canvas = new Canvas();
 	protected final Pane popupLayer = new Pane();
-	protected final GameSceneMenu helpMenu = new GameSceneMenu();
+	protected final FadingPane helpMenu = new FadingPane();
 	protected final HelpButton helpButton = new HelpButton();
 	protected final Signature signature = new Signature();
 
@@ -104,7 +104,6 @@ public class GamePage implements Page {
 	}
 
 	protected void showHelpMenu() {
-		menuFont = theme.font("font.monospaced", Math.max(6, 14 * scaling));
 		currentHelpMenuContent().ifPresent(content -> {
 			helpMenu.setTranslateX(10 * scaling);
 			helpMenu.setTranslateY(30 * scaling);
@@ -270,11 +269,10 @@ public class GamePage implements Page {
 
 	// Menu stuff
 
-	private Font menuFont =	Font.font("Sans", 24);
-
 	private static class Menu {
 		private final List<Node> column0 = new ArrayList<>();
 		private final List<Node> column1 = new ArrayList<>();
+		private Font font =	Font.font("Sans", 24);
 
 		public void addRow(Node node0, Node node1) {
 			column0.add(node0);
@@ -284,115 +282,125 @@ public class GamePage implements Page {
 		public int size() {
 			return column0.size();
 		}
+
+		public void setFont(Font font) {
+			this.font = font;
+		}
+
+		private Label label(String s) {
+			var label = new Label(s);
+			label.setTextFill(Color.gray(0.9));
+			label.setFont(font);
+			return label;
+		}
+
+		private Text text(String s, Color color) {
+			var text = new Text(s);
+			text.setFill(color);
+			text.setFont(font);
+			return text;
+		}
+
+		private Text text(String s) {
+			return text(s, Color.YELLOW);
+		}
+
+		private void addEntry(String rbKey, String kbKey) {
+			addRow(label(tt(rbKey)), text("[" + kbKey + "]"));
+		}
+
+		private Pane createPane() {
+			var grid = new GridPane();
+			grid.setHgap(20);
+			grid.setVgap(10);
+			for (int row = 0; row < column0.size(); ++row) {
+				grid.add(column0.get(row), 0, row);
+				grid.add(column1.get(row), 1, row);
+			}
+			int rowIndex = size();
+			if (GameController.it().isAutoControlled()) {
+				var text = text(tt("help.autopilot_on"), Color.ORANGE);
+				GridPane.setColumnSpan(text, 2);
+				grid.add(text, 0, rowIndex++);
+			}
+			if (GameController.it().isImmune()) {
+				var text = text(tt("help.immunity_on"), Color.ORANGE);
+				GridPane.setColumnSpan(text, 2);
+				grid.add(text, 0, rowIndex++);
+			}
+
+			var pane = new BorderPane(grid);
+			pane.setPadding(new Insets(10));
+			var bgColor = GameController.it().game().variant() == GameVariant.MS_PACMAN
+					? Color.rgb(255, 0, 0, 0.8)
+					: Color.rgb(33, 33, 255, 0.8);
+			pane.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 10));
+			return pane;
+		}
 	}
 
+	private static String tt(String key) {
+		return PacManGames2dApp.TEXTS.getString(key);
+	}
 
 	private Optional<Pane> currentHelpMenuContent() {
 		var gameState = GameController.it().state();
 		var game = GameController.it().game();
+		var menuFont = theme.font("font.monospaced", Math.max(6, 14 * scaling));
 		if (gameState == GameState.INTRO) {
-			return Optional.of(menuIntro());
+			return Optional.of(menuIntro(menuFont));
 		}
 		if (gameState == GameState.CREDIT) {
-			return Optional.of(menuCredit());
+			return Optional.of(menuCredit(menuFont));
 		}
 		if (game.level().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			return game.level().get().isDemoLevel() ? Optional.of(menuDemoLevel()) : Optional.of(menuPlaying());
+			return game.level().get().isDemoLevel()
+					? Optional.of(menuDemoLevel(menuFont))
+					: Optional.of(menuPlaying(menuFont));
 		}
 		return Optional.empty();
 	}
 
-	public Pane menuIntro() {
+	private Pane menuIntro(Font menuFont) {
 		var menu = new Menu();
+		menu.setFont(menuFont);
 		if (GameController.it().hasCredit()) {
-			addEntry(menu, "help.start_game", "1");
+			menu.addEntry("help.start_game", "1");
 		}
-		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, GameController.it().game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman",
+		menu.addEntry("help.add_credit", "5");
+		menu.addEntry(GameController.it().game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman",
 				"V");
-		return createPane(menu);
+		return menu.createPane();
 	}
 
-	public Pane menuCredit() {
+	private Pane menuCredit(Font menuFont) {
 		var menu = new Menu();
+		menu.setFont(menuFont);
 		if (GameController.it().hasCredit()) {
-			addEntry(menu, "help.start_game", "1");
+			menu.addEntry("help.start_game", "1");
 		}
-		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
+		menu.addEntry("help.add_credit", "5");
+		menu.addEntry("help.show_intro", "Q");
+		return menu.createPane();
 	}
 
-	public Pane menuPlaying() {
+	private Pane menuPlaying(Font menuFont) {
 		var menu = new Menu();
-		addEntry(menu, "help.move_left",  tt("help.cursor_left"));
-		addEntry(menu, "help.move_right", tt("help.cursor_right"));
-		addEntry(menu, "help.move_up",    tt("help.cursor_up"));
-		addEntry(menu, "help.move_down",  tt("help.cursor_down"));
-		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
+		menu.setFont(menuFont);
+		menu.addEntry("help.move_left",  tt("help.cursor_left"));
+		menu.addEntry("help.move_right", tt("help.cursor_right"));
+		menu.addEntry("help.move_up",    tt("help.cursor_up"));
+		menu.addEntry("help.move_down",  tt("help.cursor_down"));
+		menu.addEntry("help.show_intro", "Q");
+		return menu.createPane();
 	}
 
-	public Pane menuDemoLevel() {
+	private Pane menuDemoLevel(Font menuFont) {
 		var menu = new Menu();
-		addEntry(menu, "help.add_credit", "5");
-		addEntry(menu, "help.show_intro", "Q");
-		return createPane(menu);
-	}
-
-	private Pane createPane(Menu menu) {
-		var grid = new GridPane();
-		grid.setHgap(20);
-		grid.setVgap(10);
-		for (int row = 0; row < menu.column0.size(); ++row) {
-			grid.add(menu.column0.get(row), 0, row);
-			grid.add(menu.column1.get(row), 1, row);
-		}
-		int rowIndex = menu.size();
-		if (GameController.it().isAutoControlled()) {
-			var text = text(tt("help.autopilot_on"), Color.ORANGE);
-			GridPane.setColumnSpan(text, 2);
-			grid.add(text, 0, rowIndex++);
-		}
-		if (GameController.it().isImmune()) {
-			var text = text(tt("help.immunity_on"), Color.ORANGE);
-			GridPane.setColumnSpan(text, 2);
-			grid.add(text, 0, rowIndex++);
-		}
-
-		var pane = new BorderPane(grid);
-		pane.setPadding(new Insets(10));
-		var bgColor = GameController.it().game().variant() == GameVariant.MS_PACMAN
-				? Color.rgb(255, 0, 0, 0.8)
-				: Color.rgb(33, 33, 255, 0.8);
-		pane.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 10));
-		return pane;
-	}
-
-	private String tt(String key) {
-		return PacManGames2dApp.TEXTS.getString(key);
-	}
-
-	private Label label(String s) {
-		var label = new Label(s);
-		label.setTextFill(Color.gray(0.9));
-		label.setFont(menuFont);
-		return label;
-	}
-
-	private Text text(String s, Color color) {
-		var text = new Text(s);
-		text.setFill(color);
-		text.setFont(menuFont);
-		return text;
-	}
-
-	private Text text(String s) {
-		return text(s, Color.YELLOW);
-	}
-
-	private void addEntry(Menu menu, String rbKey, String kbKey) {
-		menu.addRow(label(tt(rbKey)), text("[" + kbKey + "]"));
+		menu.setFont(menuFont);
+		menu.addEntry("help.add_credit", "5");
+		menu.addEntry("help.show_intro", "Q");
+		return menu.createPane();
 	}
 }
