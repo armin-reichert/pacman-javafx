@@ -13,11 +13,11 @@ import javafx.util.Duration;
 /**
  * @author Armin Reichert
  */
-public class HelpMenu extends BorderPane {
+public class GameSceneMenu extends BorderPane {
 
 	private final FadeTransition fading;
 
-	public HelpMenu() {
+	public GameSceneMenu() {
 		fading = new FadeTransition(Duration.seconds(0.5), this);
 		fading.setFromValue(1);
 		fading.setToValue(0);
