@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
@@ -79,19 +79,19 @@ public class MsPacManIntroScene extends GameScene2D {
 		var ty = ic.titlePosition.y();
 		var y0 = ic.stopY;
 		drawMarquee();
-		drawText("\"MS PAC-MAN\"", ArcadeTheme.PALETTE_ORANGE, font8, tx, ty);
+		drawText("\"MS PAC-MAN\"", ArcadePalette.ORANGE, font8, tx, ty);
 		if (intro.state() == State.GHOSTS) {
 			var ghost = ic.ghosts[ic.ghostIndex];
 			var color = theme.color(String.format("ghost.%d.color", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText("WITH", ArcadeTheme.PALETTE_PALE, font8, tx, y0 + t(3));
+				drawText("WITH", ArcadePalette.PALE, font8, tx, y0 + t(3));
 			}
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
 			drawText(text, color, font8, tx + t(3) + dx, y0 + t(6));
 		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
-			drawText("STARRING", ArcadeTheme.PALETTE_PALE, font8, tx, y0 + t(3));
-			drawText("MS PAC-MAN", ArcadeTheme.PALETTE_YELLOW, font8, tx, y0 + t(6));
+			drawText("STARRING", ArcadePalette.PALE, font8, tx, y0 + t(3));
+			drawText("MS PAC-MAN", ArcadePalette.YELLOW, font8, tx, y0 + t(6));
 		}
 		for (var ghost : ic.ghosts) {
 			drawGhost(ghost);
@@ -105,7 +105,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		var theme = context.theme();
 		var on = intro.context().marqueeState();
 		for (int i = 0; i < intro.context().numBulbs; ++i) {
-			g.setFill(on.get(i) ? ArcadeTheme.PALETTE_PALE : ArcadeTheme.PALETTE_RED);
+			g.setFill(on.get(i) ? ArcadePalette.PALE : ArcadePalette.RED);
 			if (i <= 33) {
 				g.fillRect(s(60 + 4 * i), s(148), s(2), s(2));
 			} else if (i <= 48) {

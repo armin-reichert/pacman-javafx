@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import javafx.scene.paint.Color;
 
@@ -73,11 +73,11 @@ public class PlayScene2D extends GameScene2D {
 			}
 			if (state() == GameState.LEVEL_TEST) {
 				drawText(String.format("TEST    L%d", level.number()),
-						ArcadeTheme.PALETTE_YELLOW, sceneFont(8), t(8.5), t(21));
+						ArcadePalette.YELLOW, sceneFont(8), t(8.5), t(21));
 			} else if (state() == GameState.GAME_OVER || !GameController.it().hasCredit()) {
-				drawText("GAME  OVER", ArcadeTheme.PALETTE_RED, sceneFont(8), t(9), t(21));
+				drawText("GAME  OVER", ArcadePalette.RED, sceneFont(8), t(9), t(21));
 			} else if (state() == GameState.READY) {
-				drawText("READY!", ArcadeTheme.PALETTE_YELLOW, sceneFont(8), t(11), t(21));
+				drawText("READY!", ArcadePalette.YELLOW, sceneFont(8), t(11), t(21));
 			}
 			level.bonus().ifPresent(this::drawBonus);
 			drawPac(level.pac());

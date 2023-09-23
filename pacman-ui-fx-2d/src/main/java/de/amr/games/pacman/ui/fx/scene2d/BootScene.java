@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import javafx.geometry.Rectangle2D;
 
 import static de.amr.games.pacman.lib.Globals.RND;
@@ -55,7 +55,7 @@ public class BootScene extends GameScene2D {
 
 	private void paintRandomHexCodes() {
 		clearCanvas();
-		g.setFill(ArcadeTheme.PALETTE_PALE);
+		g.setFill(ArcadePalette.PALE);
 		g.setFont(sceneFont(8));
 		for (int row = 0; row < GameModel.TILES_Y; ++row) {
 			for (int col = 0; col < GameModel.TILES_X; ++col) {
@@ -92,7 +92,7 @@ public class BootScene extends GameScene2D {
 		clearCanvas();
 		var numRows = GameModel.TILES_Y / 2;
 		var numCols = GameModel.TILES_X / 2;
-		g.setStroke(ArcadeTheme.PALETTE_PALE);
+		g.setStroke(ArcadePalette.PALE);
 		g.setLineWidth(s(2.0));
 		for (int row = 0; row <= numRows; ++row) {
 			g.setLineWidth(row == 0 || row == numRows ? s(4.0) : s(2.0));

@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.app.Settings;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadeTheme;
+import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.Picker;
@@ -86,7 +86,7 @@ public class PacManGames3dApp extends Application {
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
 	public static Theme createTheme() {
-		var theme = new ArcadeTheme(PacManGames2dApp.MGR);
+		var theme = PacManGames2dApp.createTheme(PacManGames2dApp.MGR);
 
 		theme.set("model3D.pacman",                  new Model3D(MGR.url("model3D/pacman.obj")));
 		theme.set("model3D.ghost",                   new Model3D(MGR.url("model3D/ghost.obj")));
@@ -108,29 +108,29 @@ public class PacManGames3dApp extends Application {
 		theme.set("texture.plastic",                 createFloorTexture("plastic", "jpg"));
 		theme.set("texture.wood",                    createFloorTexture("wood", "jpg"));
 
-		theme.set("ghost.0.color.normal.dress",      ArcadeTheme.PALETTE_RED);
-		theme.set("ghost.0.color.normal.eyeballs",   ArcadeTheme.PALETTE_PALE);
-		theme.set("ghost.0.color.normal.pupils",     ArcadeTheme.PALETTE_BLUE);
+		theme.set("ghost.0.color.normal.dress",      ArcadePalette.RED);
+		theme.set("ghost.0.color.normal.eyeballs",   ArcadePalette.PALE);
+		theme.set("ghost.0.color.normal.pupils",     ArcadePalette.BLUE);
 
-		theme.set("ghost.1.color.normal.dress",      ArcadeTheme.PALETTE_PINK);
-		theme.set("ghost.1.color.normal.eyeballs",   ArcadeTheme.PALETTE_PALE);
-		theme.set("ghost.1.color.normal.pupils",     ArcadeTheme.PALETTE_BLUE);
+		theme.set("ghost.1.color.normal.dress",      ArcadePalette.PINK);
+		theme.set("ghost.1.color.normal.eyeballs",   ArcadePalette.PALE);
+		theme.set("ghost.1.color.normal.pupils",     ArcadePalette.BLUE);
 
-		theme.set("ghost.2.color.normal.dress",      ArcadeTheme.PALETTE_CYAN);
-		theme.set("ghost.2.color.normal.eyeballs",   ArcadeTheme.PALETTE_PALE);
-		theme.set("ghost.2.color.normal.pupils",     ArcadeTheme.PALETTE_BLUE);
+		theme.set("ghost.2.color.normal.dress",      ArcadePalette.CYAN);
+		theme.set("ghost.2.color.normal.eyeballs",   ArcadePalette.PALE);
+		theme.set("ghost.2.color.normal.pupils",     ArcadePalette.BLUE);
 
-		theme.set("ghost.3.color.normal.dress",      ArcadeTheme.PALETTE_ORANGE);
-		theme.set("ghost.3.color.normal.eyeballs",   ArcadeTheme.PALETTE_PALE);
-		theme.set("ghost.3.color.normal.pupils",     ArcadeTheme.PALETTE_BLUE);
+		theme.set("ghost.3.color.normal.dress",      ArcadePalette.ORANGE);
+		theme.set("ghost.3.color.normal.eyeballs",   ArcadePalette.PALE);
+		theme.set("ghost.3.color.normal.pupils",     ArcadePalette.BLUE);
 
-		theme.set("ghost.color.frightened.dress",    ArcadeTheme.PALETTE_BLUE);
-		theme.set("ghost.color.frightened.eyeballs", ArcadeTheme.PALETTE_ROSE);
-		theme.set("ghost.color.frightened.pupils",   ArcadeTheme.PALETTE_ROSE);
+		theme.set("ghost.color.frightened.dress",    ArcadePalette.BLUE);
+		theme.set("ghost.color.frightened.eyeballs", ArcadePalette.ROSE);
+		theme.set("ghost.color.frightened.pupils",   ArcadePalette.ROSE);
 
-		theme.set("ghost.color.flashing.dress",      ArcadeTheme.PALETTE_PALE);
-		theme.set("ghost.color.flashing.eyeballs",   ArcadeTheme.PALETTE_ROSE);
-		theme.set("ghost.color.flashing.pupils",     ArcadeTheme.PALETTE_RED);
+		theme.set("ghost.color.flashing.dress",      ArcadePalette.PALE);
+		theme.set("ghost.color.flashing.eyeballs",   ArcadePalette.ROSE);
+		theme.set("ghost.color.flashing.pupils",     ArcadePalette.RED);
 
 		theme.addAll("mspacman.maze.foodColor",
 				Color.rgb(222, 222, 255),
