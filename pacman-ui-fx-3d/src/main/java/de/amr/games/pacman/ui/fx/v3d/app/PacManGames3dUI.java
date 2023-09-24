@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.app.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
@@ -58,16 +57,22 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		gamePage.setSize(scene.getWidth(), scene.getHeight());
 		// register event handler for opening play scene context menu
 		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-			if (e.getButton() == MouseButton.SECONDARY &&
-					(currentGameScene instanceof PlayScene2D || currentGameScene instanceof PlayScene3D)) {
-				gamePage3D().openContextMenu(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
-			} else {
-				gamePage3D().closeContextMenu();
-			}
+			currentScene().ifPresent(gameScene -> {
+				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
+					gamePage().openContextMenu(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
+				} else {
+					gamePage().closeContextMenu();
+				}
+			});
 		});
 	}
 
-	public GamePage3D gamePage3D() {
+	private boolean isPlayScene(GameScene gameScene) {
+		var config = sceneConfig();
+		return gameScene == config.get("play") || gameScene == config.get("play3D");
+	}
+
+	public GamePage3D gamePage() {
 		return (GamePage3D) gamePage;
 	}
 
@@ -106,15 +111,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		var dimension = message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "threeD" : "twoD");
 		stage.setTitle(message(PacManGames3dApp.TEXTS, titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
-		gamePage3D().updateBackground();
+		gamePage().updateBackground();
 	}
 
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
+		var scene = super.sceneMatchingCurrentGameState();
 		var config = sceneConfig();
 		var playScene2D = config.get("play");
 		var playScene3D = config.get("play3D");
-		var scene = super.sceneMatchingCurrentGameState();
 		if (scene == playScene2D && PacManGames3dApp.PY_3D_ENABLED.get() && playScene3D != null) {
 			return playScene3D;
 		}
@@ -122,15 +127,16 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	}
 
 	public void toggle2D3D() {
-		var config = sceneConfig();
-		Ufx.toggle(PacManGames3dApp.PY_3D_ENABLED);
-		if (config.get("play") == currentGameScene || config.get("play3D") == currentGameScene) {
-			updateOrReloadGameScene(true);
-			gamePage.onGameSceneChanged();
-			currentGameScene().onSceneVariantSwitch();
-		}
-		GameController.it().update();
-		showFlashMessage(message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+		currentScene().ifPresent(gameScene -> {
+			Ufx.toggle(PacManGames3dApp.PY_3D_ENABLED);
+			if (isPlayScene(gameScene)) {
+				updateOrReloadGameScene(true);
+				gamePage.onGameSceneChanged();
+				gameScene.onSceneVariantSwitch();
+			}
+			GameController.it().update();
+			showFlashMessage(message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+		});
 	}
 
 	@Override
@@ -138,7 +144,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		super.setGameScene(newGameScene);
 		var config = sceneConfig();
 		if (newGameScene == config.get("play3D")) {
-			gamePage3D().pip().setGameSceneContext(newGameScene.context());
+			gamePage().pip().setGameSceneContext(newGameScene.context());
 		}
 	}
 
