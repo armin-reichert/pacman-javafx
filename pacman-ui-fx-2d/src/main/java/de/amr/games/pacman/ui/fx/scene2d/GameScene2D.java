@@ -30,6 +30,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
@@ -128,6 +129,7 @@ public abstract class GameScene2D implements GameScene {
 	public void draw() {
 		clearCanvas();
 		if (context == null) {
+			Logger.error("Cannot render game scene {}, no context exists", getClass().getSimpleName());
 			return; // TODO may this happen?
 		}
 		if (scoreVisible) {
@@ -160,7 +162,6 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
-		var theme = context.theme();
 		var pointsText = String.format("%02d", score.points());
 		var font = sceneFont(8);
 		drawText(title, ArcadePalette.PALE, font, x, y);
