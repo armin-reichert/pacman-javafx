@@ -40,7 +40,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class GameScene2D implements GameScene {
 
-	public static final ObjectProperty<Color>  PY_CANVAS_BG_COLOR = new SimpleObjectProperty<>(Color.rgb(30,30,60));
+	public static final ObjectProperty<Color>  PY_CANVAS_BG_COLOR = new SimpleObjectProperty<>(Color.rgb(0,0,0));
 
 	protected static double t(double tiles) {
 		return tiles * TS;
