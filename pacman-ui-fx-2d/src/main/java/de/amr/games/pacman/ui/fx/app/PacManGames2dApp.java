@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
@@ -182,23 +183,25 @@ public class PacManGames2dApp extends Application {
 
 	@Override
 	public void start(Stage stage) {
-		var gameScenesMsPacMan = new HashMap<String, GameScene>();
-		gameScenesMsPacMan.put("boot",   new BootScene());
-		gameScenesMsPacMan.put("intro",  new MsPacManIntroScene());
-		gameScenesMsPacMan.put("credit", new MsPacManCreditScene());
-		gameScenesMsPacMan.put("play",   new PlayScene2D());
-		gameScenesMsPacMan.put("cut1",   new MsPacManCutscene1());
-		gameScenesMsPacMan.put("cut2",   new MsPacManCutscene2());
-		gameScenesMsPacMan.put("cut3",   new MsPacManCutscene3());
+		Map<String, GameScene> gameScenesMsPacMan = Map.of(
+			"boot",   new BootScene(),
+			"intro",  new MsPacManIntroScene(),
+			"credit", new MsPacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"cut1",   new MsPacManCutscene1(),
+			"cut2",   new MsPacManCutscene2(),
+			"cut3",   new MsPacManCutscene3()
+		);
 
-		var gameScenesPacMan = new HashMap<String, GameScene>();
-		gameScenesPacMan.put("boot",   new BootScene());
-		gameScenesPacMan.put("intro",  new PacManIntroScene());
-		gameScenesPacMan.put("credit", new PacManCreditScene());
-		gameScenesPacMan.put("play",   new PlayScene2D());
-		gameScenesPacMan.put("cut1",   new PacManCutscene1());
-		gameScenesPacMan.put("cut2",   new PacManCutscene2());
-		gameScenesPacMan.put("cut3",   new PacManCutscene3());
+		Map<String, GameScene> gameScenesPacMan = Map.of(
+			"boot",   new BootScene(),
+			"intro",  new PacManIntroScene(),
+			"credit", new PacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"cut1",   new PacManCutscene1(),
+			"cut2",   new PacManCutscene2(),
+			"cut3",   new PacManCutscene3()
+		);
 
 		var theme = createTheme(MGR);
 		Logger.info("Theme created: {}", theme);
