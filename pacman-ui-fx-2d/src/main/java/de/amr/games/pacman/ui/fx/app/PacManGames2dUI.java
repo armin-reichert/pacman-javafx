@@ -35,6 +35,7 @@ import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -56,8 +57,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected StartPage startPage;
 	protected GamePage gamePage;
 	protected SoundHandler soundHandler;
-	protected GameScene currentGameScene;
 	protected Page currentPage;
+	private GameScene currentGameScene;
 
 	public PacManGames2dUI(Stage stage, Settings settings, Theme theme,
 												 Map<String, GameScene> gameScenesMsPacMan, Map<String, GameScene> gameScenesPacMan) {
@@ -243,8 +244,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		return clock;
 	}
 
-	public GameScene currentGameScene() {
-		return currentGameScene;
+	public Optional<GameScene> currentScene() {
+		return Optional.ofNullable(currentGameScene);
 	}
 
 	public GameModel game() {

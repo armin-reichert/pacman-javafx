@@ -10,6 +10,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.HelpButton;
 import de.amr.games.pacman.ui.fx.util.FadingPane;
@@ -91,7 +92,8 @@ public class GamePage implements Page {
 	}
 
 	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
-		return Bindings.createObjectBinding(() -> PacManGames2dApp.PY_SHOW_DEBUG_INFO.get() && ui.currentGameScene instanceof GameScene2D ?
+		return Bindings.createObjectBinding(() -> PacManGames2dApp.PY_SHOW_DEBUG_INFO.get()
+				&& ui.currentScene().isPresent() && !ui.currentScene().get().is3D() ?
 				ResourceManager.border(color, width) : null, PacManGames2dApp.PY_SHOW_DEBUG_INFO);
 	}
 
@@ -100,7 +102,7 @@ public class GamePage implements Page {
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(ui.sceneConfig().get("boot") != ui.currentGameScene());
+		helpButton.setVisible(ui.currentScene().isPresent() && ui.currentScene().get() != ui.sceneConfig().get("boot"));
 	}
 
 	protected void showHelpMenu() {
@@ -131,10 +133,11 @@ public class GamePage implements Page {
 		//TODO check if this has to be done also when scaling value did not change
 		updateHelpButton();
 		updateSignatureSizeAndPosition();
-		if (ui.currentGameScene() != null && ui.currentGameScene() instanceof GameScene2D) {
-			GameScene2D gameScene2D = (GameScene2D) ui.currentGameScene();
-			gameScene2D.setScaling(scaling);
-		}
+		ui.currentScene().ifPresent(gameScene -> {
+			if (gameScene instanceof GameScene2D gameScene2D) {
+				gameScene2D.setScaling(scaling);
+			}
+		});
 
 		if (this.scaling == scaling && !always) {
 			return;
@@ -171,22 +174,22 @@ public class GamePage implements Page {
 
 	public void onGameSceneChanged() {
 		var config = ui.sceneConfig();
+		var currentGameScene = ui.currentScene().get();
 		// if play scene gets active/inactive, add/remove key handler
 		if (GameController.it().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
-			if (ui.currentGameScene() == config.get("play")) {
+			if (currentGameScene == config.get("play")) {
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			} else {
 				layers.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			}
 		}
 		// if intro scene gets active/inactive, show/hide signature
-		if (ui.currentGameScene() == config.get("intro")) {
+		if (currentGameScene == config.get("intro")) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();
 		}
-		if (ui.currentGameScene() instanceof GameScene2D) {
-			GameScene2D gameScene2D = (GameScene2D) ui.currentGameScene();
+		if (currentGameScene instanceof GameScene2D gameScene2D) {
 			gameScene2D.setCanvas(canvas);
 		}
 		resize(scaling, true);
@@ -213,10 +216,16 @@ public class GamePage implements Page {
 		return flashMessageView;
 	}
 
+	public PacManGames2dUI ui() {
+		return ui;
+	}
+
 	public void render() {
-		if (ui.currentGameScene() instanceof GameScene2D gameScene2D) {
-			gameScene2D.draw();
-		}
+		ui.currentScene().ifPresent(gameScene -> {
+			if (gameScene instanceof GameScene2D gameScene2D) {
+				gameScene2D.draw();
+			}
+		});
 		flashMessageView.update();
 		popupLayer.setVisible(true);
 	}
@@ -224,9 +233,7 @@ public class GamePage implements Page {
 	protected void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
-		if (ui.currentGameScene() != null) {
-			ui.currentGameScene().handleKeyboardInput();
-		}
+		ui.currentScene().ifPresent(GameScene::handleKeyboardInput);
 		Keyboard.clearState();
 	}
 
