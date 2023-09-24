@@ -31,14 +31,12 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
-import static java.util.Map.of;
 
 /**
  * @author Armin Reichert
@@ -134,7 +132,7 @@ public class PacManGames3dApp extends Application {
 		theme.set("ghost.color.flashing.eyeballs",   ArcadePalette.ROSE);
 		theme.set("ghost.color.flashing.pupils",     ArcadePalette.RED);
 
-		theme.addAll("mspacman.maze.foodColor",
+		theme.addAllToArray("mspacman.maze.foodColor",
 				Color.rgb(222, 222, 255),
 				Color.rgb(255, 255, 0),
 				Color.rgb(255, 0, 0),
@@ -143,7 +141,7 @@ public class PacManGames3dApp extends Application {
 				Color.rgb(222, 222, 255)
 		);
 
-		theme.addAll("mspacman.maze.wallBaseColor",
+		theme.addAllToArray("mspacman.maze.wallBaseColor",
 				Color.rgb(255, 0, 0),
 				Color.rgb(222, 222, 255),
 				Color.rgb(222, 222, 255),
@@ -152,7 +150,7 @@ public class PacManGames3dApp extends Application {
 				Color.rgb(255, 0, 0)
 		);
 
-		theme.addAll("mspacman.maze.wallTopColor",
+		theme.addAllToArray("mspacman.maze.wallTopColor",
 				Color.rgb(255, 183, 174),
 				Color.rgb(71, 183, 255),
 				Color.rgb(222, 151, 81),

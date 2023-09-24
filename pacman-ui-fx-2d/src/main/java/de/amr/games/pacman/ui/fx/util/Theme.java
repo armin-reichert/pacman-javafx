@@ -33,26 +33,24 @@ public class Theme {
 		return count;
 	}
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(getClass().getSimpleName()).append(": ");
-		sb.append(countEntriesOfType(Image.class)).append(" images").append(", ");
-		sb.append(countEntriesOfType(Font.class)).append(" fonts").append(", ");
-		sb.append(countEntriesOfType(Color.class)).append(" colors").append(", ");
-		sb.append(countEntriesOfType(AudioClip.class)).append(" audio clips").append(", ");
-		return sb.toString();
+		return getClass().getSimpleName() + ": " +
+				countEntriesOfType(Image.class) + " images" + ", " +
+				countEntriesOfType(Font.class) + " fonts" + ", " +
+				countEntriesOfType(Color.class) + " colors" + ", " +
+				countEntriesOfType(AudioClip.class) + " audio clips" + ", ";
 	}
 
 	public void set(String name, Object thing) {
 		namedThings.put(name, thing);
 	}
 
-	public void add(String arrayName, Color color) {
+	public void addToArray(String arrayName, Color color) {
 		namedArrays.computeIfAbsent(arrayName, name -> new ArrayList<>()).add(color);
 	}
 
-	public void addAll(String arrayName, Color... colors) {
+	public void addAllToArray(String arrayName, Color... colors) {
 		for (var color : colors) {
-			add(arrayName, color);
+			addToArray(arrayName, color);
 		}
 	}
 
@@ -65,7 +63,7 @@ public class Theme {
 	 * 
 	 * @param <T>  expected return type
 	 * @param name name of thing
-	 * @return stored value casted to return type
+	 * @return stored value cast to return type
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(String name) {
@@ -99,10 +97,6 @@ public class Theme {
 
 	public AudioClip audioClip(String name) {
 		return get(name);
-	}
-
-	public Stream<Map.Entry<String, Object>> audioClipEntries() {
-		return namedThings.entrySet().stream().filter(e -> e.getValue() instanceof AudioClip);
 	}
 
 	public Stream<AudioClip> audioClips() {
