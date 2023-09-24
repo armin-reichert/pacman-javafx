@@ -69,7 +69,7 @@ public class GamePage implements Page {
 		gameSceneLayer.setBackground(theme.background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
 
-		canvasContainer.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+		canvasContainer.setBackground(ResourceManager.coloredBackground(GameScene2D.PY_CANVAS_BG_COLOR.get()));
 		canvasContainer.setCenter(canvas);
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling, false));
 

@@ -137,7 +137,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void hideTileContent(World world, Vector2i tile) {
-		g.setFill(Color.BLACK);
+		g.setFill(PY_CANVAS_BG_COLOR.get());
 		double r = world.isEnergizerTile(tile) ? 4.5 : 2;
 		double cx = t(tile.x()) + HTS;
 		double cy = t(tile.y()) + HTS ;
