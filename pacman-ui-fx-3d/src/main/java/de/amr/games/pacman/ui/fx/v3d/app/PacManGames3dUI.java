@@ -158,7 +158,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	private void selectPerspective(Perspective perspective) {
 		PacManGames3dApp.PY_3D_PERSPECTIVE.set(perspective);
-		String perspectiveName = message(PacManGames3dApp.TEXTS, perspective.name());
+		var perspectiveName = message(PacManGames3dApp.TEXTS, perspective.name());
 		showFlashMessage(message(PacManGames3dApp.TEXTS, "camera_perspective", perspectiveName));
 	}
 
