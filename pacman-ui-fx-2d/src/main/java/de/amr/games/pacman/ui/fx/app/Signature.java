@@ -14,26 +14,23 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * @author Armin Reichert
  */
 public class Signature {
 
-	private final Text madeByText;
-	private final Text nameText;
+	private final List<Text> texts;
 	private final TextFlow sentence = new TextFlow();
 	private final Transition animation;
 
-	public Signature() {
-		madeByText = new Text("Remake (2023) by ");
-		madeByText.setFill(Color.GOLD);
-		madeByText.setFont(Font.font("Helvetica", 14));
-
-		nameText = new Text("Armin Reichert");
-		nameText.setFill(Color.GOLD);
-		nameText.setFont(Font.font("Serif", 14));
-
-		sentence.getChildren().addAll(madeByText, nameText);
+	public Signature(String... words) {
+		texts = Stream.of(words).map(Text::new).collect(Collectors.toList());
+		sentence.getChildren().addAll(texts);
+		setTextColor(Color.WHEAT);
 
 		var fadeIn = new FadeTransition(Duration.seconds(5), sentence);
 		fadeIn.setFromValue(0);
@@ -46,13 +43,14 @@ public class Signature {
 		animation = new SequentialTransition(fadeIn, fadeOut);
 	}
 
-	public void setNameFont(Font font) {
-		nameText.setFont(font);
+	public Text getText(int index) {
+		return texts.get(index);
 	}
 
-	public void setMadeByFont(Font font)
-	{
-		madeByText.setFont(font);
+	public void setTextColor(Color color) {
+		for (Text text : texts) {
+			text.setFill(color);
+		}
 	}
 
 	public Node root() {

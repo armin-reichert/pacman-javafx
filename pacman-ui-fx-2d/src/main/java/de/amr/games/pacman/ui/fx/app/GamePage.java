@@ -58,7 +58,7 @@ public class GamePage implements Page {
 	protected final Pane popupLayer = new Pane();
 	protected final FadingPane helpMenu = new FadingPane();
 	protected final HelpButton helpButton = new HelpButton();
-	protected final Signature signature = new Signature();
+	protected final Signature signature = new Signature("Remake (2023) by ", "Armin Reichert");
 
 	protected double scaling = 1.0;
 
@@ -196,8 +196,8 @@ public class GamePage implements Page {
 	}
 
 	protected void updateSignatureSizeAndPosition() {
-		signature.setMadeByFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		signature.setNameFont(theme.font("font.handwriting", Math.floor(12 * scaling)));
+		signature.getText(0).setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
+		signature.getText(1).setFont((theme.font("font.handwriting", Math.floor(12 * scaling))));
 		if (ui.game().variant() == GameVariant.MS_PACMAN) {
 			signature.root().setTranslateX(50 * scaling);
 			signature.root().setTranslateY(40 * scaling);
