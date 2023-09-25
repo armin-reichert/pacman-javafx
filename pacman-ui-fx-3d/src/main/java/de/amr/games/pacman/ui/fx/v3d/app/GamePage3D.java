@@ -33,10 +33,9 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
  */
 public class GamePage3D extends GamePage {
 
-	private final BorderPane dashboardLayer = new BorderPane();
+	private final BorderPane topLayer; // contains dashboard and picture-in-picture view
 	private final PictureInPicture pip;
 	private final Dashboard dashboard;
-
 	private GamePageContextMenu contextMenu;
 
 	private class GamePageContextMenu extends ContextMenu {
@@ -117,8 +116,9 @@ public class GamePage3D extends GamePage {
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);
 
-		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pip.root());
+		topLayer = new BorderPane();
+		topLayer.setLeft(dashboard);
+		topLayer.setRight(pip.root());
 
 		contextMenu = new GamePageContextMenu();
 	}
@@ -144,11 +144,14 @@ public class GamePage3D extends GamePage {
 
 	@Override
 	public void onGameSceneChanged() {
-		var gameScene = ui.currentScene().get();
-		if (gameScene.is3D()) {
-			layers.getChildren().set(GAME_SCENE_LAYER, gameScene.root());
-			// Assume PlayScene3D is the only 3D scene
-			layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
+		//TODO this code is too difficult to understand, simplify
+		if (isCurrentGameScene3D()) {
+			var gameScene3D = ui().currentScene().get();
+			if (gameScene3D == ui().sceneConfig().get("play3D")) {
+				// Note: event handler is removed again in super.onGameSceneChanged() call
+				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
+			}
+			layers.getChildren().set(GAME_SCENE_LAYER, gameScene3D.root());
 			layers.requestFocus();
 			helpButton.setVisible(false);
 		} else {
@@ -161,17 +164,15 @@ public class GamePage3D extends GamePage {
 	}
 
 	public void updateBackground() {
-		ui.currentScene().ifPresent(gameScene -> {
-			if (gameScene.is3D()) {
-				if (PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-					layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
-				} else {
-					layers.setBackground(ui().theme().background("model3D.wallpaper"));
-				}
+		if (isCurrentGameScene3D()) {
+			if (PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				gameSceneLayer.setBackground(ui().theme().background("wallpaper.background"));
+				layers.setBackground(ui().theme().background("model3D.wallpaper"));
 			}
-		});
+		} else {
+			gameSceneLayer.setBackground(ui().theme().background("wallpaper.background"));
+		}
 	}
 
 	@Override
@@ -179,8 +180,7 @@ public class GamePage3D extends GamePage {
 		super.render();
 		contextMenu.updateState();
 		dashboard.update();
-		var pipVisible = isPictureInPictureActive() && ui().currentScene().isPresent() && ui().currentScene().get().is3D();
-		pip.root().setVisible(pipVisible);
+		pip.root().setVisible(isPictureInPictureActive() && isCurrentGameScene3D());
 		pip.render();
 	}
 
@@ -204,6 +204,10 @@ public class GamePage3D extends GamePage {
 		return PacManGames3dApp.PY_PIP_ON.get();
 	}
 
+	private boolean isCurrentGameScene3D() {
+		return ui().currentScene().isPresent() && ui().currentScene().get().is3D();
+	}
+
 	private void togglePipVisible() {
 		Ufx.toggle(PacManGames3dApp.PY_PIP_ON);
 		var message = message(PacManGames3dApp.TEXTS, isPictureInPictureActive() ? "pip_on" : "pip_off");
@@ -217,15 +221,15 @@ public class GamePage3D extends GamePage {
 	}
 
 	private void updateTopLayer() {
-		layers.getChildren().remove(dashboardLayer);
+		layers.getChildren().remove(topLayer);
 		if (dashboard.isVisible() || isPictureInPictureActive()) {
-			layers.getChildren().add(dashboardLayer);
+			layers.getChildren().add(topLayer);
 		}
 		layers.requestFocus();
 	}
 
 	protected void updateHelpButton() {
-		if (ui().currentScene().isPresent() && ui().currentScene().get().is3D()) {
+		if (isCurrentGameScene3D()) {
 			helpButton.setVisible(false);
 		} else {
 			super.updateHelpButton();
