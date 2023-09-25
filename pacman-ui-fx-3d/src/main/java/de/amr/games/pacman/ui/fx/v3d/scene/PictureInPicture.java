@@ -52,7 +52,7 @@ public class PictureInPicture {
 	}
 
 	public void render() {
-		if (playScene2D.context() != null) {
+		if (root().isVisible() && playScene2D.context() != null) {
 			playScene2D.draw();
 		}
 	}

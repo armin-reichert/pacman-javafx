@@ -177,10 +177,11 @@ public class GamePage3D extends GamePage {
 	@Override
 	public void render() {
 		super.render();
-		dashboard.update();
-		pip.root().setVisible(isPictureInPictureActive() && ui().currentScene().isPresent() && ui().currentScene().get().is3D());
-		pip.render();
 		contextMenu.updateState();
+		dashboard.update();
+		var pipVisible = isPictureInPictureActive() && ui().currentScene().isPresent() && ui().currentScene().get().is3D();
+		pip.root().setVisible(pipVisible);
+		pip.render();
 	}
 
 	@Override
