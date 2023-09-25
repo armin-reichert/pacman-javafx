@@ -27,6 +27,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.time.LocalTime;
+
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
 /**
@@ -174,7 +176,10 @@ public class GamePage3D extends GamePage {
 			if (PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				layers.setBackground(ui().theme().background("model3D.wallpaper"));
+				var hour = LocalTime.now().getHour();
+				var isNight = hour >= 20 || hour <= 5;
+				var wallpaper = isNight? "model3D.wallpaper.night" : "model3D.wallpaper";
+				layers.setBackground(ui().theme().background(wallpaper));
 			}
 		} else {
 			gameSceneLayer.setBackground(ui().theme().background("wallpaper.background"));

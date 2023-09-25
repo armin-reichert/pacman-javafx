@@ -97,6 +97,11 @@ public class PacManGames3dApp extends Application {
 				BackgroundPosition.CENTER,
 				new BackgroundSize(1, 1, true, true, false, true)
 		));
+		theme.set("model3D.wallpaper.night",  MGR.imageBackground("graphics/sea-wallpaper-night.jpg",
+				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+				BackgroundPosition.CENTER,
+				new BackgroundSize(1, 1, true, true, false, true)
+		));
 
 		theme.set("image.armin1970",                 MGR.image("graphics/armin.jpg"));
 		theme.set("icon.play",                       MGR.image("graphics/icons/play.png"));
