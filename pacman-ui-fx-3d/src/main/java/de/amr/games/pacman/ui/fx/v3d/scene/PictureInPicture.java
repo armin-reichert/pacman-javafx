@@ -52,6 +52,8 @@ public class PictureInPicture {
 	}
 
 	public void render() {
-		playScene2D.draw();
+		if (playScene2D.context() != null) {
+			playScene2D.draw();
+		}
 	}
 }

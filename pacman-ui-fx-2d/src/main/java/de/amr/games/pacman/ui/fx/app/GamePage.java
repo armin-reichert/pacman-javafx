@@ -233,7 +233,6 @@ public class GamePage implements Page {
 	protected void handleKeyPressed(KeyEvent keyEvent) {
 		Keyboard.accept(keyEvent);
 		handleKeyboardInput();
-		ui.currentScene().ifPresent(GameScene::handleKeyboardInput);
 		Keyboard.clearState();
 	}
 
@@ -271,6 +270,8 @@ public class GamePage implements Page {
 			}
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEST_LEVELS)) {
 			ui.startLevelTestMode();
+		} else {
+			ui.currentScene().ifPresent(GameScene::handleKeyboardInput);
 		}
 	}
 
