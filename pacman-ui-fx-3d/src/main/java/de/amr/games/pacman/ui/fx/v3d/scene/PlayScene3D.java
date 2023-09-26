@@ -393,7 +393,7 @@ public class PlayScene3D implements GameScene {
 			game().level().ifPresent(level -> {
 				level3D.world3D().foodOscillation().stop();
 				level3D.livesCounter3D().stopAnimation();
-				context.actionHandler().showFlashMessageSeconds(3, PacManGames3dApp.pickGameOverMessage());
+				context.actionHandler().showFlashMessageSeconds(3, PacManGames3dApp.PICKER_GAME_OVER.next());
 				context.clip("audio.game_over").play();
 				keepGameStateForSeconds(3);
 			});

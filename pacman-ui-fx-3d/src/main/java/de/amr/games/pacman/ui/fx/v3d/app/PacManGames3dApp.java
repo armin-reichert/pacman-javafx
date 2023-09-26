@@ -77,11 +77,11 @@ public class PacManGames3dApp extends Application {
 	public static final KeyCodeCombination KEY_PREV_PERSPECTIVE   = alt(KeyCode.LEFT);
 	public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE   = alt(KeyCode.RIGHT);
 
-	private static final Picker<String> PICKER_READY_PACMAN    = Picker.fromBundle(TEXTS, "pacman.ready");
-	private static final Picker<String> PICKER_READY_MS_PACMAN = Picker.fromBundle(TEXTS, "mspacman.ready");
-	private static final Picker<String> PICKER_CHEATING        = Picker.fromBundle(TEXTS, "cheating");
-	private static final Picker<String> PICKER_LEVEL_COMPLETE  = Picker.fromBundle(TEXTS, "level.complete");
-	private static final Picker<String> PICKER_GAME_OVER       = Picker.fromBundle(TEXTS, "game.over");
+	public static final Picker<String> PICKER_READY_PACMAN    = Picker.fromBundle(TEXTS, "pacman.ready");
+	public static final Picker<String> PICKER_READY_MS_PACMAN = Picker.fromBundle(TEXTS, "mspacman.ready");
+	public static final Picker<String> PICKER_CHEATING        = Picker.fromBundle(TEXTS, "cheating");
+	public static final Picker<String> PICKER_LEVEL_COMPLETE  = Picker.fromBundle(TEXTS, "level.complete");
+	public static final Picker<String> PICKER_GAME_OVER       = Picker.fromBundle(TEXTS, "game.over");
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
@@ -191,14 +191,6 @@ public class PacManGames3dApp extends Application {
 		};
 	}
 
-	public static String pickCheatingMessage() {
-		return PICKER_CHEATING.next();
-	}
-
-	public static String pickGameOverMessage() {
-		return PICKER_GAME_OVER.next();
-	}
-
 	public static String pickLevelCompleteMessage(int levelNumber) {
 		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
 				ResourceManager.message(TEXTS, "level_complete", levelNumber));
@@ -244,7 +236,7 @@ public class PacManGames3dApp extends Application {
 			"cut3",   new MsPacManCutscene3()
 		);
 
-		Map<String, GameScene> gameScenesPacMan =  Map.of(
+		Map<String, GameScene> gameScenesPacMan = Map.of(
 			"boot",   new BootScene(),
 			"intro",  new PacManIntroScene(),
 			"credit", new PacManCreditScene(),
@@ -255,12 +247,14 @@ public class PacManGames3dApp extends Application {
 			"cut3",   new PacManCutscene3()
 		);
 
-		ui = new PacManGames3dUI(stage, settings, createTheme(), gameScenesMsPacMan, gameScenesPacMan);
-		Logger.info("UI created: {} Theme: {}", ui.getClass().getSimpleName(), ui.theme());
-		ui.showStartPage();
+		var theme = createTheme();
+		Logger.info("Theme created: {}", theme);
+
+		ui = new PacManGames3dUI(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
 		GameController.it().addListener(ui);
-		Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Game started. Clock speed={} Hz", ui.clock().targetFrameratePy.get());
+		ui.showStartPage();
+		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+		Logger.info("Game started. Clock speed: {} Hz", ui.clock().targetFrameratePy.get());
 	}
 
 	@Override
