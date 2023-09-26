@@ -9,6 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.organization.name>Armin Reichert</project.organization.name>
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.source>17</maven.compiler.source>
 		<exec.mainModule>de.amr.games.pacman.ui.fx</exec.mainModule>
