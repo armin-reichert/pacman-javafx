@@ -54,7 +54,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage3D(this, theme);
-		gamePage.setSize(scene.getWidth(), scene.getHeight());
+		gamePage.setSize(mainScene().getWidth(), mainScene().getHeight());
 		// register event handler for opening play scene context menu
 		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 			currentScene().ifPresent(gameScene -> {
@@ -116,14 +116,14 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
-		var scene = super.sceneMatchingCurrentGameState();
+		var gameScene = super.sceneMatchingCurrentGameState();
 		var config = sceneConfig();
 		var playScene2D = config.get("play");
 		var playScene3D = config.get("play3D");
-		if (scene == playScene2D && PacManGames3dApp.PY_3D_ENABLED.get() && playScene3D != null) {
+		if (gameScene == playScene2D && PacManGames3dApp.PY_3D_ENABLED.get() && playScene3D != null) {
 			return playScene3D;
 		}
-		return scene;
+		return gameScene;
 	}
 
 	public void toggle2D3D() {
