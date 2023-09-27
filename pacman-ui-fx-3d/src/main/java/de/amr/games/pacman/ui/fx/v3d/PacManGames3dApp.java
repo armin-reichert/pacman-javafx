@@ -42,7 +42,9 @@ import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
  * @author Armin Reichert
  */
 public class PacManGames3dApp extends Application implements ResourceManager {
-	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
+	public static final ResourceBundle TEXTS = ResourceBundle.getBundle(
+			"de.amr.games.pacman.ui.fx.v3d.texts.messages",
+			PacManGames3dApp.class.getModule());
 
 	public static final float           PIP_MIN_HEIGHT           = 0.75f * GameModel.TILES_Y * TS;
 	public static final float           PIP_MAX_HEIGHT           = 2.00f * GameModel.TILES_Y * TS;

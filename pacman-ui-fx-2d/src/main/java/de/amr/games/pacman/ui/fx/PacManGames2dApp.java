@@ -32,7 +32,9 @@ import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application implements ResourceManager {
-	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.texts.messages");
+	public static final ResourceBundle TEXTS = ResourceBundle.getBundle(
+			"de.amr.games.pacman.ui.fx.texts.messages",
+			PacManGames2dApp.class.getModule());
 
 	public static final int CANVAS_WIDTH_UNSCALED  = GameModel.TILES_X * Globals.TS; // 224
 	public static final int CANVAS_HEIGHT_UNSCALED = GameModel.TILES_Y * Globals.TS; // 288
