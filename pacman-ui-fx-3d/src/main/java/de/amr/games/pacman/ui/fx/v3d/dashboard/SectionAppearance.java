@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;

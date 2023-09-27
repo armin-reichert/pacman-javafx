@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 
 /**
  * Intro scene of the PacMan game.

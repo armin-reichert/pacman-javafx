@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx;
 
 import javafx.scene.Node;
 

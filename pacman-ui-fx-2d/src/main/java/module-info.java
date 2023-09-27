@@ -8,7 +8,7 @@ module de.amr.games.pacman.ui.fx {
 	requires transitive javafx.media;
 	requires transitive org.tinylog.api;
 
-	exports de.amr.games.pacman.ui.fx.app;
+	exports de.amr.games.pacman.ui.fx;
 	exports de.amr.games.pacman.ui.fx.input;
 	exports de.amr.games.pacman.ui.fx.scene;
 	exports de.amr.games.pacman.ui.fx.util;

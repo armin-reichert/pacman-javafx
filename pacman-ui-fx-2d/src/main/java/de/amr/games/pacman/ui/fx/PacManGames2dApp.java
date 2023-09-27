@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
@@ -23,7 +23,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -73,11 +72,6 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 
 	private PacManGames2dUI ui;
 	private Settings settings;
-
-	@Override
-	public String rootDir() {
-		return "/de/amr/games/pacman/ui/fx/";
-	}
 
 	@Override
 	public void init() {

@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.*;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

@@ -11,8 +11,8 @@ module de.amr.games.pacman.ui.fx3d {
 	requires transitive de.amr.games.pacman;
 	requires transitive de.amr.games.pacman.ui.fx;
 
+	exports de.amr.games.pacman.ui.fx.v3d;
 	exports de.amr.games.pacman.ui.fx.v3d.animation;
-	exports de.amr.games.pacman.ui.fx.v3d.app;
 	exports de.amr.games.pacman.ui.fx.v3d.dashboard;
 	exports de.amr.games.pacman.ui.fx.v3d.entity;
 	exports de.amr.games.pacman.ui.fx.v3d.model;

@@ -2,13 +2,13 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.v3d.app;
+package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
-import de.amr.games.pacman.ui.fx.app.Settings;
+import de.amr.games.pacman.ui.fx.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.*;
@@ -97,11 +97,6 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 
 	private final Settings settings = new Settings();
 	private PacManGames3dUI ui;
-
-	@Override
-	public String rootDir() {
-		return "/de/amr/games/pacman/ui/fx/v3d/";
-	}
 
 	@Override
 	public void init() {

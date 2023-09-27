@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;

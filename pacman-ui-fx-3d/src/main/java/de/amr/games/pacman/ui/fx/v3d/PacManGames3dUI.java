@@ -2,13 +2,13 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.v3d.app;
+package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.app.Settings;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
+import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.Theme;

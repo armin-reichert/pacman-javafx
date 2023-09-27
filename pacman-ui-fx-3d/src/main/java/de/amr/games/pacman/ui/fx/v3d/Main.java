@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.app;
+package de.amr.games.pacman.ui.fx.v3d;
 
 import static javafx.application.Application.launch;
 
@@ -11,6 +11,6 @@ import static javafx.application.Application.launch;
  */
 public class Main {
 	public static void main(String[] args) {
-		launch(PacManGames2dApp.class, args);
+		launch(PacManGames3dApp.class, args);
 	}
 }

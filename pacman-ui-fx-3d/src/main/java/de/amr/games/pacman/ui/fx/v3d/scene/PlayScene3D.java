@@ -13,15 +13,15 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
-import de.amr.games.pacman.ui.fx.v3d.app.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
+import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -47,7 +47,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
-import static de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp.pickLevelCompleteMessage;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.pickLevelCompleteMessage;
 
 /**
  * 3D play scene.

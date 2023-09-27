@@ -15,7 +15,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGam
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 
-import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

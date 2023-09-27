@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;

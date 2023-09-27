@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.app.PacManGames2dApp;
+import de.amr.games.pacman.ui.fx.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import javafx.geometry.Rectangle2D;
 

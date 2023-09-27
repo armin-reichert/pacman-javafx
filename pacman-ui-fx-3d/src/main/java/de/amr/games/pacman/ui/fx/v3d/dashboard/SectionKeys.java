@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dApp;
-import de.amr.games.pacman.ui.fx.v3d.app.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 
 /**
  * Keyboard shortcuts.

@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.actors.GhostState.RETURNING_TO_HOUSE;
-import static de.amr.games.pacman.ui.fx.app.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 
 /**
  * 2D play scene.
