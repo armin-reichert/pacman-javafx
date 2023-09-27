@@ -41,9 +41,7 @@ import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
 /**
  * @author Armin Reichert
  */
-public class PacManGames3dApp extends Application {
-
-	public static final ResourceManager MGR  = new ResourceManager("/de/amr/games/pacman/ui/fx/v3d/", PacManGames3dApp.class);
+public class PacManGames3dApp extends Application implements ResourceManager {
 	public static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.ui.fx.v3d.texts.messages");
 
 	public static final float           PIP_MIN_HEIGHT           = 0.75f * GameModel.TILES_Y * TS;
@@ -85,28 +83,97 @@ public class PacManGames3dApp extends Application {
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
-	public static Theme createTheme() {
-		var theme = PacManGames2dApp.createTheme(PacManGames2dApp.MGR);
+	public static String pickFunnyReadyMessage(GameVariant gameVariant) {
+		return switch (gameVariant) {
+			case MS_PACMAN -> PICKER_READY_MS_PACMAN.next();
+			case PACMAN    -> PICKER_READY_PACMAN.next();
+		};
+	}
 
-		theme.set("model3D.pacman",                  new Model3D(MGR.url("model3D/pacman.obj")));
-		theme.set("model3D.ghost",                   new Model3D(MGR.url("model3D/ghost.obj")));
-		theme.set("model3D.pellet",                  new Model3D(MGR.url("model3D/12206_Fruit_v1_L3.obj")));
+	public static String pickLevelCompleteMessage(int levelNumber) {
+		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
+				ResourceManager.message(TEXTS, "level_complete", levelNumber));
+	}
 
-		theme.set("model3D.wallpaper",  MGR.imageBackground("graphics/sea-wallpaper.jpg",
+	private final Settings settings = new Settings();
+	private PacManGames3dUI ui;
+
+	@Override
+	public String rootDir() {
+		return "/de/amr/games/pacman/ui/fx/v3d/";
+	}
+
+	@Override
+	public void init() {
+		if (getParameters() != null) {
+			settings.merge(getParameters().getNamed());
+		}
+		GameController.create(settings.variant);
+		Logger.info("Game initialized: {}", settings);
+	}
+
+	@Override
+	public void start(Stage stage) {
+		Map<String, GameScene> gameScenesMsPacMan = Map.of(
+			"boot",   new BootScene(),
+			"intro",  new MsPacManIntroScene(),
+			"credit", new MsPacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"play3D", new PlayScene3D(),
+			"cut1",   new MsPacManCutscene1(),
+			"cut2",   new MsPacManCutscene2(),
+			"cut3",   new MsPacManCutscene3()
+		);
+
+		Map<String, GameScene> gameScenesPacMan = Map.of(
+			"boot",   new BootScene(),
+			"intro",  new PacManIntroScene(),
+			"credit", new PacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"play3D", new PlayScene3D(),
+			"cut1",   new PacManCutscene1(),
+			"cut2",   new PacManCutscene2(),
+			"cut3",   new PacManCutscene3()
+		);
+
+		var theme = createTheme();
+		Logger.info("Theme created: {}", theme);
+
+		ui = new PacManGames3dUI(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+		GameController.it().addListener(ui);
+		ui.showStartPage();
+		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+		Logger.info("Game started. Clock speed: {} Hz", ui.clock().targetFrameratePy.get());
+	}
+
+	@Override
+	public void stop() {
+		ui.clock().stop();
+		Logger.info("Game stopped.");
+	}
+
+	protected Theme createTheme() {
+		var theme = new PacManGames2dApp().createTheme();
+
+		theme.set("model3D.pacman",                  new Model3D(url("model3D/pacman.obj")));
+		theme.set("model3D.ghost",                   new Model3D(url("model3D/ghost.obj")));
+		theme.set("model3D.pellet",                  new Model3D(url("model3D/12206_Fruit_v1_L3.obj")));
+
+		theme.set("model3D.wallpaper",  imageBackground("graphics/sea-wallpaper.jpg",
 				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER,
 				new BackgroundSize(1, 1, true, true, false, true)
 		));
-		theme.set("model3D.wallpaper.night",  MGR.imageBackground("graphics/sea-wallpaper-night.jpg",
+		theme.set("model3D.wallpaper.night",  imageBackground("graphics/sea-wallpaper-night.jpg",
 				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER,
 				new BackgroundSize(1, 1, true, true, false, true)
 		));
 
-		theme.set("image.armin1970",                 MGR.image("graphics/armin.jpg"));
-		theme.set("icon.play",                       MGR.image("graphics/icons/play.png"));
-		theme.set("icon.stop",                       MGR.image("graphics/icons/stop.png"));
-		theme.set("icon.step",                       MGR.image("graphics/icons/step.png"));
+		theme.set("image.armin1970",                 image("graphics/armin.jpg"));
+		theme.set("icon.play",                       image("graphics/icons/play.png"));
+		theme.set("icon.stop",                       image("graphics/icons/stop.png"));
+		theme.set("icon.step",                       image("graphics/icons/step.png"));
 
 		theme.set("texture.hexagon",                 createFloorTexture("hexagon", "jpg"));
 		theme.set("texture.knobs",                   createFloorTexture("knobs", "jpg"));
@@ -184,82 +251,18 @@ public class PacManGames3dApp extends Application {
 		return theme;
 	}
 
-	public static String pickFunnyReadyMessage(GameVariant gameVariant) {
-		return switch (gameVariant) {
-			case MS_PACMAN -> PICKER_READY_MS_PACMAN.next();
-			case PACMAN    -> PICKER_READY_PACMAN.next();
-		};
-	}
-
-	public static String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
-				ResourceManager.message(TEXTS, "level_complete", levelNumber));
-	}
-
-	private static PhongMaterial createFloorTexture(String textureBase, String ext) {
+	private PhongMaterial createFloorTexture(String textureBase, String ext) {
 		var material = textureMaterial(textureBase, ext, null, null);
 		material.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
 		return material;
 	}
 
-	public static PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
+	public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 		var texture = new PhongMaterial();
-		texture.setBumpMap(MGR.image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-		texture.setDiffuseMap(MGR.image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
+		texture.setBumpMap(image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
+		texture.setDiffuseMap(image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
 		texture.setDiffuseColor(diffuseColor);
 		texture.setSpecularColor(specularColor);
 		return texture;
-	}
-
-	private final Settings settings = new Settings();
-	private PacManGames3dUI ui;
-
-	@Override
-	public void init() {
-		if (getParameters() != null) {
-			settings.merge(getParameters().getNamed());
-		}
-		GameController.create(settings.variant);
-		Logger.info("Game initialized: {}", settings);
-	}
-
-	@Override
-	public void start(Stage stage) {
-		Map<String, GameScene> gameScenesMsPacMan = Map.of(
-			"boot",   new BootScene(),
-			"intro",  new MsPacManIntroScene(),
-			"credit", new MsPacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"play3D", new PlayScene3D(),
-			"cut1",   new MsPacManCutscene1(),
-			"cut2",   new MsPacManCutscene2(),
-			"cut3",   new MsPacManCutscene3()
-		);
-
-		Map<String, GameScene> gameScenesPacMan = Map.of(
-			"boot",   new BootScene(),
-			"intro",  new PacManIntroScene(),
-			"credit", new PacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"play3D", new PlayScene3D(),
-			"cut1",   new PacManCutscene1(),
-			"cut2",   new PacManCutscene2(),
-			"cut3",   new PacManCutscene3()
-		);
-
-		var theme = createTheme();
-		Logger.info("Theme created: {}", theme);
-
-		ui = new PacManGames3dUI(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
-		GameController.it().addListener(ui);
-		ui.showStartPage();
-		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Game started. Clock speed: {} Hz", ui.clock().targetFrameratePy.get());
-	}
-
-	@Override
-	public void stop() {
-		ui.clock().stop();
-		Logger.info("Game stopped.");
 	}
 }

@@ -15,7 +15,8 @@ public class ObjModelLoaderTest {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			var url = PacManGames3dApp.MGR.url(args[0]);
+			var app = new PacManGames3dApp();
+			var url = app.url(args[0]);
 			var model = new Model3D(url);
 			System.out.println(model.contentReport());
 		} else {
