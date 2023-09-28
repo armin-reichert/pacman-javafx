@@ -149,7 +149,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		Logger.info("Game stopped.");
 	}
 
-	protected Theme createTheme() {
+	private Theme createTheme() {
 		var theme = new PacManGames2dApp().createTheme();
 
 		theme.set("model3D.pacman",                  new Model3D(url("model3D/pacman.obj")));
@@ -254,7 +254,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		return material;
 	}
 
-	public PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
+	private PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
 		var texture = new PhongMaterial();
 		texture.setBumpMap(image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
 		texture.setDiffuseMap(image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
