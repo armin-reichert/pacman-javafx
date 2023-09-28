@@ -54,7 +54,7 @@ public class Pac3D {
 	private WalkingAnimation walkingAnimation;
 	private DyingAnimation dyingAnimation;
 
-	public static Group createPacManGroup(Model3D model3D, Theme theme) {
+	static Group createPacManGroup(Model3D model3D, Theme theme) {
 		var body = createBody(model3D, 9,
 				theme.color("pacman.color.head"),
 				theme.color("pacman.color.eyes"),
@@ -62,7 +62,7 @@ public class Pac3D {
 		return new Group(body);
 	}
 
-	public static Group createMsPacManGroup(Model3D model3D, Theme theme) {
+	static Group createMsPacManGroup(Model3D model3D, Theme theme) {
 		var body = createBody(model3D, 9,
 				theme.color("mspacman.color.head"),
 				theme.color("mspacman.color.eyes"),
@@ -72,6 +72,7 @@ public class Pac3D {
 
 	public static Pac3D createPacMan3D(Model3D model3D, Theme theme, Pac pacMan) {
 		checkNotNull(model3D);
+		checkNotNull(theme);
 		checkNotNull(pacMan);
 
 		var pac3D = new Pac3D(createPacManGroup(model3D, theme), pacMan, theme.color("pacman.color.head"));
@@ -84,6 +85,7 @@ public class Pac3D {
 
 	public static Pac3D createMsPacMan3D(Model3D model3D, Theme theme, Pac msPacMan) {
 		checkNotNull(model3D);
+		checkNotNull(theme);
 		checkNotNull(msPacMan);
 
 		var pac3D = new Pac3D(createMsPacManGroup(model3D, theme), msPacMan, theme.color("mspacman.color.head"));

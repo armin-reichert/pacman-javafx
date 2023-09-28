@@ -64,7 +64,7 @@ public class LivesCounter3D {
 
 	private final List<Animation> animations = new ArrayList<>();
 
-	private LivesCounter3D(Supplier<Group> pacShapeProducer, boolean lookRight) {
+	private LivesCounter3D(Supplier<Node> pacShapeProducer, boolean lookRight) {
 		requireNonNull(pacShapeProducer);
 
 		pillarMaterial = ResourceManager.coloredMaterial(Color.rgb(100, 100, 100));
