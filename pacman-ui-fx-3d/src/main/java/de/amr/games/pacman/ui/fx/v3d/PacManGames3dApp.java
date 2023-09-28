@@ -248,18 +248,11 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		return theme;
 	}
 
-	private PhongMaterial createFloorTexture(String textureBase, String ext) {
-		var material = textureMaterial(textureBase, ext, null, null);
-		material.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
-		return material;
-	}
-
-	private PhongMaterial textureMaterial(String textureBase, String ext, Color diffuseColor, Color specularColor) {
+	private PhongMaterial createFloorTexture(String baseName, String ext) {
 		var texture = new PhongMaterial();
-		texture.setBumpMap(image("graphics/textures/%s-bump.%s".formatted(textureBase, ext)));
-		texture.setDiffuseMap(image("graphics/textures/%s-diffuse.%s".formatted(textureBase, ext)));
-		texture.setDiffuseColor(diffuseColor);
-		texture.setSpecularColor(specularColor);
+		texture.setBumpMap(image("graphics/textures/%s-bump.%s".formatted(baseName, ext)));
+		texture.setDiffuseMap(image("graphics/textures/%s-diffuse.%s".formatted(baseName, ext)));
+		texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
 		return texture;
 	}
 }
