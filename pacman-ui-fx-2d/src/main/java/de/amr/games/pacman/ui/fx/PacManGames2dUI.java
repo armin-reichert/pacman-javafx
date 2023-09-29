@@ -132,7 +132,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	public void showStartPage() {
 		currentPage = startPage;
-		clock.stop();
+		if (clock.isRunning()) {
+			clock.stop();
+			Logger.info("Clock stopped.");
+		}
 		scene.setRoot(startPage.root());
 		updateStage();
 		startPage.setGameVariant(game().variant());
@@ -150,6 +153,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		updateStage();
 		stage.show();
 		clock.start();
+		Logger.info("Clock started, speed={} Hz", clock.targetFrameratePy.get());
 	}
 
 	protected void configurePacSteering() {

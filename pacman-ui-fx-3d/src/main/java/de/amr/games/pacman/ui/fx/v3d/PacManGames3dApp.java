@@ -140,7 +140,6 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		GameController.it().addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Game started. Clock speed: {} Hz", ui.clock().targetFrameratePy.get());
 	}
 
 	@Override

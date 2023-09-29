@@ -113,7 +113,6 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		GameController.it().addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Game started. Clock speed={} Hz", ui.clock().targetFrameratePy.get());
 	}
 
 	@Override
