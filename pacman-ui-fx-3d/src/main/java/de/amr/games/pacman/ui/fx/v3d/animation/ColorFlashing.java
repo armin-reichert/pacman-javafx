@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
-import de.amr.games.pacman.lib.Globals;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;

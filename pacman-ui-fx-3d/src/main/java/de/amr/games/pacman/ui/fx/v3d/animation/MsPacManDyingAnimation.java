@@ -13,10 +13,12 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.util.function.Supplier;
+
 /**
  * @author Armin Reichert
  */
-public class MsPacManDyingAnimation implements DyingAnimation {
+public class MsPacManDyingAnimation implements Supplier<Animation> {
 
 	private final Animation animation;
 
@@ -28,17 +30,15 @@ public class MsPacManDyingAnimation implements DyingAnimation {
 		spin.setInterpolator(Interpolator.LINEAR);
 		spin.setCycleCount(4);
 		spin.setRate(2);
-		//@formatter:off
 		animation = new SequentialTransition(
 			Ufx.pauseSeconds(0.5),
 			spin,
 			Ufx.pauseSeconds(2)
 		);
-		//@formatter:on
 	}
 
 	@Override
-	public Animation animation() {
+	public Animation get() {
 		return animation;
 	}
 }

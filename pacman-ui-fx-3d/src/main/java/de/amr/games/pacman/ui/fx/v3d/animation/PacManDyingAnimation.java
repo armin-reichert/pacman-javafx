@@ -10,10 +10,12 @@ import javafx.animation.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.util.function.Supplier;
+
 /**
  * @author Armin Reichert
  */
-public class PacManDyingAnimation implements DyingAnimation {
+public class PacManDyingAnimation implements Supplier<Animation> {
 
 	private final Animation animation;
 	private final RotateTransition spinning;
@@ -61,7 +63,7 @@ public class PacManDyingAnimation implements DyingAnimation {
 	}
 
 	@Override
-	public Animation animation() {
+	public Animation get() {
 		return animation;
 	}
 }
