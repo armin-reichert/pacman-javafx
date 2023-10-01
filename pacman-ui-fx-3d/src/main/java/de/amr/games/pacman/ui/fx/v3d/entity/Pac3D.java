@@ -177,6 +177,14 @@ public class Pac3D {
 		return root;
 	}
 
+	public Node pacNode() {
+		return root.getChildren().get(0);
+	}
+
+	public Pac pac() {
+		return pac;
+	}
+
 	public Rotate orientation() {
 		return orientation;
 	}
