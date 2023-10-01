@@ -5,34 +5,36 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.animation;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.animation.*;
-import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-
-import java.util.function.Supplier;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
  */
-public class PacManDyingAnimation implements Supplier<Animation> {
+public interface PacDyingAnimations {
 
-	private final Pac3D pac3D;
-	private Duration spinningDuration = Duration.seconds(1.5);
-	private short numSpins = 10;
-
-	public PacManDyingAnimation(Pac3D pac3D) {
-		checkNotNull(pac3D);
-		this.pac3D = pac3D;
+	public static Animation createMsPacManDyingAnimation(Pac3D msPac3D) {
+		var spin = new RotateTransition(Duration.seconds(0.5), msPac3D.getRoot());
+		spin.setAxis(Rotate.X_AXIS);
+		spin.setFromAngle(0);
+		spin.setToAngle(360);
+		spin.setInterpolator(Interpolator.LINEAR);
+		spin.setCycleCount(4);
+		spin.setRate(2);
+		return new SequentialTransition(
+			Ufx.pauseSeconds(0.5),
+			spin,
+			Ufx.pauseSeconds(2)
+		);
 	}
 
-	@Override
-	public Animation get() {
+	public static Animation createPacManDyingAnimation(Pac3D pac3D) {
+		Duration spinningDuration = Duration.seconds(1.5);
+		short numSpins = 10;
+
 		var spinning = new RotateTransition(spinningDuration.divide(numSpins), pac3D.getRoot());
 		spinning.setAxis(Rotate.Z_AXIS);
 		spinning.setByAngle(360);

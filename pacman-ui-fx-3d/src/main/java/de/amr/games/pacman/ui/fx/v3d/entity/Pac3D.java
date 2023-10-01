@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -25,7 +27,6 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -54,7 +55,6 @@ public class Pac3D {
 	private Translate position = new Translate();
 	private Rotate orientation = new Rotate();
 	private WalkingAnimation walkingAnimation;
-	private Supplier<Animation> dyingAnimation;
 
 	static Group createPacManGroup(Model3D model3D, Theme theme) {
 		var body = createBody(model3D, 9,
@@ -79,7 +79,6 @@ public class Pac3D {
 
 		var pac3D = new Pac3D(createPacManGroup(model3D, theme), pacMan, theme.color("pacman.color.head"));
 		pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
-		pac3D.dyingAnimation = new PacManDyingAnimation(pac3D);
 		pac3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
 
 		return pac3D;
@@ -92,7 +91,6 @@ public class Pac3D {
 
 		var pac3D = new Pac3D(createMsPacManGroup(model3D, theme), msPacMan, theme.color("mspacman.color.head"));
 		pac3D.walkingAnimation = new HipSwaying(msPacMan, pac3D.root);
-		pac3D.dyingAnimation = new MsPacManDyingAnimation(pac3D.root);
 		pac3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
 
 		return pac3D;
@@ -193,8 +191,13 @@ public class Pac3D {
 		return position;
 	}
 
-	public Supplier<Animation> dyingAnimation() {
-		return dyingAnimation;
+	public Animation dyingAnimation(GameVariant variant)
+	{
+		return switch (variant) {
+			case MS_PACMAN -> PacDyingAnimations.createMsPacManDyingAnimation(this);
+			case PACMAN -> PacDyingAnimations.createPacManDyingAnimation(this);
+			default -> throw new IllegalGameVariantException(variant);
+		};
 	}
 
 	public WalkingAnimation walkingAnimation() {
