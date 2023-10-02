@@ -10,10 +10,11 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.animation.*;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
-import javafx.animation.Animation;
+import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -26,6 +27,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
@@ -194,8 +196,8 @@ public class Pac3D {
 	public Animation dyingAnimation(GameVariant variant)
 	{
 		return switch (variant) {
-			case MS_PACMAN -> PacDyingAnimations.createMsPacManDyingAnimation(this);
-			case PACMAN -> PacDyingAnimations.createPacManDyingAnimation(this);
+			case MS_PACMAN -> createMsPacManDyingAnimation();
+			case PACMAN -> createPacManDyingAnimation();
 			default -> throw new IllegalGameVariantException(variant);
 		};
 	}
@@ -246,5 +248,59 @@ public class Pac3D {
 
 	private boolean outsideWorld() {
 		return position.getX() < HTS || position.getX() > TS * pac.level().world().numCols() - HTS;
+	}
+
+	private Animation createMsPacManDyingAnimation() {
+		var spin = new RotateTransition(Duration.seconds(0.5), root);
+		spin.setAxis(Rotate.X_AXIS); //TODO check this
+		spin.setFromAngle(0);
+		spin.setToAngle(360);
+		spin.setInterpolator(Interpolator.LINEAR);
+		spin.setCycleCount(4);
+		spin.setRate(2);
+		return new SequentialTransition(
+				Ufx.pauseSeconds(0.5),
+				spin,
+				Ufx.pauseSeconds(2)
+		);
+	}
+
+	private Animation createPacManDyingAnimation() {
+		Duration spinningDuration = Duration.seconds(1.5);
+		short numSpins = 10;
+
+		var spinning = new RotateTransition(spinningDuration.divide(numSpins), root);
+		spinning.setAxis(Rotate.Z_AXIS);
+		spinning.setByAngle(360);
+		spinning.setCycleCount(numSpins);
+		spinning.setInterpolator(Interpolator.LINEAR);
+
+		var shrinking = new ScaleTransition(spinningDuration, root);
+		shrinking.setToX(0.75);
+		shrinking.setToY(0.75);
+		shrinking.setToZ(0.0);
+		shrinking.setInterpolator(Interpolator.LINEAR);
+
+		var falling = new TranslateTransition(spinningDuration, root);
+		falling.setToZ(4);
+		falling.setInterpolator(Interpolator.EASE_IN);
+
+		var animation = new SequentialTransition(
+				Ufx.actionAfterSeconds(0, () -> {
+					//TODO does not yet work as I want to
+					init();
+					turnTo(Direction.RIGHT);
+				}),
+				Ufx.pauseSeconds(0.5),
+				new ParallelTransition(spinning, shrinking, falling),
+				Ufx.pauseSeconds(1.0)
+		);
+
+		animation.setOnFinished(e -> {
+			root.setVisible(false);
+			root.setTranslateZ(0);
+		});
+
+		return animation;
 	}
 }
