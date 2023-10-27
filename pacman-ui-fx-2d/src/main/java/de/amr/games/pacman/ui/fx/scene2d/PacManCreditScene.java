@@ -35,7 +35,6 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var theme = context.theme();
 		var font8 = sceneFont(8);
 		var font6 = sceneFont(6);
 		drawText("PUSH START BUTTON", ArcadePalette.ORANGE, font8, t(6), t(17));
