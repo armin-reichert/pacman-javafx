@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
@@ -70,8 +69,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 
 	public static final BooleanProperty PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
 
-	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD   = just(KeyCode.F1);
-	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD_2 = alt(KeyCode.B);
+	public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD   = { just(KeyCode.F1), alt(KeyCode.B) };
 	public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW    = just(KeyCode.F2);
 	public static final KeyCodeCombination KEY_TOGGLE_2D_3D       = alt(KeyCode.DIGIT3);
 	public static final KeyCodeCombination KEY_PREV_PERSPECTIVE   = alt(KeyCode.LEFT);
@@ -84,18 +82,6 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 	public static final Picker<String> PICKER_GAME_OVER       = Picker.fromBundle(TEXTS, "game.over");
 
 	public static final String KEY_NO_TEXTURE = "No Texture";
-
-	public static String pickFunnyReadyMessage(GameVariant gameVariant) {
-		return switch (gameVariant) {
-			case MS_PACMAN -> PICKER_READY_MS_PACMAN.next();
-			case PACMAN    -> PICKER_READY_PACMAN.next();
-		};
-	}
-
-	public static String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
-				ResourceManager.message(TEXTS, "level_complete", levelNumber));
-	}
 
 	private final Settings settings = new Settings();
 	private PacManGames3dUI ui;

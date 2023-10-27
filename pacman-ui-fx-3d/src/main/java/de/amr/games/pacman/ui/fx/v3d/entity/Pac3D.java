@@ -8,11 +8,12 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
-import de.amr.games.pacman.ui.fx.v3d.animation.*;
+import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
+import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
+import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
+import de.amr.games.pacman.ui.fx.v3d.animation.WalkingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
@@ -32,6 +33,10 @@ import javafx.util.Duration;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
+import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
+import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
 
 /**
  * 3D-representation of Pac-Man and Ms. Pac-Man.
@@ -101,15 +106,15 @@ public class Pac3D {
 	private static Group createBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
 		var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
 		head.setId(Model3D.cssID(MESH_ID_HEAD));
-		head.setMaterial(ResourceManager.coloredMaterial(headColor));
+		head.setMaterial(coloredMaterial(headColor));
 
 		var eyes = new MeshView(model3D.mesh(MESH_ID_EYES));
 		eyes.setId(Model3D.cssID(MESH_ID_EYES));
-		eyes.setMaterial(ResourceManager.coloredMaterial(eyesColor));
+		eyes.setMaterial(coloredMaterial(eyesColor));
 
 		var palate = new MeshView(model3D.mesh(MESH_ID_PALATE));
 		palate.setId(Model3D.cssID(MESH_ID_PALATE));
-		palate.setMaterial(ResourceManager.coloredMaterial(palateColor));
+		palate.setMaterial(coloredMaterial(palateColor));
 
 		var centerTransform = Model3D.centerOverOrigin(head);
 		Stream.of(head, eyes, palate).map(Node::getTransforms).forEach(tf -> tf.add(centerTransform));
@@ -126,7 +131,7 @@ public class Pac3D {
 	}
 
 	private static Group createFeminineParts(Theme theme, double pacSize) {
-		var bowMaterial = ResourceManager.coloredMaterial(theme.color("mspacman.color.hairbow"));
+		var bowMaterial = coloredMaterial(theme.color("mspacman.color.hairbow"));
 
 		var bowLeft = new Sphere(1.2);
 		bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
@@ -136,7 +141,7 @@ public class Pac3D {
 		bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
 		bowRight.setMaterial(bowMaterial);
 
-		var pearlMaterial = ResourceManager.coloredMaterial(theme.color("mspacman.color.hairbow.pearls"));
+		var pearlMaterial = coloredMaterial(theme.color("mspacman.color.hairbow.pearls"));
 
 		var pearlLeft = new Sphere(0.4);
 		pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
@@ -147,10 +152,10 @@ public class Pac3D {
 		pearlRight.setMaterial(pearlMaterial);
 
 		var beautySpot = new Sphere(0.25);
-		beautySpot.setMaterial(ResourceManager.coloredMaterial(Color.rgb(100, 100, 100)));
+		beautySpot.setMaterial(coloredMaterial(Color.rgb(100, 100, 100)));
 		beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
-		var silicone = ResourceManager.coloredMaterial(theme.color("mspacman.color.boobs"));
+		var silicone = coloredMaterial(theme.color("mspacman.color.boobs"));
 
 		var boobLeft = new Sphere(1.5);
 		boobLeft.setMaterial(silicone);
@@ -168,9 +173,9 @@ public class Pac3D {
 		this.pac = pac;
 		this.headColor = headColor;
 		pacNode.getTransforms().setAll(position, orientation);
-		Model3D.meshView(pacNode, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-		Model3D.meshView(pacNode, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-		Model3D.meshView(pacNode, MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+		meshView(pacNode, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+		meshView(pacNode, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+		meshView(pacNode, MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 	}
 
 	public Group getRoot() {
@@ -259,9 +264,9 @@ public class Pac3D {
 		spin.setCycleCount(4);
 		spin.setRate(2);
 		return new SequentialTransition(
-				Ufx.pauseSeconds(0.5),
+				pauseSeconds(0.5),
 				spin,
-				Ufx.pauseSeconds(2)
+				pauseSeconds(2)
 		);
 	}
 
@@ -286,14 +291,14 @@ public class Pac3D {
 		falling.setInterpolator(Interpolator.EASE_IN);
 
 		var animation = new SequentialTransition(
-				Ufx.actionAfterSeconds(0, () -> {
+				actionAfterSeconds(0, () -> {
 					//TODO does not yet work as I want to
 					init();
 					turnTo(Direction.RIGHT);
 				}),
-				Ufx.pauseSeconds(0.5),
+				pauseSeconds(0.5),
 				new ParallelTransition(spinning, shrinking, falling),
-				Ufx.pauseSeconds(1.0)
+				pauseSeconds(1.0)
 		);
 
 		animation.setOnFinished(e -> {
