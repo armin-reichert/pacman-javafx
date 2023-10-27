@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -19,6 +20,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
@@ -47,7 +49,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.pickLevelCompleteMessage;
 
 /**
  * 3D play scene.
@@ -315,7 +316,7 @@ public class PlayScene3D implements GameScene {
 			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
 			var msg = "READY!";
 			if (!PacManGames3dApp.PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
-				msg = PacManGames3dApp.pickFunnyReadyMessage(game().variant());
+				msg = pickFunnyReadyMessage(game().variant());
 			}
 			readyMessageText3D.setText(msg);
 			readyMessageText3D.setVisible(true);
@@ -425,6 +426,17 @@ public class PlayScene3D implements GameScene {
 			// ignore
 		}
 		}
+	}
+
+	private String pickFunnyReadyMessage(GameVariant gameVariant) {
+		return switch (gameVariant) {
+			case MS_PACMAN -> PacManGames3dApp.PICKER_READY_MS_PACMAN.next();
+			case PACMAN    -> PacManGames3dApp.PICKER_READY_PACMAN.next();
+		};
+	}
+	private String pickLevelCompleteMessage(int levelNumber) {
+		return "%s%n%n%s".formatted(PacManGames3dApp.PICKER_LEVEL_COMPLETE.next(),
+				ResourceManager.message(PacManGames3dApp.TEXTS, "level_complete", levelNumber));
 	}
 
 	private Animation createLevelChangeAnimation() {
