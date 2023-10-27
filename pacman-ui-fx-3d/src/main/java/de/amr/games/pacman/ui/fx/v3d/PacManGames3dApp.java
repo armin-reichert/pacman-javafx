@@ -69,8 +69,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 
 	public static final BooleanProperty PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
 
-	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD   = just(KeyCode.F1);
-	public static final KeyCodeCombination KEY_TOGGLE_DASHBOARD_2 = alt(KeyCode.B);
+	public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD   = { just(KeyCode.F1), alt(KeyCode.B) };
 	public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW    = just(KeyCode.F2);
 	public static final KeyCodeCombination KEY_TOGGLE_2D_3D       = alt(KeyCode.DIGIT3);
 	public static final KeyCodeCombination KEY_PREV_PERSPECTIVE   = alt(KeyCode.LEFT);

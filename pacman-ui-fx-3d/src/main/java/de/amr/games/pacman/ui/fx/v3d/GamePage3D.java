@@ -199,7 +199,7 @@ public class GamePage3D extends GamePage {
 	protected void handleKeyboardInput() {
 		if (Keyboard.pressed(PacManGames3dApp.KEY_TOGGLE_2D_3D)) {
 			ui().toggle2D3D();
-		} else if (Keyboard.anyPressed(PacManGames3dApp.KEY_TOGGLE_DASHBOARD, PacManGames3dApp.KEY_TOGGLE_DASHBOARD_2)) {
+		} else if (Keyboard.anyPressed(PacManGames3dApp.KEYS_TOGGLE_DASHBOARD)) {
 			toggleDashboardVisible();
 		} else if (Keyboard.pressed(PacManGames3dApp.KEY_TOGGLE_PIP_VIEW)) {
 			togglePipVisible();
