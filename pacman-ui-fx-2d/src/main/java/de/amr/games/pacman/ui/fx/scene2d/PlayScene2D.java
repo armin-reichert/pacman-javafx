@@ -46,7 +46,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.anyPressed(KEYS_ADD_CREDIT)) {
 			if (!GameController.it().hasCredit()) {
 				context.actionHandler().addCredit();
 			}
