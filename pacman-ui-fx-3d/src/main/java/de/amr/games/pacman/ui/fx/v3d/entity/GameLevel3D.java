@@ -68,7 +68,7 @@ public class GameLevel3D {
 				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
 				pac3D             = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac());
 				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
-				livesCounter3D    = LivesCounter3D.counterMsPacManGame(pacModel3D, theme);
+				livesCounter3D    = new LivesCounter3D(() -> Pac3D.createMsPacManGroup(pacModel3D, theme), true);
 			}
 			case PACMAN -> {
 				var foodColor     = theme.color("pacman.maze.foodColor");
@@ -78,7 +78,7 @@ public class GameLevel3D {
 				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
 				pac3D             = Pac3D.createPacMan3D(pacModel3D, theme, level.pac());
 				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
-				livesCounter3D    = LivesCounter3D.counterPacManGame(pacModel3D, theme);
+				livesCounter3D    = new LivesCounter3D(() -> Pac3D.createPacManGroup(pacModel3D, theme), false);
 			}
 			default -> throw new IllegalGameVariantException(level.game().variant());
 		}

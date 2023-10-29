@@ -39,14 +39,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class LivesCounter3D {
 
-	public static LivesCounter3D counterPacManGame(Model3D model3D, Theme theme) {
-		return new LivesCounter3D(() -> Pac3D.createPacManGroup(model3D, theme), false);
-	}
-
-	public static LivesCounter3D counterMsPacManGame(Model3D model3D, Theme theme) {
-		return new LivesCounter3D(() -> Pac3D.createMsPacManGroup(model3D, theme), true);
-	}
-
 	public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
@@ -64,8 +56,8 @@ public class LivesCounter3D {
 
 	private final List<Animation> animations = new ArrayList<>();
 
-	private LivesCounter3D(Supplier<Node> pacShapeProducer, boolean lookRight) {
-		requireNonNull(pacShapeProducer);
+	public LivesCounter3D(Supplier<Node> pacShapeSupplier, boolean lookRight) {
+		requireNonNull(pacShapeSupplier);
 
 		pillarMaterial = ResourceManager.coloredMaterial(Color.rgb(100, 100, 100));
 		plateMaterial = ResourceManager.coloredMaterial(Color.rgb(180, 180, 180));
@@ -74,7 +66,7 @@ public class LivesCounter3D {
 		for (int i = 0; i < maxLives; ++i) {
 			addStand(2 * i * TS);
 
-			var pacShape = pacShapeProducer.get();
+			var pacShape = pacShapeSupplier.get();
 			pacShape.setTranslateX(2.0 * i * TS);
 			pacShape.setTranslateZ(-(pillarHeight + 5.5));
 			if (lookRight) {
