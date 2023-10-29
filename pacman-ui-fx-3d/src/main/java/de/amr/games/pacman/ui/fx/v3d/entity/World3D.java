@@ -299,11 +299,10 @@ public class World3D {
 		default -> throw new IllegalStateException();
 		};
 		top.setMaterial(topMaterial);
+		top.setDepth(topHeight);
 		if (ghostHouseWall) {
-			top.setDepth(topHeight);
 			top.setTranslateZ(-ghostHouseHeight - 0.2);
 		} else {
-			top.setDepth(topHeight);
 			top.translateZProperty()
 					.bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
 		}
