@@ -40,8 +40,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  * @author Armin Reichert
  */
 public class World3D {
-
-	private static final int MAZE_RESOLUTION = 4; // 1, 2, 4, 8 are allowed values
 	private static final double FLOOR_THICKNESS = 0.25;
 
 	private static class WallData {
@@ -51,9 +49,6 @@ public class World3D {
 		int numBricksX;
 		int numBricksY;
 		float brickSize;
-		PhongMaterial baseMaterial;
-		PhongMaterial topMaterial;
-		PhongMaterial houseMaterial;
 	}
 
 	public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
@@ -91,43 +86,49 @@ public class World3D {
 	private final Group foodGroup = new Group();
 	private final FoodOscillation foodOscillation;
 
-	private Color foodColor;
-	private Color wallBaseColor;
-	private Color wallTopColor;
-	private Color doorColor;
+	private final Color foodColor;
+	private final Color doorColor;
+	private final PhongMaterial baseMaterial;
+	private final PhongMaterial topMaterial;
+	private final PhongMaterial houseMaterial;
 
 	public World3D(World world, Theme theme, Model3D pelletModel3D, Color foodColor, Color wallBaseColor,
 			Color wallTopColor, Color doorColor) {
 
-		checkNotNull(theme);
 		checkNotNull(world);
+		checkNotNull(theme);
 		checkNotNull(pelletModel3D);
 		checkNotNull(foodColor);
 		checkNotNull(wallBaseColor);
 		checkNotNull(wallTopColor);
 		checkNotNull(doorColor);
 
-		this.theme = theme;
 		this.world = world;
+		this.theme = theme;
 		this.pelletModel3D = pelletModel3D;
 		this.foodColor = foodColor;
-		this.wallBaseColor = wallBaseColor;
-		this.wallTopColor = wallTopColor;
 		this.doorColor = doorColor;
+		this.baseMaterial = ResourceManager.coloredMaterial(wallBaseColor);
+		this.topMaterial = ResourceManager.coloredMaterial(wallTopColor);
 
-		this.houseLight = createGhostHouseLight();
+		//TODO this should not depend on specific color value
+		var ghostHouseColor = wallBaseColor.equals(Color.rgb(222, 222, 255))
+				? Color.rgb(200, 200, 255) : wallBaseColor;
+		this.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(ghostHouseColor, 0.25));
+
+		this.houseLight = createGhostHouseLight(wallBaseColor);
 		this.foodOscillation = new FoodOscillation(foodGroup);
 
 		buildFloor();
-		buildWorld(MAZE_RESOLUTION);
+		buildWorld(4);
 		addFood();
 
 		root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, houseLight, foodGroup);
 	}
 
-	private PointLight createGhostHouseLight() {
+	private PointLight createGhostHouseLight(Color lightColor) {
 		var light = new PointLight();
-		light.setColor(wallBaseColor);
+		light.setColor(lightColor);
 		light.setMaxRange(3 * TS);
 		var center = world.house().seat("middle");
 		light.setTranslateX(center.x() + HTS);
@@ -175,9 +176,6 @@ public class World3D {
 	private WallData createWallData(int resolution) {
 		var wallData = new WallData();
 		wallData.brickSize = (float) TS / resolution;
-		wallData.baseMaterial = ResourceManager.coloredMaterial(wallBaseColor);
-		wallData.topMaterial = ResourceManager.coloredMaterial(wallTopColor);
-		wallData.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallBaseColor, 0.25));
 		return wallData;
 	}
 
@@ -192,36 +190,6 @@ public class World3D {
 		Logger.info("Done building 3D world (resolution={}, wall height={})", floorPlan.getResolution(),
 				wallHeightPy.get());
 	}
-
-//	private void transformMaze() {
-//		if (world instanceof MapBasedWorld mapWorld) {
-//			wallsGroup.getChildren().forEach(wall -> {
-//				WallData data = (WallData) wall.getUserData();
-//				Logger.info("Wall data type is %d", data.type);
-//				var tile = tileFromFloorPlanCoord(data.x, data.y);
-//				switch (data.type) {
-//				case FloorPlan.HWALL -> {
-//					var tileAbove = tile.plus(Direction.UP.vector());
-//					if (mapWorld.isWall(tileAbove)) {
-//						wall.getTransforms().add(new Translate(0, -2));
-//					} else {
-////						wall.getTransforms().add(new Translate(0, 2));
-//					}
-//				}
-//				case FloorPlan.VWALL -> {
-//
-//				}
-//				case FloorPlan.CORNER -> {
-//
-//				}
-//				}
-//			});
-//		}
-//	}
-//
-//	private Vector2i tileFromFloorPlanCoord(int fx, int fy) {
-//		return new Vector2i(fx / MAZE_RESOLUTION, fy / MAZE_RESOLUTION);
-//	}
 
 	public Stream<DoorWing3D> doorWings3D() {
 		return doorWings3D.stream().map(DoorWing3D.class::cast);
@@ -317,11 +285,11 @@ public class World3D {
 		if (ghostHouseWall) {
 			base.setDepth(ghostHouseHeight);
 			base.setTranslateZ(-ghostHouseHeight / 2);
-			base.setMaterial(wallData.houseMaterial);
+			base.setMaterial(houseMaterial);
 		} else {
 			base.depthProperty().bind(wallHeightPy);
 			base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-			base.setMaterial(wallData.baseMaterial);
+			base.setMaterial(baseMaterial);
 		}
 
 		var top = switch (wallData.type) {
@@ -330,7 +298,7 @@ public class World3D {
 		case FloorPlan.CORNER -> corner();
 		default -> throw new IllegalStateException();
 		};
-		top.setMaterial(wallData.topMaterial);
+		top.setMaterial(topMaterial);
 		if (ghostHouseWall) {
 			top.setDepth(topHeight);
 			top.setTranslateZ(-ghostHouseHeight - 0.2);
@@ -425,10 +393,5 @@ public class World3D {
 	public Optional<Eatable3D> eatableAt(Vector2i tile) {
 		checkTileNotNull(tile);
 		return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
-	}
-
-	public void logFood() {
-		Logger.info("Food: {} energizers, {} pellets total", energizers3D().count(), eatables3D().count());
-		eatables3D().forEach(Logger::info);
 	}
 }
