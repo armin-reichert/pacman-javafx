@@ -26,16 +26,15 @@ public class PacManCreditScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.anyPressed(KEYS_ADD_CREDIT)) {
 			context.actionHandler().addCredit();
-		} else if (Keyboard.anyPressed(KEY_START_GAME, KEY_START_GAME_NUMPAD)) {
+		} else if (Keyboard.anyPressed(KEYS_START_GAME)) {
 			context.actionHandler().startGame();
 		}
 	}
 
 	@Override
 	public void drawSceneContent() {
-		var theme = context.theme();
 		var font8 = sceneFont(8);
 		var font6 = sceneFont(6);
 		drawText("PUSH START BUTTON", ArcadePalette.ORANGE, font8, t(6), t(17));

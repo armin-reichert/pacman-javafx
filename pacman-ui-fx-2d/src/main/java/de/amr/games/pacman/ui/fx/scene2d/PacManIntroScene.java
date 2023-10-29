@@ -53,9 +53,9 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(KEY_ADD_CREDIT, KEY_ADD_CREDIT_NUMPAD)) {
+		if (Keyboard.anyPressed(KEYS_ADD_CREDIT)) {
 			context.actionHandler().addCredit();
-		} else if (Keyboard.anyPressed(KEY_START_GAME, KEY_START_GAME_NUMPAD)) {
+		} else if (Keyboard.anyPressed(KEYS_START_GAME)) {
 			context.actionHandler().startGame();
 		} else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
 			context.actionHandler().switchGameVariant();
