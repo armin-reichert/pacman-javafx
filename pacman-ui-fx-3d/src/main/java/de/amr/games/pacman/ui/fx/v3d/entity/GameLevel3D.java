@@ -35,26 +35,16 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class GameLevel3D {
 
-	private static PointLight createPacLight(Pac3D pac3D) {
-		var light = new PointLight();
-		light.setColor(Color.rgb(255, 255, 0, 0.75));
-		light.setMaxRange(2 * TS);
-		light.translateXProperty().bind(pac3D.position().xProperty());
-		light.translateYProperty().bind(pac3D.position().yProperty());
-		light.setTranslateZ(-10);
-		return light;
-	}
-
 	private final GameLevel level;
 	private final Group root = new Group();
 
-	private World3D world3D;
-	private Pac3D pac3D;
-	private PointLight pacLight;
-	private Ghost3D[] ghosts3D;
-	private LevelCounter3D levelCounter3D;
-	private LivesCounter3D livesCounter3D;
-	private Scores3D scores3D;
+	private final World3D world3D;
+	private final Pac3D pac3D;
+	private final PointLight pacLight;
+	private final Ghost3D[] ghosts3D;
+	private final LevelCounter3D levelCounter3D;
+	private final LivesCounter3D livesCounter3D;
+	private final Scores3D scores3D;
 	private Bonus3D bonus3D;
 
 	public GameLevel3D(GameLevel level, Theme theme, Spritesheet spritesheet) {
@@ -64,9 +54,9 @@ public class GameLevel3D {
 
 		this.level = level;
 
-		Model3D pelletModel3D = theme.get("model3D.pellet");
-		Model3D pacModel3D    = theme.get("model3D.pacman");
-		Model3D ghostModel3D  = theme.get("model3D.ghost");
+		var pelletModel3D = theme.<Model3D>get("model3D.pellet");
+		var pacModel3D    = theme.<Model3D>get("model3D.pacman");
+		var ghostModel3D  = theme.<Model3D>get("model3D.ghost");
 
 		switch (level.game().variant()) {
 			case MS_PACMAN -> {
@@ -124,6 +114,16 @@ public class GameLevel3D {
 		world3D.wallHeightPy.bind(PacManGames3dApp.PY_3D_WALL_HEIGHT);
 		world3D.wallThicknessPy.bind(PacManGames3dApp.PY_3D_WALL_THICKNESS);
 		livesCounter3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+	}
+
+	private PointLight createPacLight(Pac3D pac3D) {
+		var light = new PointLight();
+		light.setColor(Color.rgb(255, 255, 0, 0.75));
+		light.setMaxRange(2 * TS);
+		light.translateXProperty().bind(pac3D.position().xProperty());
+		light.translateYProperty().bind(pac3D.position().yProperty());
+		light.setTranslateZ(-10);
+		return light;
 	}
 
 	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet) {
