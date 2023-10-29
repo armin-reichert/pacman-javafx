@@ -217,7 +217,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-			if (Keyboard.pressed(PacManGames2dApp.KEY_ADD_CREDIT) && !GameController.it().hasCredit()) {
+			if (Keyboard.anyPressed(PacManGames2dApp.KEYS_ADD_CREDIT) && !GameController.it().hasCredit()) {
 				context.actionHandler().addCredit();
 			} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
 				((ActionHandler3D) context.actionHandler()).selectPrevPerspective();
