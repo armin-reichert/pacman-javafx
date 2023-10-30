@@ -77,7 +77,6 @@ public class PlayScene3D implements GameScene {
 	private final Text3D readyMessageText3D = new Text3D();
 	private GameLevel3D level3D;
 
-
 	public PlayScene3D() {
 		camControllerMap.put(Perspective.DRONE,            new CamDrone());
 		camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
