@@ -217,21 +217,22 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void handleKeyboardInput() {
-			if (Keyboard.anyPressed(PacManGames2dApp.KEYS_ADD_CREDIT) && !GameController.it().hasCredit()) {
-				context.actionHandler().addCredit();
-			} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
-				((ActionHandler3D) context.actionHandler()).selectPrevPerspective();
-			} else if (Keyboard.pressed(PacManGames3dApp.KEY_NEXT_PERSPECTIVE)) {
-				((ActionHandler3D) context.actionHandler()).selectNextPerspective();
-			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
-				context.actionHandler().cheatEatAllPellets();
-			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
-				context.actionHandler().cheatAddLives();
-			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
-				context.actionHandler().cheatEnterNextLevel();
-			} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
-				context.actionHandler().cheatKillAllEatableGhosts();
-			}
+		var actionHandler = (ActionHandler3D) context.actionHandler();
+		if (Keyboard.anyPressed(PacManGames2dApp.KEYS_ADD_CREDIT) && !GameController.it().hasCredit()) {
+			actionHandler.addCredit();
+		} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
+			actionHandler.selectPrevPerspective();
+		} else if (Keyboard.pressed(PacManGames3dApp.KEY_NEXT_PERSPECTIVE)) {
+			actionHandler.selectNextPerspective();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
+			actionHandler.cheatEatAllPellets();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
+			actionHandler.cheatAddLives();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
+			actionHandler.cheatEnterNextLevel();
+		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
+			actionHandler.cheatKillAllEatableGhosts();
+		}
 	}
 
 	@Override
