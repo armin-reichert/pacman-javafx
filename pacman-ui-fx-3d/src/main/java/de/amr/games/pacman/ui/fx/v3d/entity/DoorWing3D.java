@@ -6,6 +6,10 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.v3d.animation.ColorChangeTransition;
+import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -15,9 +19,11 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 
 /**
  * Part a ghosthouse door.
@@ -32,15 +38,11 @@ public class DoorWing3D {
 
 	private final Group root = new Group();
 
-	private PhongMaterial doorOpenMaterial;
-	private PhongMaterial doorClosedMaterial;
+	private final Transition doorAnimation;
 
 	public DoorWing3D(Vector2i tile, Color color) {
 		checkTileNotNull(tile);
 		checkNotNull(color);
-
-		doorClosedMaterial = ResourceManager.coloredMaterial(color); // TODO
-		doorOpenMaterial = ResourceManager.coloredMaterial(ResourceManager.color(Color.gray(0.8), 0.1)); // TODO
 
 		for (int i = 0; i < 2; ++i) {
 			var vbar = new Cylinder(1, 8);
@@ -63,13 +65,24 @@ public class DoorWing3D {
 		hbar.setRotationAxis(Rotate.Z_AXIS);
 		hbar.setRotate(90);
 		root.getChildren().add(hbar);
+
+		var normalColor = Color.PINK;
+		var fadedColor = Color.TRANSPARENT;
+		var fadeOut = new ColorChangeTransition(Duration.seconds(0.2),
+			normalColor, fadedColor, barMaterialPy.get().diffuseColorProperty()
+		);
+		var fadeIn = new ColorChangeTransition(Duration.seconds(0.5),
+			fadedColor, normalColor, barMaterialPy.get().diffuseColorProperty()
+		);
+		fadeIn.setDelay(Duration.seconds(0.2));
+		doorAnimation = new SequentialTransition(fadeOut, fadeIn);
 	}
 
 	public Node getRoot() {
 		return root;
 	}
 
-	public void setOpen(boolean open) {
-		barMaterialPy.set(open ? doorOpenMaterial : doorClosedMaterial);
+	public void open() {
+		doorAnimation.play(); // if already running, does nothing
 	}
 }
