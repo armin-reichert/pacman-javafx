@@ -216,7 +216,7 @@ public class GameLevel3D {
 				.anyMatch(Ghost::isVisible);
 		boolean accessGranted = isAccessGranted(level.ghosts(), level.world().house().door());
 		if (accessGranted) {
-			world3D.doorWings3D().forEach(DoorWing3D::open);
+			world3D.doorWings3D().forEach(DoorWing3D::traverse);
 		}
 		world3D.houseLighting().setLightOn(isGhostNearHouse);
 	}

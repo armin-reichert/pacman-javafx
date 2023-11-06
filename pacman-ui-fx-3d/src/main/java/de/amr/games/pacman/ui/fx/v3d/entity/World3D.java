@@ -180,31 +180,25 @@ public class World3D {
 	}
 
 	private void buildWorld(int resolution) {
-		Logger.info("Build 3D world...");
 		var floorPlan = new FloorPlan(world, resolution);
 		wallsGroup.getChildren().clear();
 		addCorners(floorPlan, createWallData(resolution));
 		addHorizontalWalls(floorPlan, createWallData(resolution));
 		addVerticalWalls(floorPlan, createWallData(resolution));
-		addHouseDoor();
-		Logger.info("Done building 3D world (resolution={}, wall height={})", floorPlan.getResolution(),
-				wallHeightPy.get());
+		addDoorWing(world.house().door().leftWing(), doorColor);
+		addDoorWing(world.house().door().rightWing(), doorColor);
+		Logger.info("Built 3D world (resolution={}, wall height={})", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
 	public Stream<DoorWing3D> doorWings3D() {
-		return doorWings3D.stream().map(DoorWing3D.class::cast);
+		return doorWings3D.stream();
 	}
 
-	private void addHouseDoor() {
-		addDoorWing(world.house().door().leftWing());
-		addDoorWing(world.house().door().rightWing());
-	}
-
-	private void addDoorWing(Vector2i tile) {
-		var wing3D = new DoorWing3D(tile, doorColor);
-		wing3D.drawModePy.bind(drawModePy);
-		doorWings3D.add(wing3D);
-		doorGroup.getChildren().add(wing3D.getRoot());
+	private void addDoorWing(Vector2i tile, Color doorWingColor) {
+		var doorWing3D = new DoorWing3D(tile, doorWingColor);
+		doorWing3D.drawModePy.bind(drawModePy);
+		doorWings3D.add(doorWing3D);
+		doorGroup.getChildren().add(doorWing3D.getRoot());
 	}
 
 	private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
