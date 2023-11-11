@@ -49,6 +49,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
 
 /**
  * 3D play scene.
@@ -435,8 +436,7 @@ public class PlayScene3D implements GameScene {
 		};
 	}
 	private String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(PacManGames3dApp.PICKER_LEVEL_COMPLETE.next(),
-				ResourceManager.message(PacManGames3dApp.TEXTS, "level_complete", levelNumber));
+		return "%s%n%n%s".formatted(PacManGames3dApp.PICKER_LEVEL_COMPLETE.next(), message("level_complete", levelNumber));
 	}
 
 	private Animation createLevelChangeAnimation() {

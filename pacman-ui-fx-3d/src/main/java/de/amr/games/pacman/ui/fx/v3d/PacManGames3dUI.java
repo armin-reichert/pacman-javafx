@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 
 import java.util.Map;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -40,7 +40,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D {
 
 	public PacManGames3dUI(Stage stage, Settings settings, Theme theme,
-												 Map<String, GameScene> gameScenesMsPacMan, Map<String, GameScene> gameScenesPacMan) {
+						   Map<String, GameScene> gameScenesMsPacMan, Map<String, GameScene> gameScenesPacMan) {
 		super(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
 
 		if (gameScenesMsPacMan.get("play3D") instanceof PlayScene3D playScene3D) {
@@ -108,8 +108,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		if (clock().isPaused()) {
 			titleKey += ".paused";
 		}
-		var dimension = message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "threeD" : "twoD");
-		stage.setTitle(message(PacManGames3dApp.TEXTS, titleKey, dimension));
+		var dimension = message(PacManGames3dApp.PY_3D_ENABLED.get() ? "threeD" : "twoD");
+		stage.setTitle(message(titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 		gamePage().updateBackground();
 	}
@@ -135,7 +135,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 				gameScene.onSceneVariantSwitch();
 			}
 			GameController.it().update();
-			showFlashMessage(message(PacManGames3dApp.TEXTS, PacManGames3dApp.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(message(PacManGames3dApp.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 		});
 	}
 
@@ -158,8 +158,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	private void selectPerspective(Perspective perspective) {
 		PacManGames3dApp.PY_3D_PERSPECTIVE.set(perspective);
-		var perspectiveName = message(PacManGames3dApp.TEXTS, perspective.name());
-		showFlashMessage(message(PacManGames3dApp.TEXTS, "camera_perspective", perspectiveName));
+		var perspectiveName = message(perspective.name());
+		showFlashMessage(message("camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {

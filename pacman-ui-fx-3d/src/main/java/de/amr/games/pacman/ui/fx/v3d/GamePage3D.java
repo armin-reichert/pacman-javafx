@@ -29,7 +29,8 @@ import javafx.scene.text.Text;
 
 import java.time.LocalTime;
 
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
+
 
 /**
  * @author Armin Reichert
@@ -49,23 +50,23 @@ public class GamePage3D extends GamePage {
 
 		public void rebuild(GameScene gameScene) {
 			getItems().clear();
-			getItems().add(createTitleItem(tt("scene_display")));
+			getItems().add(createTitleItem(message("scene_display")));
 			if (gameScene instanceof PlayScene2D) {
-				var item = new MenuItem(tt("use_3D_scene"));
+				var item = new MenuItem(message("use_3D_scene"));
 				item.setOnAction(e -> ui().toggle2D3D());
 				getItems().add(item);
 			}
 			else if (gameScene instanceof PlayScene3D) {
-				var item = new MenuItem(tt("use_2D_scene"));
+				var item = new MenuItem(message("use_2D_scene"));
 				item.setOnAction(e -> ui().toggle2D3D());
 				getItems().add(item);
-				pipItem = new CheckMenuItem(tt("pip"));
+				pipItem = new CheckMenuItem(message("pip"));
 				pipItem.setOnAction(e -> togglePipVisible());
 				getItems().add(pipItem);
-				getItems().add(createTitleItem(tt("select_perspective")));
+				getItems().add(createTitleItem(message("select_perspective")));
 				perspectivesToggleGroup = new ToggleGroup();
 				for (var p : Perspective.values()) {
-					var rmi = new RadioMenuItem(message(PacManGames3dApp.TEXTS, p.name()));
+					var rmi = new RadioMenuItem(message(p.name()));
 					rmi.setUserData(p);
 					rmi.setToggleGroup(perspectivesToggleGroup);
 					getItems().add(rmi);
@@ -77,17 +78,13 @@ public class GamePage3D extends GamePage {
 					}
 				});
 			}
-			getItems().add(createTitleItem(tt("pacman")));
-			autopilotItem = new CheckMenuItem(tt("autopilot"));
+			getItems().add(createTitleItem(message("pacman")));
+			autopilotItem = new CheckMenuItem(message("autopilot"));
 			autopilotItem.setOnAction(e -> ui.toggleAutopilot());
 			getItems().add(autopilotItem);
-			immunityItem = new CheckMenuItem(tt("immunity"));
+			immunityItem = new CheckMenuItem(message("immunity"));
 			immunityItem.setOnAction(e -> ui.toggleImmunity());
 			getItems().add(immunityItem);
-		}
-
-		private String tt(String key) {
-			return message(PacManGames3dApp.TEXTS, key);
 		}
 
 		private MenuItem createTitleItem(String title) {
@@ -221,7 +218,7 @@ public class GamePage3D extends GamePage {
 
 	private void togglePipVisible() {
 		Ufx.toggle(PacManGames3dApp.PY_PIP_ON);
-		var message = message(PacManGames3dApp.TEXTS, isPictureInPictureActive() ? "pip_on" : "pip_off");
+		var message = message(isPictureInPictureActive() ? "pip_on" : "pip_off");
 		ui().showFlashMessage(message);
 		updateTopLayer();
 	}
