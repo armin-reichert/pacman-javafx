@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
@@ -56,7 +55,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
  *
  * <p>Provides different camera perspectives that can be selected sequentially using keys <code>Alt+LEFT</code>
  *  and <code>Alt+RIGHT</code>.</p>
- * 
+ *
  * @author Armin Reichert
  */
 public class PlayScene3D implements GameScene {
@@ -243,14 +242,14 @@ public class PlayScene3D implements GameScene {
 	public String camInfo() {
 		var cam = fxSubScene.getCamera();
 		return "x=%.0f y=%.0f z=%.0f rot=%.0f".formatted(cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),
-				cam.getRotate());
+			cam.getRotate());
 	}
 
 	@Override
 	public void onSceneVariantSwitch() {
 		game().level().ifPresent(level -> {
 			level3D.world3D().eatables3D().forEach(
-					eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
+				eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
 			if (Globals.oneOf(state(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
@@ -266,10 +265,10 @@ public class PlayScene3D implements GameScene {
 		// In that case, ensure that the 3D pellets are in sync with the model.
 		if (e.tile().isEmpty()) {
 			world().ifPresent(world -> world.tiles()
-					.filter(world::hasEatenFoodAt)
-					.map(level3D.world3D()::eatableAt)
-					.flatMap(Optional::stream)
-					.forEach(Eatable3D::eaten));
+				.filter(world::hasEatenFoodAt)
+				.map(level3D.world3D()::eatableAt)
+				.flatMap(Optional::stream)
+				.forEach(Eatable3D::eaten));
 		} else {
 			var tile = e.tile().get();
 			level3D.world3D().eatableAt(tile).ifPresent(level3D::eat);
@@ -312,98 +311,98 @@ public class PlayScene3D implements GameScene {
 	public void onGameStateChange(GameStateChangeEvent e) {
 		switch (e.newState) {
 
-		case READY -> {
-			level3D.pac3D().init();
-			Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
-			var msg = "READY!";
-			if (!PacManGames3dApp.PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
-				msg = pickFunnyReadyMessage(game().variant());
+			case READY -> {
+				level3D.pac3D().init();
+				Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+				var msg = "READY!";
+				if (!PacManGames3dApp.PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
+					msg = pickFunnyReadyMessage(game().variant());
+				}
+				readyMessageText3D.setText(msg);
+				readyMessageText3D.setVisible(true);
 			}
-			readyMessageText3D.setText(msg);
-			readyMessageText3D.setVisible(true);
-		}
 
-		case HUNTING -> {
-			level3D.livesCounter3D().startAnimation();
-			level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
-		}
+			case HUNTING -> {
+				level3D.livesCounter3D().startAnimation();
+				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
+			}
 
-		case PACMAN_DYING -> {
-			level3D.world3D().foodOscillation().stop();
-			lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation(game().variant()));
-		}
-
-		case GHOST_DYING -> {
-			game().level().map(GameLevel::thisFrame).ifPresent(thisFrame -> {
-				switch (game().variant()) {
-				case MS_PACMAN -> {
-					var ss = (SpritesheetMsPacManGame) context.spritesheet();
-					thisFrame.killedGhosts.forEach(ghost -> {
-						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
-						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
-					});
-				}
-				case PACMAN -> {
-					var ss = (SpritesheetPacManGame) context.spritesheet();
-					thisFrame.killedGhosts.forEach(ghost -> {
-						var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
-						level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
-					});
-				}
-				default -> throw new IllegalGameVariantException(game().variant());
-				}
-			});
-		}
-
-		case CHANGING_TO_NEXT_LEVEL -> {
-			game().level().ifPresent(level -> {
-				state().timer().resetIndefinitely();
-				replaceGameLevel3D(level);
-				updateCamera(perspectivePy.get());
-				keepGameStateForSeconds(3);
-			});
-		}
-
-		case LEVEL_COMPLETE -> {
-			game().level().ifPresent(level -> {
-				level3D.livesCounter3D().stopAnimation();
+			case PACMAN_DYING -> {
 				level3D.world3D().foodOscillation().stop();
-				// if cheat has been used to complete level, 3D food might still exist
-				level3D.world3D().eatables3D().forEach(level3D::eat);
-				// level complete animation is always played
-				var levelCompleteAnimation = createLevelCompleteAnimation(level);
-				// level change animation is played only if no intermission scene follows
-				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation()	: pauseSeconds(0);
-				lockStateAndPlayAfterSeconds(1.0,
-					levelCompleteAnimation, 
-					actionAfterSeconds(1.0, () -> {
-						level.pac().hide();
-						level3D.livesCounter3D().lightOnPy.set(false);
-						// play sound / flash msg only if no intermission scene follows
-						if (level.intermissionNumber == 0) {
-							context.clip("audio.level_complete").play();
-							context.actionHandler().showFlashMessageSeconds(2,	pickLevelCompleteMessage(level.number()));
+				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation(game().variant()));
+			}
+
+			case GHOST_DYING -> {
+				game().level().map(GameLevel::thisFrame).ifPresent(thisFrame -> {
+					switch (game().variant()) {
+						case MS_PACMAN -> {
+							var ss = (SpritesheetMsPacManGame) context.spritesheet();
+							thisFrame.killedGhosts.forEach(ghost -> {
+								var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
+								level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+							});
 						}
-					}),
-					levelChangeAnimation,
-					actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
-				);
-			});
-		}
+						case PACMAN -> {
+							var ss = (SpritesheetPacManGame) context.spritesheet();
+							thisFrame.killedGhosts.forEach(ghost -> {
+								var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
+								level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+							});
+						}
+						default -> throw new IllegalGameVariantException(game().variant());
+					}
+				});
+			}
 
-		case GAME_OVER -> {
-			game().level().ifPresent(level -> {
-				level3D.world3D().foodOscillation().stop();
-				level3D.livesCounter3D().stopAnimation();
-				context.actionHandler().showFlashMessageSeconds(3, PacManGames3dApp.PICKER_GAME_OVER.next());
-				context.clip("audio.game_over").play();
-				keepGameStateForSeconds(3);
-			});
-		}
+			case CHANGING_TO_NEXT_LEVEL -> {
+				game().level().ifPresent(level -> {
+					state().timer().resetIndefinitely();
+					replaceGameLevel3D(level);
+					updateCamera(perspectivePy.get());
+					keepGameStateForSeconds(3);
+				});
+			}
 
-		default -> {
-			// ignore
-		}
+			case LEVEL_COMPLETE -> {
+				game().level().ifPresent(level -> {
+					level3D.livesCounter3D().stopAnimation();
+					level3D.world3D().foodOscillation().stop();
+					// if cheat has been used to complete level, 3D food might still exist
+					level3D.world3D().eatables3D().forEach(level3D::eat);
+					// level complete animation is always played
+					var levelCompleteAnimation = createLevelCompleteAnimation(level);
+					// level change animation is played only if no intermission scene follows
+					var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation()	: pauseSeconds(0);
+					lockStateAndPlayAfterSeconds(1.0,
+						levelCompleteAnimation,
+						actionAfterSeconds(1.0, () -> {
+							level.pac().hide();
+							level3D.livesCounter3D().lightOnPy.set(false);
+							// play sound / flash msg only if no intermission scene follows
+							if (level.intermissionNumber == 0) {
+								context.clip("audio.level_complete").play();
+								context.actionHandler().showFlashMessageSeconds(2,	pickLevelCompleteMessage(level.number()));
+							}
+						}),
+						levelChangeAnimation,
+						actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
+					);
+				});
+			}
+
+			case GAME_OVER -> {
+				game().level().ifPresent(level -> {
+					level3D.world3D().foodOscillation().stop();
+					level3D.livesCounter3D().stopAnimation();
+					context.actionHandler().showFlashMessageSeconds(3, PacManGames3dApp.PICKER_GAME_OVER.next());
+					context.clip("audio.game_over").play();
+					keepGameStateForSeconds(3);
+				});
+			}
+
+			default -> {
+				// ignore
+			}
 
 		}
 
@@ -412,20 +411,20 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 		switch (e.oldState) {
-		case READY -> {
-			readyMessageText3D.setVisible(false);
-		}
-		case HUNTING -> {
-			if (e.newState != GameState.GHOST_DYING) {
-				level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
-				if (level3D.bonus3D() != null) {
-					level3D.bonus3D().hide();
+			case READY -> {
+				readyMessageText3D.setVisible(false);
+			}
+			case HUNTING -> {
+				if (e.newState != GameState.GHOST_DYING) {
+					level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
+					if (level3D.bonus3D() != null) {
+						level3D.bonus3D().hide();
+					}
 				}
 			}
-		}
-		default -> {
-			// ignore
-		}
+			default -> {
+				// ignore
+			}
 		}
 	}
 
@@ -482,7 +481,7 @@ public class PlayScene3D implements GameScene {
 				context.clip("audio.pacman_munch").stop();
 			}
 			if (!level.thisFrame().pacKilled && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
-					.anyMatch(Ghost::isVisible)) {
+				.anyMatch(Ghost::isVisible)) {
 				context.soundHandler().ensureLoopEndless(context.clip("audio.ghost_returning"));
 			} else {
 				context.clip("audio.ghost_returning").stop();
@@ -506,7 +505,7 @@ public class PlayScene3D implements GameScene {
 
 	/**
 	 * Keeps the current game state for given number of seconds, then forces the state timer to expire.
-	 * 
+	 *
 	 * @param seconds seconds to keep game state
 	 */
 	private void keepGameStateForSeconds(double seconds) {
