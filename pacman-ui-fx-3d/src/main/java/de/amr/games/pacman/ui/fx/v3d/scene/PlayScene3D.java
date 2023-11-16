@@ -117,13 +117,17 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
+	public void end() {
+		perspectivePy.unbind();
+	}
+
+	@Override
 	public void update() {
-		if (level3D == null) {
-			return;
+		if (level3D != null) {
+			level3D.update();
+			currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
+			updateSound();
 		}
-		level3D.update();
-		currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
-		updateSound();
 	}
 
 	@Override
@@ -153,11 +157,6 @@ public class PlayScene3D implements GameScene {
 
 	public CameraController currentCamController() {
 		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
-	}
-
-	@Override
-	public void end() {
-		perspectivePy.unbind();
 	}
 
 	public void bindSize(ReadOnlyDoubleProperty widthPy, ReadOnlyDoubleProperty heightPy) {
