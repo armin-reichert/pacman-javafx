@@ -184,19 +184,17 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	private Rectangle2D bonusSymbolSprite(byte symbol, GameVariant variant) {
-		switch (variant) {
-			case MS_PACMAN: return ((SpritesheetMsPacManGame) context.spritesheet()).bonusSymbolSprite(symbol);
-			case PACMAN:    return ((SpritesheetPacManGame)   context.spritesheet()).bonusSymbolSprite(symbol);
-			default:        throw new IllegalGameVariantException(variant);
-		}
+		return switch (variant) {
+			case MS_PACMAN -> ((SpritesheetMsPacManGame) context.spritesheet()).bonusSymbolSprite(symbol);
+			case PACMAN -> ((SpritesheetPacManGame) context.spritesheet()).bonusSymbolSprite(symbol);
+		};
 	}
 
 	private Rectangle2D livesCounterSprite(GameVariant variant) {
-		switch (variant) {
-			case MS_PACMAN: return ((SpritesheetMsPacManGame) context.spritesheet()).livesCounterSprite();
-			case PACMAN:    return ((SpritesheetPacManGame)   context.spritesheet()).livesCounterSprite();
-			default:        throw new IllegalGameVariantException(variant);
-		}
+		return switch (variant) {
+			case MS_PACMAN -> ((SpritesheetMsPacManGame) context.spritesheet()).livesCounterSprite();
+			case PACMAN -> ((SpritesheetPacManGame) context.spritesheet()).livesCounterSprite();
+		};
 	}
 
 	protected void drawLivesCounter(int numLivesDisplayed) {
