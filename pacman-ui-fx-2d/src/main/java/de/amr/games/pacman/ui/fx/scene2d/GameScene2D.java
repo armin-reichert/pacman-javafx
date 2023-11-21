@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui.fx.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperBoardAnimation;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
@@ -369,11 +369,10 @@ public abstract class GameScene2D implements GameScene {
 		g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
 	}
 
-	protected void drawClapperBoard(ClapperBoardAnimation animation, double x, double y) {
-		int spriteIndex = animation.currentSpriteIndex();
-		if (spriteIndex != -1) {
-			var ss = (SpritesheetMsPacManGame) context.spritesheet();
-			var sprite = ss.clapperboardSprites()[spriteIndex];
+	protected void drawClapperBoard(ClapperboardAnimation animation, double x, double y) {
+		var ss = (SpritesheetMsPacManGame) context.spritesheet();
+		var sprite = animation.currentSprite(ss.clapperboardSprites());
+		if (sprite != null) {
 			drawSpriteOverBoundingBox(sprite, x, y);
 			g.setFont(sceneFont(8));
 			g.setFill(ArcadePalette.PALE.darker());
