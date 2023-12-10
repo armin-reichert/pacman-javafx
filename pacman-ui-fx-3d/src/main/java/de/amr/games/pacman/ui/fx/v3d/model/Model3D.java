@@ -60,8 +60,8 @@ public class Model3D {
 		return id.replace('.', '-');
 	}
 
-	private Map<String, Mesh> meshes = new HashMap<>();
-	private Map<String, PhongMaterial> materials = new HashMap<>();
+	private final Map<String, Mesh> meshes = new HashMap<>();
+	private final Map<String, PhongMaterial> materials = new HashMap<>();
 
 	public Model3D(URL url) {
 		if (url == null) {
@@ -85,7 +85,7 @@ public class Model3D {
 			}
 			Logger.trace(contentReport());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
