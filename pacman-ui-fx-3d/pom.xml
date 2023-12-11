@@ -15,7 +15,7 @@
 		<exec.mainModule>de.amr.games.pacman.ui.fx3d</exec.mainModule>
 		<exec.mainClass>de.amr.games.pacman.ui.fx.v3d.Main</exec.mainClass>
 		<vs.java>17</vs.java>
-		<vs.javafx>17.0.8</vs.javafx>
+		<vs.javafx>21.0.1</vs.javafx>
 		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
 		<vs.maven-jar-plugin>3.2.0</vs.maven-jar-plugin>
 		<vs.maven-shade-plugin>3.4.1</vs.maven-shade-plugin>
