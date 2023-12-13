@@ -37,15 +37,40 @@ public class GameLevel3D {
 
 	private final GameLevel level;
 	private final Group root = new Group();
-
 	private final World3D world3D;
 	private final Pac3D pac3D;
-	private final PointLight pacLight;
+	private final PacLight pacLight;
 	private final Ghost3D[] ghosts3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
 	private Bonus3D bonus3D;
+
+	private class PacLight extends PointLight {
+
+		public PacLight() {
+			setColor(Color.rgb(255, 255, 0, 0.75));
+			setMaxRange(2 * TS);
+			translateXProperty().bind(pac3D.position().xProperty());
+			translateYProperty().bind(pac3D.position().yProperty());
+			setTranslateZ(-10);
+		}
+
+		public void update() {
+			var pac = level.pac();
+			boolean isVisible = pac.isVisible();
+			boolean isAlive = !pac.isDead();
+			boolean hasPower = pac.powerTimer().isRunning();
+			double radius = 0;
+			if (pac.powerTimer().duration() > 0) {
+				double t = ((double) pac.powerTimer().remaining() / pac.powerTimer().duration());
+				radius = t * 6 * TS;
+			}
+			setMaxRange(hasPower ? 2 * TS + radius : 0);
+			setLightOn(pac3D.lightedPy.get() && isVisible && isAlive && hasPower);
+		}
+
+	}
 
 	public GameLevel3D(GameLevel level, Theme theme, Spritesheet spritesheet) {
 		checkLevelNotNull(level);
@@ -67,6 +92,7 @@ public class GameLevel3D {
 				var doorColor     = theme.color("mspacman.maze.doorColor");
 				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
 				pac3D             = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac());
+				pacLight          = new PacLight();
 				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
 				livesCounter3D    = new LivesCounter3D(() -> Pac3D.createMsPacManGroup(pacModel3D, theme), true);
 			}
@@ -77,13 +103,13 @@ public class GameLevel3D {
 				var doorColor     = theme.color("pacman.maze.doorColor");
 				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
 				pac3D             = Pac3D.createPacMan3D(pacModel3D, theme, level.pac());
+				pacLight          = new PacLight();
 				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
 				livesCounter3D    = new LivesCounter3D(() -> Pac3D.createPacManGroup(pacModel3D, theme), false);
 			}
 			default -> throw new IllegalGameVariantException(level.game().variant());
 		}
 
-		pacLight       = createPacLight(pac3D);
 		levelCounter3D = new LevelCounter3D();
 		scores3D       = new Scores3D(theme.font("font.arcade", 8));
 
@@ -94,12 +120,10 @@ public class GameLevel3D {
 		root.getChildren().add(scores3D.getRoot());
 		root.getChildren().add(levelCounter3D.getRoot());
 		root.getChildren().add(livesCounter3D.getRoot());
-		root.getChildren().add(pac3D.getRoot());
-		root.getChildren().add(pacLight);
-		root.getChildren().add(ghosts3D[0].getRoot());
-		root.getChildren().add(ghosts3D[1].getRoot());
-		root.getChildren().add(ghosts3D[2].getRoot());
-		root.getChildren().add(ghosts3D[3].getRoot());
+		root.getChildren().addAll(pac3D.getRoot(), pacLight);
+		for (int id = 0; id < 4; ++id) {
+			root.getChildren().add(ghosts3D[id].getRoot());
+		}
 		// World must be added *after* the guys. Otherwise, a semi-transparent house is not rendered correctly!
 		root.getChildren().add(world3D.getRoot());
 
@@ -114,16 +138,6 @@ public class GameLevel3D {
 		world3D.wallHeightPy.bind(PacManGames3dApp.PY_3D_WALL_HEIGHT);
 		world3D.wallThicknessPy.bind(PacManGames3dApp.PY_3D_WALL_THICKNESS);
 		livesCounter3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-	}
-
-	private PointLight createPacLight(Pac3D pac3D) {
-		var light = new PointLight();
-		light.setColor(Color.rgb(255, 255, 0, 0.75));
-		light.setMaxRange(2 * TS);
-		light.translateXProperty().bind(pac3D.position().xProperty());
-		light.translateYProperty().bind(pac3D.position().yProperty());
-		light.setTranslateZ(-10);
-		return light;
 	}
 
 	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet) {
@@ -160,20 +174,6 @@ public class GameLevel3D {
 		}
 	}
 
-	private void updatePacLight() {
-		var pac = level.pac();
-		boolean isVisible = pac.isVisible();
-		boolean isAlive = !pac.isDead();
-		boolean hasPower = pac.powerTimer().isRunning();
-		double radius = 0;
-		if (pac.powerTimer().duration() > 0) {
-			double t = ((double) pac.powerTimer().remaining() / pac.powerTimer().duration());
-			radius = t * 6 * TS;
-		}
-		pacLight.setMaxRange(hasPower ? 2 * TS + radius : 0);
-		pacLight.setLightOn(pac3D.lightedPy.get() && isVisible && isAlive && hasPower);
-	}
-
 	public void update() {
 		pac3D.update();
 		Stream.of(ghosts3D).forEach(Ghost3D::update);
@@ -190,7 +190,7 @@ public class GameLevel3D {
 		} else {
 			scores3D.setShowText(Color.RED, "GAME OVER!");
 		}
-		updatePacLight();
+		pacLight.update();
 		updateHouseState();
 	}
 
