@@ -23,7 +23,6 @@ import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 
 import java.util.stream.Stream;
@@ -35,39 +34,11 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class GameLevel3D {
 
-	private static class PacLight extends PointLight {
-		private final Pac3D pac3D;
-
-		public PacLight(Pac3D pac3D) {
-			checkNotNull(pac3D);
-			this.pac3D = pac3D;
-			setColor(Color.rgb(255, 255, 0, 0.75));
-			setMaxRange(2 * TS);
-			translateXProperty().bind(pac3D.position().xProperty());
-			translateYProperty().bind(pac3D.position().yProperty());
-			setTranslateZ(-10);
-		}
-
-		public void update() {
-			var pac = pac3D.pac();
-			boolean isVisible = pac.isVisible();
-			boolean isAlive = !pac.isDead();
-			boolean hasPower = pac.powerTimer().isRunning();
-			double radius = 0;
-			if (pac.powerTimer().duration() > 0) {
-				double t = ((double) pac.powerTimer().remaining() / pac.powerTimer().duration());
-				radius = t * 6 * TS;
-			}
-			setMaxRange(hasPower ? 2 * TS + radius : 0);
-			setLightOn(pac3D.lightedPy.get() && isVisible && isAlive && hasPower);
-		}
-	}
-
 	private final GameLevel level;
 	private final Group root = new Group();
 	private final World3D world3D;
 	private final Pac3D pac3D;
-	private final PacLight pacLight;
+	private final Pac3DLight pacLight;
 	private final Ghost3D[] ghosts3D;
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
@@ -94,7 +65,7 @@ public class GameLevel3D {
 				var doorColor     = theme.color("mspacman.maze.doorColor");
 				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
 				pac3D             = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac());
-				pacLight          = new PacLight(pac3D);
+				pacLight          = new Pac3DLight(pac3D);
 				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
 				livesCounter3D    = new LivesCounter3D(() -> Pac3D.createMsPacManGroup(pacModel3D, theme), true);
 			}
@@ -105,7 +76,7 @@ public class GameLevel3D {
 				var doorColor     = theme.color("pacman.maze.doorColor");
 				world3D           = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
 				pac3D             = Pac3D.createPacMan3D(pacModel3D, theme, level.pac());
-				pacLight          = new PacLight(pac3D);
+				pacLight          = new Pac3DLight(pac3D);
 				ghosts3D          = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
 				livesCounter3D    = new LivesCounter3D(() -> Pac3D.createPacManGroup(pacModel3D, theme), false);
 			}

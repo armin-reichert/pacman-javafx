@@ -39,10 +39,10 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
 
 /**
- * 3D-representation of Pac-Man and Ms. Pac-Man.
+ * 3D-representation of Pac-Man and Ms. Pac-Man. Uses the OBJ model "pacman.obj".
  * 
  * <p>
- * Missing: Real 3D model for Ms. Pac-Man, Mouth animation...
+ * Missing: Specific 3D model for Ms. Pac-Man, mouth animation...
  * 
  * @author Armin Reichert
  */
