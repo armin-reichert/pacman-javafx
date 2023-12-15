@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
@@ -59,8 +58,8 @@ public class Pac3D {
 	private final Pac pac;
 	private final Group root;
 	private final Color headColor;
-	private Translate position = new Translate();
-	private Rotate orientation = new Rotate();
+	private final Translate position = new Translate();
+	private final Rotate orientation = new Rotate();
 	private WalkingAnimation walkingAnimation;
 
 	static Group createPacManGroup(Model3D model3D, Theme theme) {
@@ -182,10 +181,6 @@ public class Pac3D {
 		return root;
 	}
 
-	public Node pacNode() {
-		return root.getChildren().get(0);
-	}
-
 	public Pac pac() {
 		return pac;
 	}
@@ -203,7 +198,6 @@ public class Pac3D {
 		return switch (variant) {
 			case MS_PACMAN -> createMsPacManDyingAnimation();
 			case PACMAN -> createPacManDyingAnimation();
-			default -> throw new IllegalGameVariantException(variant);
 		};
 	}
 
