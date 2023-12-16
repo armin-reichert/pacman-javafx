@@ -84,7 +84,7 @@ public class DoorWing3D {
 		return root;
 	}
 
-	public void traverse() {
+	public void playTraversalAnimation() {
 		doorAnimation.play(); // if already running, does nothing
 	}
 }

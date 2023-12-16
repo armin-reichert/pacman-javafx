@@ -47,8 +47,8 @@ import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
  */
 public class Pac3D {
 
-	public static final String MESH_ID_EYES = "PacMan.Eyes";
-	public static final String MESH_ID_HEAD = "PacMan.Head";
+	public static final String MESH_ID_EYES   = "PacMan.Eyes";
+	public static final String MESH_ID_HEAD   = "PacMan.Head";
 	public static final String MESH_ID_PALATE = "PacMan.Palate";
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
@@ -121,7 +121,7 @@ public class Pac3D {
 		var root = new Group(head, eyes, palate);
 		root.getTransforms().add(Model3D.scale(root, size));
 
-		// TODO new obj importer has all meshes upside-down and backwards. Why?
+		// TODO check/fix Pac-Man mesh position and rotation in .obj file
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));

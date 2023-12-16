@@ -185,13 +185,13 @@ public class GameLevel3D {
 	}
 
 	private void updateHouseState() {
-		boolean isGhostNearHouse = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+		boolean isHouseActive = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
 				.anyMatch(Ghost::isVisible);
 		boolean accessGranted = isAccessGranted(level.ghosts(), level.world().house().door());
 		if (accessGranted) {
-			world3D.doorWings3D().forEach(DoorWing3D::traverse);
+			world3D.doorWings3D().forEach(DoorWing3D::playTraversalAnimation);
 		}
-		world3D.houseLighting().setLightOn(isGhostNearHouse);
+		world3D.houseLighting().setLightOn(isHouseActive);
 	}
 
 	private boolean isAccessGranted(Stream<Ghost> ghosts, Door door) {
