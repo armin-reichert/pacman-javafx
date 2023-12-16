@@ -1,5 +1,5 @@
 # Exported from Wings 3D 2.2.6.1
-newmtl grey_wall
+newmtl grey_material
 Ns 19.999999999999996
 d 1.0
 illum 2
@@ -8,7 +8,7 @@ Ka 0.0 0.0 0.0
 Ks 0.1 0.1 0.1
 Ke 0.0 0.0 0.0
 
-newmtl yellow_pacman
+newmtl yellow_material
 Ns 19.999999999999996
 d 1.0
 illum 2

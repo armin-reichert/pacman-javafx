@@ -47,9 +47,9 @@ import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
  */
 public class Pac3D {
 
-	public static final String MESH_ID_EYES = "Sphere.008_Sphere.010_grey_wall";
-	public static final String MESH_ID_HEAD = "Sphere_yellow_pacman";
-	public static final String MESH_ID_PALATE = "Sphere_grey_wall";
+	public static final String MESH_ID_EYES = "PacMan.Eyes";
+	public static final String MESH_ID_HEAD = "PacMan.Head";
+	public static final String MESH_ID_PALATE = "PacMan.Palate";
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
