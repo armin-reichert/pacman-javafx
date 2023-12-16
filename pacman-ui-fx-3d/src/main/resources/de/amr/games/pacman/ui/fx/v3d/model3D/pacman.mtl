@@ -8,7 +8,7 @@ Ka 0.0 0.0 0.0
 Ks 0.1 0.1 0.1
 Ke 0.0 0.0 0.0
 
-newmtl yellow_packman
+newmtl yellow_pacman
 Ns 19.999999999999996
 d 1.0
 illum 2
