@@ -10,8 +10,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.application.Application;
@@ -23,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
@@ -85,29 +82,9 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 
 	@Override
 	public void start(Stage stage) {
-		Map<String, GameScene> gameScenesMsPacMan = Map.of(
-			"boot",   new BootScene(),
-			"intro",  new MsPacManIntroScene(),
-			"credit", new MsPacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"cut1",   new MsPacManCutscene1(),
-			"cut2",   new MsPacManCutscene2(),
-			"cut3",   new MsPacManCutscene3()
-		);
-
-		Map<String, GameScene> gameScenesPacMan = Map.of(
-			"boot",   new BootScene(),
-			"intro",  new PacManIntroScene(),
-			"credit", new PacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"cut1",   new PacManCutscene1(),
-			"cut2",   new PacManCutscene2(),
-			"cut3",   new PacManCutscene3()
-		);
-
 		var theme = createTheme();
 		Logger.info("Theme created: {}", theme);
-		ui = new PacManGames2dUI(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+		ui = new PacManGames2dUI(stage, settings, theme);
 		GameController.it().addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

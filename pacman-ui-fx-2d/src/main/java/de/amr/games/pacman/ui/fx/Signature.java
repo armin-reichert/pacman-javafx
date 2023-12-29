@@ -9,7 +9,6 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;

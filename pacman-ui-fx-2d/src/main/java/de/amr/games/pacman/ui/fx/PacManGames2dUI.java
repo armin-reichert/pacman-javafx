@@ -22,6 +22,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -60,28 +61,48 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected Page currentPage;
 	private GameScene currentGameScene;
 
-	public PacManGames2dUI(Stage stage, Settings settings, Theme theme,
-												 Map<String, GameScene> gameScenesMsPacMan, Map<String, GameScene> gameScenesPacMan) {
+	public PacManGames2dUI(Stage stage, Settings settings, Theme theme) {
 		checkNotNull(stage);
 		checkNotNull(settings);
 		checkNotNull(theme);
-		checkNotNull(gameScenesMsPacMan);
-		checkNotNull(gameScenesPacMan);
 
 		this.stage = stage;
 		this.theme = theme;
 		soundHandler = new SoundHandler(theme);
 
-		gameScenes.put(GameVariant.MS_PACMAN, gameScenesMsPacMan);
-		gameScenes.put(GameVariant.PACMAN, gameScenesPacMan);
-
 		createClock();
 		createMainScene();
+		addGameScenes();
 		configurePacSteering();
 		configureBindings(settings);
 		configureStage(settings);
 		createStartPage(theme);
 		createGamePage(theme);
+	}
+
+	protected void addGameScenes() {
+		Map<String, GameScene> gameScenesMsPacMan = Map.of(
+				"boot",   new BootScene(),
+				"intro",  new MsPacManIntroScene(),
+				"credit", new MsPacManCreditScene(),
+				"play",   new PlayScene2D(),
+				"cut1",   new MsPacManCutscene1(),
+				"cut2",   new MsPacManCutscene2(),
+				"cut3",   new MsPacManCutscene3()
+		);
+
+		Map<String, GameScene> gameScenesPacMan = Map.of(
+				"boot",   new BootScene(),
+				"intro",  new PacManIntroScene(),
+				"credit", new PacManCreditScene(),
+				"play",   new PlayScene2D(),
+				"cut1",   new PacManCutscene1(),
+				"cut2",   new PacManCutscene2(),
+				"cut3",   new PacManCutscene3()
+		);
+
+		gameScenes.put(GameVariant.MS_PACMAN, gameScenesMsPacMan);
+		gameScenes.put(GameVariant.PACMAN, gameScenesPacMan);
 	}
 
 	protected void createClock() {
