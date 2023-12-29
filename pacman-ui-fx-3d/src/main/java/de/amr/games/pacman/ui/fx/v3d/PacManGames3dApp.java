@@ -101,32 +101,10 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 
 	@Override
 	public void start(Stage stage) {
-		Map<String, GameScene> gameScenesMsPacMan = Map.of(
-			"boot",   new BootScene(),
-			"intro",  new MsPacManIntroScene(),
-			"credit", new MsPacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"play3D", new PlayScene3D(),
-			"cut1",   new MsPacManCutscene1(),
-			"cut2",   new MsPacManCutscene2(),
-			"cut3",   new MsPacManCutscene3()
-		);
-
-		Map<String, GameScene> gameScenesPacMan = Map.of(
-			"boot",   new BootScene(),
-			"intro",  new PacManIntroScene(),
-			"credit", new PacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"play3D", new PlayScene3D(),
-			"cut1",   new PacManCutscene1(),
-			"cut2",   new PacManCutscene2(),
-			"cut3",   new PacManCutscene3()
-		);
-
 		var theme = createTheme();
 		Logger.info("Theme created: {}", theme);
 
-		ui = new PacManGames3dUI(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+		ui = new PacManGames3dUI(stage, settings, theme);
 		GameController.it().addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

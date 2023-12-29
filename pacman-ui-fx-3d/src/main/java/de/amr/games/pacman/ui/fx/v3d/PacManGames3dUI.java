@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
@@ -39,9 +40,33 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
  */
 public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D {
 
-	public PacManGames3dUI(Stage stage, Settings settings, Theme theme,
-						   Map<String, GameScene> gameScenesMsPacMan, Map<String, GameScene> gameScenesPacMan) {
-		super(stage, settings, theme, gameScenesMsPacMan, gameScenesPacMan);
+	public PacManGames3dUI(Stage stage, Settings settings, Theme theme) {
+		super(stage, settings, theme);
+	}
+
+	@Override
+	protected void addGameScenes() {
+		Map<String, GameScene> gameScenesMsPacMan = Map.of(
+				"boot",   new BootScene(),
+				"intro",  new MsPacManIntroScene(),
+				"credit", new MsPacManCreditScene(),
+				"play",   new PlayScene2D(),
+				"play3D", new PlayScene3D(),
+				"cut1",   new MsPacManCutscene1(),
+				"cut2",   new MsPacManCutscene2(),
+				"cut3",   new MsPacManCutscene3()
+		);
+
+		Map<String, GameScene> gameScenesPacMan = Map.of(
+				"boot",   new BootScene(),
+				"intro",  new PacManIntroScene(),
+				"credit", new PacManCreditScene(),
+				"play",   new PlayScene2D(),
+				"play3D", new PlayScene3D(),
+				"cut1",   new PacManCutscene1(),
+				"cut2",   new PacManCutscene2(),
+				"cut3",   new PacManCutscene3()
+		);
 
 		if (gameScenesMsPacMan.get("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
@@ -49,6 +74,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		if (gameScenesPacMan.get("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
 		}
+
+		gameScenes.put(GameVariant.MS_PACMAN, gameScenesMsPacMan);
+		gameScenes.put(GameVariant.PACMAN, gameScenesPacMan);
 	}
 
 	@Override
