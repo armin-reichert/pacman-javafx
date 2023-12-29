@@ -9,14 +9,11 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
-import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.application.Application;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
@@ -30,7 +27,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.TS;
