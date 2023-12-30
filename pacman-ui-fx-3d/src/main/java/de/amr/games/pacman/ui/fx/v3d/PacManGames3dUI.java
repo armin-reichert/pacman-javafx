@@ -46,37 +46,32 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected void addGameScenes() {
-		Map<String, GameScene> gameScenesMsPacMan = Map.of(
-				"boot",   new BootScene(),
-				"intro",  new MsPacManIntroScene(),
-				"credit", new MsPacManCreditScene(),
-				"play",   new PlayScene2D(),
-				"play3D", new PlayScene3D(),
-				"cut1",   new MsPacManCutscene1(),
-				"cut2",   new MsPacManCutscene2(),
-				"cut3",   new MsPacManCutscene3()
-		);
-
-		Map<String, GameScene> gameScenesPacMan = Map.of(
-				"boot",   new BootScene(),
-				"intro",  new PacManIntroScene(),
-				"credit", new PacManCreditScene(),
-				"play",   new PlayScene2D(),
-				"play3D", new PlayScene3D(),
-				"cut1",   new PacManCutscene1(),
-				"cut2",   new PacManCutscene2(),
-				"cut3",   new PacManCutscene3()
-		);
-
-		if (gameScenesMsPacMan.get("play3D") instanceof PlayScene3D playScene3D) {
+		gameScenes.put(GameVariant.MS_PACMAN, Map.of(
+			"boot",   new BootScene(),
+			"intro",  new MsPacManIntroScene(),
+			"credit", new MsPacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"play3D", new PlayScene3D(),
+			"cut1",   new MsPacManCutscene1(),
+			"cut2",   new MsPacManCutscene2(),
+			"cut3",   new MsPacManCutscene3()
+		));
+		if (gameScenes.get(GameVariant.MS_PACMAN).get("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
 		}
-		if (gameScenesPacMan.get("play3D") instanceof PlayScene3D playScene3D) {
+		gameScenes.put(GameVariant.PACMAN, Map.of(
+			"boot",   new BootScene(),
+			"intro",  new PacManIntroScene(),
+			"credit", new PacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"play3D", new PlayScene3D(),
+			"cut1",   new PacManCutscene1(),
+			"cut2",   new PacManCutscene2(),
+			"cut3",   new PacManCutscene3()
+		));
+		if (gameScenes.get(GameVariant.PACMAN).get("play3D") instanceof PlayScene3D playScene3D) {
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
 		}
-
-		gameScenes.put(GameVariant.MS_PACMAN, gameScenesMsPacMan);
-		gameScenes.put(GameVariant.PACMAN, gameScenesPacMan);
 	}
 
 	@Override
@@ -84,15 +79,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		gamePage = new GamePage3D(this, theme);
 		gamePage.setSize(mainScene().getWidth(), mainScene().getHeight());
 		// register event handler for opening play scene context menu
-		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
 			currentScene().ifPresent(gameScene -> {
 				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
 					gamePage().openContextMenu(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
 				} else {
 					gamePage().closeContextMenu();
 				}
-			});
-		});
+			})
+		);
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {

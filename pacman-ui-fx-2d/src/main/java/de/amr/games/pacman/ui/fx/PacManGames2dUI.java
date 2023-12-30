@@ -50,6 +50,7 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
  */
 public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSceneContext {
 
+	protected final GameClock clock;
 	protected final Map<GameVariant, Map<String, GameScene>> gameScenes = new EnumMap<>(GameVariant.class);
 	protected final Theme theme;
 	protected final SoundHandler soundHandler;
@@ -58,7 +59,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected StartPage startPage;
 	protected GamePage gamePage;
 	protected Page currentPage;
-	protected GameClock clock;
 	protected GameScene currentGameScene;
 
 	public PacManGames2dUI(Stage stage, Settings settings, Theme theme) {
@@ -69,8 +69,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		this.stage = stage;
 		this.theme = theme;
 		this.soundHandler = new SoundHandler(theme);
-
-		createClock();
+		this.clock = createClock();
 		createMainScene();
 		addGameScenes();
 		configurePacSteering();
@@ -101,8 +100,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		));
 	}
 
-	protected void createClock() {
-		clock = new GameClock(() -> {
+	protected GameClock createClock() {
+		var clock = new GameClock(() -> {
 			GameController.it().update();
 			if (currentGameScene != null) {
 				currentGameScene.update();
@@ -110,6 +109,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		}, () -> gamePage.render());
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 		clock.targetFrameratePy.set(GameModel.FPS);
+		return clock;
 	}
 
 	protected void createMainScene() {
