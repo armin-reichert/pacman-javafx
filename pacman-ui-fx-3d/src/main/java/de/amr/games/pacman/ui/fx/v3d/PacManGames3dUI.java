@@ -75,8 +75,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	}
 
 	@Override
-	protected void createGamePage(Theme theme) {
-		gamePage = new GamePage3D(this, theme);
+	protected GamePage3D createGamePage(Theme theme) {
+		var gamePage = new GamePage3D(this, theme);
 		gamePage.setSize(mainScene().getWidth(), mainScene().getHeight());
 		// register event handler for opening play scene context menu
 		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
@@ -88,6 +88,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 				}
 			})
 		);
+		return gamePage;
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {

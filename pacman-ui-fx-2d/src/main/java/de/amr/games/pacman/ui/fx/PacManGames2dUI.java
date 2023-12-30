@@ -56,8 +56,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected final SoundHandler soundHandler;
 	protected final Stage stage;
 	protected final Scene mainScene;
-	protected StartPage startPage;
-	protected GamePage gamePage;
+	protected final StartPage startPage;
+	protected final GamePage gamePage;
 	protected Page currentPage;
 	protected GameScene currentGameScene;
 
@@ -71,13 +71,13 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		this.soundHandler = new SoundHandler(theme);
 		this.clock = createClock();
 		this.mainScene = createMainScene();
+		this.startPage =  createStartPage(theme);
+		this.gamePage = createGamePage(theme);
 
 		addGameScenes();
 		configurePacSteering();
 		configureBindings(settings);
 		configureStage(settings);
-		createStartPage(theme);
-		createGamePage(theme);
 	}
 
 	protected void addGameScenes() {
@@ -131,8 +131,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		stage.centerOnScreen();
 	}
 
-	protected void createStartPage(Theme theme) {
-		startPage = new StartPage(theme);
+	protected StartPage createStartPage(Theme theme) {
+		var startPage = new StartPage(theme);
 		startPage.setPlayButtonAction(this::showGamePage);
 		startPage.setOnKeyPressed(e -> {
 			switch (e.getCode()) {
@@ -142,11 +142,13 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 				default           -> {}
 			}
 		});
+		return startPage;
 	}
 
-	protected void createGamePage(Theme theme) {
-		gamePage = new GamePage(this, theme);
+	protected GamePage createGamePage(Theme theme) {
+		var gamePage = new GamePage(this, theme);
 		gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
+		return gamePage;
 	}
 
 	public void showStartPage() {
