@@ -273,10 +273,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		return Optional.ofNullable(currentGameScene);
 	}
 
-	public GameModel game() {
-		return GameController.it().game();
-	}
-
 	public Map<String, GameScene> sceneConfig() {
 		return gameScenes.get(game().variant());
 	}
