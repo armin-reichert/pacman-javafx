@@ -69,10 +69,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		this.stage = stage;
 		this.theme = theme;
 		this.soundHandler = new SoundHandler(theme);
-		this.clock = createClock();
 		this.mainScene = createMainScene();
-		this.startPage =  createStartPage(theme);
+		this.startPage = createStartPage(theme);
 		this.gamePage = createGamePage(theme);
+		this.clock = createClock();
 
 		addGameScenes();
 		configurePacSteering();
