@@ -55,7 +55,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected final Theme theme;
 	protected final SoundHandler soundHandler;
 	protected final Stage stage;
-	protected Scene scene;
+	protected final Scene mainScene;
 	protected StartPage startPage;
 	protected GamePage gamePage;
 	protected Page currentPage;
@@ -70,7 +70,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		this.theme = theme;
 		this.soundHandler = new SoundHandler(theme);
 		this.clock = createClock();
-		createMainScene();
+		this.mainScene = createMainScene();
+
 		addGameScenes();
 		configurePacSteering();
 		configureBindings(settings);
@@ -112,17 +113,18 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		return clock;
 	}
 
-	protected void createMainScene() {
+	protected Scene createMainScene() {
 		var screenHeight = Screen.getPrimary().getBounds().getHeight();
 		double height = Math.min(screenHeight * 0.8, 800);
 		double width = height * 4.0 / 3.0;
-		scene = new Scene(new Region(), width, height, Color.BLACK);
+		var scene = new Scene(new Region(), width, height, Color.BLACK);
 		scene.widthProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
 		scene.heightProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
+		return scene;
 	}
 
 	protected void configureStage(Settings settings) {
-		stage.setScene(scene);
+		stage.setScene(mainScene);
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth (GameModel.TILES_X * Globals.TS);
 		stage.setMinHeight(GameModel.TILES_Y * Globals.TS);
@@ -144,7 +146,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	protected void createGamePage(Theme theme) {
 		gamePage = new GamePage(this, theme);
-		gamePage.setSize(scene.getWidth(), scene.getHeight());
+		gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
 	}
 
 	public void showStartPage() {
@@ -153,7 +155,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 			clock.stop();
 			Logger.info("Clock stopped.");
 		}
-		scene.setRoot(startPage.root());
+		mainScene.setRoot(startPage.root());
 		updateStage();
 		startPage.setGameVariant(game().variant());
 		startPage.root().requestFocus();
@@ -164,9 +166,9 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		currentPage = gamePage;
 		// call reboot() first such that current game scene is set
 		reboot();
-		scene.setRoot(gamePage.root());
+		mainScene.setRoot(gamePage.root());
 		gamePage.root().requestFocus();
-		gamePage.setSize(scene.getWidth(), scene.getHeight());
+		gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
 		updateStage();
 		stage.show();
 		clock.start();
@@ -258,7 +260,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	// Accessors
 
 	public Scene mainScene() {
-		return scene;
+		return mainScene;
 	}
 
 	public GameClock clock() {
