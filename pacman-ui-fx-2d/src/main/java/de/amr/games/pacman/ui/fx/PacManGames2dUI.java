@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -81,7 +82,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	}
 
 	protected void addGameScenes() {
-		gameScenes.put(GameVariant.MS_PACMAN, Map.of(
+		gameScenes.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
 			"boot",   new BootScene(),
 			"intro",  new MsPacManIntroScene(),
 			"credit", new MsPacManCreditScene(),
@@ -89,8 +90,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 			"cut1",   new MsPacManCutscene1(),
 			"cut2",   new MsPacManCutscene2(),
 			"cut3",   new MsPacManCutscene3()
-		));
-		gameScenes.put(GameVariant.PACMAN, Map.of(
+		)));
+		gameScenes.put(GameVariant.PACMAN, new HashMap<>(Map.of(
 			"boot",   new BootScene(),
 			"intro",  new PacManIntroScene(),
 			"credit", new PacManCreditScene(),
@@ -98,7 +99,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 			"cut1",   new PacManCutscene1(),
 			"cut2",   new PacManCutscene2(),
 			"cut3",   new PacManCutscene3()
-		));
+		)));
 	}
 
 	protected GameClock createClock() {

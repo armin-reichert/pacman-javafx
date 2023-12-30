@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
-import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
@@ -22,8 +21,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
-
-import java.util.Map;
 
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
 
@@ -46,31 +43,16 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected void addGameScenes() {
-		gameScenes.put(GameVariant.MS_PACMAN, Map.of(
-			"boot",   new BootScene(),
-			"intro",  new MsPacManIntroScene(),
-			"credit", new MsPacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"play3D", new PlayScene3D(),
-			"cut1",   new MsPacManCutscene1(),
-			"cut2",   new MsPacManCutscene2(),
-			"cut3",   new MsPacManCutscene3()
-		));
-		if (gameScenes.get(GameVariant.MS_PACMAN).get("play3D") instanceof PlayScene3D playScene3D) {
+		super.addGameScenes();
+		{
+			var playScene3D = new PlayScene3D();
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+			gameScenes.get(GameVariant.MS_PACMAN).put("play3D", playScene3D);
 		}
-		gameScenes.put(GameVariant.PACMAN, Map.of(
-			"boot",   new BootScene(),
-			"intro",  new PacManIntroScene(),
-			"credit", new PacManCreditScene(),
-			"play",   new PlayScene2D(),
-			"play3D", new PlayScene3D(),
-			"cut1",   new PacManCutscene1(),
-			"cut2",   new PacManCutscene2(),
-			"cut3",   new PacManCutscene3()
-		));
-		if (gameScenes.get(GameVariant.PACMAN).get("play3D") instanceof PlayScene3D playScene3D) {
+		{
+			var playScene3D = new PlayScene3D();
 			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+			gameScenes.get(GameVariant.PACMAN).put("play3D", playScene3D);
 		}
 	}
 
