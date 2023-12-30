@@ -51,15 +51,15 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSceneContext {
 
 	protected final Map<GameVariant, Map<String, GameScene>> gameScenes = new EnumMap<>(GameVariant.class);
-	protected GameClock clock;
-	protected Theme theme;
-	protected Stage stage;
+	protected final Theme theme;
+	protected final SoundHandler soundHandler;
+	protected final Stage stage;
 	protected Scene scene;
 	protected StartPage startPage;
 	protected GamePage gamePage;
-	protected SoundHandler soundHandler;
 	protected Page currentPage;
-	private GameScene currentGameScene;
+	protected GameClock clock;
+	protected GameScene currentGameScene;
 
 	public PacManGames2dUI(Stage stage, Settings settings, Theme theme) {
 		checkNotNull(stage);
@@ -68,7 +68,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 		this.stage = stage;
 		this.theme = theme;
-		soundHandler = new SoundHandler(theme);
+		this.soundHandler = new SoundHandler(theme);
 
 		createClock();
 		createMainScene();
@@ -81,28 +81,24 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	}
 
 	protected void addGameScenes() {
-		Map<String, GameScene> gameScenesMsPacMan = Map.of(
-				"boot",   new BootScene(),
-				"intro",  new MsPacManIntroScene(),
-				"credit", new MsPacManCreditScene(),
-				"play",   new PlayScene2D(),
-				"cut1",   new MsPacManCutscene1(),
-				"cut2",   new MsPacManCutscene2(),
-				"cut3",   new MsPacManCutscene3()
-		);
-
-		Map<String, GameScene> gameScenesPacMan = Map.of(
-				"boot",   new BootScene(),
-				"intro",  new PacManIntroScene(),
-				"credit", new PacManCreditScene(),
-				"play",   new PlayScene2D(),
-				"cut1",   new PacManCutscene1(),
-				"cut2",   new PacManCutscene2(),
-				"cut3",   new PacManCutscene3()
-		);
-
-		gameScenes.put(GameVariant.MS_PACMAN, gameScenesMsPacMan);
-		gameScenes.put(GameVariant.PACMAN, gameScenesPacMan);
+		gameScenes.put(GameVariant.MS_PACMAN, Map.of(
+			"boot",   new BootScene(),
+			"intro",  new MsPacManIntroScene(),
+			"credit", new MsPacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"cut1",   new MsPacManCutscene1(),
+			"cut2",   new MsPacManCutscene2(),
+			"cut3",   new MsPacManCutscene3()
+		));
+		gameScenes.put(GameVariant.PACMAN, Map.of(
+			"boot",   new BootScene(),
+			"intro",  new PacManIntroScene(),
+			"credit", new PacManCreditScene(),
+			"play",   new PlayScene2D(),
+			"cut1",   new PacManCutscene1(),
+			"cut2",   new PacManCutscene2(),
+			"cut3",   new PacManCutscene3()
+		));
 	}
 
 	protected void createClock() {
