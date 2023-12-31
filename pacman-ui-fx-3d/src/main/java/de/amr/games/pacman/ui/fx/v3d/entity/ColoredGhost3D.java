@@ -19,6 +19,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
+import static de.amr.games.pacman.lib.Globals.checkGhostID;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static java.util.Objects.requireNonNull;
 
@@ -27,9 +28,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class ColoredGhost3D {
 
-	public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+	public static final String MESH_ID_GHOST_DRESS    = "Sphere.004_Sphere.034_light_blue_ghost";
 	public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-	public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+	public static final String MESH_ID_GHOST_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
 
 	private final byte id;
 	private final Theme theme;
@@ -40,9 +41,9 @@ public class ColoredGhost3D {
 	private final Shape3D eyeballsShape;
 	private final Shape3D pupilsShape;
 
-	private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
+	private final ObjectProperty<Color> dressColorPy    = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
 	private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
-	private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
+	private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
 	private ParallelTransition flashingAnimation;
 	private ColorFlashing dressFlashingAnimation;
@@ -51,6 +52,7 @@ public class ColoredGhost3D {
 	public ColoredGhost3D(Model3D model3D, Theme theme, byte id, double size) {
 		requireNonNull(model3D);
 		requireNonNull(theme);
+		checkGhostID(id);
 		requirePositive(size, "ColoredGhost3D size must be positive but is %f");
 
 		this.theme = theme;
@@ -78,7 +80,7 @@ public class ColoredGhost3D {
 
 		root = new Group(dressGroup, eyesGroup);
 
-		// TODO check this: new obj importer has all meshes upside-down and backwards. Why?
+		// TODO fix orientation in obj file
 		root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
 		root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 		root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
