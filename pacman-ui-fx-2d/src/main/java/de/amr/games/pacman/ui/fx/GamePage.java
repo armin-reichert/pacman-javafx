@@ -85,6 +85,11 @@ public class GamePage implements Page {
 		layers.borderProperty().bind(debugBorderBinding(Color.RED, 3));
 		gameSceneLayer.borderProperty().bind(debugBorderBinding(Color.YELLOW, 3));
 		popupLayer.borderProperty().bind(debugBorderBinding(Color.GREENYELLOW, 3));
+
+		// listen to game scene changes
+		ui.gameScenePy.addListener((obj, ov, newGameScene) -> {
+			onGameSceneChanged(newGameScene);
+		});
 	}
 
 	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
@@ -168,24 +173,23 @@ public class GamePage implements Page {
 				canvas.getWidth(), canvas.getHeight(), borderWidth);
 	}
 
-	public void onGameSceneChanged() {
+	protected void onGameSceneChanged(GameScene newGameScene) {
 		var config = ui.sceneConfig();
-		var currentGameScene = ui.currentGameScene().get();
 		// if play scene gets active/inactive, add/remove key handler
 		if (GameController.it().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
-			if (currentGameScene == config.get("play")) {
+			if (newGameScene == config.get("play")) {
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			} else {
 				layers.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			}
 		}
 		// if intro scene gets active/inactive, show/hide signature
-		if (currentGameScene == config.get("intro")) {
+		if (newGameScene == config.get("intro")) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();
 		}
-		if (currentGameScene instanceof GameScene2D gameScene2D) {
+		if (newGameScene instanceof GameScene2D gameScene2D) {
 			gameScene2D.setCanvas(canvas);
 		}
 		resize(scaling, true);

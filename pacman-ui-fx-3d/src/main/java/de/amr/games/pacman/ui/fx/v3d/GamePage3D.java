@@ -117,7 +117,7 @@ public class GamePage3D extends GamePage {
 		pip = new PictureInPicture();
 		pip.opacityPy.bind(PacManGames3dApp.PY_PIP_OPACITY);
 		pip.heightPy.bind(PacManGames3dApp.PY_PIP_HEIGHT);
-		ui.gameScene.addListener((obj, ov, newGameScene) -> {
+		ui.gameScenePy.addListener((obj, ov, newGameScene) -> {
 			if (newGameScene == ui.sceneConfig().get("play3D")) {
 				pip.setGameSceneContext(newGameScene.context());
 			}
@@ -153,10 +153,10 @@ public class GamePage3D extends GamePage {
 	}
 
 	@Override
-	public void onGameSceneChanged() {
+	protected void onGameSceneChanged(GameScene newGameScene) {
 		//TODO this code is too difficult to understand, simplify
 		if (isCurrentGameScene3D()) {
-			var gameScene3D = ui().currentGameScene().get();
+			var gameScene3D = newGameScene;
 			if (gameScene3D == ui().sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
@@ -166,7 +166,7 @@ public class GamePage3D extends GamePage {
 			helpButton.setVisible(false);
 		} else {
 			layers.getChildren().set(GAME_SCENE_LAYER, gameSceneLayer);
-			super.onGameSceneChanged();
+			super.onGameSceneChanged(newGameScene);
 		}
 		closeContextMenu();
 		updateBackground();
