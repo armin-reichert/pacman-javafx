@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -26,12 +27,28 @@ public class StartPage implements Page {
 
 	private final StackPane root = new StackPane();
 	private final BorderPane content = new BorderPane();
+	private final Background backgroundPacManGame;
+	private final Background backgroundMsPacManGame;
 	private final Theme theme;
 	private final Node playButton;
+
+	private static Background createBackground(Image image) {
+		var backgroundImage = new BackgroundImage(image,
+				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				new BackgroundSize(
+						AUTO,	AUTO, // width, height
+						false, false, // as percentage
+						true, // contain
+						false // cover
+				));
+		return new Background(backgroundImage);
+	}
 
 	public StartPage(Theme theme) {
 		checkNotNull(theme);
 		this.theme = theme;
+		backgroundMsPacManGame = createBackground(theme.image("mspacman.startpage.image"));
+		backgroundPacManGame = createBackground(theme.image("pacman.startpage.image"));
 		playButton = createPlayButton();
 		content.setBottom(playButton);
 		BorderPane.setAlignment(playButton, Pos.CENTER);
@@ -51,18 +68,10 @@ public class StartPage implements Page {
 
 	public void setGameVariant(GameVariant gameVariant) {
 		checkGameVariant(gameVariant);
-		var image = gameVariant == GameVariant.MS_PACMAN
-				? theme.image("mspacman.startpage.image")
-				: theme.image("pacman.startpage.image");
-		var backgroundImage = new BackgroundImage(image,
-			BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-			new BackgroundSize(
-				AUTO,	AUTO, // width, height
-				false, false, // as percentage
-				true, // contain
-				false // cover
-		));
-		content.setBackground(new Background(backgroundImage));
+		content.setBackground(switch (gameVariant) {
+			case MS_PACMAN -> backgroundMsPacManGame;
+			case PACMAN -> backgroundPacManGame;
+		});
 	}
 
 	public void setPlayButtonAction(Runnable action) {
