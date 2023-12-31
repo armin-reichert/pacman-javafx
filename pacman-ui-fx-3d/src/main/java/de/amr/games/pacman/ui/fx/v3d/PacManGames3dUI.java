@@ -108,12 +108,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected void updateStage() {
-		var variant = game().variant();
-		var variantKey = variant == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
-		var titleKey = "app.title." + variantKey;
-		if (clock().isPaused()) {
-			titleKey += ".paused";
-		}
+		var variantKey = game().variant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
+		var titleKey = "app.title." + variantKey + (clock().isPaused()? ".paused" : "");
 		var dimension = message(PacManGames3dApp.PY_3D_ENABLED.get() ? "threeD" : "twoD");
 		stage.setTitle(message(titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
@@ -151,9 +147,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	}
 
 	private void selectPerspective(Perspective perspective) {
+		showFlashMessage(message("camera_perspective", message(perspective.name())));
 		PacManGames3dApp.PY_3D_PERSPECTIVE.set(perspective);
-		var perspectiveName = message(perspective.name());
-		showFlashMessage(message("camera_perspective", perspectiveName));
 	}
 
 	public void toggleDrawMode() {
