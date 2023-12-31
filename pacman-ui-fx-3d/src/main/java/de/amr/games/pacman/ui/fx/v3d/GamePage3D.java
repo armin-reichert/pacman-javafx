@@ -117,6 +117,11 @@ public class GamePage3D extends GamePage {
 		pip = new PictureInPicture();
 		pip.opacityPy.bind(PacManGames3dApp.PY_PIP_OPACITY);
 		pip.heightPy.bind(PacManGames3dApp.PY_PIP_HEIGHT);
+		ui.gameScene.addListener((obj, ov, newGameScene) -> {
+			if (newGameScene == ui.sceneConfig().get("play3D")) {
+				pip.setGameSceneContext(newGameScene.context());
+			}
+		});
 
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);

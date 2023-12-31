@@ -62,7 +62,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected final StartPage startPage;
 	protected final GamePage gamePage;
 	protected Page currentPage;
-	protected ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>(this, "gameScene");
+	public final ObjectProperty<GameScene> gameScene = new SimpleObjectProperty<>(this, "gameScene");
 
 	public PacManGames2dUI(Stage stage, Settings settings, Theme theme) {
 		checkNotNull(stage);
@@ -217,7 +217,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state " + GameController.it().state());
 		}
-		if (reload || nextGameScene != currentGameScene.get()) {
+		if (reload || nextGameScene != gameScene.get()) {
 			setGameScene(nextGameScene);
 		}
 		updateStage();
@@ -232,11 +232,11 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		});
 		newGameScene.setContext(this);
 		newGameScene.init();
-		currentGameScene.setValue(newGameScene);
+		gameScene.setValue(newGameScene);
 
 		//TODO use listener
 		gamePage.onGameSceneChanged();
-		Logger.trace("Game scene changed to {}", currentGameScene.get());
+		Logger.trace("Game scene changed to {}", gameScene.get());
 	}
 
 	// GameSceneContext
@@ -272,7 +272,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	}
 
 	public Optional<GameScene> currentGameScene() {
-		return Optional.ofNullable(currentGameScene.get());
+		return Optional.ofNullable(gameScene.get());
 	}
 
 	public Map<String, GameScene> sceneConfig() {

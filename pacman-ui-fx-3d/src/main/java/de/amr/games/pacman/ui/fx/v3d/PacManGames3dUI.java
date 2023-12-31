@@ -143,15 +143,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		});
 	}
 
-	@Override
-	protected void setGameScene(GameScene newGameScene) {
-		super.setGameScene(newGameScene);
-		// TODO: Use change listeners for the current game scene?
-		if (newGameScene == sceneConfig().get("play3D")) {
-			gamePage().pip().setGameSceneContext(newGameScene.context());
-		}
-	}
-
 	public void selectNextPerspective() {
 		selectPerspective(PacManGames3dApp.PY_3D_PERSPECTIVE.get().next());
 	}
