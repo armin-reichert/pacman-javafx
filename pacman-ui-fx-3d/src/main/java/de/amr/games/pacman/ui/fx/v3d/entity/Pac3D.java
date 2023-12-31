@@ -52,8 +52,8 @@ public class Pac3D {
 	public static final String MESH_ID_PALATE = "PacMan.Palate";
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-	public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
-	public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
+	public final ObjectProperty<Color> headColorPy   = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
+	public final BooleanProperty lightedPy           = new SimpleBooleanProperty(this, "lighted", true);
 
 	private final Pac pac;
 	private final Group root;
