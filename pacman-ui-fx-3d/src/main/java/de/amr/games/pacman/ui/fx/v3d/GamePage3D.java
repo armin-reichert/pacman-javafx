@@ -54,7 +54,7 @@ public class GamePage3D extends GamePage {
 		topLayer.setLeft(dashboard);
 		topLayer.setRight(pip.root());
 
-		contextMenu = new GamePageContextMenu();
+		contextMenu = new GamePageContextMenu(this);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class GamePage3D extends GamePage {
 
 	public void openContextMenu(Node node, double x, double y) {
 		contextMenu.hide();
-		ui().currentGameScene().ifPresent(gameScene -> contextMenu.rebuild(this, gameScene));
+		ui().currentGameScene().ifPresent(contextMenu::rebuild);
 		contextMenu.show(node, x, y);
 	}
 
@@ -110,7 +110,7 @@ public class GamePage3D extends GamePage {
 	@Override
 	public void render() {
 		super.render();
-		contextMenu.updateState(this);
+		contextMenu.updateState();
 		dashboard.update();
 		pip.root().setVisible(isPictureInPictureActive() && isCurrentGameScene3D());
 		pip.render();

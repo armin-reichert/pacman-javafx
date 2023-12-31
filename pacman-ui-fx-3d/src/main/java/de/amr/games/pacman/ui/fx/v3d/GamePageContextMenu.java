@@ -16,12 +16,17 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
  * @author Armin Reichert
  */
 class GamePageContextMenu extends ContextMenu {
+	private final GamePage3D page;
 	private CheckMenuItem autopilotItem;
 	private CheckMenuItem immunityItem;
 	private CheckMenuItem pipItem;
 	private ToggleGroup perspectivesToggleGroup;
 
-	public void rebuild(GamePage3D page, GameScene gameScene) {
+	public GamePageContextMenu(GamePage3D page) {
+		this.page = page;
+	}
+
+	public void rebuild(GameScene gameScene) {
 		getItems().clear();
 		getItems().add(createTitleItem(message("scene_display")));
 		if (gameScene instanceof PlayScene2D) {
@@ -65,7 +70,7 @@ class GamePageContextMenu extends ContextMenu {
 		return new CustomMenuItem(text);
 	}
 
-	public void updateState(GamePage3D page) {
+	public void updateState() {
 		if (perspectivesToggleGroup != null) {
 			for (var toggle : perspectivesToggleGroup.getToggles()) {
 				toggle.setSelected(PacManGames3dApp.PY_3D_PERSPECTIVE.get().equals(toggle.getUserData()));
