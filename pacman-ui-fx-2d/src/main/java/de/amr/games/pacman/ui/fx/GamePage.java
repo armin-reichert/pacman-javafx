@@ -89,7 +89,7 @@ public class GamePage implements Page {
 
 	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
 		return Bindings.createObjectBinding(() -> PacManGames2dApp.PY_SHOW_DEBUG_INFO.get()
-				&& ui.currentScene().isPresent() && !ui.currentScene().get().is3D() ?
+				&& ui.currentGameScene().isPresent() && !ui.currentGameScene().get().is3D() ?
 				ResourceManager.border(color, width) : null, PacManGames2dApp.PY_SHOW_DEBUG_INFO);
 	}
 
@@ -98,7 +98,7 @@ public class GamePage implements Page {
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(ui.currentScene().isPresent() && ui.currentScene().get() != ui.sceneConfig().get("boot"));
+		helpButton.setVisible(ui.currentGameScene().isPresent() && ui.currentGameScene().get() != ui.sceneConfig().get("boot"));
 	}
 
 	protected void showHelpMenu() {
@@ -129,7 +129,7 @@ public class GamePage implements Page {
 		//TODO check if this has to be done also when scaling value did not change
 		updateHelpButton();
 		updateSignatureSizeAndPosition();
-		ui.currentScene().ifPresent(gameScene -> {
+		ui.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
 				gameScene2D.setScaling(scaling);
 			}
@@ -170,7 +170,7 @@ public class GamePage implements Page {
 
 	public void onGameSceneChanged() {
 		var config = ui.sceneConfig();
-		var currentGameScene = ui.currentScene().get();
+		var currentGameScene = ui.currentGameScene().get();
 		// if play scene gets active/inactive, add/remove key handler
 		if (GameController.it().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
 			if (currentGameScene == config.get("play")) {
@@ -217,7 +217,7 @@ public class GamePage implements Page {
 	}
 
 	public void render() {
-		ui.currentScene().ifPresent(gameScene -> {
+		ui.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
 				gameScene2D.draw();
 			}
@@ -267,7 +267,7 @@ public class GamePage implements Page {
 		} else if (Keyboard.pressed(PacManGames2dApp.KEY_TEST_LEVELS)) {
 			ui.startLevelTestMode();
 		} else {
-			ui.currentScene().ifPresent(GameScene::handleKeyboardInput);
+			ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
 		}
 	}
 

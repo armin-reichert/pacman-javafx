@@ -79,7 +79,7 @@ public abstract class Section {
 	}
 
 	protected GameScene gameScene() {
-		return ui.currentScene().get();
+		return ui.currentGameScene().get();
 	}
 
 	protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {

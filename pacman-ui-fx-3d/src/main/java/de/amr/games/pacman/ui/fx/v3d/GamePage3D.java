@@ -135,7 +135,7 @@ public class GamePage3D extends GamePage {
 
 	public void openContextMenu(Node node, double x, double y) {
 		contextMenu.hide();
-		ui().currentScene().ifPresent(gameScene -> contextMenu.rebuild(gameScene));
+		ui().currentGameScene().ifPresent(gameScene -> contextMenu.rebuild(gameScene));
 		contextMenu.show(node, x, y);
 	}
 
@@ -151,7 +151,7 @@ public class GamePage3D extends GamePage {
 	public void onGameSceneChanged() {
 		//TODO this code is too difficult to understand, simplify
 		if (isCurrentGameScene3D()) {
-			var gameScene3D = ui().currentScene().get();
+			var gameScene3D = ui().currentGameScene().get();
 			if (gameScene3D == ui().sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
@@ -213,7 +213,7 @@ public class GamePage3D extends GamePage {
 	}
 
 	private boolean isCurrentGameScene3D() {
-		return ui().currentScene().isPresent() && ui().currentScene().get().is3D();
+		return ui().currentGameScene().isPresent() && ui().currentGameScene().get().is3D();
 	}
 
 	private void togglePipVisible() {

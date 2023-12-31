@@ -26,6 +26,8 @@ import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.Spritesheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
@@ -60,7 +62,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected final StartPage startPage;
 	protected final GamePage gamePage;
 	protected Page currentPage;
-	protected GameScene currentGameScene;
+	protected ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>(this, "gameScene");
 
 	public PacManGames2dUI(Stage stage, Settings settings, Theme theme) {
 		checkNotNull(stage);
@@ -105,9 +107,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected GameClock createClock() {
 		var clock = new GameClock(() -> {
 			GameController.it().update();
-			if (currentGameScene != null) {
-				currentGameScene.update();
-			}
+			currentGameScene().ifPresent(GameScene::update);
 		}, () -> gamePage.render());
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 		clock.targetFrameratePy.set(GameModel.FPS);
@@ -217,25 +217,26 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		if (nextGameScene == null) {
 			throw new IllegalStateException("No game scene found for game state " + GameController.it().state());
 		}
-		if (reload || nextGameScene != currentGameScene) {
+		if (reload || nextGameScene != currentGameScene.get()) {
 			setGameScene(nextGameScene);
 		}
 		updateStage();
 	}
 
 	protected void setGameScene(GameScene newGameScene) {
-		var prevGameScene = currentGameScene;
-		if (prevGameScene != null) {
+		currentGameScene().ifPresent(prevGameScene -> {
 			prevGameScene.end();
 			if (prevGameScene != sceneConfig().get("boot")) {
 				soundHandler.stopVoice();
 			}
-		}
-		currentGameScene = newGameScene;
-		currentGameScene.setContext(this);
-		currentGameScene.init();
+		});
+		newGameScene.setContext(this);
+		newGameScene.init();
+		currentGameScene.setValue(newGameScene);
+
+		//TODO use listener
 		gamePage.onGameSceneChanged();
-		Logger.trace("Game scene changed from {} to {}", prevGameScene, currentGameScene);
+		Logger.trace("Game scene changed to {}", currentGameScene.get());
 	}
 
 	// GameSceneContext
@@ -270,8 +271,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		return clock;
 	}
 
-	public Optional<GameScene> currentScene() {
-		return Optional.ofNullable(currentGameScene);
+	public Optional<GameScene> currentGameScene() {
+		return Optional.ofNullable(currentGameScene.get());
 	}
 
 	public Map<String, GameScene> sceneConfig() {
@@ -285,9 +286,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		Logger.trace("Event received: {}", e);
 		// call event specific handler
 		GameEventListener.super.onGameEvent(e);
-		if (currentGameScene != null) {
-			currentGameScene.onGameEvent(e);
-		}
+		currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
 		soundHandler.onGameEvent(e);
 	}
 
@@ -352,21 +351,17 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void restartIntro() {
-		if (currentGameScene != null) {
-			currentGameScene.end();
-			soundHandler.stopAllSounds();
-			if (game().isPlaying()) {
-				GameController.it().changeCredit(-1);
-			}
-			GameController.it().restart(INTRO);
+		soundHandler.stopAllSounds();
+		currentGameScene().ifPresent(GameScene::end);
+		if (game().isPlaying()) {
+			GameController.it().changeCredit(-1);
 		}
+		GameController.it().restart(INTRO);
 	}
 
 	@Override
 	public void reboot() {
-		if (currentGameScene != null) {
-			currentGameScene.end();
-		}
+		currentGameScene().ifPresent(GameScene::end);
 		soundHandler.playVoice("voice.explain");
 		GameController.it().restart(GameState.BOOT);
 	}

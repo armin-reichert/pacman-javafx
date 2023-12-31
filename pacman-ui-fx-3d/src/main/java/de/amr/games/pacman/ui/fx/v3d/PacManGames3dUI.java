@@ -62,7 +62,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		gamePage.setSize(mainScene().getWidth(), mainScene().getHeight());
 		// register event handler for opening play scene context menu
 		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
-			currentScene().ifPresent(gameScene -> {
+			currentGameScene().ifPresent(gameScene -> {
 				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
 					gamePage().openContextMenu(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
 				} else {
@@ -131,7 +131,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	}
 
 	public void toggle2D3D() {
-		currentScene().ifPresent(gameScene -> {
+		currentGameScene().ifPresent(gameScene -> {
 			Ufx.toggle(PacManGames3dApp.PY_3D_ENABLED);
 			if (isPlayScene(gameScene)) {
 				updateOrReloadGameScene(true);
@@ -146,7 +146,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void setGameScene(GameScene newGameScene) {
 		super.setGameScene(newGameScene);
-		// Should I rather use an observable property and change listeners for the current game scene?
+		// TODO: Use change listeners for the current game scene?
 		if (newGameScene == sceneConfig().get("play3D")) {
 			gamePage().pip().setGameSceneContext(newGameScene.context());
 		}
