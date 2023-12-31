@@ -146,8 +146,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void setGameScene(GameScene newGameScene) {
 		super.setGameScene(newGameScene);
-		var config = sceneConfig();
-		if (newGameScene == config.get("play3D")) {
+		// Should I rather use an observable property and change listeners for the current game scene?
+		if (newGameScene == sceneConfig().get("play3D")) {
 			gamePage().pip().setGameSceneContext(newGameScene.context());
 		}
 	}
