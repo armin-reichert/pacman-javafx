@@ -58,19 +58,19 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected GamePage3D createGamePage(Theme theme) {
-		var gamePage = new GamePage3D(this, theme);
-		gamePage.setSize(mainScene().getWidth(), mainScene().getHeight());
+		var page = new GamePage3D(this, theme);
+		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		// register event handler for opening play scene context menu
-		mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
+		mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
 			currentGameScene().ifPresent(gameScene -> {
 				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
-					gamePage().openContextMenu(mainScene().getRoot(), e.getScreenX(), e.getScreenY());
+					page.openContextMenu(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
 				} else {
-					gamePage().closeContextMenu();
+					page.closeContextMenu();
 				}
 			})
 		);
-		return gamePage;
+		return page;
 	}
 
 	private boolean isPlayScene(GameScene gameScene) {
@@ -89,14 +89,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected void configurePacSteering() {
-		// Steer with unmodified or with CONTROL + cursor key
-		var keyboardPlayerSteering = new KeyboardSteering();
-		keyboardPlayerSteering.define(Direction.UP,    KeyCode.UP,    KeyCombination.CONTROL_DOWN);
-		keyboardPlayerSteering.define(Direction.DOWN,  KeyCode.DOWN,  KeyCombination.CONTROL_DOWN);
-		keyboardPlayerSteering.define(Direction.LEFT,  KeyCode.LEFT,  KeyCombination.CONTROL_DOWN);
-		keyboardPlayerSteering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
-
-		GameController.it().setManualPacSteering(keyboardPlayerSteering);
+		// Enable steering with unmodified and CONTROL + cursor key
+		var steering = new KeyboardSteering();
+		steering.define(Direction.UP,    KeyCode.UP,    KeyCombination.CONTROL_DOWN);
+		steering.define(Direction.DOWN,  KeyCode.DOWN,  KeyCombination.CONTROL_DOWN);
+		steering.define(Direction.LEFT,  KeyCode.LEFT,  KeyCombination.CONTROL_DOWN);
+		steering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
+		GameController.it().setManualPacSteering(steering);
 	}
 
 	@Override
