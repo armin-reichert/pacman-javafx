@@ -105,10 +105,12 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	}
 
 	protected GameClock createClock() {
-		var clock = new GameClock(() -> {
+		var clock = new GameClock();
+		clock.setOnTick(() -> {
 			GameController.it().update();
 			currentGameScene().ifPresent(GameScene::update);
-		}, () -> gamePage.render());
+		});
+		clock.setOnRender(gamePage::render);
 		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 		clock.targetFrameratePy.set(GameModel.FPS);
 		return clock;

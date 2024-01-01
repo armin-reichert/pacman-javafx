@@ -26,7 +26,7 @@ public class GameClock {
 		// rest
 	}
 
-	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 30) {
+	public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
 		@Override
 		protected void invalidated() {
 			updateClock();
@@ -44,12 +44,7 @@ public class GameClock {
 	private long ticks;
 
 	public GameClock() {
-	}
-
-	public GameClock(Runnable onTick, Runnable onRender) {
-		this.onTick = onTick;
-		this.onRender = onRender;
-		createClock();
+		createTimeline();
 	}
 
 	public void setOnTick(Runnable onTick) {
@@ -60,7 +55,7 @@ public class GameClock {
 		this.onRender = onRender;
 	}
 
-	private void createClock() {
+	private void createTimeline() {
 		int targetFPS = targetFrameratePy.get();
 		var tick = new KeyFrame(Duration.seconds(1.0 / targetFPS), e -> executeSingleStep(!isPaused()));
 		timeline = new Timeline(targetFPS, tick);
@@ -72,7 +67,7 @@ public class GameClock {
 		if (running) {
 			timeline.stop();
 		}
-		createClock();
+		createTimeline();
 		if (running) {
 			start();
 		}
