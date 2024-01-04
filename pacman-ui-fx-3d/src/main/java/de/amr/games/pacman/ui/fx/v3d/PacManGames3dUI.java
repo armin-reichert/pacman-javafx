@@ -46,12 +46,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		super.addGameScenes();
 		{
 			var playScene3D = new PlayScene3D();
-			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+			playScene3D.bindSize(mainScene.widthProperty(), mainScene.heightProperty());
 			gameScenes.get(GameVariant.MS_PACMAN).put("play3D", playScene3D);
 		}
 		{
 			var playScene3D = new PlayScene3D();
-			playScene3D.bindSize(mainScene().widthProperty(), mainScene().heightProperty());
+			playScene3D.bindSize(mainScene.widthProperty(), mainScene.heightProperty());
 			gameScenes.get(GameVariant.PACMAN).put("play3D", playScene3D);
 		}
 	}
