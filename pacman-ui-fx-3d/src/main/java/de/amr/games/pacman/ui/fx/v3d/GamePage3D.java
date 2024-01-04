@@ -14,8 +14,9 @@ import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
-import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -55,21 +56,23 @@ public class GamePage3D extends GamePage {
 		topLayer.setRight(pip.root());
 
 		contextMenu = new GamePageContextMenu(this);
+		// register event handler for opening context menu
+		ui.mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
+			ui.currentGameScene().ifPresent(gameScene -> {
+				if (e.getButton() == MouseButton.SECONDARY && ui.isPlayScene(gameScene)) {
+					contextMenu.hide();
+					ui().currentGameScene().ifPresent(contextMenu::rebuild);
+					contextMenu.show(ui.mainScene().getRoot(), e.getScreenX(), e.getScreenY());
+				} else {
+					contextMenu.hide();
+				}
+			})
+		);
 	}
 
 	@Override
 	public PacManGames3dUI ui() {
 		return (PacManGames3dUI) ui;
-	}
-
-	public void openContextMenu(Node node, double x, double y) {
-		contextMenu.hide();
-		ui().currentGameScene().ifPresent(contextMenu::rebuild);
-		contextMenu.show(node, x, y);
-	}
-
-	public void closeContextMenu() {
-		contextMenu.hide();
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public class GamePage3D extends GamePage {
 			layers.getChildren().set(GAME_SCENE_LAYER, gameSceneLayer);
 			super.onGameSceneChanged(newGameScene);
 		}
-		closeContextMenu();
+		contextMenu.hide();
 		updateBackground();
 		updateTopLayer();
 	}

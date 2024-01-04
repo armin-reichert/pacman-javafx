@@ -17,8 +17,6 @@ import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
@@ -62,20 +60,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected GamePage3D createGamePage(Theme theme) {
 		var page = new GamePage3D(this, theme);
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
-		// register event handler for opening play scene context menu
-		mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
-			currentGameScene().ifPresent(gameScene -> {
-				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
-					page.openContextMenu(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
-				} else {
-					page.closeContextMenu();
-				}
-			})
-		);
 		return page;
 	}
 
-	private boolean isPlayScene(GameScene gameScene) {
+	public boolean isPlayScene(GameScene gameScene) {
 		var config = sceneConfig();
 		return gameScene == config.get("play") || gameScene == config.get("play3D");
 	}
