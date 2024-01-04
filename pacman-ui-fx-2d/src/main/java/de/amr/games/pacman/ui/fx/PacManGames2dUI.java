@@ -79,7 +79,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 		addGameScenes();
 		configurePacSteering();
-		configureBindings(settings);
 		configureStage(settings);
 	}
 
@@ -193,13 +192,6 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		}
 		stage.setTitle(message(PacManGames2dApp.TEXTS, titleKey));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
-	}
-
-	/**
-	 * @param settings application settings
-	 */
-	protected void configureBindings(Settings settings) {
-		// snooze...
 	}
 
 	protected GameScene sceneMatchingCurrentGameState() {

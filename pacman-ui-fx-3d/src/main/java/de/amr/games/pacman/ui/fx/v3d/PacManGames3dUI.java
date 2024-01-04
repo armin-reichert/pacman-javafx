@@ -39,6 +39,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	public PacManGames3dUI(Stage stage, Settings settings, Theme theme) {
 		super(stage, settings, theme);
+		PacManGames3dApp.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
+		PacManGames3dApp.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
 	}
 
 	@Override
@@ -96,13 +98,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		steering.define(Direction.LEFT,  KeyCode.LEFT,  KeyCombination.CONTROL_DOWN);
 		steering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
 		GameController.it().setManualPacSteering(steering);
-	}
-
-	@Override
-	protected void configureBindings(Settings settings) {
-		super.configureBindings(settings);
-		PacManGames3dApp.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
-		PacManGames3dApp.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
 	}
 
 	@Override
