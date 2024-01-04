@@ -5,6 +5,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -26,7 +27,7 @@ class GamePageContextMenu extends ContextMenu {
 		this.page = page;
 	}
 
-	public void rebuild(GameScene gameScene) {
+	public void rebuildAndShow(GameScene gameScene, Node anchor, double x, double y) {
 		getItems().clear();
 		getItems().add(createTitleItem(message("scene_display")));
 		if (gameScene instanceof PlayScene2D) {
@@ -62,6 +63,8 @@ class GamePageContextMenu extends ContextMenu {
 		immunityItem = new CheckMenuItem(message("immunity"));
 		immunityItem.setOnAction(e -> page.ui().toggleImmunity());
 		getItems().add(immunityItem);
+
+		show(anchor, x, y);
 	}
 
 	private MenuItem createTitleItem(String title) {
