@@ -56,23 +56,15 @@ public class GamePage3D extends GamePage {
 		topLayer.setRight(pip.root());
 
 		contextMenu = new GamePageContextMenu(this);
-		// register event handler for opening context menu
-		ui.mainScene().addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
-			ui.currentGameScene().ifPresent(gameScene -> {
-				if (e.getButton() == MouseButton.SECONDARY && ui.isPlayScene(gameScene)) {
-					contextMenu.hide();
-					ui().currentGameScene().ifPresent(contextMenu::rebuild);
-					contextMenu.show(ui.mainScene().getRoot(), e.getScreenX(), e.getScreenY());
-				} else {
-					contextMenu.hide();
-				}
-			})
-		);
 	}
 
 	@Override
 	public PacManGames3dUI ui() {
 		return (PacManGames3dUI) ui;
+	}
+
+	public GamePageContextMenu contextMenu() {
+		return contextMenu;
 	}
 
 	@Override
