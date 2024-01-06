@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
@@ -22,7 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -39,8 +38,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	public PacManGames3dUI(Stage stage, Settings settings, Theme theme) {
 		super(stage, settings, theme);
-		PacManGames3dApp.PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
-		PacManGames3dApp.PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
+		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
+		PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
 	}
 
 	@Override
@@ -103,7 +102,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected void updateStage() {
 		var variantKey = game().variant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
 		var titleKey = "app.title." + variantKey + (clock().isPaused()? ".paused" : "");
-		var dimension = message(PacManGames3dApp.PY_3D_ENABLED.get() ? "threeD" : "twoD");
+		var dimension = message(PY_3D_ENABLED.get() ? "threeD" : "twoD");
 		stage.setTitle(message(titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 		gamePage().updateBackground();
@@ -112,7 +111,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected GameScene sceneMatchingCurrentGameState() {
 		var gameScene = super.sceneMatchingCurrentGameState();
-		if (PacManGames3dApp.PY_3D_ENABLED.get() && gameScene == sceneConfig().get("play")) {
+		if (PY_3D_ENABLED.get() && gameScene == sceneConfig().get("play")) {
 			return sceneConfig().getOrDefault("play3D", gameScene);
 		}
 		return gameScene;
@@ -120,31 +119,27 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	public void toggle2D3D() {
 		currentGameScene().ifPresent(gameScene -> {
-			Ufx.toggle(PacManGames3dApp.PY_3D_ENABLED);
+			Ufx.toggle(PY_3D_ENABLED);
 			if (isPlayScene(gameScene)) {
 				updateOrReloadGameScene(true);
 				gameScene.onSceneVariantSwitch();
 			}
 			GameController.it().update();
-			showFlashMessage(message(PacManGames3dApp.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(message(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 		});
 	}
 
 	public void selectNextPerspective() {
-		selectPerspective(PacManGames3dApp.PY_3D_PERSPECTIVE.get().next());
+		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().next());
+		showFlashMessage(message("camera_perspective", message(PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	public void selectPrevPerspective() {
-		selectPerspective(PacManGames3dApp.PY_3D_PERSPECTIVE.get().prev());
-	}
-
-	private void selectPerspective(Perspective perspective) {
-		showFlashMessage(message("camera_perspective", message(perspective.name())));
-		PacManGames3dApp.PY_3D_PERSPECTIVE.set(perspective);
+		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().prev());
+		showFlashMessage(message("camera_perspective", message(PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	public void toggleDrawMode() {
-		PacManGames3dApp.PY_3D_DRAW_MODE.set(
-				PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+		PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
 	}
 }
