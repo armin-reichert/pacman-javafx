@@ -98,8 +98,6 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 	@Override
 	public void start(Stage stage) {
 		var theme = createTheme();
-		Logger.info("Theme created: {}", theme);
-
 		ui = new PacManGames3dUI(stage, settings, theme);
 		GameController.it().addListener(ui);
 		ui.showStartPage();
@@ -208,6 +206,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		theme.set("pacman.color.palate",             Color.rgb(191, 79, 61));
 		theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
 
+		Logger.info("Theme created: {}", theme);
 		return theme;
 	}
 
