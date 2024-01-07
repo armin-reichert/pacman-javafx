@@ -43,6 +43,7 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui.fx.PacManGames2dApp.PY_SHOW_DEBUG_INFO;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
@@ -92,6 +93,12 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 			"cut2",   new MsPacManCutscene2(),
 			"cut3",   new MsPacManCutscene3()
 		)));
+		for (var gameScene : gameScenes.get(GameVariant.MS_PACMAN).values()) {
+			if (gameScene instanceof GameScene2D gameScene2D) {
+				gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
+			}
+		}
+
 		gameScenes.put(GameVariant.PACMAN, new HashMap<>(Map.of(
 			"boot",   new BootScene(),
 			"intro",  new PacManIntroScene(),
@@ -101,6 +108,11 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 			"cut2",   new PacManCutscene2(),
 			"cut3",   new PacManCutscene3()
 		)));
+		for (var gameScene : gameScenes.get(GameVariant.PACMAN).values()) {
+			if (gameScene instanceof GameScene2D gameScene2D) {
+				gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
+			}
+		}
 	}
 
 	protected GameClock createClock() {

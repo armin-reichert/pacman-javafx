@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.ui.fx.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperboardAnimation;
@@ -41,7 +40,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class GameScene2D implements GameScene {
 
-	public static final ObjectProperty<Color>  PY_CANVAS_BG_COLOR = new SimpleObjectProperty<>(Color.rgb(0,0,0));
+	public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 
 	protected static double t(double tiles) {
 		return tiles * TS;
@@ -57,7 +56,6 @@ public abstract class GameScene2D implements GameScene {
 	protected boolean creditVisible;
 
 	protected GameScene2D() {
-		infoVisiblePy.bind(PacManGames2dApp.PY_SHOW_DEBUG_INFO); // should probably be elsewhere
 	}
 
 	@Override
