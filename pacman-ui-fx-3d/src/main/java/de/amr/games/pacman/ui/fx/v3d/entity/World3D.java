@@ -56,7 +56,7 @@ public class World3D {
 	public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
 	public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-			PacManGames3dApp.KEY_NO_TEXTURE) {
+			PacManGames3dApp.NO_TEXTURE) {
 		@Override
 		protected void invalidated() {
 			Logger.trace("Floor texture change detected");
