@@ -55,8 +55,8 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 	public static final KeyCodeCombination KEY_SIMULATION_SLOWER = alt(KeyCode.MINUS);
 	public static final KeyCodeCombination KEY_SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
 
-	public static final KeyCodeCombination KEYS_START_GAME[]     = { just(KeyCode.DIGIT1), just(KeyCode.NUMPAD1) };
-	public static final KeyCodeCombination KEYS_ADD_CREDIT[]     = { just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5) };
+	public static final KeyCodeCombination[] KEYS_START_GAME     = { just(KeyCode.DIGIT1), just(KeyCode.NUMPAD1) };
+	public static final KeyCodeCombination[] KEYS_ADD_CREDIT     = { just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5) };
 
 	public static final KeyCodeCombination KEY_QUIT              = just(KeyCode.Q);
 	public static final KeyCodeCombination KEY_TEST_LEVELS       = alt(KeyCode.T);
@@ -67,12 +67,12 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
 
+	private final Settings settings = new Settings();
+	private final Theme theme = new Theme();
 	private PacManGames2dUI ui;
-	private Settings settings;
 
 	@Override
 	public void init() {
-		settings = new Settings();
 		if (getParameters() != null) {
 			settings.merge(getParameters().getNamed());
 		}
@@ -82,7 +82,7 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 
 	@Override
 	public void start(Stage stage) {
-		var theme = createTheme();
+		populateTheme(theme);
 		Logger.info("Theme created: {}", theme);
 		ui = new PacManGames2dUI(stage, settings, theme);
 		GameController.it().addListener(ui);
@@ -96,11 +96,10 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		Logger.info("Game stopped.");
 	}
 
-	public Theme createTheme() {
-		var theme = new Theme();
-
+	public void populateTheme(Theme theme) {
+		//
 		// Common to both games
-
+		//
 		theme.set("ghost.0.color",                   ArcadePalette.RED);
 		theme.set("ghost.1.color",                   ArcadePalette.PINK);
 		theme.set("ghost.2.color",                   ArcadePalette.CYAN);
@@ -126,7 +125,6 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		//
 		// Ms. Pac-Man game
 		//
-
 		theme.set("mspacman.startpage.image",        image("graphics/mspacman/wallpaper-midway.png"));
 		theme.set("mspacman.helpButton.icon",        image("graphics/icons/help-red-64.png"));
 
@@ -158,7 +156,6 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		//
 		// Pac-Man game
 		//
-
 		theme.set("pacman.startpage.image",          image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg"));
 		theme.set("pacman.helpButton.icon",          image("graphics/icons/help-blue-64.png"));
 
@@ -186,7 +183,5 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		theme.set("pacman.audio.siren.3",            audioClip("sound/pacman/siren_3.mp3"));
 		theme.set("pacman.audio.siren.4",            audioClip("sound/pacman/siren_4.mp3"));
 		theme.set("pacman.audio.sweep",              audioClip("sound/common/sweep.mp3"));
-
-		return theme;
 	}
 }

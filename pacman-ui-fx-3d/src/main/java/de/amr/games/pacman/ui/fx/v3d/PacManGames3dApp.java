@@ -84,6 +84,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 	public static final String KEY_NO_TEXTURE = "No Texture";
 
 	private final Settings settings = new Settings();
+	private final Theme theme = new Theme();
 	private PacManGames3dUI ui;
 
 	@Override
@@ -97,7 +98,9 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 
 	@Override
 	public void start(Stage stage) {
-		var theme = createTheme();
+		new PacManGames2dApp().populateTheme(theme);
+		populateTheme(theme);
+		Logger.info("Theme created: {}", theme);
 		ui = new PacManGames3dUI(stage, settings, theme);
 		GameController.it().addListener(ui);
 		ui.showStartPage();
@@ -110,9 +113,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		Logger.info("Game stopped.");
 	}
 
-	private Theme createTheme() {
-		var theme = new PacManGames2dApp().createTheme();
-
+	private void populateTheme(Theme theme) {
 		theme.set("model3D.pacman",                  new Model3D(url("model3D/pacman.obj")));
 		theme.set("model3D.ghost",                   new Model3D(url("model3D/ghost.obj")));
 		theme.set("model3D.pellet",                  new Model3D(url("model3D/12206_Fruit_v1_L3.obj")));
@@ -205,9 +206,6 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		theme.set("pacman.color.head",               Color.rgb(255, 255, 0));
 		theme.set("pacman.color.palate",             Color.rgb(191, 79, 61));
 		theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
-
-		Logger.info("Theme created: {}", theme);
-		return theme;
 	}
 
 	private PhongMaterial createFloorTexture(String baseName, String ext) {
