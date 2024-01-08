@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.stream.Stream;
 
@@ -154,6 +155,12 @@ public class PlayScene2D extends GameScene2D {
 			g.setFill(Color.WHITE);
 			g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
 		}));
+		g.setFill(Color.YELLOW);
+		g.setFont(Font.font("Sans", 24));
+		g.fillText(String.format("%s %d",
+				gameController().state(),
+				gameController().state().timer().tick()),
+				0, 80);
 	}
 
 	@Override
