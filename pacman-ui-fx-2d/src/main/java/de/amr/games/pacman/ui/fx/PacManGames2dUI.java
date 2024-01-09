@@ -256,7 +256,10 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public Spritesheet spritesheet() {
-		return game().variant() == GameVariant.MS_PACMAN ? theme.get("mspacman.spritesheet") : theme.get("pacman.spritesheet");
+		return switch (game().variant()) {
+			case MS_PACMAN -> theme.get("mspacman.spritesheet");
+			case PACMAN    -> theme.get("pacman.spritesheet");
+		};
 	}
 
 	@Override
