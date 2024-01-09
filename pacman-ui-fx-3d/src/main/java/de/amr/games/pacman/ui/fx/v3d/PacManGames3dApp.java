@@ -37,6 +37,7 @@ import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
  * @author Armin Reichert
  */
 public class PacManGames3dApp extends Application implements ResourceManager {
+
 	private static final ResourceBundle TEXTS = ResourceBundle.getBundle(
 			"de.amr.games.pacman.ui.fx.v3d.texts.messages",
 			PacManGames3dApp.class.getModule());
@@ -110,19 +111,20 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 	}
 
 	private void populateTheme(Theme theme) {
-		theme.set("model3D.pacman",                  new Model3D(url("model3D/pacman.obj")));
-		theme.set("model3D.ghost",                   new Model3D(url("model3D/ghost.obj")));
-		theme.set("model3D.pellet",                  new Model3D(url("model3D/12206_Fruit_v1_L3.obj")));
+		theme.set("model3D.pacman",     new Model3D(url("model3D/pacman.obj")));
+		theme.set("model3D.ghost",      new Model3D(url("model3D/ghost.obj")));
+		theme.set("model3D.pellet",     new Model3D(url("model3D/12206_Fruit_v1_L3.obj")));
 
 		theme.set("model3D.wallpaper",  imageBackground("graphics/sea-wallpaper.jpg",
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER,
-				new BackgroundSize(1, 1, true, true, false, true)
+			BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+			BackgroundPosition.CENTER,
+			new BackgroundSize(1, 1, true, true, false, true)
 		));
+
 		theme.set("model3D.wallpaper.night",  imageBackground("graphics/sea-wallpaper-night.jpg",
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER,
-				new BackgroundSize(1, 1, true, true, false, true)
+			BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+			BackgroundPosition.CENTER,
+			new BackgroundSize(1, 1, true, true, false, true)
 		));
 
 		theme.set("image.armin1970",                 image("graphics/armin.jpg"));
@@ -160,48 +162,48 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		theme.set("ghost.color.flashing.pupils",     ArcadePalette.RED);
 
 		theme.addAllToArray("mspacman.maze.foodColor",
-				Color.rgb(222, 222, 255),
-				Color.rgb(255, 255, 0),
-				Color.rgb(255, 0, 0),
-				Color.rgb(222, 222, 255),
-				Color.rgb(0, 255, 255),
-				Color.rgb(222, 222, 255)
+			Color.rgb(222, 222, 255),
+			Color.rgb(255, 255, 0),
+			Color.rgb(255, 0, 0),
+			Color.rgb(222, 222, 255),
+			Color.rgb(0, 255, 255),
+			Color.rgb(222, 222, 255)
 		);
 
 		theme.addAllToArray("mspacman.maze.wallBaseColor",
-				Color.rgb(255, 0, 0),
-				Color.rgb(222, 222, 255),
-				Color.rgb(222, 222, 255),
-				Color.rgb(255, 183, 81),
-				Color.rgb(255, 255, 0),
-				Color.rgb(255, 0, 0)
+			Color.rgb(255, 0, 0),
+			Color.rgb(222, 222, 255),
+			Color.rgb(222, 222, 255),
+			Color.rgb(255, 183, 81),
+			Color.rgb(255, 255, 0),
+			Color.rgb(255, 0, 0)
 		);
 
 		theme.addAllToArray("mspacman.maze.wallTopColor",
-				Color.rgb(255, 183, 174),
-				Color.rgb(71, 183, 255),
-				Color.rgb(222, 151, 81),
-				Color.rgb(222, 151, 81),
-				Color.rgb(222, 151, 81),
-				Color.rgb(222, 151, 81)
+			Color.rgb(255, 183, 174),
+			Color.rgb(71, 183, 255),
+			Color.rgb(222, 151, 81),
+			Color.rgb(222, 151, 81),
+			Color.rgb(222, 151, 81),
+			Color.rgb(222, 151, 81)
 		);
 
-		theme.set("mspacman.color.head",             Color.rgb(255, 255, 0));
-		theme.set("mspacman.color.palate",           Color.rgb(191, 79, 61));
-		theme.set("mspacman.color.eyes",             Color.rgb(33, 33, 33));
-		theme.set("mspacman.color.boobs",            Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-		theme.set("mspacman.color.hairbow",          Color.rgb(255, 0, 0));
-		theme.set("mspacman.color.hairbow.pearls",   Color.rgb(33, 33, 255));
+		theme.set("mspacman.color.head",           Color.rgb(255, 255, 0));
+		theme.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
+		theme.set("mspacman.color.eyes",           Color.rgb(33, 33, 33));
+		theme.set("mspacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+		theme.set("mspacman.color.hairbow",        Color.rgb(255, 0, 0));
+		theme.set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
 
-		theme.set("mspacman.maze.doorColor",         Color.rgb(255, 183, 255));
+		theme.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
 
-		theme.set("pacman.maze.wallBaseColor",       Color.rgb(33, 33, 255).brighter());
-		theme.set("pacman.maze.wallTopColor",        Color.rgb(33, 33, 255).darker());
-		theme.set("pacman.maze.doorColor",           Color.rgb(252, 181, 255));
+		theme.set("pacman.maze.wallBaseColor",     Color.rgb(33, 33, 255).brighter());
+		theme.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).darker());
+		theme.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
 
-		theme.set("pacman.color.head",               Color.rgb(255, 255, 0));
-		theme.set("pacman.color.palate",             Color.rgb(191, 79, 61));
-		theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
+		theme.set("pacman.color.head",             Color.rgb(255, 255, 0));
+		theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));
+		theme.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
 	}
 
 	private PhongMaterial createFloorTexture(String baseName, String ext) {
