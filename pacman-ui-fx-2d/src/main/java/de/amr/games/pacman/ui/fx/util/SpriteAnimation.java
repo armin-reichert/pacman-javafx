@@ -18,7 +18,7 @@ public class SpriteAnimation {
 
 	public static class Builder {
 
-		private SpriteAnimation animation = new SpriteAnimation();
+		private final SpriteAnimation animation = new SpriteAnimation();
 
 		public Builder frameTicks(int ticks) {
 			animation.frameTicks = ticks;
