@@ -48,8 +48,7 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 	public static final KeyCodeCombination KEY_IMMUNITY          = alt(KeyCode.I);
 
 	public static final KeyCodeCombination KEY_PAUSE             = just(KeyCode.P);
-	public static final KeyCodeCombination KEY_PAUSE_STEP        = shift(KeyCode.P);
-	public static final KeyCodeCombination KEY_SINGLE_STEP       = just(KeyCode.SPACE);
+	public static final KeyCodeCombination[] KEYS_SINGLE_STEP    = { just(KeyCode.SPACE), shift(KeyCode.P) };
 	public static final KeyCodeCombination KEY_TEN_STEPS         = shift(KeyCode.SPACE);
 	public static final KeyCodeCombination KEY_SIMULATION_FASTER = alt(KeyCode.PLUS);
 	public static final KeyCodeCombination KEY_SIMULATION_SLOWER = alt(KeyCode.MINUS);

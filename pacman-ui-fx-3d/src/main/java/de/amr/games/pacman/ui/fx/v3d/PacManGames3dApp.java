@@ -132,10 +132,10 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		theme.set("icon.stop",                       image("graphics/icons/stop.png"));
 		theme.set("icon.step",                       image("graphics/icons/step.png"));
 
-		theme.set("texture.hexagon",                 createFloorTexture("hexagon", "jpg"));
-		theme.set("texture.knobs",                   createFloorTexture("knobs", "jpg"));
-		theme.set("texture.plastic",                 createFloorTexture("plastic", "jpg"));
-		theme.set("texture.wood",                    createFloorTexture("wood", "jpg"));
+		theme.set("texture.hexagon",                 createFloorTexture("hexagon"));
+		theme.set("texture.knobs",                   createFloorTexture("knobs"));
+		theme.set("texture.plastic",                 createFloorTexture("plastic"));
+		theme.set("texture.wood",                    createFloorTexture("wood"));
 
 		theme.set("ghost.0.color.normal.dress",      ArcadePalette.RED);
 		theme.set("ghost.0.color.normal.eyeballs",   ArcadePalette.PALE);
@@ -206,8 +206,9 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		theme.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
 	}
 
-	private PhongMaterial createFloorTexture(String baseName, String ext) {
+	private PhongMaterial createFloorTexture(String baseName) {
 		var texture = new PhongMaterial();
+		var ext = "jpg";
 		texture.setBumpMap(image("graphics/textures/%s-bump.%s".formatted(baseName, ext)));
 		texture.setDiffuseMap(image("graphics/textures/%s-diffuse.%s".formatted(baseName, ext)));
 		texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
