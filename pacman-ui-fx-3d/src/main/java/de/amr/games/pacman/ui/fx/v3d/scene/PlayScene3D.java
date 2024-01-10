@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.fx.PacManGames2dApp;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
@@ -46,9 +45,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**
  * 3D play scene.
@@ -216,19 +217,19 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		var actionHandler = (ActionHandler3D) context.actionHandler();
-		if (Keyboard.anyPressed(PacManGames2dApp.KEYS_ADD_CREDIT) && !GameController.it().hasCredit()) {
+		if (Keyboard.pressed(KEYS_ADD_CREDIT) && !GameController.it().hasCredit()) {
 			actionHandler.addCredit();
-		} else if (Keyboard.pressed(PacManGames3dApp.KEY_PREV_PERSPECTIVE)) {
+		} else if (Keyboard.pressed(KEY_PREV_PERSPECTIVE)) {
 			actionHandler.selectPrevPerspective();
-		} else if (Keyboard.pressed(PacManGames3dApp.KEY_NEXT_PERSPECTIVE)) {
+		} else if (Keyboard.pressed(KEY_NEXT_PERSPECTIVE)) {
 			actionHandler.selectNextPerspective();
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
 			actionHandler.cheatEatAllPellets();
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_ADD_LIVES)) {
 			actionHandler.cheatAddLives();
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_NEXT_LEVEL)) {
 			actionHandler.cheatEnterNextLevel();
-		} else if (Keyboard.pressed(PacManGames2dApp.KEY_CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
 			actionHandler.cheatKillAllEatableGhosts();
 		}
 	}

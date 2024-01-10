@@ -54,9 +54,9 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.anyPressed(KEYS_ADD_CREDIT)) {
+		if (Keyboard.pressed(KEYS_ADD_CREDIT)) {
 			context.actionHandler().addCredit();
-		} else if (Keyboard.anyPressed(KEYS_START_GAME)) {
+		} else if (Keyboard.pressed(KEYS_START_GAME)) {
 			context.actionHandler().startGame();
 		} else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
 			context.actionHandler().switchGameVariant();

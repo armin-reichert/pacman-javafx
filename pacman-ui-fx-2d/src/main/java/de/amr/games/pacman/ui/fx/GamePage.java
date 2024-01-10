@@ -255,7 +255,7 @@ public class GamePage implements Page {
 			showHelpMenu();
 		} else if (Keyboard.pressed(KEY_PAUSE)) {
 			ui.togglePaused();
-		} else if (Keyboard.anyPressed(KEY_PAUSE_STEP, KEY_SINGLE_STEP)) {
+		} else if (Keyboard.pressed(KEY_PAUSE_STEP, KEY_SINGLE_STEP)) {
 			ui.oneSimulationStep();
 		} else if (Keyboard.pressed(KEY_TEN_STEPS)) {
 			ui.tenSimulationSteps();

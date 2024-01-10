@@ -367,6 +367,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void reboot() {
+		soundHandler.stopAllSounds();
 		currentGameScene().ifPresent(GameScene::end);
 		soundHandler.playVoice("voice.explain");
 		GameController.it().restart(GameState.BOOT);

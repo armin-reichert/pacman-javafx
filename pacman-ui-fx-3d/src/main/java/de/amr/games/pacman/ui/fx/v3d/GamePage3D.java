@@ -21,7 +21,7 @@ import javafx.scene.shape.DrawMode;
 
 import java.time.LocalTime;
 
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 
 /**
@@ -111,11 +111,11 @@ public class GamePage3D extends GamePage {
 
 	@Override
 	protected void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames3dApp.KEY_TOGGLE_2D_3D)) {
+		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
 			ui().toggle2D3D();
-		} else if (Keyboard.anyPressed(PacManGames3dApp.KEYS_TOGGLE_DASHBOARD)) {
+		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
 			toggleDashboardVisible();
-		} else if (Keyboard.pressed(PacManGames3dApp.KEY_TOGGLE_PIP_VIEW)) {
+		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
 			togglePipVisible();
 		} else {
 			super.handleKeyboardInput();

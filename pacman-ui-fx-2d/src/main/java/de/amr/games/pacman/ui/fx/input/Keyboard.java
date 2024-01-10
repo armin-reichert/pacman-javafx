@@ -47,11 +47,17 @@ public class Keyboard {
 		}
 	}
 
-	public static boolean anyPressed(KeyCodeCombination... combinations) {
-		return Stream.of(combinations).anyMatch(Keyboard::pressed);
+	public static boolean pressed(KeyCodeCombination... combinations) {
+		if (combinations.length == 0) {
+			return false;
+		}
+		if (combinations.length == 1) {
+			return keyPressed(combinations[0]);
+		}
+		return Stream.of(combinations).anyMatch(Keyboard::keyPressed);
 	}
 
-	public static boolean pressed(KeyCodeCombination combination) {
+	private static boolean keyPressed(KeyCodeCombination combination) {
 		if (currentKeyEvent == null) {
 			return false;
 		}
