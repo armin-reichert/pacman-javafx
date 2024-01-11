@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import javafx.scene.input.KeyEvent;
@@ -22,7 +21,6 @@ import javafx.scene.shape.DrawMode;
 import java.time.LocalTime;
 
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
-
 
 /**
  * @author Armin Reichert
@@ -53,7 +51,7 @@ public class GamePage3D extends GamePage {
 		topLayer.setLeft(dashboard);
 		topLayer.setRight(pip.root());
 
-		contextMenu = new GamePageContextMenu(this);
+		contextMenu = new GamePageContextMenu();
 	}
 
 	@Override
@@ -105,7 +103,7 @@ public class GamePage3D extends GamePage {
 		super.render();
 		contextMenu.updateState();
 		dashboard.update();
-		pip.root().setVisible(isPictureInPictureActive() && isCurrentGameScene3D());
+		pip.root().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
 		pip.render();
 	}
 
@@ -116,28 +114,14 @@ public class GamePage3D extends GamePage {
 		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
 			toggleDashboardVisible();
 		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
-			togglePipVisible();
+			ui().togglePipVisible();
 		} else {
 			super.handleKeyboardInput();
 		}
 	}
 
-	/**
-	 * @return if the picture-in-picture view is activated (can be invisible nevertheless!)
-	 */
-	public boolean isPictureInPictureActive() {
-		return PacManGames3dApp.PY_PIP_ON.get();
-	}
-
 	private boolean isCurrentGameScene3D() {
 		return ui().currentGameScene().isPresent() && ui().currentGameScene().get().is3D();
-	}
-
-	public void togglePipVisible() {
-		Ufx.toggle(PacManGames3dApp.PY_PIP_ON);
-		var message = message(isPictureInPictureActive() ? "pip_on" : "pip_off");
-		ui().showFlashMessage(message);
-		updateTopLayer();
 	}
 
 	public void toggleDashboardVisible() {
@@ -145,9 +129,9 @@ public class GamePage3D extends GamePage {
 		updateTopLayer();
 	}
 
-	private void updateTopLayer() {
+	public void updateTopLayer() {
 		layers.getChildren().remove(topLayer);
-		if (dashboard.isVisible() || isPictureInPictureActive()) {
+		if (dashboard.isVisible() || PY_PIP_ON.get()) {
 			layers.getChildren().add(topLayer);
 		}
 		layers.requestFocus();

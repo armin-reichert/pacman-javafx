@@ -11,35 +11,30 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**
  * @author Armin Reichert
  */
-class GamePageContextMenu extends ContextMenu {
-	private final GamePage3D page;
+public class GamePageContextMenu extends ContextMenu {
 	private CheckMenuItem autopilotItem;
 	private CheckMenuItem immunityItem;
 	private CheckMenuItem pipItem;
 	private ToggleGroup perspectivesToggleGroup;
 
-	public GamePageContextMenu(GamePage3D page) {
-		this.page = page;
-	}
-
-	public void rebuildAndShow(GameScene gameScene, Node anchor, double x, double y) {
+	public void rebuildAndShow(ActionHandler3D actionHandler, GameScene gameScene, Node anchor, double x, double y) {
 		getItems().clear();
 		getItems().add(createTitleItem(message("scene_display")));
 		if (gameScene instanceof PlayScene2D) {
 			var item = new MenuItem(message("use_3D_scene"));
-			item.setOnAction(e -> page.ui().toggle2D3D());
+			item.setOnAction(e -> actionHandler.toggle2D3D());
 			getItems().add(item);
 		} else if (gameScene instanceof PlayScene3D) {
 			var item = new MenuItem(message("use_2D_scene"));
-			item.setOnAction(e -> page.ui().toggle2D3D());
+			item.setOnAction(e -> actionHandler.toggle2D3D());
 			getItems().add(item);
 			pipItem = new CheckMenuItem(message("pip"));
-			pipItem.setOnAction(e -> page.togglePipVisible());
+			pipItem.setOnAction(e -> actionHandler.togglePipVisible());
 			getItems().add(pipItem);
 			getItems().add(createTitleItem(message("select_perspective")));
 			perspectivesToggleGroup = new ToggleGroup();
@@ -52,16 +47,16 @@ class GamePageContextMenu extends ContextMenu {
 			perspectivesToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
 				if (nv != null) {
 					// Note: These are the used data set for the radio menu item!
-					PacManGames3dApp.PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+					PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
 				}
 			});
 		}
 		getItems().add(createTitleItem(message("pacman")));
 		autopilotItem = new CheckMenuItem(message("autopilot"));
-		autopilotItem.setOnAction(e -> page.ui().toggleAutopilot());
+		autopilotItem.setOnAction(e -> actionHandler.toggleAutopilot());
 		getItems().add(autopilotItem);
 		immunityItem = new CheckMenuItem(message("immunity"));
-		immunityItem.setOnAction(e -> page.ui().toggleImmunity());
+		immunityItem.setOnAction(e -> actionHandler.toggleImmunity());
 		getItems().add(immunityItem);
 
 		show(anchor, x, y);
@@ -76,11 +71,11 @@ class GamePageContextMenu extends ContextMenu {
 	public void updateState() {
 		if (perspectivesToggleGroup != null) {
 			for (var toggle : perspectivesToggleGroup.getToggles()) {
-				toggle.setSelected(PacManGames3dApp.PY_3D_PERSPECTIVE.get().equals(toggle.getUserData()));
+				toggle.setSelected(PY_3D_PERSPECTIVE.get().equals(toggle.getUserData()));
 			}
 		}
 		if (pipItem != null) {
-			pipItem.setSelected(page.isPictureInPictureActive());
+			pipItem.setSelected(PY_PIP_ON.get());
 		}
 		if (autopilotItem != null) {
 			autopilotItem.setSelected(GameController.it().isAutoControlled());
