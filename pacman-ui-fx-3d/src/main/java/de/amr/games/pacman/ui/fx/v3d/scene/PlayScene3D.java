@@ -40,6 +40,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -85,10 +86,10 @@ public class PlayScene3D implements GameScene {
 		camControllerMap.put(Perspective.TOTAL,            new CamTotal());
 
 		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(PacManGames3dApp.PY_3D_AXES_VISIBLE);
+		coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
 		var ambientLight = new AmbientLight();
-		ambientLight.colorProperty().bind(PacManGames3dApp.PY_3D_LIGHT_COLOR);
+		ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
 		// initial sub-scene size is irrelevant, gets bound to main scene size in init method
 		subSceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
@@ -112,7 +113,7 @@ public class PlayScene3D implements GameScene {
 		setCreditVisible(false);
 		setScoreVisible(true);
 		resetReadyMessageText3D();
-		perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE);
+		perspectivePy.bind(PY_3D_PERSPECTIVE);
 		game().level().ifPresent(this::replaceGameLevel3D);
 		Logger.info("3D play scene initialized.");
 	}
@@ -196,9 +197,9 @@ public class PlayScene3D implements GameScene {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
 		}
 
-		if (PacManGames3dApp.PY_3D_FLOOR_TEXTURE_RND.get()) {
-			var names = new String[] { "hexagon", "knobs", "plastic", "wood" };
-			PacManGames3dApp.PY_3D_FLOOR_TEXTURE.set(names[randomInt(0, names.length)]);
+		if (PY_3D_FLOOR_TEXTURE_RND.get()) {
+			List<String> names = context.theme().getArray("texture.names");
+			PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}
@@ -452,7 +453,7 @@ public class PlayScene3D implements GameScene {
 			}),
 			rotation,
 			actionAfterSeconds(0.5, () -> context.clip("audio.sweep").play()),
-			actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3dApp.PY_3D_PERSPECTIVE))
+			actionAfterSeconds(0.5, () -> perspectivePy.bind(PY_3D_PERSPECTIVE))
 		);
 	}
 

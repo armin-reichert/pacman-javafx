@@ -136,6 +136,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 		theme.set("texture.knobs",                   createFloorTexture("knobs"));
 		theme.set("texture.plastic",                 createFloorTexture("plastic"));
 		theme.set("texture.wood",                    createFloorTexture("wood"));
+		theme.addAllToArray("texture.names", "hexagon", "knobs", "plastic", "wood");
 
 		theme.set("ghost.0.color.normal.dress",      ArcadePalette.RED);
 		theme.set("ghost.0.color.normal.eyeballs",   ArcadePalette.PALE);

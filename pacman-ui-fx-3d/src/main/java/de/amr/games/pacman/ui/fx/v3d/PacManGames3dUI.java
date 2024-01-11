@@ -66,8 +66,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 			currentGameScene().ifPresent(gameScene -> {
 				page.contextMenu().hide();
 				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
-					page.contextMenu().rebuildAndShow(actionHandler(), gameScene,
-						mainScene.getRoot(), e.getScreenX(), e.getScreenY());
+					page.contextMenu().rebuild(actionHandler(), gameScene);
+					page.contextMenu().show(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
 				}
 			})
 		);

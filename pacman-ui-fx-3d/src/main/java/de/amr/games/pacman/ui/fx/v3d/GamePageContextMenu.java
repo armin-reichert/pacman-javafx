@@ -22,7 +22,7 @@ public class GamePageContextMenu extends ContextMenu {
 	private CheckMenuItem pipItem;
 	private ToggleGroup perspectivesToggleGroup;
 
-	public void rebuildAndShow(ActionHandler3D actionHandler, GameScene gameScene, Node anchor, double x, double y) {
+	public void rebuild(ActionHandler3D actionHandler, GameScene gameScene) {
 		getItems().clear();
 		getItems().add(createTitleItem(message("scene_display")));
 		if (gameScene instanceof PlayScene2D) {
@@ -58,8 +58,6 @@ public class GamePageContextMenu extends ContextMenu {
 		immunityItem = new CheckMenuItem(message("immunity"));
 		immunityItem.setOnAction(e -> actionHandler.toggleImmunity());
 		getItems().add(immunityItem);
-
-		show(anchor, x, y);
 	}
 
 	private MenuItem createTitleItem(String title) {

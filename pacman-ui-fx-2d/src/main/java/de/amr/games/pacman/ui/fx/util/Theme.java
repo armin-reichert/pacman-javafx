@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -20,12 +21,12 @@ import java.util.stream.Stream;
  */
 public class Theme {
 
-	protected Map<String, Object> namedThings = new HashMap<>();
-	protected Map<String, ArrayList<Object>> namedArrays = new HashMap<>();
+	protected Map<String, Object> valuesByName = new HashMap<>();
+	protected Map<String, ArrayList<Object>> arraysByName = new HashMap<>();
 
 	private long countEntriesOfType(Class<?> clazz) {
-		var count = namedThings.values().stream().filter(thing -> thing.getClass().isAssignableFrom(clazz)).count();
-		for (var array: namedArrays.values()) {
+		var count = valuesByName.values().stream().filter(thing -> thing.getClass().isAssignableFrom(clazz)).count();
+		for (var array: arraysByName.values()) {
 			if (!array.isEmpty() && array.get(0).getClass().isAssignableFrom(clazz)) {
 				count += array.size();
 			}
@@ -41,17 +42,21 @@ public class Theme {
 	}
 
 	public void set(String name, Object thing) {
-		namedThings.put(name, thing);
+		valuesByName.put(name, thing);
 	}
 
-	public void addToArray(String arrayName, Color color) {
-		namedArrays.computeIfAbsent(arrayName, name -> new ArrayList<>()).add(color);
+	public void addToArray(String arrayName, Object value) {
+		arraysByName.computeIfAbsent(arrayName, name -> new ArrayList<>()).add(value);
 	}
 
-	public void addAllToArray(String arrayName, Color... colors) {
-		for (var color : colors) {
-			addToArray(arrayName, color);
+	public void addAllToArray(String arrayName, Object... values) {
+		for (var value : values) {
+			addToArray(arrayName, value);
 		}
+	}
+
+	public <T> List<T> getArray(String arrayName) {
+		return (List<T>) arraysByName.get(arrayName);
 	}
 
 	/**
@@ -67,11 +72,11 @@ public class Theme {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T get(String name) {
-		return (T) namedThings.get(name);
+		return (T) valuesByName.get(name);
 	}
 
 	public Color color(String name, int i) {
-		var array = namedArrays.get(name);
+		var array = arraysByName.get(name);
 		return (Color) array.get(i);
 	}
 
@@ -100,6 +105,6 @@ public class Theme {
 	}
 
 	public Stream<AudioClip> audioClips() {
-		return namedThings.values().stream().filter(AudioClip.class::isInstance).map(AudioClip.class::cast);
+		return valuesByName.values().stream().filter(AudioClip.class::isInstance).map(AudioClip.class::cast);
 	}
 }
