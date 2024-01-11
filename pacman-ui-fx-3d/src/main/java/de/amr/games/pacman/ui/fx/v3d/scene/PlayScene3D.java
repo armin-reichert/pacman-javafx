@@ -316,7 +316,7 @@ public class PlayScene3D implements GameScene {
 				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
 				var msg = "READY!";
-				if (!PacManGames3dApp.PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
+				if (!PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
 					msg = pickFunnyReadyMessage(game().variant());
 				}
 				readyMessageText3D.setText(msg);
@@ -333,7 +333,7 @@ public class PlayScene3D implements GameScene {
 				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation(game().variant()));
 			}
 
-			case GHOST_DYING -> {
+			case GHOST_DYING ->
 				game().level().map(GameLevel::thisFrame).ifPresent(thisFrame -> {
 					switch (game().variant()) {
 						case MS_PACMAN -> {
@@ -353,18 +353,16 @@ public class PlayScene3D implements GameScene {
 						default -> throw new IllegalGameVariantException(game().variant());
 					}
 				});
-			}
 
-			case CHANGING_TO_NEXT_LEVEL -> {
+			case CHANGING_TO_NEXT_LEVEL ->
 				game().level().ifPresent(level -> {
 					state().timer().resetIndefinitely();
 					replaceGameLevel3D(level);
 					updateCamera(perspectivePy.get());
 					keepGameStateForSeconds(3);
 				});
-			}
 
-			case LEVEL_COMPLETE -> {
+			case LEVEL_COMPLETE ->
 				game().level().ifPresent(level -> {
 					level3D.livesCounter3D().stopAnimation();
 					level3D.world3D().foodOscillation().stop();
@@ -389,21 +387,17 @@ public class PlayScene3D implements GameScene {
 						actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
 					);
 				});
-			}
 
-			case GAME_OVER -> {
+			case GAME_OVER ->
 				game().level().ifPresent(level -> {
 					level3D.world3D().foodOscillation().stop();
 					level3D.livesCounter3D().stopAnimation();
-					context.actionHandler().showFlashMessageSeconds(3, PacManGames3dApp.PICKER_GAME_OVER.next());
+					context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
 					context.clip("audio.game_over").play();
 					keepGameStateForSeconds(3);
 				});
-			}
 
-			default -> {
-				// ignore
-			}
+			default -> {}
 
 		}
 
@@ -423,20 +417,18 @@ public class PlayScene3D implements GameScene {
 					}
 				}
 			}
-			default -> {
-				// ignore
-			}
+			default -> {}
 		}
 	}
 
 	private String pickFunnyReadyMessage(GameVariant gameVariant) {
 		return switch (gameVariant) {
-			case MS_PACMAN -> PacManGames3dApp.PICKER_READY_MS_PACMAN.next();
-			case PACMAN    -> PacManGames3dApp.PICKER_READY_PACMAN.next();
+			case MS_PACMAN -> PICKER_READY_MS_PACMAN.next();
+			case PACMAN    -> PICKER_READY_PACMAN.next();
 		};
 	}
 	private String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(PacManGames3dApp.PICKER_LEVEL_COMPLETE.next(), message("level_complete", levelNumber));
+		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(), message("level_complete", levelNumber));
 	}
 
 	private Animation createLevelChangeAnimation() {
@@ -461,14 +453,14 @@ public class PlayScene3D implements GameScene {
 		if (level.numFlashes == 0) {
 			return pauseSeconds(1.0);
 		}
-		double wallHeight = PacManGames3dApp.PY_3D_WALL_HEIGHT.get();
+		double wallHeight = PY_3D_WALL_HEIGHT.get();
 		var animation = new SinusCurveAnimation(level.numFlashes);
 		animation.setAmplitude(wallHeight);
 		animation.elongationPy.set(level3D.world3D().wallHeightPy.get());
 		level3D.world3D().wallHeightPy.bind(animation.elongationPy);
 		animation.setOnFinished(e -> {
-			level3D.world3D().wallHeightPy.bind(PacManGames3dApp.PY_3D_WALL_HEIGHT);
-			PacManGames3dApp.PY_3D_WALL_HEIGHT.set(wallHeight);
+			level3D.world3D().wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+			PY_3D_WALL_HEIGHT.set(wallHeight);
 		});
 		return animation;
 	}
