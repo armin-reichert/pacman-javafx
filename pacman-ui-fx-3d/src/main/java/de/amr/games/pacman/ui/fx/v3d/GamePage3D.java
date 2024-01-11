@@ -43,6 +43,7 @@ public class GamePage3D extends GamePage {
 				pip.setGameSceneContext(newGameScene.context());
 			}
 		});
+		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
 
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);

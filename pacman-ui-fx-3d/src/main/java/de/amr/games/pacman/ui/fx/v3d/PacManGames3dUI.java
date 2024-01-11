@@ -134,12 +134,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	public void togglePipVisible() {
 		Ufx.toggle(PY_PIP_ON);
-		var message = message(PY_PIP_ON.get() ? "pip_on" : "pip_off");
-		showFlashMessage(message);
-		//TODO change listener?
-		gamePage().updateTopLayer();
+		showFlashMessage(message(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
 	}
-
 
 	@Override
 	public void selectNextPerspective() {
