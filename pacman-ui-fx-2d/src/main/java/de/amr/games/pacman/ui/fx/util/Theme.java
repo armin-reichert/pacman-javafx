@@ -25,7 +25,7 @@ public class Theme {
 	protected Map<String, ArrayList<Object>> arraysByName = new HashMap<>();
 
 	private long countEntriesOfType(Class<?> clazz) {
-		var count = valuesByName.values().stream().filter(thing -> thing.getClass().isAssignableFrom(clazz)).count();
+		var count = valuesByName.values().stream().filter(value -> value.getClass().isAssignableFrom(clazz)).count();
 		for (var array: arraysByName.values()) {
 			if (!array.isEmpty() && array.get(0).getClass().isAssignableFrom(clazz)) {
 				count += array.size();
@@ -41,8 +41,8 @@ public class Theme {
 				countEntriesOfType(AudioClip.class) + " audio clips" + ", ";
 	}
 
-	public void set(String name, Object thing) {
-		valuesByName.put(name, thing);
+	public void set(String name, Object value) {
+		valuesByName.put(name, value);
 	}
 
 	public void addToArray(String arrayName, Object value) {
@@ -67,7 +67,7 @@ public class Theme {
 	 * </pre>
 	 * 
 	 * @param <T>  expected return type
-	 * @param name name of thing
+	 * @param name name of value
 	 * @return stored value cast to return type
 	 */
 	@SuppressWarnings("unchecked")
