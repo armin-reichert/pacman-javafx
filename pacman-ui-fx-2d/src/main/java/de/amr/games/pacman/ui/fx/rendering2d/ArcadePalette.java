@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
  */
 public class ArcadePalette {
 
+	public static final Color BLACK   = Color.rgb(0, 0, 0);
 	public static final Color RED    = Color.rgb(255, 0, 0);
 	public static final Color YELLOW = Color.rgb(255, 255, 0);
 	public static final Color PINK   = Color.rgb(252, 181, 255);

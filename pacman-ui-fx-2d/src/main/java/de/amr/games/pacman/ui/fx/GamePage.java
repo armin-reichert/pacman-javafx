@@ -66,7 +66,7 @@ public class GamePage implements Page {
 		gameSceneLayer.setBackground(theme.background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
 
-		canvasContainer.setBackground(ResourceManager.coloredBackground(GameScene2D.PY_CANVAS_BG_COLOR.get()));
+		canvasContainer.setBackground(ResourceManager.coloredBackground(theme.color("canvas.background")));
 		canvasContainer.setCenter(canvas);
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling, false));
 
@@ -118,9 +118,9 @@ public class GamePage implements Page {
 
 	@Override
 	public void setSize(double width, double height) {
-		double s = 0.9 * height / PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
-		if (s * PacManGames2dApp.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
-			s = 0.8 * width / PacManGames2dApp.CANVAS_WIDTH_UNSCALED;
+		double s = 0.9 * height / CANVAS_HEIGHT_UNSCALED;
+		if (s * CANVAS_WIDTH_UNSCALED > 0.8 * width) {
+			s = 0.8 * width / CANVAS_WIDTH_UNSCALED;
 		}
 		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
 		resize(s, false);
@@ -146,11 +146,11 @@ public class GamePage implements Page {
 		}
 		this.scaling = scaling;
 
-		double w = Math.round( (PacManGames2dApp.CANVAS_WIDTH_UNSCALED  + 25) * scaling );
-		double h = Math.round( (PacManGames2dApp.CANVAS_HEIGHT_UNSCALED + 15) * scaling );
+		double w = Math.round( (CANVAS_WIDTH_UNSCALED  + 25) * scaling );
+		double h = Math.round( (CANVAS_HEIGHT_UNSCALED + 15) * scaling );
 
-		canvas.setWidth(PacManGames2dApp.CANVAS_WIDTH_UNSCALED * scaling);
-		canvas.setHeight(PacManGames2dApp.CANVAS_HEIGHT_UNSCALED * scaling);
+		canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
+		canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
 
 		canvasContainer.setMinSize (w, h);
 		canvasContainer.setPrefSize(w, h);

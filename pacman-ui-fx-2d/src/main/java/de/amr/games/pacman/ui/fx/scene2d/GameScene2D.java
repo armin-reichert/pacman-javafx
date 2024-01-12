@@ -18,9 +18,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -39,8 +37,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  * @author Armin Reichert
  */
 public abstract class GameScene2D implements GameScene {
-
-	public static final ObjectProperty<Color> PY_CANVAS_BG_COLOR = new SimpleObjectProperty<>(Color.BLACK);
 
 	protected static double t(double tiles) {
 		return tiles * TS;
@@ -155,7 +151,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void clearCanvas() {
-		g.setFill(PY_CANVAS_BG_COLOR.get());
+		g.setFill(context.theme().color("canvas.background"));
 		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 	}
 

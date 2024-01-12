@@ -99,6 +99,8 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		//
 		// Common to both games
 		//
+		theme.set("canvas.background",               ArcadePalette.BLACK);
+
 		theme.set("ghost.0.color",                   ArcadePalette.RED);
 		theme.set("ghost.1.color",                   ArcadePalette.PINK);
 		theme.set("ghost.2.color",                   ArcadePalette.CYAN);
