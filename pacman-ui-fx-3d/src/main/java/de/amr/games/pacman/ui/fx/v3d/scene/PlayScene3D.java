@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
@@ -278,24 +277,17 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		game().level().ifPresent(level -> {
-			level.bonus().ifPresent(bonus -> level3D.replaceBonus3D(bonus, context.spritesheet()));
-			level3D.bonus3D().showEdible();
-		});
+		game().level().flatMap(GameLevel::bonus).ifPresent(level3D::replaceBonus3D);
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		if (level3D.bonus3D() != null) {
-			level3D.bonus3D().showEaten();
-		}
+		level3D.bonus3D().ifPresent(Bonus3D::showEaten);
 	}
 
 	@Override
 	public void onBonusExpired(GameEvent e) {
-		if (level3D.bonus3D() != null) {
-			level3D.bonus3D().hide();
-		}
+		level3D.bonus3D().ifPresent(Bonus3D::hide);
 	}
 
 	@Override
@@ -412,9 +404,7 @@ public class PlayScene3D implements GameScene {
 			case HUNTING -> {
 				if (e.newState != GameState.GHOST_DYING) {
 					level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
-					if (level3D.bonus3D() != null) {
-						level3D.bonus3D().hide();
-					}
+					level3D.bonus3D().ifPresent(Bonus3D::hide);
 				}
 			}
 			default -> {}

@@ -25,9 +25,11 @@ import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**
  * @author Armin Reichert
@@ -43,6 +45,7 @@ public class GameLevel3D {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
+	private final Spritesheet spritesheet;
 	private Bonus3D bonus3D;
 
 	public GameLevel3D(GameLevel level, Theme theme, Spritesheet spritesheet) {
@@ -51,6 +54,7 @@ public class GameLevel3D {
 		checkNotNull(spritesheet);
 
 		this.level = level;
+		this.spritesheet = spritesheet;
 
 		var pelletModel3D = theme.<Model3D>get("model3D.pellet");
 		var pacModel3D    = theme.<Model3D>get("model3D.pacman");
@@ -100,27 +104,26 @@ public class GameLevel3D {
 		// World must be added *after* the guys. Otherwise, a semi-transparent house is not rendered correctly!
 		root.getChildren().add(world3D.getRoot());
 
-		pac3D.lightedPy.bind(PacManGames3dApp.PY_3D_PAC_LIGHT_ENABLED);
-		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-		world3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-		world3D.floorColorPy.bind(PacManGames3dApp.PY_3D_FLOOR_COLOR);
-		world3D.floorTexturePy.bind(PacManGames3dApp.PY_3D_FLOOR_TEXTURE);
-		world3D.wallHeightPy.bind(PacManGames3dApp.PY_3D_WALL_HEIGHT);
-		world3D.wallThicknessPy.bind(PacManGames3dApp.PY_3D_WALL_THICKNESS);
-		livesCounter3D.drawModePy.bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
+		ghosts3D[GameModel.RED_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+		ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+		ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+		ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+		world3D.drawModePy.bind(PY_3D_DRAW_MODE);
+		world3D.floorColorPy.bind(PY_3D_FLOOR_COLOR);
+		world3D.floorTexturePy.bind(PY_3D_FLOOR_TEXTURE);
+		world3D.wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+		world3D.wallThicknessPy.bind(PY_3D_WALL_THICKNESS);
+		livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
 	}
 
-	public void replaceBonus3D(Bonus bonus, Spritesheet spritesheet) {
+	public void replaceBonus3D(Bonus bonus) {
 		checkNotNull(bonus);
-		checkNotNull(spritesheet);
-
 		if (bonus3D != null) {
 			root.getChildren().remove(bonus3D.getRoot());
 		}
-		bonus3D = createBonus3D(bonus, spritesheet);
+		bonus3D = createBonus3D(bonus);
+		bonus3D.showEdible();
 		root.getChildren().add(bonus3D.getRoot());
 	}
 
@@ -128,23 +131,21 @@ public class GameLevel3D {
 		return new Ghost3D(ghost, ghostModel3D, theme, 8.5);
 	}
 
-	private Bonus3D createBonus3D(Bonus bonus, Spritesheet spritesheet) {
-		switch (level.game().variant()) {
-		case MS_PACMAN: {
-			var ss = (SpritesheetMsPacManGame) spritesheet;
-			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
-			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
-			return new Bonus3D(bonus, symbolImage, pointsImage);
-		}
-		case PACMAN: {
-			var ss = (SpritesheetPacManGame) spritesheet;
-			var symbolImage = spritesheet.subImage(ss.bonusSymbolSprite(bonus.symbol()));
-			var pointsImage = spritesheet.subImage(ss.bonusValueSprite(bonus.symbol()));
-			return new Bonus3D(bonus, symbolImage, pointsImage);
-		}
-		default:
-			throw new IllegalGameVariantException(level.game().variant());
-		}
+	private Bonus3D createBonus3D(Bonus bonus) {
+		return switch (level.game().variant()) {
+			case MS_PACMAN -> {
+				var ss = (SpritesheetMsPacManGame) spritesheet;
+				var symbolImage = ss.subImage(ss.bonusSymbolSprite(bonus.symbol()));
+				var pointsImage = ss.subImage(ss.bonusValueSprite(bonus.symbol()));
+				yield new Bonus3D(bonus, symbolImage, pointsImage);
+			}
+			case PACMAN -> {
+				var ss = (SpritesheetPacManGame) spritesheet;
+				var symbolImage = ss.subImage(ss.bonusSymbolSprite(bonus.symbol()));
+				var pointsImage = ss.subImage(ss.bonusValueSprite(bonus.symbol()));
+				yield new Bonus3D(bonus, symbolImage, pointsImage);
+			}
+		};
 	}
 
 	public void update() {
@@ -233,8 +234,8 @@ public class GameLevel3D {
 		return ghosts3D[id];
 	}
 
-	public Bonus3D bonus3D() {
-		return bonus3D;
+	public Optional<Bonus3D> bonus3D() {
+		return Optional.ofNullable(bonus3D);
 	}
 
 	public Scores3D scores3D() {
