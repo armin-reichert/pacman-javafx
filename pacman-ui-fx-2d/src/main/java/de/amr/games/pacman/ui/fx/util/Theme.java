@@ -55,6 +55,7 @@ public class Theme {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> List<T> getArray(String arrayName) {
 		return (List<T>) arraysByName.get(arrayName);
 	}
