@@ -166,7 +166,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawLevelCounter() {
-		drawLevelCounter(context.game().variant(), context.game().levelCounter(), t(24), t(34));
+		drawLevelCounter(context.gameVariant(), context.game().levelCounter(), t(24), t(34));
 	}
 
 	private void drawLevelCounter(GameVariant variant, Iterable<Byte> levelSymbols, double xr, double yr) {
@@ -199,7 +199,7 @@ public abstract class GameScene2D implements GameScene {
 		var y = TS * (GameModel.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(livesCounterSprite(context.game().variant()), x + TS * (2 * i), y);
+			drawSprite(livesCounterSprite(context.gameVariant()), x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -210,7 +210,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawBonus(Bonus bonus) {
-		switch (context.game().variant()) {
+		switch (context.gameVariant()) {
 			case MS_PACMAN -> {
 				var ss = (SpritesheetMsPacManGame) context.spritesheet();
 				if (bonus instanceof MovingBonus movingBonus) {
@@ -233,7 +233,7 @@ public abstract class GameScene2D implements GameScene {
 					drawEntitySprite(bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
 				}
 			}
-			default -> throw new IllegalGameVariantException(context.game().variant());
+			default -> throw new IllegalGameVariantException(context.gameVariant());
 		}
 	}
 

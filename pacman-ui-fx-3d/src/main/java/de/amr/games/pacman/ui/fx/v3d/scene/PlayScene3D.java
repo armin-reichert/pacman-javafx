@@ -217,7 +217,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void handleKeyboardInput() {
 		var actionHandler = (ActionHandler3D) context.actionHandler();
-		if (Keyboard.pressed(KEYS_ADD_CREDIT) && !GameController.it().hasCredit()) {
+		if (Keyboard.pressed(KEYS_ADD_CREDIT) && !context.gameController().hasCredit()) {
 			actionHandler.addCredit();
 		} else if (Keyboard.pressed(KEY_PREV_PERSPECTIVE)) {
 			actionHandler.selectPrevPerspective();
@@ -254,7 +254,7 @@ public class PlayScene3D implements GameScene {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 			if (!level.isDemoLevel()) {
-				context.soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
+				context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhase() / 2);
 			}
 		});
 	}
@@ -315,7 +315,7 @@ public class PlayScene3D implements GameScene {
 				Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
 				var msg = "READY!";
 				if (!PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
-					msg = pickFunnyReadyMessage(context.game().variant());
+					msg = pickFunnyReadyMessage(context.gameVariant());
 				}
 				readyMessageText3D.setText(msg);
 				readyMessageText3D.setVisible(true);
@@ -328,11 +328,11 @@ public class PlayScene3D implements GameScene {
 
 			case PACMAN_DYING -> {
 				level3D.world3D().foodOscillation().stop();
-				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation(context.game().variant()));
+				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation(context.gameVariant()));
 			}
 
 			case GHOST_DYING -> {
-				switch (context.game().variant()) {
+				switch (context.gameVariant()) {
 					case MS_PACMAN -> {
 						var ss = (SpritesheetMsPacManGame) context.spritesheet();
 						level.thisFrame().killedGhosts.forEach(ghost -> {
@@ -347,7 +347,7 @@ public class PlayScene3D implements GameScene {
 							level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 						});
 					}
-					default -> throw new IllegalGameVariantException(context.game().variant());
+					default -> throw new IllegalGameVariantException(context.gameVariant());
 				}
 			}
 
@@ -501,7 +501,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onLevelStarted(GameEvent e) {
 		context.gameLevel().ifPresent(level -> {
-			switch (context.game().variant()) {
+			switch (context.gameVariant()) {
 				case MS_PACMAN -> {
 					var ss = (SpritesheetMsPacManGame) context.spritesheet();
 					var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
@@ -512,7 +512,7 @@ public class PlayScene3D implements GameScene {
 					var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
 				}
-				default -> throw new IllegalGameVariantException(context.game().variant());
+				default -> throw new IllegalGameVariantException(context.gameVariant());
 			}
 		});
 	}

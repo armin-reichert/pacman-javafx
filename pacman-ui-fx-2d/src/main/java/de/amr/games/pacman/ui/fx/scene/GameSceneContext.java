@@ -4,6 +4,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.ActionHandler;
 import de.amr.games.pacman.ui.fx.SoundHandler;
@@ -40,6 +41,10 @@ public interface GameSceneContext {
 
   default GameModel game() {
     return GameController.it().game();
+  }
+
+  default GameVariant gameVariant() {
+    return game().variant();
   }
 
   default Optional<GameLevel> gameLevel() {

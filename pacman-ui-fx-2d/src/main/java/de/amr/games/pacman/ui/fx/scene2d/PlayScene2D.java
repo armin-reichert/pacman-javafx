@@ -36,7 +36,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void init() {
-		setCreditVisible(!GameController.it().hasCredit());
+		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 	}
 
@@ -48,7 +48,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void handleKeyboardInput() {
 		if (Keyboard.pressed(KEYS_ADD_CREDIT)) {
-			if (!GameController.it().hasCredit()) {
+			if (!context.gameController().hasCredit()) {
 				context.actionHandler().addCredit();
 			}
 		} else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
@@ -65,7 +65,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawSceneContent() {
 		context.game().level().ifPresent(level -> {
-			if (context.game().variant() == GameVariant.MS_PACMAN) {
+			if (context.gameVariant() == GameVariant.MS_PACMAN) {
 				int mazeNumber = context.game().mazeNumber(level.number());
 				drawMsPacManMaze(level, mazeNumber);
 			} else {
@@ -74,7 +74,7 @@ public class PlayScene2D extends GameScene2D {
 			if (context.gameState() == GameState.LEVEL_TEST) {
 				drawText(String.format("TEST    L%d", level.number()),
 						ArcadePalette.YELLOW, sceneFont(8), t(8.5), t(21));
-			} else if (context.gameState() == GameState.GAME_OVER || !GameController.it().hasCredit()) {
+			} else if (context.gameState() == GameState.GAME_OVER || !context.gameController().hasCredit()) {
 				drawText("GAME  OVER", ArcadePalette.RED, sceneFont(8), t(9), t(21));
 			} else if (context.gameState() == GameState.READY) {
 				drawText("READY!", ArcadePalette.YELLOW, sceneFont(8), t(11), t(21));
@@ -84,7 +84,7 @@ public class PlayScene2D extends GameScene2D {
 			Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
 					.map(level::ghost).forEach(this::drawGhost);
 			if (!isCreditVisible()) {
-				boolean hideOne = level.pac().isVisible() || GameController.it().state() == GameState.GHOST_DYING;
+				boolean hideOne = level.pac().isVisible() || context.gameState() == GameState.GHOST_DYING;
 				int lives = hideOne ? context.game().lives() - 1 : context.game().lives();
 				drawLivesCounter(lives);
 			}
@@ -172,7 +172,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	public void onSceneVariantSwitch() {
 		context.game().level().ifPresent(level -> {
-			if (!level.isDemoLevel() && GameController.it().state() == GameState.HUNTING) {
+			if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
 				context.soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}
 		});
