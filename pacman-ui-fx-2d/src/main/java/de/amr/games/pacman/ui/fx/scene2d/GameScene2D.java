@@ -17,7 +17,9 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -42,12 +44,12 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
+	public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
+	public final BooleanProperty creditVisiblePy = new SimpleBooleanProperty(this, "creditVisible", false);
+	public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
 	protected GameSceneContext context;
 	protected GraphicsContext g;
-	protected double scaling = 1;
-	protected boolean scoreVisible;
-	protected boolean creditVisible;
 
 	@Override
 	public GameSceneContext context() {
@@ -69,31 +71,31 @@ public abstract class GameScene2D implements GameScene {
 		if (scaling <= 0) {
 			throw new IllegalArgumentException("Scaling value must be positive but is " + scaling);
 		}
-		this.scaling = scaling;
+		scalingPy.set(scaling);
 	}
 
 	@Override
 	public boolean isCreditVisible() {
-		return creditVisible;
+		return creditVisiblePy.get();
 	}
 
 	@Override
 	public void setCreditVisible(boolean creditVisible) {
-		this.creditVisible = creditVisible;
+		creditVisiblePy.set(creditVisible);
 	}
 
 	@Override
 	public boolean isScoreVisible() {
-		return scoreVisible;
+		return scoreVisiblePy.get();
 	}
 
 	@Override
 	public void setScoreVisible(boolean scoreVisible) {
-		this.scoreVisible = scoreVisible;
+		scoreVisiblePy.set(scoreVisible);
 	}
 
 	protected double s(double value) {
-		return value * scaling;
+		return value * scalingPy.get();
 	}
 
 	protected Font sceneFont(double size) {
@@ -116,11 +118,11 @@ public abstract class GameScene2D implements GameScene {
 			Logger.error("Cannot render game scene {}, no context exists", getClass().getSimpleName());
 			return; // TODO may this happen?
 		}
-		if (scoreVisible) {
+		if (scoreVisiblePy.get()) {
 			drawScore(context.game().score(), "SCORE", t(1), t(1));
 			drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
 		}
-		if (creditVisible) {
+		if (creditVisiblePy.get()) {
 			drawCredit(context.gameController().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent();
