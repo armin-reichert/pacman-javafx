@@ -5,7 +5,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;

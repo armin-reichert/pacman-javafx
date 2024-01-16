@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
@@ -113,7 +112,7 @@ public class PlayScene3D implements GameScene {
 		setScoreVisible(true);
 		resetReadyMessageText3D();
 		perspectivePy.bind(PY_3D_PERSPECTIVE);
-		context.game().level().ifPresent(this::replaceGameLevel3D);
+		context.gameLevel().ifPresent(this::replaceGameLevel3D);
 		Logger.info("3D play scene initialized.");
 	}
 
@@ -247,7 +246,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		context.game().level().ifPresent(level -> {
+		context.gameLevel().ifPresent(level -> {
 			level3D.world3D().eatables3D().forEach(
 				eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
 			if (Globals.oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
