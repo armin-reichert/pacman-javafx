@@ -67,7 +67,7 @@ public class Pellet3D implements Eatable3D {
 	}
 
 	@Override
-	public void eaten() {
+	public void onEaten() {
 		Ufx.actionAfterSeconds(0.05, () -> shape.setVisible(false)).play();
 	}
 

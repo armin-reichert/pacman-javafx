@@ -243,28 +243,33 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		context.gameLevel().ifPresent(level -> {
+		if (level3D != null) {
 			level3D.world3D().eatables3D().forEach(
-				eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
+				eatable3D -> eatable3D.getRoot().setVisible(!level3D.level().world().hasEatenFoodAt(eatable3D.tile())));
 			if (Globals.oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
-			if (!level.isDemoLevel()) {
-				context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhase() / 2);
+			if (!level3D.level().isDemoLevel()) {
+				context.soundHandler().ensureSirenStarted(context.gameVariant(), level3D.level().huntingPhase() / 2);
 			}
-		});
+		}
 	}
 
 	@Override
 	public void onPacFoundFood(GameEvent e) {
+		if (level3D == null) {
+			Logger.error("No game level exists");
+			return;
+		}
 		// When cheat "eat all pellets" has been used, no tile is present in the event.
 		// In that case, ensure that the 3D pellets are in sync with the model.
 		if (e.tile().isEmpty()) {
-			context.gameWorld().ifPresent(world -> world.tiles()
+			var world = level3D.level().world();
+			world.tiles()
 				.filter(world::hasEatenFoodAt)
 				.map(level3D.world3D()::eatableAt)
 				.flatMap(Optional::stream)
-				.forEach(Eatable3D::eaten));
+				.forEach(Eatable3D::onEaten);
 		} else {
 			var tile = e.tile().get();
 			level3D.world3D().eatableAt(tile).ifPresent(level3D::eat);
@@ -273,36 +278,46 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		context.gameLevel().flatMap(GameLevel::bonus).ifPresent(level3D::replaceBonus3D);
+		if (level3D != null) {
+			level3D.level().bonus().ifPresent(level3D::replaceBonus3D);
+		}
 	}
 
 	@Override
 	public void onBonusEaten(GameEvent e) {
-		level3D.bonus3D().ifPresent(Bonus3D::showEaten);
+		if (level3D != null) {
+			level3D.bonus3D().ifPresent(Bonus3D::showEaten);
+		}
 	}
 
 	@Override
-	public void onBonusExpired(GameEvent e) {
-		level3D.bonus3D().ifPresent(Bonus3D::hide);
+	public void onBonusExpired(GameEvent e){
+		if (level3D != null) {
+			level3D.bonus3D().ifPresent(Bonus3D::hide);
+		}
 	}
 
 	@Override
 	public void onPacGetsPower(GameEvent e) {
-		level3D.pac3D().walkingAnimation().setPowerWalking(true);
+		if (level3D != null) {
+			level3D.pac3D().walkingAnimation().setPowerWalking(true);
+		}
 	}
 
 	@Override
 	public void onPacLostPower(GameEvent e) {
-		level3D.pac3D().walkingAnimation().setPowerWalking(false);
+		if (level3D != null) {
+			level3D.pac3D().walkingAnimation().setPowerWalking(false);
+		}
 	}
 
 	@Override
 	public void onGameStateChange(GameStateChangeEvent e) {
-		var level = e.game.level().orElse(null);
-		if (level == null) {
-			Logger.error("Where is my game level?");
+		if (level3D == null) {
+			Logger.error("Where is my 3D game level?");
 			return;
 		}
+		var level = level3D.level();
 
 		switch (e.newState) {
 
@@ -393,17 +408,13 @@ public class PlayScene3D implements GameScene {
 		// on state exit
 		if (e.oldState != null) {
 			switch (e.oldState) {
-				case READY -> {
-					readyMessageText3D.setVisible(false);
-				}
-
+				case READY -> readyMessageText3D.setVisible(false);
 				case HUNTING -> {
 					if (e.newState != GameState.GHOST_DYING) {
 						level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
 						level3D.bonus3D().ifPresent(Bonus3D::hide);
 					}
 				}
-
 				default -> {}
 			}
 		}
@@ -474,11 +485,11 @@ public class PlayScene3D implements GameScene {
 	 * Locks the current game state, waits given seconds, plays given animations and unlocks the state when the animations
 	 * have finished.
 	 */
-	private void lockStateAndPlayAfterSeconds(double afterSeconds, Animation... animations) {
+	private void lockStateAndPlayAfterSeconds(double seconds, Animation... animations) {
 		context.gameState().timer().resetIndefinitely();
 		var animationSequence = new SequentialTransition(animations);
-		if (afterSeconds > 0) {
-			animationSequence.setDelay(Duration.seconds(afterSeconds));
+		if (seconds > 0) {
+			animationSequence.setDelay(Duration.seconds(seconds));
 		}
 		animationSequence.setOnFinished(e -> context.gameState().timer().expire());
 		animationSequence.play();
@@ -486,8 +497,6 @@ public class PlayScene3D implements GameScene {
 
 	/**
 	 * Keeps the current game state for given number of seconds, then forces the state timer to expire.
-	 *
-	 * @param seconds seconds to keep game state
 	 */
 	private void keepGameStateForSeconds(double seconds) {
 		context.gameState().timer().resetIndefinitely();
@@ -496,20 +505,22 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onLevelStarted(GameEvent e) {
-		context.gameLevel().ifPresent(level -> {
-			switch (context.gameVariant()) {
-				case MS_PACMAN -> {
-					var ss = (SpritesheetMsPacManGame) context.spritesheet();
-					var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
-					level3D.levelCounter3D().update(images);
-				}
-				case PACMAN -> {
-					var ss = (SpritesheetPacManGame) context.spritesheet();
-					var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
-					level3D.levelCounter3D().update(images);
-				}
-				default -> throw new IllegalGameVariantException(context.gameVariant());
+		if (level3D == null) {
+			Logger.error("Where is my 3D game level?");
+			return;
+		}
+		switch (context.gameVariant()) {
+			case MS_PACMAN -> {
+				var ss = (SpritesheetMsPacManGame) context.spritesheet();
+				var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+				level3D.levelCounter3D().update(images);
 			}
-		});
+			case PACMAN -> {
+				var ss = (SpritesheetPacManGame) context.spritesheet();
+				var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+				level3D.levelCounter3D().update(images);
+			}
+			default -> throw new IllegalGameVariantException(context.gameVariant());
+		}
 	}
 }

@@ -91,7 +91,7 @@ public class Energizer3D implements Eatable3D {
 	}
 
 	@Override
-	public void eaten() {
+	public void onEaten() {
 		pumping.stop();
 		// TODO check this
 		var hideAfterDelay = Ufx.actionAfterSeconds(0.05, () -> shape.setVisible(false));
