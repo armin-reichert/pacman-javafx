@@ -42,7 +42,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		context.game().level().ifPresent(this::updateSound);
+		context.gameLevel().ifPresent(this::updateSound);
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawSceneContent() {
-		context.game().level().ifPresent(level -> {
+		context.gameLevel().ifPresent(level -> {
 			if (context.gameVariant() == GameVariant.MS_PACMAN) {
 				int mazeNumber = context.game().mazeNumber(level.number());
 				drawMsPacManMaze(level, mazeNumber);
@@ -147,7 +147,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawSceneInfo() {
 		drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
-		context.game().level().ifPresent(level -> level.upwardsBlockedTiles().forEach(tile -> {
+		context.gameLevel().ifPresent(level -> level.upwardsBlockedTiles().forEach(tile -> {
 			// "No Trespassing" symbol
 			g.setFill(Color.RED);
 			g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
@@ -171,7 +171,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		context.game().level().ifPresent(level -> {
+		context.gameLevel().ifPresent(level -> {
 			if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
 				context.soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}
