@@ -80,7 +80,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		var y0 = ic.stopY;
 		drawMarquee();
 		drawText("\"MS PAC-MAN\"", ArcadePalette.ORANGE, font8, tx, ty);
-		if (intro.state() == State.GHOSTS) {
+		if (intro.state() == State.GHOSTS_MARCHING_IN) {
 			var ghost = ic.ghosts[ic.ghostIndex];
 			var color = theme.color(String.format("ghost.%d.color", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
@@ -89,7 +89,7 @@ public class MsPacManIntroScene extends GameScene2D {
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
 			drawText(text, color, font8, tx + t(3) + dx, y0 + t(6));
-		} else if (intro.state() == State.MSPACMAN || intro.state() == State.READY_TO_PLAY) {
+		} else if (intro.state() == State.MS_PACMAN_MARCHING_IN || intro.state() == State.READY_TO_PLAY) {
 			drawText("STARRING", ArcadePalette.PALE, font8, tx, y0 + t(3));
 			drawText("MS PAC-MAN", ArcadePalette.YELLOW, font8, tx, y0 + t(6));
 		}
