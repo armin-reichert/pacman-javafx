@@ -113,7 +113,7 @@ public class PlayScene3D implements GameScene {
 		setScoreVisible(true);
 		resetReadyMessageText3D();
 		perspectivePy.bind(PY_3D_PERSPECTIVE);
-		game().level().ifPresent(this::replaceGameLevel3D);
+		context.game().level().ifPresent(this::replaceGameLevel3D);
 		Logger.info("3D play scene initialized.");
 	}
 
@@ -192,7 +192,7 @@ public class PlayScene3D implements GameScene {
 		// replace initial placeholder or previous 3D level
 		subSceneRoot.getChildren().set(0, level3D.root());
 
-		if (state() == GameState.LEVEL_TEST) {
+		if (context.gameState() == GameState.LEVEL_TEST) {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
 		}
 
@@ -247,10 +247,10 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		game().level().ifPresent(level -> {
+		context.game().level().ifPresent(level -> {
 			level3D.world3D().eatables3D().forEach(
 				eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
-			if (Globals.oneOf(state(), GameState.HUNTING, GameState.GHOST_DYING)) {
+			if (Globals.oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
 				level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
 			}
 			if (!level.isDemoLevel()) {
@@ -264,7 +264,7 @@ public class PlayScene3D implements GameScene {
 		// When cheat "eat all pellets" has been used, no tile is present in the event.
 		// In that case, ensure that the 3D pellets are in sync with the model.
 		if (e.tile().isEmpty()) {
-			world().ifPresent(world -> world.tiles()
+			context.gameWorld().ifPresent(world -> world.tiles()
 				.filter(world::hasEatenFoodAt)
 				.map(level3D.world3D()::eatableAt)
 				.flatMap(Optional::stream)
@@ -277,7 +277,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onBonusActivated(GameEvent e) {
-		game().level().flatMap(GameLevel::bonus).ifPresent(level3D::replaceBonus3D);
+		context.gameLevel().flatMap(GameLevel::bonus).ifPresent(level3D::replaceBonus3D);
 	}
 
 	@Override
@@ -315,7 +315,7 @@ public class PlayScene3D implements GameScene {
 				Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
 				var msg = "READY!";
 				if (!PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
-					msg = pickFunnyReadyMessage(game().variant());
+					msg = pickFunnyReadyMessage(context.game().variant());
 				}
 				readyMessageText3D.setText(msg);
 				readyMessageText3D.setVisible(true);
@@ -328,11 +328,11 @@ public class PlayScene3D implements GameScene {
 
 			case PACMAN_DYING -> {
 				level3D.world3D().foodOscillation().stop();
-				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation(game().variant()));
+				lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().dyingAnimation(context.game().variant()));
 			}
 
 			case GHOST_DYING -> {
-				switch (game().variant()) {
+				switch (context.game().variant()) {
 					case MS_PACMAN -> {
 						var ss = (SpritesheetMsPacManGame) context.spritesheet();
 						level.thisFrame().killedGhosts.forEach(ghost -> {
@@ -347,12 +347,12 @@ public class PlayScene3D implements GameScene {
 							level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 						});
 					}
-					default -> throw new IllegalGameVariantException(game().variant());
+					default -> throw new IllegalGameVariantException(context.game().variant());
 				}
 			}
 
 			case CHANGING_TO_NEXT_LEVEL -> {
-				state().timer().resetIndefinitely();
+				context.gameState().timer().resetIndefinitely();
 				replaceGameLevel3D(level);
 				updateCamera(perspectivePy.get());
 				keepGameStateForSeconds(3);
@@ -458,7 +458,7 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void updateSound() {
-		game().level().ifPresent(level -> {
+		context.gameLevel().ifPresent(level -> {
 			if (level.isDemoLevel()) {
 				return;
 			}
@@ -479,12 +479,12 @@ public class PlayScene3D implements GameScene {
 	 * have finished.
 	 */
 	private void lockStateAndPlayAfterSeconds(double afterSeconds, Animation... animations) {
-		state().timer().resetIndefinitely();
+		context.gameState().timer().resetIndefinitely();
 		var animationSequence = new SequentialTransition(animations);
 		if (afterSeconds > 0) {
 			animationSequence.setDelay(Duration.seconds(afterSeconds));
 		}
-		animationSequence.setOnFinished(e -> state().timer().expire());
+		animationSequence.setOnFinished(e -> context.gameState().timer().expire());
 		animationSequence.play();
 	}
 
@@ -494,25 +494,25 @@ public class PlayScene3D implements GameScene {
 	 * @param seconds seconds to keep game state
 	 */
 	private void keepGameStateForSeconds(double seconds) {
-		state().timer().resetIndefinitely();
-		actionAfterSeconds(seconds, () -> state().timer().expire()).play();
+		context.gameState().timer().resetIndefinitely();
+		actionAfterSeconds(seconds, () -> context.gameState().timer().expire()).play();
 	}
 
 	@Override
 	public void onLevelStarted(GameEvent e) {
-		game().level().ifPresent(level -> {
-			switch (game().variant()) {
+		context.gameLevel().ifPresent(level -> {
+			switch (context.game().variant()) {
 				case MS_PACMAN -> {
 					var ss = (SpritesheetMsPacManGame) context.spritesheet();
-					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+					var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
 				}
 				case PACMAN -> {
 					var ss = (SpritesheetPacManGame) context.spritesheet();
-					var images = game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
+					var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 					level3D.levelCounter3D().update(images);
 				}
-				default -> throw new IllegalGameVariantException(game().variant());
+				default -> throw new IllegalGameVariantException(context.game().variant());
 			}
 		});
 	}

@@ -75,20 +75,4 @@ public interface GameScene extends GameEventListener {
 	GameSceneContext context();
 
 	void setContext(GameSceneContext context);
-
-	default GameController gameController() {
-		return GameController.it();
-	}
-
-	default GameModel game() {
-		return gameController().game();
-	}
-
-	default GameState state() {
-		return gameController().state();
-	}
-
-	default Optional<World> world() {
-		return game().level().map(GameLevel::world);
-	}
 }

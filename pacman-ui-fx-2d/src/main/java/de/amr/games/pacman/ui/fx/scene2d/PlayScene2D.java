@@ -42,7 +42,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void update() {
-		game().level().ifPresent(this::updateSound);
+		context.game().level().ifPresent(this::updateSound);
 	}
 
 	@Override
@@ -64,20 +64,19 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawSceneContent() {
-		var theme = context.theme();
-		game().level().ifPresent(level -> {
-			if (game().variant() == GameVariant.MS_PACMAN) {
-				int mazeNumber = game().mazeNumber(level.number());
+		context.game().level().ifPresent(level -> {
+			if (context.game().variant() == GameVariant.MS_PACMAN) {
+				int mazeNumber = context.game().mazeNumber(level.number());
 				drawMsPacManMaze(level, mazeNumber);
 			} else {
 				drawPacManMaze(level);
 			}
-			if (state() == GameState.LEVEL_TEST) {
+			if (context.gameState() == GameState.LEVEL_TEST) {
 				drawText(String.format("TEST    L%d", level.number()),
 						ArcadePalette.YELLOW, sceneFont(8), t(8.5), t(21));
-			} else if (state() == GameState.GAME_OVER || !GameController.it().hasCredit()) {
+			} else if (context.gameState() == GameState.GAME_OVER || !GameController.it().hasCredit()) {
 				drawText("GAME  OVER", ArcadePalette.RED, sceneFont(8), t(9), t(21));
-			} else if (state() == GameState.READY) {
+			} else if (context.gameState() == GameState.READY) {
 				drawText("READY!", ArcadePalette.YELLOW, sceneFont(8), t(11), t(21));
 			}
 			level.bonus().ifPresent(this::drawBonus);
@@ -86,7 +85,7 @@ public class PlayScene2D extends GameScene2D {
 					.map(level::ghost).forEach(this::drawGhost);
 			if (!isCreditVisible()) {
 				boolean hideOne = level.pac().isVisible() || GameController.it().state() == GameState.GHOST_DYING;
-				int lives = hideOne ? game().lives() - 1 : game().lives();
+				int lives = hideOne ? context.game().lives() - 1 : context.game().lives();
 				drawLivesCounter(lives);
 			}
 			drawLevelCounter();
@@ -148,7 +147,7 @@ public class PlayScene2D extends GameScene2D {
 	@Override
 	protected void drawSceneInfo() {
 		drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
-		game().level().ifPresent(level -> level.upwardsBlockedTiles().forEach(tile -> {
+		context.game().level().ifPresent(level -> level.upwardsBlockedTiles().forEach(tile -> {
 			// "No Trespassing" symbol
 			g.setFill(Color.RED);
 			g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
@@ -158,8 +157,8 @@ public class PlayScene2D extends GameScene2D {
 		g.setFill(Color.YELLOW);
 		g.setFont(Font.font("Sans", 24));
 		g.fillText(String.format("%s %d",
-				gameController().state(),
-				gameController().state().timer().tick()),
+				context.gameState(),
+				context.gameState().timer().tick()),
 				0, 80);
 	}
 
@@ -172,7 +171,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void onSceneVariantSwitch() {
-		game().level().ifPresent(level -> {
+		context.game().level().ifPresent(level -> {
 			if (!level.isDemoLevel() && GameController.it().state() == GameState.HUNTING) {
 				context.soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
 			}

@@ -68,7 +68,7 @@ public class PacManCutscene3 extends GameScene2D {
 			}
 			return;
 		}
-		if (state().timer().hasExpired()) {
+		if (context.gameState().timer().hasExpired()) {
 			return;
 		}
 
@@ -82,7 +82,7 @@ public class PacManCutscene3 extends GameScene2D {
 		}
 
 		case 700: {
-			state().timer().expire();
+			context.gameState().timer().expire();
 			break;
 		}
 

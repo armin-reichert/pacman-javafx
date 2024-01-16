@@ -26,14 +26,14 @@ public class BootScene extends GameScene2D {
 
 	@Override
 	public void update() {
-		if (state().timer().atSecond(start + 3)) {
-			gameController().terminateCurrentState();
+		if (context.gameState().timer().atSecond(start + 3)) {
+			context.gameController().terminateCurrentState();
 		}
 	}
 
 	@Override
 	public void draw() {
-		var timer = state().timer();
+		var timer = context.gameState().timer();
 		if (timer.tick() == 1) {
 			clearCanvas();
 		}

@@ -65,7 +65,7 @@ public class PacManCutscene2 extends GameScene2D {
 			return;
 		}
 
-		if (state().timer().hasExpired()) {
+		if (context.gameState().timer().hasExpired()) {
 			return;
 		}
 
@@ -134,7 +134,7 @@ public class PacManCutscene2 extends GameScene2D {
 
 		case 508: {
 			blinky.setVisible(false);
-			state().timer().expire();
+			context.gameState().timer().expire();
 			break;
 		}
 
