@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -45,14 +44,10 @@ public abstract class GameScene2D implements GameScene {
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 
 	protected GameSceneContext context;
-	protected Canvas canvas;
 	protected GraphicsContext g;
 	protected double scaling = 1;
 	protected boolean scoreVisible;
 	protected boolean creditVisible;
-
-	protected GameScene2D() {
-	}
 
 	@Override
 	public GameSceneContext context() {
@@ -65,14 +60,9 @@ public abstract class GameScene2D implements GameScene {
 		this.context = context;
 	}
 
-	public Canvas canvas() {
-		return canvas;
-	}
-
 	public void setCanvas(Canvas canvas) {
 		checkNotNull(canvas);
-		this.canvas = canvas;
-		this.g = canvas.getGraphicsContext2D();
+		g = canvas.getGraphicsContext2D();
 	}
 
 	public void setScaling(double scaling) {
@@ -112,7 +102,7 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public Node root() {
-		return canvas;
+		return g != null ? g.getCanvas() : null;
 	}
 
 	@Override
@@ -131,7 +121,7 @@ public abstract class GameScene2D implements GameScene {
 			drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
 		}
 		if (creditVisible) {
-			drawCredit(GameController.it().credit(), t(2), t(36) - 1);
+			drawCredit(context.gameController().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent();
 		if (infoVisiblePy.get()) {
@@ -151,8 +141,10 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void clearCanvas() {
-		g.setFill(context.theme().color("canvas.background"));
-		g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		if (g != null) {
+			g.setFill(context.theme().color("canvas.background"));
+			g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+		}
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
