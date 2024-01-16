@@ -30,7 +30,6 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -68,14 +67,12 @@ public class PlayScene3D implements GameScene {
 	};
 
 	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
+	private final SubScene fxSubScene;
+	private final Text3D readyMessageText3D;
+	private GameLevel3D level3D;
 	private GameSceneContext context;
 	private boolean scoreVisible;
 	private boolean creditVisible;
-	private final BorderPane root;
-	private final SubScene fxSubScene;
-	private final Group subSceneRoot;
-	private final Text3D readyMessageText3D = new Text3D();
-	private GameLevel3D level3D;
 
 	public PlayScene3D() {
 		camControllerMap.put(Perspective.DRONE,            new CamDrone());
@@ -89,11 +86,11 @@ public class PlayScene3D implements GameScene {
 		var ambientLight = new AmbientLight();
 		ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
+		readyMessageText3D = new Text3D();
+		var subSceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 		// initial sub-scene size is irrelevant, gets bound to main scene size in init method
-		subSceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 		fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
-		root = new BorderPane(fxSubScene);
 	}
 
 	@Override
@@ -151,8 +148,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	@Override
-	public BorderPane root() {
-		return root;
+	public Node root() {
+		return fxSubScene;
 	}
 
 	public CameraController currentCamController() {
@@ -189,7 +186,7 @@ public class PlayScene3D implements GameScene {
 		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
 
 		// replace initial placeholder or previous 3D level
-		subSceneRoot.getChildren().set(0, level3D.root());
+		((Group) fxSubScene.getRoot()).getChildren().set(0, level3D.root());
 
 		if (context.gameState() == GameState.LEVEL_TEST) {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
