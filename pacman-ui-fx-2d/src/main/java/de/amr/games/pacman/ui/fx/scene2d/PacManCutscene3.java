@@ -70,7 +70,6 @@ public class PacManCutscene3 extends GameScene2D {
 		if (context.gameState().timer().hasExpired()) {
 			return;
 		}
-
 		switch (++frame) {
 			case 400 -> {
 				blinky.placeAtTile(v2i(-1, 20), 0, 0);
@@ -79,11 +78,10 @@ public class PacManCutscene3 extends GameScene2D {
 				blinky.startAnimation();
 			}
 			case 700 -> context.gameState().timer().expire();
-			default -> {
-				pac.move();
-				blinky.move();
-			}
+			default -> {}
 		}
+		pac.move();
+		blinky.move();
 	}
 
 	@Override
