@@ -14,9 +14,9 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
@@ -45,10 +45,10 @@ public class GameLevel3D {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
-	private final Spritesheet spritesheet;
+	private final SpriteSheet spritesheet;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, Theme theme, Spritesheet spritesheet) {
+	public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spritesheet) {
 		checkLevelNotNull(level);
 		checkNotNull(theme);
 		checkNotNull(spritesheet);
@@ -134,13 +134,13 @@ public class GameLevel3D {
 	private Bonus3D createBonus3D(Bonus bonus) {
 		return switch (level.game().variant()) {
 			case MS_PACMAN -> {
-				var ss = (SpritesheetMsPacManGame) spritesheet;
+				var ss = (MsPacManSpriteSheet) spritesheet;
 				var symbolImage = ss.subImage(ss.bonusSymbolSprite(bonus.symbol()));
 				var pointsImage = ss.subImage(ss.bonusValueSprite(bonus.symbol()));
 				yield new Bonus3D(bonus, symbolImage, pointsImage);
 			}
 			case PACMAN -> {
-				var ss = (SpritesheetPacManGame) spritesheet;
+				var ss = (PacManSpriteSheet) spritesheet;
 				var symbolImage = ss.subImage(ss.bonusSymbolSprite(bonus.symbol()));
 				var pointsImage = ss.subImage(ss.bonusValueSprite(bonus.symbol()));
 				yield new Bonus3D(bonus, symbolImage, pointsImage);
