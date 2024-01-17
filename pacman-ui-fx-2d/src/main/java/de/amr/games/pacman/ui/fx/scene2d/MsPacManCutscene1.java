@@ -30,18 +30,14 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
-
-		setCreditVisible(!GameController.it().hasCredit());
+		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
-
 		intermission = new MsPacManIntermission1();
-
+		var ss = (SpritesheetMsPacManGame) context.spritesheet();
 		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
 		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
 		intermission.inky.setAnimations(new GhostAnimationsMsPacManGame(intermission.inky, ss));
 		intermission.pinky.setAnimations(new GhostAnimationsMsPacManGame(intermission.pinky, ss));
-
 		clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission1.STATE_FLAP, 2 * GameModel.FPS);
