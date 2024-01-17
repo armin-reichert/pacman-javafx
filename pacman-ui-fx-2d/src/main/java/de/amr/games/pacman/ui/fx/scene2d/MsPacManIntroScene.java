@@ -11,9 +11,9 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
@@ -31,17 +31,17 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
 
 		setCreditVisible(true);
 		setScoreVisible(true);
 
 		intro = new MsPacManIntro();
 		var msPacMan = intro.context().msPacMan;
-		msPacMan.setAnimations(new PacAnimationsMsPacManGame(msPacMan, ss));
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
+		msPacMan.setAnimations(new MsPacManPacAnimations(msPacMan, ss));
 		msPacMan.selectAnimation(PacAnimations.MUNCHING);
 		for (var ghost : intro.context().ghosts) {
-			ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss));
+			ghost.setAnimations(new MsPacManGhostAnimations(ghost, ss));
 			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
 		}
 

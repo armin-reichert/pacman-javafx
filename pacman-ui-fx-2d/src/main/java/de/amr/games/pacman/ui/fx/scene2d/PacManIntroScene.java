@@ -9,9 +9,9 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -33,15 +33,15 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) context.spritesheet();
+		var ss = context.<PacManSpriteSheet>spriteSheet();
 
 		setCreditVisible(true);
 		setScoreVisible(true);
 
 		intro = new PacManIntro();
 
-		intro.context().pacMan.setAnimations(new PacAnimationsPacManGame(intro.context().pacMan, ss));
-		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
+		intro.context().pacMan.setAnimations(new PacManPacAnimations(intro.context().pacMan, ss));
+		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
 		intro.context().blinking.reset();
 
 		intro.changeState(State.START);
@@ -105,7 +105,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery() {
-		var ss = (SpritesheetPacManGame) context.spritesheet();
+		var ss = context.<PacManSpriteSheet>spriteSheet();
 		var font = sceneFont(8);
 
 		int tx = intro.context().leftTileX;

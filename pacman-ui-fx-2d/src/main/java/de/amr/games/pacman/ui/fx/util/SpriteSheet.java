@@ -9,11 +9,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
 /**
- * A spritesheet (bekommt kein Wunschkennzeichen!)
+ * A sprite sheet (bekommt kein Wunschkennzeichen!)
  * 
  * @author Armin Reichert
  */
-public interface Spritesheet {
+public interface SpriteSheet {
 
 	int raster();
 

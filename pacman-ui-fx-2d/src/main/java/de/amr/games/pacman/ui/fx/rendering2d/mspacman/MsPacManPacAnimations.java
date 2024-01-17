@@ -15,12 +15,12 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class PacAnimationsMsPacManGame extends SpriteAnimations {
+public class MsPacManPacAnimations extends SpriteAnimations {
 
 	private final Pac pac;
-	private final SpritesheetMsPacManGame spritesheet;
+	private final MsPacManSpriteSheet spritesheet;
 
-	public PacAnimationsMsPacManGame(Pac pac, SpritesheetMsPacManGame spritesheet) {
+	public MsPacManPacAnimations(Pac pac, MsPacManSpriteSheet spritesheet) {
 		checkNotNull(pac);
 		checkNotNull(spritesheet);
 		this.pac = pac;

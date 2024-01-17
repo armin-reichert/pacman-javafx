@@ -7,9 +7,9 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission1;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -32,11 +32,12 @@ public class MsPacManCutscene1 extends GameScene2D {
 		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission1();
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
-		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
-		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
-		intermission.inky.setAnimations(new GhostAnimationsMsPacManGame(intermission.inky, ss));
-		intermission.pinky.setAnimations(new GhostAnimationsMsPacManGame(intermission.pinky, ss));
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
+
+		intermission.msPac.setAnimations(new MsPacManPacAnimations(intermission.msPac, ss));
+		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
+		intermission.inky.setAnimations(new MsPacManGhostAnimations(intermission.inky, ss));
+		intermission.pinky.setAnimations(new MsPacManGhostAnimations(intermission.pinky, ss));
 		clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission1.STATE_FLAP, 2 * GameModel.FPS);
@@ -50,7 +51,8 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
+
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPac(intermission.msPac);
 		drawPac(intermission.pacMan);
