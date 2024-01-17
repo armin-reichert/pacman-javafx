@@ -43,9 +43,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 
 	// third column contains the sprites (first two columns the maze images)
 	private Rectangle2D sprite(int tileX, int tileY) {
-		double offsetX = THIRD_COLUMN;
-		double offsetY = 0;
-		return new Rectangle2D(offsetX + r(tileX), offsetY + r(tileY), raster(), raster());
+		return new Rectangle2D(THIRD_COLUMN + r(tileX), r(tileY), raster(), raster());
 	}
 
 	private Rectangle2D[] ghostNumberSprites;
@@ -69,7 +67,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 		return sprite(1, 0);
 	}
 
-	private Rectangle2D[][] msPacManMunchingSprites = new Rectangle2D[4][];
+	private final Rectangle2D[][] msPacManMunchingSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] msPacManMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
@@ -96,7 +94,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 		return msPacManDyingSprites;
 	}
 
-	private Rectangle2D[][][] ghostsNormalSprites = new Rectangle2D[4][4][];
+	private final Rectangle2D[][][] ghostsNormalSprites = new Rectangle2D[4][4][];
 
 	public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
 		int d = DIR_ORDER.index(dir);
@@ -124,7 +122,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 		return ghostFlashingSprites;
 	}
 
-	private Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
+	private final Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
@@ -138,7 +136,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 
 	private static final int MS_PACMAN_MAZE_COUNT = 6;
 
-	private Rectangle2D[] highlightedMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+	private final Rectangle2D[] highlightedMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
 
 	public Rectangle2D highlightedMaze(int mazeNumber) {
 		if (highlightedMazeSprites[mazeNumber - 1] == null) {
@@ -148,7 +146,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 		return highlightedMazeSprites[mazeNumber - 1];
 	}
 
-	private Rectangle2D[] emptyMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+	private final Rectangle2D[] emptyMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
 
 	public Rectangle2D emptyMaze(int mazeNumber) {
 		int i = mazeNumber - 1;
@@ -158,7 +156,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 		return emptyMazeSprites[i];
 	}
 
-	private Rectangle2D[] filledMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+	private final Rectangle2D[] filledMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
 
 	public Rectangle2D filledMaze(int mazeNumber) {
 		int i = mazeNumber - 1;
@@ -168,7 +166,7 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 		return filledMazeSprites[i];
 	}
 
-	private Rectangle2D[][] pacManMunchingSprites = new Rectangle2D[4][];
+	private final Rectangle2D[][] pacManMunchingSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] pacManMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
