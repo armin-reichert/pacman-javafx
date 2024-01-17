@@ -12,6 +12,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
+import static de.amr.games.pacman.lib.Globals.t;
+
 /**
  * Intermission scene 3: "Junior".
  * 

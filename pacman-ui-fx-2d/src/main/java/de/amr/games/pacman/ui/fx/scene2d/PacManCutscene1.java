@@ -18,6 +18,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.lib.Globals.t;
+
 /**
  * @author Armin Reichert
  */

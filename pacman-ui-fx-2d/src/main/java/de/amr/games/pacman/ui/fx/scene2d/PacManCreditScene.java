@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 
+import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.KEYS_ADD_CREDIT;
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.KEYS_START_GAME;
 

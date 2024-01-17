@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Vector2i;
@@ -21,8 +20,7 @@ import javafx.scene.text.Font;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.actors.GhostState.RETURNING_TO_HOUSE;
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;

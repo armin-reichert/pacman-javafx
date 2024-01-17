@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import javafx.geometry.Rectangle2D;
 
 import static de.amr.games.pacman.lib.Globals.RND;
+import static de.amr.games.pacman.lib.Globals.t;
 
 /**
  * @author Armin Reichert

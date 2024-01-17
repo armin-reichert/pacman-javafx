@@ -39,9 +39,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class GameScene2D implements GameScene {
 
-	protected static double t(double tiles) {
-		return tiles * TS;
-	}
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 	public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);

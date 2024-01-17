@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGam
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 
+import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 
 /**
@@ -42,7 +43,7 @@ public class MsPacManIntroScene extends GameScene2D {
 		for (var ghost : intro.context().ghosts) {
 			ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss));
 			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
-		};
+		}
 
 		intro.changeState(MsPacManIntro.State.START);
 	}
@@ -102,7 +103,6 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	private void drawMarquee() {
-		var theme = context.theme();
 		var on = intro.context().marqueeState();
 		for (int i = 0; i < intro.context().numBulbs; ++i) {
 			g.setFill(on.get(i) ? ArcadePalette.PALE : ArcadePalette.RED);

@@ -19,6 +19,8 @@ import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.lib.Globals.t;
+
 /**
  * @author Armin Reichert
  */

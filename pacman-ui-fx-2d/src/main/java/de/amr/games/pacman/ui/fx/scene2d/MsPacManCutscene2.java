@@ -11,6 +11,8 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
 
+import static de.amr.games.pacman.lib.Globals.t;
+
 /**
  * Intermission scene 2: "The chase".
  * <p>
