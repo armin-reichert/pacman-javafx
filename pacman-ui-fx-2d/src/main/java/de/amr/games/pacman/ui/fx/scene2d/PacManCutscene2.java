@@ -36,14 +36,12 @@ public class PacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) context.spritesheet();
-
-		setCreditVisible(!GameController.it().hasCredit());
-		setScoreVisible(true);
-
 		frame = -1;
 		initialDelay = 120;
+		setCreditVisible(!context.gameController().hasCredit());
+		setScoreVisible(true);
 
+		var ss = (SpritesheetPacManGame) context.spritesheet();
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimationsPacManGame(pac, ss));
 
@@ -62,7 +60,7 @@ public class PacManCutscene2 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameController.it().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+				context.gameController().publishGameEvent(GameEventType.INTERMISSION_STARTED);
 			}
 			return;
 		}
@@ -72,79 +70,40 @@ public class PacManCutscene2 extends GameScene2D {
 		}
 
 		switch (++frame) {
-		case 1: {
-			blinkyStretching.setFrameIndex(0); // Show nail
-			break;
+			case 1 -> blinkyStretching.setFrameIndex(0); // Show nail
+			case 25 -> {
+				pac.placeAtTile(28, 20, 0, 0);
+				pac.setMoveDir(Direction.LEFT);
+				pac.setPixelSpeed(1.15f);
+				pac.selectAnimation(PacAnimations.MUNCHING);
+				pac.startAnimation();
+				pac.show();
+			}
+			case 111 -> {
+				blinky.placeAtTile(28, 20, -3, 0);
+				blinky.setMoveAndWishDir(Direction.LEFT);
+				blinky.setPixelSpeed(1.25f);
+				blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+				blinky.startAnimation();
+				blinky.show();
+			}
+			case 194 -> {
+				blinky.setPixelSpeed(0.09f);
+				blinkyNormal.setFrameTicks(32);
+			}
+			case 198, 226, 248 -> blinkyStretching.nextFrame(); // Stretched S-M-L
+			case 328 -> {
+				blinky.setPixelSpeed(0);
+				blinkyStretching.nextFrame(); // Rapture
+			}
+			case 329 ->	blinky.selectAnimation(GhostAnimations.BLINKY_DAMAGED); // Eyes up
+			case 389 ->	blinkyDamaged.nextFrame(); // Eyes right-down
+			case 508 -> {
+				blinky.setVisible(false);
+				context.gameState().timer().expire();
+			}
+			default -> {}
 		}
-
-		case 25: {
-			pac.placeAtTile(28, 20, 0, 0);
-			pac.setMoveDir(Direction.LEFT);
-			pac.setPixelSpeed(1.15f);
-			pac.selectAnimation(PacAnimations.MUNCHING);
-			pac.startAnimation();
-			pac.show();
-			break;
-		}
-
-		case 111: {
-			blinky.placeAtTile(28, 20, -3, 0);
-			blinky.setMoveAndWishDir(Direction.LEFT);
-			blinky.setPixelSpeed(1.25f);
-			blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
-			blinky.startAnimation();
-			blinky.show();
-			break;
-		}
-
-		case 194: {
-			blinky.setPixelSpeed(0.09f);
-			blinkyNormal.setFrameTicks(32);
-			break;
-		}
-
-		case 198: {
-			blinkyStretching.nextFrame(); // Stretched S
-			break;
-		}
-
-		case 226: {
-			blinkyStretching.nextFrame(); // Stretched M
-			break;
-		}
-
-		case 248: {
-			blinkyStretching.nextFrame(); // Stretched L
-			break;
-		}
-
-		case 328: {
-			blinky.setPixelSpeed(0);
-			blinkyStretching.nextFrame(); // Rapture
-			break;
-		}
-
-		case 329: {
-			blinky.selectAnimation(GhostAnimations.BLINKY_DAMAGED); // Eyes up
-			break;
-		}
-
-		case 389: {
-			blinkyDamaged.nextFrame(); // Eyes right-down
-			break;
-		}
-
-		case 508: {
-			blinky.setVisible(false);
-			context.gameState().timer().expire();
-			break;
-		}
-
-		default: {
-			break;
-		}
-
-		} // switch
 
 		blinky.move();
 		pac.move();

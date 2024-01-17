@@ -33,14 +33,12 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) context.spritesheet();
-
-		setCreditVisible(!GameController.it().hasCredit());
-		setScoreVisible(true);
-
 		frame = -1;
 		initialDelay = 120;
+		setCreditVisible(!context.gameController().hasCredit());
+		setScoreVisible(true);
 
+		var ss = (SpritesheetPacManGame) context.spritesheet();
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimationsPacManGame(pac, ss));
 		pac.selectAnimation(PacAnimations.MUNCHING);
@@ -65,7 +63,7 @@ public class PacManCutscene3 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameController.it().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+				context.gameController().publishGameEvent(GameEventType.INTERMISSION_STARTED);
 			}
 			return;
 		}
@@ -74,25 +72,17 @@ public class PacManCutscene3 extends GameScene2D {
 		}
 
 		switch (++frame) {
-		case 400: {
-			blinky.placeAtTile(v2i(-1, 20), 0, 0);
-			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.selectAnimation(GhostAnimations.BLINKY_NAKED);
-			blinky.startAnimation();
-			break;
-		}
-
-		case 700: {
-			context.gameState().timer().expire();
-			break;
-		}
-
-		default: {
-			pac.move();
-			blinky.move();
-			break;
-		}
-
+			case 400 -> {
+				blinky.placeAtTile(v2i(-1, 20), 0, 0);
+				blinky.setMoveAndWishDir(Direction.RIGHT);
+				blinky.selectAnimation(GhostAnimations.BLINKY_NAKED);
+				blinky.startAnimation();
+			}
+			case 700 -> context.gameState().timer().expire();
+			default -> {
+				pac.move();
+				blinky.move();
+			}
 		}
 	}
 

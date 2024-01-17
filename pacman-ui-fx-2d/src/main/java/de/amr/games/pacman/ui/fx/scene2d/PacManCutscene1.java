@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
@@ -32,14 +31,12 @@ public class PacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = (SpritesheetPacManGame) context.spritesheet();
-
-		setCreditVisible(!GameController.it().hasCredit());
-		setScoreVisible(true);
-
 		frame = -1;
 		initialDelay = 120;
+		setCreditVisible(!context.gameController().hasCredit());
+		setScoreVisible(true);
 
+		var ss = (SpritesheetPacManGame) context.spritesheet();
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacAnimationsPacManGame(pac, ss));
 		pac.selectAnimation(PacAnimations.MUNCHING);
@@ -64,7 +61,7 @@ public class PacManCutscene1 extends GameScene2D {
 		if (initialDelay > 0) {
 			--initialDelay;
 			if (initialDelay == 0) {
-				GameController.it().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+				context.gameController().publishGameEvent(GameEventType.INTERMISSION_STARTED);
 			}
 			return;
 		}
@@ -74,35 +71,24 @@ public class PacManCutscene1 extends GameScene2D {
 		}
 
 		switch (++frame) {
-		case 260: {
-			blinky.placeAtTile(-2, 20, 4, 0);
-			blinky.setMoveAndWishDir(Direction.RIGHT);
-			blinky.setPixelSpeed(0.75f);
-			blinky.selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
-			blinky.startAnimation();
-			break;
+			case 260 -> {
+				blinky.placeAtTile(-2, 20, 4, 0);
+				blinky.setMoveAndWishDir(Direction.RIGHT);
+				blinky.setPixelSpeed(0.75f);
+				blinky.selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
+				blinky.startAnimation();
+			}
+			case 400 -> {
+				pac.placeAtTile(-3, 18, 0, 6.5f);
+				pac.setMoveDir(Direction.RIGHT);
+				pac.selectAnimation(PacAnimations.BIG_PACMAN);
+				pac.startAnimation();
+			}
+			case 632 -> context.gameState().timer().expire();
+			default -> {}
 		}
-
-		case 400: {
-			pac.placeAtTile(-3, 18, 0, 6.5f);
-			pac.setMoveDir(Direction.RIGHT);
-			pac.selectAnimation(PacAnimations.BIG_PACMAN);
-			pac.startAnimation();
-			break;
-		}
-
-		case 632: {
-			context.gameState().timer().expire();
-			break;
-		}
-
-		default: {
-			pac.move();
-			blinky.move();
-			break;
-		}
-
-		}
+		pac.move();
+		blinky.move();
 	}
 
 	@Override
