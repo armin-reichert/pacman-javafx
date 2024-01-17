@@ -33,7 +33,6 @@ public class MsPacManCutscene1 extends GameScene2D {
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission1();
 		var ss = context.<MsPacManSpriteSheet>spriteSheet();
-
 		intermission.msPac.setAnimations(new MsPacManPacAnimations(intermission.msPac, ss));
 		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
 		intermission.inky.setAnimations(new MsPacManGhostAnimations(intermission.inky, ss));

@@ -31,20 +31,16 @@ public class MsPacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-
 		setCreditVisible(true);
 		setScoreVisible(true);
-
 		intro = new MsPacManIntro();
-		var msPacMan = intro.context().msPacMan;
 		var ss = context.<MsPacManSpriteSheet>spriteSheet();
-		msPacMan.setAnimations(new MsPacManPacAnimations(msPacMan, ss));
-		msPacMan.selectAnimation(PacAnimations.MUNCHING);
-		for (var ghost : intro.context().ghosts) {
+		intro.msPacMan.setAnimations(new MsPacManPacAnimations(intro.msPacMan, ss));
+		intro.msPacMan.selectAnimation(PacAnimations.MUNCHING);
+		for (var ghost : intro.ghosts) {
 			ghost.setAnimations(new MsPacManGhostAnimations(ghost, ss));
 			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
 		}
-
 		intro.changeState(MsPacManIntro.State.START);
 	}
 
@@ -75,14 +71,13 @@ public class MsPacManIntroScene extends GameScene2D {
 	public void drawSceneContent() {
 		var theme = context.theme();
 		var font8 = sceneFont(8);
-		var ic = intro.context();
-		var tx = ic.titlePosition.x();
-		var ty = ic.titlePosition.y();
-		var y0 = ic.stopY;
+		var tx = intro.titlePosition.x();
+		var ty = intro.titlePosition.y();
+		var y0 = intro.stopY;
 		drawMarquee();
 		drawText("\"MS PAC-MAN\"", ArcadePalette.ORANGE, font8, tx, ty);
 		if (intro.state() == State.GHOSTS_MARCHING_IN) {
-			var ghost = ic.ghosts[ic.ghostIndex];
+			var ghost = intro.ghosts[intro.ghostIndex];
 			var color = theme.color(String.format("ghost.%d.color", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
 				drawText("WITH", ArcadePalette.PALE, font8, tx, y0 + t(3));
@@ -94,17 +89,17 @@ public class MsPacManIntroScene extends GameScene2D {
 			drawText("STARRING", ArcadePalette.PALE, font8, tx, y0 + t(3));
 			drawText("MS PAC-MAN", ArcadePalette.YELLOW, font8, tx, y0 + t(6));
 		}
-		for (var ghost : ic.ghosts) {
+		for (var ghost : intro.ghosts) {
 			drawGhost(ghost);
 		}
-		drawPac(ic.msPacMan);
+		drawPac(intro.msPacMan);
 		drawMsPacManCopyright(t(6), t(28));
 		drawLevelCounter();
 	}
 
 	private void drawMarquee() {
-		var on = intro.context().marqueeState();
-		for (int i = 0; i < intro.context().numBulbs; ++i) {
+		var on = intro.marqueeState();
+		for (int i = 0; i < intro.numBulbs; ++i) {
 			g.setFill(on.get(i) ? ArcadePalette.PALE : ArcadePalette.RED);
 			if (i <= 33) {
 				g.fillRect(s(60 + 4 * i), s(148), s(2), s(2));

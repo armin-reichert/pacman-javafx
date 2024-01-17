@@ -39,11 +39,9 @@ public class PacManCutscene2 extends GameScene2D {
 		initialDelay = 120;
 		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
-
 		var ss = context.<PacManSpriteSheet>spriteSheet();
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacManPacAnimations(pac, ss));
-
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		var blinkyAnimations = new PacManGhostAnimations(blinky, ss);
 		blinkyNormal = blinkyAnimations.byName(GhostAnimations.GHOST_NORMAL);

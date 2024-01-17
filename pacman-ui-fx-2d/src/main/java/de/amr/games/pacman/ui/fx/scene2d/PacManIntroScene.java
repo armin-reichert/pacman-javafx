@@ -33,17 +33,13 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void init() {
-		var ss = context.<PacManSpriteSheet>spriteSheet();
-
 		setCreditVisible(true);
 		setScoreVisible(true);
-
 		intro = new PacManIntro();
-
-		intro.context().pacMan.setAnimations(new PacManPacAnimations(intro.context().pacMan, ss));
-		intro.context().ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
-		intro.context().blinking.reset();
-
+		var ss = context.<PacManSpriteSheet>spriteSheet();
+		intro.pacMan.setAnimations(new PacManPacAnimations(intro.pacMan, ss));
+		intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
+		intro.blinking.reset();
 		intro.changeState(State.START);
 	}
 
@@ -70,26 +66,19 @@ public class PacManIntroScene extends GameScene2D {
 		var timer = intro.state().timer();
 		drawGallery();
 		switch (intro.state()) {
-		case SHOWING_POINTS: {
-			drawPoints();
-			break;
-		}
-		case CHASING_PAC: {
-			drawPoints();
-			drawBlinkingEnergizer();
-			drawGuys(flutter(timer.tick()));
-			drawMidwayCopyright(t(4), t(32));
-			break;
-		}
-		case CHASING_GHOSTS:
-		case READY_TO_PLAY: {
-			drawPoints();
-			drawGuys(0);
-			drawMidwayCopyright(t(4), t(32));
-			break;
-		}
-		default:
-			break;
+			case SHOWING_POINTS -> drawPoints();
+			case CHASING_PAC -> {
+				drawPoints();
+				drawBlinkingEnergizer();
+				drawGuys(flutter(timer.tick()));
+				drawMidwayCopyright(t(4), t(32));
+			}
+			case CHASING_GHOSTS, READY_TO_PLAY -> {
+				drawPoints();
+				drawGuys(0);
+				drawMidwayCopyright(t(4), t(32));
+			}
+			default -> {}
 		}
 		drawLevelCounter();
 	}
@@ -108,12 +97,12 @@ public class PacManIntroScene extends GameScene2D {
 		var ss = context.<PacManSpriteSheet>spriteSheet();
 		var font = sceneFont(8);
 
-		int tx = intro.context().leftTileX;
-		if (intro.context().titleVisible) {
+		int tx = intro.leftTileX;
+		if (intro.titleVisible) {
 			drawText("CHARACTER / NICKNAME", ArcadePalette.PALE, font, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
-			var ghostInfo = intro.context().ghostInfo[id];
+			var ghostInfo = intro.ghostInfo[id];
 			if (!ghostInfo.pictureVisible) {
 				continue;
 			}
@@ -133,36 +122,36 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawBlinkingEnergizer() {
-		if (intro.context().blinking.on()) {
+		if (intro.blinking.on()) {
 			g.setFill(context.theme().color("pacman.maze.foodColor"));
-			g.fillOval(s(t(intro.context().leftTileX)), s(t(20)), s(TS), s(TS));
+			g.fillOval(s(t(intro.leftTileX)), s(t(20)), s(TS), s(TS));
 		}
 	}
 
 	private void drawGuys(int shakingAmount) {
 		if (shakingAmount == 0) {
-			intro.context().ghosts().forEach(this::drawGhost);
+			intro.ghosts().forEach(this::drawGhost);
 		} else {
-			drawGhost(intro.context().ghost(0));
-			drawGhost(intro.context().ghost(3));
+			drawGhost(intro.ghost(0));
+			drawGhost(intro.ghost(3));
 			// shaking ghosts effect, not quite as in original game
 			g.save();
 			g.translate(shakingAmount, 0);
-			drawGhost(intro.context().ghost(1));
-			drawGhost(intro.context().ghost(2));
+			drawGhost(intro.ghost(1));
+			drawGhost(intro.ghost(2));
 			g.restore();
 		}
-		drawPac(intro.context().pacMan);
+		drawPac(intro.pacMan);
 	}
 
 	private void drawPoints() {
 		var font8 = sceneFont(8);
 		var font6 = sceneFont(6);
-		int tx = intro.context().leftTileX + 6;
+		int tx = intro.leftTileX + 6;
 		int ty = 25;
 		g.setFill(context.theme().color("pacman.maze.foodColor"));
 		g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
-		if (intro.context().blinking.on()) {
+		if (intro.blinking.on()) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
 		}
 		drawText("10",  ArcadePalette.PALE, font8, t(tx + 2), t(ty));
