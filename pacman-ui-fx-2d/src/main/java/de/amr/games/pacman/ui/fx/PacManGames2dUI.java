@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
@@ -118,7 +117,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected GameClock createClock() {
 		var clock = new GameClock();
 		clock.setOnTick(() -> {
-			GameController.it().update();
+			gameController().update();
 			currentGameScene().ifPresent(GameScene::update);
 		});
 		clock.setOnRender(gamePage::render);
@@ -173,7 +172,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		}
 		mainScene.setRoot(startPage.root());
 		updateStage();
-		startPage.setGameVariant(game().variant());
+		startPage.setGameVariant(gameVariant());
 		startPage.root().requestFocus();
 		stage.show();
 	}
@@ -192,12 +191,11 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	}
 
 	protected void configurePacSteering() {
-		GameController.it().setManualPacSteering(new KeyboardSteering());
+		gameController().setManualPacSteering(new KeyboardSteering());
 	}
 
 	protected void updateStage() {
-		var variant = GameController.it().game().variant();
-		var variantKey = variant == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
+		var variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
 		var titleKey = "app.title." + variantKey;
 		if (clock.isPaused()) {
 			titleKey += ".paused";
@@ -208,12 +206,12 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	protected GameScene sceneMatchingCurrentGameState() {
 		var config = sceneConfig();
-		return switch (GameController.it().state()) {
+		return switch (gameState()) {
 			case BOOT              -> config.get("boot");
 			case CREDIT            -> config.get("credit");
 			case INTRO             -> config.get("intro");
-			case INTERMISSION      -> config.get("cut" + game().level().get().intermissionNumber);
-			case INTERMISSION_TEST -> config.get("cut" + GameController.it().intermissionTestNumber);
+			case INTERMISSION      -> config.get("cut" + (gameLevel().isPresent()? gameLevel().get().intermissionNumber : 1));
+			case INTERMISSION_TEST -> config.get("cut" + gameController().intermissionTestNumber);
 			default                -> config.get("play");
 		};
 	}
@@ -221,7 +219,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	protected void updateOrReloadGameScene(boolean reload) {
 		var nextGameScene = sceneMatchingCurrentGameState();
 		if (nextGameScene == null) {
-			throw new IllegalStateException("No game scene found for game state " + GameController.it().state());
+			throw new IllegalStateException("No game scene found for game state " + gameController().state());
 		}
 		if (reload || nextGameScene != gameScenePy.get()) {
 			setGameScene(nextGameScene);
@@ -256,7 +254,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public <S extends SpriteSheet> S spriteSheet() {
-		return switch (game().variant()) {
+		return switch (gameVariant()) {
 			case MS_PACMAN -> theme.get("mspacman.spritesheet");
 			case PACMAN    -> theme.get("pacman.spritesheet");
 		};
@@ -282,7 +280,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	}
 
 	public Map<String, GameScene> sceneConfig() {
-		return gameScenes.get(game().variant());
+		return gameScenes.get(gameVariant());
 	}
 
 	// GameEventListener implementation part
@@ -343,15 +341,15 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void startGame() {
-		if (GameController.it().hasCredit()) {
+		if (gameController().hasCredit()) {
 			soundHandler.stopVoice();
-			GameController.it().startPlaying();
+			gameController().startPlaying();
 		}
 	}
 
 	@Override
 	public void startCutscenesTest() {
-		GameController.it().startCutscenesTest(1);
+		gameController().startCutscenesTest(1);
 		showFlashMessage("Cut scenes");
 	}
 
@@ -360,9 +358,9 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		soundHandler.stopAllSounds();
 		currentGameScene().ifPresent(GameScene::end);
 		if (game().isPlaying()) {
-			GameController.it().changeCredit(-1);
+			gameController().changeCredit(-1);
 		}
-		GameController.it().restart(INTRO);
+		gameController().restart(INTRO);
 	}
 
 	@Override
@@ -370,12 +368,12 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		soundHandler.stopAllSounds();
 		currentGameScene().ifPresent(GameScene::end);
 		soundHandler.playVoice("voice.explain");
-		GameController.it().restart(GameState.BOOT);
+		gameController().restart(GameState.BOOT);
 	}
 
 	@Override
 	public void addCredit() {
-		GameController.it().addCredit();
+		gameController().addCredit();
 	}
 
 	@Override
@@ -417,15 +415,14 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void switchGameVariant() {
-		var variant = game().variant().next();
-		GameController.it().startNewGame(variant);
+		gameController().startNewGame(gameVariant().next());
 		showStartPage();
 	}
 
 	@Override
 	public void toggleAutopilot() {
-		GameController.it().toggleAutoControlled();
-		var auto = GameController.it().isAutoControlled();
+		gameController().toggleAutoControlled();
+		var auto = gameController().isAutoControlled();
 		String message = message(PacManGames2dApp.TEXTS, auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
@@ -433,8 +430,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void toggleImmunity() {
-		GameController.it().setImmune(!GameController.it().isImmune());
-		var immune = GameController.it().isImmune();
+		gameController().setImmune(!gameController().isImmune());
+		var immune = gameController().isImmune();
 		String message = message(PacManGames2dApp.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
@@ -442,15 +439,15 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void enterLevel(int newLevelNumber) {
-		if (GameController.it().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			return;
 		}
-		game().level().ifPresent(level -> {
+		gameLevel().ifPresent(level -> {
 			if (newLevelNumber > level.number()) {
 				for (int n = level.number(); n < newLevelNumber - 1; ++n) {
 					game().nextLevel();
 				}
-				GameController.it().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
 			} else if (newLevelNumber < level.number()) {
 				// not implemented
 			}
@@ -459,8 +456,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void startLevelTestMode() {
-		if (GameController.it().state() == GameState.INTRO) {
-			GameController.it().restart(GameState.LEVEL_TEST);
+		if (gameState() == GameState.INTRO) {
+			gameController().restart(GameState.LEVEL_TEST);
 			showFlashMessage("Level TEST MODE");
 		}
 	}
@@ -473,16 +470,16 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 
 	@Override
 	public void cheatEatAllPellets() {
-		GameController.it().cheatEatAllPellets();
+		gameController().cheatEatAllPellets();
 	}
 
 	@Override
 	public void cheatEnterNextLevel() {
-		GameController.it().cheatEnterNextLevel();
+		gameController().cheatEnterNextLevel();
 	}
 
 	@Override
 	public void cheatKillAllEatableGhosts() {
-		GameController.it().cheatKillAllEatableGhosts();
+		gameController().cheatKillAllEatableGhosts();
 	}
 }
