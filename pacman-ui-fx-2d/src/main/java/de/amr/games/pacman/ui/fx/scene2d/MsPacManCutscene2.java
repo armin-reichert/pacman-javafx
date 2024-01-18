@@ -27,10 +27,10 @@ public class MsPacManCutscene2 extends GameScene2D {
 
 	@Override
 	public void init() {
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission2();
-		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		intermission.msPac.setAnimations(new MsPacManPacAnimations(intermission.msPac, ss));
 		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
 		clapAnimation = new ClapperboardAnimation("2", "THE CHASE");

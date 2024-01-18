@@ -28,13 +28,14 @@ public class MsPacManCutscene3 extends GameScene2D {
 	private MsPacManIntermission3 intermission;
 	private ClapperboardAnimation clapAnimation;
 	private SpriteAnimation storkAnimation;
+	private MsPacManSpriteSheet ss;
 
 	@Override
 	public void init() {
+		ss = context.<MsPacManSpriteSheet>spriteSheet();
 		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission3();
-		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		intermission.msPacMan.setAnimations(new MsPacManPacAnimations(intermission.msPacMan, ss));
 		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();
@@ -52,7 +53,6 @@ public class MsPacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPac(intermission.msPacMan);
 		drawPac(intermission.pacMan);
