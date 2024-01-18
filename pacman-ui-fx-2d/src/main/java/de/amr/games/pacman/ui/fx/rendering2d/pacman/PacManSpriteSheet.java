@@ -6,21 +6,21 @@ package de.amr.games.pacman.ui.fx.rendering2d.pacman;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui.fx.util.Order;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
+import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
 /**
  * @author Armin Reichert
  */
-public class SpritesheetPacManGame implements Spritesheet {
+public class PacManSpriteSheet implements SpriteSheet {
 
 	public static final Order<Direction> DIR_ORDER = new Order<>(//
 			Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
 	private final Image source;
 
-	public SpritesheetPacManGame(Image source) {
+	public PacManSpriteSheet(Image source) {
 		this.source = source;
 	}
 
@@ -48,26 +48,17 @@ public class SpritesheetPacManGame implements Spritesheet {
 	}
 
 	public Rectangle2D bonusValueSprite(int symbol) {
-		switch (symbol) {
-		case 0:
-			return rect(0, 148, 16, 8); // 100
-		case 1:
-			return rect(16, 148, 16, 8); // 300
-		case 2:
-			return rect(32, 148, 16, 8); // 500
-		case 3:
-			return rect(48, 148, 16, 8); // 700
-		case 4:
-			return rect(64, 148, 18, 8); // 1000
-		case 5:
-			return rect(62, 164, 20, 8); // 2000
-		case 6:
-			return rect(62, 180, 20, 8); // 3000
-		case 7:
-			return rect(62, 196, 20, 8); // 5000
-		default:
-			return null;
-		}
+		return switch (symbol) {
+			case 0 -> rect(0, 148, 16, 8);  //  100
+			case 1 -> rect(16, 148, 16, 8); //  300
+			case 2 -> rect(32, 148, 16, 8); //  500
+			case 3 -> rect(48, 148, 16, 8); //  700
+			case 4 -> rect(64, 148, 18, 8); // 1000
+			case 5 -> rect(62, 164, 20, 8); // 2000
+			case 6 -> rect(62, 180, 20, 8); // 3000
+			case 7 -> rect(62, 196, 20, 8); // 5000
+			default -> null;
+		};
 	}
 
 	public Rectangle2D ghostFacingRight(int ghostID) {
@@ -78,7 +69,7 @@ public class SpritesheetPacManGame implements Spritesheet {
 		return rect(129, 15, 16, 16);
 	}
 
-	private Rectangle2D[][] pacMunchingSprites = new Rectangle2D[4][];
+	private final Rectangle2D[][] pacMunchingSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] pacMunchingSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);
@@ -107,7 +98,7 @@ public class SpritesheetPacManGame implements Spritesheet {
 		return pacDyingSprites;
 	}
 
-	private Rectangle2D[][][] ghostNormalSprites = new Rectangle2D[4][4][];
+	private final Rectangle2D[][][] ghostNormalSprites = new Rectangle2D[4][4][];
 
 	public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
 		int d = DIR_ORDER.index(dir);
@@ -135,7 +126,7 @@ public class SpritesheetPacManGame implements Spritesheet {
 		return ghostFlashingSprites;
 	}
 
-	private Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
+	private final Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
 
 	public Rectangle2D[] ghostEyesSprites(Direction dir) {
 		int d = DIR_ORDER.index(dir);

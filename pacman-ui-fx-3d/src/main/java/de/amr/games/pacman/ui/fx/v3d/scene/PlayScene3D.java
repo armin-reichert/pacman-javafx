@@ -14,8 +14,8 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
@@ -173,7 +173,7 @@ public class PlayScene3D implements GameScene {
 			return;
 		}
 
-		level3D = new GameLevel3D(level, context.theme(), context.spritesheet());
+		level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
 
 		// center over origin
 		var centerX = level.world().numCols() * HTS;
@@ -345,14 +345,14 @@ public class PlayScene3D implements GameScene {
 			case GHOST_DYING -> {
 				switch (context.gameVariant()) {
 					case MS_PACMAN -> {
-						var ss = (SpritesheetMsPacManGame) context.spritesheet();
+						var ss = context.<MsPacManSpriteSheet>spriteSheet();
 						level.thisFrame().killedGhosts.forEach(ghost -> {
 							var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 							level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
 						});
 					}
 					case PACMAN -> {
-						var ss = (SpritesheetPacManGame) context.spritesheet();
+						var ss = context.<PacManSpriteSheet>spriteSheet();
 						level.thisFrame().killedGhosts.forEach(ghost -> {
 							var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
 							level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
@@ -511,12 +511,12 @@ public class PlayScene3D implements GameScene {
 		}
 		switch (context.gameVariant()) {
 			case MS_PACMAN -> {
-				var ss = (SpritesheetMsPacManGame) context.spritesheet();
+				var ss = context.<MsPacManSpriteSheet>spriteSheet();
 				var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 				level3D.levelCounter3D().update(images);
 			}
 			case PACMAN -> {
-				var ss = (SpritesheetPacManGame) context.spritesheet();
+				var ss = context.<PacManSpriteSheet>spriteSheet();
 				var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
 				level3D.levelCounter3D().update(images);
 			}

@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission2;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -30,9 +30,9 @@ public class MsPacManCutscene2 extends GameScene2D {
 		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission2();
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
-		intermission.msPac.setAnimations(new PacAnimationsMsPacManGame(intermission.msPac, ss));
-		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
+		intermission.msPac.setAnimations(new MsPacManPacAnimations(intermission.msPac, ss));
+		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
 		clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission2.STATE_FLAP, 2 * GameModel.FPS);

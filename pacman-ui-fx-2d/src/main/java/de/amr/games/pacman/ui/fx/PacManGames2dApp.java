@@ -8,8 +8,8 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.application.Application;
@@ -129,7 +129,7 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		theme.set("mspacman.startpage.image",        image("graphics/mspacman/wallpaper-midway.png"));
 		theme.set("mspacman.helpButton.icon",        image("graphics/icons/help-red-64.png"));
 
-		theme.set("mspacman.spritesheet",            new SpritesheetMsPacManGame(image("graphics/mspacman/sprites.png")));
+		theme.set("mspacman.spritesheet",            new MsPacManSpriteSheet(image("graphics/mspacman/sprites.png")));
 		theme.set("mspacman.icon",                   image("graphics/icons/mspacman.png"));
 		theme.set("mspacman.logo.midway",            image("graphics/mspacman/midway.png"));
 		theme.set("mspacman.flashingMazes",          image("graphics/mspacman/mazes-flashing.png"));
@@ -160,7 +160,7 @@ public class PacManGames2dApp extends Application implements ResourceManager {
 		theme.set("pacman.startpage.image",          image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg"));
 		theme.set("pacman.helpButton.icon",          image("graphics/icons/help-blue-64.png"));
 
-		theme.set("pacman.spritesheet",              new SpritesheetPacManGame(image("graphics/pacman/sprites.png")));
+		theme.set("pacman.spritesheet",              new PacManSpriteSheet(image("graphics/pacman/sprites.png")));
 		theme.set("pacman.icon",                     image("graphics/icons/pacman.png"));
 		theme.set("pacman.flashingMaze",             image("graphics/pacman/maze_empty_flashing.png"));
 		theme.set("pacman.fullMaze",                 image("graphics/pacman/maze_full.png"));

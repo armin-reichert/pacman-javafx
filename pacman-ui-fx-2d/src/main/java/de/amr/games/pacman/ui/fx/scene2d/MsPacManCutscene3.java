@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.ClapperboardAnimation;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
 import static de.amr.games.pacman.lib.Globals.t;
@@ -34,9 +34,9 @@ public class MsPacManCutscene3 extends GameScene2D {
 		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission3();
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
-		intermission.msPacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.msPacMan, ss));
-		intermission.pacMan.setAnimations(new PacAnimationsMsPacManGame(intermission.pacMan, ss));
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
+		intermission.msPacMan.setAnimations(new MsPacManPacAnimations(intermission.msPacMan, ss));
+		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();
 		storkAnimation.start();
 		clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
@@ -52,7 +52,7 @@ public class MsPacManCutscene3 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		drawClapperBoard(clapAnimation, t(3), t(10));
 		drawPac(intermission.msPacMan);
 		drawPac(intermission.pacMan);

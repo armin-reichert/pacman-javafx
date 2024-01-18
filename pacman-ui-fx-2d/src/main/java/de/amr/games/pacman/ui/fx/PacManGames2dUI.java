@@ -14,17 +14,17 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.GhostAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.PacAnimationsMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.GhostAnimationsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacAnimationsPacManGame;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.SpritesheetPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.*;
 import de.amr.games.pacman.ui.fx.util.GameClock;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
+import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -255,7 +255,7 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 	}
 
 	@Override
-	public Spritesheet spritesheet() {
+	public <S extends SpriteSheet> S spriteSheet() {
 		return switch (game().variant()) {
 			case MS_PACMAN -> theme.get("mspacman.spritesheet");
 			case PACMAN    -> theme.get("pacman.spritesheet");
@@ -312,15 +312,15 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		e.game.level().ifPresent(level -> {
 			switch (e.game.variant()) {
 			case MS_PACMAN -> {
-				var ss = (SpritesheetMsPacManGame) spritesheet();
-				level.pac().setAnimations(new PacAnimationsMsPacManGame(level.pac(), ss));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsMsPacManGame(ghost, ss)));
+				var ss = this.<MsPacManSpriteSheet>spriteSheet();
+				level.pac().setAnimations(new MsPacManPacAnimations(level.pac(), ss));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGhostAnimations(ghost, ss)));
 				Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
 			}
 			case PACMAN -> {
-				var ss = (SpritesheetPacManGame) spritesheet();
-				level.pac().setAnimations(new PacAnimationsPacManGame(level.pac(), ss));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new GhostAnimationsPacManGame(ghost, ss)));
+				var ss = this.<PacManSpriteSheet>spriteSheet();
+				level.pac().setAnimations(new PacManPacAnimations(level.pac(), ss));
+				level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
 				Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
 			}
 			default -> throw new IllegalGameVariantException(e.game.variant());

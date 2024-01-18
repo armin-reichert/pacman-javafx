@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.SpritesheetMsPacManGame;
+import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.KEYS_ADD_CREDIT;
@@ -38,7 +38,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		var ss = (SpritesheetMsPacManGame) context.spritesheet();
+		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		var font6 = sceneFont(6); // TODO looks bad
 		var font8 = sceneFont(8);
 		var color = ArcadePalette.ORANGE;

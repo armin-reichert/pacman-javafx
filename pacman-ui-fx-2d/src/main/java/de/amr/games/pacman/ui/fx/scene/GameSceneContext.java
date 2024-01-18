@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.ActionHandler;
 import de.amr.games.pacman.ui.fx.SoundHandler;
-import de.amr.games.pacman.ui.fx.util.Spritesheet;
+import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.media.AudioClip;
 
@@ -23,7 +23,7 @@ public interface GameSceneContext {
 
   Theme theme();
 
-  Spritesheet spritesheet();
+  <S extends SpriteSheet> S spriteSheet();
 
   SoundHandler soundHandler();
 
