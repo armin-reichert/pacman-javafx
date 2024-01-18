@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManGhostAnimations;

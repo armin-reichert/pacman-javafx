@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

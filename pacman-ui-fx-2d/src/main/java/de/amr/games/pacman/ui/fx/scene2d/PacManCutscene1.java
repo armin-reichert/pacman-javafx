@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManPacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
