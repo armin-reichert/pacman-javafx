@@ -39,7 +39,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class GameScene2D implements GameScene {
 
-
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 	public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
 	public final BooleanProperty creditVisiblePy = new SimpleBooleanProperty(this, "creditVisible", false);
@@ -137,6 +136,7 @@ public abstract class GameScene2D implements GameScene {
 	 * Draws additional scene info, e.g. tile structure or debug info.
 	 */
 	protected void drawSceneInfo() {
+		drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
 	}
 
 	protected void clearCanvas() {
@@ -246,7 +246,7 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.WHITE);
 		g.setFont(Font.font("Monospaced", s(6)));
 		var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
-		g.fillText(text, s(pac.pos_x() + 8), s(pac.pos_y()));
+		g.fillText(text, s(pac.pos_x() - 4), s(pac.pos_y() - 4));
 		// indicate wish direction
 		float r = 2;
 		var pacCenter = pac.center();
@@ -256,7 +256,6 @@ public abstract class GameScene2D implements GameScene {
 		g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
 		g.setFill(Color.GREEN);
 		g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
-
 	}
 
 	protected void drawGhost(Ghost ghost) {
@@ -264,7 +263,6 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		ghost.animations().ifPresent(ga -> {
-			// WebFX does not allow Class::isInstance and Class::cast, so we do it the old way.
 			if (ga instanceof SpriteAnimations sa) {
 				drawEntitySprite(ghost, sa.currentSprite());
 				if (infoVisiblePy.get()) {
@@ -278,7 +276,7 @@ public abstract class GameScene2D implements GameScene {
 		g.setFill(Color.WHITE);
 		g.setFont(Font.font("Monospaced", s(6)));
 		var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-		g.fillText(text, s(ghost.pos_x() + 8), s(ghost.pos_y()));
+		g.fillText(text, s(ghost.pos_x() - 4), s(ghost.pos_y() - 4));
 	}
 
 	/**

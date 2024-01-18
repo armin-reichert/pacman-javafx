@@ -83,11 +83,6 @@ public class PacManIntroScene extends GameScene2D {
 		drawLevelCounter();
 	}
 
-	@Override
-	protected void drawSceneInfo() {
-		drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
-	}
-
 	// TODO inspect in MAME what's really going on here
 	private int flutter(long time) {
 		return time % 5 < 2 ? 0 : -1;

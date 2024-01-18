@@ -63,11 +63,6 @@ public class MsPacManIntroScene extends GameScene2D {
 	}
 
 	@Override
-	protected void drawSceneInfo() {
-		drawTileGrid(28, 36);
-	}
-
-	@Override
 	public void drawSceneContent() {
 		var theme = context.theme();
 		var font8 = sceneFont(8);
