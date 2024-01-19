@@ -41,7 +41,6 @@ public class PictureInPicture {
 		playScene2D = new PlayScene2D();
 		playScene2D.setCanvas(canvas);
 		playScene2D.setScoreVisible(true);
-		playScene2D.setCreditVisible(false);
 		playScene2D.root().opacityProperty().bind(opacityPy);
 		playScene2D.root().setVisible(false);
 	}
