@@ -26,8 +26,8 @@ import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -62,7 +62,8 @@ public class PlayScene3D implements GameScene {
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
 		@Override
 		protected void invalidated() {
-			updateCamera(get());
+			Logger.info("Perspective set to {}", perspectivePy.get());
+			currentCamController().reset(fxSubScene.getCamera());
 		}
 	};
 
@@ -87,9 +88,9 @@ public class PlayScene3D implements GameScene {
 		ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
 		readyMessageText3D = new Text3D();
-		var subSceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
+		var sceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 		// initial sub-scene size is irrelevant, gets bound to main scene size in init method
-		fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
+		fxSubScene = new SubScene(sceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
 		fxSubScene.setCamera(new PerspectiveCamera(true));
 	}
 
@@ -152,19 +153,13 @@ public class PlayScene3D implements GameScene {
 		return fxSubScene;
 	}
 
-	public CameraController currentCamController() {
-		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
-	}
-
-	public void bindSize(ReadOnlyDoubleProperty widthPy, ReadOnlyDoubleProperty heightPy) {
+	public void bindSize(ObservableDoubleValue widthPy, ObservableDoubleValue heightPy) {
 		fxSubScene.widthProperty().bind(widthPy);
 		fxSubScene.heightProperty().bind(heightPy);
 	}
 
-	private void updateCamera(Perspective perspective) {
-		currentCamController().reset(fxSubScene.getCamera());
-		fxSubScene.requestFocus();
-		Logger.info("Perspective is {} ({})", perspective, this);
+	public CameraController currentCamController() {
+		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
@@ -365,7 +360,7 @@ public class PlayScene3D implements GameScene {
 			case CHANGING_TO_NEXT_LEVEL -> {
 				context.gameState().timer().resetIndefinitely();
 				replaceGameLevel3D(level);
-				updateCamera(perspectivePy.get());
+				currentCamController().reset(fxSubScene.getCamera());
 				keepGameStateForSeconds(3);
 			}
 
