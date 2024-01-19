@@ -30,10 +30,14 @@ public class PacManCutscene1 extends GameScene2D {
 	private Ghost blinky;
 
 	@Override
+	public boolean isCreditVisible() {
+		return !context.gameController().hasCredit();
+	}
+
+	@Override
 	public void init() {
 		frame = -1;
 		initialDelay = 120;
-		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 
 		var ss = context.<PacManSpriteSheet>spriteSheet();

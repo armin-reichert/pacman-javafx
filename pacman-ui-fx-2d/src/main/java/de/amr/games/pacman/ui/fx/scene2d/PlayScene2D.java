@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -33,8 +32,12 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 public class PlayScene2D extends GameScene2D {
 
 	@Override
+	public boolean isCreditVisible() {
+		return !context.gameController().hasCredit() || context.gameState() == GameState.GAME_OVER;
+	}
+
+	@Override
 	public void init() {
-		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 	}
 
@@ -158,13 +161,6 @@ public class PlayScene2D extends GameScene2D {
 				context.gameState(),
 				context.gameState().timer().tick()),
 				0, 80);
-	}
-
-	@Override
-	public void onGameStateChange(GameStateChangeEvent e) {
-		if (e.newState == GameState.GAME_OVER) {
-			setCreditVisible(true);
-		}
 	}
 
 	@Override

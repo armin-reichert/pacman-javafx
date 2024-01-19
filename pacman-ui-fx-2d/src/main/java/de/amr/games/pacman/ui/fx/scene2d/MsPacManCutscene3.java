@@ -31,9 +31,13 @@ public class MsPacManCutscene3 extends GameScene2D {
 	private MsPacManSpriteSheet ss;
 
 	@Override
+	public boolean isCreditVisible() {
+		return !context.gameController().hasCredit();
+	}
+
+	@Override
 	public void init() {
 		ss = context.<MsPacManSpriteSheet>spriteSheet();
-		setCreditVisible(!context.gameController().hasCredit());
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission3();
 		intermission.msPacMan.setAnimations(new MsPacManPacAnimations(intermission.msPacMan, ss));

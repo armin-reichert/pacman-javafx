@@ -21,6 +21,11 @@ public class BootScene extends GameScene2D {
 	private double start; // seconds
 
 	@Override
+	public boolean isCreditVisible() {
+		return false;
+	}
+
+	@Override
 	public void init() {
 		start = 1.0;
 		setScoreVisible(false);

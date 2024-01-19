@@ -31,8 +31,12 @@ public class PacManIntroScene extends GameScene2D {
 	private PacManIntro intro;
 
 	@Override
+	public boolean isCreditVisible() {
+		return true;
+	}
+
+	@Override
 	public void init() {
-		setCreditVisible(true);
 		setScoreVisible(true);
 		intro = new PacManIntro();
 		var ss = context.<PacManSpriteSheet>spriteSheet();

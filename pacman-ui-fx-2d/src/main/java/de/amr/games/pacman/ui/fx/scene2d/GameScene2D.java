@@ -41,7 +41,6 @@ public abstract class GameScene2D implements GameScene {
 
 	public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
 	public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
-	public final BooleanProperty creditVisiblePy = new SimpleBooleanProperty(this, "creditVisible", false);
 	public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
 	protected GameSceneContext context;
@@ -68,16 +67,6 @@ public abstract class GameScene2D implements GameScene {
 			throw new IllegalArgumentException("Scaling value must be positive but is " + scaling);
 		}
 		scalingPy.set(scaling);
-	}
-
-	@Override
-	public boolean isCreditVisible() {
-		return creditVisiblePy.get();
-	}
-
-	@Override
-	public void setCreditVisible(boolean creditVisible) {
-		creditVisiblePy.set(creditVisible);
 	}
 
 	@Override
@@ -118,7 +107,7 @@ public abstract class GameScene2D implements GameScene {
 			drawScore(context.game().score(), "SCORE", t(1), t(1));
 			drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
 		}
-		if (creditVisiblePy.get()) {
+		if (isCreditVisible()) {
 			drawCredit(context.gameController().credit(), t(2), t(36) - 1);
 		}
 		drawSceneContent();

@@ -17,8 +17,12 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dApp.KEYS_START_GAME;
 public class PacManCreditScene extends GameScene2D {
 
 	@Override
+	public boolean isCreditVisible() {
+		return true;
+	}
+
+	@Override
 	public void init() {
-		setCreditVisible(true);
 		setScoreVisible(true);
 	}
 
