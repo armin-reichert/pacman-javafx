@@ -18,8 +18,6 @@ public interface GameScene extends GameEventListener {
 
 	void setScoreVisible(boolean visible);
 
-	boolean isCreditVisible();
-
 	/**
 	 * Called when the scene becomes the current one.
 	 */

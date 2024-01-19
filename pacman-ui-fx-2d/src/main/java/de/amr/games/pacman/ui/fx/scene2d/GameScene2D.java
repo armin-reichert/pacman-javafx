@@ -46,6 +46,8 @@ public abstract class GameScene2D implements GameScene {
 	protected GameSceneContext context;
 	protected GraphicsContext g;
 
+	public abstract boolean isCreditVisible();
+
 	@Override
 	public GameSceneContext context() {
 		return context;
