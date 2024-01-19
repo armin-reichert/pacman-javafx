@@ -253,7 +253,7 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onPacFoundFood(GameEvent e) {
 		if (level3D == null) {
-			Logger.error("No game level exists");
+			Logger.error("WTF: No 3D game level exists?");
 			return;
 		}
 		// When cheat "eat all pellets" has been used, no tile is present in the event.
@@ -501,21 +501,13 @@ public class PlayScene3D implements GameScene {
 	@Override
 	public void onLevelStarted(GameEvent e) {
 		if (level3D == null) {
-			Logger.error("Where is my 3D game level?");
+			Logger.error("WTF: Where is my 3D game level?");
 			return;
 		}
-		switch (context.gameVariant()) {
-			case MS_PACMAN -> {
-				var ss = context.<MsPacManSpriteSheet>spriteSheet();
-				var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
-				level3D.levelCounter3D().update(images);
-			}
-			case PACMAN -> {
-				var ss = context.<PacManSpriteSheet>spriteSheet();
-				var images = context.game().levelCounter().stream().map(ss::bonusSymbolSprite).map(ss::subImage).toArray(Image[]::new);
-				level3D.levelCounter3D().update(images);
-			}
-			default -> throw new IllegalGameVariantException(context.gameVariant());
-		}
+		var bonusSprites = switch (context.gameVariant()) {
+			case MS_PACMAN -> context.game().levelCounter().stream().map(context.<MsPacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
+			case PACMAN    -> context.game().levelCounter().stream().map(context.<PacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
+		};
+		level3D.levelCounter3D().update(bonusSprites.map(context.spriteSheet()::subImage).toArray(Image[]::new));
 	}
 }
