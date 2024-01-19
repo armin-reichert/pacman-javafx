@@ -132,20 +132,15 @@ public class GameLevel3D {
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus) {
-		return switch (level.game().variant()) {
-			case MS_PACMAN -> {
-				var ss = (MsPacManSpriteSheet) spritesheet;
-				var symbolImage = ss.subImage(ss.bonusSymbolSprite(bonus.symbol()));
-				var pointsImage = ss.subImage(ss.bonusValueSprite(bonus.symbol()));
-				yield new Bonus3D(bonus, symbolImage, pointsImage);
-			}
-			case PACMAN -> {
-				var ss = (PacManSpriteSheet) spritesheet;
-				var symbolImage = ss.subImage(ss.bonusSymbolSprite(bonus.symbol()));
-				var pointsImage = ss.subImage(ss.bonusValueSprite(bonus.symbol()));
-				yield new Bonus3D(bonus, symbolImage, pointsImage);
-			}
+		var symbolSprite = switch (level.game().variant()) {
+			case MS_PACMAN -> ((MsPacManSpriteSheet) spritesheet).bonusSymbolSprite(bonus.symbol());
+			case PACMAN    -> ((PacManSpriteSheet)   spritesheet).bonusSymbolSprite(bonus.symbol());
 		};
+		var valueSprite = switch (level.game().variant()) {
+			case MS_PACMAN -> ((MsPacManSpriteSheet) spritesheet).bonusValueSprite(bonus.symbol());
+			case PACMAN    -> ((PacManSpriteSheet)   spritesheet).bonusValueSprite(bonus.symbol());
+		};
+		return new Bonus3D(bonus, spritesheet.subImage(symbolSprite), spritesheet.subImage(valueSprite));
 	}
 
 	public void update() {
