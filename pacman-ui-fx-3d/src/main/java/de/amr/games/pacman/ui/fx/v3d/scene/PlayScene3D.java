@@ -73,7 +73,6 @@ public class PlayScene3D implements GameScene {
 	private GameLevel3D level3D;
 	private GameSceneContext context;
 	private boolean scoreVisible;
-	private boolean creditVisible;
 
 	public PlayScene3D() {
 		camControllerMap.put(Perspective.DRONE,            new CamDrone());
@@ -106,7 +105,6 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void init() {
-		setCreditVisible(false);
 		setScoreVisible(true);
 		resetReadyMessageText3D();
 		perspectivePy.bind(PY_3D_PERSPECTIVE);
@@ -130,12 +128,7 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public boolean isCreditVisible() {
-		return creditVisible;
-	}
-
-	@Override
-	public void setCreditVisible(boolean creditVisible) {
-		this.creditVisible = creditVisible;
+		return false;
 	}
 
 	@Override
