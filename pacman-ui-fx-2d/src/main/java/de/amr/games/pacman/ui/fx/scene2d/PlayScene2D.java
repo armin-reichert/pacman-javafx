@@ -167,7 +167,7 @@ public class PlayScene2D extends GameScene2D {
 	public void onSceneVariantSwitch() {
 		context.gameLevel().ifPresent(level -> {
 			if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
-				context.soundHandler().ensureSirenStarted(level.game().variant(), level.huntingPhase() / 2);
+				context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhase() / 2);
 			}
 		});
 	}

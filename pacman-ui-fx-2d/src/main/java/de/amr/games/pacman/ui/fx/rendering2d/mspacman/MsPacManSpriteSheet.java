@@ -11,6 +11,8 @@ import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
+import java.util.stream.IntStream;
+
 /**
  * @author Armin Reichert
  */
@@ -46,90 +48,98 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 		return new Rectangle2D(THIRD_COLUMN + r(tileX), r(tileY), raster(), raster());
 	}
 
-	private Rectangle2D[] ghostNumberSprites;
+	private final Rectangle2D[] ghostNumberSprites = array(
+		sprite(0, 8), sprite(1, 8), sprite(2, 8), sprite(3, 8));
 
 	public Rectangle2D[] ghostNumberSprites() {
-		if (ghostNumberSprites == null) {
-			ghostNumberSprites = array(sprite(0, 8), sprite(1, 8), sprite(2, 8), sprite(3, 8));
-		}
 		return ghostNumberSprites;
 	}
 
+	private final Rectangle2D[] bonusSymbolSprites = IntStream.range(0, 8)
+			.mapToObj(symbol -> sprite(3 + symbol, 0))
+			.toArray(Rectangle2D[]::new);
+
 	public Rectangle2D bonusSymbolSprite(int symbol) {
-		return sprite(3 + symbol, 0);
+		return bonusSymbolSprites[symbol];
 	}
+
+	private final Rectangle2D[] bonusValueSprites = IntStream.range(0, 8)
+			.mapToObj(symbol -> sprite(3 + symbol, 1))
+			.toArray(Rectangle2D[]::new);
 
 	public Rectangle2D bonusValueSprite(int symbol) {
-		return sprite(3 + symbol, 1);
+		return bonusValueSprites[symbol];
 	}
 
+	private final Rectangle2D livesCounterSprite = sprite(1, 0);
+
 	public Rectangle2D livesCounterSprite() {
-		return sprite(1, 0);
+		return livesCounterSprite;
 	}
 
 	private final Rectangle2D[][] msPacManMunchingSprites = new Rectangle2D[4][];
-
-	public Rectangle2D[] msPacManMunchingSprites(Direction dir) {
-		int d = DIR_ORDER.index(dir);
-		if (msPacManMunchingSprites[d] == null) {
+	{
+		for (byte d = 0; d < 4; ++d) {
 			var wide = sprite(0, d);
 			var open = sprite(1, d);
 			var closed = sprite(2, d);
 			msPacManMunchingSprites[d] = array(open, open, wide, wide, open, open, open, closed, closed);
 		}
-		return msPacManMunchingSprites[d];
 	}
 
-	private Rectangle2D[] msPacManDyingSprites;
+	public Rectangle2D[] msPacManMunchingSprites(Direction dir) {
+		return msPacManMunchingSprites[DIR_ORDER.index(dir)];
+	}
+
+	private final Rectangle2D[] msPacManDyingSprites;
+	{
+		var right = sprite(1, 0);
+		var left  = sprite(1, 1);
+		var up    = sprite(1, 2);
+		var down  = sprite(1, 3);
+		// TODO: this is not yet 100% correct
+		msPacManDyingSprites = array(down, left, up, right, down, left, up, right, down, left, up);
+	}
 
 	public Rectangle2D[] msPacManDyingSprites() {
-		if (msPacManDyingSprites == null) {
-			var right = sprite(1, 0);
-			var left = sprite(1, 1);
-			var up = sprite(1, 2);
-			var down = sprite(1, 3);
-			// TODO not yet 100% accurate
-			msPacManDyingSprites = array(down, left, up, right, down, left, up, right, down, left, up);
-		}
 		return msPacManDyingSprites;
 	}
 
 	private final Rectangle2D[][][] ghostsNormalSprites = new Rectangle2D[4][4][];
-
-	public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
-		int d = DIR_ORDER.index(dir);
-		if (ghostsNormalSprites[id][d] == null) {
-			ghostsNormalSprites[id][d] = array(sprite(2 * d, 4 + id), sprite(2 * d + 1, 4 + id));
+	{
+		for (byte id = 0; id < 4; ++id) {
+			for (byte d = 0; d < 4; ++d) {
+				ghostsNormalSprites[id][d] = array(sprite(2 * d, 4 + id), sprite(2 * d + 1, 4 + id));
+			}
 		}
-		return ghostsNormalSprites[id][d];
 	}
 
-	private Rectangle2D[] ghostFrightenedSprites;
+	public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
+		return ghostsNormalSprites[id][DIR_ORDER.index(dir)];
+	}
+
+	private final Rectangle2D[] ghostFrightenedSprites = array(sprite(8, 4), sprite(9, 4));
 
 	public Rectangle2D[] ghostFrightenedSprites() {
-		if (ghostFrightenedSprites == null) {
-			ghostFrightenedSprites = array(sprite(8, 4), sprite(9, 4));
-		}
 		return ghostFrightenedSprites;
 	}
 
-	private Rectangle2D[] ghostFlashingSprites;
+	private final Rectangle2D[] ghostFlashingSprites = array(
+		sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
 
 	public Rectangle2D[] ghostFlashingSprites() {
-		if (ghostFlashingSprites == null) {
-			ghostFlashingSprites = array(sprite(8, 4), sprite(9, 4), sprite(10, 4), sprite(11, 4));
-		}
 		return ghostFlashingSprites;
 	}
 
 	private final Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
-
-	public Rectangle2D[] ghostEyesSprites(Direction dir) {
-		int d = DIR_ORDER.index(dir);
-		if (ghostEyesSprites[d] == null) {
+	{
+		for (byte d = 0; d < 4; ++d) {
 			ghostEyesSprites[d] = array(sprite(8 + d, 5));
 		}
-		return ghostEyesSprites[d];
+	}
+
+	public Rectangle2D[] ghostEyesSprites(Direction dir) {
+		return ghostEyesSprites[DIR_ORDER.index(dir)];
 	}
 
 	// Ms. Pac-Man specific:
@@ -137,76 +147,85 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 	private static final int MS_PACMAN_MAZE_COUNT = 6;
 
 	private final Rectangle2D[] highlightedMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+	{
+		for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
+			highlightedMazeSprites[mazeNumber - 1] = new Rectangle2D(
+				0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
+				MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		}
+	}
 
 	public Rectangle2D highlightedMaze(int mazeNumber) {
-		if (highlightedMazeSprites[mazeNumber - 1] == null) {
-			highlightedMazeSprites[mazeNumber - 1] = new Rectangle2D(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
-					MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-		}
 		return highlightedMazeSprites[mazeNumber - 1];
 	}
 
 	private final Rectangle2D[] emptyMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+	{
+		for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
+			emptyMazeSprites[mazeNumber - 1] = rect(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
+				MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		}
+	}
 
 	public Rectangle2D emptyMaze(int mazeNumber) {
-		int i = mazeNumber - 1;
-		if (emptyMazeSprites[i] == null) {
-			emptyMazeSprites[i] = rect(SECOND_COLUMN, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-		}
-		return emptyMazeSprites[i];
+		return emptyMazeSprites[mazeNumber - 1];
 	}
 
 	private final Rectangle2D[] filledMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
+	{
+		for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
+			filledMazeSprites[mazeNumber - 1] = rect(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
+				MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
+		}
+	}
 
 	public Rectangle2D filledMaze(int mazeNumber) {
-		int i = mazeNumber - 1;
-		if (filledMazeSprites[i] == null) {
-			filledMazeSprites[i] = rect(0, i * MAZE_IMAGE_HEIGHT, MAZE_IMAGE_WIDTH, MAZE_IMAGE_HEIGHT);
-		}
-		return filledMazeSprites[i];
+		return filledMazeSprites[mazeNumber - 1];
 	}
 
 	private final Rectangle2D[][] pacManMunchingSprites = new Rectangle2D[4][];
-
-	public Rectangle2D[] pacManMunchingSprites(Direction dir) {
-		int d = DIR_ORDER.index(dir);
-		if (pacManMunchingSprites[d] == null) {
+	{
+		for (byte d = 0; d < 4; ++d) {
 			pacManMunchingSprites[d] = array(sprite(0, 9 + d), sprite(1, 9 + d), sprite(2, 9));
 		}
-		return pacManMunchingSprites[d];
 	}
+
+	public Rectangle2D[] pacManMunchingSprites(Direction dir) {
+		return pacManMunchingSprites[DIR_ORDER.index(dir)];
+	}
+
+	private final Rectangle2D heartSprite = sprite(2, 10);
 
 	public Rectangle2D heartSprite() {
-		return sprite(2, 10);
+		return heartSprite;
 	}
+
+	private final Rectangle2D blueBagSprite = rect(488, 199, 8, 8);
 
 	public Rectangle2D blueBagSprite() {
-		return rect(488, 199, 8, 8);
+		return blueBagSprite;
 	}
+
+	private final Rectangle2D juniorPacSprite = rect(509, 200, 8, 8);
 
 	public Rectangle2D juniorPacSprite() {
-		return rect(509, 200, 8, 8);
+		return juniorPacSprite;
 	}
 
-	private Rectangle2D[] clapperboardSprites;
+	private final Rectangle2D[] clapperboardSprites = array(
+		rect(456, 208, 32, 32),  // open
+		rect(488, 208, 32, 32),  // middle
+		rect(520, 208, 32, 32)); // closed
 
 	public Rectangle2D[] clapperboardSprites() {
-		if (clapperboardSprites == null) {
-			clapperboardSprites = array( //
-					rect(456, 208, 32, 32), // open
-					rect(488, 208, 32, 32), // middle
-					rect(520, 208, 32, 32)); // closed
-		}
 		return clapperboardSprites;
 	}
 
 	public SpriteAnimation createStorkFlyingAnimation() {
-		return SpriteAnimation.begin() //
-				.sprites(//
-						rect(489, 176, 32, 16), //
-						rect(521, 176, 32, 16)) //
-				.frameTicks(8) //
-				.loop() //
-				.end();
+		return SpriteAnimation.begin()
+			.sprites(rect(489, 176, 32, 16), rect(521, 176, 32, 16))
+			.frameTicks(8)
+			.loop()
+		.end();
 	}
 }

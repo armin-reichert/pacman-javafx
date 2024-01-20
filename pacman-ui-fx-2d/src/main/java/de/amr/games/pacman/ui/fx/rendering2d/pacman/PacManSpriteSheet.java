@@ -38,7 +38,11 @@ public class PacManSpriteSheet implements SpriteSheet {
 
 	public Rectangle2D[] ghostNumberSprites() {
 		if (ghostNumberSprites == null) {
-			ghostNumberSprites = array(rect(0, 132, 16, 8), rect(16, 132, 16, 8), rect(32, 132, 16, 8), rect(48, 132, 16, 8));
+			ghostNumberSprites = array(
+				rect( 0, 132, 16, 8),
+				rect(16, 132, 16, 8),
+				rect(32, 132, 16, 8),
+				rect(48, 132, 16, 8));
 		}
 		return ghostNumberSprites;
 	}
@@ -49,7 +53,7 @@ public class PacManSpriteSheet implements SpriteSheet {
 
 	public Rectangle2D bonusValueSprite(int symbol) {
 		return switch (symbol) {
-			case 0 -> rect(0, 148, 16, 8);  //  100
+			case 0 -> rect( 0, 148, 16, 8); //  100
 			case 1 -> rect(16, 148, 16, 8); //  300
 			case 2 -> rect(32, 148, 16, 8); //  500
 			case 3 -> rect(48, 148, 16, 8); //  700
@@ -139,7 +143,10 @@ public class PacManSpriteSheet implements SpriteSheet {
 	// Pac-Man specific:
 
 	public Rectangle2D[] bigPacManSprites() {
-		return array(rect(32, 16, 32, 32), rect(64, 16, 32, 32), rect(96, 16, 32, 32));
+		return array(
+			rect(32, 16, 32, 32),
+			rect(64, 16, 32, 32),
+			rect(96, 16, 32, 32));
 	}
 
 	public Rectangle2D[] blinkyDamagedSprites() {
