@@ -18,29 +18,29 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class PacManPacAnimations extends SpriteAnimations {
 
 	private final Pac pac;
-	private final PacManSpriteSheet spritesheet;
+	private final PacManSpriteSheet spriteSheet;
 
-	public PacManPacAnimations(Pac pac, PacManSpriteSheet spritesheet) {
+	public PacManPacAnimations(Pac pac, PacManSpriteSheet spriteSheet) {
 		checkNotNull(pac);
-		checkNotNull(spritesheet);
+		checkNotNull(spriteSheet);
 		this.pac = pac;
-		this.spritesheet = spritesheet;
+		this.spriteSheet = spriteSheet;
 
 		var munching = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.pacMunchingSprites(Direction.LEFT))
+				.sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
 				.loop()
 			.end();
 		
 		var dying = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.pacDyingSprites())
+				.sprites(spriteSheet.pacDyingSprites())
 				.frameTicks(8)
 			.end();
 		
 		var bigPacMan = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.bigPacManSprites())
+				.sprites(spriteSheet.bigPacManSprites())
 				.frameTicks(3)
 				.loop()
 			.end();
@@ -53,7 +53,7 @@ public class PacManPacAnimations extends SpriteAnimations {
 	@Override
 	public void updateCurrentAnimation() {
 		if (PacAnimations.MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.pacMunchingSprites(pac.moveDir()));
+			currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
 		}
 	}
 }
