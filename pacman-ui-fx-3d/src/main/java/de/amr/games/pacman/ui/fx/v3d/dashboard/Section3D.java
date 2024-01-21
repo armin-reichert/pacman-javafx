@@ -61,7 +61,8 @@ public class Section3D extends Section {
 		sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
 		sliderWallThickness.setValue(PY_3D_WALL_THICKNESS.get());
 
-		sliderPiPSceneHeight.valueProperty().bindBidirectional(PY_PIP_HEIGHT);
+		//sliderPiPSceneHeight.valueProperty().bindBidirectional(PY_PIP_HEIGHT);
+		sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set(sliderPiPSceneHeight.getValue()));
 		sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY);
 		sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
 		sliderWallThickness.valueProperty().bindBidirectional(PY_3D_WALL_THICKNESS);
