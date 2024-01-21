@@ -89,11 +89,6 @@ public class GamePage implements Page {
 		layers.borderProperty().bind(debugBorderBinding(Color.RED, 3));
 		gameSceneLayer.borderProperty().bind(debugBorderBinding(Color.YELLOW, 3));
 		popupLayer.borderProperty().bind(debugBorderBinding(Color.GREENYELLOW, 3));
-
-		// listen to game scene changes
-		ui.gameScenePy.addListener((obj, ov, newGameScene) -> {
-			onGameSceneChanged(newGameScene);
-		});
 	}
 
 	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
@@ -177,7 +172,7 @@ public class GamePage implements Page {
 				canvas.getWidth(), canvas.getHeight(), borderWidth);
 	}
 
-	protected void onGameSceneChanged(GameScene newGameScene) {
+	public void onGameSceneChanged(GameScene newGameScene) {
 		var config = sceneContext.sceneConfig();
 		// if play scene gets active/inactive, add/remove key handler
 		if (GameController.it().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {

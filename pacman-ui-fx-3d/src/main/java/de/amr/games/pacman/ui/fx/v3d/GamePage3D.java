@@ -60,7 +60,7 @@ public class GamePage3D extends GamePage {
 	}
 
 	@Override
-	protected void onGameSceneChanged(GameScene newGameScene) {
+	public void onGameSceneChanged(GameScene newGameScene) {
 		//TODO this code is too difficult to understand, simplify
 		if (isCurrentGameScene3D()) {
 			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {

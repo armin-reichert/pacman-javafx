@@ -71,6 +71,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 				}
 			})
 		);
+		gameScenePy.addListener((obj, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
 		return page;
 	}
 
