@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.media.AudioClip;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -20,6 +21,10 @@ import java.util.Optional;
 public interface GameSceneContext {
 
   ActionHandler actionHandler();
+
+  Optional<GameScene> currentGameScene();
+
+  Map<String, GameScene> sceneConfig();
 
   Theme theme();
 

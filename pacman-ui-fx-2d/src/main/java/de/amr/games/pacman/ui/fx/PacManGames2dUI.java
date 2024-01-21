@@ -51,7 +51,7 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
  * 
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSceneContext {
+public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler {
 
 	protected final GameClock clock;
 	protected final Map<GameVariant, Map<String, GameScene>> gameScenes = new EnumMap<>(GameVariant.class);
@@ -240,11 +240,21 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		Logger.trace("Game scene changed to {}", gameScenePy.get());
 	}
 
-	// GameSceneContext
+	// GameSceneContext interface implementation
 
 	@Override
 	public ActionHandler actionHandler() {
 		return this;
+	}
+
+	@Override
+	public Optional<GameScene> currentGameScene() {
+		return Optional.ofNullable(gameScenePy.get());
+	}
+
+	@Override
+	public Map<String, GameScene> sceneConfig() {
+		return gameScenes.get(gameVariant());
 	}
 
 	@Override
@@ -275,15 +285,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		return clock;
 	}
 
-	public Optional<GameScene> currentGameScene() {
-		return Optional.ofNullable(gameScenePy.get());
-	}
 
-	public Map<String, GameScene> sceneConfig() {
-		return gameScenes.get(gameVariant());
-	}
-
-	// GameEventListener implementation part
+	// GameEventListener interface implementation
 
 	@Override
 	public void onGameEvent(GameEvent e) {
@@ -327,7 +330,8 @@ public class PacManGames2dUI implements GameEventListener, ActionHandler, GameSc
 		updateOrReloadGameScene(true);
 	}
 
-	// ActionHandler implementation part
+
+	// ActionHandler interface implementation
 
 	@Override
 	public void showFlashMessage(String message, Object... args) {
