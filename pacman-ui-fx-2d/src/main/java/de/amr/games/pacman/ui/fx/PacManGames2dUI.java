@@ -159,10 +159,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected GamePage createGamePage(Theme theme) {
-		var gamePage = new GamePage(this, theme);
-		gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
-		gameScenePy.addListener((obj, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
-		return gamePage;
+		var page = new GamePage(this, this, theme);
+		page.setSize(mainScene.getWidth(), mainScene.getHeight());
+		gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
+		return page;
 	}
 
 	public void showStartPage() {

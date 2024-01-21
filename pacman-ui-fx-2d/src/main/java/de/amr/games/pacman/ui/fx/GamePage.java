@@ -61,9 +61,9 @@ public class GamePage implements Page {
 
 	protected double scaling = 1.0;
 
-	public GamePage(PacManGames2dUI ui, Theme theme) {
-		this.sceneContext = ui;
-		this.actionHandler = ui;
+	public GamePage(GameSceneContext sceneContext, ActionHandler actionHandler, Theme theme) {
+		this.sceneContext = sceneContext;
+		this.actionHandler = actionHandler;
 		this.theme = theme;
 
 		gameSceneLayer.setBackground(theme.background("wallpaper.background"));
@@ -82,8 +82,6 @@ public class GamePage implements Page {
 		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
 
 		layers.setOnKeyPressed(this::handleKeyPressed);
-		//popupLayer.setOnMouseClicked(this::handleMouseClick);
-		//new PacMouseSteering(this, popupLayer, () -> ui.game().level().map(GameLevel::pac).orElse(null));
 
 		// debug border decoration
 		layers.borderProperty().bind(debugBorderBinding(Color.RED, 3));
