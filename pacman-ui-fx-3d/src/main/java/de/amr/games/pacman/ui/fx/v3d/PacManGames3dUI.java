@@ -39,6 +39,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		super(stage, settings, theme);
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
 		PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
+		gamePage().dashboard().init(this);
 	}
 
 	@Override

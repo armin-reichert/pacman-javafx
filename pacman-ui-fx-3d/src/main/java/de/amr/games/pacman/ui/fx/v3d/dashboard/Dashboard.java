@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,16 +29,20 @@ public class Dashboard extends VBox {
 
 	private final List<Section> sections = new ArrayList<>();
 
-	public Dashboard(PacManGames3dUI ui) {
-		sections.add(new SectionGeneral(ui, "General"));
-		sections.add(new SectionKeys(ui, "Keyboard Shortcuts"));
-		sections.add(new SectionAppearance(ui, "Appearance"));
-		sections.add(new Section3D(ui, "3D Settings"));
-		sections.add(new SectionGameControl(ui, "Game Control"));
-		sections.add(new SectionGameInfo(ui, "Game Info"));
-		sections.add(new SectionGhostsInfo(ui, "Ghosts Info"));
-		sections.add(new SectionAbout(ui, "About"));
+	public Dashboard(Theme theme) {
+		sections.add(new SectionGeneral(theme, "General"));
+		sections.add(new SectionKeys(theme, "Keyboard Shortcuts"));
+		sections.add(new SectionAppearance(theme, "Appearance"));
+		sections.add(new Section3D(theme, "3D Settings"));
+		sections.add(new SectionGameControl(theme, "Game Control"));
+		sections.add(new SectionGameInfo(theme, "Game Info"));
+		sections.add(new SectionGhostsInfo(theme, "Ghosts Info"));
+		sections.add(new SectionAbout(theme, "About"));
 		sections().map(Section::getRoot).forEach(getChildren()::add);
+	}
+
+	public void init(PacManGames3dUI ui) {
+		sections.forEach(section -> section.init(ui));
 	}
 
 	public Stream<Section> sections() {

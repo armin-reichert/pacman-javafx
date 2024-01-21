@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
@@ -17,10 +18,10 @@ import javafx.scene.text.TextFlow;
  */
 public class SectionAbout extends Section {
 
-	public SectionAbout(PacManGames3dUI ui, String title) {
-		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+	public SectionAbout(Theme theme, String title) {
+		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
-		var theAuthorInYoungerYears = new ImageView(ui.theme().image("image.armin1970"));
+		var theAuthorInYoungerYears = new ImageView(theme.image("image.armin1970"));
 		theAuthorInYoungerYears.setFitWidth(286);
 		theAuthorInYoungerYears.setPreserveRatio(true);
 
@@ -29,7 +30,7 @@ public class SectionAbout extends Section {
 		madeBy.setFill(Color.grayRgb(150));
 
 		var signature = new Text("Armin Reichert");
-		var font = ui.theme().font("font.handwriting", 18);
+		var font = theme.font("font.handwriting", 18);
 		signature.setFont(font);
 		signature.setFill(Color.grayRgb(225));
 

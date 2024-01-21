@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
@@ -21,8 +22,8 @@ public class SectionAppearance extends Section {
 	private final ComboBox<String> comboFloorTexture;
 	private final CheckBox cbFloorTextureRandom;
 
-	public SectionAppearance(PacManGames3dUI ui, String title) {
-		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+	public SectionAppearance(Theme theme, String title) {
+		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		pickerLightColor = addColorPicker("Light Color", PacManGames3dApp.PY_3D_LIGHT_COLOR.get());
 		pickerLightColor.setOnAction(e -> PacManGames3dApp.PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
 		pickerFloorColor = addColorPicker("Floor Color", PacManGames3dApp.PY_3D_FLOOR_COLOR.get());

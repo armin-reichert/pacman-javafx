@@ -8,7 +8,8 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.PacManGames2dUI;
+import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -37,8 +38,8 @@ public class SectionGameControl extends Section {
 	private CheckBox cbAutopilot;
 	private CheckBox cbImmunity;
 
-	public SectionGameControl(PacManGames2dUI ui, String title) {
-		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+	public SectionGameControl(Theme theme, String title) {
+		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboGameVariant.setOnAction(e -> {
@@ -52,22 +53,25 @@ public class SectionGameControl extends Section {
 		comboInitialLives.setOnAction(e -> game().setInitialLives((comboInitialLives.getValue().shortValue())));
 
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
+		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
+		spGameLevel = addSpinner("Level", 1, 100, 1);
+		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, GameController.it().credit());
+		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> GameController.it().setCredit(newVal.intValue()));
+		cbAutopilot = addCheckBox("Autopilot", null);
+		cbImmunity = addCheckBox("Player immune", null);
+	}
+
+	@Override
+	public void init(PacManGames3dUI ui) {
+		super.init(ui);
+		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> ui.startCutscenesTest());
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> ui.restartIntro());
 		blGameLevel[GAME_LEVEL_START].setOnAction(e -> GameController.it().startPlaying());
 		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> ui.restartIntro());
 		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> GameController.it().cheatEnterNextLevel());
-
-		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
-		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> ui.startCutscenesTest());
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> ui.restartIntro());
-
-		spGameLevel = addSpinner("Level", 1, 100, 1);
 		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> ui.enterLevel(newVal.intValue()));
-
-		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, GameController.it().credit());
-		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> GameController.it().setCredit(newVal.intValue()));
-
-		cbAutopilot = addCheckBox("Autopilot", ui::toggleAutopilot);
-		cbImmunity = addCheckBox("Player immune", ui::toggleImmunity);
+		cbAutopilot.setOnAction(e -> ui.toggleAutopilot());
+		cbImmunity.setOnAction(e -> ui.toggleImmunity());
 	}
 
 	@Override

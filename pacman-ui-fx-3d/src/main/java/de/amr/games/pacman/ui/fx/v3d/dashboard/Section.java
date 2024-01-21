@@ -9,7 +9,11 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -36,7 +40,7 @@ public abstract class Section {
 		return String.format("%.2f px/sec", GameModel.SPEED_PX_100_PERCENT * fraction);
 	}
 
-	protected final PacManGames2dUI ui;
+	protected final Theme theme;
 	protected final List<InfoText> infoTexts = new ArrayList<>();
 	protected final TitledPane root = new TitledPane();
 	protected final GridPane content = new GridPane();
@@ -48,9 +52,11 @@ public abstract class Section {
 
 	private int row;
 
-	protected Section(PacManGames2dUI ui, String title, int minLabelWidth, Color textColor, Font textFont,
-			Font labelFont) {
-		this.ui = ui;
+	protected GameSceneContext sceneContext;
+	protected ActionHandler3D actionHandler;
+
+	protected Section(Theme theme, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
+		this.theme = theme;
 		this.minLabelWidth = minLabelWidth;
 		this.textColor = textColor;
 		this.textFont = textFont;
@@ -66,6 +72,11 @@ public abstract class Section {
 		root.setContent(content);
 	}
 
+	public void init(PacManGames3dUI ui) {
+		this.sceneContext = ui;
+		this.actionHandler =ui;
+	}
+
 	public TitledPane getRoot() {
 		return root;
 	}
@@ -79,7 +90,7 @@ public abstract class Section {
 	}
 
 	protected GameScene gameScene() {
-		return ui.currentGameScene().get();
+		return sceneContext.currentGameScene().get();
 	}
 
 	protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
@@ -142,7 +153,9 @@ public abstract class Section {
 		CheckBox cb = new CheckBox();
 		cb.setTextFill(textColor);
 		cb.setFont(textFont);
-		cb.setOnAction(e -> callback.run());
+		if (callback != null) {
+			cb.setOnAction(e -> callback.run());
+		}
 		addRow(labelText, cb);
 		return cb;
 	}

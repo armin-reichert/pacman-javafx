@@ -40,7 +40,7 @@ public class GamePage3D extends GamePage {
 		pip.heightPy.bind(PacManGames3dApp.PY_PIP_HEIGHT);
 		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
 
-		dashboard = new Dashboard(ui);
+		dashboard = new Dashboard(ui.theme());
 		dashboard.setVisible(false);
 
 		contextMenu = new GamePageContextMenu();
@@ -52,6 +52,10 @@ public class GamePage3D extends GamePage {
 
 	public GamePageContextMenu contextMenu() {
 		return contextMenu;
+	}
+
+	public Dashboard dashboard() {
+		return dashboard;
 	}
 
 	@Override

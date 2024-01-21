@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 
@@ -16,8 +17,8 @@ import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
  */
 public class SectionKeys extends Section {
 
-	public SectionKeys(PacManGames3dUI ui, String title) {
-		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+	public SectionKeys(Theme theme, String title) {
+		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		addInfo("F1", "Dashboard On/Off");
 		addInfo("F2", "PiP View On/Off");
 		addInfo("F3", "Reboot");

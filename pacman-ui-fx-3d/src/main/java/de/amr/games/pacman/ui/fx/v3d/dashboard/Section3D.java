@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
@@ -31,8 +32,8 @@ public class Section3D extends Section {
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
 
-	public Section3D(PacManGames3dUI ui, String title) {
-		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+	public Section3D(Theme theme, String title) {
+		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		comboPerspective.setOnAction(e -> PacManGames3dApp.PY_3D_PERSPECTIVE.set(comboPerspective.getValue()));
 		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
@@ -53,7 +54,13 @@ public class Section3D extends Section {
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(PacManGames3dApp.PY_3D_ENERGIZER_EXPLODES));
 		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(PacManGames3dApp.PY_3D_PAC_LIGHT_ENABLED));
 		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(PacManGames3dApp.PY_3D_AXES_VISIBLE));
-		cbWireframeMode = addCheckBox("Wireframe Mode", ui::toggleDrawMode);
+		cbWireframeMode = addCheckBox("Wireframe Mode", null);
+	}
+
+	@Override
+	public void init(PacManGames3dUI ui) {
+		super.init(ui);
+		cbWireframeMode.setOnAction(e -> ui.toggleDrawMode());
 	}
 
 	@Override

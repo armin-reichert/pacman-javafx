@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
@@ -17,8 +18,8 @@ import static de.amr.games.pacman.lib.TickTimer.ticksToString;
  */
 public class SectionGameInfo extends Section {
 
-	public SectionGameInfo(PacManGames3dUI ui, String title) {
-		super(ui, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+	public SectionGameInfo(Theme theme, String title) {
+		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
 		//addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().root().getWidth(), gameScene().root().getHeight()));
