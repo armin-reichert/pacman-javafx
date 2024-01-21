@@ -21,8 +21,8 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
  */
 public class SectionGeneral extends Section {
 
-	public static final int MIN_FRAMERATE = 5;
-	public static final int MAX_FRAMERATE = 120;
+	public static final int MIN_FRAME_RATE = 5;
+	public static final int MAX_FRAME_RATE = 120;
 
 	private final Button[] buttonsSimulation;
 	private final Spinner<Integer> spinnerSimulationSteps;
@@ -59,10 +59,9 @@ public class SectionGeneral extends Section {
 		btnStep.setTooltip(tooltipStep);
 
 		spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS.get());
-		spinnerSimulationSteps.valueProperty()
-				.addListener((obs, oldVal, newVal) -> PY_SIMULATION_STEPS.set(newVal.intValue()));
+		spinnerSimulationSteps.valueProperty().addListener((obs, oldVal, newVal) -> PY_SIMULATION_STEPS.set(newVal));
 
-		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAMERATE, MAX_FRAMERATE, 60);
+		sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
 		sliderTargetFPS.setShowTickLabels(false);
 		sliderTargetFPS.setShowTickMarks(false);
 
