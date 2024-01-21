@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui.fx.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
@@ -33,16 +34,16 @@ public class GamePage3D extends GamePage {
 	private final Dashboard dashboard;
 	private final GamePageContextMenu contextMenu;
 
-	public GamePage3D(PacManGames3dUI ui) {
-		super(ui, ui);
+	public GamePage3D(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
+		super(sceneContext, actionHandler);
 
 		pip = new PictureInPicture();
-		pip.gameScene().setContext(ui);
-		pip.opacityPy.bind(PacManGames3dApp.PY_PIP_OPACITY);
-		pip.heightPy.bind(PacManGames3dApp.PY_PIP_HEIGHT);
+		pip.gameScene().setContext(sceneContext);
+		pip.opacityPy.bind(PY_PIP_OPACITY);
+		pip.heightPy.bind(PY_PIP_HEIGHT);
 		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
 
-		dashboard = new Dashboard(ui.theme());
+		dashboard = new Dashboard(sceneContext.theme());
 		dashboard.setVisible(false);
 
 		contextMenu = new GamePageContextMenu();

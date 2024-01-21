@@ -59,7 +59,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected GamePage3D createGamePage() {
-		var page = new GamePage3D(this);
+		var page = new GamePage3D(this, this);
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		// register event handler for opening page context menu
 		mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
