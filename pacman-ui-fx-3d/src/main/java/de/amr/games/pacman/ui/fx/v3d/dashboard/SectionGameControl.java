@@ -29,34 +29,24 @@ public class SectionGameControl extends Section {
 	private static final int INTERMISSION_TEST_START = 0;
 	private static final int INTERMISSION_TEST_QUIT = 1;
 
-	private ComboBox<GameVariant> comboGameVariant;
-	private ComboBox<Integer> comboInitialLives;
-	private Button[] blGameLevel;
-	private Button[] blIntermissionTest;
-	private Spinner<Integer> spGameLevel;
-	private Spinner<Integer> spGameCredit;
-	private CheckBox cbAutopilot;
-	private CheckBox cbImmunity;
+	private final ComboBox<GameVariant> comboGameVariant;
+	private final ComboBox<Integer> comboInitialLives;
+	private final Button[] buttonsGameLevel;
+	private final Button[] buttonsIntermissionTest;
+	private final Spinner<Integer> spinnerGameLevel;
+	private final Spinner<Integer> spinnerGameCredit;
+	private final CheckBox cbAutopilot;
+	private final CheckBox cbImmunity;
 
 	public SectionGameControl(Theme theme, String title) {
 		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
-		comboGameVariant.setOnAction(e -> {
-			var selectedVariant = comboGameVariant.getValue();
-			if (selectedVariant != game().variant()) {
-				sceneContext.gameController().startNewGame(selectedVariant);
-			}
-		});
-
 		comboInitialLives = addComboBox("Initial Lives", 3, 5);
-		comboInitialLives.setOnAction(e -> game().setInitialLives((comboInitialLives.getValue().shortValue())));
-
-		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
-		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
-		spGameLevel = addSpinner("Level", 1, 100, 1);
-		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, sceneContext.gameController().credit());
-		spGameCredit.valueProperty().addListener((py, ov, nv) -> sceneContext.gameController().setCredit(nv.intValue()));
+		buttonsGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
+		buttonsIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
+		spinnerGameLevel = addSpinner("Level", 1, 100, 1);
+		spinnerGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, 0);
 		cbAutopilot = addCheckBox("Autopilot");
 		cbImmunity = addCheckBox("Player immune");
 	}
@@ -65,12 +55,22 @@ public class SectionGameControl extends Section {
 	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
 		super.init(sceneContext, actionHandler);
 
-		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> actionHandler.startCutscenesTest());
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> actionHandler.restartIntro());
-		blGameLevel[GAME_LEVEL_START].setOnAction(e -> sceneContext.gameController().startPlaying());
-		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler.restartIntro());
-		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.gameController().cheatEnterNextLevel());
-		spGameLevel.valueProperty().addListener((py, ov, nv) -> actionHandler.enterLevel(nv.intValue()));
+		comboGameVariant.setOnAction(e -> {
+			var selectedVariant = comboGameVariant.getValue();
+			if (selectedVariant != game().variant()) {
+				sceneContext.gameController().startNewGame(selectedVariant);
+			}
+		});
+		buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> actionHandler.startCutscenesTest());
+		buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> actionHandler.restartIntro());
+		comboInitialLives.setOnAction(e -> game().setInitialLives((comboInitialLives.getValue().shortValue())));
+		buttonsGameLevel[GAME_LEVEL_START].setOnAction(e -> sceneContext.gameController().startPlaying());
+		buttonsGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler.restartIntro());
+		buttonsGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.gameController().cheatEnterNextLevel());
+		spinnerGameLevel.valueProperty().addListener((py, ov, nv) -> actionHandler.enterLevel(nv));
+		spinnerGameLevel.getValueFactory().setValue(sceneContext.gameLevel().isPresent() ? sceneContext.gameLevel().get().number() : 1);
+		spinnerGameCredit.valueProperty().addListener((py, ov, nv) -> sceneContext.gameController().setCredit(nv));
+		spinnerGameCredit.getValueFactory().setValue(sceneContext.gameController().credit());
 		cbAutopilot.setOnAction(e -> actionHandler.toggleAutopilot());
 		cbImmunity.setOnAction(e -> actionHandler.toggleImmunity());
 	}
@@ -84,23 +84,23 @@ public class SectionGameControl extends Section {
 		comboInitialLives.setValue((int) game().initialLives());
 		cbAutopilot.setSelected(sceneContext.gameController().isAutoControlled());
 		cbImmunity.setSelected(sceneContext.gameController().isImmune());
-		blGameLevel[GAME_LEVEL_START].setDisable(!(sceneContext.gameController().hasCredit() && game().level().isEmpty()));
-		blGameLevel[GAME_LEVEL_QUIT].setDisable(game().level().isEmpty());
-		blGameLevel[GAME_LEVEL_NEXT].setDisable(!game().isPlaying() ||
+		buttonsGameLevel[GAME_LEVEL_START].setDisable(!(sceneContext.gameController().hasCredit() && game().level().isEmpty()));
+		buttonsGameLevel[GAME_LEVEL_QUIT].setDisable(game().level().isEmpty());
+		buttonsGameLevel[GAME_LEVEL_NEXT].setDisable(!game().isPlaying() ||
 			(  sceneContext.gameState() != GameState.HUNTING
 			&& sceneContext.gameState() != GameState.READY
 			&& sceneContext.gameState() != GameState.CHANGING_TO_NEXT_LEVEL));
-		blIntermissionTest[INTERMISSION_TEST_START].setDisable(
+		buttonsIntermissionTest[INTERMISSION_TEST_START].setDisable(
 			sceneContext.gameState() == GameState.INTERMISSION_TEST || sceneContext.gameState() != GameState.INTRO);
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
-		game().level().ifPresent(level -> spGameLevel.getValueFactory().setValue(level.number()));
+		buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
+		game().level().ifPresent(level -> spinnerGameLevel.getValueFactory().setValue(level.number()));
 		if (!game().isPlaying() || sceneContext.gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
-			spGameLevel.setDisable(true);
+			spinnerGameLevel.setDisable(true);
 		} else {
-			spGameLevel.setDisable(sceneContext.gameState() != GameState.READY
+			spinnerGameLevel.setDisable(sceneContext.gameState() != GameState.READY
 				&& sceneContext.gameState() != GameState.HUNTING
 				&& sceneContext.gameState() != GameState.CHANGING_TO_NEXT_LEVEL);
 		}
-		spGameCredit.getValueFactory().setValue(sceneContext.gameController().credit());
+		spinnerGameCredit.getValueFactory().setValue(sceneContext.gameController().credit());
 	}
 }
