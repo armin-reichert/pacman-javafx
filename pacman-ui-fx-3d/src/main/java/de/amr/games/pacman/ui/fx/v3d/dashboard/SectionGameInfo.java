@@ -17,7 +17,7 @@ import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 public class SectionGameInfo extends Section {
 
 	public SectionGameInfo(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 
 		addInfo("Game Scene", () -> sceneContext.currentGameScene().isPresent()
 			? sceneContext.currentGameScene().get().getClass().getSimpleName() : "n/a");

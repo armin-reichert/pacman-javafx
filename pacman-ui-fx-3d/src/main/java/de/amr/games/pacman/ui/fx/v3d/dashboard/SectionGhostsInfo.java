@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class SectionGhostsInfo extends Section {
 
 	public SectionGhostsInfo(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 		addGhostInfo(GameModel.RED_GHOST);
 		addEmptyLine();
 		addGhostInfo(GameModel.PINK_GHOST);
@@ -57,12 +57,10 @@ public class SectionGhostsInfo extends Section {
 	}
 
 	private String ghostAnimation(GameLevel level, Ghost ghost) {
-		var anims = ghost.animations();
-		if (anims.isEmpty()) {
+		if (ghost.animations().isEmpty()) {
 			return InfoText.NO_INFO;
 		}
-
-		var key = anims.get().currentAnimationName();
+		var key = ghost.animations().get().currentAnimationName();
 		return key != null ? key : InfoText.NO_INFO;
 	}
 

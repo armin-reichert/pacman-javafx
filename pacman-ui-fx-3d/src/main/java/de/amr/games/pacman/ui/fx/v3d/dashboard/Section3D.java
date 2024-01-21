@@ -36,7 +36,7 @@ public class Section3D extends Section {
 	private final CheckBox cbWireframeMode;
 
 	public Section3D(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
 		addInfo("Camera", () -> isCurrentGameScene3D() ? ((PlayScene3D)sceneContext.currentGameScene().get()).camInfo() : "")

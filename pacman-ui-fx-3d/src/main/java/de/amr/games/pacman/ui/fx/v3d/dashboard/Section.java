@@ -53,6 +53,10 @@ public abstract class Section {
 	protected GameSceneContext sceneContext;
 	protected ActionHandler3D actionHandler;
 
+	protected Section(Theme theme, String title) {
+		this(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+	}
+
 	protected Section(Theme theme, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
 		this.theme = theme;
 		this.minLabelWidth = minLabelWidth;

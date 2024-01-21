@@ -17,7 +17,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 public class SectionKeys extends Section {
 
 	public SectionKeys(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 
 		addInfo("F1", "Dashboard On/Off");
 		addInfo("F2", "Picture-in-Picture");
@@ -36,9 +36,9 @@ public class SectionKeys extends Section {
 		addInfo("Alt+Z", "Play Cut-Scenes")
 			.available(() -> sceneContext.gameState() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> PY_3D_PERSPECTIVE.get().prev().name())
-			.available(() -> isCurrentGameScene3D());
+			.available(this::isCurrentGameScene3D);
 		addInfo("Alt+RIGHT", () -> PY_3D_PERSPECTIVE.get().next().name())
-			.available(() -> isCurrentGameScene3D());
+			.available(this::isCurrentGameScene3D);
 		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
 		addInfo("SHIFT+P/SPACE", "Single Step");

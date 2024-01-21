@@ -39,7 +39,7 @@ public class SectionGameControl extends Section {
 	private final CheckBox cbImmunity;
 
 	public SectionGameControl(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 
 		comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
 		comboInitialLives = addComboBox("Initial Lives", 3, 5);

@@ -18,7 +18,7 @@ import javafx.scene.text.TextFlow;
 public class SectionAbout extends Section {
 
 	public SectionAbout(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 
 		var theAuthorInYoungerYears = new ImageView(theme.image("image.armin1970"));
 		theAuthorInYoungerYears.setFitWidth(286);

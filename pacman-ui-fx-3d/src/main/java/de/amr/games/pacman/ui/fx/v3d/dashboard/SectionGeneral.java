@@ -39,7 +39,7 @@ public class SectionGeneral extends Section {
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
 	public SectionGeneral(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 
 		iconPlay = new ImageView(theme.image("icon.play"));
 		iconStop = new ImageView(theme.image("icon.stop"));

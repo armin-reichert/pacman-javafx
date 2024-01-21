@@ -22,7 +22,7 @@ public class SectionAppearance extends Section {
 	private final CheckBox cbFloorTextureRandom;
 
 	public SectionAppearance(Theme theme, String title) {
-		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+		super(theme, title);
 		pickerLightColor = addColorPicker("Light Color", PacManGames3dApp.PY_3D_LIGHT_COLOR.get());
 		pickerLightColor.setOnAction(e -> PacManGames3dApp.PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
 		pickerFloorColor = addColorPicker("Floor Color", PacManGames3dApp.PY_3D_FLOOR_COLOR.get());
