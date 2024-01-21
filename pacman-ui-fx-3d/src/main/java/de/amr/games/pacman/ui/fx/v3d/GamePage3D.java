@@ -35,23 +35,19 @@ public class GamePage3D extends GamePage {
 		super(ui, ui);
 
 		pip = new PictureInPicture();
+		pip.gameScene().setContext(ui);
 		pip.opacityPy.bind(PacManGames3dApp.PY_PIP_OPACITY);
 		pip.heightPy.bind(PacManGames3dApp.PY_PIP_HEIGHT);
-		ui.gameScenePy.addListener((obj, ov, newGameScene) -> {
-			if (newGameScene == ui.sceneConfig().get("play3D")) {
-				pip.setGameSceneContext(newGameScene.context());
-			}
-		});
 		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
 
 		dashboard = new Dashboard(ui);
 		dashboard.setVisible(false);
 
+		contextMenu = new GamePageContextMenu();
+
 		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
 		topLayer.setRight(pip.root());
-
-		contextMenu = new GamePageContextMenu();
 	}
 
 	public GamePageContextMenu contextMenu() {

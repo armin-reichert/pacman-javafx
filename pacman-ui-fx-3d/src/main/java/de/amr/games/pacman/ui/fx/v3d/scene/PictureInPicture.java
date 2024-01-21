@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.PacManGames2dApp;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import javafx.beans.property.DoubleProperty;
@@ -45,8 +45,8 @@ public class PictureInPicture {
 		playScene2D.root().setVisible(false);
 	}
 
-	public void setGameSceneContext(GameSceneContext context) {
-		playScene2D.setContext(context);
+	public GameScene gameScene() {
+		return playScene2D;
 	}
 
 	public Node root() {
