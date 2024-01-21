@@ -88,9 +88,8 @@ public class GamePage implements Page {
 	}
 
 	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
-		return Bindings.createObjectBinding(() -> PY_SHOW_DEBUG_INFO.get()
-				&& sceneContext.currentGameScene().isPresent() && !sceneContext.currentGameScene().get().is3D() ?
-				ResourceManager.border(color, width) : null, PY_SHOW_DEBUG_INFO);
+		return Bindings.createObjectBinding(() -> PY_SHOW_DEBUG_INFO.get() ?
+			ResourceManager.border(color, width) : null, PY_SHOW_DEBUG_INFO);
 	}
 
 	protected void updateHelpButton() {

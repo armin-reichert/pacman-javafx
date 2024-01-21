@@ -36,9 +36,9 @@ public class SectionKeys extends Section {
 		addInfo("Alt+Z", "Play Cut-Scenes")
 			.available(() -> sceneContext.gameState() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> PY_3D_PERSPECTIVE.get().prev().name())
-			.available(() -> sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get().is3D());
+			.available(() -> isCurrentGameScene3D());
 		addInfo("Alt+RIGHT", () -> PY_3D_PERSPECTIVE.get().next().name())
-			.available(() -> sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get().is3D());
+			.available(() -> isCurrentGameScene3D());
 		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
 		addInfo("SHIFT+P/SPACE", "Single Step");

@@ -94,11 +94,6 @@ public abstract class GameScene2D implements GameScene {
 		return g != null ? g.getCanvas() : null;
 	}
 
-	@Override
-	public boolean is3D() {
-		return false;
-	}
-
 	public void draw() {
 		clearCanvas();
 		if (context == null) {

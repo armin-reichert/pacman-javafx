@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
+import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -117,7 +118,7 @@ public class GamePage3D extends GamePage {
 	}
 
 	private boolean isCurrentGameScene3D() {
-		return sceneContext.currentGameScene().map(GameScene::is3D).orElse(false);
+		return sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() instanceof PlayScene3D;
 	}
 
 	public void toggleDashboardVisible() {

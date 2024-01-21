@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
+import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -84,6 +85,11 @@ public abstract class Section {
 
 	protected GameModel game() {
 		return GameController.it().game();
+	}
+
+	protected boolean isCurrentGameScene3D() {
+		return sceneContext.currentGameScene().isPresent()
+			&& sceneContext.currentGameScene().get() instanceof PlayScene3D;
 	}
 
 	protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {

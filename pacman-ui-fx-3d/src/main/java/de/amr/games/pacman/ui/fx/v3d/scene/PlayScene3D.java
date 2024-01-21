@@ -213,11 +213,6 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	@Override
-	public boolean is3D() {
-		return true;
-	}
-
 	public String camInfo() {
 		var cam = fxSubScene.getCamera();
 		return "x=%.0f y=%.0f z=%.0f rot=%.0f".formatted(cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),

@@ -43,11 +43,6 @@ public interface GameScene extends GameEventListener {
 	Node root();
 
 	/**
-	 * @return if this is a scene with 3D content
-	 */
-	boolean is3D();
-
-	/**
 	 * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
 	 */
 	default void onSceneVariantSwitch() {
