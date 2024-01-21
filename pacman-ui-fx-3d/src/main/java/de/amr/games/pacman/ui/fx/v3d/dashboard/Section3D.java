@@ -39,18 +39,12 @@ public class Section3D extends Section {
 		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
-		comboPerspective.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspective.getValue()));
-		addInfo("Camera", () -> isCurrentGameScene3D()?
-			((PlayScene3D)sceneContext.currentGameScene().get()).camInfo() : "")
-			.available(() -> isCurrentGameScene3D());
+		addInfo("Camera", () -> isCurrentGameScene3D() ? ((PlayScene3D)sceneContext.currentGameScene().get()).camInfo() : "")
+				.available(this::isCurrentGameScene3D);
 		sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
-		sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set(nv.doubleValue()));
 		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, PY_PIP_OPACITY.get());
-		sliderPiPOpacity.valueProperty().addListener((py, ov, nv) -> PY_PIP_OPACITY.set(nv.doubleValue()));
 		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, PY_3D_WALL_HEIGHT.get());
-		sliderWallHeight.valueProperty().addListener((py, ov, nv) -> PY_3D_WALL_HEIGHT.set(nv.doubleValue()));
 		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, PY_3D_WALL_THICKNESS.get());
-		sliderWallThickness.valueProperty().addListener((py, ov, nv) -> PY_3D_WALL_THICKNESS.set(nv.doubleValue()));
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion");
 		cbPacLighted = addCheckBox("Pac-Man Lighted");
 		cbAxesVisible = addCheckBox("Show Axes");
@@ -60,6 +54,19 @@ public class Section3D extends Section {
 	@Override
 	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
 		super.init(sceneContext, actionHandler);
+
+		comboPerspective.setValue(PY_3D_PERSPECTIVE.get());
+		sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
+		sliderPiPOpacity.setValue(PY_PIP_OPACITY.get());
+		sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
+		sliderWallThickness.setValue(PY_3D_WALL_THICKNESS.get());
+
+		sliderPiPSceneHeight.valueProperty().bindBidirectional(PY_PIP_HEIGHT);
+		sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY);
+		sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
+		sliderWallThickness.valueProperty().bindBidirectional(PY_3D_WALL_THICKNESS);
+
+		comboPerspective.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspective.getValue()));
 		cbEnergizerExplodes.setOnAction(e -> Ufx.toggle(PY_3D_ENERGIZER_EXPLODES));
 		cbPacLighted.setOnAction(e -> Ufx.toggle(PY_3D_PAC_LIGHT_ENABLED));
 		cbAxesVisible.setOnAction(e -> Ufx.toggle(PY_3D_AXES_VISIBLE));
@@ -70,9 +77,6 @@ public class Section3D extends Section {
 	public void update() {
 		super.update();
 		comboPerspective.setValue(PY_3D_PERSPECTIVE.get());
-		sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
-		sliderPiPOpacity.setValue(PY_PIP_OPACITY.get());
-		sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
 		cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
 		cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
 		cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
