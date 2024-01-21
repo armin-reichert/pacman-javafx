@@ -68,9 +68,9 @@ public class PlayScene2D extends GameScene2D {
 		context.gameLevel().ifPresent(level -> {
 			if (context.gameVariant() == GameVariant.MS_PACMAN) {
 				int mazeNumber = context.game().mazeNumber(level.number());
-				drawMsPacManMaze(level, mazeNumber);
+				drawMsPacManMaze(level.world(), mazeNumber);
 			} else {
-				drawPacManMaze(level);
+				drawPacManMaze(level.world());
 			}
 			if (context.gameState() == GameState.LEVEL_TEST) {
 				drawText(String.format("TEST    L%d", level.number()),
@@ -94,17 +94,15 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	// TODO put all images into a single sprite sheet
-	private void drawPacManMaze(GameLevel level) {
-		var theme = context.theme();
-		var world = level.world();
+	private void drawPacManMaze(World world) {
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
 			var image = world.mazeFlashing().on()
-					? theme.image("pacman.flashingMaze")
-					: theme.image("pacman.emptyMaze");
+					? context.theme().image("pacman.flashingMaze")
+					: context.theme().image("pacman.emptyMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 		} else {
-			var image = theme.image("pacman.fullMaze");
+			var image = context.theme().image("pacman.fullMaze");
 			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
 			world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
 			if (world.energizerBlinking().off()) {
@@ -113,14 +111,12 @@ public class PlayScene2D extends GameScene2D {
 		}
 	}
 
-	private void drawMsPacManMaze(GameLevel level, int mazeNumber) {
-		var theme = context.theme();
-		var world = level.world();
+	private void drawMsPacManMaze(World world, int mazeNumber) {
 		double x = 0, y = t(3);
 		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
-				var source = theme.image("mspacman.flashingMazes");
+				var source = context.theme().image("mspacman.flashingMazes");
 				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
 				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
