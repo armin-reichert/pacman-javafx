@@ -48,7 +48,6 @@ public class GamePage implements Page {
 
 	protected final GameSceneContext sceneContext;
 	protected final ActionHandler actionHandler;
-	protected final Theme theme;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final StackPane layers = new StackPane();
 	protected final BorderPane gameSceneLayer = new BorderPane();
@@ -61,15 +60,14 @@ public class GamePage implements Page {
 
 	protected double scaling = 1.0;
 
-	public GamePage(GameSceneContext sceneContext, ActionHandler actionHandler, Theme theme) {
+	public GamePage(GameSceneContext sceneContext, ActionHandler actionHandler) {
 		this.sceneContext = sceneContext;
 		this.actionHandler = actionHandler;
-		this.theme = theme;
 
-		gameSceneLayer.setBackground(theme.background("wallpaper.background"));
+		gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
 
-		canvasContainer.setBackground(ResourceManager.coloredBackground(theme.color("canvas.background")));
+		canvasContainer.setBackground(ResourceManager.coloredBackground(sceneContext.theme().color("canvas.background")));
 		canvasContainer.setCenter(canvas);
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling, false));
 
@@ -97,7 +95,7 @@ public class GamePage implements Page {
 
 	protected void updateHelpButton() {
 		String key = sceneContext.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
-		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
+		helpButton.setImage(sceneContext.theme().image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
 		helpButton.setVisible(sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
@@ -194,7 +192,7 @@ public class GamePage implements Page {
 
 	protected void updateSignatureSizeAndPosition() {
 		signature.getText(0).setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		signature.getText(1).setFont((theme.font("font.handwriting", Math.floor(12 * scaling))));
+		signature.getText(1).setFont((sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling))));
 		if (sceneContext.game().variant() == GameVariant.MS_PACMAN) {
 			signature.root().setTranslateX(50 * scaling);
 			signature.root().setTranslateY(40 * scaling);
@@ -347,7 +345,7 @@ public class GamePage implements Page {
 	private Optional<Pane> currentHelpMenuContent() {
 		var gameState = GameController.it().state();
 		var game = GameController.it().game();
-		var menuFont = theme.font("font.monospaced", Math.max(6, 14 * scaling));
+		var menuFont = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 		if (gameState == GameState.INTRO) {
 			return Optional.of(menuIntro(menuFont));
 		}

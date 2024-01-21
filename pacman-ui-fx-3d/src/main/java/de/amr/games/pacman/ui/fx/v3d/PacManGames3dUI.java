@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
@@ -58,8 +57,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	}
 
 	@Override
-	protected GamePage3D createGamePage(Theme theme) {
-		var page = new GamePage3D(this, theme);
+	protected GamePage3D createGamePage() {
+		var page = new GamePage3D(this);
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		// register event handler for opening page context menu
 		mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->

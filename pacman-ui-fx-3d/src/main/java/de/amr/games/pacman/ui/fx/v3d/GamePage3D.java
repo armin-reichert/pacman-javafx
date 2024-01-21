@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import javafx.scene.input.KeyEvent;
@@ -32,8 +31,8 @@ public class GamePage3D extends GamePage {
 	private final Dashboard dashboard;
 	private final GamePageContextMenu contextMenu;
 
-	public GamePage3D(PacManGames3dUI ui, Theme theme) {
-		super(ui, theme);
+	public GamePage3D(PacManGames3dUI ui) {
+		super(ui, ui);
 
 		pip = new PictureInPicture();
 		pip.opacityPy.bind(PacManGames3dApp.PY_PIP_OPACITY);
@@ -87,10 +86,10 @@ public class GamePage3D extends GamePage {
 				var hour = LocalTime.now().getHour();
 				var isNight = hour >= 20 || hour <= 5;
 				var wallpaper = isNight? "model3D.wallpaper.night" : "model3D.wallpaper";
-				layers.setBackground(theme.background(wallpaper));
+				layers.setBackground(sceneContext.theme().background(wallpaper));
 			}
 		} else {
-			gameSceneLayer.setBackground(theme.background("wallpaper.background"));
+			gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 		}
 	}
 

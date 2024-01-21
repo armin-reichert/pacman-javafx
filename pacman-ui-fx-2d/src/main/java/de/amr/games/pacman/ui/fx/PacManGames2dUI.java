@@ -74,7 +74,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		this.soundHandler = new SoundHandler(theme);
 		this.mainScene = createMainScene();
 		this.startPage = createStartPage(theme);
-		this.gamePage = createGamePage(theme);
+		this.gamePage = createGamePage();
 		this.clock = createClock();
 
 		addGameScenes();
@@ -158,8 +158,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		return startPage;
 	}
 
-	protected GamePage createGamePage(Theme theme) {
-		var page = new GamePage(this, this, theme);
+	protected GamePage createGamePage() {
+		var page = new GamePage(this, this);
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
 		return page;
