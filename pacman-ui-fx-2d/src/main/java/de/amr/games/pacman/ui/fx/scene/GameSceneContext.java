@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.ActionHandler;
 import de.amr.games.pacman.ui.fx.SoundHandler;
+import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.media.AudioClip;
@@ -19,6 +20,8 @@ import java.util.Optional;
  * @author Armin Reichert
  */
 public interface GameSceneContext {
+
+  GameClock gameClock();
 
   ActionHandler actionHandler();
 

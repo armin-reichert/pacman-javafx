@@ -243,6 +243,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	// GameSceneContext interface implementation
 
+
+	@Override
+	public GameClock gameClock() {
+		return clock;
+	}
+
 	@Override
 	public ActionHandler actionHandler() {
 		return this;

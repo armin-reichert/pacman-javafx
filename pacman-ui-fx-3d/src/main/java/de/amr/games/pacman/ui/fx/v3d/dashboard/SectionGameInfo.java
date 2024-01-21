@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
@@ -20,12 +19,13 @@ public class SectionGameInfo extends Section {
 	public SectionGameInfo(Theme theme, String title) {
 		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
 
-		addInfo("Game scene", () -> gameScene().getClass().getSimpleName());
+		addInfo("Game Scene", () -> sceneContext.currentGameScene().isPresent()
+			? sceneContext.currentGameScene().get().getClass().getSimpleName() : "n/a");
 		//addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().root().getWidth(), gameScene().root().getHeight()));
-		addInfo("Game State", () -> "%s".formatted(GameController.it().state()));
-		addInfo("", () -> "Running:   %s%s".formatted(GameController.it().state().timer().tick(),
-				GameController.it().state().timer().isStopped() ? " (STOPPED)" : ""));
-		addInfo("", () -> "Remaining: %s".formatted(ticksToString(GameController.it().state().timer().remaining())));
+		addInfo("Game State", () -> "%s".formatted(sceneContext.gameState()));
+		addInfo("", () -> "Running:   %s%s".formatted(sceneContext.gameState().timer().tick(),
+			sceneContext.gameState().timer().isStopped() ? " (STOPPED)" : ""));
+		addInfo("", () -> "Remaining: %s".formatted(ticksToString(sceneContext.gameState().timer().remaining())));
 
 		addInfo("Hunting Phase", ifLevelExists(this::fmtHuntingPhase));
 		addInfo("", ifLevelExists(this::fmtHuntingTicksRunning));

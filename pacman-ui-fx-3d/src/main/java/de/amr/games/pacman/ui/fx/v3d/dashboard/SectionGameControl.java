@@ -8,8 +8,9 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -45,7 +46,7 @@ public class SectionGameControl extends Section {
 		comboGameVariant.setOnAction(e -> {
 			var selectedVariant = comboGameVariant.getValue();
 			if (selectedVariant != game().variant()) {
-				GameController.it().startNewGame(selectedVariant);
+				sceneContext.gameController().startNewGame(selectedVariant);
 			}
 		});
 
@@ -55,23 +56,24 @@ public class SectionGameControl extends Section {
 		blGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
 		blIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
 		spGameLevel = addSpinner("Level", 1, 100, 1);
-		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, GameController.it().credit());
-		spGameCredit.valueProperty().addListener((obs, oldVal, newVal) -> GameController.it().setCredit(newVal.intValue()));
-		cbAutopilot = addCheckBox("Autopilot", null);
-		cbImmunity = addCheckBox("Player immune", null);
+		spGameCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, sceneContext.gameController().credit());
+		spGameCredit.valueProperty().addListener((py, ov, nv) -> sceneContext.gameController().setCredit(nv.intValue()));
+		cbAutopilot = addCheckBox("Autopilot");
+		cbImmunity = addCheckBox("Player immune");
 	}
 
 	@Override
-	public void init(PacManGames3dUI ui) {
-		super.init(ui);
-		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> ui.startCutscenesTest());
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> ui.restartIntro());
-		blGameLevel[GAME_LEVEL_START].setOnAction(e -> GameController.it().startPlaying());
-		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> ui.restartIntro());
-		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> GameController.it().cheatEnterNextLevel());
-		spGameLevel.valueProperty().addListener((obs, oldVal, newVal) -> ui.enterLevel(newVal.intValue()));
-		cbAutopilot.setOnAction(e -> ui.toggleAutopilot());
-		cbImmunity.setOnAction(e -> ui.toggleImmunity());
+	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
+		super.init(sceneContext, actionHandler);
+
+		blIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> actionHandler.startCutscenesTest());
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> actionHandler.restartIntro());
+		blGameLevel[GAME_LEVEL_START].setOnAction(e -> sceneContext.gameController().startPlaying());
+		blGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler.restartIntro());
+		blGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.gameController().cheatEnterNextLevel());
+		spGameLevel.valueProperty().addListener((py, ov, nv) -> actionHandler.enterLevel(nv.intValue()));
+		cbAutopilot.setOnAction(e -> actionHandler.toggleAutopilot());
+		cbImmunity.setOnAction(e -> actionHandler.toggleImmunity());
 	}
 
 	@Override
@@ -79,36 +81,27 @@ public class SectionGameControl extends Section {
 		super.update();
 
 		comboGameVariant.setValue(game().variant());
-		comboGameVariant.setDisable(GameController.it().state() != GameState.INTRO);
-
+		comboGameVariant.setDisable(sceneContext.gameState() != GameState.INTRO);
 		comboInitialLives.setValue((int) game().initialLives());
-
-		cbAutopilot.setSelected(GameController.it().isAutoControlled());
-		cbImmunity.setSelected(GameController.it().isImmune());
-
-		blGameLevel[GAME_LEVEL_START].setDisable(!(GameController.it().hasCredit() && game().level().isEmpty()));
-
+		cbAutopilot.setSelected(sceneContext.gameController().isAutoControlled());
+		cbImmunity.setSelected(sceneContext.gameController().isImmune());
+		blGameLevel[GAME_LEVEL_START].setDisable(!(sceneContext.gameController().hasCredit() && game().level().isEmpty()));
 		blGameLevel[GAME_LEVEL_QUIT].setDisable(game().level().isEmpty());
-
-		blGameLevel[GAME_LEVEL_NEXT].setDisable(//
-				!game().isPlaying() //
-						|| (GameController.it().state() != GameState.HUNTING && GameController.it().state() != GameState.READY
-								&& GameController.it().state() != GameState.CHANGING_TO_NEXT_LEVEL));
-
-		blIntermissionTest[INTERMISSION_TEST_START].setDisable(//
-				GameController.it().state() == GameState.INTERMISSION_TEST || GameController.it().state() != GameState.INTRO);
-
-		blIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(GameController.it().state() != GameState.INTERMISSION_TEST);
-
+		blGameLevel[GAME_LEVEL_NEXT].setDisable(!game().isPlaying() ||
+			(  sceneContext.gameState() != GameState.HUNTING
+			&& sceneContext.gameState() != GameState.READY
+			&& sceneContext.gameState() != GameState.CHANGING_TO_NEXT_LEVEL));
+		blIntermissionTest[INTERMISSION_TEST_START].setDisable(
+			sceneContext.gameState() == GameState.INTERMISSION_TEST || sceneContext.gameState() != GameState.INTRO);
+		blIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
 		game().level().ifPresent(level -> spGameLevel.getValueFactory().setValue(level.number()));
-		if (!game().isPlaying() || GameController.it().state() == GameState.CHANGING_TO_NEXT_LEVEL) {
+		if (!game().isPlaying() || sceneContext.gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
 			spGameLevel.setDisable(true);
 		} else {
-			spGameLevel
-					.setDisable(GameController.it().state() != GameState.READY && GameController.it().state() != GameState.HUNTING
-							&& GameController.it().state() != GameState.CHANGING_TO_NEXT_LEVEL);
+			spGameLevel.setDisable(sceneContext.gameState() != GameState.READY
+				&& sceneContext.gameState() != GameState.HUNTING
+				&& sceneContext.gameState() != GameState.CHANGING_TO_NEXT_LEVEL);
 		}
-
-		spGameCredit.getValueFactory().setValue(GameController.it().credit());
+		spGameCredit.getValueFactory().setValue(sceneContext.gameController().credit());
 	}
 }

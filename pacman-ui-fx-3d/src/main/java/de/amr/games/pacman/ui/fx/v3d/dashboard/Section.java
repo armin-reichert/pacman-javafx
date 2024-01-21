@@ -7,12 +7,10 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -44,10 +42,10 @@ public abstract class Section {
 	protected final TitledPane root = new TitledPane();
 	protected final GridPane content = new GridPane();
 
-	private int minLabelWidth;
-	private Color textColor;
-	private Font textFont;
-	private Font labelFont;
+	private final int minLabelWidth;
+	private final Color textColor;
+	private final Font textFont;
+	private final Font labelFont;
 
 	private int row;
 
@@ -71,9 +69,9 @@ public abstract class Section {
 		root.setContent(content);
 	}
 
-	public void init(PacManGames3dUI ui) {
-		this.sceneContext = ui;
-		this.actionHandler =ui;
+	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
+		this.sceneContext = sceneContext;
+		this.actionHandler = actionHandler;
 	}
 
 	public TitledPane getRoot() {
@@ -86,10 +84,6 @@ public abstract class Section {
 
 	protected GameModel game() {
 		return GameController.it().game();
-	}
-
-	protected GameScene gameScene() {
-		return sceneContext.currentGameScene().get();
 	}
 
 	protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
@@ -128,14 +122,6 @@ public abstract class Section {
 		return addInfo(labelText, () -> value);
 	}
 
-	protected Button addButton(String labelText, String buttonText, Runnable action) {
-		Button button = new Button(buttonText);
-		button.setFont(textFont);
-		button.setOnAction(e -> action.run());
-		addRow(labelText, button);
-		return button;
-	}
-
 	protected Button[] addButtonList(String labelText, String... buttonTexts) {
 		HBox hbox = new HBox();
 		Button[] buttons = new Button[buttonTexts.length];
@@ -159,9 +145,13 @@ public abstract class Section {
 		return cb;
 	}
 
+	protected CheckBox addCheckBox(String labelText) {
+		return addCheckBox(labelText, null);
+	}
+
 	@SuppressWarnings("unchecked")
 	protected <T> ComboBox<T> addComboBox(String labelText, T... items) {
-		var combo = new ComboBox<T>(FXCollections.observableArrayList(items));
+		var combo = new ComboBox<>(FXCollections.observableArrayList(items));
 		combo.setStyle(style(textFont));
 		addRow(labelText, combo);
 		return combo;

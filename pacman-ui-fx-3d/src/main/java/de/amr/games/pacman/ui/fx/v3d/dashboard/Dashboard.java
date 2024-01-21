@@ -41,10 +41,6 @@ public class Dashboard extends VBox {
 		sections().map(Section::getRoot).forEach(getChildren()::add);
 	}
 
-	public void init(PacManGames3dUI ui) {
-		sections.forEach(section -> section.init(ui));
-	}
-
 	public Stream<Section> sections() {
 		return sections.stream();
 	}

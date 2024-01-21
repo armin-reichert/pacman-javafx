@@ -4,16 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
+
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**
  * 3D related settings.
@@ -34,45 +37,46 @@ public class Section3D extends Section {
 
 	public Section3D(Theme theme, String title) {
 		super(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
+
 		comboPerspective = addComboBox("Perspective", Perspective.values());
-		comboPerspective.setOnAction(e -> PacManGames3dApp.PY_3D_PERSPECTIVE.set(comboPerspective.getValue()));
-		addInfo("Camera", () -> (gameScene() instanceof PlayScene3D playScene3D) ? playScene3D.camInfo() : "")
-				.available(() -> gameScene().is3D());
-		sliderPiPSceneHeight = addSlider("PiP Size", PacManGames3dApp.PIP_MIN_HEIGHT, PacManGames3dApp.PIP_MAX_HEIGHT,
-				PacManGames3dApp.PY_PIP_HEIGHT.get());
-		sliderPiPSceneHeight.valueProperty()
-				.addListener((obs, oldValue, newValue) -> PacManGames3dApp.PY_PIP_HEIGHT.set(newValue.doubleValue()));
-		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, PacManGames3dApp.PY_PIP_OPACITY.get());
-		sliderPiPOpacity.valueProperty()
-				.addListener((obs, oldValue, newValue) -> PacManGames3dApp.PY_PIP_OPACITY.set(newValue.doubleValue()));
-		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, PacManGames3dApp.PY_3D_WALL_HEIGHT.get());
-		sliderWallHeight.valueProperty()
-				.addListener((obs, oldVal, newVal) -> PacManGames3dApp.PY_3D_WALL_HEIGHT.set(newVal.doubleValue()));
-		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, PacManGames3dApp.PY_3D_WALL_THICKNESS.get());
-		sliderWallThickness.valueProperty()
-				.addListener((obs, oldVal, newVal) -> PacManGames3dApp.PY_3D_WALL_THICKNESS.set(newVal.doubleValue()));
-		cbEnergizerExplodes = addCheckBox("Energizer Explosion", () -> Ufx.toggle(PacManGames3dApp.PY_3D_ENERGIZER_EXPLODES));
-		cbPacLighted = addCheckBox("Pac-Man Lighted", () -> Ufx.toggle(PacManGames3dApp.PY_3D_PAC_LIGHT_ENABLED));
-		cbAxesVisible = addCheckBox("Show Axes", () -> Ufx.toggle(PacManGames3dApp.PY_3D_AXES_VISIBLE));
-		cbWireframeMode = addCheckBox("Wireframe Mode", null);
+		comboPerspective.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspective.getValue()));
+		addInfo("Camera", () -> (
+			sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() instanceof PlayScene3D playScene3D)
+				? playScene3D.camInfo() : "")
+				.available(() -> sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get().is3D());
+		sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
+		sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set(nv.doubleValue()));
+		sliderPiPOpacity = addSlider("PiP Transparency", 0.0, 1.0, PY_PIP_OPACITY.get());
+		sliderPiPOpacity.valueProperty().addListener((py, ov, nv) -> PY_PIP_OPACITY.set(nv.doubleValue()));
+		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, PY_3D_WALL_HEIGHT.get());
+		sliderWallHeight.valueProperty().addListener((py, ov, nv) -> PY_3D_WALL_HEIGHT.set(nv.doubleValue()));
+		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, PY_3D_WALL_THICKNESS.get());
+		sliderWallThickness.valueProperty().addListener((py, ov, nv) -> PY_3D_WALL_THICKNESS.set(nv.doubleValue()));
+		cbEnergizerExplodes = addCheckBox("Energizer Explosion");
+		cbPacLighted = addCheckBox("Pac-Man Lighted");
+		cbAxesVisible = addCheckBox("Show Axes");
+		cbWireframeMode = addCheckBox("Wireframe Mode");
 	}
 
 	@Override
-	public void init(PacManGames3dUI ui) {
-		super.init(ui);
-		cbWireframeMode.setOnAction(e -> ui.toggleDrawMode());
+	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
+		super.init(sceneContext, actionHandler);
+		cbEnergizerExplodes.setOnAction(e -> Ufx.toggle(PY_3D_ENERGIZER_EXPLODES));
+		cbPacLighted.setOnAction(e -> Ufx.toggle(PY_3D_PAC_LIGHT_ENABLED));
+		cbAxesVisible.setOnAction(e -> Ufx.toggle(PY_3D_AXES_VISIBLE));
+		cbWireframeMode.setOnAction(e -> actionHandler.toggleDrawMode());
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		comboPerspective.setValue(PacManGames3dApp.PY_3D_PERSPECTIVE.get());
-		sliderPiPSceneHeight.setValue(PacManGames3dApp.PY_PIP_HEIGHT.get());
-		sliderPiPOpacity.setValue(PacManGames3dApp.PY_PIP_OPACITY.get());
-		sliderWallHeight.setValue(PacManGames3dApp.PY_3D_WALL_HEIGHT.get());
-		cbEnergizerExplodes.setSelected(PacManGames3dApp.PY_3D_ENERGIZER_EXPLODES.get());
-		cbPacLighted.setSelected(PacManGames3dApp.PY_3D_PAC_LIGHT_ENABLED.get());
-		cbAxesVisible.setSelected(PacManGames3dApp.PY_3D_AXES_VISIBLE.get());
+		comboPerspective.setValue(PY_3D_PERSPECTIVE.get());
+		sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
+		sliderPiPOpacity.setValue(PY_PIP_OPACITY.get());
+		sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
+		cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
+		cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
+		cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
 		cbWireframeMode.setSelected(PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.LINE);
 	}
 }
