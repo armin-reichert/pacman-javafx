@@ -20,6 +20,7 @@ import javafx.scene.shape.DrawMode;
 
 import java.time.LocalTime;
 
+import static de.amr.games.pacman.ui.fx.PacManGames2dApp.PY_SHOW_DEBUG_INFO;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**
@@ -77,6 +78,7 @@ public class GamePage3D extends GamePage {
 		contextMenu.hide();
 		updateBackground();
 		updateTopLayer();
+		updateDebugBorders();
 	}
 
 	public void updateBackground() {
@@ -116,6 +118,20 @@ public class GamePage3D extends GamePage {
 			super.handleKeyboardInput();
 		}
 	}
+
+	@Override
+	protected void updateDebugBorders()  {
+		if (PY_SHOW_DEBUG_INFO.get() && !isCurrentGameScene3D()) {
+			layers.setBorder(ResourceManager.border(Color.RED, 3));
+			gameSceneLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
+			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
+		} else {
+			layers.setBorder(null);
+			gameSceneLayer.setBorder(null);
+			popupLayer.setBorder(null);
+		}
+	}
+
 
 	private boolean isCurrentGameScene3D() {
 		return sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() instanceof PlayScene3D;

@@ -81,15 +81,7 @@ public class GamePage implements Page {
 
 		layers.setOnKeyPressed(this::handleKeyPressed);
 
-		// debug border decoration
-		layers.borderProperty().bind(debugBorderBinding(Color.RED, 3));
-		gameSceneLayer.borderProperty().bind(debugBorderBinding(Color.YELLOW, 3));
-		popupLayer.borderProperty().bind(debugBorderBinding(Color.GREENYELLOW, 3));
-	}
-
-	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
-		return Bindings.createObjectBinding(() -> PY_SHOW_DEBUG_INFO.get() ?
-			ResourceManager.border(color, width) : null, PY_SHOW_DEBUG_INFO);
+		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
 	}
 
 	protected void updateHelpButton() {
@@ -187,6 +179,20 @@ public class GamePage implements Page {
 			gameScene2D.setCanvas(canvas);
 		}
 		resize(scaling, true);
+
+		updateDebugBorders();
+	}
+
+	protected void updateDebugBorders()  {
+		if (PY_SHOW_DEBUG_INFO.get()) {
+			layers.setBorder(ResourceManager.border(Color.RED, 3));
+			gameSceneLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
+			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
+		} else {
+			layers.setBorder(null);
+			gameSceneLayer.setBorder(null);
+			popupLayer.setBorder(null);
+		}
 	}
 
 	protected void updateSignatureSizeAndPosition() {

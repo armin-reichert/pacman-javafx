@@ -284,10 +284,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	// Accessors
 
-	public Scene mainScene() {
-		return mainScene;
-	}
-
 	public GameClock clock() {
 		return clock;
 	}
@@ -464,8 +460,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 					game().nextLevel();
 				}
 				gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
-			} else if (newLevelNumber < level.number()) {
-				// not implemented
 			}
 		});
 	}
