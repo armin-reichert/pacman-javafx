@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.HelpButton;
 import de.amr.games.pacman.ui.fx.util.*;
@@ -45,7 +46,8 @@ public class GamePage implements Page {
 	protected static final int GAME_SCENE_LAYER = 0;
 	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
 
-	protected final PacManGames2dUI ui;
+	protected final GameSceneContext sceneContext;
+	protected final ActionHandler actionHandler;
 	protected final Theme theme;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final StackPane layers = new StackPane();
@@ -60,7 +62,8 @@ public class GamePage implements Page {
 	protected double scaling = 1.0;
 
 	public GamePage(PacManGames2dUI ui, Theme theme) {
-		this.ui = ui;
+		this.sceneContext = ui;
+		this.actionHandler = ui;
 		this.theme = theme;
 
 		gameSceneLayer.setBackground(theme.background("wallpaper.background"));
@@ -95,16 +98,16 @@ public class GamePage implements Page {
 
 	protected ObjectBinding<Border> debugBorderBinding(Color color, double width) {
 		return Bindings.createObjectBinding(() -> PY_SHOW_DEBUG_INFO.get()
-				&& ui.currentGameScene().isPresent() && !ui.currentGameScene().get().is3D() ?
+				&& sceneContext.currentGameScene().isPresent() && !sceneContext.currentGameScene().get().is3D() ?
 				ResourceManager.border(color, width) : null, PY_SHOW_DEBUG_INFO);
 	}
 
 	protected void updateHelpButton() {
-		String key = ui.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
+		String key = sceneContext.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
 		helpButton.setImage(theme.image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(ui.currentGameScene().isPresent() && ui.currentGameScene().get() != ui.sceneConfig().get("boot"));
+		helpButton.setVisible(sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
 	}
 
 	protected void showHelpMenu() {
@@ -135,7 +138,7 @@ public class GamePage implements Page {
 		//TODO check if this has to be done also when scaling value did not change
 		updateHelpButton();
 		updateSignatureSizeAndPosition();
-		ui.currentGameScene().ifPresent(gameScene -> {
+		sceneContext.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
 				gameScene2D.setScaling(scaling);
 			}
@@ -175,7 +178,7 @@ public class GamePage implements Page {
 	}
 
 	protected void onGameSceneChanged(GameScene newGameScene) {
-		var config = ui.sceneConfig();
+		var config = sceneContext.sceneConfig();
 		// if play scene gets active/inactive, add/remove key handler
 		if (GameController.it().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
 			if (newGameScene == config.get("play")) {
@@ -199,7 +202,7 @@ public class GamePage implements Page {
 	protected void updateSignatureSizeAndPosition() {
 		signature.getText(0).setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
 		signature.getText(1).setFont((theme.font("font.handwriting", Math.floor(12 * scaling))));
-		if (ui.game().variant() == GameVariant.MS_PACMAN) {
+		if (sceneContext.game().variant() == GameVariant.MS_PACMAN) {
 			signature.root().setTranslateX(50 * scaling);
 			signature.root().setTranslateY(40 * scaling);
 		} else {
@@ -217,12 +220,8 @@ public class GamePage implements Page {
 		return flashMessageView;
 	}
 
-	public PacManGames2dUI ui() {
-		return ui;
-	}
-
 	public void render() {
-		ui.currentGameScene().ifPresent(gameScene -> {
+		sceneContext.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
 				gameScene2D.draw();
 			}
@@ -240,39 +239,39 @@ public class GamePage implements Page {
 	protected void handleKeyboardInput() {
 		var gameState = GameController.it().state();
 		if (Keyboard.pressed(KEY_AUTOPILOT)) {
-			ui.toggleAutopilot();
+			actionHandler.toggleAutopilot();
 		} else if (Keyboard.pressed(KEY_BOOT)) {
 			if (gameState != GameState.BOOT) {
-				ui.reboot();
+				actionHandler.reboot();
 			}
 		} else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
 			Ufx.toggle(PY_SHOW_DEBUG_INFO);
 		} else if (Keyboard.pressed(KEY_FULLSCREEN)) {
-			ui.stage.setFullScreen(true);
+			actionHandler.setFullScreen(true);
 		} else if (Keyboard.pressed(KEY_IMMUNITY)) {
-			ui.toggleImmunity();
+			actionHandler.toggleImmunity();
 		} else if (Keyboard.pressed(KEY_SHOW_HELP)) {
 			showHelpMenu();
 		} else if (Keyboard.pressed(KEY_PAUSE)) {
-			ui.togglePaused();
+			actionHandler.togglePaused();
 		} else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
-			ui.oneSimulationStep();
+			actionHandler.oneSimulationStep();
 		} else if (Keyboard.pressed(KEY_TEN_STEPS)) {
-			ui.tenSimulationSteps();
+			actionHandler.tenSimulationSteps();
 		} else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
-			ui.changeSimulationSpeed(5);
+			actionHandler.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {
-			ui.changeSimulationSpeed(-5);
+			actionHandler.changeSimulationSpeed(-5);
 		} else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
-			ui.resetSimulationSpeed();
+			actionHandler.resetSimulationSpeed();
 		} else if (Keyboard.pressed(KEY_QUIT)) {
 			if (gameState != GameState.BOOT && gameState != GameState.INTRO) {
-				ui.restartIntro();
+				actionHandler.restartIntro();
 			}
 		} else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
-			ui.startLevelTestMode();
+			actionHandler.startLevelTestMode();
 		} else {
-			ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
+			sceneContext.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
 		}
 	}
 

@@ -344,6 +344,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	@Override
+	public void setFullScreen(boolean on) {
+		stage.setFullScreen(on);
+	}
+
+	@Override
 	public void startGame() {
 		if (gameController().hasCredit()) {
 			soundHandler.stopVoice();

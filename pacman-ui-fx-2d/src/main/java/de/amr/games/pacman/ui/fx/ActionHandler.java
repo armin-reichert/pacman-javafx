@@ -9,6 +9,8 @@ public interface ActionHandler {
 
     void showFlashMessageSeconds(double seconds, String message, Object... args);
 
+    void setFullScreen(boolean on);
+
     void restartIntro();
 
     void reboot();

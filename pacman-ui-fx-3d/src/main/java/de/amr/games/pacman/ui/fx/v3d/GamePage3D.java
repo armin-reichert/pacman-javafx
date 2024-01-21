@@ -55,11 +55,6 @@ public class GamePage3D extends GamePage {
 		contextMenu = new GamePageContextMenu();
 	}
 
-	@Override
-	public PacManGames3dUI ui() {
-		return (PacManGames3dUI) ui;
-	}
-
 	public GamePageContextMenu contextMenu() {
 		return contextMenu;
 	}
@@ -68,7 +63,7 @@ public class GamePage3D extends GamePage {
 	protected void onGameSceneChanged(GameScene newGameScene) {
 		//TODO this code is too difficult to understand, simplify
 		if (isCurrentGameScene3D()) {
-			if (newGameScene == ui().sceneConfig().get("play3D")) {
+			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
 			}
@@ -92,10 +87,10 @@ public class GamePage3D extends GamePage {
 				var hour = LocalTime.now().getHour();
 				var isNight = hour >= 20 || hour <= 5;
 				var wallpaper = isNight? "model3D.wallpaper.night" : "model3D.wallpaper";
-				layers.setBackground(ui().theme().background(wallpaper));
+				layers.setBackground(theme.background(wallpaper));
 			}
 		} else {
-			gameSceneLayer.setBackground(ui().theme().background("wallpaper.background"));
+			gameSceneLayer.setBackground(theme.background("wallpaper.background"));
 		}
 	}
 
@@ -110,19 +105,20 @@ public class GamePage3D extends GamePage {
 
 	@Override
 	protected void handleKeyboardInput() {
+		var actionHandler3D = (ActionHandler3D) actionHandler;
 		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
-			ui().toggle2D3D();
+			actionHandler3D.toggle2D3D();
 		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
 			toggleDashboardVisible();
 		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
-			ui().togglePipVisible();
+			actionHandler3D.togglePipVisible();
 		} else {
 			super.handleKeyboardInput();
 		}
 	}
 
 	private boolean isCurrentGameScene3D() {
-		return ui().currentGameScene().isPresent() && ui().currentGameScene().get().is3D();
+		return sceneContext.currentGameScene().map(GameScene::is3D).orElse(false);
 	}
 
 	public void toggleDashboardVisible() {
