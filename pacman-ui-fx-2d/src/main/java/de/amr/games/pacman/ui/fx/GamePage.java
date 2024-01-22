@@ -22,10 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -69,7 +66,7 @@ public class GamePage implements Page {
 
 		canvasContainer.setBackground(ResourceManager.coloredBackground(sceneContext.theme().color("canvas.background")));
 		canvasContainer.setCenter(canvas);
-		canvasContainer.heightProperty().addListener((py, ov, nv) -> resize(scaling, false));
+		canvasContainer.heightProperty().addListener((py, ov, nv) -> scalePage(scaling, false));
 
 		helpButton.setOnMouseClicked(e -> {
 			e.consume();
@@ -96,7 +93,7 @@ public class GamePage implements Page {
 	}
 
 	protected void showHelpMenu() {
-		currentHelpMenuContent().ifPresent(content -> {
+		currentHelpMenu().ifPresent(content -> {
 			helpMenu.setTranslateX(10 * scaling);
 			helpMenu.setTranslateY(30 * scaling);
 			helpMenu.setContent(content);
@@ -111,10 +108,10 @@ public class GamePage implements Page {
 			s = 0.8 * width / CANVAS_WIDTH_UNSCALED;
 		}
 		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
-		resize(s, false);
+		scalePage(s, false);
 	}
 
-	public void resize(double scaling, boolean always) {
+	public void scalePage(double scaling, boolean always) {
 		if (scaling < MIN_SCALING) {
 			Logger.info("Cannot scale to {}, minimum scaling is {}", scaling, MIN_SCALING);
 			return;
@@ -140,10 +137,6 @@ public class GamePage implements Page {
 		canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
 		canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
 
-		canvasContainer.setMinSize (w, h);
-		canvasContainer.setPrefSize(w, h);
-		canvasContainer.setMaxSize (w, h);
-
 		var roundedRect = new Rectangle(w, h);
 		roundedRect.setArcWidth (26 * scaling);
 		roundedRect.setArcHeight(26 * scaling);
@@ -154,12 +147,17 @@ public class GamePage implements Page {
 		var roundedBorder = ResourceManager.roundedBorder(ArcadePalette.PALE, cornerRadius, borderWidth);
 		canvasContainer.setBorder(roundedBorder);
 
-		popupLayer.setMinSize (w, h);
-		popupLayer.setPrefSize(w, h);
-		popupLayer.setMaxSize (w, h);
+		setSizes(canvasContainer, w, h);
+		setSizes(popupLayer, w, h);
 
 		Logger.trace("Game page resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
 				canvas.getWidth(), canvas.getHeight(), borderWidth);
+	}
+
+	private void setSizes(Region region, double width, double height) {
+		region.setMinSize(width, height);
+		region.setMaxSize(width, height);
+		region.setPrefSize(width, height);
 	}
 
 	public void onGameSceneChanged(GameScene newGameScene) {
@@ -181,7 +179,7 @@ public class GamePage implements Page {
 		if (newGameScene instanceof GameScene2D gameScene2D) {
 			gameScene2D.setCanvas(canvas);
 		}
-		resize(scaling, true);
+		scalePage(scaling, true);
 
 		updateDebugBorders();
 	}
@@ -349,11 +347,15 @@ public class GamePage implements Page {
 		}
 	}
 
+	/**
+	 * @param key resource bundle key
+	 * @return translated text
+	 */
 	private static String tt(String key) {
 		return PacManGames2dApp.TEXTS.getString(key);
 	}
 
-	private Optional<Pane> currentHelpMenuContent() {
+	private Optional<Pane> currentHelpMenu() {
 		var gameState = sceneContext.gameState();
 		var game = sceneContext.game();
 		var menuFont = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
