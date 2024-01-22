@@ -11,7 +11,6 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
@@ -282,13 +281,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		return soundHandler;
 	}
 
-	// Accessors
-
-	public GameClock clock() {
-		return clock;
-	}
-
-
 	// GameEventListener interface implementation
 
 	@Override
@@ -315,19 +307,18 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		// Found no better point in time to create and assign the sprite animations to the guys
 		e.game.level().ifPresent(level -> {
 			switch (e.game.variant()) {
-			case MS_PACMAN -> {
-				var ss = this.<MsPacManSpriteSheet>spriteSheet();
-				level.pac().setAnimations(new MsPacManPacAnimations(level.pac(), ss));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGhostAnimations(ghost, ss)));
-				Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
-			}
-			case PACMAN -> {
-				var ss = this.<PacManSpriteSheet>spriteSheet();
-				level.pac().setAnimations(new PacManPacAnimations(level.pac(), ss));
-				level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
-				Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
-			}
-			default -> throw new IllegalGameVariantException(e.game.variant());
+				case MS_PACMAN -> {
+					var ss = this.<MsPacManSpriteSheet>spriteSheet();
+					level.pac().setAnimations(new MsPacManPacAnimations(level.pac(), ss));
+					level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGhostAnimations(ghost, ss)));
+					Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
+				}
+				case PACMAN -> {
+					var ss = this.<PacManSpriteSheet>spriteSheet();
+					level.pac().setAnimations(new PacManPacAnimations(level.pac(), ss));
+					level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
+					Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
+				}
 			}
 		});
 		updateOrReloadGameScene(true);
