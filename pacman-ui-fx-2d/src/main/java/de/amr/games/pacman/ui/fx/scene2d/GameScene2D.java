@@ -6,8 +6,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
@@ -155,22 +153,19 @@ public abstract class GameScene2D implements GameScene {
 		}
 	}
 
-	private Rectangle2D livesCounterSprite(GameVariant variant) {
-		return switch (variant) {
-			case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet().livesCounterSprite();
-			case PACMAN -> context.<PacManSpriteSheet>spriteSheet().livesCounterSprite();
-		};
-	}
-
 	protected void drawLivesCounter(int numLivesDisplayed) {
-		if (numLivesDisplayed <= 0) {
+		if (numLivesDisplayed == 0) {
 			return;
 		}
+		var sprite = switch (context.gameVariant()) {
+			case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet().livesCounterSprite();
+			case PACMAN    -> context.<PacManSpriteSheet>spriteSheet().livesCounterSprite();
+		};
 		var x = TS * 2;
 		var y = TS * (GameModel.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-			drawSprite(livesCounterSprite(context.gameVariant()), x + TS * (2 * i), y);
+			drawSprite(sprite, x + TS * (2 * i), y);
 		}
 		// text indicating that more lives are available than displayed
 		int excessLives = numLivesDisplayed - maxLives;
@@ -204,7 +199,6 @@ public abstract class GameScene2D implements GameScene {
 					drawEntitySprite(bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
 				}
 			}
-			default -> throw new IllegalGameVariantException(context.gameVariant());
 		}
 	}
 
