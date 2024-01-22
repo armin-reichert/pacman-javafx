@@ -100,7 +100,7 @@ public abstract class GameScene2D implements GameScene {
 			Logger.error("Cannot render game scene {}, no context exists", getClass().getSimpleName());
 			return; // TODO may this happen?
 		}
-		if (scoreVisiblePy.get()) {
+		if (isScoreVisible()) {
 			drawScore(context.game().score(), "SCORE", t(1), t(1));
 			drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
 		}
@@ -134,7 +134,7 @@ public abstract class GameScene2D implements GameScene {
 
 	protected void drawScore(Score score, String title, double x, double y) {
 		var pointsText = String.format("%02d", score.points());
-		var font = sceneFont(8);
+		var font = sceneFont(TS);
 		drawText(title, ArcadePalette.PALE, font, x, y);
 		drawText(String.format("%7s", pointsText), ArcadePalette.PALE, font, x, y + TS + 1);
 		if (score.points() != 0) {
@@ -143,22 +143,16 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawLevelCounter() {
-		drawLevelCounter(context.gameVariant(), context.game().levelCounter(), t(24), t(34));
-	}
-
-	private void drawLevelCounter(GameVariant variant, Iterable<Byte> levelSymbols, double xr, double yr) {
-		double x = xr;
-		for (var symbol : levelSymbols) {
-			drawSprite(bonusSymbolSprite(symbol, variant), x, yr);
+		double x = t(GameModel.TILES_X - 4);
+		double y = t( GameModel.TILES_Y - 2);
+		for (byte symbol : context.game().levelCounter()) {
+			var sprite = switch (context.gameVariant()) {
+				case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+				case PACMAN -> context.<PacManSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+			};
+			drawSprite(sprite, x, y);
 			x -= TS * 2;
 		}
-	}
-
-	private Rectangle2D bonusSymbolSprite(byte symbol, GameVariant variant) {
-		return switch (variant) {
-			case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-			case PACMAN -> context.<PacManSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-		};
 	}
 
 	private Rectangle2D livesCounterSprite(GameVariant variant) {
