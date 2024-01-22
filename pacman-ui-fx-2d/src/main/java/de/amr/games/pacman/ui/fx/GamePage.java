@@ -81,6 +81,11 @@ public class GamePage implements Page {
 		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
 	}
 
+	@Override
+	public Pane root() {
+		return layers;
+	}
+
 	protected void updateHelpButton() {
 		String key = sceneContext.gameVariant() == GameVariant.MS_PACMAN 
 			? "mspacman.helpButton.icon" 
@@ -90,15 +95,6 @@ public class GamePage implements Page {
 		helpButton.setTranslateY(8 * scaling);
 		helpButton.setVisible(sceneContext.currentGameScene().isPresent()
 			&& sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
-	}
-
-	protected void showHelpMenu() {
-		currentHelpMenu().ifPresent(content -> {
-			helpMenu.setTranslateX(10 * scaling);
-			helpMenu.setTranslateY(30 * scaling);
-			helpMenu.setContent(content);
-			helpMenu.show(MENU_FADING_DELAY);
-		});
 	}
 
 	@Override
@@ -208,11 +204,6 @@ public class GamePage implements Page {
 		}
 	}
 
-	@Override
-	public Pane root() {
-		return layers;
-	}
-
 	public FlashMessageView flashMessageView() {
 		return flashMessageView;
 	}
@@ -274,6 +265,15 @@ public class GamePage implements Page {
 	}
 
 	// Menu stuff
+
+	protected void showHelpMenu() {
+		currentHelpMenu().ifPresent(content -> {
+			helpMenu.setTranslateX(10 * scaling);
+			helpMenu.setTranslateY(30 * scaling);
+			helpMenu.setContent(content);
+			helpMenu.show(MENU_FADING_DELAY);
+		});
+	}
 
 	private class Menu {
 		private final List<Node> column0 = new ArrayList<>();
