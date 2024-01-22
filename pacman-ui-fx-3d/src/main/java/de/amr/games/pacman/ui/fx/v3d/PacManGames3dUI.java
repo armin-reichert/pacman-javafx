@@ -103,7 +103,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void updateStage() {
 		var variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
-		var titleKey = "app.title." + variantKey + (clock().isPaused()? ".paused" : "");
+		var titleKey = "app.title." + variantKey + (gameClock().isPaused()? ".paused" : "");
 		var dimension = message(PY_3D_ENABLED.get() ? "threeD" : "twoD");
 		stage.setTitle(message(titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));

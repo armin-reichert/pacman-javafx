@@ -106,7 +106,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 
 	@Override
 	public void stop() {
-		ui.clock().stop();
+		ui.gameClock().stop();
 		Logger.info("Game stopped.");
 	}
 

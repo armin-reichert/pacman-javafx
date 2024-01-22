@@ -79,6 +79,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		addGameScenes();
 		configurePacSteering();
 		configureStage(settings);
+		stage.setScene(mainScene);
 	}
 
 	protected void addGameScenes() {
@@ -136,7 +137,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected void configureStage(Settings settings) {
-		stage.setScene(mainScene);
 		stage.setFullScreen(settings.fullScreen);
 		stage.setMinWidth (GameModel.TILES_X * Globals.TS);
 		stage.setMinHeight(GameModel.TILES_Y * Globals.TS);
