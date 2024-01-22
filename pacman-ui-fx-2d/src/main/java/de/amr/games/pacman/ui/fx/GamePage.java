@@ -14,15 +14,19 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.scene2d.HelpButton;
-import de.amr.games.pacman.ui.fx.util.*;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
+import de.amr.games.pacman.ui.fx.util.FadingPane;
+import de.amr.games.pacman.ui.fx.util.FlashMessageView;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -89,7 +93,8 @@ public class GamePage implements Page {
 		helpButton.setImage(sceneContext.theme().image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
-		helpButton.setVisible(sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
+		helpButton.setVisible(sceneContext.currentGameScene().isPresent()
+			&& sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
 	}
 
 	protected void showHelpMenu() {
