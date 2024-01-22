@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
@@ -52,8 +51,8 @@ public class Section3D extends Section {
 	}
 
 	@Override
-	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
-		super.init(sceneContext, actionHandler);
+	public void init(GameSceneContext sceneContext) {
+		super.init(sceneContext);
 
 		comboPerspective.setValue(PY_3D_PERSPECTIVE.get());
 		sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
@@ -71,7 +70,7 @@ public class Section3D extends Section {
 		cbEnergizerExplodes.setOnAction(e -> Ufx.toggle(PY_3D_ENERGIZER_EXPLODES));
 		cbPacLighted.setOnAction(e -> Ufx.toggle(PY_3D_PAC_LIGHT_ENABLED));
 		cbAxesVisible.setOnAction(e -> Ufx.toggle(PY_3D_AXES_VISIBLE));
-		cbWireframeMode.setOnAction(e -> actionHandler.toggleDrawMode());
+		cbWireframeMode.setOnAction(e -> actionHandler().toggleDrawMode());
 	}
 
 	@Override

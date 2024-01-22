@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -52,8 +51,8 @@ public class SectionGameControl extends Section {
 	}
 
 	@Override
-	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
-		super.init(sceneContext, actionHandler);
+	public void init(GameSceneContext sceneContext) {
+		super.init(sceneContext);
 
 		comboGameVariant.setOnAction(e -> {
 			var selectedVariant = comboGameVariant.getValue();
@@ -61,18 +60,18 @@ public class SectionGameControl extends Section {
 				sceneContext.gameController().startNewGame(selectedVariant);
 			}
 		});
-		buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> actionHandler.startCutscenesTest());
-		buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> actionHandler.restartIntro());
+		buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> actionHandler().startCutscenesTest());
+		buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> actionHandler().restartIntro());
 		comboInitialLives.setOnAction(e -> game().setInitialLives((comboInitialLives.getValue().shortValue())));
 		buttonsGameLevel[GAME_LEVEL_START].setOnAction(e -> sceneContext.gameController().startPlaying());
-		buttonsGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler.restartIntro());
+		buttonsGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler().restartIntro());
 		buttonsGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.gameController().cheatEnterNextLevel());
-		spinnerGameLevel.valueProperty().addListener((py, ov, nv) -> actionHandler.enterLevel(nv));
+		spinnerGameLevel.valueProperty().addListener((py, ov, nv) -> actionHandler().enterLevel(nv));
 		spinnerGameLevel.getValueFactory().setValue(sceneContext.gameLevel().isPresent() ? sceneContext.gameLevel().get().number() : 1);
 		spinnerGameCredit.valueProperty().addListener((py, ov, nv) -> sceneContext.gameController().setCredit(nv));
 		spinnerGameCredit.getValueFactory().setValue(sceneContext.gameController().credit());
-		cbAutopilot.setOnAction(e -> actionHandler.toggleAutopilot());
-		cbImmunity.setOnAction(e -> actionHandler.toggleImmunity());
+		cbAutopilot.setOnAction(e -> actionHandler().toggleAutopilot());
+		cbImmunity.setOnAction(e -> actionHandler().toggleImmunity());
 	}
 
 	@Override

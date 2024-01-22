@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
@@ -76,13 +75,13 @@ public class SectionGeneral extends Section {
 	}
 
 	@Override
-	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
-		super.init(sceneContext, actionHandler);
-		buttonsSimulation[0].setOnAction(e -> actionHandler.togglePaused());
+	public void init(GameSceneContext sceneContext) {
+		super.init(sceneContext);
+		buttonsSimulation[0].setOnAction(e -> actionHandler().togglePaused());
 		buttonsSimulation[1].setOnAction(e -> sceneContext.gameClock().executeSteps(PY_SIMULATION_STEPS.get(), true));
 		sliderTargetFPS.valueProperty().addListener(
 			(py, ov, nv) -> sceneContext.gameClock().targetFrameratePy.set(nv.intValue()));
-		cbUsePlayScene3D.setOnAction(e -> actionHandler.toggle2D3D());
+		cbUsePlayScene3D.setOnAction(e -> actionHandler().toggle2D3D());
 		cbPoliticallyCorrect.setOnAction(e -> Ufx.toggle(PY_WOKE_PUSSY));
 		cbDebugUI.setOnAction(e -> Ufx.toggle(PY_SHOW_DEBUG_INFO));
 		cbTimeMeasured.setOnAction(e -> Ufx.toggle(sceneContext.gameClock().timeMeasuredPy));

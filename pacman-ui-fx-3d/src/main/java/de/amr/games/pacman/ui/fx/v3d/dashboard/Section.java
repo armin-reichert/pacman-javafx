@@ -51,7 +51,6 @@ public abstract class Section {
 	private int row;
 
 	protected GameSceneContext sceneContext;
-	protected ActionHandler3D actionHandler;
 
 	protected Section(Theme theme, String title) {
 		this(theme, title, Dashboard.MIN_LABEL_WIDTH, Dashboard.TEXT_COLOR, Dashboard.TEXT_FONT, Dashboard.LABEL_FONT);
@@ -74,9 +73,11 @@ public abstract class Section {
 		root.setContent(content);
 	}
 
-	public void init(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
+	public void init(GameSceneContext sceneContext) {
 		this.sceneContext = sceneContext;
-		this.actionHandler = actionHandler;
+		if (!(sceneContext.actionHandler() instanceof ActionHandler3D)) {
+			throw new IllegalArgumentException("Action handler in scene context must be the 3D version");
+		}
 	}
 
 	public TitledPane getRoot() {
@@ -85,6 +86,10 @@ public abstract class Section {
 
 	public void update() {
 		infoTexts.forEach(InfoText::update);
+	}
+
+	protected ActionHandler3D actionHandler() {
+		return (ActionHandler3D) sceneContext.actionHandler();
 	}
 
 	protected GameModel game() {
