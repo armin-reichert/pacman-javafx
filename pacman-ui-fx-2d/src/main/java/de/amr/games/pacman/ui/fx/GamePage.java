@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -47,11 +46,9 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 public class GamePage implements Page {
 
 	protected static final double MIN_SCALING = 0.7;
-	protected static final int GAME_SCENE_LAYER = 0;
 	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
 
 	protected final GameSceneContext sceneContext;
-	protected final ActionHandler actionHandler;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final StackPane layers = new StackPane();
 	protected final BorderPane gameSceneLayer = new BorderPane();
@@ -64,9 +61,8 @@ public class GamePage implements Page {
 
 	protected double scaling = 1.0;
 
-	public GamePage(GameSceneContext sceneContext, ActionHandler actionHandler) {
+	public GamePage(GameSceneContext sceneContext) {
 		this.sceneContext = sceneContext;
-		this.actionHandler = actionHandler;
 
 		gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
@@ -89,7 +85,9 @@ public class GamePage implements Page {
 	}
 
 	protected void updateHelpButton() {
-		String key = sceneContext.game().variant() == GameVariant.MS_PACMAN ? "mspacman.helpButton.icon" : "pacman.helpButton.icon";
+		String key = sceneContext.gameVariant() == GameVariant.MS_PACMAN 
+			? "mspacman.helpButton.icon" 
+			: "pacman.helpButton.icon";
 		helpButton.setImage(sceneContext.theme().image(key), Math.ceil(10 * scaling));
 		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
 		helpButton.setTranslateY(8 * scaling);
@@ -167,7 +165,7 @@ public class GamePage implements Page {
 	public void onGameSceneChanged(GameScene newGameScene) {
 		var config = sceneContext.sceneConfig();
 		// if play scene gets active/inactive, add/remove key handler
-		if (GameController.it().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
+		if (sceneContext.gameController().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
 			if (newGameScene == config.get("play")) {
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			} else {
@@ -238,7 +236,8 @@ public class GamePage implements Page {
 	}
 
 	protected void handleKeyboardInput() {
-		var gameState = GameController.it().state();
+		var actionHandler = sceneContext.actionHandler();
+		var gameState = sceneContext.gameState();
 		if (Keyboard.pressed(KEY_AUTOPILOT)) {
 			actionHandler.toggleAutopilot();
 		} else if (Keyboard.pressed(KEY_BOOT)) {
@@ -278,7 +277,7 @@ public class GamePage implements Page {
 
 	// Menu stuff
 
-	private static class Menu {
+	private class Menu {
 		private final List<Node> column0 = new ArrayList<>();
 		private final List<Node> column1 = new ArrayList<>();
 		private Font font =	Font.font("Sans", 24);
@@ -327,20 +326,22 @@ public class GamePage implements Page {
 				grid.add(column1.get(row), 1, row);
 			}
 			int rowIndex = size();
-			if (GameController.it().isAutoControlled()) {
+			if (sceneContext.gameController().isAutoControlled()) {
 				var text = text(tt("help.autopilot_on"), Color.ORANGE);
 				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex++);
+				grid.add(text, 0, rowIndex);
+				++rowIndex;
 			}
-			if (GameController.it().isImmune()) {
+			if (sceneContext.gameController().isImmune()) {
 				var text = text(tt("help.immunity_on"), Color.ORANGE);
 				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex++);
+				grid.add(text, 0, rowIndex);
+				++rowIndex;
 			}
 
 			var pane = new BorderPane(grid);
 			pane.setPadding(new Insets(10));
-			var bgColor = GameController.it().game().variant() == GameVariant.MS_PACMAN
+			var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
 					? Color.rgb(255, 0, 0, 0.8)
 					: Color.rgb(33, 33, 255, 0.8);
 			pane.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 10));
@@ -353,8 +354,8 @@ public class GamePage implements Page {
 	}
 
 	private Optional<Pane> currentHelpMenuContent() {
-		var gameState = GameController.it().state();
-		var game = GameController.it().game();
+		var gameState = sceneContext.gameState();
+		var game = sceneContext.game();
 		var menuFont = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 		if (gameState == GameState.INTRO) {
 			return Optional.of(menuIntro(menuFont));
@@ -374,19 +375,18 @@ public class GamePage implements Page {
 	private Pane menuIntro(Font menuFont) {
 		var menu = new Menu();
 		menu.setFont(menuFont);
-		if (GameController.it().hasCredit()) {
+		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
 		menu.addEntry("help.add_credit", "5");
-		menu.addEntry(GameController.it().game().variant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman",
-				"V");
+		menu.addEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
 		return menu.createPane();
 	}
 
 	private Pane menuCredit(Font menuFont) {
 		var menu = new Menu();
 		menu.setFont(menuFont);
-		if (GameController.it().hasCredit()) {
+		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
 		menu.addEntry("help.add_credit", "5");

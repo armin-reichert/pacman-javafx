@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.GamePage;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -34,8 +33,8 @@ public class GamePage3D extends GamePage {
 	private final Dashboard dashboard;
 	private final GamePageContextMenu contextMenu;
 
-	public GamePage3D(GameSceneContext sceneContext, ActionHandler3D actionHandler) {
-		super(sceneContext, actionHandler);
+	public GamePage3D(GameSceneContext sceneContext) {
+		super(sceneContext);
 
 		pip = new PictureInPicture();
 		pip.gameScene().setContext(sceneContext);
@@ -67,13 +66,13 @@ public class GamePage3D extends GamePage {
 		if (isCurrentGameScene3D()) {
 			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
-				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) GameController.it().getManualPacSteering());
+				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());
 			}
-			layers.getChildren().set(GAME_SCENE_LAYER, newGameScene.root());
+			layers.getChildren().set(0, newGameScene.root());
 			layers.requestFocus();
-			helpButton.setVisible(false);
+			helpButton.setVisible(false); // use data binding?
 		} else {
-			layers.getChildren().set(GAME_SCENE_LAYER, gameSceneLayer);
+			layers.getChildren().set(0, gameSceneLayer);
 			super.onGameSceneChanged(newGameScene);
 		}
 		contextMenu.hide();
@@ -84,13 +83,12 @@ public class GamePage3D extends GamePage {
 
 	public void updateBackground() {
 		if (isCurrentGameScene3D()) {
-			if (PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+			if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				var hour = LocalTime.now().getHour();
-				var isNight = hour >= 20 || hour <= 5;
-				var wallpaper = isNight? "model3D.wallpaper.night" : "model3D.wallpaper";
-				layers.setBackground(sceneContext.theme().background(wallpaper));
+				int hour = LocalTime.now().getHour();
+				var wallpaperKey = hour >= 20 || hour <= 5 ? "model3D.wallpaper.night" : "model3D.wallpaper";
+				layers.setBackground(sceneContext.theme().background(wallpaperKey));
 			}
 		} else {
 			gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
@@ -108,7 +106,7 @@ public class GamePage3D extends GamePage {
 
 	@Override
 	protected void handleKeyboardInput() {
-		var actionHandler3D = (ActionHandler3D) actionHandler;
+		var actionHandler3D = (ActionHandler3D) sceneContext.actionHandler();
 		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
 			actionHandler3D.toggle2D3D();
 		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
