@@ -27,6 +27,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -59,6 +60,7 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 	public static final StringProperty  PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
 	public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR  = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+	public static final BooleanProperty PY_3D_NIGHT_MODE         = new SimpleBooleanProperty(false);
 	public static final DoubleProperty  PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);
 	public static final DoubleProperty  PY_3D_WALL_THICKNESS     = new SimpleDoubleProperty(1.25);
 	public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
@@ -90,6 +92,8 @@ public class PacManGames3dApp extends Application implements ResourceManager {
 			settings.merge(getParameters().getNamed());
 		}
 		GameController.create(settings.variant);
+		int hour = LocalTime.now().getHour();
+		PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
 		Logger.info("Game initialized: {}", settings);
 	}
 

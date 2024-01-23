@@ -31,6 +31,7 @@ public class Section3D extends Section {
 	private final Slider sliderWallHeight;
 	private final Slider sliderWallThickness;
 	private final CheckBox cbPacLighted;
+	private final CheckBox cbNightMode;
 	private final CheckBox cbAxesVisible;
 	private final CheckBox cbWireframeMode;
 
@@ -45,6 +46,7 @@ public class Section3D extends Section {
 		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, PY_3D_WALL_HEIGHT.get());
 		sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, PY_3D_WALL_THICKNESS.get());
 		cbEnergizerExplodes = addCheckBox("Energizer Explosion");
+		cbNightMode = addCheckBox("Night Mode");
 		cbPacLighted = addCheckBox("Pac-Man Lighted");
 		cbAxesVisible = addCheckBox("Show Axes");
 		cbWireframeMode = addCheckBox("Wireframe Mode");
@@ -68,6 +70,7 @@ public class Section3D extends Section {
 
 		comboPerspective.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspective.getValue()));
 		cbEnergizerExplodes.setOnAction(e -> Ufx.toggle(PY_3D_ENERGIZER_EXPLODES));
+		cbNightMode.setOnAction(e -> Ufx.toggle(PY_3D_NIGHT_MODE));
 		cbPacLighted.setOnAction(e -> Ufx.toggle(PY_3D_PAC_LIGHT_ENABLED));
 		cbAxesVisible.setOnAction(e -> Ufx.toggle(PY_3D_AXES_VISIBLE));
 		cbWireframeMode.setOnAction(e -> actionHandler().toggleDrawMode());
@@ -78,6 +81,7 @@ public class Section3D extends Section {
 		super.update();
 		comboPerspective.setValue(PY_3D_PERSPECTIVE.get());
 		cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
+		cbNightMode.setSelected(PY_3D_NIGHT_MODE.get());
 		cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
 		cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
 		cbWireframeMode.setSelected(PacManGames3dApp.PY_3D_DRAW_MODE.get() == DrawMode.LINE);

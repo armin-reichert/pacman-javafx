@@ -46,6 +46,7 @@ public class GamePage3D extends GamePage {
 		dashboard.setVisible(false);
 
 		contextMenu = new GamePageContextMenu();
+		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 
 		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
@@ -86,8 +87,7 @@ public class GamePage3D extends GamePage {
 			if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				int hour = LocalTime.now().getHour();
-				var wallpaperKey = hour >= 20 || hour <= 5 ? "model3D.wallpaper.night" : "model3D.wallpaper";
+				var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
 				layers.setBackground(sceneContext.theme().background(wallpaperKey));
 			}
 		} else {
