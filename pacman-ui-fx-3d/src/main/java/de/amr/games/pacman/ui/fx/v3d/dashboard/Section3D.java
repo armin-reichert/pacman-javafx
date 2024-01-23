@@ -39,8 +39,9 @@ public class Section3D extends Section {
 		super(theme, title);
 
 		comboPerspective = addComboBox("Perspective", Perspective.values());
-		addInfo("Camera", () -> isCurrentGameScene3D() ? ((PlayScene3D)sceneContext.currentGameScene().get()).camInfo() : "")
-				.available(this::isCurrentGameScene3D);
+		addInfo("Camera", () -> sceneContext.currentGameScene().isPresent()
+			&& sceneContext.currentGameScene().get() instanceof PlayScene3D playScene3D ? playScene3D.camInfo() : "")
+			.available(this::isCurrentGameScene3D);
 		sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
 		sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
 		sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, PY_3D_WALL_HEIGHT.get());
