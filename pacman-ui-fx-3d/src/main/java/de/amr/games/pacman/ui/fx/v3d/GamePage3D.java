@@ -42,6 +42,7 @@ public class GamePage3D extends GamePage {
 
 		dashboard = new Dashboard(sceneContext.theme());
 		dashboard.setVisible(false);
+		dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
 		contextMenu = new GamePageContextMenu();
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
@@ -108,7 +109,7 @@ public class GamePage3D extends GamePage {
 		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
 			actionHandler3D.toggle2D3D();
 		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
-			toggleDashboardVisible();
+			dashboard.setVisible(!dashboard.isVisible());
 		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
 			actionHandler3D.togglePipVisible();
 		} else {
@@ -132,11 +133,6 @@ public class GamePage3D extends GamePage {
 
 	private boolean isCurrentGameScene3D() {
 		return sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() instanceof PlayScene3D;
-	}
-
-	public void toggleDashboardVisible() {
-		dashboard.setVisible(!dashboard.isVisible());
-		updateTopLayer();
 	}
 
 	public void updateTopLayer() {
