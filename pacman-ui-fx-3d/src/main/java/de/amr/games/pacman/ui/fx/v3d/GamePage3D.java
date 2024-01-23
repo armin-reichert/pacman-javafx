@@ -18,8 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-import java.time.LocalTime;
-
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.PY_SHOW_DEBUG_INFO;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
