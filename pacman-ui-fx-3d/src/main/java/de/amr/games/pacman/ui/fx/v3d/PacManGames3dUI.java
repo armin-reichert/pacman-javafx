@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
