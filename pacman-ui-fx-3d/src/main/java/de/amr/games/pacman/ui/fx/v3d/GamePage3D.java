@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -130,24 +131,24 @@ public class GamePage3D extends GamePage {
 		}
 	}
 
-
-	private boolean isCurrentGameScene3D() {
-		return sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() instanceof PlayScene3D;
-	}
-
-	public void updateTopLayer() {
-		layers.getChildren().remove(topLayer);
-		if (dashboard.isVisible() || PY_PIP_ON.get()) {
-			layers.getChildren().add(topLayer);
-		}
-		layers.requestFocus();
-	}
-
+	@Override
 	protected void updateHelpButton() {
 		if (isCurrentGameScene3D()) {
 			helpButton.setVisible(false);
 		} else {
 			super.updateHelpButton();
 		}
+	}
+
+	private boolean isCurrentGameScene3D() {
+		return sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() instanceof PlayScene3D;
+	}
+
+	private void updateTopLayer() {
+		layers.getChildren().remove(topLayer);
+		if (dashboard.isVisible() || PY_PIP_ON.get()) {
+			layers.getChildren().add(topLayer);
+		}
+		layers.requestFocus();
 	}
 }
