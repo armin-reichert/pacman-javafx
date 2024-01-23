@@ -404,6 +404,7 @@ public class PlayScene3D implements GameScene {
 			case PACMAN    -> PICKER_READY_PACMAN.next();
 		};
 	}
+
 	private String pickLevelCompleteMessage(int levelNumber) {
 		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(), message("level_complete", levelNumber));
 	}
@@ -414,7 +415,6 @@ public class PlayScene3D implements GameScene {
 		rotation.setFromAngle(0);
 		rotation.setToAngle(360);
 		rotation.setInterpolator(Interpolator.LINEAR);
-
 		return new SequentialTransition(
 			actionAfterSeconds(1.0, () -> {
 				perspectivePy.unbind();
@@ -442,6 +442,19 @@ public class PlayScene3D implements GameScene {
 		return animation;
 	}
 
+	@Override
+	public void onLevelStarted(GameEvent e) {
+		if (level3D == null) {
+			Logger.error("WTF: Where is my 3D game level?");
+			return;
+		}
+		var bonusSprites = switch (context.gameVariant()) {
+			case MS_PACMAN -> context.game().levelCounter().stream().map(context.<MsPacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
+			case PACMAN    -> context.game().levelCounter().stream().map(context.<PacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
+		};
+		level3D.levelCounter3D().update(bonusSprites.map(context.spriteSheet()::subImage).toArray(Image[]::new));
+	}
+
 	private void updateSound() {
 		context.gameLevel().ifPresent(level -> {
 			if (level.isDemoLevel()) {
@@ -460,8 +473,16 @@ public class PlayScene3D implements GameScene {
 	}
 
 	/**
-	 * Locks the current game state, waits given seconds, plays given animations and unlocks the state when the animations
-	 * have finished.
+	 * Keeps the current game state for given number of seconds, then forces the state timer to expire.
+	 */
+	private void keepGameStateForSeconds(double seconds) {
+		context.gameState().timer().resetIndefinitely();
+		actionAfterSeconds(seconds, () -> context.gameState().timer().expire()).play();
+	}
+
+	/**
+	 * Locks the current game state, waits given seconds, plays given animations and unlocks the state
+	 * when the animations have finished.
 	 */
 	private void lockStateAndPlayAfterSeconds(double seconds, Animation... animations) {
 		context.gameState().timer().resetIndefinitely();
@@ -471,26 +492,5 @@ public class PlayScene3D implements GameScene {
 		}
 		animationSequence.setOnFinished(e -> context.gameState().timer().expire());
 		animationSequence.play();
-	}
-
-	/**
-	 * Keeps the current game state for given number of seconds, then forces the state timer to expire.
-	 */
-	private void keepGameStateForSeconds(double seconds) {
-		context.gameState().timer().resetIndefinitely();
-		actionAfterSeconds(seconds, () -> context.gameState().timer().expire()).play();
-	}
-
-	@Override
-	public void onLevelStarted(GameEvent e) {
-		if (level3D == null) {
-			Logger.error("WTF: Where is my 3D game level?");
-			return;
-		}
-		var bonusSprites = switch (context.gameVariant()) {
-			case MS_PACMAN -> context.game().levelCounter().stream().map(context.<MsPacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
-			case PACMAN    -> context.game().levelCounter().stream().map(context.<PacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
-		};
-		level3D.levelCounter3D().update(bonusSprites.map(context.spriteSheet()::subImage).toArray(Image[]::new));
 	}
 }
