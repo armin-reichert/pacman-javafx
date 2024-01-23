@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
@@ -20,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**
@@ -45,20 +47,17 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void addGameScenes() {
 		super.addGameScenes();
+		for (var gameVariant : GameVariant.values())
 		{
 			var playScene3D = new PlayScene3D();
 			playScene3D.bindSize(mainScene.widthProperty(), mainScene.heightProperty());
-			gameScenes.get(GameVariant.MS_PACMAN).put("play3D", playScene3D);
-		}
-		{
-			var playScene3D = new PlayScene3D();
-			playScene3D.bindSize(mainScene.widthProperty(), mainScene.heightProperty());
-			gameScenes.get(GameVariant.PACMAN).put("play3D", playScene3D);
+			gameScenes.get(gameVariant).put("play3D", playScene3D);
 		}
 	}
 
 	@Override
 	protected GamePage3D createGamePage() {
+		checkNotNull(mainScene);
 		var page = new GamePage3D(this);
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		// register event handler for opening page context menu
@@ -66,12 +65,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 			currentGameScene().ifPresent(gameScene -> {
 				page.contextMenu().hide();
 				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
-					page.contextMenu().rebuild(actionHandler(), gameScene);
+					page.contextMenu().rebuild(this, gameScene);
 					page.contextMenu().show(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
 				}
 			})
 		);
-		gameScenePy.addListener((obj, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
+		gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
 		return page;
 	}
 
@@ -103,7 +102,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected void updateStage() {
 		var variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
-		var titleKey = "app.title." + variantKey + (gameClock().isPaused()? ".paused" : "");
+		var titleKey = "app.title." + variantKey + (gameClock().isPaused() ? ".paused" : "");
 		var dimension = message(PY_3D_ENABLED.get() ? "threeD" : "twoD");
 		stage.setTitle(message(titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
