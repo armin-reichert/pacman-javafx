@@ -30,12 +30,12 @@ public class Dashboard extends VBox {
 
 	public Dashboard(Theme theme) {
 		sections.add(new SectionGeneral(theme, "General"));
-		sections.add(new SectionKeys(theme, "Keyboard Shortcuts"));
 		sections.add(new SectionAppearance(theme, "Appearance"));
 		sections.add(new Section3D(theme, "3D Settings"));
 		sections.add(new SectionGameControl(theme, "Game Control"));
 		sections.add(new SectionGameInfo(theme, "Game Info"));
 		sections.add(new SectionGhostsInfo(theme, "Ghosts Info"));
+		sections.add(new SectionKeys(theme, "Keyboard Shortcuts"));
 		sections.add(new SectionAbout(theme, "About"));
 		sections().map(Section::getRoot).forEach(getChildren()::add);
 	}

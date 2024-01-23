@@ -19,11 +19,12 @@ public class SectionKeys extends Section {
 	public SectionKeys(Theme theme, String title) {
 		super(theme, title);
 
-		addInfo("F1", "Dashboard On/Off");
+		addInfo("F1, Alt+B", "Dashboard On/Off");
 		addInfo("F2", "Picture-in-Picture");
 		addInfo("F3", "Reboot");
 		addInfo("Alt+A", "Autopilot On/Off");
-		addInfo("Alt+B", "Dashboard On/Off");
+		addInfo("Alt+C", "Play Cut-Scenes")
+			.available(() -> sceneContext.gameState() == GameState.INTRO);
 		addInfo("Alt+E", "Eat All Simple Pellets")
 			.available(() -> game().isPlaying());
 		addInfo("Alt+I", "Player Immunity On/Off");
@@ -33,17 +34,15 @@ public class SectionKeys extends Section {
 			.available(() -> game().isPlaying());
 		addInfo("Alt+X", "Kill Hunting Ghosts")
 			.available(() -> game().isPlaying());
-		addInfo("Alt+Z", "Play Cut-Scenes")
-			.available(() -> sceneContext.gameState() == GameState.INTRO);
 		addInfo("Alt+LEFT", () -> PY_3D_PERSPECTIVE.get().prev().name())
 			.available(this::isCurrentGameScene3D);
 		addInfo("Alt+RIGHT", () -> PY_3D_PERSPECTIVE.get().next().name())
 			.available(this::isCurrentGameScene3D);
 		addInfo("Alt+3", "3D Play Scene On/Off");
 		addInfo("P", "Pause On/Off");
-		addInfo("SHIFT+P/SPACE", "Single Step");
-		addInfo("Q", "Return to Intro Scene");
-		addInfo("V", "Switch Pac-Man / Ms. Pac-Man");
+		addInfo("Shift+P, SPACE", "Single Step");
+		addInfo("Q", "Quit, Return to Intro Scene");
+		addInfo("V", "Switch Game Variant");
 		addInfo("1", "Start Playing (Credit Required)");
 		addInfo("5", "Add Credit");
 	}
