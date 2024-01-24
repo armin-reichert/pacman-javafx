@@ -10,8 +10,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.time.LocalTime;
-
 /**
  * @author Armin Reichert
  */
@@ -26,8 +24,6 @@ public class PacManGames3dApp extends Application {
 			settings.merge(getParameters().getNamed());
 		}
 		GameController.create(settings.variant);
-		int hour = LocalTime.now().getHour();
-		PacManGames3dUI.PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
 		Logger.info("Game initialized: {}", settings);
 	}
 

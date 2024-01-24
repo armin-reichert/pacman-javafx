@@ -28,6 +28,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -88,6 +89,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		super(stage, settings);
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
 		PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
+		int hour = LocalTime.now().getHour();
+		PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
 		gamePage().dashboard().sections().forEach(section -> section.init(this));
 	}
 
