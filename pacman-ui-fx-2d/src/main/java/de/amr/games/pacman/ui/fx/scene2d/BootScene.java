@@ -10,8 +10,8 @@ import javafx.geometry.Rectangle2D;
 
 import static de.amr.games.pacman.lib.Globals.RND;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.CANVAS_WIDTH_UNSCALED;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.CANVAS_HEIGHT_UNSCALED;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.CANVAS_WIDTH_UNSCALED;
 
 /**
  * @author Armin Reichert

@@ -12,9 +12,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.CANVAS_HEIGHT_UNSCALED;
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.CANVAS_WIDTH_UNSCALED;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.PIP_MIN_HEIGHT;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.CANVAS_HEIGHT_UNSCALED;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.CANVAS_WIDTH_UNSCALED;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PIP_MIN_HEIGHT;
 
 /**
  * @author Armin Reichert

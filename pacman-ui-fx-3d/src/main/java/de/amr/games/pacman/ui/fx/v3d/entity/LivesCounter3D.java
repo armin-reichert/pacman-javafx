@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -72,9 +72,9 @@ public class LivesCounter3D {
 				pacShape.setRotationAxis(Rotate.Z_AXIS);
 				pacShape.setRotate(180);
 			}
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(PacManGames3dApp.PY_3D_DRAW_MODE);
-			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+			Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
 			var plateRotation = new RotateTransition(Duration.seconds(20.0), pacShape);
 			plateRotation.setAxis(Rotate.Z_AXIS);
@@ -111,7 +111,7 @@ public class LivesCounter3D {
 		plate.setTranslateZ(-PILLAR_HEIGHT - PLATE_THICKNESS);
 		plate.setRotationAxis(Rotate.X_AXIS);
 		plate.setRotate(90);
-		plate.drawModeProperty().bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		plate.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
 		var pillar = new Cylinder(1, PILLAR_HEIGHT);
 		pillar.setMaterial(pillarMaterial);
@@ -119,7 +119,7 @@ public class LivesCounter3D {
 		pillar.setTranslateZ(-0.5 * PILLAR_HEIGHT);
 		pillar.setRotationAxis(Rotate.X_AXIS);
 		pillar.setRotate(90);
-		pillar.drawModeProperty().bind(PacManGames3dApp.PY_3D_DRAW_MODE);
+		pillar.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
 		standsGroup.getChildren().addAll(plate, pillar);
 	}

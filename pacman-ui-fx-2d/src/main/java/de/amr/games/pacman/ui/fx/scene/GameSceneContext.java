@@ -13,8 +13,10 @@ import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.media.AudioClip;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * @author Armin Reichert
@@ -30,6 +32,8 @@ public interface GameSceneContext {
   Map<String, GameScene> sceneConfig();
 
   Theme theme();
+
+  List<ResourceBundle> messageBundles();
 
   <S extends SpriteSheet> S spriteSheet();
 

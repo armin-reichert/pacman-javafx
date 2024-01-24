@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_PERSPECTIVE;
 
 /**
  * Keyboard shortcuts.

@@ -26,9 +26,13 @@ import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -36,15 +40,11 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.PY_SHOW_DEBUG_INFO;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
+import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
 /**
@@ -53,6 +53,37 @@ import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
  * @author Armin Reichert
  */
 public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler {
+
+	public static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(
+		"de.amr.games.pacman.ui.fx.texts.messages", PacManGames2dUI.class.getModule());
+
+	public static final KeyCodeCombination KEY_CHEAT_EAT_ALL     = alt(KeyCode.E);
+	public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES   = alt(KeyCode.L);
+	public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL  = alt(KeyCode.N);
+	public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS = alt(KeyCode.X);
+	public static final KeyCodeCombination KEY_AUTOPILOT         = alt(KeyCode.A);
+	public static final KeyCodeCombination KEY_DEBUG_INFO        = alt(KeyCode.D);
+	public static final KeyCodeCombination KEY_IMMUNITY          = alt(KeyCode.I);
+	public static final KeyCodeCombination KEY_PAUSE             = just(KeyCode.P);
+	public static final KeyCodeCombination[] KEYS_SINGLE_STEP    = { just(KeyCode.SPACE), shift(KeyCode.P) };
+	public static final KeyCodeCombination KEY_TEN_STEPS         = shift(KeyCode.SPACE);
+	public static final KeyCodeCombination KEY_SIMULATION_FASTER = alt(KeyCode.PLUS);
+	public static final KeyCodeCombination KEY_SIMULATION_SLOWER = alt(KeyCode.MINUS);
+	public static final KeyCodeCombination KEY_SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
+	public static final KeyCodeCombination[] KEYS_START_GAME     = { just(KeyCode.DIGIT1), just(KeyCode.NUMPAD1) };
+	public static final KeyCodeCombination[] KEYS_ADD_CREDIT     = { just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5) };
+	public static final KeyCodeCombination KEY_QUIT              = just(KeyCode.Q);
+	public static final KeyCodeCombination KEY_TEST_LEVELS       = alt(KeyCode.T);
+	public static final KeyCodeCombination KEY_SELECT_VARIANT    = just(KeyCode.V);
+	public static final KeyCodeCombination KEY_PLAY_CUTSCENES    = alt(KeyCode.C);
+	public static final KeyCodeCombination KEY_SHOW_HELP         = just(KeyCode.H);
+	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
+	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
+
+	public static final int CANVAS_WIDTH_UNSCALED  = GameModel.TILES_X * Globals.TS; // 224
+	public static final int CANVAS_HEIGHT_UNSCALED = GameModel.TILES_Y * Globals.TS; // 288
+
+	public static final BooleanProperty PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);
 
 	protected final GameClock clock;
 	protected final Map<GameVariant, Map<String, GameScene>> gameScenes = new EnumMap<>(GameVariant.class);
@@ -253,7 +284,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected GamePage createGamePage() {
-		var page = new GamePage(this);
+		var page = new GamePage(this, messageBundles());
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
 		return page;
@@ -295,7 +326,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		if (clock.isPaused()) {
 			titleKey += ".paused";
 		}
-		stage.setTitle(message(PacManGames2dApp.TEXTS, titleKey));
+		stage.setTitle(ResourceManager.message(messageBundles(), titleKey));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 	}
 
@@ -337,6 +368,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	// GameSceneContext interface implementation
 
+	@Override
+	public List<ResourceBundle> messageBundles() {
+		return List.of(MSG_BUNDLE);
+	}
 
 	@Override
 	public GameClock gameClock() {
@@ -521,7 +556,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	public void toggleAutopilot() {
 		gameController().toggleAutoControlled();
 		var auto = gameController().isAutoControlled();
-		String message = message(PacManGames2dApp.TEXTS, auto ? "autopilot_on" : "autopilot_off");
+		String message = ResourceManager.message(messageBundles(), auto ? "autopilot_on" : "autopilot_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
 	}
@@ -530,7 +565,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	public void toggleImmunity() {
 		gameController().setImmune(!gameController().isImmune());
 		var immune = gameController().isImmune();
-		String message = message(PacManGames2dApp.TEXTS, immune ? "player_immunity_on" : "player_immunity_off");
+		String message = ResourceManager.message(messageBundles(), immune ? "player_immunity_on" : "player_immunity_off");
 		showFlashMessage(message);
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}
@@ -561,7 +596,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	@Override
 	public void cheatAddLives() {
 		game().addLives((short) 3);
-		showFlashMessage(message(PacManGames2dApp.TEXTS, "cheat_add_lives", game().lives()));
+		showFlashMessage(ResourceManager.message(messageBundles(), "cheat_add_lives", game().lives()));
 	}
 
 	@Override

@@ -5,20 +5,21 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
+import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.beans.property.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -27,8 +28,13 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
+import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
+import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -43,11 +49,51 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
  */
 public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D {
 
+	public static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(
+		"de.amr.games.pacman.ui.fx.v3d.texts.messages", PacManGames3dUI.class.getModule());
+
+	public static final float           PIP_MIN_HEIGHT           = 0.75f * GameModel.TILES_Y * TS;
+	public static final float           PIP_MAX_HEIGHT           = 2.00f * GameModel.TILES_Y * TS;
+	public static final DoubleProperty PY_PIP_OPACITY           = new SimpleDoubleProperty(0.66);
+	public static final DoubleProperty  PY_PIP_HEIGHT            = new SimpleDoubleProperty(GameModel.TILES_Y * TS);
+	public static final BooleanProperty PY_PIP_ON                = new SimpleBooleanProperty(false);
+	public static final IntegerProperty PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
+	public static final BooleanProperty PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
+	public static final BooleanProperty PY_3D_ENABLED            = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR  = new SimpleObjectProperty<>(Color.grayRgb(0x33));
+	public static final StringProperty  PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
+	public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
+	public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR  = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+	public static final BooleanProperty PY_3D_NIGHT_MODE         = new SimpleBooleanProperty(false);
+	public static final DoubleProperty  PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(1.75);
+	public static final DoubleProperty  PY_3D_WALL_THICKNESS     = new SimpleDoubleProperty(1.25);
+	public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
+	public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
+	public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
+	public static final BooleanProperty PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
+	public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD = { just(KeyCode.F1), alt(KeyCode.B) };
+	public static final KeyCodeCombination   KEY_TOGGLE_PIP_VIEW   = just(KeyCode.F2);
+	public static final KeyCodeCombination   KEY_TOGGLE_2D_3D      = alt(KeyCode.DIGIT3);
+	public static final KeyCodeCombination   KEY_PREV_PERSPECTIVE  = alt(KeyCode.LEFT);
+	public static final KeyCodeCombination   KEY_NEXT_PERSPECTIVE  = alt(KeyCode.RIGHT);
+	public static final Picker<String> PICKER_READY_PACMAN    = Picker.fromBundle(MSG_BUNDLE, "pacman.ready");
+	public static final Picker<String> PICKER_READY_MS_PACMAN = Picker.fromBundle(MSG_BUNDLE, "mspacman.ready");
+	public static final Picker<String> PICKER_CHEATING        = Picker.fromBundle(MSG_BUNDLE, "cheating");
+	public static final Picker<String> PICKER_LEVEL_COMPLETE  = Picker.fromBundle(MSG_BUNDLE, "level.complete");
+	public static final Picker<String> PICKER_GAME_OVER       = Picker.fromBundle(MSG_BUNDLE, "game.over");
+	public static final String NO_TEXTURE = "No Texture";
+
 	public PacManGames3dUI(Stage stage, Settings settings) {
 		super(stage, settings);
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
 		PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
 		gamePage().dashboard().sections().forEach(section -> section.init(this));
+	}
+
+	@Override
+	public List<ResourceBundle> messageBundles() {
+		return List.of(MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE);
 	}
 
 	@Override
@@ -174,14 +220,14 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected GamePage3D createGamePage() {
 		checkNotNull(mainScene);
-		var page = new GamePage3D(this);
+		var page = new GamePage3D(this, messageBundles());
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		// register event handler for opening page context menu
 		mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
 			currentGameScene().ifPresent(gameScene -> {
 				page.contextMenu().hide();
 				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
-					page.contextMenu().rebuild(this, gameScene);
+					page.contextMenu().rebuild(this, gameScene, messageBundles());
 					page.contextMenu().show(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
 				}
 			})
@@ -219,8 +265,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected void updateStage() {
 		var variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
 		var titleKey = "app.title." + variantKey + (gameClock().isPaused() ? ".paused" : "");
-		var dimension = message(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-		stage.setTitle(message(titleKey, dimension));
+		var dimension = ResourceManager.message(messageBundles(), PY_3D_ENABLED.get() ? "threeD" : "twoD");
+		stage.setTitle(ResourceManager.message(messageBundles(), titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 		gamePage().updateBackground();
 	}
@@ -243,26 +289,28 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 				gameScene.onSceneVariantSwitch();
 			}
 			gameController().update();
-			showFlashMessage(message(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(ResourceManager.message(messageBundles(), PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 		});
 	}
 
 	@Override
 	public void togglePipVisible() {
 		Ufx.toggle(PY_PIP_ON);
-		showFlashMessage(message(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+		showFlashMessage(ResourceManager.message(messageBundles(), PY_PIP_ON.get() ? "pip_on" : "pip_off"));
 	}
 
 	@Override
 	public void selectNextPerspective() {
 		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().next());
-		showFlashMessage(message("camera_perspective", message(PY_3D_PERSPECTIVE.get().name())));
+		showFlashMessage(ResourceManager.message(messageBundles(), "camera_perspective",
+			ResourceManager.message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	@Override
 	public void selectPrevPerspective() {
 		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().prev());
-		showFlashMessage(message("camera_perspective", message(PY_3D_PERSPECTIVE.get().name())));
+		showFlashMessage(ResourceManager.message(messageBundles(), "camera_perspective",
+			ResourceManager.message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	@Override

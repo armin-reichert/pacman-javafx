@@ -33,9 +33,9 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.oneOf;
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 
 /**
  * @author Armin Reichert
@@ -58,8 +58,11 @@ public class GamePage implements Page {
 
 	protected double scaling = 1.0;
 
-	public GamePage(GameSceneContext sceneContext) {
+	protected List<ResourceBundle> messageBundles;
+
+	public GamePage(GameSceneContext sceneContext, List<ResourceBundle> messageBundles) {
 		this.sceneContext = sceneContext;
+		this.messageBundles = messageBundles;
 
 		gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
@@ -78,7 +81,7 @@ public class GamePage implements Page {
 
 		layers.setOnKeyPressed(this::handleKeyPressed);
 
-		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
+		PacManGames2dUI.PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
 	}
 
 	@Override
@@ -99,9 +102,9 @@ public class GamePage implements Page {
 
 	@Override
 	public void setSize(double width, double height) {
-		double s = 0.9 * height / CANVAS_HEIGHT_UNSCALED;
-		if (s * CANVAS_WIDTH_UNSCALED > 0.8 * width) {
-			s = 0.8 * width / CANVAS_WIDTH_UNSCALED;
+		double s = 0.9 * height / PacManGames2dUI.CANVAS_HEIGHT_UNSCALED;
+		if (s * PacManGames2dUI.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
+			s = 0.8 * width / PacManGames2dUI.CANVAS_WIDTH_UNSCALED;
 		}
 		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
 		scalePage(s, false);
@@ -127,11 +130,11 @@ public class GamePage implements Page {
 		}
 		this.scaling = scaling;
 
-		double w = Math.round( (CANVAS_WIDTH_UNSCALED  + 25) * scaling );
-		double h = Math.round( (CANVAS_HEIGHT_UNSCALED + 15) * scaling );
+		double w = Math.round( (PacManGames2dUI.CANVAS_WIDTH_UNSCALED  + 25) * scaling );
+		double h = Math.round( (PacManGames2dUI.CANVAS_HEIGHT_UNSCALED + 15) * scaling );
 
-		canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
-		canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
+		canvas.setWidth(PacManGames2dUI.CANVAS_WIDTH_UNSCALED * scaling);
+		canvas.setHeight(PacManGames2dUI.CANVAS_HEIGHT_UNSCALED * scaling);
 
 		var roundedRect = new Rectangle(w, h);
 		roundedRect.setArcWidth (26 * scaling);
@@ -181,7 +184,7 @@ public class GamePage implements Page {
 	}
 
 	protected void updateDebugBorders()  {
-		if (PY_SHOW_DEBUG_INFO.get()) {
+		if (PacManGames2dUI.PY_SHOW_DEBUG_INFO.get()) {
 			layers.setBorder(ResourceManager.border(Color.RED, 3));
 			gameSceneLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
 			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
@@ -227,37 +230,37 @@ public class GamePage implements Page {
 	protected void handleKeyboardInput() {
 		var actionHandler = sceneContext.actionHandler();
 		var gameState = sceneContext.gameState();
-		if (Keyboard.pressed(KEY_AUTOPILOT)) {
+		if (Keyboard.pressed(PacManGames2dUI.KEY_AUTOPILOT)) {
 			actionHandler.toggleAutopilot();
-		} else if (Keyboard.pressed(KEY_BOOT)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_BOOT)) {
 			if (gameState != GameState.BOOT) {
 				actionHandler.reboot();
 			}
-		} else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
-			Ufx.toggle(PY_SHOW_DEBUG_INFO);
-		} else if (Keyboard.pressed(KEY_FULLSCREEN)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_DEBUG_INFO)) {
+			Ufx.toggle(PacManGames2dUI.PY_SHOW_DEBUG_INFO);
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_FULLSCREEN)) {
 			actionHandler.setFullScreen(true);
-		} else if (Keyboard.pressed(KEY_IMMUNITY)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_IMMUNITY)) {
 			actionHandler.toggleImmunity();
-		} else if (Keyboard.pressed(KEY_SHOW_HELP)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SHOW_HELP)) {
 			showHelpMenu();
-		} else if (Keyboard.pressed(KEY_PAUSE)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_PAUSE)) {
 			actionHandler.togglePaused();
-		} else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEYS_SINGLE_STEP)) {
 			actionHandler.oneSimulationStep();
-		} else if (Keyboard.pressed(KEY_TEN_STEPS)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_TEN_STEPS)) {
 			actionHandler.tenSimulationSteps();
-		} else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SIMULATION_FASTER)) {
 			actionHandler.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SIMULATION_SLOWER)) {
 			actionHandler.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SIMULATION_NORMAL)) {
 			actionHandler.resetSimulationSpeed();
-		} else if (Keyboard.pressed(KEY_QUIT)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_QUIT)) {
 			if (gameState != GameState.BOOT && gameState != GameState.INTRO) {
 				actionHandler.restartIntro();
 			}
-		} else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_TEST_LEVELS)) {
 			actionHandler.startLevelTestMode();
 		} else {
 			sceneContext.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
@@ -265,15 +268,6 @@ public class GamePage implements Page {
 	}
 
 	// Menu stuff
-
-	protected void showHelpMenu() {
-		currentHelpMenu().ifPresent(content -> {
-			helpMenu.setTranslateX(10 * scaling);
-			helpMenu.setTranslateY(30 * scaling);
-			helpMenu.setContent(content);
-			helpMenu.show(MENU_FADING_DELAY);
-		});
-	}
 
 	private class Menu {
 		private final List<Node> column0 = new ArrayList<>();
@@ -347,12 +341,17 @@ public class GamePage implements Page {
 		}
 	}
 
-	/**
-	 * @param key resource bundle key
-	 * @return translated text
-	 */
-	private static String tt(String key) {
-		return PacManGames2dApp.TEXTS.getString(key);
+	protected void showHelpMenu() {
+		currentHelpMenu().ifPresent(content -> {
+			helpMenu.setTranslateX(10 * scaling);
+			helpMenu.setTranslateY(30 * scaling);
+			helpMenu.setContent(content);
+			helpMenu.show(MENU_FADING_DELAY);
+		});
+	}
+
+	protected String tt(String key) {
+		return ResourceManager.message(messageBundles, key);
 	}
 
 	private Optional<Pane> currentHelpMenu() {

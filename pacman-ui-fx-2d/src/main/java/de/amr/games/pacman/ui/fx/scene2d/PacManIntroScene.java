@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManGhostAnimations;
@@ -14,7 +15,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 
 /**
  * Intro scene of the PacMan game.
@@ -53,13 +53,13 @@ public class PacManIntroScene extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(KEYS_ADD_CREDIT)) {
+		if (Keyboard.pressed(PacManGames2dUI.KEYS_ADD_CREDIT)) {
 			context.actionHandler().addCredit();
-		} else if (Keyboard.pressed(KEYS_START_GAME)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEYS_START_GAME)) {
 			context.actionHandler().startGame();
-		} else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SELECT_VARIANT)) {
 			context.actionHandler().switchGameVariant();
-		} else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
+		} else if (Keyboard.pressed(PacManGames2dUI.KEY_PLAY_CUTSCENES)) {
 			context.actionHandler().startCutscenesTest();
 		}
 	}

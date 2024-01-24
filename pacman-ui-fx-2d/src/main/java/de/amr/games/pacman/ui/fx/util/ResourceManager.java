@@ -15,6 +15,7 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -27,17 +28,22 @@ public interface ResourceManager {
 
 	/**
 	 * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
-	 * resource bundle.
+	 * first resource bundle containing the key.
 	 * 
-	 * @param bundle	resource bundle
+	 * @param bundles	resource bundle list
 	 * @param key 		key in resource bundle
 	 * @param args		optional arguments merged into the message (if pattern)
-	 * @return localized text with arguments merged or a string indicating a missing text
+	 * @return localized text with arguments merged or {@code null} if no text is available
 	 */
-	public static String message(ResourceBundle bundle, String key, Object... args) {
-		checkNotNull(bundle);
+	public static String message(List<ResourceBundle> bundles, String key, Object... args) {
+		checkNotNull(bundles);
 		checkNotNull(key);
-		return MessageFormat.format(bundle.getString(key), args);
+		for (var bundle : bundles) {
+			if (bundle.containsKey(key)) {
+				return MessageFormat.format(bundle.getString(key), args);
+			}
+		}
+		return null;
 	}
 
 	public static Background coloredBackground(Color color) {

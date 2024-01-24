@@ -18,8 +18,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.games.pacman.ui.fx.PacManGames2dApp.PY_SHOW_DEBUG_INFO;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
 
 /**
  * @author Armin Reichert
@@ -31,21 +33,21 @@ public class GamePage3D extends GamePage {
 	private final Dashboard dashboard;
 	private final GamePageContextMenu contextMenu;
 
-	public GamePage3D(GameSceneContext sceneContext) {
-		super(sceneContext);
+	public GamePage3D(GameSceneContext sceneContext, List<ResourceBundle> messageBundles) {
+		super(sceneContext, messageBundles);
 
 		pip = new PictureInPicture();
 		pip.gameScene().setContext(sceneContext);
-		pip.opacityPy.bind(PY_PIP_OPACITY);
-		pip.heightPy.bind(PY_PIP_HEIGHT);
-		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
+		pip.opacityPy.bind(PacManGames3dUI.PY_PIP_OPACITY);
+		pip.heightPy.bind(PacManGames3dUI.PY_PIP_HEIGHT);
+		PacManGames3dUI.PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
 
 		dashboard = new Dashboard(sceneContext.theme());
 		dashboard.setVisible(false);
 		dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
 		contextMenu = new GamePageContextMenu();
-		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
+		PacManGames3dUI.PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 
 		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
@@ -58,6 +60,11 @@ public class GamePage3D extends GamePage {
 
 	public Dashboard dashboard() {
 		return dashboard;
+	}
+
+	@Override
+	protected String tt(String key) {
+		return ResourceManager.message(messageBundles, key);
 	}
 
 	@Override
@@ -83,10 +90,10 @@ public class GamePage3D extends GamePage {
 
 	public void updateBackground() {
 		if (isCurrentGameScene3D()) {
-			if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+			if (PacManGames3dUI.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
+				var wallpaperKey = PacManGames3dUI.PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
 				layers.setBackground(sceneContext.theme().background(wallpaperKey));
 			}
 		} else {
@@ -99,18 +106,18 @@ public class GamePage3D extends GamePage {
 		super.render();
 		contextMenu.updateState();
 		dashboard.update();
-		pip.root().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
+		pip.root().setVisible(PacManGames3dUI.PY_PIP_ON.get() && isCurrentGameScene3D());
 		pip.render();
 	}
 
 	@Override
 	protected void handleKeyboardInput() {
 		var actionHandler3D = (ActionHandler3D) sceneContext.actionHandler();
-		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
+		if (Keyboard.pressed(PacManGames3dUI.KEY_TOGGLE_2D_3D)) {
 			actionHandler3D.toggle2D3D();
-		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
+		} else if (Keyboard.pressed(PacManGames3dUI.KEYS_TOGGLE_DASHBOARD)) {
 			dashboard.setVisible(!dashboard.isVisible());
-		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
+		} else if (Keyboard.pressed(PacManGames3dUI.KEY_TOGGLE_PIP_VIEW)) {
 			actionHandler3D.togglePipVisible();
 		} else {
 			super.handleKeyboardInput();
@@ -145,7 +152,7 @@ public class GamePage3D extends GamePage {
 
 	private void updateTopLayer() {
 		layers.getChildren().remove(topLayer);
-		if (dashboard.isVisible() || PY_PIP_ON.get()) {
+		if (dashboard.isVisible() || PacManGames3dUI.PY_PIP_ON.get()) {
 			layers.getChildren().add(topLayer);
 		}
 		layers.requestFocus();
