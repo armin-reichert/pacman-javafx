@@ -7,17 +7,11 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
