@@ -46,7 +46,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.message;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp.*;
 
 /**

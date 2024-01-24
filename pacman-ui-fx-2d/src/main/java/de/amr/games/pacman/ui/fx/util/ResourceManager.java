@@ -73,6 +73,8 @@ public interface ResourceManager {
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
+	Class<?> getResourceRootClass();
+
 	/**
 	 * Creates a URL from a resource path. If the path does not start with a slash, the path to the resource
 	 * root directory is prepended.
@@ -82,7 +84,7 @@ public interface ResourceManager {
 	 */
 	default URL url(String path) {
 		checkNotNull(path);
-		URL url = getClass().getResource(path);
+		URL url = getResourceRootClass().getResource(path);
 		if (url == null) {
 			throw new MissingResourceException(
 					String.format("Resource '%s' not found relative to class '%s'", path, getClass()),

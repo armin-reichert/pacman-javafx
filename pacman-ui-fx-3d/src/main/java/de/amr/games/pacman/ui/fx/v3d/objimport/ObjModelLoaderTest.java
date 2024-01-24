@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.objimport;
 
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dApp;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import org.tinylog.Logger;
 
@@ -15,8 +16,8 @@ public class ObjModelLoaderTest {
 
 	public static void main(String[] args) {
 		if (args.length > 0) {
-			var app = new PacManGames3dApp();
-			var url = app.url(args[0]);
+			ResourceManager rm = () -> PacManGames3dUI.class;
+			var url = rm.url(args[0]);
 			var model = new Model3D(url);
 			System.out.println(model.contentReport());
 		} else {
