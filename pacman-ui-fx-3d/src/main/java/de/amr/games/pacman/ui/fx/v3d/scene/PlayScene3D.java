@@ -46,7 +46,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
-import static de.amr.games.pacman.ui.fx.PacManGames2dUI.KEY_CHEAT_NEXT_LEVEL;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 

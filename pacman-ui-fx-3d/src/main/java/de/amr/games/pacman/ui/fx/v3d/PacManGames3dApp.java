@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.time.LocalTime;
-import java.util.ResourceBundle;
 
 /**
  * @author Armin Reichert
