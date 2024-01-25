@@ -150,7 +150,7 @@ public class PlayScene3D implements GameScene {
 		fxSubScene.heightProperty().bind(heightPy);
 	}
 
-	public CameraController currentCamController() {
+	private CameraController currentCamController() {
 		return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
 	}
 
@@ -161,19 +161,18 @@ public class PlayScene3D implements GameScene {
 		}
 
 		level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
+		// replace initial placeholder or previous 3D level
+		((Group) fxSubScene.getRoot()).getChildren().set(0, level3D.root());
 
 		// center over origin
-		var centerX = level.world().numCols() * HTS;
-		var centerY = level.world().numRows() * HTS;
+		double centerX = level.world().numCols() * HTS;
+		double centerY = level.world().numRows() * HTS;
 		level3D.root().setTranslateX(-centerX);
 		level3D.root().setTranslateY(-centerY);
 
 		// keep the scores rotated such that the viewer always sees them frontally
 		level3D.scores3D().getRoot().rotationAxisProperty().bind(camera.rotationAxisProperty());
 		level3D.scores3D().getRoot().rotateProperty().bind(camera.rotateProperty());
-
-		// replace initial placeholder or previous 3D level
-		((Group) fxSubScene.getRoot()).getChildren().set(0, level3D.root());
 
 		if (context.gameState() == GameState.LEVEL_TEST) {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
@@ -217,9 +216,8 @@ public class PlayScene3D implements GameScene {
 		}
 	}
 
-	public String camInfo() {
-		return "x=%.0f y=%.0f z=%.0f rot=%.0f".formatted(
-			camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ(), camera.getRotate());
+	public PerspectiveCamera getCamera() {
+		return camera;
 	}
 
 	@Override
