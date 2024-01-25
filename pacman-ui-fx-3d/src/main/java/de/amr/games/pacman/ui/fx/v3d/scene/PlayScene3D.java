@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -18,7 +17,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
@@ -43,14 +41,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PICKER_LEVEL_COMPLETE;
 
 /**
  * 3D play scene.
@@ -65,13 +64,14 @@ public class PlayScene3D implements GameScene {
 	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
 		@Override
 		protected void invalidated() {
-			Logger.info("Perspective set to {}", perspectivePy.get());
-			currentCamController().reset(fxSubScene.getCamera());
+			Logger.info("Perspective set to {}", get());
+			currentCamController().reset(camera);
 		}
 	};
 
 	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
 	private final SubScene fxSubScene;
+	private final PerspectiveCamera camera;
 	private final Text3D readyMessageText3D;
 	private GameLevel3D level3D;
 	private GameSceneContext context;
@@ -93,7 +93,8 @@ public class PlayScene3D implements GameScene {
 		var sceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 		// initial sub-scene size is irrelevant, gets bound to main scene size in init method
 		fxSubScene = new SubScene(sceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
-		fxSubScene.setCamera(new PerspectiveCamera(true));
+		camera = new PerspectiveCamera(true);
+		fxSubScene.setCamera(camera);
 	}
 
 	@Override
@@ -124,7 +125,7 @@ public class PlayScene3D implements GameScene {
 	public void update() {
 		if (level3D != null) {
 			level3D.update();
-			currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
+			currentCamController().update(camera, level3D.pac3D());
 			updateSound();
 		}
 	}
@@ -168,8 +169,8 @@ public class PlayScene3D implements GameScene {
 		level3D.root().setTranslateY(-centerY);
 
 		// keep the scores rotated such that the viewer always sees them frontally
-		level3D.scores3D().getRoot().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-		level3D.scores3D().getRoot().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+		level3D.scores3D().getRoot().rotationAxisProperty().bind(camera.rotationAxisProperty());
+		level3D.scores3D().getRoot().rotateProperty().bind(camera.rotateProperty());
 
 		// replace initial placeholder or previous 3D level
 		((Group) fxSubScene.getRoot()).getChildren().set(0, level3D.root());
@@ -217,9 +218,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	public String camInfo() {
-		var cam = fxSubScene.getCamera();
-		return "x=%.0f y=%.0f z=%.0f rot=%.0f".formatted(cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ(),
-			cam.getRotate());
+		return "x=%.0f y=%.0f z=%.0f rot=%.0f".formatted(
+			camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ(), camera.getRotate());
 	}
 
 	@Override
@@ -324,30 +324,20 @@ public class PlayScene3D implements GameScene {
 			}
 
 			case GHOST_DYING -> {
-				switch (context.gameVariant()) {
-					case MS_PACMAN -> {
-						var ss = context.<MsPacManSpriteSheet>spriteSheet();
-						level.thisFrame().killedGhosts.forEach(ghost -> {
-							var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
-							level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
-						});
-					}
-					case PACMAN -> {
-						var ss = context.<PacManSpriteSheet>spriteSheet();
-						level.thisFrame().killedGhosts.forEach(ghost -> {
-							var numberImage = ss.subImage(ss.ghostNumberSprites()[ghost.killedIndex()]);
-							level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
-						});
-					}
-					default -> throw new IllegalGameVariantException(context.gameVariant());
-				}
+				Supplier<Rectangle2D[]> spriteSupplier = switch (context.gameVariant()) {
+					case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet()::ghostNumberSprites;
+					case PACMAN    -> context.<PacManSpriteSheet>spriteSheet()::ghostNumberSprites;
+				};
+				level.thisFrame().killedGhosts.forEach(ghost -> {
+					var numberImage = context.spriteSheet().subImage(spriteSupplier.get()[ghost.killedIndex()]);
+					level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+				});
 			}
 
 			case CHANGING_TO_NEXT_LEVEL -> {
-				context.gameState().timer().resetIndefinitely();
-				replaceGameLevel3D(level);
-				currentCamController().reset(fxSubScene.getCamera());
 				keepGameStateForSeconds(3);
+				replaceGameLevel3D(level);
+				currentCamController().reset(camera);
 			}
 
 			case LEVEL_COMPLETE -> {
@@ -410,7 +400,7 @@ public class PlayScene3D implements GameScene {
 
 	private String pickLevelCompleteMessage(int levelNumber) {
 		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
-			ResourceManager.message(context.messageBundles(),"level_complete", levelNumber));
+			message(context.messageBundles(),"level_complete", levelNumber));
 	}
 
 	private Animation createLevelChangeAnimation() {
