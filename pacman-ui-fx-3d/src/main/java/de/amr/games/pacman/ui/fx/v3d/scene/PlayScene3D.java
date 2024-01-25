@@ -20,7 +20,6 @@ import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
@@ -30,6 +29,7 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -42,12 +42,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PICKER_LEVEL_COMPLETE;
 
 /**
  * 3D play scene.
@@ -81,10 +84,10 @@ public class PlayScene3D implements GameScene {
 		camControllerMap.put(Perspective.TOTAL,            new CamTotal());
 
 		var coordSystem = new CoordSystem();
-		coordSystem.visibleProperty().bind(PacManGames3dUI.PY_3D_AXES_VISIBLE);
+		coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
 		var ambientLight = new AmbientLight();
-		ambientLight.colorProperty().bind(PacManGames3dUI.PY_3D_LIGHT_COLOR);
+		ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
 		readyMessageText3D = new Text3D();
 		var sceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
@@ -107,7 +110,7 @@ public class PlayScene3D implements GameScene {
 	public void init() {
 		setScoreVisible(true);
 		resetReadyMessageText3D();
-		perspectivePy.bind(PacManGames3dUI.PY_3D_PERSPECTIVE);
+		perspectivePy.bind(PY_3D_PERSPECTIVE);
 		context.gameLevel().ifPresent(this::replaceGameLevel3D);
 		Logger.info("3D play scene initialized.");
 	}
@@ -175,9 +178,9 @@ public class PlayScene3D implements GameScene {
 			readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
 		}
 
-		if (PacManGames3dUI.PY_3D_FLOOR_TEXTURE_RND.get()) {
+		if (PY_3D_FLOOR_TEXTURE_RND.get()) {
 			List<String> names = context.theme().getArray("texture.names");
-			PacManGames3dUI.PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
+			PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
 		}
 		Logger.info("3D game level {} created.", level.number());
 	}
@@ -198,9 +201,9 @@ public class PlayScene3D implements GameScene {
 		var actionHandler = (ActionHandler3D) context.actionHandler();
 		if (Keyboard.pressed(KEYS_ADD_CREDIT) && !context.gameController().hasCredit()) {
 			actionHandler.addCredit();
-		} else if (Keyboard.pressed(PacManGames3dUI.KEY_PREV_PERSPECTIVE)) {
+		} else if (Keyboard.pressed(KEY_PREV_PERSPECTIVE)) {
 			actionHandler.selectPrevPerspective();
-		} else if (Keyboard.pressed(PacManGames3dUI.KEY_NEXT_PERSPECTIVE)) {
+		} else if (Keyboard.pressed(KEY_NEXT_PERSPECTIVE)) {
 			actionHandler.selectNextPerspective();
 		} else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
 			actionHandler.cheatEatAllPellets();
@@ -303,7 +306,7 @@ public class PlayScene3D implements GameScene {
 				level3D.pac3D().init();
 				Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
 				var msg = "READY!";
-				if (!PacManGames3dUI.PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
+				if (!PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
 					msg = pickFunnyReadyMessage(context.gameVariant());
 				}
 				readyMessageText3D.setText(msg);
@@ -375,7 +378,7 @@ public class PlayScene3D implements GameScene {
 			case GAME_OVER -> {
 				level3D.world3D().foodOscillation().stop();
 				level3D.livesCounter3D().stopAnimation();
-				context.actionHandler().showFlashMessageSeconds(3, PacManGames3dUI.PICKER_GAME_OVER.next());
+				context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
 				context.clip("audio.game_over").play();
 				keepGameStateForSeconds(3);
 			}
@@ -400,13 +403,13 @@ public class PlayScene3D implements GameScene {
 
 	private String pickFunnyReadyMessage(GameVariant gameVariant) {
 		return switch (gameVariant) {
-			case MS_PACMAN -> PacManGames3dUI.PICKER_READY_MS_PACMAN.next();
-			case PACMAN    -> PacManGames3dUI.PICKER_READY_PACMAN.next();
+			case MS_PACMAN -> PICKER_READY_MS_PACMAN.next();
+			case PACMAN    -> PICKER_READY_PACMAN.next();
 		};
 	}
 
 	private String pickLevelCompleteMessage(int levelNumber) {
-		return "%s%n%n%s".formatted(PacManGames3dUI.PICKER_LEVEL_COMPLETE.next(),
+		return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
 			ResourceManager.message(context.messageBundles(),"level_complete", levelNumber));
 	}
 
@@ -423,7 +426,7 @@ public class PlayScene3D implements GameScene {
 			}),
 			rotation,
 			actionAfterSeconds(0.5, () -> context.clip("audio.sweep").play()),
-			actionAfterSeconds(0.5, () -> perspectivePy.bind(PacManGames3dUI.PY_3D_PERSPECTIVE))
+			actionAfterSeconds(0.5, () -> perspectivePy.bind(PY_3D_PERSPECTIVE))
 		);
 	}
 
@@ -431,14 +434,14 @@ public class PlayScene3D implements GameScene {
 		if (level.numFlashes == 0) {
 			return pauseSeconds(1.0);
 		}
-		double wallHeight = PacManGames3dUI.PY_3D_WALL_HEIGHT.get();
+		double wallHeight = PY_3D_WALL_HEIGHT.get();
 		var animation = new SinusCurveAnimation(level.numFlashes);
 		animation.setAmplitude(wallHeight);
 		animation.elongationPy.set(level3D.world3D().wallHeightPy.get());
 		level3D.world3D().wallHeightPy.bind(animation.elongationPy);
 		animation.setOnFinished(e -> {
-			level3D.world3D().wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
-			PacManGames3dUI.PY_3D_WALL_HEIGHT.set(wallHeight);
+			level3D.world3D().wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+			PY_3D_WALL_HEIGHT.set(wallHeight);
 		});
 		return animation;
 	}
@@ -449,11 +452,15 @@ public class PlayScene3D implements GameScene {
 			Logger.error("WTF: Where is my 3D game level?");
 			return;
 		}
-		var bonusSprites = switch (context.gameVariant()) {
-			case MS_PACMAN -> context.game().levelCounter().stream().map(context.<MsPacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
-			case PACMAN    -> context.game().levelCounter().stream().map(context.<PacManSpriteSheet>spriteSheet()::bonusSymbolSprite);
+		Function<Byte, Rectangle2D> spriteSupplier = switch (context.gameVariant()) {
+			case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet()::bonusSymbolSprite;
+			case PACMAN    -> context.<PacManSpriteSheet>spriteSheet()::bonusSymbolSprite;
 		};
-		level3D.levelCounter3D().update(bonusSprites.map(context.spriteSheet()::subImage).toArray(Image[]::new));
+		var bonusSprites = context.game().levelCounter().stream()
+			.map(spriteSupplier)
+			.map(context.spriteSheet()::subImage)
+			.toArray(Image[]::new);
+		level3D.levelCounter3D().update(bonusSprites);
 	}
 
 	private void updateSound() {
