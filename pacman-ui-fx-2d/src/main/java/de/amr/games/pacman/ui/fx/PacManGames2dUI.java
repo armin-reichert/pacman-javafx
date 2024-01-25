@@ -80,10 +80,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
 
-	public static final int CANVAS_WIDTH_UNSCALED  = GameModel.TILES_X * Globals.TS; // 224
-	public static final int CANVAS_HEIGHT_UNSCALED = GameModel.TILES_Y * Globals.TS; // 288
+	public static final int CANVAS_WIDTH_UNSCALED  = GameModel.TILES_X * Globals.TS; // 28*8 = 224
+	public static final int CANVAS_HEIGHT_UNSCALED = GameModel.TILES_Y * Globals.TS; // 36*8 = 288
 
-	public static final BooleanProperty PY_SHOW_DEBUG_INFO    = new SimpleBooleanProperty(false);
+	public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
 	protected final GameClock clock;
 	protected final Map<GameVariant, Map<String, GameScene>> gameScenes = new EnumMap<>(GameVariant.class);
@@ -94,15 +94,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	protected final StartPage startPage;
 	protected final GamePage gamePage;
 	protected Page currentPage;
-	public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
+	protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
 	public PacManGames2dUI(Stage stage, Settings settings) {
 		checkNotNull(stage);
 		checkNotNull(settings);
 
-		this.stage = stage;
 		populateTheme();
-		Logger.info("Theme loaded: {}", theme);
+
+		this.stage = stage;
 		this.soundHandler = new SoundHandler(theme);
 		this.mainScene = createMainScene();
 		this.startPage = createStartPage(theme);

@@ -33,6 +33,7 @@ public class PacManGames3dApp extends Application {
 		GameController.it().addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+		Logger.info("Theme: {}", ui.theme());
 	}
 
 	@Override

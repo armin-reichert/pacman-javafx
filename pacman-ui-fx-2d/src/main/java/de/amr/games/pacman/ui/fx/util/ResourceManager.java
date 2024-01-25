@@ -43,6 +43,7 @@ public interface ResourceManager {
 				return MessageFormat.format(bundle.getString(key), args);
 			}
 		}
+		Logger.error("Missing localized text for key {}", key);
 		return null;
 	}
 
