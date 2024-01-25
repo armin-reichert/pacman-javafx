@@ -61,17 +61,16 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class PlayScene3D implements GameScene {
 
-	public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
+	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
+	private final SubScene fxSubScene;
+	private final PerspectiveCamera camera;
+	private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
 		@Override
 		protected void invalidated() {
 			Logger.info("Perspective set to {}", get());
 			currentCamController().reset(camera);
 		}
 	};
-
-	private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
-	private final SubScene fxSubScene;
-	private final PerspectiveCamera camera;
 	private final Text3D readyMessageText3D;
 	private GameLevel3D level3D;
 	private GameSceneContext context;
@@ -90,11 +89,16 @@ public class PlayScene3D implements GameScene {
 		ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
 		readyMessageText3D = new Text3D();
+
 		var sceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
 		// initial sub-scene size is irrelevant, gets bound to main scene size in init method
 		fxSubScene = new SubScene(sceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
 		camera = new PerspectiveCamera(true);
 		fxSubScene.setCamera(camera);
+	}
+
+	public PerspectiveCamera getCamera() {
+		return camera;
 	}
 
 	@Override
@@ -214,10 +218,6 @@ public class PlayScene3D implements GameScene {
 		} else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
 			actionHandler.cheatKillAllEatableGhosts();
 		}
-	}
-
-	public PerspectiveCamera getCamera() {
-		return camera;
 	}
 
 	@Override
