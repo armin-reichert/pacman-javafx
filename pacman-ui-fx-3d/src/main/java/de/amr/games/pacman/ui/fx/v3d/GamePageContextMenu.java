@@ -4,6 +4,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.control.*;
@@ -24,8 +25,10 @@ public class GamePageContextMenu extends ContextMenu {
 	private CheckMenuItem immunityItem;
 	private CheckMenuItem pipItem;
 	private ToggleGroup perspectivesToggleGroup;
+	private Font titleItemFont = Font.font("Sans", FontWeight.BOLD, 14);
 
-	public void rebuild(ActionHandler3D actionHandler, GameScene gameScene, List<ResourceBundle> messageBundles) {
+	public void rebuild(Theme theme, ActionHandler3D actionHandler, GameScene gameScene, List<ResourceBundle> messageBundles) {
+		titleItemFont = theme.font("font.handwriting", 20);
 		getItems().clear();
 		getItems().add(createTitleItem(ResourceManager.message(messageBundles,"scene_display")));
 		if (gameScene instanceof PlayScene2D) {
@@ -65,7 +68,7 @@ public class GamePageContextMenu extends ContextMenu {
 
 	private MenuItem createTitleItem(String title) {
 		var text = new Text(title);
-		text.setFont(Font.font("Sans", FontWeight.BOLD, 14));
+		text.setFont(titleItemFont);
 		return new CustomMenuItem(text);
 	}
 

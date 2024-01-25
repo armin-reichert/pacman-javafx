@@ -10,6 +10,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.Locale;
+
 /**
  * @author Armin Reichert
  */
@@ -24,7 +26,7 @@ public class PacManGames3dApp extends Application {
 			settings.merge(getParameters().getNamed());
 		}
 		GameController.create(settings.variant);
-		Logger.info("Game initialized: {}", settings);
+		Logger.info("Game initialized: {}, locale: {}", settings, Locale.getDefault());
 	}
 
 	@Override
