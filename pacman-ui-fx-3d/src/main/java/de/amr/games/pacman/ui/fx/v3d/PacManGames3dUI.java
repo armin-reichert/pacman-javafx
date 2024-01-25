@@ -36,6 +36,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -105,9 +106,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	@Override
 	protected void populateTheme() {
-		super.populateTheme(); // loads resources from 2D module
+		super.populateTheme(); // loads resources from 2D module!
 
-		ResourceManager rm = this::getClass; // loads resources from this module
+		ResourceManager rm = () -> PacManGames3dUI.class; // loads resources from this module
 		theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
 		theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
 		theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
@@ -272,8 +273,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected void updateStage() {
 		var variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
 		var titleKey = "app.title." + variantKey + (gameClock().isPaused() ? ".paused" : "");
-		var dimension = ResourceManager.message(messageBundles(), PY_3D_ENABLED.get() ? "threeD" : "twoD");
-		stage.setTitle(ResourceManager.message(messageBundles(), titleKey, dimension));
+		var dimension = message(messageBundles(), PY_3D_ENABLED.get() ? "threeD" : "twoD");
+		stage.setTitle(message(messageBundles(), titleKey, dimension));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 		gamePage().updateBackground();
 	}
@@ -296,28 +297,28 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 				gameScene.onSceneVariantSwitch();
 			}
 			gameController().update();
-			showFlashMessage(ResourceManager.message(messageBundles(), PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(message(messageBundles(), PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 		});
 	}
 
 	@Override
 	public void togglePipVisible() {
 		Ufx.toggle(PY_PIP_ON);
-		showFlashMessage(ResourceManager.message(messageBundles(), PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+		showFlashMessage(message(messageBundles(), PY_PIP_ON.get() ? "pip_on" : "pip_off"));
 	}
 
 	@Override
 	public void selectNextPerspective() {
 		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().next());
-		showFlashMessage(ResourceManager.message(messageBundles(), "camera_perspective",
-			ResourceManager.message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
+		showFlashMessage(message(messageBundles(), "camera_perspective",
+			message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	@Override
 	public void selectPrevPerspective() {
 		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().prev());
-		showFlashMessage(ResourceManager.message(messageBundles(), "camera_perspective",
-			ResourceManager.message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
+		showFlashMessage(message(messageBundles(), "camera_perspective",
+			message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	@Override

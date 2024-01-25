@@ -45,6 +45,7 @@ import java.util.*;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
 /**
@@ -326,7 +327,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		if (clock.isPaused()) {
 			titleKey += ".paused";
 		}
-		stage.setTitle(ResourceManager.message(messageBundles(), titleKey));
+		stage.setTitle(message(messageBundles(), titleKey));
 		stage.getIcons().setAll(theme.image(variantKey + ".icon"));
 	}
 
@@ -556,8 +557,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	public void toggleAutopilot() {
 		gameController().toggleAutoControlled();
 		var auto = gameController().isAutoControlled();
-		String message = ResourceManager.message(messageBundles(), auto ? "autopilot_on" : "autopilot_off");
-		showFlashMessage(message);
+		showFlashMessage(message(messageBundles(), auto ? "autopilot_on" : "autopilot_off"));
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
 	}
 
@@ -565,8 +565,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	public void toggleImmunity() {
 		gameController().setImmune(!gameController().isImmune());
 		var immune = gameController().isImmune();
-		String message = ResourceManager.message(messageBundles(), immune ? "player_immunity_on" : "player_immunity_off");
-		showFlashMessage(message);
+		showFlashMessage(message(messageBundles(), immune ? "player_immunity_on" : "player_immunity_off"));
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}
 
@@ -596,7 +595,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	@Override
 	public void cheatAddLives() {
 		game().addLives((short) 3);
-		showFlashMessage(ResourceManager.message(messageBundles(), "cheat_add_lives", game().lives()));
+		showFlashMessage(message(messageBundles(), "cheat_add_lives", game().lives()));
 	}
 
 	@Override
