@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 
@@ -268,12 +269,23 @@ public class GamePage implements Page {
 		}
 	}
 
+	protected String tt(String key, Object... args) {
+		var text = ResourceManager.message(messageBundles, key, args);
+		return text != null ? text : "<" + key + ">";
+	}
+
+
 	// Menu stuff
 
 	private class Menu {
 		private final List<Node> column0 = new ArrayList<>();
 		private final List<Node> column1 = new ArrayList<>();
-		private Font font =	Font.font("Sans", 24);
+		private final Font font;
+
+		public Menu(Font font) {
+			checkNotNull(font);
+			this.font = font;
+		}
 
 		public void addRow(Node node0, Node node1) {
 			column0.add(node0);
@@ -282,10 +294,6 @@ public class GamePage implements Page {
 
 		public int size() {
 			return column0.size();
-		}
-
-		public void setFont(Font font) {
-			this.font = font;
 		}
 
 		private Label label(String s) {
@@ -343,76 +351,70 @@ public class GamePage implements Page {
 	}
 
 	protected void showHelpMenu() {
-		currentHelpMenu().ifPresent(content -> {
+		currentHelpMenu().ifPresent(menu -> {
 			helpMenu.setTranslateX(10 * scaling);
 			helpMenu.setTranslateY(30 * scaling);
-			helpMenu.setContent(content);
+			helpMenu.setContent(menu.createPane());
 			helpMenu.show(MENU_FADING_DELAY);
 		});
 	}
 
-	protected String tt(String key, Object... args) {
-		var text = ResourceManager.message(messageBundles, key, args);
-		return text != null ? text : "<" + key + ">";
+	private Font createMenuFont() {
+		return sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 	}
 
-	private Optional<Pane> currentHelpMenu() {
+	private Optional<Menu> currentHelpMenu() {
 		var gameState = sceneContext.gameState();
 		var game = sceneContext.game();
-		var menuFont = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 		if (gameState == GameState.INTRO) {
-			return Optional.of(menuIntro(menuFont));
+			return Optional.of(createIntroMenu());
 		}
 		if (gameState == GameState.CREDIT) {
-			return Optional.of(menuCredit(menuFont));
+			return Optional.of(createCreditMenu());
 		}
 		if (game.level().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
 			return game.level().get().isDemoLevel()
-					? Optional.of(menuDemoLevel(menuFont))
-					: Optional.of(menuPlaying(menuFont));
+					? Optional.of(createDemoLevelMenu())
+					: Optional.of(createPlayingMenu());
 		}
 		return Optional.empty();
 	}
 
-	private Pane menuIntro(Font menuFont) {
-		var menu = new Menu();
-		menu.setFont(menuFont);
+	private Menu createIntroMenu() {
+		var menu = new Menu(createMenuFont());
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
 		menu.addEntry("help.add_credit", "5");
 		menu.addEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
-		return menu.createPane();
+		return menu;
 	}
 
-	private Pane menuCredit(Font menuFont) {
-		var menu = new Menu();
-		menu.setFont(menuFont);
+	private Menu createCreditMenu() {
+		var menu = new Menu(createMenuFont());
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
 		menu.addEntry("help.add_credit", "5");
 		menu.addEntry("help.show_intro", "Q");
-		return menu.createPane();
+		return menu;
 	}
 
-	private Pane menuPlaying(Font menuFont) {
-		var menu = new Menu();
-		menu.setFont(menuFont);
+	private Menu createPlayingMenu() {
+		var menu = new Menu(createMenuFont());
 		menu.addEntry("help.move_left",  tt("help.cursor_left"));
 		menu.addEntry("help.move_right", tt("help.cursor_right"));
 		menu.addEntry("help.move_up",    tt("help.cursor_up"));
 		menu.addEntry("help.move_down",  tt("help.cursor_down"));
 		menu.addEntry("help.show_intro", "Q");
-		return menu.createPane();
+		return menu;
 	}
 
-	private Pane menuDemoLevel(Font menuFont) {
-		var menu = new Menu();
-		menu.setFont(menuFont);
+	private Menu createDemoLevelMenu() {
+		var menu = new Menu(createMenuFont());
 		menu.addEntry("help.add_credit", "5");
 		menu.addEntry("help.show_intro", "Q");
-		return menu.createPane();
+		return menu;
 	}
 }
