@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
 /**
@@ -111,7 +112,7 @@ public class GamePage3D extends GamePage {
 
 	public void updateBackground() {
 		if (isCurrentGameScene3D()) {
-			if (PacManGames3dUI.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+			if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
 				var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
@@ -134,11 +135,11 @@ public class GamePage3D extends GamePage {
 	@Override
 	protected void handleKeyboardInput() {
 		var actionHandler3D = (ActionHandler3D) sceneContext.actionHandler();
-		if (Keyboard.pressed(PacManGames3dUI.KEY_TOGGLE_2D_3D)) {
+		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
 			actionHandler3D.toggle2D3D();
-		} else if (Keyboard.pressed(PacManGames3dUI.KEYS_TOGGLE_DASHBOARD)) {
+		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
 			dashboard.setVisible(!dashboard.isVisible());
-		} else if (Keyboard.pressed(PacManGames3dUI.KEY_TOGGLE_PIP_VIEW)) {
+		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
 			actionHandler3D.togglePipVisible();
 		} else {
 			super.handleKeyboardInput();
@@ -148,9 +149,9 @@ public class GamePage3D extends GamePage {
 	@Override
 	protected void updateDebugBorders()  {
 		if (PY_SHOW_DEBUG_INFO.get() && !isCurrentGameScene3D()) {
-			layers.setBorder(ResourceManager.border(Color.RED, 3));
-			gameSceneLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
-			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
+			layers.setBorder(border(Color.RED, 3));
+			gameSceneLayer.setBorder(border(Color.YELLOW, 3));
+			popupLayer.setBorder(border(Color.GREENYELLOW, 3));
 		} else {
 			layers.setBorder(null);
 			gameSceneLayer.setBorder(null);
