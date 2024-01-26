@@ -65,16 +65,16 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE      = new SimpleObjectProperty<>(DrawMode.FILL);
 	public static final BooleanProperty PY_3D_ENABLED                 = new SimpleBooleanProperty(true);
+	public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES      = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR       = new SimpleObjectProperty<>(Color.grayRgb(0x33));
 	public static final StringProperty  PY_3D_FLOOR_TEXTURE           = new SimpleStringProperty("knobs");
 	public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND       = new SimpleBooleanProperty(false);
 	public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR       = new SimpleObjectProperty<>(Color.GHOSTWHITE);
 	public static final BooleanProperty PY_3D_NIGHT_MODE              = new SimpleBooleanProperty(false);
-	public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(1.75);
-	public static final DoubleProperty  PY_3D_WALL_THICKNESS          = new SimpleDoubleProperty(1.25);
 	public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED       = new SimpleBooleanProperty(true);
 	public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-	public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES      = new SimpleBooleanProperty(true);
+	public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(1.75);
+	public static final DoubleProperty  PY_3D_WALL_THICKNESS          = new SimpleDoubleProperty(1.25);
 	public static final BooleanProperty PY_WOKE_PUSSY                 = new SimpleBooleanProperty(false);
 
 	public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD    = { just(KeyCode.F1), alt(KeyCode.B) };
@@ -153,52 +153,51 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		THEME.set("ghost.color.flashing.pupils",     ArcadePalette.RED);
 
 		THEME.addAllToArray("mspacman.maze.foodColor",
-				Color.rgb(222, 222, 255),
-				Color.rgb(255, 255, 0),
-				Color.rgb(255, 0, 0),
-				Color.rgb(222, 222, 255),
-				Color.rgb(0, 255, 255),
-				Color.rgb(222, 222, 255)
+			Color.rgb(222, 222, 255),
+			Color.rgb(255, 255,   0),
+			Color.rgb(255,   0,   0),
+			Color.rgb(222, 222, 255),
+			Color.rgb(  0, 255, 255),
+			Color.rgb(222, 222, 255)
 		);
 
 		THEME.addAllToArray("mspacman.maze.wallBaseColor",
-				Color.rgb(255, 0, 0),
-				Color.rgb(222, 222, 255),
-				Color.rgb(222, 222, 255),
-				Color.rgb(255, 183, 81),
-				Color.rgb(255, 255, 0),
-				Color.rgb(255, 0, 0)
+			Color.rgb(255,   0,   0),
+			Color.rgb(222, 222, 255),
+			Color.rgb(222, 222, 255),
+			Color.rgb(255, 183,  81),
+			Color.rgb(255, 255,   0),
+			Color.rgb(255,   0,   0)
 		);
 
 		THEME.addAllToArray("mspacman.maze.wallTopColor",
-				Color.rgb(255, 183, 174),
-				Color.rgb(71, 183, 255),
-				Color.rgb(222, 151, 81),
-				Color.rgb(222, 151, 81),
-				Color.rgb(222, 151, 81),
-				Color.rgb(222, 151, 81)
+			Color.rgb(255, 183, 174),
+			Color.rgb( 71, 183, 255),
+			Color.rgb(222, 151,  81),
+			Color.rgb(222, 151,  81),
+			Color.rgb(222, 151,  81),
+			Color.rgb(222, 151,  81)
 		);
 
-		THEME.set("mspacman.color.head",           Color.rgb(255, 255, 0));
-		THEME.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
-		THEME.set("mspacman.color.eyes",           Color.rgb(33, 33, 33));
-		THEME.set("mspacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-		THEME.set("mspacman.color.hairbow",        Color.rgb(255, 0, 0));
-		THEME.set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
+		THEME.set("mspacman.color.head",           Color.rgb(255, 255,   0));
+		THEME.set("mspacman.color.palate",         Color.rgb(191,  79,  61));
+		THEME.set("mspacman.color.eyes",           Color.rgb( 33,  33,  33));
+		THEME.set("mspacman.color.boobs",          Color.rgb(255, 255,   0).deriveColor(0, 1.0, 0.96, 1.0));
+		THEME.set("mspacman.color.hairbow",        Color.rgb(255,   0,   0));
+		THEME.set("mspacman.color.hairbow.pearls", Color.rgb( 33,  33, 255));
 
 		THEME.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
 
-		THEME.set("pacman.maze.wallBaseColor",     Color.rgb(33, 33, 255).brighter());
-		THEME.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).darker());
+		THEME.set("pacman.maze.wallBaseColor",     Color.rgb( 33,  33, 255).brighter());
+		THEME.set("pacman.maze.wallTopColor",      Color.rgb( 33,  33, 255).darker());
 		THEME.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
 
-		THEME.set("pacman.color.head",             Color.rgb(255, 255, 0));
-		THEME.set("pacman.color.palate",           Color.rgb(191, 79, 61));
-		THEME.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
+		THEME.set("pacman.color.head",             Color.rgb(255, 255,   0));
+		THEME.set("pacman.color.palate",           Color.rgb(191,  79,  61));
+		THEME.set("pacman.color.eyes",             Color.rgb( 33,  33,  33));
 
 		Logger.info("Pac-Man games 3D theme loaded");
 	}
-
 
 	public PacManGames3dUI(Stage stage, Settings settings) {
 		super(stage, settings);
