@@ -365,16 +365,15 @@ public class GamePage implements Page {
 
 	private Optional<Menu> currentHelpMenu() {
 		var gameState = sceneContext.gameState();
-		var game = sceneContext.game();
 		if (gameState == GameState.INTRO) {
 			return Optional.of(createIntroMenu());
 		}
 		if (gameState == GameState.CREDIT) {
 			return Optional.of(createCreditMenu());
 		}
-		if (game.level().isPresent()
+		if (sceneContext.gameLevel().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			return game.level().get().isDemoLevel()
+			return sceneContext.gameLevel().get().isDemoLevel()
 					? Optional.of(createDemoLevelMenu())
 					: Optional.of(createPlayingMenu());
 		}
