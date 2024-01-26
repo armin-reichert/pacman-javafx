@@ -26,6 +26,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -105,6 +106,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	static {
 		ResourceManager rm = () -> PacManGames3dUI.class;
+
 		THEME.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
 		THEME.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
 		THEME.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
@@ -195,6 +197,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		THEME.set("pacman.color.head",             Color.rgb(255, 255,   0));
 		THEME.set("pacman.color.palate",           Color.rgb(191,  79,  61));
 		THEME.set("pacman.color.eyes",             Color.rgb( 33,  33,  33));
+
+		// dashboard
+		THEME.set("infobox.min_col_width",         100);
+		THEME.set("infobox.min_label_width",       120);
+		THEME.set("infobox.text_color",            Color.WHITE);
+		THEME.set("infobox.label_font",            Font.font("Tahoma", 12));
+		THEME.set("infobox.text_font",             Font.font("Tahoma", 12));
 
 		Logger.info("Pac-Man games 3D theme loaded");
 	}

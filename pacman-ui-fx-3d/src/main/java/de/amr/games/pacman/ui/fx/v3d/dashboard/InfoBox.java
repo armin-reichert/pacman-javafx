@@ -53,7 +53,11 @@ public abstract class InfoBox {
 	protected GameSceneContext sceneContext;
 
 	protected InfoBox(Theme theme, String title) {
-		this(theme, title, InfoBoxStyle.MIN_LABEL_WIDTH, InfoBoxStyle.TEXT_COLOR, InfoBoxStyle.TEXT_FONT, InfoBoxStyle.LABEL_FONT);
+		this(theme, title,
+			theme.get("infobox.min_label_width"),
+			theme.get("infobox.text_color"),
+			theme.get("infobox.text_font"),
+			theme.get("infobox.label_font"));
 	}
 
 	protected InfoBox(Theme theme, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
@@ -173,7 +177,7 @@ public abstract class InfoBox {
 
 	protected Slider addSlider(String labelText, double min, double max, double initialValue) {
 		Slider slider = new Slider(min, max, initialValue);
-		slider.setMinWidth(InfoBoxStyle.MIN_COL_WIDTH);
+		slider.setMinWidth((int)theme.get("infobox.min_col_width"));
 		slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 			if (e.getClickCount() == 2) {
 				slider.setValue(initialValue);
