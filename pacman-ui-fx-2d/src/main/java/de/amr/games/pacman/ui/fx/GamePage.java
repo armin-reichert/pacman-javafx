@@ -82,7 +82,7 @@ public class GamePage implements Page {
 
 		layers.setOnKeyPressed(this::handleKeyPressed);
 
-		PacManGames2dUI.PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
+		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
 	}
 
 	@Override
@@ -103,9 +103,9 @@ public class GamePage implements Page {
 
 	@Override
 	public void setSize(double width, double height) {
-		double s = 0.9 * height / PacManGames2dUI.CANVAS_HEIGHT_UNSCALED;
-		if (s * PacManGames2dUI.CANVAS_WIDTH_UNSCALED > 0.8 * width) {
-			s = 0.8 * width / PacManGames2dUI.CANVAS_WIDTH_UNSCALED;
+		double s = 0.9 * height / CANVAS_HEIGHT_UNSCALED;
+		if (s * CANVAS_WIDTH_UNSCALED > 0.8 * width) {
+			s = 0.8 * width / CANVAS_WIDTH_UNSCALED;
 		}
 		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
 		scalePage(s, false);
@@ -131,11 +131,11 @@ public class GamePage implements Page {
 		}
 		this.scaling = scaling;
 
-		double w = Math.round( (PacManGames2dUI.CANVAS_WIDTH_UNSCALED  + 25) * scaling );
-		double h = Math.round( (PacManGames2dUI.CANVAS_HEIGHT_UNSCALED + 15) * scaling );
+		double w = Math.round( (CANVAS_WIDTH_UNSCALED  + 25) * scaling );
+		double h = Math.round( (CANVAS_HEIGHT_UNSCALED + 15) * scaling );
 
-		canvas.setWidth(PacManGames2dUI.CANVAS_WIDTH_UNSCALED * scaling);
-		canvas.setHeight(PacManGames2dUI.CANVAS_HEIGHT_UNSCALED * scaling);
+		canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
+		canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
 
 		var roundedRect = new Rectangle(w, h);
 		roundedRect.setArcWidth (26 * scaling);
@@ -185,7 +185,7 @@ public class GamePage implements Page {
 	}
 
 	protected void updateDebugBorders()  {
-		if (PacManGames2dUI.PY_SHOW_DEBUG_INFO.get()) {
+		if (PY_SHOW_DEBUG_INFO.get()) {
 			layers.setBorder(ResourceManager.border(Color.RED, 3));
 			gameSceneLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
 			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
@@ -238,7 +238,7 @@ public class GamePage implements Page {
 				actionHandler.reboot();
 			}
 		} else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
-			Ufx.toggle(PacManGames2dUI.PY_SHOW_DEBUG_INFO);
+			Ufx.toggle(PY_SHOW_DEBUG_INFO);
 		} else if (Keyboard.pressed(KEY_FULLSCREEN)) {
 			actionHandler.setFullScreen(true);
 		} else if (Keyboard.pressed(KEY_IMMUNITY)) {
