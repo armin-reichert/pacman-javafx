@@ -75,7 +75,7 @@ public class GamePage3D extends GamePage {
 		return db;
 	}
 
-	public List<InfoBox> getDashboardSections() {
+	public List<InfoBox> getInfoBoxes() {
 		return infoBoxes;
 	}
 
