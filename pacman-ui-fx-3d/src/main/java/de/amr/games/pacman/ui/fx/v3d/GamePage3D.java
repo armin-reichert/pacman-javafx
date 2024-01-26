@@ -62,14 +62,14 @@ public class GamePage3D extends GamePage {
 
 	private VBox createDashboard(Theme theme) {
 		var db = new VBox();
-		infoBoxes.add(new InfoBoxGeneral(theme, "General"));
-		infoBoxes.add(new InfoBoxAppearance(theme, "Appearance"));
-		infoBoxes.add(new InfoBox3D(theme, "3D Settings"));
-		infoBoxes.add(new InfoBoxGameControl(theme, "Game Control"));
-		infoBoxes.add(new InfoBoxGameInfo(theme, "Game Info"));
-		infoBoxes.add(new InfoBoxGhostsInfo(theme, "Ghosts Info"));
-		infoBoxes.add(new InfoBoxKeys(theme, "Keyboard Shortcuts"));
-		infoBoxes.add(new InfoBoxAbout(theme, "About"));
+		infoBoxes.add(new InfoBoxGeneral(theme, tt("infobox.general.title")));
+		infoBoxes.add(new InfoBoxAppearance(theme, tt("infobox.appearance.title")));
+		infoBoxes.add(new InfoBox3D(theme, tt("infobox.3D_settings.title")));
+		infoBoxes.add(new InfoBoxGameControl(theme, tt("infobox.game_control.title")));
+		infoBoxes.add(new InfoBoxGameInfo(theme, tt("infobox.game_info.title")));
+		infoBoxes.add(new InfoBoxGhostsInfo(theme, tt("infobox.ghosts_info.title")));
+		infoBoxes.add(new InfoBoxKeys(theme, tt("infobox.keyboard_shortcuts.title")));
+		infoBoxes.add(new InfoBoxAbout(theme, tt("infobox.about.title")));
 		infoBoxes.stream().map(InfoBox::getRoot).forEach(db.getChildren()::add);
 		db.setVisible(false);
 		db.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
@@ -82,11 +82,6 @@ public class GamePage3D extends GamePage {
 
 	public GamePageContextMenu contextMenu() {
 		return contextMenu;
-	}
-
-	@Override
-	protected String tt(String key) {
-		return ResourceManager.message(messageBundles, key);
 	}
 
 	@Override

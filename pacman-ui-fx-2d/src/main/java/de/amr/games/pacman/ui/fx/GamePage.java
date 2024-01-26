@@ -350,8 +350,9 @@ public class GamePage implements Page {
 		});
 	}
 
-	protected String tt(String key) {
-		return ResourceManager.message(messageBundles, key);
+	protected String tt(String key, Object... args) {
+		var text = ResourceManager.message(messageBundles, key, args);
+		return text != null ? text : "<" + key + ">";
 	}
 
 	private Optional<Pane> currentHelpMenu() {
