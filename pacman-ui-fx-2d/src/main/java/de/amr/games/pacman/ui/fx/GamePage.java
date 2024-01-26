@@ -36,6 +36,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.oneOf;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 
 /**
  * @author Armin Reichert
@@ -230,37 +231,37 @@ public class GamePage implements Page {
 	protected void handleKeyboardInput() {
 		var actionHandler = sceneContext.actionHandler();
 		var gameState = sceneContext.gameState();
-		if (Keyboard.pressed(PacManGames2dUI.KEY_AUTOPILOT)) {
+		if (Keyboard.pressed(KEY_AUTOPILOT)) {
 			actionHandler.toggleAutopilot();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_BOOT)) {
+		} else if (Keyboard.pressed(KEY_BOOT)) {
 			if (gameState != GameState.BOOT) {
 				actionHandler.reboot();
 			}
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_DEBUG_INFO)) {
+		} else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
 			Ufx.toggle(PacManGames2dUI.PY_SHOW_DEBUG_INFO);
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_FULLSCREEN)) {
+		} else if (Keyboard.pressed(KEY_FULLSCREEN)) {
 			actionHandler.setFullScreen(true);
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_IMMUNITY)) {
+		} else if (Keyboard.pressed(KEY_IMMUNITY)) {
 			actionHandler.toggleImmunity();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SHOW_HELP)) {
+		} else if (Keyboard.pressed(KEY_SHOW_HELP)) {
 			showHelpMenu();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_PAUSE)) {
+		} else if (Keyboard.pressed(KEY_PAUSE)) {
 			actionHandler.togglePaused();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEYS_SINGLE_STEP)) {
+		} else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
 			actionHandler.oneSimulationStep();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_TEN_STEPS)) {
+		} else if (Keyboard.pressed(KEY_TEN_STEPS)) {
 			actionHandler.tenSimulationSteps();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SIMULATION_FASTER)) {
+		} else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
 			actionHandler.changeSimulationSpeed(5);
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SIMULATION_SLOWER)) {
+		} else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {
 			actionHandler.changeSimulationSpeed(-5);
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_SIMULATION_NORMAL)) {
+		} else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
 			actionHandler.resetSimulationSpeed();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_QUIT)) {
+		} else if (Keyboard.pressed(KEY_QUIT)) {
 			if (gameState != GameState.BOOT && gameState != GameState.INTRO) {
 				actionHandler.restartIntro();
 			}
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_TEST_LEVELS)) {
+		} else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
 			actionHandler.startLevelTestMode();
 		} else {
 			sceneContext.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
