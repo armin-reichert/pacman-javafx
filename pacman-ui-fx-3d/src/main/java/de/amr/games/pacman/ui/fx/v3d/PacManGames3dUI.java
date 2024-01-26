@@ -205,7 +205,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
 		int hour = LocalTime.now().getHour();
 		PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
-		gamePage().dashboard().sections().forEach(section -> section.init(this));
+		gamePage().getDashboardSections().forEach(section -> section.init(this));
 	}
 
 	@Override

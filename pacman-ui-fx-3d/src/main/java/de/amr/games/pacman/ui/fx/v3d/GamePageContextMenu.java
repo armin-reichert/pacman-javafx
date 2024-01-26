@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui.fx.v3d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;

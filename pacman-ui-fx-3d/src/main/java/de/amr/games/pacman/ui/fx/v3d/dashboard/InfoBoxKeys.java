@@ -14,9 +14,9 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_PERSPECTIVE;
  * 
  * @author Armin Reichert
  */
-public class SectionKeys extends Section {
+public class InfoBoxKeys extends InfoBox {
 
-	public SectionKeys(Theme theme, String title) {
+	public InfoBoxKeys(Theme theme, String title) {
 		super(theme, title);
 
 		addInfo("F1, Alt+B", "Dashboard On/Off");
@@ -26,14 +26,14 @@ public class SectionKeys extends Section {
 		addInfo("Alt+C", "Play Cut-Scenes")
 			.available(() -> sceneContext.gameState() == GameState.INTRO);
 		addInfo("Alt+E", "Eat All Simple Pellets")
-			.available(() -> game().isPlaying());
+			.available(() -> sceneContext.game().isPlaying());
 		addInfo("Alt+I", "Player Immunity On/Off");
 		addInfo("Alt+L", "Add 3 Player Lives")
-			.available(() -> game().isPlaying());
+			.available(() -> sceneContext.game().isPlaying());
 		addInfo("Alt+N", "Next Level")
-			.available(() -> game().isPlaying());
+			.available(() -> sceneContext.game().isPlaying());
 		addInfo("Alt+X", "Kill Hunting Ghosts")
-			.available(() -> game().isPlaying());
+			.available(() -> sceneContext.game().isPlaying());
 		addInfo("Alt+LEFT", () -> PY_3D_PERSPECTIVE.get().prev().name())
 			.available(this::isCurrentGameScene3D);
 		addInfo("Alt+RIGHT", () -> PY_3D_PERSPECTIVE.get().next().name())

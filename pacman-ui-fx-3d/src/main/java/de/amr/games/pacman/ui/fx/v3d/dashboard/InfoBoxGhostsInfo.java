@@ -16,9 +16,9 @@ import java.util.function.Supplier;
 /**
  * @author Armin Reichert
  */
-public class SectionGhostsInfo extends Section {
+public class InfoBoxGhostsInfo extends InfoBox {
 
-	public SectionGhostsInfo(Theme theme, String title) {
+	public InfoBoxGhostsInfo(Theme theme, String title) {
 		super(theme, title);
 		addGhostInfo(GameModel.RED_GHOST);
 		addEmptyLine();
@@ -47,7 +47,7 @@ public class SectionGhostsInfo extends Section {
 
 	private Supplier<String> ifLevelExists(BiFunction<GameLevel, Ghost, String> fnGhostInfo, byte ghostID) {
 		return () -> {
-			var level = game().level().orElse(null);
+			var level = sceneContext.game().level().orElse(null);
 			return level != null ? fnGhostInfo.apply(level, level.ghost(ghostID)) : InfoText.NO_INFO;
 		};
 	}

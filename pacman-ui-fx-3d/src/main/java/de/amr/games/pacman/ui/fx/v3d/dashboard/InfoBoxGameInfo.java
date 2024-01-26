@@ -14,9 +14,9 @@ import static de.amr.games.pacman.lib.TickTimer.ticksToString;
  * 
  * @author Armin Reichert
  */
-public class SectionGameInfo extends Section {
+public class InfoBoxGameInfo extends InfoBox {
 
-	public SectionGameInfo(Theme theme, String title) {
+	public InfoBoxGameInfo(Theme theme, String title) {
 		super(theme, title);
 
 		addInfo("Game Scene", () -> sceneContext.currentGameScene().isPresent()

@@ -18,7 +18,7 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
  * 
  * @author Armin Reichert
  */
-public class SectionGeneral extends Section {
+public class InfoBoxGeneral extends InfoBox {
 
 	public static final int MIN_FRAME_RATE = 5;
 	public static final int MAX_FRAME_RATE = 120;
@@ -37,7 +37,7 @@ public class SectionGeneral extends Section {
 	private final Tooltip tooltipStop = new Tooltip("Stop");
 	private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
-	public SectionGeneral(Theme theme, String title) {
+	public InfoBoxGeneral(Theme theme, String title) {
 		super(theme, title);
 
 		iconPlay = new ImageView(theme.image("icon.play"));

@@ -10,18 +10,22 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
+import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_PIP_ON;
 
 /**
  * @author Armin Reichert
@@ -30,7 +34,8 @@ public class GamePage3D extends GamePage {
 
 	private final BorderPane topLayer; // contains dashboard and picture-in-picture view
 	private final PictureInPicture pip;
-	private final Dashboard dashboard;
+	private final Pane dashboard;
+	private final List<InfoBox> infoBoxes = new ArrayList<>();
 	private final GamePageContextMenu contextMenu;
 
 	public GamePage3D(GameSceneContext sceneContext, List<ResourceBundle> messageBundles) {
@@ -40,9 +45,19 @@ public class GamePage3D extends GamePage {
 		pip.gameScene().setContext(sceneContext);
 		pip.opacityPy.bind(PacManGames3dUI.PY_PIP_OPACITY);
 		pip.heightPy.bind(PacManGames3dUI.PY_PIP_HEIGHT);
-		PacManGames3dUI.PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
+		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
 
-		dashboard = new Dashboard(sceneContext.theme());
+		dashboard = new VBox();
+		var theme = sceneContext.theme();
+		infoBoxes.add(new InfoBoxGeneral(theme, "General"));
+		infoBoxes.add(new InfoBoxAppearance(theme, "Appearance"));
+		infoBoxes.add(new InfoBox3D(theme, "3D Settings"));
+		infoBoxes.add(new InfoBoxGameControl(theme, "Game Control"));
+		infoBoxes.add(new InfoBoxGameInfo(theme, "Game Info"));
+		infoBoxes.add(new InfoBoxGhostsInfo(theme, "Ghosts Info"));
+		infoBoxes.add(new InfoBoxKeys(theme, "Keyboard Shortcuts"));
+		infoBoxes.add(new InfoBoxAbout(theme, "About"));
+		infoBoxes.stream().map(InfoBox::getRoot).forEach(dashboard.getChildren()::add);
 		dashboard.setVisible(false);
 		dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
@@ -54,12 +69,12 @@ public class GamePage3D extends GamePage {
 		topLayer.setRight(pip.root());
 	}
 
-	public GamePageContextMenu contextMenu() {
-		return contextMenu;
+	public List<InfoBox> getDashboardSections() {
+		return infoBoxes;
 	}
 
-	public Dashboard dashboard() {
-		return dashboard;
+	public GamePageContextMenu contextMenu() {
+		return contextMenu;
 	}
 
 	@Override
@@ -105,8 +120,8 @@ public class GamePage3D extends GamePage {
 	public void render() {
 		super.render();
 		contextMenu.updateState();
-		dashboard.update();
-		pip.root().setVisible(PacManGames3dUI.PY_PIP_ON.get() && isCurrentGameScene3D());
+		infoBoxes.forEach(InfoBox::update);
+		pip.root().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
 		pip.render();
 	}
 
@@ -152,7 +167,7 @@ public class GamePage3D extends GamePage {
 
 	private void updateTopLayer() {
 		layers.getChildren().remove(topLayer);
-		if (dashboard.isVisible() || PacManGames3dUI.PY_PIP_ON.get()) {
+		if (dashboard.isVisible() || PY_PIP_ON.get()) {
 			layers.getChildren().add(topLayer);
 		}
 		layers.requestFocus();
