@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.InfoBoxStyle;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;

@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_PIP_ON;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
 /**
  * @author Armin Reichert
@@ -40,15 +41,26 @@ public class GamePage3D extends GamePage {
 
 	public GamePage3D(GameSceneContext sceneContext, List<ResourceBundle> messageBundles) {
 		super(sceneContext, messageBundles);
+		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
+		pip = createPictureInPicture();
+		dashboard = createDashboard(sceneContext.theme());
+		contextMenu = new GamePageContextMenu();
+		topLayer = new BorderPane();
+		topLayer.setLeft(dashboard);
+		topLayer.setRight(pip.root());
+	}
 
-		pip = new PictureInPicture();
+	private PictureInPicture createPictureInPicture() {
+		var pip = new PictureInPicture();
 		pip.gameScene().setContext(sceneContext);
-		pip.opacityPy.bind(PacManGames3dUI.PY_PIP_OPACITY);
-		pip.heightPy.bind(PacManGames3dUI.PY_PIP_HEIGHT);
+		pip.opacityPy.bind(PY_PIP_OPACITY);
+		pip.heightPy.bind(PY_PIP_HEIGHT);
 		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
+		return pip;
+	}
 
-		dashboard = new VBox();
-		var theme = sceneContext.theme();
+	private VBox createDashboard(Theme theme) {
+		var db = new VBox();
 		infoBoxes.add(new InfoBoxGeneral(theme, "General"));
 		infoBoxes.add(new InfoBoxAppearance(theme, "Appearance"));
 		infoBoxes.add(new InfoBox3D(theme, "3D Settings"));
@@ -57,16 +69,10 @@ public class GamePage3D extends GamePage {
 		infoBoxes.add(new InfoBoxGhostsInfo(theme, "Ghosts Info"));
 		infoBoxes.add(new InfoBoxKeys(theme, "Keyboard Shortcuts"));
 		infoBoxes.add(new InfoBoxAbout(theme, "About"));
-		infoBoxes.stream().map(InfoBox::getRoot).forEach(dashboard.getChildren()::add);
-		dashboard.setVisible(false);
-		dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
-
-		contextMenu = new GamePageContextMenu();
-		PacManGames3dUI.PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
-
-		topLayer = new BorderPane();
-		topLayer.setLeft(dashboard);
-		topLayer.setRight(pip.root());
+		infoBoxes.stream().map(InfoBox::getRoot).forEach(db.getChildren()::add);
+		db.setVisible(false);
+		db.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
+		return db;
 	}
 
 	public List<InfoBox> getDashboardSections() {
@@ -108,7 +114,7 @@ public class GamePage3D extends GamePage {
 			if (PacManGames3dUI.PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
 				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
-				var wallpaperKey = PacManGames3dUI.PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
+				var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
 				layers.setBackground(sceneContext.theme().background(wallpaperKey));
 			}
 		} else {
