@@ -58,8 +58,10 @@ public class GamePage implements Page {
 
 	protected double scaling = 1.0;
 
-	public GamePage(GameSceneContext sceneContext) {
+	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
+
+		setSize(width, height);
 
 		gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
