@@ -16,20 +16,12 @@ import de.amr.games.pacman.ui.fx.util.FadingPane;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -203,83 +195,6 @@ public class GamePage extends CanvasContainer implements Page {
 
 	// Menu stuff
 
-	private static class Menu {
-
-		private final GameSceneContext sceneContext;
-		private final List<Node> column0 = new ArrayList<>();
-		private final List<Node> column1 = new ArrayList<>();
-		private final Font font;
-
-		public Menu(GameSceneContext sceneContext, Font font) {
-			checkNotNull(sceneContext);
-			checkNotNull(font);
-			this.sceneContext = sceneContext;
-			this.font = font;
-		}
-
-		public void addRow(Node node0, Node node1) {
-			column0.add(node0);
-			column1.add(node1);
-		}
-
-		public int size() {
-			return column0.size();
-		}
-
-		private Label label(String s) {
-			var label = new Label(s);
-			label.setTextFill(Color.gray(0.9));
-			label.setFont(font);
-			return label;
-		}
-
-		private Text text(String s, Color color) {
-			var text = new Text(s);
-			text.setFill(color);
-			text.setFont(font);
-			return text;
-		}
-
-		private Text text(String s) {
-			return text(s, Color.YELLOW);
-		}
-
-		private void addEntry(String rbKey, String kbKey) {
-			addRow(label(sceneContext.tt(rbKey)), text("[" + kbKey + "]"));
-		}
-
-		private Pane createPane() {
-			var grid = new GridPane();
-			grid.setHgap(20);
-			grid.setVgap(10);
-			for (int row = 0; row < column0.size(); ++row) {
-				grid.add(column0.get(row), 0, row);
-				grid.add(column1.get(row), 1, row);
-			}
-			int rowIndex = size();
-			if (sceneContext.gameController().isAutoControlled()) {
-				var text = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex);
-				++rowIndex;
-			}
-			if (sceneContext.gameController().isImmune()) {
-				var text = text(sceneContext.tt("help.immunity_on"), Color.ORANGE);
-				GridPane.setColumnSpan(text, 2);
-				grid.add(text, 0, rowIndex);
-				++rowIndex;
-			}
-
-			var pane = new BorderPane(grid);
-			pane.setPadding(new Insets(10));
-			var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
-					? Color.rgb(255, 0, 0, 0.8)
-					: Color.rgb(33, 33, 255, 0.8);
-			pane.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 10));
-			return pane;
-		}
-	}
-
 	protected void showHelpMenu() {
 		currentHelpMenu().ifPresent(menu -> {
 			helpMenu.setTranslateX(10 * scaling);
@@ -289,7 +204,7 @@ public class GamePage extends CanvasContainer implements Page {
 		});
 	}
 
-	private Optional<Menu> currentHelpMenu() {
+	private Optional<GamePagePopupMenu> currentHelpMenu() {
 		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 		var gameState = sceneContext.gameState();
 		if (gameState == GameState.INTRO) {
@@ -307,8 +222,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return Optional.empty();
 	}
 
-	private Menu createIntroMenu(Font font) {
-		var menu = new Menu(sceneContext, font);
+	private GamePagePopupMenu createIntroMenu(Font font) {
+		var menu = new GamePagePopupMenu(sceneContext, font);
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
@@ -317,8 +232,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private Menu createCreditMenu(Font font) {
-		var menu = new Menu(sceneContext, font);
+	private GamePagePopupMenu createCreditMenu(Font font) {
+		var menu = new GamePagePopupMenu(sceneContext, font);
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
@@ -327,8 +242,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private Menu createPlayingMenu(Font font) {
-		var menu = new Menu(sceneContext, font);
+	private GamePagePopupMenu createPlayingMenu(Font font) {
+		var menu = new GamePagePopupMenu(sceneContext, font);
 		menu.addEntry("help.move_left",  tt("help.cursor_left"));
 		menu.addEntry("help.move_right", tt("help.cursor_right"));
 		menu.addEntry("help.move_up",    tt("help.cursor_up"));
@@ -337,8 +252,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private Menu createDemoLevelMenu(Font font) {
-		var menu = new Menu(sceneContext, font);
+	private GamePagePopupMenu createDemoLevelMenu(Font font) {
+		var menu = new GamePagePopupMenu(sceneContext, font);
 		menu.addEntry("help.add_credit", "5");
 		menu.addEntry("help.show_intro", "Q");
 		return menu;
