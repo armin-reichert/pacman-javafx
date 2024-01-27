@@ -32,7 +32,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
@@ -59,11 +58,8 @@ public class GamePage implements Page {
 
 	protected double scaling = 1.0;
 
-	protected List<ResourceBundle> messageBundles;
-
-	public GamePage(GameSceneContext sceneContext, List<ResourceBundle> messageBundles) {
+	public GamePage(GameSceneContext sceneContext) {
 		this.sceneContext = sceneContext;
-		this.messageBundles = messageBundles;
 
 		gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 		gameSceneLayer.setCenter(canvasContainer);
@@ -270,7 +266,7 @@ public class GamePage implements Page {
 	}
 
 	protected String tt(String key, Object... args) {
-		var text = ResourceManager.message(messageBundles, key, args);
+		var text = ResourceManager.message(sceneContext.messageBundles(), key, args);
 		return text != null ? text : "<" + key + ">";
 	}
 

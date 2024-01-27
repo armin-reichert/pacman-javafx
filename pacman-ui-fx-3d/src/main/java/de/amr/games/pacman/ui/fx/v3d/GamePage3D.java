@@ -40,8 +40,8 @@ public class GamePage3D extends GamePage {
 	private final List<InfoBox> infoBoxes = new ArrayList<>();
 	private final GamePageContextMenu contextMenu;
 
-	public GamePage3D(GameSceneContext sceneContext, List<ResourceBundle> messageBundles) {
-		super(sceneContext, messageBundles);
+	public GamePage3D(GameSceneContext sceneContext) {
+		super(sceneContext);
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 		pip = createPictureInPicture();
 		dashboard = createDashboard(sceneContext.theme());

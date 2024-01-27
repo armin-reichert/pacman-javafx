@@ -85,7 +85,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	public static final Picker<String> PICKER_READY_PACMAN            = Picker.fromBundle(MSG_BUNDLE, "pacman.ready");
 	public static final Picker<String> PICKER_READY_MS_PACMAN         = Picker.fromBundle(MSG_BUNDLE, "mspacman.ready");
-	public static final Picker<String> PICKER_CHEATING                = Picker.fromBundle(MSG_BUNDLE, "cheating");
+	//public static final Picker<String> PICKER_CHEATING                = Picker.fromBundle(MSG_BUNDLE, "cheating");
 	public static final Picker<String> PICKER_LEVEL_COMPLETE          = Picker.fromBundle(MSG_BUNDLE, "level.complete");
 	public static final Picker<String> PICKER_GAME_OVER               = Picker.fromBundle(MSG_BUNDLE, "game.over");
 
@@ -236,7 +236,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected GamePage3D createGamePage() {
 		checkNotNull(mainScene);
-		var page = new GamePage3D(this, messageBundles());
+		var page = new GamePage3D(this);
 		page.setSize(mainScene.getWidth(), mainScene.getHeight());
 		// register event handler for opening page context menu
 		mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
