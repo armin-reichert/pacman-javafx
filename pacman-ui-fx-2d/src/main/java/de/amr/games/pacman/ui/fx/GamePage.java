@@ -23,13 +23,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +59,7 @@ public class GamePage extends CanvasContainer implements Page {
 		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
 		layers.getChildren().addAll(popupLayer, flashMessageView);
 		layers.setOnKeyPressed(this::handleKeyPressed);
-		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
+		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> showDebugBorders(nv));
 		setSize(width, height);
 	}
 
@@ -111,11 +108,11 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 		scalePage(scaling, true);
 
-		updateDebugBorders();
+		showDebugBorders(PY_SHOW_DEBUG_INFO.get());
 	}
 
-	protected void updateDebugBorders()  {
-		if (PY_SHOW_DEBUG_INFO.get()) {
+	protected void showDebugBorders(boolean on)  {
+		if (on) {
 			layers.setBorder(ResourceManager.border(Color.RED, 3));
 			canvasLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
 			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
