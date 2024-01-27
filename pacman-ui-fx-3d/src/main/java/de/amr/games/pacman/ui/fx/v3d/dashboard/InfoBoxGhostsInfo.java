@@ -37,9 +37,8 @@ public class InfoBoxGhostsInfo extends InfoBox {
 		case GameModel.ORANGE_GHOST -> "Orange";
 		default -> "";
 		};
-		addInfo(color + " Ghost", ifLevelExists(this::ghostName, ghostID));
-		addInfo("State", ifLevelExists(this::ghostState, ghostID));
-		addInfo("Killed Index", ifLevelExists(this::ghostKilledIndex, ghostID));
+		addInfo(color + " Ghost", ifLevelExists(this::ghostNameAndState, ghostID));
+		//addInfo("Killed Index", ifLevelExists(this::ghostKilledIndex, ghostID));
 		addInfo("Animation", ifLevelExists(this::ghostAnimation, ghostID));
 		addInfo("Movement", ifLevelExists(this::ghostMovement, ghostID));
 		addInfo("Tile", ifLevelExists(this::ghostTile, ghostID));
@@ -52,8 +51,8 @@ public class InfoBoxGhostsInfo extends InfoBox {
 		};
 	}
 
-	private String ghostName(GameLevel level, Ghost ghost) {
-		return ghost.name();
+	private String ghostNameAndState(GameLevel level, Ghost ghost) {
+		return String.format("%s (%s)", ghost.name(), ghostState(level, ghost));
 	}
 
 	private String ghostAnimation(GameLevel level, Ghost ghost) {
@@ -82,9 +81,5 @@ public class InfoBoxGhostsInfo extends InfoBox {
 	private String ghostMovement(GameLevel level, Ghost ghost) {
 		var speed = ghost.velocity().length();
 		return "%.2f px %s (%s)".formatted(speed, ghost.moveDir(), ghost.wishDir());
-	}
-
-	private String ghostKilledIndex(GameLevel level, Ghost ghost) {
-		return "%d".formatted(ghost.killedIndex());
 	}
 }
