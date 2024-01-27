@@ -30,6 +30,7 @@ public class CanvasContainer {
 		canvasLayer.setCenter(canvasContainer);
 		canvasContainer.setCenter(canvas);
 		layers.getChildren().add(canvasLayer);
+		canvasContainer.widthProperty().addListener((py, ov, nv) -> scalePage(scaling, false));
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> scalePage(scaling, false));
 	}
 
