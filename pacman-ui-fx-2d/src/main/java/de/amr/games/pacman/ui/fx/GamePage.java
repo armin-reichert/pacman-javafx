@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -44,7 +45,7 @@ public class GamePage extends CanvasContainer implements Page {
 
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
-		helpButton.setOnMouseClicked(e -> {
+		helpButton.setOnMouseClicked((MouseEvent e) -> {
 			e.consume();
 			showHelpMenu();
 		});

@@ -9,7 +9,7 @@ import org.tinylog.Logger;
 /**
  * Layered container containing a canvas in the center of the lowest layer.
  *
- * TODO: needs testing
+ * <p>TODO: needs testing</p>
  */
 public class CanvasContainer {
 
@@ -98,7 +98,7 @@ public class CanvasContainer {
 
 	protected void scalePage(double newScaling, boolean always) {
 		if (newScaling < minScaling) {
-			Logger.info("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
+			Logger.error("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
 			return;
 		}
 		if (scaling == newScaling && !always) {
@@ -127,12 +127,12 @@ public class CanvasContainer {
 					new BorderWidths(borderWidth)));
 			canvasContainer.setBorder(roundedBorder);
 			setSizes(canvasContainer, w, h);
-			Logger.info("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
+			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
 				canvas.getWidth(), canvas.getHeight(), borderWidth);
 		} else {
 			canvasContainer.setBorder(null);
 			setSizes(canvasContainer, canvas.getWidth(), canvas.getHeight());
-			Logger.info("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, no border", scaling,
+			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, no border", scaling,
 				canvas.getWidth(), canvas.getHeight());
 		}
 	}
