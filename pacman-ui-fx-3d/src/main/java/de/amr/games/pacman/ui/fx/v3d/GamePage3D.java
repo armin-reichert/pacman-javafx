@@ -100,7 +100,7 @@ public class GamePage3D extends GamePage {
 		contextMenu.hide();
 		updateBackground();
 		updateTopLayer();
-		updateDebugBorders();
+		showDebugBorders(PY_SHOW_DEBUG_INFO.get());
 	}
 
 	public void updateBackground() {
@@ -140,16 +140,8 @@ public class GamePage3D extends GamePage {
 	}
 
 	@Override
-	protected void updateDebugBorders()  {
-		if (PY_SHOW_DEBUG_INFO.get() && !isCurrentGameScene3D()) {
-			layers.setBorder(border(Color.RED, 3));
-			getCanvasLayer().setBorder(border(Color.YELLOW, 3));
-			popupLayer.setBorder(border(Color.GREENYELLOW, 3));
-		} else {
-			layers.setBorder(null);
-			getCanvasLayer().setBorder(null);
-			popupLayer.setBorder(null);
-		}
+	protected void showDebugBorders(boolean on)  {
+		super.showDebugBorders(on && !isCurrentGameScene3D());
 	}
 
 	@Override
