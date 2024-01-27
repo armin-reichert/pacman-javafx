@@ -63,9 +63,8 @@ public class GamePage3D extends GamePage {
 	private VBox createDashboard(Theme theme) {
 		var db = new VBox();
 		infoBoxes.add(new InfoBoxGeneral(theme, tt("infobox.general.title")));
-		infoBoxes.add(new InfoBoxAppearance(theme, tt("infobox.appearance.title")));
-		infoBoxes.add(new InfoBox3D(theme, tt("infobox.3D_settings.title")));
 		infoBoxes.add(new InfoBoxGameControl(theme, tt("infobox.game_control.title")));
+		infoBoxes.add(new InfoBox3D(theme, tt("infobox.3D_settings.title")));
 		infoBoxes.add(new InfoBoxGameInfo(theme, tt("infobox.game_info.title")));
 		infoBoxes.add(new InfoBoxGhostsInfo(theme, tt("infobox.ghosts_info.title")));
 		infoBoxes.add(new InfoBoxKeys(theme, tt("infobox.keyboard_shortcuts.title")));
