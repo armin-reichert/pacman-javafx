@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
@@ -74,19 +73,19 @@ public class MsPacManIntroScene extends GameScene2D {
 		var ty = intro.titlePosition.y();
 		var y0 = intro.stopY;
 		drawMarquee();
-		drawText("\"MS PAC-MAN\"", ArcadePalette.ORANGE, font8, tx, ty);
+		drawText("\"MS PAC-MAN\"", context.theme().color("palette.orange"), font8, tx, ty);
 		if (intro.state() == State.GHOSTS_MARCHING_IN) {
 			var ghost = intro.ghosts[intro.ghostIndex];
 			var color = theme.color(String.format("ghost.%d.color", ghost.id()));
 			if (ghost.id() == GameModel.RED_GHOST) {
-				drawText("WITH", ArcadePalette.PALE, font8, tx, y0 + t(3));
+				drawText("WITH", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
 			}
 			var text = ghost.name().toUpperCase();
 			var dx = text.length() < 4 ? t(1) : 0;
 			drawText(text, color, font8, tx + t(3) + dx, y0 + t(6));
 		} else if (intro.state() == State.MS_PACMAN_MARCHING_IN || intro.state() == State.READY_TO_PLAY) {
-			drawText("STARRING", ArcadePalette.PALE, font8, tx, y0 + t(3));
-			drawText("MS PAC-MAN", ArcadePalette.YELLOW, font8, tx, y0 + t(6));
+			drawText("STARRING", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
+			drawText("MS PAC-MAN", context.theme().color("palette.yellow"), font8, tx, y0 + t(6));
 		}
 		for (var ghost : intro.ghosts) {
 			drawGhost(ghost);
@@ -99,7 +98,9 @@ public class MsPacManIntroScene extends GameScene2D {
 	private void drawMarquee() {
 		var on = intro.marqueeState();
 		for (int i = 0; i < intro.numBulbs; ++i) {
-			g.setFill(on.get(i) ? ArcadePalette.PALE : ArcadePalette.RED);
+			g.setFill(on.get(i)
+				? context.theme().color("palette.pale")
+				: context.theme().color("palette.red"));
 			if (i <= 33) {
 				g.fillRect(s(60 + 4 * i), s(148), s(2), s(2));
 			} else if (i <= 48) {

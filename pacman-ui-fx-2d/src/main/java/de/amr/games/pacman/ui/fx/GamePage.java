@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -145,7 +144,8 @@ public class GamePage implements Page {
 
 		double borderWidth  = Math.max(5, Math.ceil(h / 55));
 		double cornerRadius = Math.ceil(10 * scaling);
-		var roundedBorder = ResourceManager.roundedBorder(ArcadePalette.PALE, cornerRadius, borderWidth);
+		var roundedBorder = ResourceManager.roundedBorder(
+			sceneContext.theme().color("palette.pale"), cornerRadius, borderWidth);
 		canvasContainer.setBorder(roundedBorder);
 
 		setSizes(canvasContainer, w, h);

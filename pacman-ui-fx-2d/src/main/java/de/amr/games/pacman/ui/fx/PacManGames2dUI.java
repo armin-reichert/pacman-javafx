@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
@@ -94,12 +93,24 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		//
 		// Common to both games
 		//
-		THEME.set("canvas.background",               ArcadePalette.BLACK);
 
-		THEME.set("ghost.0.color",                   ArcadePalette.RED);
-		THEME.set("ghost.1.color",                   ArcadePalette.PINK);
-		THEME.set("ghost.2.color",                   ArcadePalette.CYAN);
-		THEME.set("ghost.3.color",                   ArcadePalette.ORANGE);
+		THEME.set("palette.black",                   Color.rgb(  0,   0,   0));
+		THEME.set("palette.red",                     Color.rgb(255,   0,   0));
+		THEME.set("palette.yellow",                  Color.rgb(255, 255,   0));
+		THEME.set("palette.pink",                    Color.rgb(252, 181, 255));
+		THEME.set("palette.cyan",                    Color.rgb(  0, 255, 255));
+		THEME.set("palette.orange",                  Color.rgb(251, 190,  88));
+		THEME.set("palette.blue",                    Color.rgb( 33,  33, 255));
+		THEME.set("palette.pale",                    Color.rgb(222, 222, 255));
+		THEME.set("palette.rose",                    Color.rgb(252, 187, 179));
+
+
+		THEME.set("canvas.background",               THEME.color("palette.black"));
+
+		THEME.set("ghost.0.color",                   THEME.color("palette.red"));
+		THEME.set("ghost.1.color",                   THEME.color("palette.pink"));
+		THEME.set("ghost.2.color",                   THEME.color("palette.cyan"));
+		THEME.set("ghost.3.color",                   THEME.color("palette.orange"));
 
 		THEME.set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
 		THEME.set("startpage.button.color",          Color.WHITE);

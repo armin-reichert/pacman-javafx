@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.ArcadePalette;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManPacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
@@ -97,7 +96,7 @@ public class PacManIntroScene extends GameScene2D {
 
 		int tx = intro.leftTileX;
 		if (intro.titleVisible) {
-			drawText("CHARACTER / NICKNAME", ArcadePalette.PALE, font, t(tx + 3), t(6));
+			drawText("CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
 		}
 		for (int id = 0; id < 4; ++id) {
 			var ghostInfo = intro.ghostInfo[id];
@@ -143,6 +142,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawPoints() {
+		var color = context.theme().color("palette.pale");
 		var font8 = sceneFont(8);
 		var font6 = sceneFont(6);
 		int tx = intro.leftTileX + 6;
@@ -152,9 +152,9 @@ public class PacManIntroScene extends GameScene2D {
 		if (intro.blinking.on()) {
 			g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
 		}
-		drawText("10",  ArcadePalette.PALE, font8, t(tx + 2), t(ty));
-		drawText("PTS", ArcadePalette.PALE, font6, t(tx + 5), t(ty));
-		drawText("50",  ArcadePalette.PALE, font8, t(tx + 2), t(ty + 2));
-		drawText("PTS", ArcadePalette.PALE, font6, t(tx + 5), t(ty + 2));
+		drawText("10",  color, font8, t(tx + 2), t(ty));
+		drawText("PTS", color, font6, t(tx + 5), t(ty));
+		drawText("50",  color, font8, t(tx + 2), t(ty + 2));
+		drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
 	}
 }
