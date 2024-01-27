@@ -18,6 +18,7 @@ import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.beans.property.*;
+import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
@@ -234,16 +235,16 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	}
 
 	@Override
-	protected GamePage3D createGamePage() {
-		checkNotNull(mainScene);
-		var page = new GamePage3D(this, mainScene.getWidth(), mainScene.getHeight());
+	protected GamePage3D createGamePage(Scene parentScene) {
+		checkNotNull(parentScene);
+		var page = new GamePage3D(this, parentScene.getWidth(), parentScene.getHeight());
 		// register event handler for opening page context menu
-		mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
+		parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
 			currentGameScene().ifPresent(gameScene -> {
 				page.contextMenu().hide();
 				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
 					page.contextMenu().rebuild(theme(), actionHandler(), gameScene, messageBundles());
-					page.contextMenu().show(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
+					page.contextMenu().show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
 				}
 			})
 		);

@@ -23,7 +23,6 @@ import javafx.scene.shape.DrawMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
@@ -41,8 +40,7 @@ public class GamePage3D extends GamePage {
 	private final GamePageContextMenu contextMenu;
 
 	public GamePage3D(GameSceneContext sceneContext, double width, double height) {
-		super(sceneContext);
-		setSize(width, height);
+		super(sceneContext, width, height);
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 		pip = createPictureInPicture();
 		dashboard = createDashboard(sceneContext.theme());

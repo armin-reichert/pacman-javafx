@@ -212,7 +212,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		this.soundHandler = new SoundHandler(THEME);
 		this.mainScene = createMainScene();
 		this.startPage = createStartPage();
-		this.gamePage = createGamePage();
+		this.gamePage = createGamePage(mainScene);
 		this.clock = createClock();
 
 		addGameScenes();
@@ -255,13 +255,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	protected GameClock createClock() {
 		var clock = new GameClock();
+		clock.targetFrameratePy.set(GameModel.FPS);
+		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
 		clock.setOnTick(() -> {
 			gameController().update();
 			currentGameScene().ifPresent(GameScene::update);
 		});
-		clock.setOnRender(gamePage::render);
-		clock.pausedPy.addListener((py, ov, nv) -> updateStage());
-		clock.targetFrameratePy.set(GameModel.FPS);
+		clock.setOnRender(() -> gamePage.render());
 		return clock;
 	}
 
@@ -296,8 +296,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		return startPage;
 	}
 
-	protected GamePage createGamePage() {
-		var page = new GamePage(this, mainScene.getWidth(), mainScene.getHeight());
+	protected GamePage createGamePage(Scene parentScene) {
+		checkNotNull(parentScene);
+		var page = new GamePage(this, parentScene.getWidth(), parentScene.getHeight());
 		gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
 		return page;
 	}
