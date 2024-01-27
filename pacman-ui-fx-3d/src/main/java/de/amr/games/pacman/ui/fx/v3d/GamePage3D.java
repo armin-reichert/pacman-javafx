@@ -60,13 +60,13 @@ public class GamePage3D extends GamePage {
 
 	private VBox createDashboard(Theme theme) {
 		var db = new VBox();
-		infoBoxes.add(new InfoBoxGeneral(theme, tt("infobox.general.title")));
-		infoBoxes.add(new InfoBoxGameControl(theme, tt("infobox.game_control.title")));
-		infoBoxes.add(new InfoBox3D(theme, tt("infobox.3D_settings.title")));
-		infoBoxes.add(new InfoBoxGameInfo(theme, tt("infobox.game_info.title")));
-		infoBoxes.add(new InfoBoxGhostsInfo(theme, tt("infobox.ghosts_info.title")));
-		infoBoxes.add(new InfoBoxKeys(theme, tt("infobox.keyboard_shortcuts.title")));
-		infoBoxes.add(new InfoBoxAbout(theme, tt("infobox.about.title")));
+		infoBoxes.add(new InfoBoxGeneral(theme, sceneContext.tt("infobox.general.title")));
+		infoBoxes.add(new InfoBoxGameControl(theme, sceneContext.tt("infobox.game_control.title")));
+		infoBoxes.add(new InfoBox3D(theme, sceneContext.tt("infobox.3D_settings.title")));
+		infoBoxes.add(new InfoBoxGameInfo(theme, sceneContext.tt("infobox.game_info.title")));
+		infoBoxes.add(new InfoBoxGhostsInfo(theme, sceneContext.tt("infobox.ghosts_info.title")));
+		infoBoxes.add(new InfoBoxKeys(theme, sceneContext.tt("infobox.keyboard_shortcuts.title")));
+		infoBoxes.add(new InfoBoxAbout(theme, sceneContext.tt("infobox.about.title")));
 		infoBoxes.stream().map(InfoBox::getRoot).forEach(db.getChildren()::add);
 		db.setVisible(false);
 		db.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());

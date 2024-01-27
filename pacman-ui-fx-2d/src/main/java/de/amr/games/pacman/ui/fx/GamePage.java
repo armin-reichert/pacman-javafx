@@ -188,12 +188,6 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 	}
 
-	protected String tt(String key, Object... args) {
-		var text = ResourceManager.message(sceneContext.messageBundles(), key, args);
-		return text != null ? text : "<" + key + ">";
-	}
-
-
 	// Menu stuff
 
 	protected void showHelpMenu() {
@@ -245,10 +239,10 @@ public class GamePage extends CanvasContainer implements Page {
 
 	private GamePagePopupMenu createPlayingMenu(Font font) {
 		var menu = new GamePagePopupMenu(sceneContext, font);
-		menu.addEntry("help.move_left",  tt("help.cursor_left"));
-		menu.addEntry("help.move_right", tt("help.cursor_right"));
-		menu.addEntry("help.move_up",    tt("help.cursor_up"));
-		menu.addEntry("help.move_down",  tt("help.cursor_down"));
+		menu.addEntry("help.move_left",  sceneContext.tt("help.cursor_left"));
+		menu.addEntry("help.move_right", sceneContext.tt("help.cursor_right"));
+		menu.addEntry("help.move_up",    sceneContext.tt("help.cursor_up"));
+		menu.addEntry("help.move_down",  sceneContext.tt("help.cursor_down"));
 		menu.addEntry("help.show_intro", "Q");
 		return menu;
 	}
