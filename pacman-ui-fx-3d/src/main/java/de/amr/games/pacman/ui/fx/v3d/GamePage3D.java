@@ -94,7 +94,7 @@ public class GamePage3D extends GamePage {
 			layers.requestFocus();
 			helpButton.setVisible(false); // use data binding?
 		} else {
-			layers.getChildren().set(0, gameSceneLayer);
+			layers.getChildren().set(0, getCanvasLayer());
 			super.onGameSceneChanged(newGameScene);
 		}
 		contextMenu.hide();
@@ -112,7 +112,7 @@ public class GamePage3D extends GamePage {
 				layers.setBackground(sceneContext.theme().background(wallpaperKey));
 			}
 		} else {
-			gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
+			getCanvasLayer().setBackground(sceneContext.theme().background("wallpaper.background"));
 		}
 	}
 
@@ -143,21 +143,21 @@ public class GamePage3D extends GamePage {
 	protected void updateDebugBorders()  {
 		if (PY_SHOW_DEBUG_INFO.get() && !isCurrentGameScene3D()) {
 			layers.setBorder(border(Color.RED, 3));
-			gameSceneLayer.setBorder(border(Color.YELLOW, 3));
+			getCanvasLayer().setBorder(border(Color.YELLOW, 3));
 			popupLayer.setBorder(border(Color.GREENYELLOW, 3));
 		} else {
 			layers.setBorder(null);
-			gameSceneLayer.setBorder(null);
+			getCanvasLayer().setBorder(null);
 			popupLayer.setBorder(null);
 		}
 	}
 
 	@Override
-	protected void updateHelpButton() {
+	protected void updateHelpButton(double newScaling) {
 		if (isCurrentGameScene3D()) {
 			helpButton.setVisible(false);
 		} else {
-			super.updateHelpButton();
+			super.updateHelpButton(newScaling);
 		}
 	}
 

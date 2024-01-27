@@ -238,6 +238,14 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected GamePage3D createGamePage(Scene parentScene) {
 		checkNotNull(parentScene);
 		var page = new GamePage3D(this, parentScene.getWidth(), parentScene.getHeight());
+		page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
+		page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
+		page.setMinScaling(0.7);
+		page.setDiscreteScaling(true);
+		page.setCanvasBorderEnabled(true);
+		page.setCanvasBorderColor(theme().color("palette.pale"));
+		page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
+		page.getCanvasContainer().setBackground(ResourceManager.coloredBackground(theme().color("canvas.background")));
 		// register event handler for opening page context menu
 		parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
 			currentGameScene().ifPresent(gameScene -> {

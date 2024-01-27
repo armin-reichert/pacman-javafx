@@ -18,10 +18,12 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -40,123 +42,52 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 /**
  * @author Armin Reichert
  */
-public class GamePage implements Page {
+public class GamePage extends CanvasContainer implements Page {
 
-	protected static final double MIN_SCALING = 0.7;
 	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
 
 	protected final GameSceneContext sceneContext;
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
-	protected final StackPane layers = new StackPane();
-	protected final BorderPane gameSceneLayer = new BorderPane();
-	protected final BorderPane canvasContainer = new BorderPane();
-	protected final Canvas canvas = new Canvas();
 	protected final Pane popupLayer = new Pane();
 	protected final FadingPane helpMenu = new FadingPane();
 	protected final HelpButton helpButton = new HelpButton();
 	protected final Signature signature = new Signature("Remake (2023) by ", "Armin Reichert");
 
-	protected double scaling = 1.0;
-
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
-
-		setSize(width, height);
-
-		gameSceneLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
-		gameSceneLayer.setCenter(canvasContainer);
-
-		canvasContainer.setBackground(ResourceManager.coloredBackground(sceneContext.theme().color("canvas.background")));
-		canvasContainer.setCenter(canvas);
-		canvasContainer.heightProperty().addListener((py, ov, nv) -> scalePage(scaling, false));
-
 		helpButton.setOnMouseClicked(e -> {
 			e.consume();
 			showHelpMenu();
 		});
-
-		layers.getChildren().addAll(gameSceneLayer, popupLayer, flashMessageView);
 		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
-
+		layers.getChildren().addAll(popupLayer, flashMessageView);
 		layers.setOnKeyPressed(this::handleKeyPressed);
-
 		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> updateDebugBorders());
+		setSize(width, height);
 	}
 
-	@Override
-	public Pane root() {
-		return layers;
-	}
-
-	protected void updateHelpButton() {
+	protected void updateHelpButton(double newScaling) {
 		String key = sceneContext.gameVariant() == GameVariant.MS_PACMAN 
 			? "mspacman.helpButton.icon" 
 			: "pacman.helpButton.icon";
-		helpButton.setImage(sceneContext.theme().image(key), Math.ceil(10 * scaling));
-		helpButton.setTranslateX(popupLayer.getWidth() - 20 * scaling);
-		helpButton.setTranslateY(8 * scaling);
+		helpButton.setImage(sceneContext.theme().image(key), Math.ceil(10 * newScaling));
+		helpButton.setTranslateX(popupLayer.getWidth() - 20 * newScaling);
+		helpButton.setTranslateY(8 * newScaling);
 		helpButton.setVisible(sceneContext.currentGameScene().isPresent()
 			&& sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
 	}
 
-	@Override
-	public void setSize(double width, double height) {
-		double s = 0.9 * height / CANVAS_HEIGHT_UNSCALED;
-		if (s * CANVAS_WIDTH_UNSCALED > 0.8 * width) {
-			s = 0.8 * width / CANVAS_WIDTH_UNSCALED;
-		}
-		s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
-		scalePage(s, false);
-	}
-
-	public void scalePage(double scaling, boolean always) {
-		if (scaling < MIN_SCALING) {
-			Logger.info("Cannot scale to {}, minimum scaling is {}", scaling, MIN_SCALING);
-			return;
-		}
-
-		//TODO check if this has to be done also when scaling value did not change
-		updateHelpButton();
+	protected void scalePage(double newScaling, boolean always) {
+		//TODO move into hook method?
 		updateSignatureSizeAndPosition();
 		sceneContext.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
-				gameScene2D.setScaling(scaling);
+				gameScene2D.setScaling(newScaling);
 			}
 		});
-
-		if (this.scaling == scaling && !always) {
-			return;
-		}
-		this.scaling = scaling;
-
-		double w = Math.round( (CANVAS_WIDTH_UNSCALED  + 25) * scaling );
-		double h = Math.round( (CANVAS_HEIGHT_UNSCALED + 15) * scaling );
-
-		canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
-		canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
-
-		var roundedRect = new Rectangle(w, h);
-		roundedRect.setArcWidth (26 * scaling);
-		roundedRect.setArcHeight(26 * scaling);
-		canvasContainer.setClip(roundedRect);
-
-		double borderWidth  = Math.max(5, Math.ceil(h / 55));
-		double cornerRadius = Math.ceil(10 * scaling);
-		var roundedBorder = ResourceManager.roundedBorder(
-			sceneContext.theme().color("palette.pale"), cornerRadius, borderWidth);
-		canvasContainer.setBorder(roundedBorder);
-
-		setSizes(canvasContainer, w, h);
-		setSizes(popupLayer, w, h);
-
-		Logger.trace("Game page resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
-				canvas.getWidth(), canvas.getHeight(), borderWidth);
-	}
-
-	private void setSizes(Region region, double width, double height) {
-		region.setMinSize(width, height);
-		region.setMaxSize(width, height);
-		region.setPrefSize(width, height);
+		updateHelpButton(newScaling); // TODO doesn't work correctly
+		super.scalePage(newScaling, always);
+		setSizes(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
 	}
 
 	public void onGameSceneChanged(GameScene newGameScene) {
@@ -186,11 +117,11 @@ public class GamePage implements Page {
 	protected void updateDebugBorders()  {
 		if (PY_SHOW_DEBUG_INFO.get()) {
 			layers.setBorder(ResourceManager.border(Color.RED, 3));
-			gameSceneLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
+			canvasLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
 			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
 		} else {
 			layers.setBorder(null);
-			gameSceneLayer.setBorder(null);
+			canvasLayer.setBorder(null);
 			popupLayer.setBorder(null);
 		}
 	}
