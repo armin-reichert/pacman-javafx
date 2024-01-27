@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
 /**
