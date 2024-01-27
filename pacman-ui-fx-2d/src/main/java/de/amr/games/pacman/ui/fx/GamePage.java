@@ -203,13 +203,17 @@ public class GamePage extends CanvasContainer implements Page {
 
 	// Menu stuff
 
-	private class Menu {
+	private static class Menu {
+
+		private final GameSceneContext sceneContext;
 		private final List<Node> column0 = new ArrayList<>();
 		private final List<Node> column1 = new ArrayList<>();
 		private final Font font;
 
-		public Menu(Font font) {
+		public Menu(GameSceneContext sceneContext, Font font) {
+			checkNotNull(sceneContext);
 			checkNotNull(font);
+			this.sceneContext = sceneContext;
 			this.font = font;
 		}
 
@@ -241,7 +245,7 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 
 		private void addEntry(String rbKey, String kbKey) {
-			addRow(label(tt(rbKey)), text("[" + kbKey + "]"));
+			addRow(label(sceneContext.tt(rbKey)), text("[" + kbKey + "]"));
 		}
 
 		private Pane createPane() {
@@ -254,13 +258,13 @@ public class GamePage extends CanvasContainer implements Page {
 			}
 			int rowIndex = size();
 			if (sceneContext.gameController().isAutoControlled()) {
-				var text = text(tt("help.autopilot_on"), Color.ORANGE);
+				var text = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
 				GridPane.setColumnSpan(text, 2);
 				grid.add(text, 0, rowIndex);
 				++rowIndex;
 			}
 			if (sceneContext.gameController().isImmune()) {
-				var text = text(tt("help.immunity_on"), Color.ORANGE);
+				var text = text(sceneContext.tt("help.immunity_on"), Color.ORANGE);
 				GridPane.setColumnSpan(text, 2);
 				grid.add(text, 0, rowIndex);
 				++rowIndex;
@@ -285,29 +289,26 @@ public class GamePage extends CanvasContainer implements Page {
 		});
 	}
 
-	private Font createMenuFont() {
-		return sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
-	}
-
 	private Optional<Menu> currentHelpMenu() {
+		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 		var gameState = sceneContext.gameState();
 		if (gameState == GameState.INTRO) {
-			return Optional.of(createIntroMenu());
+			return Optional.of(createIntroMenu(font));
 		}
 		if (gameState == GameState.CREDIT) {
-			return Optional.of(createCreditMenu());
+			return Optional.of(createCreditMenu(font));
 		}
 		if (sceneContext.gameLevel().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
 			return sceneContext.gameLevel().get().isDemoLevel()
-					? Optional.of(createDemoLevelMenu())
-					: Optional.of(createPlayingMenu());
+					? Optional.of(createDemoLevelMenu(font))
+					: Optional.of(createPlayingMenu(font));
 		}
 		return Optional.empty();
 	}
 
-	private Menu createIntroMenu() {
-		var menu = new Menu(createMenuFont());
+	private Menu createIntroMenu(Font font) {
+		var menu = new Menu(sceneContext, font);
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
@@ -316,8 +317,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private Menu createCreditMenu() {
-		var menu = new Menu(createMenuFont());
+	private Menu createCreditMenu(Font font) {
+		var menu = new Menu(sceneContext, font);
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
@@ -326,8 +327,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private Menu createPlayingMenu() {
-		var menu = new Menu(createMenuFont());
+	private Menu createPlayingMenu(Font font) {
+		var menu = new Menu(sceneContext, font);
 		menu.addEntry("help.move_left",  tt("help.cursor_left"));
 		menu.addEntry("help.move_right", tt("help.cursor_right"));
 		menu.addEntry("help.move_up",    tt("help.cursor_up"));
@@ -336,8 +337,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private Menu createDemoLevelMenu() {
-		var menu = new Menu(createMenuFont());
+	private Menu createDemoLevelMenu(Font font) {
+		var menu = new Menu(sceneContext, font);
 		menu.addEntry("help.add_credit", "5");
 		menu.addEntry("help.show_intro", "Q");
 		return menu;

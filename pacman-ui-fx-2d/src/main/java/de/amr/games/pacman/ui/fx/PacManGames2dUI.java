@@ -395,6 +395,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	@Override
+	public String tt(String key, Object... args) {
+		var text = ResourceManager.message(messageBundles(), key, args);
+		return text != null ? text : "<" + key + ">";
+	}
+
+	@Override
 	public GameClock gameClock() {
 		return clock;
 	}

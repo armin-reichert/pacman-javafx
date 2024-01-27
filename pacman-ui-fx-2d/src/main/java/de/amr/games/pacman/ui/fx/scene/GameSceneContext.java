@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.ActionHandler;
 import de.amr.games.pacman.ui.fx.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.GameClock;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.media.AudioClip;
@@ -34,6 +35,8 @@ public interface GameSceneContext {
   Theme theme();
 
   List<ResourceBundle> messageBundles();
+
+  String tt(String key, Object... args);
 
   <S extends SpriteSheet> S spriteSheet();
 
