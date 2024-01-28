@@ -5,27 +5,30 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
-import de.amr.games.pacman.ui.fx.scene2d.HelpButton;
 import de.amr.games.pacman.ui.fx.util.FadingPane;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.scene.Cursor;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.oneOf;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 
@@ -40,30 +43,37 @@ public class GamePage extends CanvasContainer implements Page {
 	protected final FlashMessageView flashMessageView = new FlashMessageView();
 	protected final Pane popupLayer = new Pane();
 	protected final FadingPane helpMenu = new FadingPane();
-	protected final HelpButton helpButton = new HelpButton();
+	protected final ImageView helpIcon = new ImageView();
 	protected final Signature signature = new Signature("Remake (2023) by ", "Armin Reichert");
 
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
-		helpButton.setOnMouseClicked((MouseEvent e) -> {
+
+		helpIcon.setCursor(Cursor.HAND);
+		helpIcon.setOnMouseClicked((MouseEvent e) -> {
 			e.consume();
 			showHelpMenu();
 		});
-		popupLayer.getChildren().addAll(helpButton, signature.root(), helpMenu);
+		popupLayer.getChildren().addAll(helpIcon, signature.root(), helpMenu);
 		layers.getChildren().addAll(popupLayer, flashMessageView);
 		layers.setOnKeyPressed(this::handleKeyPressed);
 		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> showDebugBorders(nv));
 		setSize(width, height);
 	}
 
-	protected void updateHelpButton(double newScaling) {
+	protected void updateHelpIcon() {
+		Logger.info("Update help icon, scaling: {}", scaling);
 		String key = sceneContext.gameVariant() == GameVariant.MS_PACMAN 
 			? "mspacman.helpButton.icon" 
 			: "pacman.helpButton.icon";
-		helpButton.setImage(sceneContext.theme().image(key), Math.ceil(10 * newScaling));
-		helpButton.setTranslateX(popupLayer.getWidth() - 20 * newScaling);
-		helpButton.setTranslateY(8 * newScaling);
-		helpButton.setVisible(sceneContext.currentGameScene().isPresent()
+		var icon = sceneContext.theme().image(key);
+		double size = Math.ceil(12 * scaling);
+		helpIcon.setImage(icon);
+		helpIcon.setFitHeight(size);
+		helpIcon.setFitWidth(size);
+		helpIcon.setTranslateX(GameModel.TILES_X * Globals.TS * scaling);
+		helpIcon.setTranslateY(10 * scaling);
+		helpIcon.setVisible(sceneContext.currentGameScene().isPresent()
 			&& sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
 	}
 
@@ -75,9 +85,9 @@ public class GamePage extends CanvasContainer implements Page {
 				gameScene2D.setScaling(newScaling);
 			}
 		});
-		updateHelpButton(newScaling); // TODO doesn't work correctly
 		super.scalePage(newScaling, always);
 		setSizes(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
+		updateHelpIcon();
 	}
 
 	public void onGameSceneChanged(GameScene newGameScene) {
