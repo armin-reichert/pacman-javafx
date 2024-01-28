@@ -35,10 +35,8 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
  */
 public class GamePage extends CanvasContainer implements Page {
 
-	protected static final Duration MENU_FADING_DELAY = Duration.seconds(1.5);
-
 	protected final GameSceneContext sceneContext;
-	protected final FlashMessageView flashMessageView = new FlashMessageView();
+	protected final FlashMessageView flashMessageLayer = new FlashMessageView();
 	protected final Pane popupLayer = new Pane();
 	protected final FadingPane helpMenu = new FadingPane();
 	protected final ImageView helpIcon = new ImageView();
@@ -48,11 +46,11 @@ public class GamePage extends CanvasContainer implements Page {
 		this.sceneContext = sceneContext;
 		helpIcon.setCursor(Cursor.HAND);
 		helpIcon.setOnMouseClicked((MouseEvent e) -> {
-			e.consume();
+			e.consume(); // necessary?
 			showHelpMenu();
 		});
 		popupLayer.getChildren().addAll(helpIcon, signature.root(), helpMenu);
-		layers.getChildren().addAll(popupLayer, flashMessageView);
+		layers.getChildren().addAll(popupLayer, flashMessageLayer);
 		layers.setOnKeyPressed(this::handleKeyPressed);
 		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> showDebugBorders(nv));
 		setSize(width, height);
@@ -81,7 +79,7 @@ public class GamePage extends CanvasContainer implements Page {
 		return gameScene != sceneContext.sceneConfig().get("boot");
 	}
 
-	protected void scalePage(double newScaling, boolean always) {
+	protected void rescale(double newScaling, boolean always) {
 		//TODO move into hook method?
 		updateSignatureSizeAndPosition();
 		sceneContext.currentGameScene().ifPresent(gameScene -> {
@@ -89,8 +87,9 @@ public class GamePage extends CanvasContainer implements Page {
 				gameScene2D.setScaling(newScaling);
 			}
 		});
-		super.scalePage(newScaling, always);
-		setSizes(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
+		//TODO clarify!
+		super.rescale(newScaling, always);
+		resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
 		updateHelpIcon();
 	}
 
@@ -117,7 +116,7 @@ public class GamePage extends CanvasContainer implements Page {
 		helpIcon.setVisible(isHelpIconVisible());
 		showDebugBorders(PY_SHOW_DEBUG_INFO.get());
 
-		scalePage(scaling, true);
+		rescale(scaling, true);
 	}
 
 	protected void showDebugBorders(boolean on)  {
@@ -145,7 +144,7 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	public FlashMessageView flashMessageView() {
-		return flashMessageView;
+		return flashMessageLayer;
 	}
 
 	public void render() {
@@ -154,7 +153,7 @@ public class GamePage extends CanvasContainer implements Page {
 				gameScene2D.draw();
 			}
 		});
-		flashMessageView.update();
+		flashMessageLayer.update();
 		popupLayer.setVisible(true);
 	}
 
@@ -211,7 +210,7 @@ public class GamePage extends CanvasContainer implements Page {
 			helpMenu.setTranslateX(10 * scaling);
 			helpMenu.setTranslateY(30 * scaling);
 			helpMenu.setContent(menu.createPane());
-			helpMenu.show(MENU_FADING_DELAY);
+			helpMenu.show(Duration.seconds(1.5));
 		});
 	}
 

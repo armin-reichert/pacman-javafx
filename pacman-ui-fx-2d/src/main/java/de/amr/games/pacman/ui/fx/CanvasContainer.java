@@ -30,8 +30,8 @@ public class CanvasContainer {
 		canvasLayer.setCenter(canvasContainer);
 		canvasContainer.setCenter(canvas);
 		layers.getChildren().add(canvasLayer);
-		canvasContainer.widthProperty().addListener((py, ov, nv) -> scalePage(scaling, false));
-		canvasContainer.heightProperty().addListener((py, ov, nv) -> scalePage(scaling, false));
+		canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(scaling, false));
+		canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(scaling, false));
 	}
 
 	public Pane root() {
@@ -74,7 +74,7 @@ public class CanvasContainer {
 		this.canvasBorderColor = canvasBorderColor;
 	}
 
-	protected void setSizes(Region region, double width, double height) {
+	protected void resizeRegion(Region region, double width, double height) {
 		region.setMinSize(width, height);
 		region.setMaxSize(width, height);
 		region.setPrefSize(width, height);
@@ -93,10 +93,10 @@ public class CanvasContainer {
 			s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
 		}
 
-		scalePage(s, false);
+		rescale(s, false);
 	}
 
-	protected void scalePage(double newScaling, boolean always) {
+	protected void rescale(double newScaling, boolean always) {
 		if (newScaling < minScaling) {
 			Logger.error("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
 			return;
@@ -126,12 +126,12 @@ public class CanvasContainer {
 					new CornerRadii(cornerRadius),
 					new BorderWidths(borderWidth)));
 			canvasContainer.setBorder(roundedBorder);
-			setSizes(canvasContainer, w, h);
+			resizeRegion(canvasContainer, w, h);
 			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
 				canvas.getWidth(), canvas.getHeight(), borderWidth);
 		} else {
 			canvasContainer.setBorder(null);
-			setSizes(canvasContainer, canvas.getWidth(), canvas.getHeight());
+			resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
 			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, no border", scaling,
 				canvas.getWidth(), canvas.getHeight());
 		}
