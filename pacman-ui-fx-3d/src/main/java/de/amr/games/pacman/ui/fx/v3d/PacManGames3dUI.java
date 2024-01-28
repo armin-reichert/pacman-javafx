@@ -289,8 +289,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	protected void updateStage() {
 		var variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
 		var titleKey = "app.title." + variantKey + (gameClock().isPaused() ? ".paused" : "");
-		var dimension = message(messageBundles(), PY_3D_ENABLED.get() ? "threeD" : "twoD");
-		stage.setTitle(message(messageBundles(), titleKey, dimension));
+		var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+		stage.setTitle(tt(titleKey, dimension));
 		stage.getIcons().setAll(theme().image(variantKey + ".icon"));
 		gamePage().updateBackground();
 	}
@@ -313,28 +313,26 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 				gameScene.onSceneVariantSwitch();
 			}
 			gameController().update();
-			showFlashMessage(message(messageBundles(), PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+			showFlashMessage(tt(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
 		});
 	}
 
 	@Override
 	public void togglePipVisible() {
 		Ufx.toggle(PY_PIP_ON);
-		showFlashMessage(message(messageBundles(), PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+		showFlashMessage(tt(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
 	}
 
 	@Override
 	public void selectNextPerspective() {
 		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().next());
-		showFlashMessage(message(messageBundles(), "camera_perspective",
-			message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
+		showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	@Override
 	public void selectPrevPerspective() {
 		PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().prev());
-		showFlashMessage(message(messageBundles(), "camera_perspective",
-			message(messageBundles(), PY_3D_PERSPECTIVE.get().name())));
+		showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
 	}
 
 	@Override
