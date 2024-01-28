@@ -46,7 +46,6 @@ public class GamePage extends CanvasContainer implements Page {
 
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
-
 		helpIcon.setCursor(Cursor.HAND);
 		helpIcon.setOnMouseClicked((MouseEvent e) -> {
 			e.consume();
@@ -60,19 +59,26 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	protected void updateHelpIcon() {
-		Logger.info("Update help icon, scaling: {}", scaling);
-		String key = sceneContext.gameVariant() == GameVariant.MS_PACMAN 
-			? "mspacman.helpButton.icon" 
-			: "pacman.helpButton.icon";
-		var icon = sceneContext.theme().image(key);
 		double size = Math.ceil(12 * scaling);
+		var icon = switch (sceneContext.gameVariant()) {
+			case MS_PACMAN -> sceneContext.theme().image("mspacman.helpButton.icon");
+			case PACMAN ->    sceneContext.theme().image("pacman.helpButton.icon");
+		};
 		helpIcon.setImage(icon);
 		helpIcon.setFitHeight(size);
 		helpIcon.setFitWidth(size);
 		helpIcon.setTranslateX(unscaledCanvasWidth * scaling);
 		helpIcon.setTranslateY(10 * scaling);
-		helpIcon.setVisible(sceneContext.currentGameScene().isPresent()
-			&& sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
+		helpIcon.setVisible(isHelpIconVisible());
+		Logger.info("Updated help icon, scaling: {}", scaling);
+	}
+
+	protected boolean isHelpIconVisible() {
+		if (sceneContext.currentGameScene().isEmpty()) {
+			return false;
+		}
+		var gameScene = sceneContext.currentGameScene().get();
+		return gameScene != sceneContext.sceneConfig().get("boot");
 	}
 
 	protected void scalePage(double newScaling, boolean always) {
@@ -90,26 +96,28 @@ public class GamePage extends CanvasContainer implements Page {
 
 	public void onGameSceneChanged(GameScene newGameScene) {
 		var config = sceneContext.sceneConfig();
-		// if play scene gets active/inactive, add/remove key handler
+
+		//TODO: find a better solution than adding/removing key handler, maybe adapter class?
 		if (sceneContext.gameController().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
+			// if play scene gets active/inactive, add/remove key handler
 			if (newGameScene == config.get("play")) {
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			} else {
 				layers.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			}
 		}
-		// if intro scene gets active/inactive, show/hide signature
 		if (newGameScene == config.get("intro")) {
 			signature.showAfterSeconds(3);
 		} else {
 			signature.hide();
 		}
-		if (newGameScene instanceof GameScene2D gameScene2D) {
-			gameScene2D.setCanvas(canvas);
+		if (newGameScene instanceof GameScene2D scene2D) {
+			scene2D.setCanvas(canvas);
 		}
-		scalePage(scaling, true);
-
+		helpIcon.setVisible(isHelpIconVisible());
 		showDebugBorders(PY_SHOW_DEBUG_INFO.get());
+
+		scalePage(scaling, true);
 	}
 
 	protected void showDebugBorders(boolean on)  {

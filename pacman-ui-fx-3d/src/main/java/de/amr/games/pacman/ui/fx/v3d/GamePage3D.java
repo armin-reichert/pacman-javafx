@@ -91,11 +91,11 @@ public class GamePage3D extends GamePage {
 			}
 			layers.getChildren().set(0, newGameScene.root());
 			layers.requestFocus();
-			helpIcon.setVisible(false);
 		} else {
 			layers.getChildren().set(0, getCanvasLayer());
 			super.onGameSceneChanged(newGameScene);
 		}
+		helpIcon.setVisible(isHelpIconVisible());
 		contextMenu.hide();
 		updateBackground();
 		updateTopLayer();
@@ -143,8 +143,14 @@ public class GamePage3D extends GamePage {
 		super.showDebugBorders(on && !isCurrentGameScene3D());
 	}
 
+	@Override
+	protected boolean isHelpIconVisible() {
+		return !isCurrentGameScene3D() && super.isHelpIconVisible();
+	}
+
 	private boolean isCurrentGameScene3D() {
-		return sceneContext.currentGameScene().isPresent() && sceneContext.currentGameScene().get() instanceof PlayScene3D;
+		return sceneContext.currentGameScene().isPresent()
+			&& sceneContext.currentGameScene().get() instanceof PlayScene3D;
 	}
 
 	private void updateTopLayer() {
