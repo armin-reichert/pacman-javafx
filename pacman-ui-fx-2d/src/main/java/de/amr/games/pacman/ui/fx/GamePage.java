@@ -68,7 +68,7 @@ public class GamePage extends CanvasContainer implements Page {
 		helpIcon.setTranslateX(unscaledCanvasWidth * scaling);
 		helpIcon.setTranslateY(10 * scaling);
 		helpIcon.setVisible(isHelpIconVisible());
-		Logger.info("Updated help icon, scaling: {}", scaling);
+		Logger.trace("Updated help icon, scaling: {}", scaling);
 	}
 
 	protected boolean isHelpIconVisible() {

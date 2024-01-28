@@ -7,6 +7,7 @@ import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -73,6 +74,7 @@ public class GamePageContextMenu extends ContextMenu {
 	private MenuItem createTitleItem(String title) {
 		var text = new Text(title);
 		text.setFont(titleItemFont);
+		text.setFill(Color.gray(0.4));
 		return new CustomMenuItem(text);
 	}
 
