@@ -43,7 +43,7 @@ public class GamePage3D extends GamePage {
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 		pip = createPictureInPicture();
 		dashboard = createDashboard(sceneContext.theme());
-		contextMenu = new GamePageContextMenu();
+		contextMenu = new GamePageContextMenu(sceneContext);
 		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
 		topLayer.setRight(pip.root());
