@@ -91,7 +91,7 @@ public class GamePage3D extends GamePage {
 			}
 			layers.getChildren().set(0, newGameScene.root());
 			layers.requestFocus();
-			helpButton.setVisible(false); // use data binding?
+			helpIcon.setVisible(false);
 		} else {
 			layers.getChildren().set(0, getCanvasLayer());
 			super.onGameSceneChanged(newGameScene);
@@ -141,15 +141,6 @@ public class GamePage3D extends GamePage {
 	@Override
 	protected void showDebugBorders(boolean on)  {
 		super.showDebugBorders(on && !isCurrentGameScene3D());
-	}
-
-	@Override
-	protected void updateHelpButton(double newScaling) {
-		if (isCurrentGameScene3D()) {
-			helpButton.setVisible(false);
-		} else {
-			super.updateHelpButton(newScaling);
-		}
 	}
 
 	private boolean isCurrentGameScene3D() {

@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
@@ -71,7 +69,7 @@ public class GamePage extends CanvasContainer implements Page {
 		helpIcon.setImage(icon);
 		helpIcon.setFitHeight(size);
 		helpIcon.setFitWidth(size);
-		helpIcon.setTranslateX(GameModel.TILES_X * Globals.TS * scaling);
+		helpIcon.setTranslateX(unscaledCanvasWidth * scaling);
 		helpIcon.setTranslateY(10 * scaling);
 		helpIcon.setVisible(sceneContext.currentGameScene().isPresent()
 			&& sceneContext.currentGameScene().get() != sceneContext.sceneConfig().get("boot"));
