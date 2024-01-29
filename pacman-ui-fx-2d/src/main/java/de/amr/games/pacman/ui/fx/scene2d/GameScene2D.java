@@ -88,14 +88,25 @@ public abstract class GameScene2D implements GameScene {
 
 	@Override
 	public Node root() {
-		return g != null ? g.getCanvas() : null;
+		return canvas();
+	}
+
+	public Canvas canvas() {
+		return g != null? g.getCanvas() : null;
 	}
 
 	public void draw() {
+		if (canvas() == null) {
+			Logger.error("Cannot render game scene {}, no canvas has been assigned",
+				getClass().getSimpleName());
+			return;
+
+		}
 		clearCanvas();
 		if (context == null) {
-			Logger.error("Cannot render game scene {}, no context exists", getClass().getSimpleName());
-			return; // TODO may this happen?
+			Logger.error("Cannot render game scene {}, no scene context has been assigned",
+				getClass().getSimpleName());
+			return;
 		}
 		if (isScoreVisible()) {
 			drawScore(context.game().score(), "SCORE", t(1), t(1));
@@ -125,7 +136,7 @@ public abstract class GameScene2D implements GameScene {
 	protected void clearCanvas() {
 		if (g != null) {
 			g.setFill(context.theme().color("canvas.background"));
-			g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+			g.fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
 		}
 	}
 

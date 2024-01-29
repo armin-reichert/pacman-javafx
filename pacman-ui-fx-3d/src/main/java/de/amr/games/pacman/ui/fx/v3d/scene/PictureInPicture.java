@@ -49,11 +49,11 @@ public class PictureInPicture {
 	}
 
 	public Node root() {
-		return playScene2D.root();
+		return canvas;
 	}
 
 	public void draw() {
-		if (root().isVisible()) {
+		if (canvas.isVisible()) {
 			playScene2D.draw();
 		}
 	}
