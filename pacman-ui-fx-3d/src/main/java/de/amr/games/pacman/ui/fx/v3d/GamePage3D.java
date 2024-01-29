@@ -46,13 +46,14 @@ public class GamePage3D extends GamePage {
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
+		PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
+		dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
 	}
 
 	private PictureInPicture createPictureInPicture() {
 		var pip = new PictureInPicture(sceneContext);
 		pip.opacityPy.bind(PY_PIP_OPACITY);
 		pip.heightPy.bind(PY_PIP_HEIGHT);
-		PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
 		return pip;
 	}
 
@@ -70,7 +71,6 @@ public class GamePage3D extends GamePage {
 			infoBox.init(sceneContext);
 		});
 		db.setVisible(false);
-		db.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
 		return db;
 	}
 
