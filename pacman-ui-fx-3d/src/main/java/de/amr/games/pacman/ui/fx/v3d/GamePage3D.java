@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.scene.GameScene;
 import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
@@ -42,7 +41,7 @@ public class GamePage3D extends GamePage {
 		super(sceneContext, width, height);
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 		pip = createPictureInPicture();
-		dashboard = createDashboard(sceneContext.theme());
+		dashboard = createDashboard();
 		contextMenu = new GamePageContextMenu(sceneContext);
 		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
@@ -58,15 +57,15 @@ public class GamePage3D extends GamePage {
 		return pip;
 	}
 
-	private VBox createDashboard(Theme theme) {
+	private VBox createDashboard() {
 		var db = new VBox();
-		infoBoxes.add(new InfoBoxGeneral(theme, sceneContext.tt("infobox.general.title")));
-		infoBoxes.add(new InfoBoxGameControl(theme, sceneContext.tt("infobox.game_control.title")));
-		infoBoxes.add(new InfoBox3D(theme, sceneContext.tt("infobox.3D_settings.title")));
-		infoBoxes.add(new InfoBoxGameInfo(theme, sceneContext.tt("infobox.game_info.title")));
-		infoBoxes.add(new InfoBoxGhostsInfo(theme, sceneContext.tt("infobox.ghosts_info.title")));
-		infoBoxes.add(new InfoBoxKeys(theme, sceneContext.tt("infobox.keyboard_shortcuts.title")));
-		infoBoxes.add(new InfoBoxAbout(theme, sceneContext.tt("infobox.about.title")));
+		infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
+		infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
+		infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
+		infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
+		infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
+		infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
+		infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
 		infoBoxes.stream().map(InfoBox::getRoot).forEach(db.getChildren()::add);
 		db.setVisible(false);
 		db.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
