@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.scene;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.scene.GameScene;
+import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -36,7 +36,7 @@ public class PictureInPicture {
 	private final PlayScene2D playScene2D;
 	private final Canvas canvas;
 
-	public PictureInPicture() {
+	public PictureInPicture(GameSceneContext sceneContext) {
 		double h = heightPy.doubleValue();
 		double aspectRatio = (double) GameModel.TILES_X / GameModel.TILES_Y;
 		canvas = new Canvas(h * aspectRatio, h);
@@ -45,18 +45,15 @@ public class PictureInPicture {
 		playScene2D.setScoreVisible(true);
 		playScene2D.root().opacityProperty().bind(opacityPy);
 		playScene2D.root().setVisible(false);
-	}
-
-	public GameScene gameScene() {
-		return playScene2D;
+		playScene2D.setContext(sceneContext);
 	}
 
 	public Node root() {
 		return playScene2D.root();
 	}
 
-	public void render() {
-		if (root().isVisible() && playScene2D.context() != null) {
+	public void draw() {
+		if (root().isVisible()) {
 			playScene2D.draw();
 		}
 	}

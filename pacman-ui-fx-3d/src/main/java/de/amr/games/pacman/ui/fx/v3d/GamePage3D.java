@@ -31,7 +31,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-	private final BorderPane topLayer = new BorderPane(); // contains dashboard and picture-in-picture view
+	private final BorderPane dashboardLayer = new BorderPane(); // contains dashboard and picture-in-picture view
 	private final PictureInPicture pip;
 	private final Pane dashboard;
 	private final GamePageContextMenu contextMenu;
@@ -42,14 +42,13 @@ public class GamePage3D extends GamePage {
 		pip = createPictureInPicture();
 		dashboard = createDashboard();
 		contextMenu = new GamePageContextMenu(sceneContext);
-		topLayer.setLeft(dashboard);
-		topLayer.setRight(pip.root());
+		dashboardLayer.setLeft(dashboard);
+		dashboardLayer.setRight(pip.root());
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 	}
 
 	private PictureInPicture createPictureInPicture() {
-		var pip = new PictureInPicture();
-		pip.gameScene().setContext(sceneContext);
+		var pip = new PictureInPicture(sceneContext);
 		pip.opacityPy.bind(PY_PIP_OPACITY);
 		pip.heightPy.bind(PY_PIP_HEIGHT);
 		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
@@ -118,7 +117,7 @@ public class GamePage3D extends GamePage {
 		contextMenu.updateState();
 		infoBoxes.forEach(InfoBox::update);
 		pip.root().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
-		pip.render();
+		pip.draw();
 	}
 
 	@Override
@@ -151,9 +150,9 @@ public class GamePage3D extends GamePage {
 	}
 
 	private void updateTopLayer() {
-		layers.getChildren().remove(topLayer);
+		layers.getChildren().remove(dashboardLayer);
 		if (dashboard.isVisible() || PY_PIP_ON.get()) {
-			layers.getChildren().add(topLayer);
+			layers.getChildren().add(dashboardLayer);
 		}
 		layers.requestFocus();
 	}
