@@ -99,15 +99,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		THEME.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
 
 		THEME.set("model3D.wallpaper", rm.imageBackground("graphics/sea-wallpaper.jpg",
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER,
-				new BackgroundSize(1, 1, true, true, false, true)
+			BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+			BackgroundPosition.CENTER,
+			new BackgroundSize(1, 1, true, true, false, true)
 		));
 
 		THEME.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER,
-				new BackgroundSize(1, 1, true, true, false, true)
+			BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+			BackgroundPosition.CENTER,
+			new BackgroundSize(1, 1, true, true, false, true)
 		));
 
 		THEME.set("image.armin1970",                 rm.image("graphics/armin.jpg"));
@@ -216,7 +216,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		return List.of(MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE);
 	}
 
-
 	@Override
 	protected void addGameScenes() {
 		super.addGameScenes();
@@ -286,7 +285,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
 		stage.setTitle(tt(titleKey, dimension));
 		stage.getIcons().setAll(theme().image(variantKey + ".icon"));
-		//gamePage().updateBackground();
 	}
 
 	@Override
