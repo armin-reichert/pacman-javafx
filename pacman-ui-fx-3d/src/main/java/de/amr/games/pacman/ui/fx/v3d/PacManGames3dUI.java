@@ -91,18 +91,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
 	public static final String NO_TEXTURE                             = "No Texture";
 
-	private static void loadFloorTextures(ResourceManager rm, String... names) {
-		var ext = "jpg";
-		for (var name : names) {
-			var texture = new PhongMaterial();
-			texture.setBumpMap(rm.image("graphics/textures/%s-bump.%s".formatted(name, ext)));
-			texture.setDiffuseMap(rm.image("graphics/textures/%s-diffuse.%s".formatted(name, ext)));
-			texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
-			THEME.set("texture." + name, texture);
-		}
-		THEME.addAllToArray("texture.names", (Object[]) names);
-	}
-
 	static {
 		ResourceManager rm = () -> PacManGames3dUI.class;
 
@@ -127,7 +115,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		THEME.set("icon.stop",                       rm.image("graphics/icons/stop.png"));
 		THEME.set("icon.step",                       rm.image("graphics/icons/step.png"));
 
-		loadFloorTextures(rm,"hexagon", "knobs", "plastic", "wood");
+		var textureNames = List.of("hexagon", "knobs", "plastic", "wood");
+		for (var name : textureNames) {
+			var texture = new PhongMaterial();
+			texture.setBumpMap(rm.image("graphics/textures/%s-bump.jpg".formatted(name)));
+			texture.setDiffuseMap(rm.image("graphics/textures/%s-diffuse.jpg".formatted(name)));
+			texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
+			THEME.set("texture." + name, texture);
+		}
+		THEME.addAllToArray("texture.names", textureNames.toArray());
 
 		THEME.set("ghost.0.color.normal.dress",      THEME.color("palette.red"));
 		THEME.set("ghost.0.color.normal.eyeballs",   THEME.color("palette.pale"));
