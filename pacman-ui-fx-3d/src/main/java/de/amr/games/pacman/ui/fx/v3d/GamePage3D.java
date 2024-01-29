@@ -31,21 +31,20 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-	private final BorderPane topLayer; // contains dashboard and picture-in-picture view
+	private final BorderPane topLayer = new BorderPane(); // contains dashboard and picture-in-picture view
 	private final PictureInPicture pip;
 	private final Pane dashboard;
-	private final List<InfoBox> infoBoxes = new ArrayList<>();
 	private final GamePageContextMenu contextMenu;
+	private final List<InfoBox> infoBoxes = new ArrayList<>();
 
 	public GamePage3D(GameSceneContext sceneContext, double width, double height) {
 		super(sceneContext, width, height);
-		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 		pip = createPictureInPicture();
 		dashboard = createDashboard();
 		contextMenu = new GamePageContextMenu(sceneContext);
-		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
 		topLayer.setRight(pip.root());
+		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground());
 	}
 
 	private PictureInPicture createPictureInPicture() {
@@ -66,14 +65,13 @@ public class GamePage3D extends GamePage {
 		infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
 		infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
 		infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
-		infoBoxes.stream().map(InfoBox::getRoot).forEach(db.getChildren()::add);
+		infoBoxes.forEach(infoBox -> {
+			db.getChildren().add(infoBox.getRoot());
+			infoBox.init(sceneContext);
+		});
 		db.setVisible(false);
 		db.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 		return db;
-	}
-
-	public List<InfoBox> getInfoBoxes() {
-		return infoBoxes;
 	}
 
 	public GamePageContextMenu contextMenu() {
