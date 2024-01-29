@@ -286,7 +286,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
 		stage.setTitle(tt(titleKey, dimension));
 		stage.getIcons().setAll(theme().image(variantKey + ".icon"));
-		gamePage().updateBackground();
+		//gamePage().updateBackground();
 	}
 
 	@Override
