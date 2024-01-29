@@ -13,7 +13,10 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
 import de.amr.games.pacman.ui.fx.v3d.scene.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -36,18 +39,35 @@ public class GamePage3D extends GamePage {
 	private final GamePageContextMenu contextMenu;
 	private final List<InfoBox> infoBoxes = new ArrayList<>();
 
-	public GamePage3D(GameSceneContext sceneContext, double width, double height) {
+	public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
 		super(sceneContext, width, height);
 		pip = createPictureInPicture();
+		contextMenu = createContextMenu(parentScene);
 		dashboard = createDashboard();
-		contextMenu = new GamePageContextMenu(sceneContext);
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
+
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
 		PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
 		dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
+	}
+
+	private GamePageContextMenu createContextMenu(Scene parentScene) {
+		var menu = new GamePageContextMenu(sceneContext);
+		parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
+				sceneContext.currentGameScene().ifPresent(gameScene -> {
+					contextMenu.hide();
+					boolean isPlayScene = sceneContext.sceneConfig().get("play") == gameScene
+							|| sceneContext.sceneConfig().get("play3D") == gameScene;
+					if (e.getButton() == MouseButton.SECONDARY && isPlayScene) {
+						menu.rebuild(gameScene);
+						menu.show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
+					}
+				})
+		);
+		return menu;
 	}
 
 	private PictureInPicture createPictureInPicture() {

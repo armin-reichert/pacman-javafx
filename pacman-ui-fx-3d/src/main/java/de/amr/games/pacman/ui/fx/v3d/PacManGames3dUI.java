@@ -19,7 +19,9 @@ import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -230,7 +232,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 	@Override
 	protected GamePage3D createGamePage(Scene parentScene) {
 		checkNotNull(parentScene);
-		var page = new GamePage3D(this, parentScene.getWidth(), parentScene.getHeight());
+		var page = new GamePage3D(parentScene, this, parentScene.getWidth(), parentScene.getHeight());
 		page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
 		page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
 		page.setMinScaling(0.7);
@@ -239,27 +241,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		page.setCanvasBorderColor(theme().color("palette.pale"));
 		page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
 		page.getCanvasContainer().setBackground(ResourceManager.coloredBackground(theme().color("canvas.background")));
-		// register event handler for opening page context menu
-		parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
-			currentGameScene().ifPresent(gameScene -> {
-				page.contextMenu().hide();
-				if (e.getButton() == MouseButton.SECONDARY && isPlayScene(gameScene)) {
-					page.contextMenu().rebuild(gameScene);
-					page.contextMenu().show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
-				}
-			})
-		);
 		gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
 		return page;
 	}
 
 	public boolean isPlayScene(GameScene gameScene) {
-		var config = sceneConfig();
-		return gameScene == config.get("play") || gameScene == config.get("play3D");
-	}
-
-	public GamePage3D gamePage() {
-		return (GamePage3D) gamePage;
+		return gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D");
 	}
 
 	@Override
