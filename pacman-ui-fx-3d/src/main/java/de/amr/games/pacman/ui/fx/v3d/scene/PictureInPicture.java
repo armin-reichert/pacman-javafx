@@ -53,8 +53,6 @@ public class PictureInPicture {
 	}
 
 	public void draw() {
-		if (canvas.isVisible()) {
-			playScene2D.draw();
-		}
+		playScene2D.draw();
 	}
 }

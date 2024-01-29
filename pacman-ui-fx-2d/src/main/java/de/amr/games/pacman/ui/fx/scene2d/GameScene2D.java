@@ -100,7 +100,9 @@ public abstract class GameScene2D implements GameScene {
 			Logger.error("Cannot render game scene {}, no canvas has been assigned",
 				getClass().getSimpleName());
 			return;
-
+		}
+		if (!canvas().isVisible()) {
+			return;
 		}
 		clearCanvas();
 		if (context == null) {
