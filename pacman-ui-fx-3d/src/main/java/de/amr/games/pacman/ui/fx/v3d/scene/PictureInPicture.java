@@ -25,8 +25,8 @@ public class PictureInPicture {
 		@Override
 		protected void invalidated() {
 			double scaling = get() / CANVAS_HEIGHT_UNSCALED;
-			canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
-			canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
+			playScene2D.canvas().setWidth(CANVAS_WIDTH_UNSCALED * scaling);
+			playScene2D.canvas().setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
 			playScene2D.setScaling(scaling);
 		}
 	};
@@ -34,12 +34,11 @@ public class PictureInPicture {
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 
 	private final PlayScene2D playScene2D;
-	private final Canvas canvas;
 
 	public PictureInPicture(GameSceneContext sceneContext) {
 		double h = heightPy.doubleValue();
 		double aspectRatio = (double) GameModel.TILES_X / GameModel.TILES_Y;
-		canvas = new Canvas(h * aspectRatio, h);
+		var canvas = new Canvas(h * aspectRatio, h);
 		playScene2D = new PlayScene2D();
 		playScene2D.setCanvas(canvas);
 		playScene2D.setScoreVisible(true);
@@ -49,7 +48,7 @@ public class PictureInPicture {
 	}
 
 	public Node root() {
-		return canvas;
+		return playScene2D.canvas();
 	}
 
 	public void draw() {
