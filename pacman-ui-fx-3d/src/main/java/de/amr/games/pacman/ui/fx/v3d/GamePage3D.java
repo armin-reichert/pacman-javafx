@@ -80,23 +80,22 @@ public class GamePage3D extends GamePage {
 
 	@Override
 	public void onGameSceneChanged(GameScene newGameScene) {
-		//TODO this code is too difficult to understand, simplify
+		contextMenu.hide();
 		if (isCurrentGameScene3D()) {
+			helpIcon.setVisible(false);
 			showDebugBorders(false);
 			updateBackground3D();
 			updateDashboardLayer();
-			helpIcon.setVisible(false);
 			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());
 			}
 			layers.getChildren().set(0, newGameScene.root());
-			layers.requestFocus();
+			layers.requestFocus(); // necessary?
 		} else {
-			layers.getChildren().set(0, getCanvasLayer());
+			layers.getChildren().set(0, canvasLayer);
 			super.onGameSceneChanged(newGameScene);
 		}
-		contextMenu.hide();
 	}
 
 	private void updateBackground3D() {
