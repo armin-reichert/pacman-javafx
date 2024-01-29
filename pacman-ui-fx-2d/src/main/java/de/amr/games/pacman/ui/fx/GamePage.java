@@ -45,10 +45,7 @@ public class GamePage extends CanvasContainer implements Page {
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
 		helpIcon.setCursor(Cursor.HAND);
-		helpIcon.setOnMouseClicked((MouseEvent e) -> {
-			e.consume(); // necessary?
-			showHelpMenu();
-		});
+		helpIcon.setOnMouseClicked(e -> showHelpMenu());
 		popupLayer.getChildren().addAll(helpIcon, signature.root(), helpMenu);
 		layers.getChildren().addAll(popupLayer, flashMessageLayer);
 		layers.setOnKeyPressed(this::handleKeyPressed);
