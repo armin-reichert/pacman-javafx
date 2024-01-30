@@ -75,6 +75,22 @@ public class GamePage extends CanvasContainer implements Page {
 		return gameScene != sceneContext.sceneConfig().get("boot");
 	}
 
+	protected void updateSignatureLayout() {
+		signature.getText(0).setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
+		signature.getText(1).setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		var textFlow = signature.root();
+		textFlow.setTranslateX((canvasContainer.getWidth() - textFlow.getWidth()) * 0.5);
+		switch (sceneContext.gameVariant()) {
+			case MS_PACMAN -> {
+				textFlow.setTranslateY(40 * scaling); // TODO fixme
+			}
+			case PACMAN -> {
+				textFlow.setTranslateY(28 * scaling); // TODO fixme
+			}
+		}
+		Logger.trace("Signature layout updated, scaling={}", scaling);
+	}
+
 	protected void rescale(double newScaling, boolean always) {
 		super.rescale(newScaling, always);
 		resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
@@ -122,21 +138,6 @@ public class GamePage extends CanvasContainer implements Page {
 			layers.setBorder(null);
 			canvasLayer.setBorder(null);
 			popupLayer.setBorder(null);
-		}
-	}
-
-	protected void updateSignatureLayout() {
-		signature.getText(0).setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		signature.getText(1).setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
-		switch (sceneContext.gameVariant()) {
-			case MS_PACMAN -> {
-				signature.root().setTranslateX(50 * scaling);
-				signature.root().setTranslateY(40 * scaling);
-			}
-			case PACMAN -> {
-				signature.root().setTranslateX(50 * scaling);
-				signature.root().setTranslateY(28 * scaling);
-			}
 		}
 	}
 

@@ -38,6 +38,7 @@ public class Signature {
 		var fadeOut = new FadeTransition(Duration.seconds(1), sentence);
 		fadeOut.setFromValue(1);
 		fadeOut.setToValue(0);
+		//fadeOut.setDelay(Duration.seconds(10)); // for testing
 
 		animation = new SequentialTransition(fadeIn, fadeOut);
 	}
@@ -52,7 +53,7 @@ public class Signature {
 		}
 	}
 
-	public Node root() {
+	public TextFlow root() {
 		return sentence;
 	}
 
