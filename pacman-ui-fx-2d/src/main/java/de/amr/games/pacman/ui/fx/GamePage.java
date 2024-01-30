@@ -52,6 +52,11 @@ public class GamePage extends CanvasContainer implements Page {
 		setSize(width, height);
 	}
 
+	@Override
+	public Pane rootPane() {
+		return layers;
+	}
+
 	protected void updateHelpIconLayout() {
 		double size = Math.ceil(12 * scaling);
 		var icon = switch (sceneContext.gameVariant()) {
