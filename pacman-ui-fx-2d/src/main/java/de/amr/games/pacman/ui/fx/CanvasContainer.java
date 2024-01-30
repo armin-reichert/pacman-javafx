@@ -81,8 +81,8 @@ public class CanvasContainer {
 	}
 
 	public void setSize(double width, double height) {
-		double shrink_width  = canvasBorderEnabled ? 0.8 : 1.0;
-		double shrink_height = canvasBorderEnabled ? 0.9 : 1.0;
+		double shrink_width  = canvasBorderEnabled ? 0.85 : 1.0;
+		double shrink_height = canvasBorderEnabled ? 0.92 : 1.0;
 
 		double s = shrink_height * height / unscaledCanvasHeight;
 		if (s * unscaledCanvasWidth > shrink_width * width) {
