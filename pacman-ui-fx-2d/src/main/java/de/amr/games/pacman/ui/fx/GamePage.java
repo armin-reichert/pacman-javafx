@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.FadingPane;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
@@ -28,6 +27,7 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.oneOf;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
 
 /**
  * @author Armin Reichert
@@ -56,7 +56,7 @@ public class GamePage extends CanvasContainer implements Page {
 		double size = Math.ceil(12 * scaling);
 		var icon = switch (sceneContext.gameVariant()) {
 			case MS_PACMAN -> sceneContext.theme().image("mspacman.helpButton.icon");
-			case PACMAN ->    sceneContext.theme().image("pacman.helpButton.icon");
+			case PACMAN    -> sceneContext.theme().image("pacman.helpButton.icon");
 		};
 		helpIcon.setImage(icon);
 		helpIcon.setFitHeight(size);
@@ -81,12 +81,8 @@ public class GamePage extends CanvasContainer implements Page {
 		var textFlow = signature.root();
 		textFlow.setTranslateX((canvasContainer.getWidth() - textFlow.getWidth()) * 0.5);
 		switch (sceneContext.gameVariant()) {
-			case MS_PACMAN -> {
-				textFlow.setTranslateY(40 * scaling); // TODO fixme
-			}
-			case PACMAN -> {
-				textFlow.setTranslateY(28 * scaling); // TODO fixme
-			}
+			case MS_PACMAN -> textFlow.setTranslateY(40 * scaling); // TODO fixme
+			case PACMAN    -> textFlow.setTranslateY(28 * scaling); // TODO fixme
 		}
 		Logger.trace("Signature layout updated, scaling={}", scaling);
 	}
@@ -131,9 +127,10 @@ public class GamePage extends CanvasContainer implements Page {
 
 	protected void showDebugBorders(boolean on)  {
 		if (on) {
-			layers.setBorder(ResourceManager.border(Color.RED, 3));
-			canvasLayer.setBorder(ResourceManager.border(Color.YELLOW, 3));
-			popupLayer.setBorder(ResourceManager.border(Color.GREENYELLOW, 3));
+			int w = 3;
+			layers.setBorder(border(Color.RED, w));
+			canvasLayer.setBorder(border(Color.YELLOW, w));
+			popupLayer.setBorder(border(Color.GREENYELLOW, w));
 		} else {
 			layers.setBorder(null);
 			canvasLayer.setBorder(null);
@@ -224,8 +221,8 @@ public class GamePage extends CanvasContainer implements Page {
 		if (sceneContext.gameLevel().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
 			return sceneContext.gameLevel().get().isDemoLevel()
-					? Optional.of(createDemoLevelMenu(font))
-					: Optional.of(createPlayingMenu(font));
+				? Optional.of(createDemoLevelMenu(font))
+				: Optional.of(createPlayingMenu(font));
 		}
 		return Optional.empty();
 	}
