@@ -260,7 +260,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 			gameController().update();
 			currentGameScene().ifPresent(GameScene::update);
 		});
-		clock.setOnRender(() -> gamePage.render());
+		clock.setOnRender(gamePage::render);
 		return clock;
 	}
 
