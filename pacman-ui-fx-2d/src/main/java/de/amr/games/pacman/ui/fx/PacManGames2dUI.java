@@ -316,10 +316,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 			clock.stop();
 			Logger.info("Clock stopped.");
 		}
-		mainScene.setRoot(startPage.root());
+		mainScene.setRoot(startPage.rootPane());
 		updateStage();
 		startPage.setGameVariant(gameVariant());
-		startPage.root().requestFocus();
+		startPage.rootPane().requestFocus();
 		stage.show();
 	}
 
@@ -327,8 +327,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		currentPage = gamePage;
 		// call reboot() first such that current game scene is set
 		reboot();
-		mainScene.setRoot(gamePage.root());
-		gamePage.root().requestFocus();
+		mainScene.setRoot(gamePage.rootPane());
+		gamePage.rootPane().requestFocus();
 		gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
 		updateStage();
 		stage.show();

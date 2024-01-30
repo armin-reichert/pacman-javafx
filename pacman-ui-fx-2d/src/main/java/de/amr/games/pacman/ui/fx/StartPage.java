@@ -62,7 +62,7 @@ public class StartPage implements Page {
 	}
 
 	@Override
-	public StackPane root() {
+	public Pane rootPane() {
 		return root;
 	}
 

@@ -34,7 +34,7 @@ public class CanvasContainer {
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(scaling, false));
 	}
 
-	public Pane root() {
+	public Pane rootPane() {
 		return layers;
 	}
 

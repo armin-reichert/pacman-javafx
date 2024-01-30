@@ -1,11 +1,13 @@
 package de.amr.games.pacman.ui.fx;
 
-import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 /**
  * @author Armin Reichert
  */
 public interface Page {
-  Node root();
+
+  Pane rootPane();
+
   void setSize(double width, double height);
 }
