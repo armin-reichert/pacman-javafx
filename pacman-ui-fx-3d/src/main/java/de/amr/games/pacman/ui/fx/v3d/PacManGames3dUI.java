@@ -196,7 +196,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		THEME.set("pacman.color.eyes",             Color.rgb( 33,  33,  33));
 
 		// dashboard
-		THEME.set("infobox.min_col_width",         100);
+		THEME.set("infobox.min_col_width",         180);
 		THEME.set("infobox.min_label_width",       120);
 		THEME.set("infobox.text_color",            Color.WHITE);
 		THEME.set("infobox.label_font",            Font.font("Tahoma", 12));
