@@ -44,7 +44,6 @@ import java.util.*;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
 /**
