@@ -94,10 +94,6 @@ public class GamePage3D extends GamePage {
 		return db;
 	}
 
-	public GamePageContextMenu contextMenu() {
-		return contextMenu;
-	}
-
 	@Override
 	public void onGameSceneChanged(GameScene newGameScene) {
 		contextMenu.hide();

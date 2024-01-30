@@ -113,6 +113,7 @@ public abstract class GameScene2D implements GameScene {
 		if (isScoreVisible()) {
 			drawScore(context.game().score(), "SCORE", t(1), t(1));
 			drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
+
 		}
 		if (isCreditVisible()) {
 			drawCredit(context.gameController().credit(), t(2), t(36) - 1);

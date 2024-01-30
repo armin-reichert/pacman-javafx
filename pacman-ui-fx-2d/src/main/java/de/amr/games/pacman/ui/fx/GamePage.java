@@ -18,7 +18,6 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -53,7 +52,7 @@ public class GamePage extends CanvasContainer implements Page {
 		setSize(width, height);
 	}
 
-	protected void updateHelpIcon() {
+	protected void updateHelpIconLayout() {
 		double size = Math.ceil(12 * scaling);
 		var icon = switch (sceneContext.gameVariant()) {
 			case MS_PACMAN -> sceneContext.theme().image("mspacman.helpButton.icon");
@@ -77,17 +76,15 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	protected void rescale(double newScaling, boolean always) {
-		//TODO move into hook method?
-		updateSignatureSizeAndPosition();
-		sceneContext.currentGameScene().ifPresent(gameScene -> {
-			if (gameScene instanceof GameScene2D gameScene2D) {
-				gameScene2D.setScaling(newScaling);
-			}
-		});
-		//TODO clarify!
 		super.rescale(newScaling, always);
 		resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
-		updateHelpIcon();
+		updateHelpIconLayout();
+		updateSignatureLayout();
+		sceneContext.currentGameScene().ifPresent(gameScene -> {
+			if (gameScene instanceof GameScene2D gameScene2D) {
+				gameScene2D.setScaling(scaling);
+			}
+		});
 	}
 
 	public void onGameSceneChanged(GameScene newGameScene) {
@@ -128,15 +125,18 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 	}
 
-	protected void updateSignatureSizeAndPosition() {
+	protected void updateSignatureLayout() {
 		signature.getText(0).setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		signature.getText(1).setFont((sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling))));
-		if (sceneContext.game().variant() == GameVariant.MS_PACMAN) {
-			signature.root().setTranslateX(50 * scaling);
-			signature.root().setTranslateY(40 * scaling);
-		} else {
-			signature.root().setTranslateX(50 * scaling);
-			signature.root().setTranslateY(28 * scaling);
+		signature.getText(1).setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		switch (sceneContext.gameVariant()) {
+			case MS_PACMAN -> {
+				signature.root().setTranslateX(50 * scaling);
+				signature.root().setTranslateY(40 * scaling);
+			}
+			case PACMAN -> {
+				signature.root().setTranslateX(50 * scaling);
+				signature.root().setTranslateY(28 * scaling);
+			}
 		}
 	}
 
