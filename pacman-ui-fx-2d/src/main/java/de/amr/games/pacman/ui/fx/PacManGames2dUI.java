@@ -310,28 +310,28 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		return page;
 	}
 
+	private void setPage(Page page) {
+		currentPage = page;
+		mainScene.setRoot(page.rootPane());
+		page.setSize(mainScene.getWidth(), mainScene.getHeight());
+		page.rootPane().requestFocus();
+		updateStage();
+		stage.show();
+	}
+
 	public void showStartPage() {
-		currentPage = startPage;
 		if (clock.isRunning()) {
 			clock.stop();
 			Logger.info("Clock stopped.");
 		}
-		mainScene.setRoot(startPage.rootPane());
-		updateStage();
 		startPage.setGameVariant(gameVariant());
-		startPage.rootPane().requestFocus();
-		stage.show();
+		setPage(startPage);
 	}
 
 	public void showGamePage() {
-		currentPage = gamePage;
 		// call reboot() first such that current game scene is set
 		reboot();
-		mainScene.setRoot(gamePage.rootPane());
-		gamePage.rootPane().requestFocus();
-		gamePage.setSize(mainScene.getWidth(), mainScene.getHeight());
-		updateStage();
-		stage.show();
+		setPage(gamePage);
 		clock.start();
 		Logger.info("Clock started, speed={} Hz", clock.targetFrameratePy.get());
 	}
