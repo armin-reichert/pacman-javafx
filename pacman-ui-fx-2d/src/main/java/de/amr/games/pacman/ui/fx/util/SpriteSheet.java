@@ -47,8 +47,12 @@ public interface SpriteSheet {
 	 * @return image (copy) of spritesheet region
 	 */
 	default Image subImage(int x, int y, int width, int height) {
+		return subImage(source(), x, y, width, height);
+	}
+
+	static Image subImage(Image source, int x, int y, int width, int height) {
 		var image = new WritableImage(width, height);
-		image.getPixelWriter().setPixels(0, 0, width, height, source().getPixelReader(), x, y);
+		image.getPixelWriter().setPixels(0, 0, width, height, source.getPixelReader(), x, y);
 		return image;
 	}
 

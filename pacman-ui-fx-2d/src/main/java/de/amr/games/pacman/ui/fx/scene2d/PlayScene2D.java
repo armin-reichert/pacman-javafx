@@ -95,15 +95,20 @@ public class PlayScene2D extends GameScene2D {
 
 	// TODO put all images into a single sprite sheet
 	private void drawPacManMaze(World world) {
+		//TODO use new spritesheet class
+		var image = context.theme().image("pacman.spritesheet_new");
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
-			var image = world.mazeFlashing().on()
-					? context.theme().image("pacman.flashingMaze")
-					: context.theme().image("pacman.emptyMaze");
-			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
+			if (world.mazeFlashing().on()) {
+				var mazeImage = context.theme().image("pacman.flashingMaze");
+				g.drawImage(mazeImage, s(x), s(y), s(mazeImage.getWidth()), s(mazeImage.getHeight()));
+			} else {
+				//TODO use new sprite sheet class method providing rectangle
+				g.drawImage(image, 228, 0, 224, 248, s(x), s(y), s(224), s(248));
+			}
 		} else {
-			var image = context.theme().image("pacman.fullMaze");
-			g.drawImage(image, s(x), s(y), s(image.getWidth()), s(image.getHeight()));
+			//TODO use new sprite sheet class method providing rectangle
+			g.drawImage(image, 0, 0, 224, 248, s(x), s(y), s(224), s(248));
 			world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
 			if (world.energizerBlinking().off()) {
 				world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
