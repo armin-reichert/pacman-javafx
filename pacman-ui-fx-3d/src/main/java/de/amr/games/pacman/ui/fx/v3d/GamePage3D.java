@@ -46,6 +46,7 @@ public class GamePage3D extends GamePage {
 		dashboard = createDashboard();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
+		layers.getChildren().add(dashboardLayer);
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
@@ -107,11 +108,15 @@ public class GamePage3D extends GamePage {
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());
 			}
 			layers.getChildren().set(0, newGameScene.root());
-			layers.requestFocus(); // necessary?
 		} else {
 			layers.getChildren().set(0, canvasLayer);
 			super.onGameSceneChanged(newGameScene);
 		}
+	}
+
+	private void updateDashboardLayer() {
+		dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
+		layers.requestFocus();
 	}
 
 	private void updateBackground3D() {
@@ -161,13 +166,5 @@ public class GamePage3D extends GamePage {
 	private boolean isCurrentGameScene3D() {
 		return sceneContext.currentGameScene().isPresent()
 			&& sceneContext.currentGameScene().get() instanceof PlayScene3D;
-	}
-
-	private void updateDashboardLayer() {
-		layers.getChildren().remove(dashboardLayer);
-		if (dashboard.isVisible() || PY_PIP_ON.get()) {
-			layers.getChildren().add(dashboardLayer);
-		}
-		layers.requestFocus();
 	}
 }
