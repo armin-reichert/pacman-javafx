@@ -29,7 +29,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -40,7 +39,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -436,19 +434,11 @@ public class PlayScene3D implements GameScene {
 
 	@Override
 	public void onLevelStarted(GameEvent e) {
-		if (level3D == null) {
+		if (level3D != null) {
+			level3D.updateLevelCounter3D();
+		} else {
 			Logger.error("WTF: Where is my 3D game level?");
-			return;
 		}
-		Function<Byte, Rectangle2D> spriteSupplier = switch (context.gameVariant()) {
-			case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet()::bonusSymbolSprite;
-			case PACMAN    -> context.<PacManSpriteSheet>spriteSheet()::bonusSymbolSprite;
-		};
-		var bonusSprites = context.game().levelCounter().stream()
-			.map(spriteSupplier)
-			.map(context.spriteSheet()::subImage)
-			.toArray(Image[]::new);
-		level3D.levelCounter3D().update(bonusSprites);
 	}
 
 	private void updateSound() {

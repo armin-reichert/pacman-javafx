@@ -22,10 +22,13 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -44,16 +47,16 @@ public class GameLevel3D {
 	private final LevelCounter3D levelCounter3D;
 	private final LivesCounter3D livesCounter3D;
 	private final Scores3D scores3D;
-	private final SpriteSheet spritesheet;
+	private final SpriteSheet spriteSheet;
 	private Bonus3D bonus3D;
 
-	public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spritesheet) {
+	public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spriteSheet) {
 		checkLevelNotNull(level);
 		checkNotNull(theme);
-		checkNotNull(spritesheet);
+		checkNotNull(spriteSheet);
 
 		this.level = level;
-		this.spritesheet = spritesheet;
+		this.spriteSheet = spriteSheet;
 
 		var pelletModel3D = theme.<Model3D>get("model3D.pellet");
 		var pacModel3D    = theme.<Model3D>get("model3D.pacman");
@@ -87,6 +90,8 @@ public class GameLevel3D {
 		}
 
 		levelCounter3D = new LevelCounter3D();
+		updateLevelCounter3D();
+
 		scores3D       = new Scores3D(theme.font("font.arcade", 8));
 
 		scores3D.setPosition(TS, -3 * TS, -3 * TS);
@@ -132,14 +137,14 @@ public class GameLevel3D {
 
 	private Bonus3D createBonus3D(Bonus bonus) {
 		var symbolSprite = switch (level.game().variant()) {
-			case MS_PACMAN -> ((MsPacManSpriteSheet) spritesheet).bonusSymbolSprite(bonus.symbol());
-			case PACMAN    -> ((PacManSpriteSheet)   spritesheet).bonusSymbolSprite(bonus.symbol());
+			case MS_PACMAN -> ((MsPacManSpriteSheet) spriteSheet).bonusSymbolSprite(bonus.symbol());
+			case PACMAN    -> ((PacManSpriteSheet) spriteSheet).bonusSymbolSprite(bonus.symbol());
 		};
 		var valueSprite = switch (level.game().variant()) {
-			case MS_PACMAN -> ((MsPacManSpriteSheet) spritesheet).bonusValueSprite(bonus.symbol());
-			case PACMAN    -> ((PacManSpriteSheet)   spritesheet).bonusValueSprite(bonus.symbol());
+			case MS_PACMAN -> ((MsPacManSpriteSheet) spriteSheet).bonusValueSprite(bonus.symbol());
+			case PACMAN    -> ((PacManSpriteSheet) spriteSheet).bonusValueSprite(bonus.symbol());
 		};
-		return new Bonus3D(bonus, spritesheet.subImage(symbolSprite), spritesheet.subImage(valueSprite));
+		return new Bonus3D(bonus, spriteSheet.subImage(symbolSprite), spriteSheet.subImage(valueSprite));
 	}
 
 	public void update() {
@@ -160,6 +165,18 @@ public class GameLevel3D {
 		}
 		pacLight.update();
 		updateHouseState();
+	}
+
+	public void updateLevelCounter3D() {
+		Function<Byte, Rectangle2D> spriteSupplier = switch (level.game().variant()) {
+			case MS_PACMAN -> ((MsPacManSpriteSheet) spriteSheet)::bonusSymbolSprite;
+			case PACMAN    -> ((PacManSpriteSheet) spriteSheet)::bonusSymbolSprite;
+		};
+		var bonusSprites = level.game().levelCounter().stream()
+			.map(spriteSupplier)
+			.map(spriteSheet::subImage)
+			.toArray(Image[]::new);
+		levelCounter3D.update(bonusSprites);
 	}
 
 	public void eat(Eatable3D eatable3D) {
