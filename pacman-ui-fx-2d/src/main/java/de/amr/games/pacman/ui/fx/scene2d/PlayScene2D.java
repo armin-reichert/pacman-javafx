@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -67,8 +68,7 @@ public class PlayScene2D extends GameScene2D {
 	protected void drawSceneContent() {
 		context.gameLevel().ifPresent(level -> {
 			if (context.gameVariant() == GameVariant.MS_PACMAN) {
-				int mazeNumber = context.game().mazeNumber(level.number());
-				drawMsPacManMaze(level.world(), mazeNumber);
+				drawMsPacManMaze(level.world(), context.game().mazeNumber(level.number()));
 			} else {
 				drawPacManMaze(level.world());
 			}
@@ -95,20 +95,17 @@ public class PlayScene2D extends GameScene2D {
 
 	// TODO put all images into a single sprite sheet
 	private void drawPacManMaze(World world) {
-		//TODO use new spritesheet class
-		var image = context.theme().image("pacman.spritesheet_new");
+		PacManSpriteSheet sheet = context.theme().get("pacman.spritesheet");
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
 				var mazeImage = context.theme().image("pacman.flashingMaze");
 				g.drawImage(mazeImage, s(x), s(y), s(mazeImage.getWidth()), s(mazeImage.getHeight()));
 			} else {
-				//TODO use new sprite sheet class method providing rectangle
-				g.drawImage(image, 228, 0, 224, 248, s(x), s(y), s(224), s(248));
+				g.drawImage(sheet.source(), 228, 0, 224, 248, s(x), s(y), s(224), s(248));
 			}
 		} else {
-			//TODO use new sprite sheet class method providing rectangle
-			g.drawImage(image, 0, 0, 224, 248, s(x), s(y), s(224), s(248));
+			g.drawImage(sheet.source(), 0, 0, 224, 248, s(x), s(y), s(224), s(248));
 			world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
 			if (world.energizerBlinking().off()) {
 				world.energizerTiles().forEach(tile -> hideTileContent(world, tile));

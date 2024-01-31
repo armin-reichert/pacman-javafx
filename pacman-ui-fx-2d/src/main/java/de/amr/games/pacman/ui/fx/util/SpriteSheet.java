@@ -66,16 +66,21 @@ public interface SpriteSheet {
 	}
 
 	/**
+	 * @param offsetX x-offset in spritesheet image
 	 * @param tileX    grid column (in tile coordinates)
 	 * @param tileY    grid row (in tile coordinates)
 	 * @param numTiles number of tiles
 	 * @return horizontal stripe of tiles at given grid position
 	 */
-	default Rectangle2D[] tilesRightOf(int tileX, int tileY, int numTiles) {
+	default Rectangle2D[] tilesRightOf(int offsetX, int tileX, int tileY, int numTiles) {
 		var tiles = new Rectangle2D[numTiles];
 		for (int i = 0; i < numTiles; ++i) {
-			tiles[i] = tile(tileX + i, tileY);
+			tiles[i] = rect(offsetX + r(tileX + i), r(tileY), raster(), raster());
 		}
 		return tiles;
+	}
+
+	default Rectangle2D[] tilesRightOf(int tileX, int tileY, int numTiles) {
+		return tilesRightOf(0, tileX, tileY, numTiles);
 	}
 }

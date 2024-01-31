@@ -165,11 +165,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		THEME.set("pacman.startpage.image",          rm.image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg"));
 		THEME.set("pacman.helpButton.icon",          rm.image("graphics/icons/help-blue-64.png"));
 
-		THEME.set("pacman.spritesheet",              new PacManSpriteSheet(rm.image("graphics/pacman/sprites.png")));
-		THEME.set("pacman.spritesheet_new",          rm.image("graphics/pacman/pacman-spritesheet.png"));
-		THEME.set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
+		THEME.set("pacman.spritesheet",              new PacManSpriteSheet(rm.image("graphics/pacman/pacman-spritesheet.png")));
 		THEME.set("pacman.flashingMaze",             rm.image("graphics/pacman/maze_empty_flashing.png"));
-		THEME.set("pacman.emptyMaze",                rm.image("graphics/pacman/maze_empty.png"));
+		THEME.set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
 		THEME.set("pacman.maze.foodColor",           Color.rgb(254, 189, 180));
 
 		THEME.set("pacman.audio.bonus_eaten",        rm.audioClip("sound/pacman/eat_fruit.mp3"));
