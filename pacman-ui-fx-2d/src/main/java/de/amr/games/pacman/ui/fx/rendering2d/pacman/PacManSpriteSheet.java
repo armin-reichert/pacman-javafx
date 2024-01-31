@@ -115,7 +115,7 @@ public class PacManSpriteSheet implements SpriteSheet {
 		double m = 0.5; // margin
 		double size = 16 - 2 * m;
 		for (int i = 0; i < 11; ++i) {
-			pacDyingSprites[i] = new Rectangle2D(OFF_X + 48 + i * 16 + m, m, size, size);
+			pacDyingSprites[i] = rect(OFF_X + 48 + i * 16 + m, m, size, size);
 		}
 	}
 
