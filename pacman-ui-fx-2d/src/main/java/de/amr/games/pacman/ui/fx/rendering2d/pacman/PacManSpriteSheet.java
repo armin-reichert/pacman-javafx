@@ -37,10 +37,10 @@ public class PacManSpriteSheet implements SpriteSheet {
 	}
 
 	private final Rectangle2D[] ghostNumberSprites = array(
-		rect(OFF_X     , 132, 16, 8),  // 200
-		rect(OFF_X + 16, 132, 16, 8),  // 400
-		rect(OFF_X + 32, 132, 16, 8),  // 800
-		rect(OFF_X + 48, 132, 16, 8)); // 1600
+		rect(456, 133, 15, 7),  // 200
+		rect(472, 133, 15, 7),  // 400
+		rect(488, 133, 15, 7),  // 800
+		rect(504, 133, 16, 7)); // 1600
 
 	public Rectangle2D[] ghostNumberSprites() {
 		return ghostNumberSprites;
@@ -58,14 +58,14 @@ public class PacManSpriteSheet implements SpriteSheet {
 	{
 		for (byte symbol = 0; symbol < 8; ++symbol) {
 			bonusValueSprites[symbol] = switch (symbol) {
-				case 0 -> rect(OFF_X,      148, 16, 8); //  100
-				case 1 -> rect(OFF_X + 16, 148, 16, 8); //  300
-				case 2 -> rect(OFF_X + 32, 148, 16, 8); //  500
-				case 3 -> rect(OFF_X + 48, 148, 16, 8); //  700
-				case 4 -> rect(OFF_X + 64, 148, 18, 8); // 1000
-				case 5 -> rect(OFF_X + 62, 164, 20, 8); // 2000
-				case 6 -> rect(OFF_X + 62, 180, 20, 8); // 3000
-				case 7 -> rect(OFF_X + 62, 196, 20, 8); // 5000
+				case 0 -> rect(457, 148, 14, 7); //  100
+				case 1 -> rect(472, 148, 15, 7); //  300
+				case 2 -> rect(488, 148, 15, 7); //  500
+				case 3 -> rect(504, 148, 15, 7); //  700
+				case 4 -> rect(520, 148, 18, 7); // 1000
+				case 5 -> rect(518, 164, 20, 7); // 2000
+				case 6 -> rect(518, 180, 20, 7); // 3000
+				case 7 -> rect(518, 196, 20, 7); // 5000
 				default -> null;
 			};
 		}
