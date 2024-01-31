@@ -157,6 +157,8 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private void replaceGameLevel3D(GameLevel level) {
+
+		//TODO In level 1 when switching between 2D and 3D view, the 3D level is always recreated. How to avoid this?
 		if (level.number() > 1 && level3D != null && level3D.level().number() == level.number()) {
 			Logger.info("3D game level up-to-date");
 			return;
