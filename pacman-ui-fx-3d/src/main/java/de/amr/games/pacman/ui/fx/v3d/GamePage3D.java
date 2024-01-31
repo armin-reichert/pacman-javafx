@@ -33,7 +33,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-	private final BorderPane dashboardLayer = new BorderPane(); // contains dashboard and picture-in-picture view
+	private final BorderPane dashboardLayer; // contains dashboard and picture-in-picture view
 	private final PictureInPicture pip;
 	private final Pane dashboard;
 	private final GamePageContextMenu contextMenu;
@@ -41,12 +41,16 @@ public class GamePage3D extends GamePage {
 
 	public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
 		super(sceneContext, width, height);
+
 		pip = createPictureInPicture();
 		contextMenu = createContextMenu(parentScene);
 		dashboard = createDashboard();
+
+		dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
 		layers.getChildren().add(dashboardLayer);
+
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
@@ -57,17 +61,18 @@ public class GamePage3D extends GamePage {
 
 	private GamePageContextMenu createContextMenu(Scene parentScene) {
 		var menu = new GamePageContextMenu(sceneContext);
-		parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->
+		parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+			menu.hide();
+			if (e.getButton() == MouseButton.SECONDARY) {
 				sceneContext.currentGameScene().ifPresent(gameScene -> {
-					contextMenu.hide();
-					boolean isPlayScene = sceneContext.sceneConfig().get("play") == gameScene
-							|| sceneContext.sceneConfig().get("play3D") == gameScene;
-					if (e.getButton() == MouseButton.SECONDARY && isPlayScene) {
+					if (gameScene == sceneContext.sceneConfig().get("play") ||
+						gameScene == sceneContext.sceneConfig().get("play3D")) {
 						menu.rebuild(gameScene);
 						menu.show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
 					}
-				})
-		);
+				});
+			}
+		});
 		return menu;
 	}
 
