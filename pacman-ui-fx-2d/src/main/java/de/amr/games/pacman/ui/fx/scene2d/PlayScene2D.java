@@ -99,13 +99,15 @@ public class PlayScene2D extends GameScene2D {
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
-				var mazeImage = context.theme().image("pacman.flashingMaze");
-				g.drawImage(mazeImage, s(x), s(y), s(mazeImage.getWidth()), s(mazeImage.getHeight()));
+				var mazeImage = sheet.getEmptyFlashingMazeImage();
+				g.drawImage(mazeImage, s(x), s(y),
+						s(mazeImage.getWidth()), s(mazeImage.getHeight()));
 			} else {
-				g.drawImage(sheet.source(), 228, 0, 224, 248, s(x), s(y), s(224), s(248));
+				drawSprite(sheet.getEmptyMazeSprite(), x, y);
 			}
 		} else {
-			g.drawImage(sheet.source(), 0, 0, 224, 248, s(x), s(y), s(224), s(248));
+			drawSprite(sheet.getFullMazeSprite(), x, y);
+			//g.drawImage(sheet.source(), 0, 0, 224, 248, s(x), s(y), s(224), s(248));
 			world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
 			if (world.energizerBlinking().off()) {
 				world.energizerTiles().forEach(tile -> hideTileContent(world, tile));

@@ -21,9 +21,11 @@ public class PacManSpriteSheet implements SpriteSheet {
 	private static final int OFF_X = 456;
 
 	private final Image source;
+	private final Image emptyFlashingMazeImage;
 
-	public PacManSpriteSheet(Image source) {
+	public PacManSpriteSheet(Image source, Image emptyFlashingMazeImage) {
 		this.source = source;
+		this.emptyFlashingMazeImage = emptyFlashingMazeImage;
 	}
 
 	@Override
@@ -34,6 +36,22 @@ public class PacManSpriteSheet implements SpriteSheet {
 	@Override
 	public int raster() {
 		return 16;
+	}
+
+	public Image getEmptyFlashingMazeImage() {
+		return emptyFlashingMazeImage;
+	}
+
+	private final Rectangle2D fullMazeSprite = rect(0, 0, 224, 248);
+
+	public Rectangle2D getFullMazeSprite() {
+		return fullMazeSprite;
+	}
+
+	private final Rectangle2D emptyMazeSprite = rect(228, 0, 224, 248);
+
+	public Rectangle2D getEmptyMazeSprite() {
+		return emptyMazeSprite;
 	}
 
 	private final Rectangle2D[] ghostNumberSprites = array(
