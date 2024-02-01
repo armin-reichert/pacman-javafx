@@ -548,16 +548,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	@Override
-	public void oneSimulationStep() {
+	public void doSimulationSteps(int numSteps) {
 		if (clock.isPaused()) {
-			clock.executeSingleStep(true);
-		}
-	}
-
-	@Override
-	public void tenSimulationSteps() {
-		if (clock.isPaused()) {
-			clock.executeSteps(10, true);
+			if (numSteps == 1) {
+				clock.executeSingleStep(true);
+			} else {
+				clock.executeSteps(numSteps, true);
+			}
 		}
 	}
 

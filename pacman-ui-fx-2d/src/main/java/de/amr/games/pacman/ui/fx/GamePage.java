@@ -183,9 +183,9 @@ public class GamePage extends CanvasContainer implements Page {
 		} else if (Keyboard.pressed(KEY_PAUSE)) {
 			actionHandler.togglePaused();
 		} else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
-			actionHandler.oneSimulationStep();
+			actionHandler.doSimulationSteps(1);
 		} else if (Keyboard.pressed(KEY_TEN_STEPS)) {
-			actionHandler.tenSimulationSteps();
+			actionHandler.doSimulationSteps(10);
 		} else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
 			actionHandler.changeSimulationSpeed(5);
 		} else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {

@@ -17,9 +17,7 @@ public interface ActionHandler {
 
     void togglePaused();
 
-    void oneSimulationStep();
-
-    void tenSimulationSteps();
+    void doSimulationSteps(int numSteps);
 
     void changeSimulationSpeed(int delta);
 
