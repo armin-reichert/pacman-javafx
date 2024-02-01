@@ -269,7 +269,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected Scene createMainScene() {
-		var screenHeight = Screen.getPrimary().getBounds().getHeight();
+		double screenHeight = Screen.getPrimary().getBounds().getHeight();
 		double height = Math.min(screenHeight * 0.8, 800);
 		double width = height * 4.0 / 3.0;
 		var scene = new Scene(new Region(), width, height, Color.BLACK);
@@ -345,8 +345,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected void updateStage() {
-		var variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
-		var titleKey = "app.title." + variantKey;
+		String variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
+		String titleKey = "app.title." + variantKey;
 		if (clock.isPaused()) {
 			titleKey += ".paused";
 		}
@@ -399,7 +399,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	@Override
 	public String tt(String key, Object... args) {
-		var text = ResourceManager.message(messageBundles(), key, args);
+		String text = ResourceManager.message(messageBundles(), key, args);
 		return text != null ? text : "<" + key + ">";
 	}
 
@@ -582,7 +582,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	@Override
 	public void toggleAutopilot() {
 		gameController().toggleAutoControlled();
-		var auto = gameController().isAutoControlled();
+		boolean auto = gameController().isAutoControlled();
 		showFlashMessage(tt(auto ? "autopilot_on" : "autopilot_off"));
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
 	}
@@ -590,7 +590,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	@Override
 	public void toggleImmunity() {
 		gameController().setImmune(!gameController().isImmune());
-		var immune = gameController().isImmune();
+		boolean immune = gameController().isImmune();
 		showFlashMessage(tt(immune ? "player_immunity_on" : "player_immunity_off"));
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}
