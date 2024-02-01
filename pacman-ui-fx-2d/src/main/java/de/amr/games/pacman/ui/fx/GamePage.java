@@ -158,7 +158,7 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	protected void handleKeyPressed(KeyEvent keyEvent) {
-		Keyboard.accept(keyEvent);
+		Keyboard.handleKeyEvent(keyEvent);
 		handleKeyboardInput();
 		Keyboard.clearState();
 	}

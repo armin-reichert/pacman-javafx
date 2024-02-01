@@ -32,19 +32,23 @@ public class Keyboard {
 	private static KeyEvent currentKeyEvent;
 
 	/**
-	 * If the event is not yet consumed, it is stored and can be matched against key combinations.
+	 * If the event is not yet consumed, it is stored, otherwise it is discarded.
 	 * 
 	 * @param e key event
 	 */
-	public static void accept(KeyEvent e) {
+	public static void handleKeyEvent(KeyEvent e) {
 		if (e.isConsumed()) {
 			currentKeyEvent = null;
-			Logger.trace("Ignored key event ({}): {}", e.getCode(), e);
+			Logger.trace("Discarded key event ({}): {}", e.getCode(), e);
 		} else {
 			currentKeyEvent = e;
 			e.consume();
-			Logger.trace("Consumed key event ({}): {}", e.getCode(), e);
+			Logger.trace("Stored and consumed key event ({}): {}", e.getCode(), e);
 		}
+	}
+
+	public static void clearState() {
+		currentKeyEvent = null;
 	}
 
 	public static boolean pressed(KeyCodeCombination... combinations) {
@@ -61,15 +65,11 @@ public class Keyboard {
 		if (currentKeyEvent == null) {
 			return false;
 		}
-		var match = combination.match(currentKeyEvent);
-		if (match) {
+		boolean matching = combination.match(currentKeyEvent);
+		if (matching) {
 			Logger.trace("Key event matches combination {}", combination.getName());
 		}
-		return match;
-	}
-
-	public static void clearState() {
-		currentKeyEvent = null;
+		return matching;
 	}
 
 	private Keyboard() {
