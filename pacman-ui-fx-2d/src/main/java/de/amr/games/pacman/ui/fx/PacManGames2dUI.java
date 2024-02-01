@@ -131,16 +131,16 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		//
 		// Ms. Pac-Man game
 		//
-		THEME.set("mspacman.startpage.image",        rm.image("graphics/mspacman/wallpaper-midway.png"));
+		THEME.set("mspacman.startpage.image",        rm.image("graphics/mspacman/mspacman_flyer.png"));
 		THEME.set("mspacman.helpButton.icon",        rm.image("graphics/icons/help-red-64.png"));
 
 		THEME.set("mspacman.spritesheet",            new MsPacManSpriteSheet(
-			rm.image("graphics/mspacman/sprites.png"),
-			rm.image("graphics/mspacman/mazes-flashing.png")
+			rm.image("graphics/mspacman/mspacman_spritesheet.png"),
+			rm.image("graphics/mspacman/mazes_flashing.png")
 			));
 
 		THEME.set("mspacman.icon",                   rm.image("graphics/icons/mspacman.png"));
-		THEME.set("mspacman.logo.midway",            rm.image("graphics/mspacman/midway.png"));
+		THEME.set("mspacman.logo.midway",            rm.image("graphics/mspacman/midway_logo.png"));
 
 		THEME.set("mspacman.audio.bonus_eaten",      rm.audioClip("sound/mspacman/Fruit.mp3"));
 		THEME.set("mspacman.audio.credit",           rm.audioClip("sound/mspacman/Credit.mp3"));
@@ -165,12 +165,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		//
 		// Pac-Man game
 		//
-		THEME.set("pacman.startpage.image",          rm.image("graphics/pacman/1980-Flyer-USA-Midway-front.jpg"));
+		THEME.set("pacman.startpage.image",          rm.image("graphics/pacman/pacman_flyer.png"));
 		THEME.set("pacman.helpButton.icon",          rm.image("graphics/icons/help-blue-64.png"));
 
 		THEME.set("pacman.spritesheet",              new PacManSpriteSheet(
-			rm.image("graphics/pacman/pacman-spritesheet.png"),
-			rm.image("graphics/pacman/maze_empty_flashing.png"))
+			rm.image("graphics/pacman/pacman_spritesheet.png"),
+			rm.image("graphics/pacman/maze_flashing.png"))
 		);
 
 		THEME.set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
