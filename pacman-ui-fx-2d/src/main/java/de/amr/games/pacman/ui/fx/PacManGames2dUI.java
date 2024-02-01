@@ -134,10 +134,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		THEME.set("mspacman.startpage.image",        rm.image("graphics/mspacman/wallpaper-midway.png"));
 		THEME.set("mspacman.helpButton.icon",        rm.image("graphics/icons/help-red-64.png"));
 
-		THEME.set("mspacman.spritesheet",            new MsPacManSpriteSheet(rm.image("graphics/mspacman/sprites.png")));
+		THEME.set("mspacman.spritesheet",            new MsPacManSpriteSheet(
+			rm.image("graphics/mspacman/sprites.png"),
+			rm.image("graphics/mspacman/mazes-flashing.png")
+			));
+
 		THEME.set("mspacman.icon",                   rm.image("graphics/icons/mspacman.png"));
 		THEME.set("mspacman.logo.midway",            rm.image("graphics/mspacman/midway.png"));
-		THEME.set("mspacman.flashingMazes",          rm.image("graphics/mspacman/mazes-flashing.png"));
 
 		THEME.set("mspacman.audio.bonus_eaten",      rm.audioClip("sound/mspacman/Fruit.mp3"));
 		THEME.set("mspacman.audio.credit",           rm.audioClip("sound/mspacman/Credit.mp3"));
@@ -166,8 +169,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		THEME.set("pacman.helpButton.icon",          rm.image("graphics/icons/help-blue-64.png"));
 
 		THEME.set("pacman.spritesheet",              new PacManSpriteSheet(
-				                                           	rm.image("graphics/pacman/pacman-spritesheet.png"),
-																										rm.image("graphics/pacman/maze_empty_flashing.png")));
+			rm.image("graphics/pacman/pacman-spritesheet.png"),
+			rm.image("graphics/pacman/maze_empty_flashing.png"))
+		);
 
 		THEME.set("pacman.icon",                     rm.image("graphics/icons/pacman.png"));
 		THEME.set("pacman.maze.foodColor",           Color.rgb(254, 189, 180));

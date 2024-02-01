@@ -95,19 +95,18 @@ public class PlayScene2D extends GameScene2D {
 
 	// TODO put all images into a single sprite sheet
 	private void drawPacManMaze(World world) {
-		PacManSpriteSheet sheet = context.theme().get("pacman.spritesheet");
+		PacManSpriteSheet sheet = context.spriteSheet();
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
-				var mazeImage = sheet.getEmptyFlashingMazeImage();
-				g.drawImage(mazeImage, s(x), s(y),
-						s(mazeImage.getWidth()), s(mazeImage.getHeight()));
+				var flashingMazeImage = sheet.getFlashingMazeImage();
+				g.drawImage(flashingMazeImage,
+					s(x), s(y), s(flashingMazeImage.getWidth()), s(flashingMazeImage.getHeight()));
 			} else {
 				drawSprite(sheet.getEmptyMazeSprite(), x, y);
 			}
 		} else {
 			drawSprite(sheet.getFullMazeSprite(), x, y);
-			//g.drawImage(sheet.source(), 0, 0, 224, 248, s(x), s(y), s(224), s(248));
 			world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
 			if (world.energizerBlinking().off()) {
 				world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
@@ -116,19 +115,18 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(World world, int mazeNumber) {
+		MsPacManSpriteSheet sheet = context.spriteSheet();
 		double x = 0, y = t(3);
-		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
-				var source = context.theme().image("mspacman.flashingMazes");
-				var flashingMazeSprite = ss.highlightedMaze(mazeNumber);
-				drawSprite(source, flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
+				var flashingMazeSprite = sheet.highlightedMaze(mazeNumber);
+				drawSprite(sheet.getFlashingMazesImage(), flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
 			} else {
-				drawSprite(ss.source(), ss.emptyMaze(mazeNumber), x, y);
+				drawSprite(sheet.source(), sheet.emptyMaze(mazeNumber), x, y);
 			}
 		} else {
 			// draw filled maze and hide eaten food (including energizers)
-			drawSprite(ss.filledMaze(mazeNumber), x, y);
+			drawSprite(sheet.filledMaze(mazeNumber), x, y);
 			world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
 			// energizer animation
 			if (world.energizerBlinking().off()) {

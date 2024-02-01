@@ -21,11 +21,11 @@ public class PacManSpriteSheet implements SpriteSheet {
 	private static final int OFF_X = 456;
 
 	private final Image source;
-	private final Image emptyFlashingMazeImage;
+	private final Image flashingMazeImage;
 
-	public PacManSpriteSheet(Image source, Image emptyFlashingMazeImage) {
+	public PacManSpriteSheet(Image source, Image flashingMazeImage) {
 		this.source = source;
-		this.emptyFlashingMazeImage = emptyFlashingMazeImage;
+		this.flashingMazeImage = flashingMazeImage;
 	}
 
 	@Override
@@ -38,8 +38,8 @@ public class PacManSpriteSheet implements SpriteSheet {
 		return 16;
 	}
 
-	public Image getEmptyFlashingMazeImage() {
-		return emptyFlashingMazeImage;
+	public Image getFlashingMazeImage() {
+		return flashingMazeImage;
 	}
 
 	private final Rectangle2D fullMazeSprite = rect(0, 0, 224, 248);

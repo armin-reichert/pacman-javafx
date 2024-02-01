@@ -28,9 +28,11 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 	private static final int THIRD_COLUMN = 456;
 
 	private final Image source;
+	private final Image flashingMazesImage;
 
-	public MsPacManSpriteSheet(Image source) {
+	public MsPacManSpriteSheet(Image source, Image flashingMazesImage) {
 		this.source = source;
+		this.flashingMazesImage = flashingMazesImage;
 	}
 
 	@Override
@@ -145,6 +147,10 @@ public class MsPacManSpriteSheet implements SpriteSheet {
 	// Ms. Pac-Man specific:
 
 	private static final int MS_PACMAN_MAZE_COUNT = 6;
+
+	public Image getFlashingMazesImage() {
+		return flashingMazesImage;
+	}
 
 	private final Rectangle2D[] highlightedMazeSprites = new Rectangle2D[MS_PACMAN_MAZE_COUNT];
 	{
