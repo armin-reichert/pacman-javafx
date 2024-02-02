@@ -22,6 +22,22 @@ import java.util.ResourceBundle;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
+ * <p>
+ * Provides methods for loading assets using relative paths under the package of a specified root class. As there is
+ * exactly one abstract method, an instance can be created using a lambda expression.
+ * </p>
+ * <p>
+ *  Example:
+ * </p>
+ * <pre>
+ *   src/main/resources/my/package/images/my_image.png
+ *  </pre>
+ *  Then the image can be loaded as follows:
+ * <pre>
+ *   ResourceManager rm = () -> my.package.SomeClass.class;
+ *   Image image = rm.image("images/my_image.png"); *
+ * </pre>
+ *
  * @author Armin Reichert
  */
 public interface ResourceManager {
@@ -35,7 +51,7 @@ public interface ResourceManager {
 	 * @param args		optional arguments merged into the message (if pattern)
 	 * @return localized text with arguments merged or {@code null} if no text is available
 	 */
-	public static String message(List<ResourceBundle> bundles, String key, Object... args) {
+	static String message(List<ResourceBundle> bundles, String key, Object... args) {
 		checkNotNull(bundles);
 		checkNotNull(key);
 		for (var bundle : bundles) {
@@ -47,39 +63,42 @@ public interface ResourceManager {
 		return null;
 	}
 
-	public static Background coloredBackground(Color color) {
+	static Background coloredBackground(Color color) {
 		checkNotNull(color);
 		return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
 	}
 
-	public static Background coloredRoundedBackground(Color color, int radius) {
+	static Background coloredRoundedBackground(Color color, int radius) {
 		checkNotNull(color);
 		return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
 	}
 
-	public static Border roundedBorder(Color color, double cornerRadius, double width) {
+	static Border roundedBorder(Color color, double cornerRadius, double width) {
 		checkNotNull(color);
 		return new Border(
 				new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
 	}
 
-	public static Border border(Color color, double width) {
+	static Border border(Color color, double width) {
 		checkNotNull(color);
 		return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
 	}
 
-	public static PhongMaterial coloredMaterial(Color color) {
+	static PhongMaterial coloredMaterial(Color color) {
 		checkNotNull(color);
 		var material = new PhongMaterial(color);
 		material.setSpecularColor(color.brighter());
 		return material;
 	}
 
-	public static Color color(Color color, double opacity) {
+	static Color color(Color color, double opacity) {
 		checkNotNull(color);
 		return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
 	}
 
+	/**
+	 * @return the class relative to whose package the resources are loaded
+	 */
 	Class<?> getResourceRootClass();
 
 	/**
