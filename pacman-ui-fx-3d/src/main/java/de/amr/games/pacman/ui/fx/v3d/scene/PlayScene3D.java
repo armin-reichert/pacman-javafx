@@ -346,14 +346,14 @@ public class PlayScene3D implements GameScene {
 				// level complete animation is always played
 				var levelCompleteAnimation = createLevelCompleteAnimation(level);
 				// level change animation is played only if no intermission scene follows
-				var levelChangeAnimation = level.intermissionNumber == 0 ? createLevelChangeAnimation() : pauseSeconds(0);
+				var levelChangeAnimation = level.intermissionNumber() == 0 ? createLevelChangeAnimation() : pauseSeconds(0);
 				lockStateAndPlayAfterSeconds(1.0,
 					levelCompleteAnimation,
 					actionAfterSeconds(1.0, () -> {
 						level.pac().hide();
 						level3D.livesCounter3D().lightOnPy.set(false);
 						// play sound / flash msg only if no intermission scene follows
-						if (level.intermissionNumber == 0) {
+						if (level.intermissionNumber() == 0) {
 							context.clip("audio.level_complete").play();
 							context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
 						}
@@ -419,11 +419,11 @@ public class PlayScene3D implements GameScene {
 	}
 
 	private Animation createLevelCompleteAnimation(GameLevel level) {
-		if (level.numFlashes == 0) {
+		if (level.numFlashes() == 0) {
 			return pauseSeconds(1.0);
 		}
 		double wallHeight = PY_3D_WALL_HEIGHT.get();
-		var animation = new SinusCurveAnimation(level.numFlashes);
+		var animation = new SinusCurveAnimation(level.numFlashes());
 		animation.setAmplitude(wallHeight);
 		animation.elongationPy.set(level3D.world3D().wallHeightPy.get());
 		level3D.world3D().wallHeightPy.bind(animation.elongationPy);

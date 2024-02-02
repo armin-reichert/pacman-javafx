@@ -360,7 +360,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 			case BOOT              -> config.get("boot");
 			case CREDIT            -> config.get("credit");
 			case INTRO             -> config.get("intro");
-			case INTERMISSION      -> config.get("cut" + (gameLevel().isPresent()? gameLevel().get().intermissionNumber : 1));
+			case INTERMISSION      -> config.get("cut" + (gameLevel().isPresent()? gameLevel().get().intermissionNumber() : 1));
 			case INTERMISSION_TEST -> config.get("cut" + gameController().intermissionTestNumber);
 			default                -> config.get("play");
 		};

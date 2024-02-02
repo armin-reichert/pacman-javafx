@@ -165,7 +165,7 @@ public class Ghost3D {
 		default -> Look.NORMAL;
 		};
 		if (currentLook != newLook) {
-			setLook(newLook, ghost.level().numFlashes);
+			setLook(newLook, ghost.level().numFlashes());
 		}
 	}
 

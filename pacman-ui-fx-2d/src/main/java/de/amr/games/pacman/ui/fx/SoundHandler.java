@@ -70,7 +70,7 @@ public class SoundHandler {
 				if (GameController.it().state() == GameState.INTERMISSION_TEST) {
 					intermissionNumber = GameController.it().intermissionTestNumber;
 				} else if (event.game.level().isPresent()) {
-					intermissionNumber = event.game.level().get().intermissionNumber;
+					intermissionNumber = event.game.level().get().intermissionNumber();
 				}
 				if (intermissionNumber > 0) {
 					if (gameVariant == GameVariant.MS_PACMAN) {
