@@ -44,7 +44,7 @@ public class InfoBoxGameInfo extends InfoBox {
 	private String fmtHuntingPhase(GameLevel level) {
 		var huntingTimer = level.huntingTimer();
 		return "%s #%d%s".formatted(level.currentHuntingPhaseName(),
-				level.scatterPhase().isPresent() ? level.scatterPhase().getAsInt() : level.chasingPhase().getAsInt(),
+				level.scatterPhase().isPresent() ? level.scatterPhase().getAsInt() : level.chasingPhase().orElse(42),
 				huntingTimer.isStopped() ? " STOPPED" : "");
 	}
 
@@ -63,23 +63,23 @@ public class InfoBoxGameInfo extends InfoBox {
 	}
 
 	private String fmtGhostSpeed(GameLevel level) {
-		return fmtSpeed(level.ghostSpeed);
+		return fmtSpeed(level.ghostSpeedPercentage);
 	}
 
 	private String fmtGhostSpeedFrightened(GameLevel level) {
-		return fmtSpeed(level.ghostSpeedFrightened);
+		return fmtSpeed(level.ghostSpeedFrightenedPercentage);
 	}
 
 	private String fmtGhostSpeedTunnel(GameLevel level) {
-		return fmtSpeed(level.ghostSpeedTunnel);
+		return fmtSpeed(level.ghostSpeedTunnelPercentage);
 	}
 
 	private String fmtPacSpeed(GameLevel level) {
-		return fmtSpeed(level.pacSpeed);
+		return fmtSpeed(level.pacSpeedPercentage);
 	}
 
 	private String fmtPacSpeedPowered(GameLevel level) {
-		return fmtSpeed(level.pacSpeedPowered);
+		return fmtSpeed(level.pacSpeedPoweredPercentage);
 	}
 
 	private String fmtPacPowerSeconds(GameLevel level) {

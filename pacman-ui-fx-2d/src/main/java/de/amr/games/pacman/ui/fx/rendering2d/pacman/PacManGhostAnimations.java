@@ -18,65 +18,65 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class PacManGhostAnimations extends SpriteAnimations {
 
 	private final Ghost ghost;
-	private final PacManSpriteSheet spritesheet;
+	private final PacManSpriteSheet spriteSheet;
 
-	public PacManGhostAnimations(Ghost ghost, PacManSpriteSheet spritesheet) {
+	public PacManGhostAnimations(Ghost ghost, PacManSpriteSheet spriteSheet) {
 		checkNotNull(ghost);
-		checkNotNull(spritesheet);
+		checkNotNull(spriteSheet);
 		this.ghost = ghost;
-		this.spritesheet = spritesheet;
+		this.spriteSheet = spriteSheet;
 
 		var normal = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+				.sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
 				.frameTicks(8)
 				.loop()
 			.end();
 
 		var frightened = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostFrightenedSprites())
+				.sprites(spriteSheet.ghostFrightenedSprites())
 				.frameTicks(8)
 				.loop()
 			.end();
 		
 		var flashing = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostFlashingSprites())
+				.sprites(spriteSheet.ghostFlashingSprites())
 				.frameTicks(6)
 				.loop()
 			.end();
 		
 		var eyesAnimation = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostEyesSprites(Direction.LEFT))
+				.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
 			.end();
 		
 		var numberAnimation = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostNumberSprites())
+				.sprites(spriteSheet.ghostNumberSprites())
 			.end();
 		
 		var damaged = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.blinkyDamagedSprites())
+				.sprites(spriteSheet.blinkyDamagedSprites())
 			.end();
 		
 		var stretched = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.blinkyStretchedSprites())
+				.sprites(spriteSheet.blinkyStretchedSprites())
 			.end();
 		
 		var patched = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.blinkyPatchedSprites())
+				.sprites(spriteSheet.blinkyPatchedSprites())
 				.frameTicks(4)
 				.loop()
 			.end();
 		
 		var naked = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.blinkyNakedSprites())
+				.sprites(spriteSheet.blinkyNakedSprites())
 				.frameTicks(4)
 				.loop()
 			.end();
@@ -108,9 +108,9 @@ public class PacManGhostAnimations extends SpriteAnimations {
 	@Override
 	public void updateCurrentAnimation() {
 		if (GhostAnimations.GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
+			currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
 		} else if (GhostAnimations.GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.ghostEyesSprites(ghost.wishDir()));
+			currentAnimation.setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
 		}
 	}
 }

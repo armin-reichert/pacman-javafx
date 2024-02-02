@@ -81,6 +81,6 @@ public class InfoBoxGhostsInfo extends InfoBox {
 
 	private String ghostMovement(GameLevel level, Ghost ghost) {
 		var speed = ghost.velocity().length();
-		return "%.2f px %s (%s)".formatted(speed, ghost.moveDir(), ghost.wishDir());
+		return "%.2f px/s %s (%s)".formatted(speed, ghost.moveDir(), ghost.wishDir());
 	}
 }
