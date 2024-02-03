@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -37,7 +38,7 @@ public class GamePage extends CanvasContainer implements Page {
 	protected final GameSceneContext sceneContext;
 	protected final FlashMessageView flashMessageLayer = new FlashMessageView();
 	protected final Pane popupLayer = new Pane();
-	protected final FadingPane helpMenu = new FadingPane();
+	protected final FadingPane menuFadingPane = new FadingPane();
 	protected final ImageView helpIcon = new ImageView();
 	protected final Signature signature = new Signature("Remake (2023) by ", "Armin Reichert");
 
@@ -45,7 +46,7 @@ public class GamePage extends CanvasContainer implements Page {
 		this.sceneContext = sceneContext;
 		helpIcon.setCursor(Cursor.HAND);
 		helpIcon.setOnMouseClicked(e -> showHelpMenu());
-		popupLayer.getChildren().addAll(helpIcon, signature.root(), helpMenu);
+		popupLayer.getChildren().addAll(helpIcon, signature.root(), menuFadingPane);
 		layers.getChildren().addAll(popupLayer, flashMessageLayer);
 		layers.setOnKeyPressed(this::handleKeyPressed);
 		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> showDebugBorders(nv));
@@ -205,70 +206,105 @@ public class GamePage extends CanvasContainer implements Page {
 
 	// Menu stuff
 
+	private class GamePagePopupMenu extends PagePopupMenu {
+
+		public void addEntry(String labelText, String keyboardKey) {
+			addRow(label(labelText, Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
+		}
+
+		public void addLocalizedEntry(String lhsKey, String rhsText) {
+			addEntry(sceneContext.tt(lhsKey), rhsText);
+		}
+
+		@Override
+		public Pane createPane(Color backgroundColor, Font font) {
+			var pane = super.createPane(backgroundColor, font);
+			var grid = (GridPane) pane.getChildren().get(0); // TODO improve
+			// default entries:
+			int rowIndex = size();
+			if (sceneContext.gameController().isAutoControlled()) {
+				var autoPilotEntry = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
+				autoPilotEntry.setFont(font);
+				GridPane.setColumnSpan(autoPilotEntry, 2);
+				grid.add(autoPilotEntry, 0, rowIndex);
+				++rowIndex;
+			}
+			if (sceneContext.gameController().isImmune()) {
+				var immunityEntry = text(sceneContext.tt("help.immunity_on"), Color.ORANGE);
+				immunityEntry.setFont(font);
+				GridPane.setColumnSpan(immunityEntry, 2);
+				grid.add(immunityEntry, 0, rowIndex);
+				++rowIndex;
+			}
+			return pane;
+		}
+	}
+
 	protected void showHelpMenu() {
 		currentHelpMenu().ifPresent(menu -> {
+			var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 			var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
 				? Color.rgb(255, 0, 0, 0.8)
 				: Color.rgb(33, 33, 255, 0.8);
-			helpMenu.setTranslateX(10 * scaling);
-			helpMenu.setTranslateY(30 * scaling);
-			helpMenu.setContent(menu.createPane(bgColor));
-			helpMenu.show(Duration.seconds(1.5));
+			var menuPane = menu.createPane(bgColor, font);
+			menuFadingPane.setTranslateX(10 * scaling);
+			menuFadingPane.setTranslateY(30 * scaling);
+			menuFadingPane.setContent(menuPane);
+			menuFadingPane.show(Duration.seconds(1.5));
 		});
 	}
 
-	private Optional<PagePopupMenu> currentHelpMenu() {
-		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
+	private Optional<GamePagePopupMenu> currentHelpMenu() {
 		var gameState = sceneContext.gameState();
 		if (gameState == GameState.INTRO) {
-			return Optional.of(createIntroMenu(font));
+			return Optional.of(createIntroMenu());
 		}
 		if (gameState == GameState.CREDIT) {
-			return Optional.of(createCreditMenu(font));
+			return Optional.of(createCreditMenu());
 		}
 		if (sceneContext.gameLevel().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
 			return sceneContext.gameLevel().get().isDemoLevel()
-				? Optional.of(createDemoLevelMenu(font))
-				: Optional.of(createPlayingMenu(font));
+				? Optional.of(createDemoLevelMenu())
+				: Optional.of(createPlayingMenu());
 		}
 		return Optional.empty();
 	}
 
-	private PagePopupMenu createIntroMenu(Font font) {
-		var menu = new PagePopupMenu(sceneContext, font);
+	private GamePagePopupMenu createIntroMenu() {
+		var menu = new GamePagePopupMenu();
 		if (sceneContext.gameController().hasCredit()) {
-			menu.addEntry("help.start_game", "1");
+			menu.addLocalizedEntry("help.start_game", "1");
 		}
-		menu.addEntry("help.add_credit", "5");
-		menu.addEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+		menu.addLocalizedEntry("help.add_credit", "5");
+		menu.addLocalizedEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
 		return menu;
 	}
 
-	private PagePopupMenu createCreditMenu(Font font) {
-		var menu = new PagePopupMenu(sceneContext, font);
+	private GamePagePopupMenu createCreditMenu() {
+		var menu = new GamePagePopupMenu();
 		if (sceneContext.gameController().hasCredit()) {
-			menu.addEntry("help.start_game", "1");
+			menu.addLocalizedEntry("help.start_game", "1");
 		}
-		menu.addEntry("help.add_credit", "5");
-		menu.addEntry("help.show_intro", "Q");
+		menu.addLocalizedEntry("help.add_credit", "5");
+		menu.addLocalizedEntry("help.show_intro", "Q");
 		return menu;
 	}
 
-	private PagePopupMenu createPlayingMenu(Font font) {
-		var menu = new PagePopupMenu(sceneContext, font);
-		menu.addEntry("help.move_left",  sceneContext.tt("help.cursor_left"));
-		menu.addEntry("help.move_right", sceneContext.tt("help.cursor_right"));
-		menu.addEntry("help.move_up",    sceneContext.tt("help.cursor_up"));
-		menu.addEntry("help.move_down",  sceneContext.tt("help.cursor_down"));
-		menu.addEntry("help.show_intro", "Q");
+	private GamePagePopupMenu createPlayingMenu() {
+		var menu = new GamePagePopupMenu();
+		menu.addLocalizedEntry("help.move_left",  sceneContext.tt("help.cursor_left"));
+		menu.addLocalizedEntry("help.move_right", sceneContext.tt("help.cursor_right"));
+		menu.addLocalizedEntry("help.move_up",    sceneContext.tt("help.cursor_up"));
+		menu.addLocalizedEntry("help.move_down",  sceneContext.tt("help.cursor_down"));
+		menu.addLocalizedEntry("help.show_intro", "Q");
 		return menu;
 	}
 
-	private PagePopupMenu createDemoLevelMenu(Font font) {
-		var menu = new PagePopupMenu(sceneContext, font);
-		menu.addEntry("help.add_credit", "5");
-		menu.addEntry("help.show_intro", "Q");
+	private GamePagePopupMenu createDemoLevelMenu() {
+		var menu = new GamePagePopupMenu();
+		menu.addLocalizedEntry("help.add_credit", "5");
+		menu.addLocalizedEntry("help.show_intro", "Q");
 		return menu;
 	}
 }
