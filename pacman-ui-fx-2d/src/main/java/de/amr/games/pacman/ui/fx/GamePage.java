@@ -240,20 +240,6 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 	}
 
-	protected void showHelpMenu() {
-		currentHelpMenu().ifPresent(menu -> {
-			var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
-			var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
-				? Color.rgb(255, 0, 0, 0.8)
-				: Color.rgb(33, 33, 255, 0.8);
-			var menuPane = menu.createPane(bgColor, font);
-			menuFadingPane.setTranslateX(10 * scaling);
-			menuFadingPane.setTranslateY(30 * scaling);
-			menuFadingPane.setContent(menuPane);
-			menuFadingPane.show(Duration.seconds(1.5));
-		});
-	}
-
 	private Optional<GamePagePopupMenu> currentHelpMenu() {
 		var gameState = sceneContext.gameState();
 		if (gameState == GameState.INTRO) {
@@ -265,10 +251,24 @@ public class GamePage extends CanvasContainer implements Page {
 		if (sceneContext.gameLevel().isPresent()
 				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
 			return sceneContext.gameLevel().get().isDemoLevel()
-				? Optional.of(createDemoLevelMenu())
-				: Optional.of(createPlayingMenu());
+					? Optional.of(createDemoLevelMenu())
+					: Optional.of(createPlayingMenu());
 		}
 		return Optional.empty();
+
+	}
+
+	private void showHelpMenu() {
+		currentHelpMenu().ifPresent(menu -> {
+			var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
+					? Color.rgb(255, 0, 0, 0.8)
+					: Color.rgb(33, 33, 255, 0.8);
+			var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
+			menuFadingPane.setTranslateX(10 * scaling);
+			menuFadingPane.setTranslateY(30 * scaling);
+			menuFadingPane.setContent(menu.createPane(bgColor, font));
+			menuFadingPane.show(Duration.seconds(1.5));
+		});
 	}
 
 	private GamePagePopupMenu createIntroMenu() {
