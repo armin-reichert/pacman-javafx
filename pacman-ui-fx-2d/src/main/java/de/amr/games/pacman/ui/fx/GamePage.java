@@ -207,14 +207,17 @@ public class GamePage extends CanvasContainer implements Page {
 
 	protected void showHelpMenu() {
 		currentHelpMenu().ifPresent(menu -> {
+			var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
+				? Color.rgb(255, 0, 0, 0.8)
+				: Color.rgb(33, 33, 255, 0.8);
 			helpMenu.setTranslateX(10 * scaling);
 			helpMenu.setTranslateY(30 * scaling);
-			helpMenu.setContent(menu.createPane());
+			helpMenu.setContent(menu.createPane(bgColor));
 			helpMenu.show(Duration.seconds(1.5));
 		});
 	}
 
-	private Optional<GamePagePopupMenu> currentHelpMenu() {
+	private Optional<PagePopupMenu> currentHelpMenu() {
 		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
 		var gameState = sceneContext.gameState();
 		if (gameState == GameState.INTRO) {
@@ -232,8 +235,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return Optional.empty();
 	}
 
-	private GamePagePopupMenu createIntroMenu(Font font) {
-		var menu = new GamePagePopupMenu(sceneContext, font);
+	private PagePopupMenu createIntroMenu(Font font) {
+		var menu = new PagePopupMenu(sceneContext, font);
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
@@ -242,8 +245,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private GamePagePopupMenu createCreditMenu(Font font) {
-		var menu = new GamePagePopupMenu(sceneContext, font);
+	private PagePopupMenu createCreditMenu(Font font) {
+		var menu = new PagePopupMenu(sceneContext, font);
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addEntry("help.start_game", "1");
 		}
@@ -252,8 +255,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private GamePagePopupMenu createPlayingMenu(Font font) {
-		var menu = new GamePagePopupMenu(sceneContext, font);
+	private PagePopupMenu createPlayingMenu(Font font) {
+		var menu = new PagePopupMenu(sceneContext, font);
 		menu.addEntry("help.move_left",  sceneContext.tt("help.cursor_left"));
 		menu.addEntry("help.move_right", sceneContext.tt("help.cursor_right"));
 		menu.addEntry("help.move_up",    sceneContext.tt("help.cursor_up"));
@@ -262,8 +265,8 @@ public class GamePage extends CanvasContainer implements Page {
 		return menu;
 	}
 
-	private GamePagePopupMenu createDemoLevelMenu(Font font) {
-		var menu = new GamePagePopupMenu(sceneContext, font);
+	private PagePopupMenu createDemoLevelMenu(Font font) {
+		var menu = new PagePopupMenu(sceneContext, font);
 		menu.addEntry("help.add_credit", "5");
 		menu.addEntry("help.show_intro", "Q");
 		return menu;

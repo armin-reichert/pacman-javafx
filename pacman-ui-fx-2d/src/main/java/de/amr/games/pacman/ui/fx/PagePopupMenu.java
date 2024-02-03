@@ -18,14 +18,14 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
-public class GamePagePopupMenu {
+public class PagePopupMenu {
 
 	private final GameSceneContext sceneContext;
 	private final List<Node> column0 = new ArrayList<>();
 	private final List<Node> column1 = new ArrayList<>();
 	private final Font font;
 
-	public GamePagePopupMenu(GameSceneContext sceneContext, Font font) {
+	public PagePopupMenu(GameSceneContext sceneContext, Font font) {
 		checkNotNull(sceneContext);
 		checkNotNull(font);
 		this.sceneContext = sceneContext;
@@ -55,22 +55,11 @@ public class GamePagePopupMenu {
 		return text;
 	}
 
-	private Text text(String s) {
-		return text(s, Color.YELLOW);
+	public void addEntry(String messageKey, String keyboardKey) {
+		addRow(label(sceneContext.tt(messageKey)), text("[" + keyboardKey + "]", Color.YELLOW));
 	}
 
-	public void addEntry(String rbKey, String kbKey) {
-		addRow(label(sceneContext.tt(rbKey)), text("[" + kbKey + "]"));
-	}
-
-	public Pane createPane() {
-		var grid = new GridPane();
-		grid.setHgap(20);
-		grid.setVgap(10);
-		for (int row = 0; row < column0.size(); ++row) {
-			grid.add(column0.get(row), 0, row);
-			grid.add(column1.get(row), 1, row);
-		}
+	public void addDefaultEntries(GridPane grid) {
 		int rowIndex = size();
 		if (sceneContext.gameController().isAutoControlled()) {
 			var text = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
@@ -85,12 +74,20 @@ public class GamePagePopupMenu {
 			++rowIndex;
 		}
 
+	}
+
+	public Pane createPane(Color backgroundColor) {
+		var grid = new GridPane();
+		grid.setHgap(20);
+		grid.setVgap(10);
+		for (int row = 0; row < column0.size(); ++row) {
+			grid.add(column0.get(row), 0, row);
+			grid.add(column1.get(row), 1, row);
+		}
+		addDefaultEntries(grid);
 		var pane = new BorderPane(grid);
 		pane.setPadding(new Insets(10));
-		var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
-				? Color.rgb(255, 0, 0, 0.8)
-				: Color.rgb(33, 33, 255, 0.8);
-		pane.setBackground(ResourceManager.coloredRoundedBackground(bgColor, 10));
+		pane.setBackground(ResourceManager.coloredRoundedBackground(backgroundColor, 10));
 		return pane;
 	}
 }
