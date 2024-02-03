@@ -71,6 +71,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	public static final KeyCodeCombination KEY_TEST_LEVELS       = alt(KeyCode.T);
 	public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS = alt(KeyCode.X);
 
+	public static final KeyCodeCombination[] KEYS_SHOW_GAME_PAGE = { just(KeyCode.SPACE), just(KeyCode.ENTER) };
 	public static final KeyCodeCombination[] KEYS_SINGLE_STEP    = { just(KeyCode.SPACE), shift(KeyCode.P) };
 	public static final KeyCodeCombination KEY_TEN_STEPS         = shift(KeyCode.SPACE);
 	public static final KeyCodeCombination KEY_SIMULATION_FASTER = alt(KeyCode.PLUS);
@@ -291,11 +292,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		var startPage = new StartPage(theme());
 		startPage.setPlayButtonAction(this::showGamePage);
 		startPage.setOnKeyPressed(e -> {
-			switch (e.getCode()) {
-				case ENTER, SPACE -> showGamePage();
-				case V            -> switchGameVariant();
-				case F11          -> stage.setFullScreen(true);
-				default           -> {}
+			if (Arrays.stream(KEYS_SHOW_GAME_PAGE).anyMatch(combination -> combination.match(e))) {
+				showGamePage();
+			} else if (KEY_SELECT_VARIANT.match(e)) {
+				switchGameVariant();
+			} else if (KEY_FULLSCREEN.match(e)) {
+				stage.setFullScreen(true);
 			}
 		});
 		return startPage;
