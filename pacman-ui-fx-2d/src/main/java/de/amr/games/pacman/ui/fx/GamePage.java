@@ -24,8 +24,6 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Optional;
-
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
 
@@ -238,75 +236,67 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 	}
 
-	private Optional<GamePagePopupMenu> currentHelpMenu() {
-		GamePagePopupMenu menu = switch (sceneContext.gameState()) {
-			case INTRO -> createIntroMenu();
-			case CREDIT -> createCreditMenu();
+	private GamePagePopupMenu currentHelpMenu() {
+		GamePagePopupMenu menu = new GamePagePopupMenu();
+		switch (sceneContext.gameState()) {
+			case INTRO -> createIntroMenu(menu);
+			case CREDIT -> createCreditMenu(menu);
 			case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
 				if (sceneContext.gameLevel().isPresent()) {
-					yield sceneContext.gameLevel().get().isDemoLevel() ? createDemoLevelMenu(): createPlayingMenu();
-				} else {
-					yield null;
+					if (sceneContext.gameLevel().get().isDemoLevel()) {
+						createDemoLevelMenu(menu);
+					} else {
+						createPlayingMenu(menu);
+					}
 				}
 			}
-			default -> createQuitMenu();
-		};
-		return Optional.ofNullable(menu);
+			default -> createQuitMenu(menu);
+		}
+		return menu;
 	}
 
 	private void showHelpMenu() {
-		currentHelpMenu().ifPresent(menu -> {
-			var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
-					? Color.rgb(255, 0, 0, 0.8)
-					: Color.rgb(33, 33, 255, 0.8);
-			var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
-			menuFadingPane.setTranslateX(10 * scaling);
-			menuFadingPane.setTranslateY(30 * scaling);
-			menuFadingPane.setContent(menu.createPane(bgColor, font));
-			menuFadingPane.show(Duration.seconds(1.5));
-		});
+		var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
+			? Color.rgb(255, 0, 0, 0.8)
+			: Color.rgb(33, 33, 255, 0.8);
+		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
+		var menuContent = currentHelpMenu().createPane(bgColor, font);
+		menuFadingPane.setTranslateX(10 * scaling);
+		menuFadingPane.setTranslateY(30 * scaling);
+		menuFadingPane.setContent(menuContent);
+		menuFadingPane.show(Duration.seconds(1.5));
 	}
 
-	private GamePagePopupMenu createIntroMenu() {
-		var menu = new GamePagePopupMenu();
+	private void createIntroMenu(GamePagePopupMenu menu) {
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addLocalizedEntry("help.start_game", "1");
 		}
 		menu.addLocalizedEntry("help.add_credit", "5");
 		menu.addLocalizedEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
-		return menu;
 	}
 
-	private GamePagePopupMenu createQuitMenu() {
-		var menu = new GamePagePopupMenu();
+	private void createQuitMenu(GamePagePopupMenu menu) {
 		menu.addLocalizedEntry("help.show_intro", "Q");
-		return menu;
 	}
 
-	private GamePagePopupMenu createCreditMenu() {
-		var menu = new GamePagePopupMenu();
+	private void createCreditMenu(GamePagePopupMenu menu) {
 		if (sceneContext.gameController().hasCredit()) {
 			menu.addLocalizedEntry("help.start_game", "1");
 		}
 		menu.addLocalizedEntry("help.add_credit", "5");
 		menu.addLocalizedEntry("help.show_intro", "Q");
-		return menu;
 	}
 
-	private GamePagePopupMenu createPlayingMenu() {
-		var menu = new GamePagePopupMenu();
+	private void createPlayingMenu(GamePagePopupMenu menu) {
 		menu.addLocalizedEntry("help.move_left",  sceneContext.tt("help.cursor_left"));
 		menu.addLocalizedEntry("help.move_right", sceneContext.tt("help.cursor_right"));
 		menu.addLocalizedEntry("help.move_up",    sceneContext.tt("help.cursor_up"));
 		menu.addLocalizedEntry("help.move_down",  sceneContext.tt("help.cursor_down"));
 		menu.addLocalizedEntry("help.show_intro", "Q");
-		return menu;
 	}
 
-	private GamePagePopupMenu createDemoLevelMenu() {
-		var menu = new GamePagePopupMenu();
+	private void createDemoLevelMenu(GamePagePopupMenu menu) {
 		menu.addLocalizedEntry("help.add_credit", "5");
 		menu.addLocalizedEntry("help.show_intro", "Q");
-		return menu;
 	}
 }
