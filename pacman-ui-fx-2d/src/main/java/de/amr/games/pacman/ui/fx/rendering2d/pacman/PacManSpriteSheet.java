@@ -130,10 +130,12 @@ public class PacManSpriteSheet implements SpriteSheet {
 
 	private final Rectangle2D[] pacDyingSprites = new Rectangle2D[11];
 	{
-		double m = 0.5; // margin
-		double size = 16 - 2 * m;
-		for (int i = 0; i < 11; ++i) {
-			pacDyingSprites[i] = rect(OFF_X + 48 + i * 16 + m, m, size, size);
+		// TODO why do I get drawing artifacts if size is exactly 16?
+		double size = 15.5;
+		for (int i = 0; i < pacDyingSprites.length; ++i) {
+			// TODO ensure last image is completely visible. What a mess!
+			int y = i == 10 ? 1 : 0;
+			pacDyingSprites[i] = rect(504 + i * 16, y, size - 0.5, size - 0.5);
 		}
 	}
 
