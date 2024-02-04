@@ -219,7 +219,7 @@ public class GamePage extends CanvasContainer implements Page {
 		public Pane createPane(Color backgroundColor, Font font) {
 			var pane = super.createPane(backgroundColor, font);
 			var grid = (GridPane) pane.getChildren().get(0); // TODO improve
-			// default entries:
+			// add default entries:
 			int nextFreeIndex = grid.getRowCount();
 			if (sceneContext.gameController().isAutoControlled()) {
 				var autoPilotEntry = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
@@ -240,17 +240,18 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	private Optional<GamePagePopupMenu> currentHelpMenu() {
-		GamePagePopupMenu menu = null;
-		if (sceneContext.gameState() == GameState.INTRO) {
-			menu = createIntroMenu();
-		}
-		else if (sceneContext.gameState() == GameState.CREDIT) {
-			menu = createCreditMenu();
-		}
-		else if (sceneContext.gameLevel().isPresent() && oneOf(sceneContext.gameState(),
-			GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			menu = sceneContext.gameLevel().get().isDemoLevel() ? createDemoLevelMenu()	: createPlayingMenu();
-		}
+		GamePagePopupMenu menu = switch (sceneContext.gameState()) {
+			case INTRO -> createIntroMenu();
+			case CREDIT -> createCreditMenu();
+			case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
+				if (sceneContext.gameLevel().isPresent()) {
+					yield sceneContext.gameLevel().get().isDemoLevel() ? createDemoLevelMenu(): createPlayingMenu();
+				} else {
+					yield null;
+				}
+			}
+			default -> createQuitMenu();
+		};
 		return Optional.ofNullable(menu);
 	}
 
@@ -274,6 +275,12 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 		menu.addLocalizedEntry("help.add_credit", "5");
 		menu.addLocalizedEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+		return menu;
+	}
+
+	private GamePagePopupMenu createQuitMenu() {
+		var menu = new GamePagePopupMenu();
+		menu.addLocalizedEntry("help.show_intro", "Q");
 		return menu;
 	}
 
