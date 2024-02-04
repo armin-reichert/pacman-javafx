@@ -13,7 +13,5 @@ module de.amr.games.pacman.ui.fx {
 	exports de.amr.games.pacman.ui.fx.scene;
 	exports de.amr.games.pacman.ui.fx.util;
 	exports de.amr.games.pacman.ui.fx.rendering2d;
-	exports de.amr.games.pacman.ui.fx.rendering2d.mspacman;
-	exports de.amr.games.pacman.ui.fx.rendering2d.pacman;
 	exports de.amr.games.pacman.ui.fx.scene2d;
 }

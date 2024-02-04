@@ -11,9 +11,9 @@ import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManGhostAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManPacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.mspacman.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 

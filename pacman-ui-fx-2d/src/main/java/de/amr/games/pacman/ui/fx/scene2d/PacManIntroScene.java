@@ -8,9 +8,9 @@ import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManGhostAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManPacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.pacman.PacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManPacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;

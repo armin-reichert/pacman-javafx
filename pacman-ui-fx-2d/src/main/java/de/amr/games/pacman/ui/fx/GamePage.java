@@ -201,7 +201,7 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 	}
 
-	// Menu stuff
+	// Help Info stuff
 
 	public class HelpInfo extends PageInfo {
 
