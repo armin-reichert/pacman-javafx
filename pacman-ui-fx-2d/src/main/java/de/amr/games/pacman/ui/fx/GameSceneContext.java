@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.scene;
+package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
@@ -7,6 +7,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.ActionHandler;
+import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;

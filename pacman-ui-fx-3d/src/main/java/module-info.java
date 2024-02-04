@@ -16,7 +16,7 @@ module de.amr.games.pacman.ui.fx3d {
 	exports de.amr.games.pacman.ui.fx.v3d.dashboard;
 	exports de.amr.games.pacman.ui.fx.v3d.entity;
 	exports de.amr.games.pacman.ui.fx.v3d.model;
-	exports de.amr.games.pacman.ui.fx.v3d.scene;
+	exports de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 	// give access for loading module (non-class) resources, see Class.getResource()
 	opens de.amr.games.pacman.ui.fx.v3d.graphics;

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.v3d.scene;
+package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.scene.Camera;
@@ -13,14 +13,13 @@ import static de.amr.games.pacman.lib.Globals.lerp;
 /**
  * @author Armin Reichert
  */
-public class CamFollowingPlayer implements CameraController {
+public class CamDrone implements CameraController {
 
-	private double speedX = 0.005;
-	private double speedY = 0.030;
+	private double speed = 0.01;
 
 	@Override
 	public String toString() {
-		return "Following Player";
+		return "Drone";
 	}
 
 	@Override
@@ -28,14 +27,16 @@ public class CamFollowingPlayer implements CameraController {
 		cam.setNearClip(0.1);
 		cam.setFarClip(10000.0);
 		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(60);
-		cam.setTranslateZ(-160);
+		cam.setRotate(0);
+		cam.setTranslateX(0);
+		cam.setTranslateY(0);
+		cam.setTranslateZ(-400);
 	}
 
 	@Override
 	public void update(Camera cam, Pac3D pac3D) {
 		var position = pac3D.position();
-		cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speedX));
-		cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() + 100, speedY));
+		cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speed));
+		cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() - 150, speed));
 	}
 }

@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
+import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
-import de.amr.games.pacman.ui.fx.v3d.scene.Perspective;
-import de.amr.games.pacman.ui.fx.v3d.scene.PlayScene3D;
+import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
+import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
