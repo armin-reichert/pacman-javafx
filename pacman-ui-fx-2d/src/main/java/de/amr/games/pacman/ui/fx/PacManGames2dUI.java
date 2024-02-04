@@ -473,15 +473,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		e.game.level().ifPresent(level -> {
 			switch (e.game.variant()) {
 				case MS_PACMAN -> {
-					var ss = this.<MsPacManSpriteSheet>spriteSheet();
-					level.pac().setAnimations(new MsPacManPacAnimations(level.pac(), ss));
-					level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGhostAnimations(ghost, ss)));
+					level.pac().setAnimations(new MsPacManPacAnimations(level.pac(), spriteSheet()));
+					level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGhostAnimations(ghost, spriteSheet())));
 					Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
 				}
 				case PACMAN -> {
-					var ss = this.<PacManSpriteSheet>spriteSheet();
-					level.pac().setAnimations(new PacManPacAnimations(level.pac(), ss));
-					level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
+					level.pac().setAnimations(new PacManPacAnimations(level.pac(), spriteSheet()));
+					level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, spriteSheet())));
 					Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
 				}
 			}
