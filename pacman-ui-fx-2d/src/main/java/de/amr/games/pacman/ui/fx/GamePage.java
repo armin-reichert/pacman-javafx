@@ -26,7 +26,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.oneOf;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
 
