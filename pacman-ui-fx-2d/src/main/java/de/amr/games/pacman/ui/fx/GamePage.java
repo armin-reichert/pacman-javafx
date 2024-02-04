@@ -206,14 +206,13 @@ public class GamePage extends CanvasContainer implements Page {
 
 	// Menu stuff
 
-	private class GamePagePopupMenu extends PagePopupMenu {
+	public class GamePagePopupMenu extends PagePopupMenu {
 
-		public void addEntry(String labelText, String keyboardKey) {
-			addRow(label(labelText, Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
-		}
-
-		public void addLocalizedEntry(String lhsKey, String rhsText) {
-			addEntry(sceneContext.tt(lhsKey), rhsText);
+		public void addLocalizedEntry(String lhsKey, String keyboardKey) {
+			addRow(
+				label(sceneContext.tt(lhsKey), Color.gray(0.9)),
+				text("[" + keyboardKey + "]", Color.YELLOW)
+			);
 		}
 
 		@Override
@@ -221,41 +220,38 @@ public class GamePage extends CanvasContainer implements Page {
 			var pane = super.createPane(backgroundColor, font);
 			var grid = (GridPane) pane.getChildren().get(0); // TODO improve
 			// default entries:
-			int rowIndex = size();
+			int nextFreeIndex = grid.getRowCount();
 			if (sceneContext.gameController().isAutoControlled()) {
 				var autoPilotEntry = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
 				autoPilotEntry.setFont(font);
 				GridPane.setColumnSpan(autoPilotEntry, 2);
-				grid.add(autoPilotEntry, 0, rowIndex);
-				++rowIndex;
+				grid.add(autoPilotEntry, 0, nextFreeIndex);
+				nextFreeIndex += 1;
 			}
 			if (sceneContext.gameController().isImmune()) {
 				var immunityEntry = text(sceneContext.tt("help.immunity_on"), Color.ORANGE);
 				immunityEntry.setFont(font);
 				GridPane.setColumnSpan(immunityEntry, 2);
-				grid.add(immunityEntry, 0, rowIndex);
-				++rowIndex;
+				grid.add(immunityEntry, 0, nextFreeIndex);
+				nextFreeIndex += 1;
 			}
 			return pane;
 		}
 	}
 
 	private Optional<GamePagePopupMenu> currentHelpMenu() {
-		var gameState = sceneContext.gameState();
-		if (gameState == GameState.INTRO) {
-			return Optional.of(createIntroMenu());
+		GamePagePopupMenu menu = null;
+		if (sceneContext.gameState() == GameState.INTRO) {
+			menu = createIntroMenu();
 		}
-		if (gameState == GameState.CREDIT) {
-			return Optional.of(createCreditMenu());
+		else if (sceneContext.gameState() == GameState.CREDIT) {
+			menu = createCreditMenu();
 		}
-		if (sceneContext.gameLevel().isPresent()
-				&& oneOf(gameState, GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
-			return sceneContext.gameLevel().get().isDemoLevel()
-					? Optional.of(createDemoLevelMenu())
-					: Optional.of(createPlayingMenu());
+		else if (sceneContext.gameLevel().isPresent() && oneOf(sceneContext.gameState(),
+			GameState.READY, GameState.HUNTING, GameState.PACMAN_DYING, GameState.GHOST_DYING)) {
+			menu = sceneContext.gameLevel().get().isDemoLevel() ? createDemoLevelMenu()	: createPlayingMenu();
 		}
-		return Optional.empty();
-
+		return Optional.ofNullable(menu);
 	}
 
 	private void showHelpMenu() {

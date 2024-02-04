@@ -1,10 +1,7 @@
 package de.amr.games.pacman.ui.fx;
 
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.scene.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -16,8 +13,6 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 public class PagePopupMenu {
 
 	private final List<Label> column0 = new ArrayList<>();
@@ -26,10 +21,6 @@ public class PagePopupMenu {
 	public void addRow(Label label, Text text) {
 		column0.add(label);
 		column1.add(text);
-	}
-
-	public int size() {
-		return column0.size();
 	}
 
 	public Label label(String s, Color color) {
