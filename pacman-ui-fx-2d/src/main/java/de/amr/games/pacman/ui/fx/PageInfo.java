@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagePopupMenu {
+public class PageInfo {
 
 	private final List<Label> column0 = new ArrayList<>();
 	private final List<Text> column1 = new ArrayList<>();

@@ -35,15 +35,15 @@ public class GamePage extends CanvasContainer implements Page {
 	protected final GameSceneContext sceneContext;
 	protected final FlashMessageView flashMessageLayer = new FlashMessageView();
 	protected final Pane popupLayer = new Pane();
-	protected final FadingPane menuFadingPane = new FadingPane();
+	protected final FadingPane helpInfoPopUp = new FadingPane();
 	protected final ImageView helpIcon = new ImageView();
 	protected final Signature signature = new Signature("Remake (2023) by ", "Armin Reichert");
 
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
 		helpIcon.setCursor(Cursor.HAND);
-		helpIcon.setOnMouseClicked(e -> showHelpMenu());
-		popupLayer.getChildren().addAll(helpIcon, signature.root(), menuFadingPane);
+		helpIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
+		popupLayer.getChildren().addAll(helpIcon, signature.root(), helpInfoPopUp);
 		layers.getChildren().addAll(popupLayer, flashMessageLayer);
 		layers.setOnKeyPressed(this::handleKeyPressed);
 		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> showDebugBorders(nv));
@@ -177,7 +177,7 @@ public class GamePage extends CanvasContainer implements Page {
 		} else if (Keyboard.pressed(KEY_IMMUNITY)) {
 			actionHandler.toggleImmunity();
 		} else if (Keyboard.pressed(KEY_SHOW_HELP)) {
-			showHelpMenu();
+			showHelpInfoPopUp();
 		} else if (Keyboard.pressed(KEY_PAUSE)) {
 			actionHandler.togglePaused();
 		} else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
@@ -203,7 +203,7 @@ public class GamePage extends CanvasContainer implements Page {
 
 	// Menu stuff
 
-	public class GamePagePopupMenu extends PagePopupMenu {
+	public class HelpInfo extends PageInfo {
 
 		public void addLocalizedEntry(String lhsKey, String keyboardKey) {
 			addRow(
@@ -236,67 +236,67 @@ public class GamePage extends CanvasContainer implements Page {
 		}
 	}
 
-	private GamePagePopupMenu currentHelpMenu() {
-		GamePagePopupMenu menu = new GamePagePopupMenu();
+	private HelpInfo currentHelpInfo() {
+		HelpInfo helpInfo = new HelpInfo();
 		switch (sceneContext.gameState()) {
-			case INTRO -> createIntroMenu(menu);
-			case CREDIT -> createCreditMenu(menu);
+			case INTRO -> addInfoForIntroScene(helpInfo);
+			case CREDIT -> addInfoForCreditScene(helpInfo);
 			case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
 				if (sceneContext.gameLevel().isPresent()) {
 					if (sceneContext.gameLevel().get().isDemoLevel()) {
-						createDemoLevelMenu(menu);
+						addInfoForDemoLevel(helpInfo);
 					} else {
-						createPlayingMenu(menu);
+						addInfoForPlayScene(helpInfo);
 					}
 				}
 			}
-			default -> createQuitMenu(menu);
+			default -> addInfoForQuittingScene(helpInfo);
 		}
-		return menu;
+		return helpInfo;
 	}
 
-	private void showHelpMenu() {
+	private void showHelpInfoPopUp() {
 		var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
 			? Color.rgb(255, 0, 0, 0.8)
 			: Color.rgb(33, 33, 255, 0.8);
 		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
-		var menuContent = currentHelpMenu().createPane(bgColor, font);
-		menuFadingPane.setTranslateX(10 * scaling);
-		menuFadingPane.setTranslateY(30 * scaling);
-		menuFadingPane.setContent(menuContent);
-		menuFadingPane.show(Duration.seconds(1.5));
+		var pane = currentHelpInfo().createPane(bgColor, font);
+		helpInfoPopUp.setTranslateX(10 * scaling);
+		helpInfoPopUp.setTranslateY(30 * scaling);
+		helpInfoPopUp.setContent(pane);
+		helpInfoPopUp.show(Duration.seconds(1.5));
 	}
 
-	private void createIntroMenu(GamePagePopupMenu menu) {
+	private void addInfoForIntroScene(HelpInfo info) {
 		if (sceneContext.gameController().hasCredit()) {
-			menu.addLocalizedEntry("help.start_game", "1");
+			info.addLocalizedEntry("help.start_game", "1");
 		}
-		menu.addLocalizedEntry("help.add_credit", "5");
-		menu.addLocalizedEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+		info.addLocalizedEntry("help.add_credit", "5");
+		info.addLocalizedEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
 	}
 
-	private void createQuitMenu(GamePagePopupMenu menu) {
-		menu.addLocalizedEntry("help.show_intro", "Q");
+	private void addInfoForQuittingScene(HelpInfo info) {
+		info.addLocalizedEntry("help.show_intro", "Q");
 	}
 
-	private void createCreditMenu(GamePagePopupMenu menu) {
+	private void addInfoForCreditScene(HelpInfo info) {
 		if (sceneContext.gameController().hasCredit()) {
-			menu.addLocalizedEntry("help.start_game", "1");
+			info.addLocalizedEntry("help.start_game", "1");
 		}
-		menu.addLocalizedEntry("help.add_credit", "5");
-		menu.addLocalizedEntry("help.show_intro", "Q");
+		info.addLocalizedEntry("help.add_credit", "5");
+		info.addLocalizedEntry("help.show_intro", "Q");
 	}
 
-	private void createPlayingMenu(GamePagePopupMenu menu) {
-		menu.addLocalizedEntry("help.move_left",  sceneContext.tt("help.cursor_left"));
-		menu.addLocalizedEntry("help.move_right", sceneContext.tt("help.cursor_right"));
-		menu.addLocalizedEntry("help.move_up",    sceneContext.tt("help.cursor_up"));
-		menu.addLocalizedEntry("help.move_down",  sceneContext.tt("help.cursor_down"));
-		menu.addLocalizedEntry("help.show_intro", "Q");
+	private void addInfoForPlayScene(HelpInfo info) {
+		info.addLocalizedEntry("help.move_left",  sceneContext.tt("help.cursor_left"));
+		info.addLocalizedEntry("help.move_right", sceneContext.tt("help.cursor_right"));
+		info.addLocalizedEntry("help.move_up",    sceneContext.tt("help.cursor_up"));
+		info.addLocalizedEntry("help.move_down",  sceneContext.tt("help.cursor_down"));
+		info.addLocalizedEntry("help.show_intro", "Q");
 	}
 
-	private void createDemoLevelMenu(GamePagePopupMenu menu) {
-		menu.addLocalizedEntry("help.add_credit", "5");
-		menu.addLocalizedEntry("help.show_intro", "Q");
+	private void addInfoForDemoLevel(HelpInfo info) {
+		info.addLocalizedEntry("help.add_credit", "5");
+		info.addLocalizedEntry("help.show_intro", "Q");
 	}
 }
