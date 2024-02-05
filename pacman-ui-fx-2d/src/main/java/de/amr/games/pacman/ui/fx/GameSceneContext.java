@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui.fx.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.media.AudioClip;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface GameSceneContext {
   GameClock gameClock();
 
   ActionHandler actionHandler();
+
+  ObjectProperty<GameScene> gameSceneProperty();
 
   Optional<GameScene> currentGameScene();
 

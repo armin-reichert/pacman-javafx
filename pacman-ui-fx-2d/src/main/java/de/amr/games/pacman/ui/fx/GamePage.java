@@ -49,17 +49,17 @@ public class GamePage extends CanvasContainer implements Page {
 
 		createHelpIcon();
 		createSignature();
+		createDebugInfoBindings();
 
 		popupLayer.getChildren().addAll(helpIcon, signature, helpInfoPopUp);
-		layers.getChildren().addAll(popupLayer, flashMessageLayer);
-		layers.setOnKeyPressed(this::handleKeyPressed);
-		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> showDebugBorders(nv));
+		layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
+		layersContainer.setOnKeyPressed(this::handleKeyPressed);
 		setSize(width, height);
 	}
 
 	@Override
 	public Pane rootPane() {
-		return layers;
+		return layersContainer;
 	}
 
 	private void createHelpIcon() {
@@ -110,9 +110,9 @@ public class GamePage extends CanvasContainer implements Page {
 		if (sceneContext.gameController().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
 			// if play scene gets active/inactive, add/remove key handler
 			if (newGameScene == config.get("play")) {
-				layers.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+				layersContainer.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			} else {
-				layers.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+				layersContainer.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			}
 		}
 		if (newGameScene == config.get("intro")) {
@@ -124,25 +124,28 @@ public class GamePage extends CanvasContainer implements Page {
 		if (newGameScene instanceof GameScene2D scene2D) {
 			scene2D.setCanvas(canvas);
 		}
-
 		updateHelpIcon();
-
-		showDebugBorders(PY_SHOW_DEBUG_INFO.get());
 
 		rescale(getScaling(), true);
 	}
 
-	protected void showDebugBorders(boolean on)  {
-		if (on) {
-			int w = 3;
-			layers.setBorder(border(Color.RED, w));
-			canvasLayer.setBorder(border(Color.YELLOW, w));
-			popupLayer.setBorder(border(Color.GREENYELLOW, w));
-		} else {
-			layers.setBorder(null);
-			canvasLayer.setBorder(null);
-			popupLayer.setBorder(null);
-		}
+	private void createDebugInfoBindings() {
+		layersContainer.borderProperty().bind(Bindings.createObjectBinding(
+			() -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.RED, 3) : null,
+			PY_SHOW_DEBUG_INFO, sceneContext.gameSceneProperty()
+		));
+		canvasLayer.borderProperty().bind(Bindings.createObjectBinding(
+			() -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.YELLOW, 3) : null,
+			PY_SHOW_DEBUG_INFO, sceneContext.gameSceneProperty()
+		));
+		popupLayer.borderProperty().bind(Bindings.createObjectBinding(
+			() -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.GREENYELLOW, 3) : null,
+			PY_SHOW_DEBUG_INFO, sceneContext.gameSceneProperty()
+		));
+	}
+
+	protected boolean isCurrentGameScene2D() {
+		return true;
 	}
 
 	public FlashMessageView flashMessageView() {

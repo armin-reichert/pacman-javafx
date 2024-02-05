@@ -202,7 +202,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	protected final StartPage startPage;
 	protected final GamePage gamePage;
 	protected Page currentPage;
-	protected final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
+	public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
 	public PacManGames2dUI(Stage stage, Settings settings) {
 		checkNotNull(stage);
@@ -384,7 +384,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		});
 		newGameScene.setContext(this);
 		newGameScene.init();
-		gameScenePy.setValue(newGameScene);
+		gameScenePy.set(newGameScene);
 		Logger.trace("Game scene changed to {}", gameScenePy.get());
 	}
 
@@ -409,6 +409,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	@Override
 	public ActionHandler actionHandler() {
 		return this;
+	}
+
+	@Override
+	public ObjectProperty<GameScene> gameSceneProperty() {
+		return gameScenePy;
 	}
 
 	@Override

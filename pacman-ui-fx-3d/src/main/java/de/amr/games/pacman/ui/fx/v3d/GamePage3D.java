@@ -104,7 +104,6 @@ public class GamePage3D extends GamePage {
 	public void onGameSceneChanged(GameScene newGameScene) {
 		contextMenu.hide();
 		if (isCurrentGameScene3D()) {
-			showDebugBorders(false);
 			updateBackground3D();
 			updateDashboardLayer();
 			updateHelpIcon();
@@ -135,6 +134,16 @@ public class GamePage3D extends GamePage {
 		}
 	}
 
+	private boolean isCurrentGameScene3D() {
+		return sceneContext.currentGameScene().isPresent()
+			&& sceneContext.currentGameScene().get() instanceof PlayScene3D;
+	}
+
+	@Override
+	protected boolean isCurrentGameScene2D() {
+		return !isCurrentGameScene3D();
+	}
+
 	@Override
 	public void render() {
 		super.render();
@@ -159,17 +168,8 @@ public class GamePage3D extends GamePage {
 	}
 
 	@Override
-	protected void showDebugBorders(boolean on)  {
-		super.showDebugBorders(on && !isCurrentGameScene3D());
-	}
-
-	@Override
 	protected boolean isHelpIconVisible() {
 		return !isCurrentGameScene3D() && super.isHelpIconVisible();
 	}
 
-	private boolean isCurrentGameScene3D() {
-		return sceneContext.currentGameScene().isPresent()
-			&& sceneContext.currentGameScene().get() instanceof PlayScene3D;
-	}
 }

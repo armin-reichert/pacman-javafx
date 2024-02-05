@@ -15,7 +15,7 @@ import org.tinylog.Logger;
  */
 public class CanvasContainer {
 
-	protected final StackPane layers = new StackPane();
+	protected final StackPane layersContainer = new StackPane();
 	protected final BorderPane canvasLayer = new BorderPane();
 	protected final BorderPane canvasContainer = new BorderPane();
 	protected final Canvas canvas = new Canvas();
@@ -32,7 +32,7 @@ public class CanvasContainer {
 	public CanvasContainer() {
 		canvasLayer.setCenter(canvasContainer);
 		canvasContainer.setCenter(canvas);
-		layers.getChildren().add(canvasLayer);
+		layersContainer.getChildren().add(canvasLayer);
 		canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
 		canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
 	}
@@ -45,8 +45,8 @@ public class CanvasContainer {
 		scalingPy.set(scaling);
 	}
 
-	public StackPane getLayers() {
-		return layers;
+	public StackPane getLayersContainer() {
+		return layersContainer;
 	}
 
 	public BorderPane getCanvasLayer() {
