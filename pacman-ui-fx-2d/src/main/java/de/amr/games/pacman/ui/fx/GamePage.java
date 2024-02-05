@@ -55,40 +55,6 @@ public class GamePage extends CanvasContainer implements Page {
 		setSize(width, height);
 	}
 
-	private void createSignature() {
-		var remake = new Text("Remake (2023) by ");
-		remake.setFill(Color.WHEAT);
-
-		var author = new Text("Armin Reichert");
-		author.setFill(Color.WHEAT);
-
-		signature = new TextFlow(remake, author);
-
-		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
-		fadeIn.setFromValue(0);
-		fadeIn.setToValue(1);
-
-		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
-		fadeOut.setFromValue(1);
-		fadeOut.setToValue(0);
-		//fadeOut.setDelay(Duration.seconds(10)); // for testing
-
-		signatureAnimation = new SequentialTransition(fadeIn, fadeOut);
-	}
-
-	protected void updateSignatureLayout() {
-		Text remake = (Text) signature.getChildren().get(0);
-		remake.setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		Text author = (Text) signature.getChildren().get(1);
-		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
-		signature.setTranslateX((canvasContainer.getWidth() - signature.getWidth()) * 0.5);
-		switch (sceneContext.gameVariant()) {
-			case MS_PACMAN -> signature.setTranslateY(40 * scaling); // TODO fixme
-			case PACMAN    -> signature.setTranslateY(28 * scaling); // TODO fixme
-		}
-		Logger.trace("Signature layout updated, scaling={}", scaling);
-	}
-
 	@Override
 	public Pane rootPane() {
 		return layers;
@@ -228,6 +194,44 @@ public class GamePage extends CanvasContainer implements Page {
 		} else {
 			sceneContext.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
 		}
+	}
+
+	// Signature stuff
+
+	private void createSignature() {
+		var remake = new Text("Remake (2023) by ");
+		remake.setFill(Color.WHEAT);
+		remake.setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
+
+		var author = new Text("Armin Reichert");
+		author.setFill(Color.WHEAT);
+		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
+
+		signature = new TextFlow(remake, author);
+
+		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
+		fadeIn.setFromValue(0);
+		fadeIn.setToValue(1);
+
+		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
+		fadeOut.setFromValue(1);
+		fadeOut.setToValue(0);
+		//fadeOut.setDelay(Duration.seconds(10)); // for testing
+
+		signatureAnimation = new SequentialTransition(fadeIn, fadeOut);
+	}
+
+	protected void updateSignatureLayout() {
+		Text remake = (Text) signature.getChildren().get(0);
+		Text author = (Text) signature.getChildren().get(1);
+		remake.setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
+		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		signature.setTranslateX((canvasContainer.getWidth() - signature.getWidth()) * 0.5);
+		switch (sceneContext.gameVariant()) {
+			case MS_PACMAN -> signature.setTranslateY(40 * scaling); // TODO fixme
+			case PACMAN    -> signature.setTranslateY(28 * scaling); // TODO fixme
+		}
+		Logger.trace("Signature layout updated, scaling={}", scaling);
 	}
 
 	// Help Info stuff
