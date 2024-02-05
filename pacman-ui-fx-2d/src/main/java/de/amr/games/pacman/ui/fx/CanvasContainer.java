@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui.fx;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -19,7 +21,7 @@ public class CanvasContainer {
 	protected final Canvas canvas = new Canvas();
 
 	protected double minScaling = 1.0;
-	protected double scaling = 1.0;
+	private final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 	protected double unscaledCanvasWidth = 300;
 	protected double unscaledCanvasHeight = 400;
 	protected Color canvasBorderColor = Color.WHITE;
@@ -30,8 +32,16 @@ public class CanvasContainer {
 		canvasLayer.setCenter(canvasContainer);
 		canvasContainer.setCenter(canvas);
 		layers.getChildren().add(canvasLayer);
-		canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(scaling, false));
-		canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(scaling, false));
+		canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
+		canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
+	}
+
+	public double getScaling() {
+		return scalingPy.get();
+	}
+
+	public void setScaling(double scaling) {
+		scalingPy.set(scaling);
 	}
 
 	public StackPane getLayers() {
@@ -101,25 +111,25 @@ public class CanvasContainer {
 			Logger.error("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
 			return;
 		}
-		if (scaling == newScaling && !always) {
+		if (getScaling() == newScaling && !always) {
 			// avoid useless scaling
 			return;
 		}
-		scaling = newScaling;
+		setScaling(newScaling);
 
-		canvas.setWidth(unscaledCanvasWidth * scaling);
-		canvas.setHeight(unscaledCanvasHeight * scaling);
+		canvas.setWidth(unscaledCanvasWidth * getScaling());
+		canvas.setHeight(unscaledCanvasHeight * getScaling());
 
 		if (canvasBorderEnabled) {
-			double w = Math.round((unscaledCanvasWidth + 25) * scaling);
-			double h = Math.round((unscaledCanvasHeight + 15) * scaling);
+			double w = Math.round((unscaledCanvasWidth + 25) * getScaling());
+			double h = Math.round((unscaledCanvasHeight + 15) * getScaling());
 			var roundedRect = new Rectangle(w, h);
-			roundedRect.setArcWidth(26 * scaling);
-			roundedRect.setArcHeight(26 * scaling);
+			roundedRect.setArcWidth(26 * getScaling());
+			roundedRect.setArcHeight(26 * getScaling());
 			canvasContainer.setClip(roundedRect);
 
 			double borderWidth = Math.max(5, Math.ceil(h / 55));
-			double cornerRadius = Math.ceil(10 * scaling);
+			double cornerRadius = Math.ceil(10 * getScaling());
 			var roundedBorder = new Border(
 				new BorderStroke(canvasBorderColor,
 					BorderStrokeStyle.SOLID,
@@ -127,13 +137,13 @@ public class CanvasContainer {
 					new BorderWidths(borderWidth)));
 			canvasContainer.setBorder(roundedBorder);
 			resizeRegion(canvasContainer, w, h);
-			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px", scaling,
-				canvas.getWidth(), canvas.getHeight(), borderWidth);
+			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px",
+				getScaling(), canvas.getWidth(), canvas.getHeight(), borderWidth);
 		} else {
 			canvasContainer.setBorder(null);
 			resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
-			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, no border", scaling,
-				canvas.getWidth(), canvas.getHeight());
+			Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, no border",
+				getScaling(), canvas.getWidth(), canvas.getHeight());
 		}
 	}
 }

@@ -61,7 +61,7 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	protected void updateHelpIconLayout() {
-		double size = Math.ceil(12 * scaling);
+		double size = Math.ceil(12 * getScaling());
 		var icon = switch (sceneContext.gameVariant()) {
 			case MS_PACMAN -> sceneContext.theme().image("mspacman.helpButton.icon");
 			case PACMAN    -> sceneContext.theme().image("pacman.helpButton.icon");
@@ -69,10 +69,10 @@ public class GamePage extends CanvasContainer implements Page {
 		helpIcon.setImage(icon);
 		helpIcon.setFitHeight(size);
 		helpIcon.setFitWidth(size);
-		helpIcon.setTranslateX(unscaledCanvasWidth * scaling);
-		helpIcon.setTranslateY(10 * scaling);
+		helpIcon.setTranslateX(unscaledCanvasWidth * getScaling());
+		helpIcon.setTranslateY(10 * getScaling());
 		helpIcon.setVisible(isHelpIconVisible());
-		Logger.trace("Updated help icon, scaling: {}", scaling);
+		Logger.trace("Updated help icon, scaling: {}", getScaling());
 	}
 
 	protected boolean isHelpIconVisible() {
@@ -90,7 +90,7 @@ public class GamePage extends CanvasContainer implements Page {
 		updateSignatureLayout();
 		sceneContext.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
-				gameScene2D.setScaling(scaling);
+				gameScene2D.setScaling(getScaling());
 			}
 		});
 	}
@@ -120,7 +120,7 @@ public class GamePage extends CanvasContainer implements Page {
 		helpIcon.setVisible(isHelpIconVisible());
 		showDebugBorders(PY_SHOW_DEBUG_INFO.get());
 
-		rescale(scaling, true);
+		rescale(getScaling(), true);
 	}
 
 	protected void showDebugBorders(boolean on)  {
@@ -201,11 +201,11 @@ public class GamePage extends CanvasContainer implements Page {
 	private void createSignature() {
 		var remake = new Text("Remake (2023) by ");
 		remake.setFill(Color.WHEAT);
-		remake.setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
+		remake.setFont(Font.font("Helvetica", Math.floor(10 * getScaling())));
 
 		var author = new Text("Armin Reichert");
 		author.setFill(Color.WHEAT);
-		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * getScaling())));
 
 		signature = new TextFlow(remake, author);
 
@@ -224,14 +224,14 @@ public class GamePage extends CanvasContainer implements Page {
 	protected void updateSignatureLayout() {
 		Text remake = (Text) signature.getChildren().get(0);
 		Text author = (Text) signature.getChildren().get(1);
-		remake.setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		remake.setFont(Font.font("Helvetica", Math.floor(10 * getScaling())));
+		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * getScaling())));
 		signature.setTranslateX((canvasContainer.getWidth() - signature.getWidth()) * 0.5);
 		switch (sceneContext.gameVariant()) {
-			case MS_PACMAN -> signature.setTranslateY(40 * scaling); // TODO fixme
-			case PACMAN    -> signature.setTranslateY(28 * scaling); // TODO fixme
+			case MS_PACMAN -> signature.setTranslateY(40 * getScaling()); // TODO fixme
+			case PACMAN    -> signature.setTranslateY(28 * getScaling()); // TODO fixme
 		}
-		Logger.trace("Signature layout updated, scaling={}", scaling);
+		Logger.trace("Signature layout updated, scaling={}", getScaling());
 	}
 
 	// Help Info stuff
@@ -292,10 +292,10 @@ public class GamePage extends CanvasContainer implements Page {
 		var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
 			? Color.rgb(255, 0, 0, 0.8)
 			: Color.rgb(33, 33, 255, 0.8);
-		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * scaling));
+		var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
 		var pane = currentHelpInfo().createPane(bgColor, font);
-		helpInfoPopUp.setTranslateX(10 * scaling);
-		helpInfoPopUp.setTranslateY(30 * scaling);
+		helpInfoPopUp.setTranslateX(10 * getScaling());
+		helpInfoPopUp.setTranslateY(30 * getScaling());
 		helpInfoPopUp.setContent(pane);
 		helpInfoPopUp.show(Duration.seconds(1.5));
 	}
