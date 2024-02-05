@@ -104,10 +104,10 @@ public class GamePage3D extends GamePage {
 	public void onGameSceneChanged(GameScene newGameScene) {
 		contextMenu.hide();
 		if (isCurrentGameScene3D()) {
-			helpIcon.setVisible(false);
 			showDebugBorders(false);
 			updateBackground3D();
 			updateDashboardLayer();
+			updateHelpIcon();
 			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
 				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());

@@ -40,15 +40,16 @@ public class GamePage extends CanvasContainer implements Page {
 	protected final FlashMessageView flashMessageLayer = new FlashMessageView();
 	protected final Pane popupLayer = new Pane();
 	protected final FadingPane helpInfoPopUp = new FadingPane();
-	protected final ImageView helpIcon = new ImageView();
-	protected TextFlow signature;
-	protected Transition signatureAnimation;
+	private ImageView helpIcon;
+	private TextFlow signature;
+	private Transition signatureAnimation;
 
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
-		helpIcon.setCursor(Cursor.HAND);
-		helpIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
+
+		createHelpIcon();
 		createSignature();
+
 		popupLayer.getChildren().addAll(helpIcon, signature, helpInfoPopUp);
 		layers.getChildren().addAll(popupLayer, flashMessageLayer);
 		layers.setOnKeyPressed(this::handleKeyPressed);
@@ -61,7 +62,15 @@ public class GamePage extends CanvasContainer implements Page {
 		return layers;
 	}
 
-	protected void updateHelpIconLayout() {
+	private void createHelpIcon() {
+		helpIcon = new ImageView();
+		helpIcon.setCursor(Cursor.HAND);
+		helpIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
+		scalingPy.addListener((py, ov, nv) -> updateHelpIcon());
+		updateHelpIcon();
+	}
+
+	protected void updateHelpIcon() {
 		double size = Math.ceil(12 * getScaling());
 		var icon = switch (sceneContext.gameVariant()) {
 			case MS_PACMAN -> sceneContext.theme().image("mspacman.helpButton.icon");
@@ -87,7 +96,6 @@ public class GamePage extends CanvasContainer implements Page {
 	protected void rescale(double newScaling, boolean always) {
 		super.rescale(newScaling, always);
 		resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
-		updateHelpIconLayout();
 		sceneContext.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
 				gameScene2D.setScaling(getScaling());
@@ -108,7 +116,6 @@ public class GamePage extends CanvasContainer implements Page {
 			}
 		}
 		if (newGameScene == config.get("intro")) {
-			signatureAnimation.setDelay(Duration.seconds(3));
 			signatureAnimation.play();
 		} else {
 			signatureAnimation.stop();
@@ -117,7 +124,9 @@ public class GamePage extends CanvasContainer implements Page {
 		if (newGameScene instanceof GameScene2D scene2D) {
 			scene2D.setCanvas(canvas);
 		}
-		helpIcon.setVisible(isHelpIconVisible());
+
+		updateHelpIcon();
+
 		showDebugBorders(PY_SHOW_DEBUG_INFO.get());
 
 		rescale(getScaling(), true);
@@ -225,6 +234,7 @@ public class GamePage extends CanvasContainer implements Page {
 		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
 		fadeIn.setFromValue(0);
 		fadeIn.setToValue(1);
+		fadeIn.setDelay(Duration.seconds(3));
 
 		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
 		fadeOut.setFromValue(1);
