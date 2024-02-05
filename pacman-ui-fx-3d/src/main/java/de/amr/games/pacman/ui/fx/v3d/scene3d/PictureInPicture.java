@@ -21,17 +21,17 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PIP_MIN_HEIGHT;
  */
 public class PictureInPicture {
 
-	public final DoubleProperty heightPy = new SimpleDoubleProperty(PIP_MIN_HEIGHT) {
+	public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", PIP_MIN_HEIGHT) {
 		@Override
 		protected void invalidated() {
 			double scaling = get() / CANVAS_HEIGHT_UNSCALED;
-			playScene2D.canvas().setWidth(CANVAS_WIDTH_UNSCALED * scaling);
-			playScene2D.canvas().setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
+			canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
+			canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
 			playScene2D.setScaling(scaling);
 		}
 	};
 
-	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
+	public final DoubleProperty opacityPy = new SimpleDoubleProperty(this, "opacity", 1.0);
 
 	private final Canvas canvas;
 	private final PlayScene2D playScene2D;
