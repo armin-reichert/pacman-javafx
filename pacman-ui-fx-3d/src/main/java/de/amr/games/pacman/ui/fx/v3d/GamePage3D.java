@@ -49,14 +49,17 @@ public class GamePage3D extends GamePage {
 		dashboardLayer = new BorderPane();
 		dashboardLayer.setLeft(dashboard);
 		dashboardLayer.setRight(pip.root());
-		layers.getChildren().add(dashboardLayer);
 
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
+
+		getLayersContainer().getChildren().add(dashboardLayer);
 
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
 		PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
 		dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
+
+		updateDashboardLayer();
 	}
 
 	private GamePageContextMenu createContextMenu(Scene parentScene) {
@@ -106,30 +109,30 @@ public class GamePage3D extends GamePage {
 		if (isCurrentGameScene3D()) {
 			updateBackground3D();
 			updateDashboardLayer();
-			updateHelpIcon();
+			updateHelpButton();
 			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
-				layers.addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());
+				getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());
 			}
-			layers.getChildren().set(0, newGameScene.root());
+			getLayersContainer().getChildren().set(0, newGameScene.root());
 		} else {
-			layers.getChildren().set(0, canvasLayer);
+			getLayersContainer().getChildren().set(0, canvasLayer);
 			super.onGameSceneChanged(newGameScene);
 		}
 	}
 
 	private void updateDashboardLayer() {
 		dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
-		layers.requestFocus();
+		getLayersContainer().requestFocus();
 	}
 
 	private void updateBackground3D() {
 		if (isCurrentGameScene3D()) {
 			if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				layers.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+				getLayersContainer().setBackground(ResourceManager.coloredBackground(Color.BLACK));
 			} else {
 				var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-				layers.setBackground(sceneContext.theme().background(wallpaperKey));
+				getLayersContainer().setBackground(sceneContext.theme().background(wallpaperKey));
 			}
 		}
 	}
@@ -166,10 +169,4 @@ public class GamePage3D extends GamePage {
 			super.handleKeyboardInput();
 		}
 	}
-
-	@Override
-	protected boolean isHelpIconVisible() {
-		return !isCurrentGameScene3D() && super.isHelpIconVisible();
-	}
-
 }

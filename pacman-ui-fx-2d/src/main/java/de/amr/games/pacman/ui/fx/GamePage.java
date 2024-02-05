@@ -19,6 +19,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -40,18 +41,18 @@ public class GamePage extends CanvasContainer implements Page {
 	protected final FlashMessageView flashMessageLayer = new FlashMessageView();
 	protected final Pane popupLayer = new Pane();
 	protected final FadingPane helpInfoPopUp = new FadingPane();
-	private ImageView helpIcon;
+	private BorderPane helpButton;
 	private TextFlow signature;
 	private Transition signatureAnimation;
 
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
 
-		createHelpIcon();
+		createHelpButton();
 		createSignature();
 		createDebugInfoBindings();
 
-		popupLayer.getChildren().addAll(helpIcon, signature, helpInfoPopUp);
+		popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
 		layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
 		layersContainer.setOnKeyPressed(this::handleKeyPressed);
 		setSize(width, height);
@@ -62,31 +63,36 @@ public class GamePage extends CanvasContainer implements Page {
 		return layersContainer;
 	}
 
-	private void createHelpIcon() {
-		helpIcon = new ImageView();
-		helpIcon.setCursor(Cursor.HAND);
-		helpIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
-		scalingPy.addListener((py, ov, nv) -> updateHelpIcon());
-		updateHelpIcon();
+	private void createHelpButton() {
+		helpButton = new BorderPane();
+		helpButton.setCenter(new ImageView());
+		helpButton.setCursor(Cursor.HAND);
+		helpButton.setOnMouseClicked(e -> showHelpInfoPopUp());
+		scalingPy.addListener((py, ov, nv) -> updateHelpButton());
+		updateHelpButton();
 	}
 
-	protected void updateHelpIcon() {
+	protected void updateHelpButton() {
+		ImageView icon = (ImageView) helpButton.getCenter();
 		double size = Math.ceil(12 * getScaling());
-		var icon = switch (sceneContext.gameVariant()) {
-			case MS_PACMAN -> sceneContext.theme().image("mspacman.helpButton.icon");
-			case PACMAN    -> sceneContext.theme().image("pacman.helpButton.icon");
-		};
-		helpIcon.setImage(icon);
-		helpIcon.setFitHeight(size);
-		helpIcon.setFitWidth(size);
-		helpIcon.setTranslateX(unscaledCanvasWidth * getScaling());
-		helpIcon.setTranslateY(10 * getScaling());
-		helpIcon.setVisible(isHelpIconVisible());
+		var image = sceneContext.theme().image(switch(sceneContext.gameVariant()) {
+			case MS_PACMAN -> "mspacman.helpButton.icon";
+			case PACMAN    -> "pacman.helpButton.icon";
+		});
+		icon.setImage(image);
+		icon.setFitHeight(size);
+		icon.setFitWidth(size);
+		helpButton.setTranslateX(unscaledCanvasWidth * getScaling());
+		helpButton.setTranslateY(10 * getScaling());
+		helpButton.setVisible(isHelpButtonVisible());
 		Logger.trace("Updated help icon, scaling: {}", getScaling());
 	}
 
-	protected boolean isHelpIconVisible() {
+	protected boolean isHelpButtonVisible() {
 		if (sceneContext.currentGameScene().isEmpty()) {
+			return false;
+		}
+		if (!isCurrentGameScene2D()) {
 			return false;
 		}
 		var gameScene = sceneContext.currentGameScene().get();
@@ -124,7 +130,7 @@ public class GamePage extends CanvasContainer implements Page {
 		if (newGameScene instanceof GameScene2D scene2D) {
 			scene2D.setCanvas(canvas);
 		}
-		updateHelpIcon();
+		updateHelpButton();
 
 		rescale(getScaling(), true);
 	}
