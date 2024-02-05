@@ -33,21 +33,22 @@ public class PictureInPicture {
 
 	public final DoubleProperty opacityPy = new SimpleDoubleProperty(1.0);
 
+	private final Canvas canvas;
 	private final PlayScene2D playScene2D;
 
 	public PictureInPicture(GameSceneContext sceneContext) {
 		double h = heightPy.doubleValue();
 		double aspectRatio = (double) GameModel.TILES_X / GameModel.TILES_Y;
-		var canvas = new Canvas(h * aspectRatio, h);
+		canvas = new Canvas(h * aspectRatio, h);
+		canvas.opacityProperty().bind(opacityPy);
 		playScene2D = new PlayScene2D();
 		playScene2D.setCanvas(canvas);
 		playScene2D.setScoreVisible(true);
 		playScene2D.setContext(sceneContext);
-		root().opacityProperty().bind(opacityPy);
 	}
 
-	public Node root() {
-		return playScene2D.canvas();
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
 	public void draw() {

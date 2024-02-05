@@ -48,7 +48,7 @@ public class GamePage3D extends GamePage {
 
 		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
-		topLayer.setRight(pip.root());
+		topLayer.setRight(pip.getCanvas());
 
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
@@ -152,19 +152,19 @@ public class GamePage3D extends GamePage {
 		super.render();
 		contextMenu.updateState();
 		infoBoxes.forEach(InfoBox::update);
-		pip.root().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
+		pip.getCanvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
 		pip.draw();
 	}
 
 	@Override
 	protected void handleKeyboardInput() {
-		var actionHandler3D = (ActionHandler3D) sceneContext.actionHandler();
+		var actionHandler = (ActionHandler3D) sceneContext.actionHandler();
 		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
-			actionHandler3D.toggle2D3D();
+			actionHandler.toggle2D3D();
 		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
 			dashboard.setVisible(!dashboard.isVisible());
 		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
-			actionHandler3D.togglePipVisible();
+			actionHandler.togglePipVisible();
 		} else {
 			super.handleKeyboardInput();
 		}
