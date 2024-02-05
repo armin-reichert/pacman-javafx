@@ -12,6 +12,9 @@ import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.FadingPane;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -19,6 +22,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -35,17 +40,53 @@ public class GamePage extends CanvasContainer implements Page {
 	protected final Pane popupLayer = new Pane();
 	protected final FadingPane helpInfoPopUp = new FadingPane();
 	protected final ImageView helpIcon = new ImageView();
-	protected final Signature signature = new Signature("Remake (2023) by ", "Armin Reichert");
+	protected TextFlow signature;
+	protected Transition signatureAnimation;
 
 	public GamePage(GameSceneContext sceneContext, double width, double height) {
 		this.sceneContext = sceneContext;
 		helpIcon.setCursor(Cursor.HAND);
 		helpIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
-		popupLayer.getChildren().addAll(helpIcon, signature.root(), helpInfoPopUp);
+		createSignature();
+		popupLayer.getChildren().addAll(helpIcon, signature, helpInfoPopUp);
 		layers.getChildren().addAll(popupLayer, flashMessageLayer);
 		layers.setOnKeyPressed(this::handleKeyPressed);
 		PY_SHOW_DEBUG_INFO.addListener((py, ov, nv) -> showDebugBorders(nv));
 		setSize(width, height);
+	}
+
+	private void createSignature() {
+		var remake = new Text("Remake (2023) by ");
+		remake.setFill(Color.WHEAT);
+
+		var author = new Text("Armin Reichert");
+		author.setFill(Color.WHEAT);
+
+		signature = new TextFlow(remake, author);
+
+		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
+		fadeIn.setFromValue(0);
+		fadeIn.setToValue(1);
+
+		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
+		fadeOut.setFromValue(1);
+		fadeOut.setToValue(0);
+		//fadeOut.setDelay(Duration.seconds(10)); // for testing
+
+		signatureAnimation = new SequentialTransition(fadeIn, fadeOut);
+	}
+
+	protected void updateSignatureLayout() {
+		Text remake = (Text) signature.getChildren().get(0);
+		remake.setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
+		Text author = (Text) signature.getChildren().get(1);
+		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
+		signature.setTranslateX((canvasContainer.getWidth() - signature.getWidth()) * 0.5);
+		switch (sceneContext.gameVariant()) {
+			case MS_PACMAN -> signature.setTranslateY(40 * scaling); // TODO fixme
+			case PACMAN    -> signature.setTranslateY(28 * scaling); // TODO fixme
+		}
+		Logger.trace("Signature layout updated, scaling={}", scaling);
 	}
 
 	@Override
@@ -76,18 +117,6 @@ public class GamePage extends CanvasContainer implements Page {
 		return gameScene != sceneContext.sceneConfig().get("boot");
 	}
 
-	protected void updateSignatureLayout() {
-		signature.getText(0).setFont(Font.font("Helvetica", Math.floor(10 * scaling)));
-		signature.getText(1).setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * scaling)));
-		var textFlow = signature.root();
-		textFlow.setTranslateX((canvasContainer.getWidth() - textFlow.getWidth()) * 0.5);
-		switch (sceneContext.gameVariant()) {
-			case MS_PACMAN -> textFlow.setTranslateY(40 * scaling); // TODO fixme
-			case PACMAN    -> textFlow.setTranslateY(28 * scaling); // TODO fixme
-		}
-		Logger.trace("Signature layout updated, scaling={}", scaling);
-	}
-
 	protected void rescale(double newScaling, boolean always) {
 		super.rescale(newScaling, always);
 		resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
@@ -113,9 +142,11 @@ public class GamePage extends CanvasContainer implements Page {
 			}
 		}
 		if (newGameScene == config.get("intro")) {
-			signature.showAfterSeconds(3);
+			signatureAnimation.setDelay(Duration.seconds(3));
+			signatureAnimation.play();
 		} else {
-			signature.hide();
+			signatureAnimation.stop();
+			signature.setOpacity(0);
 		}
 		if (newGameScene instanceof GameScene2D scene2D) {
 			scene2D.setCanvas(canvas);
