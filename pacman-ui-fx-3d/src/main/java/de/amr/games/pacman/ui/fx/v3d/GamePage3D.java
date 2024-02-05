@@ -33,7 +33,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-	private final BorderPane dashboardLayer; // contains dashboard and picture-in-picture view
+	private final BorderPane topLayer; // contains dashboard and picture-in-picture view
 	private final PictureInPicture pip;
 	private final Pane dashboard;
 	private final GamePageContextMenu contextMenu;
@@ -46,20 +46,20 @@ public class GamePage3D extends GamePage {
 		contextMenu = createContextMenu(parentScene);
 		dashboard = createDashboard();
 
-		dashboardLayer = new BorderPane();
-		dashboardLayer.setLeft(dashboard);
-		dashboardLayer.setRight(pip.root());
+		topLayer = new BorderPane();
+		topLayer.setLeft(dashboard);
+		topLayer.setRight(pip.root());
 
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
-		getLayersContainer().getChildren().add(dashboardLayer);
+		getLayersContainer().getChildren().add(topLayer);
 
 		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
 		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
-		PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
-		dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
+		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
+		dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
-		updateDashboardLayer();
+		updateTopLayer();
 	}
 
 	private GamePageContextMenu createContextMenu(Scene parentScene) {
@@ -105,11 +105,7 @@ public class GamePage3D extends GamePage {
 
 	@Override
 	public void onGameSceneChanged(GameScene newGameScene) {
-		contextMenu.hide();
 		if (isCurrentGameScene3D()) {
-			updateBackground3D();
-			updateDashboardLayer();
-			updateHelpButton();
 			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
 				getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());
@@ -119,10 +115,14 @@ public class GamePage3D extends GamePage {
 			getLayersContainer().getChildren().set(0, canvasLayer);
 			super.onGameSceneChanged(newGameScene);
 		}
+		updateBackground3D();
+		updateHelpButton();
+		updateTopLayer();
+		contextMenu.hide();
 	}
 
-	private void updateDashboardLayer() {
-		dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
+	private void updateTopLayer() {
+		topLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
 		getLayersContainer().requestFocus();
 	}
 
