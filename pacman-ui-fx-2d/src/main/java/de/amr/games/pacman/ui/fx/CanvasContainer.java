@@ -20,8 +20,9 @@ public class CanvasContainer {
 	protected final BorderPane canvasContainer = new BorderPane();
 	protected final Canvas canvas = new Canvas();
 
+	public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+
 	protected double minScaling = 1.0;
-	private final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 	protected double unscaledCanvasWidth = 300;
 	protected double unscaledCanvasHeight = 400;
 	protected Color canvasBorderColor = Color.WHITE;

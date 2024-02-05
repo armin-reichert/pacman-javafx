@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -87,7 +88,6 @@ public class GamePage extends CanvasContainer implements Page {
 		super.rescale(newScaling, always);
 		resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
 		updateHelpIconLayout();
-		updateSignatureLayout();
 		sceneContext.currentGameScene().ifPresent(gameScene -> {
 			if (gameScene instanceof GameScene2D gameScene2D) {
 				gameScene2D.setScaling(getScaling());
@@ -201,13 +201,26 @@ public class GamePage extends CanvasContainer implements Page {
 	private void createSignature() {
 		var remake = new Text("Remake (2023) by ");
 		remake.setFill(Color.WHEAT);
-		remake.setFont(Font.font("Helvetica", Math.floor(10 * getScaling())));
+		remake.fontProperty().bind(Bindings.createObjectBinding(
+				() -> Font.font("Helvetica", Math.floor(10 * getScaling())), scalingPy));
 
 		var author = new Text("Armin Reichert");
 		author.setFill(Color.WHEAT);
-		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * getScaling())));
+		author.fontProperty().bind(Bindings.createObjectBinding(
+				() -> sceneContext.theme().font("font.handwriting", Math.floor(11 * getScaling())), scalingPy));
 
 		signature = new TextFlow(remake, author);
+
+		signature.translateXProperty().bind(Bindings.createDoubleBinding(
+			() -> (canvasContainer.getWidth() - signature.getWidth()) * 0.5, canvasContainer.widthProperty()
+		));
+
+		signature.translateYProperty().bind(Bindings.createDoubleBinding(
+			() -> switch(sceneContext.gameVariant()) {
+				case MS_PACMAN -> 40 * getScaling(); // TODO fixme
+				case PACMAN    -> 28 * getScaling(); // TODO fixme
+			}, scalingPy
+		));
 
 		var fadeIn = new FadeTransition(Duration.seconds(5), signature);
 		fadeIn.setFromValue(0);
@@ -216,22 +229,8 @@ public class GamePage extends CanvasContainer implements Page {
 		var fadeOut = new FadeTransition(Duration.seconds(1), signature);
 		fadeOut.setFromValue(1);
 		fadeOut.setToValue(0);
-		//fadeOut.setDelay(Duration.seconds(10)); // for testing
 
 		signatureAnimation = new SequentialTransition(fadeIn, fadeOut);
-	}
-
-	protected void updateSignatureLayout() {
-		Text remake = (Text) signature.getChildren().get(0);
-		Text author = (Text) signature.getChildren().get(1);
-		remake.setFont(Font.font("Helvetica", Math.floor(10 * getScaling())));
-		author.setFont(sceneContext.theme().font("font.handwriting", Math.floor(12 * getScaling())));
-		signature.setTranslateX((canvasContainer.getWidth() - signature.getWidth()) * 0.5);
-		switch (sceneContext.gameVariant()) {
-			case MS_PACMAN -> signature.setTranslateY(40 * getScaling()); // TODO fixme
-			case PACMAN    -> signature.setTranslateY(28 * getScaling()); // TODO fixme
-		}
-		Logger.trace("Signature layout updated, scaling={}", getScaling());
 	}
 
 	// Help Info stuff
