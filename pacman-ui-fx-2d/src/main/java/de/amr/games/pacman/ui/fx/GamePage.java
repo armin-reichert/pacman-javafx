@@ -55,45 +55,13 @@ public class GamePage extends CanvasContainer implements Page {
 		popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
 		layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
 		layersContainer.setOnKeyPressed(this::handleKeyPressed);
+
 		setSize(width, height);
 	}
 
 	@Override
 	public Pane rootPane() {
 		return layersContainer;
-	}
-
-	private void createHelpButton() {
-		helpButton = new BorderPane();
-		helpButton.setCenter(new ImageView());
-		helpButton.setCursor(Cursor.HAND);
-		helpButton.setOnMouseClicked(e -> showHelpInfoPopUp());
-		scalingPy.addListener((py, ov, nv) -> updateHelpButton());
-		updateHelpButton();
-	}
-
-	protected void updateHelpButton() {
-		ImageView imageView = (ImageView) helpButton.getCenter();
-		var image = sceneContext.theme().image(switch(sceneContext.gameVariant()) {
-			case MS_PACMAN -> "mspacman.helpButton.icon";
-			case PACMAN    -> "pacman.helpButton.icon";
-		});
-		double size = Math.ceil(12 * getScaling());
-		imageView.setImage(image);
-		imageView.setFitHeight(size);
-		imageView.setFitWidth(size);
-		helpButton.setTranslateX(unscaledCanvasWidth * getScaling());
-		helpButton.setTranslateY(10 * getScaling());
-		helpButton.setVisible(isHelpButtonVisible());
-		Logger.trace("Updated help icon, scaling: {}", getScaling());
-	}
-
-	protected boolean isHelpButtonVisible() {
-		if (sceneContext.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
-			return false;
-		}
-		var gameScene = sceneContext.currentGameScene().get();
-		return gameScene != sceneContext.sceneConfig().get("boot");
 	}
 
 	protected void rescale(double newScaling, boolean always) {
@@ -250,6 +218,39 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	// Help Info stuff
+
+	private void createHelpButton() {
+		helpButton = new BorderPane();
+		helpButton.setCenter(new ImageView());
+		helpButton.setCursor(Cursor.HAND);
+		helpButton.setOnMouseClicked(e -> showHelpInfoPopUp());
+		scalingPy.addListener((py, ov, nv) -> updateHelpButton());
+		updateHelpButton();
+	}
+
+	protected void updateHelpButton() {
+		ImageView imageView = (ImageView) helpButton.getCenter();
+		var image = sceneContext.theme().image(switch(sceneContext.gameVariant()) {
+			case MS_PACMAN -> "mspacman.helpButton.icon";
+			case PACMAN    -> "pacman.helpButton.icon";
+		});
+		double size = Math.ceil(12 * getScaling());
+		imageView.setImage(image);
+		imageView.setFitHeight(size);
+		imageView.setFitWidth(size);
+		helpButton.setTranslateX(unscaledCanvasWidth * getScaling());
+		helpButton.setTranslateY(10 * getScaling());
+		helpButton.setVisible(isHelpButtonVisible());
+		Logger.trace("Updated help icon, scaling: {}", getScaling());
+	}
+
+	protected boolean isHelpButtonVisible() {
+		if (sceneContext.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
+			return false;
+		}
+		var gameScene = sceneContext.currentGameScene().get();
+		return gameScene != sceneContext.sceneConfig().get("boot");
+	}
 
 	public class HelpInfo extends PageInfo {
 
