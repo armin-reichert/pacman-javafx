@@ -73,15 +73,15 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	protected void updateHelpButton() {
-		ImageView icon = (ImageView) helpButton.getCenter();
-		double size = Math.ceil(12 * getScaling());
+		ImageView imageView = (ImageView) helpButton.getCenter();
 		var image = sceneContext.theme().image(switch(sceneContext.gameVariant()) {
 			case MS_PACMAN -> "mspacman.helpButton.icon";
 			case PACMAN    -> "pacman.helpButton.icon";
 		});
-		icon.setImage(image);
-		icon.setFitHeight(size);
-		icon.setFitWidth(size);
+		double size = Math.ceil(12 * getScaling());
+		imageView.setImage(image);
+		imageView.setFitHeight(size);
+		imageView.setFitWidth(size);
 		helpButton.setTranslateX(unscaledCanvasWidth * getScaling());
 		helpButton.setTranslateY(10 * getScaling());
 		helpButton.setVisible(isHelpButtonVisible());
@@ -89,10 +89,7 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	protected boolean isHelpButtonVisible() {
-		if (sceneContext.currentGameScene().isEmpty()) {
-			return false;
-		}
-		if (!isCurrentGameScene2D()) {
+		if (sceneContext.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
 			return false;
 		}
 		var gameScene = sceneContext.currentGameScene().get();
