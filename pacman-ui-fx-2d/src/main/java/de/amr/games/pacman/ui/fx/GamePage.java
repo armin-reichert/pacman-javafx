@@ -54,7 +54,11 @@ public class GamePage extends CanvasContainer implements Page {
 
 		popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
 		layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
-		layersContainer.setOnKeyPressed(this::handleKeyPressed);
+		layersContainer.setOnKeyPressed(e -> {
+			Keyboard.handleKeyEvent(e);
+			handleKeyboardInput();
+			Keyboard.clearState();
+		});
 
 		setSize(width, height);
 	}
@@ -129,12 +133,6 @@ public class GamePage extends CanvasContainer implements Page {
 		});
 		flashMessageLayer.update();
 		popupLayer.setVisible(true);
-	}
-
-	protected void handleKeyPressed(KeyEvent keyEvent) {
-		Keyboard.handleKeyEvent(keyEvent);
-		handleKeyboardInput();
-		Keyboard.clearState();
 	}
 
 	protected void handleKeyboardInput() {
