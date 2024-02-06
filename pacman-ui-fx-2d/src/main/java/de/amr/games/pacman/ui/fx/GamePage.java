@@ -75,18 +75,16 @@ public class GamePage extends CanvasContainer implements Page {
 	}
 
 	public void onGameSceneChanged(GameScene newGameScene) {
-		var config = sceneContext.sceneConfig();
-
 		//TODO: find a better solution than adding/removing key handler, maybe adapter class?
 		if (sceneContext.gameController().getManualPacSteering() instanceof KeyboardSteering keyboardSteering) {
 			// if play scene gets active/inactive, add/remove key handler
-			if (newGameScene == config.get("play")) {
+			if (newGameScene == sceneContext.sceneConfig().get("play")) {
 				layersContainer.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			} else {
 				layersContainer.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
 			}
 		}
-		if (newGameScene == config.get("intro")) {
+		if (newGameScene == sceneContext.sceneConfig().get("intro")) {
 			signatureAnimation.play();
 		} else {
 			signatureAnimation.stop();
@@ -141,11 +139,10 @@ public class GamePage extends CanvasContainer implements Page {
 
 	protected void handleKeyboardInput() {
 		var actionHandler = sceneContext.actionHandler();
-		var gameState = sceneContext.gameState();
 		if (Keyboard.pressed(KEY_AUTOPILOT)) {
 			actionHandler.toggleAutopilot();
 		} else if (Keyboard.pressed(KEY_BOOT)) {
-			if (gameState != GameState.BOOT) {
+			if (sceneContext.gameState() != GameState.BOOT) {
 				actionHandler.reboot();
 			}
 		} else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
@@ -169,7 +166,7 @@ public class GamePage extends CanvasContainer implements Page {
 		} else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
 			actionHandler.resetSimulationSpeed();
 		} else if (Keyboard.pressed(KEY_QUIT)) {
-			if (gameState != GameState.BOOT && gameState != GameState.INTRO) {
+			if (sceneContext.gameState() != GameState.BOOT && sceneContext.gameState() != GameState.INTRO) {
 				actionHandler.restartIntro();
 			}
 		} else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
