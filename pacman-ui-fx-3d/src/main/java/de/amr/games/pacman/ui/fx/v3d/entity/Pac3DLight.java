@@ -25,7 +25,6 @@ public class Pac3DLight extends PointLight {
 	public void update() {
 		var pac = pac3D.pac();
 		boolean isVisible = pac.isVisible();
-		boolean isAlive = !pac.isDead();
 		boolean hasPower = pac.powerTimer().isRunning();
 		double radius = 0;
 		if (pac.powerTimer().duration() > 0) {
@@ -33,6 +32,6 @@ public class Pac3DLight extends PointLight {
 			radius = t * 6 * TS;
 		}
 		setMaxRange(hasPower ? 2 * TS + radius : 0);
-		setLightOn(pac3D.lightedPy.get() && isVisible && isAlive && hasPower);
+		setLightOn(pac3D.lightedPy.get() && isVisible && hasPower);
 	}
 }

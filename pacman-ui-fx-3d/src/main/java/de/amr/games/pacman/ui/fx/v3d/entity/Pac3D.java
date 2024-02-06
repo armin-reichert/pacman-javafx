@@ -213,17 +213,17 @@ public class Pac3D {
 		updatePosition();
 		turnTo(pac.moveDir());
 		updateVisibility();
-		walkingAnimation.hold();
+		walkingAnimation.stop();
 	}
 
 	public void update() {
-		if (pac.isDead()) {
-			walkingAnimation.hold();
+		if (pac.velocity().length() == 0) {
+			walkingAnimation.stop();
 		} else {
 			updatePosition();
 			updateVisibility();
 			turnTo(pac.moveDir());
-			walkingAnimation.walk();
+			walkingAnimation.play();
 		}
 	}
 

@@ -50,9 +50,9 @@ public class HeadBanging implements WalkingAnimation {
 	}
 
 	@Override
-	public void walk() {
+	public void play() {
 		if (pac.isStandingStill()) {
-			hold();
+			stop();
 			animation.getNode().setRotate(0);
 			return;
 		}
@@ -65,7 +65,7 @@ public class HeadBanging implements WalkingAnimation {
 	}
 
 	@Override
-	public void hold() {
+	public void stop() {
 		animation.stop();
 		animation.getNode().setRotationAxis(animation.getAxis());
 		animation.getNode().setRotate(0);

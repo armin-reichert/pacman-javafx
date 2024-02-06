@@ -11,9 +11,9 @@ import javafx.animation.Animation;
  */
 public interface WalkingAnimation {
 
-	void walk();
+	void play();
 
-	void hold();
+	void stop();
 
 	void setPowerWalking(boolean power);
 
