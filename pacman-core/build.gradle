@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'de.amr.games.pacman'
+version '1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    implementation 'org.tinylog:tinylog-api:2.7.0'
+    implementation 'org.tinylog:tinylog-impl:2.7.0'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+}
+
+repositories {
+    mavenCentral()
+}
