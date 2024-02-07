@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.javamodularity.moduleplugin' version '1.8.12'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '2.25.0'
+}
+
+group 'de.amr.games.pacman'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+application {
+    mainModule = 'de.amr.games.pacman.ui.fx'
+    mainClass = 'de.amr.games.pacman.ui.fx.Main'
+}
+
+javafx {
+    version = '17.0.6'
+    modules = ['javafx.controls', 'javafx.media']
+}
+
+dependencies {
+    implementation project(':pacman-core')
+    implementation 'org.tinylog:tinylog-api:2.7.0'
+    implementation 'org.tinylog:tinylog-impl:2.7.0'
+}
+
+jlink {
+    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'app'
+    }
+}
+
+jlinkZip {
+    group = 'distribution'
+}
