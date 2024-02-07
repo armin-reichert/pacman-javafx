@@ -9,34 +9,32 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
-repositories {
-    mavenCentral()
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
+sourceCompatibility = "17"
+targetCompatibility = "17"
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx'
     mainClass  = 'de.amr.games.pacman.ui.fx.Main'
 }
 
-javafx {
-    version = '21.0.2'
-    modules = ['javafx.controls', 'javafx.media']
-}
-
 dependencies {
     implementation project(':pacman-core')
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+
+javafx {
+    version = '21.0.2'
+    modules = ['javafx.controls', 'javafx.media']
 }
 
 jlink {

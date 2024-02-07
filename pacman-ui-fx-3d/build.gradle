@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    //id 'org.javamodularity.moduleplugin' version '1.8.12'
+    id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.beryx.jlink' version '3.0.1'
 }
@@ -9,28 +9,12 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
-repositories {
-    mavenCentral()
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
+sourceCompatibility = "17"
+targetCompatibility = "17"
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx.v3d'
     mainClass  = 'de.amr.games.pacman.ui.fx.v3d.Main'
-}
-
-javafx {
-    version = '21.0.2'
-    modules = ['javafx.controls', 'javafx.media']
 }
 
 dependencies {
@@ -38,6 +22,19 @@ dependencies {
     implementation project(':pacman-ui-fx-2d')
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+javafx {
+    version = '21.0.2'
+    modules = ['javafx.controls', 'javafx.media']
 }
 
 jlink {
