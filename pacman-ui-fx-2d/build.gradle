@@ -47,3 +47,7 @@ jlink {
 jlinkZip {
     group = 'distribution'
 }
+
+task prepareKotlinBuildScriptModel {
+    // WTF
+}
