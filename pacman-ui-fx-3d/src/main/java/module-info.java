@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-module de.amr.games.pacman.ui.fx3d {
+module de.amr.games.pacman.ui.fx.v3d {
 
 	requires javafx.graphics;
 	requires transitive javafx.controls;

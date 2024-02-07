@@ -25,7 +25,7 @@ tasks.withType(JavaCompile).configureEach {
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx'
-    mainClass = 'de.amr.games.pacman.ui.fx.Main'
+    mainClass  = 'de.amr.games.pacman.ui.fx.Main'
 }
 
 javafx {
