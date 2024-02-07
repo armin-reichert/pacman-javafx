@@ -52,6 +52,6 @@ jlinkZip {
     group = 'distribution'
 }
 
-task prepareKotlinBuildScriptModel {
+tasks.register('prepareKotlinBuildScriptModel') {
     // WTF
 }
