@@ -1,0 +1,7 @@
+READY state
+
+Tick 1:   "PLAYER ONE" appears, "READY!" appears
+Tick 130: "PLAYER ONE" disappears
+Tick 132: Guys appear
+Tick 248: "READY!" disappears
+Tick 249: Guys move
