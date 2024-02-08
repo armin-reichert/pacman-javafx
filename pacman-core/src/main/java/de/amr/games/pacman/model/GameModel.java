@@ -50,6 +50,7 @@ public class GameModel {
 	public static final byte    POINTS_ENERGIZER = 50;
 	public static final short   POINTS_ALL_GHOSTS_KILLED_IN_LEVEL = 12_000;
 	public static final short[] POINTS_GHOSTS_SEQUENCE = { 200, 400, 800, 1600 };
+	public static final short   EXTRA_LIFE_SCORE = 10000;
 	public static final short   BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
 	public static final short   PAC_POWER_FADES_TICKS = 2 * FPS - 1; // unsure
 
@@ -144,7 +145,6 @@ public class GameModel {
 	private final List<Byte> levelCounter;
 	private final Score score;
 	private final Score highScore;
-	private final short extraLifeScore;
 	private GameLevel level;
 	private short initialLives;
 	private short lives;
@@ -158,7 +158,6 @@ public class GameModel {
 		score = new Score();
 		highScore = new Score();
 		initialLives = 3;
-		extraLifeScore = 10000;
 	}
 
 	/**
@@ -327,7 +326,7 @@ public class GameModel {
 			highScore.setLevelNumber(level.number());
 			highScore.setDate(LocalDate.now());
 		}
-		if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
+		if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
 			lives += 1;
 			GameController.it().publishGameEvent(GameEventType.EXTRA_LIFE_WON);
 		}
