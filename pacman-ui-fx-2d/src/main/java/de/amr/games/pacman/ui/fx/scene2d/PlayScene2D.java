@@ -10,6 +10,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -145,7 +146,7 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
+		drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 		context.gameLevel().ifPresent(level -> level.upwardsBlockedTiles().forEach(tile -> {
 			// "No Trespassing" symbol
 			g.setFill(Color.RED);

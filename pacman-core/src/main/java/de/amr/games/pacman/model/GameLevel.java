@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -304,7 +305,7 @@ public class GameLevel {
 	public List<Vector2i> upwardsBlockedTiles() {
 		return switch (game.variant()) {
 			case MS_PACMAN -> Collections.emptyList();
-			case PACMAN    -> GameModel.PACMAN_RED_ZONE;
+			case PACMAN    -> ArcadeWorld.PACMAN_RED_ZONE;
 		};
 	}
 

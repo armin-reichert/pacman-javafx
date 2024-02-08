@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManPacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
@@ -94,7 +95,7 @@ public class PacManCutscene3 extends GameScene2D {
 
 	@Override
 	protected void drawSceneInfo() {
-		drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
+		drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 		var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
 		drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
 	}

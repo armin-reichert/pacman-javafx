@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.CANVAS_HEIGHT_UNSCALED;
@@ -38,7 +37,7 @@ public class PictureInPicture {
 
 	public PictureInPicture(GameSceneContext sceneContext) {
 		double h = heightPy.doubleValue();
-		double aspectRatio = (double) GameModel.TILES_X / GameModel.TILES_Y;
+		double aspectRatio = (double) ArcadeWorld.TILES_X / ArcadeWorld.TILES_Y;
 		canvas = new Canvas(h * aspectRatio, h);
 		canvas.opacityProperty().bind(opacityPy);
 		playScene2D = new PlayScene2D();

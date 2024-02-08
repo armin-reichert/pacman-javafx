@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class WorldTest {
 
 	@Test
 	public void testNullTileArg() {
-		var world = GameModel.createPacManWorld();
+		var world = ArcadeWorld.createPacManWorld();
 		assertThrows(NullPointerException.class, () -> world.insideBounds(null));
 		assertThrows(NullPointerException.class, () -> world.belongsToPortal(null));
 		assertThrows(NullPointerException.class, () -> world.isIntersection(null));
@@ -61,9 +62,9 @@ public class WorldTest {
 
 	@Test
 	public void testPacManWorld() {
-		var world = GameModel.createPacManWorld();
-		assertEquals(GameModel.TILES_Y, world.numRows());
-		assertEquals(GameModel.TILES_X, world.numCols());
+		var world = ArcadeWorld.createPacManWorld();
+		assertEquals(ArcadeWorld.TILES_Y, world.numRows());
+		assertEquals(ArcadeWorld.TILES_X, world.numCols());
 		assertEquals(4, world.energizerTiles().count());
 		assertEquals(244, world.tiles().filter(world::isFoodTile).count());
 		assertEquals(240, world.tiles().filter(world::isFoodTile).filter(not(world::isEnergizerTile)).count());
@@ -72,9 +73,9 @@ public class WorldTest {
 
 	@Test
 	public void testMsPacManWorld1() {
-		var world = GameModel.createMsPacManWorld(1);
-		assertEquals(GameModel.TILES_Y, world.numRows());
-		assertEquals(GameModel.TILES_X, world.numCols());
+		var world = ArcadeWorld.createMsPacManWorld(1);
+		assertEquals(ArcadeWorld.TILES_Y, world.numRows());
+		assertEquals(ArcadeWorld.TILES_X, world.numCols());
 		assertEquals(4, world.energizerTiles().count());
 		assertEquals(220 + 4, world.tiles().filter(world::isFoodTile).count());
 		assertEquals(220, world.tiles().filter(world::isFoodTile).filter(not(world::isEnergizerTile)).count());
@@ -83,9 +84,9 @@ public class WorldTest {
 
 	@Test
 	public void testMsPacManWorld2() {
-		var world = GameModel.createMsPacManWorld(2);
-		assertEquals(GameModel.TILES_Y, world.numRows());
-		assertEquals(GameModel.TILES_X, world.numCols());
+		var world = ArcadeWorld.createMsPacManWorld(2);
+		assertEquals(ArcadeWorld.TILES_Y, world.numRows());
+		assertEquals(ArcadeWorld.TILES_X, world.numCols());
 		assertEquals(4, world.energizerTiles().count());
 		assertEquals(240 + 4, world.tiles().filter(world::isFoodTile).count());
 		assertEquals(240, world.tiles().filter(world::isFoodTile).filter(not(world::isEnergizerTile)).count());
@@ -94,9 +95,9 @@ public class WorldTest {
 
 	@Test
 	public void testMsPacManWorld3() {
-		var world = GameModel.createMsPacManWorld(3);
-		assertEquals(GameModel.TILES_Y, world.numRows());
-		assertEquals(GameModel.TILES_X, world.numCols());
+		var world = ArcadeWorld.createMsPacManWorld(3);
+		assertEquals(ArcadeWorld.TILES_Y, world.numRows());
+		assertEquals(ArcadeWorld.TILES_X, world.numCols());
 		assertEquals(4, world.energizerTiles().count());
 		assertEquals(238 + 4, world.tiles().filter(world::isFoodTile).count());
 		assertEquals(238, world.tiles().filter(world::isFoodTile).filter(not(world::isEnergizerTile)).count());
@@ -105,9 +106,9 @@ public class WorldTest {
 
 	@Test
 	public void testMsPacManWorld4() {
-		var world = GameModel.createMsPacManWorld(4);
-		assertEquals(GameModel.TILES_Y, world.numRows());
-		assertEquals(GameModel.TILES_X, world.numCols());
+		var world = ArcadeWorld.createMsPacManWorld(4);
+		assertEquals(ArcadeWorld.TILES_Y, world.numRows());
+		assertEquals(ArcadeWorld.TILES_X, world.numCols());
 		assertEquals(4, world.energizerTiles().count());
 		assertEquals(234 + 4, world.tiles().filter(world::isFoodTile).count());
 		assertEquals(234, world.tiles().filter(world::isFoodTile).filter(not(world::isEnergizerTile)).count());
@@ -142,6 +143,6 @@ public class WorldTest {
 	@Test
 	public void testIllegalArcadeMapSize() {
 		byte[][] map = { { 0, 1, 2 }, { 1, 1, 1 }, { 2, 2, 2 } };
-		assertThrows(IllegalArgumentException.class, () -> GameModel.createArcadeWorld(map));
+		assertThrows(IllegalArgumentException.class, () -> ArcadeWorld.createArcadeWorld(map));
 	}
 }

@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.lib.Score;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
@@ -133,7 +133,7 @@ public abstract class GameScene2D implements GameScene {
 	 * Draws additional scene info, e.g. tile structure or debug info.
 	 */
 	protected void drawSceneInfo() {
-		drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
+		drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
 	}
 
 	protected void clearCanvas() {
@@ -156,8 +156,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawLevelCounter() {
-		double x = t(GameModel.TILES_X - 4);
-		double y = t( GameModel.TILES_Y - 2);
+		double x = t(ArcadeWorld.TILES_X - 4);
+		double y = t( ArcadeWorld.TILES_Y - 2);
 		for (byte symbol : context.game().levelCounter()) {
 			var sprite = switch (context.gameVariant()) {
 				case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
@@ -177,7 +177,7 @@ public abstract class GameScene2D implements GameScene {
 			case PACMAN    -> context.<PacManSpriteSheet>spriteSheet().livesCounterSprite();
 		};
 		var x = TS * 2;
-		var y = TS * (GameModel.TILES_Y - 2);
+		var y = TS * (ArcadeWorld.TILES_Y - 2);
 		int maxLives = 5;
 		for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
 			drawSprite(sprite, x + TS * (2 * i), y);

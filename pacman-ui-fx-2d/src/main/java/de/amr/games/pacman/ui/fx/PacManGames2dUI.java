@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
 import de.amr.games.pacman.ui.fx.rendering2d.*;
 import de.amr.games.pacman.ui.fx.scene2d.*;
@@ -76,8 +77,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	public static final KeyCodeCombination KEY_BOOT              = just(KeyCode.F3);
 	public static final KeyCodeCombination KEY_FULLSCREEN        = just(KeyCode.F11);
 
-	public static final int CANVAS_WIDTH_UNSCALED  = GameModel.TILES_X * Globals.TS; // 28*8 = 224
-	public static final int CANVAS_HEIGHT_UNSCALED = GameModel.TILES_Y * Globals.TS; // 36*8 = 288
+	public static final int CANVAS_WIDTH_UNSCALED  = ArcadeWorld.TILES_X * Globals.TS; // 28*8 = 224
+	public static final int CANVAS_HEIGHT_UNSCALED = ArcadeWorld.TILES_Y * Globals.TS; // 36*8 = 288
 
 	public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.test;
 
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -37,11 +37,11 @@ public class FloorPlanGeneration {
 			DIR.mkdir();
 		}
 		Stream.of(8, 4, 2, 1).forEach(res -> {
-			createFloorPlan(GameModel.createPacManWorld(),    file(PACMAN_PATTERN,    1, res), res);
-			createFloorPlan(GameModel.createMsPacManWorld(1), file(MS_PACMAN_PATTERN, 1, res), res);
-			createFloorPlan(GameModel.createMsPacManWorld(2), file(MS_PACMAN_PATTERN, 2, res), res);
-			createFloorPlan(GameModel.createMsPacManWorld(3), file(MS_PACMAN_PATTERN, 3, res), res);
-			createFloorPlan(GameModel.createMsPacManWorld(4), file(MS_PACMAN_PATTERN, 4, res), res);
+			createFloorPlan(ArcadeWorld.createPacManWorld(),    file(PACMAN_PATTERN,    1, res), res);
+			createFloorPlan(ArcadeWorld.createMsPacManWorld(1), file(MS_PACMAN_PATTERN, 1, res), res);
+			createFloorPlan(ArcadeWorld.createMsPacManWorld(2), file(MS_PACMAN_PATTERN, 2, res), res);
+			createFloorPlan(ArcadeWorld.createMsPacManWorld(3), file(MS_PACMAN_PATTERN, 3, res), res);
+			createFloorPlan(ArcadeWorld.createMsPacManWorld(4), file(MS_PACMAN_PATTERN, 4, res), res);
 		});
 		Stream.of(8, 4, 2, 1).forEach(res -> {
 			assertTrue(file(PACMAN_PATTERN, 1, res).exists());
