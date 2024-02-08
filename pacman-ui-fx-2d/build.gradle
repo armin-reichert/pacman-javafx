@@ -9,9 +9,6 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
-sourceCompatibility = "17"
-targetCompatibility = "17"
-
 application {
     mainModule = 'de.amr.games.pacman.ui.fx'
     mainClass  = 'de.amr.games.pacman.ui.fx.Main'
@@ -31,6 +28,9 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 javafx {
     version = '21.0.2'
@@ -38,7 +38,7 @@ javafx {
 }
 
 jlink {
-    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+    imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'pacman-javafx-2d'
