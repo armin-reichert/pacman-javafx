@@ -27,38 +27,6 @@ import static de.amr.games.pacman.lib.NavigationPoint.np;
  */
 public class GameModel {
 
-	/**
-	 * In Ms. Pac-Man, there are 4 maps used by the 6 mazes. Up to level 13, the mazes are:
-	 * <ul>
-	 * <li>Maze #1: pink maze, white dots (level 1-2)
-	 * <li>Maze #2: light blue maze, yellow dots (level 3-5)
-	 * <li>Maze #3: orange maze, red dots (level 6-9)
-	 * <li>Maze #4: dark blue maze, white dots (level 10-13)
-	 * </ul>
-	 * From level 14 on, the maze alternates every 4th level between maze #5 and maze #6.
-	 * <ul>
-	 * <li>Maze #5: pink maze, cyan dots (same map as maze #3)
-	 * <li>Maze #6: orange maze, white dots (same map as maze #4)
-	 * </ul>
-	 * <p>
-	 */
-	public static int mazeNumberMsPacMan(int levelNumber) {
-		checkLevelNumber(levelNumber);
-		return switch (levelNumber) {
-			case 1, 2           -> 1;
-			case 3, 4, 5        -> 2;
-			case 6, 7, 8, 9     -> 3;
-			case 10, 11, 12, 13 -> 4;
-			default             -> (levelNumber - 14) % 8 < 4 ? 5 : 6;  // alternate between maze #5 and #6 every 4th level
-		};
-	}
-	
-	private static int mapNumberMsPacMan(int levelNumber) {
-		checkLevelNumber(levelNumber);
-		// from level 14, alternate between map #3 and #4 every 4th level
-		return levelNumber <= 13 ? mazeNumberMsPacMan(levelNumber) : mazeNumberMsPacMan(levelNumber) - 2;
-	}
-
 	public static final byte RED_GHOST    = 0;
 	public static final byte PINK_GHOST   = 1;
 	public static final byte CYAN_GHOST   = 2;
@@ -210,7 +178,7 @@ public class GameModel {
 	public void setLevel(int levelNumber) {
 		checkLevelNumber(levelNumber);
 		var world = switch (variant) {
-			case MS_PACMAN -> ArcadeWorld.createMsPacManWorld(mapNumberMsPacMan(levelNumber));
+			case MS_PACMAN -> ArcadeWorld.createMsPacManWorld(ArcadeWorld.mapNumberMsPacMan(levelNumber));
 			case PACMAN -> ArcadeWorld.createPacManWorld();
 		};
 		var levelData = LEVEL_DATA[dataRow(levelNumber)];
@@ -289,7 +257,7 @@ public class GameModel {
 	 * @return number of maze (not map) used in level, 1-based.
 	 */
 	public int mazeNumber(int levelNumber) {
-		return variant == GameVariant.MS_PACMAN ? mazeNumberMsPacMan(levelNumber) : 1;
+		return variant == GameVariant.MS_PACMAN ? ArcadeWorld.mazeNumberMsPacMan(levelNumber) : 1;
 	}
 
 	public boolean isPlaying() {
