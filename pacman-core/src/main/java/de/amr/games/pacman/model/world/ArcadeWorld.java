@@ -57,9 +57,11 @@ public interface ArcadeWorld {
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	};
+
 	List<Vector2i> PACMAN_RED_ZONE = List.of(
 			v2i(12, 14), v2i(15, 14),
 			v2i(12, 26), v2i(15, 26));
+
 	byte[][][] MS_PACMAN_MAPS = {
 		{
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -217,12 +219,14 @@ public interface ArcadeWorld {
 			{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 		}
 	};
+
 	Vector2i ARCADE_HOUSE_POSITION    = v2i(10, 15);
 	Vector2i ARCADE_HOUSE_SIZE        = v2i(8, 5);
 	Vector2f ARCADE_HOUSE_SEAT_LEFT   = halfTileRightOf(11, 17);
 	Vector2f ARCADE_HOUSE_SEAT_MIDDLE = halfTileRightOf(13, 17);
 	Vector2f ARCADE_HOUSE_SEAT_RIGHT  = halfTileRightOf(15, 17);
 	Door     ARCADE_HOUSE_DOOR        = new Door(v2i(13, 15), v2i(14, 15));
+
 	NavigationPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
 		np(12, 26), np(9, 26),  np(12, 32), np(15, 32), np(24, 29), np(21, 23),
 		np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),

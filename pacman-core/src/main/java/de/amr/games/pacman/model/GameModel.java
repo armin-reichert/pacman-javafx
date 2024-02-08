@@ -6,7 +6,10 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.RouteBasedSteering;
+import de.amr.games.pacman.lib.RuleBasedSteering;
+import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
 
@@ -18,7 +21,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.NavigationPoint.np;
 
 /**
  * Pac-Man / Ms. Pac-Man game model.
