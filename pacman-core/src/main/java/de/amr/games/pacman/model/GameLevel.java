@@ -127,7 +127,7 @@ public class GameLevel {
 			case CYAN_GHOST -> pac.tilesAheadBuggy(2).scaled(2).minus(ghosts[RED_GHOST].tile());
 			// Clyde/Sue: attacks directly but retreats if Pac is near
 			case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-				? scatterTarget(ORANGE_GHOST)
+				? ghostScatterTarget(ORANGE_GHOST)
 				: pac.tile();
 			default -> throw new IllegalGhostIDException(ghostID);
 		};
@@ -161,7 +161,7 @@ public class GameLevel {
 		};
 	}
 
-	public Vector2i scatterTarget(byte ghostID) {
+	public Vector2i ghostScatterTarget(byte ghostID) {
 		return switch (ghostID) {
 			case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
 			case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
@@ -404,7 +404,7 @@ public class GameLevel {
 		} else if (chasingPhase().isPresent() || cruiseElroy) {
 			ghostFollowsTarget(ghost, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		} else {
-			ghostFollowsTarget(ghost, scatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
+			ghostFollowsTarget(ghost, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		}
 	}
 
@@ -413,7 +413,7 @@ public class GameLevel {
 		if (chasingPhase().isPresent() || cruiseElroy) {
 			ghostFollowsTarget(ghost, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		} else {
-			ghostFollowsTarget(ghost, scatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
+			ghostFollowsTarget(ghost, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		}
 	}
 
