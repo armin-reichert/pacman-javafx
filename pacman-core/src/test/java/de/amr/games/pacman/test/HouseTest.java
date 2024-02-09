@@ -26,11 +26,11 @@ public class HouseTest {
 	@Test
 	public void testArcadeHouseProperties() {
 		var house = ArcadeWorld.createArcadeHouse();
-		assertEquals(ArcadeWorld.ARCADE_HOUSE_POSITION,    house.topLeftTile());
-		assertEquals(ArcadeWorld.ARCADE_HOUSE_SIZE,        house.size());
-		assertEquals(ArcadeWorld.ARCADE_HOUSE_DOOR,        house.door());
-		assertEquals(ArcadeWorld.ARCADE_HOUSE_SEAT_LEFT,   house.seat("left"));
-		assertEquals(ArcadeWorld.ARCADE_HOUSE_SEAT_MIDDLE, house.seat("middle"));
-		assertEquals(ArcadeWorld.ARCADE_HOUSE_SEAT_RIGHT,  house.seat("right"));
+		assertEquals(ArcadeWorld.HOUSE_POSITION,    house.topLeftTile());
+		assertEquals(ArcadeWorld.HOUSE_SIZE,        house.size());
+		assertEquals(ArcadeWorld.HOUSE_DOOR,        house.door());
+		assertEquals(ArcadeWorld.HOUSE_SEAT_LEFT,   house.seat("left"));
+		assertEquals(ArcadeWorld.HOUSE_SEAT_MIDDLE, house.seat("middle"));
+		assertEquals(ArcadeWorld.HOUSE_SEAT_RIGHT,  house.seat("right"));
 	}
 }

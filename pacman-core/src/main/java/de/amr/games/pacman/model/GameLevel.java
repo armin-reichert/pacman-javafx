@@ -98,24 +98,20 @@ public class GameLevel {
 
 		// Blinky: attacks Pac-Man directly
 		ghosts[RED_GHOST].setRevivalPosition(world.house().seat("middle"));
-		ghosts[RED_GHOST].setScatterTile(v2i(25, 0));
 		ghosts[RED_GHOST].setChasingTarget(pac::tile);
 
 		// Pinky: ambushes Pac-Man
 		ghosts[PINK_GHOST].setRevivalPosition(world.house().seat("middle"));
-		ghosts[PINK_GHOST].setScatterTile(v2i(2, 0));
 		ghosts[PINK_GHOST].setChasingTarget(() -> pac.tilesAheadBuggy(4));
 
 		// Inky: attacks from opposite side as Blinky
 		ghosts[CYAN_GHOST].setRevivalPosition(world.house().seat("left"));
-		ghosts[CYAN_GHOST].setScatterTile(v2i(27, 34));
 		ghosts[CYAN_GHOST].setChasingTarget(() -> pac.tilesAheadBuggy(2).scaled(2).minus(ghosts[RED_GHOST].tile()));
 
 		// Clyde/Sue: attacks directly but retreats if Pac is near
 		ghosts[ORANGE_GHOST].setRevivalPosition(world.house().seat("right"));
-		ghosts[ORANGE_GHOST].setScatterTile(v2i(0, 34));
 		ghosts[ORANGE_GHOST].setChasingTarget(() -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-				? ghosts[ORANGE_GHOST].scatterTile()
+				? scatterTile(ORANGE_GHOST)
 				: pac.tile());
 
 		ghostHouseManagement = new GhostHouseManagement(this);
@@ -142,6 +138,16 @@ public class GameLevel {
 			case PINK_GHOST   -> world.house().seat("middle");
 			case CYAN_GHOST   -> world.house().seat("left");
 			case ORANGE_GHOST -> world.house().seat("right");
+			default -> throw new IllegalGhostIDException(ghostID);
+		};
+	}
+
+	public Vector2i scatterTile(byte ghostID) {
+		return switch (ghostID) {
+			case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
+			case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
+			case CYAN_GHOST   -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
+			case ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
 			default -> throw new IllegalGhostIDException(ghostID);
 		};
 	}

@@ -31,7 +31,6 @@ public class Ghost extends Creature {
 	private GhostState state;
 	private Supplier<Vector2i> fnChasingTarget = () -> null;
 	private Vector2f revivalPosition = Vector2f.ZERO;
-	private Vector2i scatterTile = Vector2i.ZERO;
 	private byte killedIndex;
 
 	private GameLevel level;
@@ -49,7 +48,6 @@ public class Ghost extends Creature {
 			"id=" + id +
 			", state=" + state +
 			", revivalPosition=" + revivalPosition +
-			", scatterTile=" + scatterTile +
 			", killedIndex=" + killedIndex +
 			'}';
 	}
@@ -100,15 +98,6 @@ public class Ghost extends Creature {
 		this.revivalPosition = pos;
 	}
 
-	public Vector2i scatterTile() {
-		return scatterTile;
-	}
-
-	public void setScatterTile(Vector2i tile) {
-		checkNotNull(tile);
-		this.scatterTile = tile;
-	}
-
 	/**
 	 * @return Index <code>(0,1,2,3)</code> telling when this ghost was killed during Pac-Man power phase. If not killed,
 	 *         value is -1.
@@ -150,7 +139,7 @@ public class Ghost extends Creature {
 	 * While "scattering", a ghost aims to "his" maze corner and circles around the wall block in that corner.
 	 */
 	public void scatter() {
-		setTargetTile(scatterTile);
+		setTargetTile(level.scatterTile(id));
 		navigateTowardsTarget();
 		tryMoving();
 	}

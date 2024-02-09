@@ -71,22 +71,22 @@ public class PacManGameTest {
 			var redGhost = level.ghost(GameModel.RED_GHOST);
 			assertEquals(-1, redGhost.killedIndex());
 			assertNotEquals(Vector2f.ZERO, redGhost.revivalPosition());
-			assertNotEquals(Vector2i.ZERO, redGhost.scatterTile());
+			assertNotEquals(Vector2i.ZERO, level.scatterTile(redGhost.id()));
 
 			var pinkGhost = level.ghost(GameModel.PINK_GHOST);
 			assertEquals(-1, pinkGhost.killedIndex());
 			assertNotEquals(Vector2f.ZERO, pinkGhost.revivalPosition());
-			assertNotEquals(Vector2i.ZERO, pinkGhost.scatterTile());
+			assertNotEquals(Vector2i.ZERO, level.scatterTile(pinkGhost.id()));
 
 			var cyanGhost = level.ghost(GameModel.CYAN_GHOST);
 			assertEquals(-1, cyanGhost.killedIndex());
 			assertNotEquals(Vector2f.ZERO, cyanGhost.revivalPosition());
-			assertNotEquals(Vector2i.ZERO, cyanGhost.scatterTile());
+			assertNotEquals(Vector2i.ZERO, level.scatterTile(cyanGhost.id()));
 
 			var orangeGhost = level.ghost(GameModel.ORANGE_GHOST);
 			assertEquals(-1, orangeGhost.killedIndex());
 			assertNotEquals(Vector2f.ZERO, orangeGhost.revivalPosition());
-			assertNotEquals(Vector2i.ZERO, orangeGhost.scatterTile());
+			assertNotEquals(Vector2i.ZERO, level.scatterTile(orangeGhost.id()));
 		});
 	}
 

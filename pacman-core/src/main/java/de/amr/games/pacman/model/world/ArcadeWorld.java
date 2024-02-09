@@ -220,12 +220,18 @@ public interface ArcadeWorld {
 		}
 	};
 
-	Vector2i ARCADE_HOUSE_POSITION    = v2i(10, 15);
-	Vector2i ARCADE_HOUSE_SIZE        = v2i(8, 5);
-	Vector2f ARCADE_HOUSE_SEAT_LEFT   = halfTileRightOf(11, 17);
-	Vector2f ARCADE_HOUSE_SEAT_MIDDLE = halfTileRightOf(13, 17);
-	Vector2f ARCADE_HOUSE_SEAT_RIGHT  = halfTileRightOf(15, 17);
-	Door     ARCADE_HOUSE_DOOR        = new Door(v2i(13, 15), v2i(14, 15));
+	Vector2i HOUSE_POSITION = v2i(10, 15);
+	Vector2i HOUSE_SIZE = v2i(8, 5);
+	Vector2f HOUSE_SEAT_LEFT = halfTileRightOf(11, 17);
+	Vector2f HOUSE_SEAT_MIDDLE = halfTileRightOf(13, 17);
+	Vector2f HOUSE_SEAT_RIGHT = halfTileRightOf(15, 17);
+	Door HOUSE_DOOR = new Door(v2i(13, 15), v2i(14, 15));
+
+	Vector2i SCATTER_TARGET_LEFT_UPPER_CORNER  = v2i(2, 0);
+	Vector2i SCATTER_TARGET_RIGHT_UPPER_CORNER = v2i(25, 0);
+	Vector2i SCATTER_TARGET_LEFT_LOWER_CORNER  = v2i(0, 34);
+	Vector2i SCATTER_TARGET_RIGHT_LOWER_CORNER = v2i(27, 0);
+
 
 	NavigationPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
 		np(12, 26), np(9, 26),  np(12, 32), np(15, 32), np(24, 29), np(21, 23),
@@ -263,12 +269,12 @@ public interface ArcadeWorld {
 
 	static House createArcadeHouse() {
 		var house = new House();
-		house.setMinTile(ARCADE_HOUSE_POSITION);
-		house.setSize(ARCADE_HOUSE_SIZE);
-		house.setDoor(ARCADE_HOUSE_DOOR);
-		house.addSeat("left", ARCADE_HOUSE_SEAT_LEFT);
-		house.addSeat("middle", ARCADE_HOUSE_SEAT_MIDDLE);
-		house.addSeat("right", ARCADE_HOUSE_SEAT_RIGHT);
+		house.setMinTile(HOUSE_POSITION);
+		house.setSize(HOUSE_SIZE);
+		house.setDoor(HOUSE_DOOR);
+		house.addSeat("left", HOUSE_SEAT_LEFT);
+		house.addSeat("middle", HOUSE_SEAT_MIDDLE);
+		house.addSeat("right", HOUSE_SEAT_RIGHT);
 		return house;
 	}
 
