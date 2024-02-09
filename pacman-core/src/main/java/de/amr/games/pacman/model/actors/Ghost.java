@@ -27,7 +27,6 @@ public class Ghost extends Creature {
 
 	private final byte id;
 	private GhostState state;
-	private Vector2f revivalPosition = Vector2f.ZERO;
 	private byte killedIndex;
 
 	private GameLevel level;
@@ -44,7 +43,6 @@ public class Ghost extends Creature {
 		return "Ghost{" +
 			"id=" + id +
 			", state=" + state +
-			", revivalPosition=" + revivalPosition +
 			", killedIndex=" + killedIndex +
 			'}';
 	}
@@ -74,15 +72,6 @@ public class Ghost extends Creature {
 	@Override
 	public World world() {
 		return level.world();
-	}
-
-	public Vector2f revivalPosition() {
-		return revivalPosition;
-	}
-
-	public void setRevivalPosition(Vector2f pos) {
-		checkNotNull(pos);
-		this.revivalPosition = pos;
 	}
 
 	/**
@@ -401,7 +390,7 @@ public class Ghost extends Creature {
 	}
 
 	private void updateStateEnteringHouse() {
-		boolean atRevivalPosition = moveInsideHouse(world().house(), revivalPosition);
+		boolean atRevivalPosition = moveInsideHouse(world().house(), level.ghostRevivalPosition(id));
 		if (atRevivalPosition) {
 			setMoveAndWishDir(UP);
 			enterStateLocked();
@@ -417,4 +406,5 @@ public class Ghost extends Creature {
 			selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
 		}
 	}
+
 }

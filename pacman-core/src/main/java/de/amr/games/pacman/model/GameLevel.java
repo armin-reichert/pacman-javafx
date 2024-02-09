@@ -96,11 +96,6 @@ public class GameLevel {
 		};
 		ghosts().forEach(ghost -> ghost.setLevel(this));
 
-		ghosts[RED_GHOST].setRevivalPosition(world.house().seat("middle"));
-		ghosts[PINK_GHOST].setRevivalPosition(world.house().seat("middle"));
-		ghosts[CYAN_GHOST].setRevivalPosition(world.house().seat("left"));
-		ghosts[ORANGE_GHOST].setRevivalPosition(world.house().seat("right"));
-
 		ghostHouseManagement = new GhostHouseManagement(this);
 
 		bonusSymbols = new byte[2];
@@ -137,10 +132,19 @@ public class GameLevel {
 
 	public Vector2f initialGhostPosition(byte ghostID) {
 		return switch (ghostID) {
-			case RED_GHOST    -> world.house().door().entryPosition();
-			case PINK_GHOST   -> world.house().seat("middle");
-			case CYAN_GHOST   -> world.house().seat("left");
-			case ORANGE_GHOST -> world.house().seat("right");
+			case RED_GHOST    -> ArcadeWorld.HOUSE_DOOR.entryPosition();
+			case PINK_GHOST   -> ArcadeWorld.HOUSE_SEAT_MIDDLE;
+			case CYAN_GHOST   -> ArcadeWorld.HOUSE_SEAT_LEFT;
+			case ORANGE_GHOST -> ArcadeWorld.HOUSE_SEAT_RIGHT;
+			default -> throw new IllegalGhostIDException(ghostID);
+		};
+	}
+
+	public Vector2f ghostRevivalPosition(byte ghostID) {
+		return switch (ghostID) {
+			case RED_GHOST, PINK_GHOST -> ArcadeWorld.HOUSE_SEAT_MIDDLE;
+			case CYAN_GHOST   -> ArcadeWorld.HOUSE_SEAT_LEFT;
+			case ORANGE_GHOST -> ArcadeWorld.HOUSE_SEAT_RIGHT;
 			default -> throw new IllegalGhostIDException(ghostID);
 		};
 	}
@@ -368,7 +372,7 @@ public class GameLevel {
 
 	/**
 	 * Specifies the hunting behavior of the given ghost.
-	 * 
+	 *
 	 * @param ghost one of the ghosts
 	 */
 	public void doGhostHuntingAction(Ghost ghost) {
