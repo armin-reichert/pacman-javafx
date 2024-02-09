@@ -97,11 +97,15 @@ public class GameLevel {
 			new Ghost(ORANGE_GHOST, isMsPacManGame ? "Sue" : "Clyde")
 		};
 		ghosts().forEach(ghost -> {
-			ghost.setLevel(this);
+			ghost.setWorld(world);
+			ghost.setPac(pac);
 			ghost.setFnHuntingBehavior(isMsPacManGame ? this::huntInMsPacManGame : this::huntInPacManGame);
+			ghost.setFnFrightenedBehavior(this::frightenedGhost);
 			ghost.setBounceRange(
 				initialGhostPosition(ghost.id()).y() - HTS,
 			    initialGhostPosition(ghost.id()).y() + HTS);
+			ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
+			ghost.setFnIsSteeringAllowed(dir -> isSteeringAllowed(ghost, dir));
 		});
 
 		ghostHouseManagement = new GhostHouseManagement(this);
@@ -409,6 +413,14 @@ public class GameLevel {
 		}
 		ghost.navigateTowardsTarget();
 		ghost.tryMoving();
+	}
+
+	private void frightenedGhost(Ghost ghost) {
+		var speed = world().isTunnel(ghost.tile())
+			? ghostSpeedTunnelPercentage()
+			: ghostSpeedFrightenedPercentage();
+		ghost.setRelSpeed(speed);
+		ghost.roam();
 	}
 
 	/**

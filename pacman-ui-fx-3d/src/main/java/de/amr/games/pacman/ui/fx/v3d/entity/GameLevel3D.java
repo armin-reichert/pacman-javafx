@@ -132,7 +132,7 @@ public class GameLevel3D {
 	}
 
 	private Ghost3D createGhost3D(Ghost ghost, Model3D ghostModel3D, Theme theme) {
-		return new Ghost3D(ghost, ghostModel3D, theme, 8.5);
+		return new Ghost3D(level, ghost, ghostModel3D, theme, 8.5);
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus) {

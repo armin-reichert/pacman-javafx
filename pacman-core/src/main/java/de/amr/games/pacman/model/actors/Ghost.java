@@ -8,13 +8,13 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
@@ -30,9 +30,12 @@ public class Ghost extends Creature {
 	private final byte id;
 	private GhostState state;
 	private byte killedIndex;
-
-	private GameLevel level;
+	private Pac pac;
 	private Consumer<Ghost> fnHuntingBehavior;
+	private Consumer<Ghost> fnFrightenedBehavior;
+	private Predicate<Direction> fnIsSteeringAllowed;
+	private World world;
+	private Vector2f revivalPosition;
 	private double bounceMinY;
 	private double bounceMaxY;
 
@@ -66,22 +69,33 @@ public class Ghost extends Creature {
 		setKilledIndex(-1);
 	}
 
-	public void setLevel(GameLevel level) {
-		this.level = level;
-	}
-
-	public GameLevel level() {
-		return level;
-	}
-
 	@Override
 	public World world() {
-		return level.world();
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+
+	public void setPac(Pac pac) {
+		checkNotNull(pac);
+		this.pac = pac;
 	}
 
 	public void setBounceRange(double minY, double maxY) {
 		bounceMinY = minY;
 		bounceMaxY = maxY;
+	}
+
+	public void setRevivalPosition(Vector2f revivalPosition) {
+		checkNotNull(revivalPosition);
+		this.revivalPosition = revivalPosition;
+	}
+
+	public void setFnIsSteeringAllowed(Predicate<Direction> fnIsSteeringAllowed) {
+		checkNotNull(fnIsSteeringAllowed);
+		this.fnIsSteeringAllowed = fnIsSteeringAllowed;
 	}
 
 	/**
@@ -104,12 +118,17 @@ public class Ghost extends Creature {
 		this.fnHuntingBehavior = fnHuntingBehavior;
 	}
 
+	public void setFnFrightenedBehavior(Consumer<Ghost> fnFrightenedBehavior) {
+		checkNotNull(fnFrightenedBehavior);
+		this.fnFrightenedBehavior = fnFrightenedBehavior;
+	}
+
 	@Override
 	public boolean canAccessTile(Vector2i targetTile) {
 		checkTileNotNull(targetTile);
 		var currentTile = tile();
 		for (var dir : Direction.values()) {
-			if (targetTile.equals(currentTile.plus(dir.vector())) && !level.isSteeringAllowed(this, dir)) {
+			if (targetTile.equals(currentTile.plus(dir.vector())) && !fnIsSteeringAllowed.test(dir)) {
 				Logger.trace("Ghost {} cannot access tile {} because he cannot move %s at tile {}",
 					name(), targetTile, dir, currentTile);
 				return false;
@@ -219,7 +238,7 @@ public class Ghost extends Creature {
 	}
 
 	private boolean killable() {
-		return level.pac().powerTimer().isRunning() && killedIndex == -1;
+		return pac.powerTimer().isRunning() && killedIndex == -1;
 	}
 
 	// --- LEAVING_HOUSE ---
@@ -342,11 +361,7 @@ public class Ghost extends Creature {
 	}
 
 	private void updateStateFrightened() {
-		var speed = world().isTunnel(tile())
-			? level.ghostSpeedTunnelPercentage()
-			: level.ghostSpeedFrightenedPercentage();
-		setRelSpeed(speed);
-		roam();
+		fnFrightenedBehavior.accept(this);
 		selectFrightenedAnimation();
 	}
 
@@ -402,7 +417,7 @@ public class Ghost extends Creature {
 	}
 
 	private void updateStateEnteringHouse() {
-		boolean atRevivalPosition = moveInsideHouse(world().house(), level.ghostRevivalPosition(id));
+		boolean atRevivalPosition = moveInsideHouse(world().house(), revivalPosition);
 		if (atRevivalPosition) {
 			setMoveAndWishDir(UP);
 			enterStateLocked();
@@ -410,7 +425,7 @@ public class Ghost extends Creature {
 	}
 
 	private void selectFrightenedAnimation() {
-		var timer = level.pac().powerTimer();
+		var timer = pac.powerTimer();
 		if (timer.remaining() == GameModel.PAC_POWER_FADES_TICKS
 				|| timer.duration() < GameModel.PAC_POWER_FADES_TICKS && timer.tick() == 1) {
 			selectAnimation(GhostAnimations.GHOST_FLASHING);
@@ -418,5 +433,4 @@ public class Ghost extends Creature {
 			selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
 		}
 	}
-
 }

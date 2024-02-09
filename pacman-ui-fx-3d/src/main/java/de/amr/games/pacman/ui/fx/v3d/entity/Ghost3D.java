@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -52,6 +53,7 @@ public class Ghost3D {
 
 	public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
+	private final GameLevel level;
 	private final Ghost ghost;
 	private final Group root;
 	private final Group numberGroup;
@@ -66,11 +68,13 @@ public class Ghost3D {
 	private Image numberImage;
 	private Look currentLook;
 
-	public Ghost3D(Ghost ghost, Model3D model3D, Theme theme, double size) {
+	public Ghost3D(GameLevel level, Ghost ghost, Model3D model3D, Theme theme, double size) {
+		checkLevelNotNull(level);
 		requireNonNull(ghost);
 		requireNonNull(model3D);
 		requirePositive(size, "Ghost3D size must be positive but is %f");
 
+		this.level = level;
 		this.ghost = ghost;
 
 		coloredGhost3D = new ColoredGhost3D(model3D, theme, ghost.id(), size);
@@ -130,7 +134,7 @@ public class Ghost3D {
 		position.setY(ghost.center().y());
 		position.setZ(-5);
 		orientation.setAngle(Turn.angle(ghost.moveDir()));
-		root.setVisible(ghost.isVisible() && !outsideWorld(ghost.level().world()));
+		root.setVisible(ghost.isVisible() && !outsideWorld(level.world()));
 	}
 
 	private void updateAnimations() {
@@ -165,7 +169,7 @@ public class Ghost3D {
 		default -> Look.NORMAL;
 		};
 		if (currentLook != newLook) {
-			setLook(newLook, ghost.level().numFlashes());
+			setLook(newLook, level.numFlashes());
 		}
 	}
 
@@ -202,14 +206,14 @@ public class Ghost3D {
 	}
 
 	private Look normalOrFrightenedOrFlashingLook() {
-		if (ghost.level().pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
+		if (level.pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
 			return frightenedOrFlashingLook();
 		}
 		return Look.NORMAL;
 	}
 
 	private Look frightenedOrFlashingLook() {
-		return ghost.level().pac().isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
+		return level.pac().isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
 	}
 
 	private boolean outsideWorld(World world) {
