@@ -103,7 +103,7 @@ public class GameLevel {
 			ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
 			ghost.setBounceRange(
 				initialGhostPosition(ghost.id()).y() - HTS,
-			    initialGhostPosition(ghost.id()).y() + HTS);
+				initialGhostPosition(ghost.id()).y() + HTS);
 			ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
 			ghost.setFnIsSteeringAllowed(dir -> isSteeringAllowed(ghost, dir));
 		});
@@ -290,7 +290,7 @@ public class GameLevel {
 	public void setCruiseElroyState(int cruiseElroyState) {
 		if (cruiseElroyState < -2 || cruiseElroyState > 2) {
 			throw new IllegalArgumentException(
-					"Cruise Elroy state must be one of -2, -1, 0, 1, 2, but is " + cruiseElroyState);
+				"Cruise Elroy state must be one of -2, -1, 0, 1, 2, but is " + cruiseElroyState);
 		}
 		this.cruiseElroyState = (byte) cruiseElroyState;
 		Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
@@ -390,9 +390,9 @@ public class GameLevel {
 	 * </p>
 	 * <br>
 	 * <p>
-	 * 	Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
-	 * 	can be taken, it is stored and taken as soon as possible.
-	 * 	Otherwise, the remaining directions are checked in clockwise order.
+	 * Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
+	 * can be taken, it is stored and taken as soon as possible.
+	 * Otherwise, the remaining directions are checked in clockwise order.
 	 * </p>
 	 *
 	 * 	@see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
