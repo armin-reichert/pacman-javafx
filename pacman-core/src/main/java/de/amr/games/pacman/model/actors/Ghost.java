@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -29,7 +30,7 @@ public class Ghost extends Creature {
 	private final byte id;
 	private GhostState state;
 	private byte killedIndex;
-	private Pac pac;
+	private TickTimer pacPowerTimer;
 	private Consumer<Ghost> fnHuntingBehavior;
 	private Consumer<Ghost> fnFrightenedBehavior;
 	private Predicate<Direction> fnIsSteeringAllowed;
@@ -77,9 +78,9 @@ public class Ghost extends Creature {
 		this.world = world;
 	}
 
-	public void setPac(Pac pac) {
-		checkNotNull(pac);
-		this.pac = pac;
+	public void setPacPowerTimer(TickTimer timer) {
+		checkNotNull(timer);
+		this.pacPowerTimer = timer;
 	}
 
 	public void setBounceRange(double minY, double maxY) {
@@ -206,7 +207,7 @@ public class Ghost extends Creature {
 	}
 
 	private boolean killable() {
-		return pac.powerTimer().isRunning() && killedIndex == -1;
+		return pacPowerTimer.isRunning() && killedIndex == -1;
 	}
 
 	// --- LEAVING_HOUSE ---
@@ -393,11 +394,10 @@ public class Ghost extends Creature {
 	}
 
 	private void selectFrightenedAnimation() {
-		var timer = pac.powerTimer();
-		if (timer.remaining() == GameModel.PAC_POWER_FADES_TICKS
-				|| timer.duration() < GameModel.PAC_POWER_FADES_TICKS && timer.tick() == 1) {
+		if (pacPowerTimer.remaining() == GameModel.PAC_POWER_FADES_TICKS
+				|| pacPowerTimer.duration() < GameModel.PAC_POWER_FADES_TICKS && pacPowerTimer.tick() == 1) {
 			selectAnimation(GhostAnimations.GHOST_FLASHING);
-		} else if (timer.remaining() > GameModel.PAC_POWER_FADES_TICKS) {
+		} else if (pacPowerTimer.remaining() > GameModel.PAC_POWER_FADES_TICKS) {
 			selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
 		}
 	}
