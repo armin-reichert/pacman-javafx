@@ -257,11 +257,11 @@ public abstract class Creature extends Entity implements AnimationDirector {
 	 * Sets the new wish direction for reaching the target tile.
 	 */
 	public void navigateTowardsTarget() {
-		if (!newTileEntered && moved()) {
-			return; // we don't need no navigation, dim dit diddit diddit dim dit diddit diddit...
-		}
 		if (targetTile == null) {
 			return;
+		}
+		if (!newTileEntered && moved()) {
+			return; // we don't need no navigation, dim dit diddit diddit dim dit diddit diddit...
 		}
 		if (world().belongsToPortal(tile())) {
 			return; // inside portal, no navigation happens

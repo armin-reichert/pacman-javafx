@@ -14,8 +14,6 @@ import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.util.function.Supplier;
-
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -29,7 +27,6 @@ public class Ghost extends Creature {
 
 	private final byte id;
 	private GhostState state;
-	private Supplier<Vector2i> fnChasingTarget = () -> null;
 	private Vector2f revivalPosition = Vector2f.ZERO;
 	private byte killedIndex;
 
@@ -79,16 +76,6 @@ public class Ghost extends Creature {
 		return level.world();
 	}
 
-	/**
-	 * Sets the function that provides the target tile of this ghost when chasing Pac-Man.
-	 * 
-	 * @param fnChasingTarget function providing the chasing target tile
-	 */
-	public void setChasingTarget(Supplier<Vector2i> fnChasingTarget) {
-		checkNotNull(fnChasingTarget);
-		this.fnChasingTarget = fnChasingTarget;
-	}
-
 	public Vector2f revivalPosition() {
 		return revivalPosition;
 	}
@@ -133,24 +120,6 @@ public class Ghost extends Creature {
 	@Override
 	public boolean canReverse() {
 		return isNewTileEntered() && is(HUNTING_PAC, FRIGHTENED);
-	}
-
-	/**
-	 * While "scattering", a ghost aims to "his" maze corner and circles around the wall block in that corner.
-	 */
-	public void scatter() {
-		setTargetTile(level.scatterTile(id));
-		navigateTowardsTarget();
-		tryMoving();
-	}
-
-	/**
-	 * While chasing, a ghost aims toward the tile computed by his fnChasingTarget function.
-	 */
-	public void chase() {
-		setTargetTile(fnChasingTarget.get());
-		navigateTowardsTarget();
-		tryMoving();
 	}
 
 	/**

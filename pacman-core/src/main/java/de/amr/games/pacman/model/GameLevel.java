@@ -96,23 +96,10 @@ public class GameLevel {
 		};
 		ghosts().forEach(ghost -> ghost.setLevel(this));
 
-		// Blinky: attacks Pac-Man directly
 		ghosts[RED_GHOST].setRevivalPosition(world.house().seat("middle"));
-		ghosts[RED_GHOST].setChasingTarget(pac::tile);
-
-		// Pinky: ambushes Pac-Man
 		ghosts[PINK_GHOST].setRevivalPosition(world.house().seat("middle"));
-		ghosts[PINK_GHOST].setChasingTarget(() -> pac.tilesAheadBuggy(4));
-
-		// Inky: attacks from opposite side as Blinky
 		ghosts[CYAN_GHOST].setRevivalPosition(world.house().seat("left"));
-		ghosts[CYAN_GHOST].setChasingTarget(() -> pac.tilesAheadBuggy(2).scaled(2).minus(ghosts[RED_GHOST].tile()));
-
-		// Clyde/Sue: attacks directly but retreats if Pac is near
 		ghosts[ORANGE_GHOST].setRevivalPosition(world.house().seat("right"));
-		ghosts[ORANGE_GHOST].setChasingTarget(() -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-				? scatterTile(ORANGE_GHOST)
-				: pac.tile());
 
 		ghostHouseManagement = new GhostHouseManagement(this);
 
@@ -121,6 +108,22 @@ public class GameLevel {
 		bonusSymbols[1] = nextBonusSymbol();
 
 		Logger.trace("Game level {} ({}) created.", levelNumber, game.variant());
+	}
+
+	private Vector2i chasingTarget(byte ghostID) {
+		return switch (ghostID) {
+			// Blinky: attacks Pac-Man directly
+			case RED_GHOST -> pac.tile();
+			// Pinky: ambushes Pac-Man
+			case PINK_GHOST -> pac.tilesAheadBuggy(4);
+			// Inky: attacks from opposite side as Blinky
+			case CYAN_GHOST -> pac.tilesAheadBuggy(2).scaled(2).minus(ghosts[RED_GHOST].tile());
+			// Clyde/Sue: attacks directly but retreats if Pac is near
+			case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
+				? scatterTarget(ORANGE_GHOST)
+				: pac.tile();
+			default -> throw new IllegalGhostIDException(ghostID);
+		};
 	}
 
 	public Direction initialGhostDirection(byte ghostID) {
@@ -142,7 +145,7 @@ public class GameLevel {
 		};
 	}
 
-	public Vector2i scatterTile(byte ghostID) {
+	public Vector2i scatterTarget(byte ghostID) {
 		return switch (ghostID) {
 			case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
 			case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
@@ -380,17 +383,23 @@ public class GameLevel {
 				if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
 					ghost.roam();
 				} else if (chasingPhase().isPresent() || cruiseElroy) {
-					ghost.chase();
+					ghost.setTargetTile(chasingTarget(ghost.id()));
+					ghost.navigateTowardsTarget();
+					ghost.tryMoving();
 				} else {
-					ghost.scatter();
+					ghost.setTargetTile(scatterTarget(ghost.id()));
+					ghost.navigateTowardsTarget();
+					ghost.tryMoving();
 				}
 			}
 			case PACMAN -> {
 				if (chasingPhase().isPresent() || cruiseElroy) {
-					ghost.chase();
+					ghost.setTargetTile(chasingTarget(ghost.id()));
 				} else {
-					ghost.scatter();
+					ghost.setTargetTile(scatterTarget(ghost.id()));
 				}
+				ghost.navigateTowardsTarget();
+				ghost.tryMoving();
 			}
 		}
 	}
