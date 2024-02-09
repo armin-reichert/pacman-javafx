@@ -33,6 +33,8 @@ public class Ghost extends Creature {
 
 	private GameLevel level;
 	private Consumer<Ghost> fnHuntingBehavior;
+	private double bounceMinY;
+	private double bounceMaxY;
 
 	public Ghost(byte id, String name) {
 		super(name);
@@ -75,6 +77,11 @@ public class Ghost extends Creature {
 	@Override
 	public World world() {
 		return level.world();
+	}
+
+	public void setBounceRange(double minY, double maxY) {
+		bounceMinY = minY;
+		bounceMaxY = maxY;
 	}
 
 	/**
@@ -196,11 +203,9 @@ public class Ghost extends Creature {
 
 	private void updateStateLocked() {
 		if (insideHouse()) {
-			var minY = level.initialGhostPosition(id).y() - HTS;
-			var maxY = level.initialGhostPosition(id).y() + HTS;
-			if (pos_y <= minY) {
+			if (pos_y <= bounceMinY) {
 				setMoveAndWishDir(DOWN);
-			} else if (pos_y >= maxY) {
+			} else if (pos_y >= bounceMaxY) {
 				setMoveAndWishDir(UP);
 			}
 			setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);

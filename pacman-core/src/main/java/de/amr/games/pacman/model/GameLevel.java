@@ -99,6 +99,9 @@ public class GameLevel {
 		ghosts().forEach(ghost -> {
 			ghost.setLevel(this);
 			ghost.setFnHuntingBehavior(isMsPacManGame ? this::huntInMsPacManGame : this::huntInPacManGame);
+			ghost.setBounceRange(
+				initialGhostPosition(ghost.id()).y() - HTS,
+			    initialGhostPosition(ghost.id()).y() + HTS);
 		});
 
 		ghostHouseManagement = new GhostHouseManagement(this);
