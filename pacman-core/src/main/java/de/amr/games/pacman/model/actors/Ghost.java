@@ -14,6 +14,8 @@ import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
+import java.util.function.Consumer;
+
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -30,6 +32,7 @@ public class Ghost extends Creature {
 	private byte killedIndex;
 
 	private GameLevel level;
+	private Consumer<Ghost> fnHuntingBehavior;
 
 	public Ghost(byte id, String name) {
 		super(name);
@@ -89,6 +92,11 @@ public class Ghost extends Creature {
 		this.killedIndex = (byte) index;
 	}
 
+	public void setFnHuntingBehavior(Consumer<Ghost> fnHuntingBehavior) {
+		checkNotNull(fnHuntingBehavior);
+		this.fnHuntingBehavior = fnHuntingBehavior;
+	}
+
 	@Override
 	public boolean canAccessTile(Vector2i targetTile) {
 		checkTileNotNull(targetTile);
@@ -100,7 +108,7 @@ public class Ghost extends Creature {
 				return false;
 			}
 		}
-		if (level.world().house().door().occupies(targetTile)) {
+		if (world().house().door().occupies(targetTile)) {
 			return is(ENTERING_HOUSE, LEAVING_HOUSE);
 		}
 		return super.canAccessTile(targetTile);
@@ -312,8 +320,7 @@ public class Ghost extends Creature {
 	}
 
 	private void updateStateHuntingPac() {
-		setRelSpeed(level.huntingSpeedPercentage(this));
-		level.doGhostHuntingAction(this);
+		fnHuntingBehavior.accept(this);
 	}
 
 	// --- FRIGHTENED ---

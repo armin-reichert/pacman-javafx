@@ -94,7 +94,10 @@ public class GameLevel {
 			new Ghost(CYAN_GHOST, "Inky"),
 			new Ghost(ORANGE_GHOST, game.variant() == GameVariant.MS_PACMAN ? "Sue" : "Clyde")
 		};
-		ghosts().forEach(ghost -> ghost.setLevel(this));
+		ghosts().forEach(ghost -> {
+			ghost.setLevel(this);
+			ghost.setFnHuntingBehavior(this::hunt);
+		});
 
 		ghostHouseManagement = new GhostHouseManagement(this);
 
@@ -375,7 +378,8 @@ public class GameLevel {
 	 *
 	 * @param ghost one of the ghosts
 	 */
-	public void doGhostHuntingAction(Ghost ghost) {
+	private void hunt(Ghost ghost) {
+		ghost.setRelSpeed(huntingSpeedPercentage(ghost));
 		boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
 		switch (game.variant()) {
 			case MS_PACMAN -> {
