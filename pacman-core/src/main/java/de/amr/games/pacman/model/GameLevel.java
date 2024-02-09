@@ -85,18 +85,20 @@ public class GameLevel {
 		this.data        = data;
 		this.demoLevel   = demoLevel;
 
-		pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
+		boolean isMsPacManGame = game.variant() == GameVariant.MS_PACMAN;
+
+		pac = new Pac(isMsPacManGame ? "Ms. Pac-Man" : "Pac-Man");
 		pac.setLevel(this);
 
 		ghosts = new Ghost[] {
 			new Ghost(RED_GHOST,  "Blinky"),
 			new Ghost(PINK_GHOST, "Pinky"),
 			new Ghost(CYAN_GHOST, "Inky"),
-			new Ghost(ORANGE_GHOST, game.variant() == GameVariant.MS_PACMAN ? "Sue" : "Clyde")
+			new Ghost(ORANGE_GHOST, isMsPacManGame ? "Sue" : "Clyde")
 		};
 		ghosts().forEach(ghost -> {
 			ghost.setLevel(this);
-			ghost.setFnHuntingBehavior(this::hunt);
+			ghost.setFnHuntingBehavior(isMsPacManGame ? this::huntInMsPacManGame : this::huntInPacManGame);
 		});
 
 		ghostHouseManagement = new GhostHouseManagement(this);
@@ -373,43 +375,37 @@ public class GameLevel {
 		return huntingPhase;
 	}
 
-	/**
-	 * Specifies the hunting behavior of the given ghost.
-	 *
-	 * @param ghost one of the ghosts
-	 */
-	private void hunt(Ghost ghost) {
+	private void huntInMsPacManGame(Ghost ghost) {
 		ghost.setRelSpeed(huntingSpeedPercentage(ghost));
 		boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
-		switch (game.variant()) {
-			case MS_PACMAN -> {
-				/*
-				 * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
-				 * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
-				 * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
-				 */
-				if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-					ghost.roam();
-				} else if (chasingPhase().isPresent() || cruiseElroy) {
-					ghost.setTargetTile(chasingTarget(ghost.id()));
-					ghost.navigateTowardsTarget();
-					ghost.tryMoving();
-				} else {
-					ghost.setTargetTile(scatterTarget(ghost.id()));
-					ghost.navigateTowardsTarget();
-					ghost.tryMoving();
-				}
-			}
-			case PACMAN -> {
-				if (chasingPhase().isPresent() || cruiseElroy) {
-					ghost.setTargetTile(chasingTarget(ghost.id()));
-				} else {
-					ghost.setTargetTile(scatterTarget(ghost.id()));
-				}
-				ghost.navigateTowardsTarget();
-				ghost.tryMoving();
-			}
+		/*
+		 * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
+		 * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
+		 * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
+		 */
+		if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+			ghost.roam();
+		} else if (chasingPhase().isPresent() || cruiseElroy) {
+			ghost.setTargetTile(chasingTarget(ghost.id()));
+			ghost.navigateTowardsTarget();
+			ghost.tryMoving();
+		} else {
+			ghost.setTargetTile(scatterTarget(ghost.id()));
+			ghost.navigateTowardsTarget();
+			ghost.tryMoving();
 		}
+	}
+
+	private void huntInPacManGame(Ghost ghost) {
+		ghost.setRelSpeed(huntingSpeedPercentage(ghost));
+		boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
+		if (chasingPhase().isPresent() || cruiseElroy) {
+			ghost.setTargetTile(chasingTarget(ghost.id()));
+		} else {
+			ghost.setTargetTile(scatterTarget(ghost.id()));
+		}
+		ghost.navigateTowardsTarget();
+		ghost.tryMoving();
 	}
 
 	/**
