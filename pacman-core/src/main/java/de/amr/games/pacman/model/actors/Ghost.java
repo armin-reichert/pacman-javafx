@@ -145,37 +145,6 @@ public class Ghost extends Creature {
 		return isNewTileEntered() && is(HUNTING_PAC, FRIGHTENED);
 	}
 
-	/**
-	 * Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
-	 * can be taken, it is stored and taken as soon as possible.
-	 * Otherwise, the remaining directions are checked in clockwise order.
-	 *
-	 * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
-	 */
-	public void roam() {
-		if (!world().belongsToPortal(tile()) && (isNewTileEntered() || !moved())) {
-			setWishDir(chooseFrightenedDirection());
-		}
-		tryMoving();
-	}
-
-	private Direction chooseFrightenedDirection() {
-		Direction opposite = moveDir().opposite();
-		Direction dir = pseudoRandomDirection();
-		while (dir == opposite || !canAccessTile(tile().plus(dir.vector()))) {
-			dir = dir.succClockwise();
-		}
-		return dir;
-	}
-
-	private Direction pseudoRandomDirection() {
-		float rnd = Globals.randomFloat(0, 100);
-		if (rnd < 16.3) return UP;
-		if (rnd < 16.3 + 25.2) return RIGHT;
-		if (rnd < 16.3 + 25.2 + 28.5) return DOWN;
-		return LEFT;
-	}
-
 	// Here begins the state machine part
 
 	/** The current state of this ghost. */

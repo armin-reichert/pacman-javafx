@@ -99,8 +99,8 @@ public class GameLevel {
 		ghosts().forEach(ghost -> {
 			ghost.setWorld(world);
 			ghost.setPac(pac);
-			ghost.setFnHuntingBehavior(isMsPacManGame ? this::huntInMsPacManGame : this::huntInPacManGame);
-			ghost.setFnFrightenedBehavior(this::frightenedGhost);
+			ghost.setFnHuntingBehavior(isMsPacManGame ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
+			ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
 			ghost.setBounceRange(
 				initialGhostPosition(ghost.id()).y() - HTS,
 			    initialGhostPosition(ghost.id()).y() + HTS);
@@ -382,45 +382,74 @@ public class GameLevel {
 		return huntingPhase;
 	}
 
-	private void huntInMsPacManGame(Ghost ghost) {
-		ghost.setRelSpeed(huntingSpeedPercentage(ghost));
+	/**
+	 * <p>
+	 * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
+	 * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
+	 * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
+	 * </p>
+	 * <br>
+	 * <p>
+	 * 	Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
+	 * 	can be taken, it is stored and taken as soon as possible.
+	 * 	Otherwise, the remaining directions are checked in clockwise order.
+	 * </p>
+	 *
+	 * 	@see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
+	 */
+	private void ghostHuntsInMsPacManGame(Ghost ghost) {
 		boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
-		/*
-		 * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
-		 * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
-		 * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
-		 */
 		if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-			ghost.roam();
+			ghostRoamsThroughWorld(ghost);
 		} else if (chasingPhase().isPresent() || cruiseElroy) {
-			ghost.setTargetTile(chasingTarget(ghost.id()));
-			ghost.navigateTowardsTarget();
-			ghost.tryMoving();
+			ghostFollowsTarget(ghost, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		} else {
-			ghost.setTargetTile(scatterTarget(ghost.id()));
-			ghost.navigateTowardsTarget();
-			ghost.tryMoving();
+			ghostFollowsTarget(ghost, scatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		}
 	}
 
-	private void huntInPacManGame(Ghost ghost) {
-		ghost.setRelSpeed(huntingSpeedPercentage(ghost));
+	private void ghostHuntsInPacManGame(Ghost ghost) {
 		boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
 		if (chasingPhase().isPresent() || cruiseElroy) {
-			ghost.setTargetTile(chasingTarget(ghost.id()));
+			ghostFollowsTarget(ghost, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		} else {
-			ghost.setTargetTile(scatterTarget(ghost.id()));
+			ghostFollowsTarget(ghost, scatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
 		}
+	}
+
+	private void ghostFollowsTarget(Ghost ghost, Vector2i targetTile, byte relSpeed) {
+		ghost.setRelSpeed(relSpeed);
+		ghost.setTargetTile(targetTile);
 		ghost.navigateTowardsTarget();
 		ghost.tryMoving();
 	}
 
-	private void frightenedGhost(Ghost ghost) {
+	private void ghostRoamsThroughWorld(Ghost ghost) {
 		var speed = world().isTunnel(ghost.tile())
 			? ghostSpeedTunnelPercentage()
 			: ghostSpeedFrightenedPercentage();
+		if (!world.belongsToPortal(ghost.tile()) && (ghost.isNewTileEntered() || !ghost.moved())) {
+			ghost.setWishDir(chooseFrightenedDirection(ghost));
+		}
 		ghost.setRelSpeed(speed);
-		ghost.roam();
+		ghost.tryMoving();
+	}
+
+	private Direction chooseFrightenedDirection(Ghost ghost) {
+		Direction opposite = ghost.moveDir().opposite();
+		Direction dir = pseudoRandomDirection();
+		while (dir == opposite || !ghost.canAccessTile(ghost.tile().plus(dir.vector()))) {
+			dir = dir.succClockwise();
+		}
+		return dir;
+	}
+
+	private Direction pseudoRandomDirection() {
+		float rnd = Globals.randomFloat(0, 100);
+		if (rnd < 16.3) return UP;
+		if (rnd < 16.3 + 25.2) return RIGHT;
+		if (rnd < 16.3 + 25.2 + 28.5) return DOWN;
+		return LEFT;
 	}
 
 	/**
