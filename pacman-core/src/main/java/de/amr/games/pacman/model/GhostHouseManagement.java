@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
@@ -78,7 +77,7 @@ class GhostHouseManagement {
 				Logger.trace("Global dot counter = {}", globalDotCounter);
 			}
 		} else {
-			level.ghosts(LOCKED).filter(Creature::insideHouse).findFirst().ifPresent(this::increaseGhostDotCounter);
+			level.ghosts(LOCKED).filter(Ghost::insideHouse).findFirst().ifPresent(this::increaseGhostDotCounter);
 		}
 	}
 

@@ -78,6 +78,10 @@ public class Ghost extends Creature {
 		this.world = world;
 	}
 
+	public boolean insideHouse() {
+		return world().house().contains(tile());
+	}
+
 	public void setPacPowerTimer(TickTimer timer) {
 		checkNotNull(timer);
 		this.pacPowerTimer = timer;

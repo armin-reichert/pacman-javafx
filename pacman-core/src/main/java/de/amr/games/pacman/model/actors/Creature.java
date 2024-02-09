@@ -76,10 +76,6 @@ public abstract class Creature extends Entity implements AnimationDirector {
 
 	public abstract boolean canReverse();
 
-	public boolean insideHouse() {
-		return world().house().contains(tile());
-	}
-
 	/** Tells if the creature entered a new tile with its last move or placement. */
 	public boolean isNewTileEntered() {
 		return newTileEntered;
