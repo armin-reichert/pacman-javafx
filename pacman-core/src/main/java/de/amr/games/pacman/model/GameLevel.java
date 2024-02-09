@@ -101,9 +101,6 @@ public class GameLevel {
 			ghost.setPacPowerTimer(pac.powerTimer());
 			ghost.setFnHuntingBehavior(isMsPacManGame ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
 			ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
-			ghost.setBounceRange(
-				initialGhostPosition(ghost.id()).y() - HTS,
-				initialGhostPosition(ghost.id()).y() + HTS);
 			ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
 			ghost.setFnIsSteeringAllowed(dir -> isSteeringAllowed(ghost, dir));
 		});

@@ -36,8 +36,6 @@ public class Ghost extends Creature {
 	private Predicate<Direction> fnIsSteeringAllowed;
 	private World world;
 	private Vector2f revivalPosition;
-	private double bounceMinY;
-	private double bounceMaxY;
 
 	public Ghost(byte id, String name) {
 		super(name);
@@ -85,11 +83,6 @@ public class Ghost extends Creature {
 	public void setPacPowerTimer(TickTimer timer) {
 		checkNotNull(timer);
 		this.pacPowerTimer = timer;
-	}
-
-	public void setBounceRange(double minY, double maxY) {
-		bounceMinY = minY;
-		bounceMaxY = maxY;
 	}
 
 	public void setRevivalPosition(Vector2f revivalPosition) {
@@ -195,9 +188,9 @@ public class Ghost extends Creature {
 
 	private void updateStateLocked() {
 		if (insideHouse()) {
-			if (pos_y <= bounceMinY) {
+			if (pos_y <= revivalPosition.y() - 4) {
 				setMoveAndWishDir(DOWN);
-			} else if (pos_y >= bounceMaxY) {
+			} else if (pos_y >= revivalPosition.y() + 4) {
 				setMoveAndWishDir(UP);
 			}
 			setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
