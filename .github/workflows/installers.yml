@@ -23,7 +23,7 @@ jobs:
     - name: Echo JAVA_HOME
       run: echo $JAVA_HOME
     - name: Verify Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v4
+      uses: gradle/wrapper-validation-action@v2
     - name: Execute build
       run: ./gradlew --info --stacktrace build
     - name: Execute jlink
