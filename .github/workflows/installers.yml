@@ -19,11 +19,11 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.java }}
-        distribution: temurin
+        distribution: 'temurin'
     - name: Echo JAVA_HOME
       run: echo $JAVA_HOME
     - name: Verify Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v1
+      uses: gradle/wrapper-validation-action@v4
     - name: Execute build
       run: ./gradlew --info --stacktrace build
     - name: Execute jlink
@@ -31,7 +31,7 @@ jobs:
     - name: Execute jpackage
       run: ./gradlew --info --stacktrace jpackage
     - name: Upload EXE as an artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-exe
         path: pacman-ui-fx-2d/build/jpackage/*.exe
