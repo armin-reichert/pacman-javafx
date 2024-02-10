@@ -20,7 +20,10 @@ jlink {
         name = 'pacman-javafx-2d'
     }
     jpackage {
+        installerType = 'exe'
         installerOptions = ['--win-dir-chooser', '--win-menu', '--win-shortcut']
+        vendor = 'Armin Reichert'
+        // icon = /path/to/icon.ico
     }
 }
 
