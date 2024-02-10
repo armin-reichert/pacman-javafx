@@ -1,6 +1,6 @@
 name: Gradle Create Installers
 
-on: [pull_request]
+on: [workflow_dispatch]
 
 jobs:
   build:
