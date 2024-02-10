@@ -30,8 +30,13 @@ jobs:
       run: ./gradlew --info --stacktrace jlink
     - name: Execute jpackage
       run: ./gradlew --info --stacktrace jpackage
-    - name: Upload EXE as an artifact
+    - name: Upload EXE of 2D app as an artifact
       uses: actions/upload-artifact@v4
       with:
         name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-exe
         path: pacman-ui-fx-2d/build/jpackage/*.exe
+    - name: Upload EXE of 3D app as an artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-exe
+        path: pacman-ui-fx-3d/build/jpackage/*.exe
