@@ -7,7 +7,7 @@ Both games (2D) can now also be played online:
 - [WebFX Demo Pac-Man](https://pacman.webfx.dev/)
 - [WebFX Demo Ms. Pac-Man](https://mspacman.webfx.dev/)
 
-This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler technology (:+1: to Bruno Salmon).
+This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler technology (👏: to Bruno Salmon).
 
 ## Video
 
