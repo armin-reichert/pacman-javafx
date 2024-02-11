@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
@@ -35,11 +36,13 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
+import static java.util.function.Predicate.not;
 
 /**
  * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No 3D play scene, no dashboard, no picture-in-picture view.
@@ -628,16 +631,32 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	@Override
 	public void cheatEatAllPellets() {
-		gameController().cheatEatAllPellets();
-	}
-
-	@Override
-	public void cheatEnterNextLevel() {
-		gameController().cheatEnterNextLevel();
+		if (game().isPlaying() && gameState() == GameState.HUNTING) {
+			gameLevel().ifPresent(level -> {
+				level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::removeFood);
+				gameController().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+			});
+		}
 	}
 
 	@Override
 	public void cheatKillAllEatableGhosts() {
-		gameController().cheatKillAllEatableGhosts();
+		if (game().isPlaying() && gameState() == GameState.HUNTING) {
+			gameLevel().ifPresent(level -> {
+				level.killAllHuntingAndFrightenedGhosts();
+				gameController().changeState(GameState.GHOST_DYING);
+			});
+		}
 	}
+
+	@Override
+	public void cheatEnterNextLevel() {
+		if (game().isPlaying() && gameState() == GameState.HUNTING) {
+			gameLevel().ifPresent(level -> {
+				level.world().tiles().forEach(level.world()::removeFood);
+				gameController().changeState(GameState.LEVEL_COMPLETE);
+			});
+		}
+	}
+
 }

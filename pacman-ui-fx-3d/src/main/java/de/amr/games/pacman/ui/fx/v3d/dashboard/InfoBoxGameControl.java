@@ -65,7 +65,7 @@ public class InfoBoxGameControl extends InfoBox {
 		comboInitialLives.setOnAction(e -> sceneContext.game().setInitialLives((comboInitialLives.getValue().shortValue())));
 		buttonsGameLevel[GAME_LEVEL_START].setOnAction(e -> sceneContext.gameController().startPlaying());
 		buttonsGameLevel[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler().restartIntro());
-		buttonsGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.gameController().cheatEnterNextLevel());
+		buttonsGameLevel[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.actionHandler().cheatEnterNextLevel());
 		spinnerGameLevel.valueProperty().addListener((py, ov, nv) -> actionHandler().enterLevel(nv));
 		spinnerGameLevel.getValueFactory().setValue(sceneContext.gameLevel().isPresent() ? sceneContext.gameLevel().get().number() : 1);
 		spinnerGameCredit.valueProperty().addListener((py, ov, nv) -> sceneContext.gameController().setCredit(nv));

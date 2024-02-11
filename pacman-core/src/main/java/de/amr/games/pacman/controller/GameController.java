@@ -75,12 +75,11 @@ public class GameController extends Fsm<GameState, GameModel> {
 	private Steering manualPacSteering = Steering.NONE;
 	private int credit;
 	private boolean autoControlled = false;
-	private boolean immune = false; // extra feature
+	private boolean immune = false;
 	public int intermissionTestNumber; // used in intermission test mode
 
 	private GameController(GameVariant variant) {
 		super(GameState.values());
-		GameController.it = this;
 		game = new GameModel(variant);
 		// map FSM state change events to game events
 		addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
@@ -189,35 +188,6 @@ public class GameController extends Fsm<GameState, GameModel> {
 		if (state() == GameState.INTRO) {
 			intermissionTestNumber = cutSceneNumber;
 			changeState(GameState.INTERMISSION_TEST);
-		}
-	}
-
-	public void cheatEatAllPellets() {
-		if (game.isPlaying() && state() == GameState.HUNTING) {
-			game.level().ifPresent(level -> {
-				var world = level.world();
-				world.tiles().filter(Predicate.not(world::isEnergizerTile)).forEach(world::removeFood);
-				publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-			});
-		}
-	}
-
-	public void cheatKillAllEatableGhosts() {
-		if (game.isPlaying() && state() == GameState.HUNTING) {
-			game.level().ifPresent(level -> {
-				level.killAllHuntingAndFrightenedGhosts();
-				changeState(GameState.GHOST_DYING);
-			});
-		}
-	}
-
-	public void cheatEnterNextLevel() {
-		if (game.isPlaying() && state() == GameState.HUNTING) {
-			game.level().ifPresent(level -> {
-				var world = level.world();
-				world.tiles().forEach(world::removeFood);
-				changeState(GameState.LEVEL_COMPLETE);
-			});
 		}
 	}
 

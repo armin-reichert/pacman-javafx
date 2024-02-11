@@ -21,4 +21,7 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
