@@ -1,9 +1,8 @@
 plugins {
     id 'java'
-    id 'application'
     //id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'org.beryx.jlink' version '3.0.1'
+    id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
 group 'de.amr.games.pacman'
@@ -46,6 +45,12 @@ jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'pacman-javafx-3d'
+    }
+    jpackage {
+        installerType = 'exe'
+        installerOptions = ['--win-dir-chooser', '--win-menu', '--win-shortcut']
+        vendor = 'Armin Reichert'
+        // icon = /path/to/icon.ico
     }
 }
 
