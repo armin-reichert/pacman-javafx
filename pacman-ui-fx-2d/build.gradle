@@ -23,7 +23,7 @@ jlink {
         installerType = 'exe'
         installerOptions = ['--win-dir-chooser', '--win-menu', '--win-shortcut']
         vendor = 'Armin Reichert'
-        // icon = /path/to/icon.ico
+        icon = 'pacman.ico'
     }
 }
 
