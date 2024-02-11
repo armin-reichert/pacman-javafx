@@ -122,7 +122,7 @@ public class GamePage3D extends GamePage {
 	}
 
 	private void updateTopLayer() {
-		topLayer.setVisible(isCurrentGameScene3D() && (dashboard.isVisible() || PY_PIP_ON.get()));
+		topLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
 		getLayersContainer().requestFocus();
 	}
 
