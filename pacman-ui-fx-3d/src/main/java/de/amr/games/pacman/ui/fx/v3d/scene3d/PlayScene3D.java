@@ -335,6 +335,7 @@ public class PlayScene3D implements GameScene {
 			case CHANGING_TO_NEXT_LEVEL -> {
 				keepGameStateForSeconds(3);
 				replaceGameLevel3D(level);
+				level3D.pac3D().init();
 				currentCamController().reset(camera);
 			}
 

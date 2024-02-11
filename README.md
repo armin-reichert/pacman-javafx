@@ -68,7 +68,7 @@ In the 2D or 3D subproject folder, call `mvn javafx:run`.
 
 ## Build with Gradle (work in progress)
 - `cd <repository-root>\pacman-javafx`
-- `.\gradlew jpackage` (builds and creates Windows installers, see directory `build`)
+- `.\gradlew jpackage` (builds and creates Windows installers, see directory `build\jpackage`)
 
 ### Running the application using Gradle
 In the 2D or 3D subproject folder, call `.\gradlew run`.
