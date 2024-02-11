@@ -539,9 +539,20 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		gameController().restart(GameState.BOOT);
 	}
 
+	/**
+	 * Adds credit (simulates insertion of a coin) and switches to the credit scene.
+	 */
 	@Override
 	public void addCredit() {
-		gameController().addCredit();
+		if (!game().isPlaying()) {
+			boolean added = gameController().changeCredit(1);
+			if (added) {
+				gameController().publishGameEvent(GameEventType.CREDIT_ADDED);
+			}
+			if (gameState() != GameState.CREDIT) {
+				gameController().changeState(GameState.CREDIT);
+			}
+		}
 	}
 
 	@Override
@@ -580,7 +591,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	@Override
 	public void switchGameVariant() {
-		gameController().startNewGame(gameVariant().next());
+		gameController().newGame(gameVariant().next());
+		gameController().restart(GameState.BOOT);
 		showStartPage();
 	}
 

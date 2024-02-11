@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RuleBasedSteering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -85,6 +86,11 @@ public class GameController extends Fsm<GameState, GameModel> {
 		addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
 	}
 
+	public void newGame(GameVariant variant) {
+		checkGameVariant(variant);
+		game = new GameModel(variant);
+	}
+
 	@Override
 	public GameModel context() {
 		return game;
@@ -149,33 +155,6 @@ public class GameController extends Fsm<GameState, GameModel> {
 	public void setManualPacSteering(Steering steering) {
 		checkNotNull(steering);
 		this.manualPacSteering = steering;
-	}
-
-	// Game commands
-
-	/**
-	 * Creates a new game as specified by the given variant and reboots. Keeps immunity and credit.
-	 * 
-	 * @param variant Pac-Man or Ms. Pac-Man
-	 */
-	public void startNewGame(GameVariant variant) {
-		game = new GameModel(variant);
-		restart(GameState.BOOT);
-	}
-
-	/**
-	 * Adds credit (simulates insertion of a coin) and switches to the credit scene.
-	 */
-	public void addCredit() {
-		if (!game.isPlaying()) {
-			boolean added = changeCredit(1);
-			if (added) {
-				publishGameEvent(GameEventType.CREDIT_ADDED);
-			}
-			if (state() != GameState.CREDIT) {
-				changeState(GameState.CREDIT);
-			}
-		}
 	}
 
 	public void startPlaying() {

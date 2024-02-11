@@ -53,11 +53,11 @@ public class InfoBoxGameControl extends InfoBox {
 	@Override
 	public void init(GameSceneContext sceneContext) {
 		super.init(sceneContext);
-
 		comboGameVariant.setOnAction(e -> {
 			var selectedVariant = comboGameVariant.getValue();
 			if (selectedVariant != sceneContext.game().variant()) {
-				sceneContext.gameController().startNewGame(selectedVariant);
+				sceneContext.gameController().newGame(selectedVariant);
+				sceneContext.gameController().restart(GameState.BOOT);
 			}
 		});
 		buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> actionHandler().startCutscenesTest());
