@@ -24,34 +24,38 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 installed you can also start the game(s) by double-clicking the "fat" jar file. Otherwise run the installer and 
 double-click the new desktop icon(s).
 
-## How to build on your local computer
+## How to build on your local computer with Maven
 
-You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) installed and ensure that this version is used by the following build steps.
+You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) or newer installed.
 
-### Clone repositories (only first time)
+### Clone repository (only first time)
 - `cd <repository-root>`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
-### Build all Windows executables in one step using Maven
+### Build Windows executables
 - `cd <repository-root>\pacman-javafx`
-- `build.bat`  
+- `mvn_build.bat`  
 
 or build separately:
 
 ### Build JavaFX user interface variants
 - `cd <repository-root>\pacman-javafx\pacman-ui-fx-2d`
-- `mvn install -Djavafx.platform=win` or `mvn install -P build-for-windows` (builds Windows executables of 2D game) 
-- `mvn install -Djavafx.platform=linux`  or `mvn install -P build-for-linux` (builds Linux executables of 2D game, untested)
+- `mvn install -Djavafx.platform=win` or 
+- `mvn install -P build-for-windows` (Windows executables of 2D game) 
+- `mvn install -Djavafx.platform=linux` or 
+- `mvn install -P build-for-linux` (Linux executables of 2D game, untested)
 - `cd <repository-root>\pacman-javafx\pacman-ui-fx-3d`
-- `mvn install -Djavafx.platform=win` or `mvn install -P build-for-windows` (builds Windows executables of 2D+3D game) 
-- `mvn install -Djavafx.platform=linux`  or `mvn install -P build-for-linux` (builds Linux executables of 2D+3D game, untested)
+- `mvn install -Djavafx.platform=win` or 
+- `mvn install -P build-for-windows` (Windows executables of 2D+3D game) 
+- `mvn install -Djavafx.platform=linux` or 
+- `mvn install -P build-for-linux` (Linux executables of 2D+3D game, untested)
 
-To be able to create these Windows executables you need to first install the following tools:
+To be able to create the Windows executables, you need to first install the following tools:
 
 - [Inno Setup](https://jrsoftware.org/isinfo.php)
 - [WiX toolset](https://wixtoolset.org/)
 
-as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md) (:+1: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
+as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md) (:clap: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
 
 I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
 
@@ -60,14 +64,14 @@ To build the Linux executables, you need to have a Linux JDK on your computer. E
 in the `pom.xml`files to point to your local path.
 
 ### Running the application using Maven
-In the subproject folder, call `mvn javafx:run`.
+In the 2D or 3D subproject folder, call `mvn javafx:run`.
 
 ## Build with Gradle (work in progress)
 - `cd <repository-root>\pacman-javafx`
-- `.\gradlew jpackage` (builds and creates Windows installers)
+- `.\gradlew jpackage` (builds and creates Windows installers, see directory `build`)
 
 ### Running the application using Gradle
-In the subproject folder, call `.\gradlew run`.
+In the 2D or 3D subproject folder, call `.\gradlew run`.
 
 
 ## How to use the application 
