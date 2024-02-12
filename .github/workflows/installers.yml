@@ -24,11 +24,11 @@ jobs:
     - name: Verify Gradle Wrapper
       uses: gradle/wrapper-validation-action@v2
     - name: Execute build
-      run: ./gradlew --debug --stacktrace build
+      run: ./gradlew --info --stacktrace build
     - name: Execute jlink
-      run: ./gradlew --debug --stacktrace jlink
+      run: ./gradlew --info --stacktrace jlink
     - name: Execute jpackage
-      run: ./gradlew --debug --stacktrace jpackage
+      run: ./gradlew --info --stacktrace jpackage
     - name: Upload EXE of 2D app as an artifact
       uses: actions/upload-artifact@v4
       with:
