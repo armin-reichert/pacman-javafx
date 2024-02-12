@@ -65,7 +65,7 @@ public class PacManSpriteSheet implements SpriteSheet {
 	}
 
 	private final Rectangle2D[] bonusSymbolSprites = IntStream.range(0, 8)
-		.mapToObj(sym -> rect(OFF_X + r(2 + sym), r(3), r(1), r(1)))
+		.mapToObj(sym -> rect(OFF_X + r(2 + sym), r(3) + 0.5, r(1), r(1) - 0.5))
 		.toArray(Rectangle2D[]::new);
 
 	public Rectangle2D bonusSymbolSprite(int symbol) {
