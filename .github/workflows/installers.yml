@@ -23,10 +23,6 @@ jobs:
       run: echo $JAVA_HOME
     - name: Verify Gradle Wrapper
       uses: gradle/wrapper-validation-action@v2
-    - name: Execute build
-      run: ./gradlew --info --stacktrace build
-    - name: Execute jlink
-      run: ./gradlew --info --stacktrace jlink
     - name: Execute jpackage
       run: ./gradlew --info --stacktrace jpackage
     - name: Upload EXE of 2D app as an artifact
