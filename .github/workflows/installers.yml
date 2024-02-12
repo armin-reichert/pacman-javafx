@@ -59,5 +59,3 @@ jobs:
       with:
         name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-deb
         path: pacman-ui-fx-3d/build/jpackage/*.deb
-        
-        
