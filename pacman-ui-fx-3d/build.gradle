@@ -8,6 +8,8 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
+ext.os = org.gradle.internal.os.OperatingSystem.current()
+
 application {
     mainModule = 'de.amr.games.pacman.ui.fx.v3d'
     mainClass  = 'de.amr.games.pacman.ui.fx.v3d.Main'
@@ -47,8 +49,14 @@ jlink {
         name = 'pacman-javafx-3d'
     }
     jpackage {
-        installerType = 'exe'
-        installerOptions = ['--win-dir-chooser', '--win-menu', '--win-shortcut']
+        if (os.isWindows()) {
+            installerType = 'exe'
+            installerOptions = ['--win-dir-chooser', '--win-menu', '--win-shortcut']
+        } else if (os.isLinux()) {
+            installerType = 'deb'
+        } else if (os.isMacOsX()) {
+            installerType = 'dmg'
+        }
         vendor = 'Armin Reichert'
         icon = 'pacman.ico'
     }
