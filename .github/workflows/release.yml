@@ -6,7 +6,8 @@ on:
 
 jobs:
   
-  build-artifacts:
+  build-and-upload-artifacts:
+    
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
@@ -29,18 +30,13 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
       - name: Execute jpackage
         run: ./gradlew --info --stacktrace jpackage
-
-  upload-artifacts:
-    needs: build-artifacts
-    runs-on: ubuntu-latest
-    steps:
-      - name: Upload ALL artifacts
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           path: pacman-ui-fx-3d/build/jpackage
 
   download-and-release-artifacts:
-    needs: upload-artifacts
+    needs: build-and-upload-artifacts
     runs-on: ubuntu-latest
     steps:
       - name: Download ALL artifacts
