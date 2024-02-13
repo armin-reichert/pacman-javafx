@@ -33,19 +33,19 @@ jobs:
       - name: Upload exe
         uses: actions/upload-artifact@v4
         with:
-          name: pacman-ui-fx-3d-${{ matrix.os }}-exe
+          name: ${{ matrix.os }}-exe
           path: pacman-ui-fx-3d/build/jpackage/*.exe
           if-no-files-found: ignore
       - name: Upload deb
         uses: actions/upload-artifact@v4
         with:
-          name: pacman-ui-fx-3d-${{ matrix.os }}-deb
+          name: ${{ matrix.os }}-deb
           path: pacman-ui-fx-3d/build/jpackage/*.deb
           if-no-files-found: ignore
       - name: Upload dmg
         uses: actions/upload-artifact@v4
         with:
-          name: pacman-ui-fx-3d-${{ matrix.os }}-dmg
+          name: ${{ matrix.os }}-dmg
           path: pacman-ui-fx-3d/build/jpackage/*.dmg
           if-no-files-found: ignore
 
@@ -62,5 +62,8 @@ jobs:
       - name: Release executables
         uses: softprops/action-gh-release@v1
         with:
-          files: build/*
+          files: |
+            ubuntu-latest-deb/*.deb
+            macOS-latest-dmg/*.dmg
+            windows-latest-exe/*.exe
 
