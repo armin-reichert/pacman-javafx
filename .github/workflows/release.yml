@@ -34,17 +34,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pacman-ui-fx-3d-${{ matrix.os }}-exe
-          path: build/jpackage/*exe
+          path: build/jpackage/*.exe
       - name: Upload exe
         uses: actions/upload-artifact@v4
         with:
           name: pacman-ui-fx-3d-${{ matrix.os }}-deb
-          path: build/jpackage/*deb
+          path: build/jpackage/*.deb
       - name: Upload deb
         uses: actions/upload-artifact@v4
         with:
           name: pacman-ui-fx-3d-${{ matrix.os }}-dmg
-          path: build/jpackage/*dmg
+          path: build/jpackage/*.dmg
 
   download-and-release-artifacts:
     needs: build-and-upload-artifacts
