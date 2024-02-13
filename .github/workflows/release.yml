@@ -33,6 +33,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
+          name: executable-${{ matrix.os }}-{{matrix.java}}
           path: pacman-ui-fx-3d/build/jpackage
 
   download-and-release-artifacts:
