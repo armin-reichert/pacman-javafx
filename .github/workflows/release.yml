@@ -57,7 +57,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: pacman-ui-fx-3d/build/jpackage
-          pattern: (*-exe|*-deb|*-dmg)
       - name: Release executables
         uses: softprops/action-gh-release@v1
         with:
