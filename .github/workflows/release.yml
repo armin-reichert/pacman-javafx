@@ -57,8 +57,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: pacman-ui-fx-3d/build/jpackage
+      - name: List files
+        run: ls -lhrt
       - name: Release executables
         uses: softprops/action-gh-release@v1
         with:
-          files: pacman-ui-fx-3d/build/jpackage/*     
+          files: build/*
 
