@@ -117,7 +117,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		THEME.set("icon.stop",                       rm.image("graphics/icons/stop.png"));
 		THEME.set("icon.step",                       rm.image("graphics/icons/step.png"));
 
-		var textureNames = List.of("hexagon", "knobs", "plastic", "wood");
+		var textureNames = List.of("knobs", "plastic", "wood");
 		for (var name : textureNames) {
 			var texture = new PhongMaterial();
 			texture.setBumpMap(rm.image("graphics/textures/%s-bump.jpg".formatted(name)));
