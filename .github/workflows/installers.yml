@@ -1,74 +1,76 @@
 name: Release
 on: [workflow_dispatch]
+
 jobs:
-	# Job #1: Build everything from scratch
-  build:
-    name: ${{ matrix.os }} JDK ${{ matrix.java }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [ '17' ]
-      fail-fast: false
-    steps:
-    - name: Git checkout
-      uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: ${{ matrix.java }}
-        distribution: 'temurin'
-    - name: Echo JAVA_HOME
-      run: echo $JAVA_HOME
-    - name: Verify Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v2
-    - name: Execute jpackage
-      run: ./gradlew --info --stacktrace jpackage
-    - name: Upload EXE of 2D app as an artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-exe
-        path: pacman-ui-fx-2d/build/jpackage/*.exe
-    - name: Upload EXE of 3D app as an artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-exe
-        path: pacman-ui-fx-3d/build/jpackage/*.exe
-    - name: Upload DMG of 2D app as an artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-dmg
-        path: pacman-ui-fx-2d/build/jpackage/*.dmg
-    - name: Upload DMG of 3D app as an artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-dmg
-        path: pacman-ui-fx-3d/build/jpackage/*.dmg
-    - name: Upload DEB of 2D app as an artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-deb
-        path: pacman-ui-fx-2d/build/jpackage/*.deb
-    - name: Upload DEB of 3D app as an artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-deb
-        path: pacman-ui-fx-3d/build/jpackage/*.deb
+	
+ 	# Job #1: Build everything from scratch
+	build-artifacts:
+		runs-on: ${{ matrix.os }}
+		strategy:
+			matrix:
+				os: [ubuntu-latest, macOS-latest, windows-latest]
+				java: [ '17' ]
+			fail-fast: false
+		name: ${{ matrix.os }} JDK ${{ matrix.java }}
+		steps:
+	    - name: Git checkout
+	      uses: actions/checkout@v4
+	    - name: Set up JDK
+	      uses: actions/setup-java@v4
+	      with:
+	        java-version: ${{ matrix.java }}
+	        distribution: 'temurin'
+	    - name: Echo JAVA_HOME
+	      run: echo $JAVA_HOME
+	    - name: Verify Gradle Wrapper
+	      uses: gradle/wrapper-validation-action@v2
+	    - name: Execute jpackage
+	      run: ./gradlew --info --stacktrace jpackage
+	    - name: Upload EXE of 2D app as an artifact
+	      uses: actions/upload-artifact@v4
+	      with:
+	        name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-exe
+	        path: pacman-ui-fx-2d/build/jpackage/*.exe
+	    - name: Upload EXE of 3D app as an artifact
+	      uses: actions/upload-artifact@v4
+	      with:
+	        name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-exe
+	        path: pacman-ui-fx-3d/build/jpackage/*.exe
+	    - name: Upload DMG of 2D app as an artifact
+	      uses: actions/upload-artifact@v4
+	      with:
+	        name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-dmg
+	        path: pacman-ui-fx-2d/build/jpackage/*.dmg
+	    - name: Upload DMG of 3D app as an artifact
+	      uses: actions/upload-artifact@v4
+	      with:
+	        name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-dmg
+	        path: pacman-ui-fx-3d/build/jpackage/*.dmg
+	    - name: Upload DEB of 2D app as an artifact
+	      uses: actions/upload-artifact@v4
+	      with:
+	        name: pacman-ui-fx-2d-jdk-${{ matrix.java }}-${{ matrix.os }}-deb
+	        path: pacman-ui-fx-2d/build/jpackage/*.deb
+	    - name: Upload DEB of 3D app as an artifact
+	      uses: actions/upload-artifact@v4
+	      with:
+	        name: pacman-ui-fx-3d-jdk-${{ matrix.java }}-${{ matrix.os }}-deb
+	        path: pacman-ui-fx-3d/build/jpackage/*.deb
 
 
-  # Job #2: Publish release and attach installers
-  publish: 
-    runs-on: ubuntu-latest
+	# Job #2: Publish release and attach installers
+ 	publish: 
+    	runs-on: ubuntu-latest
     steps:
-      - uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            pacman-ui-fx-2d/build/jpackage/*.exe
-            pacman-ui-fx-2d/build/jpackage/*.dmg
-            pacman-ui-fx-2d/build/jpackage/*.deb
-            pacman-ui-fx-2d/build/jpackage/*.exe
-            pacman-ui-fx-2d/build/jpackage/*.dmg
-            pacman-ui-fx-2d/build/jpackage/*.deb
-            LICENSE
+    	- uses: softprops/action-gh-release@v1
+      	if: startsWith(github.ref, 'refs/tags/')
+      	with:
+        	files: |
+            	pacman-ui-fx-2d/build/jpackage/*.exe
+            	pacman-ui-fx-2d/build/jpackage/*.dmg
+            	pacman-ui-fx-2d/build/jpackage/*.deb
+            	pacman-ui-fx-2d/build/jpackage/*.exe
+            	pacman-ui-fx-2d/build/jpackage/*.dmg
+            	pacman-ui-fx-2d/build/jpackage/*.deb
+            	LICENSE
 
