@@ -35,8 +35,7 @@ jobs:
       - name: Upload ALL artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: pacman-ui-fx-3d/build/jpackage
-          pattern: (*.exe|*.deb|*.dmg)
+          path: pacman-ui-fx-3d/build/jpackage/(*.exe|*.deb|*.dmg)
 
   download-and-release-artifacts:
     needs: upload-artifacts
