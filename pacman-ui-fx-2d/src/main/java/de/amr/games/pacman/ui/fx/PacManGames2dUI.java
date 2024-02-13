@@ -36,7 +36,6 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -343,7 +342,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected void configurePacSteering() {
-		gameController().setManualPacSteering(new KeyboardSteering());
+		gameController().setManualSteering(new KeyboardSteering());
 	}
 
 	protected void updateStage() {

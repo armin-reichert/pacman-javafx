@@ -262,7 +262,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 		steering.define(Direction.DOWN,  KeyCode.DOWN,  KeyCombination.CONTROL_DOWN);
 		steering.define(Direction.LEFT,  KeyCode.LEFT,  KeyCombination.CONTROL_DOWN);
 		steering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
-		gameController().setManualPacSteering(steering);
+		gameController().setManualSteering(steering);
 	}
 
 	@Override

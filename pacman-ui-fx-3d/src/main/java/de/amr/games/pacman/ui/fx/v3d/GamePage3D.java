@@ -108,7 +108,7 @@ public class GamePage3D extends GamePage {
 		if (isCurrentGameScene3D()) {
 			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
 				// Note: event handler is removed again in super.onGameSceneChanged() call
-				getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().getManualPacSteering());
+				getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().manualSteering());
 			}
 			getLayersContainer().getChildren().set(0, newGameScene.root());
 		} else {

@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.RuleBasedSteering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -17,8 +16,7 @@ import de.amr.games.pacman.model.GameVariant;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.function.Predicate;
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkGameVariant;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -70,14 +68,16 @@ public class GameController extends Fsm<GameState, GameModel> {
 		return it;
 	}
 
-	private final Collection<GameEventListener> gameEventListeners = new ArrayList<>();
-	private GameModel game;
-	private Steering autopilot = new RuleBasedSteering();
-	private Steering manualPacSteering = Steering.NONE;
+	private final List<GameEventListener> gameEventListeners = new ArrayList<>();
+	private final Steering autopilot = new RuleBasedSteering();
+	private Steering manualSteering = Steering.NONE;
 	private int credit;
-	private boolean autoControlled = false;
-	private boolean immune = false;
-	public int intermissionTestNumber; // used in intermission test mode
+	private boolean autoControlled;
+	private boolean immune;
+	private GameModel game;
+
+	/** Used in intermission test mode. */
+	public int intermissionTestNumber;
 
 	private GameController(GameVariant variant) {
 		super(GameState.values());
@@ -133,9 +133,6 @@ public class GameController extends Fsm<GameState, GameModel> {
 		autoControlled = !autoControlled;
 	}
 
-	/**
-	 * @return tells if Pac-Man can get killed by ghosts
-	 */
 	public boolean isImmune() {
 		return immune;
 	}
@@ -145,28 +142,36 @@ public class GameController extends Fsm<GameState, GameModel> {
 	}
 
 	public Steering steering() {
-		return autoControlled ? autopilot : manualPacSteering;
+		return autoControlled ? autopilot : manualSteering;
 	}
 
-	public Steering getManualPacSteering() {
-		return manualPacSteering;
+	public Steering manualSteering() {
+		return manualSteering;
 	}
 
-	public void setManualPacSteering(Steering steering) {
+	public void setManualSteering(Steering steering) {
 		checkNotNull(steering);
-		this.manualPacSteering = steering;
+		this.manualSteering = steering;
 	}
 
 	public void startPlaying() {
-		if ((state() == GameState.INTRO || state() == GameState.CREDIT) && hasCredit()) {
+		if (!hasCredit()) {
+			Logger.error("Cannot start playing: no credit");
+			return;
+		}
+		if (currentState == GameState.INTRO || currentState == GameState.CREDIT) {
 			changeState(GameState.READY);
+		} else {
+			Logger.error("Cannot start playing when in game state {}", currentState);
 		}
 	}
 
 	public void startCutscenesTest(int cutSceneNumber) {
-		if (state() == GameState.INTRO) {
+		if (currentState == GameState.INTRO) {
 			intermissionTestNumber = cutSceneNumber;
 			changeState(GameState.INTERMISSION_TEST);
+		} else {
+			Logger.error("Cutscenes test can only be started from intro");
 		}
 	}
 

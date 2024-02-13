@@ -62,7 +62,7 @@ public enum GameState implements FsmState<GameModel> {
 	READY {
 		@Override
 		public void onEnter(GameModel game) {
-			GameController.it().getManualPacSteering().setEnabled(false);
+			GameController.it().manualSteering().setEnabled(false);
 			GameController.it().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
 			if (!GameController.it().hasCredit()) {
 				game.reset();
@@ -123,7 +123,7 @@ public enum GameState implements FsmState<GameModel> {
 		@Override
 		public void onEnter(GameModel game) {
 			game.level().ifPresent(level -> {
-				GameController.it().getManualPacSteering().setEnabled(true);
+				GameController.it().manualSteering().setEnabled(true);
 				level.pac().startAnimation();
 				level.ghosts().forEach(Ghost::startAnimation);
 				level.world().energizerBlinking().restart();
@@ -150,7 +150,7 @@ public enum GameState implements FsmState<GameModel> {
 	LEVEL_COMPLETE {
 		@Override
 		public void onEnter(GameModel game) {
-			GameController.it().getManualPacSteering().setEnabled(false);
+			GameController.it().manualSteering().setEnabled(false);
 			timer.restartSeconds(4);
 			game.level().ifPresent(GameLevel::end);
 			GameController.it().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
@@ -186,7 +186,7 @@ public enum GameState implements FsmState<GameModel> {
 	CHANGING_TO_NEXT_LEVEL {
 		@Override
 		public void onEnter(GameModel game) {
-			GameController.it().getManualPacSteering().setEnabled(false);
+			GameController.it().manualSteering().setEnabled(false);
 			timer.restartSeconds(1);
 			game.nextLevel();
 			GameController.it().publishGameEvent(GameEventType.LEVEL_STARTED);
@@ -240,7 +240,7 @@ public enum GameState implements FsmState<GameModel> {
 		@Override
 		public void onEnter(GameModel game) {
 			game.level().ifPresent(level -> {
-				GameController.it().getManualPacSteering().setEnabled(false);
+				GameController.it().manualSteering().setEnabled(false);
 				timer.restartSeconds(4);
 				level.onPacKilled();
 				GameController.it().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
@@ -288,7 +288,7 @@ public enum GameState implements FsmState<GameModel> {
 		public void onEnter(GameModel game) {
 			timer.restartSeconds(1.2); //TODO not sure about exact duration
 			game.updateHighScore();
-			GameController.it().getManualPacSteering().setEnabled(false);
+			GameController.it().manualSteering().setEnabled(false);
 			GameController.it().changeCredit(-1);
 			GameController.it().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
 		}
