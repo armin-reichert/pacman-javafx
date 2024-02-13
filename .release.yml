@@ -1,6 +1,8 @@
 name: Release
 
-on: [workflow_dispatch]
+on: push
+tags:
+      - "version-*"
 
 jobs:
   
@@ -64,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        # if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             pacman-ui-fx-2d/build/jpackage/*.exe
