@@ -30,11 +30,21 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
       - name: Execute jpackage
         run: ./gradlew --info --stacktrace jpackage
-      - name: Upload
+      - name: Upload exe
         uses: actions/upload-artifact@v4
         with:
-          name: executable-${{ matrix.os }}-{{matrix.java}}
-          path: pacman-ui-fx-3d/build/jpackage
+          name: pacman-ui-fx-3d-${{ matrix.os }}-exe
+          path: build/jpackage/*exe
+      - name: Upload exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacman-ui-fx-3d-${{ matrix.os }}-deb
+          path: build/jpackage/*deb
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacman-ui-fx-3d-${{ matrix.os }}-dmg
+          path: build/jpackage/*dmg
 
   download-and-release-artifacts:
     needs: build-and-upload-artifacts
