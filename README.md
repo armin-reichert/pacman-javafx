@@ -22,9 +22,16 @@ a full version where the play scene can be switched between 2D and 3D, even duri
 
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executables/installers (for Windows, Linux and Mac-OS). On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why). The Linux and Mac-OS installers/executables are completey untested.
 
-## How to build on your local computer with Maven
+## Build with Gradle
+- `cd <repository-root>\pacman-javafx`
+- `.\gradlew jpackage` (builds and creates Windows installers, see directory `build\jpackage`)
 
-You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) or newer installed.
+### Running the application using Gradle
+In the 2D or 3D subproject folder, call `.\gradlew run`. To create an executabe/installer for your platform, run `.\gradlew jpackage`. (Linux and Mac-OS versions are completely untested, any help appreciated!)
+
+## Build with Maven
+
+You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) or newer and a local Maven client installed.
 
 ### Clone repository (only first time)
 - `cd <repository-root>`
@@ -63,13 +70,6 @@ in the `pom.xml`files to point to your local path. Then run the `mvn_build_linux
 
 ### Running the application using Maven
 In the 2D or 3D subproject folder, call `mvn javafx:run`.
-
-## Build with Gradle (work in progress)
-- `cd <repository-root>\pacman-javafx`
-- `.\gradlew jpackage` (builds and creates Windows installers, see directory `build\jpackage`)
-
-### Running the application using Gradle
-In the 2D or 3D subproject folder, call `.\gradlew run`. To create an executabe/installer for your platform, run `.\gradlew jpackage`. (Linux and Mac-OS versions are completely untested, any help appreciated!)
 
 
 ## How to use the application 
