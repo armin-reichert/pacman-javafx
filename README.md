@@ -69,7 +69,7 @@ In the 2D or 3D subproject folder, call `mvn javafx:run`.
 - `.\gradlew jpackage` (builds and creates Windows installers, see directory `build\jpackage`)
 
 ### Running the application using Gradle
-In the 2D or 3D subproject folder, call `.\gradlew run`.
+In the 2D or 3D subproject folder, call `.\gradlew run`. To create an executabe/installer for your platform, run `.\gradlew jpackage`. (Linux and Mac-OS versions are completely untested, any help appreciated!)
 
 
 ## How to use the application 
