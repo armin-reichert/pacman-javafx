@@ -287,7 +287,7 @@ public class Ghost extends Creature {
 			}
 		}
 		move();
-		boolean reachedTarget = differsAtMost(1, pos_x(), targetPosition.x())
+		boolean reachedTarget = differsAtMost(velocity().length() / 2, pos_x(), targetPosition.x())
 				&& pos_y() >= targetPosition.y();
 		if (reachedTarget) {
 			setPosition(targetPosition);
@@ -349,8 +349,8 @@ public class Ghost extends Creature {
 	// --- RETURNING_TO_HOUSE ---
 
 	/**
-	 * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns to the
-	 * ghost house to be revived. Hallelujah!
+	 * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
+	 * to the ghost house to be revived. Hallelujah!
 	 */
 	public void enterStateReturningToHouse() {
 		state = RETURNING_TO_HOUSE;
@@ -360,8 +360,7 @@ public class Ghost extends Creature {
 
 	private void updateStateReturningToHouse() {
 		var houseEntry = world().house().door().entryPosition();
-		// TODO should this check for difference by speed instead of 1?
-		if (position().almostEquals(houseEntry, 1, 0)) {
+		if (position().almostEquals(houseEntry, velocity().length() / 2, 0)) {
 			setPosition(houseEntry);
 			enterStateEnteringHouse();
 		} else {
@@ -392,7 +391,7 @@ public class Ghost extends Creature {
 
 	private void selectFrightenedAnimation() {
 		if (pacPowerTimer.remaining() == GameModel.PAC_POWER_FADES_TICKS
-				|| pacPowerTimer.duration() < GameModel.PAC_POWER_FADES_TICKS && pacPowerTimer.tick() == 1) {
+			|| pacPowerTimer.duration() < GameModel.PAC_POWER_FADES_TICKS && pacPowerTimer.tick() == 1) {
 			selectAnimation(GhostAnimations.GHOST_FLASHING);
 		} else if (pacPowerTimer.remaining() > GameModel.PAC_POWER_FADES_TICKS) {
 			selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
