@@ -32,7 +32,7 @@ public enum Direction {
 
 	private final Vector2i vector;
 
-	private Direction(int x, int y) {
+	Direction(int x, int y) {
 		vector = new Vector2i(x, y);
 	}
 
@@ -44,34 +44,22 @@ public enum Direction {
 		return OPPOSITE[ordinal()];
 	}
 
-	public Direction succAntiClockwise() {
-		switch (this) {
-		case UP:
-			return LEFT;
-		case LEFT:
-			return DOWN;
-		case DOWN:
-			return RIGHT;
-		case RIGHT:
-			return UP;
-		default:
-			throw new IllegalStateException();
-		}
+	public Direction nextAntiClockwise() {
+		return switch (this) {
+			case UP -> LEFT;
+			case LEFT -> DOWN;
+			case DOWN -> RIGHT;
+			case RIGHT -> UP;
+		};
 	}
 
-	public Direction succClockwise() {
-		switch (this) {
-		case UP:
-			return RIGHT;
-		case RIGHT:
-			return DOWN;
-		case DOWN:
-			return LEFT;
-		case LEFT:
-			return UP;
-		default:
-			throw new IllegalStateException();
-		}
+	public Direction nextClockwise() {
+		return switch (this) {
+			case UP -> RIGHT;
+			case RIGHT -> DOWN;
+			case DOWN -> LEFT;
+			case LEFT -> UP;
+		};
 	}
 
 	public boolean isVertical() {

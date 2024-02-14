@@ -65,11 +65,6 @@ public class RuleBasedSteering extends Steering {
 	}
 
 	@Override
-	public void init() {
-		// nothing to do
-	}
-
-	@Override
 	public void steer(GameLevel level, Creature guy) {
 		if (guy.moved() && !guy.isNewTileEntered()) {
 			return;
@@ -160,9 +155,10 @@ public class RuleBasedSteering extends Steering {
 			if (level.world().isEnergizerTile(ahead) && !level.world().hasEatenFoodAt(ahead)) {
 				energizerFound = true;
 			}
-			Vector2i aheadLeft = ahead.plus(pac.moveDir().succAntiClockwise().vector());
-			Vector2i aheadRight = ahead.plus(pac.moveDir().succClockwise().vector());
-			for (Ghost ghost : level.ghosts(GhostState.HUNTING_PAC).toArray(Ghost[]::new)) {
+			var aheadLeft = ahead.plus(pac.moveDir().nextAntiClockwise().vector());
+			var aheadRight = ahead.plus(pac.moveDir().nextClockwise().vector());
+			Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
+			for (var ghost : huntingGhosts) {
 				if (ghost.tile().equals(ahead) || ghost.tile().equals(aheadLeft) || ghost.tile().equals(aheadRight)) {
 					if (energizerFound) {
 						Logger.trace("Ignore hunting ghost ahead, energizer comes first!");
@@ -177,14 +173,15 @@ public class RuleBasedSteering extends Steering {
 
 	private Ghost findHuntingGhostBehind(GameLevel level) {
 		var pac = level.pac();
-		Vector2i pacManTile = pac.tile();
+		var pacManTile = pac.tile();
 		for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
-			Vector2i behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
+			var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
 			if (!pac.canAccessTile(behind)) {
 				break;
 			}
-			for (Ghost ghost : level.ghosts().toArray(Ghost[]::new)) {
-				if (ghost.is(GhostState.HUNTING_PAC) && ghost.tile().equals(behind)) {
+			Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
+			for (Ghost ghost : huntingGhosts) {
+				if (ghost.tile().equals(behind)) {
 					return ghost;
 				}
 			}

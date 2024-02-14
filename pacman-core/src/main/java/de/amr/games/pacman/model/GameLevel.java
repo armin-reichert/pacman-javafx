@@ -436,7 +436,7 @@ public class GameLevel {
 		Direction opposite = ghost.moveDir().opposite();
 		Direction dir = pseudoRandomDirection();
 		while (dir == opposite || !ghost.canAccessTile(ghost.tile().plus(dir.vector()))) {
-			dir = dir.succClockwise();
+			dir = dir.nextClockwise();
 		}
 		return dir;
 	}
