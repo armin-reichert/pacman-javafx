@@ -221,10 +221,10 @@ public class Pac3D {
 			walkingAnimation.stop();
 		} else {
 			updatePosition();
-			updateVisibility();
 			turnTo(pac.moveDir());
 			walkingAnimation.play();
 		}
+		updateVisibility();
 	}
 
 	private void updatePosition() {
