@@ -23,8 +23,8 @@ a full version where the play scene can be switched between 2D and 3D, even duri
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executables/installers (for Windows, Linux and Mac-OS). On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why). The Linux and Mac-OS installers/executables are completey untested.
 
 ## Build with Gradle
-- `cd <repository-root>\pacman-javafx`
-- `gradlew jpackage` (builds and creates Windows installers, see directory `build\jpackage`)
+- `cd <repository-root>/pacman-javafx`
+- `gradlew jpackage` (builds and creates Windows installers, see directory `build/jpackage`)
 
 ### Running the application using Gradle
 In the 2D or 3D subproject folder, call `gradlew run`. To create an executabe/installer for your platform, run `gradlew jpackage`. (Linux and Mac-OS versions are completely untested, any help appreciated!)
@@ -38,18 +38,18 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
 ### Build Windows executables
-- `cd <repository-root>\pacman-javafx`
+- `cd <repository-root>/pacman-javafx`
 - `mvn_build.bat`  
 
 or build separately:
 
 ### Build JavaFX user interface variants
-- `cd <repository-root>\pacman-javafx\pacman-ui-fx-2d`
+- `cd <repository-root>/pacman-javafx\pacman-ui-fx-2d`
 - `mvn install -Djavafx.platform=win` or 
 - `mvn install -P build-for-windows` (Windows executables of 2D game) 
 - `mvn install -Djavafx.platform=linux` or 
 - `mvn install -P build-for-linux` (Linux executables of 2D game, untested)
-- `cd <repository-root>\pacman-javafx\pacman-ui-fx-3d`
+- `cd <repository-root>/pacman-javafx\pacman-ui-fx-3d`
 - `mvn install -Djavafx.platform=win` or 
 - `mvn install -P build-for-windows` (Windows executables of 2D+3D game) 
 - `mvn install -Djavafx.platform=linux` or 
