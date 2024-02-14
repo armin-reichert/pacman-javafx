@@ -3,25 +3,18 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.amr.games.pacman</groupId>
+	<parent>
+		<groupId>de.amr.games.pacman</groupId>
+		<artifactId>pacman-all</artifactId>
+		<version>1.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
 	<artifactId>pacman-ui-fx-2d</artifactId>
-	<version>1.0</version>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.organization.name>Armin Reichert</project.organization.name>
-		<maven.compiler.target>17</maven.compiler.target>
-		<maven.compiler.source>17</maven.compiler.source>
 		<exec.mainModule>de.amr.games.pacman.ui.fx</exec.mainModule>
 		<exec.mainClass>de.amr.games.pacman.ui.fx.Main</exec.mainClass>
-		<vs.java>17</vs.java>
-		<vs.javafx>21.0.2</vs.javafx>
-		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
-		<vs.maven-jar-plugin>3.2.0</vs.maven-jar-plugin>
-		<vs.maven-shade-plugin>3.4.1</vs.maven-shade-plugin>
-		<vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
-		<vs.tinylog>2.6.2</vs.tinylog>
-		<linux.jdk.path>C:\dev\linux\jdk-17.0.7</linux.jdk.path>
 	</properties>
 
 	<profiles>
@@ -193,9 +186,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 
 	</build>
-
 </project>

@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.amr.games.pacman</groupId>
+    <artifactId>pacman-all</artifactId>
+    <version>1.0</version>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.organization.name>Armin Reichert</project.organization.name>
+        <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <vs.java>17</vs.java>
+        <vs.javafx>21.0.2</vs.javafx>
+        <vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
+        <vs.maven-jar-plugin>3.2.0</vs.maven-jar-plugin>
+        <vs.maven-shade-plugin>3.4.1</vs.maven-shade-plugin>
+        <vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
+        <vs.tinylog>2.7.0</vs.tinylog>
+        <linux.jdk.path>C:\dev\linux\jdk-17.0.7</linux.jdk.path>
+    </properties>
+
+    <modules>
+        <module>pacman-core</module>
+        <module>pacman-ui-fx-2d</module>
+        <module>pacman-ui-fx-3d</module>
+    </modules>
+
+</project>
