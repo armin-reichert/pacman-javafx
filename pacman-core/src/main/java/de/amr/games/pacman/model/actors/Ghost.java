@@ -182,7 +182,7 @@ public class Ghost extends Creature {
 	 */
 	public void enterStateLocked() {
 		state = LOCKED;
-		setPixelSpeed(0);
+		setPixelSpeed(insideHouse() ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
 		selectAnimation(GhostAnimations.GHOST_NORMAL);
 	}
 
@@ -193,7 +193,6 @@ public class Ghost extends Creature {
 			} else if (pos_y >= revivalPosition.y() + 4) {
 				setMoveAndWishDir(UP);
 			}
-			setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
 			move();
 		}
 		if (killable()) {
@@ -253,8 +252,7 @@ public class Ghost extends Creature {
 		}
 		float centerX = center().x();
 		float houseCenterX = house.center().x();
-		float speed = GameModel.SPEED_PX_INSIDE_HOUSE;
-		if (differsAtMost(0.5 * speed, centerX, houseCenterX)) {
+		if (differsAtMost(velocity().length() / 2, centerX, houseCenterX)) {
 			// align horizontally and raise
 			setPos_x(houseCenterX - HTS);
 			setMoveAndWishDir(UP);
