@@ -1,8 +1,11 @@
+# This workflow builds all executables and attaches them to the
+# release whenever a new release is published via the GitHub UI.
+
 name: Release
 
 on: 
   release:
-    types: [published]
+    types: [published] # if this is omitted, the workflow starts 3 times when creating a release!
 
 jobs:
   
@@ -10,11 +13,12 @@ jobs:
     
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
-        java: [ '17' ]
+        os:   [ubuntu-latest, macOS-latest, windows-latest]
+        java: ['17']
       fail-fast: false
+
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} JDK ${{ matrix.java }}
+    name: Build and upload artifacts for ${{ matrix.os }} JDK ${{ matrix.java }}
     
     steps:
       - name: Git checkout
@@ -30,6 +34,8 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
       - name: Execute jpackage
         run: ./gradlew --info --stacktrace jpackage
+
+      # simplify these steps
       - name: Upload exe
         uses: actions/upload-artifact@v4
         with:
@@ -58,12 +64,11 @@ jobs:
         with:
           path: pacman-ui-fx-3d/build/jpackage
       - name: List files
-        run: ls -lhrt
-      - name: Release executables
+        run: ls -R
+      - name: Attach executables to release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             ubuntu-latest-deb/*.deb
             macOS-latest-dmg/*.dmg
             windows-latest-exe/*.exe
-
