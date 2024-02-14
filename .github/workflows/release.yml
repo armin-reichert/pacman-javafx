@@ -1,5 +1,6 @@
-# This workflow builds all executables and attaches them to the
-# release whenever a new release is published via the GitHub UI.
+# This workflow builds executables for Windows, Linux and Mac-OS and attaches the 3D-version executables to the
+# release (when a new release is published via the GitHub UI). 
+# Note that this works for a multi-project and has to be slightly adapted for a single-project.
 
 name: Release
 
