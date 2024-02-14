@@ -837,10 +837,12 @@ public class GameLevel {
 		var portals        = world.portals();
 		var entryPortal    = portals.get(RND.nextInt(portals.size()));
 		var exitPortal     = portals.get(RND.nextInt(portals.size()));
-		var startPoint     = leftToRight ? np(entryPortal.leftTunnelEnd())
-				                             : np(entryPortal.rightTunnelEnd());
-		var exitPoint      = leftToRight ? np(exitPortal.rightTunnelEnd().plus(1, 0))
-				                             : np(exitPortal.leftTunnelEnd().minus(1, 0));
+		var startPoint     = leftToRight
+								? np(entryPortal.leftTunnelEnd())
+								: np(entryPortal.rightTunnelEnd());
+		var exitPoint      = leftToRight
+								? np(exitPortal.rightTunnelEnd().plus(1, 0))
+								: np(exitPortal.leftTunnelEnd().minus(1, 0));
 
 		var route = new ArrayList<NavigationPoint>();
 		route.add(startPoint);
