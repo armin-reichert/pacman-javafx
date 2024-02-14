@@ -24,10 +24,10 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 
 ## Build with Gradle
 - `cd whateverpath/to/git/pacman-javafx`
-- `gradlew jpackage` (builds and creates Windows installers, see directory `build/jpackage`)
+- `gradlew jpackage` (builds and creates installer for your platform, see directory `build/jpackage`)
 
 ### Running the application using Gradle
-In the 2D or 3D subproject folder, call `gradlew run`. To create an executabe/installer for your platform, run `gradlew jpackage`. (Linux and Mac-OS versions are completely untested, any help appreciated!)
+In the 2D or 3D subproject folder, call `gradlew run`.
 
 ## Build with Maven
 
