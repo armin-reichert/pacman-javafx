@@ -48,7 +48,7 @@ public class GamePage3D extends GamePage {
 
 		topLayer = new BorderPane();
 		topLayer.setLeft(dashboard);
-		topLayer.setRight(pip.getCanvas());
+		topLayer.setRight(pip.canvas());
 
 		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
@@ -152,7 +152,7 @@ public class GamePage3D extends GamePage {
 		super.render();
 		contextMenu.updateState();
 		infoBoxes.forEach(InfoBox::update);
-		pip.getCanvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
+		pip.canvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
 		pip.draw();
 	}
 

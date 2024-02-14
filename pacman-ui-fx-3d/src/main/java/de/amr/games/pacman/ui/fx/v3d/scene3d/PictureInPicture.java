@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import javafx.beans.property.DoubleProperty;
@@ -37,7 +36,7 @@ public class PictureInPicture {
 
 	public PictureInPicture(GameSceneContext sceneContext) {
 		double h = heightPy.doubleValue();
-		double aspectRatio = (double) ArcadeWorld.TILES_X / ArcadeWorld.TILES_Y;
+		double aspectRatio = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
 		canvas = new Canvas(h * aspectRatio, h);
 		canvas.opacityProperty().bind(opacityPy);
 		playScene2D = new PlayScene2D();
@@ -46,7 +45,7 @@ public class PictureInPicture {
 		playScene2D.setContext(sceneContext);
 	}
 
-	public Canvas getCanvas() {
+	public Canvas canvas() {
 		return canvas;
 	}
 
