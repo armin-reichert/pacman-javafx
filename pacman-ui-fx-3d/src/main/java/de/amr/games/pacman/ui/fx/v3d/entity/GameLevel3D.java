@@ -136,15 +136,22 @@ public class GameLevel3D {
 	}
 
 	private Bonus3D createBonus3D(Bonus bonus) {
-		var symbolSprite = switch (level.game().variant()) {
-			case MS_PACMAN -> ((MsPacManSpriteSheet) spriteSheet).bonusSymbolSprite(bonus.symbol());
-			case PACMAN    -> ((PacManSpriteSheet) spriteSheet).bonusSymbolSprite(bonus.symbol());
-		};
-		var valueSprite = switch (level.game().variant()) {
-			case MS_PACMAN -> ((MsPacManSpriteSheet) spriteSheet).bonusValueSprite(bonus.symbol());
-			case PACMAN    -> ((PacManSpriteSheet) spriteSheet).bonusValueSprite(bonus.symbol());
-		};
-		return new Bonus3D(bonus, spriteSheet.subImage(symbolSprite), spriteSheet.subImage(valueSprite));
+		byte symbol = bonus.symbol();
+		switch (level.game().variant()) {
+			case PACMAN -> {
+				PacManSpriteSheet ss = (PacManSpriteSheet) spriteSheet;
+				return new Bonus3D(bonus,
+						spriteSheet.subImage(ss.bonusSymbolSprite(symbol)),
+						spriteSheet.subImage(ss.bonusValueSprite(symbol)));
+			}
+			case MS_PACMAN -> {
+				MsPacManSpriteSheet ss = (MsPacManSpriteSheet) spriteSheet;
+				return new Bonus3D(bonus,
+						spriteSheet.subImage(ss.bonusSymbolSprite(symbol)),
+						spriteSheet.subImage(ss.bonusValueSprite(symbol)));
+			}
+			default -> throw new IllegalGameVariantException(level.game().variant());
+		}
 	}
 
 	public void update() {
