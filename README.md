@@ -23,7 +23,7 @@ a full version where the play scene can be switched between 2D and 3D, even duri
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executables/installers (for Windows, Linux and Mac-OS). On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why). The Linux and Mac-OS installers/executables are completey untested.
 
 ## Build with Gradle
-- `cd <repository-root>/pacman-javafx`
+- `cd whateverpath/to/git/pacman-javafx`
 - `gradlew jpackage` (builds and creates Windows installers, see directory `build/jpackage`)
 
 ### Running the application using Gradle
