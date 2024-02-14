@@ -3,18 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>de.amr.games.pacman</groupId>
-	<artifactId>pacman-core</artifactId>
-	<version>1.0</version>
+	<parent>
+		<groupId>de.amr.games.pacman</groupId>
+		<artifactId>pacman-all</artifactId>
+		<version>1.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vs.java>17</vs.java>
-		<vs.junit>4.13.2</vs.junit>
-		<vs.maven-compiler-plugin>3.10.1</vs.maven-compiler-plugin>
-		<vs.maven-source-plugin>3.3.0</vs.maven-source-plugin>
-		<vs.tinylog>2.6.2</vs.tinylog>
-	</properties>
+	<artifactId>pacman-core</artifactId>
 
 	<build>
 		<plugins>
