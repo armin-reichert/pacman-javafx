@@ -18,11 +18,13 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 JavaFX user interfaces for my UI-agnostic/faceless [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic). There is a 2D-only user interface and
 a full version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>Alt+3</kbd>).
 
-(On Windows, the "/" should be replaced by a backslash (&#92;) in the following calls)
-
 ## How to run
 
-In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executables/installers (for Windows, Linux and Mac-OS). On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why). The Linux and Mac-OS installers/executables are completey untested.
+In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executables/installers (for Windows). On Windows, the application must be 
+uninstalled first (if already installed), otherwise the installer crashes (no idea why).
+
+If you want to installers for other platforms e.g. Linux or Mac-OS, ask someone who is able to do that. I find it too
+difficult and much too tedious.
 
 ## How to build
 
@@ -36,13 +38,12 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 ## Build project with Gradle
 
 - `cd /whatever/path/to/git/pacman-javafx`
-- `./gradlew jpackage` (builds and creates installer for your platform, see directory `build/jpackage`)
+- `./gradlew jpackage` (builds and creates installer in directory `build/jpackage`)
 
 ### Running the application(s) using Gradle
 
 - 2D app: `./gradlew pacman-ui-fx-2d:run`
 - 3D app: `./gradlew pacman-ui-fx-3d:run`
-
 
 ## Build project with Maven
 
@@ -55,14 +56,9 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 
 - `cd /whatever/path/to/git/pacman-javafx/pacman-ui-fx-2d`
 - `mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D game) 
-- `mvnw install -Djavafx.platform=linux` or `mvnw install -P build-for-linux`   (Linux executables of 2D game, untested)
 
 - `cd /whatever/path/to/git/pacman-javafx/pacman-ui-fx-3d`
 - `mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D+3D game) 
-- `mvnw install -Djavafx.platform=linux` or `mvnw install -P build-for-linux`   (Linux executables of 2D+3D game, untested)
-
-To build the Linux executables, you need to have a Linux JDK on your computer. Edit the variable `linux.jdk.path`
-in the `pom.xml`files to point to your local path.
 
 To be able to create the Windows executables, you need to first install the following tools:
 
