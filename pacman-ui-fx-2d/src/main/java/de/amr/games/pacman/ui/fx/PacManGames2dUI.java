@@ -198,7 +198,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected final GameClock clock;
-	protected final Map<GameVariant, Map<String, GameScene>> gameScenes = new EnumMap<>(GameVariant.class);
+	protected final Map<GameVariant, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameVariant.class);
 	protected final SoundHandler soundHandler;
 	protected final Stage stage;
 	protected final Scene mainScene;
@@ -225,7 +225,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected void addGameScenes() {
-		gameScenes.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
+		gameScenesByVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
 			"boot",   new BootScene(),
 			"intro",  new MsPacManIntroScene(),
 			"credit", new MsPacManCreditScene(),
@@ -234,13 +234,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 			"cut2",   new MsPacManCutscene2(),
 			"cut3",   new MsPacManCutscene3()
 		)));
-		for (var gameScene : gameScenes.get(GameVariant.MS_PACMAN).values()) {
-			if (gameScene instanceof GameScene2D gameScene2D) {
-				gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
-			}
-		}
 
-		gameScenes.put(GameVariant.PACMAN, new HashMap<>(Map.of(
+		gameScenesByVariant.put(GameVariant.PACMAN, new HashMap<>(Map.of(
 			"boot",   new BootScene(),
 			"intro",  new PacManIntroScene(),
 			"credit", new PacManCreditScene(),
@@ -249,9 +244,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 			"cut2",   new PacManCutscene2(),
 			"cut3",   new PacManCutscene3()
 		)));
-		for (var gameScene : gameScenes.get(GameVariant.PACMAN).values()) {
-			if (gameScene instanceof GameScene2D gameScene2D) {
-				gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
+
+		for (Map<String, GameScene> gameSceneMap : gameScenesByVariant.values()) {
+			for (GameScene gameScene : gameSceneMap.values()) {
+				if (gameScene instanceof GameScene2D gameScene2D) {
+					gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
+				}
 			}
 		}
 	}
@@ -426,7 +424,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	@Override
 	public Map<String, GameScene> sceneConfig() {
-		return gameScenes.get(gameVariant());
+		return gameScenesByVariant.get(gameVariant());
 	}
 
 	@Override
