@@ -18,7 +18,7 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 JavaFX user interfaces for my UI-agnostic/faceless [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic). There is a 2D-only user interface and
 a full version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>Alt+3</kbd>).
 
-(On Windows, the "/" should be replaced by a "\" in the following calls)
+(On Windows, the "/" should be replaced by a backslash (&#92;) in the following calls)
 
 ## How to run
 
