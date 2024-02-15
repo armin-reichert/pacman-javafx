@@ -9,6 +9,7 @@ group 'de.amr.games.pacman'
 version '1.0'
 
 ext.os = org.gradle.internal.os.OperatingSystem.current()
+println "*** Building on ${os.familyName} / ${os.name} / ${os.version} / ${System.getProperty("os.arch")}."
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx.v3d'
