@@ -29,7 +29,7 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17) or newer installed on your computer.
 
 ### Clone repository (only first time)
-- 
+ 
 - `cd /whatever/path/to/git`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
@@ -44,7 +44,7 @@ You need to have a [JDK 17](https://www.oracle.com/java/technologies/downloads/#
 - 3D app: `./gradlew pacman-ui-fx-3d:run`
 
 
-## Build with Maven
+## Build project with Maven
 
 ### Build Windows installers for both variants (2D and 3D)
 
