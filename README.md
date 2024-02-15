@@ -23,8 +23,8 @@ a full version where the play scene can be switched between 2D and 3D, even duri
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executables/installers (for Windows). On Windows, the application must be 
 uninstalled first (if already installed), otherwise the installer crashes (no idea why).
 
-If you want to installers for other platforms e.g. Linux or Mac-OS, ask someone who is able to do that. I find it too
-difficult and much too tedious.
+If you want to have installers for other platforms e.g. Linux or Mac-OS, ask someone who is able to do that. I find it much too
+difficult and especialy much too tedious to achive that.
 
 ## How to build
 
