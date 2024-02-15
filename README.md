@@ -24,7 +24,7 @@ In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases
 uninstalled first (if already installed), otherwise the installer crashes (no idea why).
 
 If you want to have installers for other platforms e.g. Linux or Mac-OS, ask someone who is able to do that. I find it much too
-difficult and especialy much too tedious to achive that.
+difficult and especialy much too tedious to achive that (I am really too old for that shit).
 
 ## How to build
 
