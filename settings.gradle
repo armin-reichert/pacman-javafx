@@ -1,2 +1,3 @@
 rootProject.name = 'pacman-javafx'
+
 include 'pacman-core', 'pacman-ui-fx-2d', 'pacman-ui-fx-3d'

@@ -1,14 +1,15 @@
 plugins {
     id 'java'
-    id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
     id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
 group 'de.amr.games.pacman'
 version '1.0'
 
+ext.arch = System.getProperty("platform.arch")
 ext.os = org.gradle.internal.os.OperatingSystem.current()
-println "*** Building on ${os.familyName} / ${os.name} / ${os.version} / ${System.getProperty("os.arch")}."
+println "Operating System: family='${os.familyName}' name='${os.name}' version='${os.version}' arch='${arch}'"
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx.v3d'
@@ -41,7 +42,6 @@ java {
     }
 }
 
-
 jlink {
     imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
@@ -49,15 +49,16 @@ jlink {
         name = 'pacman-javafx-3d'
     }
     jpackage {
-        // not sure where these are finally appearing
+        // not sure if these are properly passed to jpackage call
         installerOptions = [
-            '--description', 'JavaFX 3D',
-            '--copyright', '(c) 2021-2024 Armin Reichert',
+                '--description', 'JavaFX 3D',
+                '--copyright', '2021-2024',
+                '--vendor', 'Armin Reichert'
         ]
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'exe'
-            installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-shortcut'])
+            installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut'])
         } else if (os.isLinux()) {
             // doesn't create working installer
             installerType = 'deb'
@@ -65,7 +66,6 @@ jlink {
     }
 }
 
-// needed?
 jlinkZip {
     group = 'distribution'
 }

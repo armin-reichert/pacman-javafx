@@ -5,13 +5,10 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
-ext.os = org.gradle.internal.os.OperatingSystem.current()
-println "*** Building on ${os.familyName} / ${os.name} / ${os.version} / ${System.getProperty("os.arch")}."
-
 dependencies {
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
-    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 repositories {
