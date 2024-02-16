@@ -7,9 +7,9 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
-ext.arch = System.getProperty("platform.arch")
+ext.arch = System.getProperty("os.arch")
 ext.os = org.gradle.internal.os.OperatingSystem.current()
-println "Operating System: family='${os.familyName}' name='${os.name}' version='${os.version}' arch='${arch}'"
+println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx.v3d'
