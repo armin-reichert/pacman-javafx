@@ -1,8 +1,7 @@
 plugins {
     id 'java'
-    //id 'org.javamodularity.moduleplugin' version '1.8.12'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 group 'de.amr.games.pacman'
@@ -23,6 +22,11 @@ dependencies {
     implementation 'org.tinylog:tinylog-impl:2.7.0'
 }
 
+javafx {
+    version = '21.0.2'
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
+}
+
 repositories {
     mavenCentral()
 }
@@ -37,10 +41,6 @@ java {
     }
 }
 
-javafx {
-    version = '21.0.2'
-    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
-}
 
 jlink {
     imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
@@ -49,19 +49,23 @@ jlink {
         name = 'pacman-javafx-3d'
     }
     jpackage {
+        // not sure where these are finally appearing
+        installerOptions = [
+            '--description', 'JavaFX 3D',
+            '--copyright', '(c) 2021-2024 Armin Reichert',
+        ]
         if (os.isWindows()) {
+            icon = 'pacman.ico'
             installerType = 'exe'
-            installerOptions = ['--win-dir-chooser', '--win-menu', '--win-shortcut']
+            installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-shortcut'])
         } else if (os.isLinux()) {
+            // doesn't create working installer
             installerType = 'deb'
-        } else if (os.isMacOsX()) {
-            installerType = 'dmg'
         }
-        vendor = 'Armin Reichert'
-        icon = 'pacman.ico'
     }
 }
 
+// needed?
 jlinkZip {
     group = 'distribution'
 }
