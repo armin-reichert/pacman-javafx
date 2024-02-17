@@ -55,7 +55,7 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	@Override
 	public void drawSceneContent() {
-		drawClapperBoard(clapAnimation, t(3), t(10));
+		drawMsPacManClapperBoard(clapAnimation, t(3), t(10));
 		drawPac(intermission.msPac);
 		drawPac(intermission.pacMan);
 		drawGhost(intermission.inky);

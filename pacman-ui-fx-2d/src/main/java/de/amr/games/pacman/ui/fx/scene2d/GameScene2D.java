@@ -96,12 +96,12 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	public void draw() {
-		if (canvas() == null) {
+		if (g == null) {
 			Logger.error("Cannot render game scene {}, no canvas has been assigned",
 				getClass().getSimpleName());
 			return;
 		}
-		if (!canvas().isVisible()) {
+		if (!g.getCanvas().isVisible()) {
 			return;
 		}
 		clearCanvas();
@@ -137,10 +137,8 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void clearCanvas() {
-		if (g != null) {
-			g.setFill(context.theme().color("canvas.background"));
-			g.fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
-		}
+		g.setFill(context.theme().color("canvas.background"));
+		g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
 	}
 
 	protected void drawScore(Score score, String title, double x, double y) {
@@ -293,10 +291,8 @@ public abstract class GameScene2D implements GameScene {
 	 * @param x x coordinate of left-upper corner of bounding box
 	 * @param y y coordinate of left-upper corner of bounding box
 	 */
-	protected void drawSpriteOverBoundingBox(Rectangle2D sprite, double x, double y) {
-		if (sprite != null) {
-			drawSprite(sprite, x + HTS - sprite.getWidth() / 2, y + HTS - sprite.getHeight() / 2);
-		}
+	protected void drawSpriteCenteredOverBox(Rectangle2D sprite, double x, double y) {
+		drawSprite(sprite, x + HTS - 0.5 * sprite.getWidth(), y + HTS - 0.5 * sprite.getHeight());
 	}
 
 	/**
@@ -317,18 +313,16 @@ public abstract class GameScene2D implements GameScene {
 	 */
 	protected void drawEntitySprite(Entity entity, Rectangle2D sprite) {
 		if (entity.isVisible()) {
-			drawSpriteOverBoundingBox(sprite, entity.pos_x(), entity.pos_y());
+			drawSpriteCenteredOverBox(sprite, entity.pos_x(), entity.pos_y());
 		}
 	}
 
 	protected void drawCredit(int credit, double x, double y) {
- 		drawText(String.format("CREDIT %2d", credit), context.theme().color("palette.pale"),
-			sceneFont(8), x, y);
+ 		drawText(String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
 	}
 
 	protected void drawMidwayCopyright(double x, double y) {
-		drawText("© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"),
-			sceneFont(8), x, y);
+		drawText("© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"),	sceneFont(8), x, y);
 	}
 
 	protected void drawMsPacManCopyright(double x, double y) {
@@ -336,16 +330,16 @@ public abstract class GameScene2D implements GameScene {
 		g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
 		g.setFill(context.theme().color("palette.red"));
 		g.setFont(sceneFont(8));
-		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2)); // (c) symbol
+		g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
 		g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
 		g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
 	}
 
-	protected void drawClapperBoard(ClapperboardAnimation animation, double x, double y) {
+	protected void drawMsPacManClapperBoard(ClapperboardAnimation animation, double x, double y) {
 		var ss = context.<MsPacManSpriteSheet>spriteSheet();
 		var sprite = animation.currentSprite(ss.clapperboardSprites());
 		if (sprite != null) {
-			drawSpriteOverBoundingBox(sprite, x, y);
+			drawSpriteCenteredOverBox(sprite, x, y);
 			g.setFont(sceneFont(8));
 			g.setFill(context.theme().color("palette.pale").darker());
 			var numberX = s(x + sprite.getWidth() - 25);

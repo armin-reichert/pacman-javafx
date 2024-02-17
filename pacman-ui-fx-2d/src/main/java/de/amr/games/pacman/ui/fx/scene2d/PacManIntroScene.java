@@ -104,7 +104,7 @@ public class PacManIntroScene extends GameScene2D {
 				continue;
 			}
 			int ty = 7 + 3 * id;
-			drawSpriteOverBoundingBox(ss.ghostFacingRight(id), t(tx) + 4, t(ty));
+			drawSpriteCenteredOverBox(ss.ghostFacingRight(id), t(tx) + 4, t(ty));
 			if (ghostInfo.characterVisible) {
 				var text = "-" + ghostInfo.character;
 				var color = context.theme().color("ghost." + id + ".color");
