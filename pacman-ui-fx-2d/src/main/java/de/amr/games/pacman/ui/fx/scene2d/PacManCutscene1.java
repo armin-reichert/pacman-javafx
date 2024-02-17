@@ -42,24 +42,10 @@ public class PacManCutscene1 extends GameScene2D {
 		setScoreVisible(true);
 
 		var ss = context.<PacManSpriteSheet>spriteSheet();
-
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacManPacAnimations(pac, ss));
-		pac.selectAnimation(PacAnimations.MUNCHING);
-		pac.startAnimation();
-		pac.placeAtTile(29, 20, 0, 0);
-		pac.setMoveDir(Direction.LEFT);
-		pac.setPixelSpeed(1.25f);
-		pac.show();
-
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.setAnimations(new PacManGhostAnimations(blinky, ss));
-		blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
-		blinky.startAnimation();
-		blinky.placeAtTile(32, 20, 0, 0);
-		blinky.setMoveAndWishDir(Direction.LEFT);
-		blinky.setPixelSpeed(1.3f);
-		blinky.show();
 	}
 
 	@Override
@@ -76,7 +62,22 @@ public class PacManCutscene1 extends GameScene2D {
 			return;
 		}
 
-		switch (++frame) {
+		switch (frame) {
+			case 0 -> {
+				pac.placeAtTile(29, 20, 0, 0);
+				pac.setMoveDir(Direction.LEFT);
+				pac.setPixelSpeed(1.25f);
+				pac.selectAnimation(PacAnimations.MUNCHING);
+				pac.startAnimation();
+				pac.show();
+
+				blinky.placeAtTile(32, 20, 0, 0);
+				blinky.setMoveAndWishDir(Direction.LEFT);
+				blinky.setPixelSpeed(1.3f);
+				blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+				blinky.startAnimation();
+				blinky.show();
+			}
 			case 260 -> {
 				blinky.placeAtTile(-2, 20, 4, 0);
 				blinky.setMoveAndWishDir(Direction.RIGHT);
@@ -91,10 +92,12 @@ public class PacManCutscene1 extends GameScene2D {
 				pac.startAnimation();
 			}
 			case 632 -> context.gameState().timer().expire();
-			default -> {}
+			default -> {
+				pac.move();
+				blinky.move();
+			}
 		}
-		pac.move();
-		blinky.move();
+		++frame;
 	}
 
 	@Override
