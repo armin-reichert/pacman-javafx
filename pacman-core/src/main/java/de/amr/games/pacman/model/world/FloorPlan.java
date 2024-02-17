@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -26,47 +27,43 @@ public class FloorPlan {
 	public static final byte DOOR = 4;
 
 	private static char symbol(byte b) {
-		switch (b) {
-		case CORNER:
-			return '+';
-		case EMPTY:
-			return ' ';
-		case HWALL:
-			return '\u2014';
-		case VWALL:
-			return '|';
-		case DOOR:
-			return 'd';
-		default:
-			return '?';
-		}
+		return switch (b) {
+			case CORNER -> '+';
+			case EMPTY  -> ' ';
+			case HWALL  -> '—';
+			case VWALL  -> '|';
+			case DOOR   -> 'd';
+			default     -> '?';
+		};
 	}
 
-	private byte[][] info;
+	private final byte[][] cells;
 	private final World world;
 	private final int resolution;
 
 	public FloorPlan(World world, int resolution) {
+		checkNotNull(world);
 		this.world = world;
 		this.resolution = resolution;
-		int numBlocksX = resolution * world.numCols();
-		int numBlocksY = resolution * world.numRows();
-		info = new byte[numBlocksY][numBlocksX];
-		scanForWalls(numBlocksX, numBlocksY);
-		clearPlacesSurroundedByWalls(numBlocksX, numBlocksY);
-		separateWallsAndCorners(numBlocksX, numBlocksY);
+		int numCellsX = resolution * world.numCols();
+		int numCellsY = resolution * world.numRows();
+		cells = new byte[numCellsY][numCellsX];
+		separateWallsFromEmptyCells(numCellsX, numCellsY);
+		emptyCellsSurroundedByWalls(numCellsX, numCellsY);
+		separateHorizontalWallsAndCorners(numCellsX, numCellsY);
+		separateVerticalWallsAndCorners(numCellsX, numCellsY);
 	}
 
-	public byte get(int x, int y) {
-		return info[y][x];
+	public byte cell(int x, int y) {
+		return cells[y][x];
 	}
 
 	public int sizeX() {
-		return info[0].length;
+		return cells[0].length;
 	}
 
 	public int sizeY() {
-		return info.length;
+		return cells.length;
 	}
 
 	public int getResolution() {
@@ -81,7 +78,7 @@ public class FloorPlan {
 		PrintWriter p = new PrintWriter(w);
 		for (int y = 0; y < sizeY(); ++y) {
 			for (int x = 0; x < sizeX(); ++x) {
-				p.print(useSymbols ? String.valueOf(symbol(get(x, y))) : get(x, y));
+				p.print(useSymbols ? String.valueOf(symbol(cell(x, y))) : cell(x, y));
 			}
 			p.println();
 		}
@@ -92,9 +89,17 @@ public class FloorPlan {
 		return v2i(tileX, tileY + dy);
 	}
 
+	private Vector2i northOf(Vector2i tile, int i) {
+		return northOf(tile.x(), tile.y(), i);
+	}
+
 	private Vector2i southOf(int tileX, int tileY, int i) {
 		int dy = i / resolution == resolution - 1 ? 1 : 0;
 		return v2i(tileX, tileY + dy);
+	}
+
+	private Vector2i southOf(Vector2i tile, int i) {
+		return southOf(tile.x(), tile.y(), i);
 	}
 
 	private Vector2i westOf(int tileX, int tileY, int i) {
@@ -102,34 +107,37 @@ public class FloorPlan {
 		return v2i(tileX + dx, tileY);
 	}
 
+	private Vector2i westOf(Vector2i tile, int i) {
+		return westOf(tile.x(), tile.y(), i);
+	}
+
 	private Vector2i eastOf(int tileX, int tileY, int i) {
 		int dx = i % resolution == resolution - 1 ? 1 : 0;
 		return v2i(tileX + dx, tileY);
 	}
 
-	private void separateWallsAndCorners(int numBlocksX, int numBlocksY) {
-		separateHorizontalWallsAndCorners(numBlocksX, numBlocksY);
-		separateVerticalWallsAndCorners(numBlocksX, numBlocksY);
+	private Vector2i eastOf(Vector2i tile, int i) {
+		return eastOf(tile.x(), tile.y(), i);
 	}
 
-	private void separateVerticalWallsAndCorners(int numBlocksX, int numBlocksY) {
-		for (int x = 0; x < numBlocksX; ++x) {
+	private void separateVerticalWallsAndCorners(int numCellsX, int numCellsY) {
+		for (int x = 0; x < numCellsX; ++x) {
 			int startY = -1;
 			int size = 0;
-			for (int y = 0; y < numBlocksY; ++y) {
-				if (info[y][x] == CORNER) {
+			for (int y = 0; y < numCellsY; ++y) {
+				if (cells[y][x] == CORNER) {
 					if (startY == -1) {
 						startY = y;
 						size = 1;
 					} else {
-						info[y][x] = (y == numBlocksY - 1) ? CORNER : VWALL;
+						cells[y][x] = (y == numCellsY - 1) ? CORNER : VWALL;
 						++size;
 					}
 				} else {
 					if (size == 1) {
-						info[startY][x] = CORNER;
+						cells[startY][x] = CORNER;
 					} else if (size > 1) {
-						info[startY + size - 1][x] = CORNER;
+						cells[startY + size - 1][x] = CORNER;
 					}
 					startY = -1;
 					size = 0;
@@ -138,24 +146,24 @@ public class FloorPlan {
 		}
 	}
 
-	private void separateHorizontalWallsAndCorners(int numBlocksX, int numBlocksY) {
-		for (int y = 0; y < numBlocksY; ++y) {
+	private void separateHorizontalWallsAndCorners(int numCellsX, int numCellsY) {
+		for (int y = 0; y < numCellsY; ++y) {
 			int startX = -1;
 			int size = 0;
-			for (int x = 0; x < numBlocksX; ++x) {
-				if (info[y][x] == CORNER) {
+			for (int x = 0; x < numCellsX; ++x) {
+				if (cells[y][x] == CORNER) {
 					if (startX == -1) {
 						startX = x;
 						size = 1;
 					} else {
-						info[y][x] = x == numBlocksX - 1 ? CORNER : HWALL;
+						cells[y][x] = x == numCellsX - 1 ? CORNER : HWALL;
 						++size;
 					}
 				} else {
 					if (size == 1) {
-						info[y][startX] = CORNER;
+						cells[y][startX] = CORNER;
 					} else if (size > 1) {
-						info[y][startX + size - 1] = CORNER;
+						cells[y][startX + size - 1] = CORNER;
 					}
 					startX = -1;
 					size = 0;
@@ -164,35 +172,34 @@ public class FloorPlan {
 		}
 	}
 
-	private void scanForWalls(int numBlocksX, int numBlocksY) {
-		for (int y = 0; y < numBlocksY; ++y) {
-			for (int x = 0; x < numBlocksX; ++x) {
+	private void separateWallsFromEmptyCells(int numCellsX, int numCellsY) {
+		for (int y = 0; y < numCellsY; ++y) {
+			for (int x = 0; x < numCellsX; ++x) {
 				Vector2i tile = v2i(x / resolution, y / resolution);
-				info[y][x] = world.isWall(tile) ? CORNER : EMPTY;
+				cells[y][x] = world.isWall(tile) ? CORNER : EMPTY; // use CORNER as synonym for any kind of wall
 			}
 		}
 	}
 
-	private void clearPlacesSurroundedByWalls(int numBlocksX, int numBlocksY) {
-		for (int y = 0; y < numBlocksY; ++y) {
-			int tileY = y / resolution;
-			for (int x = 0; x < numBlocksX; ++x) {
-				int tileX = x / resolution;
+	private void emptyCellsSurroundedByWalls(int numCellsX, int numCellsY) {
+		for (int y = 0; y < numCellsY; ++y) {
+			for (int x = 0; x < numCellsX; ++x) {
 				int i = (y % resolution) * resolution + (x % resolution);
-				var n = northOf(tileX, tileY, i);
-				var e = eastOf(tileX, tileY, i);
-				var s = southOf(tileX, tileY, i);
-				var w = westOf(tileX, tileY, i);
+				Vector2i tile = v2i(x / resolution, y / resolution);
+				Vector2i n = northOf(tile, i);
+				Vector2i e = eastOf(tile, i);
+				Vector2i s = southOf(tile, i);
+				Vector2i w = westOf(tile, i);
 				if (world.isWall(n) && world.isWall(e) && world.isWall(s) && world.isWall(w)) {
-					var se = southOf(e.x(), e.y(), i);
-					var sw = southOf(w.x(), w.y(), i);
-					var ne = northOf(e.x(), e.y(), i);
-					var nw = northOf(w.x(), w.y(), i);
-					if (world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
-							|| world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
+					Vector2i se = southOf(e, i);
+					Vector2i sw = southOf(w, i);
+					Vector2i ne = northOf(e, i);
+					Vector2i nw = northOf(w, i);
+					if (   world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
+						|| world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
 						// keep corner of wall region
 					} else {
-						info[y][x] = EMPTY;
+						cells[y][x] = EMPTY;
 					}
 				}
 			}

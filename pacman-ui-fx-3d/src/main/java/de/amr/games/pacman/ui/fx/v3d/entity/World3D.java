@@ -209,7 +209,7 @@ public class World3D {
 			wallData.y = y;
 			wallData.numBricksX = 0;
 			for (int x = 0; x < floorPlan.sizeX(); ++x) {
-				if (floorPlan.get(x, y) == FloorPlan.HWALL) {
+				if (floorPlan.cell(x, y) == FloorPlan.HWALL) {
 					if (wallData.numBricksX == 0) {
 						wallData.x = x;
 					}
@@ -233,7 +233,7 @@ public class World3D {
 			wallData.y = -1;
 			wallData.numBricksY = 0;
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
-				if (floorPlan.get(x, y) == FloorPlan.VWALL) {
+				if (floorPlan.cell(x, y) == FloorPlan.VWALL) {
 					if (wallData.numBricksY == 0) {
 						wallData.y = y;
 					}
@@ -255,7 +255,7 @@ public class World3D {
 		wallData.numBricksY = 1;
 		for (int x = 0; x < floorPlan.sizeX(); ++x) {
 			for (int y = 0; y < floorPlan.sizeY(); ++y) {
-				if (floorPlan.get(x, y) == FloorPlan.CORNER) {
+				if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
 					wallData.x = x;
 					wallData.y = y;
 					addCompositeWall(floorPlan, wallData);
