@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.actors.GhostState.RETURNING_TO_HOUSE;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 
 /**
  * 2D play scene.
@@ -50,17 +51,17 @@ public class PlayScene2D extends GameScene2D {
 
 	@Override
 	public void handleKeyboardInput() {
-		if (Keyboard.pressed(PacManGames2dUI.KEYS_ADD_CREDIT)) {
+		if (Keyboard.pressed(KEYS_ADD_CREDIT)) {
 			if (!context.gameController().hasCredit()) {
 				context.actionHandler().addCredit();
 			}
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_EAT_ALL)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
 			context.actionHandler().cheatEatAllPellets();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_ADD_LIVES)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_ADD_LIVES)) {
 			context.actionHandler().cheatAddLives();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_NEXT_LEVEL)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_NEXT_LEVEL)) {
 			context.actionHandler().cheatEnterNextLevel();
-		} else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_KILL_GHOSTS)) {
+		} else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
 			context.actionHandler().cheatKillAllEatableGhosts();
 		}
 	}
@@ -77,6 +78,7 @@ public class PlayScene2D extends GameScene2D {
 				drawText(String.format("TEST    L%d", level.number()),
 					context.theme().color("palette.yellow"), sceneFont(8), t(8.5), t(21));
 			} else if (context.gameState() == GameState.GAME_OVER || !context.gameController().hasCredit()) {
+				// text "GAME OVER" is also drawn on demo mode screen
 				drawText("GAME  OVER", context.theme().color("palette.red"), sceneFont(8), t(9), t(21));
 			} else if (context.gameState() == GameState.READY) {
 				drawText("READY!", context.theme().color("palette.yellow"), sceneFont(8), t(11), t(21));
@@ -94,15 +96,13 @@ public class PlayScene2D extends GameScene2D {
 		});
 	}
 
-	// TODO put all images into a single sprite sheet
 	private void drawPacManMaze(World world) {
 		PacManSpriteSheet sheet = context.spriteSheet();
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
-				var flashingMazeImage = sheet.getFlashingMazeImage();
-				g.drawImage(flashingMazeImage,
-					s(x), s(y), s(flashingMazeImage.getWidth()), s(flashingMazeImage.getHeight()));
+				var flashingMaze = sheet.getFlashingMazeImage();
+				g.drawImage(flashingMaze, s(x), s(y), s(flashingMaze.getWidth()), s(flashingMaze.getHeight()));
 			} else {
 				drawSprite(sheet.getEmptyMazeSprite(), x, y);
 			}
