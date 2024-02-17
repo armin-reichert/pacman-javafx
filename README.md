@@ -292,8 +292,53 @@ Now try with Maven client: `mvn javafx:run -Dprism.verbose="true"`
 
 Same issue. No message from PRISM.
 
+Tried this: In IntelliJ, right-click over the "Main" class of the 3d subproject and select "More Run/Debug -> Modify Run Configuration..."
 
+In the run configuration, add the VM parameters input field and enter `-Dprism.verbose=true -Dprism.forceGPU=true`.
+Then run the application. And, you won't believe what you see in the console:
 
+```
+rism pipeline init order: es2 sw 
+Using Double Precision Marlin Rasterizer
+Using dirty region optimizations
+Not using texture mask for primitives
+Not forcing power of 2 sizes for textures
+Using hardware CLAMP_TO_ZERO mode
+Opting in for HiDPI pixel scaling
+Prism pipeline name = com.sun.prism.es2.ES2Pipeline
+Loading ES2 native library ... prism_es2
+	succeeded.
+GLFactory using com.sun.prism.es2.X11GLFactory
+(X) Got class = class com.sun.prism.es2.ES2Pipeline
+Initialized prism pipeline: com.sun.prism.es2.ES2Pipeline
+Maximum supported texture size: 16384
+Maximum texture size clamped to 4096
+Non power of two texture support = true
+Maximum number of vertex attributes = 16
+Maximum number of uniform vertex components = 16384
+Maximum number of uniform fragment components = 16384
+Maximum number of varying components = 124
+Maximum number of texture units usable in a vertex shader = 16
+Maximum number of texture units usable in a fragment shader = 16
+Graphics Vendor: VMware, Inc.
+       Renderer: SVGA3D; build: RELEASE;  LLVM;
+        Version: 4.1 (Compatibility Profile) Mesa 23.2.1-1ubuntu3.1~22.04.2
+ES2ResourceFactory: Prism - createStockShader: FillPgram_Color.frag
+ES2ResourceFactory: Prism - createStockShader: Solid_TextureRGB.frag
+ES2ResourceFactory: Prism - createStockShader: FillRoundRect_Color.frag
+ES2ResourceFactory: Prism - createStockShader: Texture_Color.frag
+PPSRenderer: scenario.effect - createShader: LinearConvolveShadow_20
+        
+```
+
+and below:
+```
+vsync: true vpipe: true
+```
+
+(whatever that means). 
+
+But what matters: The 3D view is working!
 
 
 
