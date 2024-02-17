@@ -133,3 +133,59 @@ Cheats:
 ![Dashboard](doc/dashboard-about.png)
 
 
+## Linux issues
+
+Ubuntu in VMWare player under Windows 10.
+
+```
+armin@armin-virtual-machine:~$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.3 LTS
+Release:	22.04
+Codename:	jammy
+
+```
+
+Starting from within IntelliJ after creating the jar using Gradle, the following exception occurs:
+```
+Exception in thread "Thread-4" com.sun.media.jfxmedia.MediaException: Could not create player!
+	at javafx.media@21.0.2/com.sun.media.jfxmediaimpl.NativeMediaManager.getPlayer(NativeMediaManager.java:299)
+	at javafx.media@21.0.2/com.sun.media.jfxmedia.MediaManager.getPlayer(MediaManager.java:118)
+	at javafx.media@21.0.2/com.sun.media.jfxmediaimpl.NativeMediaAudioClipPlayer.play(NativeMediaAudioClipPlayer.java:319)
+	at javafx.media@21.0.2/com.sun.media.jfxmediaimpl.NativeMediaAudioClipPlayer.clipScheduler(NativeMediaAudioClipPlayer.java:112)
+	at javafx.media@21.0.2/com.sun.media.jfxmediaimpl.NativeMediaAudioClipPlayer$Enthreaderator.lambda$static$0(NativeMediaAudioClipPlayer.java:85)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+```
+
+See https://stackoverflow.com/questions/62619607/javafx-media-issue-on-ubuntu-could-not-create-player
+
+Install FFMPEG (takes very long to install):
+
+```
+sudo apt-install ffmpeg
+```
+
+Now, 2D version works!
+
+But 3D features are not available! (Is this caused by running inside VMWare?):
+```
+Feb 17, 2024 1:16:51 PM javafx.scene.paint.Material <init>
+WARNING: System can't support ConditionalFeature.SCENE3D
+Feb 17, 2024 1:16:51 PM javafx.scene.paint.Material <init>
+WARNING: System can't support ConditionalFeature.SCENE3D
+Feb 17, 2024 1:16:51 PM javafx.scene.paint.Material <init>
+WARNING: System can't support ConditionalFeature.SCENE3D
+Feb 17, 2024 1:16:51 PM javafx.scene.shape.Mesh <init>
+WARNING: System can't support ConditionalFeature.SCENE3D
+Feb 17, 2024 1:16:51 PM javafx.scene.shape.Mesh <init>
+WARNING: System can't support ConditionalFeature.SCENE3D
+Feb 17, 2024 1:16:52 PM javafx.scene.shape.Mesh <init>
+WARNING: System can't support ConditionalFeature.SCENE3D
+```
+
+
+
+
+
+
