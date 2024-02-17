@@ -22,7 +22,7 @@
         <vs.maven-shade-plugin>3.4.1</vs.maven-shade-plugin>
         <vs.maven-source-plugin>3.3.0</vs.maven-source-plugin>
         <vs.tinylog>2.7.0</vs.tinylog>
-        <linux.jdk.path>C:\dev\linux\jdk-17.0.7</linux.jdk.path>
+        <linux.jdk.path>/home/armin/.jdks/openjdk-21.0.2</linux.jdk.path>
     </properties>
 
     <modules>
