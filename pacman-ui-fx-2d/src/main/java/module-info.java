@@ -1,12 +1,15 @@
 /*
  * Copyright (c) 2021-2023 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
-module de.amr.games.pacman.ui.fx {
+open module de.amr.games.pacman.ui.fx {
 
-	requires transitive de.amr.games.pacman;
-	requires transitive javafx.controls;
-	requires transitive javafx.media;
-	requires transitive org.tinylog.api;
+	// module is open to allow access to resources using class loader
+
+	requires javafx.graphics;
+	requires javafx.controls;
+	requires javafx.media;
+	requires org.tinylog.api;
+	requires de.amr.games.pacman;
 
 	exports de.amr.games.pacman.ui.fx;
 	exports de.amr.games.pacman.ui.fx.input;
