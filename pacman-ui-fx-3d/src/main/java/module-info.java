@@ -4,12 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 open module de.amr.games.pacman.ui.fx.v3d {
 
+	// module is open to allow access to resources using class loader
+
 	requires javafx.graphics;
-	requires transitive javafx.controls;
-	requires transitive javafx.media;
+	requires javafx.controls;
+	requires javafx.media;
 	requires org.tinylog.api;
-	requires transitive de.amr.games.pacman;
-	requires transitive de.amr.games.pacman.ui.fx;
+	requires de.amr.games.pacman;
+	requires de.amr.games.pacman.ui.fx;
 
 	exports de.amr.games.pacman.ui.fx.v3d;
 	exports de.amr.games.pacman.ui.fx.v3d.animation;
