@@ -8,9 +8,6 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Armin Reichert
  */
