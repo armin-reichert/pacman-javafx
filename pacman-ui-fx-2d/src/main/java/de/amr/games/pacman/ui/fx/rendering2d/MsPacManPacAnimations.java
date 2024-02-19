@@ -9,6 +9,8 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
+import java.util.Map;
+
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -16,6 +18,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class MsPacManPacAnimations extends SpriteAnimations {
 
+	private final Map<String, SpriteAnimation> animationsByName;
 	private final Pac pac;
 	private final MsPacManSpriteSheet spriteSheet;
 
@@ -44,9 +47,16 @@ public class MsPacManPacAnimations extends SpriteAnimations {
 				.loop()
 			.end();
 
-		animationsByName.put(PacAnimations.MUNCHING,         munching);
-		animationsByName.put(PacAnimations.DYING,            dying);
-		animationsByName.put(PacAnimations.HUSBAND_MUNCHING, husbandMunching);
+		animationsByName = Map.of(
+			PacAnimations.MUNCHING,         munching,
+			PacAnimations.DYING,            dying,
+			PacAnimations.HUSBAND_MUNCHING, husbandMunching
+		);
+	}
+
+	@Override
+	public SpriteAnimation byName(String name) {
+		return animationsByName.get(name);
 	}
 
 	@Override

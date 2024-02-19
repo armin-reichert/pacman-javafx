@@ -14,9 +14,8 @@ import java.util.Map;
 /**
  * @author Armin Reichert
  */
-public abstract class SpriteAnimations implements Animations<SpriteAnimation, Rectangle2D> {
+public abstract class SpriteAnimations implements Animations {
 
-	protected final Map<String, SpriteAnimation> animationsByName = new HashMap<>();
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
 
@@ -31,12 +30,7 @@ public abstract class SpriteAnimations implements Animations<SpriteAnimation, Re
 		}
 	}
 
-	public SpriteAnimation byName(String name) {
-		if (animationsByName.containsKey(name)) {
-			return animationsByName.get(name);
-		}
-		throw new IllegalArgumentException("Illegal animation name: " + name);
-	}
+	public abstract SpriteAnimation byName(String name);
 
 	@Override
 	public SpriteAnimation currentAnimation() {

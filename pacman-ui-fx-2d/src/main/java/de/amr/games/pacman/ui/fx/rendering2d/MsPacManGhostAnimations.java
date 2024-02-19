@@ -5,70 +5,76 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
-import javafx.geometry.Rectangle2D;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacManGhostAnimations extends SpriteAnimations
-		implements Animations<SpriteAnimation, Rectangle2D> {
+public class MsPacManGhostAnimations extends SpriteAnimations {
 
+	private final Map<String, SpriteAnimation> animationsByName;
 	private final Ghost ghost;
-	private final MsPacManSpriteSheet spritesheet;
+	private final MsPacManSpriteSheet spriteSheet;
 
-	public MsPacManGhostAnimations(Ghost ghost, MsPacManSpriteSheet spritesheet) {
+	public MsPacManGhostAnimations(Ghost ghost, MsPacManSpriteSheet spriteSheet) {
 		checkNotNull(ghost);
-		checkNotNull(spritesheet);
+		checkNotNull(spriteSheet);
 		this.ghost = ghost;
-		this.spritesheet = spritesheet;
+		this.spriteSheet = spriteSheet;
 
 		var normal = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+				.sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
 				.frameTicks(8)
 				.loop()
 			.end();
 		
 		var frightened = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostFrightenedSprites())
+				.sprites(spriteSheet.ghostFrightenedSprites())
 				.frameTicks(8)
 				.loop()
 			.end();
 		
 		var flashing = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostFlashingSprites())
+				.sprites(spriteSheet.ghostFlashingSprites())
 				.frameTicks(6)
 				.loop()
 			.end();
 		
 		var eyes = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostEyesSprites(Direction.LEFT))
+				.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
 			.end();
 		
 		var number = SpriteAnimation
 			.begin()
-				.sprites(spritesheet.ghostNumberSprites())
+				.sprites(spriteSheet.ghostNumberSprites())
 			.end();
 
-		animationsByName.put(GhostAnimations.GHOST_NORMAL,     normal);
-		animationsByName.put(GhostAnimations.GHOST_FRIGHTENED, frightened);
-		animationsByName.put(GhostAnimations.GHOST_FLASHING,   flashing);
-		animationsByName.put(GhostAnimations.GHOST_EYES,       eyes);
-		animationsByName.put(GhostAnimations.GHOST_NUMBER,     number);
+		animationsByName = Map.of(
+			GhostAnimations.GHOST_NORMAL,     normal,
+			GhostAnimations.GHOST_FRIGHTENED, frightened,
+			GhostAnimations.GHOST_FLASHING,   flashing,
+			GhostAnimations.GHOST_EYES,       eyes,
+			GhostAnimations.GHOST_NUMBER,     number);
 
 		// TODO check this
 		eyes.start();
 		frightened.start();
 		flashing.start();
+	}
+
+	@Override
+	public SpriteAnimation byName(String name) {
+		return animationsByName.get(name);
 	}
 
 	@Override
@@ -82,9 +88,9 @@ public class MsPacManGhostAnimations extends SpriteAnimations
 	@Override
 	public void updateCurrentAnimation() {
 		if (GhostAnimations.GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
+			currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
 		} else if (GhostAnimations.GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spritesheet.ghostEyesSprites(ghost.wishDir()));
+			currentAnimation.setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
 		}
 	}
 }

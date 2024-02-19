@@ -9,6 +9,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
+import java.util.Map;
+
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -16,6 +18,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class PacManGhostAnimations extends SpriteAnimations {
 
+	private final Map<String, SpriteAnimation> animationsByName;
 	private final Ghost ghost;
 	private final PacManSpriteSheet spriteSheet;
 
@@ -80,20 +83,26 @@ public class PacManGhostAnimations extends SpriteAnimations {
 				.loop()
 			.end();
 
-		animationsByName.put(GhostAnimations.GHOST_NORMAL,     normal);
-		animationsByName.put(GhostAnimations.GHOST_FRIGHTENED, frightened);
-		animationsByName.put(GhostAnimations.GHOST_FLASHING,   flashing);
-		animationsByName.put(GhostAnimations.GHOST_EYES,       eyesAnimation);
-		animationsByName.put(GhostAnimations.GHOST_NUMBER,     numberAnimation);
-		animationsByName.put(GhostAnimations.BLINKY_DAMAGED,   damaged);
-		animationsByName.put(GhostAnimations.BLINKY_STRETCHED, stretched);
-		animationsByName.put(GhostAnimations.BLINKY_PATCHED,   patched);
-		animationsByName.put(GhostAnimations.BLINKY_NAKED,     naked);
+		animationsByName = Map.of(
+			GhostAnimations.GHOST_NORMAL,     normal,
+			GhostAnimations.GHOST_FRIGHTENED, frightened,
+			GhostAnimations.GHOST_FLASHING,   flashing,
+			GhostAnimations.GHOST_EYES,       eyesAnimation,
+			GhostAnimations.GHOST_NUMBER,     numberAnimation,
+			GhostAnimations.BLINKY_DAMAGED,   damaged,
+			GhostAnimations.BLINKY_STRETCHED, stretched,
+			GhostAnimations.BLINKY_PATCHED,   patched,
+			GhostAnimations.BLINKY_NAKED,     naked);
 
 		// TODO check this
 		eyesAnimation.start();
 		frightened.start();
 		flashing.start();
+	}
+
+	@Override
+	public SpriteAnimation byName(String name) {
+		return animationsByName.get(name);
 	}
 
 	@Override

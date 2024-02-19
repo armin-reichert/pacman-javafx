@@ -37,7 +37,7 @@ public abstract class Creature extends Entity implements AnimationDirector {
 	protected boolean canTeleport;
 	protected float corneringSpeedUp;
 
-	private Animations<?, ?> animations;
+	private Animations animations;
 
 	protected Creature(String name) {
 		checkNotNull(name, "Name of creature must not be null");
@@ -62,11 +62,10 @@ public abstract class Creature extends Entity implements AnimationDirector {
 		canTeleport = true;
 	}
 
-	public void setAnimations(Animations<?, ?> animations) {
+	public void setAnimations(Animations animations) {
 		this.animations = animations;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public Optional<Animations> animations() {
 		return Optional.ofNullable(animations);

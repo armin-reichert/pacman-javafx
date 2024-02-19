@@ -7,13 +7,13 @@ package de.amr.games.pacman.model.actors;
 /**
  * @author Armin Reichert
  */
-public interface Animations<A, S> {
+public interface Animations {
 
 	String currentAnimationName();
 
-	A currentAnimation();
+	Object currentAnimation();
 
-	S currentSprite();
+	Object currentSprite();
 
 	void select(String name, Object... args);
 
@@ -22,5 +22,4 @@ public interface Animations<A, S> {
 	void stopSelected();
 
 	void resetSelected();
-
 }
