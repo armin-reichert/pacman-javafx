@@ -28,35 +28,30 @@ public class MsPacManGhostAnimations extends SpriteAnimations {
 		this.ghost = ghost;
 		this.spriteSheet = spriteSheet;
 
-		var normal = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
-				.frameTicks(8)
-				.loop()
+		var normal = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+			.frameTicks(8)
+			.loop()
 			.end();
 		
-		var frightened = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostFrightenedSprites())
-				.frameTicks(8)
-				.loop()
+		var frightened = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostFrightenedSprites())
+			.frameTicks(8)
+			.loop()
 			.end();
 		
-		var flashing = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostFlashingSprites())
-				.frameTicks(6)
-				.loop()
+		var flashing = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostFlashingSprites())
+			.frameTicks(6)
+			.loop()
 			.end();
 		
-		var eyes = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
+		var eyes = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
 			.end();
 		
-		var number = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostNumberSprites())
+		var number = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostNumberSprites())
 			.end();
 
 		animationsByName = Map.of(

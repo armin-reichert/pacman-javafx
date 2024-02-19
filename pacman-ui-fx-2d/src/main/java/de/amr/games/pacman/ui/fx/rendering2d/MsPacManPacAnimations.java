@@ -28,23 +28,20 @@ public class MsPacManPacAnimations extends SpriteAnimations {
 		this.pac = pac;
 		this.spriteSheet = spriteSheet;
 
-		var munching = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
-				.loop()
+		var munching = SpriteAnimation.begin()
+			.sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
+			.loop()
 			.end();
 		
-		var dying = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.msPacManDyingSprites())
-				.frameTicks(8)
+		var dying = SpriteAnimation.begin()
+			.sprites(spriteSheet.msPacManDyingSprites())
+			.frameTicks(8)
 			.end();
 		
-		var husbandMunching = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
-				.frameTicks(2)
-				.loop()
+		var husbandMunching = SpriteAnimation.begin()
+			.sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
+			.frameTicks(2)
+			.loop()
 			.end();
 
 		animationsByName = Map.of(

@@ -28,59 +28,50 @@ public class PacManGhostAnimations extends SpriteAnimations {
 		this.ghost = ghost;
 		this.spriteSheet = spriteSheet;
 
-		var normal = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
-				.frameTicks(8)
-				.loop()
+		var normal = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+			.frameTicks(8)
+			.loop()
 			.end();
 
-		var frightened = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostFrightenedSprites())
-				.frameTicks(8)
-				.loop()
+		var frightened = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostFrightenedSprites())
+			.frameTicks(8)
+			.loop()
 			.end();
 		
-		var flashing = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostFlashingSprites())
-				.frameTicks(6)
-				.loop()
+		var flashing = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostFlashingSprites())
+			.frameTicks(6)
+			.loop()
 			.end();
 		
-		var eyesAnimation = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
+		var eyesAnimation = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
 			.end();
 		
-		var numberAnimation = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.ghostNumberSprites())
+		var numberAnimation = SpriteAnimation.begin()
+			.sprites(spriteSheet.ghostNumberSprites())
 			.end();
 		
-		var damaged = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.blinkyDamagedSprites())
+		var damaged = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyDamagedSprites())
 			.end();
 		
-		var stretched = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.blinkyStretchedSprites())
+		var stretched = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyStretchedSprites())
 			.end();
 		
-		var patched = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.blinkyPatchedSprites())
-				.frameTicks(4)
-				.loop()
+		var patched = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyPatchedSprites())
+			.frameTicks(4)
+			.loop()
 			.end();
 		
-		var naked = SpriteAnimation
-			.begin()
-				.sprites(spriteSheet.blinkyNakedSprites())
-				.frameTicks(4)
-				.loop()
+		var naked = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyNakedSprites())
+			.frameTicks(4)
+			.loop()
 			.end();
 
 		animationsByName = Map.of(
