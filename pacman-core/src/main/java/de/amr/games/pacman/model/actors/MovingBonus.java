@@ -115,7 +115,7 @@ public class MovingBonus extends Creature implements Bonus {
 	}
 
 	public void setRoute(List<NavigationPoint> route, boolean leftToRight) {
-		placeAtTile(route.get(0).tile(), 0, 0);
+		centerOverTile(route.get(0).tile());
 		setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
 		route.remove(0);
 		steering.setRoute(route);

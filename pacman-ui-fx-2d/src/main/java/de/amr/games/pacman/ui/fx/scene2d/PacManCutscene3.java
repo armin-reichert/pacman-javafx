@@ -46,7 +46,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.setAnimations(new PacManPacAnimations(pac, ss));
 		pac.selectAnimation(PacAnimations.MUNCHING);
 		pac.startAnimation();
-		pac.placeAtTile(v2i(29, 20), 0, 0);
+		pac.centerOverTile(v2i(29, 20));
 		pac.setMoveDir(Direction.LEFT);
 		pac.setPixelSpeed(1.25f);
 		pac.show();
@@ -54,7 +54,7 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky.setAnimations(new PacManGhostAnimations(blinky, ss));
 		blinky.selectAnimation(GhostAnimations.BLINKY_PATCHED);
 		blinky.startAnimation();
-		blinky.placeAtTile(v2i(35, 20), 0, 0);
+		blinky.centerOverTile(v2i(35, 20));
 		blinky.setMoveAndWishDir(Direction.LEFT);
 		blinky.setPixelSpeed(1.25f);
 		blinky.show();
@@ -74,7 +74,7 @@ public class PacManCutscene3 extends GameScene2D {
 		}
 		switch (++frame) {
 			case 400 -> {
-				blinky.placeAtTile(v2i(-1, 20), 0, 0);
+				blinky.centerOverTile(v2i(-1, 20));
 				blinky.setMoveAndWishDir(Direction.RIGHT);
 				blinky.selectAnimation(GhostAnimations.BLINKY_NAKED);
 				blinky.startAnimation();

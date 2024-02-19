@@ -134,14 +134,12 @@ public abstract class Creature extends Entity implements AnimationDirector {
 	}
 
 	/**
-	 * Places this creature exactly (no offsets) at the given tile coordinate. Updates the <code>newTileEntered</code>
-	 * state.
-	 * 
-	 * @param tile tile
+	 * Places this creature centered over the given tile.
+	 *
+	 * @param tile tile where creature is placed
 	 */
-	public void placeAtTile(Vector2i tile) {
-		checkTileNotNull(tile);
-		placeAtTile(tile.x(), tile.y(), 0, 0);
+	public void centerOverTile(Vector2i tile) {
+		placeAtTile(tile, 0, 0);
 	}
 
 	/**
@@ -153,8 +151,8 @@ public abstract class Creature extends Entity implements AnimationDirector {
 	 *         original Arcade game.
 	 */
 	public Vector2i tilesAheadBuggy(int numTiles) {
-		Vector2i ahead = tile().plus(moveDir().vector().scaled(numTiles));
-		return moveDir() == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
+		Vector2i ahead = tile().plus(moveDir.vector().scaled(numTiles));
+		return moveDir == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
 	}
 
 	/**
@@ -275,7 +273,7 @@ public abstract class Creature extends Entity implements AnimationDirector {
 			}
 			final var neighborTile = currentTile.plus(dir.vector());
 			if (canAccessTile(neighborTile)) {
-				final var distance = neighborTile.euclideanDistance(targetTile);
+				final float distance = neighborTile.euclideanDistance(targetTile);
 				if (distance < minDistance) {
 					minDistance = distance;
 					targetDir = dir;
@@ -331,7 +329,7 @@ public abstract class Creature extends Entity implements AnimationDirector {
 	private void tryTeleport(List<Portal> portals) {
 		if (canTeleport) {
 			for (var portal : portals) {
-				teleport(portal);
+				tryTeleport(portal);
 				if (moveResult.teleported) {
 					return;
 				}
@@ -339,17 +337,17 @@ public abstract class Creature extends Entity implements AnimationDirector {
 		}
 	}
 
-	private void teleport(Portal portal) {
+	private void tryTeleport(Portal portal) {
 		var tile = tile();
 		var old_pos_x = pos_x;
 		var old_pos_y = pos_y;
-		if (tile.y() == portal.leftTunnelEnd().y() && pos_x < (portal.leftTunnelEnd().x() - portal.depth()) * TS) {
-			placeAtTile(portal.rightTunnelEnd());
+		if (tile.y() == portal.leftTunnelEnd().y() && pos_x < portal.leftTunnelEnd().x() - portal.depth() * TS) {
+			centerOverTile(portal.rightTunnelEnd());
 			moveResult.teleported = true;
 			moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
 				name, old_pos_x, old_pos_y, pos_x, pos_y));
 		} else if (tile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
-			placeAtTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
+			centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
 			moveResult.teleported = true;
 			moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
 				name, old_pos_x, old_pos_y, pos_x, pos_y));
@@ -357,33 +355,33 @@ public abstract class Creature extends Entity implements AnimationDirector {
 	}
 
 	private void tryMoving(Direction dir) {
-		final var tileBeforeMove = tile();
-		final var aroundCorner = !dir.sameOrientation(moveDir);
-		final var dirVector = dir.vector().toFloatVec();
-		final var newVelocity = dirVector.scaled(velocity().length());
-		final var touchPosition = center().plus(dirVector.scaled(HTS)).plus(newVelocity);
-		final var touchedTile = tileAt(touchPosition);
+		final Vector2i tileBeforeMove = tile();
+		final Vector2f dirVector = dir.vector().toFloatVec();
+		final Vector2f newVelocity = dirVector.scaled(velocity().length());
+		final Vector2f touchPosition = center().plus(dirVector.scaled(HTS)).plus(newVelocity);
+		final Vector2i touchedTile = tileAt(touchPosition);
+		final boolean isTurn = !dir.sameOrientation(moveDir);
 
 		if (!canAccessTile(touchedTile)) {
-			if (!aroundCorner) {
-				placeAtTile(tile()); // adjust if blocked and moving forward
+			if (!isTurn) {
+				centerOverTile(tile()); // adjust over tile (would move forward against wall)
 			}
 			moveResult.addMessage(String.format("Cannot move %s into tile %s", dir, touchedTile));
 			return;
 		}
 
-		if (aroundCorner) {
-			var offset = dir.isHorizontal() ? offset().y() : offset().x();
-			boolean atTurnPosition = Math.abs(offset) <= 1; // TODO <= pixelspeed?
+		if (isTurn) {
+			float offset = dir.isHorizontal() ? offset().y() : offset().x();
+			boolean atTurnPosition = Math.abs(offset) <= 1; // TODO <= pixel-speed?
 			if (atTurnPosition) {
-				placeAtTile(tile()); // adjust if moving around corner
+				centerOverTile(tile()); // adjust over tile (starts moving around corner)
 			} else {
 				moveResult.addMessage(String.format("Wants to take corner towards %s but not at turn position", dir));
 				return;
 			}
 		}
 
-		if (aroundCorner && corneringSpeedUp > 0) {
+		if (isTurn && corneringSpeedUp > 0) {
 			setVelocity(newVelocity.plus(dirVector.scaled(corneringSpeedUp)));
 			Logger.trace("{} velocity around corner: {}", name(), velocity().length());
 			move();
