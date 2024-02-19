@@ -9,11 +9,7 @@ package de.amr.games.pacman.model.actors;
  */
 public interface Animations {
 
-	String currentAnimationName();
-
 	Object currentAnimation();
-
-	Object currentSprite();
 
 	void select(String name, Object... args);
 

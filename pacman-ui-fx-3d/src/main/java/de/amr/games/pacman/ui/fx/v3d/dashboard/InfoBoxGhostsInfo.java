@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
 import java.util.function.BiFunction;
@@ -63,8 +64,8 @@ public class InfoBoxGhostsInfo extends InfoBox {
 		if (ghost.animations().isEmpty()) {
 			return InfoText.NO_INFO;
 		}
-		var key = ghost.animations().get().currentAnimationName();
-		return key != null ? key : InfoText.NO_INFO;
+		SpriteAnimations sa = (SpriteAnimations) ghost.animations().get();
+		return sa.currentAnimationName() != null ? sa.currentAnimationName() : InfoText.NO_INFO;
 	}
 
 	private String ghostTile(GameLevel level, Ghost ghost) {

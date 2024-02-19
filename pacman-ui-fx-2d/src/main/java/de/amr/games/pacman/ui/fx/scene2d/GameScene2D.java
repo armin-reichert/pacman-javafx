@@ -220,29 +220,25 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		pac.animations().ifPresent(pa -> {
-			if (pa instanceof SpriteAnimations sa) {
-				drawEntitySprite(pac, sa.currentSprite());
+			if (pa instanceof SpriteAnimations animations) {
+				drawEntitySprite(pac, animations.currentSprite());
 				if (infoVisiblePy.get()) {
-					drawPacInfo(pac, sa);
+					g.setFill(Color.WHITE);
+					g.setFont(Font.font("Monospaced", s(6)));
+					var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
+					g.fillText(text, s(pac.pos_x() - 4), s(pac.pos_y() - 4));
+					// indicate wish direction
+					float r = 2;
+					var pacCenter = pac.center();
+					var indicatorCenter = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(1.5f * TS));
+					var indicatorTopLeft = indicatorCenter.minus(r, r);
+					g.setStroke(Color.WHITE);
+					g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
+					g.setFill(Color.GREEN);
+					g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
 				}
 			}
 		});
-	}
-
-	private void drawPacInfo(Pac pac, SpriteAnimations animations) {
-		g.setFill(Color.WHITE);
-		g.setFont(Font.font("Monospaced", s(6)));
-		var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
-		g.fillText(text, s(pac.pos_x() - 4), s(pac.pos_y() - 4));
-		// indicate wish direction
-		float r = 2;
-		var pacCenter = pac.center();
-		var indicatorCenter = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(1.5f * TS));
-		var indicatorTopLeft = indicatorCenter.minus(r, r);
-		g.setStroke(Color.WHITE);
-		g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
-		g.setFill(Color.GREEN);
-		g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
 	}
 
 	protected void drawGhost(Ghost ghost) {
@@ -250,20 +246,16 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		ghost.animations().ifPresent(ga -> {
-			if (ga instanceof SpriteAnimations sa) {
-				drawEntitySprite(ghost, sa.currentSprite());
+			if (ga instanceof SpriteAnimations animations) {
+				drawEntitySprite(ghost, animations.currentSprite());
 				if (infoVisiblePy.get()) {
-					drawGhostInfo(ghost, sa);
+					g.setFill(Color.WHITE);
+					g.setFont(Font.font("Monospaced", s(6)));
+					var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
+					g.fillText(text, s(ghost.pos_x() - 4), s(ghost.pos_y() - 4));
 				}
 			}
 		});
-	}
-
-	private void drawGhostInfo(Ghost ghost, SpriteAnimations sa) {
-		g.setFill(Color.WHITE);
-		g.setFont(Font.font("Monospaced", s(6)));
-		var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-		g.fillText(text, s(ghost.pos_x() - 4), s(ghost.pos_y() - 4));
 	}
 
 	/**
@@ -277,8 +269,8 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
 		if (sprite != null) {
 			g.drawImage(source,
-					sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
-					s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+				sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
+				s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
 		}
 	}
 

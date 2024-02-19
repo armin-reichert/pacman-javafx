@@ -11,7 +11,6 @@ import java.util.Optional;
  */
 public interface AnimationDirector {
 
-	@SuppressWarnings("rawtypes")
 	Optional<Animations> animations();
 
 	default void selectAnimation(String name, Object... args) {

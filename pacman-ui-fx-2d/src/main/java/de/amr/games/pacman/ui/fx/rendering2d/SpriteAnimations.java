@@ -16,15 +16,8 @@ public abstract class SpriteAnimations implements Animations {
 	protected String currentAnimationName;
 	protected SpriteAnimation currentAnimation;
 
-	@Override
-	public void select(String name, Object... args) {
-		if (!name.equals(currentAnimationName)) {
-			currentAnimationName = name;
-			currentAnimation = byName(name);
-			if (currentAnimation != null) {
-				currentAnimation.setFrameIndex(0);
-			}
-		}
+	public String currentAnimationName() {
+		return currentAnimationName;
 	}
 
 	public abstract SpriteAnimation byName(String name);
@@ -35,8 +28,14 @@ public abstract class SpriteAnimations implements Animations {
 	}
 
 	@Override
-	public String currentAnimationName() {
-		return currentAnimationName;
+	public void select(String name, Object... args) {
+		if (!name.equals(currentAnimationName)) {
+			currentAnimationName = name;
+			currentAnimation = byName(name);
+			if (currentAnimation != null) {
+				currentAnimation.setFrameIndex(0);
+			}
+		}
 	}
 
 	@Override
@@ -60,9 +59,8 @@ public abstract class SpriteAnimations implements Animations {
 		}
 	}
 
-	@Override
 	public final Rectangle2D currentSprite() {
-		if (currentAnimationName != null) {
+		if (currentAnimation != null) {
 			updateCurrentAnimation();
 			return currentAnimation.currentSprite();
 		}
