@@ -7,9 +7,9 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission1;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGhostAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManPacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -26,7 +26,7 @@ public class MsPacManCutscene1 extends GameScene2D {
 
 	private MsPacManIntermission1 intermission;
 	private ClapperboardAnimation clapAnimation;
-	private MsPacManSpriteSheet ss;
+	private MsPacManGameSpriteSheet ss;
 
 	@Override
 	public boolean isCreditVisible() {
@@ -38,10 +38,10 @@ public class MsPacManCutscene1 extends GameScene2D {
 		ss = context.spriteSheet();
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission1();
-		intermission.msPac.setAnimations(new MsPacManPacAnimations(intermission.msPac, ss));
-		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
-		intermission.inky.setAnimations(new MsPacManGhostAnimations(intermission.inky, ss));
-		intermission.pinky.setAnimations(new MsPacManGhostAnimations(intermission.pinky, ss));
+		intermission.msPac.setAnimations(new MsPacManGamePacAnimations(intermission.msPac, ss));
+		intermission.pacMan.setAnimations(new MsPacManGamePacAnimations(intermission.pacMan, ss));
+		intermission.inky.setAnimations(new MsPacManGameGhostAnimations(intermission.inky, ss));
+		intermission.pinky.setAnimations(new MsPacManGameGhostAnimations(intermission.pinky, ss));
 		clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
 		clapAnimation.start();
 		intermission.changeState(MsPacManIntermission1.STATE_FLAP, 2 * GameModel.FPS);

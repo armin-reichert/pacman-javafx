@@ -14,8 +14,8 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -139,13 +139,13 @@ public class GameLevel3D {
 		byte symbol = bonus.symbol();
 		switch (level.game().variant()) {
 			case PACMAN -> {
-				PacManSpriteSheet ss = (PacManSpriteSheet) spriteSheet;
+				PacManGameSpriteSheet ss = (PacManGameSpriteSheet) spriteSheet;
 				return new Bonus3D(bonus,
 						spriteSheet.subImage(ss.bonusSymbolSprite(symbol)),
 						spriteSheet.subImage(ss.bonusValueSprite(symbol)));
 			}
 			case MS_PACMAN -> {
-				MsPacManSpriteSheet ss = (MsPacManSpriteSheet) spriteSheet;
+				MsPacManGameSpriteSheet ss = (MsPacManGameSpriteSheet) spriteSheet;
 				return new Bonus3D(bonus,
 						spriteSheet.subImage(ss.bonusSymbolSprite(symbol)),
 						spriteSheet.subImage(ss.bonusValueSprite(symbol)));
@@ -176,8 +176,8 @@ public class GameLevel3D {
 
 	public void updateLevelCounter3D() {
 		Function<Byte, Rectangle2D> spriteSupplier = switch (level.game().variant()) {
-			case MS_PACMAN -> ((MsPacManSpriteSheet) spriteSheet)::bonusSymbolSprite;
-			case PACMAN    -> ((PacManSpriteSheet) spriteSheet)::bonusSymbolSprite;
+			case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
+			case PACMAN    -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
 		};
 		var bonusSprites = level.game().levelCounter().stream()
 			.map(spriteSupplier)

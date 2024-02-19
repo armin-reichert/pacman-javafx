@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
 import java.util.function.BiFunction;

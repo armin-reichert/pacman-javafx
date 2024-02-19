@@ -15,8 +15,8 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
@@ -323,8 +323,8 @@ public class PlayScene3D implements GameScene {
 
 			case GHOST_DYING -> {
 				Supplier<Rectangle2D[]> spriteSupplier = switch (context.gameVariant()) {
-					case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet()::ghostNumberSprites;
-					case PACMAN    -> context.<PacManSpriteSheet>spriteSheet()::ghostNumberSprites;
+					case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet()::ghostNumberSprites;
+					case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet()::ghostNumberSprites;
 				};
 				level.thisFrame().killedGhosts.forEach(ghost -> {
 					var numberImage = context.spriteSheet().subImage(spriteSupplier.get()[ghost.killedIndex()]);

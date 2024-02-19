@@ -10,9 +10,9 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.SpriteAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -158,8 +158,8 @@ public abstract class GameScene2D implements GameScene {
 		double y = t( ArcadeWorld.TILES_Y - 2);
 		for (byte symbol : context.game().levelCounter()) {
 			var sprite = switch (context.gameVariant()) {
-				case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-				case PACMAN -> context.<PacManSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+				case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+				case PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
 			};
 			drawSprite(sprite, x, y);
 			x -= TS * 2;
@@ -171,8 +171,8 @@ public abstract class GameScene2D implements GameScene {
 			return;
 		}
 		var sprite = switch (context.gameVariant()) {
-			case MS_PACMAN -> context.<MsPacManSpriteSheet>spriteSheet().livesCounterSprite();
-			case PACMAN    -> context.<PacManSpriteSheet>spriteSheet().livesCounterSprite();
+			case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().livesCounterSprite();
+			case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().livesCounterSprite();
 		};
 		var x = TS * 2;
 		var y = TS * (ArcadeWorld.TILES_Y - 2);
@@ -191,7 +191,7 @@ public abstract class GameScene2D implements GameScene {
 	protected void drawBonus(Bonus bonus) {
 		switch (context.gameVariant()) {
 			case MS_PACMAN -> {
-				var ss = context.<MsPacManSpriteSheet>spriteSheet();
+				var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
 				if (bonus instanceof MovingBonus movingBonus) {
 					//TODO reconsider this way of implementing the jumping bonus
 					g.save();
@@ -205,7 +205,7 @@ public abstract class GameScene2D implements GameScene {
 				}
 			}
 			case PACMAN -> {
-				var ss = context.<PacManSpriteSheet>spriteSheet();
+				var ss = context.<PacManGameSpriteSheet>spriteSheet();
 				if (bonus.state() == Bonus.STATE_EDIBLE) {
 					drawEntitySprite(bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
 				} else if (bonus.state() == Bonus.STATE_EATEN) {
@@ -328,7 +328,7 @@ public abstract class GameScene2D implements GameScene {
 	}
 
 	protected void drawMsPacManClapperBoard(ClapperboardAnimation animation, double x, double y) {
-		var ss = context.<MsPacManSpriteSheet>spriteSheet();
+		var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
 		var sprite = animation.currentSprite(ss.clapperboardSprites());
 		if (sprite != null) {
 			drawSpriteCenteredOverBox(sprite, x, y);

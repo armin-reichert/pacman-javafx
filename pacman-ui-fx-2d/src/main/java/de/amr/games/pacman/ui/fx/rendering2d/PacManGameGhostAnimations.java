@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 
 import java.util.Map;
 
@@ -16,13 +17,13 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGhostAnimations extends SpriteAnimations {
+public class PacManGameGhostAnimations extends SpriteAnimations {
 
 	private final Map<String, SpriteAnimation> animationsByName;
 	private final Ghost ghost;
-	private final MsPacManSpriteSheet spriteSheet;
+	private final PacManGameSpriteSheet spriteSheet;
 
-	public MsPacManGhostAnimations(Ghost ghost, MsPacManSpriteSheet spriteSheet) {
+	public PacManGameGhostAnimations(Ghost ghost, PacManGameSpriteSheet spriteSheet) {
 		checkNotNull(ghost);
 		checkNotNull(spriteSheet);
 		this.ghost = ghost;
@@ -33,7 +34,7 @@ public class MsPacManGhostAnimations extends SpriteAnimations {
 			.frameTicks(8)
 			.loop()
 			.end();
-		
+
 		var frightened = SpriteAnimation.begin()
 			.sprites(spriteSheet.ghostFrightenedSprites())
 			.frameTicks(8)
@@ -46,23 +47,47 @@ public class MsPacManGhostAnimations extends SpriteAnimations {
 			.loop()
 			.end();
 		
-		var eyes = SpriteAnimation.begin()
+		var eyesAnimation = SpriteAnimation.begin()
 			.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
 			.end();
 		
-		var number = SpriteAnimation.begin()
+		var numberAnimation = SpriteAnimation.begin()
 			.sprites(spriteSheet.ghostNumberSprites())
+			.end();
+		
+		var damaged = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyDamagedSprites())
+			.end();
+		
+		var stretched = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyStretchedSprites())
+			.end();
+		
+		var patched = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyPatchedSprites())
+			.frameTicks(4)
+			.loop()
+			.end();
+		
+		var naked = SpriteAnimation.begin()
+			.sprites(spriteSheet.blinkyNakedSprites())
+			.frameTicks(4)
+			.loop()
 			.end();
 
 		animationsByName = Map.of(
 			GhostAnimations.GHOST_NORMAL,     normal,
 			GhostAnimations.GHOST_FRIGHTENED, frightened,
 			GhostAnimations.GHOST_FLASHING,   flashing,
-			GhostAnimations.GHOST_EYES,       eyes,
-			GhostAnimations.GHOST_NUMBER,     number);
+			GhostAnimations.GHOST_EYES,       eyesAnimation,
+			GhostAnimations.GHOST_NUMBER,     numberAnimation,
+			GhostAnimations.BLINKY_DAMAGED,   damaged,
+			GhostAnimations.BLINKY_STRETCHED, stretched,
+			GhostAnimations.BLINKY_PATCHED,   patched,
+			GhostAnimations.BLINKY_NAKED,     naked);
 
 		// TODO check this
-		eyes.start();
+		eyesAnimation.start();
 		frightened.start();
 		flashing.start();
 	}

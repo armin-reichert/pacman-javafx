@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 /**
  * @author Armin Reichert
  */
-public class PacManSpriteSheet implements SpriteSheet {
+public class PacManGameSpriteSheet implements SpriteSheet {
 
 	private static final Order<Direction> DIR_ORDER = new Order<>(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 	private static final int OFF_X = 456;
@@ -23,7 +23,7 @@ public class PacManSpriteSheet implements SpriteSheet {
 	private final Image source;
 	private final Image flashingMazeImage;
 
-	public PacManSpriteSheet(Image source, Image flashingMazeImage) {
+	public PacManGameSpriteSheet(Image source, Image flashingMazeImage) {
 		this.source = source;
 		this.flashingMazeImage = flashingMazeImage;
 	}

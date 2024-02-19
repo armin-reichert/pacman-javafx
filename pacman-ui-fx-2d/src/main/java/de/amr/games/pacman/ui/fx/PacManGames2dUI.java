@@ -134,7 +134,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		THEME.set("mspacman.startpage.image",        rm.image("graphics/mspacman/mspacman_flyer.png"));
 		THEME.set("mspacman.helpButton.icon",        rm.image("graphics/icons/help-red-64.png"));
 
-		THEME.set("mspacman.spritesheet",            new MsPacManSpriteSheet(
+		THEME.set("mspacman.spritesheet",            new MsPacManGameSpriteSheet(
 			rm.image("graphics/mspacman/mspacman_spritesheet.png"),
 			rm.image("graphics/mspacman/mazes_flashing.png")
 			));
@@ -168,7 +168,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		THEME.set("pacman.startpage.image",          rm.image("graphics/pacman/pacman_flyer.png"));
 		THEME.set("pacman.helpButton.icon",          rm.image("graphics/icons/help-blue-64.png"));
 
-		THEME.set("pacman.spritesheet",              new PacManSpriteSheet(
+		THEME.set("pacman.spritesheet",              new PacManGameSpriteSheet(
 			rm.image("graphics/pacman/pacman_spritesheet.png"),
 			rm.image("graphics/pacman/maze_flashing.png"))
 		);
@@ -472,13 +472,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		e.game.level().ifPresent(level -> {
 			switch (e.game.variant()) {
 				case MS_PACMAN -> {
-					level.pac().setAnimations(new MsPacManPacAnimations(level.pac(), spriteSheet()));
-					level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGhostAnimations(ghost, spriteSheet())));
+					level.pac().setAnimations(new MsPacManGamePacAnimations(level.pac(), spriteSheet()));
+					level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
 					Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
 				}
 				case PACMAN -> {
-					level.pac().setAnimations(new PacManPacAnimations(level.pac(), spriteSheet()));
-					level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, spriteSheet())));
+					level.pac().setAnimations(new PacManGamePacAnimations(level.pac(), spriteSheet()));
+					level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
 					Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
 				}
 			}

@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 
 import java.util.Map;
 
@@ -16,13 +17,13 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class MsPacManPacAnimations extends SpriteAnimations {
+public class MsPacManGamePacAnimations extends SpriteAnimations {
 
 	private final Map<String, SpriteAnimation> animationsByName;
 	private final Pac pac;
-	private final MsPacManSpriteSheet spriteSheet;
+	private final MsPacManGameSpriteSheet spriteSheet;
 
-	public MsPacManPacAnimations(Pac pac, MsPacManSpriteSheet spriteSheet) {
+	public MsPacManGamePacAnimations(Pac pac, MsPacManGameSpriteSheet spriteSheet) {
 		checkNotNull(pac);
 		checkNotNull(spriteSheet);
 		this.pac = pac;

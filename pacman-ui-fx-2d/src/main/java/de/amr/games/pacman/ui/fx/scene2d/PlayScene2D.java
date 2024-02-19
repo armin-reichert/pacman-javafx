@@ -13,8 +13,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -96,7 +96,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawPacManMaze(World world) {
-		PacManSpriteSheet sheet = context.spriteSheet();
+		PacManGameSpriteSheet sheet = context.spriteSheet();
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {
@@ -115,7 +115,7 @@ public class PlayScene2D extends GameScene2D {
 	}
 
 	private void drawMsPacManMaze(World world, int mazeNumber) {
-		MsPacManSpriteSheet sheet = context.spriteSheet();
+		MsPacManGameSpriteSheet sheet = context.spriteSheet();
 		double x = 0, y = t(3);
 		if (world.mazeFlashing().isRunning()) {
 			if (world.mazeFlashing().on()) {

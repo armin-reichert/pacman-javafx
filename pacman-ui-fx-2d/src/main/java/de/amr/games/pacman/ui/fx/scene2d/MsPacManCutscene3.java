@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManPacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 
 import static de.amr.games.pacman.lib.Globals.t;
@@ -28,7 +28,7 @@ public class MsPacManCutscene3 extends GameScene2D {
 	private MsPacManIntermission3 intermission;
 	private ClapperboardAnimation clapAnimation;
 	private SpriteAnimation storkAnimation;
-	private MsPacManSpriteSheet ss;
+	private MsPacManGameSpriteSheet ss;
 
 	@Override
 	public boolean isCreditVisible() {
@@ -40,8 +40,8 @@ public class MsPacManCutscene3 extends GameScene2D {
 		ss = context.spriteSheet();
 		setScoreVisible(true);
 		intermission = new MsPacManIntermission3();
-		intermission.msPacMan.setAnimations(new MsPacManPacAnimations(intermission.msPacMan, ss));
-		intermission.pacMan.setAnimations(new MsPacManPacAnimations(intermission.pacMan, ss));
+		intermission.msPacMan.setAnimations(new MsPacManGamePacAnimations(intermission.msPacMan, ss));
+		intermission.pacMan.setAnimations(new MsPacManGamePacAnimations(intermission.pacMan, ss));
 		storkAnimation = ss.createStorkFlyingAnimation();
 		storkAnimation.start();
 		clapAnimation = new ClapperboardAnimation("3", "JUNIOR");

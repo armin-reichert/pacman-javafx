@@ -8,9 +8,9 @@ import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGhostAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManPacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -38,9 +38,9 @@ public class PacManIntroScene extends GameScene2D {
 	public void init() {
 		setScoreVisible(true);
 		intro = new PacManIntro();
-		var ss = context.<PacManSpriteSheet>spriteSheet();
-		intro.pacMan.setAnimations(new PacManPacAnimations(intro.pacMan, ss));
-		intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGhostAnimations(ghost, ss)));
+		var ss = context.<PacManGameSpriteSheet>spriteSheet();
+		intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, ss));
+		intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
 		intro.blinking.reset();
 		intro.changeState(State.START);
 	}
@@ -91,7 +91,7 @@ public class PacManIntroScene extends GameScene2D {
 	}
 
 	private void drawGallery() {
-		var ss = context.<PacManSpriteSheet>spriteSheet();
+		var ss = context.<PacManGameSpriteSheet>spriteSheet();
 		var font = sceneFont(8);
 
 		int tx = intro.leftTileX;
