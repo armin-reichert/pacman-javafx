@@ -176,10 +176,11 @@ public class Ghost extends Creature {
 		checkNotNull(state);
 		this.state = state;
 		switch (state) {
-			case LOCKED, HUNTING_PAC, ENTERING_HOUSE, LEAVING_HOUSE -> selectAnimation(ANIM_GHOST_NORMAL);
+			case LOCKED, HUNTING_PAC, LEAVING_HOUSE -> selectAnimation(ANIM_GHOST_NORMAL);
 			case EATEN               -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
 			case RETURNING_TO_HOUSE  -> selectAnimation(ANIM_GHOST_EYES);
 			case FRIGHTENED          -> updateFrightenedAnimation();
+			case ENTERING_HOUSE      -> {}
 		}
 	}
 
@@ -347,42 +348,32 @@ public class Ghost extends Creature {
 	// --- ENTERING_HOUSE ---
 
 	/**
-	 * When an eaten ghost reaches the ghost house, he enters and follows the path to his revival position.
+	 * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
+	 * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
 	 */
 	private void updateStateEnteringHouse() {
-		boolean atRevivalPosition = moveInsideHouse(world.house(), world.house().door().entryPosition(), revivalPosition);
-		if (atRevivalPosition) {
-			setMoveAndWishDir(UP);
-			setState(LOCKED);
-		}
-	}
-
-	/**
-	 * Ghost moves down on the vertical axis to the center, then reverts or moves sidewards to reach his target position.
-	 *
-	 * @return <code>true</code> if ghost has reached target position
-	 */
-	private boolean moveInsideHouse(House house, Vector2f entryPosition, Vector2f targetPosition) {
-		var houseCenter = house.center();
-		if (position().almostEquals(entryPosition, velocity().length() / 2, 0) && moveDir() != Direction.DOWN) {
-			// near entry, start entering
+		Vector2f entryPosition = world.house().door().entryPosition();
+		Vector2f houseCenter = world.house().center();
+		if (position().almostEquals(entryPosition,0.5f * velocity().length(), 0) && moveDir() != Direction.DOWN) {
+			// if near entry, start falling
 			setPosition(entryPosition);
 			setMoveAndWishDir(Direction.DOWN);
 		} else if (pos_y() >= houseCenter.y()) {
+			// reached ground
 			setPos_y(houseCenter.y());
-			if (targetPosition.x() < houseCenter.x()) {
+			if (revivalPosition.x() < houseCenter.x()) {
 				setMoveAndWishDir(LEFT);
-			} else if (targetPosition.x() > houseCenter.x()) {
+			} else if (revivalPosition.x() > houseCenter.x()) {
 				setMoveAndWishDir(RIGHT);
 			}
 		}
 		setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
 		move();
-		boolean reachedTarget = differsAtMost(velocity().length() / 2, pos_x(), targetPosition.x())
-			&& pos_y() >= targetPosition.y();
-		if (reachedTarget) {
-			setPosition(targetPosition);
+		if (differsAtMost(0.5 * GameModel.SPEED_PX_ENTERING_HOUSE, pos_x(), revivalPosition.x())
+			&& pos_y() >= revivalPosition.y()) {
+			setPosition(revivalPosition);
+			setMoveAndWishDir(UP);
+			setState(LOCKED);
 		}
-		return reachedTarget;
 	}
 }
