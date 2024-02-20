@@ -176,22 +176,13 @@ public class Ghost extends Creature {
 		checkNotNull(state);
 		this.state = state;
 		switch (state) {
-			case LOCKED -> {
-				setPixelSpeed(insideHouse(world.house()) ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
-				selectAnimation(ANIM_GHOST_NORMAL);
-			}
-			case LEAVING_HOUSE -> setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
-			case HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
-			case FRIGHTENED -> {}
-			case EATEN -> selectAnimation(ANIM_GHOST_NUMBER, (int) killedIndex);
-			case RETURNING_TO_HOUSE -> {
-				setTargetTile(world.house().door().leftWing());
-				selectAnimation(ANIM_GHOST_EYES);
-			}
-			case ENTERING_HOUSE -> {
-				setTargetTile(null);
-				setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
-			}
+			case LOCKED,
+				 HUNTING_PAC         -> selectAnimation(ANIM_GHOST_NORMAL);
+			case FRIGHTENED          -> updateFrightenedAnimation();
+			case EATEN               -> selectAnimation(ANIM_GHOST_NUMBER, (Byte) killedIndex);
+			case RETURNING_TO_HOUSE  -> selectAnimation(ANIM_GHOST_EYES);
+			case ENTERING_HOUSE,
+				 LEAVING_HOUSE       -> {}
 			default -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
 		}
 	}
@@ -221,6 +212,7 @@ public class Ghost extends Creature {
 	private void updateStateLocked() {
 		if (insideHouse(world.house())) {
 			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
+			setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
 			move();
 			if (pos_y <= minY) {
 				setMoveAndWishDir(DOWN);
@@ -228,6 +220,8 @@ public class Ghost extends Creature {
 				setMoveAndWishDir(UP);
 			}
 			pos_y = clamp(pos_y, minY, maxY);
+		} else {
+			setPixelSpeed(0);
 		}
 		if (killable()) {
 			updateFrightenedAnimation();
@@ -285,36 +279,9 @@ public class Ghost extends Creature {
 			// move sidewards until center axis is reached
 			setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
 		}
+		setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
 		move();
 		return false;
-	}
-
-	/**
-	 * Ghost moves down on the vertical axis to the center, then reverts or moves sidewards to reach his target position.
-	 *
-	 * @return <code>true</code> if ghost has reached target position
-	 */
-	private boolean moveInsideHouse(House house, Vector2f entryPosition, Vector2f targetPosition) {
-		var houseCenter = house.center();
-		if (position().almostEquals(entryPosition, velocity().length() / 2, 0) && moveDir() != Direction.DOWN) {
-			// near entry, start entering
-			setPosition(entryPosition);
-			setMoveAndWishDir(Direction.DOWN);
-		} else if (pos_y() >= houseCenter.y()) {
-			setPos_y(houseCenter.y());
-			if (targetPosition.x() < houseCenter.x()) {
-				setMoveAndWishDir(LEFT);
-			} else if (targetPosition.x() > houseCenter.x()) {
-				setMoveAndWishDir(RIGHT);
-			}
-		}
-		move();
-		boolean reachedTarget = differsAtMost(velocity().length() / 2, pos_x(), targetPosition.x())
-				&& pos_y() >= targetPosition.y();
-		if (reachedTarget) {
-			setPosition(targetPosition);
-		}
-		return reachedTarget;
 	}
 
 	// --- HUNTING_PAC ---
@@ -376,6 +343,7 @@ public class Ghost extends Creature {
 			setState(ENTERING_HOUSE);
 		} else {
 			setPixelSpeed(GameModel.SPEED_PX_RETURNING_TO_HOUSE);
+			setTargetTile(world.house().door().leftWing());
 			navigateTowardsTarget();
 			tryMoving();
 		}
@@ -392,5 +360,34 @@ public class Ghost extends Creature {
 			setMoveAndWishDir(UP);
 			setState(LOCKED);
 		}
+	}
+
+	/**
+	 * Ghost moves down on the vertical axis to the center, then reverts or moves sidewards to reach his target position.
+	 *
+	 * @return <code>true</code> if ghost has reached target position
+	 */
+	private boolean moveInsideHouse(House house, Vector2f entryPosition, Vector2f targetPosition) {
+		var houseCenter = house.center();
+		if (position().almostEquals(entryPosition, velocity().length() / 2, 0) && moveDir() != Direction.DOWN) {
+			// near entry, start entering
+			setPosition(entryPosition);
+			setMoveAndWishDir(Direction.DOWN);
+		} else if (pos_y() >= houseCenter.y()) {
+			setPos_y(houseCenter.y());
+			if (targetPosition.x() < houseCenter.x()) {
+				setMoveAndWishDir(LEFT);
+			} else if (targetPosition.x() > houseCenter.x()) {
+				setMoveAndWishDir(RIGHT);
+			}
+		}
+		setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
+		move();
+		boolean reachedTarget = differsAtMost(velocity().length() / 2, pos_x(), targetPosition.x())
+			&& pos_y() >= targetPosition.y();
+		if (reachedTarget) {
+			setPosition(targetPosition);
+		}
+		return reachedTarget;
 	}
 }
