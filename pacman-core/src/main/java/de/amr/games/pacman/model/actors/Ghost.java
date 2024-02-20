@@ -120,6 +120,10 @@ public class Ghost extends Creature {
 		this.killedIndex = (byte) index;
 	}
 
+	private boolean killable() {
+		return pac.powerTimer().isRunning() && killedIndex == -1;
+	}
+
 	public void setFnHuntingBehavior(Consumer<Ghost> fnHuntingBehavior) {
 		checkNotNull(fnHuntingBehavior);
 		this.fnHuntingBehavior = fnHuntingBehavior;
@@ -169,15 +173,26 @@ public class Ghost extends Creature {
 	}
 
 	public void setState(GhostState state) {
+		checkNotNull(state);
+		this.state = state;
 		switch (state) {
-			case LOCKED             -> { this.state = state; enterStateLocked(); }
-			case LEAVING_HOUSE      -> { this.state = state; enterStateLeavingHouse(); }
-			case HUNTING_PAC        -> { this.state = state; enterStateHuntingPac(); }
-			case FRIGHTENED         -> { this.state = state; enterStateFrightened(); }
-			case EATEN              -> { this.state = state; enterStateEaten(); }
-			case RETURNING_TO_HOUSE -> { this.state = state; enterStateReturningToHouse(); }
-			case ENTERING_HOUSE     -> { this.state = state; enterStateEnteringHouse(); }
-			default                 -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
+			case LOCKED -> {
+				setPixelSpeed(insideHouse(world.house()) ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
+				selectAnimation(ANIM_GHOST_NORMAL);
+			}
+			case LEAVING_HOUSE -> setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
+			case HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
+			case FRIGHTENED -> {}
+			case EATEN -> selectAnimation(ANIM_GHOST_NUMBER, (int) killedIndex);
+			case RETURNING_TO_HOUSE -> {
+				setTargetTile(world.house().door().leftWing());
+				selectAnimation(ANIM_GHOST_EYES);
+			}
+			case ENTERING_HOUSE -> {
+				setTargetTile(null);
+				setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
+			}
+			default -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
 		}
 	}
 
@@ -203,11 +218,6 @@ public class Ghost extends Creature {
 	 * In locked state, ghosts inside the house are bouncing up and down. They become blue/blink if Pac-Man gets/fades
 	 * power. After that, they return to their normal color.
 	 */
-	private void enterStateLocked() {
-		setPixelSpeed(insideHouse(world.house()) ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
-		selectAnimation(ANIM_GHOST_NORMAL);
-	}
-
 	private void updateStateLocked() {
 		if (insideHouse(world.house())) {
 			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
@@ -220,14 +230,10 @@ public class Ghost extends Creature {
 			pos_y = clamp(pos_y, minY, maxY);
 		}
 		if (killable()) {
-			selectFrightenedAnimation();
+			updateFrightenedAnimation();
 		} else {
 			selectAnimation(ANIM_GHOST_NORMAL);
 		}
-	}
-
-	private boolean killable() {
-		return pac.powerTimer().isRunning() && killedIndex == -1;
 	}
 
 	// --- LEAVING_HOUSE ---
@@ -239,13 +245,9 @@ public class Ghost extends Creature {
 	 * <p>
 	 * The ghost speed is slower than outside, but I do not know the exact value.
 	 */
-	private void enterStateLeavingHouse() {
-		setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
-	}
-
 	private void updateStateLeavingHouse() {
 		if (killable()) {
-			selectFrightenedAnimation();
+			updateFrightenedAnimation();
 		} else {
 			selectAnimation(ANIM_GHOST_NORMAL);
 		}
@@ -324,10 +326,6 @@ public class Ghost extends Creature {
 	 * is an "infinite" chasing phase.
 	 * <p>
 	 */
-	private void enterStateHuntingPac() {
-		selectAnimation(ANIM_GHOST_NORMAL);
-	}
-
 	private void updateStateHuntingPac() {
 		fnHuntingBehavior.accept(this);
 	}
@@ -341,12 +339,18 @@ public class Ghost extends Creature {
 	 * A frightened ghost has a blue color and starts flashing blue/white shortly (how long exactly?) before Pac-Man loses
 	 * his power. Speed is about half of the normal speed.
 	 */
-	private void enterStateFrightened() {
-	}
-
 	private void updateStateFrightened() {
 		fnFrightenedBehavior.accept(this);
-		selectFrightenedAnimation();
+		updateFrightenedAnimation();
+	}
+
+	private void updateFrightenedAnimation() {
+		if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADES_TICKS
+			|| pac.powerTimer().duration() < GameModel.PAC_POWER_FADES_TICKS && pac.powerTimer().tick() == 1) {
+			selectAnimation(ANIM_GHOST_FLASHING);
+		} else if (pac.powerTimer().remaining() > GameModel.PAC_POWER_FADES_TICKS) {
+			selectAnimation(ANIM_GHOST_FRIGHTENED);
+		}
 	}
 
 	// --- EATEN ---
@@ -355,10 +359,6 @@ public class Ghost extends Creature {
 	 * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
 	 * The value doubles for each ghost eaten using the power of the same energizer.
 	 */
-	private void enterStateEaten() {
-		selectAnimation(ANIM_GHOST_NUMBER, (int) killedIndex);
-	}
-
 	private void updateStateEaten() {
 		// wait for timeout
 	}
@@ -369,11 +369,6 @@ public class Ghost extends Creature {
 	 * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
 	 * to the ghost house to be revived. Hallelujah!
 	 */
-	private void enterStateReturningToHouse() {
-		setTargetTile(world.house().door().leftWing());
-		selectAnimation(ANIM_GHOST_EYES);
-	}
-
 	private void updateStateReturningToHouse() {
 		var houseEntry = world.house().door().entryPosition();
 		if (position().almostEquals(houseEntry, velocity().length() / 2, 0)) {
@@ -391,25 +386,11 @@ public class Ghost extends Creature {
 	/**
 	 * When an eaten ghost reaches the ghost house, he enters and follows the path to his revival position.
 	 */
-	private void enterStateEnteringHouse() {
-		setTargetTile(null);
-		setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
-	}
-
 	private void updateStateEnteringHouse() {
 		boolean atRevivalPosition = moveInsideHouse(world.house(), world.house().door().entryPosition(), revivalPosition);
 		if (atRevivalPosition) {
 			setMoveAndWishDir(UP);
 			setState(LOCKED);
-		}
-	}
-
-	private void selectFrightenedAnimation() {
-		if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADES_TICKS
-			|| pac.powerTimer().duration() < GameModel.PAC_POWER_FADES_TICKS && pac.powerTimer().tick() == 1) {
-			selectAnimation(ANIM_GHOST_FLASHING);
-		} else if (pac.powerTimer().remaining() > GameModel.PAC_POWER_FADES_TICKS) {
-			selectAnimation(ANIM_GHOST_FRIGHTENED);
 		}
 	}
 }
