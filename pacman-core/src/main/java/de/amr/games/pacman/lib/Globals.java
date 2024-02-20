@@ -212,14 +212,8 @@ public class Globals {
 	 * @return the value if inside the interval, the lower bound if the value is smaller, the upper bound if the value is
 	 *         larger
 	 */
-	public static double clamp(double value, double min, double max) {
-		if (value < min) {
-			return min;
-		}
-		if (value > max) {
-			return max;
-		}
-		return value;
+	public static float clamp(float value, float min, float max) {
+		return (value < min) ? min : Math.min(value, max);
 	}
 
 	/**

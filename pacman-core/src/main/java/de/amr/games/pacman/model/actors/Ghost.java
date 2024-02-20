@@ -198,12 +198,14 @@ public class Ghost extends Creature {
 
 	private void updateStateLocked() {
 		if (insideHouse(world.house())) {
-			if (pos_y <= revivalPosition.y() - 4) {
+			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
+			move();
+			if (pos_y <= minY) {
 				setMoveAndWishDir(DOWN);
-			} else if (pos_y >= revivalPosition.y() + 4) {
+			} else if (pos_y >= maxY) {
 				setMoveAndWishDir(UP);
 			}
-			move();
+			pos_y = clamp(pos_y, minY, maxY);
 		}
 		if (killable()) {
 			selectFrightenedAnimation();
