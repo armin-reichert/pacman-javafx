@@ -5,12 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.world.House;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkLevelNotNull;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
 
@@ -45,6 +47,7 @@ class GhostHouseManagement {
 	}
 
 	private final GameLevel level;
+	private final House house;
 	private final long      pacStarvingTicksLimit;
 	private final byte[]    globalGhostDotLimits;
 	private final byte[]    privateGhostDotLimits;
@@ -52,9 +55,12 @@ class GhostHouseManagement {
 	private int             globalDotCounter;
 	private boolean         globalDotCounterEnabled;
 
-	public GhostHouseManagement(GameLevel level) {
+	public GhostHouseManagement(GameLevel level, House house) {
 		checkLevelNotNull(level);
+		checkNotNull(house);
 		this.level = level;
+		this.house = house;
+
 		pacStarvingTicksLimit = level.number() < 5 ? 4 * GameModel.FPS : 3 * GameModel.FPS;
 		globalGhostDotLimits = new byte[] { -1, 7, 17, -1 };
 		privateGhostDotLimits = switch (level.number()) {
@@ -77,7 +83,10 @@ class GhostHouseManagement {
 				Logger.trace("Global dot counter = {}", globalDotCounter);
 			}
 		} else {
-			level.ghosts(LOCKED).filter(Ghost::insideHouse).findFirst().ifPresent(this::increaseGhostDotCounter);
+			level.ghosts(LOCKED)
+				.filter(ghost -> ghost.insideHouse(house))
+				.findFirst()
+				.ifPresent(this::increaseGhostDotCounter);
 		}
 	}
 
@@ -106,7 +115,7 @@ class GhostHouseManagement {
 			return Optional.empty();
 		}
 
-		if (!unlockedGhost.insideHouse()) {
+		if (!unlockedGhost.insideHouse(house)) {
 			return GhostUnlockInfo.of(unlockedGhost, "Already outside house");
 		}
 		var id = unlockedGhost.id();

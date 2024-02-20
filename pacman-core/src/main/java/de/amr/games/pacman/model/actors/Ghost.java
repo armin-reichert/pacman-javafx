@@ -86,8 +86,8 @@ public class Ghost extends Creature {
 		this.world = world;
 	}
 
-	public boolean insideHouse() {
-		return world().house().contains(tile());
+	public boolean insideHouse(House house) {
+		return house.contains(tile());
 	}
 
 	public void setPac(Pac pac) {
@@ -141,7 +141,7 @@ public class Ghost extends Creature {
 				return false;
 			}
 		}
-		if (world().house().door().occupies(targetTile)) {
+		if (world.house().door().occupies(targetTile)) {
 			return is(ENTERING_HOUSE, LEAVING_HOUSE);
 		}
 		return super.canAccessTile(targetTile);
@@ -192,12 +192,12 @@ public class Ghost extends Creature {
 	 */
 	public void enterStateLocked() {
 		state = LOCKED;
-		setPixelSpeed(insideHouse() ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
+		setPixelSpeed(insideHouse(world.house()) ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
 		selectAnimation(ANIM_GHOST_NORMAL);
 	}
 
 	private void updateStateLocked() {
-		if (insideHouse()) {
+		if (insideHouse(world.house())) {
 			if (pos_y <= revivalPosition.y() - 4) {
 				setMoveAndWishDir(DOWN);
 			} else if (pos_y >= revivalPosition.y() + 4) {
@@ -236,7 +236,7 @@ public class Ghost extends Creature {
 		} else {
 			selectAnimation(ANIM_GHOST_NORMAL);
 		}
-		var outOfHouse = leaveHouse(world().house());
+		var outOfHouse = leaveHouse(world.house());
 		if (outOfHouse) {
 			setMoveAndWishDir(LEFT);
 			newTileEntered = false; // keep moving left until new tile is entered
@@ -279,8 +279,7 @@ public class Ghost extends Creature {
 	 *
 	 * @return <code>true</code> if ghost has reached target position
 	 */
-	private boolean moveInsideHouse(House house, Vector2f targetPosition) {
-		var entryPosition = house.door().entryPosition();
+	private boolean moveInsideHouse(House house, Vector2f entryPosition, Vector2f targetPosition) {
 		var houseCenter = house.center();
 		if (position().almostEquals(entryPosition, velocity().length() / 2, 0) && moveDir() != Direction.DOWN) {
 			// near entry, start entering
@@ -362,12 +361,12 @@ public class Ghost extends Creature {
 	 */
 	public void enterStateReturningToHouse() {
 		state = RETURNING_TO_HOUSE;
-		setTargetTile(world().house().door().leftWing());
+		setTargetTile(world.house().door().leftWing());
 		selectAnimation(ANIM_GHOST_EYES);
 	}
 
 	private void updateStateReturningToHouse() {
-		var houseEntry = world().house().door().entryPosition();
+		var houseEntry = world.house().door().entryPosition();
 		if (position().almostEquals(houseEntry, velocity().length() / 2, 0)) {
 			setPosition(houseEntry);
 			enterStateEnteringHouse();
@@ -390,7 +389,7 @@ public class Ghost extends Creature {
 	}
 
 	private void updateStateEnteringHouse() {
-		boolean atRevivalPosition = moveInsideHouse(world().house(), revivalPosition);
+		boolean atRevivalPosition = moveInsideHouse(world.house(), world.house().door().entryPosition(), revivalPosition);
 		if (atRevivalPosition) {
 			setMoveAndWishDir(UP);
 			enterStateLocked();

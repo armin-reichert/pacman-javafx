@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -105,7 +106,7 @@ public class GameLevel {
 			ghost.setFnIsSteeringAllowed(dir -> isSteeringAllowed(ghost, dir));
 		});
 
-		ghostHouseManagement = new GhostHouseManagement(this);
+		ghostHouseManagement = new GhostHouseManagement(this, world.house());
 
 		bonusSymbols = new byte[2];
 		bonusSymbols[0] = nextBonusSymbol();
@@ -610,7 +611,7 @@ public class GameLevel {
 		world.energizerBlinking().tick();
 
 		// Update guys
-		unlockGhost();
+		unlockGhost(world().house());
 		var steering = pac.steering().orElse(GameController.it().steering());
 		steering.steer(this, pac);
 		pac.update();
@@ -681,10 +682,10 @@ public class GameLevel {
 		Logger.info("{} died at tile {}", pac.name(), pac.tile());
 	}
 
-	private void unlockGhost() {
+	private void unlockGhost(House house) {
 		ghostHouseManagement.checkIfNextGhostCanLeaveHouse().ifPresent(unlocked -> {
 			var ghost = unlocked.ghost();
-			if (ghost.insideHouse()) {
+			if (ghost.insideHouse(house)) {
 				ghost.enterStateLeavingHouse();
 			} else {
 				ghost.setMoveAndWishDir(LEFT);
