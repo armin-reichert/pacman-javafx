@@ -60,10 +60,10 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
 	@Override
 	public void updateCurrentAnimation() {
 		if (PacAnimations.MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.msPacManMunchingSprites(pac.moveDir()));
+			currentAnimation().setSprites(spriteSheet.msPacManMunchingSprites(pac.moveDir()));
 		}
 		if (PacAnimations.HUSBAND_MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.pacManMunchingSprites(pac.moveDir()));
+			currentAnimation().setSprites(spriteSheet.pacManMunchingSprites(pac.moveDir()));
 		}
 	}
 }

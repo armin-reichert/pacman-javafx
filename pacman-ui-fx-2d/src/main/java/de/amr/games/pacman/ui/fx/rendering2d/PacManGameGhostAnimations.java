@@ -108,9 +108,9 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
 	@Override
 	public void updateCurrentAnimation() {
 		if (GhostAnimations.GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
+			currentAnimation().setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
 		} else if (GhostAnimations.GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
+			currentAnimation().setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
 		}
 	}
 }

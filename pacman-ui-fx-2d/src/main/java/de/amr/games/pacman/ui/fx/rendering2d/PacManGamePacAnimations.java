@@ -59,7 +59,7 @@ public class PacManGamePacAnimations extends SpriteAnimations {
 	@Override
 	public void updateCurrentAnimation() {
 		if (PacAnimations.MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
+			currentAnimation().setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
 		}
 	}
 }
