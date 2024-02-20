@@ -103,8 +103,8 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 				ghost.show();
 
 				if (ghost.moveDir() == Direction.LEFT) {
-					if (ghost.pos_x() <= ctx.stopX) {
-						ghost.setPos_x(ctx.stopX);
+					if (ghost.posX() <= ctx.stopX) {
+						ghost.setPosX(ctx.stopX);
 						ghost.setMoveAndWishDir(Direction.UP);
 						ctx.ticksUntilLifting = 2;
 					} else {
@@ -119,7 +119,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 						Logger.trace("Ticks until lifting {}: {}", ghost.name(), ctx.ticksUntilLifting);
 						return;
 					}
-					if (ghost.pos_y() <= ctx.stopY + ghost.id() * 16) {
+					if (ghost.posY() <= ctx.stopY + ghost.id() * 16) {
 						ghost.setPixelSpeed(0);
 						ghost.animations().ifPresent(ani -> {
 							ani.stopSelected();
@@ -143,7 +143,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 				ctx.marqueeTimer.advance();
 				ctx.msPacMan.show();
 				ctx.msPacMan.move();
-				if (ctx.msPacMan.pos_x() <= ctx.stopMsPacX) {
+				if (ctx.msPacMan.posX() <= ctx.stopMsPacX) {
 					ctx.msPacMan.setPixelSpeed(0);
 					ctx.msPacMan.animations().ifPresent(Animations::resetSelected);
 					ctx.changeState(State.READY_TO_PLAY);

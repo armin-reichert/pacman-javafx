@@ -48,12 +48,12 @@ public class Pac extends Creature {
 			", restingTicks=" + restingTicks +
 			", starvingTicks=" + starvingTicks +
 			", visible=" + visible +
-			", pos_x=" + pos_x +
-			", pos_y=" + pos_y +
-			", vel_x=" + vel_x +
-			", vel_y=" + vel_y +
-			", acc_x=" + acc_x +
-			", acc_y=" + acc_y +
+			", pos_x=" + posX +
+			", pos_y=" + posY +
+			", vel_x=" + velX +
+			", vel_y=" + velY +
+			", acc_x=" + accX +
+			", acc_y=" + accY +
 			'}';
 	}
 

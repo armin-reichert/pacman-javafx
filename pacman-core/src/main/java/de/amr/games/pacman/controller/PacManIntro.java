@@ -113,11 +113,11 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 					ctx.blinking.start();
 				}
 				// Pac-Man reaches the energizer at the left and turns
-				if (ctx.pacMan.pos_x() <= TS * ctx.leftTileX) {
+				if (ctx.pacMan.posX() <= TS * ctx.leftTileX) {
 					ctx.changeState(State.CHASING_GHOSTS);
 				}
 				// Ghosts already reverse direction before Pac-Man eats the energizer and turns!
-				else if (ctx.pacMan.pos_x() <= TS * ctx.leftTileX + HTS) {
+				else if (ctx.pacMan.posX() <= TS * ctx.leftTileX + HTS) {
 					ctx.ghosts().forEach(ghost -> {
 						ghost.setState(GhostState.FRIGHTENED);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);

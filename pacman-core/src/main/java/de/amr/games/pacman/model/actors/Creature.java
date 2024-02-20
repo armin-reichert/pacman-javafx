@@ -338,18 +338,18 @@ public abstract class Creature extends Entity implements AnimationDirector {
 
 	private void tryTeleport(Portal portal) {
 		var tile = tile();
-		var old_pos_x = pos_x;
-		var old_pos_y = pos_y;
-		if (tile.y() == portal.leftTunnelEnd().y() && pos_x < portal.leftTunnelEnd().x() - portal.depth() * TS) {
+		var old_pos_x = posX;
+		var old_pos_y = posY;
+		if (tile.y() == portal.leftTunnelEnd().y() && posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
 			centerOverTile(portal.rightTunnelEnd());
 			moveResult.teleported = true;
 			moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-				name, old_pos_x, old_pos_y, pos_x, pos_y));
+				name, old_pos_x, old_pos_y, posX, posY));
 		} else if (tile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
 			centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
 			moveResult.teleported = true;
 			moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-				name, old_pos_x, old_pos_y, pos_x, pos_y));
+				name, old_pos_x, old_pos_y, posX, posY));
 		}
 	}
 

@@ -226,7 +226,7 @@ public abstract class GameScene2D implements GameScene {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(6)));
 					var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
-					g.fillText(text, s(pac.pos_x() - 4), s(pac.pos_y() - 4));
+					g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
 					// indicate wish direction
 					float r = 2;
 					var pacCenter = pac.center();
@@ -252,7 +252,7 @@ public abstract class GameScene2D implements GameScene {
 					g.setFill(Color.WHITE);
 					g.setFont(Font.font("Monospaced", s(6)));
 					var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
-					g.fillText(text, s(ghost.pos_x() - 4), s(ghost.pos_y() - 4));
+					g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
 				}
 			}
 		});
@@ -305,7 +305,7 @@ public abstract class GameScene2D implements GameScene {
 	 */
 	protected void drawEntitySprite(Entity entity, Rectangle2D sprite) {
 		if (entity.isVisible()) {
-			drawSpriteCenteredOverBox(sprite, entity.pos_x(), entity.pos_y());
+			drawSpriteCenteredOverBox(sprite, entity.posX(), entity.posY());
 		}
 	}
 

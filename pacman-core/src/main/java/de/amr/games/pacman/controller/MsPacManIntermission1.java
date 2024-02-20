@@ -125,7 +125,7 @@ public class MsPacManIntermission1 {
 	}
 
 	private void updateStateChasedByGhosts() {
-		if (inky.pos_x() > TS * 30) {
+		if (inky.posX() > TS * 30) {
 			enterStateComingTogether();
 		} else {
 			pacMan.move();
@@ -149,12 +149,12 @@ public class MsPacManIntermission1 {
 
 	private void updateStateComingTogether() {
 		// Pac-Man and Ms. Pac-Man reach end position?
-		if (pacMan.moveDir() == Direction.UP && pacMan.pos_y() < UPPER_LANE_Y) {
+		if (pacMan.moveDir() == Direction.UP && pacMan.posY() < UPPER_LANE_Y) {
 			enterStateInHeaven();
 		}
 
 		// Pac-Man and Ms. Pac-Man meet?
-		else if (pacMan.moveDir() == Direction.LEFT && pacMan.pos_x() - msPac.pos_x() < TS * (2)) {
+		else if (pacMan.moveDir() == Direction.LEFT && pacMan.posX() - msPac.posX() < TS * (2)) {
 			pacMan.setMoveDir(Direction.UP);
 			pacMan.setPixelSpeed(SPEED_PAC_RISING);
 			msPac.setMoveDir(Direction.UP);
@@ -162,7 +162,7 @@ public class MsPacManIntermission1 {
 		}
 
 		// Inky and Pinky collide?
-		else if (inky.moveDir() == Direction.LEFT && inky.pos_x() - pinky.pos_x() < TS * (2)) {
+		else if (inky.moveDir() == Direction.LEFT && inky.posX() - pinky.posX() < TS * (2)) {
 			inky.setMoveAndWishDir(Direction.RIGHT);
 			inky.setPixelSpeed(SPEED_GHOST_AFTER_COLLISION);
 			inky.setVelocity(inky.velocity().minus(0, 2.0f));
@@ -179,12 +179,12 @@ public class MsPacManIntermission1 {
 			msPac.move();
 			inky.move();
 			pinky.move();
-			if (inky.pos_y() > MIDDLE_LANE_Y) {
-				inky.setPosition(inky.pos_x(), MIDDLE_LANE_Y);
+			if (inky.posY() > MIDDLE_LANE_Y) {
+				inky.setPosition(inky.posX(), MIDDLE_LANE_Y);
 				inky.setAcceleration(Vector2f.ZERO);
 			}
-			if (pinky.pos_y() > MIDDLE_LANE_Y) {
-				pinky.setPosition(pinky.pos_x(), MIDDLE_LANE_Y);
+			if (pinky.posY() > MIDDLE_LANE_Y) {
+				pinky.setPosition(pinky.posX(), MIDDLE_LANE_Y);
 				pinky.setAcceleration(Vector2f.ZERO);
 			}
 		}
@@ -207,7 +207,7 @@ public class MsPacManIntermission1 {
 		pinky.setPixelSpeed(0);
 		pinky.hide();
 
-		heart.setPosition((pacMan.pos_x() + msPac.pos_x()) / 2, pacMan.pos_y() - TS * (2));
+		heart.setPosition((pacMan.posX() + msPac.posX()) / 2, pacMan.posY() - TS * (2));
 		heart.show();
 
 		changeState(STATE_IN_HEAVEN, 3 * 60);

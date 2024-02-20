@@ -210,12 +210,12 @@ public class Ghost extends Creature {
 			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
 			setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
 			move();
-			if (pos_y <= minY) {
+			if (posY <= minY) {
 				setMoveAndWishDir(DOWN);
-			} else if (pos_y >= maxY) {
+			} else if (posY >= maxY) {
 				setMoveAndWishDir(UP);
 			}
-			pos_y = clamp(pos_y, minY, maxY);
+			posY = clamp(posY, minY, maxY);
 		} else {
 			setPixelSpeed(0);
 		}
@@ -236,40 +236,26 @@ public class Ghost extends Creature {
 	 * The ghost speed is slower than outside, but I do not know the exact value.
 	 */
 	private void updateStateLeavingHouse() {
-		if (killable()) {
-			updateFrightenedAnimation();
-		} else {
-			selectAnimation(ANIM_GHOST_NORMAL);
-		}
-		var outOfHouse = leaveHouse(world.house());
-		if (outOfHouse) {
+		Vector2f houseEntryPosition = world.house().door().entryPosition();
+		if (posY() <= houseEntryPosition.y()) {
+			// has raised and is outside house
+			setPosition(houseEntryPosition);
 			setMoveAndWishDir(LEFT);
-			newTileEntered = false; // keep moving left until new tile is entered
+			newTileEntered = false; // force moving left until new tile is entered
 			if (killable()) {
 				setState(FRIGHTENED);
 			} else {
 				killedIndex = -1; // TODO check this
 				setState(HUNTING_PAC);
 			}
+			return;
 		}
-	}
-
-	/**
-	 * Ghosts first move sidewards to the center, then they raise until the house entry/exit position outside is reached.
-	 *
-	 * @return <code>true</code> if ghost has left house
-	 */
-	private boolean leaveHouse(House house) {
-		var endPosition = house.door().entryPosition();
-		if (pos_y() <= endPosition.y()) {
-			setPosition(endPosition); // align vertically at house entry
-			return true;
-		}
+		// move inside house
 		float centerX = center().x();
-		float houseCenterX = house.center().x();
-		if (differsAtMost(velocity().length() / 2, centerX, houseCenterX)) {
+		float houseCenterX = world.house().center().x();
+		if (differsAtMost(0.5f * GameModel.SPEED_PX_INSIDE_HOUSE, centerX, houseCenterX)) {
 			// align horizontally and raise
-			setPos_x(houseCenterX - HTS);
+			setPosX(houseCenterX - HTS);
 			setMoveAndWishDir(UP);
 		} else {
 			// move sidewards until center axis is reached
@@ -277,7 +263,11 @@ public class Ghost extends Creature {
 		}
 		setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
 		move();
-		return false;
+		if (killable()) {
+			updateFrightenedAnimation();
+		} else {
+			selectAnimation(ANIM_GHOST_NORMAL);
+		}
 	}
 
 	// --- HUNTING_PAC ---
@@ -333,8 +323,8 @@ public class Ghost extends Creature {
 	 * to the ghost house to be revived. Hallelujah!
 	 */
 	private void updateStateReturningToHouse() {
-		var houseEntry = world.house().door().entryPosition();
-		if (position().almostEquals(houseEntry, velocity().length() / 2, 0)) {
+		Vector2f houseEntry = world.house().door().entryPosition();
+		if (position().almostEquals(houseEntry, 0.5f * GameModel.SPEED_PX_RETURNING_TO_HOUSE, 0)) {
 			setPosition(houseEntry);
 			setState(ENTERING_HOUSE);
 		} else {
@@ -358,9 +348,9 @@ public class Ghost extends Creature {
 			// if near entry, start falling
 			setPosition(entryPosition);
 			setMoveAndWishDir(Direction.DOWN);
-		} else if (pos_y() >= houseCenter.y()) {
+		} else if (posY() >= houseCenter.y()) {
 			// reached ground
-			setPos_y(houseCenter.y());
+			setPosY(houseCenter.y());
 			if (revivalPosition.x() < houseCenter.x()) {
 				setMoveAndWishDir(LEFT);
 			} else if (revivalPosition.x() > houseCenter.x()) {
@@ -369,8 +359,8 @@ public class Ghost extends Creature {
 		}
 		setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
 		move();
-		if (differsAtMost(0.5 * GameModel.SPEED_PX_ENTERING_HOUSE, pos_x(), revivalPosition.x())
-			&& pos_y() >= revivalPosition.y()) {
+		if (differsAtMost(0.5 * GameModel.SPEED_PX_ENTERING_HOUSE, posX(), revivalPosition.x())
+			&& posY() >= revivalPosition.y()) {
 			setPosition(revivalPosition);
 			setMoveAndWishDir(UP);
 			setState(LOCKED);
