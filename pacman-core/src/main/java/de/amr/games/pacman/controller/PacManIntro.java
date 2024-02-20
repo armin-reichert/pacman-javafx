@@ -6,7 +6,9 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 
 import java.util.stream.Stream;
 
@@ -95,7 +97,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				ctx.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
 				ctx.pacMan.startAnimation();
 				ctx.ghosts().forEach(ghost -> {
-					ghost.enterStateHuntingPac();
+					ghost.setState(GhostState.HUNTING_PAC);
 					ghost.setPosition(ctx.pacMan.position().plus(16 * (ghost.id() + 1), 0));
 					ghost.setMoveAndWishDir(Direction.LEFT);
 					ghost.setPixelSpeed(ctx.chaseSpeed);
@@ -117,7 +119,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				// Ghosts already reverse direction before Pac-Man eats the energizer and turns!
 				else if (ctx.pacMan.pos_x() <= TS * ctx.leftTileX + HTS) {
 					ctx.ghosts().forEach(ghost -> {
-						ghost.enterStateFrightened();
+						ghost.setState(GhostState.FRIGHTENED);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
 						ghost.setPixelSpeed(0.6f);
@@ -156,7 +158,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				nextVictim.ifPresent(victim -> {
 					victim.setKilledIndex(victim.id());
 					ctx.ghostKilledTime = timer.tick();
-					victim.enterStateEaten();
+					victim.setState(GhostState.EATEN);
 					ctx.pacMan.hide();
 					ctx.pacMan.setPixelSpeed(0);
 					ctx.ghosts().forEach(ghost -> {

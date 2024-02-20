@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import org.tinylog.Logger;
 
@@ -79,7 +80,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 					ghost.setPosition(TS * 33.5f, TS * 20);
 					ghost.setMoveAndWishDir(Direction.LEFT);
 					ghost.setPixelSpeed(ctx.speed);
-					ghost.enterStateHuntingPac();
+					ghost.setState(GhostState.HUNTING_PAC);
 					ghost.startAnimation();
 				}
 				ctx.ghostIndex = 0;

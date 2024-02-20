@@ -220,7 +220,7 @@ public enum GameState implements FsmState<GameModel> {
 					var steering = level.pac().steering().orElse(GameController.it().steering());
 					steering.steer(level, level.pac());
 					level.ghosts(GhostState.EATEN, GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
-							.forEach(Ghost::update);
+							.forEach(Ghost::updateState);
 					level.world().energizerBlinking().tick();
 				});
 			}
@@ -230,7 +230,7 @@ public enum GameState implements FsmState<GameModel> {
 		public void onExit(GameModel game) {
 			game.level().ifPresent(level -> {
 				level.pac().show();
-				level.ghosts(GhostState.EATEN).forEach(Ghost::enterStateReturningToHouse);
+				level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_TO_HOUSE));
 				level.ghosts().forEach(ghost -> ghost.animations().ifPresent(Animations::startSelected));
 			});
 		}
@@ -369,7 +369,7 @@ public enum GameState implements FsmState<GameModel> {
 					}
 					level.world().energizerBlinking().tick();
 					level.world().mazeFlashing().tick();
-					level.ghosts().forEach(Ghost::update);
+					level.ghosts().forEach(Ghost::updateState);
 					level.bonus().ifPresent(bonus -> bonus.update(level));
 				} else {
 					GameController.it().restart(GameState.BOOT);

@@ -168,19 +168,32 @@ public class Ghost extends Creature {
 		return oneOf(state, alternatives);
 	}
 
+	public void setState(GhostState state) {
+		switch (state) {
+			case LOCKED             -> { this.state = state; enterStateLocked(); }
+			case LEAVING_HOUSE      -> { this.state = state; enterStateLeavingHouse(); }
+			case HUNTING_PAC        -> { this.state = state; enterStateHuntingPac(); }
+			case FRIGHTENED         -> { this.state = state; enterStateFrightened(); }
+			case EATEN              -> { this.state = state; enterStateEaten(); }
+			case RETURNING_TO_HOUSE -> { this.state = state; enterStateReturningToHouse(); }
+			case ENTERING_HOUSE     -> { this.state = state; enterStateEnteringHouse(); }
+			default                 -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
+		}
+	}
+
 	/**
 	 * Executes a single simulation step for this ghost in the current game level.
 	 */
-	public void update() {
+	public void updateState() {
 		switch (state) {
-		case LOCKED             -> updateStateLocked();
-		case LEAVING_HOUSE      -> updateStateLeavingHouse();
-		case HUNTING_PAC        -> updateStateHuntingPac();
-		case FRIGHTENED         -> updateStateFrightened();
-		case EATEN              -> updateStateEaten();
-		case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
-		case ENTERING_HOUSE     -> updateStateEnteringHouse();
-		default                 -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
+			case LOCKED             -> updateStateLocked();
+			case LEAVING_HOUSE      -> updateStateLeavingHouse();
+			case HUNTING_PAC        -> updateStateHuntingPac();
+			case FRIGHTENED         -> updateStateFrightened();
+			case EATEN              -> updateStateEaten();
+			case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
+			case ENTERING_HOUSE     -> updateStateEnteringHouse();
+			default                 -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
 		}
 	}
 
@@ -190,8 +203,7 @@ public class Ghost extends Creature {
 	 * In locked state, ghosts inside the house are bouncing up and down. They become blue/blink if Pac-Man gets/fades
 	 * power. After that, they return to their normal color.
 	 */
-	public void enterStateLocked() {
-		state = LOCKED;
+	private void enterStateLocked() {
 		setPixelSpeed(insideHouse(world.house()) ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
 		selectAnimation(ANIM_GHOST_NORMAL);
 	}
@@ -227,8 +239,7 @@ public class Ghost extends Creature {
 	 * <p>
 	 * The ghost speed is slower than outside, but I do not know the exact value.
 	 */
-	public void enterStateLeavingHouse() {
-		state = LEAVING_HOUSE;
+	private void enterStateLeavingHouse() {
 		setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
 	}
 
@@ -243,10 +254,10 @@ public class Ghost extends Creature {
 			setMoveAndWishDir(LEFT);
 			newTileEntered = false; // keep moving left until new tile is entered
 			if (killable()) {
-				enterStateFrightened();
+				setState(FRIGHTENED);
 			} else {
 				killedIndex = -1; // TODO check this
-				enterStateHuntingPac();
+				setState(HUNTING_PAC);
 			}
 		}
 	}
@@ -313,8 +324,7 @@ public class Ghost extends Creature {
 	 * is an "infinite" chasing phase.
 	 * <p>
 	 */
-	public void enterStateHuntingPac() {
-		state = HUNTING_PAC;
+	private void enterStateHuntingPac() {
 		selectAnimation(ANIM_GHOST_NORMAL);
 	}
 
@@ -331,8 +341,7 @@ public class Ghost extends Creature {
 	 * A frightened ghost has a blue color and starts flashing blue/white shortly (how long exactly?) before Pac-Man loses
 	 * his power. Speed is about half of the normal speed.
 	 */
-	public void enterStateFrightened() {
-		state = FRIGHTENED;
+	private void enterStateFrightened() {
 	}
 
 	private void updateStateFrightened() {
@@ -346,8 +355,7 @@ public class Ghost extends Creature {
 	 * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
 	 * The value doubles for each ghost eaten using the power of the same energizer.
 	 */
-	public void enterStateEaten() {
-		state = EATEN;
+	private void enterStateEaten() {
 		selectAnimation(ANIM_GHOST_NUMBER, (int) killedIndex);
 	}
 
@@ -361,8 +369,7 @@ public class Ghost extends Creature {
 	 * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
 	 * to the ghost house to be revived. Hallelujah!
 	 */
-	public void enterStateReturningToHouse() {
-		state = RETURNING_TO_HOUSE;
+	private void enterStateReturningToHouse() {
 		setTargetTile(world.house().door().leftWing());
 		selectAnimation(ANIM_GHOST_EYES);
 	}
@@ -371,7 +378,7 @@ public class Ghost extends Creature {
 		var houseEntry = world.house().door().entryPosition();
 		if (position().almostEquals(houseEntry, velocity().length() / 2, 0)) {
 			setPosition(houseEntry);
-			enterStateEnteringHouse();
+			setState(ENTERING_HOUSE);
 		} else {
 			setPixelSpeed(GameModel.SPEED_PX_RETURNING_TO_HOUSE);
 			navigateTowardsTarget();
@@ -384,8 +391,7 @@ public class Ghost extends Creature {
 	/**
 	 * When an eaten ghost reaches the ghost house, he enters and follows the path to his revival position.
 	 */
-	public void enterStateEnteringHouse() {
-		state = ENTERING_HOUSE;
+	private void enterStateEnteringHouse() {
 		setTargetTile(null);
 		setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
 	}
@@ -394,7 +400,7 @@ public class Ghost extends Creature {
 		boolean atRevivalPosition = moveInsideHouse(world.house(), world.house().door().entryPosition(), revivalPosition);
 		if (atRevivalPosition) {
 			setMoveAndWishDir(UP);
-			enterStateLocked();
+			setState(LOCKED);
 		}
 	}
 

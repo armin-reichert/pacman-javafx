@@ -483,7 +483,7 @@ public class GameLevel {
 			ghost.setPosition(initialGhostPosition(ghost.id()));
 			ghost.setMoveAndWishDir(initialGhostDirection(ghost.id()));
 			ghost.setVisible(false);
-			ghost.enterStateLocked();
+			ghost.setState(LOCKED);
 			ghost.resetAnimation();
 		});
 		world.mazeFlashing().reset();
@@ -556,7 +556,7 @@ public class GameLevel {
 	private void handlePacPowerStarts() {
 		pac.powerTimer().restartSeconds(pacPowerSeconds());
 		Logger.info("{} power starting, duration {} ticks", pac.name(), pac.powerTimer().duration());
-		ghosts(HUNTING_PAC).forEach(Ghost::enterStateFrightened);
+		ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
 		ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
 		GameController.it().publishGameEvent(GameEventType.PAC_GETS_POWER);
 	}
@@ -567,7 +567,7 @@ public class GameLevel {
 		pac.powerTimer().resetIndefinitely();
 		huntingTimer.start();
 		Logger.info("Hunting timer restarted");
-		ghosts(FRIGHTENED).forEach(Ghost::enterStateHuntingPac);
+		ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
 		GameController.it().publishGameEvent(GameEventType.PAC_LOST_POWER);
 	}
 
@@ -615,7 +615,7 @@ public class GameLevel {
 		var steering = pac.steering().orElse(GameController.it().steering());
 		steering.steer(this, pac);
 		pac.update();
-		ghosts().forEach(Ghost::update);
+		ghosts().forEach(Ghost::updateState);
 
 		// Update bonus
 		if (bonus != null) {
@@ -665,7 +665,7 @@ public class GameLevel {
 
 	private void killGhost(Ghost ghost) {
 		ghost.setKilledIndex(numGhostsKilledByEnergizer);
-		ghost.enterStateEaten();
+		ghost.setState(EATEN);
 		numGhostsKilledByEnergizer += 1;
 		thisFrame.killedGhosts.add(ghost);
 		int points = GameModel.POINTS_GHOSTS_SEQUENCE[ghost.killedIndex()];
@@ -686,10 +686,10 @@ public class GameLevel {
 		ghostHouseManagement.checkIfNextGhostCanLeaveHouse().ifPresent(unlocked -> {
 			var ghost = unlocked.ghost();
 			if (ghost.insideHouse(house)) {
-				ghost.enterStateLeavingHouse();
+				ghost.setState(LEAVING_HOUSE);
 			} else {
 				ghost.setMoveAndWishDir(LEFT);
-				ghost.enterStateHuntingPac();
+				ghost.setState(HUNTING_PAC);
 			}
 			if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
 				// Blinky's "cruise elroy" state is re-enabled when orange ghost is unlocked
