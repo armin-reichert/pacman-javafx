@@ -98,7 +98,7 @@ public class GameLevel {
 		};
 		ghosts().forEach(ghost -> {
 			ghost.setWorld(world);
-			ghost.setPacPowerTimer(pac.powerTimer());
+			ghost.setPac(pac);
 			ghost.setFnHuntingBehavior(isMsPacManGame ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
 			ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
 			ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));

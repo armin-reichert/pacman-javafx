@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -27,20 +26,20 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class Ghost extends Creature {
 
-	public static final String ANIM_GHOST_NORMAL = "normal";
+	public static final String ANIM_GHOST_NORMAL     = "normal";
 	public static final String ANIM_GHOST_FRIGHTENED = "frightened";
-	public static final String ANIM_GHOST_EYES = "eyes";
-	public static final String ANIM_GHOST_FLASHING = "flashing";
-	public static final String ANIM_GHOST_NUMBER = "number";
-	public static final String ANIM_BLINKY_DAMAGED = "damaged";
+	public static final String ANIM_GHOST_EYES       = "eyes";
+	public static final String ANIM_GHOST_FLASHING   = "flashing";
+	public static final String ANIM_GHOST_NUMBER     = "number";
+	public static final String ANIM_BLINKY_DAMAGED   = "damaged";
 	public static final String ANIM_BLINKY_STRETCHED = "stretched";
-	public static final String ANIM_BLINKY_PATCHED = "patched";
-	public static final String ANIM_BLINKY_NAKED = "naked";
+	public static final String ANIM_BLINKY_PATCHED   = "patched";
+	public static final String ANIM_BLINKY_NAKED     = "naked";
 
 	private final byte id;
 	private GhostState state;
 	private byte killedIndex;
-	private TickTimer pacPowerTimer;
+	private Pac pac;
 	private Consumer<Ghost> fnHuntingBehavior;
 	private Consumer<Ghost> fnFrightenedBehavior;
 	private Predicate<Direction> fnIsSteeringAllowed;
@@ -83,6 +82,7 @@ public class Ghost extends Creature {
 	}
 
 	public void setWorld(World world) {
+		checkNotNull(world);
 		this.world = world;
 	}
 
@@ -90,9 +90,9 @@ public class Ghost extends Creature {
 		return world().house().contains(tile());
 	}
 
-	public void setPacPowerTimer(TickTimer timer) {
-		checkNotNull(timer);
-		this.pacPowerTimer = timer;
+	public void setPac(Pac pac) {
+		checkNotNull(pac);
+		this.pac = pac;
 	}
 
 	public void setRevivalPosition(Vector2f revivalPosition) {
@@ -213,7 +213,7 @@ public class Ghost extends Creature {
 	}
 
 	private boolean killable() {
-		return pacPowerTimer.isRunning() && killedIndex == -1;
+		return pac.powerTimer().isRunning() && killedIndex == -1;
 	}
 
 	// --- LEAVING_HOUSE ---
@@ -398,10 +398,10 @@ public class Ghost extends Creature {
 	}
 
 	private void selectFrightenedAnimation() {
-		if (pacPowerTimer.remaining() == GameModel.PAC_POWER_FADES_TICKS
-			|| pacPowerTimer.duration() < GameModel.PAC_POWER_FADES_TICKS && pacPowerTimer.tick() == 1) {
+		if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADES_TICKS
+			|| pac.powerTimer().duration() < GameModel.PAC_POWER_FADES_TICKS && pac.powerTimer().tick() == 1) {
 			selectAnimation(ANIM_GHOST_FLASHING);
-		} else if (pacPowerTimer.remaining() > GameModel.PAC_POWER_FADES_TICKS) {
+		} else if (pac.powerTimer().remaining() > GameModel.PAC_POWER_FADES_TICKS) {
 			selectAnimation(ANIM_GHOST_FRIGHTENED);
 		}
 	}
