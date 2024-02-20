@@ -176,14 +176,10 @@ public class Ghost extends Creature {
 		checkNotNull(state);
 		this.state = state;
 		switch (state) {
-			case LOCKED,
-				 HUNTING_PAC         -> selectAnimation(ANIM_GHOST_NORMAL);
-			case FRIGHTENED          -> updateFrightenedAnimation();
-			case EATEN               -> selectAnimation(ANIM_GHOST_NUMBER, (Byte) killedIndex);
+			case LOCKED, HUNTING_PAC, ENTERING_HOUSE, LEAVING_HOUSE -> selectAnimation(ANIM_GHOST_NORMAL);
+			case EATEN               -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
 			case RETURNING_TO_HOUSE  -> selectAnimation(ANIM_GHOST_EYES);
-			case ENTERING_HOUSE,
-				 LEAVING_HOUSE       -> {}
-			default -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
+			case FRIGHTENED          -> updateFrightenedAnimation();
 		}
 	}
 
@@ -199,7 +195,6 @@ public class Ghost extends Creature {
 			case EATEN              -> updateStateEaten();
 			case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
 			case ENTERING_HOUSE     -> updateStateEnteringHouse();
-			default                 -> throw new IllegalArgumentException(String.format("Unknown ghost state: '%s'", state));
 		}
 	}
 
