@@ -8,9 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
@@ -49,9 +47,9 @@ public class PacManCutscene2 extends GameScene2D {
 		pac.setAnimations(new PacManGamePacAnimations(pac, ss));
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		var blinkyAnimations = new PacManGameGhostAnimations(blinky, ss);
-		blinkyNormal = blinkyAnimations.byName(GhostAnimations.GHOST_NORMAL);
-		blinkyStretching = blinkyAnimations.byName(GhostAnimations.BLINKY_STRETCHED);
-		blinkyDamaged = blinkyAnimations.byName(GhostAnimations.BLINKY_DAMAGED);
+		blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
+		blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
+		blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
 		blinky.setAnimations(blinkyAnimations);
 		blinky.setPixelSpeed(0);
 		blinky.hide();
@@ -77,7 +75,7 @@ public class PacManCutscene2 extends GameScene2D {
 				pac.placeAtTile(28, 20, 0, 0);
 				pac.setMoveDir(Direction.LEFT);
 				pac.setPixelSpeed(1.15f);
-				pac.selectAnimation(PacAnimations.MUNCHING);
+				pac.selectAnimation(Pac.ANIM_MUNCHING);
 				pac.startAnimation();
 				pac.show();
 			}
@@ -85,7 +83,7 @@ public class PacManCutscene2 extends GameScene2D {
 				blinky.placeAtTile(28, 20, -3, 0);
 				blinky.setMoveAndWishDir(Direction.LEFT);
 				blinky.setPixelSpeed(1.25f);
-				blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+				blinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 				blinky.startAnimation();
 				blinky.show();
 			}
@@ -98,7 +96,7 @@ public class PacManCutscene2 extends GameScene2D {
 				blinky.setPixelSpeed(0);
 				blinkyStretching.nextFrame(); // Rapture
 			}
-			case 329 ->	blinky.selectAnimation(GhostAnimations.BLINKY_DAMAGED); // Eyes up
+			case 329 ->	blinky.selectAnimation(Ghost.ANIM_BLINKY_DAMAGED); // Eyes up
 			case 389 ->	blinkyDamaged.nextFrame(); // Eyes right-down
 			case 508 -> {
 				blinky.setVisible(false);

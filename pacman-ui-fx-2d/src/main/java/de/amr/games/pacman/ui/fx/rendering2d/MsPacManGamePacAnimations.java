@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
+import javafx.geometry.Rectangle2D;
 
 import java.util.Map;
 
@@ -46,24 +46,26 @@ public class MsPacManGamePacAnimations extends SpriteAnimations {
 			.end();
 
 		animationsByName = Map.of(
-			PacAnimations.MUNCHING,         munching,
-			PacAnimations.DYING,            dying,
-			PacAnimations.HUSBAND_MUNCHING, husbandMunching
+			Pac.ANIM_MUNCHING,         munching,
+			Pac.ANIM_DYING,            dying,
+			Pac.ANIM_HUSBAND_MUNCHING, husbandMunching
 		);
 	}
 
 	@Override
-	public SpriteAnimation byName(String name) {
+	public SpriteAnimation animation(String name) {
 		return animationsByName.get(name);
 	}
 
 	@Override
-	public void updateCurrentAnimation() {
-		if (PacAnimations.MUNCHING.equals(currentAnimationName)) {
-			currentAnimation().setSprites(spriteSheet.msPacManMunchingSprites(pac.moveDir()));
+	public Rectangle2D currentSprite() {
+		var currentAnimation = currentAnimation();
+		if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
+			currentAnimation.setSprites(spriteSheet.msPacManMunchingSprites(pac.moveDir()));
 		}
-		if (PacAnimations.HUSBAND_MUNCHING.equals(currentAnimationName)) {
-			currentAnimation().setSprites(spriteSheet.pacManMunchingSprites(pac.moveDir()));
+		if (Pac.ANIM_HUSBAND_MUNCHING.equals(currentAnimationName)) {
+			currentAnimation.setSprites(spriteSheet.pacManMunchingSprites(pac.moveDir()));
 		}
+		return currentAnimation != null ? currentAnimation.currentSprite() : null;
 	}
 }

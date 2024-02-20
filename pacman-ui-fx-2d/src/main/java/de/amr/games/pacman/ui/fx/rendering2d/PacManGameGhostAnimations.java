@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
+import javafx.geometry.Rectangle2D;
 
 import java.util.Map;
 
@@ -76,15 +76,15 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
 			.end();
 
 		animationsByName = Map.of(
-			GhostAnimations.GHOST_NORMAL,     normal,
-			GhostAnimations.GHOST_FRIGHTENED, frightened,
-			GhostAnimations.GHOST_FLASHING,   flashing,
-			GhostAnimations.GHOST_EYES,       eyesAnimation,
-			GhostAnimations.GHOST_NUMBER,     numberAnimation,
-			GhostAnimations.BLINKY_DAMAGED,   damaged,
-			GhostAnimations.BLINKY_STRETCHED, stretched,
-			GhostAnimations.BLINKY_PATCHED,   patched,
-			GhostAnimations.BLINKY_NAKED,     naked);
+			Ghost.ANIM_GHOST_NORMAL,     normal,
+			Ghost.ANIM_GHOST_FRIGHTENED, frightened,
+			Ghost.ANIM_GHOST_FLASHING,   flashing,
+			Ghost.ANIM_GHOST_EYES,       eyesAnimation,
+			Ghost.ANIM_GHOST_NUMBER,     numberAnimation,
+			Ghost.ANIM_BLINKY_DAMAGED,   damaged,
+			Ghost.ANIM_BLINKY_STRETCHED, stretched,
+			Ghost.ANIM_BLINKY_PATCHED,   patched,
+			Ghost.ANIM_BLINKY_NAKED,     naked);
 
 		// TODO check this
 		eyesAnimation.start();
@@ -93,24 +93,26 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
 	}
 
 	@Override
-	public SpriteAnimation byName(String name) {
+	public SpriteAnimation animation(String name) {
 		return animationsByName.get(name);
 	}
 
 	@Override
 	public void select(String name, Object... args) {
 		super.select(name, args);
-		if (GhostAnimations.GHOST_NUMBER.equals(name)) {
-			byName(GhostAnimations.GHOST_NUMBER).setFrameIndex((int) args[0]);
+		if (Ghost.ANIM_GHOST_NUMBER.equals(name)) {
+			animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex((Integer) args[0]);
 		}
 	}
 
 	@Override
-	public void updateCurrentAnimation() {
-		if (GhostAnimations.GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation().setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
-		} else if (GhostAnimations.GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation().setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
+	public Rectangle2D currentSprite() {
+		var currentAnimation = currentAnimation();
+		if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
+			currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
+		} else if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
+			currentAnimation.setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
 		}
+		return currentAnimation != null ? currentAnimation.currentSprite() : null;
 	}
 }

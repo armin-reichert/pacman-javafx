@@ -96,28 +96,28 @@ public class MsPacManIntermission1 {
 		pacMan.setMoveDir(Direction.RIGHT);
 		pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
 		pacMan.setPixelSpeed(SPEED_PAC_CHASING);
-		pacMan.selectAnimation(PacAnimations.HUSBAND_MUNCHING);
+		pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
 		pacMan.startAnimation();
 		pacMan.show();
 
 		inky.setMoveAndWishDir(Direction.RIGHT);
 		inky.setPosition(pacMan.position().minus(TS * 6, 0));
 		inky.setPixelSpeed(SPEED_GHOST_CHASING);
-		inky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+		inky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 		inky.startAnimation();
 		inky.show();
 
 		msPac.setMoveDir(Direction.LEFT);
 		msPac.setPosition(TS * 30, LOWER_LANE_Y);
 		msPac.setPixelSpeed(SPEED_PAC_CHASING);
-		msPac.selectAnimation(PacAnimations.MUNCHING);
+		msPac.selectAnimation(Pac.ANIM_MUNCHING);
 		msPac.startAnimation();
 		msPac.show();
 
 		pinky.setMoveAndWishDir(Direction.LEFT);
 		pinky.setPosition(msPac.position().plus(TS * 6, 0));
 		pinky.setPixelSpeed(SPEED_GHOST_CHASING);
-		pinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+		pinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 		pinky.startAnimation();
 		pinky.show();
 

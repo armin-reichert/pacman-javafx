@@ -92,7 +92,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				ctx.pacMan.setMoveDir(Direction.LEFT);
 				ctx.pacMan.setPixelSpeed(ctx.chaseSpeed);
 				ctx.pacMan.show();
-				ctx.pacMan.selectAnimation(PacAnimations.MUNCHING);
+				ctx.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
 				ctx.pacMan.startAnimation();
 				ctx.ghosts().forEach(ghost -> {
 					ghost.enterStateHuntingPac();
@@ -100,7 +100,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 					ghost.setMoveAndWishDir(Direction.LEFT);
 					ghost.setPixelSpeed(ctx.chaseSpeed);
 					ghost.show();
-					ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
+					ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 					ghost.startAnimation();
 				});
 			}
@@ -118,7 +118,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				else if (ctx.pacMan.pos_x() <= TS * ctx.leftTileX + HTS) {
 					ctx.ghosts().forEach(ghost -> {
 						ghost.enterStateFrightened();
-						ghost.selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
+						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
 						ghost.setPixelSpeed(0.6f);
 						ghost.move();

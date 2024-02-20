@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
@@ -84,12 +83,12 @@ public class MsPacManIntermission3 {
 	private void enterStateDeliverJunior() {
 		pacMan.setMoveDir(Direction.RIGHT);
 		pacMan.setPosition(TS * 3, LANE_Y - 4);
-		pacMan.selectAnimation(PacAnimations.HUSBAND_MUNCHING);
+		pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
 		pacMan.show();
 
 		msPacMan.setMoveDir(Direction.RIGHT);
 		msPacMan.setPosition(TS * 5, LANE_Y - 4);
-		msPacMan.selectAnimation(PacAnimations.MUNCHING);
+		msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
 		msPacMan.show();
 
 		stork.setPosition(TS * 30, TS * 12);

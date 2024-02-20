@@ -8,9 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
@@ -44,7 +42,7 @@ public class PacManCutscene3 extends GameScene2D {
 		var ss = context.<PacManGameSpriteSheet>spriteSheet();
 		pac = new Pac("Pac-Man");
 		pac.setAnimations(new PacManGamePacAnimations(pac, ss));
-		pac.selectAnimation(PacAnimations.MUNCHING);
+		pac.selectAnimation(Pac.ANIM_MUNCHING);
 		pac.startAnimation();
 		pac.centerOverTile(v2i(29, 20));
 		pac.setMoveDir(Direction.LEFT);
@@ -52,7 +50,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.show();
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.setAnimations(new PacManGameGhostAnimations(blinky, ss));
-		blinky.selectAnimation(GhostAnimations.BLINKY_PATCHED);
+		blinky.selectAnimation(Ghost.ANIM_BLINKY_PATCHED);
 		blinky.startAnimation();
 		blinky.centerOverTile(v2i(35, 20));
 		blinky.setMoveAndWishDir(Direction.LEFT);
@@ -76,7 +74,7 @@ public class PacManCutscene3 extends GameScene2D {
 			case 400 -> {
 				blinky.centerOverTile(v2i(-1, 20));
 				blinky.setMoveAndWishDir(Direction.RIGHT);
-				blinky.selectAnimation(GhostAnimations.BLINKY_NAKED);
+				blinky.selectAnimation(Ghost.ANIM_BLINKY_NAKED);
 				blinky.startAnimation();
 			}
 			case 700 -> context.gameState().timer().expire();

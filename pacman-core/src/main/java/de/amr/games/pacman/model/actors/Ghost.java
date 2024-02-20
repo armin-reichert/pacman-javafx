@@ -27,6 +27,16 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class Ghost extends Creature {
 
+	public static final String ANIM_GHOST_NORMAL = "normal";
+	public static final String ANIM_GHOST_FRIGHTENED = "frightened";
+	public static final String ANIM_GHOST_EYES = "eyes";
+	public static final String ANIM_GHOST_FLASHING = "flashing";
+	public static final String ANIM_GHOST_NUMBER = "number";
+	public static final String ANIM_BLINKY_DAMAGED = "damaged";
+	public static final String ANIM_BLINKY_STRETCHED = "stretched";
+	public static final String ANIM_BLINKY_PATCHED = "patched";
+	public static final String ANIM_BLINKY_NAKED = "naked";
+
 	private final byte id;
 	private GhostState state;
 	private byte killedIndex;
@@ -183,7 +193,7 @@ public class Ghost extends Creature {
 	public void enterStateLocked() {
 		state = LOCKED;
 		setPixelSpeed(insideHouse() ? GameModel.SPEED_PX_INSIDE_HOUSE : 0);
-		selectAnimation(GhostAnimations.GHOST_NORMAL);
+		selectAnimation(ANIM_GHOST_NORMAL);
 	}
 
 	private void updateStateLocked() {
@@ -198,7 +208,7 @@ public class Ghost extends Creature {
 		if (killable()) {
 			selectFrightenedAnimation();
 		} else {
-			selectAnimation(GhostAnimations.GHOST_NORMAL);
+			selectAnimation(ANIM_GHOST_NORMAL);
 		}
 	}
 
@@ -224,7 +234,7 @@ public class Ghost extends Creature {
 		if (killable()) {
 			selectFrightenedAnimation();
 		} else {
-			selectAnimation(GhostAnimations.GHOST_NORMAL);
+			selectAnimation(ANIM_GHOST_NORMAL);
 		}
 		var outOfHouse = leaveHouse(world().house());
 		if (outOfHouse) {
@@ -304,7 +314,7 @@ public class Ghost extends Creature {
 	 */
 	public void enterStateHuntingPac() {
 		state = HUNTING_PAC;
-		selectAnimation(GhostAnimations.GHOST_NORMAL);
+		selectAnimation(ANIM_GHOST_NORMAL);
 	}
 
 	private void updateStateHuntingPac() {
@@ -337,7 +347,7 @@ public class Ghost extends Creature {
 	 */
 	public void enterStateEaten() {
 		state = EATEN;
-		selectAnimation(GhostAnimations.GHOST_NUMBER, (int) killedIndex);
+		selectAnimation(ANIM_GHOST_NUMBER, (int) killedIndex);
 	}
 
 	private void updateStateEaten() {
@@ -353,7 +363,7 @@ public class Ghost extends Creature {
 	public void enterStateReturningToHouse() {
 		state = RETURNING_TO_HOUSE;
 		setTargetTile(world().house().door().leftWing());
-		selectAnimation(GhostAnimations.GHOST_EYES);
+		selectAnimation(ANIM_GHOST_EYES);
 	}
 
 	private void updateStateReturningToHouse() {
@@ -390,9 +400,9 @@ public class Ghost extends Creature {
 	private void selectFrightenedAnimation() {
 		if (pacPowerTimer.remaining() == GameModel.PAC_POWER_FADES_TICKS
 			|| pacPowerTimer.duration() < GameModel.PAC_POWER_FADES_TICKS && pacPowerTimer.tick() == 1) {
-			selectAnimation(GhostAnimations.GHOST_FLASHING);
+			selectAnimation(ANIM_GHOST_FLASHING);
 		} else if (pacPowerTimer.remaining() > GameModel.PAC_POWER_FADES_TICKS) {
-			selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
+			selectAnimation(ANIM_GHOST_FRIGHTENED);
 		}
 	}
 }

@@ -251,7 +251,7 @@ public enum GameState implements FsmState<GameModel> {
 		public void onUpdate(GameModel game) {
 			game.level().ifPresent(level -> {
 				if (timer.atSecond(1)) {
-					level.pac().selectAnimation(PacAnimations.DYING);
+					level.pac().selectAnimation(Pac.ANIM_DYING);
 					level.pac().resetAnimation();
 					level.ghosts().forEach(Ghost::hide);
 				} else if (timer.atSecond(1.4)) {

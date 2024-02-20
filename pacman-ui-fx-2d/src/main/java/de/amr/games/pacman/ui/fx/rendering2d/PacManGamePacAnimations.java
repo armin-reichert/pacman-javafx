@@ -6,9 +6,9 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
+import javafx.geometry.Rectangle2D;
 
 import java.util.Map;
 
@@ -46,20 +46,22 @@ public class PacManGamePacAnimations extends SpriteAnimations {
 			.end();
 
 		animationsByName = Map.of(
-			PacAnimations.MUNCHING,   munching,
-			PacAnimations.DYING,      dying,
-			PacAnimations.BIG_PACMAN, bigPacMan);
+			Pac.ANIM_MUNCHING,   munching,
+			Pac.ANIM_DYING,      dying,
+			Pac.ANIM_BIG_PACMAN, bigPacMan);
 	}
 
 	@Override
-	public SpriteAnimation byName(String name) {
+	public SpriteAnimation animation(String name) {
 		return animationsByName.get(name);
 	}
 
 	@Override
-	public void updateCurrentAnimation() {
-		if (PacAnimations.MUNCHING.equals(currentAnimationName)) {
-			currentAnimation().setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
+	public Rectangle2D currentSprite() {
+		var currentAnimation = currentAnimation();
+		if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
+			currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));
 		}
+		return currentAnimation != null ? currentAnimation.currentSprite() : null;
 	}
 }

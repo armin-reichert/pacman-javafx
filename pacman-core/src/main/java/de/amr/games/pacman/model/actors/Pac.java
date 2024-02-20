@@ -20,6 +20,12 @@ import java.util.Optional;
 public class Pac extends Creature {
 
 	public static final long REST_FOREVER = -1;
+	public static final String ANIM_MUNCHING = "munching";
+	public static final String ANIM_DYING = "dying";
+	/** In Pac-Man cutscene, big Pac-Man appears. */
+	public static final String ANIM_BIG_PACMAN = "big_pacman";
+	/** In Ms. Pac-Man cutscenes, also Ms. PacMan's husband appears. */
+	public static final String ANIM_HUSBAND_MUNCHING = "husband_munching";
 
 	private final TickTimer powerTimer;
 	private boolean dead;
@@ -77,7 +83,7 @@ public class Pac extends Creature {
 		starvingTicks = 0;
 		corneringSpeedUp = 1.5f; // TODO experimental
 		powerTimer.reset(0);
-		selectAnimation(PacAnimations.MUNCHING);
+		selectAnimation(ANIM_MUNCHING);
 	}
 
 	public void update() {

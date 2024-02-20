@@ -170,7 +170,7 @@ public class GameLevel {
 
 	public void end() {
 		pac.rest(Pac.REST_FOREVER);
-		pac.selectAnimation(PacAnimations.MUNCHING);
+		pac.selectAnimation(Pac.ANIM_MUNCHING);
 		ghosts().forEach(Ghost::hide);
 		deactivateBonus();
 		world.mazeFlashing().reset();

@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import org.tinylog.Logger;
 
 import java.util.BitSet;
@@ -74,7 +73,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 				ctx.msPacMan.setPosition(TS * 31, TS * 20);
 				ctx.msPacMan.setMoveDir(Direction.LEFT);
 				ctx.msPacMan.setPixelSpeed(ctx.speed);
-				ctx.msPacMan.selectAnimation(PacAnimations.MUNCHING);
+				ctx.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
 				ctx.msPacMan.startAnimation();
 				for (var ghost : ctx.ghosts) {
 					ghost.setPosition(TS * 33.5f, TS * 20);

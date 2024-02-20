@@ -8,9 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostAnimations;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.actors.PacAnimations;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
@@ -67,14 +65,14 @@ public class PacManCutscene1 extends GameScene2D {
 				pac.placeAtTile(29, 20, 0, 0);
 				pac.setMoveDir(Direction.LEFT);
 				pac.setPixelSpeed(1.25f);
-				pac.selectAnimation(PacAnimations.MUNCHING);
+				pac.selectAnimation(Pac.ANIM_MUNCHING);
 				pac.startAnimation();
 				pac.show();
 
 				blinky.placeAtTile(32, 20, 0, 0);
 				blinky.setMoveAndWishDir(Direction.LEFT);
 				blinky.setPixelSpeed(1.3f);
-				blinky.selectAnimation(GhostAnimations.GHOST_NORMAL);
+				blinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 				blinky.startAnimation();
 				blinky.show();
 			}
@@ -82,13 +80,13 @@ public class PacManCutscene1 extends GameScene2D {
 				blinky.placeAtTile(-2, 20, 4, 0);
 				blinky.setMoveAndWishDir(Direction.RIGHT);
 				blinky.setPixelSpeed(0.75f);
-				blinky.selectAnimation(GhostAnimations.GHOST_FRIGHTENED);
+				blinky.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 				blinky.startAnimation();
 			}
 			case 400 -> {
 				pac.placeAtTile(-3, 18, 0, 6.5f);
 				pac.setMoveDir(Direction.RIGHT);
-				pac.selectAnimation(PacAnimations.BIG_PACMAN);
+				pac.selectAnimation(Pac.ANIM_BIG_PACMAN);
 				pac.startAnimation();
 			}
 			case 632 -> context.gameState().timer().expire();

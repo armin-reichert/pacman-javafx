@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.model.actors.Animations;
 import javafx.geometry.Rectangle2D;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -20,10 +21,12 @@ public abstract class SpriteAnimations implements Animations {
 
 	@Override
 	public SpriteAnimation currentAnimation() {
-		return byName(currentAnimationName);
+		return animation(currentAnimationName);
 	}
 
-	public abstract SpriteAnimation byName(String name);
+	public abstract Rectangle2D currentSprite();
+
+	public abstract SpriteAnimation animation(String name);
 
 	@Override
 	public void select(String name, Object... args) {
@@ -31,6 +34,8 @@ public abstract class SpriteAnimations implements Animations {
 			currentAnimationName = name;
 			if (currentAnimation() != null) {
 				currentAnimation().setFrameIndex(0);
+			} else {
+				Logger.warn("No animation with name {} exists", name);
 			}
 		}
 	}
@@ -54,17 +59,5 @@ public abstract class SpriteAnimations implements Animations {
 		if (currentAnimation() != null) {
 			currentAnimation().reset();
 		}
-	}
-
-	public final Rectangle2D currentSprite() {
-		if (currentAnimation() != null) {
-			updateCurrentAnimation();
-			return currentAnimation().currentSprite();
-		}
-		return null;
-	}
-
-	protected void updateCurrentAnimation() {
-		// for example to adjust to current ghost direction
 	}
 }

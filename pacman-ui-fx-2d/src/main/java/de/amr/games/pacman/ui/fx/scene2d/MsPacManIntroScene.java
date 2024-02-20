@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.GhostAnimations;
-import de.amr.games.pacman.model.actors.PacAnimations;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameGhostAnimations;
@@ -39,10 +39,10 @@ public class MsPacManIntroScene extends GameScene2D {
 		intro = new MsPacManIntro();
 		var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
 		intro.msPacMan.setAnimations(new MsPacManGamePacAnimations(intro.msPacMan, ss));
-		intro.msPacMan.selectAnimation(PacAnimations.MUNCHING);
+		intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
 		for (var ghost : intro.ghosts) {
 			ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss));
-			ghost.selectAnimation(GhostAnimations.GHOST_NORMAL);
+			ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 		}
 		intro.changeState(MsPacManIntro.State.START);
 	}
