@@ -9,7 +9,9 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
