@@ -45,6 +45,8 @@ public class Ghost extends Creature {
 	private Predicate<Direction> fnIsSteeringAllowed;
 	private World world;
 	private Vector2f revivalPosition;
+	private float speedReturningToHouse;
+	private float speedInsideHouse;
 
 	public Ghost(byte id, String name) {
 		super(name);
@@ -98,6 +100,14 @@ public class Ghost extends Creature {
 	public void setRevivalPosition(Vector2f revivalPosition) {
 		checkNotNull(revivalPosition);
 		this.revivalPosition = revivalPosition;
+	}
+
+	public void setSpeedReturningToHouse(float pixelsPerTick) {
+		this.speedReturningToHouse = pixelsPerTick;
+	}
+
+	public void setSpeedInsideHouse(float pixelsPerTick) {
+		this.speedInsideHouse = pixelsPerTick;
 	}
 
 	public void setFnIsSteeringAllowed(Predicate<Direction> fnIsSteeringAllowed) {
@@ -208,7 +218,7 @@ public class Ghost extends Creature {
 	private void updateStateLocked() {
 		if (insideHouse(world.house())) {
 			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
-			setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
+			setPixelSpeed(speedInsideHouse);
 			move();
 			if (posY <= minY) {
 				setMoveAndWishDir(DOWN);
@@ -253,7 +263,7 @@ public class Ghost extends Creature {
 		// move inside house
 		float centerX = center().x();
 		float houseCenterX = world.house().center().x();
-		if (differsAtMost(0.5f * GameModel.SPEED_PX_INSIDE_HOUSE, centerX, houseCenterX)) {
+		if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
 			// align horizontally and raise
 			setPosX(houseCenterX - HTS);
 			setMoveAndWishDir(UP);
@@ -261,7 +271,7 @@ public class Ghost extends Creature {
 			// move sidewards until center axis is reached
 			setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
 		}
-		setPixelSpeed(GameModel.SPEED_PX_INSIDE_HOUSE);
+		setPixelSpeed(speedInsideHouse);
 		move();
 		if (killable()) {
 			updateFrightenedAnimation();
@@ -323,11 +333,11 @@ public class Ghost extends Creature {
 	 */
 	private void updateStateReturningToHouse() {
 		Vector2f houseEntry = world.house().door().entryPosition();
-		if (position().almostEquals(houseEntry, 0.5f * GameModel.SPEED_PX_RETURNING_TO_HOUSE, 0)) {
+		if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
 			setPosition(houseEntry);
 			setState(ENTERING_HOUSE);
 		} else {
-			setPixelSpeed(GameModel.SPEED_PX_RETURNING_TO_HOUSE);
+			setPixelSpeed(speedReturningToHouse);
 			setTargetTile(world.house().door().leftWing());
 			navigateTowardsTarget();
 			tryMoving();
@@ -356,9 +366,9 @@ public class Ghost extends Creature {
 				setMoveAndWishDir(RIGHT);
 			}
 		}
-		setPixelSpeed(GameModel.SPEED_PX_ENTERING_HOUSE);
+		setPixelSpeed(speedReturningToHouse);
 		move();
-		if (differsAtMost(0.5 * GameModel.SPEED_PX_ENTERING_HOUSE, posX(), revivalPosition.x())
+		if (differsAtMost(0.5 * speedReturningToHouse, posX(), revivalPosition.x())
 			&& posY() >= revivalPosition.y()) {
 			setPosition(revivalPosition);
 			setMoveAndWishDir(UP);

@@ -104,6 +104,8 @@ public class GameLevel {
 			ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
 			ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
 			ghost.setFnIsSteeringAllowed(dir -> isSteeringAllowed(ghost, dir));
+			ghost.setSpeedReturningToHouse(SPEED_PX_RETURNING_TO_HOUSE);
+			ghost.setSpeedInsideHouse(SPEED_PX_INSIDE_HOUSE);
 		});
 
 		ghostHouseManagement = new GhostHouseManagement(this, world.house());
