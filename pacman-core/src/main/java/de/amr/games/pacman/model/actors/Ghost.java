@@ -44,6 +44,7 @@ public class Ghost extends Creature {
 	private Consumer<Ghost> fnFrightenedBehavior;
 	private Predicate<Direction> fnIsSteeringAllowed;
 	private World world;
+	private House house;
 	private Vector2f revivalPosition;
 	private float speedReturningToHouse;
 	private float speedInsideHouse;
@@ -86,6 +87,10 @@ public class Ghost extends Creature {
 	public void setWorld(World world) {
 		checkNotNull(world);
 		this.world = world;
+	}
+
+	public void setHouse(House house) {
+		this.house = house;
 	}
 
 	public boolean insideHouse(House house) {
@@ -155,7 +160,7 @@ public class Ghost extends Creature {
 				return false;
 			}
 		}
-		if (world.house().door().occupies(targetTile)) {
+		if (house.door().occupies(targetTile)) {
 			return is(ENTERING_HOUSE, LEAVING_HOUSE);
 		}
 		return super.canAccessTile(targetTile);
@@ -216,7 +221,7 @@ public class Ghost extends Creature {
 	 * power. After that, they return to their normal color.
 	 */
 	private void updateStateLocked() {
-		if (insideHouse(world.house())) {
+		if (insideHouse(house)) {
 			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
 			setPixelSpeed(speedInsideHouse);
 			move();
@@ -246,7 +251,7 @@ public class Ghost extends Creature {
 	 * The ghost speed is slower than outside, but I do not know the exact value.
 	 */
 	private void updateStateLeavingHouse() {
-		Vector2f houseEntryPosition = world.house().door().entryPosition();
+		Vector2f houseEntryPosition = house.door().entryPosition();
 		if (posY() <= houseEntryPosition.y()) {
 			// has raised and is outside house
 			setPosition(houseEntryPosition);
@@ -262,7 +267,7 @@ public class Ghost extends Creature {
 		}
 		// move inside house
 		float centerX = center().x();
-		float houseCenterX = world.house().center().x();
+		float houseCenterX = house.center().x();
 		if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
 			// align horizontally and raise
 			setPosX(houseCenterX - HTS);
@@ -332,13 +337,13 @@ public class Ghost extends Creature {
 	 * to the ghost house to be revived. Hallelujah!
 	 */
 	private void updateStateReturningToHouse() {
-		Vector2f houseEntry = world.house().door().entryPosition();
+		Vector2f houseEntry = house.door().entryPosition();
 		if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
 			setPosition(houseEntry);
 			setState(ENTERING_HOUSE);
 		} else {
 			setPixelSpeed(speedReturningToHouse);
-			setTargetTile(world.house().door().leftWing());
+			setTargetTile(house.door().leftWing());
 			navigateTowardsTarget();
 			tryMoving();
 		}
@@ -351,8 +356,8 @@ public class Ghost extends Creature {
 	 * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
 	 */
 	private void updateStateEnteringHouse() {
-		Vector2f entryPosition = world.house().door().entryPosition();
-		Vector2f houseCenter = world.house().center();
+		Vector2f entryPosition = house.door().entryPosition();
+		Vector2f houseCenter = house.center();
 		if (position().almostEquals(entryPosition,0.5f * velocity().length(), 0) && moveDir() != Direction.DOWN) {
 			// if near entry, start falling
 			setPosition(entryPosition);

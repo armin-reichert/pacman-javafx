@@ -99,6 +99,7 @@ public class GameLevel {
 		};
 		ghosts().forEach(ghost -> {
 			ghost.setWorld(world);
+			ghost.setHouse(world.house());
 			ghost.setPac(pac);
 			ghost.setFnHuntingBehavior(isMsPacManGame ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
 			ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
