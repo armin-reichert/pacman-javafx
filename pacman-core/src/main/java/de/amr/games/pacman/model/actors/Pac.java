@@ -118,6 +118,11 @@ public class Pac extends Creature {
 		return powerTimer.isRunning() && powerTimer.remaining() <= GameModel.PAC_POWER_FADES_TICKS;
 	}
 
+	public boolean isPowerStartingToFade() {
+		return powerTimer.isRunning() && powerTimer.remaining() == GameModel.PAC_POWER_FADES_TICKS
+			|| powerTimer().duration() < GameModel.PAC_POWER_FADES_TICKS && powerTimer().tick() == 1;
+	}
+
 	public TickTimer powerTimer() {
 		return powerTimer;
 	}

@@ -298,10 +298,9 @@ public class Ghost extends Creature {
 	}
 
 	private void updateFrightenedAnimation() {
-		if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADES_TICKS
-			|| pac.powerTimer().duration() < GameModel.PAC_POWER_FADES_TICKS && pac.powerTimer().tick() == 1) {
+		if (pac.isPowerStartingToFade()) {
 			selectAnimation(ANIM_GHOST_FLASHING);
-		} else if (pac.powerTimer().remaining() > GameModel.PAC_POWER_FADES_TICKS) {
+		} else if (!pac.isPowerFading()) {
 			selectAnimation(ANIM_GHOST_FRIGHTENED);
 		}
 	}
