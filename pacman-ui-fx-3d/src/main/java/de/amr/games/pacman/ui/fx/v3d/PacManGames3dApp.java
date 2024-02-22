@@ -27,6 +27,7 @@ public class PacManGames3dApp extends Application {
 		}
 		GameController.create(settings.variant);
 		Logger.info("Game initialized: {}, locale: {}", settings, Locale.getDefault());
+		Logger.info("Java version is {}", System.getProperty("java.version"));
 	}
 
 	@Override
