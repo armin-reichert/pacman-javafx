@@ -106,33 +106,33 @@ class GhostHouseManagement {
 	}
 
 	public Optional<GhostUnlockInfo> checkIfNextGhostCanLeaveHouse() {
-		var unlockedGhost = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
+		Ghost candidate = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
 			.map(level::ghost)
 			.filter(ghost -> ghost.is(LOCKED))
-			.findFirst().orElse(null);
+			.findFirst()
+			.orElse(null);
 
-		if (unlockedGhost == null) {
+		if (candidate == null) {
 			return Optional.empty();
 		}
-
-		if (!unlockedGhost.insideHouse(house)) {
-			return GhostUnlockInfo.of(unlockedGhost, "Already outside house");
+		// Blinky always gets unlocked immediately
+		if (candidate.id() == RED_GHOST) {
+			return GhostUnlockInfo.of(candidate, "Red ghost gets unlocked immediately");
 		}
-		var id = unlockedGhost.id();
 		// check private dot counter first (if enabled)
-		if (!globalDotCounterEnabled && ghostDotCounters[id] >= privateGhostDotLimits[id]) {
-			return GhostUnlockInfo.of(unlockedGhost, "Private dot counter at limit (%d)", privateGhostDotLimits[id]);
+		if (!globalDotCounterEnabled && ghostDotCounters[candidate.id()] >= privateGhostDotLimits[candidate.id()]) {
+			return GhostUnlockInfo.of(candidate, "Private dot counter at limit (%d)", privateGhostDotLimits[candidate.id()]);
 		}
 		// check global dot counter
-		var globalDotLimit = globalGhostDotLimits[id] == -1 ? Integer.MAX_VALUE : globalGhostDotLimits[id];
+		var globalDotLimit = globalGhostDotLimits[candidate.id()] == -1 ? Integer.MAX_VALUE : globalGhostDotLimits[candidate.id()];
 		if (globalDotCounter >= globalDotLimit) {
-			return GhostUnlockInfo.of(unlockedGhost, "Global dot counter at limit (%d)", globalDotLimit);
+			return GhostUnlockInfo.of(candidate, "Global dot counter at limit (%d)", globalDotLimit);
 		}
 		// check Pac-Man starving time
 		if (level.pac().starvingTicks() >= pacStarvingTicksLimit) {
 			level.pac().endStarving(); // TODO change pac state here?
 			Logger.trace("Pac-Man starving timer reset to 0");
-			return GhostUnlockInfo.of(unlockedGhost, "%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingTicksLimit);
+			return GhostUnlockInfo.of(candidate, "%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingTicksLimit);
 		}
 		return Optional.empty();
 	}

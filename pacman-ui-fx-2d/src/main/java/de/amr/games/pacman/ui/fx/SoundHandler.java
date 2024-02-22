@@ -125,7 +125,7 @@ public class SoundHandler {
 
 	public void stopAllSounds() {
 		theme.audioClips().filter(clip -> clip != voiceClip).forEach(AudioClip::stop);
-		Logger.info("All sounds stopped");
+		Logger.trace("All sounds stopped");
 	}
 
 	private void startSiren(GameVariant gameVariant, int sirenIndex) {
