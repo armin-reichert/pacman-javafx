@@ -17,7 +17,7 @@ import java.util.Optional;
  * 
  * @author Armin Reichert
  */
-public class Pac extends Creature {
+public class Pac extends Creature implements  AnimationDirector {
 
 	public static final long REST_FOREVER = -1;
 	public static final String ANIM_MUNCHING = "munching";
@@ -34,6 +34,7 @@ public class Pac extends Creature {
 	private Steering steering;
 
 	private GameLevel level;
+	private Animations animations;
 
 	public Pac(String name) {
 		super(name);
@@ -63,6 +64,15 @@ public class Pac extends Creature {
 
 	public GameLevel level() {
 		return level;
+	}
+
+	public void setAnimations(Animations animations) {
+		this.animations = animations;
+	}
+
+	@Override
+	public Optional<Animations> animations() {
+		return Optional.ofNullable(animations);
 	}
 
 	@Override

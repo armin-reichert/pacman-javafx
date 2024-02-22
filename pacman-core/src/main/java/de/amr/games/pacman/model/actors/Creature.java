@@ -23,7 +23,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  * 
  * @author Armin Reichert
  */
-public abstract class Creature extends Entity implements AnimationDirector {
+public abstract class Creature extends Entity {
 
 	protected static final Direction[] DIRECTION_PRIORITY = { UP, LEFT, DOWN, RIGHT };
 
@@ -36,8 +36,6 @@ public abstract class Creature extends Entity implements AnimationDirector {
 	protected boolean gotReverseCommand;
 	protected boolean canTeleport;
 	protected float corneringSpeedUp;
-
-	private Animations animations;
 
 	protected Creature(String name) {
 		checkNotNull(name, "Name of creature must not be null");
@@ -60,15 +58,6 @@ public abstract class Creature extends Entity implements AnimationDirector {
 		newTileEntered = true;
 		gotReverseCommand = false;
 		canTeleport = true;
-	}
-
-	public void setAnimations(Animations animations) {
-		this.animations = animations;
-	}
-
-	@Override
-	public Optional<Animations> animations() {
-		return Optional.ofNullable(animations);
 	}
 
 	public abstract World world();

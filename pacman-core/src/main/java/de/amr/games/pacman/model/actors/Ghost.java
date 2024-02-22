@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -24,7 +25,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  * 
  * @author Armin Reichert
  */
-public class Ghost extends Creature {
+public class Ghost extends Creature implements AnimationDirector {
 
 	public static final String ANIM_GHOST_NORMAL     = "normal";
 	public static final String ANIM_GHOST_FRIGHTENED = "frightened";
@@ -48,6 +49,7 @@ public class Ghost extends Creature {
 	private Vector2f revivalPosition;
 	private float speedReturningToHouse;
 	private float speedInsideHouse;
+	private Animations animations;
 
 	public Ghost(byte id, String name) {
 		super(name);
@@ -71,6 +73,15 @@ public class Ghost extends Creature {
 	 */
 	public byte id() {
 		return id;
+	}
+
+	public void setAnimations(Animations animations) {
+		this.animations = animations;
+	}
+
+	@Override
+	public Optional<Animations> animations() {
+		return Optional.ofNullable(animations);
 	}
 
 	@Override
@@ -150,20 +161,20 @@ public class Ghost extends Creature {
 	}
 
 	@Override
-	public boolean canAccessTile(Vector2i targetTile) {
-		checkTileNotNull(targetTile);
+	public boolean canAccessTile(Vector2i tile) {
+		checkTileNotNull(tile);
 		var currentTile = tile();
 		for (var dir : Direction.values()) {
-			if (targetTile.equals(currentTile.plus(dir.vector())) && !fnIsSteeringAllowed.test(dir)) {
-				Logger.trace("Ghost {} cannot access tile {} because he cannot move %s at tile {}",
-					name(), targetTile, dir, currentTile);
+			if (tile.equals(currentTile.plus(dir.vector())) && !fnIsSteeringAllowed.test(dir)) {
+				Logger.trace("Ghost {} cannot access tile {} because he cannot move {} at tile {}",
+					name(), tile, dir, currentTile);
 				return false;
 			}
 		}
-		if (house.door().occupies(targetTile)) {
+		if (house.door().occupies(tile)) {
 			return is(ENTERING_HOUSE, LEAVING_HOUSE);
 		}
-		return super.canAccessTile(targetTile);
+		return super.canAccessTile(tile);
 	}
 
 	@Override
@@ -217,8 +228,8 @@ public class Ghost extends Creature {
 	// --- LOCKED ---
 
 	/**
-	 * In locked state, ghosts inside the house are bouncing up and down. They become blue/blink if Pac-Man gets/fades
-	 * power. After that, they return to their normal color.
+	 * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
+	 * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
 	 */
 	private void updateStateLocked() {
 		if (insideHouse(house)) {

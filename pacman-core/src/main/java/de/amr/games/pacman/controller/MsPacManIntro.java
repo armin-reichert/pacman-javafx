@@ -6,7 +6,6 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -121,10 +120,8 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 					}
 					if (ghost.posY() <= ctx.stopY + ghost.id() * 16) {
 						ghost.setPixelSpeed(0);
-						ghost.animations().ifPresent(ani -> {
-							ani.stopSelected();
-							ani.resetSelected();
-						});
+						ghost.stopAnimation();
+						ghost.resetAnimation();
 						if (ctx.ghostIndex == 3) {
 							ctx.changeState(State.MS_PACMAN_MARCHING_IN);
 						} else {
@@ -145,7 +142,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 				ctx.msPacMan.move();
 				if (ctx.msPacMan.posX() <= ctx.stopMsPacX) {
 					ctx.msPacMan.setPixelSpeed(0);
-					ctx.msPacMan.animations().ifPresent(Animations::resetSelected);
+					ctx.msPacMan.resetAnimation();
 					ctx.changeState(State.READY_TO_PLAY);
 				}
 			}

@@ -206,7 +206,7 @@ public enum GameState implements FsmState<GameModel> {
 			timer.restartSeconds(1);
 			game.level().ifPresent(level -> {
 				level.pac().hide();
-				level.ghosts().forEach(ghost -> ghost.animations().ifPresent(Animations::stopSelected));
+				level.ghosts().forEach(Ghost::stopAnimation);
 				GameController.it().publishGameEvent(GameEventType.GHOST_EATEN);
 			});
 		}
@@ -231,7 +231,7 @@ public enum GameState implements FsmState<GameModel> {
 			game.level().ifPresent(level -> {
 				level.pac().show();
 				level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_TO_HOUSE));
-				level.ghosts().forEach(ghost -> ghost.animations().ifPresent(Animations::startSelected));
+				level.ghosts().forEach(Ghost::startAnimation);
 			});
 		}
 	},
