@@ -101,6 +101,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	}
 
 	public void setHouse(House house) {
+		checkNotNull(house);
 		this.house = house;
 	}
 
@@ -351,6 +352,7 @@ public class Ghost extends Creature implements AnimationDirector {
 		Vector2f houseEntry = house.door().entryPosition();
 		if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
 			setPosition(houseEntry);
+			setMoveAndWishDir(DOWN);
 			setState(ENTERING_HOUSE);
 		} else {
 			setPixelSpeed(speedReturningToHouse);
@@ -367,25 +369,19 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
 	 */
 	private void updateStateEnteringHouse() {
-		Vector2f entryPosition = house.door().entryPosition();
 		Vector2f houseCenter = house.center();
-		if (position().almostEquals(entryPosition,0.5f * velocity().length(), 0) && moveDir() != Direction.DOWN) {
-			// if near entry, start falling
-			setPosition(entryPosition);
-			setMoveAndWishDir(Direction.DOWN);
-		} else if (posY() >= houseCenter.y()) {
+		if (posY >= houseCenter.y()) {
 			// reached ground
 			setPosY(houseCenter.y());
-			if (revivalPosition.x() < houseCenter.x()) {
+			if (revivalPosition.x() < posX) {
 				setMoveAndWishDir(LEFT);
-			} else if (revivalPosition.x() > houseCenter.x()) {
+			} else if (revivalPosition.x() > posX) {
 				setMoveAndWishDir(RIGHT);
 			}
 		}
 		setPixelSpeed(speedReturningToHouse);
 		move();
-		if (differsAtMost(0.5 * speedReturningToHouse, posX(), revivalPosition.x())
-			&& posY() >= revivalPosition.y()) {
+		if (posY >= revivalPosition.y() && differsAtMost(0.5 * speedReturningToHouse, posX, revivalPosition.x())) {
 			setPosition(revivalPosition);
 			setMoveAndWishDir(UP);
 			setState(LOCKED);
