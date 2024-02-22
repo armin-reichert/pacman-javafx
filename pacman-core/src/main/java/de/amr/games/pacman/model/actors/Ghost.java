@@ -388,7 +388,7 @@ public class Ghost extends Creature implements AnimationDirector {
 			&& posY() >= revivalPosition.y()) {
 			setPosition(revivalPosition);
 			setMoveAndWishDir(UP);
-			setState(LOCKED);
+			setState(id == GameModel.RED_GHOST ? LEAVING_HOUSE : LOCKED);
 		}
 	}
 }
