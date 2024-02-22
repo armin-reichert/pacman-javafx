@@ -45,5 +45,6 @@ public class InfoBoxKeys extends InfoBox {
 		addInfo("V", "Switch Game Variant");
 		addInfo("1", "Start Playing (Credit Required)");
 		addInfo("5", "Add Credit");
+		addInfo("Runtime version", Runtime.version().toString());
 	}
 }
