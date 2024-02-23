@@ -77,7 +77,7 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
 	public void select(String name, Object... args) {
 		super.select(name, args);
 		if (Ghost.ANIM_GHOST_NUMBER.equals(name)) {
-			animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex((Integer) args[0]);
+			animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex((Byte) args[0]);
 		}
 	}
 
