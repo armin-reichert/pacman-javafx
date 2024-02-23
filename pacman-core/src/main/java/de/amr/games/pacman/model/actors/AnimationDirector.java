@@ -13,8 +13,12 @@ public interface AnimationDirector {
 
 	Optional<Animations> animations();
 
-	default void selectAnimation(String name, Object... args) {
-		animations().ifPresent(a -> a.select(name, args));
+	default void selectAnimation(String name, int index) {
+		animations().ifPresent(a -> a.select(name, index));
+	}
+
+	default void selectAnimation(String name) {
+		animations().ifPresent(a -> a.select(name, 0));
 	}
 
 	default void startAnimation() {

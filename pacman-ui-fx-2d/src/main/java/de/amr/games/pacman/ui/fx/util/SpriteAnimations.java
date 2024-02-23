@@ -29,7 +29,7 @@ public abstract class SpriteAnimations implements Animations {
 	public abstract SpriteAnimation animation(String name);
 
 	@Override
-	public void select(String name, Object... args) {
+	public void select(String name, int index) {
 		if (!name.equals(currentAnimationName)) {
 			currentAnimationName = name;
 			if (currentAnimation() != null) {

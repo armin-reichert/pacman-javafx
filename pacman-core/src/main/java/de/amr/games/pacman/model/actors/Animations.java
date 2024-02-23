@@ -11,7 +11,7 @@ public interface Animations {
 
 	Object currentAnimation();
 
-	void select(String name, Object... args);
+	void select(String name, int index);
 
 	void startSelected();
 

@@ -74,10 +74,10 @@ public class MsPacManGameGhostAnimations extends SpriteAnimations {
 	}
 
 	@Override
-	public void select(String name, Object... args) {
-		super.select(name, args);
+	public void select(String name, int index) {
+		super.select(name, index);
 		if (Ghost.ANIM_GHOST_NUMBER.equals(name)) {
-			animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex((Byte) args[0]);
+			animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex(index);
 		}
 	}
 
