@@ -261,7 +261,7 @@ public enum GameState implements FsmState<GameModel> {
 					level.pac().hide();
 					game.loseLife();
 					if (game.lives() == 0) {
-						level.world().mazeFlashing().stop();
+						level.world().energizerBlinking().stop();
 					}
 				} else if (timer.hasExpired()) {
 					if (!GameController.it().hasCredit()) {
