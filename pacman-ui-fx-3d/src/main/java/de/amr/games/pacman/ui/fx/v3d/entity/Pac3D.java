@@ -246,7 +246,7 @@ public class Pac3D {
 	}
 
 	private boolean outsideWorld() {
-		return position.getX() < HTS || position.getX() > TS * pac.level().world().numCols() - HTS;
+		return position.getX() < HTS || position.getX() > TS * pac.world().numCols() - HTS;
 	}
 
 	private Animation createMsPacManDyingAnimation() {
