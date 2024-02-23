@@ -44,7 +44,6 @@ public class Ghost extends Creature implements AnimationDirector {
 	private Consumer<Ghost> fnHuntingBehavior;
 	private Consumer<Ghost> fnFrightenedBehavior;
 	private Predicate<Direction> fnIsSteeringAllowed;
-	private World world;
 	private House house;
 	private Vector2f revivalPosition;
 	private float speedReturningToHouse;
@@ -88,16 +87,6 @@ public class Ghost extends Creature implements AnimationDirector {
 	public void reset() {
 		super.reset();
 		setKilledIndex(-1);
-	}
-
-	@Override
-	public World world() {
-		return world;
-	}
-
-	public void setWorld(World world) {
-		checkNotNull(world);
-		this.world = world;
 	}
 
 	public void setHouse(House house) {

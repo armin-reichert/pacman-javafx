@@ -35,8 +35,6 @@ public class MovingBonus extends Creature implements Bonus {
 	private long eatenTimer;
 	private byte state;
 
-	private GameLevel level;
-
 	public MovingBonus(byte symbol, int points) {
 		super("MovingBonus-" + symbol);
 		reset();
@@ -46,15 +44,6 @@ public class MovingBonus extends Creature implements Bonus {
 		canTeleport = false; // override default from Creature
 		eatenTimer = 0;
 		state = Bonus.STATE_INACTIVE;
-	}
-
-	public void setLevel(GameLevel level) {
-		this.level = level;
-	}
-
-	@Override
-	public World world() {
-		return level.world();
 	}
 
 	@Override

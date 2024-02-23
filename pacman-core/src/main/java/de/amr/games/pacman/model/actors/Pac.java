@@ -17,15 +17,16 @@ import java.util.Optional;
  * 
  * @author Armin Reichert
  */
-public class Pac extends Creature implements  AnimationDirector {
+public class Pac extends Creature implements AnimationDirector {
 
-	public static final long REST_FOREVER = -1;
-	public static final String ANIM_MUNCHING = "munching";
-	public static final String ANIM_DYING = "dying";
+	public static final String ANIM_MUNCHING         = "munching";
+	public static final String ANIM_DYING            = "dying";
 	/** In Pac-Man cutscene, big Pac-Man appears. */
-	public static final String ANIM_BIG_PACMAN = "big_pacman";
+	public static final String ANIM_BIG_PACMAN       = "big_pacman";
 	/** In Ms. Pac-Man cutscenes, also Ms. PacMan's husband appears. */
 	public static final String ANIM_HUSBAND_MUNCHING = "husband_munching";
+
+	public static final long REST_FOREVER = -1;
 
 	private final TickTimer powerTimer;
 	private boolean dead;
@@ -33,7 +34,6 @@ public class Pac extends Creature implements  AnimationDirector {
 	private long starvingTicks;
 	private Steering steering;
 
-	private GameLevel level;
 	private Animations animations;
 
 	public Pac(String name) {
@@ -58,14 +58,6 @@ public class Pac extends Creature implements  AnimationDirector {
 			'}';
 	}
 
-	public void setLevel(GameLevel level) {
-		this.level = level;
-	}
-
-	public GameLevel level() {
-		return level;
-	}
-
 	public void setAnimations(Animations animations) {
 		this.animations = animations;
 	}
@@ -73,11 +65,6 @@ public class Pac extends Creature implements  AnimationDirector {
 	@Override
 	public Optional<Animations> animations() {
 		return Optional.ofNullable(animations);
-	}
-
-	@Override
-	public World world() {
-		return level.world();
 	}
 
 	@Override
@@ -96,7 +83,7 @@ public class Pac extends Creature implements  AnimationDirector {
 		selectAnimation(ANIM_MUNCHING);
 	}
 
-	public void update() {
+	public void update(GameLevel level) {
 		if (dead || restingTicks == REST_FOREVER) {
 			return;
 		}

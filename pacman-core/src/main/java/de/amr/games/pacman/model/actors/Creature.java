@@ -31,6 +31,7 @@ public abstract class Creature extends Entity {
 	private Direction moveDir;
 	private Direction wishDir;
 	private Vector2i targetTile;
+	protected World world;
 	protected final MoveResult moveResult = new MoveResult();
 	protected boolean newTileEntered;
 	protected boolean gotReverseCommand;
@@ -60,7 +61,13 @@ public abstract class Creature extends Entity {
 		canTeleport = true;
 	}
 
-	public abstract World world();
+	public World world() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
 
 	public abstract boolean canReverse();
 

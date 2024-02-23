@@ -89,7 +89,7 @@ public class GameLevel {
 		boolean isMsPacManGame = game.variant() == GameVariant.MS_PACMAN;
 
 		pac = new Pac(isMsPacManGame ? "Ms. Pac-Man" : "Pac-Man");
-		pac.setLevel(this);
+		pac.setWorld(world);
 
 		ghosts = new Ghost[] {
 			new Ghost(RED_GHOST,  "Blinky"),
@@ -617,7 +617,7 @@ public class GameLevel {
 		unlockGhost(world().house());
 		var steering = pac.steering().orElse(GameController.it().steering());
 		steering.steer(this, pac);
-		pac.update();
+		pac.update(this);
 		ghosts().forEach(Ghost::updateState);
 
 		// Update bonus
@@ -857,7 +857,7 @@ public class GameLevel {
 		route.trimToSize();
 
 		var movingBonus = new MovingBonus(symbol, points);
-		movingBonus.setLevel(this);
+		movingBonus.setWorld(world);
 		movingBonus.setRoute(route, leftToRight);
 		Logger.info("Moving bonus created, route: {} ({})",	route, leftToRight ? "left to right" : "right to left");
 		return movingBonus;
