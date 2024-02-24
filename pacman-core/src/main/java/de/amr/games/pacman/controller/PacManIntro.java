@@ -32,8 +32,9 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 		public boolean nicknameVisible;
 		public boolean characterVisible;
 
-		public GhostInfo(byte id, String nickname, String character) {
+		public GhostInfo(byte id, String nickname, String character, Pac pac) {
 			ghost = new Ghost(id, nickname);
+			ghost.setPac(pac);
 			this.character = character;
 		}
 	}
@@ -215,10 +216,10 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 	public Pulse blinking = new Pulse(10, true);
 	public Pac pacMan = new Pac("Pac-Man");
 	public GhostInfo[] ghostInfo = {
-		new GhostInfo(GameModel.RED_GHOST,   "BLINKY","SHADOW"),
-		new GhostInfo(GameModel.PINK_GHOST,  "PINKY", "SPEEDY"),
-		new GhostInfo(GameModel.CYAN_GHOST,  "INKY",  "BASHFUL"),
-		new GhostInfo(GameModel.ORANGE_GHOST,"CLYDE", "POKEY")
+		new GhostInfo(GameModel.RED_GHOST,   "BLINKY","SHADOW", pacMan),
+		new GhostInfo(GameModel.PINK_GHOST,  "PINKY", "SPEEDY", pacMan),
+		new GhostInfo(GameModel.CYAN_GHOST,  "INKY",  "BASHFUL", pacMan),
+		new GhostInfo(GameModel.ORANGE_GHOST,"CLYDE", "POKEY", pacMan)
 	};
 	public boolean creditVisible = false;
 	public boolean titleVisible = false;
