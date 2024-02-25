@@ -34,9 +34,8 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 		public boolean nicknameVisible;
 		public boolean characterVisible;
 
-		public GhostInfo(byte id, String nickname, String character, Pac pac) {
+		public GhostInfo(byte id, String nickname, String character) {
 			ghost = new Ghost(id, nickname);
-			ghost.setPac(pac);
 			this.character = character;
 		}
 	}
@@ -104,7 +103,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				intro.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
 				intro.pacMan.startAnimation();
 				intro.ghosts().forEach(ghost -> {
-					ghost.setState(GhostState.HUNTING_PAC);
+					ghost.setState(GhostState.HUNTING_PAC, intro.pacMan);
 					ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));
 					ghost.setMoveAndWishDir(Direction.LEFT);
 					ghost.setPixelSpeed(intro.chaseSpeed);
@@ -126,7 +125,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				// Ghosts already reverse direction before Pac-Man eats the energizer and turns!
 				else if (intro.pacMan.posX() <= TS * intro.leftTileX + HTS) {
 					intro.ghosts().forEach(ghost -> {
-						ghost.setState(FRIGHTENED);
+						ghost.setState(FRIGHTENED, intro.pacMan);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
 						ghost.setPixelSpeed(intro.ghostFrightenedSpeed);
@@ -165,7 +164,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 					.ifPresent(victim -> {
 						//TODO(robustness) If killedIndex not set *before* changing state, animation frame index is invalid!
 						victim.setKilledIndex(victim.id());
-						victim.setState(EATEN);
+						victim.setState(EATEN, intro.pacMan);
 						intro.ghostKilledTime = timer.tick();
 						intro.pacMan.hide();
 						intro.pacMan.setPixelSpeed(0);
@@ -230,10 +229,10 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 	public Pulse blinking = new Pulse(10, true);
 	public Pac pacMan = new Pac("Pac-Man");
 	public GhostInfo[] ghostInfo = {
-		new GhostInfo(GameModel.RED_GHOST,   "BLINKY","SHADOW", pacMan),
-		new GhostInfo(GameModel.PINK_GHOST,  "PINKY", "SPEEDY", pacMan),
-		new GhostInfo(GameModel.CYAN_GHOST,  "INKY",  "BASHFUL", pacMan),
-		new GhostInfo(GameModel.ORANGE_GHOST,"CLYDE", "POKEY", pacMan)
+		new GhostInfo(GameModel.RED_GHOST,   "BLINKY","SHADOW"),
+		new GhostInfo(GameModel.PINK_GHOST,  "PINKY", "SPEEDY"),
+		new GhostInfo(GameModel.CYAN_GHOST,  "INKY",  "BASHFUL"),
+		new GhostInfo(GameModel.ORANGE_GHOST,"CLYDE", "POKEY")
 	};
 	public boolean creditVisible = false;
 	public boolean titleVisible = false;

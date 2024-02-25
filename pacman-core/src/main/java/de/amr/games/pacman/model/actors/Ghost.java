@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.House;
-import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -40,7 +39,6 @@ public class Ghost extends Creature implements AnimationDirector {
 	private final byte id;
 	private GhostState state;
 	private byte killedIndex;
-	private Pac pac;
 	private Consumer<Ghost> fnHuntingBehavior;
 	private Consumer<Ghost> fnFrightenedBehavior;
 	private Predicate<Direction> fnIsSteeringAllowed;
@@ -98,11 +96,6 @@ public class Ghost extends Creature implements AnimationDirector {
 		return house.contains(tile());
 	}
 
-	public void setPac(Pac pac) {
-		checkNotNull(pac);
-		this.pac = pac;
-	}
-
 	public void setRevivalPosition(Vector2f revivalPosition) {
 		checkNotNull(revivalPosition);
 		this.revivalPosition = revivalPosition;
@@ -134,10 +127,6 @@ public class Ghost extends Creature implements AnimationDirector {
 			throw new IllegalArgumentException("Killed index must be one of -1, 0, 1, 2, 3, but is: " + index);
 		}
 		this.killedIndex = (byte) index;
-	}
-
-	private boolean killable() {
-		return pac.powerTimer().isRunning() && killedIndex == -1;
 	}
 
 	public void setFnHuntingBehavior(Consumer<Ghost> fnHuntingBehavior) {
@@ -188,30 +177,40 @@ public class Ghost extends Creature implements AnimationDirector {
 		return oneOf(state, alternatives);
 	}
 
-	public void setState(GhostState state) {
+	/**
+	 * Changes the state of this ghost.
+	 *
+	 * @param state the new state
+	 * @param pac Pac-Man or Ms. Pac-Man
+	 */
+	public void setState(GhostState state, Pac pac) {
 		checkNotNull(state);
+		checkNotNull(pac);
 		this.state = state;
 		switch (state) {
 			case LOCKED, HUNTING_PAC, LEAVING_HOUSE -> selectAnimation(ANIM_GHOST_NORMAL);
 			case EATEN               -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
 			case RETURNING_TO_HOUSE  -> selectAnimation(ANIM_GHOST_EYES);
-			case FRIGHTENED          -> updateFrightenedAnimation();
+			case FRIGHTENED          -> updateFrightenedAnimation(pac);
 			case ENTERING_HOUSE      -> {}
 		}
 	}
 
 	/**
 	 * Executes a single simulation step for this ghost in the current game level.
+	 *
+	 * @param pac Pac-Man or Ms. Pac-Man
 	 */
-	public void updateState() {
+	public void updateState(Pac pac) {
+		checkNotNull(pac);
 		switch (state) {
-			case LOCKED             -> updateStateLocked();
-			case LEAVING_HOUSE      -> updateStateLeavingHouse();
-			case HUNTING_PAC        -> updateStateHuntingPac();
-			case FRIGHTENED         -> updateStateFrightened();
-			case EATEN              -> updateStateEaten();
-			case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
-			case ENTERING_HOUSE     -> updateStateEnteringHouse();
+			case LOCKED             -> updateStateLocked(pac);
+			case LEAVING_HOUSE      -> updateStateLeavingHouse(pac);
+			case HUNTING_PAC        -> updateStateHuntingPac(pac);
+			case FRIGHTENED         -> updateStateFrightened(pac);
+			case EATEN              -> updateStateEaten(pac);
+			case RETURNING_TO_HOUSE -> updateStateReturningToHouse(pac);
+			case ENTERING_HOUSE     -> updateStateEnteringHouse(pac);
 		}
 	}
 
@@ -221,7 +220,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
 	 * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
 	 */
-	private void updateStateLocked() {
+	private void updateStateLocked(Pac pac) {
 		if (insideHouse(house)) {
 			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
 			setPixelSpeed(speedInsideHouse);
@@ -235,8 +234,8 @@ public class Ghost extends Creature implements AnimationDirector {
 		} else {
 			setPixelSpeed(0);
 		}
-		if (killable()) {
-			updateFrightenedAnimation();
+		if (killable(pac)) {
+			updateFrightenedAnimation(pac);
 		} else {
 			selectAnimation(ANIM_GHOST_NORMAL);
 		}
@@ -251,18 +250,18 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * <p>
 	 * The ghost speed is slower than outside, but I do not know the exact value.
 	 */
-	private void updateStateLeavingHouse() {
+	private void updateStateLeavingHouse(Pac pac) {
 		Vector2f houseEntryPosition = house.door().entryPosition();
 		if (posY() <= houseEntryPosition.y()) {
 			// has raised and is outside house
 			setPosition(houseEntryPosition);
 			setMoveAndWishDir(LEFT);
 			newTileEntered = false; // force moving left until new tile is entered
-			if (killable()) {
-				setState(FRIGHTENED);
+			if (killable(pac)) {
+				setState(FRIGHTENED, pac);
 			} else {
 				killedIndex = -1; // TODO check this
-				setState(HUNTING_PAC);
+				setState(HUNTING_PAC, pac);
 			}
 			return;
 		}
@@ -279,8 +278,8 @@ public class Ghost extends Creature implements AnimationDirector {
 		}
 		setPixelSpeed(speedInsideHouse);
 		move();
-		if (killable()) {
-			updateFrightenedAnimation();
+		if (killable(pac)) {
+			updateFrightenedAnimation(pac);
 		} else {
 			selectAnimation(ANIM_GHOST_NORMAL);
 		}
@@ -295,7 +294,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * is an "infinite" chasing phase.
 	 * <p>
 	 */
-	private void updateStateHuntingPac() {
+	private void updateStateHuntingPac(Pac pac) {
 		fnHuntingBehavior.accept(this);
 	}
 
@@ -308,17 +307,21 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * A frightened ghost has a blue color and starts flashing blue/white shortly (how long exactly?) before Pac-Man loses
 	 * his power. Speed is about half of the normal speed.
 	 */
-	private void updateStateFrightened() {
+	private void updateStateFrightened(Pac pac) {
 		fnFrightenedBehavior.accept(this);
-		updateFrightenedAnimation();
+		updateFrightenedAnimation(pac);
 	}
 
-	private void updateFrightenedAnimation() {
+	private void updateFrightenedAnimation(Pac pac) {
 		if (pac.isPowerStartingToFade()) {
 			selectAnimation(ANIM_GHOST_FLASHING);
 		} else if (!pac.isPowerFading()) {
 			selectAnimation(ANIM_GHOST_FRIGHTENED);
 		}
+	}
+
+	private boolean killable(Pac pac) {
+		return pac.powerTimer().isRunning() && killedIndex == -1;
 	}
 
 	// --- EATEN ---
@@ -327,7 +330,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
 	 * The value doubles for each ghost eaten using the power of the same energizer.
 	 */
-	private void updateStateEaten() {
+	private void updateStateEaten(Pac pac) {
 		// wait for timeout
 	}
 
@@ -337,12 +340,12 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
 	 * to the ghost house to be revived. Hallelujah!
 	 */
-	private void updateStateReturningToHouse() {
+	private void updateStateReturningToHouse(Pac pac) {
 		Vector2f houseEntry = house.door().entryPosition();
 		if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
 			setPosition(houseEntry);
 			setMoveAndWishDir(DOWN);
-			setState(ENTERING_HOUSE);
+			setState(ENTERING_HOUSE, pac);
 		} else {
 			setPixelSpeed(speedReturningToHouse);
 			setTargetTile(house.door().leftWing());
@@ -357,7 +360,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
 	 * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
 	 */
-	private void updateStateEnteringHouse() {
+	private void updateStateEnteringHouse(Pac pac) {
 		Vector2f houseCenter = house.center();
 		if (posY >= houseCenter.y()) {
 			// reached ground
@@ -373,7 +376,7 @@ public class Ghost extends Creature implements AnimationDirector {
 		if (posY >= revivalPosition.y() && differsAtMost(0.5 * speedReturningToHouse, posX, revivalPosition.x())) {
 			setPosition(revivalPosition);
 			setMoveAndWishDir(UP);
-			setState(LOCKED);
+			setState(LOCKED, pac);
 		}
 	}
 }
