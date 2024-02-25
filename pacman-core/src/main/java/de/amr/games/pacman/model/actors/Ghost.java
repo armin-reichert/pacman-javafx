@@ -181,18 +181,15 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * Changes the state of this ghost.
 	 *
 	 * @param state the new state
-	 * @param pac Pac-Man or Ms. Pac-Man
 	 */
-	public void setState(GhostState state, Pac pac) {
+	public void setState(GhostState state) {
 		checkNotNull(state);
-		checkNotNull(pac);
 		this.state = state;
 		switch (state) {
-			case LOCKED, HUNTING_PAC, LEAVING_HOUSE -> selectAnimation(ANIM_GHOST_NORMAL);
-			case EATEN               -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
-			case RETURNING_TO_HOUSE  -> selectAnimation(ANIM_GHOST_EYES);
-			case FRIGHTENED          -> updateFrightenedAnimation(pac);
-			case ENTERING_HOUSE      -> {}
+			case LOCKED, HUNTING_PAC, LEAVING_HOUSE  -> selectAnimation(ANIM_GHOST_NORMAL);
+			case EATEN                               -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
+			case RETURNING_TO_HOUSE, ENTERING_HOUSE  -> selectAnimation(ANIM_GHOST_EYES);
+			case FRIGHTENED                          -> selectAnimation(ANIM_GHOST_FRIGHTENED);
 		}
 	}
 
@@ -206,11 +203,11 @@ public class Ghost extends Creature implements AnimationDirector {
 		switch (state) {
 			case LOCKED             -> updateStateLocked(pac);
 			case LEAVING_HOUSE      -> updateStateLeavingHouse(pac);
-			case HUNTING_PAC        -> updateStateHuntingPac(pac);
+			case HUNTING_PAC        -> updateStateHuntingPac();
 			case FRIGHTENED         -> updateStateFrightened(pac);
-			case EATEN              -> updateStateEaten(pac);
-			case RETURNING_TO_HOUSE -> updateStateReturningToHouse(pac);
-			case ENTERING_HOUSE     -> updateStateEnteringHouse(pac);
+			case EATEN              -> updateStateEaten();
+			case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
+			case ENTERING_HOUSE     -> updateStateEnteringHouse();
 		}
 	}
 
@@ -258,10 +255,10 @@ public class Ghost extends Creature implements AnimationDirector {
 			setMoveAndWishDir(LEFT);
 			newTileEntered = false; // force moving left until new tile is entered
 			if (killable(pac)) {
-				setState(FRIGHTENED, pac);
+				setState(FRIGHTENED);
 			} else {
 				killedIndex = -1; // TODO check this
-				setState(HUNTING_PAC, pac);
+				setState(HUNTING_PAC);
 			}
 			return;
 		}
@@ -294,7 +291,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * is an "infinite" chasing phase.
 	 * <p>
 	 */
-	private void updateStateHuntingPac(Pac pac) {
+	private void updateStateHuntingPac() {
 		fnHuntingBehavior.accept(this);
 	}
 
@@ -330,7 +327,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
 	 * The value doubles for each ghost eaten using the power of the same energizer.
 	 */
-	private void updateStateEaten(Pac pac) {
+	private void updateStateEaten() {
 		// wait for timeout
 	}
 
@@ -340,12 +337,12 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
 	 * to the ghost house to be revived. Hallelujah!
 	 */
-	private void updateStateReturningToHouse(Pac pac) {
+	private void updateStateReturningToHouse() {
 		Vector2f houseEntry = house.door().entryPosition();
 		if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
 			setPosition(houseEntry);
 			setMoveAndWishDir(DOWN);
-			setState(ENTERING_HOUSE, pac);
+			setState(ENTERING_HOUSE);
 		} else {
 			setPixelSpeed(speedReturningToHouse);
 			setTargetTile(house.door().leftWing());
@@ -360,7 +357,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	 * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
 	 * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
 	 */
-	private void updateStateEnteringHouse(Pac pac) {
+	private void updateStateEnteringHouse() {
 		Vector2f houseCenter = house.center();
 		if (posY >= houseCenter.y()) {
 			// reached ground
@@ -376,7 +373,7 @@ public class Ghost extends Creature implements AnimationDirector {
 		if (posY >= revivalPosition.y() && differsAtMost(0.5 * speedReturningToHouse, posX, revivalPosition.x())) {
 			setPosition(revivalPosition);
 			setMoveAndWishDir(UP);
-			setState(LOCKED, pac);
+			setState(LOCKED);
 		}
 	}
 }

@@ -233,7 +233,7 @@ public enum GameState implements FsmState<GameModel> {
 		public void onExit(GameModel game) {
 			game.level().ifPresent(level -> {
 				level.pac().show();
-				level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_TO_HOUSE, level.pac()));
+				level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_TO_HOUSE));
 				level.ghosts().forEach(Ghost::startAnimation);
 			});
 		}

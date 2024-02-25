@@ -103,7 +103,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				intro.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
 				intro.pacMan.startAnimation();
 				intro.ghosts().forEach(ghost -> {
-					ghost.setState(GhostState.HUNTING_PAC, intro.pacMan);
+					ghost.setState(GhostState.HUNTING_PAC);
 					ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));
 					ghost.setMoveAndWishDir(Direction.LEFT);
 					ghost.setPixelSpeed(intro.chaseSpeed);
@@ -125,7 +125,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				// Ghosts already reverse direction before Pac-Man eats the energizer and turns!
 				else if (intro.pacMan.posX() <= TS * intro.leftTileX + HTS) {
 					intro.ghosts().forEach(ghost -> {
-						ghost.setState(FRIGHTENED, intro.pacMan);
+						ghost.setState(FRIGHTENED);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
 						ghost.setPixelSpeed(intro.ghostFrightenedSpeed);
@@ -164,7 +164,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 					.ifPresent(victim -> {
 						//TODO(robustness) If killedIndex not set *before* changing state, animation frame index is invalid!
 						victim.setKilledIndex(victim.id());
-						victim.setState(EATEN, intro.pacMan);
+						victim.setState(EATEN);
 						intro.ghostKilledTime = timer.tick();
 						intro.pacMan.hide();
 						intro.pacMan.setPixelSpeed(0);
