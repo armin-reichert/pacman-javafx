@@ -41,6 +41,9 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 		}
 	}
 
+	/**
+	 * Intro is controlled by a FSM, here come the states.
+	 */
 	public enum State implements FsmState<PacManIntro> {
 
 		START {
@@ -66,9 +69,10 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				} else if (timer.atSecond(1.5)) {
 					intro.ghostInfo[intro.ghostIndex].nicknameVisible = true;
 				} else if (timer.atSecond(2.0)) {
-					if (++intro.ghostIndex < 4) {
+					if (intro.ghostIndex < intro.ghostInfo.length - 1) {
 						timer.resetIndefinitely();
 					}
+					intro.ghostIndex += 1;
 				} else if (timer.atSecond(2.5)) {
 					intro.changeState(State.SHOWING_POINTS);
 				}
@@ -197,12 +201,12 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 			public void onUpdate(PacManIntro intro) {
 				if (timer.atSecond(0.75)) {
 					intro.ghostInfo[3].ghost.hide();
-					if (!GameController.it().hasCredit()) {
-						GameController.it().changeState(GameState.READY);
+					if (!gameController().hasCredit()) {
+						gameController().changeState(GameState.READY);
 					}
 				}
 				else if (timer.atSecond(5)) {
-					GameController.it().changeState(GameState.CREDIT);
+					gameController().changeState(GameState.CREDIT);
 				}
 			}
 		};
@@ -212,6 +216,10 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 		@Override
 		public TickTimer timer() {
 			return timer;
+		}
+
+		GameController gameController() {
+			return GameController.it();
 		}
 	}
 
