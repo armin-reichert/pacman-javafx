@@ -71,13 +71,13 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 				intro.marqueeTimer.restartIndefinitely();
 				intro.msPacMan.setPosition(TS * 31, TS * 20);
 				intro.msPacMan.setMoveDir(Direction.LEFT);
-				intro.msPacMan.setPixelSpeed(intro.speed);
+				intro.msPacMan.setSpeed(intro.speed);
 				intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
 				intro.msPacMan.startAnimation();
 				for (var ghost : intro.ghosts) {
 					ghost.setPosition(TS * 33.5f, TS * 20);
 					ghost.setMoveAndWishDir(Direction.LEFT);
-					ghost.setPixelSpeed(intro.speed);
+					ghost.setSpeed(intro.speed);
 					ghost.setState(GhostState.HUNTING_PAC);
 					ghost.startAnimation();
 				}
@@ -118,7 +118,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 						return;
 					}
 					if (ghost.posY() <= intro.stopY + ghost.id() * 16) {
-						ghost.setPixelSpeed(0);
+						ghost.setSpeed(0);
 						ghost.stopAnimation();
 						ghost.resetAnimation();
 						if (intro.ghostIndex == 3) {
@@ -140,7 +140,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 				intro.msPacMan.show();
 				intro.msPacMan.move();
 				if (intro.msPacMan.posX() <= intro.stopMsPacX) {
-					intro.msPacMan.setPixelSpeed(0);
+					intro.msPacMan.setSpeed(0);
 					intro.msPacMan.resetAnimation();
 					intro.changeState(State.READY_TO_PLAY);
 				}

@@ -82,40 +82,40 @@ public class MsPacManIntermission2 {
 		if (stateTimer.atSecond(4.5)) {
 			pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
 			pacMan.setMoveDir(Direction.RIGHT);
-			pacMan.setPixelSpeed(2.0f);
+			pacMan.setSpeed(2.0f);
 			pacMan.show();
 			msPac.setPosition(TS * (-8), UPPER_LANE_Y);
 			msPac.setMoveDir(Direction.RIGHT);
-			msPac.setPixelSpeed(2.0f);
+			msPac.setSpeed(2.0f);
 			msPac.show();
 		} else if (stateTimer.atSecond(9)) {
 			pacMan.setPosition(TS * 36, LOWER_LANE_Y);
 			pacMan.setMoveDir(Direction.LEFT);
-			pacMan.setPixelSpeed(2.0f);
+			pacMan.setSpeed(2.0f);
 			msPac.setPosition(TS * 30, LOWER_LANE_Y);
 			msPac.setMoveDir(Direction.LEFT);
-			msPac.setPixelSpeed(2.0f);
+			msPac.setSpeed(2.0f);
 		} else if (stateTimer.atSecond(13.5)) {
 			pacMan.setMoveDir(Direction.RIGHT);
-			pacMan.setPixelSpeed(2.0f);
+			pacMan.setSpeed(2.0f);
 			msPac.setPosition(TS * (-8), MIDDLE_LANE_Y);
 			msPac.setMoveDir(Direction.RIGHT);
-			msPac.setPixelSpeed(2.0f);
+			msPac.setSpeed(2.0f);
 			pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
 		} else if (stateTimer.atSecond(17.5)) {
 			pacMan.setPosition(TS * 42, UPPER_LANE_Y);
 			pacMan.setMoveDir(Direction.LEFT);
-			pacMan.setPixelSpeed(4.0f);
+			pacMan.setSpeed(4.0f);
 			msPac.setPosition(TS * 30, UPPER_LANE_Y);
 			msPac.setMoveDir(Direction.LEFT);
-			msPac.setPixelSpeed(4.0f);
+			msPac.setSpeed(4.0f);
 		} else if (stateTimer.atSecond(18.5)) {
 			pacMan.setPosition(TS * (-2), LOWER_LANE_Y);
 			pacMan.setMoveDir(Direction.RIGHT);
-			pacMan.setPixelSpeed(4.0f);
+			pacMan.setSpeed(4.0f);
 			msPac.setPosition(TS * (-14), LOWER_LANE_Y);
 			msPac.setMoveDir(Direction.RIGHT);
-			msPac.setPixelSpeed(4.0f);
+			msPac.setSpeed(4.0f);
 		} else if (stateTimer.atSecond(23)) {
 			GameController.it().terminateCurrentState();
 			return;

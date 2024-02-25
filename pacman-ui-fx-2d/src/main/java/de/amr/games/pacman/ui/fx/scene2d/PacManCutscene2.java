@@ -51,7 +51,7 @@ public class PacManCutscene2 extends GameScene2D {
 		blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
 		blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
 		blinky.setAnimations(blinkyAnimations);
-		blinky.setPixelSpeed(0);
+		blinky.setSpeed(0);
 		blinky.hide();
 	}
 
@@ -74,7 +74,7 @@ public class PacManCutscene2 extends GameScene2D {
 			case 25 -> {
 				pac.placeAtTile(28, 20, 0, 0);
 				pac.setMoveDir(Direction.LEFT);
-				pac.setPixelSpeed(1.15f);
+				pac.setSpeed(1.15f);
 				pac.selectAnimation(Pac.ANIM_MUNCHING);
 				pac.startAnimation();
 				pac.show();
@@ -82,18 +82,18 @@ public class PacManCutscene2 extends GameScene2D {
 			case 111 -> {
 				blinky.placeAtTile(28, 20, -3, 0);
 				blinky.setMoveAndWishDir(Direction.LEFT);
-				blinky.setPixelSpeed(1.25f);
+				blinky.setSpeed(1.25f);
 				blinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 				blinky.startAnimation();
 				blinky.show();
 			}
 			case 194 -> {
-				blinky.setPixelSpeed(0.09f);
+				blinky.setSpeed(0.09f);
 				blinkyNormal.setFrameTicks(32);
 			}
 			case 198, 226, 248 -> blinkyStretching.nextFrame(); // Stretched S-M-L
 			case 328 -> {
-				blinky.setPixelSpeed(0);
+				blinky.setSpeed(0);
 				blinkyStretching.nextFrame(); // Rapture
 			}
 			case 329 ->	blinky.selectAnimation(Ghost.ANIM_BLINKY_DAMAGED); // Eyes up

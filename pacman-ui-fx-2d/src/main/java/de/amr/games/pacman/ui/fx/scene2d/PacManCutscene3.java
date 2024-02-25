@@ -46,7 +46,7 @@ public class PacManCutscene3 extends GameScene2D {
 		pac.startAnimation();
 		pac.centerOverTile(v2i(29, 20));
 		pac.setMoveDir(Direction.LEFT);
-		pac.setPixelSpeed(1.25f);
+		pac.setSpeed(1.25f);
 		pac.show();
 		blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
 		blinky.setAnimations(new PacManGameGhostAnimations(blinky, ss));
@@ -54,7 +54,7 @@ public class PacManCutscene3 extends GameScene2D {
 		blinky.startAnimation();
 		blinky.centerOverTile(v2i(35, 20));
 		blinky.setMoveAndWishDir(Direction.LEFT);
-		blinky.setPixelSpeed(1.25f);
+		blinky.setSpeed(1.25f);
 		blinky.show();
 	}
 

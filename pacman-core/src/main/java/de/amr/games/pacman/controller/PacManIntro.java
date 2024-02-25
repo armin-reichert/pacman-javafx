@@ -98,7 +98,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				timer.restartIndefinitely();
 				intro.pacMan.setPosition(TS * 36, TS * 20);
 				intro.pacMan.setMoveDir(Direction.LEFT);
-				intro.pacMan.setPixelSpeed(intro.chaseSpeed);
+				intro.pacMan.setSpeed(intro.chaseSpeed);
 				intro.pacMan.show();
 				intro.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
 				intro.pacMan.startAnimation();
@@ -106,7 +106,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 					ghost.setState(GhostState.HUNTING_PAC);
 					ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));
 					ghost.setMoveAndWishDir(Direction.LEFT);
-					ghost.setPixelSpeed(intro.chaseSpeed);
+					ghost.setSpeed(intro.chaseSpeed);
 					ghost.show();
 					ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 					ghost.startAnimation();
@@ -128,7 +128,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 						ghost.setState(FRIGHTENED);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
-						ghost.setPixelSpeed(intro.ghostFrightenedSpeed);
+						ghost.setSpeed(intro.ghostFrightenedSpeed);
 						ghost.move();
 					});
 					intro.pacMan.move();
@@ -147,7 +147,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				timer.restartIndefinitely();
 				intro.ghostKilledTime = timer.tick();
 				intro.pacMan.setMoveDir(Direction.RIGHT);
-				intro.pacMan.setPixelSpeed(intro.chaseSpeed);
+				intro.pacMan.setSpeed(intro.chaseSpeed);
 			}
 
 			@Override
@@ -167,9 +167,9 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 						victim.setState(EATEN);
 						intro.ghostKilledTime = timer.tick();
 						intro.pacMan.hide();
-						intro.pacMan.setPixelSpeed(0);
+						intro.pacMan.setSpeed(0);
 						intro.ghosts().forEach(ghost -> {
-							ghost.setPixelSpeed(0);
+							ghost.setSpeed(0);
 							ghost.stopAnimation();
 						});
 				});
@@ -177,13 +177,13 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				// After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
 				if (timer.tick() == intro.ghostKilledTime + 50) {
 					intro.pacMan.show();
-					intro.pacMan.setPixelSpeed(intro.chaseSpeed);
+					intro.pacMan.setSpeed(intro.chaseSpeed);
 					intro.ghosts().forEach(ghost -> {
 						if (ghost.is(EATEN)) {
 							ghost.hide();
 						} else {
 							ghost.show();
-							ghost.setPixelSpeed(intro.ghostFrightenedSpeed);
+							ghost.setSpeed(intro.ghostFrightenedSpeed);
 							ghost.startAnimation();
 						}
 					});

@@ -114,7 +114,7 @@ public class PacManGameTest {
 	public void testDeadPacHasZeroSpeed() {
 		game.level().ifPresent(level -> {
 			var pac = level.pac();
-			pac.setPixelSpeed(42);
+			pac.setSpeed(42);
 			assertEquals(42.0, pac.velocity().length(), Vector2f.EPSILON);
 			pac.killed();
 			assertEquals(0.0, pac.velocity().length(), Vector2f.EPSILON);

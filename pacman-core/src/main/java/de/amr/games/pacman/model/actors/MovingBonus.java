@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.RouteBasedSteering;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -82,7 +81,7 @@ public class MovingBonus extends Creature implements Bonus {
 		state = Bonus.STATE_INACTIVE;
 		jumpAnimation.stop();
 		hide();
-		setPixelSpeed(0);
+		setSpeed(0);
 	}
 
 	@Override
@@ -90,7 +89,7 @@ public class MovingBonus extends Creature implements Bonus {
 		state = Bonus.STATE_EDIBLE;
 		jumpAnimation.restart();
 		show();
-		setPixelSpeed(0.5f); // how fast in the original game?
+		setSpeed(0.5f); // how fast in the original game?
 		setTargetTile(null);
 	}
 

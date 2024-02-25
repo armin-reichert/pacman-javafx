@@ -219,15 +219,15 @@ public abstract class Creature extends Entity {
 	}
 
 	/**
-	 * Sets the speed as a fraction of the base speed (1.25 pixels/sec).
+	 * Sets the speed in percent of the base speed (1.25 pixels/second).
 	 * 
 	 * @param percentage percentage of base speed
 	 */
-	public void setRelSpeed(byte percentage) {
+	public void setPercentageSpeed(byte percentage) {
 		if (percentage < 0) {
 			throw new IllegalArgumentException("Negative speed percentage: " + percentage);
 		}
-		setPixelSpeed((float) 0.01 *  percentage * GameModel.SPEED_PX_100_PERCENT);
+		setSpeed((float) 0.01 *  percentage * GameModel.SPEED_PX_100_PERCENT);
 	}
 
 	/**
@@ -235,7 +235,7 @@ public abstract class Creature extends Entity {
 	 * 
 	 * @param pixelSpeed speed in pixels
 	 */
-	public void setPixelSpeed(float pixelSpeed) {
+	public void setSpeed(float pixelSpeed) {
 		if (pixelSpeed < 0) {
 			throw new IllegalArgumentException("Negative pixel speed: " + pixelSpeed);
 		}

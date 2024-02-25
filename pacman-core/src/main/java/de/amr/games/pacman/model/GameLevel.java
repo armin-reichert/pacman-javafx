@@ -418,7 +418,7 @@ public class GameLevel {
 	}
 
 	private void ghostFollowsTarget(Ghost ghost, Vector2i targetTile, byte relSpeed) {
-		ghost.setRelSpeed(relSpeed);
+		ghost.setPercentageSpeed(relSpeed);
 		ghost.setTargetTile(targetTile);
 		ghost.navigateTowardsTarget();
 		ghost.tryMoving();
@@ -431,7 +431,7 @@ public class GameLevel {
 		if (!world.belongsToPortal(ghost.tile()) && (ghost.isNewTileEntered() || !ghost.moved())) {
 			ghost.setWishDir(chooseFrightenedDirection(ghost));
 		}
-		ghost.setRelSpeed(speed);
+		ghost.setPercentageSpeed(speed);
 		ghost.tryMoving();
 	}
 

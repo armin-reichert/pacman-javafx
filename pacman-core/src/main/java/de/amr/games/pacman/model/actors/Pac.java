@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
 
 import java.util.Optional;
 
@@ -89,7 +88,7 @@ public class Pac extends Creature implements AnimationDirector {
 		}
 		if (restingTicks == 0) {
 			byte speed = powerTimer.isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage();
-			setRelSpeed(speed);
+			setPercentageSpeed(speed);
 			tryMoving();
 			if (moved()) {
 				startAnimation();
@@ -104,7 +103,7 @@ public class Pac extends Creature implements AnimationDirector {
 
 	public void killed() {
 		stopAnimation();
-		setPixelSpeed(0);
+		setSpeed(0);
 		dead = true;
 		starvingTicks = 0;
 		restingTicks = 0;

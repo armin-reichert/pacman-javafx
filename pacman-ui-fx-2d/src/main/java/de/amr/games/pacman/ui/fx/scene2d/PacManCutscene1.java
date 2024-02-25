@@ -64,14 +64,14 @@ public class PacManCutscene1 extends GameScene2D {
 			case 0 -> {
 				pac.placeAtTile(29, 20, 0, 0);
 				pac.setMoveDir(Direction.LEFT);
-				pac.setPixelSpeed(1.25f);
+				pac.setSpeed(1.25f);
 				pac.selectAnimation(Pac.ANIM_MUNCHING);
 				pac.startAnimation();
 				pac.show();
 
 				blinky.placeAtTile(32, 20, 0, 0);
 				blinky.setMoveAndWishDir(Direction.LEFT);
-				blinky.setPixelSpeed(1.3f);
+				blinky.setSpeed(1.3f);
 				blinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 				blinky.startAnimation();
 				blinky.show();
@@ -79,7 +79,7 @@ public class PacManCutscene1 extends GameScene2D {
 			case 260 -> {
 				blinky.placeAtTile(-2, 20, 4, 0);
 				blinky.setMoveAndWishDir(Direction.RIGHT);
-				blinky.setPixelSpeed(0.75f);
+				blinky.setSpeed(0.75f);
 				blinky.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 				blinky.startAnimation();
 			}

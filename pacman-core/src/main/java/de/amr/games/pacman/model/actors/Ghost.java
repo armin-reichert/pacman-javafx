@@ -220,7 +220,7 @@ public class Ghost extends Creature implements AnimationDirector {
 	private void updateStateLocked(Pac pac) {
 		if (insideHouse(house)) {
 			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
-			setPixelSpeed(speedInsideHouse);
+			setSpeed(speedInsideHouse);
 			move();
 			if (posY <= minY) {
 				setMoveAndWishDir(DOWN);
@@ -229,7 +229,7 @@ public class Ghost extends Creature implements AnimationDirector {
 			}
 			posY = clamp(posY, minY, maxY);
 		} else {
-			setPixelSpeed(0);
+			setSpeed(0);
 		}
 		if (killable(pac)) {
 			updateFrightenedAnimation(pac);
@@ -273,7 +273,7 @@ public class Ghost extends Creature implements AnimationDirector {
 			// move sidewards until center axis is reached
 			setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
 		}
-		setPixelSpeed(speedInsideHouse);
+		setSpeed(speedInsideHouse);
 		move();
 		if (killable(pac)) {
 			updateFrightenedAnimation(pac);
@@ -344,7 +344,7 @@ public class Ghost extends Creature implements AnimationDirector {
 			setMoveAndWishDir(DOWN);
 			setState(ENTERING_HOUSE);
 		} else {
-			setPixelSpeed(speedReturningToHouse);
+			setSpeed(speedReturningToHouse);
 			setTargetTile(house.door().leftWing());
 			navigateTowardsTarget();
 			tryMoving();
@@ -368,7 +368,7 @@ public class Ghost extends Creature implements AnimationDirector {
 				setMoveAndWishDir(RIGHT);
 			}
 		}
-		setPixelSpeed(speedReturningToHouse);
+		setSpeed(speedReturningToHouse);
 		move();
 		if (posY >= revivalPosition.y() && differsAtMost(0.5 * speedReturningToHouse, posX, revivalPosition.x())) {
 			setPosition(revivalPosition);
