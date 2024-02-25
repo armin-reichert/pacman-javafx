@@ -125,7 +125,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 						ghost.setState(FRIGHTENED);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
-						ghost.setPixelSpeed(0.6f);
+						ghost.setPixelSpeed(intro.ghostFrightenedSpeed);
 						ghost.move();
 					});
 					intro.pacMan.move();
@@ -180,7 +180,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 							ghost.hide();
 						} else {
 							ghost.show();
-							ghost.setPixelSpeed(0.6f);
+							ghost.setPixelSpeed(intro.ghostFrightenedSpeed);
 							ghost.startAnimation();
 						}
 					});
@@ -216,6 +216,8 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 	}
 
 	public float chaseSpeed = 1.1f;
+
+	public float ghostFrightenedSpeed = 0.6f;
 	public int leftTileX = 4;
 	public Pulse blinking = new Pulse(10, true);
 	public Pac pacMan = new Pac("Pac-Man");
