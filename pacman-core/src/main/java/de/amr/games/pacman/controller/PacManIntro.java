@@ -43,65 +43,65 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 
 		START {
 			@Override
-			public void onUpdate(PacManIntro ctx) {
+			public void onUpdate(PacManIntro intro) {
 				if (timer.tick() == 2) {
-					ctx.creditVisible = true;
+					intro.creditVisible = true;
 				} else if (timer.tick() == 3) {
-					ctx.titleVisible = true;
+					intro.titleVisible = true;
 				} else if (timer.atSecond(1)) {
-					ctx.changeState(State.PRESENTING_GHOSTS);
+					intro.changeState(State.PRESENTING_GHOSTS);
 				}
 			}
 		},
 
 		PRESENTING_GHOSTS {
 			@Override
-			public void onUpdate(PacManIntro ctx) {
+			public void onUpdate(PacManIntro intro) {
 				if (timer.atSecond(0)) {
-					ctx.ghostInfo[ctx.ghostIndex].pictureVisible = true;
+					intro.ghostInfo[intro.ghostIndex].pictureVisible = true;
 				} else if (timer.atSecond(1.0)) {
-					ctx.ghostInfo[ctx.ghostIndex].characterVisible = true;
+					intro.ghostInfo[intro.ghostIndex].characterVisible = true;
 				} else if (timer.atSecond(1.5)) {
-					ctx.ghostInfo[ctx.ghostIndex].nicknameVisible = true;
+					intro.ghostInfo[intro.ghostIndex].nicknameVisible = true;
 				} else if (timer.atSecond(2.0)) {
-					if (++ctx.ghostIndex < 4) {
+					if (++intro.ghostIndex < 4) {
 						timer.resetIndefinitely();
 					}
 				} else if (timer.atSecond(2.5)) {
-					ctx.changeState(State.SHOWING_POINTS);
+					intro.changeState(State.SHOWING_POINTS);
 				}
 			}
 		},
 
 		SHOWING_POINTS {
 			@Override
-			public void onEnter(PacManIntro ctx) {
-				ctx.blinking.stop();
+			public void onEnter(PacManIntro intro) {
+				intro.blinking.stop();
 			}
 
 			@Override
-			public void onUpdate(PacManIntro ctx) {
+			public void onUpdate(PacManIntro intro) {
 				if (timer.atSecond(1)) {
-					ctx.changeState(State.CHASING_PAC);
+					intro.changeState(State.CHASING_PAC);
 				}
 			}
 		},
 
 		CHASING_PAC {
 			@Override
-			public void onEnter(PacManIntro ctx) {
+			public void onEnter(PacManIntro intro) {
 				timer.restartIndefinitely();
-				ctx.pacMan.setPosition(TS * 36, TS * 20);
-				ctx.pacMan.setMoveDir(Direction.LEFT);
-				ctx.pacMan.setPixelSpeed(ctx.chaseSpeed);
-				ctx.pacMan.show();
-				ctx.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
-				ctx.pacMan.startAnimation();
-				ctx.ghosts().forEach(ghost -> {
+				intro.pacMan.setPosition(TS * 36, TS * 20);
+				intro.pacMan.setMoveDir(Direction.LEFT);
+				intro.pacMan.setPixelSpeed(intro.chaseSpeed);
+				intro.pacMan.show();
+				intro.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
+				intro.pacMan.startAnimation();
+				intro.ghosts().forEach(ghost -> {
 					ghost.setState(GhostState.HUNTING_PAC);
-					ghost.setPosition(ctx.pacMan.position().plus(16 * (ghost.id() + 1), 0));
+					ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));
 					ghost.setMoveAndWishDir(Direction.LEFT);
-					ghost.setPixelSpeed(ctx.chaseSpeed);
+					ghost.setPixelSpeed(intro.chaseSpeed);
 					ghost.show();
 					ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
 					ghost.startAnimation();
@@ -109,70 +109,70 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 			}
 
 			@Override
-			public void onUpdate(PacManIntro ctx) {
+			public void onUpdate(PacManIntro intro) {
 				if (timer.atSecond(1)) {
-					ctx.blinking.start();
+					intro.blinking.start();
 				}
 				// Pac-Man reaches the energizer at the left and turns
-				if (ctx.pacMan.posX() <= TS * ctx.leftTileX) {
-					ctx.changeState(State.CHASING_GHOSTS);
+				if (intro.pacMan.posX() <= TS * intro.leftTileX) {
+					intro.changeState(State.CHASING_GHOSTS);
 				}
 				// Ghosts already reverse direction before Pac-Man eats the energizer and turns!
-				else if (ctx.pacMan.posX() <= TS * ctx.leftTileX + HTS) {
-					ctx.ghosts().forEach(ghost -> {
+				else if (intro.pacMan.posX() <= TS * intro.leftTileX + HTS) {
+					intro.ghosts().forEach(ghost -> {
 						ghost.setState(GhostState.FRIGHTENED);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
 						ghost.setPixelSpeed(0.6f);
 						ghost.move();
 					});
-					ctx.pacMan.move();
+					intro.pacMan.move();
 				}
 				else { // keep moving
-					ctx.blinking.tick();
-					ctx.pacMan.move();
-					ctx.ghosts().forEach(Ghost::move);
+					intro.blinking.tick();
+					intro.pacMan.move();
+					intro.ghosts().forEach(Ghost::move);
 				}
 			}
 		},
 
 		CHASING_GHOSTS {
 			@Override
-			public void onEnter(PacManIntro ctx) {
+			public void onEnter(PacManIntro intro) {
 				timer.restartIndefinitely();
-				ctx.ghostKilledTime = timer.tick();
-				ctx.pacMan.setMoveDir(Direction.RIGHT);
-				ctx.pacMan.setPixelSpeed(ctx.chaseSpeed);
+				intro.ghostKilledTime = timer.tick();
+				intro.pacMan.setMoveDir(Direction.RIGHT);
+				intro.pacMan.setPixelSpeed(intro.chaseSpeed);
 			}
 
 			@Override
-			public void onUpdate(PacManIntro ctx) {
-				if (ctx.ghosts().allMatch(ghost -> ghost.is(GhostState.EATEN))) {
-					ctx.pacMan.hide();
-					ctx.changeState(READY_TO_PLAY);
+			public void onUpdate(PacManIntro intro) {
+				if (intro.ghosts().allMatch(ghost -> ghost.is(GhostState.EATEN))) {
+					intro.pacMan.hide();
+					intro.changeState(READY_TO_PLAY);
 					return;
 				}
-				var nextVictim = ctx.ghosts()//
-						.filter(ctx.pacMan::sameTile)//
+				var nextVictim = intro.ghosts()//
+						.filter(intro.pacMan::sameTile)//
 						.filter(ghost -> ghost.is(GhostState.FRIGHTENED))//
 						.findFirst();
 				nextVictim.ifPresent(victim -> {
 					victim.setKilledIndex(victim.id());
-					ctx.ghostKilledTime = timer.tick();
+					intro.ghostKilledTime = timer.tick();
 					victim.setState(GhostState.EATEN);
-					ctx.pacMan.hide();
-					ctx.pacMan.setPixelSpeed(0);
-					ctx.ghosts().forEach(ghost -> {
+					intro.pacMan.hide();
+					intro.pacMan.setPixelSpeed(0);
+					intro.ghosts().forEach(ghost -> {
 						ghost.setPixelSpeed(0);
 						ghost.stopAnimation();
 					});
 				});
 
 				// After ??? sec, Pac-Man and the surviving ghosts get visible again and move on
-				if (timer.tick() - ctx.ghostKilledTime == timer.secToTicks(0.9)) {
-					ctx.pacMan.show();
-					ctx.pacMan.setPixelSpeed(ctx.chaseSpeed);
-					ctx.ghosts().forEach(ghost -> {
+				if (timer.tick() - intro.ghostKilledTime == timer.secToTicks(0.9)) {
+					intro.pacMan.show();
+					intro.pacMan.setPixelSpeed(intro.chaseSpeed);
+					intro.ghosts().forEach(ghost -> {
 						if (!ghost.is(GhostState.EATEN)) {
 							ghost.show();
 							ghost.setPixelSpeed(0.6f);
@@ -182,17 +182,17 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 						}
 					});
 				}
-				ctx.pacMan.move();
-				ctx.ghosts().forEach(Ghost::move);
-				ctx.blinking.tick();
+				intro.pacMan.move();
+				intro.ghosts().forEach(Ghost::move);
+				intro.blinking.tick();
 			}
 		},
 
 		READY_TO_PLAY {
 			@Override
-			public void onUpdate(PacManIntro ctx) {
+			public void onUpdate(PacManIntro intro) {
 				if (timer.atSecond(0.75)) {
-					ctx.ghostInfo[3].ghost.hide();
+					intro.ghostInfo[3].ghost.hide();
 					if (!GameController.it().hasCredit()) {
 						GameController.it().changeState(GameState.READY);
 					}
