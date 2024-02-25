@@ -24,25 +24,24 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 
-	public float          speed                = 1.1f;
-	public int            stopY                = TS * 11 + 1;
-	public int            stopX                = TS * 6 - 4;
-	public int            stopMsPacX           = TS * 15 + 2;
-	public int            ticksUntilLifting    = 0;
-	public Vector2i       titlePosition        = v2i(TS * 10, TS * 8);
-	public TickTimer      marqueeTimer         = new TickTimer("marquee-timer");
-	public int            numBulbs             = 96;
-	public int            bulbOnDistance       = 16;
-	public Pac            msPacMan             = new Pac("Ms. Pac-Man");
-	public Ghost[]        ghosts               = {
-			new Ghost(GameModel.RED_GHOST,   "Blinky"),
-			new Ghost(GameModel.PINK_GHOST,  "Pinky"),
-			new Ghost(GameModel.CYAN_GHOST,  "Inky"),
-			new Ghost(GameModel.ORANGE_GHOST,"Sue")
+	public float     speed             = 1.1f;
+	public int       stopY             = TS * 11 + 1;
+	public int       stopX             = TS * 6 - 4;
+	public int       stopMsPacX        = TS * 15 + 2;
+	public int       ticksUntilLifting = 0;
+	public Vector2i  titlePosition     = v2i(TS * 10, TS * 8);
+	public TickTimer marqueeTimer      = new TickTimer("marquee-timer");
+	public int       numBulbs          = 96;
+	public int       bulbOnDistance    = 16;
+	public int       ghostIndex        = 0;
 
-
+	public Pac msPacMan = new Pac("Ms. Pac-Man");
+	public Ghost[] ghosts = {
+		new Ghost(GameModel.RED_GHOST,   "Blinky"),
+		new Ghost(GameModel.PINK_GHOST,  "Pinky"),
+		new Ghost(GameModel.CYAN_GHOST,  "Inky"),
+		new Ghost(GameModel.ORANGE_GHOST,"Sue")
 	};
-	public int ghostIndex = 0;
 
 	/**
 	 * In the Arcade game, 6 of the 96 bulbs are switched-on every frame, shifting every tick. The bulbs in the leftmost
@@ -68,44 +67,44 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 
 		START {
 			@Override
-			public void onEnter(MsPacManIntro ctx) {
-				ctx.marqueeTimer.restartIndefinitely();
-				ctx.msPacMan.setPosition(TS * 31, TS * 20);
-				ctx.msPacMan.setMoveDir(Direction.LEFT);
-				ctx.msPacMan.setPixelSpeed(ctx.speed);
-				ctx.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
-				ctx.msPacMan.startAnimation();
-				for (var ghost : ctx.ghosts) {
+			public void onEnter(MsPacManIntro intro) {
+				intro.marqueeTimer.restartIndefinitely();
+				intro.msPacMan.setPosition(TS * 31, TS * 20);
+				intro.msPacMan.setMoveDir(Direction.LEFT);
+				intro.msPacMan.setPixelSpeed(intro.speed);
+				intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+				intro.msPacMan.startAnimation();
+				for (var ghost : intro.ghosts) {
 					ghost.setPosition(TS * 33.5f, TS * 20);
 					ghost.setMoveAndWishDir(Direction.LEFT);
-					ghost.setPixelSpeed(ctx.speed);
+					ghost.setPixelSpeed(intro.speed);
 					ghost.setState(GhostState.HUNTING_PAC);
 					ghost.startAnimation();
 				}
-				ctx.ghostIndex = 0;
+				intro.ghostIndex = 0;
 			}
 
 			@Override
-			public void onUpdate(MsPacManIntro ctx) {
-				ctx.marqueeTimer.advance();
+			public void onUpdate(MsPacManIntro intro) {
+				intro.marqueeTimer.advance();
 				if (timer.atSecond(1)) {
-					ctx.changeState(State.GHOSTS_MARCHING_IN);
+					intro.changeState(State.GHOSTS_MARCHING_IN);
 				}
 			}
 		},
 
 		GHOSTS_MARCHING_IN {
 			@Override
-			public void onUpdate(MsPacManIntro ctx) {
-				ctx.marqueeTimer.advance();
-				var ghost = ctx.ghosts[ctx.ghostIndex];
+			public void onUpdate(MsPacManIntro intro) {
+				intro.marqueeTimer.advance();
+				var ghost = intro.ghosts[intro.ghostIndex];
 				ghost.show();
 
 				if (ghost.moveDir() == Direction.LEFT) {
-					if (ghost.posX() <= ctx.stopX) {
-						ghost.setPosX(ctx.stopX);
+					if (ghost.posX() <= intro.stopX) {
+						ghost.setPosX(intro.stopX);
 						ghost.setMoveAndWishDir(Direction.UP);
-						ctx.ticksUntilLifting = 2;
+						intro.ticksUntilLifting = 2;
 					} else {
 						ghost.move();
 					}
@@ -113,19 +112,19 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 				}
 
 				if (ghost.moveDir() == Direction.UP) {
-					if (ctx.ticksUntilLifting > 0) {
-						ctx.ticksUntilLifting -= 1;
-						Logger.trace("Ticks until lifting {}: {}", ghost.name(), ctx.ticksUntilLifting);
+					if (intro.ticksUntilLifting > 0) {
+						intro.ticksUntilLifting -= 1;
+						Logger.trace("Ticks until lifting {}: {}", ghost.name(), intro.ticksUntilLifting);
 						return;
 					}
-					if (ghost.posY() <= ctx.stopY + ghost.id() * 16) {
+					if (ghost.posY() <= intro.stopY + ghost.id() * 16) {
 						ghost.setPixelSpeed(0);
 						ghost.stopAnimation();
 						ghost.resetAnimation();
-						if (ctx.ghostIndex == 3) {
-							ctx.changeState(State.MS_PACMAN_MARCHING_IN);
+						if (intro.ghostIndex == 3) {
+							intro.changeState(State.MS_PACMAN_MARCHING_IN);
 						} else {
-							++ctx.ghostIndex;
+							++intro.ghostIndex;
 						}
 					} else {
 						ghost.move();
@@ -136,27 +135,27 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 
 		MS_PACMAN_MARCHING_IN {
 			@Override
-			public void onUpdate(MsPacManIntro ctx) {
-				ctx.marqueeTimer.advance();
-				ctx.msPacMan.show();
-				ctx.msPacMan.move();
-				if (ctx.msPacMan.posX() <= ctx.stopMsPacX) {
-					ctx.msPacMan.setPixelSpeed(0);
-					ctx.msPacMan.resetAnimation();
-					ctx.changeState(State.READY_TO_PLAY);
+			public void onUpdate(MsPacManIntro intro) {
+				intro.marqueeTimer.advance();
+				intro.msPacMan.show();
+				intro.msPacMan.move();
+				if (intro.msPacMan.posX() <= intro.stopMsPacX) {
+					intro.msPacMan.setPixelSpeed(0);
+					intro.msPacMan.resetAnimation();
+					intro.changeState(State.READY_TO_PLAY);
 				}
 			}
 		},
 
 		READY_TO_PLAY {
 			@Override
-			public void onUpdate(MsPacManIntro ctx) {
-				ctx.marqueeTimer.advance();
-				if (timer.atSecond(2.0) && !GameController.it().hasCredit()) {
-					GameController.it().changeState(GameState.READY);
+			public void onUpdate(MsPacManIntro intro) {
+				intro.marqueeTimer.advance();
+				if (timer.atSecond(2.0) && !gameController().hasCredit()) {
+					gameController().changeState(GameState.READY);
 					// go into demo mode
 				} else if (timer.atSecond(5)) {
-					GameController.it().changeState(GameState.CREDIT);
+					gameController().changeState(GameState.CREDIT);
 				}
 			}
 		};
@@ -166,6 +165,10 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
 		@Override
 		public TickTimer timer() {
 			return timer;
+		}
+
+		GameController gameController() {
+			return GameController.it();
 		}
 	}
 
