@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.model.actors.GhostState.EATEN;
+import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 
 /**
  * Controls the intro scene of the Pac-Man game.
@@ -120,7 +122,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 				// Ghosts already reverse direction before Pac-Man eats the energizer and turns!
 				else if (intro.pacMan.posX() <= TS * intro.leftTileX + HTS) {
 					intro.ghosts().forEach(ghost -> {
-						ghost.setState(GhostState.FRIGHTENED);
+						ghost.setState(FRIGHTENED);
 						ghost.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
 						ghost.setMoveAndWishDir(Direction.RIGHT);
 						ghost.setPixelSpeed(0.6f);
@@ -147,41 +149,43 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 
 			@Override
 			public void onUpdate(PacManIntro intro) {
-				if (intro.ghosts().allMatch(ghost -> ghost.is(GhostState.EATEN))) {
+				if (intro.ghosts().allMatch(ghost -> ghost.is(EATEN))) {
 					intro.pacMan.hide();
 					intro.changeState(READY_TO_PLAY);
 					return;
 				}
-				var nextVictim = intro.ghosts()//
-						.filter(intro.pacMan::sameTile)//
-						.filter(ghost -> ghost.is(GhostState.FRIGHTENED))//
-						.findFirst();
-				nextVictim.ifPresent(victim -> {
-					victim.setKilledIndex(victim.id());
-					intro.ghostKilledTime = timer.tick();
-					victim.setState(GhostState.EATEN);
-					intro.pacMan.hide();
-					intro.pacMan.setPixelSpeed(0);
-					intro.ghosts().forEach(ghost -> {
-						ghost.setPixelSpeed(0);
-						ghost.stopAnimation();
-					});
+
+				intro.ghosts()
+					.filter(ghost -> ghost.is(FRIGHTENED) && ghost.sameTile(intro.pacMan))
+					.findFirst()
+					.ifPresent(victim -> {
+						//TODO(robustness) If killedIndex not set *before* changing state, animation frame index is invalid!
+						victim.setKilledIndex(victim.id());
+						victim.setState(EATEN);
+						intro.ghostKilledTime = timer.tick();
+						intro.pacMan.hide();
+						intro.pacMan.setPixelSpeed(0);
+						intro.ghosts().forEach(ghost -> {
+							ghost.setPixelSpeed(0);
+							ghost.stopAnimation();
+						});
 				});
 
 				// After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-				if (timer.tick() - intro.ghostKilledTime == 50) {
+				if (timer.tick() == intro.ghostKilledTime + 50) {
 					intro.pacMan.show();
 					intro.pacMan.setPixelSpeed(intro.chaseSpeed);
 					intro.ghosts().forEach(ghost -> {
-						if (!ghost.is(GhostState.EATEN)) {
+						if (ghost.is(EATEN)) {
+							ghost.hide();
+						} else {
 							ghost.show();
 							ghost.setPixelSpeed(0.6f);
 							ghost.startAnimation();
-						} else {
-							ghost.hide();
 						}
 					});
 				}
+
 				intro.pacMan.move();
 				intro.ghosts().forEach(Ghost::move);
 				intro.blinking.tick();

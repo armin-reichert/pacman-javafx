@@ -10,6 +10,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -117,8 +118,13 @@ public class SpriteAnimation {
 		transition.setDelay(delay);
 	}
 
-	public void setFrameIndex(int frame) {
-		this.frameIndex = frame;
+	public void setFrameIndex(int index) {
+		if (index < 0 || index >= sprites.length) {
+			Logger.error("Frame index {} is out of range, Number of sprites: {}",
+				index, sprites.length);
+		} else {
+			frameIndex = index;
+		}
 	}
 
 	public int frameIndex() {
