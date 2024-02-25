@@ -168,8 +168,8 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 					});
 				});
 
-				// After ??? sec, Pac-Man and the surviving ghosts get visible again and move on
-				if (timer.tick() - intro.ghostKilledTime == timer.secToTicks(0.9)) {
+				// After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
+				if (timer.tick() - intro.ghostKilledTime == 50) {
 					intro.pacMan.show();
 					intro.pacMan.setPixelSpeed(intro.chaseSpeed);
 					intro.ghosts().forEach(ghost -> {
