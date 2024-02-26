@@ -32,8 +32,7 @@ public class PacManGameTest {
 	public void setUpTest() {
 		game = GameController.it().game();
 		game.reset();
-		game.setLevel(1);
-		game.startLevel();
+		game.createAndStartLevel(1);
 	}
 
 	@Test
@@ -94,7 +93,7 @@ public class PacManGameTest {
 	public void testPacResting() {
 		game.level().ifPresent(level -> {
 			var pac = level.pac();
-			pac.rest(3);
+			pac.setRestingTicks((byte) 3);
 			assertEquals(3, pac.restingTicks());
 		});
 	}
@@ -124,8 +123,7 @@ public class PacManGameTest {
 	@Test
 	public void testPacManGameBonus() {
 		for (int levelNumber = 1; levelNumber <= 21; ++levelNumber) {
-			game.setLevel(levelNumber);
-			game.startLevel();
+			game.createAndStartLevel(levelNumber);
 			game.level().ifPresent(level -> {
 				level.handleBonusReached(0);
 				assertTrue(level.bonus().isPresent());

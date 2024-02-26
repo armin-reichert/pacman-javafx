@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.RouteBasedSteering;
 import de.amr.games.pacman.lib.RuleBasedSteering;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
 
@@ -171,11 +172,11 @@ public class GameModel {
 	}
 
 	/**
-	 * Sets the game level with the given number.
-	 * 
+	 * Starts new game level with the given number.
+	 *
 	 * @param levelNumber level number (starting at 1)
 	 */
-	public void createLevel(int levelNumber) {
+	public void createAndStartLevel(int levelNumber) {
 		checkLevelNumber(levelNumber);
 		var world = switch (variant) {
 			case MS_PACMAN -> ArcadeWorld.createMsPacManWorld(ArcadeWorld.mapNumberMsPacMan(levelNumber));
@@ -185,6 +186,24 @@ public class GameModel {
 		level = new GameLevel(this, world, levelNumber, levelData, false);
 		Logger.info("Level {} created", levelNumber);
 		publishGameEvent(this, GameEventType.LEVEL_CREATED);
+
+		if (level.number() == 1) {
+			levelCounter.clear();
+		}
+		// In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+		// (also inside the same level) whenever a bonus is earned. That's what I was told.
+		if (variant == GameVariant.PACMAN || level.number() <= 7) {
+			levelCounter.add(level.bonusSymbol(0));
+			if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
+				levelCounter.remove(0);
+			}
+		}
+		score.setLevelNumber(level.number());
+		level.letsGetReadyToRumble();
+		level.guys().forEach(Entity::hide);
+		Logger.info("Level {} started ({})", level.number(), variant);
+
+		publishGameEvent(this, GameEventType.LEVEL_STARTED);
 	}
 
 	/**
@@ -207,36 +226,19 @@ public class GameModel {
 			}
 		}
 		Logger.info("Demo level created ({})", variant);
-		startLevel();
 		publishGameEvent(this, GameEventType.LEVEL_CREATED);
-	}
 
-	public void startLevel() {
-		if (!level.isDemoLevel()) {
-			if (level.number() == 1) {
-				levelCounter.clear();
-			}
-			// In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-			// (also inside the same level) whenever a bonus is earned. That's what I was told.
-			if (variant == GameVariant.PACMAN || level.number() <= 7) {
-				levelCounter.add(level.bonusSymbol(0));
-				if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-					levelCounter.remove(0);
-				}
-			}
-		}
 		score.setLevelNumber(level.number());
 		level.letsGetReadyToRumble();
-		// Demo level shows guys immediately, otherwise they get shown after some ticks, see game state
-		level.guys().forEach(guy -> guy.setVisible(level.isDemoLevel()));
-		Logger.info("{} {} started ({})", level.isDemoLevel() ? "Demo level" : "Level", level.number(), variant);
+		level.guys().forEach(Entity::show);
+		Logger.info("Demo Level {} started ({})", level.number(), variant);
+
 		publishGameEvent(this, GameEventType.LEVEL_STARTED);
 	}
 
 	public void nextLevel() {
 		if (level != null) {
-			createLevel(level.number() + 1);
-			startLevel();
+			createAndStartLevel(level.number() + 1);
 		} else {
 			throw new IllegalStateException("Cannot enter next level, no current level is set");
 		}

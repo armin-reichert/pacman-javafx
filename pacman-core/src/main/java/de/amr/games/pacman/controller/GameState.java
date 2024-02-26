@@ -81,8 +81,7 @@ public enum GameState implements FsmState<GameModel> {
 				game.score().reset();
 				game.clearLevelCounter();
 				game.reset();
-				game.createLevel(1);
-				game.startLevel();
+				game.createAndStartLevel(1);
 				publishGameEvent(game, GameEventType.READY_TO_PLAY);
 			}
 		}
@@ -336,8 +335,7 @@ public enum GameState implements FsmState<GameModel> {
 			};
 			timer.restartIndefinitely();
 			game.reset();
-			game.createLevel(1);
-			game.startLevel();
+			game.createAndStartLevel(1);
 		}
 
 		@Override
