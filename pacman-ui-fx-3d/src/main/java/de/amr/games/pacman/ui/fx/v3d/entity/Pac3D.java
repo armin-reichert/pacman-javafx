@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
@@ -36,6 +35,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
+import static de.amr.games.pacman.ui.fx.v3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
 
 /**
@@ -65,17 +65,17 @@ public class Pac3D {
 
 	static Group createPacManGroup(Model3D model3D, Theme theme) {
 		var body = createBody(model3D, 9,
-				theme.color("pacman.color.head"),
-				theme.color("pacman.color.eyes"),
-				theme.color("pacman.color.palate"));
+			theme.color("pacman.color.head"),
+			theme.color("pacman.color.eyes"),
+			theme.color("pacman.color.palate"));
 		return new Group(body);
 	}
 
 	static Group createMsPacManGroup(Model3D model3D, Theme theme) {
 		var body = createBody(model3D, 9,
-				theme.color("mspacman.color.head"),
-				theme.color("mspacman.color.eyes"),
-				theme.color("mspacman.color.palate"));
+			theme.color("mspacman.color.head"),
+			theme.color("mspacman.color.eyes"),
+			theme.color("mspacman.color.palate"));
 		return new Group(body, createFeminineParts(theme, 9));
 	}
 
@@ -96,11 +96,11 @@ public class Pac3D {
 		checkNotNull(theme);
 		checkNotNull(msPacMan);
 
-		var pac3D = new Pac3D(createMsPacManGroup(model3D, theme), msPacMan, theme.color("mspacman.color.head"));
-		pac3D.walkingAnimation = new HipSwaying(msPacMan, pac3D.root);
-		pac3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+		var msPac3D = new Pac3D(createMsPacManGroup(model3D, theme), msPacMan, theme.color("mspacman.color.head"));
+		msPac3D.walkingAnimation = new HipSwaying(msPacMan, msPac3D.root);
+		msPac3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
-		return pac3D;
+		return msPac3D;
 	}
 
 	private static Group createBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
@@ -194,11 +194,11 @@ public class Pac3D {
 		return position;
 	}
 
-	public Animation dyingAnimation(GameVariant variant)
+	public Animation createDyingAnimation(GameVariant variant)
 	{
 		return switch (variant) {
 			case MS_PACMAN -> createMsPacManDyingAnimation();
-			case PACMAN -> createPacManDyingAnimation();
+			case PACMAN    -> createPacManDyingAnimation();
 		};
 	}
 
@@ -220,7 +220,7 @@ public class Pac3D {
 		position.setY(center.y());
 		position.setZ(-5.0);
 		orientation.setAxis(Rotate.Z_AXIS);
-		orientation.setAngle(Turn.angle(pac.moveDir()));
+		orientation.setAngle(angle(pac.moveDir()));
 		root.setVisible(pac.isVisible() && !outsideWorld());
 		if (pac.isStandingStill()) {
 			walkingAnimation.stop();
@@ -241,35 +241,35 @@ public class Pac3D {
 		spin.setInterpolator(Interpolator.LINEAR);
 		spin.setCycleCount(4);
 		spin.setRate(2);
+		spin.setDelay(Duration.seconds(0.5));
 		return new SequentialTransition(
-				pauseSeconds(0.5),
-				spin,
-				pauseSeconds(2)
+			spin,
+			pauseSeconds(2)
 		);
 	}
 
 	private Animation createPacManDyingAnimation() {
-		Duration spinningDuration = Duration.seconds(1.5);
+		Duration duration = Duration.seconds(1.5);
 		short numSpins = 10;
 
-		var spinning = new RotateTransition(spinningDuration.divide(numSpins), root);
+		var spinning = new RotateTransition(duration.divide(numSpins), root);
 		spinning.setAxis(Rotate.Z_AXIS);
 		spinning.setByAngle(360);
 		spinning.setCycleCount(numSpins);
 		spinning.setInterpolator(Interpolator.LINEAR);
 
-		var shrinking = new ScaleTransition(spinningDuration, root);
+		var shrinking = new ScaleTransition(duration, root);
 		shrinking.setToX(0.75);
 		shrinking.setToY(0.75);
 		shrinking.setToZ(0.0);
 		shrinking.setInterpolator(Interpolator.LINEAR);
 
-		var falling = new TranslateTransition(spinningDuration, root);
+		var falling = new TranslateTransition(duration, root);
 		falling.setToZ(4);
 		falling.setInterpolator(Interpolator.EASE_IN);
 
+		//TODO does not yet work as I want to
 		var animation = new SequentialTransition(
-			//TODO does not yet work as I want to
 			actionAfterSeconds(0, this::init),
 			pauseSeconds(0.5),
 			new ParallelTransition(spinning, shrinking, falling),
