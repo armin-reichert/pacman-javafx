@@ -484,9 +484,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 				}
 			}
 		});
-		updateOrReloadGameScene(true);
 	}
 
+	@Override
+	public void onLevelStarted(GameEvent e) {
+		updateOrReloadGameScene(true);
+	}
 
 	// ActionHandler interface implementation
 
