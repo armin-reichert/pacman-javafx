@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -210,39 +211,22 @@ public class Pac3D {
 		root.setScaleX(1.0);
 		root.setScaleY(1.0);
 		root.setScaleZ(1.0);
-		updatePosition();
-		turnTo(pac.moveDir());
-		updateVisibility();
-		walkingAnimation.stop();
+		update();
 	}
 
 	public void update() {
-		updatePosition();
-		turnTo(pac.moveDir());
-		updateVisibility();
-		if (pac.velocity().length() == 0) {
+		Vector2f center = pac.center();
+		position.setX(center.x());
+		position.setY(center.y());
+		position.setZ(-5.0);
+		orientation.setAxis(Rotate.Z_AXIS);
+		orientation.setAngle(Turn.angle(pac.moveDir()));
+		root.setVisible(pac.isVisible() && !outsideWorld());
+		if (pac.isStandingStill()) {
 			walkingAnimation.stop();
 		} else {
 			walkingAnimation.play();
 		}
-	}
-
-	private void updatePosition() {
-		position.setX(pac.center().x());
-		position.setY(pac.center().y());
-		position.setZ(-5.0);
-	}
-
-	public void turnTo(Direction dir) {
-		var angle = Turn.angle(dir);
-		if (angle != orientation.getAngle()) {
-			orientation.setAxis(Rotate.Z_AXIS);
-			orientation.setAngle(angle);
-		}
-	}
-
-	private void updateVisibility() {
-		root.setVisible(pac.isVisible() && !outsideWorld());
 	}
 
 	private boolean outsideWorld() {
@@ -285,14 +269,11 @@ public class Pac3D {
 		falling.setInterpolator(Interpolator.EASE_IN);
 
 		var animation = new SequentialTransition(
-				actionAfterSeconds(0, () -> {
-					//TODO does not yet work as I want to
-					init();
-					turnTo(Direction.RIGHT);
-				}),
-				pauseSeconds(0.5),
-				new ParallelTransition(spinning, shrinking, falling),
-				pauseSeconds(1.0)
+			//TODO does not yet work as I want to
+			actionAfterSeconds(0, this::init),
+			pauseSeconds(0.5),
+			new ParallelTransition(spinning, shrinking, falling),
+			pauseSeconds(1.0)
 		);
 
 		animation.setOnFinished(e -> {
