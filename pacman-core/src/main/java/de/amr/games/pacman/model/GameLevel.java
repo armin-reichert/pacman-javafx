@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.*;
@@ -636,6 +637,39 @@ public class GameLevel {
 		}
 
 		logWhatHappenedThisFrame();
+	}
+
+	public void simulateOneTestFrame(TickTimer timer, int lastTestedLevel) {
+		if (number() <= lastTestedLevel) {
+			if (timer.atSecond(0.5)) {
+				guys().forEach(Creature::show);
+			} else if (timer.atSecond(1.5)) {
+				handleBonusReached(0);
+			} else if (timer.atSecond(2.5)) {
+				bonus().ifPresent(bonus -> bonus.setEaten(120));
+				GameController.it().publishGameEvent(GameEventType.BONUS_EATEN);
+			} else if (timer.atSecond(4.5)) {
+				handleBonusReached(1);
+			} else if (timer.atSecond(5.5)) {
+				guys().forEach(Creature::hide);
+				bonus().ifPresent(bonus -> bonus.setEaten(60));
+				GameController.it().publishGameEvent(GameEventType.BONUS_EATEN);
+			} else if (timer.atSecond(6.5)) {
+				var flashing = world().mazeFlashing();
+				flashing.restart(2 * numFlashes());
+			} else if (timer.atSecond(12.0)) {
+				end();
+				game.nextLevel();
+				timer.restartIndefinitely();
+				GameController.it().publishGameEvent(GameEventType.LEVEL_STARTED);
+			}
+			world().energizerBlinking().tick();
+			world().mazeFlashing().tick();
+			ghosts().forEach(ghost -> ghost.updateState(pac()));
+			bonus().ifPresent(bonus -> bonus.update(this));
+		} else {
+			GameController.it().restart(GameState.BOOT);
+		}
 	}
 
 	private void logWhatHappenedThisFrame() {

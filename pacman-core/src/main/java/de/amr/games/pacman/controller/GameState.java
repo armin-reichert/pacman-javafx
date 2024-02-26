@@ -329,16 +329,10 @@ public enum GameState implements FsmState<GameModel> {
 
 		@Override
 		public void onEnter(GameModel game) {
-			switch (game.variant()) {
-			case MS_PACMAN:
-				lastTestedLevel = 18;
-				break;
-			case PACMAN:
-				lastTestedLevel = 20;
-				break;
-			default:
-				break;
-			}
+			lastTestedLevel = switch (game.variant()) {
+				case MS_PACMAN -> 18;
+				case PACMAN    -> 20;
+			};
 			timer.restartIndefinitely();
 			game.reset();
 			game.setLevel(1);
@@ -347,37 +341,7 @@ public enum GameState implements FsmState<GameModel> {
 
 		@Override
 		public void onUpdate(GameModel game) {
-			game.level().ifPresent(level -> {
-				if (level.number() <= lastTestedLevel) {
-					if (timer.atSecond(0.5)) {
-						level.guys().forEach(Creature::show);
-					} else if (timer.atSecond(1.5)) {
-						level.handleBonusReached(0);
-					} else if (timer.atSecond(2.5)) {
-						level.bonus().ifPresent(bonus -> bonus.setEaten(120));
-						gameController().publishGameEvent(GameEventType.BONUS_EATEN);
-					} else if (timer.atSecond(4.5)) {
-						level.handleBonusReached(1);
-					} else if (timer.atSecond(5.5)) {
-						level.bonus().ifPresent(bonus -> bonus.setEaten(60));
-						level.guys().forEach(Creature::hide);
-					} else if (timer.atSecond(6.5)) {
-						var flashing = level.world().mazeFlashing();
-						flashing.restart(2 * level.numFlashes());
-					} else if (timer.atSecond(12.0)) {
-						level.end();
-						game.nextLevel();
-						timer.restartIndefinitely();
-						gameController().publishGameEvent(GameEventType.LEVEL_STARTED);
-					}
-					level.world().energizerBlinking().tick();
-					level.world().mazeFlashing().tick();
-					level.ghosts().forEach(ghost -> ghost.updateState(level.pac()));
-					level.bonus().ifPresent(bonus -> bonus.update(level));
-				} else {
-					gameController().restart(GameState.BOOT);
-				}
-			});
+			game.level().ifPresent(level -> level.simulateOneTestFrame(timer, lastTestedLevel));
 		}
 
 		@Override

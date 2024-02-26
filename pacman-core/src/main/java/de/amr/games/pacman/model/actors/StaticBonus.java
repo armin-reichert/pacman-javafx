@@ -84,46 +84,40 @@ public class StaticBonus extends Entity implements Bonus {
 		timer = ticks;
 		state = Bonus.STATE_EATEN;
 		Logger.info("Bonus eaten: {}", this);
-		GameController.it().publishGameEvent(GameEventType.BONUS_EATEN, tile());
 	}
 
 	private void expire() {
 		setInactive();
 		Logger.info("Bonus expired: {}", this);
-		GameController.it().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
 	}
 
 	@Override
 	public void update(GameLevel level) {
 		switch (state) {
-		case Bonus.STATE_INACTIVE: {
-			// stay inactive
-			break;
-		}
-		case Bonus.STATE_EDIBLE: {
-			// TODO does this belong here? I doubt it.
-			if (sameTile(level.pac())) {
-				level.game().scorePoints(points());
-				setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
-				Logger.info("Scored {} points for eating bonus {}", points(), this);
-				GameController.it().publishGameEvent(GameEventType.BONUS_EATEN);
-			} else if (timer == 0) {
-				expire();
-			} else {
-				--timer;
+			case STATE_INACTIVE -> {}
+			case STATE_EDIBLE -> {
+				if (sameTile(level.pac())) {
+					setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
+					Logger.info("Scored {} points for eating bonus {}", points, this);
+					// TODO does this belong here? I doubt it.
+					level.game().scorePoints(points);
+					GameController.it().publishGameEvent(GameEventType.BONUS_EATEN);
+				} else if (timer == 0) {
+					expire();
+					GameController.it().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+				} else {
+					--timer;
+				}
 			}
-			break;
-		}
-		case Bonus.STATE_EATEN: {
-			if (timer == 0) {
-				expire();
-			} else {
-				--timer;
+			case STATE_EATEN -> {
+				if (timer == 0) {
+					expire();
+					GameController.it().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+				} else {
+					--timer;
+				}
 			}
-			break;
-		}
-		default:
-			throw new IllegalStateException();
+			default -> throw new IllegalStateException("Unknown bonus state: " + state);
 		}
 	}
 }
