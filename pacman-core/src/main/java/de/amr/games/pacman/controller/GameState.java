@@ -73,10 +73,7 @@ public enum GameState implements FsmState<GameModel> {
 				game.reset();
 				game.startDemoLevel();
 			} else if (game.isPlaying()) {
-				game.level().ifPresent(level -> {
-					level.letsGetReadyToRumble();
-					level.guys().forEach(Entity::show);
-				});
+				game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
 			} else {
 				game.score().reset();
 				game.clearLevelCounter();

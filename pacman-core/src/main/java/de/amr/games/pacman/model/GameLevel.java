@@ -475,19 +475,21 @@ public class GameLevel {
 
 	/**
 	 * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
-	 * energizer pulse are reset too. All guys are hidden initially.
+	 * energizer pulse are reset too.
+	 *
+	 * @param guysVisible if the guys are visible
 	 */
-	public void letsGetReadyToRumble() {
+	public void letsGetReadyToRumble(boolean guysVisible) {
 		pac.reset();
 		pac.setPosition(halfTileRightOf(13, 26));
 		pac.setMoveAndWishDir(Direction.LEFT);
-		pac.setVisible(false);
+		pac.setVisible(guysVisible);
 		pac.resetAnimation();
 		ghosts().forEach(ghost -> {
 			ghost.reset();
 			ghost.setPosition(initialGhostPosition(ghost.id()));
 			ghost.setMoveAndWishDir(initialGhostDirection(ghost.id()));
-			ghost.setVisible(false);
+			ghost.setVisible(guysVisible);
 			ghost.setState(LOCKED);
 			ghost.resetAnimation();
 		});

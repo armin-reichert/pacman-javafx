@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import java.util.*;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
  * Pac-Man / Ms. Pac-Man game model.
@@ -178,33 +180,32 @@ public class GameModel {
 	 */
 	public void createAndStartLevel(int levelNumber) {
 		checkLevelNumber(levelNumber);
-		var world = switch (variant) {
-			case MS_PACMAN -> ArcadeWorld.createMsPacManWorld(ArcadeWorld.mapNumberMsPacMan(levelNumber));
-			case PACMAN -> ArcadeWorld.createPacManWorld();
+		World world = switch (variant) {
+			case MS_PACMAN -> createMsPacManWorld(mapNumberMsPacMan(levelNumber));
+			case PACMAN    -> createPacManWorld();
 		};
-		var levelData = LEVEL_DATA[dataRow(levelNumber)];
-		level = new GameLevel(this, world, levelNumber, levelData, false);
+		level = new GameLevel(this, world, levelNumber, LEVEL_DATA[dataRow(levelNumber)], false);
 
-		if (level.number() == 1) {
+		if (levelNumber == 1) {
 			levelCounter.clear();
 		}
 		// In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
 		// (also inside the same level) whenever a bonus is earned. That's what I was told.
-		if (variant == GameVariant.PACMAN || level.number() <= 7) {
+		if (variant == GameVariant.PACMAN || levelNumber <= 7) {
 			levelCounter.add(level.bonusSymbol(0));
 			if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
 				levelCounter.remove(0);
 			}
 		}
-		score.setLevelNumber(level.number());
-		Logger.info("Level {} created", levelNumber);
+		score.setLevelNumber(levelNumber);
+
+		Logger.info("Level {} created ({})", levelNumber, variant);
 		publishGameEvent(this, GameEventType.LEVEL_CREATED);
 
 		// at this point the animations of Pac-Man and the ghosts must have been created!
-		level.letsGetReadyToRumble();
-		level.guys().forEach(Entity::hide);
+		level.letsGetReadyToRumble(false);
 
-		Logger.info("Level {} started ({})", level.number(), variant);
+		Logger.info("Level {} started ({})", levelNumber, variant);
 		publishGameEvent(this, GameEventType.LEVEL_STARTED);
 	}
 
@@ -215,13 +216,13 @@ public class GameModel {
 		scoringEnabled = false;
 		switch (variant) {
 			case MS_PACMAN -> {
-				var world = ArcadeWorld.createMsPacManWorld(1);
+				var world = createMsPacManWorld(1);
 				level = new GameLevel(this, world, 1, LEVEL_DATA[0], true);
 				// TODO this is not the exact behavior from the Arcade game
 				level.pac().setSteering(new RuleBasedSteering());
 			}
 			case PACMAN -> {
-				var world = ArcadeWorld.createPacManWorld();
+				var world = createPacManWorld();
 				level = new GameLevel(this, world, 1, LEVEL_DATA[0], true);
 				// TODO this is not the exact behavior from the Arcade game
 				level.pac().setSteering(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
@@ -231,8 +232,7 @@ public class GameModel {
 		publishGameEvent(this, GameEventType.LEVEL_CREATED);
 
 		score.setLevelNumber(level.number());
-		level.letsGetReadyToRumble();
-		level.guys().forEach(Entity::show);
+		level.letsGetReadyToRumble(true);
 		Logger.info("Demo Level {} started ({})", level.number(), variant);
 
 		publishGameEvent(this, GameEventType.LEVEL_STARTED);
