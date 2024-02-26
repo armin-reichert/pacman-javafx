@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.actors;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavigationPoint;
@@ -15,6 +14,8 @@ import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
 import java.util.List;
+
+import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 
 /**
  * A bonus that tumbles through the world, starting at some portal, making one round around the ghost house and leaving
@@ -99,7 +100,6 @@ public class MovingBonus extends Creature implements Bonus {
 		eatenTimer = ticks;
 		jumpAnimation.stop();
 		Logger.info("Bonus eaten: {}", this);
-		GameController.it().publishGameEvent(GameEventType.BONUS_EATEN, tile());
 	}
 
 	public void setRoute(List<NavigationPoint> route, boolean leftToRight) {
@@ -127,14 +127,14 @@ public class MovingBonus extends Creature implements Bonus {
 			if (sameTile(level.pac())) {
 				level.game().scorePoints(points());
 				setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
-				GameController.it().publishGameEvent(GameEventType.BONUS_EATEN);
+				publishGameEvent(level.game(), GameEventType.BONUS_EATEN);
 				return;
 			}
 			steering.steer(level, this);
 			if (steering.isComplete()) {
 				setInactive();
 				Logger.trace("Bonus left world: {}", this);
-				GameController.it().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+				publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
 			} else {
 				navigateTowardsTarget();
 				tryMoving();
@@ -147,7 +147,7 @@ public class MovingBonus extends Creature implements Bonus {
 			if (--eatenTimer == 0) {
 				setInactive();
 				Logger.trace("Bonus expired: {}", this);
-				GameController.it().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+				publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
 			}
 			break;
 		}

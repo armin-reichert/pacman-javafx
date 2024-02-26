@@ -38,6 +38,7 @@ import org.tinylog.Logger;
 import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
@@ -544,7 +545,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		if (!game().isPlaying()) {
 			boolean added = gameController().changeCredit(1);
 			if (added) {
-				gameController().publishGameEvent(GameEventType.CREDIT_ADDED);
+				publishGameEvent(game(), GameEventType.CREDIT_ADDED);
 			}
 			if (gameState() != GameState.CREDIT) {
 				gameController().changeState(GameState.CREDIT);
@@ -643,7 +644,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 		if (game().isPlaying() && gameState() == GameState.HUNTING) {
 			gameLevel().ifPresent(level -> {
 				level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::removeFood);
-				gameController().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+				publishGameEvent(game(), GameEventType.PAC_FOUND_FOOD);
 			});
 		}
 	}

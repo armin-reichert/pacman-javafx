@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.ui.fx.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -33,7 +34,7 @@ public class PacManGames3dApp extends Application {
 	@Override
 	public void start(Stage stage) {
 		ui = new PacManGames3dUI(stage, settings);
-		GameController.it().addListener(ui);
+		GameEventManager.addListener(ui);
 		ui.showStartPage();
 		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
 		Logger.info("Theme: {}", ui.theme());

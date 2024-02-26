@@ -4,11 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.actors;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
+
+import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 
 /**
  * Bonus that appears for some time at a fixed position before it gets eaten or vanishes.
@@ -98,13 +99,13 @@ public class StaticBonus extends Entity implements Bonus {
 			case STATE_EDIBLE -> {
 				if (sameTile(level.pac())) {
 					setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
-					Logger.info("Scored {} points for eating bonus {}", points, this);
 					// TODO does this belong here? I doubt it.
 					level.game().scorePoints(points);
-					GameController.it().publishGameEvent(GameEventType.BONUS_EATEN);
+					Logger.info("Scored {} points for eating bonus {}", points, this);
+					publishGameEvent(level.game(), GameEventType.BONUS_EATEN);
 				} else if (timer == 0) {
 					expire();
-					GameController.it().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+					publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
 				} else {
 					--timer;
 				}
@@ -112,7 +113,7 @@ public class StaticBonus extends Entity implements Bonus {
 			case STATE_EATEN -> {
 				if (timer == 0) {
 					expire();
-					GameController.it().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+					publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
 				} else {
 					--timer;
 				}

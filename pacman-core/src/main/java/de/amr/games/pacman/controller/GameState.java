@@ -12,6 +12,8 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
 
+import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+
 /**
  * Game states of the Pac-Man/Ms. Pac-Man game.
  * <p>
@@ -66,7 +68,7 @@ public enum GameState implements FsmState<GameModel> {
 		@Override
 		public void onEnter(GameModel game) {
 			gameController().manualSteering().setEnabled(false);
-			gameController().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+			publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
 			if (!gameController().hasCredit()) {
 				game.reset();
 				game.createDemoLevel();
@@ -82,7 +84,7 @@ public enum GameState implements FsmState<GameModel> {
 				game.reset();
 				game.setLevel(1);
 				game.startLevel();
-				gameController().publishGameEvent(GameEventType.READY_TO_PLAY);
+				publishGameEvent(game, GameEventType.READY_TO_PLAY);
 			}
 		}
 
@@ -130,7 +132,7 @@ public enum GameState implements FsmState<GameModel> {
 				level.pac().startAnimation();
 				level.ghosts().forEach(Ghost::startAnimation);
 				level.world().energizerBlinking().restart();
-				gameController().publishGameEvent(new GameEvent(GameEventType.HUNTING_PHASE_STARTED, game, null));
+				publishGameEvent(new GameEvent(GameEventType.HUNTING_PHASE_STARTED, game, null));
 			});
 		}
 
@@ -156,7 +158,7 @@ public enum GameState implements FsmState<GameModel> {
 			gameController().manualSteering().setEnabled(false);
 			timer.restartSeconds(4);
 			game.level().ifPresent(GameLevel::end);
-			gameController().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+			publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
 		}
 
 		@Override
@@ -192,7 +194,7 @@ public enum GameState implements FsmState<GameModel> {
 			gameController().manualSteering().setEnabled(false);
 			timer.restartSeconds(1);
 			game.nextLevel();
-			gameController().publishGameEvent(GameEventType.LEVEL_STARTED);
+			publishGameEvent(game, GameEventType.LEVEL_STARTED);
 		}
 
 		@Override
@@ -210,7 +212,7 @@ public enum GameState implements FsmState<GameModel> {
 			game.level().ifPresent(level -> {
 				level.pac().hide();
 				level.ghosts().forEach(Ghost::stopAnimation);
-				gameController().publishGameEvent(GameEventType.GHOST_EATEN);
+				publishGameEvent(game, GameEventType.GHOST_EATEN);
 			});
 		}
 
@@ -246,7 +248,7 @@ public enum GameState implements FsmState<GameModel> {
 				gameController().manualSteering().setEnabled(false);
 				timer.restartSeconds(4);
 				level.onPacKilled();
-				gameController().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+				publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
 			});
 		}
 
@@ -259,7 +261,7 @@ public enum GameState implements FsmState<GameModel> {
 					level.ghosts().forEach(Ghost::hide);
 				} else if (timer.atSecond(1.4)) {
 					level.pac().startAnimation();
-					gameController().publishGameEvent(GameEventType.PAC_DIED);
+					publishGameEvent(game, GameEventType.PAC_DIED);
 				} else if (timer.atSecond(3.0)) {
 					level.pac().hide();
 					game.loseLife();
@@ -293,7 +295,7 @@ public enum GameState implements FsmState<GameModel> {
 			game.updateHighScore();
 			gameController().manualSteering().setEnabled(false);
 			gameController().changeCredit(-1);
-			gameController().publishGameEvent(GameEventType.STOP_ALL_SOUNDS);
+			publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
 		}
 
 		@Override
@@ -362,7 +364,7 @@ public enum GameState implements FsmState<GameModel> {
 				if (gameController().intermissionTestNumber < 3) {
 					++gameController().intermissionTestNumber;
 					timer.restartIndefinitely();
-					gameController().publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);
+					publishGameEvent(game, GameEventType.UNSPECIFIED_CHANGE);
 				} else {
 					gameController().intermissionTestNumber = 1;
 					gameController().changeState(INTRO);

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.RouteBasedSteering;
 import de.amr.games.pacman.lib.RuleBasedSteering;
@@ -20,6 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
@@ -184,7 +184,7 @@ public class GameModel {
 		var levelData = LEVEL_DATA[dataRow(levelNumber)];
 		level = new GameLevel(this, world, levelNumber, levelData, false);
 		Logger.info("Level {} created", levelNumber);
-		GameController.it().publishGameEvent(GameEventType.LEVEL_CREATED);
+		publishGameEvent(this, GameEventType.LEVEL_CREATED);
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class GameModel {
 			}
 		}
 		Logger.info("Demo level created ({})", variant);
-		GameController.it().publishGameEvent(GameEventType.LEVEL_CREATED);
+		publishGameEvent(this, GameEventType.LEVEL_CREATED);
 	}
 
 	public void startLevel() {
@@ -229,7 +229,7 @@ public class GameModel {
 		// Demo level shows guys immediately, otherwise they get shown after some ticks, see game state
 		level.guys().forEach(guy -> guy.setVisible(level.isDemoLevel()));
 		Logger.info("{} {} started ({})", level.isDemoLevel() ? "Demo level" : "Level", level.number(), variant);
-		GameController.it().publishGameEvent(GameEventType.LEVEL_STARTED);
+		publishGameEvent(this, GameEventType.LEVEL_STARTED);
 	}
 
 	public void nextLevel() {
@@ -327,7 +327,7 @@ public class GameModel {
 		}
 		if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
 			lives += 1;
-			GameController.it().publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+			publishGameEvent(this, GameEventType.EXTRA_LIFE_WON);
 		}
 	}
 

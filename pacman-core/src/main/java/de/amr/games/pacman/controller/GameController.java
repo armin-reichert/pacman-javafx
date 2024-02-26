@@ -4,19 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
-import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
 import de.amr.games.pacman.lib.RuleBasedSteering;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import org.tinylog.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkGameVariant;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -68,7 +62,6 @@ public class GameController extends Fsm<GameState, GameModel> {
 		return it;
 	}
 
-	private final List<GameEventListener> gameEventListeners = new ArrayList<>();
 	private final Steering autopilot = new RuleBasedSteering();
 	private Steering manualSteering = Steering.NONE;
 	private int credit;
@@ -83,7 +76,8 @@ public class GameController extends Fsm<GameState, GameModel> {
 		super(GameState.values());
 		game = new GameModel(variant);
 		// map FSM state change events to game events
-		addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+		addStateChangeListener((oldState, newState) ->
+			GameEventManager.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
 	}
 
 	public void newGame(GameVariant variant) {
@@ -173,30 +167,5 @@ public class GameController extends Fsm<GameState, GameModel> {
 		} else {
 			Logger.error("Cutscenes test can only be started from intro");
 		}
-	}
-
-	// Events
-
-	public void addListener(GameEventListener gameEventListener) {
-		checkNotNull(gameEventListener);
-		gameEventListeners.add(gameEventListener);
-	}
-
-	public void removeListener(GameEventListener gameEventListener) {
-		checkNotNull(gameEventListener);
-		gameEventListeners.remove(gameEventListener);
-	}
-
-	public void publishGameEvent(GameEventType type) {
-		publishGameEvent(new GameEvent(type, game, null));
-	}
-
-	public void publishGameEvent(GameEventType type, Vector2i tile) {
-		publishGameEvent(new GameEvent(type, game, tile));
-	}
-
-	public void publishGameEvent(GameEvent event) {
-		Logger.trace("Publish game event: {}", event);
-		gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
 	}
 }

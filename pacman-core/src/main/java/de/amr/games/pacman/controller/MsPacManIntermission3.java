@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 
+import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
@@ -74,7 +75,7 @@ public class MsPacManIntermission3 {
 
 	private void updateStateFlap() {
 		if (stateTimer.atSecond(1)) {
-			GameController.it().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+			publishGameEvent(GameController.it().game(), GameEventType.INTERMISSION_STARTED);
 		} else if (stateTimer.atSecond(3)) {
 			enterStateDeliverJunior();
 		}
