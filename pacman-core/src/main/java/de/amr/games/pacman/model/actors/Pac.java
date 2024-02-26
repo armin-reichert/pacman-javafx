@@ -7,7 +7,6 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 
 import java.util.Optional;
 
@@ -25,19 +24,19 @@ public class Pac extends Creature implements AnimationDirector {
 	/** In Ms. Pac-Man cutscenes, also Ms. PacMan's husband appears. */
 	public static final String ANIM_HUSBAND_MUNCHING = "husband_munching";
 
-	public static final long REST_FOREVER = -1;
+	public static final byte REST_INDEFINITE = -1;
 
-	private final TickTimer powerTimer;
+	private final TickTimer powerTimer = new TickTimer("PacPower");
 	private boolean dead;
-	private long restingTicks;
+	private byte restingTicks;
 	private long starvingTicks;
+	private int fadingTicks;
 	private Steering steering;
 
 	private Animations animations;
 
 	public Pac(String name) {
 		super(name);
-		powerTimer = new TickTimer("PacPower");
 		reset();
 	}
 
@@ -83,12 +82,11 @@ public class Pac extends Creature implements AnimationDirector {
 	}
 
 	public void update(GameLevel level) {
-		if (dead || restingTicks == REST_FOREVER) {
+		if (dead || restingTicks == REST_INDEFINITE) {
 			return;
 		}
 		if (restingTicks == 0) {
-			byte speed = powerTimer.isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage();
-			setPercentageSpeed(speed);
+			setPercentageSpeed(powerTimer.isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
 			tryMoving();
 			if (moved()) {
 				startAnimation();
@@ -110,29 +108,34 @@ public class Pac extends Creature implements AnimationDirector {
 		powerTimer.stop();
 	}
 
+	public void setFadingTicks(int fadingTicks) {
+		this.fadingTicks = fadingTicks;
+	}
+
 	public boolean isPowerFading() {
-		return powerTimer.isRunning() && powerTimer.remaining() <= GameModel.PAC_POWER_FADES_TICKS;
+		return powerTimer.isRunning() && powerTimer.remaining() <= fadingTicks;
 	}
 
 	public boolean isPowerStartingToFade() {
-		return powerTimer.isRunning() && powerTimer.remaining() == GameModel.PAC_POWER_FADES_TICKS
-			|| powerTimer().duration() < GameModel.PAC_POWER_FADES_TICKS && powerTimer().tick() == 1;
+		return powerTimer.isRunning() && powerTimer.remaining() == fadingTicks
+			|| powerTimer().duration() < fadingTicks && powerTimer().tick() == 1;
 	}
 
 	public TickTimer powerTimer() {
 		return powerTimer;
 	}
 
-	/* Number of ticks Pac is resting and not moving. */
-	public long restingTicks() {
+	/* Number of ticks Pac is resting and not moving (1 after eating pellet, 3 after eating energizer). */
+	public byte restingTicks() {
 		return restingTicks;
 	}
 
-	public void rest(long ticks) {
-		if (ticks != REST_FOREVER && ticks < 0) {
+	public void setRestingTicks(byte ticks) {
+		if (ticks == REST_INDEFINITE || ticks >= 0) {
+			restingTicks = ticks;
+		} else {
 			throw new IllegalArgumentException("Resting time cannot be negative, but is: " + ticks);
 		}
-		restingTicks = ticks;
 	}
 
 	/* Number of ticks since Pac has eaten a pellet or energizer. */
@@ -149,7 +152,7 @@ public class Pac extends Creature implements AnimationDirector {
 	}
 
 	public boolean isStandingStill() {
-		return velocity().length() == 0 || !moved() || restingTicks == REST_FOREVER;
+		return velocity().length() == 0 || !moved() || restingTicks == REST_INDEFINITE;
 	}
 
 	public Optional<Steering> steering() {
@@ -159,5 +162,4 @@ public class Pac extends Creature implements AnimationDirector {
 	public void setSteering(Steering steering) {
 		this.steering = steering;
 	}
-
 }

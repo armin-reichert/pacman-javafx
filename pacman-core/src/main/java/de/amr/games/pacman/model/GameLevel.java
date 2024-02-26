@@ -90,6 +90,7 @@ public class GameLevel {
 
 		pac = new Pac(isMsPacManGame ? "Ms. Pac-Man" : "Pac-Man");
 		pac.setWorld(world);
+		pac.setFadingTicks(PAC_POWER_FADES_TICKS); // not sure
 
 		ghosts = new Ghost[] {
 			new Ghost(RED_GHOST,  "Blinky"),
@@ -172,7 +173,7 @@ public class GameLevel {
 	}
 
 	public void end() {
-		pac.rest(Pac.REST_FOREVER);
+		pac.setRestingTicks(Pac.REST_INDEFINITE);
 		pac.selectAnimation(Pac.ANIM_MUNCHING);
 		ghosts().forEach(Ghost::hide);
 		deactivateBonus();
@@ -538,12 +539,12 @@ public class GameLevel {
 		}
 		if (thisFrame.energizerFound) {
 			numGhostsKilledByEnergizer = 0;
-			pac.rest(GameModel.RESTING_TICKS_ENERGIZER);
+			pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
 			int points = GameModel.POINTS_ENERGIZER;
 			game.scorePoints(points);
 			Logger.info("Scored {} points for eating energizer", points);
 		} else {
-			pac.rest(GameModel.RESTING_TICKS_NORMAL_PELLET);
+			pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
 			game.scorePoints(GameModel.POINTS_NORMAL_PELLET);
 		}
 		ghostHouseManagement.onFoodFound();
