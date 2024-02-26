@@ -175,7 +175,7 @@ public class GameModel {
 	 * 
 	 * @param levelNumber level number (starting at 1)
 	 */
-	public void setLevel(int levelNumber) {
+	public void createLevel(int levelNumber) {
 		checkLevelNumber(levelNumber);
 		var world = switch (variant) {
 			case MS_PACMAN -> ArcadeWorld.createMsPacManWorld(ArcadeWorld.mapNumberMsPacMan(levelNumber));
@@ -190,7 +190,7 @@ public class GameModel {
 	/**
 	 * Creates the demo game level ("attract mode").
 	 */
-	public void createDemoLevel() {
+	public void startDemoLevel() {
 		scoringEnabled = false;
 		switch (variant) {
 			case MS_PACMAN -> {
@@ -207,6 +207,7 @@ public class GameModel {
 			}
 		}
 		Logger.info("Demo level created ({})", variant);
+		startLevel();
 		publishGameEvent(this, GameEventType.LEVEL_CREATED);
 	}
 
@@ -234,7 +235,7 @@ public class GameModel {
 
 	public void nextLevel() {
 		if (level != null) {
-			setLevel(level.number() + 1);
+			createLevel(level.number() + 1);
 			startLevel();
 		} else {
 			throw new IllegalStateException("Cannot enter next level, no current level is set");
