@@ -372,6 +372,12 @@ public class PlayScene3D implements GameScene {
 				keepGameStateForSeconds(3);
 			}
 
+			case LEVEL_TEST -> {
+				PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
+				level.pac().setVisible(true);
+				level3D.pac3D().update();
+			}
+
 			default -> {}
 		}
 
