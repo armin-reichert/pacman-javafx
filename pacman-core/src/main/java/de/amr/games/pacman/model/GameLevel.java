@@ -609,7 +609,7 @@ public class GameLevel {
 
 		// Now check who gets killed
 		thisFrame.pacPrey = ghosts(FRIGHTENED).filter(pac::sameTile).collect(Collectors.toList());
-		thisFrame.pacKilled = !GameController.it().isImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+		thisFrame.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
 
 		// Update world
 		world.mazeFlashing().tick();
@@ -617,7 +617,7 @@ public class GameLevel {
 
 		// Update guys
 		unlockGhost(world().house());
-		var steering = pac.steering().orElse(GameController.it().steering());
+		var steering = pac.steering().orElse(GameController.it().pacSteering());
 		steering.steer(this, pac);
 		pac.update(this);
 		ghosts().forEach(ghost -> ghost.updateState(pac));

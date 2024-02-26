@@ -341,7 +341,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 	}
 
 	protected void configurePacSteering() {
-		gameController().setManualSteering(new KeyboardSteering());
+		gameController().setManualPacSteering(new KeyboardSteering());
 	}
 
 	protected void updateStage() {
@@ -515,7 +515,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	@Override
 	public void startCutscenesTest() {
-		gameController().startCutscenesTest(1);
+		gameController().startIntermissionTest(1);
 		showFlashMessage("Cut scenes");
 	}
 
@@ -596,16 +596,16 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
 	@Override
 	public void toggleAutopilot() {
-		gameController().toggleAutoControlled();
-		boolean auto = gameController().isAutoControlled();
+		gameController().togglePacAutoControlled();
+		boolean auto = gameController().isPacAutoControlled();
 		showFlashMessage(tt(auto ? "autopilot_on" : "autopilot_off"));
 		soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
 	}
 
 	@Override
 	public void toggleImmunity() {
-		gameController().setImmune(!gameController().isImmune());
-		boolean immune = gameController().isImmune();
+		gameController().setPacImmune(!gameController().isPacImmune());
+		boolean immune = gameController().isPacImmune();
 		showFlashMessage(tt(immune ? "player_immunity_on" : "player_immunity_off"));
 		soundHandler.playVoice(immune ? "voice.immunity.on" : "voice.immunity.off");
 	}

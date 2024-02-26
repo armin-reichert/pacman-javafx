@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
-import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
 import de.amr.games.pacman.lib.RuleBasedSteering;
@@ -12,6 +11,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkGameVariant;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -63,10 +63,10 @@ public class GameController extends Fsm<GameState, GameModel> {
 	}
 
 	private final Steering autopilot = new RuleBasedSteering();
-	private Steering manualSteering = Steering.NONE;
+	private Steering manualPacSteering = Steering.NONE;
 	private int credit;
-	private boolean autoControlled;
-	private boolean immune;
+	private boolean pacAutoControlled;
+	private boolean pacImmune;
 	private GameModel game;
 
 	/** Used in intermission test mode. */
@@ -74,10 +74,9 @@ public class GameController extends Fsm<GameState, GameModel> {
 
 	private GameController(GameVariant variant) {
 		super(GameState.values());
-		game = new GameModel(variant);
+		newGame(variant);
 		// map FSM state change events to game events
-		addStateChangeListener((oldState, newState) ->
-			GameEventManager.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+		addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
 	}
 
 	public void newGame(GameVariant variant) {
@@ -115,37 +114,37 @@ public class GameController extends Fsm<GameState, GameModel> {
 		return credit > 0;
 	}
 
-	public boolean isAutoControlled() {
-		return autoControlled;
+	public boolean isPacAutoControlled() {
+		return pacAutoControlled;
 	}
 
-	public void setAutoControlled(boolean autoControlled) {
-		this.autoControlled = autoControlled;
+	public void setPacAutoControlled(boolean pacAutoControlled) {
+		this.pacAutoControlled = pacAutoControlled;
 	}
 
-	public void toggleAutoControlled() {
-		autoControlled = !autoControlled;
+	public void togglePacAutoControlled() {
+		pacAutoControlled = !pacAutoControlled;
 	}
 
-	public boolean isImmune() {
-		return immune;
+	public boolean isPacImmune() {
+		return pacImmune;
 	}
 
-	public void setImmune(boolean immune) {
-		this.immune = immune;
+	public void setPacImmune(boolean pacImmune) {
+		this.pacImmune = pacImmune;
 	}
 
-	public Steering steering() {
-		return autoControlled ? autopilot : manualSteering;
+	public Steering pacSteering() {
+		return pacAutoControlled ? autopilot : manualPacSteering;
 	}
 
-	public Steering manualSteering() {
-		return manualSteering;
+	public Steering manualPacSteering() {
+		return manualPacSteering;
 	}
 
-	public void setManualSteering(Steering steering) {
+	public void setManualPacSteering(Steering steering) {
 		checkNotNull(steering);
-		this.manualSteering = steering;
+		this.manualPacSteering = steering;
 	}
 
 	public void startPlaying() {
@@ -160,12 +159,16 @@ public class GameController extends Fsm<GameState, GameModel> {
 		}
 	}
 
-	public void startCutscenesTest(int cutSceneNumber) {
+	public void startIntermissionTest(int number) {
+		if (number < 1 || number > 3) {
+			Logger.error("Intermission test number must be 1, 2 or 3");
+			return;
+		}
 		if (currentState == GameState.INTRO) {
-			intermissionTestNumber = cutSceneNumber;
+			intermissionTestNumber = number;
 			changeState(GameState.INTERMISSION_TEST);
 		} else {
-			Logger.error("Cutscenes test can only be started from intro");
+			Logger.error("Intermission test can only be started from intro screen");
 		}
 	}
 }

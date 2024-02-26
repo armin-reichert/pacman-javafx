@@ -80,7 +80,7 @@ public class GamePage extends CanvasContainer implements Page {
 
 	public void onGameSceneChanged(GameScene newGameScene) {
 		//TODO: find a better solution than adding/removing key handler, maybe adapter class?
-		if (sceneContext.gameController().manualSteering() instanceof KeyboardSteering keyboardSteering) {
+		if (sceneContext.gameController().manualPacSteering() instanceof KeyboardSteering keyboardSteering) {
 			// if play scene gets active/inactive, add/remove key handler
 			if (newGameScene == sceneContext.sceneConfig().get("play")) {
 				layersContainer.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
@@ -262,14 +262,14 @@ public class GamePage extends CanvasContainer implements Page {
 			var grid = (GridPane) pane.getChildren().get(0); // TODO improve
 			// add default entries:
 			int nextFreeIndex = grid.getRowCount();
-			if (sceneContext.gameController().isAutoControlled()) {
+			if (sceneContext.gameController().isPacAutoControlled()) {
 				var autoPilotEntry = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
 				autoPilotEntry.setFont(font);
 				GridPane.setColumnSpan(autoPilotEntry, 2);
 				grid.add(autoPilotEntry, 0, nextFreeIndex);
 				nextFreeIndex += 1;
 			}
-			if (sceneContext.gameController().isImmune()) {
+			if (sceneContext.gameController().isPacImmune()) {
 				var immunityEntry = text(sceneContext.tt("help.immunity_on"), Color.ORANGE);
 				immunityEntry.setFont(font);
 				GridPane.setColumnSpan(immunityEntry, 2);

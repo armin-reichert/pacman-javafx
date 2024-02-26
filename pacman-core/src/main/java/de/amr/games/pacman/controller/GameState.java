@@ -67,7 +67,7 @@ public enum GameState implements FsmState<GameModel> {
 	READY {
 		@Override
 		public void onEnter(GameModel game) {
-			gameController().manualSteering().setEnabled(false);
+			gameController().manualPacSteering().setEnabled(false);
 			publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
 			if (!gameController().hasCredit()) {
 				game.reset();
@@ -128,7 +128,7 @@ public enum GameState implements FsmState<GameModel> {
 		@Override
 		public void onEnter(GameModel game) {
 			game.level().ifPresent(level -> {
-				gameController().manualSteering().setEnabled(true);
+				gameController().manualPacSteering().setEnabled(true);
 				level.pac().startAnimation();
 				level.ghosts().forEach(Ghost::startAnimation);
 				level.world().energizerBlinking().restart();
@@ -155,7 +155,7 @@ public enum GameState implements FsmState<GameModel> {
 	LEVEL_COMPLETE {
 		@Override
 		public void onEnter(GameModel game) {
-			gameController().manualSteering().setEnabled(false);
+			gameController().manualPacSteering().setEnabled(false);
 			timer.restartSeconds(4);
 			game.level().ifPresent(GameLevel::end);
 			publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
@@ -191,7 +191,7 @@ public enum GameState implements FsmState<GameModel> {
 	CHANGING_TO_NEXT_LEVEL {
 		@Override
 		public void onEnter(GameModel game) {
-			gameController().manualSteering().setEnabled(false);
+			gameController().manualPacSteering().setEnabled(false);
 			timer.restartSeconds(1);
 			game.nextLevel();
 			publishGameEvent(game, GameEventType.LEVEL_STARTED);
@@ -222,7 +222,7 @@ public enum GameState implements FsmState<GameModel> {
 				gameController().resumePreviousState();
 			} else {
 				game.level().ifPresent(level -> {
-					var steering = level.pac().steering().orElse(gameController().steering());
+					var steering = level.pac().steering().orElse(gameController().pacSteering());
 					steering.steer(level, level.pac());
 					level.ghosts(GhostState.EATEN, GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
 							.forEach(ghost -> ghost.updateState(level.pac()));
@@ -245,7 +245,7 @@ public enum GameState implements FsmState<GameModel> {
 		@Override
 		public void onEnter(GameModel game) {
 			game.level().ifPresent(level -> {
-				gameController().manualSteering().setEnabled(false);
+				gameController().manualPacSteering().setEnabled(false);
 				timer.restartSeconds(4);
 				level.onPacKilled();
 				publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
@@ -293,7 +293,7 @@ public enum GameState implements FsmState<GameModel> {
 		public void onEnter(GameModel game) {
 			timer.restartSeconds(1.2); //TODO not sure about exact duration
 			game.updateHighScore();
-			gameController().manualSteering().setEnabled(false);
+			gameController().manualPacSteering().setEnabled(false);
 			gameController().changeCredit(-1);
 			publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
 		}

@@ -90,10 +90,10 @@ public class GamePageContextMenu extends ContextMenu {
 			pipItem.setSelected(PY_PIP_ON.get());
 		}
 		if (autopilotItem != null) {
-			autopilotItem.setSelected(GameController.it().isAutoControlled());
+			autopilotItem.setSelected(GameController.it().isPacAutoControlled());
 		}
 		if (immunityItem != null) {
-			immunityItem.setSelected(GameController.it().isImmune());
+			immunityItem.setSelected(GameController.it().isPacImmune());
 		}
 	}
 }
