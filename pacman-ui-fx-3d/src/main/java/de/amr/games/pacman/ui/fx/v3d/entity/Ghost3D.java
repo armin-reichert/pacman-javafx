@@ -25,6 +25,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -161,12 +162,16 @@ public class Ghost3D {
 	}
 
 	private void updateLook() {
+		if (ghost.state() == null) {
+			Logger.error("Cannot update ghost 3D look because ghost state is undefined");
+			return;
+		}
 		var newLook = switch (ghost.state()) {
-		case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
-		case FRIGHTENED -> frightenedOrFlashingLook();
-		case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
-		case EATEN -> Look.NUMBER;
-		default -> Look.NORMAL;
+			case LOCKED, LEAVING_HOUSE              -> normalOrFrightenedOrFlashingLook();
+			case FRIGHTENED                         -> frightenedOrFlashingLook();
+			case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
+			case EATEN                              -> Look.NUMBER;
+			default                                 -> Look.NORMAL;
 		};
 		if (currentLook != newLook) {
 			setLook(newLook, level.numFlashes());

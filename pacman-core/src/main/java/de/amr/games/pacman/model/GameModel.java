@@ -184,8 +184,6 @@ public class GameModel {
 		};
 		var levelData = LEVEL_DATA[dataRow(levelNumber)];
 		level = new GameLevel(this, world, levelNumber, levelData, false);
-		Logger.info("Level {} created", levelNumber);
-		publishGameEvent(this, GameEventType.LEVEL_CREATED);
 
 		if (level.number() == 1) {
 			levelCounter.clear();
@@ -199,10 +197,14 @@ public class GameModel {
 			}
 		}
 		score.setLevelNumber(level.number());
+		Logger.info("Level {} created", levelNumber);
+		publishGameEvent(this, GameEventType.LEVEL_CREATED);
+
+		// at this point the animations of Pac-Man and the ghosts must have been created!
 		level.letsGetReadyToRumble();
 		level.guys().forEach(Entity::hide);
-		Logger.info("Level {} started ({})", level.number(), variant);
 
+		Logger.info("Level {} started ({})", level.number(), variant);
 		publishGameEvent(this, GameEventType.LEVEL_STARTED);
 	}
 

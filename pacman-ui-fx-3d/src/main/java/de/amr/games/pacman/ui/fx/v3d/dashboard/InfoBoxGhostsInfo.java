@@ -73,7 +73,7 @@ public class InfoBoxGhostsInfo extends InfoBox {
 	}
 
 	private String ghostState(GameLevel level, Ghost ghost) {
-		var stateText = ghost.state().name();
+		var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
 		if (ghost.state() == GhostState.HUNTING_PAC) {
 			stateText = level.currentHuntingPhaseName();
 		}

@@ -174,7 +174,11 @@ public class Ghost extends Creature implements AnimationDirector {
 	 *         <code>false</code>
 	 */
 	public boolean is(GhostState... alternatives) {
-		return oneOf(state, alternatives);
+		if (state != null) {
+			return oneOf(state, alternatives);
+		}
+		Logger.error("Cannot check ghost state because it is undefined");
+		return false;
 	}
 
 	/**
