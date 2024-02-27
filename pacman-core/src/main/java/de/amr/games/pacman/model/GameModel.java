@@ -235,13 +235,13 @@ public class GameModel {
         publishGameEvent(this, GameEventType.LEVEL_STARTED);
     }
 
-    public void nextLevel() {
-        if (level != null) {
-            createAndStartLevel(level.number() + 1);
-        } else {
-            throw new IllegalStateException("Cannot enter next level, no current level is set");
-        }
-    }
+//    public void nextLevel() {
+//        if (level != null) {
+//            createAndStartLevel(level.number() + 1);
+//        } else {
+//            throw new IllegalStateException("Cannot enter next level, no current level is set");
+//        }
+//    }
 
     public void removeLevel() {
         level = null;

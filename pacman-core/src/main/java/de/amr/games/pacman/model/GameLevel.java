@@ -721,7 +721,7 @@ public class GameLevel {
                 flashing.restart(2 * numFlashes());
             } else if (timer.atSecond(12.0)) {
                 end();
-                game.nextLevel();
+                game.createAndStartLevel(levelNumber + 1);
                 timer.restartIndefinitely();
                 publishGameEvent(game, GameEventType.LEVEL_STARTED);
             }

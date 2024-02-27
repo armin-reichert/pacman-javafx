@@ -182,7 +182,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             gameController().manualPacSteering().setEnabled(false);
             timer.restartSeconds(1);
-            game.nextLevel();
+            game.level().ifPresent(level -> game.createAndStartLevel(level.number() + 1));
             publishGameEvent(game, GameEventType.LEVEL_STARTED);
         }
 

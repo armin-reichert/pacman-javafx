@@ -625,7 +625,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         gameLevel().ifPresent(level -> {
             if (newLevelNumber > level.number()) {
                 for (int n = level.number(); n < newLevelNumber - 1; ++n) {
-                    game().nextLevel();
+                    game().createAndStartLevel(level.number() + 1);
                 }
                 gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
             }
