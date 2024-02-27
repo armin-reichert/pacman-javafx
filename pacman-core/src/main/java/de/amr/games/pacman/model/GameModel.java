@@ -50,7 +50,6 @@ public class GameModel {
     public static final byte POINTS_NORMAL_PELLET = 10;
     public static final byte POINTS_ENERGIZER = 50;
     public static final short POINTS_ALL_GHOSTS_KILLED_IN_LEVEL = 12_000;
-    public static final short[] POINTS_GHOSTS_SEQUENCE = {200, 400, 800, 1600};
     public static final short EXTRA_LIFE_SCORE = 10000;
     public static final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
     public static final short PAC_POWER_FADES_TICKS = 2 * FPS - 1; // unsure
@@ -299,6 +298,11 @@ public class GameModel {
 
     public Score highScore() {
         return highScore;
+    }
+
+    public int pointsForKillingGhost(int index) {
+        byte[] factor = { 2, 4, 8, 16 };
+        return 100 * factor[index];
     }
 
     public void scorePoints(int points) {

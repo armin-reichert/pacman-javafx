@@ -767,7 +767,7 @@ public class GameLevel {
         ghost.setState(EATEN);
         numGhostsKilledByEnergizer += 1;
         thisFrame.killedGhosts.add(ghost);
-        int points = GameModel.POINTS_GHOSTS_SEQUENCE[ghost.killedIndex()];
+        int points = game.pointsForKillingGhost(ghost.killedIndex());
         game.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
