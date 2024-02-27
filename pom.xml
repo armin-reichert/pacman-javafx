@@ -14,7 +14,7 @@
         <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <vs.java>17</vs.java>
+        <vs.java>21</vs.java>
         <vs.javafx>21.0.2</vs.javafx>
         <vs.javafx-maven-plugin>0.0.8</vs.javafx-maven-plugin>
         <vs.junit>4.13.2</vs.junit>
