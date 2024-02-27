@@ -69,9 +69,6 @@ public interface GameEventListener {
             case PAC_STARTS_LOSING_POWER:
                 onPacStartsLosingPower(event);
                 break;
-            case READY_TO_PLAY:
-                onReadyToPlay(event);
-                break;
             case INTERMISSION_STARTED:
                 onIntermissionStarted(event);
                 break;
@@ -141,9 +138,6 @@ public interface GameEventListener {
     }
 
     default void onPacStartsLosingPower(GameEvent e) {
-    }
-
-    default void onReadyToPlay(GameEvent e) {
     }
 
     default void onStopAllSounds(GameEvent e) {

@@ -84,9 +84,13 @@ public class SoundHandler {
                 }
                 break;
             }
-            case READY_TO_PLAY:
+            case LEVEL_STARTED:
                 if (!demoLevel) {
-                    audioClip(gameVariant, "audio.game_ready").play();
+                    event.game.level().ifPresent(level -> {
+                        if (level.number() == 1) {
+                            audioClip(gameVariant, "audio.game_ready").play();
+                        }
+                    });
                 }
                 break;
             case PAC_DIED:

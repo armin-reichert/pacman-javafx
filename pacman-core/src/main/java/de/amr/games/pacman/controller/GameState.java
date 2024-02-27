@@ -83,7 +83,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.clearLevelCounter();
                 game.reset();
                 game.createAndStartLevel(1);
-                publishGameEvent(game, GameEventType.READY_TO_PLAY);
+                //publishGameEvent(game, GameEventType.READY_TO_PLAY);
             }
         }
 
