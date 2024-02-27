@@ -14,7 +14,10 @@ import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -801,19 +804,19 @@ public class GameLevel {
     private Bonus bonus;
 
     private byte nextBonusSymbol() {
-        if (game.variant() == GameVariant.MS_PACMAN) {
-            return nextMsPacManBonusSymbol();
-        }
-        // In the Pac-Man game, each level has a single bonus symbol appearing twice
-        return switch (levelNumber) {
-            case 1 -> GameModel.PACMAN_CHERRIES;
-            case 2 -> GameModel.PACMAN_STRAWBERRY;
-            case 3, 4 -> GameModel.PACMAN_PEACH;
-            case 5, 6 -> GameModel.PACMAN_APPLE;
-            case 7, 8 -> GameModel.PACMAN_GRAPES;
-            case 9, 10 -> GameModel.PACMAN_GALAXIAN;
-            case 11, 12 -> GameModel.PACMAN_BELL;
-            default -> GameModel.PACMAN_KEY;
+        return switch (game.variant()) {
+            case MS_PACMAN -> nextMsPacManBonusSymbol();
+            // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
+            case PACMAN -> switch (levelNumber) {
+                case 1 -> GameModel.PACMAN_CHERRIES;
+                case 2 -> GameModel.PACMAN_STRAWBERRY;
+                case 3, 4 -> GameModel.PACMAN_PEACH;
+                case 5, 6 -> GameModel.PACMAN_APPLE;
+                case 7, 8 -> GameModel.PACMAN_GRAPES;
+                case 9, 10 -> GameModel.PACMAN_GALAXIAN;
+                case 11, 12 -> GameModel.PACMAN_BELL;
+                default -> GameModel.PACMAN_KEY;
+            };
         };
     }
 
@@ -853,31 +856,25 @@ public class GameLevel {
      * </table>
      */
     private byte nextMsPacManBonusSymbol() {
-        switch (levelNumber) {
-            case 1:
-                return GameModel.MS_PACMAN_CHERRIES;
-            case 2:
-                return GameModel.MS_PACMAN_STRAWBERRY;
-            case 3:
-                return GameModel.MS_PACMAN_ORANGE;
-            case 4:
-                return GameModel.MS_PACMAN_PRETZEL;
-            case 5:
-                return GameModel.MS_PACMAN_APPLE;
-            case 6:
-                return GameModel.MS_PACMAN_PEAR;
-            case 7:
-                return GameModel.MS_PACMAN_BANANA;
-            default:
+        return switch (levelNumber) {
+            case 1 -> GameModel.MS_PACMAN_CHERRIES;
+            case 2 -> GameModel.MS_PACMAN_STRAWBERRY;
+            case 3 -> GameModel.MS_PACMAN_ORANGE;
+            case 4 -> GameModel.MS_PACMAN_PRETZEL;
+            case 5 -> GameModel.MS_PACMAN_APPLE;
+            case 6 -> GameModel.MS_PACMAN_PEAR;
+            case 7 -> GameModel.MS_PACMAN_BANANA;
+            default -> {
                 int random = randomInt(0, 320);
-                if (random < 50) return GameModel.MS_PACMAN_CHERRIES;
-                if (random < 100) return GameModel.MS_PACMAN_STRAWBERRY;
-                if (random < 150) return GameModel.MS_PACMAN_ORANGE;
-                if (random < 200) return GameModel.MS_PACMAN_PRETZEL;
-                if (random < 240) return GameModel.MS_PACMAN_APPLE;
-                if (random < 280) return GameModel.MS_PACMAN_PEAR;
-                else return GameModel.MS_PACMAN_BANANA;
-        }
+                if (random <  50) yield GameModel.MS_PACMAN_CHERRIES;
+                if (random < 100) yield GameModel.MS_PACMAN_STRAWBERRY;
+                if (random < 150) yield GameModel.MS_PACMAN_ORANGE;
+                if (random < 200) yield GameModel.MS_PACMAN_PRETZEL;
+                if (random < 240) yield GameModel.MS_PACMAN_APPLE;
+                if (random < 280) yield GameModel.MS_PACMAN_PEAR;
+                yield GameModel.MS_PACMAN_BANANA;
+            }
+        };
     }
 
     public boolean isBonusReached() {
