@@ -173,9 +173,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             Color.rgb(255, 183, 174),
             Color.rgb(71, 183, 255),
             Color.rgb(222, 151, 81),
-            Color.rgb(222, 151, 81),
-            Color.rgb(222, 151, 81),
-            Color.rgb(222, 151, 81)
+            Color.rgb(33, 33, 255),
+            Color.rgb(255, 183, 255),
+            Color.rgb(222, 183, 174)
         );
 
         THEME.set("mspacman.color.head", Color.rgb(255, 255, 0));
