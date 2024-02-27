@@ -34,7 +34,7 @@ difficult and especialy much too tedious to achieve that (I am really too old fo
 
 ## How to build
 
-You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#java17) installed on your computer.
+You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) installed on your computer.
 
 ### Clone repository (only first time)
 
