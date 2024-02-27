@@ -41,31 +41,29 @@ public class SoundHandler {
         boolean demoLevel = event.game.level().isPresent() && event.game.level().get().isDemoLevel();
         var gameVariant = event.game.variant();
         switch (event.type) {
-            case BONUS_EATEN:
+            case BONUS_EATEN -> {
                 if (!demoLevel) {
                     audioClip(gameVariant, "audio.bonus_eaten").play();
                 }
-                break;
-            case CREDIT_ADDED:
-                audioClip(gameVariant, "audio.credit").play();
-                break;
-            case EXTRA_LIFE_WON:
+            }
+            case CREDIT_ADDED -> audioClip(gameVariant, "audio.credit").play();
+            case EXTRA_LIFE_WON -> {
                 if (!demoLevel) {
                     audioClip(gameVariant, "audio.extra_life").play();
                 }
-                break;
-            case GHOST_EATEN:
+            }
+            case GHOST_EATEN -> {
                 if (!demoLevel) {
                     audioClip(gameVariant, "audio.ghost_eaten").play();
                 }
-                break;
-            case HUNTING_PHASE_STARTED:
+            }
+            case HUNTING_PHASE_STARTED -> {
                 if (event.game.level().isPresent() && !demoLevel) {
                     var level = event.game.level().get();
                     level.scatterPhase().ifPresent(phase -> ensureSirenStarted(gameVariant, phase));
                 }
-                break;
-            case INTERMISSION_STARTED: {
+            }
+            case INTERMISSION_STARTED -> {
                 int intermissionNumber = 0;
                 if (GameController.it().state() == GameState.INTERMISSION_TEST) {
                     intermissionNumber = GameController.it().intermissionTestNumber;
@@ -82,9 +80,8 @@ public class SoundHandler {
                         clip.play();
                     }
                 }
-                break;
             }
-            case LEVEL_STARTED:
+            case LEVEL_STARTED -> {
                 if (!demoLevel) {
                     event.game.level().ifPresent(level -> {
                         if (level.number() == 1) {
@@ -92,25 +89,25 @@ public class SoundHandler {
                         }
                     });
                 }
-                break;
-            case PAC_DIED:
+            }
+            case PAC_DIED -> {
                 if (!demoLevel) {
                     audioClip(gameVariant, "audio.pacman_death").play();
                 }
-                break;
-            case PAC_FOUND_FOOD:
+            }
+            case PAC_FOUND_FOOD -> {
                 if (!demoLevel) {
                     // TODO this does not sound as in the original game
                     ensureLoop(audioClip(gameVariant, "audio.pacman_munch"), AudioClip.INDEFINITE);
                 }
-                break;
-            case PAC_LOST_POWER:
+            }
+            case PAC_LOST_POWER -> {
                 if (!demoLevel) {
                     audioClip(gameVariant, "audio.pacman_power").stop();
                     event.game.level().ifPresent(level -> ensureSirenStarted(gameVariant, level.huntingPhase() / 2));
                 }
-                break;
-            case PAC_GETS_POWER:
+            }
+            case PAC_GETS_POWER -> {
                 if (!demoLevel) {
                     stopSirens(gameVariant);
                     var clip = audioClip(gameVariant, "audio.pacman_power");
@@ -118,12 +115,11 @@ public class SoundHandler {
                     clip.setCycleCount(AudioClip.INDEFINITE);
                     clip.play();
                 }
-                break;
-            case STOP_ALL_SOUNDS:
-                stopAllSounds();
-                break;
-            default:
-                break;
+            }
+            case STOP_ALL_SOUNDS -> stopAllSounds();
+            default -> {
+                Logger.debug("Game event {} not handled", event);
+            }
         }
     }
 
