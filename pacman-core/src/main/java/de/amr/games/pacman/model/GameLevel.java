@@ -907,6 +907,9 @@ public class GameLevel {
      * @param bonusIndex bonus index (0 or 1).
      */
     public void handleBonusReached(int bonusIndex) {
+        if (bonusIndex < 0 || bonusIndex > 1) {
+            throw new IllegalArgumentException("Bonus index must be 0 or 1 but is " + bonusIndex);
+        }
         switch (game.variant()) {
             case MS_PACMAN -> {
                 if (bonusIndex == 1 && bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
@@ -914,16 +917,18 @@ public class GameLevel {
                     return;
                 }
                 byte symbol = bonusSymbols[bonusIndex];
-                bonus = createMovingBonus(symbol, GameModel.BONUS_VALUES_MS_PACMAN[symbol] * 100, RND.nextBoolean());
+                int points = GameModel.BONUS_VALUES_MS_PACMAN[symbol] * 100;
+                bonus = createMovingBonus(symbol, points, RND.nextBoolean());
                 bonus.setEdible(TickTimer.INDEFINITE);
                 publishGameEvent(game, GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
             case PACMAN -> {
                 byte symbol = bonusSymbols[bonusIndex];
-                bonus = new StaticBonus(symbol, GameModel.BONUS_VALUES_PACMAN[symbol] * 100);
-                bonus.entity().setPosition(GameModel.BONUS_POSITION_PACMAN);
+                int points = GameModel.BONUS_VALUES_PACMAN[symbol] * 100;
+                bonus = new StaticBonus(symbol, points);
                 int ticks = randomInt(9 * FPS, 10 * FPS); // between 9 and 10 seconds
                 bonus.setEdible(ticks);
+                bonus.entity().setPosition(GameModel.BONUS_POSITION_PACMAN);
                 publishGameEvent(game, GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
         }
