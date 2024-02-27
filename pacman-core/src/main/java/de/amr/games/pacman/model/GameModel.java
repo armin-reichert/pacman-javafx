@@ -301,8 +301,8 @@ public class GameModel {
     }
 
     public int pointsForKillingGhost(int index) {
-        byte[] factor = { 2, 4, 8, 16 };
-        return 100 * factor[index];
+        short[] points = { 200, 400, 800, 1600 };
+        return points[index];
     }
 
     public void scorePoints(int points) {
