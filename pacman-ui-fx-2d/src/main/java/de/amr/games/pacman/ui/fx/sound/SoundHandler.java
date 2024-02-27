@@ -21,6 +21,8 @@ import org.tinylog.Logger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
@@ -35,17 +37,21 @@ public class SoundHandler implements GameEventListener {
     }
 
     public AudioClip audioClip(GameVariant gameVariant, String clipName) {
-        var prefix = gameVariant == GameVariant.MS_PACMAN ? "mspacman." : "pacman.";
-        return theme.audioClip(prefix + clipName);
+        checkNotNull(gameVariant);
+        checkNotNull(clipName);
+        return switch(gameVariant) {
+            case MS_PACMAN -> theme.audioClip("mspacman." + clipName);
+            case PACMAN -> theme.audioClip("pacman." + clipName);
+        };
     }
 
-    private boolean isPlayingLevel(GameEvent e) {
-        return !e.game.level().map(GameLevel::isDemoLevel).orElse(true);
+    private boolean isRealLevel(GameEvent event) {
+        return !event.game.level().map(GameLevel::isDemoLevel).orElse(true);
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        if (isPlayingLevel(event)) {
+        if (isRealLevel(event)) {
             audioClip(event.game.variant(), "audio.bonus_eaten").play();
         }
     }
@@ -57,14 +63,14 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onExtraLifeWon(GameEvent event) {
-        if (isPlayingLevel(event)) {
+        if (isRealLevel(event)) {
             audioClip(event.game.variant(), "audio.extra_life").play();
         }
     }
 
     @Override
     public void onGhostEaten(GameEvent event) {
-        if (isPlayingLevel(event)) {
+        if (isRealLevel(event)) {
             audioClip(event.game.variant(), "audio.ghost_eaten").play();
         }
     }
@@ -110,14 +116,14 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onPacDied(GameEvent event) {
-        if (isPlayingLevel(event)) {
+        if (isRealLevel(event)) {
             audioClip(event.game.variant(), "audio.pacman_death").play();
         }
     }
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        if (isPlayingLevel(event)) {
+        if (isRealLevel(event)) {
             //TODO (fixme) this does not sound 100% as in the original game
             ensureLoop(audioClip(event.game.variant(), "audio.pacman_munch"), AudioClip.INDEFINITE);
         }
@@ -125,7 +131,7 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        if (isPlayingLevel(event)) {
+        if (isRealLevel(event)) {
             stopSirens(event.game.variant());
             var clip = audioClip(event.game.variant(), "audio.pacman_power");
             clip.stop();
